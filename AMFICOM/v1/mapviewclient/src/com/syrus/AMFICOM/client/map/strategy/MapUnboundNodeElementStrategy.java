@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.11 2005/02/01 16:16:13 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.12 2005/02/01 17:18:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import javax.swing.SwingUtilities;
 /**
  * Стратегия управления непривязанным узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/02/01 16:16:13 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/01 17:18:16 $
  * @module mapviewclient_v1
  */
 public final class MapUnboundNodeElementStrategy extends MapStrategy 
@@ -86,7 +86,6 @@ public final class MapUnboundNodeElementStrategy extends MapStrategy
 		MapState mapState = logicalNetLayer.getMapState();
 
 		int mouseMode = mapState.getMouseMode();
-		int actionMode = mapState.getActionMode();
 
 		Point point = me.getPoint();
 
@@ -94,107 +93,126 @@ public final class MapUnboundNodeElementStrategy extends MapStrategy
 		{
 			if(mouseMode == MapState.MOUSE_PRESSED)
 			{
-				if ((actionMode == MapState.SELECT_ACTION_MODE))
-				{
-					MapElement mel = logicalNetLayer.getCurrentMapElement();
-					if(mel instanceof Selection)
-					{
-						Selection sel = (Selection)mel;
-						sel.add(unbound);
-					}
-					else
-					{
-						Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
-						sel.addAll(logicalNetLayer.getSelectedElements());
-						logicalNetLayer.setCurrentMapElement(sel);
-					}
-				}
-				if ((actionMode != MapState.SELECT_ACTION_MODE) &&
-					(actionMode != MapState.MOVE_ACTION_MODE) )
-				{
-					logicalNetLayer.deselectAll();
-				}
-				unbound.setSelected(true);
-			}
+				leftMousePressed(mapState, point);
+			}//MapState.MOUSE_PRESSED
 			else
 			if(mouseMode == MapState.MOUSE_DRAGGED)
 			{
-				if (actionMode == MapState.MOVE_ACTION_MODE)
-				{
-					//Если разрешено то перемещаем объект
-					if ( aContext.getApplicationModel().isEnabled(
-						MapApplicationModel.ACTION_EDIT_BINDING))
-					{
-						if(command == null)
-						{
-//							List selection = logicalNetLayer.getSelectedElements();
-//							if(selection.size() == 1)
-//								command = new 
-							command = new MoveSelectionCommandBundle(point);
-							((MoveSelectionCommandBundle )command).setLogicalNetLayer(logicalNetLayer);
-						}
-						command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
-					}
-				}//if (actionMode == MapState.MOVE_ACTION_MODE)
-
-				unbound.setCanBind(false);
-				
-				for(Iterator it = logicalNetLayer.getMapView().getMap().getSiteNodes().iterator(); it.hasNext();)
-				{
-					SiteNode sit = (SiteNode)it.next();
-					SiteNodeController snc = (SiteNodeController)logicalNetLayer.getMapViewController().getController(sit);
-					if(!(sit instanceof UnboundNode))
-						if(snc.isMouseOnElement(sit, point))
-						{
-							unbound.setCanBind(true);
-							break;
-						}
-				}
-				
-//				MapElement mapElement = logicalNetLayer.getMapElementAtPoint(point);
-//				unbound.setCanBind(mapElement instanceof MapSiteNodeElement);
-				
+				leftMouseDragged(mapState, point);
 			}//if(mouseMode == MapState.MOUSE_DRAGGED)
 			else
 			if(mouseMode == MapState.MOUSE_RELEASED)
 			{
-				if (actionMode == MapState.MOVE_ACTION_MODE)
-				{
-					if(command != null)
-					{
-						// complete move
-						logicalNetLayer.getCommandList().add(command);
-						logicalNetLayer.getCommandList().execute();
-						command = null;
-					}
-					
-					if(unbound.getCanBind())
-					{
-						for(Iterator it = logicalNetLayer.getMapView().getMap().getSiteNodes().iterator(); it.hasNext();)
-						{
-							SiteNode site = (SiteNode)it.next();
-							SiteNodeController snc = (SiteNodeController)logicalNetLayer.getMapViewController().getController(site);
-							if(!(site instanceof UnboundNode))
-								if(snc.isMouseOnElement(site, point))
-								{
-									command = new BindUnboundNodeToSiteCommandBundle(unbound, site);
-									((BindUnboundNodeToSiteCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
-									logicalNetLayer.getCommandList().add(command);
-									logicalNetLayer.getCommandList().execute();
-									command = null;
-									break;
-								}
-						}
-//						MapSiteNodeElement site = (MapSiteNodeElement )logicalNetLayer.getMapElementAtPoint(point);
-//						command = new BindToSiteCommandBundle(unbound, site);
-//						((BindToSiteCommandBundle )command).setLogicalNetLayer(logicalNetLayer);
-					}
-
-					command = null;
-				}//if (actionMode == MapState.MOVE_ACTION_MODE)
-				mapState.setActionMode(MapState.NULL_ACTION_MODE);
+				leftMouseReleased(mapState, point);
 			}//if(mouseMode == MapState.MOUSE_RELEASED)
 		}//SwingUtilities.isLeftMouseButton(me)
+	}
+
+	/**
+	 * Process left mouse released.
+	 * @param mapState map state
+	 * @param point new point
+	 */
+	void leftMouseReleased(MapState mapState, Point point)
+	{
+		int actionMode = mapState.getActionMode();
+
+		if (actionMode == MapState.MOVE_ACTION_MODE)
+		{
+			if (command != null)
+			{
+				logicalNetLayer.getCommandList().add(command);
+				logicalNetLayer.getCommandList().execute();
+				command = null;
+			}
+			if (unbound.getCanBind())
+			{
+				for (Iterator it = logicalNetLayer.getMapView().getMap().getSiteNodes().iterator();it.hasNext();)
+				{
+					SiteNode site = (SiteNode)it.next();
+					SiteNodeController snc = (SiteNodeController)logicalNetLayer.getMapViewController().getController(site);
+					if (!(site instanceof UnboundNode))
+						if (snc.isMouseOnElement(site, point))
+						{
+							command = new BindUnboundNodeToSiteCommandBundle(unbound, site);
+							((BindUnboundNodeToSiteCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
+							logicalNetLayer.getCommandList().add(command);
+							logicalNetLayer.getCommandList().execute();
+							command = null;
+							break;
+						}
+				}
+			}
+			command = null;
+		}//MapState.MOVE_ACTION_MODE
+		mapState.setActionMode(MapState.NULL_ACTION_MODE);
+	}
+
+	/**
+	 * Process left mouse dragged.
+	 * @param mapState map state
+	 * @param point new point
+	 */
+	void leftMouseDragged(MapState mapState, Point point)
+	{
+		int actionMode = mapState.getActionMode();
+
+		if (actionMode == MapState.MOVE_ACTION_MODE)
+		{
+			if (aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))
+			{
+				if (command == null)
+				{
+					command = new MoveSelectionCommandBundle(point);
+					((MoveSelectionCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
+				}
+				command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
+			}
+		}//MapState.MOVE_ACTION_MODE
+
+		unbound.setCanBind(false);
+		for (Iterator it = logicalNetLayer.getMapView().getMap().getSiteNodes().iterator();it.hasNext();)
+		{
+			SiteNode sit = (SiteNode)it.next();
+			SiteNodeController snc = (SiteNodeController)logicalNetLayer.getMapViewController().getController(sit);
+			if (!(sit instanceof UnboundNode))
+				if (snc.isMouseOnElement(sit, point))
+				{
+					unbound.setCanBind(true);
+					break;
+				}
+		}
+	}
+
+	/**
+	 * Process left mouse pressed.
+	 * @param mapState map state
+	 * @param point new point
+	 */
+	void leftMousePressed(MapState mapState, Point point)
+	{
+		int actionMode = mapState.getActionMode();
+
+		if ((actionMode == MapState.SELECT_ACTION_MODE))
+		{
+			MapElement mel = logicalNetLayer.getCurrentMapElement();
+			if (mel instanceof Selection)
+			{
+				Selection sel = (Selection)mel;
+				sel.add(unbound);
+			}
+			else
+			{
+				Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
+				sel.addAll(logicalNetLayer.getSelectedElements());
+				logicalNetLayer.setCurrentMapElement(sel);
+			}
+		}//MapState.SELECT_ACTION_MODE
+		if ((actionMode != MapState.SELECT_ACTION_MODE) && (actionMode != MapState.MOVE_ACTION_MODE))
+		{
+			logicalNetLayer.deselectAll();
+		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
+		unbound.setSelected(true);
 	}
 }
 

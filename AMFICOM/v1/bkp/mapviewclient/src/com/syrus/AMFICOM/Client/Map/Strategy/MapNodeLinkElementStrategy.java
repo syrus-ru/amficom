@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElementStrategy.java,v 1.8 2005/02/01 16:16:13 krupenn Exp $
+ * $Id: MapNodeLinkElementStrategy.java,v 1.9 2005/02/01 17:18:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.mapview.Selection;
 
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
@@ -25,7 +26,7 @@ import javax.swing.SwingUtilities;
 /**
  * Стратегия управления фрагментом линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/01 16:16:13 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/01 17:18:16 $
  * @module mapviewclient_v1
  */
 public final class MapNodeLinkElementStrategy extends MapStrategy 
@@ -79,45 +80,56 @@ public final class MapNodeLinkElementStrategy extends MapStrategy
 		MapState mapState = logicalNetLayer.getMapState();
 
 		int mouseMode = mapState.getMouseMode();
-		int actionMode = mapState.getActionMode();
+		
+		Point point = me.getPoint();
 
 		if(SwingUtilities.isLeftMouseButton(me))
 		{
 			if(mouseMode == MapState.MOUSE_PRESSED)
 			{
-				nodeLink.setSelected(true);
-				if ((actionMode == MapState.SELECT_ACTION_MODE))
-				{
-					MapElement mel = logicalNetLayer.getCurrentMapElement();
-					if(mel instanceof Selection)
-					{
-						Selection sel = (Selection)mel;
-						sel.add(nodeLink);
-					}
-					else
-					{
-						Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
-						sel.addAll(logicalNetLayer.getSelectedElements());
-						logicalNetLayer.setCurrentMapElement(sel);
-					}
-				}
-				else
-				if (actionMode == MapState.ALT_LINK_ACTION_MODE)
-				{
-					command = new CreatePhysicalNodeCommandBundle(nodeLink, me.getPoint());
-					((CreatePhysicalNodeCommandBundle )command).setLogicalNetLayer(logicalNetLayer);
-					logicalNetLayer.getCommandList().add(command);
-					logicalNetLayer.getCommandList().execute();
-				}
-				else
-				if (actionMode != MapState.MOVE_ACTION_MODE)
-				{
-					logicalNetLayer.deselectAll();
-					nodeLink.setSelected(true);
-				}
-			}
-		}
+				leftMousePressed(mapState, point);
+			}//MapState.MOUSE_PRESSED
+		}//SwingUtilities.isLeftMouseButton(me)
 
+	}
+
+	/**
+	 * Process left mouse pressed.
+	 * @param mapState map state
+	 * @param point new point
+	 */
+	void leftMousePressed(MapState mapState, Point point)
+	{
+		int actionMode = mapState.getActionMode();
+
+		nodeLink.setSelected(true);
+		if ((actionMode == MapState.SELECT_ACTION_MODE))
+		{
+			MapElement mel = logicalNetLayer.getCurrentMapElement();
+			if (mel instanceof Selection)
+			{
+				Selection sel = (Selection)mel;
+				sel.add(nodeLink);
+			}
+			else
+			{
+				Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
+				sel.addAll(logicalNetLayer.getSelectedElements());
+				logicalNetLayer.setCurrentMapElement(sel);
+			}
+		}//MapState.SELECT_ACTION_MODE
+		else if (actionMode == MapState.ALT_LINK_ACTION_MODE)
+		{
+			command = new CreatePhysicalNodeCommandBundle(nodeLink, point);
+			((CreatePhysicalNodeCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
+			logicalNetLayer.getCommandList().add(command);
+			logicalNetLayer.getCommandList().execute();
+		}//MapState.ALT_LINK_ACTION_MODE
+		else if (actionMode != MapState.MOVE_ACTION_MODE)
+		{
+			logicalNetLayer.deselectAll();
+			nodeLink.setSelected(true);
+		}//MapState.MOVE_ACTION_MODE
 	}
 }
 

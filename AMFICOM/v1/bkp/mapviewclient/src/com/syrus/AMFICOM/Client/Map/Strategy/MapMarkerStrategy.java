@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.14 2005/02/01 16:16:13 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.15 2005/02/01 17:18:16 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,16 +11,13 @@
 
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Map.UI.MotionDescriptor;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.mapview.Marker;
@@ -35,7 +32,7 @@ import javax.swing.SwingUtilities;
  * —тратеги€ управлени€ маркером.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/02/01 16:16:13 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/01 17:18:16 $
  * @module mapviewclient_v1
  */
 public final class MapMarkerStrategy extends MapStrategy 
@@ -82,14 +79,8 @@ public final class MapMarkerStrategy extends MapStrategy
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");
 		
 		MapState mapState = logicalNetLayer.getMapState();
-		Map map = marker.getMap();
 		
-		MarkerController mc = (MarkerController)logicalNetLayer.getMapViewController().getController(marker);
-
-		MapCoordinatesConverter converter = logicalNetLayer;
-
 		int mouseMode = mapState.getMouseMode();
-		int actionMode = mapState.getActionMode();
 
 		Point point = me.getPoint();
 
@@ -97,123 +88,138 @@ public final class MapMarkerStrategy extends MapStrategy
 		{
 			if(mouseMode == MapState.MOUSE_PRESSED)
 			{
-				if ((actionMode == MapState.SELECT_ACTION_MODE))
-				{
-					MapElement mel = logicalNetLayer.getCurrentMapElement();
-					if(mel instanceof Selection)
-					{
-					}
-					else
-					{
-						logicalNetLayer.deselectAll();
-					}
-				}
-				else
-				if ((actionMode != MapState.SELECT_ACTION_MODE) &&
-					(actionMode != MapState.MOVE_ACTION_MODE) )
-				{
-					logicalNetLayer.deselectAll();
-				}
-				marker.setSelected(true);
+				leftMousePressed(mapState, point);
 			}//MapState.MOUSE_PRESSED
 			else
 			if(mouseMode == MapState.MOUSE_DRAGGED)
 			{
-				//ѕроверка того что маркер можно перемещать и его перемещение
-				if ( logicalNetLayer.getContext().getApplicationModel().isEnabled(
-							MapApplicationModel.ACTION_USE_MARKER))
-				{
-					NodeLink nodeLink = marker.getNodeLink();
-					AbstractNode sn = marker.getStartNode();
-					AbstractNode en = marker.getEndNode();
-
-					//–исование о пределение координат маркера происходит путм проецировани€ координат
-					//курсора на линию на которой маркер находитс€
-
-					Point anchorPoint = converter.convertMapToScreen(marker.getLocation());
-					
-					Point start = converter.convertMapToScreen(sn.getLocation());
-					Point end = converter.convertMapToScreen(en.getLocation());
-					
-					double lengthFromStartNode;
-					
-					MotionDescriptor md = new MotionDescriptor(start, end, anchorPoint, point);
-
-					lengthFromStartNode = md.lengthFromStartNode;
-
-					while(lengthFromStartNode > md.nodeLinkLength)
-					{
-						nodeLink = marker.nextNodeLink();
-						if(nodeLink == null)
-							lengthFromStartNode = md.nodeLinkLength;
-						else
-						{
-							sn = en;
-							en = nodeLink.getOtherNode(sn);
-	
-							marker.setNodeLink(nodeLink);
-							marker.setStartNode(sn);
-							marker.setEndNode(en);
-	
-							start = converter.convertMapToScreen(sn.getLocation());
-							end = converter.convertMapToScreen(en.getLocation());
-							
-							md = new MotionDescriptor(start, end, anchorPoint, point);
-
-							lengthFromStartNode = md.lengthFromStartNode;
-							
-							if(lengthFromStartNode < 0)
-							{
-								lengthFromStartNode = 0;
-								break;
-							}
-						}
-					}
-					while(lengthFromStartNode < 0)
-					{
-						nodeLink = marker.previousNodeLink();
-						if(nodeLink == null)
-							lengthFromStartNode = 0;
-						else
-						{
-							en = sn;
-							sn = nodeLink.getOtherNode(en);
-	
-							marker.setNodeLink(nodeLink);
-							marker.setStartNode(sn);
-							marker.setEndNode(en);
-	
-							start = converter.convertMapToScreen(sn.getLocation());
-							end = converter.convertMapToScreen(en.getLocation());
-
-							md = new MotionDescriptor(start, end, anchorPoint, point);
-
-							lengthFromStartNode = md.lengthFromStartNode;
-							
-							if(lengthFromStartNode > md.nodeLinkLength)
-							{
-								lengthFromStartNode = md.nodeLinkLength;
-								break;
-							}
-						}
-					}
-
-					mc.adjustPosition(marker, lengthFromStartNode);
-
-					//ѕосылаем сообщение что маркер перемещаетс€
-					mc.notifyMarkerMoved(marker);
-				}// MapApplicationModel.ACTION_USE_MARKER
+				leftMouseDragged(mapState, point);
 			}//MapState.MOUSE_DRAGGED
 			else
 			if(mouseMode == MapState.MOUSE_RELEASED)
 			{
-				if (actionMode == MapState.MOVE_ACTION_MODE)
-				{
-				}//if (actionMode == MapState.MOVE_ACTION_MODE)
+				leftMouseReleased(mapState, point);
 			}//MapState.MOUSE_RELEASED
 
 		}//SwingUtilities.isLeftMouseButton(me)
 
+	}
+
+	/**
+	 * Process left mouse dragged.
+	 * @param mapState map state
+	 * @param point new point
+	 */
+	void leftMouseDragged(MapState mapState, Point point)
+	{
+		int actionMode = mapState.getActionMode();
+
+		MarkerController mc = (MarkerController)logicalNetLayer.getMapViewController().getController(marker);
+
+		MapCoordinatesConverter converter = logicalNetLayer;
+
+		//ѕроверка того что маркер можно перемещать и его перемещение
+		if (logicalNetLayer.getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_USE_MARKER))
+		{
+			NodeLink nodeLink = marker.getNodeLink();
+			AbstractNode sn = marker.getStartNode();
+			AbstractNode en = marker.getEndNode();
+			Point anchorPoint = converter.convertMapToScreen(marker.getLocation());
+			Point start = converter.convertMapToScreen(sn.getLocation());
+			Point end = converter.convertMapToScreen(en.getLocation());
+			double lengthFromStartNode;
+			MotionDescriptor md = new MotionDescriptor(start, end, anchorPoint, point);
+			lengthFromStartNode = md.lengthFromStartNode;
+			while (lengthFromStartNode > md.nodeLinkLength)
+			{
+				nodeLink = marker.nextNodeLink();
+				if (nodeLink == null)
+					lengthFromStartNode = md.nodeLinkLength;
+				else
+				{
+					sn = en;
+					en = nodeLink.getOtherNode(sn);
+					marker.setNodeLink(nodeLink);
+					marker.setStartNode(sn);
+					marker.setEndNode(en);
+					start = converter.convertMapToScreen(sn.getLocation());
+					end = converter.convertMapToScreen(en.getLocation());
+					md = new MotionDescriptor(start, end, anchorPoint, point);
+					lengthFromStartNode = md.lengthFromStartNode;
+					if (lengthFromStartNode < 0)
+					{
+						lengthFromStartNode = 0;
+						break;
+					}
+				}
+			}
+			while (lengthFromStartNode < 0)
+			{
+				nodeLink = marker.previousNodeLink();
+				if (nodeLink == null)
+					lengthFromStartNode = 0;
+				else
+				{
+					en = sn;
+					sn = nodeLink.getOtherNode(en);
+					marker.setNodeLink(nodeLink);
+					marker.setStartNode(sn);
+					marker.setEndNode(en);
+					start = converter.convertMapToScreen(sn.getLocation());
+					end = converter.convertMapToScreen(en.getLocation());
+					md = new MotionDescriptor(start, end, anchorPoint, point);
+					lengthFromStartNode = md.lengthFromStartNode;
+					if (lengthFromStartNode > md.nodeLinkLength)
+					{
+						lengthFromStartNode = md.nodeLinkLength;
+						break;
+					}
+				}
+			}
+			mc.adjustPosition(marker, lengthFromStartNode);
+			mc.notifyMarkerMoved(marker);
+		}
+	}
+
+	/**
+	 * Process left mouse released.
+	 * @param mapState map state
+	 * @param point new point
+	 */
+	void leftMouseReleased(MapState mapState, Point point)
+	{
+		int actionMode = mapState.getActionMode();
+
+		if (actionMode == MapState.MOVE_ACTION_MODE)
+		{
+		}
+	}
+
+	/**
+	 * Process left mouse pressed.
+	 * @param mapState map state
+	 * @param point new point
+	 */
+	void leftMousePressed(MapState mapState, Point point)
+	{
+		int actionMode = mapState.getActionMode();
+
+		if ((actionMode == MapState.SELECT_ACTION_MODE))
+		{
+			MapElement mel = logicalNetLayer.getCurrentMapElement();
+			if (mel instanceof Selection)
+			{
+			}
+			else
+			{
+				logicalNetLayer.deselectAll();
+			}
+		}//MapState.SELECT_ACTION_MODE
+		else if ((actionMode != MapState.SELECT_ACTION_MODE) && (actionMode != MapState.MOVE_ACTION_MODE))
+		{
+			logicalNetLayer.deselectAll();
+		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
+		marker.setSelected(true);
 	}
 }
 
