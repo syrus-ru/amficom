@@ -40,6 +40,9 @@ $(LIBNAME_INTERFACE):	.corba
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMConfigurationReceive.java \
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMMeasurementReceive.java \
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMGeneralTransmit.java \
+		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMAdministrationTransmit.java \
+		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMConfigurationTransmit.java \
+		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMMeasurementTransmit.java \
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMServerImpl.java \
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/ClientMeasurementServer.java 
 	touch $@

@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralReceive.java,v 1.1 2005/01/19 20:59:09 arseniy Exp $
+ * $Id: CMGeneralReceive.java,v 1.2 2005/01/26 15:43:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,14 +34,14 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/19 20:59:09 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/26 15:43:17 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
 public abstract class CMGeneralReceive extends CMServerPOA {
 
-	private static final long serialVersionUID = 4217287655251415892L;
+	//private static final long serialVersionUID = 4217287655251415892L;
 
 	public void receiveParameterType(ParameterType_Transferable parameterType_Transferable,
 									boolean force,
