@@ -7,7 +7,11 @@
 *.swp
 *.log
 *.sor
+.classpath
+.project
+.settings
 classes
+test
 docs
 lib
 Makefile.inc
