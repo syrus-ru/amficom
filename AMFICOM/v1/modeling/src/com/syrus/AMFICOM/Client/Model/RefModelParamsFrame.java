@@ -1,26 +1,22 @@
 package com.syrus.AMFICOM.Client.Model;
 
+import java.util.*;
+import java.util.List;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.table.*;
 
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ATableFrame;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-
-import com.syrus.AMFICOM.analysis.dadara.*;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ATableFrame;
 import com.syrus.AMFICOM.Client.Model.ModelMath.*;
-import com.syrus.io.BellcoreStructure;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.io.*;
 
 public class RefModelParamsFrame extends ATableFrame
 {
@@ -31,26 +27,20 @@ public class RefModelParamsFrame extends ATableFrame
 	ATable table;
 	ParamTableModel tableModel;
 
-	Scheme scheme;
 	SchemePath path;
 
-//---------------------------Constructor---------------------------------------
 	public RefModelParamsFrame(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
 
-		try
-		{
+		try {
 			jbInit();
 		}
-		catch(Exception e)
-		{
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-
-//-----------------------------------------------------------------------------
 	private void jbInit() throws Exception
 	{
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
@@ -93,57 +83,63 @@ public class RefModelParamsFrame extends ATableFrame
 		return tableModel;
 	}
 
-
-//-----------------------------------------------------------------------------
 	public void doIt()
 	{
 		path = (SchemePath)pathIDsComboBox.getSelectedObjectResource();
-		if (path == null || path.getId().equals(""))
-		{
+		if (path == null) {
 			String error = "Не задан маршрут моделирования.\n";
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), error, "Ошибка", JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(), error, "Ошибка",
+																		JOptionPane.OK_OPTION);
 			return;
 		}
 
 		BellcoreStructure bs = getTrace();
-		if(bs == null)
+		if (bs == null)
 			return;
-		bs.title = "Модель \"" + path.getName() + "\"";
-		bs.monitored_element_id = path.getId();
+		bs.title = "Модель \"" + path.name() + "\"";
+		bs.schemePathId = path.id().identifierString();
 		Pool.put("bellcorestructure", "primarytrace", bs);
 		aContext.getDispatcher().notify(new RefChangeEvent("all", RefChangeEvent.CLOSE_EVENT));
 		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace", RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
 	}
 
-//-----------------------------------------------------------------------------
 	void setDefaults() // Default parameters of the modeling
 	{
-		tableModel.updateData(new Object[]{
-			new Integer(64),
-			new Double(4),
-			new Integer(1000),
-			new Integer(1625),
-			new Double(40),
-			new Double(0.0),
-			new Double(0.95),
-			new Double(0.1),
-			new Double(-40),
-			new Double(0.5),
-			new Double(0.2)});
+		tableModel.updateData(new Object[] {
+													new Integer(64),
+													new Double(4),
+													new Integer(1000),
+													new Integer(1625),
+													new Double(40),
+													new Double(0.0),
+													new Double(0.95),
+													new Double(0.1),
+													new Double( -40),
+													new Double(0.5),
+													new Double(0.2)});
+	}
+
+	public void setModelingSchemes(List schemes)
+	{
+		pathIDsComboBox.removeAllItems();
+		for (Iterator sit = schemes.iterator(); sit.hasNext(); ) {
+			Scheme scheme = (Scheme)sit.next();
+			SchemePath[] paths = scheme.schemeMonitoringSolution().schemePaths();
+			for (int i = 0;  i < paths.length; i++) {
+				pathIDsComboBox.addItem(paths[i]);
+			}
+		}
 	}
 
 	public void setModelingScheme(Scheme scheme)
 	{
-		this.scheme = scheme;
 		pathIDsComboBox.removeAllItems();
-		for(Iterator it = scheme.getTopLevelPaths().iterator(); it.hasNext();)
-		{
-			SchemePath path = (SchemePath)it.next();
-			pathIDsComboBox.addItem(path);
+		SchemePath[] paths = scheme.schemeMonitoringSolution().schemePaths();
+		for (int i = 0; i < paths.length; i++) {
+			pathIDsComboBox.addItem(paths[i]);
 		}
 	}
 
-//-----------------------------------------------------------------------------
 	BellcoreStructure getTrace()
 	{
 		double length = ((Integer)tableModel.getValueAt(0, 1)).doubleValue() * 1000;
@@ -188,92 +184,30 @@ public class RefModelParamsFrame extends ATableFrame
 		return createBS (y, resolution/1000., wave_length, pulsWidth);
 	}
 
-
-//-----------------------------------------------------------------------------
 	BellcoreStructure createBS (double[] y, double delta_x, double wl, double pulseWidth)
 	{
 		BellcoreStructure bs = new BellcoreStructure();
-		int size = y.length;
-		int averages = 1;
-		short wavelength = (short)wl;
-		int actualwavelength = 10 * wavelength;
+
 		double groupindex = 1.46800;
 		double pulsewidth = pulseWidth;
 		double resolution = delta_x;
-		long datetime = System.currentTimeMillis();
-		String omid = "AMFICOM generated";
 
-		bs.addField(BellcoreStructure.GENPARAMS);
-		bs.genParams.NW = wavelength;
+		BellcoreModelWriter writer = new BellcoreModelWriter(bs);
+		writer.setWavelength((int)wl);
+		writer.setTime(System.currentTimeMillis() / 1000);
+		writer.setOpticalModule("AMFICOM generated");
+		writer.setPathId(path.id().identifierString());
+		writer.setUnits("mt");
+		writer.setAverages(1);
+		writer.setRangeParameters(1.46800, delta_x, delta_x * y.length);
+		writer.setData(y);
+		writer.finalizeChanges();
 
-		bs.addField(BellcoreStructure.SUPPARAMS);
-		bs.supParams.OMID = omid;
-		bs.supParams.OT = path.getId();
-
-		bs.addField(BellcoreStructure.FXDPARAMS);
-		bs.fxdParams.DTS = datetime / 1000;
-		bs.fxdParams.UD = "mt";
-		bs.fxdParams.AW = (short)(actualwavelength);
-		bs.fxdParams.TPW = 1;
-		bs.fxdParams.PWU = new short[1];
-		bs.fxdParams.DS = new int [1];
-		bs.fxdParams.NPPW = new int [1];
-		bs.fxdParams.PWU[0] = (short)pulsewidth;
-		bs.fxdParams.DS[0] = (int)(resolution * groupindex / 3d * 100d * 10000d * 1000d);
-		bs.fxdParams.NPPW[0] = size;
-		bs.fxdParams.GI = (int)(groupindex * 100000);
-		bs.fxdParams.NAV = averages;
-		bs.fxdParams.AR = (int)(resolution * size * groupindex / 3d * 100d * 1000d);
-
-		bs.addField(BellcoreStructure.DATAPOINTS);
-		bs.dataPts.TNDP = size;
-		bs.dataPts.TSF = 1;
-		bs.dataPts.TPS = new int [1];
-		bs.dataPts.SF = new short [1];
-		bs.dataPts.TPS[0] = size;
-		bs.dataPts.SF[0] = 1000;
-		bs.dataPts.DSF = new int[1][size];
-		for (int i = 0; i < size; i++)
-			bs.dataPts.DSF[0][i] = 65535 - (int)(y[i]*1000);
-
-		bs.addField(BellcoreStructure.CKSUM);
-		bs.cksum.CSM = 0;
-
-		bs.addField(BellcoreStructure.MAP);
-		bs.map.MRN = 100;
-		bs.map.NB = 6;
-
-		bs.map.B_id = new String[6];
-		bs.map.B_rev = new int[6];
-		bs.map.B_size = new int[6];
-		bs.map.B_id[0] = "Map";
-		bs.map.B_id[1] = "GenParams";
-		bs.map.B_id[2] = "SupParams";
-		bs.map.B_id[3] = "FxdParams";
-		bs.map.B_id[4] = "DataPts";
-		bs.map.B_id[5] = "Cksum";
-
-		for (int i = 1; i < 6; i++)
-			bs.map.B_rev[i] = 100;
-
-		bs.map.B_size[1] = bs.genParams.getSize();
-		bs.map.B_size[2] = bs.supParams.getSize();
-		bs.map.B_size[3] = bs.fxdParams.getSize();
-		bs.map.B_size[4] = bs.dataPts.getSize();
-		bs.map.B_size[5] = bs.cksum.getSize();
-		bs.map.MBS = bs.map.getSize();
 
 		return bs;
 	}
 
-
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
 ////////////     Additional Necessary Class Definition     ////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-//-----------------------------------------------------------------------------
 }
 
 class ParamTableModel extends AbstractTableModel

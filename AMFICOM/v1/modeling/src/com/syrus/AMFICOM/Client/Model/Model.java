@@ -1,14 +1,9 @@
 package com.syrus.AMFICOM.Client.Model;
 
-import java.awt.Frame;
-import java.awt.Toolkit;
-
+import java.awt.*;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.DefaultModelApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Model.ModelApplicationModelFactory;
+import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class Model
 {

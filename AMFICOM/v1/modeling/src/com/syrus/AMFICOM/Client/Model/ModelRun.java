@@ -2,8 +2,7 @@ package com.syrus.AMFICOM.Client.Model;
 
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Model.DefaultModelApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class ModelRun
 {
@@ -17,7 +16,6 @@ public class ModelRun
 		{
 			e.printStackTrace();
 		}
-
 		new Model(new DefaultModelApplicationModelFactory());
 	}
 }

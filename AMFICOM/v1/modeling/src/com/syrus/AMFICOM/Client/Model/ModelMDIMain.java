@@ -2,35 +2,39 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Model;
 
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.text.*;
-import java.util.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.InternalFrameEvent;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.*;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.*;
-import com.syrus.AMFICOM.Client.General.Command.Config.*;
 import com.syrus.AMFICOM.Client.General.Command.Model.*;
+import com.syrus.AMFICOM.Client.General.Command.Model.MapCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Command.Session.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Report.*;
+import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Map.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewOpenCommand;
+import com.syrus.AMFICOM.Client.Map.UI.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Schematics.Elements.*;
-import com.syrus.AMFICOM.Client.Schematics.Scheme.*;
-import com.syrus.io.*;
+import com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeViewerFrame;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.io.BellcoreStructure;
 
 public class ModelMDIMain extends JFrame implements OperationListener
 {
@@ -60,16 +64,15 @@ public class ModelMDIMain extends JFrame implements OperationListener
 	MapMarkersPanel mmp;
 	public MapElementsFrame mapElementsFrame;
 	public MapPropertyFrame mapPropertyFrame;
-	public JInternalFrame mapframe;
+	public MapFrame mapframe;
 
 	PropsFrame propsFrame;
 	ElementsListFrame elementsListFrame;
+	SchemeTabbedPane schemeTab;
 	SchemeViewerFrame schemeFrame;
-	SchemePanelNoEdition panel;
 	SchemeGraph graph;
 
-//  public ISMMapContext ismMapContext;
-	public MapContext mapContext;
+//	public MapView mapView;
 //	public GetMapElementStructure elementStructure;
 	public Checker checker;
 
@@ -154,8 +157,6 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		transData = new TransData ();
 		desktopPane.add(transData);
 
-		panel = new SchemePanelNoEdition(aContext);
-
 		mmlp = new MapMarkersLayeredPanel(internal_dispatcher);
 		analysisFrame = new ScalableFrame(mmlp)
 		{
@@ -197,25 +198,25 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		internal_dispatcher.register(this, "addschemeelementevent");
 		internal_dispatcher.register(this, "addschemeevent");
 
-		Environment.the_dispatcher.register(this, "contextchange");
+		Environment.getDispatcher().register(this, "contextchange");
 
 
-		aModel.setCommand("menuSessionOpen", new SessionOpenCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionOpen", new SessionOpenCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
-		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
 		aModel.setCommand("menuViewMapOpen", new MapModelOpenCommand(internal_dispatcher, aContext, this));
-		aModel.setCommand("menuViewMapEdit", new OpenMapEditorCommand(Environment.the_dispatcher, aContext, null));
+		aModel.setCommand("menuViewMapEdit", new MapViewOpenCommand(desktopPane, mapframe, aContext));
 		aModel.setCommand("menuViewMapClose", new MapCloseCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuViewPerformModeling", new PerformModelingCommand(internal_dispatcher, this, aContext));
 		aModel.setCommand("menuViewModelSave", new SaveModelingCommand(internal_dispatcher, aContext, "primarytrace"));
 		aModel.setCommand("menuViewModelLoad", new LoadModelingCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuViewSchemeOpen", new SchemeOpenCommand(aContext, graph));
-		aModel.setCommand("menuViewSchemeEdit", new OpenSchemeEditorCommand(internal_dispatcher, aContext, new SchematicsApplicationModelFactory()));
+		aModel.setCommand("menuViewSchemeOpen", new SchemeOpenCommand(aContext));
+		aModel.setCommand("menuViewSchemeEdit", new SchemeOpenCommand(aContext));
 		aModel.setCommand("menuViewSchemeClose", new SchemeCloseCommand(aContext, graph));
 
 		aModel.setCommand("menuFileOpen", new FileOpenCommand(internal_dispatcher, aContext));
@@ -261,33 +262,25 @@ public class ModelMDIMain extends JFrame implements OperationListener
 
 		aModel.fireModelChanged("");
 
-		if(ConnectionInterface.getActiveConnection() != null)
-	 {
-		 aContext.setConnectionInterface(ConnectionInterface.getActiveConnection());
-		 if(aContext.getConnectionInterface().isConnected())
-			 internal_dispatcher.notify(new ContextChangeEvent(
-					 aContext.getConnectionInterface(),
-					 ContextChangeEvent.CONNECTION_OPENED_EVENT));
-	 }
-	 else
-	 {
-		 aContext.setConnectionInterface(Environment.getDefaultConnectionInterface());
-		 ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-//			new CheckConnectionCommand(internal_dispatcher, aContext).execute();
-	 }
-	 if(SessionInterface.getActiveSession() != null)
-	 {
-		 aContext.setSessionInterface(SessionInterface.getActiveSession());
-		 aContext.setConnectionInterface(aContext.getSessionInterface().getConnectionInterface());
-		 if(aContext.getSessionInterface().isOpened())
-			 internal_dispatcher.notify(new ContextChangeEvent(
-					 aContext.getSessionInterface(),
-					 ContextChangeEvent.SESSION_OPENED_EVENT));
-	 }
-	 else
-	 {
-		 aContext.setSessionInterface(Environment.getDefaultSessionInterface(aContext.getConnectionInterface()));
-		 SessionInterface.setActiveSession(aContext.getSessionInterface());
+		if(ConnectionInterface.getInstance() != null)
+		{
+			if(ConnectionInterface.getInstance().isConnected())
+				internal_dispatcher.notify(new ContextChangeEvent(
+						ConnectionInterface.getInstance(),
+						ContextChangeEvent.CONNECTION_OPENED_EVENT));
+		}
+		if(SessionInterface.getActiveSession() != null)
+		{
+			aContext.setSessionInterface(SessionInterface.getActiveSession());
+			if(aContext.getSessionInterface().isOpened())
+				internal_dispatcher.notify(new ContextChangeEvent(
+						aContext.getSessionInterface(),
+						ContextChangeEvent.SESSION_OPENED_EVENT));
+		}
+		else
+		{
+			aContext.setSessionInterface(Environment.getDefaultSessionInterface(ConnectionInterface.getInstance()));
+			SessionInterface.setActiveSession(aContext.getSessionInterface());
 		}
 	}
 
@@ -298,7 +291,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		this.aContext = aContext;
 		aContext.setDispatcher(internal_dispatcher);
 		if(aContext.getApplicationModel() == null)
-			aContext.setApplicationModel(new ApplicationModel());
+			aContext.setApplicationModel(ApplicationModel.getInstance());
 		setModel(aContext.getApplicationModel());
 	}
 
@@ -323,24 +316,27 @@ public class ModelMDIMain extends JFrame implements OperationListener
 
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 
-		double delta_x = bs.getDeltaX();
+		double delta_x = bs.getResolution();
 		double[] y = bs.getTraceData();
 
 		if (id.equals("primarytrace"))
 		{
 			if (mmp != null)
+			{
 				mmp.removeAllMarkers();
-			mmp = new MapMarkersPanel(mmlp, internal_dispatcher, y, delta_x);
-			mmlp.setGraphPanel(mmp);
+				mmp.init(y, delta_x);
+			}
+			else
+			{
+				mmp = new MapMarkersPanel(mmlp, internal_dispatcher, y, delta_x);
+				analysisFrame.setGraph(mmp, true, "primarytrace");
+			}
 			String path_id = (String)Pool.get("activecontext", "activepathid");
-			mmp.setMapPathId(path_id);
-			analysisFrame.setGraph(mmp, true, "primarytrace");
+			mmp.setSchemePathId(path_id);
 
 			new InitialAnalysisCommand().execute();//1
 			mmp.updEvents("primarytrace");
-			String name = bs.title;
-			if(name != null)
-				analysisFrame.setTitle(name);
+			analysisFrame.setTitle(bs.title);
 		}
 		else
 		{
@@ -349,7 +345,6 @@ public class ModelMDIMain extends JFrame implements OperationListener
 			analysisFrame.updScales();
 			traces.put(id, p);
 		}
-
 	}
 
 	public void removeTrace (String id)
@@ -492,7 +487,6 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		if(ae.getActionCommand().equals("mapopenevent"))
 		{
 			aModel.setEnabled("menuViewPerformModeling", true);
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
 
 			Dimension dim = desktopPane.getSize();
 			updTraceFrames();
@@ -508,8 +502,8 @@ public class ModelMDIMain extends JFrame implements OperationListener
 			aModel.setEnabled("menuViewModelLoad", true);
 			aModel.fireModelChanged("");
 
-			Scheme scheme = (Scheme)ae.getSource();
-			paramsFrame.setModelingScheme(scheme);
+			List schemes = (List)ae.getSource();
+			paramsFrame.setModelingSchemes(schemes);
 		}
 		if(ae.getActionCommand().equals("mapcloseevent"))
 		{
@@ -523,12 +517,12 @@ public class ModelMDIMain extends JFrame implements OperationListener
 			for(int i = 0; i < desktopPane.getComponents().length; i++)
 			{
 							Component comp = desktopPane.getComponent(i);
-							if (comp instanceof MapMainFrame)
+							if (comp instanceof MapFrame)
 							{
-											((MapMainFrame)comp).setVisible(false);
+											((MapFrame)comp).setVisible(false);
 //											((MapMainFrame)comp).dispose();
-											((MapMainFrame)comp).setMapContext(null);
-											((MapMainFrame)comp).setContext(null);
+											((MapFrame)comp).setMapView(null);
+											((MapFrame)comp).setContext(null);
 							}
 							else
 							if (comp instanceof MapPropertyFrame)
@@ -570,7 +564,8 @@ public class ModelMDIMain extends JFrame implements OperationListener
 
 				if (schemeFrame == null)
 				{
-					schemeFrame = new SchemeViewerFrame(aContext, panel)
+					schemeTab = new SchemeTabbedPane(aContext);
+					schemeFrame = new SchemeViewerFrame(aContext, schemeTab)
 					{
 						protected void fireInternalFrameEvent(int id)
 						{
@@ -634,47 +629,28 @@ public class ModelMDIMain extends JFrame implements OperationListener
 /**/
 		if (ae.getActionCommand().equals("addschemeevent"))
 		{
-			Dimension dim = desktopPane.getSize();
-
-			String scheme_id = (String)ae.getSource();
-			Scheme scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
-			scheme.unpack();
-
-			SchemePanelNoEdition panel = new SchemePanelNoEdition(aContext);
-			panel.ignore_loading = true;
-			//ElementsEditorFrame frame = new ElementsEditorFrame(aContext, panel);
-			SchemeViewerFrame frame = new SchemeViewerFrame(aContext, panel);
-			frame.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-			frame.setTitle(scheme.getName());
-			desktopPane.add(frame);
-
-			frame.setSize(4 * dim.width / 5, 3 * dim.height / 5);
-			frame.setLocation(0, 2 * dim.height / 5);//+ 25 * scheme_count
-			frame.setVisible(true);
-			frame.toFront();
-
-			panel.openScheme(scheme);
+			com.syrus.AMFICOM.general.corba.Identifier scheme_id =
+					(com.syrus.AMFICOM.general.corba.Identifier)ae.getSource();
+			try {
+				Scheme scheme = (Scheme)SchemeStorableObjectPool.getStorableObject(
+								scheme_id, true);
+				schemeTab.openScheme(scheme);
+			}
+			catch (ApplicationException ex) {
+				ex.printStackTrace();
+			}
 		}
 		else if (ae.getActionCommand().equals("addschemeelementevent"))
 		{
-			String se_id = (String)ae.getSource();
-			SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, se_id);
-			se.unpack();
-
-			SchemePanelNoEdition panel = new SchemePanelNoEdition(aContext);
-			panel.setGraphSize(new Dimension());
-			SchemeViewerFrame frame = new SchemeViewerFrame(aContext, panel);
-			frame.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-			frame.setTitle(se.getName());
-			desktopPane.add(frame);
-
-			Dimension dim = desktopPane.getSize();
-
-			frame.setSize(4 * dim.width / 5, 3 * dim.height / 5);
-			frame.setLocation(0, 2 * dim.height / 5);
-			frame.setVisible(true);
-			frame.toFront();
-			panel.openSchemeElement(se);
+			com.syrus.AMFICOM.general.corba.Identifier se_id =
+					(com.syrus.AMFICOM.general.corba.Identifier)ae.getSource();
+			try {
+				SchemeElement se = (SchemeElement)SchemeStorableObjectPool.getStorableObject(se_id, true);
+				schemeTab.openSchemeElement(se);
+			}
+			catch (ApplicationException ex) {
+				ex.printStackTrace();
+			}
 		}
 /**/
 		if(ae.getActionCommand().equals("contextchange"))
@@ -687,8 +663,8 @@ public class ModelMDIMain extends JFrame implements OperationListener
 
 				if(aContext.getSessionInterface().equals(ssi))
 				{
-					aContext.setSessionInterface(ssi);
-					aContext.setDataSourceInterface(aContext.getApplicationModel().getDataSource(aContext.getSessionInterface()));
+//					aContext.setSessionInterface(ssi);
+//					aContext.setDataSourceInterface(aContext.getApplicationModel().getDataSource(aContext.getSessionInterface()));
 
 					setSessionOpened();
 
@@ -702,8 +678,6 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				SessionInterface ssi = (SessionInterface)cce.getSource();
 				if(aContext.getSessionInterface().equals(ssi))
 				{
-					aContext.setDataSourceInterface(null);
-
 					setSessionClosed();
 
 					statusBar.setText("status", LangModel.getString("statusReady"));
@@ -714,18 +688,18 @@ public class ModelMDIMain extends JFrame implements OperationListener
 			if(cce.CONNECTION_OPENED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
+				if(ConnectionInterface.getInstance().equals(cci))
 				{
 					setConnectionOpened();
 
 					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
+					statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
 				}
 			}
 			if(cce.CONNECTION_CLOSED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
+				if(ConnectionInterface.getInstance().equals(cci))
 				{
 					statusBar.setText("status", LangModel.getString("statusError"));
 					statusBar.setText("server", LangModel.getString("statusConnectionError"));
@@ -739,7 +713,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 			if(cce.CONNECTION_FAILED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
+				if (ConnectionInterface.getInstance().equals(cci))
 				{
 					statusBar.setText("status", LangModel.getString("statusError"));
 					statusBar.setText("server", LangModel.getString("statusConnectionError"));
@@ -750,9 +724,17 @@ public class ModelMDIMain extends JFrame implements OperationListener
 			if(cce.DOMAIN_SELECTED)
 			{
 				setDomainSelected();
-				String name = ((ObjectResource)Pool.get("domain", aContext.getSessionInterface().getDomainId())).getName();
-				if(name != null)
-					statusBar.setText("domain", name);
+				try
+				{
+					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+							domain_id, true);
+					statusBar.setText("domain", domain.getName());
+				}
+				catch(ApplicationException ex)
+				{
+					ex.printStackTrace();
+				}
 			}
 		}
 	}
@@ -835,23 +817,21 @@ public class ModelMDIMain extends JFrame implements OperationListener
 
 	public void setSessionOpened()
 	{
-		this.checker = new Checker(this.aContext.getDataSourceInterface());
+		this.checker = new Checker(aContext.getDataSource());
 		if(!checker.checkCommand(checker.enterReflectoModelingWindow))
 			return;
 
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
-		new SurveyDataSourceImage(dataSource).LoadTestTypes();
-		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
-		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
-		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
-		new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
+//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
+//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
+//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
+//		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
+//		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
+//		new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
 
-		new SchemeDataSourceImage(dataSource).LoadNetDirectory();
-		new SchemeDataSourceImage(dataSource).LoadISMDirectory();
-
-		new SchemeDataSourceImage(dataSource).LoadSchemeProto();
-		new MapDataSourceImage(dataSource).LoadProtoElements();
+//		new SchemeDataSourceImage(dataSource).LoadNetDirectory();
+//		new SchemeDataSourceImage(dataSource).LoadISMDirectory();
+//		new SchemeDataSourceImage(dataSource).LoadSchemeProto();
+//		new MapDataSourceImage(dataSource).LoadProtoElements();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionDomain", true);
@@ -863,24 +843,16 @@ public class ModelMDIMain extends JFrame implements OperationListener
 
 		aModel.fireModelChanged("");
 
-		String domain_id = aContext.getSessionInterface().getDomainId();
-		if (domain_id != null && !domain_id.equals(""))
-		{
-			String name = ((ObjectResource)Pool.get("domain", domain_id)).getName();
-			if(name != null)
-				statusBar.setText("domain", name);
-			setDomainSelected();
-		}
+		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+		internal_dispatcher.notify(new ContextChangeEvent(domain_id, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 	}
 
 	public void setDomainSelected()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-
-		new SchemeDataSourceImage(dataSource).LoadSchemes();
-		new ConfigDataSourceImage(dataSource).LoadNet();
-		new ConfigDataSourceImage(dataSource).LoadISM();
-		new MapDataSourceImage(dataSource).LoadMaps();
+//		new SchemeDataSourceImage(dataSource).LoadSchemes();
+//		new ConfigDataSourceImage(dataSource).LoadNet();
+//		new ConfigDataSourceImage(dataSource).LoadISM();
+//		new MapDataSourceImage(dataSource).loadMaps();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 
@@ -946,7 +918,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 	{
 		internal_dispatcher.notify(new OperationEvent(this, 0, "mapcloseevent"));
 		internal_dispatcher.unregister(this, "contextchange");
-		Environment.the_dispatcher.unregister(this, "contextchange");
+		Environment.getDispatcher().unregister(this, "contextchange");
 		aContext.getApplicationModel().getCommand("menuExit").execute();
 	}
 
@@ -963,7 +935,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 			internal_dispatcher.notify(new OperationEvent(this, 0, "mapcloseevent"));
 
 			internal_dispatcher.unregister(this, "contextchange");
-			Environment.the_dispatcher.unregister(this, "contextchange");
+			Environment.getDispatcher().unregister(this, "contextchange");
 			aContext.getApplicationModel().getCommand("menuExit").execute();
 			return;
 		}
