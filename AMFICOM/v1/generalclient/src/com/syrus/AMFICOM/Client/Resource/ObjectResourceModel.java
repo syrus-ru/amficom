@@ -86,77 +86,58 @@ public class ObjectResourceModel{
 
 	public Collection getChildren(String key)
 	{
-//		System.out.println(" ORM: getChildren " + key);
 		return children;
+	}
+	
+	public int getColumnCount(){
+		throw new UnsupportedOperationException("this method must be override!");
 	}
 
 	public String getColumnValue(String col_id)
 	{
-//		System.out.println("      ORM: getValue " + col_id);
 		return "";
 	}
-/*	
-	public Component getColumnRenderer(String col_id)
-    {
-//		System.out.println("        ORM: getColumnRenderer " + col_id);
-		return null;//new JLabelRenderer(col_id);
-	}
 
-	public Component getColumnEditor(String col_id)
-    {
-//		System.out.println("         ORM: getColumnEditor " + col_id);
-		return null;//new TextFieldEditor(col_id);
-	}
-*/	
 	public List getPropertyColumns()
 	{
-//		System.out.println("           ORM: getPropertyColumns");
 		return propertyColumns;
 	}
 
 	public Component getPropertyEditor(String col_id)
     {
-//		System.out.println("                ORM: getPropertyEditor " + col_id);
-		return null;//getColumnEditor(col_id);
+		return null;
 	}
 
 	public String getPropertyName(String col_id)
 	{
-//		System.out.println("             ORM: getPropertyName " + col_id);
 		return "";
 	}
 
 	public PropertiesPanel getPropertyPane()
 	{
-//		System.out.println("  ORM: getPropertyPane");
 		return panel;
 	}
 	
 	public Component getPropertyRenderer(String col_id)
     {
-//		System.out.println("               ORM: getPropertyRenderer " + col_id);
-		return null;//getColumnRenderer(col_id);
+		return null;
 	}
 
 	public String getPropertyValue(String col_id)
 	{
-//		System.out.println("            ORM: getPropertyValue " + col_id);
 		return "";
 	}
 	
 	public boolean isPropertyEditable(String col_id)
 	{
-//		System.out.println("                  ORM: isEditable " + col_id);
 		return false;
 	}
 
 	public void setColumnValue(String col_id, Object val)
 	{
-//		System.out.println("       ORM: setValue " + col_id + " " + val);
 	}
 
 	public void setPropertyValue(String col_id, Object val)
 	{
-//		System.out.println("              ORM: setPropertyValue " + col_id + " " + val);
 	}
 }
