@@ -1,57 +1,55 @@
-/*
- * $Id: SOTextRenderer.java,v 1.2 2005/03/21 09:49:19 stas Exp $
+/*-
+ * $Id: IconedRenderer.java,v 1.1 2005/03/30 13:27:20 stas Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.client_.general.ui_.tree;
+package com.syrus.AMFICOM.client_.general.ui_.tree_;
 
 import java.awt.*;
-import java.awt.Color;
 
 import javax.swing.*;
-import javax.swing.JLabel;
 import javax.swing.tree.TreeCellRenderer;
+
+import com.syrus.AMFICOM.logic.Item;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/21 09:49:19 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/30 13:27:20 $
  * @module generalclient_v1
  */
 
-public class SOTextRenderer extends JLabel implements TreeCellRenderer {
-	private static final long serialVersionUID = 3689072858814887473L;
-	
+public class IconedRenderer extends JLabel implements TreeCellRenderer {
+	private static IconedRenderer instance;
 	/**
 	 * @todo fill following fields from UIDefaults 
 	 */
-	public static Color selectedBackground = Color.BLUE;
-	public static Color selectedForeground = Color.WHITE;
-	
+	private Color selectedBackground = Color.BLUE;
+	private Color selectedForeground = Color.WHITE;
 	private boolean selected = false; 
-	private static SOTextRenderer instance;
 	
-	private SOTextRenderer() {
+	private IconedRenderer() {
 		// empty
 	}
 	
-	public static SOTextRenderer getInstance() {
+	public static IconedRenderer getInstance() {
 		if (instance == null) {
-			instance = new SOTextRenderer();
+			instance = new IconedRenderer();
 		}
 		return instance;
 	}
 	
 	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 		this.selected = selected;
-		SONode node = (SONode )value;
+		Item node = (Item)value;
 		setText(node.getName());
-		setIcon(node.getIcon());
+		if (node instanceof IconedNode)
+			setIcon(((IconedNode)node).getIcon());
 
 		if (!selected) {
-			setForeground(node.getColor());
+			setForeground(tree.getForeground());
 			setBackground(tree.getBackground());
 		}
 		else {
@@ -62,11 +60,11 @@ public class SOTextRenderer extends JLabel implements TreeCellRenderer {
 	}
 	
 	protected void paintComponent (Graphics g) {
-		if (selected) {
+		if (this.selected) {
 			int x = 0;
-			Icon icon = instance.getIcon();
-			if (icon != null) {
-				x += icon.getIconWidth() + getIconTextGap(); 
+			Icon icon1 = getIcon();
+			if (icon1 != null) {
+				x += icon1.getIconWidth() + getIconTextGap(); 
 			}
 			g.setColor(selectedBackground);
 			Insets i = getInsets();
@@ -75,4 +73,3 @@ public class SOTextRenderer extends JLabel implements TreeCellRenderer {
 		super.paintComponent(g);
 	}
 }
-

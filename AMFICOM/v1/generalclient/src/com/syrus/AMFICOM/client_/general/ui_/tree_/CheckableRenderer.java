@@ -1,12 +1,12 @@
-/*
- * $Id: SOCheckboxRenderer.java,v 1.2 2005/03/21 09:49:19 stas Exp $
+/*-
+ * $Id: CheckableRenderer.java,v 1.1 2005/03/30 13:27:20 stas Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.client_.general.ui_.tree;
+package com.syrus.AMFICOM.client_.general.ui_.tree_;
 
 import java.awt.*;
 
@@ -14,13 +14,15 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicRadioButtonUI;
 import javax.swing.tree.TreeCellRenderer;
 
+import com.syrus.AMFICOM.logic.Item;
+
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/21 09:49:19 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/30 13:27:20 $
  * @module generalclient_v1
  */
 
-public class SOCheckboxRenderer extends JCheckBox implements TreeCellRenderer {
+public class CheckableRenderer extends JCheckBox implements TreeCellRenderer {
 	private static final long serialVersionUID = 3258125877622683441L;
 	/**
 	 * @todo fill following fields from UIDefaults 
@@ -30,15 +32,15 @@ public class SOCheckboxRenderer extends JCheckBox implements TreeCellRenderer {
 	public static Color selectedForeground = Color.WHITE;
 	
 	private boolean selected = false; 
-	private static SOCheckboxRenderer instance;
+	private static CheckableRenderer instance;
 	
-	private SOCheckboxRenderer() {
+	private CheckableRenderer() {
 		// empty
 	}
 	
-	public static SOCheckboxRenderer getInstance() {
+	public static CheckableRenderer getInstance() {
 		if (instance == null) {
-			instance = new SOCheckboxRenderer();
+			instance = new CheckableRenderer();
 			instance.setOpaque(false);
 			instance.setFocusable(false);
 		}
@@ -47,30 +49,26 @@ public class SOCheckboxRenderer extends JCheckBox implements TreeCellRenderer {
 	
 	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 		this.selected = selected;
-		SONode node = (SONode)value;
+		Item node = (Item)value;
 		setText(node.getName());
-		/**
-		 * setIcon(node.getIcon());
-		 * - ignored here as it replaces default checkbox icon
-		 */
 		
 		if (!selected) {
-			setForeground(node.getColor());
+			setForeground(tree.getForeground());
 			setBackground(tree.getBackground());
 		}
 		else {
 			setForeground(selectedForeground);
 			setBackground(selectedBackground);
 		}
-		if (node instanceof SOCheckableNode) {
-			setSelected(((SOCheckableNode)node).isChecked());
+		if (node instanceof CheckableNode) {
+			setSelected(((CheckableNode)node).isChecked());
 		}
 		return this;
 	}
 	
 	public Dimension getPreferredSize() {
 		Dimension ps = super.getPreferredSize();
-		return new Dimension(ps.width, SOCheckboxRenderer.preferredHeight);
+		return new Dimension(ps.width, preferredHeight);
 	}
 
 	protected void paintComponent(Graphics g) {
@@ -87,4 +85,3 @@ public class SOCheckboxRenderer extends JCheckBox implements TreeCellRenderer {
 		super.paintComponent(g);
 	}
 }
-
