@@ -13,3 +13,4 @@ lib
 .client
 Makefile.inc
 bak
+doc
