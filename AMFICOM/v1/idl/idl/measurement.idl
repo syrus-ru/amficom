@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.37 2004/11/19 12:25:28 bob Exp $
+ * $Id: measurement.idl,v 1.38 2004/12/24 09:45:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ module corba {
 		wstring description;
 
 		wstring name;
-		com::syrus::AMFICOM::general::corba::DataType sort;
+		com::syrus::AMFICOM::general::corba::DataType data_type;
 	};	
 	typedef sequence <ParameterType_Transferable> ParameterTypeSeq_Transferable;
 
