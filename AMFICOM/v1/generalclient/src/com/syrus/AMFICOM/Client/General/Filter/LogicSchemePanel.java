@@ -18,7 +18,7 @@ public class LogicSchemePanel extends JPanel
 	LogicScheme logicScheme = null;
 	private LogicSchemeWindow lsWindow = null;
 
-	ProSchemeElement_yo selectedElement = null;
+	ProSchemeElementBase selectedElement = null;
 	ElementsActiveZone firstActiveZone = null;
 
 	private int mouseClickedX = 0;

@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.filter.*;
 import java.awt.event.*;
 
-public class LogicScheme extends LogicScheme_yo
+public class LogicScheme extends LogicSchemeBase
 {
 	public LogicScheme(ObjectResourceFilter filter)
 	{
@@ -61,8 +61,8 @@ public class LogicScheme extends LogicScheme_yo
 		return new FilterExpression();
 	}
 
-	public ElementsActiveZone_yo createElementsActiveZone(
-			LogicSchemeElement_yo owner,
+	public ElementsActiveZoneBase createElementsActiveZone(
+			LogicSchemeElementBase owner,
 				String zoneType,
 				int size,
 				int x,
@@ -76,18 +76,18 @@ public class LogicScheme extends LogicScheme_yo
 				y);
 	}
 
-	public FinishedLink_yo createFinishedLink(ElementsActiveZone_yo from, ElementsActiveZone_yo to)
+	public FinishedLinkBase createFinishedLink(ElementsActiveZoneBase from, ElementsActiveZoneBase to)
 	{
 		return new FinishedLink((ElementsActiveZone )from, (ElementsActiveZone )to);
 	}
 
-	public LogicSchemeElement_yo createLogicSchemeElement(
+	public LogicSchemeElementBase createLogicSchemeElement(
 			String type,
 				FilterExpressionInterface fe,
 				String operandType,
 				int itsX,
 				int itsY,
-				LogicScheme_yo ls)
+				LogicSchemeBase ls)
 	{
 		return new LogicSchemeElement(
 				type,
@@ -188,7 +188,7 @@ public class LogicScheme extends LogicScheme_yo
 		for (int i = 0; i < this.schemeElements.size(); i++)
 		{
 			LogicSchemeElement curLSE = (LogicSchemeElement) this.schemeElements.get(i);
-			if (curLSE.type.equals(LogicSchemeElement_yo.t_condition))
+			if (curLSE.type.equals(LogicSchemeElementBase.t_condition))
 			{
 				FilterExpression fe = (FilterExpression) curLSE.filterExpression;
 				if (fe.isTemplate())

@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 
 import com.syrus.AMFICOM.filter.*;
 
-public class LogicSchemeElement extends LogicSchemeElement_yo
+public class LogicSchemeElement extends LogicSchemeElementBase
 {
 	public LogicSchemeElement(
 			String type,

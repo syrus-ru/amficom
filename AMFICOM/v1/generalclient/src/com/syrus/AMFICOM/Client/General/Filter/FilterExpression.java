@@ -22,11 +22,11 @@ public class FilterExpression extends StubResource implements FilterExpressionIn
 	public static final String TIME_EXPRESSION = "time";
 	public static final String LIST_EXPRESSION = "list";
 
-	private FilterExpression_yo fe;
+	private FilterExpressionBase fe;
 
 	public FilterExpression()
 	{
-		fe = new FilterExpression_yo();
+		fe = new FilterExpressionBase();
 	}
 
 	public String getName()
