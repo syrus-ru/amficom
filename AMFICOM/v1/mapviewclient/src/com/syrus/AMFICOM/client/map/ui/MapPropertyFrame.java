@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertyFrame.java,v 1.2 2004/09/17 11:39:25 krupenn Exp $
+ * $Id: MapPropertyFrame.java,v 1.3 2004/09/29 15:11:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,47 +12,46 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertyFrame;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertyTableModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
+import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesTable;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesTableModel;
 
-import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JScrollPane;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 /**
  *  Окно отображения свойств элемента карты
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/17 11:39:25 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/29 15:11:26 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public final class MapPropertyFrame extends JInternalFrame
-		implements OperationListener
+		implements OperationListener, TableModelListener
 {
 	public ApplicationContext aContext;
 
-	ObjectResourceTable table;
-	ObjectResourceTableModel model;
-	ObjectResourceController controller;
+	ObjectResourcePropertiesTable table = null;
+	ObjectResourcePropertiesTableModel model = null;
+	ObjectResourcePropertiesController controller = null;
 	
 	ObjectResource or;
 
@@ -80,7 +79,7 @@ public final class MapPropertyFrame extends JInternalFrame
 
 		getContentPane().setLayout(new BorderLayout());
 
-//		getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
+		getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -104,93 +103,36 @@ public final class MapPropertyFrame extends JInternalFrame
 
 	public void initialize()
 	{
-//		controller = new ObjectResourcePropertiesController();
-//		model = new ObjectResourceTableModel(controller);
-//		table = new ObjectResourceTable(model);
+		model = new ObjectResourcePropertiesTableModel(controller);
+		table = new ObjectResourcePropertiesTable(model);
+		model.addTableModelListener(this);
 	}
 
 	public void setObjectResource(ObjectResource or)
 	{
-//		controler.setObjectResource(or);
+		controller = MapPropsManager.getPropertiesController((MapElement )or);
+		model.setObjectResource(or);
+		model.setController(controller);
 		table.updateUI();
 	}
 
 	public void operationPerformed(OperationEvent oe )
 	{
-/*
-		super.operationPerformed(oe);
-		if(oe.getActionCommand().equals(MapEvent.MAP_DESELECTED))
-		{
-			panel.setSelected(null);
-		}
 		if(oe.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
 		{
 			MapNavigateEvent mne = (MapNavigateEvent )oe;
-			if(mne.MAP_ELEMENT_SELECTED)
+			if(mne.isMapElementSelected())
 			{
 				ObjectResource me = (ObjectResource )mne.getSource();
-				panel.setSelected(me);
+				setObjectResource(me);
 			}
 		}
-*/
 	}
 
-/*
-	private class ObjectResourcePropertiesController extends ObjectResourceController
+	public void tableChanged(TableModelEvent e)
 	{
-//		ApplicationContext aContext;
-		public static final String KEY_PROPERTY = "property";
-		public static final String KEY_VALUE = "value";
-	
-		private static ObjectResourcePropertiesController instance;
-	
-		private List keys;
-		
-		private ObjectResourcePropertiesController() 
-		{
-			// empty private constructor
-			String[] keysArray = new String[] { KEY_PROPERTY, KEY_VALUE};
-		
-			this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
-		}
-
-		public static ObjectResourcePropertiesController getInstance() 
-		{
-			if (instance == null)
-				instance = new ObjectResourcePropertiesController();
-			return instance;
-		}
-	
-		public List getKeys()
-		{
-			return this.keys;
-		}
-	
-		public String getName(final String key)
-		{
-			String name = null;
-			if (key.equals(KEY_PROPERTY))
-				name = LangModelMap.getString("Property");
-			else
-			if (key.equals(KEY_VALUE))
-				name = LangModelMap.getString("Value");
-			return name;
-		}
-
-		public void setObjectResource(ObjectResource or)
-		{
-			controler.setObjectResource(or);
-			table.updateUI();
-		}
-
-		public boolean isCellEditable(int p_row, int p_col)
-		{
-			if(!aContext.getApplicationModel().isEnabled("mapActionEditProperties"))
-				return false;
-	
-			return true;
-//			return super.isCellEditable(p_row, p_col);
-		}
+		Dispatcher disp = aContext.getDispatcher();
+		if(disp != null)
+			disp.notify(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
-*/
 }

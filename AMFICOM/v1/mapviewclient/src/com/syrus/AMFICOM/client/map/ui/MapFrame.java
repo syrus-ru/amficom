@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
+ * $Id: MapFrame.java,v 1.3 2004/09/29 15:11:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -66,7 +66,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/29 15:11:26 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -296,6 +296,7 @@ public class MapFrame extends JInternalFrame
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_NAVIGATE);
 				this.aContext.getDispatcher().unregister(this, MapEvent.PLACE_ELEMENT);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_CENTER_CHANGED);
+				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_CHANGED);
 				this.aContext.getDispatcher().unregister(this, SchemeNavigateEvent.type);
 				this.aContext.getDispatcher().unregister(this, CatalogNavigateEvent.type);
 				this.aContext.getDispatcher().unregister(this, TreeListSelectionEvent.typ);
@@ -313,6 +314,7 @@ public class MapFrame extends JInternalFrame
 			aContext.getDispatcher().register(this, MapEvent.MAP_NAVIGATE);
 			aContext.getDispatcher().register(this, MapEvent.PLACE_ELEMENT);
 			aContext.getDispatcher().register(this, MapEvent.MAP_CENTER_CHANGED);
+			aContext.getDispatcher().register(this, MapEvent.MAP_CHANGED);
 			aContext.getDispatcher().register(this, SchemeNavigateEvent.type);
 			aContext.getDispatcher().register(this, CatalogNavigateEvent.type);
 			aContext.getDispatcher().register(this, TreeListSelectionEvent.typ);
@@ -396,6 +398,11 @@ public class MapFrame extends JInternalFrame
 		if(ae.getActionCommand().equals(MapEvent.MAP_DESELECTED))
 		{
 			mapToolBar.setEnableDisablePanel(false);
+		}
+		else
+		if(ae.getActionCommand().equals(MapEvent.MAP_CHANGED))
+		{
+			getMapViewer().getLogicalNetLayer().operationPerformed(ae);
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_NAVIGATE))

@@ -181,7 +181,7 @@ public final class MapSchemeTreePanel extends JPanel
 		if(oe.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
 		{
 			MapNavigateEvent mne = (MapNavigateEvent )oe;
-			if(mne.MAP_ELEMENT_SELECTED)
+			if(mne.isMapElementSelected())
 			{
 				ObjectResource me = (ObjectResource )mne.getSource();
 			}

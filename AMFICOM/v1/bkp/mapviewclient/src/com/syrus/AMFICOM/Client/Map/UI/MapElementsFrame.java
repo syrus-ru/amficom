@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsFrame.java,v 1.2 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: MapElementsFrame.java,v 1.3 2004/09/29 15:11:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import javax.swing.JInternalFrame;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/29 15:11:26 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -116,9 +116,11 @@ public class MapElementsFrame extends JInternalFrame
 			if(panel.performProcessing)
 				setMap(((MapView)ae.getSource()).getMap());
 		if(	ae.getActionCommand().equals(MapEvent.MAP_CHANGED))
-			panel.updateTable();
+			if(panel.performProcessing)
+				panel.updateTable();
 		if(	ae.getActionCommand().equals(MapEvent.SELECTION_CHANGED))
-			panel.setSelectedObjects();
+			if(panel.performProcessing)
+				panel.setSelectedObjects();
 		if(	ae.getActionCommand().equals(MapEvent.MAP_FRAME_SHOWN))
 		{
 			MapFrame mapFrame = (MapFrame)ae.getSource();

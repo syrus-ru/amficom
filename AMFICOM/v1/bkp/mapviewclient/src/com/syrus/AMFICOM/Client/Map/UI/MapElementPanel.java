@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementPanel.java,v 1.3 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: MapElementPanel.java,v 1.4 2004/09/29 15:11:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,9 +12,12 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
@@ -57,7 +60,7 @@ import javax.swing.event.ListSelectionListener;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/29 15:11:26 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -112,13 +115,15 @@ public final class MapElementPanel extends JPanel
 	void jbInit()
 	{
 		typeComboBox.addItem(MapSiteNodeElement.typ);
+		typeComboBox.addItem("mapwellnode");
+		typeComboBox.addItem("mappiquetnode");
 		typeComboBox.addItem(MapPhysicalLinkElement.typ);
 		typeComboBox.addItem(MapPipePathElement.typ);
 		typeComboBox.addItem(MapCablePathElement.typ);
 //		typeComboBox.addItem(SchemeElement.typ);
 		typeComboBox.addItem(MapPhysicalNodeElement.typ);
 		typeComboBox.addItem(MapMarkElement.typ);
-		typeComboBox.addItem(com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement.typ);
+		typeComboBox.addItem(MapMeasurementPathElement.typ);
 		typeComboBox.addItem(MapMarker.typ);
 
 		typeComboBox.addActionListener(new java.awt.event.ActionListener()
@@ -235,8 +240,13 @@ public final class MapElementPanel extends JPanel
 					}
 				}
 				mouseSelect = true;
+
+				if(disp != null)
+				{
+					disp.notify(new MapEvent(this, MapNavigateEvent.MAP_CHANGED));
+//			logicalNetLayer.repaint();
+				}
 			}
-			logicalNetLayer.repaint();
 		}
 		catch(Exception e)
 		{
@@ -256,7 +266,36 @@ public final class MapElementPanel extends JPanel
 		if(map != null)
 		{
 			if(selection.equals(MapSiteNodeElement.typ))
-				dataSet = map.getMapSiteNodeElements();
+			{
+				for(Iterator it = map.getMapSiteNodeElements().iterator(); it.hasNext();)
+				{
+					MapSiteNodeElement site = (MapSiteNodeElement )it.next();
+					if(		!site.getMapProtoId().equals(MapNodeProtoElement.WELL)
+						&&	!site.getMapProtoId().equals(MapNodeProtoElement.PIQUET)
+						&&	!site.getMapProtoId().equals(MapNodeProtoElement.WELL) )
+							dataSet.add(site);
+				}
+			}
+			else
+			if(selection.equals("mapwellnode"))
+			{
+				for(Iterator it = map.getMapSiteNodeElements().iterator(); it.hasNext();)
+				{
+					MapSiteNodeElement site = (MapSiteNodeElement )it.next();
+					if(site.getMapProtoId().equals(MapNodeProtoElement.WELL))
+						dataSet.add(site);
+				}
+			}
+			else
+			if(selection.equals("mappiquetnode"))
+			{
+				for(Iterator it = map.getMapSiteNodeElements().iterator(); it.hasNext();)
+				{
+					MapSiteNodeElement site = (MapSiteNodeElement )it.next();
+					if(site.getMapProtoId().equals(MapNodeProtoElement.PIQUET))
+						dataSet.add(site);
+				}
+			}
 			else
 			if(selection.equals(MapPhysicalLinkElement.typ))
 				dataSet = map.getPhysicalLinks();
@@ -339,7 +378,7 @@ public final class MapElementPanel extends JPanel
 				boolean isSelected,
 				boolean cellHasFocus)
 		{
-			String text = LangModel.getString("node" + (String )value);
+			String text = LangModelMap.getString((String )value);
 			return super.getListCellRendererComponent(
 				list, text, index, isSelected, cellHasFocus);
 		}
