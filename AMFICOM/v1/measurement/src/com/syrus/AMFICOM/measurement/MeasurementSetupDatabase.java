@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.23 2004/09/09 10:08:54 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.24 2004/09/16 08:07:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.DomainMember;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -30,7 +32,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/09/09 10:08:54 $
+ * @version $Revision: 1.24 $, $Date: 2004/09/16 08:07:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -549,8 +551,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retriveByIdsOneQuery(null, condition);
-		else list = retriveByIdsOneQuery(ids, condition);
+			list = retrieveByIdsOneQuery(null, condition);
+		else list = retrieveByIdsOneQuery(ids, condition);
 		
 		for(Iterator it=list.iterator();it.hasNext();){
 			MeasurementSetup measurementSetup = (MeasurementSetup)it.next();
@@ -558,6 +560,25 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 		
 		return list;	
+	}
+	
+	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+		List list = null;
+		
+		String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
+				+ SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
+				+ SQL_WHERE + LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET
+					+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
+					+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString()
+					+ CLOSE_BRACKET
+				+ CLOSE_BRACKET;		
+		try {
+			list = retrieveButIds(ids, condition);
+		}  catch (IllegalDataException ide) {			
+			Log.debugMessage("MeasurementSetupDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+		}
+		
+		return list;
 	}
 
 }
