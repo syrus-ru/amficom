@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.5 2004/08/09 11:54:14 arseniy Exp $
+ * $Id: Server.java,v 1.6 2004/08/09 12:04:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/09 11:54:14 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/09 12:04:23 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -31,8 +31,6 @@ public class Server extends DomainMember implements Characterized {
 	private String name;
 	private String description;
 	private Identifier userId;
-	private String location;
-	private String hostname;
 	private List characteristicIds;
 
 	private List mcms;
@@ -61,8 +59,6 @@ public class Server extends DomainMember implements Characterized {
 		this.name = new String(st.name);
 		this.description = new String(st.description);
 		this.userId = new Identifier(st.user_id);
-		this.location = new String(st.location);
-		this.hostname = new String(st.hostname);
 
 		this.characteristicIds = new ArrayList(st.characteristic_ids.length);
 		for (int i = 0; i < st.characteristic_ids.length; i++)
@@ -98,8 +94,6 @@ public class Server extends DomainMember implements Characterized {
 																	 new String(this.name),
 																	 new String(this.description),
 																	 (Identifier_Transferable)this.userId.getTransferable(),
-																	 new String(this.location),
-																	 new String(this.hostname),
 																	 charIds,
 																	 mcmIds);
 	}
@@ -114,14 +108,6 @@ public class Server extends DomainMember implements Characterized {
 
 	public Identifier getUserId() {
 		return this.userId;
-	}
-
-	public String getLocation() {
-		return this.location;
-	}
-
-	public String getHostName() {
-		return this.hostname;
 	}
 
 	public List getCharacteristicIds() {
@@ -143,9 +129,7 @@ public class Server extends DomainMember implements Characterized {
 																						Identifier domainId,
 																						String name,
 																						String description,
-																						Identifier userId,
-																						String location,
-																						String hostname) {
+																						Identifier userId) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
@@ -154,8 +138,6 @@ public class Server extends DomainMember implements Characterized {
 		this.name = name;
 		this.description = description;
 		this.userId = userId;
-		this.location = location;
-		this.hostname = hostname;
 	}
 
 	protected synchronized void setMCMs(List mcms) {

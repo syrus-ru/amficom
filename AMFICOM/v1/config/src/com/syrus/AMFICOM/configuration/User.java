@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.1 2004/08/09 11:54:14 arseniy Exp $
+ * $Id: User.java,v 1.2 2004/08/09 12:04:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.corba.UserSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/09 11:54:14 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/09 12:04:23 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -56,5 +56,59 @@ public class User extends StorableObject {
 		this.sort = ut.sort.value();
 		this.name = new String(ut.name);
 		this.description = new String(ut.description);
+
+		this.userDatabase = ConfigurationDatabaseContext.userDatabase;
+		try {
+			this.userDatabase.insert(this);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+	}
+
+	public Object getTransferable() {
+		return new User_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+																 super.created.getTime(),
+																 super.modified.getTime(),
+																 (Identifier_Transferable)super.creatorId.getTransferable(),
+																 (Identifier_Transferable)super.modifierId.getTransferable(),
+																 new String(this.login),
+																 UserSort.from_int(this.sort),
+																 new String(this.name),
+																 new String(this.description));
+	}
+
+	public String getLogin() {
+		return this.login;
+	}
+
+	public UserSort getSort() {
+		return UserSort.from_int(this.sort);
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						String login,
+																						int sort,
+																						String name,
+																						String description) {
+		super.setAttributes(created,
+												modified,
+												creatorId,
+												modifierId);
+		this.login = login;
+		this.sort = sort;
+		this.name = name;
+		this.description = description;
 	}
 }
