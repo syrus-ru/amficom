@@ -113,7 +113,12 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 		if (ep.type == EventParams::REFLECTIVE)
 		{
 			fprintf(stderr, " --            R1 %.1f R2 %.1f R3 %.1f",
-				ep.R1, ep.R3, ep.R3);
+				ep.R1, ep.R2, ep.R3);
+		}
+		if (ep.type == EventParams::DEADZONE)
+		{
+			fprintf(stderr, " --   R2 %.1f",
+				ep.R2);
 		}
 		fprintf(stderr, "\n");
 #endif
