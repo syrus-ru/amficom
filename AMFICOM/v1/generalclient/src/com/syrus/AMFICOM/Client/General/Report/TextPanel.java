@@ -18,15 +18,13 @@ import javax.swing.JTextPane;
 
 public class TextPanel extends JScrollPane
 {
-	private RenderingObject ro = null;
-	private JTextPane dataPane = null;
+	public JTextPane dataPane = null;
 
 	public TextPanel(ObjectsReport rp)
 			throws CreateReportException
 	{
 		try
 		{
-			this.ro = ro;
       this.dataPane = (JTextPane)rp.getReserve();
 
 			jbInit();

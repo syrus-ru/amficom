@@ -62,7 +62,7 @@ public class CreateSurveyReportCommand extends VoidCommand
     if (mainFrame.alarmPopupFrame != null)
         report.addRecord(
           orModel.getLangForField(ObserveReportModel.alarm_info),
-          mainFrame.alarmPopupFrame.getDescriptionText());
+          mainFrame.alarmPopupFrame.getDescriptionPane());
       
     if (mainFrame.resultFrame != null)
         report.addRecord(

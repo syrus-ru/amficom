@@ -8,6 +8,7 @@ import javax.swing.JFileChooser;
 
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import com.sun.image.codec.jpeg.JPEGCodec;
+import javax.swing.JTextPane;
 import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
 
@@ -1180,60 +1181,8 @@ public class ReportTemplateImplementationPanel extends JPanel
 						{
 							FirmedTextPane label = (FirmedTextPane)this.labels.get(
 								matrix[row][col]);
-
-							String fontName = label.getFont().getName();
-
-							String fontSize = null;
-
-							fontSize = new Integer(
-								label.getFont().getSize()).toString();
-
-							String textBuffer = label.getText();
-							int curIndex = 0;
-							while (curIndex < textBuffer.length())
-							{
-								if (textBuffer.charAt(curIndex) == ' ')
-								{
-									textBuffer = textBuffer.substring(0, curIndex) +
-													 "&nbsp;" +
-													 textBuffer.substring(
-										curIndex + 1, textBuffer.length());
-								}
-								if (textBuffer.charAt(curIndex) == '\n')
-								{
-									textBuffer = textBuffer.substring(0, curIndex) +
-													 "<br>" +
-													 textBuffer.substring(
-										curIndex + 1, textBuffer.length());
-								}
-								curIndex++;
-							}
-
-							String italicTagStart = "";
-							String italicTagEnd = "";
-							if (label.getFont().isItalic())
-							{
-								italicTagStart = "<i>";
-								italicTagEnd = "</i>";
-							}
-
-							String boldTagStart = "";
-							String boldTagEnd = "";
-							if (label.getFont().isBold())
-							{
-								boldTagStart = "<b>";
-								boldTagEnd = "</b>";
-							}
-
-							String fontBuffer = " style=\"font-size: " + fontSize;
-
-							fontBuffer += "px";
-							fontBuffer += ";\">" +
-								"<font face=\"" + fontName + "\">" +
-								boldTagStart + italicTagStart + textBuffer +
-								italicTagEnd + boldTagEnd + "</font>";
-
-							out.write(fontBuffer.getBytes());
+                
+              writeTextPane(label,out);  
 						}
 						else if (matrix[row][col] >= this.labels.size() + this.objects.size())
 						{
@@ -1294,14 +1243,40 @@ public class ReportTemplateImplementationPanel extends JPanel
 								matrix[row][col] - this.labels.size());
 
 							if (ro.rendererPanel.insidePanel instanceof
+								 TextPanel)
+              {
+								//Отчёт с текстовым полем
+  							out.write(">".getBytes());
+								JScrollPane sp = (JScrollPane) ro.rendererPanel.
+													  insidePanel;
+                            
+								if (sp == null)
+									continue;
+
+								JTextPane textPane = (JTable) sp.getViewport().getView();
+								textPane.setSize(sp.getPreferredSize());
+								this.writeTextPane(textPane,out);
+              }
+
+							else if (ro.rendererPanel.insidePanel instanceof
 								 ReportResultsTablePanel)
+              {
+								//Таблица
 								out.write("valign=\"Top\"".getBytes());
+  							out.write(">".getBytes());
+								JScrollPane sp = (JScrollPane) ro.rendererPanel.
+													  insidePanel;
+                            
+								if (sp == null)
+									continue;
 
-							out.write(">".getBytes());
-
-							if (!(ro.rendererPanel.insidePanel instanceof
-									ReportResultsTablePanel))
+								JTable itsTable = (JTable) sp.getViewport().getView();
+								itsTable.setSize(sp.getPreferredSize());
+								this.writeTable(out, itsTable, beforePrinting);
+              }
+							else 
 							{
+  							out.write(">".getBytes());              
 								//Создаём каталог path/fileName.files
 								File f = new File(fileName);
 								String fileNameWOPNE =
@@ -1360,18 +1335,6 @@ public class ReportTemplateImplementationPanel extends JPanel
 													 getPreferredSize(),
 													 tagImageFileName);
 								imagesSaved++;
-							}
-							else
-							{
-								//Таблица
-								JScrollPane sp = (JScrollPane) ro.rendererPanel.
-													  insidePanel;
-								if (sp == null)
-									continue;
-
-								JTable itsTable = (JTable) sp.getViewport().getView();
-								itsTable.setSize(sp.getPreferredSize());
-								this.writeTable(out, itsTable, beforePrinting);
 							}
 						}
 					}
@@ -1667,6 +1630,65 @@ public class ReportTemplateImplementationPanel extends JPanel
 		buffer += "</table>\n\n";
 		out.write(buffer.getBytes());
 	}
+
+  private void writeTextPane (JTextPane label,
+                             FileOutputStream out)
+  {
+    String fontName = label.getFont().getName();
+
+    String fontSize = null;
+
+    fontSize = new Integer(
+      label.getFont().getSize()).toString();
+
+    String textBuffer = label.getText();
+    int curIndex = 0;
+    while (curIndex < textBuffer.length())
+    {
+      if (textBuffer.charAt(curIndex) == ' ')
+      {
+        textBuffer = textBuffer.substring(0, curIndex) +
+                 "&nbsp;" +
+                 textBuffer.substring(
+          curIndex + 1, textBuffer.length());
+      }
+      if (textBuffer.charAt(curIndex) == '\n')
+      {
+        textBuffer = textBuffer.substring(0, curIndex) +
+                 "<br>" +
+                 textBuffer.substring(
+          curIndex + 1, textBuffer.length());
+      }
+      curIndex++;
+    }
+
+    String italicTagStart = "";
+    String italicTagEnd = "";
+    if (label.getFont().isItalic())
+    {
+      italicTagStart = "<i>";
+      italicTagEnd = "</i>";
+    }
+
+    String boldTagStart = "";
+    String boldTagEnd = "";
+    if (label.getFont().isBold())
+    {
+      boldTagStart = "<b>";
+      boldTagEnd = "</b>";
+    }
+
+    String fontBuffer = " style=\"font-size: " + fontSize;
+
+    fontBuffer += "px";
+    fontBuffer += ";\">" +
+      "<font face=\"" + fontName + "\">" +
+      boldTagStart + italicTagStart + textBuffer +
+      italicTagEnd + boldTagEnd + "</font>";
+
+    out.write(fontBuffer.getBytes());
+  
+  }
 
 	public void printReport()
 	{

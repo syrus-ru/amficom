@@ -101,14 +101,14 @@ public class SchemeReportModel extends APOReportModel
 	{
 		SchemeRenderPanel schemePanel = null;
 
-		if (   rp.field.equals(SchemeReportModel.scheme)
+		if (  rp.field.equals(SchemeReportModel.scheme)
 			 || rp.field.equals(SchemeReportModel.ugo))
 		{
 			Scheme sc = null;
 
-			if (rp.getReserve() instanceof AMTReportPanel)
+			if (rp.getReserve() instanceof UgoPanel)
 			{
-				sc = ((UgoPanel)((AMTReportPanel) rp.getReserve()).panel).scheme;
+				sc = ((UgoPanel) rp.getReserve()).scheme;
 			}
 			else
 			{
@@ -117,12 +117,6 @@ public class SchemeReportModel extends APOReportModel
 					throw new CreateReportException(
 						rp.getName(),
 						CreateReportException.cantImplement);
-
-/*				SchemeGraph schemeGraph = schemePanel.getGraph();
-
-
-				returnValue = new SchemeRenderPanel(reportsRO, schemeGraph);*/
-
 			}
 
 			schemePanel = new SchemeRenderPanel(aContext);
