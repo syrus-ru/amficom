@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.6 2005/02/08 20:12:37 arseniy Exp $
+ * $Id: Event.java,v 1.7 2005/02/14 13:09:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.event;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -31,12 +32,10 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/08 20:12:37 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/14 13:09:40 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -51,7 +50,7 @@ public class Event extends StorableObject implements TypedObject {
 	private String description;
 
 	private EventParameter[] parameters;
-	private List eventSourceIds; //List <Identifier>
+	private Collection eventSourceIds; //Collection <Identifier>
 
 	private StorableObjectDatabase eventDatabase;
 
@@ -99,22 +98,24 @@ public class Event extends StorableObject implements TypedObject {
 
 	protected Event(Identifier id,
 					   Identifier creatorId,
+					   long version,
 					   EventType type,
 						 String description,
 						 EventParameter[] parameters,
 						 List eventSourceIds) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version);
 		this.type = type;
 		this.status = EventStatus._EVENT_STATUS_GENERATED;
 		this.description = description;
 		this.parameters = parameters;
-		this.eventSourceIds = eventSourceIds;
-
-		super.currentVersion = super.getNextVersion();
+		
+		this.eventSourceIds = new ArrayList();
+		this.eventSourceIds.addAll(eventSourceIds);
 
 		this.eventDatabase = EventDatabaseContext.eventDatabase;
 	}
@@ -138,25 +139,18 @@ public class Event extends StorableObject implements TypedObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new Event(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENT_ENTITY_CODE),
+			Event event = new Event(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENT_ENTITY_CODE),
 											creatorId,
+											0L,
 											type,
 											description,
 											parameters,
 											eventSourceIds);
+			event.changed = true;
+			return event;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Event.createInstance | cannot generate identifier ", e);
-		}
-	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.eventDatabase != null)
-				this.eventDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
 
@@ -194,36 +188,23 @@ public class Event extends StorableObject implements TypedObject {
 		return this.parameters;
 	}
 
-	public List getEventSourceIds() {
-		return Collections.unmodifiableList(this.eventSourceIds);
-	}
-
-	public void updateStatus(EventStatus status1, Identifier modifierId1) throws UpdateObjectException {
-		this.status = status1.value();
-		super.modified = new Date(System.currentTimeMillis());
-		super.modifierId = (Identifier) modifierId1.clone();
-		try {
-			this.eventDatabase.update(this, UPDATE_STATUS, null);
-		}
-		catch (IllegalDataException e) {
-			throw new UpdateObjectException(e.getMessage(), e);
-		}
-		catch (VersionCollisionException vce) {
-			throw new UpdateObjectException(vce.getMessage(), vce);
-		}
+	public Collection getEventSourceIds() {
+		return Collections.unmodifiableCollection(this.eventSourceIds);
 	}
 
 	protected synchronized void setAttributes(Date created,
 																	Date modified,
 																	Identifier creatorId,
 																	Identifier modifierId,
+																  long version,
 																	EventType type,
 																	int status,
 																	String description) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId);
+				modified,
+				creatorId,
+				modifierId,
+				version);
 		this.type = type;
 		this.status = status;
 		this.description = description;
@@ -245,7 +226,7 @@ public class Event extends StorableObject implements TypedObject {
 	 */
 	public void setType(EventType type) {
 		this.type = type;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	/**
@@ -254,7 +235,7 @@ public class Event extends StorableObject implements TypedObject {
 	 */
 	public void setStatus(EventStatus status) {
 		this.status = status.value();
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	/**
@@ -263,7 +244,7 @@ public class Event extends StorableObject implements TypedObject {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	/**
@@ -272,7 +253,7 @@ public class Event extends StorableObject implements TypedObject {
 	 */
 	public void setEventParameters(EventParameter[] parameters) {
 		this.setEventParameters0(parameters);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	/**
@@ -281,7 +262,7 @@ public class Event extends StorableObject implements TypedObject {
 	 */
 	public void setEventSourceIds(List eventSourceIds) {
 		this.setEventSourceIds0(eventSourceIds);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public List getDependencies() {

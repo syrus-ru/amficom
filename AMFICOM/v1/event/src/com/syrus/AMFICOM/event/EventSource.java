@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.5 2005/02/08 20:24:57 arseniy Exp $
+ * $Id: EventSource.java,v 1.6 2005/02/14 13:09:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.syrus.AMFICOM.event.corba.EventSource_Transferable;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -27,7 +26,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/08 20:24:57 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/14 13:09:40 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -60,15 +59,15 @@ public class EventSource extends StorableObject {
 
 	protected EventSource(Identifier id,
 			 Identifier creatorId,
+			 long version,
 			 Identifier sourceEntityId) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
-				creatorId);
+				creatorId,
+				version);
 		this.sourceEntityId = sourceEntityId;
-
-		super.currentVersion = super.getNextVersion();
 
 		this.eventSourceDatabase = EventDatabaseContext.eventSourceDatabase;
 	}
@@ -79,22 +78,15 @@ public class EventSource extends StorableObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new EventSource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTSOURCE_ENTITY_CODE),
+			EventSource eventSource = new EventSource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTSOURCE_ENTITY_CODE),
 					creatorId,
+					0L,
 					sourceEntityId);
+			eventSource.changed = true;
+			return eventSource;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("EventSource.createInstance | cannot generate identifier ", e);
-		}
-	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.eventSourceDatabase != null)
-				this.eventSourceDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
 
@@ -109,18 +101,20 @@ public class EventSource extends StorableObject {
 
 	public void setSourceEntityId(Identifier sourceEntityId) {
 		this.sourceEntityId = sourceEntityId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	protected synchronized void setAttributes(Date created,
 																	Date modified,
 																	Identifier creatorId,
 																	Identifier modifierId,
+																	long version,
 																	Identifier sourceEntityId) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
-												modifierId);
+												modifierId,
+												version);
 		this.sourceEntityId = sourceEntityId;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.6 2005/02/07 11:56:51 arseniy Exp $
+ * $Id: EventType.java,v 1.7 2005/02/14 13:09:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.event;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.event.corba.EventType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/07 11:56:51 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/14 13:09:40 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -43,12 +44,14 @@ public class EventType extends StorableObjectType {
 
 	public static final String CODENAME_MEASUREMENT_ALARM = "measurement_alarm";
 
-	private List parameterTypes;
+	private Collection parameterTypes;
 
 	private StorableObjectDatabase eventTypeDatabase;
 
 	public EventType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+
+		this.parameterTypes = new ArrayList();
 
 		this.eventTypeDatabase = EventDatabaseContext.eventTypeDatabase;
 		try {
@@ -73,11 +76,11 @@ public class EventType extends StorableObjectType {
 					new String(ett.description));
 
 		try {
-			List parameterTypeIds = new ArrayList(ett.parameter_type_ids.length);
+			List parTypeIds = new ArrayList(ett.parameter_type_ids.length);
 			for (int i = 0; i < ett.parameter_type_ids.length; i++)
-				parameterTypeIds.add(new Identifier(ett.parameter_type_ids[i]));
+				parTypeIds.add(new Identifier(ett.parameter_type_ids[i]));
 
-			this.parameterTypes = GeneralStorableObjectPool.getStorableObjects(parameterTypeIds, true);
+			this.parameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypeIds, true);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -88,6 +91,7 @@ public class EventType extends StorableObjectType {
 
 	protected EventType(Identifier id,
 								Identifier creatorId,
+								long version,
 								String codename,
 								String description,
 								List parameterTypes) {
@@ -96,13 +100,12 @@ public class EventType extends StorableObjectType {
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
+				version,
 				codename,
 				description);
 
 		this.parameterTypes = new ArrayList(); 
 		this.setParameterTypes0(parameterTypes);
-
-		super.currentVersion = super.getNextVersion();
 
 		this.eventTypeDatabase = EventDatabaseContext.eventTypeDatabase;
 	}
@@ -124,24 +127,17 @@ public class EventType extends StorableObjectType {
 			throw new IllegalArgumentException("Argument is null'");
 
 		try {
-			return new EventType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTTYPE_ENTITY_CODE),
+			EventType eventType = new EventType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTTYPE_ENTITY_CODE),
 										creatorId,
+										0L,
 										codename,
 										description,
 										parameterTypes);
+			eventType.changed = true;
+			return eventType;
 		}
 		catch (IllegalObjectEntityException ioee) {
 			throw new CreateObjectException("EventType.createInstance | cannot generate identifier ", ioee);
-		}
-	}
-
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.eventTypeDatabase != null)
-				this.eventTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
 
@@ -157,25 +153,27 @@ public class EventType extends StorableObjectType {
 										parTypeIds);
 	}
 
-  public List getParameterTypes() {
-		return Collections.unmodifiableList(this.parameterTypes);
+  public Collection getParameterTypes() {
+		return Collections.unmodifiableCollection(this.parameterTypes);
 	}
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
 																						Identifier creatorId,
 																						Identifier modifierId,
+																						long version,
 																						String codename,
 																						String description) {
 		super.setAttributes(created,
 							modified,
 							creatorId,
 							modifierId,
+							version,
 							codename,
 							description);
 	}
 
-	protected void setParameterTypes0(List parameterTypes) {
+	protected void setParameterTypes0(Collection parameterTypes) {
 		this.parameterTypes.clear();
 		if (parameterTypes != null)
 	     	this.parameterTypes.addAll(parameterTypes);
@@ -187,9 +185,9 @@ public class EventType extends StorableObjectType {
 	 * @param parameterTypes
 	 *            The inParameterTypes to set.
 	 */
-	public void setParameterTypes(List parameterTypes) {
+	public void setParameterTypes(Collection parameterTypes) {
 		this.setParameterTypes0(parameterTypes);
-		super.currentVersion = super.getNextVersion();		
+		this.changed = true;
 	}
 
 	public List getDependencies() {
