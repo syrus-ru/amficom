@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.40 2005/02/03 17:51:05 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.41 2005/02/04 14:22:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/02/03 17:51:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2005/02/04 14:22:18 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -257,6 +257,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 					this.retrieveMDMIdsByOneQuery(monitoredElementsOneSort,
 							ObjectEntities.TRANSPATHMELINK_ENTITY,
 							MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
+					break;
 				default:
 					String mesg = "ERROR: Unknown sort of monitoredelement: " + meSort;
 					throw new RetrieveObjectException(mesg);
