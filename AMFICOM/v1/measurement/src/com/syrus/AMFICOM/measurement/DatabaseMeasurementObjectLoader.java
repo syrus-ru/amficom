@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.29 2004/11/19 23:08:59 arseniy Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.30 2004/12/22 12:02:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/11/19 23:08:59 $
+ * @version $Revision: 1.30 $, $Date: 2004/12/22 12:02:11 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -484,7 +484,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 		catch (DatabaseException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage());
+			throw new DatabaseException("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage(), e);
 		}
 	}
 
@@ -508,23 +508,23 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 			Identifier identifier = null;
 			if (object instanceof Identifier)
 				identifier = (Identifier)object;
-			else if (object instanceof Identified)
-				identifier = ((Identified)object).getId();
-			else throw new DatabaseException("DatabaseMeasumentObjectLoader.delete | Object " + 
-												object.getClass().getName() 
-												+ " isn't Identifier or Identified");
+			else
+				if (object instanceof Identified)
+					identifier = ((Identified)object).getId();
+				else
+					throw new DatabaseException("DatabaseMeasumentObjectLoader.delete | Object " + object.getClass().getName() + " isn't Identifier or Identified");
 			Short entityCode = new Short(identifier.getMajor());
 			List list = (List)map.get(entityCode);
-				if (list == null){
-					list = new LinkedList();
-					map.put(entityCode, list);
-				}
+			if (list == null) {
+				list = new LinkedList();
+				map.put(entityCode, list);
+			}
 			list.add(object);
 
 		}
 
-		for (Iterator iter = ids.iterator(); iter.hasNext();) {
-			Short entityCode = (Short) iter.next();
+		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
+			Short entityCode = (Short) it.next();
 			List list = (List)map.get(entityCode);
 			delete(null, list);
 		}
