@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.29 2004/12/01 14:44:27 bass Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.30 2004/12/01 15:41:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,14 +11,15 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/12/01 14:44:27 $
+ * @version $Revision: 1.30 $, $Date: 2004/12/01 15:41:47 $
  * @author $Author: bass $
- * @todo Declare class &lt;default&gt; final instead of public as it's
- *       referenced only within configuration package.
- * @todo Because of the same, declare all fields &amp; methods &lt;package&gt;.
+ * @todo Declare all fields private as<ol>
+ *       <li>they have public accessors; and</li>
+ *       <li>there's {@link #init(StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase)}
+ *       method which is supposed to be the only modifier for class' fields.</li></ol>
  * @module configuration_v1
  */
-public class ConfigurationDatabaseContext {
+public final class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase characteristicTypeDatabase;
 	protected static StorableObjectDatabase equipmentTypeDatabase;
 	protected static StorableObjectDatabase portTypeDatabase;
@@ -26,7 +27,6 @@ public class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase linkTypeDatabase;
 	protected static StorableObjectDatabase cableThreadTypeDatabase;
 	protected static StorableObjectDatabase transmissionPathTypeDatabase;
-
 	protected static StorableObjectDatabase characteristicDatabase;
 	protected static StorableObjectDatabase userDatabase;
 	protected static StorableObjectDatabase domainDatabase;
@@ -40,56 +40,48 @@ public class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase monitoredElementDatabase;
 	protected static StorableObjectDatabase linkDatabase;
 
-	private ConfigurationDatabaseContext() {	
+	private ConfigurationDatabaseContext() {
 		// private constructor 
 	}
 
-	/**
-	 * @todo Rename formal parameters for their names to match the ones of
-	 *       class members: e. g.:
-	 *       <code>ConfigurationDatabaseContext.characteristicTypeDatabase
-	 *       = characteristicTypeDatabase;</code>
-	 * @todo Declare formal parameters final.
-	 */
-	public static void init(StorableObjectDatabase characteristicTypeDatabase1,
-													StorableObjectDatabase equipmentTypeDatabase1,
-													StorableObjectDatabase portTypeDatabase1,
-													StorableObjectDatabase measurementPortTypeDatabase1,
-													StorableObjectDatabase linkTypeDatabase1,
-													StorableObjectDatabase cableThreadTypeDatabase1,
-													StorableObjectDatabase characteristicDatabase1,
-													StorableObjectDatabase userDatabase1,
-													StorableObjectDatabase domainDatabase1,
-													StorableObjectDatabase serverDatabase1,
-													StorableObjectDatabase mcmDatabase1,
-													StorableObjectDatabase equipmentDatabase1,
-													StorableObjectDatabase portDatabase1,
-													StorableObjectDatabase measurementPortDatabase1,
-													StorableObjectDatabase transmissionPathDatabase1,
-													StorableObjectDatabase transmissionPathTypeDatabase1,
-													StorableObjectDatabase kisDatabase1,
-													StorableObjectDatabase monitoredElementDatabase1,
-													StorableObjectDatabase linkDatabase1) {
-		characteristicTypeDatabase = characteristicTypeDatabase1;
-		equipmentTypeDatabase = equipmentTypeDatabase1;
-		portTypeDatabase = portTypeDatabase1;
-		measurementPortTypeDatabase = measurementPortTypeDatabase1;
-		linkTypeDatabase = linkTypeDatabase1;
-		cableThreadTypeDatabase = cableThreadTypeDatabase1;
-		
-		characteristicDatabase = characteristicDatabase1;
-		userDatabase = userDatabase1;
-		domainDatabase = domainDatabase1;
-		serverDatabase = serverDatabase1;
-		mcmDatabase = mcmDatabase1;
-		equipmentDatabase = equipmentDatabase1;
-		portDatabase = portDatabase1;
-		measurementPortDatabase = measurementPortDatabase1;
-		transmissionPathDatabase = transmissionPathDatabase1;
-		transmissionPathTypeDatabase = transmissionPathTypeDatabase1;
-		kisDatabase = kisDatabase1;
-		monitoredElementDatabase = monitoredElementDatabase1;
-		linkDatabase = linkDatabase1;
+	public static void init(final StorableObjectDatabase newCharacteristicTypeDatabase,
+			final StorableObjectDatabase newEquipmentTypeDatabase,
+			final StorableObjectDatabase newPortTypeDatabase,
+			final StorableObjectDatabase newMeasurementPortTypeDatabase,
+			final StorableObjectDatabase newLinkTypeDatabase,
+			final StorableObjectDatabase newCableThreadTypeDatabase,
+			final StorableObjectDatabase newCharacteristicDatabase,
+			final StorableObjectDatabase newUserDatabase,
+			final StorableObjectDatabase newDomainDatabase,
+			final StorableObjectDatabase newServerDatabase,
+			final StorableObjectDatabase newMcmDatabase,
+			final StorableObjectDatabase newEquipmentDatabase,
+			final StorableObjectDatabase newPortDatabase,
+			final StorableObjectDatabase newMeasurementPortDatabase,
+			final StorableObjectDatabase newTransmissionPathDatabase,
+			final StorableObjectDatabase newTransmissionPathTypeDatabase,
+			final StorableObjectDatabase newKisDatabase,
+			final StorableObjectDatabase newMonitoredElementDatabase,
+			final StorableObjectDatabase newLinkDatabase) {
+		characteristicTypeDatabase = newCharacteristicTypeDatabase;
+		equipmentTypeDatabase = newEquipmentTypeDatabase;
+		portTypeDatabase = newPortTypeDatabase;
+		measurementPortTypeDatabase = newMeasurementPortTypeDatabase;
+		linkTypeDatabase = newLinkTypeDatabase;
+		cableThreadTypeDatabase = newCableThreadTypeDatabase;
+		characteristicDatabase = newCharacteristicDatabase;
+		userDatabase = newUserDatabase;
+		domainDatabase = newDomainDatabase;
+		serverDatabase = newServerDatabase;
+		mcmDatabase = newMcmDatabase;
+		equipmentDatabase = newEquipmentDatabase;
+		portDatabase = newPortDatabase;
+		measurementPortDatabase = newMeasurementPortDatabase;
+		transmissionPathDatabase = newTransmissionPathDatabase;
+		transmissionPathTypeDatabase = newTransmissionPathTypeDatabase;
+		kisDatabase = newKisDatabase;
+		monitoredElementDatabase = newMonitoredElementDatabase;
+		linkDatabase = newLinkDatabase;
 	}
 
 	public static StorableObjectDatabase getCharacteristicDatabase() {
