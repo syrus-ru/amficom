@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.52 2004/11/18 12:05:13 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.53 2004/11/19 08:49:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2004/11/18 12:05:13 $
+ * @version $Revision: 1.53 $, $Date: 2004/11/19 08:49:45 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -93,14 +93,98 @@ public abstract class StorableObjectDatabase {
 		//connection = DatabaseConnection.getConnection();
 	}
 
-	public void delete(StorableObject storableObject) {
+	public void delete(StorableObject storableObject)  throws IllegalDataException {
 		String storableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {			
 			statement = connection.createStatement();
-			statement.executeUpdate(SQL_DELETE_FROM + this.getEnityName() + SQL_WHERE + COLUMN_ID + EQUALS
-					+ storableObjectIdStr);			
+			String sql = SQL_DELETE_FROM + this.getEnityName() + SQL_WHERE + COLUMN_ID + EQUALS
+			+ storableObjectIdStr;
+			Log.debugMessage(this.getEnityName() + "Database.delete | Trying: " + sql, Log.DEBUGLEVEL09);
+			statement.executeUpdate(sql);			
+		}
+		catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				statement = null;				
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+			finally{
+				DatabaseConnection.closeConnection(connection);
+			}
+		}
+	}
+	
+	public void delete(List ids) throws IllegalDataException {
+		if ( (ids == null) || (ids.isEmpty()))
+			return;
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(SQL_DELETE_FROM);
+			buffer.append(this.getEnityName());
+			buffer.append(SQL_WHERE);
+			buffer.append(OPEN_BRACKET);
+			buffer.append(COLUMN_ID);
+			int idsLength = ids.size();
+			if (idsLength == 1) {
+				buffer.append(EQUALS);
+				Object object = ids.iterator().next();
+				Identifier identifier = null;
+				if (object instanceof Identifier)
+					identifier = (Identifier)object;
+				else if (object instanceof Identified)
+					identifier = ((Identified)object).getId();
+				else throw new IllegalDataException("StorableObjectDatabase.delete | Object " + 
+													object.getClass().getName() 
+													+ " isn't Identifier or Identified");
+				buffer.append(DatabaseIdentifier.toSQLString(identifier));
+			} else {
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+					
+				int i = 1;
+				for (Iterator it = ids.iterator(); it.hasNext();i++) {						
+					Object object = it.next();
+					Identifier id = null;
+					if (object instanceof Identifier)
+						id = (Identifier)object;
+					else if (object instanceof Identified)
+						id = ((Identified)object).getId();
+					else throw new IllegalDataException("StorableObjectDatabase.delete | Object " + 
+														object.getClass().getName() 
+														+ " isn't Identifier or Identified");
+					buffer.append(DatabaseIdentifier.toSQLString(id));
+					if (it.hasNext()) {
+						if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+							buffer.append(COMMA);
+						else {
+							buffer.append(CLOSE_BRACKET);
+							buffer.append(SQL_OR);
+							buffer.append(COLUMN_ID);
+							buffer.append(SQL_IN);
+							buffer.append(OPEN_BRACKET);
+						}
+					}
+				}
+				buffer.append(CLOSE_BRACKET);
+				}
+			buffer.append(CLOSE_BRACKET);			
+
+			sql = retrieveQuery(buffer.toString());
+		}
+		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
+		try {			
+			statement = connection.createStatement();
+			Log.debugMessage(this.getEnityName() + "Database.delete | Trying: " + sql, Log.DEBUGLEVEL09);
+			statement.executeUpdate(sql);			
 		}
 		catch (SQLException sqle1) {
 			Log.errorException(sqle1);
