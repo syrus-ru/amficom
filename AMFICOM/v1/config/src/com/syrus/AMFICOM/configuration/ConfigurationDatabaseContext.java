@@ -3,13 +3,13 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 public abstract class ConfigurationDatabaseContext {
-	public static StorableObjectDatabase characteristicTypeDatabase;
+	protected static StorableObjectDatabase characteristicTypeDatabase;
 
-	public static StorableObjectDatabase characteristicDatabase;
-	public static StorableObjectDatabase portDatabase;
-	public static StorableObjectDatabase monitoredElementDatabase;
-	public static StorableObjectDatabase kisDatabase;
-	public static StorableObjectDatabase mcmDatabase;
+	protected static StorableObjectDatabase characteristicDatabase;
+	protected static StorableObjectDatabase portDatabase;
+	protected static StorableObjectDatabase monitoredElementDatabase;
+	protected static StorableObjectDatabase kisDatabase;
+	protected static StorableObjectDatabase mcmDatabase;
 
 	public static void init(StorableObjectDatabase characteristicTypeDatabase1,
 
