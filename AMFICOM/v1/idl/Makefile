@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.21 2005/03/02 10:51:07 arseniy Exp $
+# $Id: Makefile,v 1.22 2005/03/04 13:14:22 bass Exp $
 #
 # vim:ft=make:
 #
@@ -47,7 +47,10 @@ xtra: .xtra
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/configuration.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/measurement.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/cmserver.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/mshserver.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/map.idl
+	if [ -f ../mcm_v1/idl/mcm.idl ]; then $(IDLJ) $(IDLJFLAGS) ../mcm_v1/idl/mcm.idl; fi
+	if [ -f ../mserver_v1/idl/mserver.idl ]; then $(IDLJ) $(IDLJFLAGS) ../mserver_v1/idl/mserver.idl; fi
 	touch $@
 
 .PHONY: idl
