@@ -19,6 +19,10 @@ public class MCM extends DomainMember implements Characterized, TypedObject {
 	private Identifier typeId;
 	private String name;
 	private String description;
+	private Identifier userId;
+	private Identifier serverId;
+	private String location;
+	private String hostname;
 	private List characteristicIds;
 
 	private List kiss;
@@ -95,6 +99,22 @@ public class MCM extends DomainMember implements Characterized, TypedObject {
 
 	public String getDescription() {
 		return this.description;
+	}
+
+	public Identifier getUserId() {
+		return this.userId;
+	}
+
+	public Identifier getServerId() {
+		return this.serverId;
+	}
+
+	public String getLocation() {
+		return this.location;
+	}
+
+	public String getHostName() {
+		return this.hostname;
 	}
 
 	public List getCharacteristicIds() {
