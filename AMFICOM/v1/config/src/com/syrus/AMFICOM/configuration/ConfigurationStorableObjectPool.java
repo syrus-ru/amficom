@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.15 2004/10/03 12:43:06 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.16 2004/10/04 05:53:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/10/03 12:43:06 $
+ * @version $Revision: 1.16 $, $Date: 2004/10/04 05:53:10 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -302,144 +302,6 @@ public class ConfigurationStorableObjectPool {
 		return list;
 	}
 
-
-    
-	public static List getStorableObjectsByDomain(short entityCode, Domain domain) throws DatabaseException,
-			CommunicationException {
-		List list = null;
-		LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(entityCode));
-		if (objectPool != null) {
-			list = new LinkedList();
-			for (Iterator it = objectPool.iterator(); it.hasNext();) {
-				StorableObject storableObject = (StorableObject) it.next();
-				if (domain != null) {
-					/**
-					 * TODO check for entites
-					 */
-					switch (entityCode) {
-						case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-							{
-								CharacteristicType characteristicType = (CharacteristicType)storableObject;
-								list.add(characteristicType);
-							}
-							break;
-						case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-							{
-								EquipmentType equipmentType = (EquipmentType)storableObject;
-								list.add(equipmentType);
-							}
-							break;
-						case ObjectEntities.PORTTYPE_ENTITY_CODE:
-							{
-								PortType portType = (PortType)storableObject;
-								list.add(portType);
-							}
-							break;
-						case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-							{
-								MeasurementPortType measurementPortType = (MeasurementPortType)storableObject;
-								list.add(measurementPortType);
-							}
-							break;
-						case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-							{
-								Characteristic characteristic = (Characteristic)storableObject;
-								list.add(characteristic);
-							}
-							break;
-//						case ObjectEntities.PERMATTR_ENTITY_CODE:
-//							storableObject = cObjectLoader.loadPermissionAttributes(objectId);
-//							break;
-						case ObjectEntities.USER_ENTITY_CODE:
-							User user = (User)storableObject;
-							list.add(user);
-							break;
-						case ObjectEntities.DOMAIN_ENTITY_CODE:
-							Domain domain2 = (Domain)storableObject;
-							if (domain2.isChild(domain))
-								list.add(domain2);
-							break;
-						case ObjectEntities.SERVER_ENTITY_CODE:
-							{
-								Server server = (Server) storableObject;
-								Domain serverDomain = (Domain)ConfigurationStorableObjectPool.getStorableObject(server.getDomainId(), true);
-								if (serverDomain.isChild(domain))
-									list.add(server);
-							}
-							break;
-						case ObjectEntities.MCM_ENTITY_CODE:	
-							{
-								MCM mcm = (MCM)storableObject;
-								Domain mcmDomain = (Domain)ConfigurationStorableObjectPool.getStorableObject(mcm.getDomainId(), true);
-								if (mcmDomain.isChild(domain))
-									list.add(mcm);
-							}
-							break;
-						case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-							{
-								Equipment equipment = (Equipment)storableObject;
-								Domain eqDomain = (Domain)ConfigurationStorableObjectPool.getStorableObject(equipment.getDomainId(), true);
-								if (eqDomain.isChild(domain))
-									list.add(equipment);								
-							}
-							break;
-						case ObjectEntities.PORT_ENTITY_CODE:
-							{
-								Port port = (Port)storableObject;
-								Equipment equipment = (Equipment)ConfigurationStorableObjectPool.getStorableObject(port.getEquipmentId(), true);
-								Domain eqDomain = (Domain)ConfigurationStorableObjectPool.getStorableObject(equipment.getDomainId(), true);
-								if (eqDomain.isChild(domain))
-									list.add(port);								
-							}
-							break;
-						case ObjectEntities.TRANSPATH_ENTITY_CODE:
-							{
-								TransmissionPath transmissionPath = (TransmissionPath) storableObject;
-								Domain pathDomain = (Domain) ConfigurationStorableObjectPool.getStorableObject(transmissionPath.getDomainId(), true);
-								if (pathDomain.isChild(domain))
-									list.add(transmissionPath);
-								
-							}
-							break;
-						case ObjectEntities.KIS_ENTITY_CODE:
-							{
-								KIS kis = (KIS)storableObject;
-								Domain kisDomain = (Domain) ConfigurationStorableObjectPool.getStorableObject(kis.getDomainId(), true);
-								if (kisDomain.isChild(domain))
-									list.add(kis);
-							}
-							break;
-						case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-							{
-								MeasurementPort measurementPort = (MeasurementPort)storableObject;
-								KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
-								Domain kisDomain = (Domain) ConfigurationStorableObjectPool.getStorableObject(kis.getDomainId(), true);
-								if (kisDomain.isChild(domain))
-									list.add(measurementPort);
-							}
-							break;
-						case ObjectEntities.ME_ENTITY_CODE:
-							{
-								MonitoredElement me = (MonitoredElement)storableObject;
-								Domain meDomain = (Domain) ConfigurationStorableObjectPool.getStorableObject(me.getDomainId(), true);
-								if (meDomain.isChild(domain)) 
-									list.add(me);
-							}
-							break;
-						default:
-							list.add(storableObject);
-							break;
-		
-					}
-		
-				} else {
-					list.add(storableObject);
-				}
-		
-			}
-		}
-		return list;
-		}
 	
     private static StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
 		StorableObject storableObject;
