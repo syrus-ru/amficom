@@ -139,7 +139,7 @@ public class KIS extends Equipment {
 												supplierCode,
 												eqClass,
 												imageId,
-												EquipmentSort.EQUIPMENT_SORT_KIS);
+												EquipmentSort.EQUIPMENT_SORT_KIS.value());
 		this.mcmId = mcmId;
 	}
 }
