@@ -25,6 +25,16 @@
 # can be useful for creating a module that consists of many directories
 # spread out over the entire source repository.
 
-AMFICOMv2	&general &idl
-general		AMFICOM/v2/general
+AMFICOMv2	&idl\
+		&general\
+		&administration\
+		&configuration\
+		&measurement
+
 idl		AMFICOM/v2/idl
+general		AMFICOM/v2/general
+administration	AMFICOM/v2/administration
+configuration	AMFICOM/v2/configuration
+measurement	AMFICOM/v2/measurement
+
+mcm		AMFICOM/v2/mcm
