@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.68 2005/04/01 21:57:12 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.69 2005/04/02 17:10:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,9 @@ import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -56,7 +58,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/04/01 21:57:12 $
+ * @version $Revision: 1.69 $, $Date: 2005/04/02 17:10:43 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -197,6 +199,15 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		mServerConnectionManager = new MServerConnectionManager(corbaServer, mServerServantName, mServerCheckTimeout);
 		mServerConnectionManager.start();
 
+		/*	Initialize Identifier Pool*/
+		try {
+			MServer mServerRef = mServerConnectionManager.getVerifiedMServerReference();
+			IdentifierPool.init(mServerRef);
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+			System.exit(-1);
+		}
 
 		/*	Create map of test processors*/
 		testProcessors = Collections.synchronizedMap(new HashMap());
@@ -351,18 +362,14 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 					startTestProcessor(test);
 				}
 			}
-
-			synchronized (resultList) {
+			
+			if (!resultList.isEmpty()) {
 				try {
-					mServerRef = mServerConnectionManager.getVerifiedMServerReference();
-
 					resultsT = createTransferables();
-					if (resultsT.length > 0) {
-						mServerRef.receiveResults(resultsT, (Identifier_Transferable) mcmId.getTransferable());
-						resultList.clear();
-						super.clearFalls();
-					}
-
+					mServerRef = mServerConnectionManager.getVerifiedMServerReference();
+					mServerRef.receiveResults(resultsT, (Identifier_Transferable) mcmId.getTransferable());
+					resultList.clear();
+					super.clearFalls();
 				}
 				catch (CommunicationException ce) {
 					Log.errorException(ce);
@@ -524,7 +531,18 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		this.running = false;
 		for (Iterator it = transceivers.keySet().iterator(); it.hasNext();)
 			((Transceiver)transceivers.get(it.next())).shutdown();
+
 		deactivateCORBAServer();
+
+		Log.debugMessage("MeasurementServer.shutdown | serialize GeneralStorableObjectPool" , Log.DEBUGLEVEL09);
+		GeneralStorableObjectPool.serializePool();
+		Log.debugMessage("MeasurementServer.shutdown | serialize MeasurementStorableObjectPool" , Log.DEBUGLEVEL09);
+		AdministrationStorableObjectPool.serializePool();
+		Log.debugMessage("MeasurementServer.shutdown | serialize AdministrationStorableObjectPool" , Log.DEBUGLEVEL09);
+		ConfigurationStorableObjectPool.serializePool();
+		Log.debugMessage("MeasurementServer.shutdown | serialize MeasurementStorableObjectPool" , Log.DEBUGLEVEL09);
+		MeasurementStorableObjectPool.serializePool();
+
 		DatabaseConnection.closeConnection();
 	}
 
