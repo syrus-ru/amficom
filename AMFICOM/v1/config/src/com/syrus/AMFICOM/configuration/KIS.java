@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.20 2004/10/26 12:46:57 max Exp $
+ * $Id: KIS.java,v 1.21 2004/11/02 12:42:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/10/26 12:46:57 $
- * @author $Author: max $
+ * @version $Revision: 1.21 $, $Date: 2004/11/02 12:42:02 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -157,6 +157,19 @@ public class KIS extends DomainMember implements TypedObject {
 		for (Iterator iterator = this.measurementPortIds.iterator(); iterator.hasNext();)
 			mportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
+		System.out.println((Identifier_Transferable)super.id.getTransferable());
+		System.out.println(super.created.getTime());
+		System.out.println(super.modified.getTime());
+		System.out.println((Identifier_Transferable)super.creatorId.getTransferable());
+		System.out.println((Identifier_Transferable)super.modifierId.getTransferable());
+		System.out.println((Identifier_Transferable)super.domainId.getTransferable());
+		System.out.println(new String(this.name));
+		System.out.println(new String(this.description));
+		System.out.println((Identifier_Transferable)this.type.getId().getTransferable());
+		System.out.println((Identifier_Transferable)this.equipmentId.getTransferable());
+		System.out.println((Identifier_Transferable)this.mcmId.getTransferable());
+		System.out.println(mportIds == null);
+		
 		return new KIS_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																super.created.getTime(),
 																super.modified.getTime(),

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.22 2004/10/21 08:01:02 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.23 2004/11/02 12:42:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,21 +32,18 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/10/21 08:01:02 $
+ * @version $Revision: 1.23 $, $Date: 2004/11/02 12:42:02 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class ConfigurationStorableObjectPool {
 
-	private static final int			OBJECT_POOL_MAP_SIZE			= 16;		/*
-															  * Number
-															  * of
-															  * entities
-															  */
+	private static final int			OBJECT_POOL_MAP_SIZE			= 16;		/* Number of entities */
 
 	private static final int			CHARACTERISTICTYPE_OBJECT_POOL_SIZE	= 9;
 	private static final int			EQUIPMENTTYPE_OBJECT_POOL_SIZE		= 1;
+	private static final int			KISTYPE_OBJECT_POOL_SIZE		= 1;
 	private static final int			PORTTYPE_OBJECT_POOL_SIZE		= 1;
 	private static final int			MEASUREMENTPORTTYPE_OBJECT_POOL_SIZE	= 1;
 
@@ -63,13 +60,7 @@ public class ConfigurationStorableObjectPool {
 	private static final int			MEASUREMENTPORT_OBJECT_POOL_SIZE	= 2;
 	private static final int			ME_OBJECT_POOL_SIZE			= 2;
 
-	private static Map				objectPoolMap;						/*
-															 * Map
-															 * <String
-															 * objectEntity,
-															 * LRUMap
-															 * objectPool>
-															 */
+	private static Map				objectPoolMap;						/* Map <Short objectEntity, LRUMap objectPool>*/
 	private static ConfigurationObjectLoader	cObjectLoader;
 	private static Class				cacheMapClass				= LRUMap.class;
 
@@ -82,6 +73,7 @@ public class ConfigurationStorableObjectPool {
 
 		addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.KISTYPE_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.PORTTYPE_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, size);
@@ -105,6 +97,7 @@ public class ConfigurationStorableObjectPool {
 
 		addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, CHARACTERISTICTYPE_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, EQUIPMENTTYPE_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.KISTYPE_ENTITY_CODE, KISTYPE_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.PORTTYPE_ENTITY_CODE, PORTTYPE_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, MEASUREMENTPORTTYPE_OBJECT_POOL_SIZE);
 
@@ -405,6 +398,9 @@ public class ConfigurationStorableObjectPool {
 			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 				storableObject = cObjectLoader.loadEquipmentType(objectId);
 				break;
+			case ObjectEntities.KISTYPE_ENTITY_CODE:
+				storableObject = cObjectLoader.loadKISType(objectId);
+				break;
 			case ObjectEntities.PORTTYPE_ENTITY_CODE:
 				storableObject = cObjectLoader.loadPortType(objectId);
 				break;
@@ -466,6 +462,9 @@ public class ConfigurationStorableObjectPool {
 					break;
 				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadEquipmentTypes(ids);
+					break;
+				case ObjectEntities.KISTYPE_ENTITY_CODE:
+					loadedList = cObjectLoader.loadKISTypes(ids);
 					break;
 				case ObjectEntities.PORTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadPortTypes(ids);
@@ -529,6 +528,9 @@ public class ConfigurationStorableObjectPool {
 					break;
 				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadEquipmentTypesButIds(condition, ids);
+					break;
+				case ObjectEntities.KISTYPE_ENTITY_CODE:
+					loadedList = cObjectLoader.loadKISTypesButIds(condition, ids);
 					break;
 				case ObjectEntities.PORTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadPortTypesButIds(condition, ids);
@@ -627,6 +629,13 @@ public class ConfigurationStorableObjectPool {
 										.get(0), force);
 							else
 								cObjectLoader.saveEquipmentTypes(list, force);
+							break;
+						case ObjectEntities.KISTYPE_ENTITY_CODE:
+							if (alone)
+								cObjectLoader.saveKISType((KISType) list
+										.get(0), force);
+							else
+								cObjectLoader.saveKISTypes(list, force);
 							break;
 						case ObjectEntities.PORTTYPE_ENTITY_CODE:
 							if (alone)
