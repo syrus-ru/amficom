@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.1 2004/10/19 14:22:32 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.2 2004/10/19 14:30:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/19 14:22:32 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/19 14:30:08 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -61,6 +61,10 @@ public class StringFieldCondition implements StorableObjectCondition {
 		return this.entityCode;
 	}
 
+	public void setEntityCode(short entityCode){
+		setEntityCode(new Short(entityCode));
+	}
+	
 	public void setEntityCode(Short entityCode) {
 		this.entityCode = entityCode;
 
