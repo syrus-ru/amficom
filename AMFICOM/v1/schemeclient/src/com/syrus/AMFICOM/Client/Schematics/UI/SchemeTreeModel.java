@@ -612,7 +612,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				{
 					ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, (String)map_proto.pe_ids.get(i));
 					proto.map_proto = map_proto;
-					vec.add(new ObjectResourceTreeNode(proto, proto.getName(), true, true));
+					ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(proto, proto.getName(), true, true);
+					ortn.setDragDropEnabled(true);
+					vec.add(ortn);
 				}
 			}
 			else if(node.getObject() instanceof Scheme)

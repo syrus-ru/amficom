@@ -11,8 +11,22 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import java.awt.datatransfer.*;
+import java.io.*;
+import java.util.*;
+import java.util.zip.*;
 
-public class ProtoElement extends ObjectResource implements Serializable
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
+
+import com.syrus.AMFICOM.Client.Schematics.UI.*;
+
+public class ProtoElement extends ObjectResource
+		implements Transferable, Serializable
 {
 	public static final String typ = "proto";
 	private static final long serialVersionUID = 01L;
@@ -343,6 +357,29 @@ public class ProtoElement extends ObjectResource implements Serializable
 		Pool.put(ProtoElement.typ, proto.getId(), proto);
 		Pool.put("clonedids", id, proto.id);
 		return proto;
+	}
+
+	public Object getTransferData(DataFlavor flavor)
+	{
+		if (flavor.getHumanPresentableName().equals("ProtoElementLabel"))
+		{
+			return (Object) (this);
+		}
+		return null;
+	}
+
+	public DataFlavor[] getTransferDataFlavors()
+	{
+		DataFlavor myDataFlavor = new MyDataFlavor(this.getClass(),"ProtoElementLabel");
+		DataFlavor[] dfs = new DataFlavor[2];
+		dfs[0] = myDataFlavor;
+		dfs[1] = DataFlavor.getTextPlainUnicodeFlavor();
+		return dfs;
+	}
+
+	public boolean isDataFlavorSupported(DataFlavor flavor)
+	{
+		return (flavor.getHumanPresentableName().equals("ProtoElementLabel"));
 	}
 }
 

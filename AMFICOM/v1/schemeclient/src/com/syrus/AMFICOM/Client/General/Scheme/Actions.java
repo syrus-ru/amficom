@@ -210,34 +210,39 @@ class DeleteAction extends AbstractAction
 						DefaultEdge edge = (DefaultEdge)cells[i];
 						new_cells.add(edge);
 
-						Object p = ((DefaultPort)edge.getSource()).getParent();
-						if (p instanceof PortCell)
+						if (edge.getSource() instanceof DefaultPort)
 						{
-							removePortFromParent((DefaultPort)edge.getTarget(), ((PortCell)p).getSchemePort());
-							new_cells.add(p);
-						}
-						else if (p instanceof CablePortCell)
-						{
-							removeCablePortFromParent((DefaultPort)edge.getTarget(), ((CablePortCell)p).getSchemeCablePort());
-							new_cells.add(p);
-						}
-						else
-						{
-							p = ((DefaultPort)edge.getTarget()).getParent();
+							Object p = ((DefaultPort)edge.getSource()).getParent();
 							if (p instanceof PortCell)
 							{
-								removePortFromParent((DefaultPort)edge.getSource(), ((PortCell)p).getSchemePort());
+								removePortFromParent((DefaultPort)edge.getTarget(), ((PortCell)p).getSchemePort());
 								new_cells.add(p);
 							}
 							else if (p instanceof CablePortCell)
 							{
-								removeCablePortFromParent((DefaultPort)edge.getSource(), ((CablePortCell)p).getSchemeCablePort());
+								removeCablePortFromParent((DefaultPort)edge.getTarget(), ((CablePortCell)p).getSchemeCablePort());
 								new_cells.add(p);
 							}
+							else
+							{
+								p = ((DefaultPort)edge.getTarget()).getParent();
+								if (p instanceof PortCell)
+								{
+									removePortFromParent((DefaultPort)edge.getSource(), ((PortCell)p).getSchemePort());
+									new_cells.add(p);
+								}
+								else if (p instanceof CablePortCell)
+								{
+									removeCablePortFromParent((DefaultPort)edge.getSource(), ((CablePortCell)p).getSchemeCablePort());
+									new_cells.add(p);
+								}
+							}
+							deleteConnections(edge, (DefaultPort)edge.getSource());
+							deleteConnections(edge, (DefaultPort)edge.getTarget());
 						}
-						deleteConnections(edge, (DefaultPort)edge.getSource());
-						deleteConnections(edge, (DefaultPort)edge.getTarget());
 					}
+					else
+						new_cells.add(cells[i]);
 				}
 			}
 			cells = DefaultGraphModel.getDescendants(graph.getModel(),

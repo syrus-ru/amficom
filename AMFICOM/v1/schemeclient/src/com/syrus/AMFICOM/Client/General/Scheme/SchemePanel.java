@@ -149,7 +149,7 @@ public class SchemePanel extends ElementsPanel
 		super.openSchemeElement(se);
 	}
 
-	protected void setProtoCell (ProtoElement proto)
+	protected void setProtoCell (ProtoElement proto, Point p)
 	{
 		if (proto != null)
 		{
@@ -159,7 +159,7 @@ public class SchemePanel extends ElementsPanel
 			SchemeElement scheme_el = new SchemeElement(proto, dataSource);
 			scheme_el.unpack();
 
-			insertSchemeElement(scheme_el, proto.serializable_cell, proto.serializable_ugo);
+			insertSchemeElement(scheme_el, proto.serializable_cell, proto.serializable_ugo, p);
 
 			repaint();
 		}
@@ -178,18 +178,18 @@ public class SchemePanel extends ElementsPanel
 		}
 	}
 
-	private void insertSchemeElement (SchemeElement scheme_el, Serializable serializable_cell, Serializable serializable_ugo)
+	private void insertSchemeElement (SchemeElement scheme_el, Serializable serializable_cell, Serializable serializable_ugo, Point p)
 	{
 		if (serializable_ugo != null)
 		{
-			Map clones = copySchemeElementFromArchivedState (scheme_el, serializable_ugo);
+			Map clones = copySchemeElementFromArchivedState (scheme_el, serializable_ugo, p);
 			if ((clones == null || clones.size() == 0) && serializable_cell != null)
-				copySchemeElementFromArchivedState (scheme_el, serializable_cell);
+				copySchemeElementFromArchivedState (scheme_el, serializable_cell, p);
 			else if (serializable_cell != null)
 				copySchemeElementFromArchivedState_virtual(scheme_el);
 		}
 		else if (serializable_cell != null)
-			copySchemeElementFromArchivedState (scheme_el, serializable_cell);
+			copySchemeElementFromArchivedState (scheme_el, serializable_cell, p);
 /*
 		for (int i = 0; i < scheme_el.element_ids.size(); i++)
 		{
@@ -199,7 +199,7 @@ public class SchemePanel extends ElementsPanel
 			inner.pack();
 		}
 */
-	scheme_el.pack();
+		scheme_el.pack();
 	}
 
 	public Map copySchemeElementFromArchivedState_virtual(SchemeElement element)
@@ -225,11 +225,11 @@ public class SchemePanel extends ElementsPanel
 		//return null;
 	}
 
-	private Map copySchemeElementFromArchivedState(SchemeElement element, Object s)
+	private Map copySchemeElementFromArchivedState(SchemeElement element, Object s, Point p)
 	{
 		if (s instanceof Vector)
 		{
-			Map clones = graph.copyFromArchivedState(s, new Point(0, 0));
+			Map clones = graph.copyFromArchivedState(s, p);
 
 			Vector v = (Vector) s;
 			Object[] cells = (Object[]) v.get(0);

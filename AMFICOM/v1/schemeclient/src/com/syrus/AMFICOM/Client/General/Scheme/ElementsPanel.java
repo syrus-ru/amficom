@@ -1,50 +1,21 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.awt.Component;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
-import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JToolBar;
+import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
-import javax.swing.JOptionPane;
-
-import com.syrus.AMFICOM.Client.General.Event.CatalogNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
-import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-import com.syrus.AMFICOM.Client.Resource.Network.CablePort;
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-import com.syrus.AMFICOM.Client.Resource.Network.Link;
-import com.syrus.AMFICOM.Client.Resource.Network.Port;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCablePort;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 import com.jgraph.graph.*;
-import com.jgraph.graph.GraphModel;
-import com.jgraph.graph.GraphUndoManager;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.Network.Port;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class ElementsPanel extends UgoPanel
 		implements KeyListener
@@ -310,7 +281,7 @@ public class ElementsPanel extends UgoPanel
 		super.operationPerformed(ae);
 	}
 
-	protected void setProtoCell (ProtoElement proto)
+	protected void setProtoCell (ProtoElement proto, Point p)
 	{
 		if (proto != null)
 		{
@@ -319,7 +290,7 @@ public class ElementsPanel extends UgoPanel
 			DataSourceInterface dataSource = aContext.getDataSourceInterface();
 			ProtoElement new_proto = (ProtoElement)proto.clone(dataSource);
 
-			insertCell(new_proto.serializable_cell, false);
+			insertCell(new_proto.serializable_cell, false, p);
 			repaint();
 		}
 	}

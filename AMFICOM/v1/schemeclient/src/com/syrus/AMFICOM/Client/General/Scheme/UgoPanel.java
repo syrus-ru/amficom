@@ -152,7 +152,7 @@ public class UgoPanel extends JPanel
 					if (obj instanceof ProtoElement)
 					{
 						ProtoElement proto = (ProtoElement)obj;
-						setProtoCell(proto);
+						setProtoCell(proto, null);
 					}
 					graph.skip_notify = false;
 				}
@@ -507,7 +507,7 @@ public class UgoPanel extends JPanel
 		return scheme;
 	}
 
-	protected void setProtoCell (ProtoElement proto)
+	protected void setProtoCell (ProtoElement proto, Point p)
 	{
 		if (!insert_ugo)
 			return;
@@ -572,14 +572,14 @@ public class UgoPanel extends JPanel
 	//	assignClonedIds(clones);
 	}
 
-	public Map insertCell (Serializable serializable_cell, boolean remove_old)
+	public Map insertCell (Serializable serializable_cell, boolean remove_old, Point p)
 	{
 		if (remove_old)
 			GraphActions.clearGraph(graph);
 
 		if (serializable_cell != null && serializable_cell instanceof Vector)
 		{
-			Map clones = graph.copyFromArchivedState(serializable_cell, new Point(0, 0));
+			Map clones = graph.copyFromArchivedState(serializable_cell, p);
 
 			Vector v = (Vector) serializable_cell;
 			Object[] cells = (Object[]) v.get(0);

@@ -203,16 +203,18 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 		if (selectedObject instanceof MapProtoGroup)
 		{
 			MapProtoGroup group = (MapProtoGroup)selectedObject;
-
-			MapProtoElement new_proto = gpp.createMapProtoElement();
-			if (new_proto != null)
+			if (group.group_ids.isEmpty())
 			{
-				group.mapproto_ids.add(new_proto.getId());
-				aContext.getDataSourceInterface().SaveMapProtoElements(new String[] {new_proto.getId()});
-				aContext.getDataSourceInterface().SaveMapProtoGroups(new String[] {group.getId()});
+				MapProtoElement new_proto = gpp.createMapProtoElement();
+				if (new_proto != null)
+				{
+					group.mapproto_ids.add(new_proto.getId());
+					aContext.getDataSourceInterface().SaveMapProtoElements(new String[] {new_proto.getId()});
+					aContext.getDataSourceInterface().SaveMapProtoGroups(new String[] {group.getId()});
 
-				new_proto.owner_id = aContext.getSessionInterface().getUserId();
-				dispatcher.notify(new TreeListSelectionEvent(group.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
+					new_proto.owner_id = aContext.getSessionInterface().getUserId();
+					dispatcher.notify(new TreeListSelectionEvent(group.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
+				}
 			}
 		}
 	}

@@ -1,24 +1,16 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.Map;
+import java.awt.*;
+import java.awt.datatransfer.*;
+import java.awt.dnd.*;
+import java.awt.event.*;
+import java.io.IOException;
+import java.util.*;
 
-import com.jgraph.graph.CellHandle;
-import com.jgraph.graph.CellView;
-import com.jgraph.graph.DefaultEdge;
-import com.jgraph.graph.DefaultPort;
-import com.jgraph.graph.GraphConstants;
-import com.jgraph.graph.GraphContext;
-import com.jgraph.graph.GraphLayoutCache;
+import com.jgraph.graph.*;
 import com.jgraph.pad.GPGraphUI;
-import com.jgraph.plaf.basic.BasicGraphUI;
-//import com.jgraph.plaf.basic.BasicGraphUI$MouseHandler;
-//import com.jgraph.plaf.basic.BasicGraphUI$RootHandle;
+import com.jgraph.plaf.basic.*;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class SchemeGraphUI extends GPGraphUI
 {
@@ -47,6 +39,59 @@ public class SchemeGraphUI extends GPGraphUI
 	protected MouseListener createMouseListener()
 	{
 		return new SchemeMouseHandler();
+	}
+
+	class SchemeGraphDropTargetListener extends BasicGraphUI.GraphDropTargetListener
+	{
+		SchemeGraphDropTargetListener()
+		{
+			DropTarget dt = new DropTarget(graph, this);
+			dt.setActive(true);
+		}
+
+		public void drop(DropTargetDropEvent e)
+		{
+			Point p = e.getLocation();
+			DataFlavor[] df = e.getCurrentDataFlavors();
+
+			if (df[0].getHumanPresentableName().equals("ProtoElementLabel"))
+			{
+				try
+				{
+					ProtoElement proto = (ProtoElement)e.getTransferable().getTransferData(df[0]);
+					e.acceptDrop(DnDConstants.ACTION_MOVE);
+					e.getDropTargetContext().dropComplete(true);
+					((SchemeGraph)graph).panel.setProtoCell(proto, p);
+				}
+				catch (UnsupportedFlavorException ex)
+				{
+					e.getDropTargetContext().dropComplete(false);
+				}
+				catch (IOException ex)
+				{
+					e.getDropTargetContext().dropComplete(false);
+				}
+			}
+
+		}
+	}
+
+	protected void installListeners()
+	{
+		super.installListeners();
+		DropTarget dropTarget = graph.getDropTarget();
+		try
+		{
+			if (dropTarget != null)
+			{
+				defaultDropTargetListener = new SchemeGraphDropTargetListener();
+				dropTarget.addDropTargetListener(defaultDropTargetListener);
+			}
+		}
+		catch (TooManyListenersException tmle)
+		{
+			// should not happen... swing drop target is multicast
+		}
 	}
 
 	public class SchemeMouseHandler extends BasicGraphUI.MouseHandler

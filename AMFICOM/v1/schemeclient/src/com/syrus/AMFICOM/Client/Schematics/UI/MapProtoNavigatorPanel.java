@@ -1,36 +1,19 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Enumeration;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
+import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.MapProtoGroup;
-
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import oracle.jdeveloper.layout.*;
 
 public class MapProtoNavigatorPanel extends JPanel implements OperationListener
 {
@@ -196,6 +179,7 @@ public class MapProtoNavigatorPanel extends JPanel implements OperationListener
 				{
 					MapProtoGroup parent_group = (MapProtoGroup)Pool.get(MapProtoGroup.typ, group.parent_id);
 					parent_group.group_ids.remove(group.getId());
+					aContext.getDataSourceInterface().SaveMapProtoGroups(new String[] {parent_group.getId()});
 				}
 			}
 			else
@@ -210,19 +194,30 @@ public class MapProtoNavigatorPanel extends JPanel implements OperationListener
 					JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.YES_OPTION)
 			{
-				aContext.getDataSourceInterface().RemoveMapProtoElements(new String[] {map_proto.getId()});
 				String id = map_proto.getId();
+				aContext.getDataSourceInterface().RemoveMapProtoElements(new String[] {id});
 				Pool.remove(MapProtoElement.typ, id);
 
+				ArrayList groups = new ArrayList();
 				for (Enumeration enum = Pool.getHash(MapProtoGroup.typ).elements(); enum.hasMoreElements();)
 				{
 					MapProtoGroup group = (MapProtoGroup)enum.nextElement();
 					if (group.mapproto_ids.contains(id));
 					{
 						group.mapproto_ids.remove(id);
-						dispatcher.notify(new TreeListSelectionEvent(group.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
-						break;
+						groups.add(group);
 					}
+				}
+				if (!groups.isEmpty())
+				{
+					String[] ids = new String[groups.size()];
+					for (int i = 0; i < groups.size(); i++)
+						ids[i] = ((MapProtoGroup)groups.get(i)).getId();
+
+					aContext.getDataSourceInterface().SaveMapProtoGroups(ids);
+					dispatcher.notify(new TreeListSelectionEvent(
+							((MapProtoGroup)groups.get(0)).getTyp(),
+							TreeListSelectionEvent.REFRESH_EVENT));
 				}
 			}
 			else

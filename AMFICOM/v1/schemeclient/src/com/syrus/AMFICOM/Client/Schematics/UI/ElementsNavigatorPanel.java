@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -217,15 +218,26 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 				aContext.getDataSourceInterface().RemoveMapProtoElements(new String[] {id});
 				Pool.remove(MapProtoElement.typ, id);
 
+				ArrayList groups = new ArrayList();
 				for (Enumeration enum = Pool.getHash(MapProtoGroup.typ).elements(); enum.hasMoreElements();)
 				{
 					MapProtoGroup group = (MapProtoGroup)enum.nextElement();
 					if (group.mapproto_ids.contains(id));
 					{
 						group.mapproto_ids.remove(id);
-						dispatcher.notify(new TreeListSelectionEvent(group.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
-						break;
+						groups.add(group);
 					}
+				}
+				if (!groups.isEmpty())
+				{
+					String[] ids = new String[groups.size()];
+					for (int i = 0; i < groups.size(); i++)
+						ids[i] = ((MapProtoGroup)groups.get(i)).getId();
+
+					aContext.getDataSourceInterface().SaveMapProtoGroups(ids);
+					dispatcher.notify(new TreeListSelectionEvent(
+							((MapProtoGroup)groups.get(0)).getTyp(),
+							TreeListSelectionEvent.REFRESH_EVENT));
 				}
 			}
 			else

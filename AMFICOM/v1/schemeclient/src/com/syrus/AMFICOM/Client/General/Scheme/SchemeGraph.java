@@ -1,52 +1,20 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
-import javax.swing.JButton;
-import javax.swing.JPopupMenu;
-import javax.swing.JToggleButton;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
+import com.jgraph.graph.*;
+import com.jgraph.pad.*;
+import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPathElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-
-import com.jgraph.graph.CellMapper;
-import com.jgraph.graph.CellViewRenderer;
-import com.jgraph.graph.ConnectionSet;
-import com.jgraph.graph.DefaultEdge;
-import com.jgraph.graph.DefaultGraphCell;
-import com.jgraph.graph.DefaultGraphModel;
-import com.jgraph.graph.Edge;
-import com.jgraph.graph.EdgeView;
-import com.jgraph.graph.GraphConstants;
-import com.jgraph.graph.GraphLayoutCache;
-import com.jgraph.graph.GraphModel;
-import com.jgraph.graph.GraphUndoManager;
-import com.jgraph.graph.Port;
-import com.jgraph.graph.PortView;
-import com.jgraph.graph.VertexView;
-import com.jgraph.pad.GPGraph;
-//import com.jgraph.pad.GPGraph$GPMarqueeHandler;
-import com.jgraph.plaf.GraphUI;
 
 public class SchemeGraph extends GPGraph
 {
@@ -67,8 +35,6 @@ public class SchemeGraph extends GPGraph
 
 	public boolean is_debug = false;
 	private boolean changed = false;
-
-//	public static SchemeVertexRenderer scheme_renderer = new SchemeVertexRenderer();
 
 	public SchemeGraph(ApplicationContext aContext, UgoPanel panel)
 	{
@@ -174,6 +140,10 @@ public class SchemeGraph extends GPGraph
 
 		public CellViewRenderer getRenderer() {
 			return DeviceView.renderer;
+		}
+
+		public Rectangle getPureBounds() {
+			return bounds;
 		}
 	}
 
@@ -494,25 +464,38 @@ public class SchemeGraph extends GPGraph
 			// вставляем клонированные селлы
 			Object[] cloned_cells = clones.values().toArray();
 			getGraphLayoutCache().insert(cloned_cells, viewAttributes, cs, null, null);
+
+
+			if (p != null)
+			{
+				Point setpoint = snap(p);
+				Rectangle rect;
+				CellView[] cv = getGraphLayoutCache().getMapping(cloned_cells);
+				//CellView[] cv2 = getGraphLayoutCache().getAllDescendants(cv);
+				CellView topcv = cv[0];
+				for (int i = 0; i < cv.length; i++)
+					if (cv[i] instanceof DeviceView)
+					{
+						topcv = cv[i];
+						break;
+					}
+				if (topcv instanceof SchemeVertexView)
+					rect = ((SchemeVertexView)topcv).getPureBounds();
+				else
+					rect = topcv.getBounds();
+
+				p = snap(new Point((int)(p.x / (2 * getScale()) - rect.x / 2), (int)(p.y / (2 * getScale()) - rect.y / 2)));
+				//getGraphLayoutCache().update(getGraphLayoutCache().getAllDescendants(cv));
+				getGraphLayoutCache().setRememberCellViews(false);
+				getGraphLayoutCache().translateViews(cv, p.x, p.y);
+				getGraphLayoutCache().update(cv);
+			}
+
 			return clones;
 		}
 		return null;
 	}
-/*
-	ArrayList createElementsList(SchemeElement element)
-	{
-		ArrayList elements = new ArrayList();
-		//for (int i = 0; i < element.element_ids.size(); i++)
-		for (Enumeration en = element.getChildElements(); en.hasMoreElements();)
-		{
-			SchemeElement el = (SchemeElement)en.nextElement();
-			//SchemeElement el = (SchemeElement)Pool.get(SchemeElement.typ, (String)element.element_ids.get(i));
-			elements.addAll(createElementsList(el));
-		}
-		elements.add(element);
-		return elements;
-	}
-*/
+
 	public void setGraphEditable(boolean b)
 	{
 		//setBendable(b);
