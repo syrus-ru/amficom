@@ -1,82 +1,82 @@
+
 package com.syrus.AMFICOM.map;
 
-public class IntDimension implements java.io.Serializable 
-{
-    
-    public int width;
+public class IntDimension implements java.io.Serializable {
 
-    public int height;
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3256440309234872368L;
+	/**
+	 * @deprecated use correspond accessors
+	 */
+	public int	width;
+	/**
+	 * @deprecated use correspond accessors
+	 */
+	public int	height;
 
-
-    public IntDimension() 
-	{
+	public IntDimension() {
 		this(0, 0);
-    }
+	}
 
-    public IntDimension(IntDimension d) 
-	{
+	public IntDimension(IntDimension d) {
 		this(d.width, d.height);
-    }
+	}
 
-    public IntDimension(int width, int height) 
-	{
+	public IntDimension(int width, int height) {
 		this.width = width;
 		this.height = height;
-    }
+	}
 
-    /**
-     * Returns the width of this dimension in double precision.
-     * @return the width of this dimension in double precision
-     */
-    public double getWidth() 
-	{
-		return width;
-    }
+	public int getWidth() {
+		return this.width;
+	}
 
-    public double getHeight() 
-	{
-		return height;
-    }
+	public int getHeight() {
+		return this.height;
+	}
 
-    public void setSize(double width, double height) 
-	{
+	public void setSize(double width, double height) {
 		this.width = (int) Math.ceil(width);
 		this.height = (int) Math.ceil(height);
-    }
+	}
 
-    public IntDimension getSize() 
-	{
-		return new IntDimension(width, height);
-    }	
+	public IntDimension getSize() {
+		return new IntDimension(this.width, this.height);
+	}
 
-    public void setSize(IntDimension d) 
-	{
+	public void setSize(IntDimension d) {
 		setSize(d.width, d.height);
-    }	
+	}
 
-    public void setSize(int width, int height) 
-	{
-    	this.width = width;
-    	this.height = height;
-    }	
+	public void setSize(int width, int height) {
+		this.width = width;
+		this.height = height;
+	}
 
-    public boolean equals(Object obj) 
-	{
+	public boolean equals(Object obj) {
 		if (obj instanceof IntDimension) {
-			IntDimension d = (IntDimension)obj;
-			return (width == d.width) && (height == d.height);
+			IntDimension d = (IntDimension) obj;
+			return (this.width == d.width) && (this.height == d.height);
 		}
 		return false;
-    }
+	}
 
-    public int hashCode() 
-	{
-        int sum = width + height;
-        return sum * (sum + 1)/2 + width;
-    }
+	public int hashCode() {
+		int sum = this.width + this.height;
+		return sum * (sum + 1) / 2 + this.width;
+	}
 
-    public String toString() 
-	{
-		return getClass().getName() + "[width=" + width + ",height=" + height + "]";
-    }
+	public String toString() {
+		return getClass().getName() + "[width=" + this.width + ",height=" + this.height + "]";
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
 }
