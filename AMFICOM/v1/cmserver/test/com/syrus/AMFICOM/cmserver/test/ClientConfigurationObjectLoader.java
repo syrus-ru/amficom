@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.4 2004/09/28 09:44:25 max Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.5 2004/09/29 06:12:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,12 +36,13 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/28 09:44:25 $
- * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2004/09/29 06:12:51 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -295,131 +296,131 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		throw new UnsupportedOperationException();
 	}
     
-    public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws DatabaseException, CommunicationException{
+    public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws DatabaseException, CommunicationException{
+     public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void savePortType(PortType portType, boolean force) throws DatabaseException, CommunicationException{
+     public void savePortType(PortType portType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws DatabaseException, CommunicationException{
+     public void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveCharacteristic(Characteristic characteristic, boolean force) throws DatabaseException, CommunicationException{
+     public void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-//     public void savePermissionAttributes(PermissionAttributes permissionAttributes, Boolean force) throws DatabaseException, CommunicationException{
+//     public void savePermissionAttributes(PermissionAttributes permissionAttributes, Boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
 //    }
 
-     public void saveUser(User user, boolean force) throws DatabaseException, CommunicationException{
+     public void saveUser(User user, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveDomain(Domain domain, boolean force) throws DatabaseException, CommunicationException{
+     public void saveDomain(Domain domain, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveServer(Server server, boolean force) throws DatabaseException, CommunicationException{
+     public void saveServer(Server server, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMCM(MCM mCM, boolean force) throws DatabaseException, CommunicationException{
+     public void saveMCM(MCM mCM, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveEquipment(Equipment equipment, boolean force) throws DatabaseException, CommunicationException{
+     public void saveEquipment(Equipment equipment, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void savePort(Port port, boolean force) throws DatabaseException, CommunicationException{
+     public void savePort(Port port, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws DatabaseException, CommunicationException{
+     public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveKIS(KIS kIS, boolean force) throws DatabaseException, CommunicationException{
+     public void saveKIS(KIS kIS, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws DatabaseException, CommunicationException{
+     public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws DatabaseException, CommunicationException{
+     public void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveCharacteristicTypes(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void saveCharacteristicTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveEquipmentTypes(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void saveEquipmentTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void savePortTypes(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void savePortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMeasurementPortTypes(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void saveMeasurementPortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveCharacteristics(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void saveCharacteristics(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-//     public void savePermissionAttributes(PermissionAttributes permissionAttributes) throws DatabaseException, CommunicationException{
+//     public void savePermissionAttributes(PermissionAttributes permissionAttributes) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
 //     }
 
-     public void saveUsers(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void saveUsers(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveDomains(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void saveDomains(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveServers(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void saveServers(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMCMs(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void saveMCMs(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveEquipments(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void saveEquipments(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void savePorts(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void savePorts(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveTransmissionPaths(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void saveTransmissionPaths(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveKISs(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void saveKISs(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMeasurementPorts(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void saveMeasurementPorts(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
-     public void saveMonitoredElements(List list, boolean force) throws DatabaseException, CommunicationException{
+     public void saveMonitoredElements(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
 
