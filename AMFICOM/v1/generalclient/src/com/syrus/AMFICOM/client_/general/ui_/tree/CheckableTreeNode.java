@@ -1,5 +1,5 @@
 /*
- * $Id: CheckableTreeNode.java,v 1.1 2005/03/05 11:33:03 stas Exp $
+ * $Id: CheckableTreeNode.java,v 1.2 2005/03/10 07:54:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,11 @@ import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 
 import javax.swing.*;
-import javax.swing.Icon;
 import javax.swing.tree.MutableTreeNode;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/05 11:33:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/10 07:54:59 $
  * @module generalclient_v1
  */
 
@@ -56,14 +55,13 @@ public class CheckableTreeNode extends StorableObjectTreeNode {
 	}
 	
 	public void mouseClicked(MouseEvent e) {
-		if (SwingUtilities.isRightMouseButton(e) || e.getClickCount() == 2) {
+		if (SwingUtilities.isRightMouseButton(e)) {
 			this.isChecked = !this.isChecked;
 			for (Enumeration en = children(); en.hasMoreElements();) {
 				MutableTreeNode child = (MutableTreeNode) en.nextElement();
 				if (child instanceof CheckableTreeNode)
 					((CheckableTreeNode) child).setChecked(this.isChecked);
 			}
-			
 		}	
 	}
 }

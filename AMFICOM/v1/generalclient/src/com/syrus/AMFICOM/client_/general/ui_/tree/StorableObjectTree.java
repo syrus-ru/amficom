@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectTree.java,v 1.1 2005/03/05 15:20:38 stas Exp $
+ * $Id: StorableObjectTree.java,v 1.2 2005/03/10 07:54:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/05 15:20:38 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/10 07:54:59 $
  * @module generalclient_v1
  */
 
@@ -48,6 +48,7 @@ public class StorableObjectTree extends JTree implements OperationListener,
 		super(new Object[0]);
 		this.dispatcher = disp;
 		this.dispatcher.register(this, TreeDataSelectionEvent.type);
+		this.dispatcher.register(this, TreeListSelectionEvent.typ);
 		try {
 			jbInit();
 		} catch (Exception e) {
@@ -136,19 +137,44 @@ public class StorableObjectTree extends JTree implements OperationListener,
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
 
-	public boolean setNodeSelection(DefaultMutableTreeNode orte, Object o) {
-		boolean selected = false;
-		return selected;
-	}
-
 	public void operationPerformed(OperationEvent ev) {
 		if (ev.getActionCommand().equals(TreeListSelectionEvent.typ)) {
 			TreeListSelectionEvent select_event = (TreeListSelectionEvent) ev;
 			if (select_event.SELECT) {
-			// TODO
+				Object o = ev.getSource();
+				StorableObjectTreeNode node = null;
+				TreePath tp = getSelectionPath();
+				if (tp != null) {
+					StorableObjectTreeNode startNode = (StorableObjectTreeNode)tp.getParentPath().getLastPathComponent();
+					node = getNodeForObject(startNode, o, true);
+				}
+				if (node == null)
+					node = getNodeForObject(root, o, false);
+				if (node == null)
+					node = getNodeForObject(root, o, true);
+				if (node != null)
+					setSelectionPath(new TreePath(node.getPath()));				
 			} 
 			else if (select_event.REFRESH) {
-			// TODO
+				Object o = ev.getSource();
+				if (o == null || o.equals("")) {
+					TreePath tp = getSelectionPath();
+					if (tp != null) {
+						StorableObjectTreeNode parentNode = (StorableObjectTreeNode)tp.getParentPath().getLastPathComponent();
+						parentNode.setExpanded(false);
+						expandNode(parentNode);
+						updateUI();
+					}
+				} 
+				else {
+					StorableObjectTreeNode node = getNodeForObject(root, o, false);
+					if (node != null && node.getParent() != null) {
+						StorableObjectTreeNode parentNode = (StorableObjectTreeNode)node.getParent();
+						parentNode.setExpanded(false);
+						expandNode(parentNode);
+						updateUI();
+					}	
+				}
 			} 
 			else if (select_event.DESELECT) {
 				getSelectionModel().clearSelection();
@@ -185,13 +211,13 @@ public class StorableObjectTree extends JTree implements OperationListener,
 			StorableObjectTreeNode parentNode = (StorableObjectTreeNode)node.getParent();
 			cl = otm.getNodeChildClass(parentNode);
 			controller = otm.getNodeChildController(parentNode);
-			n = res.indexOf(selectedObject);
-			
+						
 			for (Enumeration enumeration = parentNode.children(); enumeration.hasMoreElements();) {
 				Object childObj = ((StorableObjectTreeNode)enumeration.nextElement()).getObject();
 				if (!(childObj instanceof String))
 					res.add(childObj);
 			}
+			n = res.indexOf(selectedObject);
 		}
 
 		TreeDataSelectionEvent event = new TreeDataSelectionEvent(this, res, cl, n,
@@ -204,75 +230,40 @@ public class StorableObjectTree extends JTree implements OperationListener,
 
 	void tree_treeWillExpand(TreeExpansionEvent e) {
 		StorableObjectTreeNode node = (StorableObjectTreeNode)e.getPath().getLastPathComponent();
+		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+		expandNode(node);
+		setSelectionPath(new TreePath(node.getPath()));
+		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+	}
+	
+	void expandNode(StorableObjectTreeNode node) {
 		if (!node.isExpanded()) {
-			this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			node.removeAllChildren();
+			node.removeAllChildren();	
 			List vec = otm.getChildNodes(node);
 			for (Iterator it = vec.iterator(); it.hasNext();) {
 				node.add((DefaultMutableTreeNode) it.next());
 			}
-			setSelectionPath(new TreePath(node.getPath()));
 			node.setExpanded(true);
-			this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
-
-	DefaultMutableTreeNode recure_tree_exp(StorableObjectTreeNode tn, Object o) {
-		DefaultMutableTreeNode oooo = null;
-		if (!tn.getAllowsChildren())
-			return null;
-
-		StorableObjectTreeNode fc = (StorableObjectTreeNode) tn.getFirstChild();
-
-		Object obj = fc.getObject();
-		if (obj instanceof String && ((String) obj).length() == 0) {
-			this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			tn.removeAllChildren();
-			List vec = otm.getChildNodes(tn);
-			this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-			if (vec.size() == 0)
-				tn.setAllowsChildren(false);
-
-			for (Iterator it = vec.iterator(); it.hasNext();) {
-				StorableObjectTreeNode tnn = (StorableObjectTreeNode)it.next();
-				tn.add(tnn);
-
-				if (!tnn.getObject().equals(o)) {
-					oooo = recure_tree_exp(tnn, o);
-					if (oooo != null) {
-						for (; it.hasNext();) {
-							StorableObjectTreeNode temp = ((StorableObjectTreeNode)it.next());
-							tn.add(temp);
-						}
-						break;
-					}
-				} 
-				else {
-					oooo = tnn;
-					for (; it.hasNext();) {
-						StorableObjectTreeNode temp = ((StorableObjectTreeNode)it.next());
-						tn.add(temp);
-					}
-					break;
-				}
-			}
-		} 
-		else {
-			for (Enumeration en = tn.children(); en.hasMoreElements();) {
-				StorableObjectTreeNode tnn = (StorableObjectTreeNode) en.nextElement();
-				if (!tnn.getObject().equals(o)) {
-					oooo = recure_tree_exp(tnn, o);
-					if (oooo != null) {
-						break;
-					}
-				} 
-				else {
-					oooo = tnn;
-					break;
-				}
-			}
+	
+	StorableObjectTreeNode getNodeForObject (StorableObjectTreeNode startNode, Object obj, boolean forceExpansion) {
+		if (startNode.getObject().equals(obj))
+			return startNode;
+		if (forceExpansion)
+			expandNode(startNode);
+		for (Enumeration en = startNode.children(); en.hasMoreElements();) {
+			StorableObjectTreeNode child = (StorableObjectTreeNode)en.nextElement();
+			if (child.getObject().equals(obj))
+				return child;
 		}
-		return oooo;
+		for (Enumeration en = startNode.children(); en.hasMoreElements();) {
+			StorableObjectTreeNode child = (StorableObjectTreeNode)en.nextElement();
+			StorableObjectTreeNode node = getNodeForObject(child, obj, forceExpansion);
+			if (node != null)
+				return node;
+		}
+		return null;
 	}
 
 	public void dragGestureRecognized(DragGestureEvent event) {
