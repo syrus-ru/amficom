@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.34 2005/01/13 15:15:27 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.35 2005/01/21 14:54:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,40 +19,19 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveNodeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
-import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
-import com.syrus.AMFICOM.Client.Resource.ImageResource;
 import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StringFieldCondition;
-import com.syrus.AMFICOM.general.corba.StringFieldSort;
-import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
-import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
-import com.syrus.AMFICOM.map.PhysicalLinkType;
-import com.syrus.AMFICOM.map.Mark;
-import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
 import com.syrus.AMFICOM.Client.Map.mapview.AlarmMarker;
 import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
@@ -60,50 +39,46 @@ import com.syrus.AMFICOM.Client.Map.mapview.EventMarker;
 import com.syrus.AMFICOM.Client.Map.mapview.Marker;
 import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 import com.syrus.AMFICOM.Client.Map.mapview.Selection;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
-import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.scheme.PathDecompositor;
-import com.syrus.AMFICOM.scheme.corba.*;
-
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.resource.FileImageResource;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.scheme.PathDecompositor;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.SchemePath;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import javax.swing.ImageIcon;
 
 /**
  * Управляет отображением логической структуры сети.
  * 
  * 
  * 
- * @version $Revision: 1.34 $, $Date: 2005/01/13 15:15:27 $
+ * @version $Revision: 1.35 $, $Date: 2005/01/21 14:54:26 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -637,8 +612,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 */
 	public void drawLines(Graphics g)
 	{
-		Graphics2D p = (Graphics2D )g;
-		
 		Iterator e;
 	
 		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
@@ -678,7 +651,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				PhysicalLink mple = 
 					(PhysicalLink)it.next();
 				getMapViewController().getController(mple).paint(mple, g, visibleBounds);
-//				mple.paint(g, visibleBounds);
 			}
 		}
 		else
@@ -690,7 +662,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				CablePath cpath = 
 					(CablePath)it.next();
 				getMapViewController().getController(cpath).paint(cpath, g, visibleBounds);
-//				cpath.paint(g, visibleBounds);
 				elementsToDisplay.removeAll(cpath.getLinks());
 			}
 			for(Iterator it = elementsToDisplay.iterator(); it.hasNext();)
@@ -698,7 +669,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				PhysicalLink mple = 
 					(PhysicalLink)it.next();
 				getMapViewController().getController(mple).paint(mple, g, visibleBounds);
-//				mple.paint(g, visibleBounds);
 			}
 		}
 		else
@@ -710,7 +680,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				PhysicalLink mple = 
 					(PhysicalLink)e.next();
 				getMapViewController().getController(mple).paint(mple, g, visibleBounds);
-//				mple.paint(g, visibleBounds);
 			}
 		}
 		else
@@ -721,7 +690,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 				NodeLink curNodeLink = (NodeLink)e.next();
 				getMapViewController().getController(curNodeLink).paint(curNodeLink, g, visibleBounds);
-//				curNodeLink.paint(p, visibleBounds);
 			}
 		}
 	}
@@ -731,26 +699,22 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 */
 	public void drawNodes(Graphics g)
 	{
-		Graphics2D pg = (Graphics2D )g;
-
 		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
 
 		boolean showNodes = MapPropertiesManager.isShowPhysicalNodes();
 		Iterator e = getMapView().getMap().getNodes().iterator();
 		while (e.hasNext())
 		{
-			AbstractNode curNode = (AbstractNode)e.next();
+			AbstractNode curNode = (AbstractNode )e.next();
 			if(curNode instanceof TopologicalNode)
 			{
 				if(showNodes)
 				{
 					getMapViewController().getController(curNode).paint(curNode, g, visibleBounds);
-//					curNode.paint(pg, visibleBounds);
 				}
 			}
 			else
 				getMapViewController().getController(curNode).paint(curNode, g, visibleBounds);
-//				curNode.paint(pg, visibleBounds);
 		}
 /*
 		e = getMapView().getMarkers().iterator();
@@ -818,8 +782,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 	public void drawSelection(Graphics g)
 	{
-		Graphics2D pg = (Graphics2D )g;
-
 		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
 
 		Iterator e = getMapView().getMap().getSelectedElements().iterator();
@@ -827,7 +789,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		{
 			MapElement el = (MapElement)e.next();
 			getMapViewController().getController(el).paint(el, g, visibleBounds);
-//			el.paint(pg, visibleBounds);
 		}
 	}
 
@@ -1388,7 +1349,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
 		
 		MapView mapView = getMapView();
-		Map map = mapView.getMap();
 
 		//Здесь пробегаемся по всем элементам и если на каком-нибудь из них курсор
 		//то устанавливаем его текущим элементом
