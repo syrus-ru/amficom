@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.13 2005/03/30 11:08:09 arseniy Exp $
+ * $Id: CMGeneralTransmit.java,v 1.14 2005/03/30 11:25:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/03/30 11:08:09 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/30 11:25:27 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -457,7 +457,8 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 	public Identifier_Transferable[] transmitRefreshedGeneralObjects(StorableObject_Transferable[] storableObjects_Transferables,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
-		Log.debugMessage("Refreshing for user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMGeneralTransmit.transmitRefreshedGeneralObjects | Refreshing for user '"
+				+ accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 		try {
 
 			Map storableObjectsTMap = new HashMap();
@@ -475,12 +476,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 					it.remove();
 			}
 
-			int i = 0;
-			Identifier_Transferable[] idsT = new Identifier_Transferable[storableObjects.size()];
-			for (Iterator it = storableObjects.iterator(); it.hasNext(); i++)
-				idsT[i] = (Identifier_Transferable) ((StorableObject) it.next()).getId().getTransferable();
-			Log.debugMessage("CMServer.transmitRefreshedConfigurationObjects | return " + idsT.length + " item(s)", Log.DEBUGLEVEL05);
-			return idsT;
+			return Identifier.createTransferables(storableObjects);
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
