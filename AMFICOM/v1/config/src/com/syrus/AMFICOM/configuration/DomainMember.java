@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.5 2004/07/27 16:03:30 arseniy Exp $
+ * $Id: DomainMember.java,v 1.6 2004/07/28 12:54:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $ $, $ $
+ * @version $Revision: 1.6 $, $Date: 2004/07/28 12:54:18 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */

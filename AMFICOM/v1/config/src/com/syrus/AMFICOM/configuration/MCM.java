@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.6 2004/07/27 16:03:30 arseniy Exp $
+ * $Id: MCM.java,v 1.7 2004/07/28 12:54:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $ $, $ $
+ * @version $Revision: 1.7 $, $Date: 2004/07/28 12:54:18 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.5 2004/07/28 12:49:46 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.6 2004/07/28 12:54:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $ $, $ $
+ * @version $Revision: 1.6 $, $Date: 2004/07/28 12:54:18 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectTypePool.java,v 1.2 2004/07/27 16:03:30 arseniy Exp $
+ * $Id: ConfigurationObjectTypePool.java,v 1.3 2004/07/28 12:54:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.util.Log;
 
 /**
- * @version $ $, $ $
+ * @version $Revision: 1.3 $, $Date: 2004/07/28 12:54:18 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */

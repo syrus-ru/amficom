@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.9 2004/07/27 16:03:30 arseniy Exp $
+ * $Id: KIS.java,v 1.10 2004/07/28 12:54:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 
 /**
- * @version $ $, $ $
+ * @version $Revision: 1.10 $, $Date: 2004/07/28 12:54:18 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.7 2004/07/27 16:03:30 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.8 2004/07/28 12:54:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 
 /**
- * @version $ $, $ $
+ * @version $Revision: 1.8 $, $Date: 2004/07/28 12:54:18 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
