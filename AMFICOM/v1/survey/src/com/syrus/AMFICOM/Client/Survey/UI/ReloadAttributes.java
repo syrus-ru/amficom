@@ -22,8 +22,8 @@ import java.util.Vector;
 
 import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
-import com.syrus.AMFICOM.Client.Configure.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Configure.Map.MapMainFrame;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapMainFrame;
 
 ///Thread для перезагрузки аттрибутов элементов карты
 public class ReloadAttributes 

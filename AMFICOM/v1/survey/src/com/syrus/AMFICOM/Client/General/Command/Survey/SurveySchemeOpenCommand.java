@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.General.Command.Survey;
 import java.awt.*;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.Configure.Map.UI.*;
+import com.syrus.AMFICOM.Client.Map.UI.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;

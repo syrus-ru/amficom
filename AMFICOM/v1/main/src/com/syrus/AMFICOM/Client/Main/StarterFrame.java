@@ -202,7 +202,7 @@ public class StarterFrame extends JFrame implements OperationListener
 		aModel.setCommand("menuToolsConfig", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Configure.Configure", LangModelMain.Text("menuToolsConfig")));
 		aModel.setCommand("menuToolsComponents", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Schematics.Elements.ElementsEditor", LangModelMain.Text("menuToolsComponents")));
 		aModel.setCommand("menuToolsScheme", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeEditor", LangModelMain.Text("menuToolsScheme")));
-		aModel.setCommand("menuToolsMap", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Configure.Map.Editor.MapEditor", LangModelMain.Text("menuToolsMap")));
+		aModel.setCommand("menuToolsMap", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Map.Editor.MapEditor", LangModelMain.Text("menuToolsMap")));
 		aModel.setCommand("menuToolsTrace", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Optimize.Optimize", LangModelMain.Text("menuToolsTrace")));
 		aModel.setCommand("menuToolsSchedule", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Schedule.Schedule", LangModelMain.Text("menuToolsSchedule")));
 		aModel.setCommand("menuToolsSurvey", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Survey.Survey", LangModelMain.Text("menuToolsSurvey")));

@@ -9,8 +9,8 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.AMFICOM.Client.Configure.*;
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.Configure.Map.Setup.*;
+import com.syrus.AMFICOM.Client.Map.*;
+import com.syrus.AMFICOM.Client.Map.Setup.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 

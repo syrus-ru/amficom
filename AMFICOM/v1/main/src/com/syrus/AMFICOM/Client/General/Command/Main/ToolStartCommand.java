@@ -104,13 +104,13 @@ class MyThread extends Thread
 				new com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeEditor(new DefaultSchematicsApplicationModelFactory());
 			}
 			else
-			if(toolName.equals("com.syrus.AMFICOM.Client.Configure.Map.Editor.MapEditor"))
+			if(toolName.equals("com.syrus.AMFICOM.Client.Map.Editor.MapEditor"))
 			{
 				LangModelConfig.initialize();
 				LangModelMap.initialize();
 				LangModelSchematics.initialize();
 				LangModelReport.initialize();
-				new com.syrus.AMFICOM.Client.Configure.Map.Editor.MapEditor(new DefaultMapEditorApplicationModelFactory());
+				new com.syrus.AMFICOM.Client.Map.Editor.MapEditor(new DefaultMapEditorApplicationModelFactory());
 			}
 			else
 			if(toolName.equals("com.syrus.AMFICOM.Client.Schematics.Elements.ElementsEditor"))

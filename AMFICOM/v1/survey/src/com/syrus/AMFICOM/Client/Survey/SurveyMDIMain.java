@@ -1,12 +1,11 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Survey;
 
-import com.syrus.AMFICOM.Client.Configure.Map.MapElementsFrame;
-import com.syrus.AMFICOM.Client.Configure.Map.MapMainFrame;
-import com.syrus.AMFICOM.Client.Configure.Map.MapPropertyFrame;
+import com.syrus.AMFICOM.Client.Map.MapElementsFrame;
+import com.syrus.AMFICOM.Client.Map.MapMainFrame;
+import com.syrus.AMFICOM.Client.Map.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.CloseAllInternalCommand;
-import com.syrus.AMFICOM.Client.General.Command.Config.MapJViewOpenCommand;
 import com.syrus.AMFICOM.Client.General.Command.Config.OpenMapEditorCommand;
 import com.syrus.AMFICOM.Client.General.Command.Config.OpenSchemeEditorCommand;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
@@ -332,9 +331,6 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 				internal_dispatcher, aContext));
 		//new SurveyNewMapViewCommand(internal_dispatcher, desktopPane,
 		// aContext, new MapSurveyNetApplicationModelFactory()));
-		aModel.setCommand("menuVisualizeISMGIS", new MapJViewOpenCommand(
-				internal_dispatcher, desktopPane, aContext,
-				new MapSurveyISMApplicationModelFactory()));
 		aModel.setCommand("menuVisualizeSchemeEdit",
 				new OpenSchemeEditorCommand(internal_dispatcher, aContext,
 						new SchematicsApplicationModelFactory()));
