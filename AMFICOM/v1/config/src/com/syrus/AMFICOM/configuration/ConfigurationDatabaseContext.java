@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.22 2004/10/22 10:23:41 max Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.23 2004/10/22 13:00:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/10/22 10:23:41 $
- * @author $Author: max $
+ * @version $Revision: 1.23 $, $Date: 2004/10/22 13:00:32 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -21,6 +21,7 @@ public class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase equipmentTypeDatabase;
 	protected static StorableObjectDatabase portTypeDatabase;
 	protected static StorableObjectDatabase measurementPortTypeDatabase;
+	protected static StorableObjectDatabase linkTypeDatabase;
     protected static StorableObjectDatabase kisTypeDatabase;
 	
 	protected static StorableObjectDatabase characteristicDatabase;
@@ -34,6 +35,7 @@ public class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase transmissionPathDatabase;
 	protected static StorableObjectDatabase kisDatabase;
 	protected static StorableObjectDatabase monitoredElementDatabase;
+	protected static StorableObjectDatabase linkDatabase;
 	
 	private ConfigurationDatabaseContext() {	
 		// private constructor 
@@ -43,6 +45,7 @@ public class ConfigurationDatabaseContext {
 													StorableObjectDatabase equipmentTypeDatabase1,
 													StorableObjectDatabase portTypeDatabase1,
 													StorableObjectDatabase measurementPortTypeDatabase1,
+													StorableObjectDatabase linkTypeDatabase1,
                                                     StorableObjectDatabase kisTypeDatabase1,
 													StorableObjectDatabase characteristicDatabase1,
 													StorableObjectDatabase userDatabase1,
@@ -54,11 +57,13 @@ public class ConfigurationDatabaseContext {
 													StorableObjectDatabase measurementPortDatabase1,
 													StorableObjectDatabase transmissionPathDatabase1,
 													StorableObjectDatabase kisDatabase1,
-													StorableObjectDatabase monitoredElementDatabase1) {
+													StorableObjectDatabase monitoredElementDatabase1,
+													StorableObjectDatabase linkDatabase1) {
 		characteristicTypeDatabase = characteristicTypeDatabase1;
 		equipmentTypeDatabase = equipmentTypeDatabase1;
 		portTypeDatabase = portTypeDatabase1;
 		measurementPortTypeDatabase = measurementPortTypeDatabase1;
+		linkTypeDatabase = linkTypeDatabase1;
         kisTypeDatabase = kisTypeDatabase1;
 		
 		characteristicDatabase = characteristicDatabase1;
@@ -72,6 +77,7 @@ public class ConfigurationDatabaseContext {
 		transmissionPathDatabase = transmissionPathDatabase1;
 		kisDatabase = kisDatabase1;
 		monitoredElementDatabase = monitoredElementDatabase1;
+		linkDatabase = linkTypeDatabase1;
 	}
 	public static StorableObjectDatabase getCharacteristicDatabase() {
 		return characteristicDatabase;
@@ -93,6 +99,9 @@ public class ConfigurationDatabaseContext {
 	}
     public static StorableObjectDatabase getKISTypeDatabase() {
         return kisTypeDatabase;
+    }
+    public static StorableObjectDatabase getLinkTypeDatabase() {
+        return linkTypeDatabase;
     }
 	public static StorableObjectDatabase getMCMDatabase() {
 		return mcmDatabase;

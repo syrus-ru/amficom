@@ -64,6 +64,10 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MeasurementPortDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElementDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/Link.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/LinkType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/LinkDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/LinkTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/StringFieldCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/LinkedIdsCondition.java
