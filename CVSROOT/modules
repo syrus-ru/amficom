@@ -50,3 +50,5 @@ trc		hw/trc
 t4		hw/t4
 
 util		util
+#M	idls	Client-side AMFICOM CORBA object & interface
+idls	idls
