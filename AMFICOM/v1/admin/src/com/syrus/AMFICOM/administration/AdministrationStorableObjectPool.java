@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.1 2005/01/14 18:05:13 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.2 2005/02/08 09:23:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/14 18:05:13 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/08 09:23:32 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -267,8 +267,8 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(List ids) throws DatabaseException, CommunicationException {
-		instance.deleteImpl(ids);
+	public static void delete(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+		instance.deleteImpl(objects);
 	}
 
 	protected void deleteStorableObject(Identifier id) throws DatabaseException, CommunicationException {
@@ -285,9 +285,9 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		}
 	}
 	
-	protected void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException {
+	protected void deleteStorableObjects(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		try {
-			aObjectLoader.delete(ids);
+			aObjectLoader.delete(objects);
 		}
 		catch (DatabaseException e) {
 			Log.errorMessage("AdministrationStorableObjectPool.deleteStorableObjects | DatabaseException: " + e.getMessage());
