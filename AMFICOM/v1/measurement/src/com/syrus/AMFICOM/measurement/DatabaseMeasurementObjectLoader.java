@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.23 2004/11/17 09:32:55 max Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.24 2004/11/17 11:17:40 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/11/17 09:32:55 $
+ * @version $Revision: 1.24 $, $Date: 2004/11/17 11:17:40 $
  * @author $Author: max $
  * @module measurement_v1
  */
@@ -477,7 +478,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
                     Log.errorMessage("DatabaseConfigurationObjectLoader.refresh | Unknown entity: "
                             + entityCode);                
             }
-            return (java.util.Set)loadedSo;
+            return new HashSet(loadedSo);
         } catch (DatabaseException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.refresh | DatabaseException: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.refresh | DatabaseException: " + e.getMessage());

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.32 2004/11/17 09:42:48 max Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.33 2004/11/17 11:19:51 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,13 +31,12 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.io.LRUMapSaver;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/11/17 09:42:48 $
+ * @version $Revision: 1.33 $, $Date: 2004/11/17 11:19:51 $
  * @author $Author: max $
  * @module configuration_v1
  */
