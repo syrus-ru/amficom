@@ -5,9 +5,9 @@ ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR = ../idl_v1/idl
 
-JAVACFLAGS = -source 1.3
-SUNJAVACFLAGS = -target 1.2
-JIKESFLAGS = -target 1.2
+JAVACFLAGS = -source 1.4
+SUNJAVACFLAGS = -target 1.4
+JIKESFLAGS = -target 1.4.2
 
 
 include ../tools/Makefile.inc

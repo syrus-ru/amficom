@@ -10,9 +10,9 @@ APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/admin
 HOST=mongol
 SERVICE_NAME=mongol
 
-JAVACFLAGS = -source 1.3
-SUNJAVACFLAGS = -target 1.2
-JIKESFLAGS = -target 1.2
+JAVACFLAGS = -source 1.4
+SUNJAVACFLAGS = -target 1.4
+JIKESFLAGS = -target 1.4.2
 
 JPUB = $(ORACLE_HOME)/bin/jpub
 JPUB_FLAGS = \
