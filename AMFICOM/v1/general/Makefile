@@ -1,17 +1,15 @@
 #
-# $Id: Makefile,v 1.27 2005/01/19 12:40:24 arseniy Exp $
+# $Id: Makefile,v 1.28 2005/01/19 20:42:59 arseniy Exp $
 #
 # vim:set ft=make:
 #
 
 MODULE_NAME = general_v1
 
-LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
-ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
+LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
+ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-IDLDIR=../idl_v1/idl
-
-APPCLASSPATH = $(LIBDIR)/util.jar
+IDLDIR = ../idl_v1/idl
 
 JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4
@@ -20,6 +18,8 @@ JIKESFLAGS = -target 1.4.2
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
+
+APPCLASSPATH := $(LIBDIR)/util.jar
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \

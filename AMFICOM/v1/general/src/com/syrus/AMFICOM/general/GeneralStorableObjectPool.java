@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.1 2005/01/13 14:16:11 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.2 2005/01/19 20:42:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,18 +16,20 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/13 14:16:11 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/19 20:42:59 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
 public final class GeneralStorableObjectPool extends StorableObjectPool {
 
-	private static final int			OBJECT_POOL_MAP_SIZE			= 2;		/* Number of entities */
+	private static final int OBJECT_POOL_MAP_SIZE = 3;		/* Number of entities */
 
-	private static final int			CHARACTERISTICTYPE_OBJECT_POOL_SIZE	= 9;
+	private static final int PARAMETERTYPE_OBJECT_POOL_SIZE= 9;
 
-	private static final int			CHARACTERISTIC_OBJECT_POOL_SIZE		= 4;
+	private static final int CHARACTERISTICTYPE_OBJECT_POOL_SIZE = 9;
+
+	private static final int CHARACTERISTIC_OBJECT_POOL_SIZE = 4;
 
 	private static GeneralObjectLoader	gObjectLoader;
 	private static GeneralStorableObjectPool instance;
@@ -35,7 +37,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 	private GeneralStorableObjectPool() {
 		// singleton
 	}
-	
+
 	private GeneralStorableObjectPool(Class cacheMapClass) {
 		super(cacheMapClass);
 	}
@@ -48,6 +50,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 
 		gObjectLoader = gObjectLoader1;
 
+		instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, size);
 		
@@ -62,8 +65,8 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 
 		gObjectLoader = gObjectLoader1;
 
+		instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, PARAMETERTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, CHARACTERISTICTYPE_OBJECT_POOL_SIZE);
-
 		instance.addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, CHARACTERISTIC_OBJECT_POOL_SIZE);
 		
 		instance.populatePools();
@@ -109,15 +112,18 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static List getStorableObjectsByConditionButIds(	List ids,
-								StorableObjectCondition condition,
-								boolean useLoader) throws ApplicationException {
+	public static List getStorableObjectsByConditionButIds(List ids,
+												StorableObjectCondition condition,
+												boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 
 	protected StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
 		StorableObject storableObject;
 		switch (objectId.getMajor()) {
+			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+				storableObject = gObjectLoader.loadParameterType(objectId);
+				break;
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
 				storableObject = gObjectLoader.loadCharacteristicType(objectId);
 				break;
@@ -134,6 +140,9 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 	protected List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
 		List loadedList = null;
 		switch (entityCode.shortValue()) {
+			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+				loadedList = gObjectLoader.loadParameterTypes(ids);
+				break;
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
 				loadedList = gObjectLoader.loadCharacteristicTypes(ids);
 				break;
@@ -152,12 +161,15 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		List loadedList = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
-				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-					loadedList = gObjectLoader.loadCharacteristicTypesButIds(condition, ids);
-					break;
-				case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-					loadedList = gObjectLoader.loadCharacteristicsButIds(condition, ids);
-					break;
+			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+				loadedList = gObjectLoader.loadParameterTypesButIds(condition, ids);
+				break;
+			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
+				loadedList = gObjectLoader.loadCharacteristicTypesButIds(condition, ids);
+				break;
+			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
+				loadedList = gObjectLoader.loadCharacteristicsButIds(condition, ids);
+				break;
 			default:				
 				Log.errorMessage("GeneralStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
 				loadedList = null;
@@ -171,6 +183,12 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		if (!list.isEmpty()) {
 			boolean alone = (list.size() == 1);
 			switch (code) {
+				case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+					if (alone)
+						gObjectLoader.saveParameterType((ParameterType)list.get(0), force);
+					else 
+						gObjectLoader.saveParameterTypes(list, force);
+					break;
 				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
 					if (alone)
 						gObjectLoader.saveCharacteristicType((CharacteristicType) list.get(0), force);

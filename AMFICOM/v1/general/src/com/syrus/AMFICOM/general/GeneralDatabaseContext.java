@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralDatabaseContext.java,v 1.2 2005/01/18 15:08:26 bass Exp $
+ * $Id: GeneralDatabaseContext.java,v 1.3 2005/01/19 20:42:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/18 15:08:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/01/19 20:42:59 $
+ * @author $Author: arseniy $
  * @todo Declare all fields private as<ol>
  *       <li>they have public accessors; and</li>
  *       <li>there's {@link #init(StorableObjectDatabase, StorableObjectDatabase)}
@@ -19,17 +19,46 @@ package com.syrus.AMFICOM.general;
  * @module general_v1
  */
 public final class GeneralDatabaseContext {
+	protected static StorableObjectDatabase	parameterTypeDatabase;
 	protected static StorableObjectDatabase characteristicTypeDatabase;
 	protected static StorableObjectDatabase characteristicDatabase;
-    
+
 	private GeneralDatabaseContext() {
 		// private constructor 
 	}
 
-	public static void init(final StorableObjectDatabase characteristicTypeDatabase1,
-			final StorableObjectDatabase characteristicDatabase1) {
-		characteristicTypeDatabase = characteristicTypeDatabase1;
-		characteristicDatabase = characteristicDatabase1;
+	public static void init(final StorableObjectDatabase parameterTypeDatabase1,
+													final StorableObjectDatabase characteristicTypeDatabase1,
+													final StorableObjectDatabase characteristicDatabase1) {
+		if (parameterTypeDatabase1 != null)
+			parameterTypeDatabase = parameterTypeDatabase1;
+
+		if (characteristicTypeDatabase1 != null)
+			characteristicTypeDatabase = characteristicTypeDatabase1;
+
+		if (characteristicDatabase1 != null)
+			characteristicDatabase = characteristicDatabase1;
+	}
+
+	public static StorableObjectDatabase getDatabase(short entityCode ) {
+		switch (entityCode) {
+
+			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+				return parameterTypeDatabase;
+
+			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
+				return characteristicTypeDatabase;
+
+			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
+				return characteristicDatabase;
+
+			default:
+				return null;       
+		}
+	}
+
+	public static StorableObjectDatabase getParameterTypeDatabase() {
+		return parameterTypeDatabase;
 	}
 
 	public static StorableObjectDatabase getCharacteristicDatabase() {
