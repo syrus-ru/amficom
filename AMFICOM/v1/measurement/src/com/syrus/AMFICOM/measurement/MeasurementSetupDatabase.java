@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.37 2004/11/02 10:29:59 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.38 2004/11/02 13:39:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/11/02 10:29:59 $
+ * @version $Revision: 1.38 $, $Date: 2004/11/02 13:39:40 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -614,15 +614,17 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	        for (Iterator it = measurementIds.iterator(); it.hasNext();i++) {
 	       		 Identifier id = (Identifier) it.next();
 	       		 measurementIdsStr.append( id.toSQLString() );
-	       		 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-	       		 	measurementIdsStr.append(COMMA);
-	       		 else {
-	                measurementIdsStr.append(CLOSE_BRACKET);
-	                measurementIdsStr.append(SQL_OR);
-	                measurementIdsStr.append(COLUMN_ID);
-	                measurementIdsStr.append(SQL_IN);
-	                measurementIdsStr.append(OPEN_BRACKET);
-	       		 }  
+	       		 if (it.hasNext()){
+		       		 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+		       		 	measurementIdsStr.append(COMMA);
+		       		 else {
+		                measurementIdsStr.append(CLOSE_BRACKET);
+		                measurementIdsStr.append(SQL_OR);
+		                measurementIdsStr.append(COLUMN_ID);
+		                measurementIdsStr.append(SQL_IN);
+		                measurementIdsStr.append(OPEN_BRACKET);
+		       		 }  
+	       		 }
 	       	}
 	        
 	        condition = COLUMN_ID + SQL_IN + OPEN_BRACKET	
