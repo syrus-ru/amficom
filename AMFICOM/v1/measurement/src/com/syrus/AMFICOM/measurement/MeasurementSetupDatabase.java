@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.15 2004/08/23 20:47:37 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.16 2004/08/26 14:59:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,8 +30,8 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/23 20:47:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2004/08/26 14:59:38 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -304,22 +305,96 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
+	
+	private static String retrieveMeasurementSetupQuery(String condition){
+		return SQL_SELECT
+		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+		+ COLUMN_CREATOR_ID + COMMA
+		+ COLUMN_MODIFIER_ID + COMMA
+		+ COLUMN_PARAMETER_SET_ID + COMMA
+		+ COLUMN_CRITERIA_SET_ID + COMMA
+		+ COLUMN_THRESHOLD_SET_ID + COMMA
+		+ COLUMN_ETALON_ID + COMMA
+		+ COLUMN_DESCRIPTION + COMMA
+		+ COLUMN_MEASUREMENT_DURAION
+		+ SQL_FROM + ObjectEntities.MS_ENTITY
+		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+
+	}
+	
+	private static MeasurementSetup updateMeasurementSetupFromResultSet(MeasurementSetup measurementSetup, ResultSet resultSet) throws RetrieveObjectException, SQLException{
+		MeasurementSetup measurementSetup1 = measurementSetup;
+		if (measurementSetup == null){
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			measurementSetup1 = new MeasurementSetup(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 
+												   null, null, null, 0, null);
+		}
+		/**
+		 * @todo when change DB Identifier model ,change getString() to
+		 *       getLong()
+		 */
+		Set parameterSet;
+		Set criteriaSet;
+		Set thresholdSet;
+		Set etalon;
+		String idCode;
+		try {
+			parameterSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_PARAMETER_SET_ID)), true);
+			/**
+			 * @todo when change DB Identifier model ,change String to long
+			 */
+			/**
+			 * @todo when change DB Identifier model ,change getString() to
+			 *       getLong()
+			 */
+			idCode = resultSet.getString(COLUMN_CRITERIA_SET_ID);
+			criteriaSet = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
+			/**
+			 * @todo when change DB Identifier model ,change getString() to
+			 *       getLong()
+			 */
+			idCode = resultSet.getString(COLUMN_THRESHOLD_SET_ID);
+			thresholdSet = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
+			/**
+			 * @todo when change DB Identifier model ,change getString() to
+			 *       getLong()
+			 */
+			idCode = resultSet.getString(COLUMN_ETALON_ID);
+			etalon = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
+		}
+		catch (ApplicationException ae) {
+			throw new RetrieveObjectException(ae);
+		}
+
+		String description = resultSet.getString(COLUMN_DESCRIPTION);
+		measurementSetup1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+																	 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+																	 /**
+																		* @todo when change DB Identifier model ,change getString() to
+																		*       getLong()
+																		*/
+																	 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+																	 /**
+																		* @todo when change DB Identifier model ,change getString() to
+																		*       getLong()
+																		*/
+																	 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+																	 parameterSet,
+																	 criteriaSet,
+																	 thresholdSet,
+																	 etalon,
+																	 (description != null) ? description : "",
+																	 resultSet.getLong(COLUMN_MEASUREMENT_DURAION));
+		return measurementSetup1;
+	}
+
 
 	private void retrieveMeasurementSetup(MeasurementSetup measurementSetup) throws ObjectNotFoundException, RetrieveObjectException {
 		String msIdStr = measurementSetup.getId().toSQLString();
-		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_PARAMETER_SET_ID + COMMA
-			+ COLUMN_CRITERIA_SET_ID + COMMA
-			+ COLUMN_THRESHOLD_SET_ID + COMMA
-			+ COLUMN_ETALON_ID + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_MEASUREMENT_DURAION
-			+ SQL_FROM + ObjectEntities.MS_ENTITY
-			+ SQL_WHERE + COLUMN_ID + EQUALS + msIdStr;
+		String sql = retrieveMeasurementSetupQuery(COLUMN_ID + EQUALS + msIdStr);
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -328,62 +403,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			Log.debugMessage("MeasurementSetupDatabase.retrieveMeasurementSetup | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				Set parameterSet;
-				Set criteriaSet;
-				Set thresholdSet;
-				Set etalon;
-				String idCode;
-				try {
-					parameterSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_PARAMETER_SET_ID)), true);
-					/**
-					 * @todo when change DB Identifier model ,change String to long
-					 */
-					/**
-					 * @todo when change DB Identifier model ,change getString() to
-					 *       getLong()
-					 */
-					idCode = resultSet.getString(COLUMN_CRITERIA_SET_ID);
-					criteriaSet = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
-					/**
-					 * @todo when change DB Identifier model ,change getString() to
-					 *       getLong()
-					 */
-					idCode = resultSet.getString(COLUMN_THRESHOLD_SET_ID);
-					thresholdSet = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
-					/**
-					 * @todo when change DB Identifier model ,change getString() to
-					 *       getLong()
-					 */
-					idCode = resultSet.getString(COLUMN_ETALON_ID);
-					etalon = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
-				}
-				catch (ApplicationException ae) {
-					throw new RetrieveObjectException(ae);
-				}
-
-				String description = resultSet.getString(COLUMN_DESCRIPTION);
-				measurementSetup.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-																			 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-																			 /**
-																				* @todo when change DB Identifier model ,change getString() to
-																				*       getLong()
-																				*/
-																			 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-																			 /**
-																				* @todo when change DB Identifier model ,change getString() to
-																				*       getLong()
-																				*/
-																			 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-																			 parameterSet,
-																			 criteriaSet,
-																			 thresholdSet,
-																			 etalon,
-																			 (description != null) ? description : "",
-																			 resultSet.getLong(COLUMN_MEASUREMENT_DURAION));
+				updateMeasurementSetupFromResultSet(measurementSetup, resultSet);
 			}
 			else
 				throw new ObjectNotFoundException("No such measurement setup: " + msIdStr);
@@ -545,5 +565,123 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 	}
 
+	public static List retrieveByIds(List ids) throws RetrieveObjectException {
+		if ((ids == null) || (ids.isEmpty()))
+			return new LinkedList();
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
+	}
+	
+	private static List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				buffer.append(EQUALS);
+				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+			} else{
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				
+				int i = 1;
+				for(Iterator it=ids.iterator();it.hasNext();i++){
+					Identifier id = (Identifier)it.next();
+					buffer.append(id.toSQLString());
+					if (i < idsLength)
+						buffer.append(COMMA);
+				}
+				
+				buffer.append(CLOSE_BRACKET);
+			}
+			sql = retrieveMeasurementSetupQuery(buffer.toString());
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("MeasurementSetupDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				result.add(updateMeasurementSetupFromResultSet(null, resultSet));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "MeasurementSetupDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return result;
+	}
+	
+	private static List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				return retriveByIdsOneQuery(ids);
+			}
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(EQUALS);							
+			buffer.append(QUESTION);
+			
+			sql =retrieveMeasurementSetupQuery(buffer.toString());
+		}
+			
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(sql.toString());
+			for(Iterator it = ids.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next(); 
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				String idStr = id.getIdentifierString();
+				stmt.setString(1, idStr);
+				resultSet = stmt.executeQuery();
+				if (resultSet.next()){
+					result.add(updateMeasurementSetupFromResultSet(null, resultSet));
+				} else{
+					Log.errorMessage("MeasurementSetupDatabase.retriveByIdsPreparedStatement | No such measurement setup: " + idStr);									
+				}
+				
+			}
+		}catch (SQLException sqle) {
+			String mesg = "MeasurementSetupDatabase.retriveByIdsPreparedStatement | Cannot retrieve measurement setup " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (stmt != null)
+					stmt.close();
+				stmt = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}			
+		
+		return result;
+	}
 
 }

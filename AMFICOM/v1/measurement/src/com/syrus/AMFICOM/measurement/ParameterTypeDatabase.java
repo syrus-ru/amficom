@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.15 2004/08/22 18:45:56 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.16 2004/08/26 14:59:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,11 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,8 +29,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/22 18:45:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2004/08/26 14:59:38 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -50,18 +53,54 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		this.retrieveParameterType(parameterType);
 	}
 
+	private static String retrievePararameterTypeQuery(String condition){
+		return SQL_SELECT
+		+ COLUMN_ID + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+		+ COLUMN_CREATOR_ID + COMMA
+		+ COLUMN_MODIFIER_ID + COMMA
+		+ COLUMN_CODENAME + COMMA
+		+ COLUMN_DESCRIPTION + COMMA
+		+ COLUMN_NAME
+		+ SQL_FROM + ObjectEntities.PARAMETERTYPE_ENTITY
+		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+
+	}
+	
+	private static ParameterType updateParameterTypeFromResultSet(ParameterType parameterType, ResultSet resultSet) throws SQLException{
+		ParameterType parameterType1 = parameterType;
+		if (parameterType == null){
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			parameterType1 = new ParameterType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null);
+		}
+		/**
+		 * @todo when change DB Identifier model ,change getString() to getLong()
+		 */
+		parameterType1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+												DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+												/**
+												 * @todo when change DB Identifier model ,change getString() to
+												 *       getLong()
+												 */
+												 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+												 /**
+												  * @todo when change DB Identifier model ,change getString() to
+												  *       getLong()
+												  */
+												 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+												 resultSet.getString(COLUMN_CODENAME),
+												 resultSet.getString(COLUMN_DESCRIPTION),
+												 resultSet.getString(COLUMN_NAME));
+		return parameterType1;
+	}
+
+	
 	private void retrieveParameterType(ParameterType parameterType) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		String parameterTypeIdStr = parameterType.getId().toSQLString();
-		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_NAME
-			+ SQL_FROM + ObjectEntities.PARAMETERTYPE_ENTITY
-			+ SQL_WHERE + COLUMN_ID + EQUALS + parameterTypeIdStr;
+		String sql = retrievePararameterTypeQuery(COLUMN_ID + EQUALS + parameterTypeIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -269,5 +308,149 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		}
 		((ArrayList)parameterTypes).trimToSize();
 		return parameterTypes;
+	}
+	
+	public static void delete(MeasurementType measurementType) {
+		String parameterTypeIdStr = measurementType.getId().toSQLString();
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			statement.executeUpdate(SQL_DELETE_FROM
+					+ ObjectEntities.PARAMETERTYPE_ENTITY 
+					+ SQL_WHERE + COLUMN_ID + EQUALS + parameterTypeIdStr);
+			connection.commit();
+		}
+		catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		}
+		finally {
+			try {
+				if(statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+	
+	public static List retrieveByIds(List ids) throws RetrieveObjectException {
+		if ((ids == null) || (ids.isEmpty()))
+			return new LinkedList();
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
+	}
+	
+	private static List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				buffer.append(EQUALS);
+				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+			} else{
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				
+				int i = 1;
+				for(Iterator it=ids.iterator();it.hasNext();i++){
+					Identifier id = (Identifier)it.next();
+					buffer.append(id.toSQLString());
+					if (i < idsLength)
+						buffer.append(COMMA);
+				}
+				
+				buffer.append(CLOSE_BRACKET);
+			}
+			sql = retrievePararameterTypeQuery(buffer.toString());
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("MeasurementTypeDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				result.add(updateParameterTypeFromResultSet(null, resultSet));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "MeasurementTypeDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return result;
+	}
+	
+	private static List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				return retriveByIdsOneQuery(ids);
+			}
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(EQUALS);							
+			buffer.append(QUESTION);
+			
+			sql =retrievePararameterTypeQuery(buffer.toString());
+		}
+			
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(sql.toString());
+			for(Iterator it = ids.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next(); 
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				String idStr = id.getIdentifierString();
+				stmt.setString(1, idStr);
+				resultSet = stmt.executeQuery();
+				if (resultSet.next()){
+					result.add(updateParameterTypeFromResultSet(null, resultSet));
+				} else{
+					Log.errorMessage("MeasurementTypeDatabase.retriveByIdsPreparedStatement | No such measurement type: " + idStr);									
+				}
+				
+			}
+		}catch (SQLException sqle) {
+			String mesg = "MeasurementTypeDatabase.retriveByIdsPreparedStatement | Cannot retrieve measurement type " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (stmt != null)
+					stmt.close();
+				stmt = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}			
+		
+		return result;
 	}
 }

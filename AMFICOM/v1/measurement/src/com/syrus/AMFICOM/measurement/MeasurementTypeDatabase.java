@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.18 2004/08/23 20:47:37 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.19 2004/08/26 14:59:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,8 +30,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/23 20:47:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2004/08/26 14:59:38 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -57,17 +58,52 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		this.retrieveParameterTypes(measurementType);
 	}
 
+	private static String retrieveMeasurementTypeQuery(String condition){
+		return SQL_SELECT
+		+ COLUMN_ID + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+		+ COLUMN_CREATOR_ID + COMMA
+		+ COLUMN_MODIFIER_ID + COMMA
+		+ COLUMN_CODENAME + COMMA
+		+ COLUMN_DESCRIPTION
+		+ SQL_FROM + ObjectEntities.MEASUREMENTTYPE_ENTITY
+		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+
+	}
+	
+	private static MeasurementType updateMeasurementTypeFromResultSet(MeasurementType measurementType, ResultSet resultSet) throws SQLException{
+		MeasurementType measurementType1 = measurementType;
+		if (measurementType == null){
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			measurementType1 = new MeasurementType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 
+												   null, null);
+		}
+		/**
+		 * @todo when change DB Identifier model ,change getString() to getLong()
+		 */
+		measurementType1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+												DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+												/**
+												 * @todo when change DB Identifier model ,change getString() to
+												 *       getLong()
+												 */
+												 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+												 /**
+												  * @todo when change DB Identifier model ,change getString() to
+												  *       getLong()
+												  */
+												 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+												 resultSet.getString(COLUMN_CODENAME),
+												 resultSet.getString(COLUMN_DESCRIPTION));
+		return measurementType1;
+	}
+	
 	private void retrieveMeasurementType(MeasurementType measurementType) throws ObjectNotFoundException, RetrieveObjectException {
 		String measurementTypeIdStr = measurementType.getId().toSQLString();
-		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION
-			+ SQL_FROM + ObjectEntities.MEASUREMENTTYPE_ENTITY
-			+ SQL_WHERE + COLUMN_ID + EQUALS + measurementTypeIdStr;
+		String sql = retrieveMeasurementTypeQuery(COLUMN_ID + EQUALS + measurementTypeIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -75,18 +111,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			Log.debugMessage("MeasurementTypeDatabase.retrieveMeasurementType | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				measurementType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-																			DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-																			/**
-																			 * @todo when change DB Identifier model ,change getString() to getLong()
-																			 */																			
-																			new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-																			/**
-																			 * @todo when change DB Identifier model ,change getString() to getLong()
-																			 */
-																			new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-																			resultSet.getString(COLUMN_CODENAME),
-																			resultSet.getString(COLUMN_DESCRIPTION));
+				updateMeasurementTypeFromResultSet(measurementType, resultSet);
 			else
 				throw new ObjectNotFoundException("No such measurement type: " + measurementTypeIdStr);
 		}
@@ -330,7 +355,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
-	public void delete(MeasurementType measurementType) {
+	public static void delete(MeasurementType measurementType) {
 		String measurementTypeIdStr = measurementType.getId().toSQLString();
 		Statement statement = null;
 		try {
@@ -432,5 +457,124 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			}
 		}
 		return measurementTypes;
+	}
+	
+	public static List retrieveByIds(List ids) throws RetrieveObjectException {
+		if ((ids == null) || (ids.isEmpty()))
+			return new LinkedList();
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
+	}
+	
+	private static List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				buffer.append(EQUALS);
+				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+			} else{
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				
+				int i = 1;
+				for(Iterator it=ids.iterator();it.hasNext();i++){
+					Identifier id = (Identifier)it.next();
+					buffer.append(id.toSQLString());
+					if (i < idsLength)
+						buffer.append(COMMA);
+				}
+				
+				buffer.append(CLOSE_BRACKET);
+			}
+			sql = retrieveMeasurementTypeQuery(buffer.toString());
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("MeasurementTypeDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				result.add(updateMeasurementTypeFromResultSet(null, resultSet));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "MeasurementTypeDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return result;
+	}
+	
+	private static List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				return retriveByIdsOneQuery(ids);
+			}
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(EQUALS);							
+			buffer.append(QUESTION);
+			
+			sql =retrieveMeasurementTypeQuery(buffer.toString());
+		}
+			
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(sql.toString());
+			for(Iterator it = ids.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next(); 
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				String idStr = id.getIdentifierString();
+				stmt.setString(1, idStr);
+				resultSet = stmt.executeQuery();
+				if (resultSet.next()){
+					result.add(updateMeasurementTypeFromResultSet(null, resultSet));
+				} else{
+					Log.errorMessage("MeasurementTypeDatabase.retriveByIdsPreparedStatement | No such measurement type: " + idStr);									
+				}
+				
+			}
+		}catch (SQLException sqle) {
+			String mesg = "MeasurementTypeDatabase.retriveByIdsPreparedStatement | Cannot retrieve measurement type " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (stmt != null)
+					stmt.close();
+				stmt = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}			
+		
+		return result;
 	}
 }
