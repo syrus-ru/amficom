@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.server.load;
 
 import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.General.octetSeqHolder;
+import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.CORBA.Resource.*;
 import com.syrus.AMFICOM.server.*;
 import java.io.*;
@@ -56,7 +56,7 @@ public class TestImages
 			e.printStackTrace();
 		}
 	}
-
+/*
 	static public int loadImages(
 			ImageResourceSeq_TransferableHolder imageseq,
 			Vector image_ids)
@@ -148,6 +148,6 @@ public class TestImages
 		return 1;
 	}
 	}
-
+*/
 }
 

@@ -116,7 +116,7 @@ public class LoadTestData
 						{
 							String arg_id = (String )e.nextElement();
 
-							MyStringTokenizer parser = new MyStringTokenizer((String )ht2.get(arg_id));
+							SimpleStringTokenizer parser = new SimpleStringTokenizer((String )ht2.get(arg_id));
 							String arg_type_id = parser.nextToken();
 							String arg_type_name = parser.finalToken();
 
@@ -133,7 +133,7 @@ public class LoadTestData
 						{
 							String param_id = (String )e.nextElement();
 
-							MyStringTokenizer parser = new MyStringTokenizer((String )ht3.get(param_id));
+							SimpleStringTokenizer parser = new SimpleStringTokenizer((String )ht3.get(param_id));
 							String param_type_id = parser.nextToken();
 							String param_type_name = parser.finalToken();
 
@@ -150,7 +150,7 @@ public class LoadTestData
 						{
 							String crit_id = (String )e.nextElement();
 
-//							MyStringTokenizer parser = new MyStringTokenizer((String )ht4.get(crit_id));
+//							SimpleStringTokenizer parser = new SimpleStringTokenizer((String )ht4.get(crit_id));
 //							String crit_type_id = parser.nextToken();
 //							String crit_type_name = parser.finalToken();
 							setAnalysisTypeCriteria(
@@ -189,7 +189,7 @@ public class LoadTestData
 						{
 							String param_id = (String )e.nextElement();
 
-							MyStringTokenizer parser = new MyStringTokenizer((String )ht3.get(param_id));
+							SimpleStringTokenizer parser = new SimpleStringTokenizer((String )ht3.get(param_id));
 							String param_type_id = parser.nextToken();
 							String param_type_name = parser.finalToken();
 
@@ -227,7 +227,7 @@ public class LoadTestData
 						{
 							String arg_id = (String )e.nextElement();
 
-							MyStringTokenizer parser = new MyStringTokenizer((String )ht2.get(arg_id));
+							SimpleStringTokenizer parser = new SimpleStringTokenizer((String )ht2.get(arg_id));
 							String arg_type_id = parser.nextToken();
 							String arg_type_name = parser.finalToken();
 
@@ -244,7 +244,7 @@ public class LoadTestData
 						{
 							String param_id = (String )e.nextElement();
 
-							MyStringTokenizer parser = new MyStringTokenizer((String )ht3.get(param_id));
+							SimpleStringTokenizer parser = new SimpleStringTokenizer((String )ht3.get(param_id));
 							String param_type_id = parser.nextToken();
 							String param_type_name = parser.finalToken();
 
@@ -261,7 +261,7 @@ public class LoadTestData
 						{
 							String th_id = (String )e.nextElement();
 
-							MyStringTokenizer parser = new MyStringTokenizer((String )ht4.get(th_id));
+							SimpleStringTokenizer parser = new SimpleStringTokenizer((String )ht4.get(th_id));
 							String th_type_id = parser.nextToken();
 							String th_type_name = parser.finalToken();
 							setEvaluationTypeThreshold(
@@ -296,7 +296,7 @@ public class LoadTestData
 						{
 							String arg_id = (String )e.nextElement();
 
-							MyStringTokenizer parser = new MyStringTokenizer((String )ht2.get(arg_id));
+							SimpleStringTokenizer parser = new SimpleStringTokenizer((String )ht2.get(arg_id));
 							String arg_type_id = parser.nextToken();
 							String arg_type_name = parser.finalToken();
 
@@ -313,7 +313,7 @@ public class LoadTestData
 						{
 							String param_id = (String )e.nextElement();
 
-							MyStringTokenizer parser = new MyStringTokenizer((String )ht3.get(param_id));
+							SimpleStringTokenizer parser = new SimpleStringTokenizer((String )ht3.get(param_id));
 							String param_type_id = parser.nextToken();
 							String param_type_name = parser.finalToken();
 
@@ -350,7 +350,7 @@ public class LoadTestData
 						{
 							String arg_id = (String )e.nextElement();
 
-							MyStringTokenizer parser = new MyStringTokenizer((String )ht2.get(arg_id));
+							SimpleStringTokenizer parser = new SimpleStringTokenizer((String )ht2.get(arg_id));
 							String arg_type_id = parser.nextToken();
 							String arg_type_name = parser.finalToken();
 
@@ -368,7 +368,7 @@ public class LoadTestData
 						{
 							String param_id = (String )e.nextElement();
 
-							MyStringTokenizer parser = new MyStringTokenizer((String )ht3.get(param_id));
+							SimpleStringTokenizer parser = new SimpleStringTokenizer((String )ht3.get(param_id));
 							String param_type_id = parser.nextToken();
 							String param_type_name = parser.finalToken();
 

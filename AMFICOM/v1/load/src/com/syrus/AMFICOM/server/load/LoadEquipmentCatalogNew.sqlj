@@ -128,7 +128,7 @@ public class LoadEquipmentCatalogNew
 					{
 						String key = (String )e.nextElement();
 
-						MyStringTokenizer parser = new MyStringTokenizer((String )ht2.get(key));
+						SimpleStringTokenizer parser = new SimpleStringTokenizer((String )ht2.get(key));
 						String lt_id = parser.nextToken();
 						String thread_class = parser.finalToken();
 

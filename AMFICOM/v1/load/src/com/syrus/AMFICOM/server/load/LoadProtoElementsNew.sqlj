@@ -146,7 +146,7 @@ public class LoadProtoElementsNew
 						{
 							String thread_id = (String )e.nextElement();
 
-							MyStringTokenizer parser = new MyStringTokenizer((String )ht2.get(thread_id));
+							SimpleStringTokenizer parser = new SimpleStringTokenizer((String )ht2.get(thread_id));
 							String thread_type_id = parser.nextToken();
 							String thread_name = parser.finalToken();
 

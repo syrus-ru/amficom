@@ -7,11 +7,15 @@ SRC=$(HOME)\src
 CLASSES=$(HOME)\classes
 
 LAYOUTCLASSPATH=$(EXTLIB)\layout.jar
-VBJCLASSPATH=$(ORACLE_HOME)\lib\vbjorb.jar;$(ORACLE_HOME)\lib\vbjapp.jar;$(ORACLE_HOME)\lib\aurora_client.jar
-SQLJCLASSPATH=$(ORACLE_HOME)\sqlj\lib\runtime12.jar;$(ORACLE_HOME)\sqlj\lib\translator.jar
-JDBCCLASSPATH=$(ORACLE_HOME)\jdbc\lib\classes12.jar
+VBJCLASSPATH=$(EXTLIB)\vbjorb.jar;$(EXTLIB)\vbjapp.jar;$(EXTLIB)\aurora_client.jar
+#SQLJCLASSPATH=$(ORACLE_HOME)\sqlj\lib\runtime12.jar;$(ORACLE_HOME)\sqlj\lib\translator.jar
+#JDBCCLASSPATH=$(ORACLE_HOME)\jdbc\lib\classes12.jar
+SQLJCLASSPATH=$(EXTLIB)\runtime12ee.jar;$(EXTLIB)\translator.jar
+JDBCCLASSPATH=$(EXTLIB)\ojdbc14_g.jar
 
-PROJECTCLASSPATH=$(LIB)\server\kisserver.jar;$(LIB)\server\utilserver.jar;$(LIB)\util.jar;$(LIB)\corbaportable.jar;$(LIB)\server\servermisc.jar;$(LIB)\server\serverprocess.jar
+PROJECTCLASSPATH=$(LIB)\server\servermisc.jar;$(LIB)\util.jar;$(LIB)\corbaportable.jar
+#;$(LIB)\server\kisserver.jar
+#;$(LIB)\server\serverprocess.jar
 
 SERVERHOSTNAME=research
 CONNECTSTRING=shaitan
