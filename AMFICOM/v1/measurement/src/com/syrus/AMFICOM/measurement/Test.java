@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.50 2004/09/01 15:26:05 max Exp $
+ * $Id: Test.java,v 1.51 2004/09/07 15:21:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -40,8 +41,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2004/09/01 15:26:05 $
- * @author $Author: max $
+ * @version $Revision: 1.51 $, $Date: 2004/09/07 15:21:00 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -438,6 +439,9 @@ public class Test extends StorableObject {
 		}
 		catch (IllegalDataException e) {
 			throw new UpdateObjectException(e.getMessage(), e);
+		}
+		catch (VersionCollisionException vce){
+			throw new UpdateObjectException(vce.getMessage(), vce);
 		}
 	}
 	/**

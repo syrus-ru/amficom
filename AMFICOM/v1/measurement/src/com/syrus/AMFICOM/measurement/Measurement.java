@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.25 2004/09/01 15:08:11 bob Exp $
+ * $Id: Measurement.java,v 1.26 2004/09/07 15:20:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,13 +18,14 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/09/01 15:08:11 $
+ * @version $Revision: 1.26 $, $Date: 2004/09/07 15:20:59 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -174,6 +175,9 @@ public class Measurement extends Action {
 		}
 		catch (IllegalDataException e) {
 			throw new UpdateObjectException(e.getMessage(), e);
+		}
+		catch (VersionCollisionException vce){
+			throw new UpdateObjectException(vce.getMessage(), vce);
 		}
 	}
 

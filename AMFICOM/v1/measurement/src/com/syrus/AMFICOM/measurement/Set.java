@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.23 2004/09/01 15:08:11 bob Exp $
+ * $Id: Set.java,v 1.24 2004/09/07 15:21:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/09/01 15:08:11 $
+ * @version $Revision: 1.24 $, $Date: 2004/09/07 15:21:00 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -161,6 +162,9 @@ public class Set extends StorableObject {
 		catch (IllegalDataException e) {
 			throw new UpdateObjectException("MeasurementSetup.attachToMonitoredElement | Cannot attach measurement setup '" + this.id + "' to monitored element '" + monitoredElementId + "' -- " + e.getMessage(), e);
 		}
+		catch (VersionCollisionException vce){
+			throw new UpdateObjectException(vce.getMessage(), vce);
+		}
 		this.monitoredElementIds.add(monitoredElementId);
 	}
 
@@ -174,6 +178,9 @@ public class Set extends StorableObject {
 		}
 		catch (IllegalDataException e) {
 			throw new UpdateObjectException("MeasurementSetup.detachFromMonitoredElement | Cannot dettach measurement setup '" + this.id + "' from monitored element '" + monitoredElementId + "' -- " + e.getMessage(), e);
+		}
+		catch (VersionCollisionException vce){
+			throw new UpdateObjectException(vce.getMessage(), vce);
 		}
 		this.monitoredElementIds.remove(monitoredElementId);
   }

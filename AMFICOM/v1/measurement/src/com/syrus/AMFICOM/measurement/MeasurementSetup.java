@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.27 2004/09/01 15:08:11 bob Exp $
+ * $Id: MeasurementSetup.java,v 1.28 2004/09/07 15:20:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,11 +20,12 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/09/01 15:08:11 $
+ * @version $Revision: 1.28 $, $Date: 2004/09/07 15:20:59 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -185,6 +186,9 @@ public class MeasurementSetup extends StorableObject {
 											"MeasurementSetup.attachToMonitoredElement | Cannot attach measurement setup '"
 													+ this.id + "' to monitored element '" + monitoredElementId
 													+ "' -- " + e.getMessage(), e);
+		}
+		catch (VersionCollisionException vce){
+			throw new UpdateObjectException(vce.getMessage(), vce);
 		}
 		this.monitoredElementIds.add(monitoredElementId);
 		//this.monitoredElementIds.trimToSize();
