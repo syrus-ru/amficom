@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
@@ -13,38 +15,73 @@ import com.syrus.AMFICOM.Client.Map.MapDataException;
 
 public class MapImagePanel extends JPanel
 {
-	private Image mapImage;
+	private Image mapImage = null;
+	private Image mapPaintableImage = null;
 
 	MapInfoLogicalNetLayer layerToPaint = null;
 
 	public MapImagePanel()
 	{
 		this.setDoubleBuffered(true);
+		
+		ComponentListener[] listeners = this.getComponentListeners();
+		for (int i = 0; i < listeners.length; i++)
+			this.removeComponentListener(listeners[i]);
 
 		this.addComponentListener(new ComponentAdapter()
 		{
-			public void componentResized(ComponentEvent e)
+			private void setLayerSize()
 			{
 				if(MapImagePanel.this.layerToPaint != null)
-					MapImagePanel.this.layerToPaint.setMapImageSize(e.getComponent().getWidth(), e
-							.getComponent().getHeight());
+					MapImagePanel.this.layerToPaint.setMapImageSize(
+							MapImagePanel.this.getWidth(),
+							MapImagePanel.this.getHeight());
+			}
+			public void componentResized(ComponentEvent e)
+			{
+				setLayerSize();
 			}
 
 			public void componentShown(ComponentEvent e)
 			{
-				if(MapImagePanel.this.layerToPaint != null)
-					MapImagePanel.this.layerToPaint.setMapImageSize(e.getComponent().getWidth(), e
-							.getComponent().getHeight());
+				setLayerSize();
 			}
 		});
 	}
 
-	public void setImage(Image newImage)
+	public void refreshImages()
 	{
-		this.mapImage = newImage;
-		this.repaint();
+		if (	(this.mapImage == null)
+				||(this.mapImage.getWidth(this) != this.getWidth())
+				||(this.mapImage.getHeight(this) != this.getHeight()))
+		{
+			this.mapImage = new BufferedImage(
+					this.getWidth(),
+					this.getHeight(),
+				BufferedImage.TYPE_USHORT_565_RGB);
+			
+			this.mapPaintableImage = new BufferedImage(
+					this.getWidth(),
+					this.getHeight(),
+				BufferedImage.TYPE_USHORT_565_RGB);
+		}
+	}
+	
+	public void redrawMainImage()
+	{
+		this.mapImage.getGraphics().drawImage(this.mapPaintableImage,0,0,this);
+	}
+	
+	public Image getPaintableImage()
+	{
+		return this.mapPaintableImage;
 	}
 
+	public Image getCurrentImage()
+	{
+		return this.mapImage;
+	}
+	
 	public void setLogicalLayer(MapInfoLogicalNetLayer layerToPaint)
 	{
 		this.layerToPaint = layerToPaint;
@@ -72,10 +109,9 @@ public class MapImagePanel extends JPanel
 				e.printStackTrace();
 			}
 	}
-
+	
 	public void repaint(Graphics g, int shiftX, int shiftY)
 	{
-		// super.paintComponent(g);
 		g.setColor(Color.GRAY);
 
 		if(shiftX > 0)
