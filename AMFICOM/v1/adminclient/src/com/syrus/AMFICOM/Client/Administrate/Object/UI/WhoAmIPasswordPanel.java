@@ -1,579 +1,163 @@
+/*
+ * $Id: WhoAmIPasswordPanel.java,v 1.2 2004/08/06 06:46:12 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
-
+import java.util.Date;
 import javax.swing.*;
-import javax.swing.border.*;
-
 import oracle.jdeveloper.layout.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
 
-
-
-
-
-public class WhoAmIPasswordPanel extends JPanel
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/08/06 06:46:12 $
+ * @module admin_v1
+ */
+final class WhoAmIPasswordPanel extends JPanel
 {
-  private BorderLayout borderLayout1 = new BorderLayout();
-  private JPanel labelsPanel = new JPanel();
-  private JPanel textPanel = new JPanel();
-  private JPanel jPanel1 = new JPanel();
-  private JLabel jLabel1 = new JLabel();
-  private JLabel jLabel2 = new JLabel();
-  private VerticalFlowLayout verticalFlowLayout1 = new VerticalFlowLayout();
-  private JLabel jLabel3 = new JLabel();
-  private VerticalFlowLayout verticalFlowLayout2 = new VerticalFlowLayout();
-  private JPasswordField jOldPasswordField = new JPasswordField();
-  private JPasswordField jPasswordField1 = new JPasswordField();
-  private JPasswordField jPasswordField2 = new JPasswordField();
-  private JPanel jPanel2 = new JPanel();
-  private JButton applyButton = new JButton();
-  private JLabel jLabelError = new JLabel();
-  private XYLayout xYLayout1 = new XYLayout();
-  private JLabel jLabelOK = new JLabel();
+	private BorderLayout borderLayout1 = new BorderLayout();
+	private JButton applyButton = new JButton();
+	private JLabel jLabel1 = new JLabel();
+	private JLabel jLabel2 = new JLabel();
+	private JLabel jLabel3 = new JLabel();
+	JLabel jLabelError = new JLabel();
+	JLabel jLabelOK = new JLabel();
+	private JPanel labelsPanel = new JPanel();
+	private JPanel jPanel1 = new JPanel();
+	private JPanel jPanel2 = new JPanel();
+	private JPanel textPanel = new JPanel();
+	JPasswordField jOldPasswordField = new JPasswordField();
+	JPasswordField jPasswordField1 = new JPasswordField();
+	JPasswordField jPasswordField2 = new JPasswordField();
+	private VerticalFlowLayout verticalFlowLayout1 = new VerticalFlowLayout();
+	private VerticalFlowLayout verticalFlowLayout2 = new VerticalFlowLayout();
+	private XYLayout xYLayout1 = new XYLayout();
 
+	private static final String ERROR_COMMON = "Ошибка! Пароль не был изменён.";
+	private static final String ERROR_SHORT = "Ошибка! Пароль короче 3-х знаков!";
+	private static final String ERROR_WRONG_ALL = "Ошибка! Неправильный старый пароль!";
+	private static final String ERROR_NON_EQUAL = "Ошибка! Введённые пароли отличаются!";
+	private static final String OK = "Пароль успешно изменён.";
 
-  String PASSWORD;
+	String password;
+	private User user;
+	OperatorProfile op;
+	private ApplicationContext aContext;
+	private Dispatcher dispatcher;
 
-  String error         = "Ошибка! Пароль не был изменен.";
-  String errorShort    = "Ошибка! Пароль короче 3-х знаков!";
-  String errorWrongOld = "Ошибка! Неправильный старый пароль!";
-  String errorNonEqual = "Ошибка! Введенные пароли отличаются!";
-  String ok = "Пароль успешно изменен.";
+	WhoAmIPasswordPanel()
+	{
+		jbInit();
+	}
 
-  User user;
-  OperatorProfile op;
-  ApplicationContext aContext;
-  Dispatcher dispatcher;
+	private void jbInit()
+	{
+		this.setLayout(this.borderLayout1);
+		this.setName("Пароль");
+		this.textPanel.setLayout(this.verticalFlowLayout1);
+		this.jLabel1.setPreferredSize(new Dimension(89, 21));
+		this.jLabel1.setText(LangModel.getString("labelOldPassword"));
+		this.jLabel2.setPreferredSize(new Dimension(44, 21));
+		this.jLabel2.setText(LangModel.getString("labelNewPassword"));
+		this.jLabel3.setPreferredSize(new Dimension(106, 21));
+		this.jLabel3.setText(LangModel.getString("labelNewPassword2"));
+		this.jPanel1.setLayout(this.verticalFlowLayout2);
+		this.applyButton.setText("Применить");
+		this.jLabelError.setText("   ");
+		this.labelsPanel.setLayout(this.xYLayout1);
+		this.jLabelOK.setText("   ");
+		this.add(this.labelsPanel, BorderLayout.SOUTH);
+		this.add(this.textPanel, BorderLayout.WEST);
+		this.add(this.jPanel1, BorderLayout.CENTER);
+		this.jPanel1.add(this.jOldPasswordField, null);
+		this.textPanel.add(this.jLabel1, null);
+		this.textPanel.add(this.jLabel2, null);
+		this.textPanel.add(this.jLabel3, null);
+		this.jPanel1.add(this.jPasswordField1, null);
+		this.jPanel1.add(this.jPasswordField2, null);
+		this.jPanel1.add(this.jPanel2, null);
+		this.jPanel2.add(this.applyButton, null);
+		this.labelsPanel.add(this.jLabelError, new XYConstraints(5, 2, -1, -1));
+		this.labelsPanel.add(this.jLabelOK, new XYConstraints(5, 2, -1, -1));
 
+		this.applyButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String p1 = new String(WhoAmIPasswordPanel.this.jPasswordField1.getPassword());
+				String p2 = new String(WhoAmIPasswordPanel.this.jPasswordField2.getPassword());
 
-  public WhoAmIPasswordPanel()
-  {
-    try {
-      jbInit();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
+				if (p1.equals(p2) && p1.length() >= 3 && new String(WhoAmIPasswordPanel.this.jOldPasswordField.getPassword()).equals(WhoAmIPasswordPanel.this.op.password))
+				{
+					WhoAmIPasswordPanel.this.password = p1;
+					modify();
 
-  }
-  private void jbInit() throws Exception {
-    this.setLayout(borderLayout1);
-    this.setName("Пароль");
-    textPanel.setLayout(verticalFlowLayout1);
-    jLabel1.setPreferredSize(new Dimension(89, 21));
-    jLabel1.setText("Старый пароль");
-    jLabel2.setPreferredSize(new Dimension(44, 21));
-    jLabel2.setText("Пароль");
-    jLabel3.setPreferredSize(new Dimension(106, 21));
-    jLabel3.setText("пароль (повторно)");
-    jPanel1.setLayout(verticalFlowLayout2);
-    applyButton.setText("Применить");
-    jLabelError.setText("   ");
-    labelsPanel.setLayout(xYLayout1);
-//    labelsPanel.setPreferredSize(new Dimension(46, 23));
-    jLabelOK.setText("   ");
-//    jPanel1.setPreferredSize(new Dimension(119, 125));
-//    textPanel.setPreferredSize(new Dimension(116, 105));
-//    this.setPreferredSize(new Dimension(235, 145));
-    this.add(labelsPanel, BorderLayout.SOUTH);
-    this.add(textPanel, BorderLayout.WEST);
-    this.add(jPanel1, BorderLayout.CENTER);
-    jPanel1.add(jOldPasswordField, null);
-    textPanel.add(jLabel1, null);
-    textPanel.add(jLabel2, null);
-    textPanel.add(jLabel3, null);
-    jPanel1.add(jPasswordField1, null);
-    jPanel1.add(jPasswordField2, null);
-    jPanel1.add(jPanel2, null);
-    jPanel2.add(applyButton, null);
-    labelsPanel.add(jLabelError, new XYConstraints(5, 2, -1, -1));
-    labelsPanel.add(jLabelOK, new XYConstraints(5, 2, -1, -1));
+					WhoAmIPasswordPanel.this.jLabelOK.setText(OK);
+					WhoAmIPasswordPanel.this.jLabelError.setText("");
+					repaint();
+				}
+				else if (!new String(WhoAmIPasswordPanel.this.jOldPasswordField.getPassword()).equals(WhoAmIPasswordPanel.this.op.password))
+				{
+					WhoAmIPasswordPanel.this.jLabelError.setText(ERROR_WRONG_ALL);
+					WhoAmIPasswordPanel.this.jLabelOK.setText("");
+					repaint();
+				}
+				else if (!p1.equals(p2))
+				{
+					WhoAmIPasswordPanel.this.jLabelError.setText(ERROR_NON_EQUAL);
+					WhoAmIPasswordPanel.this.jLabelOK.setText("");
+					repaint();
+				}
+				else if (p1.length() < 3)
+				{
+					WhoAmIPasswordPanel.this.jLabelError.setText(ERROR_SHORT);
+					WhoAmIPasswordPanel.this.jLabelOK.setText("");
+					repaint();
+				}
+				else
+				{
+					WhoAmIPasswordPanel.this.jLabelError.setText(ERROR_COMMON);
+					WhoAmIPasswordPanel.this.jLabelOK.setText("");
+					repaint();
+				}
+			}
+		});
 
-    applyButton.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        ApplyButton_actionPerformed(e);
-      }
-    });
+		this.jLabelError.setForeground(Color.RED);
+		this.jLabelOK.setForeground(Color.BLUE);
+	}
 
-    jLabelError.setForeground(Color.red);
-    jLabelOK.setForeground(Color.blue);
+	void setAContext(ApplicationContext aContext)
+	{
+		this.aContext = aContext;
+		this.dispatcher = this.aContext.getDispatcher();
+	}
 
-  }
+	void setData(User user, OperatorProfile op)
+	{
+		if (user == null || op == null)
+			return;
+		this.op = op;
+		this.user = user;
+	}
 
-
-  public void setAContext(ApplicationContext aContext)
-  {
-    this.aContext = aContext;
-    this.dispatcher = this.aContext.getDispatcher();
-  }
-
-
-  public void setData(User user, OperatorProfile op)
-  {
-    if(user == null || op == null)
-      return;
-    this.op = op;
-    this.user = user;
-
-    String ok = "Пароль для " + op.login + " успешно изменен.";
-  }
-
-
-  void ApplyButton_actionPerformed(ActionEvent e)
-  {
-    String p1 = new String(this.jPasswordField1.getPassword());
-    String p2 = new String(this.jPasswordField2.getPassword());
-
-    if(p1.equals(p2) && p1.length() >=3 && new String(jOldPasswordField.getPassword()).equals(op.password))
-    {
-      this.PASSWORD = p1;
-      modify();
-
-      this.jLabelOK.setText(ok);
-      this.jLabelError.setText("");
-      repaint();
-    }
-    else if(!new String(jOldPasswordField.getPassword()).equals(op.password))
-    {
-      this.jLabelError.setText(errorWrongOld);
-      this.jLabelOK.setText("");
-      repaint();
-    }
-    else if(!p1.equals(p2))
-    {
-      this.jLabelError.setText(errorNonEqual);
-      this.jLabelOK.setText("");
-      repaint();
-    }
-    else if(p1.length()<3)
-    {
-      this.jLabelError.setText(errorShort);
-      this.jLabelOK.setText("");
-      repaint();
-    }
-    else
-    {
-      this.jLabelError.setText(error);
-      this.jLabelOK.setText("");
-      repaint();
-    }
-  }
-
-
-  private void modify()
-  {
-    Date d = new Date();
-    this.op.password = this.PASSWORD;
-    this.op.modified_by = user.id;
-    this.op.modified = d.getTime();
-    Pool.put(OperatorProfile.typ, op.id, op);
-    this.aContext.getDataSourceInterface().SaveOperatorProfile(op.id);
-    dispatcher.notify(new OperationEvent(this, 0, OperatorProfile.typ+"updated"));
-  }
-
-
+	void modify()
+	{
+		Date d = new Date();
+		this.op.password = this.password;
+		this.op.modified_by = this.user.id;
+		this.op.modified = d.getTime();
+		Pool.put(OperatorProfile.typ, this.op.id, this.op);
+		this.aContext.getDataSourceInterface().SaveOperatorProfile(this.op.id);
+		this.dispatcher.notify(new OperationEvent(this, 0, OperatorProfile.typ + "updated"));
+	}
 }
-
-
-
-/*
-
-public class WhoAmIPasswordPanel extends JPanel
-{
-  JLabel jLabel2 = new JLabel();
-  JLabel jLabel3 = new JLabel();
-  JPasswordField jPasswordField1 = new JPasswordField();
-  JPasswordField jPasswordField2 = new JPasswordField();
-  JButton ApplyButton = new JButton();
-//  JButton RepeatButton = new JButton();
-  JLabel jLabelError = new JLabel();
-  JLabel jLabelOK = new JLabel();
-  String PASSWORD;
-
-  String error         = "Ошибка! Пароль не был изменен.";
-  String errorShort    = "Ошибка! Пароль короче 3-х знаков!";
-  String errorWrongOld = "Ошибка! Неправильный старый пароль!";
-  String errorNonEqual = "Ошибка! Введенные пароли отличаются!";
-  String ok = "Пароль успешно изменен.";
-
-  User user;
-  OperatorProfile op;
-  ApplicationContext aContext;
-  Dispatcher dispatcher;
-  JPanel jPanel1 = new JPanel();
-  VerticalFlowLayout verticalFlowLayout1 = new VerticalFlowLayout();
-  JPanel jPanel2 = new JPanel();
-  XYLayout xYLayout2 = new XYLayout();
-  JPanel jPanel3 = new JPanel();
-  JPanel jPanel4 = new JPanel();
-  XYLayout xYLayout3 = new XYLayout();
-  JPanel jPanel5 = new JPanel();
-  VerticalFlowLayout verticalFlowLayout2 = new VerticalFlowLayout();
-  FlowLayout flowLayout1 = new FlowLayout();
-  XYLayout xYLayout1 = new XYLayout();
-  private TitledBorder titledBorder1;
-  JLabel jLabel1 = new JLabel();
-  JPasswordField jOldPasswordField = new JPasswordField();
-  TitledBorder titledBorder2;
-  TitledBorder titledBorder3;
-  TitledBorder titledBorder4;
-
-
-  public WhoAmIPasswordPanel()
-  {
-    try {
-      jbInit();
-    }
-    catch(Exception ex) {
-      ex.printStackTrace();
-    }
-  }
-  void jbInit() throws Exception
-  {
-    titledBorder1 = new TitledBorder("");
-    titledBorder2 = new TitledBorder("");
-    titledBorder3 = new TitledBorder("");
-    titledBorder4 = new TitledBorder("");
-    jLabelError.setForeground(Color.red);
-    jLabelOK.setForeground(Color.blue);
-    jLabelError.setText("");
-    jLabelOK.setText("");
-    this.setName("Пароль");
-    this.setLayout(xYLayout1);
-    this.setPreferredSize(new Dimension(220, 160));
-    jLabel2.setPreferredSize(new Dimension(110, 17));
-    jLabel2.setText("Пароль");
-    jLabel3.setPreferredSize(new Dimension(110, 17));
-    jLabel3.setText("Пароль (повторно)");
-    ApplyButton.setText("Применить");
-//    RepeatButton.setText("Повторить");
-    ApplyButton.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        ApplyButton_actionPerformed(e);
-      }
-    });
-//    RepeatButton.addActionListener(new java.awt.event.ActionListener() {
-//      public void actionPerformed(ActionEvent e) {
-//  RepeatButton_actionPerformed(e);
-//      }
-//    });
-
-    jPanel1.setPreferredSize(new Dimension(125, 500));
-    jPanel1.setLayout(verticalFlowLayout1);
-    jPanel2.setLayout(xYLayout2);
-    jPanel3.setLayout(flowLayout1);
-    jPanel4.setPreferredSize(new Dimension(169, 20));
-    jPanel4.setLayout(xYLayout3);
-    jPanel5.setLayout(verticalFlowLayout2);
-    jPanel5.setPreferredSize(new Dimension(120, 500));
-    jPanel3.setMinimumSize(new Dimension(114, 20));
-    jPanel3.setPreferredSize(new Dimension(169, 25));
-    jPasswordField1.setBorder(BorderFactory.createLoweredBevelBorder());
-    jPasswordField1.setPreferredSize(new Dimension(4, 17));
-    jPasswordField2.setBorder(BorderFactory.createLoweredBevelBorder());
-    jPasswordField2.setPreferredSize(new Dimension(4, 17));
-    jLabel1.setText("Старый пароль");
-    jOldPasswordField.setBorder(BorderFactory.createLoweredBevelBorder());
-    jOldPasswordField.setPreferredSize(new Dimension(4, 17));
-    jPanel1.add(jOldPasswordField, null);
-    jPanel1.add(jPasswordField1, null);
-    jPanel1.add(jPasswordField2, null);
-    jPanel1.add(jPanel3, null);
-    jPanel3.add(jPanel2, null);
-//    jPanel2.add(RepeatButton,    new XYConstraints(2, 1, 100, 17));
-    jPanel2.add(ApplyButton,   new XYConstraints(2, 1, 100, 17));
-    this.add(jPanel4,             new XYConstraints(1, 94, 283, -1));
-    jPanel4.add(jLabelError,      new XYConstraints(1, 1, -1, 15));
-    jPanel4.add(jLabelOK,    new XYConstraints(1, 1, -1, 15));
-    this.add(jPanel5,       new XYConstraints(0, 0, -1, 81));
-    jPanel5.add(jLabel1, null);
-    jPanel5.add(jLabel2, null);
-    jPanel5.add(jLabel3, null);
-    this.add(jPanel1,                    new XYConstraints(117, 0, 135, 96));
-
-    this.ApplyButton.setVisible(true);
-//    this.RepeatButton.show(false);
-    repaint();
-  }
-
-  public void setData(User user, OperatorProfile op)
-  {
-    if(user == null || op == null)
-      return;
-    this.op = op;
-    this.user = user;
-
-    String ok = "Пароль для " + op.login + " успешно изменен.";
-  }
-
-  void ApplyButton_actionPerformed(ActionEvent e)
-  {
-    String p1 = this.jPasswordField1.getText();
-    String p2 = this.jPasswordField2.getText();
-
-    if(p1.equals(p2) && p1.length() >=3 && jOldPasswordField.getText().equals(op.password))
-    {
-      this.PASSWORD = p1;
-      modify();
-
-      this.jLabelOK.setText(ok);
-      this.jLabelError.setText("");
-      repaint();
-    }
-    else if(!p1.equals(p2))
-    {
-      this.jLabelError.setText(errorNonEqual);
-      this.jLabelOK.setText("");
-      repaint();
-    }
-    else if(p1.length()<3)
-    {
-      this.jLabelError.setText(errorShort);
-      this.jLabelOK.setText("");
-      repaint();
-    }
-    else if(!jOldPasswordField.getText().equals(op.password))
-    {
-      this.jLabelError.setText(errorWrongOld);
-      this.jLabelOK.setText("");
-      repaint();
-    }
-    else
-    {
-      this.jLabelError.setText(error);
-      this.jLabelOK.setText("");
-      repaint();
-    }
-//    this.jPasswordField1.enable(false);
-//    this.jPasswordField2.enable(false);
-//    this.ApplyButton.show(false);
-//    this.RepeatButton.show(true);
-
-  }
-
-//  void RepeatButton_actionPerformed(ActionEvent e)
-//  {
-//    this.jPasswordField1.setText("");
-//    this.jPasswordField2.setText("");
-//    this.jPasswordField1.enable(true);
-//    this.jPasswordField2.enable(true);
-//    this.ApplyButton.show(true);
-//    this.RepeatButton.show(false);
-//    this.jLabelError.setText("");
-//    this.jLabelOK.setText("");
-//    this.repaint();
-//  }
-
-
-  private void modify()
-  {
-    Date d = new Date();
-    this.op.password = this.PASSWORD;
-    this.op.modified_by = user.id;
-    this.op.modified = d.getTime();
-    Pool.put(op.typ, op.id, op);
-    this.aContext.getDataSourceInterface().SaveOperatorProfile(op.id);
-    dispatcher.notify(new OperationEvent(this, 0, OperatorProfile.typ+"updated"));
-  }
-
-
-
-  public void setAContext(ApplicationContext aContext)
-  {
-    this.aContext = aContext;
-    this.dispatcher = this.aContext.getDispatcher();
-  }
-}
-
-/*
-public class WhoAmIPasswordPanel extends JPanel
-{
-  JLabel jLabel2 = new JLabel();
-  JLabel jLabel3 = new JLabel();
-  JPasswordField jPasswordField1 = new JPasswordField();
-  JPasswordField jPasswordField2 = new JPasswordField();
-  JButton ApplyButton = new JButton();
-  JButton RepeatButton = new JButton();
-  JLabel jLabelError = new JLabel();
-  JLabel jLabelOK = new JLabel();
-  String PASSWORD;
-
-  String error = "Ошибка! Пароль не был изменен.";
-  String ok = "Пароль успешно изменен.";
-
-  User user;
-  OperatorProfile op;
-  ApplicationContext aContext;
-  Dispatcher dispatcher;
-  JPanel jPanel1 = new JPanel();
-  VerticalFlowLayout verticalFlowLayout1 = new VerticalFlowLayout();
-  JPanel jPanel2 = new JPanel();
-  XYLayout xYLayout2 = new XYLayout();
-  JPanel jPanel3 = new JPanel();
-  JPanel jPanel4 = new JPanel();
-  XYLayout xYLayout3 = new XYLayout();
-  JPanel jPanel5 = new JPanel();
-  VerticalFlowLayout verticalFlowLayout2 = new VerticalFlowLayout();
-  FlowLayout flowLayout1 = new FlowLayout();
-  XYLayout xYLayout1 = new XYLayout();
-  private TitledBorder titledBorder1;
-  JLabel jLabel1 = new JLabel();
-  JPasswordField jOldPasswordField = new JPasswordField();
-  TitledBorder titledBorder2;
-  TitledBorder titledBorder3;
-  TitledBorder titledBorder4;
-
-
-  public WhoAmIPasswordPanel()
-  {
-    try {
-      jbInit();
-    }
-    catch(Exception ex) {
-      ex.printStackTrace();
-    }
-  }
-  void jbInit() throws Exception
-  {
-    titledBorder1 = new TitledBorder("");
-    titledBorder2 = new TitledBorder("");
-    titledBorder3 = new TitledBorder("");
-    titledBorder4 = new TitledBorder("");
-    jLabelError.setForeground(Color.red);
-    jLabelOK.setForeground(Color.blue);
-    jLabelError.setText("");
-    jLabelOK.setText("");
-    this.setName("Пароль");
-    this.setLayout(xYLayout1);
-    this.setPreferredSize(new Dimension(220, 160));
-    jLabel2.setPreferredSize(new Dimension(110, 17));
-    jLabel2.setText("Пароль");
-    jLabel3.setPreferredSize(new Dimension(110, 17));
-    jLabel3.setText("Пароль (повторно)");
-    ApplyButton.setText("Применить");
-    RepeatButton.setText("Повторить");
-    ApplyButton.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        ApplyButton_actionPerformed(e);
-      }
-    });
-    RepeatButton.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-	RepeatButton_actionPerformed(e);
-      }
-    });
-
-    jPanel1.setPreferredSize(new Dimension(125, 500));
-    jPanel1.setLayout(verticalFlowLayout1);
-    jPanel2.setLayout(xYLayout2);
-    jPanel3.setLayout(flowLayout1);
-    jPanel4.setPreferredSize(new Dimension(169, 20));
-    jPanel4.setLayout(xYLayout3);
-    jPanel5.setLayout(verticalFlowLayout2);
-    jPanel5.setPreferredSize(new Dimension(120, 500));
-    jPanel3.setMinimumSize(new Dimension(114, 20));
-    jPanel3.setPreferredSize(new Dimension(169, 25));
-    jPasswordField1.setBorder(BorderFactory.createLoweredBevelBorder());
-    jPasswordField1.setPreferredSize(new Dimension(4, 17));
-    jPasswordField2.setBorder(BorderFactory.createLoweredBevelBorder());
-    jPasswordField2.setPreferredSize(new Dimension(4, 17));
-    jLabel1.setText("Старый пароль");
-    jOldPasswordField.setBorder(BorderFactory.createLoweredBevelBorder());
-    jOldPasswordField.setPreferredSize(new Dimension(4, 17));
-    jPanel1.add(jOldPasswordField, null);
-    jPanel1.add(jPasswordField1, null);
-    jPanel1.add(jPasswordField2, null);
-    jPanel1.add(jPanel3, null);
-    jPanel3.add(jPanel2, null);
-    jPanel2.add(RepeatButton,    new XYConstraints(2, 1, 100, 17));
-    jPanel2.add(ApplyButton,   new XYConstraints(2, 1, 100, 17));
-    this.add(jPanel4,             new XYConstraints(1, 94, 283, -1));
-    jPanel4.add(jLabelError,      new XYConstraints(1, 1, -1, 15));
-    jPanel4.add(jLabelOK,    new XYConstraints(1, 1, -1, 15));
-    this.add(jPanel5,       new XYConstraints(0, 0, -1, 81));
-    jPanel5.add(jLabel1, null);
-    jPanel5.add(jLabel2, null);
-    jPanel5.add(jLabel3, null);
-    this.add(jPanel1,                    new XYConstraints(117, 0, 135, 96));
-
-    this.ApplyButton.show(true);
-    this.RepeatButton.show(false);
-    repaint();
-  }
-
-  public void setData(User user, OperatorProfile op)
-  {
-    if(user == null || op == null)
-      return;
-    this.op = op;
-    this.user = user;
-
-    String ok = "Пароль для " + op.login + " успешно изменен.";
-  }
-
-  void ApplyButton_actionPerformed(ActionEvent e)
-  {
-    String p1 = this.jPasswordField1.getText();
-    String p2 = this.jPasswordField2.getText();
-
-    if(p1.equals(p2) && p1.length() >=3 && jOldPasswordField.getText().equals(op.password))
-    {
-      this.PASSWORD = p1;
-      modify();
-
-      this.jLabelOK.setText(ok);
-      this.jLabelError.setText("");
-      repaint();
-    }
-    else
-    {
-      this.jLabelError.setText(error);
-      this.jLabelOK.setText("");
-      repaint();
-    }
-    this.jPasswordField1.enable(false);
-    this.jPasswordField2.enable(false);
-    this.ApplyButton.show(false);
-    this.RepeatButton.show(true);
-
-  }
-
-  void RepeatButton_actionPerformed(ActionEvent e)
-  {
-    this.jPasswordField1.setText("");
-    this.jPasswordField2.setText("");
-    this.jPasswordField1.enable(true);
-    this.jPasswordField2.enable(true);
-    this.ApplyButton.show(true);
-    this.RepeatButton.show(false);
-    this.jLabelError.setText("");
-    this.jLabelOK.setText("");
-    this.repaint();
-  }
-
-
-  private void modify()
-  {
-    Date d = new Date();
-    this.op.password = this.PASSWORD;
-    this.op.modified_by = user.id;
-    this.op.modified = d.getTime();
-    Pool.put(op.typ, op.id, op);
-    this.aContext.getDataSourceInterface().SaveOperatorProfile(op.id);
-    dispatcher.notify(new OperationEvent(this, 0, OperatorProfile.typ+"updated"));
-  }
-
-
-
-  public void setAContext(ApplicationContext aContext)
-  {
-    this.aContext = aContext;
-    this.dispatcher = this.aContext.getDispatcher();
-  }
-}*/
