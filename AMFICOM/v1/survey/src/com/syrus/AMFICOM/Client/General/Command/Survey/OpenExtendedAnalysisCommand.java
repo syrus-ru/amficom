@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 
-public class OpenExtendedAnalysisCommand extends VoidCommand 
+public class OpenExtendedAnalysisCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	ApplicationContext aContext;
@@ -64,9 +64,8 @@ public class OpenExtendedAnalysisCommand extends VoidCommand
 		aC.setDataSourceInterface(aC.getApplicationModel().getDataSource(aContext.getSessionInterface()));
 		aC.setDispatcher(dispatcher);
 
-        System.out.println("Starting Extended Analysis window");
+		  System.out.println("Starting Extended Analysis window");
 
-		LangModelAnalyse.initialize();
 		new com.syrus.AMFICOM.Client.Analysis.Reflectometry.AnalyseExt(new ReflectometryAnalyseApplicationModelFactory());
 /*
 		try
@@ -95,6 +94,6 @@ public class OpenExtendedAnalysisCommand extends VoidCommand
 			System.out.println("Ошибка запуска модуля - " + e.getMessage());
 			dispatcher.notify(new StatusMessageEvent("Ошибка открытия модуля AnalyseExt"));
 		}
-*/	
+*/
 	}
 }

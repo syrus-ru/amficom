@@ -5,7 +5,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 
-public class OpenPrognosisCommand extends VoidCommand 
+public class OpenPrognosisCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	ApplicationContext aContext;
@@ -56,10 +56,8 @@ public class OpenPrognosisCommand extends VoidCommand
 		aC.setDataSourceInterface(aC.getApplicationModel().getDataSource(aContext.getSessionInterface()));
 		aC.setDispatcher(dispatcher);
 
-        System.out.println("Starting Prognosis window");
+		  System.out.println("Starting Prognosis window");
 
-		LangModelPrediction.initialize();
-		LangModelAnalyse.initialize();
 		new com.syrus.AMFICOM.Client.Prediction.Prediction(new DefaultPredictionApplicationModelFactory());
 /*
 		try

@@ -249,8 +249,8 @@ public class AlarmReportModel extends ObjectResourceReportModel
 		{
 			String returnValue =
 				orrm.getObjectsName() + ":" +
-				LangModelReport.String(rp.view_type) + ":" +
-				LangModelReport.String("label_byFields");
+				LangModelReport.getString(rp.view_type) + ":" +
+				LangModelReport.getString("label_byFields");
 
 			Vector fieldList = (Vector) rp.getReserve();
 			int listRenderSize = (fieldList.size() > 2) ? 3 : fieldList.size();
@@ -263,7 +263,7 @@ public class AlarmReportModel extends ObjectResourceReportModel
 			}
 			if (listRenderSize != fieldList.size())
 				returnValue +=
-					(LangModelReport.String("label_more") +
+					(LangModelReport.getString("label_more") +
 					Integer.toString(fieldList.size() - listRenderSize) + ")");
 
 			return returnValue;
@@ -274,7 +274,7 @@ public class AlarmReportModel extends ObjectResourceReportModel
 			resultString = resultString + ":" + orrm.getColumnNamebyID(rp.field);
 		if (!rp.view_type.equals(""))
 			resultString = resultString + ":"
-				+ LangModelReport.String(rp.view_type);
+				+ LangModelReport.getString(rp.view_type);
 		return resultString;
 	}
 }

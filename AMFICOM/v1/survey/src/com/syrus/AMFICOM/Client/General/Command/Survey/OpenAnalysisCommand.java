@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 
 
-public class OpenAnalysisCommand extends VoidCommand 
+public class OpenAnalysisCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	ApplicationContext aContext;
@@ -16,7 +16,7 @@ public class OpenAnalysisCommand extends VoidCommand
 
 	public OpenAnalysisCommand()
 	{
-		// nothing 
+		// nothing
 	}
 
 	public OpenAnalysisCommand(Dispatcher dispatcher, ApplicationContext aContext, ApplicationModelFactory factory)
@@ -66,9 +66,8 @@ public class OpenAnalysisCommand extends VoidCommand
 		aC.setDataSourceInterface(aC.getApplicationModel().getDataSource(aContext.getSessionInterface()));
 		aC.setDispatcher(dispatcher);
 
-        System.out.println("Starting Analysis window");
-		
-		LangModelAnalyse.initialize();
+		  System.out.println("Starting Analysis window");
+
 		new com.syrus.AMFICOM.Client.Analysis.Reflectometry.Analyse(new ReflectometryAnalyseApplicationModelFactory());
 /*
 		try

@@ -41,13 +41,13 @@ public class DefaultAlarmFilter extends AlarmFilter
 		vec.add("time");
 		vec.add(String.valueOf(loval));
 		vec.add(String.valueOf(hival));
-		
+
 		col_name = getFilterColumnName("time");
-		fe.setName(LangModel.String("labelFiltration") +
-				" \'" + col_name + 
-				"\' " + LangModel.String("labelTimeOt") + 
-				" " + sdf.format(new Date(loval)) + 
-				" " + LangModel.String("labelTimeDo") +
+		fe.setName(LangModel.getString("labelFiltration") +
+				" \'" + col_name +
+				"\' " + LangModel.getString("labelTimeOt") +
+				" " + sdf.format(new Date(loval)) +
+				" " + LangModel.getString("labelTimeDo") +
 				" " + sdf.format(new Date(hival)));
 		fe.setVec(vec);
 		fe.setId("time");
@@ -68,9 +68,9 @@ public class DefaultAlarmFilter extends AlarmFilter
 
 		col_name = getFilterColumnName("status");
 		fe.setVec(vec);
-		fe.setName(LangModel.String("labelFiltration") +
+		fe.setName(LangModel.getString("labelFiltration") +
 				" \'" + col_name +
-				"\' " + LangModel.String("labelPoSpisku"));
+				"\' " + LangModel.getString("labelPoSpisku"));
 		fe.setId("status");
 		addCriterium(fe);
 

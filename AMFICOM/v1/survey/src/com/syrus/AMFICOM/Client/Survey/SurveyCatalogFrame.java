@@ -12,11 +12,11 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 
-public class SurveyCatalogFrame extends ObjectResourceCatalogFrame 
+public class SurveyCatalogFrame extends ObjectResourceCatalogFrame
 	implements OperationListener
 {
 	Dispatcher dispatcher;
-	
+
 	public SurveyCatalogFrame(String title, ApplicationContext aContext)
 	{
 		super(title, aContext);
@@ -108,7 +108,7 @@ public class SurveyCatalogFrame extends ObjectResourceCatalogFrame
 				title = "";
 			}
 
-			setTitle(LangModel.String("node" + title));
+			setTitle(LangModel.getString("node" + title));
 		}
 	}
 }

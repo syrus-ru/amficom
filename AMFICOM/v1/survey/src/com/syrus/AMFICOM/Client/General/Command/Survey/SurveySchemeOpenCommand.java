@@ -41,7 +41,6 @@ public class SurveySchemeOpenCommand extends VoidCommand
 		if (dataSource == null)
 			return;
 
-		LangModelSchematics.initialize();
 		SchemeChooserDialog mcd = new SchemeChooserDialog(dataSource);//mapFrame, "Выберите карту", true);
 
 		DataSet dataSet = new DataSet(Pool.getHash(Scheme.typ));

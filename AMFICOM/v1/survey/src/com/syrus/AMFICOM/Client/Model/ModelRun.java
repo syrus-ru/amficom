@@ -10,9 +10,6 @@ public class ModelRun
 	public static void main(String[] args)
 	{
 		Environment.initialize();
-		LangModelModel.initialize();
-		LangModelAnalyse.initialize();
-		LangModelSchematics.initialize();
 
 		try
 		{

@@ -232,11 +232,11 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		statusBar.setWidth("domain", 150);
 		statusBar.setWidth("time", 50);
 
-		statusBar.setText("status", LangModel.String("statusReady"));
-		statusBar.setText("server", LangModel.String("statusNoConnection"));
-		statusBar.setText("session", LangModel.String("statusNoSession"));
-		statusBar.setText("user", LangModel.String("statusNoUser"));
-		statusBar.setText("domain", LangModel.String("statusNoDomain"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
+		statusBar.setText("server", LangModel.getString("statusNoConnection"));
+		statusBar.setText("session", LangModel.getString("statusNoSession"));
+		statusBar.setText("user", LangModel.getString("statusNoUser"));
+		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 		statusBar.setText("time", " ");
 		statusBar.organize();
 		statusBar.setDispatcher(Environment.the_dispatcher);
@@ -734,7 +734,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 
 		aModel.fireModelChanged("");
 
-		statusBar.setText("status", LangModel.String("statusReady"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
 		statusBar.setText("server", aContext.getConnectionInterface()
 				.getServiceURL());
 	}
@@ -749,8 +749,8 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 
 		aModel.fireModelChanged("");
 
-		statusBar.setText("status", LangModel.String("statusDisconnected"));
-		statusBar.setText("server", LangModel.String("statusNoConnection"));
+		statusBar.setText("status", LangModel.getString("statusDisconnected"));
+		statusBar.setText("server", LangModel.getString("statusNoConnection"));
 	}
 
 	public void setConnectionFailed() {
@@ -763,8 +763,8 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 
 		aModel.fireModelChanged("");
 
-		statusBar.setText("status", LangModel.String("statusError"));
-		statusBar.setText("server", LangModel.String("statusConnectionError"));
+		statusBar.setText("status", LangModel.getString("statusError"));
+		statusBar.setText("server", LangModel.getString("statusConnectionError"));
 	}
 
 	public void setSessionOpened() {
@@ -778,7 +778,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		aModel.enable("menuSessionDomain");
 		aModel.fireModelChanged("");
 
-		statusBar.setText("status", LangModel.String("statusReady"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
 		statusBar.setText("session", sdf.format(new Date(aContext
 				.getSessionInterface().getLogonTime())));
 		statusBar.setText("user", aContext.getSessionInterface().getUser());
@@ -867,10 +867,10 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 
 		new CloseAllInternalCommand(desktopPane).execute();
 
-		statusBar.setText("status", LangModel.String("statusReady"));
-		statusBar.setText("session", LangModel.String("statusNoSession"));
-		statusBar.setText("user", LangModel.String("statusNoUser"));
-		statusBar.setText("domain", LangModel.String("statusNoDomain"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
+		statusBar.setText("session", LangModel.getString("statusNoSession"));
+		statusBar.setText("user", LangModel.getString("statusNoUser"));
+		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 	}
 
 	public Dispatcher getInternalDispatcher() {

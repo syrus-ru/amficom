@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 
-public class OpenNormsCommand extends VoidCommand 
+public class OpenNormsCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	ApplicationContext aContext;
@@ -64,9 +64,9 @@ public class OpenNormsCommand extends VoidCommand
 		aC.setDataSourceInterface(aC.getApplicationModel().getDataSource(aContext.getSessionInterface()));
 		aC.setDispatcher(dispatcher);
 
-        System.out.println("Starting Norms window");
+		  System.out.println("Starting Norms window");
 
-		LangModelAnalyse.initialize();
+
 		new com.syrus.AMFICOM.Client.Analysis.Reflectometry.Evaluation(new ReflectometryAnalyseApplicationModelFactory());
 
 //		try

@@ -11,7 +11,7 @@ import javax.swing.*;
 
 public class METree extends FilterTree
 {
-	FilterTreeNode root = new FilterTreeNode(LangModel.String("labelRoot"), "root");
+	FilterTreeNode root = new FilterTreeNode(LangModel.getString("labelRoot"), "root");
 
 	public METree()
 	{
@@ -30,7 +30,7 @@ public class METree extends FilterTree
 			for(Enumeration enu = kis.access_ports.elements(); enu.hasMoreElements();)
 			{
 				AccessPort ap = (AccessPort )enu.nextElement();
-				
+
 				Hashtable ht2 = Pool.getHash(MonitoredElement.typ);
 				if(ht2 != null)
 				for(Enumeration en2 = ht2.elements(); en2.hasMoreElements();)

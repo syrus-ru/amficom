@@ -2,8 +2,6 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Survey;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.DefaultSurveyApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
@@ -22,9 +20,6 @@ public class SurveyRun
 		{
 			e.printStackTrace();
 		}
-		//LangModelSurvey.initialize();
-		LangModelSchedule.initialize();
-		LangModelAnalyse.initialize();
 		new Survey(new DefaultSurveyApplicationModelFactory());
 	}
 }

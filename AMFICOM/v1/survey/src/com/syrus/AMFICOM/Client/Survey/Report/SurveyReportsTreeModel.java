@@ -13,9 +13,6 @@ import javax.swing.tree.TreeNode;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
@@ -54,9 +51,6 @@ import com.syrus.AMFICOM.Client.Configure.Report.EquipFeaturesReportModel;
 import com.syrus.AMFICOM.Client.Schematics.Report.SchemeReportModel;
 
 import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
-import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationReportModel;
-import com.syrus.AMFICOM.Client.Analysis.Report.SurveyReportModel;
-import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
 import com.syrus.AMFICOM.Client.Prediction.Report.PredictionReportModel;
 import com.syrus.AMFICOM.Client.Model.Report.ModelingReportModel;
 
@@ -77,7 +71,7 @@ public class SurveyReportsTreeModel extends ObjectResourceTreeModel
 	{
 		return new ObjectResourceTreeNode(
 			"root",
-			LangModelReport.String("label_availableReports"),
+			LangModelReport.getString("label_availableReports"),
 			true);
 	}
 
@@ -153,7 +147,7 @@ public class SurveyReportsTreeModel extends ObjectResourceTreeModel
 
 						ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 							curReport,
-							LangModelReport.String(curReport.view_type),
+							LangModelReport.getString(curReport.view_type),
 							true,
 							new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 							"images/new.gif").getScaledInstance(16, 16,
@@ -209,7 +203,7 @@ public class SurveyReportsTreeModel extends ObjectResourceTreeModel
 
 			ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 				or,
-				LangModelReport.String(ObjectResourceReportModel.rt_objectsReport),
+				LangModelReport.getString(ObjectResourceReportModel.rt_objectsReport),
 				true,
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/new.gif").
 				getScaledInstance(16, 16, Image.SCALE_SMOOTH)));

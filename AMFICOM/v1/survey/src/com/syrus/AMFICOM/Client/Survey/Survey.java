@@ -2,9 +2,6 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Survey;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.DefaultSurveyApplicationModelFactory;
@@ -45,7 +42,7 @@ public class Survey
 		}
 		frame.setLocation((screenSize.width - frameSize.width)/2, (screenSize.height - frameSize.height)/2);
 		frame.addWindowListener(new WindowAdapter() { public void windowClosing(WindowEvent e) { System.exit(0); } });
-*/		
+*/
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("images/main/observe_mini.gif"));
 		frame.setVisible(true);
 	}
@@ -61,10 +58,7 @@ public class Survey
 		{
 			e.printStackTrace();
 		}
-		LangModelConfig.initialize();
-//		LangModelSurvey.initialize();
-		LangModelSchedule.initialize();
-		LangModelAnalyse.initialize();
+
 		new Survey(new DefaultSurveyApplicationModelFactory());
 	}
 }

@@ -13,7 +13,7 @@ import javax.swing.JTree;
 
 public class AlarmSourceTree extends FilterTree
 {
-	FilterTreeNode root = new FilterTreeNode(LangModel.String("labelRoot"), "root");
+	FilterTreeNode root = new FilterTreeNode(LangModel.getString("labelRoot"), "root");
 
 	public AlarmSourceTree()
 	{
