@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisWrapper.java,v 1.4 2005/04/01 08:43:32 bob Exp $
+ * $Id: AnalysisWrapper.java,v 1.5 2005/04/01 14:10:28 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,25 +16,26 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/04/01 14:10:28 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class AnalysisWrapper implements StorableObjectWrapper {
 
-	public static final String		COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
+	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
+	public static final String COLUMN_MEASUREMENT_ID = "measurement_id";
+	public static final String COLUMN_CRITERIA_SET_ID = "criteria_set_id";
 
-	public static final String		COLUMN_MEASUREMENT_ID		= "measurement_id";
+	private static AnalysisWrapper instance;
 
-	public static final String		COLUMN_CRITERIA_SET_ID		= "criteria_set_id";
-
-	private static AnalysisWrapper	instance;
-
-	private List					keys;
+	private List keys;
 
 	private AnalysisWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_TYPE_ID, COLUMN_MONITORED_ELEMENT_ID, COLUMN_MEASUREMENT_ID,
+		String[] keysArray = new String[] {COLUMN_TYPE_ID,
+				COLUMN_MONITORED_ELEMENT_ID,
+				COLUMN_MEASUREMENT_ID,
+				COLUMN_NAME,
 				COLUMN_CRITERIA_SET_ID};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
@@ -64,6 +65,8 @@ public class AnalysisWrapper implements StorableObjectWrapper {
 				return analysis.getMonitoredElementId();
 			if (key.equals(COLUMN_MEASUREMENT_ID))
 				return analysis.getMeasurement();
+			if (key.equals(COLUMN_NAME))
+				return analysis.getName();
 			if (key.equals(COLUMN_CRITERIA_SET_ID))
 				return analysis.getCriteriaSet();
 		}
@@ -83,6 +86,8 @@ public class AnalysisWrapper implements StorableObjectWrapper {
 				analysis.setMonitoredElementId((Identifier) value);
 			else if (key.equals(COLUMN_MEASUREMENT_ID))
 				analysis.setMeasurement((Measurement) value);
+			else if (key.equals(COLUMN_NAME))
+				analysis.setName((String) value);
 			else if (key.equals(COLUMN_CRITERIA_SET_ID))
 				analysis.setCriteriaSet((Set) value);
 		}

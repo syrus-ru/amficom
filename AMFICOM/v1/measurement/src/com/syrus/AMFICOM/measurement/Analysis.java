@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.45 2005/04/01 08:43:32 bob Exp $
+ * $Id: Analysis.java,v 1.46 2005/04/01 14:10:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.46 $, $Date: 2005/04/01 14:10:28 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -37,6 +37,7 @@ public class Analysis extends Action {
 	 */
 	private static final long	serialVersionUID	= 3979266967062721849L;
 
+	private String name;
 	private Set criteriaSet;
 
 	private StorableObjectDatabase analysisDatabase;
@@ -78,6 +79,7 @@ public class Analysis extends Action {
 					   AnalysisType type,
 					   Identifier monitoredElementId,
 					   Measurement measurement,
+					   String name,
 					   Set criteriaSet) {
 		super(id,
 					new Date(System.currentTimeMillis()),
@@ -89,6 +91,7 @@ public class Analysis extends Action {
 					monitoredElementId,
 					measurement);
 
+		this.name = name;
 		this.criteriaSet = criteriaSet;
 
 		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
@@ -97,10 +100,12 @@ public class Analysis extends Action {
 
 	public Object getTransferable() {
 		return new Analysis_Transferable(super.getHeaderTransferable(),
-									(Identifier_Transferable)super.type.getId().getTransferable(),
-									(Identifier_Transferable)super.monitoredElementId.getTransferable(),
-									(super.parentAction != null) ? (Identifier_Transferable) super.parentAction.getId().getTransferable() : new Identifier_Transferable(""),
-									(Identifier_Transferable)this.criteriaSet.getId().getTransferable());
+				(Identifier_Transferable) super.type.getId().getTransferable(),
+				(Identifier_Transferable) super.monitoredElementId.getTransferable(),
+				(super.parentAction != null) ? (Identifier_Transferable) super.parentAction.getId().getTransferable()
+						: new Identifier_Transferable(""),
+				(this.name != null) ? new String(this.name) : "",
+				(Identifier_Transferable) this.criteriaSet.getId().getTransferable());
 	}
 
 	public short getEntityCode() {
@@ -111,12 +116,21 @@ public class Analysis extends Action {
 		return (Measurement)super.parentAction;
 	}
 	
-	public void setMeasurement(Measurement measurement) {
+	public void setMeasurement(final Measurement measurement) {
 		super.parentAction = measurement;
 		super.changed = true;
 	}
-	
-	public void setCriteriaSet(Set criteriaSet) {
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(final String name) {
+		this.name = name;
+		super.changed = true;
+	}
+
+	public void setCriteriaSet(final Set criteriaSet) {
 		this.criteriaSet = criteriaSet;
 		super.changed = true;
 	}
@@ -126,27 +140,30 @@ public class Analysis extends Action {
 	}
 
 	protected synchronized void setAttributes(Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												long version,
-												AnalysisType type,
-												Identifier monitoredElementId,
-												Measurement measurement,
-												Set criteriaSet) {
+			Date modified,
+			Identifier creatorId,
+			Identifier modifierId,
+			long version,
+			AnalysisType type,
+			Identifier monitoredElementId,
+			Measurement measurement,
+			String name,
+			Set criteriaSet) {
 		super.setAttributes(created,
-							modified,
-							creatorId,
-							modifierId,
-							version,
-							type,
-							monitoredElementId,
-							measurement);
+				modified,
+				creatorId,
+				modifierId,
+				version,
+				type,
+				monitoredElementId,
+				measurement);
+		this.name = name;
 		this.criteriaSet = criteriaSet;
 	}
 
 	/**
 	 * Create a new instance for client
+	 * 
 	 * @param creatorId
 	 * @param type
 	 * @param monitoredElementId
@@ -159,6 +176,7 @@ public class Analysis extends Action {
 										  AnalysisType type,
 										  Identifier monitoredElementId,
 										  Measurement measurement,
+										  String name,
 										  Set criteriaSet) throws CreateObjectException {
 		if (creatorId == null || type == null || monitoredElementId == null || criteriaSet == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
@@ -170,6 +188,7 @@ public class Analysis extends Action {
 				type,
 				monitoredElementId,
 				measurement,
+				name,
 				criteriaSet);
 			analysis.changed = true;
 			return analysis;

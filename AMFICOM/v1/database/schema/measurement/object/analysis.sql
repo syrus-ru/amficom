@@ -9,6 +9,7 @@ CREATE TABLE Analysis (
  type_id VARCHAR2(32) NOT NULL,
  monitored_element_id VARCHAR2(32) NOT NULL,
  measurement_id VARCHAR2(32),
+ name VARCHAR2(128),
 --
  criteria_set_id VARCHAR2(32) NOT NULL,
 --

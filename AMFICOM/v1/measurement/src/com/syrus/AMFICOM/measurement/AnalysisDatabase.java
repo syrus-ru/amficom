@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.53 2005/04/01 08:43:32 bob Exp $
+ * $Id: AnalysisDatabase.java,v 1.54 2005/04/01 14:10:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,10 +25,11 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.54 $, $Date: 2005/04/01 14:10:28 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -55,10 +56,11 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns =  StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
-				+ AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
-				+ AnalysisWrapper.COLUMN_MEASUREMENT_ID + COMMA
-				+ AnalysisWrapper.COLUMN_CRITERIA_SET_ID;
+			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+					+ AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
+					+ AnalysisWrapper.COLUMN_MEASUREMENT_ID + COMMA
+					+ StorableObjectWrapper.COLUMN_NAME + COMMA
+					+ AnalysisWrapper.COLUMN_CRITERIA_SET_ID;
 		}
 		return columns;
 	}
@@ -66,6 +68,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
@@ -79,6 +82,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		String values = DatabaseIdentifier.toSQLString(analysis.getType().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(analysis.getMonitoredElementId()) + COMMA
 			+ ((measurement != null) ? (DatabaseIdentifier.toSQLString(measurement.getId())) : "") + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(analysis.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(analysis.getCriteriaSet().getId());
 		return values;
 	}
@@ -90,6 +94,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, analysis.getType().getId()); 
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, analysis.getMonitoredElementId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (measurement != null) ? measurement.getId() : null);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, analysis.getName(), SIZE_NAME_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, analysis.getCriteriaSet().getId());
 		return startParameterNumber;
 	}
@@ -100,6 +105,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 				new Analysis(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
 								0L,
+								null,
 								null,
 								null,
 								null,
@@ -126,6 +132,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 							   analysisType,
 							   DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID),
 							   measurement,
+							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 							   criteriaSet);
 		return analysis;
 	}
