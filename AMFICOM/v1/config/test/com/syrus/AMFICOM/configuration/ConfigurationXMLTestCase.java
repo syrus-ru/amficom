@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationXMLTestCase.java,v 1.1 2005/02/07 13:50:42 bob Exp $
+ * $Id: ConfigurationXMLTestCase.java,v 1.2 2005/02/07 14:43:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.XMLIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/07 13:50:42 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/07 14:43:50 $
  * @author $Author: bob $
  * @module tools
  */
@@ -70,6 +70,7 @@ public class ConfigurationXMLTestCase extends TestCase {
 				System.out.println();
 				try {
 					GeneralStorableObjectPool.flush(true);
+					ConfigurationStorableObjectPool.flush(true);
 				} catch (VersionCollisionException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -104,7 +105,5 @@ public class ConfigurationXMLTestCase extends TestCase {
 			linkType.getId(), false, false);
 		GeneralStorableObjectPool.putStorableObject(characteristic);		
 		linkType.addCharacteristic(characteristic);
-		GeneralStorableObjectPool.flush(true);
-		ConfigurationStorableObjectPool.flush(true);
 	}
 }

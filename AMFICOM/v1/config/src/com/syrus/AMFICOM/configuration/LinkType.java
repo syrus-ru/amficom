@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.29 2005/01/31 13:47:50 arseniy Exp $
+ * $Id: LinkType.java,v 1.30 2005/02/07 14:43:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,22 +8,21 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Collections;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -33,8 +32,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/01/31 13:47:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/02/07 14:43:50 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -223,9 +222,7 @@ public class LinkType extends AbstractLinkType implements Characterized {
 	}
 
 	public List getDependencies() {
-		List dependencies = new LinkedList();
-		dependencies.addAll(this.characteristics);
-		return dependencies;
+		return Collections.unmodifiableList(this.characteristics);
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
