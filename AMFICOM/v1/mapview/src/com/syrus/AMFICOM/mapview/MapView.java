@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.11 2005/03/01 15:35:41 krupenn Exp $
+* $Id: MapView.java,v 1.12 2005/03/04 14:29:23 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/03/01 15:35:41 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/04 14:29:23 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -556,7 +556,7 @@ public class MapView extends DomainMember {
 	{
 		if(se == null)
 			return null;
-		for(Iterator it = getMap().getSiteNodes().iterator(); it.hasNext();)
+		for(Iterator it = getMap().getAllSiteNodes().iterator(); it.hasNext();)
 		{
 			SiteNode node = (SiteNode )it.next();
 			if(node instanceof UnboundNode)
@@ -608,7 +608,7 @@ public class MapView extends DomainMember {
 	 */
 	public List getCablePaths()
 	{
-		return this.cablePaths;
+		return Collections.unmodifiableList(this.cablePaths);
 	}
 
 	/**
@@ -691,7 +691,7 @@ public class MapView extends DomainMember {
 	 */
 	public List getMeasurementPaths()
 	{
-		return this.measurementPaths;
+		return Collections.unmodifiableList(this.measurementPaths);
 	}
 
 	/**
@@ -832,7 +832,7 @@ public class MapView extends DomainMember {
 	 */
 	public List getMarkers()
 	{
-		return this.markers;
+		return Collections.unmodifiableList(this.markers);
 	}
 
 	/**
