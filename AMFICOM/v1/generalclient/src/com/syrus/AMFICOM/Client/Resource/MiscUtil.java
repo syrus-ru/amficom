@@ -63,9 +63,12 @@ public class MiscUtil
 
 	static public double fourdigits(double d)
 	{
-		long l = (long )(d * 10000);
-		double d2 = (double )l;
-		return d2 / 10000;
+		return (long)(d * 10000) / 10000d;
+	}
+
+	static public float fourdigits(float d)
+	{
+		return (int)(d * 10000) / 10000f;
 	}
 
 	public static boolean validName(String name)
