@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapMouseListener;
 import com.syrus.AMFICOM.Client.Map.UI.MapMouseMotionListener;
 import com.syrus.AMFICOM.Client.Map.UI.MapScrollPane;
 import com.syrus.AMFICOM.Client.Map.UI.MapToolTippedPanel;
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
+import com.syrus.AMFICOM.map.DoublePoint;
 import java.awt.Component;
 
 import java.awt.dnd.DropTarget;

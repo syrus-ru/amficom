@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
 
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
+import com.syrus.AMFICOM.map.DoublePoint;
 //import com.mapinfo.util.DoublePoint;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -138,10 +138,12 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 			DoublePoint endPoint, 
 			double dist)
 	{
-		DoublePoint point = new DoublePoint(startPoint.getX(), startPoint.getY());
 		double len = distance(startPoint,endPoint);
-		point.x += (endPoint.getX() - startPoint.getX()) / len * dist;
-		point.y += (endPoint.getY() - startPoint.getY()) / len * dist;
+    
+    DoublePoint point = new DoublePoint(
+      startPoint.getX() + (endPoint.getX() - startPoint.getX()) / len * dist,
+      startPoint.getY() + (endPoint.getY() - startPoint.getY()) / len * dist);
+      
 		return point;
 	}
 
@@ -239,7 +241,11 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
         URLConnection s = mapServer.openConnection();
   
         System.out.println("MIFLNL - repaint - Conection opened");
+        
+        if (s.getInputStream() == null)
+          return;
         ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
+        
         System.out.println("MIFLNL - repaint - ObjectInputStream exists");
 
         try
@@ -482,7 +488,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
     result += "&" + ServletCommandNames.CENTER_Y + "=" + this.getCenter().getY();
     result += "&" + ServletCommandNames.ZOOM_FACTOR + "=" + this.getScale();
     
-    int index = 1;
+    int index = 0;
     Iterator layersIt = ((MapInfoNetMapViewer)this.viewer).getLayers().iterator();
     for (;layersIt.hasNext();)
     {
