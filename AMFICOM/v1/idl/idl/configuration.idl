@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.52 2004/11/23 09:46:15 bob Exp $
+ * $Id: configuration.idl,v 1.53 2004/11/23 14:09:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,11 +24,9 @@ module corba {
 //		void getKIS() raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 //	};
 
-#ifdef GENERAL_COMMON
 	abstract valuetype DomainMember {
 		attribute general::corba::Identifier domaiId;
 	};
-#endif // GENERAL_COMMON
 
 //////////////////// AccessIdentifier ///////////////////
 	struct AccessIdentifier_Transferable {
