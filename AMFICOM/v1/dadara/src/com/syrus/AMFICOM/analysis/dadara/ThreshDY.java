@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.1 2005/02/21 13:39:33 saa Exp $
+ * $Id: ThreshDY.java,v 1.2 2005/03/09 10:49:50 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,13 +13,14 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/02/21 13:39:33 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/09 10:49:50 $
  * @module
  */
 public class ThreshDY extends Thresh
 {
-	protected boolean typeL; // 0: dA, 1: dL
-	protected double[] values; // dA or dL values
+	private static final double VALUE_GRID = 0.001;
+	private boolean typeL; // 0: dA, 1: dL
+	private double[] values; // dA or dL values
 
 	protected ThreshDY()
 	{
@@ -45,4 +46,18 @@ public class ThreshDY extends Thresh
 			dos.writeDouble(values[k]);
 	}
 
+	protected double getDY(int n)
+	{
+		return values[n];
+	}
+	protected boolean getTypeL()
+	{
+		return typeL;
+	}
+	protected void setDY(int n, double val)
+	{
+		if (VALUE_GRID > 0)
+			val = Math.rint(val / VALUE_GRID) * VALUE_GRID;
+		values[n] = val;
+	}
 }

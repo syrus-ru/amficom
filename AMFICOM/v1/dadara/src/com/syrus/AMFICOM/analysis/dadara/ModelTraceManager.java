@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.17 2005/03/05 11:47:32 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.18 2005/03/09 10:49:50 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.17 $, $Date: 2005/03/05 11:47:32 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/09 10:49:50 $
  * @module
  */
 public class ModelTraceManager
@@ -41,14 +41,20 @@ public class ModelTraceManager
 		thMTCache = null;
 	}
 
-	// очищает записи кэша, завис€щие от ключа key в порогах
-	// (это key и Thresh.CONJ_KEY[key])
-	protected void invalidateThMTByKey(int key)
+	// очищает записи кэша пороговых кривых key
+	protected void emptyThMTEntry(int key)
 	{
 		if (thMTCache == null)
 			thMTCache = new ModelTrace[] { null, null, null, null };
 		thMTCache[key] = null;
-		thMTCache[Thresh.CONJ_KEY[key]] = null;
+	}
+
+	// очищает записи кэша, завис€щие от ключа key в порогах
+	// (это key и Thresh.CONJ_KEY[key])
+	protected void invalidateThMTByKey(int key)
+	{
+		emptyThMTEntry(key);
+		emptyThMTEntry(Thresh.CONJ_KEY[key]);
 	}
 
 	protected boolean isThMFCacheValid(int key)
@@ -248,9 +254,9 @@ public class ModelTraceManager
 		public double getValue(int key)
 		{
 			if (type == TYPE_DXF || type == TYPE_DXT)
-				return ((ThreshDX )th).dX[key];
+				return ((ThreshDX )th).getDX(key);
 			else
-				return ((ThreshDY )th).values[key];
+				return ((ThreshDY )th).getDY(key);
 		}
 		public void setValue(int key, double value)
 		{
@@ -262,10 +268,10 @@ public class ModelTraceManager
 					val = MAX_DX;
 				if (val < MIN_DX)
 					val = MIN_DX;
-				((ThreshDX )th).dX[key] = val;
+				((ThreshDX )th).setDX(key, val);
 			}
 			else
-				((ThreshDY )th).values[key] = value;
+				((ThreshDY )th).setDY(key, value);
 		}
 	}
 
@@ -282,14 +288,14 @@ public class ModelTraceManager
 			if (th instanceof ThreshDX)
 			{
 				ret.add(new ThreshEditor(
-					((ThreshDX )th).isRise
+					((ThreshDX )th).getRise()
 						? ThreshEditor.TYPE_DXF
 						: ThreshEditor.TYPE_DXF,
 					th));
 			}
 			if (th instanceof ThreshDY)
 			{
-				if (((ThreshDY )th).typeL)
+				if (((ThreshDY )th).getTypeL())
 					ret.add(new ThreshEditor(ThreshEditor.TYPE_L, th));
 				else
 					ret.add(new ThreshEditor(ThreshEditor.TYPE_A, th));
@@ -320,7 +326,7 @@ public class ModelTraceManager
 			ModelFunction tmp = mf.copy();
 			tmp.changeByThresh(tDX, tDY, key);
 			thMt = new ModelTraceImplMF(tmp, traceLength);
-			invalidateThMTByKey(key);
+			emptyThMTEntry(key);
 			thMTCache[key] = thMt;
 		}
 		return thMt;
@@ -477,7 +483,7 @@ public class ModelTraceManager
 	{
 		private ThreshDX th;
 		private int key;
-		private double dxFrac = 0; // сохран€ем дробную часть dx, еще не доставленную до th 
+		private double dxFrac = 0; // сохран€ем дробную часть dx 
 		protected int posX;
 		protected double posY;
 		protected ThresholdHandleDX(int thId, int key, int posX, double posY)
@@ -489,13 +495,13 @@ public class ModelTraceManager
 		}
 		public void moveBy(double dx, double dy) // dy is ignored
 		{
-			dxFrac += dx;
-			dx = Math.round(dxFrac);
-			dxFrac -= dx;
-			//System.err.println("THDX: moveBy: dx=" + dx + "; dy=" + dy);
-			invalidateThMTByKey(key);
-			posX += dx;
-			th.dX[key] += dx;
+			dx += dxFrac;
+			double desiredValue = th.getDX(key) + dx;
+			th.setDX(key, desiredValue);
+			dxFrac = desiredValue - th.getDX(key);
+			posX += dx - dxFrac;
+			if (dxFrac != dx)
+				invalidateThMTByKey(key);
 		}
 		public int getX()
 		{
@@ -512,25 +518,17 @@ public class ModelTraceManager
 	{
 		private ThreshDY th;
 		private int key;
-		private double dyGrid; // точность представлени€ dy
-		private double dyFrac; // сохраненна€ дробна€ часть порога, не ложаща€с€ на заданную сетку
+		private double dyFrac = 0; // сохраненна€ дробна€ часть порога, не ложаща€с€ на допускаемую порогом сетку
 		protected int posX;
 		protected double posY;
-		private void snapToGrid()
-		{
-			if (dyGrid > 0)
-				th.values[key] =
-					Math.rint(th.values[key] / dyGrid) * dyGrid;
-		}
 
-		protected ThresholdHandleDY(int thId, int key, int posX, double posY, double dyGrid)
+		protected ThresholdHandleDY(int thId, int key, int posX, double posY)
 		{
 			this.th = tDY[thId];
 			this.key = key;
-			this.dyGrid = dyGrid;
 			int posMin = th.xMin;
 			int posMax = th.xMax;
-			if (th.typeL && thId > 0 && thId < tDY.length - 1)
+			if (th.getTypeL() && thId > 0 && thId < tDY.length - 1)
 			{
 				// уточн€ем положение точки прив€зки по ширине 98% максимума кривой
 				posMin = tDY[thId - 1].xMax;
@@ -573,18 +571,16 @@ public class ModelTraceManager
 				posX = posMax;
 			this.posX = posX;
 			this.posY = posY;
-			snapToGrid();
 		}
 		public void moveBy(double dx, double dy) // dx is ignored
 		{
 			dy += dyFrac;
-			th.values[key] += dy;
-			double desiredValue = th.values[key]; 
-			snapToGrid();
-			dyFrac = desiredValue - th.values[key];
-			invalidateThMTByKey(key);
-			posY += dy - dyFrac;
-			// прив€зка к такой же сетке значени€ самого порога
+			double desiredValue = th.getDY(key) + dy;
+			th.setDY(key, desiredValue);
+			dyFrac = desiredValue - th.getDY(key);
+			posY += dy - dyFrac; // прив€зка к сетке значени€ самого порога
+			if (dy != dyFrac)
+				invalidateThMTByKey(key);
 		}
 		public int getX()
 		{
@@ -705,7 +701,7 @@ public class ModelTraceManager
 			int thId = mf.findResponsibleThreshDYID(tDX, tDY, bestKey, bestX);
 			if (thId == -1)
 				return null;
-			ThresholdHandleDY handle = new ThresholdHandleDY(thId, bestKey, bestX, bestY, 0.001);
+			ThresholdHandleDY handle = new ThresholdHandleDY(thId, bestKey, bestX, bestY);
 			handle.posY = getThresholdY(bestKey, handle.posX);
 			return handle;
 		}
