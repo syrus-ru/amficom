@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2004/06/22 10:07:44 arseniy Exp $
+# $Id: Makefile,v 1.4 2004/06/22 10:27:11 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -32,10 +32,10 @@ else
 LIBDIR = ../lib
 endif
 ENCODING = windows-1251
-JAVACFLAGS = -source 1.3 -sourcepath $(SRCDIR) -deprecation -g -O
-SUNJAVACFLAGS = -target 1.2
+JAVACFLAGS = -source 1.4 -sourcepath $(SRCDIR) -deprecation -g -O
+SUNJAVACFLAGS = -target 1.4.2
 JIKESFLAGS = \
-	-target 1.2 \
+	-target 1.4.2 \
 	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
 	+E \
 	+P \
@@ -97,11 +97,16 @@ all: .all
 idl: .idl
 
 .idl: $(SRCDIR) $(CLASSDIR)
+	$(IDL2JAVA) \
+		$(IDL2JAVAFLAGS) \
+		$(IDLDIR)/general.idl
 	touch $@
 
 .PHONY: idlclean
 idlclean:
 	$(RM) -r \
+		$(SRCDIR)/com/syrus/AMFICOM/general/corba \
+		$(CLASSDIR)/com/syrus/AMFICOM/general/corba \
 		.idl
 
 .PHONY: sqlj
