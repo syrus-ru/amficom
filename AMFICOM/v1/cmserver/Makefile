@@ -13,12 +13,14 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,IDLJ)
 
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/mcm_interface.jar
+APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/mserver_interface.jar
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
 
-SOURCES := com/syrus/AMFICOM/cmserver/CMServerConfigurationObjectLoader.java \
+SOURCES := com/syrus/AMFICOM/cmserver/CMServerGeneralObjectLoader.java \
+	com/syrus/AMFICOM/cmserver/CMServerAdministrationObjectLoader.java \
+	com/syrus/AMFICOM/cmserver/CMServerConfigurationObjectLoader.java \
 	com/syrus/AMFICOM/cmserver/CMServerMeasurementObjectLoader.java \
 	com/syrus/AMFICOM/cmserver/DatabaseContextSetup.java \
 	com/syrus/AMFICOM/cmserver/CMGeneralReceive.java \
