@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.4 2005/01/20 09:08:48 stas Exp $
+ * $Id: CharacteristicType.java,v 1.5 2005/01/20 13:34:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,24 +12,20 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/20 09:08:48 $
- * @author $Author: stas $
+ * @version $Revision: 1.5 $, $Date: 2005/01/20 13:34:04 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
 public class CharacteristicType extends StorableObjectType {
 	private static final long serialVersionUID = 6153350736368296076L;
 
-	public static final String COLUMN_ID = "id";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_CODENAME = "codename";
 	public static final String COLUMN_DATA_TYPE = "type";
 	public static final String COLUMN_SORT = "sort";
 	private static Map exportColumns = null;
@@ -160,37 +156,15 @@ public class CharacteristicType extends StorableObjectType {
 		return Collections.EMPTY_LIST;
 	}
 
-	public static CharacteristicType createInstance(Identifier creatorId,
-												 Map exportColumns) throws CreateObjectException{
-
-		if (creatorId == null || exportColumns == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		Identifier _id = (Identifier)exportColumns.get(COLUMN_ID);
-		String _description = (String)exportColumns.get(COLUMN_DESCRIPTION);
-		String _codename = (String)exportColumns.get(COLUMN_CODENAME);
-		int _sort = Integer.parseInt((String)exportColumns.get(COLUMN_SORT));
-		int _dataType = Integer.parseInt((String)exportColumns.get(COLUMN_DATA_TYPE));
-
-		return new CharacteristicType(
-				_id,
-				creatorId,
-				_codename,
-				_description,
-				_sort,
-				_dataType);
+	public CharacteristicType (Map exportedColumns) {
+		super(exportedColumns);
+		this.dataType = Integer.parseInt((String)exportedColumns.get(COLUMN_DATA_TYPE));
+		this.sort = Integer.parseInt((String)exportedColumns.get(COLUMN_SORT));
 	}
 
-	public Map exportColumns() {
-		if (exportColumns == null) {
-			exportColumns = new HashMap(5);
-		}
-		exportColumns.put(COLUMN_ID, getId());
-		exportColumns.put(COLUMN_DESCRIPTION, getDescription());
-		exportColumns.put(COLUMN_CODENAME, getCodename());
-		exportColumns.put(COLUMN_SORT, String.valueOf(getSort().value()));
-		exportColumns.put(COLUMN_DATA_TYPE, String.valueOf(getDataType().value()));
-
-		return exportColumns;
+	public synchronized void exportColumns() {
+		super.exportColumns();
+		this.exportedColumns.put(COLUMN_DATA_TYPE, Integer.toString(this.dataType));
+		this.exportedColumns.put(COLUMN_SORT, Integer.toString(this.sort));
 	}
 }

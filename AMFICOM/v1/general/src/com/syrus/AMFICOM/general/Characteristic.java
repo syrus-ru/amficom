@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.5 2005/01/20 09:08:48 stas Exp $
+ * $Id: Characteristic.java,v 1.6 2005/01/20 13:34:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,31 +12,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/01/20 09:08:48 $
- * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/01/20 13:34:04 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
 public class Characteristic extends StorableObject implements TypedObject {
 	private static final long serialVersionUID = -2746555753961778403L;
 
-	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_CHARACTERISTIC_TYPE_ID = "type";
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_CHARACTERISTIC_TYPE_ID = "type";
 	public static final String COLUMN_SORT = "sort";
 	public static final String COLUMN_VALUE = "value";
 	public static final String COLUMN_CHARACTERIZED_ID = "characterizedId";
 	public static final String COLUMN_EDITABLE = "editable";
 	public static final String COLUMN_VISIBLE = "visible";
-	private static Map exportColumns = null;
 
 	private CharacteristicType type;
 	private String name;
@@ -90,7 +87,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 						String value,
 						Identifier characterizedId,
 						boolean editable,
-						boolean visible){
+						boolean visible) {
 				super(id,
 						new Date(System.currentTimeMillis()),
 						new Date(System.currentTimeMillis()),
@@ -130,7 +127,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 												 String value,
 												 Identifier characterizedId,
 												 boolean editable,
-												 boolean visible) throws CreateObjectException{
+												 boolean visible) throws CreateObjectException {
 
 		if (creatorId == null || type == null || name == null || description == null ||
 				value == null || characterizedId == null)
@@ -305,54 +302,35 @@ public class Characteristic extends StorableObject implements TypedObject {
 		return null;
 	}
 
-	public static Characteristic createInstance(Identifier creatorId,
-												 Map exportColumns) throws CreateObjectException{
+	public Characteristic (Map exportedColumns) throws CreateObjectException {
+		super(exportedColumns);
 
-		if (creatorId == null || exportColumns == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		Identifier _id = (Identifier)exportColumns.get(COLUMN_ID);
-		String _description = (String)exportColumns.get(COLUMN_DESCRIPTION);
-		String _name = (String)exportColumns.get(COLUMN_NAME);
-		Identifier _typeId = (Identifier)exportColumns.get(COLUMN_CHARACTERISTIC_TYPE_ID);
-		int _sort = Integer.parseInt((String)exportColumns.get(COLUMN_SORT));
-		String _value = (String)exportColumns.get(COLUMN_VALUE);
-		Identifier _characterizedId = (Identifier)exportColumns.get(COLUMN_CHARACTERIZED_ID);
-		boolean _editable = ((Boolean)exportColumns.get(COLUMN_EDITABLE)).booleanValue();
-		boolean _visible = ((Boolean)exportColumns.get(COLUMN_VISIBLE)).booleanValue();
-
+		Identifier typeId = new Identifier((String)exportedColumns.get(COLUMN_CHARACTERISTIC_TYPE_ID));
 		try {
-			return new Characteristic(
-					_id,
-					creatorId,
-					(CharacteristicType)GeneralStorableObjectPool.getStorableObject(_typeId, false),
-					_name,
-					_description,
-					_sort,
-					_value,
-					_characterizedId,
-					_editable,
-					_visible);
+			this.type = (CharacteristicType)GeneralStorableObjectPool.getStorableObject(typeId, false);
 		}
-		catch (ApplicationException e) {
-			throw new CreateObjectException("Characteristic.createInstance | cannot find CharacteristicType ", e);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
+
+		this.name = (String)exportedColumns.get(COLUMN_NAME);
+		this.description = (String)exportedColumns.get(COLUMN_DESCRIPTION);
+		this.sort = Integer.parseInt((String)exportedColumns.get(COLUMN_SORT));
+		this.value = (String)exportedColumns.get(COLUMN_VALUE);
+		this.characterizedId = new Identifier((String)exportedColumns.get(COLUMN_CHARACTERIZED_ID));
+		this.editable = Boolean.getBoolean((String)exportedColumns.get(COLUMN_EDITABLE));
+		this.visible = Boolean.getBoolean((String)exportedColumns.get(COLUMN_VISIBLE));
 	}
 
-	public Map exportColumns() {
-		if (exportColumns == null) {
-			exportColumns = new HashMap(9);
-		}
-		exportColumns.put(COLUMN_ID, getId());
-		exportColumns.put(COLUMN_NAME, getName());
-		exportColumns.put(COLUMN_DESCRIPTION, getDescription());
-		exportColumns.put(COLUMN_CHARACTERISTIC_TYPE_ID, getType().getId());
-		exportColumns.put(COLUMN_SORT, String.valueOf(getSort().value()));
-		exportColumns.put(COLUMN_VALUE, getValue());
-		exportColumns.put(COLUMN_CHARACTERIZED_ID, getCharacterizedId());
-		exportColumns.put(COLUMN_EDITABLE, String.valueOf(isEditable()));
-		exportColumns.put(COLUMN_VISIBLE, String.valueOf(isVisible()));
-
-		return exportColumns;
+	public synchronized void exportColumns() {
+		super.exportColumns();
+		this.exportedColumns.put(COLUMN_CHARACTERISTIC_TYPE_ID, this.type.toString());
+		this.exportedColumns.put(COLUMN_NAME, this.name);
+		this.exportedColumns.put(COLUMN_DESCRIPTION, this.description);
+		this.exportedColumns.put(COLUMN_SORT, Integer.toString(this.sort));
+		this.exportedColumns.put(COLUMN_VALUE, this.value);
+		this.exportedColumns.put(COLUMN_CHARACTERIZED_ID, this.characterizedId.toString());
+		this.exportedColumns.put(COLUMN_EDITABLE, Boolean.toString(this.editable));
+		this.exportedColumns.put(COLUMN_VISIBLE, Boolean.toString(this.visible));
 	}
 }

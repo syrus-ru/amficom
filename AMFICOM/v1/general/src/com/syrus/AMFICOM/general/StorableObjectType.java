@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.8 2004/11/15 15:14:46 bob Exp $
+ * $Id: StorableObjectType.java,v 1.9 2005/01/20 13:34:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,17 +9,21 @@
 package com.syrus.AMFICOM.general;
 
 import java.util.Date;
+import java.util.Map;
 
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/11/15 15:14:46 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/01/20 13:34:04 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
 public abstract class StorableObjectType extends StorableObject {
 	static final long serialVersionUID = 6253817645176813979L;
+
+	public static final String COLUMN_CODENAME = "codename";
+	public static final String COLUMN_DESCRIPTION = "description";
 
 	protected String codename;
 	protected String description;
@@ -77,5 +81,17 @@ public abstract class StorableObjectType extends StorableObject {
 							modifier_id);
 		this.codename = codename;
 		this.description = description;
+	}
+
+	protected StorableObjectType (Map exportedColumns) {
+		super(exportedColumns);
+		this.codename = (String)exportedColumns.get(COLUMN_CODENAME);
+		this.description = (String)exportedColumns.get(COLUMN_DESCRIPTION);
+	}
+
+	protected void exportColumns() {
+		super.exportColumns();
+		this.exportedColumns.put(COLUMN_CODENAME, this.codename);
+		this.exportedColumns.put(COLUMN_DESCRIPTION, this.description);
 	}
 }

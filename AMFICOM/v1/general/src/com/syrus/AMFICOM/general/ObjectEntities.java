@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.43 2005/01/14 06:25:23 bass Exp $
+ * $Id: ObjectEntities.java,v 1.44 2005/01/20 13:34:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,15 +9,17 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/01/14 06:25:23 $
- * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/01/20 13:34:04 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class ObjectEntities {
 	/*	Object Types	*/
+	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
 	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteristicType";
 
 	public static final String EVENTTYPE_ENTITY = "EventType";
+	public static final String EVENTTYPPARTYPLINK_ENTITY = "EventTypParTypLink";
 	public static final String ALARMTYPE_ENTITY = "AlarmType";
 
 	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType";
@@ -27,7 +29,6 @@ public final class ObjectEntities {
 	public static final String CABLE_LINKTYPE_ENTITY = "CableLinkType";
 	public static final String CABLETHREADTYPE_ENTITY = "CableThreadType";
 
-	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
 	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";
 	public static final String MNTTYPPARTYPLINK_ENTITY = "MntTypParTypLink";
 	public static final String MNTTYMEASPORTTYPELINK_ENTITY = "MntTypMeasPortTypLink";
@@ -138,8 +139,9 @@ public final class ObjectEntities {
 	public static final short GENERAL_MIN_ENTITY_CODE = 0x0041;
 
 	public static final short CHARACTERISTIC_ENTITY_CODE = GENERAL_MIN_ENTITY_CODE;
-	
-	public static final short CHARACTERISTICTYPE_ENTITY_CODE = 0x0061;
+
+	public static final short PARAMETERTYPE_ENTITY_CODE = 0x0061;
+	public static final short CHARACTERISTICTYPE_ENTITY_CODE = 0x0062;
 
 	public static final short GENERAL_MAX_ENTITY_CODE = 0x0080;
 
@@ -215,11 +217,10 @@ public final class ObjectEntities {
 	public static final short TEMPORALPATTERN_ENTITY_CODE = 0x020A;
 	public static final short MODELING_ENTITY_CODE = 0x020B;
 
-	public static final short PARAMETERTYPE_ENTITY_CODE = 0x0241;
-	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0242;
-	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0243;
-	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0244;
-	public static final short MODELINGTYPE_ENTITY_CODE = 0x0245;
+	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0241;
+	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0242;
+	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0243;
+	public static final short MODELINGTYPE_ENTITY_CODE = 0x0244;
 
 	public static final short MEASUREMENT_MAX_ENTITY_CODE = 0x0280;
 
@@ -300,7 +301,8 @@ public final class ObjectEntities {
 		/**
 		 * TODO recast using Trove Collections
 		 */
-		if (entity.equals(CHARACTERISTICTYPE_ENTITY)) return CHARACTERISTICTYPE_ENTITY_CODE;
+		if (entity.equals(PARAMETERTYPE_ENTITY)) return PARAMETERTYPE_ENTITY_CODE;
+		else if (entity.equals(CHARACTERISTICTYPE_ENTITY)) return CHARACTERISTICTYPE_ENTITY_CODE;
 
 		else if (entity.equals(EVENTTYPE_ENTITY)) return EVENTTYPE_ENTITY_CODE;
 		else if (entity.equals(ALARMTYPE_ENTITY)) return ALARMTYPE_ENTITY_CODE;
@@ -312,7 +314,6 @@ public final class ObjectEntities {
 		else if (entity.equals(CABLETHREADTYPE_ENTITY)) return CABLETHREADTYPE_ENTITY_CODE;
 		else if (entity.equals(CABLE_LINKTYPE_ENTITY)) return CABLE_LINKTYPE_ENTITY_CODE;
 		
-		else if (entity.equals(PARAMETERTYPE_ENTITY)) return PARAMETERTYPE_ENTITY_CODE;
 		else if (entity.equals(MEASUREMENTTYPE_ENTITY)) return MEASUREMENTTYPE_ENTITY_CODE;
 		else if (entity.equals(ANALYSISTYPE_ENTITY)) return ANALYSISTYPE_ENTITY_CODE;
 		else if (entity.equals(EVALUATIONTYPE_ENTITY)) return EVALUATIONTYPE_ENTITY_CODE;
@@ -393,6 +394,8 @@ public final class ObjectEntities {
 		 * TODO recast using Trove Collections
 		 */
 		switch (code) {
+			case PARAMETERTYPE_ENTITY_CODE:
+				return PARAMETERTYPE_ENTITY;
 			case CHARACTERISTICTYPE_ENTITY_CODE:
 				return CHARACTERISTICTYPE_ENTITY;
 
@@ -414,8 +417,6 @@ public final class ObjectEntities {
 			case CABLE_LINKTYPE_ENTITY_CODE:
 				return CABLE_LINKTYPE_ENTITY;
 				
-			case PARAMETERTYPE_ENTITY_CODE:
-				return PARAMETERTYPE_ENTITY;
 			case MEASUREMENTTYPE_ENTITY_CODE:
 				return MEASUREMENTTYPE_ENTITY;
 			case ANALYSISTYPE_ENTITY_CODE:
