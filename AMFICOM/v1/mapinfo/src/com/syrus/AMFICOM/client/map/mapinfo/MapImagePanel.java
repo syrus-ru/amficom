@@ -7,6 +7,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
+import java.util.Date;
 
 import javax.swing.JPanel;
 
@@ -64,6 +65,9 @@ public class MapImagePanel extends JPanel
 					this.getWidth(),
 					this.getHeight(),
 				BufferedImage.TYPE_USHORT_565_RGB);
+			
+			System.out.println(new Date(System.currentTimeMillis()).toString() +
+				" MapImagePanel - new BufferedImages created.");
 		}
 	}
 	

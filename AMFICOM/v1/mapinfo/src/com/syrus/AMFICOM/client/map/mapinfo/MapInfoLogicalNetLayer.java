@@ -300,74 +300,54 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 					return;
 		
 				//Вертикальный (либо сверху, либо снизу ограничен горизонтальным)
-				String reqVString = null;
 				Image vertImage = null;
-				
-				if (shiftX > 0)
-				{
-					DoublePoint vertSegmentCenterSphCoords = this.convertScreenToMap(
-							new Point(shiftX / 2,mipSize.height / 2 + shiftY / 2));
-					reqVString = uriString + createRenderCommandString(
-							shiftX,
-							mipSize.height - Math.abs(shiftY),
-							vertSegmentCenterSphCoords.getX(),
-							vertSegmentCenterSphCoords.getY(),
-							this.getScale() * Math.abs(shiftX) / mipSize.width);
-				}
-				else if (shiftX < 0)
-				{
-					DoublePoint vertSegmentCenterSphCoords = this.convertScreenToMap(
-							new Point(mipSize.width + shiftX / 2,mipSize.height / 2 + shiftY / 2));					
-					reqVString = uriString + createRenderCommandString(
-							-shiftX,
-							mipSize.height - Math.abs(shiftY),
-							vertSegmentCenterSphCoords.getX(),
-							vertSegmentCenterSphCoords.getY(),
-							this.getScale() * Math.abs(shiftX) / mipSize.width);
-				}
-				
 				if (shiftX != 0)
-					vertImage = this.getServerMapImage(reqVString,Math.abs(shiftX),mipSize.height);
-				
-				System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" MIFLNL - repaint - got vertical screen segment");
+				{
+					Point vertSegmentCenter = new Point();
+				 	vertSegmentCenter.x = (shiftX > 0) ? shiftX / 2 : mipSize.width + shiftX / 2;
+				 	vertSegmentCenter.y = mipSize.height / 2 + shiftY / 2;				 	
+				 	
+					DoublePoint vertSegmentCenterSphCoords =
+						this.convertScreenToMap(vertSegmentCenter);
+					
+					String reqVString = uriString + createRenderCommandString(
+							Math.abs(shiftX),
+							mipSize.height - Math.abs(shiftY),
+							vertSegmentCenterSphCoords.getX(),
+							vertSegmentCenterSphCoords.getY(),
+							this.getScale() * Math.abs(shiftX) / mipSize.width);
+					
+					vertImage = this.getServerMapImage(reqVString,Math.abs(shiftX),mipSize.height);					
+
+					System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
+						" MIFLNL - repaint - got vertical screen segment");
+				}
 				
 				//Горизонтальный
-				String reqHString = null;
 				Image horizImage = null;
-				
-				if (shiftY > 0)
+				if (shiftY != 0)
 				{
-					DoublePoint horizSegmentCenterSphCoords = this.convertScreenToMap(
-							new Point(mipSize.width / 2,shiftY / 2));
+					Point horizSegmentCenter = new Point();
+				 	horizSegmentCenter.x = mipSize.width / 2;
+					horizSegmentCenter.y = (shiftY > 0) ? shiftY / 2 : mipSize.height + shiftY / 2;
+				 	
+					DoublePoint horizSegmentCenterSphCoords =
+						this.convertScreenToMap(horizSegmentCenter);
 					
-					reqHString = uriString + createRenderCommandString(
+					String reqHString = uriString + createRenderCommandString(
 							mipSize.width,
-							shiftY,
+							Math.abs(shiftY),
 							horizSegmentCenterSphCoords.getX(),
 							horizSegmentCenterSphCoords.getY(),
 							this.getScale());
-				}
-				else if (shiftY < 0)
-				{
-					DoublePoint horizSegmentCenterSphCoords = this.convertScreenToMap(
-							new Point(mipSize.width / 2,mipSize.height + shiftY / 2));
 					
-					reqHString = uriString + createRenderCommandString(
-							mipSize.width,
-							-shiftY,
-							horizSegmentCenterSphCoords.getX(),
-							horizSegmentCenterSphCoords.getY(),
-							this.getScale());
-				}
-				
-				if (shiftY != 0)				
-					horizImage = this.getServerMapImage(reqHString,mipSize.width,Math.abs(shiftY));
-	
-				System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
-					" MIFLNL - repaint - got horizontal screen segment");
-				
+					horizImage = this.getServerMapImage(reqHString,mipSize.width,Math.abs(shiftY));					
 
+					System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
+						" MIFLNL - repaint - got horizontal screen segment");
+				}
+
+				
 				//Drawing old image usable area to new image				
 				riGraphics.drawImage(
 					this.nmViewer.mapImagePanel.getCurrentImage(),
@@ -395,22 +375,18 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 				}
 				
 				//Drawing horizontal new part of image
-				if (shiftY > 0)
+				if (shiftY != 0)
+				{
+					int horizStartY = (shiftY > 0) ? 0 : mipSize.height + shiftY;				
 					riGraphics.drawImage(
 							(new ImageIcon(horizImage)).getImage(),
 							0,
-							0,
+							horizStartY,
 							this.nmViewer.mapImagePanel);
-				else if (shiftY < 0)
-					riGraphics.drawImage(
-							(new ImageIcon(horizImage)).getImage(),
-							0,
-							mipSize.height + shiftY,
-							this.nmViewer.mapImagePanel);
-				
-				System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
-				" MIFLNL - repaint - horizontal image segment drawn");
-				
+					
+					System.out.println(this.sdFormat.format(new Date(System.currentTimeMillis())) +
+					" MIFLNL - repaint - horizontal image segment drawn");
+				}				
 			}
 		}
 		this.nmViewer.mapImagePanel.redrawMainImage();
