@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalCondition.java,v 1.8 2005/02/24 14:59:59 arseniy Exp $
+ * $Id: TemporalCondition.java,v 1.9 2005/03/24 11:56:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalCondition_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/24 14:59:59 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/24 11:56:43 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -53,7 +53,7 @@ public class TemporalCondition implements StorableObjectCondition {
 		return this.entityCode;
 	}
 
-	public boolean isConditionTrue(Object object) throws ApplicationException {
+	public boolean isConditionTrue(Object object) {
 		boolean condition = false;
 		if (object instanceof Test) {
 			Test test = (Test) object;
