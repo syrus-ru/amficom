@@ -136,6 +136,7 @@ $(LIBNAME_GENERAL):
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\general.idl
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\resource.idl
 	$(IDL2JAVA) $(IDL2JAVAOPTIONS) $(IDL)\constants.idl
+	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\general\corba\*.java
 	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\General\*.java
 	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Resource\*.java
 	$(JAVAC) -d $(CLASSES) -classpath $(VBJCLASSPATH) -sourcepath $(SRC) $(SRC)\com\syrus\AMFICOM\CORBA\Constant\*.java
@@ -146,6 +147,7 @@ $(LIBNAME_GENERAL):
 
 jar10:
 	$(JAR) -cf $(LIBNAME_GENERAL) \
+		-C $(CLASSES) com\syrus\AMFICOM\general\corba \
 		-C $(CLASSES) com\syrus\AMFICOM\CORBA\Constant \
 		-C $(CLASSES) com\syrus\AMFICOM\CORBA\General \
 		-C $(CLASSES) com\syrus\AMFICOM\CORBA\Resource \
