@@ -10,20 +10,20 @@ package com.syrus.AMFICOM.configuration;
 
 public interface ComSyrusAmficomConfigurationSchemePath
 {
-  public abstract com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable type ();
+  com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable type ();
 
-  public abstract void type (com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable newType);
+  void type (com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable newType);
 
-  public abstract TransmissionPathType typeImpl ();
+  TransmissionPathType typeImpl ();
 
-  public abstract void typeImpl (TransmissionPathType newTypeImpl);
+  void typeImpl (TransmissionPathType newTypeImpl);
 
-  public abstract com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable path ();
+  com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable path ();
 
-  public abstract void path (com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable newPath);
+  void path (com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable newPath);
 
-  public abstract TransmissionPath pathImpl ();
+  TransmissionPath pathImpl ();
 
-  public abstract void pathImpl (TransmissionPath newPathImpl);
+  void pathImpl (TransmissionPath newPathImpl);
 
 } // interface ComSyrusAmficomConfigurationSchemePath

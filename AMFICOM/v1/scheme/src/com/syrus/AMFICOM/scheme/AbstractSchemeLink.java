@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeLink.java,v 1.1 2005/03/16 12:51:34 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.2 2005/03/17 09:40:22 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,10 +18,11 @@ import java.util.Date;
  * {@link AbstractSchemeLink}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/17 09:40:22 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
+	private static final long serialVersionUID = 1423195997939538835L;
 
 	/**
 	 * Depending on implementation, may reference either

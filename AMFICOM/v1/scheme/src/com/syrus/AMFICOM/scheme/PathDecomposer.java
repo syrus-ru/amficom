@@ -1,5 +1,5 @@
 /*
- * $Id: PathDecomposer.java,v 1.2 2005/03/16 12:51:34 bass Exp $
+ * $Id: PathDecomposer.java,v 1.3 2005/03/17 09:40:22 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,12 @@ package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
-import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/16 12:51:34 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 09:40:22 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -103,43 +102,39 @@ public final class PathDecomposer {
 
 	public double[] getOpticalDistanceFromStart(final PathElement pathElement) {
 		if (this.schemePath.links().length == 0)
-			return null;
+			return new double[0];
 
 		double tmp = 0;
 		List links = Arrays.asList(this.schemePath.links());
 
-		for(Iterator it = links.iterator(); it.hasNext();)
-		{
+		for (final Iterator it = links.iterator(); it.hasNext();) {
 			PathElement pe = (PathElement)it.next();
 			if (pe.equals(pathElement))
-			{
-				double d[] = {tmp, tmp + SchemeUtils.getOpticalLength(pe)};
-				return d;
-			}
+				return new double[]{tmp, tmp + SchemeUtils.getOpticalLength(pe)};
 			tmp += SchemeUtils.getOpticalLength(pe);
 		}
-		return null;
+		return new double[0];
 	}
 
-	public double[] getPhysicalDistanceFromStart(final PathElement pathElement)
-	{
+	/**
+	 * @param pathElement
+	 * @deprecated This method is never used and hence is a candidate for
+	 *             removal.
+	 */
+	public double[] getPhysicalDistanceFromStart(final PathElement pathElement) {
 		if (this.schemePath.links().length == 0)
-			return null;
+			return new double[0];
 
 		double tmp = 0;
 		List links = Arrays.asList(this.schemePath.links());
 
-		for(Iterator it = links.iterator(); it.hasNext();)
-		{
+		for (final Iterator it = links.iterator(); it.hasNext();) {
 			PathElement pe = (PathElement)it.next();
 			if (pe.equals(pathElement))
-			{
-				double d[] = {tmp, tmp + SchemeUtils.getPhysicalLength(pe)};
-				return d;
-			}
+				return new double[]{tmp, tmp + SchemeUtils.getPhysicalLength(pe)};
 			tmp += SchemeUtils.getPhysicalLength(pe);
 		}
-		return null;
+		return new double[0];
 	}
 
 	public double getOpticalDistance(final double physicalDistance)

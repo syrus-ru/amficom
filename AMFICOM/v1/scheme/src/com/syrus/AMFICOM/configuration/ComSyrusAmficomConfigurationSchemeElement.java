@@ -10,28 +10,28 @@ package com.syrus.AMFICOM.configuration;
 
 public interface ComSyrusAmficomConfigurationSchemeElement
 {
-  public abstract com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable equipmentType ();
+  com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable equipmentType ();
 
-  public abstract void equipmentType (com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable newEquipmentType);
+  void equipmentType (com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable newEquipmentType);
 
-  public abstract EquipmentType equipmentTypeImpl ();
+  EquipmentType equipmentTypeImpl ();
 
-  public abstract void equipmentTypeImpl (EquipmentType newEquipmentTypeImpl);
+  void equipmentTypeImpl (EquipmentType newEquipmentTypeImpl);
 
-  public abstract com.syrus.AMFICOM.configuration.corba.Equipment_Transferable equipment ();
+  com.syrus.AMFICOM.configuration.corba.Equipment_Transferable equipment ();
 
-  public abstract void equipment (com.syrus.AMFICOM.configuration.corba.Equipment_Transferable newEquipment);
+  void equipment (com.syrus.AMFICOM.configuration.corba.Equipment_Transferable newEquipment);
 
-  public abstract Equipment equipmentImpl ();
+  Equipment equipmentImpl ();
 
-  public abstract void equipmentImpl (Equipment newEquipmentImpl);
+  void equipmentImpl (Equipment newEquipmentImpl);
 
-  public abstract com.syrus.AMFICOM.configuration.corba.KIS_Transferable rtu ();
+  com.syrus.AMFICOM.configuration.corba.KIS_Transferable rtu ();
 
-  public abstract void rtu (com.syrus.AMFICOM.configuration.corba.KIS_Transferable newRtu);
+  void rtu (com.syrus.AMFICOM.configuration.corba.KIS_Transferable newRtu);
 
-  public abstract KIS rtuImpl ();
+  KIS rtuImpl ();
 
-  public abstract void rtuImpl (KIS newRtuImpl);
+  void rtuImpl (KIS newRtuImpl);
 
-} // interface ComSyrusAmficomConfigurationSchemeElement
+}

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeOptimizeInfo.java,v 1.1 2005/03/16 12:51:34 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.2 2005/03/17 09:40:22 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,19 +9,17 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.corba.*;
-import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoPackage.OptimizationMode;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/17 09:40:22 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends
 		AbstractCloneableStorableObject implements Describable {
+	private static final long serialVersionUID = 3761127137155232822L;
 
 	protected Identifier schemeId = null;
 
@@ -29,23 +27,23 @@ public final class SchemeOptimizeInfo extends
 
 	protected String thisDescription = null;
 
-	protected double thisIterations = (double) 0;
+	protected double thisIterations = 0;
 
-	protected double thisLenMargin = (double) 0;
+	protected double thisLenMargin = 0;
 
-	protected double thisMutationDegree = (double) 0;
+	protected double thisMutationDegree = 0;
 
-	protected double thisMutationRate = (double) 0;
+	protected double thisMutationRate = 0;
 
 	protected String thisName = null;
 
-	protected double thisNodesCutProb = (double) 0;
+	protected double thisNodesCutProb = 0;
 
-	protected double thisNodesSpliceProb = (double) 0;
+	protected double thisNodesSpliceProb = 0;
 
 	protected OptimizationMode thisOptimizationMode = null;
 
-	protected double thisPrice = (double) 0;
+	protected double thisPrice = 0;
 
 	protected String thisReflNames[] = null;
 
@@ -53,11 +51,11 @@ public final class SchemeOptimizeInfo extends
 
 	protected double thisReflRanges[] = null;
 
-	protected double thisRtuCreateProb = (double) 0;
+	protected double thisRtuCreateProb = 0;
 
-	protected double thisRtuDeleteProb = (double) 0;
+	protected double thisRtuDeleteProb = 0;
 
-	protected double thisSurvivorRate = (double) 0;
+	protected double thisSurvivorRate = 0;
 
 	protected String thisSwitchNames[] = null;
 
@@ -65,7 +63,7 @@ public final class SchemeOptimizeInfo extends
 
 	protected double thisSwitchPrices[] = null;
 
-	protected double thisWavelength = (double) 0;
+	protected double thisWavelength = 0;
 
 	/**
 	 * @param id

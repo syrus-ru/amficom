@@ -8,9 +8,9 @@ package com.syrus.AMFICOM.scheme.corba.PathElementPackage;
 * 4 Март 2005 г. 18:11:15 MSK
 */
 
-public class Type implements org.omg.CORBA.portable.IDLEntity
-{
-  private        int __value;
+public class Type implements org.omg.CORBA.portable.IDLEntity {
+	private static final long serialVersionUID = 3257565092399887665L;
+private        int __value;
   private static int __size = 3;
   private static com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type[] __array = new com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type [__size];
 
@@ -23,20 +23,18 @@ public class Type implements org.omg.CORBA.portable.IDLEntity
 
   public int value ()
   {
-    return __value;
+    return this.__value;
   }
 
-  public static com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type from_int (int value)
-  {
-    if (value >= 0 && value < __size)
-      return __array[value];
-    else
-      throw new org.omg.CORBA.BAD_PARAM ();
-  }
+	public static com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type from_int (int value) {
+		if (value >= 0 && value < __size)
+			return __array[value];
+		throw new org.omg.CORBA.BAD_PARAM();
+	}
 
   protected Type (int value)
   {
-    __value = value;
-    __array[__value] = this;
+    this.__value = value;
+    __array[this.__value] = this;
   }
 } // class Type

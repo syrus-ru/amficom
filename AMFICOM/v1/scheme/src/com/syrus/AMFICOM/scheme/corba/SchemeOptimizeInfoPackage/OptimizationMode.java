@@ -10,7 +10,8 @@ package com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoPackage;
 
 public class OptimizationMode implements org.omg.CORBA.portable.IDLEntity
 {
-  private        int __value;
+	private static final long serialVersionUID = 3546921385554294069L;
+private        int __value;
   private static int __size = 1;
   private static com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoPackage.OptimizationMode[] __array = new com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoPackage.OptimizationMode [__size];
 
@@ -19,20 +20,19 @@ public class OptimizationMode implements org.omg.CORBA.portable.IDLEntity
 
   public int value ()
   {
-    return __value;
+    return this.__value;
   }
 
-  public static com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoPackage.OptimizationMode from_int (int value)
-  {
-    if (value >= 0 && value < __size)
-      return __array[value];
-    else
-      throw new org.omg.CORBA.BAD_PARAM ();
-  }
+	public static com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoPackage.OptimizationMode from_int(
+			int value) {
+		if (value >= 0 && value < __size)
+			return __array[value];
+		throw new org.omg.CORBA.BAD_PARAM();
+	}
 
   protected OptimizationMode (int value)
   {
-    __value = value;
-    __array[__value] = this;
+    this.__value = value;
+    __array[this.__value] = this;
   }
 } // class OptimizationMode

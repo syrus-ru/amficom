@@ -10,12 +10,12 @@ package com.syrus.AMFICOM.configuration;
 
 public interface ComSyrusAmficomConfigurationSchemeProtoElement
 {
-  public abstract com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable equipmentType ();
+  com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable equipmentType ();
 
-  public abstract void equipmentType (com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable newEquipmentType);
+  void equipmentType (com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable newEquipmentType);
 
-  public abstract EquipmentType equipmentTypeImpl ();
+  EquipmentType equipmentTypeImpl ();
 
-  public abstract void equipmentTypeImpl (EquipmentType newEquipmentTypeImpl);
+  void equipmentTypeImpl (EquipmentType newEquipmentTypeImpl);
 
 } // interface ComSyrusAmficomConfigurationSchemeProtoElement

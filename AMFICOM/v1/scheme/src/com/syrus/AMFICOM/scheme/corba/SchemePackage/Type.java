@@ -8,9 +8,9 @@ package com.syrus.AMFICOM.scheme.corba.SchemePackage;
 * 4 Март 2005 г. 18:11:15 MSK
 */
 
-public class Type implements org.omg.CORBA.portable.IDLEntity
-{
-  private        int __value;
+public class Type implements org.omg.CORBA.portable.IDLEntity {
+	private static final long serialVersionUID = 3616726075988784953L;
+private        int __value;
   private static int __size = 8;
   private static com.syrus.AMFICOM.scheme.corba.SchemePackage.Type[] __array = new com.syrus.AMFICOM.scheme.corba.SchemePackage.Type [__size];
 

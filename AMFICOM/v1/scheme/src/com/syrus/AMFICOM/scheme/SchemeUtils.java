@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeUtils.java,v 1.9 2005/03/04 19:25:01 bass Exp $
+ * $Id: SchemeUtils.java,v 1.10 2005/03/17 09:40:22 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 import java.util.*;
 
@@ -17,12 +16,12 @@ import java.util.*;
  * Functionality will be partially moved to {@link PathElement}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/03/04 19:25:01 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/17 09:40:22 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
 public class SchemeUtils {
-	private static final char separator = ':';
+	private static final char SEPARATOR = ':';
 
 	private SchemeUtils() {
 		assert false;
@@ -246,12 +245,12 @@ public class SchemeUtils {
 			SchemeElement el = scheme.schemeElements()[i];
 			if (el.internalScheme() != null)
 			{
-				Scheme inner = el.internalScheme();
-				SchemeElement inner_se = getTopologicalElement(inner, element);
-				if (inner_se != null)
+				final Scheme innerScheme = el.internalScheme();
+				final SchemeElement innerSchemeElement = getTopologicalElement(innerScheme, element);
+				if (innerSchemeElement != null)
 				{
-					if (inner.type().value() == com.syrus.AMFICOM.scheme.corba.SchemePackage.Type._CABLE_SUBNETWORK)
-						return inner_se;
+					if (innerScheme.type().value() == com.syrus.AMFICOM.scheme.corba.SchemePackage.Type._CABLE_SUBNETWORK)
+						return innerSchemeElement;
 					return element;
 				}
 			}
@@ -264,10 +263,10 @@ public class SchemeUtils {
 		if (element.internalScheme() == null) {
 			HashSet v = new HashSet();
 			for (int i = 0; i < element.schemeElements().length; i++) {
-				SchemeElement inner_se = element.schemeElements()[i];
-				for (Iterator it = getAllChildElements(inner_se).iterator(); it.hasNext(); )
+				final SchemeElement innerSchemeElement = element.schemeElements()[i];
+				for (Iterator it = getAllChildElements(innerSchemeElement).iterator(); it.hasNext(); )
 					v.add(it.next());
-				v.add(inner_se);
+				v.add(innerSchemeElement);
 			}
 			return v;
 		}
@@ -435,7 +434,7 @@ public class SchemeUtils {
 
 	public static String parseThreadName(String name)
 	{
-		int pos = name.lastIndexOf(separator);
+		int pos = name.lastIndexOf(SEPARATOR);
 		if (pos == -1)
 			return name;
 		return pos == name.length() ? name : name.substring(pos + 1);

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableThread.java,v 1.1 2005/03/16 12:51:34 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.2 2005/03/17 09:40:22 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,17 +11,17 @@ package com.syrus.AMFICOM.scheme;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.*;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/17 09:40:22 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject implements Describable, Characterizable,
 		ComSyrusAmficomConfigurationSchemeCableThread {
+	private static final long serialVersionUID = 4050204133015171124L;
 
 	protected Identifier cableThreadTypeId = null;
 

@@ -14,16 +14,16 @@ public interface ComSyrusAmficomConfigurationSchemeLink
   /**
   					 * @see com.syrus.AMFICOM.scheme.AbstractSchemeLink#abstractLinkTypeId
   					 */
-  public abstract com.syrus.AMFICOM.configuration.corba.LinkType_Transferable linkType ();
+  com.syrus.AMFICOM.configuration.corba.LinkType_Transferable linkType ();
 
 
   /**
   					 * @see com.syrus.AMFICOM.scheme.AbstractSchemeLink#abstractLinkTypeId
   					 */
-  public abstract void linkType (com.syrus.AMFICOM.configuration.corba.LinkType_Transferable newLinkType);
+  void linkType (com.syrus.AMFICOM.configuration.corba.LinkType_Transferable newLinkType);
 
-  public abstract LinkType linkTypeImpl ();
+  LinkType linkTypeImpl ();
 
-  public abstract void linkTypeImpl (LinkType newLinkTypeImpl);
+  void linkTypeImpl (LinkType newLinkTypeImpl);
 
 } // interface ComSyrusAmficomConfigurationSchemeLink

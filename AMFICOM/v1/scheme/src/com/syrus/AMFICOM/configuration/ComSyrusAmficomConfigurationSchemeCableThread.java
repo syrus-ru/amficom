@@ -8,22 +8,23 @@ package com.syrus.AMFICOM.configuration;
 * 4 Март 2005 г. 18:11:06 MSK
 */
 
-public interface ComSyrusAmficomConfigurationSchemeCableThread
-{
-  public abstract com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable cableThreadType ();
+public interface ComSyrusAmficomConfigurationSchemeCableThread {
+	com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable cableThreadType();
 
-  public abstract void cableThreadType (com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable newCableThreadType);
+	void cableThreadType(
+			com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable newCableThreadType);
 
-  public abstract CableThreadType cableThreadTypeImpl ();
+	CableThreadType cableThreadTypeImpl();
 
-  public abstract void cableThreadTypeImpl (CableThreadType newCableThreadTypeImpl);
+	void cableThreadTypeImpl(CableThreadType newCableThreadTypeImpl);
 
-  public abstract com.syrus.AMFICOM.configuration.corba.Link_Transferable thread ();
+	com.syrus.AMFICOM.configuration.corba.Link_Transferable thread();
 
-  public abstract void thread (com.syrus.AMFICOM.configuration.corba.Link_Transferable newThread);
+	void thread(
+			com.syrus.AMFICOM.configuration.corba.Link_Transferable newThread);
 
-  public abstract Link threadImpl ();
+	Link threadImpl();
 
-  public abstract void threadImpl (Link newThreadImpl);
+	void threadImpl(Link newThreadImpl);
 
-} // interface ComSyrusAmficomConfigurationSchemeCableThread
+}
