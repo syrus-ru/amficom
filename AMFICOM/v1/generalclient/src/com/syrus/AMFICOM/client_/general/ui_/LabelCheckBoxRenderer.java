@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * Renderer for JCheckBox items based on JLabel.
- * @version $Revision: 1.3 $, $Date: 2005/01/14 11:04:09 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/14 11:10:28 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -51,7 +51,6 @@ public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {
 	}
 	
 	/**
-	 * @deprecated
 	 * There is no need in more than one instance of this renderer.
 	 * @return LabelCheckBoxRenderer instance. 
 	 */

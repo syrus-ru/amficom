@@ -1,5 +1,5 @@
 /*
- * $Id: TestResourceListTest.java,v 1.5 2005/01/14 11:04:09 bob Exp $
+ * $Id: TestResourceListTest.java,v 1.6 2005/01/14 11:10:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,9 +10,6 @@ package com.syrus.AMFICOM.client_.general.ui;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentListener;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,16 +18,15 @@ import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjList;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
 import com.syrus.AMFICOM.client_.resource.TestResource;
 import com.syrus.AMFICOM.client_.resource.TestResourceController;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/01/14 11:04:09 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/14 11:10:28 $
  * @module general_v1
  */
 public class TestResourceListTest {
