@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.5 2005/02/11 18:42:17 arseniy Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.6 2005/02/18 17:59:53 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,7 +29,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/11 18:42:17 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/18 17:59:53 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -307,11 +306,14 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 
 
-	public void delete(Identifier id) throws CommunicationException, DatabaseException {
-		this.delete(id, null);
+	public void delete(Identifier id) throws IllegalDataException {
+		short entityCode = id.getMajor();
+		StorableObjectDatabase storableObjectDatabase = EventDatabaseContext.getDatabase(entityCode);
+		if (storableObjectDatabase != null)
+			storableObjectDatabase.delete(id);
 	}
 
-	public void delete(Collection objects) throws CommunicationException, DatabaseException, IllegalDataException {
+	public void delete(Collection objects) throws IllegalDataException {
 		if (objects == null || objects.isEmpty())
 			return;
 		/**
@@ -322,6 +324,8 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		/**
 		 * separate objects by kind of entity
 		 */
+		Collection entityObjects;
+		Short entityCode;
 		for (Iterator it = objects.iterator(); it.hasNext();) {
 			Object object = it.next();
 			Identifier identifier = null;
@@ -332,51 +336,24 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 					identifier = ((Identified) object).getId();
 				else
 					throw new IllegalDataException("DatabaseEventObjectLoader.delete | Object "
-							+ object.getClass().getName()
-							+ " isn't Identifier or Identified");
-			Short entityCode = new Short(identifier.getMajor());
-			List list = (List) map.get(entityCode);
-			if (list == null) {
-				list = new LinkedList();
-				map.put(entityCode, list);
+							+ object.getClass().getName() + " isn't Identifier or Identified");
+
+			entityCode = new Short(identifier.getMajor());
+			entityObjects = (Collection) map.get(entityCode);
+			if (entityObjects == null) {
+				entityObjects = new LinkedList();
+				map.put(entityCode, entityObjects);
 			}
-			list.add(object);
+			entityObjects.add(object);
 		}
 
+		StorableObjectDatabase storableObjectDatabase;
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
-			Short entityCode = (Short) it.next();
-			List list = (List) map.get(entityCode);
-			this.delete(null, list);
-		}
-	}
-
-	private void delete(Identifier id, Collection objects) throws DatabaseException {
-		short entityCode = (id != null) ? id.getMajor() : 0;
-		if (id == null) {
-			if (objects.isEmpty())
-				return;
-			Object obj = objects.iterator().next();
-			if (obj instanceof Identifier)
-				entityCode = ((Identifier) obj).getMajor();
-			else
-				if (obj instanceof Identified)
-					entityCode = ((Identified) obj).getId().getMajor();
-		}
-		try {
-			StorableObjectDatabase database = EventDatabaseContext.getDatabase(entityCode);
-			if (database != null) {
-				if (id != null)
-					database.delete(id);
-				else
-					if (objects != null && !objects.isEmpty()) {
-						database.delete(objects);
-					}
-			}
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseEventObjectLoader.delete | IllegalDataException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
+			entityCode = (Short) it.next();
+			entityObjects = (Collection) map.get(entityCode);
+			storableObjectDatabase = EventDatabaseContext.getDatabase(entityCode);
+			if (storableObjectDatabase != null)
+				storableObjectDatabase.delete(entityObjects);
 		}
 	}
 

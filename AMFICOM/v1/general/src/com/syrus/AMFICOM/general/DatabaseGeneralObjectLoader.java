@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.10 2005/02/11 18:40:16 arseniy Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.11 2005/02/18 17:55:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/11 18:40:16 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/18 17:55:07 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -294,11 +294,14 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 
 
-	public void delete(Identifier id) throws CommunicationException, DatabaseException {
-		delete(id, null);
+	public void delete(Identifier id) throws IllegalDataException {
+		short entityCode = id.getMajor();
+		StorableObjectDatabase storableObjectDatabase = GeneralDatabaseContext.getDatabase(entityCode);
+		if (storableObjectDatabase != null)
+			storableObjectDatabase.delete(id);
 	}
 
-	public void delete(Collection objects) throws CommunicationException, DatabaseException, IllegalDataException {
+	public void delete(Collection objects) throws IllegalDataException {
 		if (objects == null || objects.isEmpty())
 			return;
 		/**
@@ -309,6 +312,8 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		/**
 		 * separate objects by kind of entity
 		 */
+		Collection entityObjects;
+		Short entityCode;
 		for (Iterator it = objects.iterator(); it.hasNext();) {
 			Object object = it.next();
 			Identifier identifier = null;
@@ -319,50 +324,24 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 					identifier = ((Identified) object).getId();
 				else
 					throw new IllegalDataException("DatabaseGeneralObjectLoader.delete | Object "
-							+ object.getClass().getName()
-							+ " isn't Identifier or Identified");
-			Short entityCode = new Short(identifier.getMajor());
-			Collection collection = (Collection) map.get(entityCode);
-			if (collection == null) {
-				collection = new LinkedList();
-				map.put(entityCode, collection);
+							+ object.getClass().getName() + " isn't Identifier or Identified");
+
+			entityCode = new Short(identifier.getMajor());
+			entityObjects = (Collection) map.get(entityCode);
+			if (entityObjects == null) {
+				entityObjects = new LinkedList();
+				map.put(entityCode, entityObjects);
 			}
-			collection.add(object);
+			entityObjects.add(object);
 		}
 
+		StorableObjectDatabase storableObjectDatabase;
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
-			Short entityCode = (Short) it.next();
-			Collection collection = (Collection) map.get(entityCode);
-			this.delete(null, collection);
-		}
-	}
-
-	private void delete(Identifier id, Collection objects) throws DatabaseException {
-		short entityCode = (id != null) ? id.getMajor() : 0;
-		if (id == null) {
-			if (objects.isEmpty())
-				return;
-			Object obj = objects.iterator().next();
-			if (obj instanceof Identifier)
-				entityCode = ((Identifier) obj).getMajor();
-			else
-				if (obj instanceof Identified)
-					entityCode = ((Identified) obj).getId().getMajor();
-		}
-		try {
-			StorableObjectDatabase database = GeneralDatabaseContext.getDatabase(entityCode);
-			if (database != null) {
-				if (id != null)
-					database.delete(id);
-				else
-					if (objects != null && !objects.isEmpty()) {
-						database.delete(objects);
-					}
-			}
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.delete | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.delete | DatabaseException: " + e.getMessage());
+			entityCode = (Short) it.next();
+			entityObjects = (Collection) map.get(entityCode);
+			storableObjectDatabase = GeneralDatabaseContext.getDatabase(entityCode);
+			if (storableObjectDatabase != null)
+				storableObjectDatabase.delete(entityObjects);
 		}
 	}
 

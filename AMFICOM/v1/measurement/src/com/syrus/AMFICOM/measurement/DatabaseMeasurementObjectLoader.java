@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.39 2005/02/11 16:31:48 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.40 2005/02/18 17:59:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,11 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Collection;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/02/11 16:31:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.40 $, $Date: 2005/02/18 17:59:02 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -1088,11 +1088,14 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 
 
-	public void delete(Identifier id) throws DatabaseException, CommunicationException {
-		delete(id, null);
+	public void delete(Identifier id) throws IllegalDataException {
+		short entityCode = id.getMajor();
+		StorableObjectDatabase storableObjectDatabase = MeasurementDatabaseContext.getDatabase(entityCode);
+		if (storableObjectDatabase != null)
+			storableObjectDatabase.delete(id);
 	}
 
-	public void delete(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	public void delete(Collection objects) throws IllegalDataException {
 		if (objects == null || objects.isEmpty())
 			return;
 		/**
@@ -1103,6 +1106,8 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		/**
 		 * separate objects by kind of entity
 		 */
+		Collection entityObjects;
+		Short entityCode;
 		for (Iterator it = objects.iterator(); it.hasNext();) {
 			Object object = it.next();
 			Identifier identifier = null;
@@ -1113,58 +1118,24 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 					identifier = ((Identified) object).getId();
 				else
 					throw new IllegalDataException("DatabaseMeasumentObjectLoader.delete | Object "
-							+ object.getClass().getName()
-							+ " isn't Identifier or Identified");
-			Short entityCode = new Short(identifier.getMajor());
-			Collection list = (Collection) map.get(entityCode);
-			if (list == null) {
-				list = new LinkedList();
-				map.put(entityCode, list);
+							+ object.getClass().getName() + " isn't Identifier or Identified");
+
+			entityCode = new Short(identifier.getMajor());
+			entityObjects = (Collection) map.get(entityCode);
+			if (entityObjects == null) {
+				entityObjects = new LinkedList();
+				map.put(entityCode, entityObjects);
 			}
-			list.add(object);
+			entityObjects.add(object);
 		}
 
+		StorableObjectDatabase storableObjectDatabase;
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
-			Short entityCode = (Short) it.next();
-			Collection list = (Collection) map.get(entityCode);
-			this.delete(null, list);
-		}
-	}
-
-	/**
-	 * delete storable objects of one kind of entity
-	 * 
-	 * @param id
-	 * @param objects
-	 * @throws DatabaseException
-	 */
-	private void delete(Identifier id, Collection objects) throws DatabaseException {
-		short entityCode = (id != null) ? id.getMajor() : 0;
-		if (id == null) {
-			if (objects.isEmpty())
-				return;
-			Object obj = objects.iterator().next();
-			if (obj instanceof Identifier)
-				entityCode = ((Identifier) obj).getMajor();
-			else
-				if (obj instanceof Identified)
-					entityCode = ((Identified) obj).getId().getMajor();
-		}
-		try {
-			StorableObjectDatabase database = MeasurementDatabaseContext.getDatabase(entityCode);
-			if (database != null) {
-				if (id != null)
-					database.delete(id);
-				else
-					if (objects != null && !objects.isEmpty()) {
-						database.delete(objects);
-					}
-			}
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseMeasumentObjectLoader.delete | IllegalDataException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
+			entityCode = (Short) it.next();
+			entityObjects = (Collection) map.get(entityCode);
+			storableObjectDatabase = MeasurementDatabaseContext.getDatabase(entityCode);
+			if (storableObjectDatabase != null)
+				storableObjectDatabase.delete(entityObjects);
 		}
 	}
 
