@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.42 2004/11/26 16:12:26 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.43 2004/11/30 09:45:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/11/26 16:12:26 $
+ * @version $Revision: 1.43 $, $Date: 2004/11/30 09:45:39 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -378,7 +378,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		} else list =  this.retrieveButIds(ids);
 		return list;
 	}
-
+        
 	public void updateCharacteristics(StorableObject storableObject) throws UpdateObjectException {
 		if (!(storableObject instanceof Characterized)) {
 			String mesg = "CharacteristicDatabase.updateCharacteristics | Storable object " + 
