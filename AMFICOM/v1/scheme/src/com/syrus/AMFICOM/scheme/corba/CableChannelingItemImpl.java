@@ -1,5 +1,5 @@
 /*
- * $Id: CableChannelingItemImpl.java,v 1.7 2004/12/17 15:58:58 bass Exp $
+ * $Id: CableChannelingItemImpl.java,v 1.8 2004/12/20 10:10:09 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,15 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
-import com.syrus.AMFICOM.CORBA.Map.MapPhysicalLinkElement_Transferable;
 import com.syrus.AMFICOM.general.corba.*;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
+import com.syrus.AMFICOM.map.*;
+import com.syrus.AMFICOM.map.corba.*;
 import com.syrus.util.logging.ErrorHandler;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/12/17 15:58:58 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/20 10:10:09 $
  * @module schemecommon_v1
  */
 final class CableChannelingItemImpl extends CableChannelingItem implements Cloneable {
@@ -200,14 +199,29 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 	/**
 	 * @see CableChannelingItem#physicalLink()
 	 */
-	public MapPhysicalLinkElement_Transferable physicalLink() {
+	public PhysicalLink_Transferable physicalLink() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see CableChannelingItem#physicalLink(MapPhysicalLinkElement_Transferable)
+	 * @see CableChannelingItem#physicalLink(PhysicalLink_Transferable)
 	 */
-	public void physicalLink(MapPhysicalLinkElement_Transferable physicalLink) {
+	public void physicalLink(final PhysicalLink_Transferable physicalLink) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see ComSyrusAmficomMapCableChannelingItem#physicalLinkImpl()
+	 */
+	public PhysicalLink physicalLinkImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param physicalLink
+	 * @see ComSyrusAmficomMapCableChannelingItem#physicalLinkImpl(PhysicalLink)
+	 */
+	public void physicalLinkImpl(final PhysicalLink physicalLink) {
 		throw new UnsupportedOperationException();
 	}
 
