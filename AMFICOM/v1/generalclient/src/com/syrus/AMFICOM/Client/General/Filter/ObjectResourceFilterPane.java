@@ -1,63 +1,31 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\General\Panels\GeneralListPane.java                    * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: ObjectResourceFilterPane.java,v 1.14 2004/09/27 10:34:21 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
 
 package com.syrus.AMFICOM.Client.General.Filter;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.Client.General.UI.*;
-
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-
-import java.util.List;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
-
+import java.util.List;
+import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
-import javax.swing.border.EtchedBorder;
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.GridBagConstraints;
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.event.*;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2004/09/27 10:34:21 $
+ * @module generalclient_v1
+ */
 public class ObjectResourceFilterPane extends JScrollPane
 {
 	public static String state_filterChanged = "filterChanged";
