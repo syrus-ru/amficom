@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.92 2005/03/21 11:49:04 bob Exp $
+ * $Id: CMServerImpl.java,v 1.93 2005/03/29 20:56:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.administration.UserWrapper;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -41,8 +42,8 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2005/03/21 11:49:04 $
- * @author $Author: bob $
+ * @version $Revision: 1.93 $, $Date: 2005/03/29 20:56:33 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -142,8 +143,7 @@ public class CMServerImpl extends CMMeasurementTransmit {
 																UserWrapper.COLUMN_LOGIN);
 			Collection collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if (collection.isEmpty())
-				/* TODO add ErrorCode login not found */
-				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, "User login '"
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_LOGIN_NOT_FOUND, CompletionStatus.COMPLETED_NO, "User login '"
 						+ userLogin + "' not found.");
 			Identifier id = ((User) collection.iterator().next()).getId();
 			return (Identifier_Transferable) id.getTransferable();
@@ -168,8 +168,7 @@ public class CMServerImpl extends CMMeasurementTransmit {
 																StorableObjectWrapper.COLUMN_NAME);
 			Collection collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if (collection.isEmpty())
-				/* TODO add ErrorCode userName not found */
-				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, "User name '"
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_LOGIN_NOT_FOUND, CompletionStatus.COMPLETED_NO, "User name '"
 						+ userName + "' not found.");
 			Identifier id = ((User) collection.iterator().next()).getId();
 			return (Identifier_Transferable) id.getTransferable();
@@ -192,8 +191,10 @@ public class CMServerImpl extends CMMeasurementTransmit {
 
 	public void delete(Identifier_Transferable id_Transferable, AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.delete | trying to delete... ", Log.DEBUGLEVEL03);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
 		Identifier id = new Identifier(id_Transferable);
+		Log.debugMessage("CMServerImpl.delete | trying to delete object '" + id
+				+ "' on request of user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 		short entityCode = id.getMajor();
 		if (ObjectGroupEntities.isInGeneralGroup(entityCode))
 			GeneralStorableObjectPool.delete(id);
@@ -209,7 +210,9 @@ public class CMServerImpl extends CMMeasurementTransmit {
 
 	public void deleteList(Identifier_Transferable[] id_Transferables, AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.deleteList | Trying to delete... ", Log.DEBUGLEVEL03);
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMServerImpl.deleteList | Trying to delete " + id_Transferables.length
+				+ " objects on request of user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 		List idList = new ArrayList(id_Transferables.length);
 		List generalList = new ArrayList(id_Transferables.length);
 		List administrationList = new ArrayList(id_Transferables.length);
