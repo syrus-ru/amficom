@@ -1,5 +1,5 @@
 /*
- * $Id: ImportCommand.java,v 1.1 2004/10/20 13:25:32 krupenn Exp $
+ * $Id: ImportCommand.java,v 1.2 2005/01/13 15:13:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,9 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.io.IntelStreamReader;
 
 import java.io.File;
@@ -34,7 +37,7 @@ import javax.swing.JOptionPane;
  * Класс $RCSfile: ImportCommand.java,v $ 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/10/20 13:25:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/13 15:13:35 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -45,43 +48,51 @@ public abstract class ImportCommand extends VoidCommand
 	private IntelStreamReader isr;
 
 	private Map clonedIds = new HashMap();
-	
-	private DataSourceInterface dsi;
-	
-	public ImportCommand(DataSourceInterface dsi)
+
+	protected class ImportObject
 	{
-		this.dsi = dsi;
+		public String type;
+		public Object[][] exportColumns;
+		
+		public ImportObject(String type, Object[][] exportColumns)
+		{
+			this.type = type;
+			this.exportColumns = exportColumns;
+		}
 	}
 
-	protected final String getClonedId(String typ, String id)
+	public ImportCommand()
 	{
-		String clonedId = (String )clonedIds.get(id);
+	}
+	
+	protected final Identifier getClonedId(short entityCode, Identifier id)
+		throws IllegalObjectEntityException
+	{
+		Identifier clonedId = (Identifier )clonedIds.get(id);
 		if(clonedId == null)
-			clonedId = cloneId(typ, id);
+			clonedId = cloneId(entityCode, id);
 		return clonedId;
 	}
 	
-	private final String cloneId(String typ, String id)
+	private final Identifier cloneId(short entityCode, Identifier id)
+		throws IllegalObjectEntityException
 	{
-		String clonedId;
-		if(dsi == null)
-			clonedId = "new" + id;
-		else
-			clonedId = dsi.GetUId(typ);
+		Identifier clonedId;
+		clonedId = IdentifierPool.getGeneratedIdentifier(entityCode);
 		clonedIds.put(id, clonedId);
 		return clonedId;
 	}
 
-	protected String[][] readObject()
+	protected ImportObject readObject()
 	{
 		List objectColumnList = new LinkedList();
 		String[] type = readType();
 		if(type == null)
 			return null;
-		objectColumnList.add(type);
 		while(true)
 		{
 			String[] s = getString();
+			Object[] o = new Object[2];
 			if(s == null)
 				break;
 			if(s[0].length() == 0)
@@ -91,17 +102,39 @@ public abstract class ImportCommand extends VoidCommand
 			if(s[0].indexOf("@") != 0)
 				return null;
 			s[0] = s[0].substring(1, s[0].length());
+			o[0] = s[0];
 
-			objectColumnList.add(s);
+			if(s[1].length() == 0)
+			{
+				List arg = new LinkedList();
+				while(true)
+				{
+					String[] s2 = getString();
+					if(s2 == null)
+						return null;
+					if(s2[0].length() == 0)
+						return null;
+					if(s2[0].indexOf("@\\") != -1)
+						break;
+					if(s2[0].indexOf("@") != -1)
+						return null;
+					arg.add(s2[0]);
+				}
+				o[1] = arg;
+			}
+			else
+				o[1] = s[1];
+
+			objectColumnList.add(o);
 		}
-		String[][] retObj = new String[objectColumnList.size()][];
+		Object[][] retObj = new Object[objectColumnList.size()][];
 		int i = 0;
 		for(Iterator it = objectColumnList.iterator(); it.hasNext();)
 		{
-			String[] s = (String[] )it.next();
+			Object[] s = (Object[] )it.next();
 			retObj[i++] = s;
 		}
-		return retObj;
+		return new ImportObject(type[0], retObj);
 	}
 	
 	private String[] readType()
@@ -190,11 +223,6 @@ public abstract class ImportCommand extends VoidCommand
 		}
 	}
 
-	public void setDsi(DataSourceInterface dsi)
-	{
-		this.dsi = dsi;
-	}
-	
 	protected static final String openFileForReading(String path)
 	{
 		String fileName = null;

@@ -1,5 +1,5 @@
 /*
- * $Id: ExportCommand.java,v 1.1 2004/10/20 13:25:32 krupenn Exp $
+ * $Id: ExportCommand.java,v 1.2 2005/01/13 15:13:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,14 +19,16 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
+import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import java.util.Iterator;
 
 /**
  * Класс $RCSfile: ExportCommand.java,v $ 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/10/20 13:25:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/13 15:13:35 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -42,9 +44,20 @@ public abstract class ExportCommand extends VoidCommand
 		pw.println ("@@" + type);
 	}
 
-	protected void put(String field, String value)
+	protected void put(Object field, Object value)
 	{
-		pw.println ("@" + field + " " + value);
+		if(value instanceof List)
+		{
+			List list = (List )value;
+			pw.println ("@" + field);
+			for(Iterator it = list.iterator(); it.hasNext();)
+			{
+				pw.println (it.next().toString());
+			}
+			pw.println ("@\\" + field);
+		}
+		else
+			pw.println ("@" + field + " " + value);
 	}
 	
 	protected void endObject()
