@@ -64,3 +64,5 @@ load	load
 importmif	importmif
 #M	general	Client common classes
 general_v1	general
+#M	admin	Administrative module
+admin	admin
