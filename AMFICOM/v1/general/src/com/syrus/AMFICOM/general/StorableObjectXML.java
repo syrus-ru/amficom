@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.13 2005/02/10 12:53:58 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.14 2005/02/11 10:22:30 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import java.util.Map;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  * 
- * @version $Revision: 1.13 $, $Date: 2005/02/10 12:53:58 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/11 10:22:30 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -127,7 +127,7 @@ public class StorableObjectXML {
 		return list;
 	}
 
-	public void updateObject(final StorableObject storableObject) throws IllegalDataException,
+	public void updateObject(final StorableObject storableObject, final Identifier modifierId) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
 		StorableObjectWrapper wrapper = this.getWrapper(storableObject.getId().getMajor());
 		List keys = wrapper.getKeys();
@@ -144,6 +144,7 @@ public class StorableObjectXML {
 			if (!shortClassName.equals(ObjectEntities.codeToString(id.getMajor())))
 				objectMap.put(CLASSNAME, shortClassName);
 		}
+		// TODO check versions, update version, modifierId
 		objectMap.put(StorableObjectWrapper.COLUMN_ID, id);
 		objectMap.put(StorableObjectWrapper.COLUMN_CREATED, storableObject.getCreated());
 		objectMap.put(StorableObjectWrapper.COLUMN_MODIFIED, storableObject.getModified());

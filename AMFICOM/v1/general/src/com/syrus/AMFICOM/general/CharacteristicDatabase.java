@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.11 2005/02/11 09:29:27 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.12 2005/02/11 10:22:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/11 09:29:27 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/11 10:22:30 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -432,13 +432,13 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 
 	}
 
-  public void updateCharacteristics(List storableObjects, Identifier modifierId) throws UpdateObjectException {
+	public void updateCharacteristics(List storableObjects) throws UpdateObjectException {
     // Construction of Map <StorableObjectIdentifier> <List <CharacteristicIdentifier> >
 		if(storableObjects == null || storableObjects.isEmpty())
 			return;
 
-    Map storableObjectIdCharIdsMap = new HashMap();
-		List characteristics = new LinkedList();
+		Map storableObjectIdCharIdsMap = new HashMap();
+		Map modifierIdCharacteristics = new HashMap();
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			if (!(storableObject instanceof Characterized)) {
@@ -446,6 +446,12 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 								storableObject.getClass().getName() + " is not a type of Characterized";
 				throw new UpdateObjectException(mesg);                
 			}
+			List characteristics = (List) modifierIdCharacteristics.get(storableObject.getModifierId());
+			if (characteristics == null) {
+				characteristics = new LinkedList();
+				modifierIdCharacteristics.put(storableObject.getModifierId(), characteristics);
+			}
+				
 			for (Iterator iter = ((Characterized) storableObject).getCharacteristics().iterator(); iter.hasNext();) {
 				Characteristic characteristic = (Characteristic) iter.next();
 				characteristics.add(characteristic);
@@ -522,7 +528,13 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			}
 			super.delete(listIdToDelete);
 			// insert and update. Iterating through InMap and matching it with DBMap 
-			super.checkAndUpdateEntities(characteristics, modifierId, true);
+			for (Iterator it = modifierIdCharacteristics.keySet().iterator(); it.hasNext();) {
+				Identifier modifierId = (Identifier) it.next();
+				List characteristics = (List) modifierIdCharacteristics.get(modifierId);
+				if (characteristics != null && !characteristics.isEmpty())
+					super.checkAndUpdateEntities(characteristics, modifierId, true);
+			}
+			
 		}
 		catch (SQLException sqle) {
 			String mesg = "CharacteristicDatabase.updateCharacteristics | SQLException: " + sqle.getMessage();
