@@ -62,7 +62,8 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 //							mne.spd.setMeasurement (new LengthParameters (((MapMarkersPanel)panel).ep, panel.delta_x, "", d));
 //							double dist = mne.spd.getMeasuredDistance(mne.distance);
 							double dist = mne.getDistance();
-							((MapMarkersPanel)panel).createMarker("", mne.getMarkerId(), dist);
+							Marker m = ((MapMarkersPanel)panel).createMarker("", dist);
+							m.setId(mne.getMarkerId());
 							((MapMarkersPanel)panel).move_notify();
 							((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(true);
 							jLayeredPane.repaint();
@@ -81,7 +82,7 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 							}
 							else
 							{
-								am.id = mne.getMarkerId();
+								am.setId(mne.getMarkerId());
 								((MapMarkersPanel)panel).moveMarker(mne.getMarkerId(), dist);
 							}
 							((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(true);

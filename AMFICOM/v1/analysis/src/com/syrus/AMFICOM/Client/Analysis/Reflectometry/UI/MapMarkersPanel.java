@@ -6,12 +6,12 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.*;
 
 public class MapMarkersPanel extends ThresholdsPanel
 {
 	protected Identifier monitored_element_id = null;
-	protected String scheme_path_id = null;
+	protected com.syrus.AMFICOM.general.corba.Identifier scheme_path_id = null;
 
 	protected boolean show_markers = true;
 	protected boolean creating_marker = false;
@@ -50,7 +50,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 		this.monitored_element_id = monitored_element_id;
 	}
 
-	public void setSchemePathId (String scheme_path_id)
+	public void setSchemePathId (com.syrus.AMFICOM.general.corba.Identifier scheme_path_id)
 	{
 		this.scheme_path_id = scheme_path_id;
 	}
@@ -65,12 +65,17 @@ public class MapMarkersPanel extends ThresholdsPanel
 
 		if (creating_marker && parent instanceof MapMarkersLayeredPanel)
 		{
-			Marker m = createMarker ("", "", coord2index(currpos.x) * delta_x);
+			Marker m = createMarker ("", coord2index(currpos.x) * delta_x);
 			((MapMarkersLayeredPanel)parent).setButtons();
 
-			MapNavigateEvent mne = new MapNavigateEvent (this,
+			MapNavigateEvent mne = new MapNavigateEvent(
+					this,
 					MapNavigateEvent.DATA_MARKER_CREATED_EVENT,
-					m.id, m.pos * delta_x, scheme_path_id, monitored_element_id);
+					m.getId(),
+					m.pos * delta_x,
+					scheme_path_id,
+					monitored_element_id
+					);
 			if(true)
 			{
 //				mne.spd = new SchemePathDecompositor();
@@ -81,7 +86,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 			dispatcher.notify(mne);
 			dispatcher.notify(new MapNavigateEvent (this,
 											MapNavigateEvent.DATA_MARKER_SELECTED_EVENT,
-													m.id, m.pos * delta_x, scheme_path_id, monitored_element_id));
+													m.getId(), m.pos * delta_x, scheme_path_id, monitored_element_id));
 
 			return;
 		}
@@ -101,7 +106,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 					}
 					active_marker = m;
 					dispatcher.notify (new MapNavigateEvent (this, MapNavigateEvent.DATA_MARKER_SELECTED_EVENT,
-														 m.id, m.pos * delta_x, scheme_path_id, monitored_element_id));
+														 m.getId(), m.pos * delta_x, scheme_path_id, monitored_element_id));
 				}
 			}
 		}
@@ -127,7 +132,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 			//System.out.println("MapMarkersPanel: tmD: mm dt " + (t1-t0));
 			return;
 		}
-		
+
 		//long t0 = System.currentTimeMillis();
 		super.this_mouseDragged(e);
 		//long t1 = System.currentTimeMillis();
@@ -137,7 +142,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 	void move_notify()
 	{
 		dispatcher.notify (new MapNavigateEvent (this, MapNavigateEvent.DATA_MARKER_MOVED_EVENT,
-												 active_marker.id, active_marker.pos * delta_x, scheme_path_id, monitored_element_id));
+												 active_marker.getId(), active_marker.pos * delta_x, scheme_path_id, monitored_element_id));
 	}
 
 	protected void this_mouseReleased(MouseEvent e)
@@ -271,7 +276,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 					mne = new MapNavigateEvent(
 						this,
 						MapNavigateEvent.DATA_MARKER_DELETED_EVENT,
-						m.id,
+						m.getId(),
 						alarms[i].alarmPointCoord * delta_x,
 						scheme_path_id,
 						monitored_element_id);
@@ -281,7 +286,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 					mne = new MapNavigateEvent(
 						this,
 						MapNavigateEvent.DATA_MARKER_DELETED_EVENT,
-						m.id,
+						m.getId(),
 						m.pos * delta_x,
 						scheme_path_id,
 						monitored_element_id);
@@ -293,33 +298,29 @@ public class MapMarkersPanel extends ThresholdsPanel
 		}
 	}
 
-	public Marker createMarker (String name, String id, double position)
+	public Marker createMarker (String name, double position)
 	{
 		Marker m = new Marker(name, (int)(position / delta_x));
-		if (!id.equals(""))
-			m.id = id;
 		markers.add(m);
 		active_marker = m;
 		return m;
 	}
 
-	public Marker createAlarmMarker (String name, String id, double position)
+	public Marker createAlarmMarker (String name, Identifier id, double position)
 	{
 		Marker m = new AlarmMarker(name, (int)(position / delta_x));
-		if (!id.equals(""))
-			m.id = id;
 		markers.add(m);
 		active_marker = m;
 		return m;
 	}
 
-	public Marker activateMarker (String id)
+	public Marker activateMarker (Identifier id)
 	{
 		Iterator it = markers.iterator();
 		while(it.hasNext())
 		{
 			Marker m = (Marker)it.next();
-			if (m.id.equals(id))
+			if (m.getId().equals(id))
 			{
 				active_marker = m;
 				return m;
@@ -328,13 +329,13 @@ public class MapMarkersPanel extends ThresholdsPanel
 		return null;
 	}
 
-	public void moveMarker (String id, double new_position)
+	public void moveMarker (Identifier id, double new_position)
 	{
 		Iterator it = markers.iterator();
 		while(it.hasNext())
 		{
 			Marker m = (Marker)it.next();
-			if (m.id.equals(id))
+			if (m.getId().equals(id))
 			{
 				moveMarker (m, (int)(new_position / delta_x));
 				return;
@@ -368,13 +369,13 @@ public class MapMarkersPanel extends ThresholdsPanel
 		((ScalableLayeredPanel)parent).updScale2fit(st, en);
 	}
 
-	public Marker deleteMarker (String id)
+	public Marker deleteMarker (Identifier id)
 	{
 		Iterator it = markers.iterator();
 		while(it.hasNext())
 		{
 			Marker m = (Marker)it.next();
-			if (m.id.equals(id))
+			if (m.getId().equals(id))
 			{
 				deleteMarker (m);
 				return m;
@@ -392,7 +393,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 			mne = new MapNavigateEvent(
 				this,
 				MapNavigateEvent.DATA_MARKER_DELETED_EVENT,
-				m.id,
+				m.getId(),
 				m.pos * delta_x,
 				scheme_path_id,
 				monitored_element_id);
@@ -402,7 +403,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 			mne = new MapNavigateEvent (
 				this,
 				MapNavigateEvent.DATA_MARKER_DELETED_EVENT,
-				m.id,
+				m.getId(),
 				m.pos * delta_x,
 				scheme_path_id,
 				monitored_element_id);

@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.DomainCondition;
-import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
@@ -194,10 +194,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 			{
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode)node.getParent();
 				MonitoredElement me = (MonitoredElement)parent.getObject();
-				LinkedIdsCondition condition = LinkedIdsCondition.getInstance();
-				condition.setDomain(domain);
-				condition.setIdentifier(me.getId());
-				condition.setEntityCode(ObjectEntities.MS_ENTITY_CODE);
+				LinkedIdsCondition condition = new LinkedIdsCondition(me.getId(), ObjectEntities.MS_ENTITY_CODE);
 				try {
 					List mSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 					for (Iterator it = mSetups.iterator(); it.hasNext(); ) {
@@ -277,9 +274,7 @@ condition.setDomain(domain);
 		if (node.getObject() instanceof MeasurementSetup)
 		{
 			MeasurementSetup setup = (MeasurementSetup)node.getObject();
-			LinkedIdsCondition condition = LinkedIdsCondition.getInstance();
-			condition.setDomain(domain);
-			condition.setIdentifier(setup.getId());
+			LinkedIdsCondition condition = new LinkedIdsCondition(setup.getId(), ObjectEntities.TEST_ENTITY_CODE);
 			condition.setEntityCode(ObjectEntities.TEST_ENTITY_CODE);
 			try {
 				List tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -294,10 +289,7 @@ condition.setDomain(domain);
 		}
 		if (node.getObject()instanceof Test) {
 			Test test = (Test)node.getObject();
-			LinkedIdsCondition condition = LinkedIdsCondition.getInstance();
-			condition.setDomain(domain);
-			condition.setIdentifier(test.getId());
-			condition.setEntityCode(ObjectEntities.MEASUREMENT_ENTITY_CODE);
+			LinkedIdsCondition condition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_ENTITY_CODE);
 			try
 			{
 				List measurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
