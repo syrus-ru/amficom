@@ -12,14 +12,15 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/30 12:32:57 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2005/03/22 10:39:43 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public abstract class AbstractLabelCellRenderer extends JLabel implements TableCellRenderer {
@@ -32,7 +33,7 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 	 * 1.0 - ALPHA constant. see {@link #ALPHA}
 	 */
 	public static final double	ONE_MINUS_ALPHA	= 1.0 - ALPHA;
-
+	
 	protected Map				renderers;
 
 	private Component			component;
@@ -41,9 +42,10 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 
 	public AbstractLabelCellRenderer() {
 		setOpaque(true);
+		setBorder(UIManager.getBorder(ResourceKeys.TABLE_BORDER));
 		this.renderers = new HashMap();
 		this.renderers.put(Color.class, ColorCellRenderer.getInstance());
-		this.renderers.put(Boolean.class, BooleanRenderer.getInstance());
+		this.renderers.put(Boolean.class, BooleanRenderer.getInstance());		
 	}
 
 	/**
@@ -122,14 +124,14 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 		}
 
 		if (hasFocus) {
-			// setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));
+			setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));
 			// //$NON-NLS-1$
 			if (table.isCellEditable(rowIndex, vColIndex)) {
 				this.component.setForeground(UIManager.getColor("Table.focusCellForeground")); //$NON-NLS-1$
 				// component.setBackground(UIManager.getColor("Table.focusCellBackground"));
 			}
 		} else {
-			// setBorder(noFocusBorder);
+			setBorder(UIManager.getBorder(ResourceKeys.TABLE_BORDER));
 		}
 
 		return this.component;
@@ -143,7 +145,7 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 		super.setForeground(c);
 		this.unselectedForeground = c;
 	}
-
+	
 	/**
 	 * abstract method to custom rendering objectResource with aid of
 	 * objectResourceController
