@@ -162,12 +162,7 @@ public class PrimaryParametersFrame extends ATableFrame
 //		double res = (double)bs.fxdParams.DS[0] * .3d / (double)bs.fxdParams.GI;
 //		double res2 = (bs.fxdParams.AR - bs.fxdParams.AO) * 3d / ((double)bs.dataPts.TNDP * (double)bs.fxdParams.GI/1000d);
 		double res = bs.getResolution();
-
-		if (bs.getUnits().equals("km"))
-			res *= 1000d;
 		double range = bs.getRange();
-		if (bs.getUnits().equals("mt"))
-			range /= 1000d;
 		String date = sdf.format(bs.getDate());
 
 		tModel.updateColumn(new Object[] {

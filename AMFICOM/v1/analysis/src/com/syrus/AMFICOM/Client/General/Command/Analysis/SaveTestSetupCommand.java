@@ -116,7 +116,7 @@ public class SaveTestSetupCommand extends VoidCommand
 		{
 			ms.attachToMonitoredElement(
 					bs.monitoredElementId,
-					new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getUserId()));
+					new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id));
 		}
 		catch(UpdateObjectException ex)
 		{

@@ -304,7 +304,7 @@ public class EventsFrame extends ATableFrame
 
 	void setTableModel(BellcoreStructure bs, TraceEvent[] events)
 	{
-		double res = bs.getResolution();
+		double res = bs.getResolution() / 1000d;
 		double sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
 
 		tModel.clearTable();

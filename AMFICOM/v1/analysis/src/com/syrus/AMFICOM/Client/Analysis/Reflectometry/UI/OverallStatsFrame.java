@@ -288,7 +288,7 @@ public class OverallStatsFrame extends ATableFrame
 		if (ev == null)
 			return;
 
-		double range = ev.last_point * bs.getResolution();
+		double range = ev.last_point * bs.getResolution() / 1000d;
 		double loss = Math.abs(ev.data[0] -  ev.data[1]);
 		double attenuation = loss / range;
 		double orl = MathRef.ORL(ev.data[0], ev.data[1]);
