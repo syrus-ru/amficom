@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemePortImpl.java,v 1.5 2004/12/15 13:47:41 bass Exp $
+ * $Id: AbstractSchemePortImpl.java,v 1.6 2004/12/15 14:56:08 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.*;
  * {@link AbstractSchemePort} instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/12/15 13:47:41 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/15 14:56:08 $
  * @module schemecommon_v1
  */
 final class AbstractSchemePortImpl extends AbstractSchemePort {
@@ -54,6 +54,13 @@ final class AbstractSchemePortImpl extends AbstractSchemePort {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see JavaUtilIStorableObject#createdImpl()
+	 */
+	public Date createdImpl() {
+		throw new UnsupportedOperationException();
+	}
+
 	public String description() {
 		throw new UnsupportedOperationException();
 	}
@@ -71,11 +78,7 @@ final class AbstractSchemePortImpl extends AbstractSchemePort {
 	}
 
 	public Date getCreated() {
-		throw new UnsupportedOperationException();
-	}
-
-	public com.syrus.AMFICOM.general.Identifier getCreatorId() {
-		throw new UnsupportedOperationException();
+		return createdImpl();
 	}
 
 	public List getDependencies() {
@@ -86,12 +89,8 @@ final class AbstractSchemePortImpl extends AbstractSchemePort {
 		throw new UnsupportedOperationException();
 	}
 
-	public com.syrus.AMFICOM.general.Identifier getId() {
-		throw new UnsupportedOperationException();
-	}
-
 	public Date getModified() {
-		throw new UnsupportedOperationException();
+		return modifiedImpl();
 	}
 
 	public Identifier id() {
@@ -135,6 +134,13 @@ final class AbstractSchemePortImpl extends AbstractSchemePort {
 	}
 
 	public long modified() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see JavaUtilIStorableObject#modifiedImpl()
+	 */
+	public Date modifiedImpl() {
 		throw new UnsupportedOperationException();
 	}
 
