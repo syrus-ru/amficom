@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.7 2004/07/28 12:49:46 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.8 2004/08/09 11:55:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,18 +21,26 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/07/28 12:49:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2004/08/09 11:55:41 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class KISDatabase extends StorableObjectDatabase {
+	// table :: kis
+    // description VARCHAR2(256),
+    public static final String COLUMN_DESCRIPTION   = "description";
+    // domain_id Identifier,
+    public static final String COLUMN_DOMAIN_ID     = "domain_id";
+    // name VARCHAR2(64) NOT NULL,
+    public static final String COLUMN_NAME  = "name";	
+	// mcm_id Identifier NOT NULL
 	public static final String COLUMN_MCM_ID = "mcm_id";
+	
 
 	private KIS fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof KIS)
@@ -45,20 +54,41 @@ public class KISDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveKIS(KIS kis) throws ObjectNotFoundException, RetrieveObjectException {
-		String mIdStr = kis.getId().toSQLString();
-		String sql = EquipmentDatabase.retriveSQL(kis,
-													 ObjectEntities.KIS_ENTITY,
-													 COLUMN_MCM_ID,
-													 EquipmentDatabase.COLUMN_SORT + EQUALS + EquipmentSort._EQUIPMENT_SORT_KIS);
-		
+		String kisIdStr = kis.getId().toSQLString();
+		String sql;		
+		{
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(StorableObjectDatabase.SQL_SELECT);
+		buffer.append(DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_CREATED));
+		buffer.append(StorableObjectDatabase.COMMA);
+		buffer.append(DatabaseDate.toQuerySubString(StorableObjectDatabase.COLUMN_MODIFIED));
+		buffer.append(StorableObjectDatabase.COMMA);
+		buffer.append(StorableObjectDatabase.COLUMN_CREATOR_ID);
+		buffer.append(StorableObjectDatabase.COMMA);
+		buffer.append(StorableObjectDatabase.COLUMN_MODIFIER_ID);
+		buffer.append(StorableObjectDatabase.COMMA);
+		buffer.append(DomainMember.COLUMN_DOMAIN_ID);
+		buffer.append(StorableObjectDatabase.COMMA);
+		buffer.append(COLUMN_NAME);
+		buffer.append(StorableObjectDatabase.COMMA);
+		buffer.append(COLUMN_DESCRIPTION);
+		buffer.append(StorableObjectDatabase.SQL_SELECT);
+		buffer.append(COLUMN_MCM_ID);
+		buffer.append(StorableObjectDatabase.SQL_FROM);
+		buffer.append(ObjectEntities.KIS_ENTITY);
+		buffer.append(StorableObjectDatabase.SQL_WHERE);
+		buffer.append(StorableObjectDatabase.COLUMN_ID);
+		buffer.append(StorableObjectDatabase.EQUALS);
+		buffer.append(kisIdStr);
+		sql = buffer.toString();
+		}
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("KISDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) {
-				EquipmentType equipmentType = (EquipmentType)ConfigurationObjectTypePool.getObjectType(new Identifier(resultSet.getString(EquipmentDatabase.COLUMN_TYPE_ID)));
+			if (resultSet.next()) {				
 				kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 													DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 													/**
@@ -72,36 +102,19 @@ public class KISDatabase extends StorableObjectDatabase {
 													/**
 														* @todo when change DB Identifier model ,change getString() to getLong()
 														*/
-													new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
-													equipmentType,
+													new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),													
 													resultSet.getString(EquipmentDatabase.COLUMN_NAME),
-													resultSet.getString(EquipmentDatabase.COLUMN_DESCRIPTION),
-													resultSet.getString(EquipmentDatabase.COLUMN_LATITUDE),
-													resultSet.getString(EquipmentDatabase.COLUMN_LONGITUDE),
-													resultSet.getString(EquipmentDatabase.COLUMN_HW_SERIAL),
-													resultSet.getString(EquipmentDatabase.COLUMN_SW_SERIAL),
-													resultSet.getString(EquipmentDatabase.COLUMN_HW_VERSION),
-													resultSet.getString(EquipmentDatabase.COLUMN_SW_VERSION),
-													resultSet.getString(EquipmentDatabase.COLUMN_INVENTORY_NUMBER),
-													resultSet.getString(EquipmentDatabase.COLUMN_MANUFACTURER),
-													resultSet.getString(EquipmentDatabase.COLUMN_MANUFACTURER_CODE),
-													resultSet.getString(EquipmentDatabase.COLUMN_SUPPLIER),
-													resultSet.getString(EquipmentDatabase.COLUMN_SUPPLIER_CODE),
-													resultSet.getString(EquipmentDatabase.COLUMN_EQCLASS),
-													/**
-														* @todo when change DB Identifier model ,change getString() to getLong()
-														*/
-													new Identifier(resultSet.getString(EquipmentDatabase.COLUMN_IMAGE_ID)),
+													resultSet.getString(EquipmentDatabase.COLUMN_DESCRIPTION),													
 													/**
 														* @todo when change DB Identifier model ,change getString() to getLong()
 														*/
 													new Identifier(resultSet.getString(COLUMN_MCM_ID)));
 			}
 			else
-				throw new ObjectNotFoundException("No such kis: " + mIdStr);
+				throw new ObjectNotFoundException("No such kis: " + kisIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "KISDatabase.retrieve | Cannot retrieve kis " + mIdStr;
+			String mesg = "KISDatabase.retrieve | Cannot retrieve kis " + kisIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -153,23 +166,92 @@ public class KISDatabase extends StorableObjectDatabase {
 	}
 
 	private void insertKIS(KIS kis) throws CreateObjectException {
-		String cIdStr = kis.getId().toSQLString();		
-		String sql = EquipmentDatabase.insertSQL(kis,ObjectEntities.KIS_ENTITY,COLUMN_MCM_ID,kis.getMCMId().toSQLString());
-		Statement statement = null;
+		/**
+		 * @todo when change DB Identifier model ,change String to long
+		 */
+		String kisIdCode = kis.getId().getCode();
+
+		/**
+		 * @todo when change DB Identifier model ,change String to long
+		 */
+		Identifier domainId = kis.getDomainId();
+		
+		/**
+		 * @todo when change DB Identifier model ,change String to long
+		 */
+		Identifier mcmId = kis.getMCMId();
+
+		
+		String sql = SQL_INSERT_INTO
+			+ ObjectEntities.SET_ENTITY
+			+ OPEN_BRACKET
+			+ COLUMN_ID + COMMA
+			+ COLUMN_CREATED + COMMA
+			+ COLUMN_MODIFIED + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_DOMAIN_ID + COMMA
+			+ COLUMN_NAME + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_MCM_ID
+			+ CLOSE_BRACKET
+			+ SQL_VALUES + OPEN_BRACKET
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION
+			+ CLOSE_BRACKET;
+		
+		PreparedStatement preparedStatement = null;
 		try {
-			statement = connection.createStatement();
+			preparedStatement = connection.prepareStatement(sql);
+			/**
+			  * @todo when change DB Identifier model ,change setString() to setLong()
+			  */
+			preparedStatement.setString(1, kisIdCode);
+			preparedStatement.setDate(2, new java.sql.Date(kis.getCreated().getTime()));
+			preparedStatement.setDate(3, new java.sql.Date(kis.getModified().getTime()));
+			/**
+			  * @todo when change DB Identifier model ,change setString() to setLong()
+			  */
+			preparedStatement.setString(4, kis.getCreatorId().getCode());
+			/**
+			  * @todo when change DB Identifier model ,change setString() to setLong()
+			  */
+			preparedStatement.setString(5, kis.getModifierId().getCode());
+			
+			/**
+			  * @todo when change DB Identifier model ,change setString() to setLong()
+			  */
+			preparedStatement.setString(6, (domainId != null)?domainId.getCode():Identifier.getNullSQLString());
+
+			preparedStatement.setString(7, kis.getName());
+			
+			preparedStatement.setString(8, kis.getDescription());			
+			
+			/**
+			  * @todo when change DB Identifier model ,change setString() to setLong()
+			  */
+			preparedStatement.setString(9, (mcmId != null)?mcmId.getCode():Identifier.getNullSQLString());
+										
 			Log.debugMessage("KISDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL05);
-			statement.executeUpdate(sql);
+			preparedStatement.executeUpdate();
+			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "KISDatabase.insert | Cannot insert kis " + cIdStr;
+			String mesg = "KISDatabase.insert | Cannot insert kis " + kisIdCode;
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
+				if (preparedStatement != null)
+					preparedStatement.close();
+				preparedStatement = null;
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
