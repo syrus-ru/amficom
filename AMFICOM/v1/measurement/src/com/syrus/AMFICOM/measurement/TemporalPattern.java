@@ -613,6 +613,7 @@ public class TemporalPattern extends StorableObject {
 
 	private HashMap					templates;
 	private long[]					times;
+	private Date[]					timesDate;
 
 	public TemporalPattern(Identifier id) throws RetrieveObjectException {
 		super(id);
@@ -757,13 +758,22 @@ public class TemporalPattern extends StorableObject {
 			}
 
 			this.times = new long[timeList.size()];
+			this.timesDate = new Date[timeList.size()];
 			int count = 0;
 			for (Iterator it = timeList.iterator(); it.hasNext();) {
-				this.times[count++] = ((Date) it.next()).getTime();
+				this.timesDate[count] = (Date) it.next();
+				this.times[count] = this.timesDate[count].getTime();
+				count++;
 			}
 		}
 
 		return this.times;
+	}
+
+	public Date[] getTimesDate(long start, long end) {
+		if (this.times == null)
+			getTimes(start, end);
+		return this.timesDate;
 	}
 
 	public void removeAll() {
