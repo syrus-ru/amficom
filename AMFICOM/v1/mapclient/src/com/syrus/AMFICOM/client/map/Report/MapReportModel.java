@@ -13,6 +13,9 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
+import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
+import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
+
 import javax.swing.JComponent;
 
 
@@ -28,7 +31,7 @@ import javax.swing.JComponent;
 public class MapReportModel extends ReportModel
 {
 	public static String rep_linkChars = "rep_linkChars";
-	public static String rep_topology = "rep_topology";
+	public static String rep_topology = "label_topology";
 
 	public String getName() {return "mapreportmodel";}
 	public String getObjectsName() {return ObjectResource.typ;}
@@ -51,6 +54,33 @@ public class MapReportModel extends ReportModel
 			return ":" + obj.getName();
 		else
 			throw new CreateReportException("",CreateReportException.poolObjNotExists);
+
+
+
+
+/*		String reserve_str = (String) rp.getReserve();
+		int separatPosit = reserve_str.indexOf(':');
+		if (separatPosit == -1)
+		{
+			Scheme scheme = (Scheme) Pool.get(Scheme.typ, reserve_str);
+			return ":" + scheme.name;
+		}
+		else
+		{
+			Scheme scheme = (Scheme) Pool.get(Scheme.typ,
+														 reserve_str.substring(0, separatPosit));
+			String secondPart = "";
+			if (rp.field.equals(MapReportModel.rep_topology))
+				secondPart = ( (MapContext) Pool.get(MapContext.typ,
+																 reserve_str.
+																 substring(separatPosit + 1))).
+					name;
+			else
+				secondPart = ( (SolutionCompact) Pool.get(SolutionCompact.typ,
+					reserve_str.substring(separatPosit + 1))).name;
+			return ":" + scheme.name + ":" + secondPart;
+		}
+*/
 	}
 
 	public MapReportModel()
@@ -62,6 +92,20 @@ public class MapReportModel extends ReportModel
 			ObjectsReport rp,
 			ReportTemplate rt)
 	{
+		String curValue = (String) rt.resourcesLoaded.get("mapProtoElementsLoaded");
+		if (curValue.equals("false"))
+		{
+			new MapDataSourceImage(dsi).LoadProtoElements();
+			rt.resourcesLoaded.put("mapProtoElementsLoaded","true");
+		}
+
+		curValue = (String) rt.resourcesLoaded.get("mapsLoaded");
+		if (curValue.equals("false"))
+		{
+			new MapDataSourceImage(dsi).LoadMaps();
+			rt.resourcesLoaded.put("mapsLoaded","true");
+		}
+
 	}
 
 	public int getReportKind(ObjectsReport rp)
