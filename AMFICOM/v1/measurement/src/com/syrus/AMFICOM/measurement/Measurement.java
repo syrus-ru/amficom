@@ -203,18 +203,14 @@ public class Measurement extends Action {
 														 Identifier creatorId,
 														 Measurement measurement,
 														 AlarmLevel alarmLevel,
-														 Identifier[] parameterIds,
-														 Identifier[] parameterTypeIds,
-														 byte[][] parameterValues) throws CreateObjectException {
+														 SetParameter[] parameters) throws CreateObjectException {
 		return Result.create(id,
 												 creatorId,
 												 this,
 												 this,
 												 ResultSort.RESULT_SORT_MEASUREMENT,
 												 alarmLevel,
-												 parameterIds,
-												 parameterTypeIds,
-												 parameterValues);						
+												 parameters);						
 	}
 
 	public Result retrieveResult(ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {

@@ -114,18 +114,14 @@ public class Analysis extends Action {
 														 Identifier creatorId,
 														 Measurement measurement,
 														 AlarmLevel alarmLevel,
-														 Identifier[] parameterIds,
-														 Identifier[] parameterTypeIds,
-														 byte[][] parameterValues) throws CreateObjectException {
+														 SetParameter[] parameters) throws CreateObjectException {
 		return Result.create(id,
 												 creatorId,
 												 measurement,
 												 this,
 												 ResultSort.RESULT_SORT_ANALYSIS,
 												 alarmLevel,
-												 parameterIds,
-												 parameterTypeIds,
-												 parameterValues);
+												 parameters);
 	}
 
 	public static Analysis create(Identifier id,

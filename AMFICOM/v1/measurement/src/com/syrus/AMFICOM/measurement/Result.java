@@ -99,9 +99,7 @@ public class Result extends StorableObject {
 								 Action action,
 								 ResultSort sort,
 								 AlarmLevel alarmLevel,
-								 Identifier[] parameterIds,
-								 Identifier[] parameterTypeIds,
-								 byte[][] parameterValues) throws CreateObjectException {
+								 SetParameter[] parameters) throws CreateObjectException {
 		super(id,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis()),
@@ -111,12 +109,7 @@ public class Result extends StorableObject {
 		this.action = action;
 		this.sort = sort.value();
 		this.alarmLevel = alarmLevel.value();
-
-		this.parameters = new SetParameter[Math.min(Math.min(parameterIds.length, parameterTypeIds.length), parameterValues.length)];
-		for (int i = 0; i < this.parameters.length; i++)
-			this.parameters[i] = new SetParameter(parameterIds[i],
-																						parameterTypeIds[i],
-																						parameterValues[i]);
+		this.parameters = parameters;
 
 		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
 		try {
@@ -192,17 +185,13 @@ public class Result extends StorableObject {
 																 Action action,
 																 ResultSort sort,
 																 AlarmLevel alarmLevel,
-																 Identifier[] parameterIds,
-																 Identifier[] parameterTypeIds,
-																 byte[][] parameterValues) throws CreateObjectException {
+																 SetParameter[] parameters) throws CreateObjectException {
 		return new Result(id,
 											creatorId,
 											measurement,
 											action,
 											sort,
 											alarmLevel,
-											parameterIds,
-											parameterTypeIds,
-											parameterValues);
+											parameters);
 	}
 }

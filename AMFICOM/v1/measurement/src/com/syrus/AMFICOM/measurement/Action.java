@@ -57,7 +57,5 @@ public abstract class Action extends StorableObject implements TypedObject {
 																			Identifier creatorId,
 																			Measurement measurement,
 																			AlarmLevel alarmLevel,
-																			Identifier[] parameterIds,
-																			Identifier[] parameterTypeIds,
-																			byte[][] parameterValues) throws CreateObjectException;
+																			SetParameter[] parameters) throws CreateObjectException;
 }
