@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.1 2005/01/24 15:29:27 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.2 2005/01/24 15:38:31 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/24 15:29:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/24 15:38:31 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -62,7 +62,6 @@ public class StorableObjectXMLDriver {
 			path.mkdirs();
 			this.fileName = path.getAbsolutePath() + File.separatorChar + packageName + ".xml";
 		}
-		System.out.println(this.fileName);
 		this.packageName = packageName;
 		this.parseXmlFile(false);
 	}
