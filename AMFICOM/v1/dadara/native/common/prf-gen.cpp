@@ -124,5 +124,9 @@ void prf_print(FILE *f) // f == 0 is default (stdout)
 	fflush(f);
 }
 
+void prf_print()
+{
+	prf_print(0);
+}
 
 #endif

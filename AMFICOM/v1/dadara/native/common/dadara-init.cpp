@@ -15,7 +15,6 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 	{
 		prf_print();
 	}
-	fflush(stdout);
 	return TRUE;
 }
 
