@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.3 2005/01/17 11:47:48 stas Exp $
+ * $Id: Characteristic.java,v 1.4 2005/01/20 07:32:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,13 +11,15 @@ package com.syrus.AMFICOM.general;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/17 11:47:48 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/20 07:32:38 $
  * @author $Author: stas $
  * @module general_v1
  */
@@ -34,7 +36,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	public static final String COLUMN_CHARACTERIZED_ID = "characterizedId";
 	public static final String COLUMN_EDITABLE = "editable";
 	public static final String COLUMN_VISIBLE = "visible";
-	private static Object[][] exportColumns = null;
+	private static Map exportColumns = null;
 
 	private CharacteristicType type;
 	private String name;
@@ -303,28 +305,19 @@ public class Characteristic extends StorableObject implements TypedObject {
 		return null;
 	}
 
-	public Object[][] exportColumns() {
+	public Map exportColumns() {
 		if (exportColumns == null) {
-			exportColumns = new Object[9][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-			exportColumns[3][0] = COLUMN_CHARACTERISTIC_TYPE;
-			exportColumns[4][0] = COLUMN_SORT;
-			exportColumns[5][0] = COLUMN_VALUE;
-			exportColumns[6][0] = COLUMN_CHARACTERIZED_ID;
-			exportColumns[7][0] = COLUMN_EDITABLE;
-			exportColumns[8][0] = COLUMN_VISIBLE;
+			exportColumns = new HashMap(9);
 		}
-		exportColumns[0][1] = getId();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-		exportColumns[3][1] = getType().getId();
-		exportColumns[4][1] = String.valueOf(getSort().value());
-		exportColumns[5][1] = getValue();
-		exportColumns[6][1] = getCharacterizedId();
-		exportColumns[7][1] = String.valueOf(isEditable());
-		exportColumns[8][1] = String.valueOf(isVisible());
+		exportColumns.put(COLUMN_ID, getId());
+		exportColumns.put(COLUMN_NAME, getName());
+		exportColumns.put(COLUMN_DESCRIPTION, getDescription());
+		exportColumns.put(COLUMN_CHARACTERISTIC_TYPE, getType().getId());
+		exportColumns.put(COLUMN_SORT, String.valueOf(getSort().value()));
+		exportColumns.put(COLUMN_VALUE, getValue());
+		exportColumns.put(COLUMN_CHARACTERIZED_ID, getCharacterizedId());
+		exportColumns.put(COLUMN_EDITABLE, String.valueOf(isEditable()));
+		exportColumns.put(COLUMN_VISIBLE, String.valueOf(isVisible()));
 
 		return exportColumns;
 	}

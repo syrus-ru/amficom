@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.2 2005/01/17 11:47:48 stas Exp $
+ * $Id: CharacteristicType.java,v 1.3 2005/01/20 07:32:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,13 +11,15 @@ package com.syrus.AMFICOM.general;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/17 11:47:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/20 07:32:38 $
  * @author $Author: stas $
  * @module general_v1
  */
@@ -29,7 +31,7 @@ public class CharacteristicType extends StorableObjectType {
 	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_DATA_TYPE = "type";
 	public static final String COLUMN_SORT = "sort";
-	private static Object[][] exportColumns = null;
+	private static Map exportColumns = null;
 
 	private int dataType;
 	private int sort;
@@ -157,18 +159,14 @@ public class CharacteristicType extends StorableObjectType {
 		return Collections.EMPTY_LIST;
 	}
 
-	public Object[][] exportColumns() {
+	public Map exportColumns() {
 		if (exportColumns == null) {
-			exportColumns = new Object[4][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_DESCRIPTION;
-			exportColumns[2][0] = COLUMN_DATA_TYPE;
-			exportColumns[3][0] = COLUMN_SORT;
+			exportColumns = new HashMap(4);
 		}
-		exportColumns[0][1] = getId();
-		exportColumns[1][1] = getDescription();
-		exportColumns[3][1] = String.valueOf(getDataType().value());
-		exportColumns[4][1] = String.valueOf(getSort().value());
+		exportColumns.put(COLUMN_ID, getId());
+		exportColumns.put(COLUMN_DESCRIPTION, getDescription());
+		exportColumns.put(COLUMN_SORT, String.valueOf(getSort().value()));
+		exportColumns.put(COLUMN_DATA_TYPE, String.valueOf(getDataType().value()));
 
 		return exportColumns;
 	}
