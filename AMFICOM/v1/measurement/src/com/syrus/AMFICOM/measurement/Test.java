@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.ContinuousTestTimeStamps;
@@ -189,7 +188,7 @@ public class Test extends StorableObject {
 												int temporal_type,
 												Date start_time,
 												Date end_time,
-												Identifier temporalPatternID,
+												Identifier temporalPatternId,
 												//Date[] tt_timestamps,
 												Identifier measurement_type_id,
 												Identifier analysis_type_id,
@@ -200,9 +199,10 @@ public class Test extends StorableObject {
 												String description) {
 		super.setAttributes(created, modified, creator_id, modifier_id);
 		this.temporal_type = temporal_type;
-		//this.timeStamps = new TestTimeStamps(temporal_type, start_time,
-		// end_time, temporalPatternId, tt_timestamps);
-		this.temporalPatternId = temporalPatternID;
+		this.temporalPatternId = temporalPatternId;
+		this.timeStamps = new TestTimeStamps(temporal_type, start_time,
+											 end_time, temporalPatternId);
+
 		this.measurement_type_id = measurement_type_id;
 		this.analysis_type_id = analysis_type_id;
 		this.evaluation_type_id = evaluation_type_id;
