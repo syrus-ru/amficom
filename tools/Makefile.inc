@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.17 2004/09/09 13:56:54 bass Exp $
+# $Id: Makefile.inc,v 1.18 2004/09/28 11:04:19 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -157,10 +157,9 @@ endif
 JAVA = $(JAVA_HOME)/bin/java
 
 IDLJ = $(JAVA_HOME)/bin/idlj
-IDLJFLAGS = \
+IDLJFLAGS += \
 	-fallTIE \
 	-i $(IDLDIR) \
-	-keep \
 	-td $(SRCDIR) \
 	-v
 
