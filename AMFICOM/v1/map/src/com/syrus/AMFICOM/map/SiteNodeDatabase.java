@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.5 2004/12/16 11:50:40 bob Exp $
+ * $Id: SiteNodeDatabase.java,v 1.6 2004/12/23 09:38:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/16 11:50:40 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/23 09:38:39 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -122,8 +122,8 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 		try {
 			DatabaseString.setString(preparedStatement, ++i, siteNode.getName(), SIZE_NAME_COLUMN);
 			DatabaseString.setString(preparedStatement, ++i, siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			preparedStatement.setDouble(++i, siteNode.getLongitude());
-			preparedStatement.setDouble(++i, siteNode.getLatitude());
+			preparedStatement.setDouble(++i, siteNode.getLocation().getX());
+			preparedStatement.setDouble(++i, siteNode.getLocation().getY());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, siteNode.getImageId());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, siteNode.getType().getId());
 			DatabaseString.setString(preparedStatement, ++i, siteNode.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
@@ -142,8 +142,8 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNode.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-			+ siteNode.getLongitude() + COMMA
-			+ siteNode.getLatitude() + COMMA
+			+ siteNode.getLocation().getX() + COMMA
+			+ siteNode.getLocation().getY() + COMMA
 			+ DatabaseIdentifier.toSQLString(siteNode.getImageId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(siteNode.getType().getId()) + COMMA
 			+ DatabaseString.toQuerySubString(siteNode.getCity(), MarkDatabase.SIZE_CITY_COLUMN) + COMMA

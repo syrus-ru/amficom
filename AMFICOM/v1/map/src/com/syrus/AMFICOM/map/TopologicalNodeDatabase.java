@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.4 2004/12/16 11:50:40 bob Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.5 2004/12/23 09:38:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/16 11:50:40 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/23 09:38:39 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -282,8 +282,8 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 		try {
 			DatabaseString.setString(preparedStatement, ++i, topologicalNode.getName(), SIZE_NAME_COLUMN);
 			DatabaseString.setString(preparedStatement, ++i, topologicalNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			preparedStatement.setDouble(++i, topologicalNode.getLongitude());
-			preparedStatement.setDouble(++i, topologicalNode.getLatitude());
+			preparedStatement.setDouble(++i, topologicalNode.getLocation().getX());
+			preparedStatement.setDouble(++i, topologicalNode.getLocation().getY());
 			preparedStatement.setInt(++i, topologicalNode.isActive() ? 1 : 0);
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -297,8 +297,8 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(topologicalNode.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(topologicalNode.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-			+ topologicalNode.getLongitude() + COMMA
-			+ topologicalNode.getLatitude() + COMMA
+			+ topologicalNode.getLocation().getX() + COMMA
+			+ topologicalNode.getLocation().getY() + COMMA
 			+ (topologicalNode.isActive() ? 1 : 0);
 		return values;
 	}

@@ -37,41 +37,7 @@ $(LIBNAME): .mach
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/map/IntPoint.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/DoublePoint.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/IntDimension.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/PhysicalLinkBinding.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/SiteNodeState.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/TopologicalNodeState.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/MapElement.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/MapElementState.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/NodeState.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/NodeLinkState.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/PhysicalLinkState.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/AbstractNode.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/MapStorableObjectPool.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/MapObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/DatabaseMapObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/MapDatabaseContext.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/SiteNodeType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/SiteNodeTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/SiteNode.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/SiteNodeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/PhysicalLinkType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/PhysicalLinkTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/TopologicalNode.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/TopologicalNodeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/NodeLink.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/NodeLinkDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/Mark.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/MarkDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/PhysicalLink.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/PhysicalLinkDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/Collector.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/CollectorDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/Map.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/MapDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/AbstractNode.java
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java)
 	touch $@
 
 .corba:	$(CLASSDIR)

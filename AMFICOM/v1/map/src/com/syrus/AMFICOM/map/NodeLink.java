@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLink.java,v 1.10 2004/12/20 12:36:01 krupenn Exp $
+ * $Id: NodeLink.java,v 1.11 2004/12/23 09:38:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/12/20 12:36:01 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2004/12/23 09:38:39 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements Characterized, MapElement {
@@ -126,7 +126,7 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 
 		this.nodeLinkDatabase = MapDatabaseContext.getNodeLinkDatabase();
 
-		selected = false;
+		this.selected = false;
 	}
 
 	public void insert() throws CreateObjectException {
@@ -139,27 +139,29 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		}
 	}
 
-	public static NodeLink createInstance(
-			AbstractNode stNode, 
-			AbstractNode eNode) 
+	public static NodeLink createInstance(										  
+			Identifier creatorId,
+			String name,
+			PhysicalLink physicalLink,
+			AbstractNode starNode, 
+			AbstractNode endNode,
+			double length) 
 		throws CreateObjectException 
 	{
-		if (stNode == null || eNode == null)
+		if (name == null || physicalLink == null || starNode == null || endNode == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			Identifier ide =
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.NODE_LINK_ENTITY_CODE);
 			return new NodeLink(
-				ide,
-				stNode.getMap().getCreatorId(),
-				ide.toString(),
-				null,
-				stNode,
-				eNode,
-				0.0D);
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.NODE_LINK_ENTITY_CODE),
+				creatorId,
+				name,
+				physicalLink,
+				starNode,
+				endNode,
+				length);
 		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Domain.createInstance | cannot generate identifier ", e);
+			throw new CreateObjectException("NodeLink.createInstance | cannot generate identifier ", e);
 		}
 	}
 
@@ -295,7 +297,7 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 
 	public Map getMap()
 	{
-		return map;
+		return this.map;
 	}
 
 	public void setMap(Map map)
@@ -305,7 +307,7 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 
 	public boolean isSelected()
 	{
-		return selected;
+		return this.selected;
 	}
 
 	public void setSelected(boolean selected)
@@ -360,7 +362,7 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 
 	public boolean isRemoved()
 	{
-		return removed;
+		return this.removed;
 	}
 	
 	public void setRemoved(boolean removed)

@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.3 2004/12/16 11:50:40 bob Exp $
+ * $Id: MarkDatabase.java,v 1.4 2004/12/23 09:38:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/16 11:50:40 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/23 09:38:39 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -120,8 +120,8 @@ public class MarkDatabase extends StorableObjectDatabase {
 		try {
 			DatabaseString.setString(preparedStatement, ++i, mark.getName(), SIZE_NAME_COLUMN);
 			DatabaseString.setString(preparedStatement, ++i, mark.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			preparedStatement.setDouble(++i, mark.getLongitude());
-			preparedStatement.setDouble(++i, mark.getLatitude());
+			preparedStatement.setDouble(++i, mark.getLocation().getX());
+			preparedStatement.setDouble(++i, mark.getLocation().getY());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mark.getPhysicalLink().getId());
 			preparedStatement.setDouble(++i, mark.getDistance());
 			DatabaseString.setString(preparedStatement, ++i, mark.getCity(), SIZE_CITY_COLUMN);
@@ -139,8 +139,8 @@ public class MarkDatabase extends StorableObjectDatabase {
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(mark.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(mark.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-			+ mark.getLongitude() + COMMA
-			+ mark.getLatitude() + COMMA
+			+ mark.getLocation().getX() + COMMA
+			+ mark.getLocation().getY() + COMMA
 			+ DatabaseIdentifier.toSQLString(mark.getPhysicalLink().getId()) + COMMA
 			+ mark.getDistance() + COMMA
 			+ DatabaseString.toQuerySubString(mark.getCity(), SIZE_CITY_COLUMN) + COMMA

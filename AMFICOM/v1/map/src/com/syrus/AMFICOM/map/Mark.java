@@ -1,5 +1,5 @@
 /*
- * $Id: Mark.java,v 1.7 2004/12/20 12:36:01 krupenn Exp $
+ * $Id: Mark.java,v 1.8 2004/12/23 09:38:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/20 12:36:01 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.8 $, $Date: 2004/12/23 09:38:39 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class Mark extends AbstractNode implements Characterized {
@@ -78,8 +78,7 @@ public class Mark extends AbstractNode implements Characterized {
 		super.name = mt.name;
 		super.description = mt.description;
 
-		super.location.x = mt.longitude;
-		super.location.y = mt.latitude;
+		super.location = new DoublePoint(mt.longitude, mt.latitude);
 
 		this.distance = mt.distance;
 
@@ -120,8 +119,7 @@ public class Mark extends AbstractNode implements Characterized {
 		super.modifierId = creatorId;
 		super.name = name;
 		super.description = description;
-		super.location.x = longitude;
-		super.location.y = latitude;		
+		super.location = new DoublePoint(longitude, latitude);		
 		this.physicalLink = physicalLink;
 		this.distance = distance;
 		this.city = city;
@@ -148,29 +146,32 @@ public class Mark extends AbstractNode implements Characterized {
 		}
 	}
 
-	public static Mark createInstance(
-			PhysicalLink link,
-			double len)
-		throws CreateObjectException 
-	{
-		if (link == null)
+	public static Mark createInstance(	final Identifier creatorId,
+										final String name,
+										final String description,
+										final double longitude,
+										final double latitude,
+										final PhysicalLink physicalLink,
+										final double distance,
+										final String city,
+										final String street,
+										final String building) throws CreateObjectException {
+		if (creatorId == null || name == null || description == null || physicalLink == null 
+				|| city == null || street == null || building == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
+
 		try {
-			Identifier ide =
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.MARK_ENTITY_CODE);
-			return new Mark(
-				ide,
-				link.getMap().getCreatorId(),
-				ide.toString(),
-				"",
-				0.0D,
-				0.0D,
-				link,
-				len,
-				"",
-				"",
-				"");
+			return new Mark(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MARK_ENTITY_CODE), 
+					creatorId, 
+					name,
+					description,
+					longitude, 
+					latitude,
+					physicalLink,
+					distance,
+					city,
+					street,
+					building);
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Mark.createInstance | cannot generate identifier ", e);
 		}
@@ -192,8 +193,8 @@ public class Mark extends AbstractNode implements Characterized {
 		return new Mark_Transferable(super.getHeaderTransferable(),
 						this.name,
 						this.description,
-						this.location.x,
-						this.location.y,
+						this.location.getX(),
+						this.location.getY(),
 						(Identifier_Transferable)this.physicalLink.getId().getTransferable(),
 						this.distance,
 						this.city,
@@ -267,8 +268,7 @@ public class Mark extends AbstractNode implements Characterized {
 				modifierId);
 		super.name = name;
 		super.description = description;
-		super.location.x = longitude;
-		super.location.y = latitude;
+		super.location.setLocation(longitude, latitude);
 		this.physicalLink = physicalLink;
 		this.distance = distance;
 		this.city = city;
@@ -283,7 +283,7 @@ public class Mark extends AbstractNode implements Characterized {
 
 	public NodeLink getNodeLink()
 	{
-		return nodeLink;
+		return this.nodeLink;
 	}
 
 	public void setStartNode(AbstractNode startNode)
@@ -293,12 +293,12 @@ public class Mark extends AbstractNode implements Characterized {
 
 	public AbstractNode getStartNode()
 	{
-		return startNode;
+		return this.startNode;
 	}
 
 	public DoublePoint getLocation()
 	{
-		return new DoublePoint(location.x, location.y);
+		return (DoublePoint)this.location.clone();
 	}
 
 	public void setLocation(DoublePoint location)
@@ -313,16 +313,12 @@ public class Mark extends AbstractNode implements Characterized {
 
 		double pathLength = 0;
 		
-		for(Iterator it = getPhysicalLink().getNodeLinks().iterator(); it.hasNext();)
-		{
+		for(Iterator it = getPhysicalLink().getNodeLinks().iterator(); it.hasNext();){
 			NodeLink nl = (NodeLink )it.next();
-			if(nl.equals(nodeLink))
-			{
+			if(nl.equals(this.nodeLink)){
 				pathLength += this.getSizeInDoubleLt();
 				break;
-			}
-			else
-			{
+			} else {
 				pathLength += nl.getLengthLt();
 			}
 		}
@@ -340,7 +336,7 @@ public class Mark extends AbstractNode implements Characterized {
 		while(it.hasPrevious())
 		{
 			NodeLink nl = (NodeLink )it.previous();
-			if(nl == nodeLink)
+			if(nl == this.nodeLink)
 			{
 				pathLength += nl.getLengthLt() - this.getSizeInDoubleLt();
 				break;
@@ -358,7 +354,7 @@ public class Mark extends AbstractNode implements Characterized {
 
 	public double getSizeInDoubleLt()
 	{
-		return sizeInDoubleLt;
+		return this.sizeInDoubleLt;
 	}
 
 	public List getNodeLinks()

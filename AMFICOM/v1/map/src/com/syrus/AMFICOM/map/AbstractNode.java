@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractNode.java,v 1.3 2004/12/20 12:36:00 krupenn Exp $
+ * $Id: AbstractNode.java,v 1.4 2004/12/23 09:38:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/20 12:36:00 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.4 $, $Date: 2004/12/23 09:38:39 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public abstract class AbstractNode 
@@ -39,12 +39,12 @@ public abstract class AbstractNode
 	protected String	description;
 
 	/**
-	 * @deprecated use location.x
+	 * @deprecated use {@link #location.getX()}
 	 */
 	protected double	longitude;
 
 	/**
-	 * @deprecated use location.y
+	 * @deprecated use {@link #location.getY()}
 	 */
 	protected double	latitude;
 
@@ -101,7 +101,7 @@ public abstract class AbstractNode
 		super(id, created, modified, creatorId, modifierId);
 		this.name = name;
 		this.description = desription;
-		this.location = new DoublePoint(location.x, location.y);
+		this.location.setLocation(location.getX(), location.getY());
 		this.characteristics = new LinkedList();
 	}
 
@@ -140,17 +140,17 @@ public abstract class AbstractNode
 	}
 
 	/**
-	 * @deprecated use getLocation().y
+	 * @deprecated use {@link #getLocation().getY()}
 	 */
 	public double getLatitude() {
-		return location.getY();
+		return this.location.getY();
 	}
 
 	/**
-	 * @deprecated use getLocation().x
+	 * @deprecated use {@link #getLocation().getX()}
 	 */
 	public double getLongitude() {
-		return location.getX();
+		return this.location.getX();
 	}
 
 	public String getName() {
@@ -171,38 +171,20 @@ public abstract class AbstractNode
 	public void setDescription(String description) {
 		this.description = description;
 		super.currentVersion = super.getNextVersion();
-	}
-
-	/**
-	 * @deprecated use setLocation(DoublePoint )
-	 */
-	public void setLatitude(double latitude) {
-		this.location.y = latitude;
-		super.currentVersion = super.getNextVersion();
-	}
-
-	/**
-	 * @deprecated uset setLocation(DoublePoint )
-	 */
-	public void setLongitude(double longitude) {
-		this.location.x = longitude;
-		super.currentVersion = super.getNextVersion();
-	}
+	}	
 
 	public void setName(String name) {
 		this.name = name;
 		super.currentVersion = super.getNextVersion();
 	}
 
-	public DoublePoint getLocation()
-	{
-		return new DoublePoint(location.x, location.y);
+	public DoublePoint getLocation(){
+		return (DoublePoint)this.location.clone();
 	}
 
 	public void setLocation(DoublePoint location)
 	{
-		this.location.x = location.x;
-		this.location.y = location.y;
+		this.location.setLocation(location.getX(), location.getY());
 		super.currentVersion = super.getNextVersion();
 	}
 
@@ -297,7 +279,7 @@ public abstract class AbstractNode
 
 	public Map getMap()
 	{
-		return map;
+		return this.map;
 	}
 
 	public void setMap(Map map)
@@ -307,7 +289,7 @@ public abstract class AbstractNode
 
 	public boolean isSelected()
 	{
-		return selected;
+		return this.selected;
 	}
 
 	public void setSelected(boolean selected)
@@ -323,12 +305,12 @@ public abstract class AbstractNode
 
 	public boolean getAlarmState()
 	{
-		return alarmState;
+		return this.alarmState;
 	}
 
 	public boolean isRemoved()
 	{
-		return removed;
+		return this.removed;
 	}
 
 	public void setRemoved(boolean removed)

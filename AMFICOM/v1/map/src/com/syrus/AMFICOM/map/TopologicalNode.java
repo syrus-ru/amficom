@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNode.java,v 1.7 2004/12/20 18:39:18 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.8 2004/12/23 09:38:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/20 18:39:18 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.8 $, $Date: 2004/12/23 09:38:39 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class TopologicalNode extends AbstractNode {
@@ -76,8 +76,7 @@ public class TopologicalNode extends AbstractNode {
 		super(tnt.header);
 		super.name = tnt.name;
 		super.description = tnt.description;
-		super.location.x = tnt.longitude;
-		super.location.y = tnt.latitude;
+		super.location = new DoublePoint(tnt.longitude, tnt.latitude);
 		this.active = tnt.active;
 
 		try {
@@ -108,10 +107,9 @@ public class TopologicalNode extends AbstractNode {
 		super.modified = new Date(time);
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
-		this.name = name;
-		this.description = description;
-		this.location.x = longitude;
-		this.location.y = latitude;
+		super.name = name;
+		super.description = description;
+		super.location = new DoublePoint(longitude, latitude);
 		this.active = active;
 
 		this.characteristics = new LinkedList();
@@ -138,8 +136,7 @@ public class TopologicalNode extends AbstractNode {
 		this.name = name;
 		this.description = description;
 		this.physicalLink = physicalLink;
-		this.location.x = longitude;
-		this.location.y = latitude;
+		this.location = new DoublePoint(longitude, latitude);
 		this.active = active;
 
 		this.characteristics = new LinkedList();
@@ -148,7 +145,7 @@ public class TopologicalNode extends AbstractNode {
 
 		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
 
-		selected = false;
+		this.selected = false;
 	}
 
 	public void insert() throws CreateObjectException {
@@ -162,27 +159,30 @@ public class TopologicalNode extends AbstractNode {
 	}
 
 	public static TopologicalNode createInstance(
+			Identifier creatorId,
+			String name,
+			String description,
 			PhysicalLink physicalLink, 
 			DoublePoint location)
 		throws CreateObjectException {
 
-		if (physicalLink == null || location == null)
+		if (creatorId == null || name == null || description == null || physicalLink == null || location == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			Identifier ide =
+			Identifier id =
 				IdentifierPool.getGeneratedIdentifier(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE);
 			return new TopologicalNode(
-				ide,
-				physicalLink.getMap().getCreatorId(),
-				ide.toString(),
-				"",
+				id,
+				creatorId,
+				name,
+				description,
 				physicalLink,
-				location.x,
-				location.y,
+				location.getX(),
+				location.getY(),
 				false);
 		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Domain.createInstance | cannot generate identifier ", e);
+			throw new CreateObjectException("TopologicalNode.createInstance | cannot generate identifier ", e);
 		}
 	}
 
@@ -195,21 +195,21 @@ public class TopologicalNode extends AbstractNode {
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			Identifier ide =
+			Identifier id =
 				IdentifierPool.getGeneratedIdentifier(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE);
 			TopologicalNode tnode = new TopologicalNode(
-				ide,
+				id,
 				map.getCreatorId(),
-				ide.toString(),
+				id.toString(),
 				"",
 				null,
-				location.x,
-				location.y,
+				location.getX(),
+				location.getY(),
 				false);
 			tnode.setMap(map);
 			return tnode;
 		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Domain.createInstance | cannot generate identifier ", e);
+			throw new CreateObjectException("TopologicalNode.createInstance | cannot generate identifier ", e);
 		}
 	}
 
@@ -226,8 +226,8 @@ public class TopologicalNode extends AbstractNode {
 				super.getHeaderTransferable(), 
 				this.name, 
 				this.description,
-				this.location.x, 
-				this.location.y,
+				this.location.getX(), 
+				this.location.getY(),
 				(Identifier_Transferable) this.physicalLink.getId().getTransferable(),
 				this.active, 
 				charIds);
@@ -272,8 +272,7 @@ public class TopologicalNode extends AbstractNode {
 					modifierId);
 			this.name = name;
 			this.description = description;
-			this.location.x = longitude;
-			this.location.y = latitude;
+			this.location.setLocation(longitude, latitude);
 			this.active = active;					
 	}
 
@@ -285,7 +284,7 @@ public class TopologicalNode extends AbstractNode {
 
 	public boolean isCanBind()
 	{
-		return canBind;
+		return this.canBind;
 	}
 
 	public MapElementState getState()

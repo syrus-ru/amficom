@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLink.java,v 1.11 2004/12/20 15:17:39 bob Exp $
+ * $Id: PhysicalLink.java,v 1.12 2004/12/23 09:38:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/12/20 15:17:39 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/23 09:38:39 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -192,36 +192,44 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		}
 	}
 
-	public static PhysicalLink createInstance(
-			AbstractNode stNode, 
-			AbstractNode eNode, 
-			PhysicalLinkType type)
+	public static PhysicalLink createInstance(final Identifier creatorId,
+											  final String name, 
+											  final String description,
+											  final PhysicalLinkType physicalLinkType,
+											  final AbstractNode startNode, 
+											  final AbstractNode endNode, 
+											  final String city, 
+											  final String street, 
+											  final String building,
+											  final int dimensionX,
+											  final int dimensionY,
+											  final boolean leftToRight,
+											  final boolean topToBottom)
 		throws CreateObjectException {
 
-		if (stNode == null || eNode == null
-				|| type == null)
+		if (creatorId == null || name == null
+				|| description == null || physicalLinkType == null || startNode == null || endNode == null ||
+				city == null || street == null || building == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			Identifier ide =
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
 			return new PhysicalLink(
-				ide,
-				stNode.getMap().getCreatorId(),
-				ide.toString(),
-				"",
-				type,
-				stNode,
-				eNode,
-				"",
-				"",
-				"",
-				type.getBindingDimension().getWidth(),
-				type.getBindingDimension().getHeight(),
-				true,
-				true);
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE),
+				creatorId,
+				name, 
+				description,
+				physicalLinkType,
+				startNode, 
+				endNode, 
+				city, 
+				street, 
+				building,
+				dimensionX,
+				dimensionY,
+				leftToRight,
+				topToBottom);
 		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Domain.createInstance | cannot generate identifier ", e);
+			throw new CreateObjectException("PhysicalLink.createInstance | cannot generate identifier ", e);
 		}
 	}
 
@@ -657,18 +665,22 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	public DoublePoint getLocation()
 	{
 		int count = 0;
+		double x = 0.0;
+		double y = 0.0;
 		DoublePoint point = new DoublePoint(0.0, 0.0);
 
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
-		{
+		for(Iterator it = getNodeLinks().iterator(); it.hasNext();){
 			NodeLink mnle = (NodeLink )it.next();
 			DoublePoint an = mnle.getLocation();
-			point.x += an.x;
-			point.y += an.y;
+			x += an.getX();
+			y += an.getY();
 			count ++;
 		}
-		point.x /= count;
-		point.y /= count;
+		if (count > 0){
+			x /= count;
+			y /= count;
+			point.setLocation(x, y);
+		}
 		
 		return point;
 	}

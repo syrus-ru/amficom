@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNode.java,v 1.6 2004/12/20 12:36:01 krupenn Exp $
+ * $Id: SiteNode.java,v 1.7 2004/12/23 09:38:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/20 12:36:01 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2004/12/23 09:38:39 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -67,8 +67,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		super(snt.header);
 		super.name = snt.name;
 		super.description = snt.description;
-		super.location.x = snt.longitude;
-		super.location.y = snt.latitude;
+		super.location = new DoublePoint(snt.longitude, snt.latitude);
 		this.imageId = new Identifier(snt.imageId);		
 		this.city = snt.city;
 		this.street = snt.street;
@@ -97,7 +96,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 			double longitude,
 			double latitude,
 			String city,
-			String steet,
+			String street,
 			String building) {
 		super(id);
 		long time = System.currentTimeMillis();
@@ -109,10 +108,9 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		this.type = type;
 		this.name = name;
 		this.description = description;
-		this.location.x = longitude;
-		this.location.y = latitude;
+		this.location = new DoublePoint(longitude, latitude);
 		this.city = city;
-		this.street = steet;
+		this.street = street;
 		this.building = building;
 
 		this.characteristics = new LinkedList();
@@ -121,7 +119,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 
 		this.siteNodeDatabase = MapDatabaseContext.getSiteNodeDatabase();
 
-		selected = false;
+		this.selected = false;
 	}
 
 	public void insert() throws CreateObjectException {
@@ -135,31 +133,35 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	}
 
 	public static SiteNode createInstance(
+			final Identifier creatorId,
+			String name,
+			String description,
+			SiteNodeType siteNodeType,
 			DoublePoint location,
-			Map map,
-			SiteNodeType pe)
+			String city,
+			String street,
+			String building)
 		throws CreateObjectException {
 
-		if (location == null || map == null || pe == null)
+		if (creatorId == null || name == null || description == null ||						 
+				siteNodeType == null || location == null || city == null || street == null || building == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			Identifier ide =
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
 			return new SiteNode(
-				ide,
-				map.getCreatorId(),
-				pe.getImageId(),
-				pe.getName(),
-				"",
-				pe,
-				location.x,
-				location.y,
-				"",
-				"",
-				"");
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE),
+				creatorId,
+				siteNodeType.getImageId(),
+				name,
+				description,
+				siteNodeType,
+				location.getX(),
+				location.getY(),
+				city,
+				street,
+				building);
 		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Domain.createInstance | cannot generate identifier ", e);
+			throw new CreateObjectException("SiteNode.createInstance | cannot generate identifier ", e);
 		}
 	}
 
@@ -180,8 +182,8 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		return new SiteNode_Transferable(super.getHeaderTransferable(), 
 							this.name,
 							this.description,
-							this.location.x,
-							this.location.y, 
+							this.location.getX(),
+							this.location.getY(), 
 							(Identifier_Transferable) this.imageId.getTransferable(),
 							(Identifier_Transferable) this.type.getId().getTransferable(),
 							this.city,
@@ -246,8 +248,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 					modifierId);
 			this.name = name;
 			this.description = description;
-			this.location.x = longitude;
-			this.location.y = latitude;
+			this.location.setLocation(longitude, latitude);
 			this.imageId = imageId;
 			this.type = type;
 			this.city = city;

@@ -1,5 +1,5 @@
 /*
- * $Id: Collector.java,v 1.11 2004/12/20 12:36:00 krupenn Exp $
+ * $Id: Collector.java,v 1.12 2004/12/23 09:38:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/12/20 12:36:00 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2004/12/23 09:38:39 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class Collector 
@@ -64,6 +64,8 @@ public class Collector
 
 	public Collector(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+		this.physicalLinks = new LinkedList();
+		this.characteristics = new LinkedList();
 
 		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
 		try {
@@ -128,21 +130,23 @@ public class Collector
 	}
 
 	public static Collector createInstance(
+			Identifier creatorId,
 			Map map,
-			String name)
+			String name,
+			String description)
 		throws CreateObjectException {
 
-		if (map == null || name == null)
+		if (creatorId == null || map == null || name == null || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
 			return new Collector(
 				IdentifierPool.getGeneratedIdentifier(ObjectEntities.COLLECTOR_ENTITY_CODE),
-				map.getCreatorId(),
+				creatorId,
 				name,
-				"");
+				description);
 		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Domain.createInstance | cannot generate identifier ", e);
+			throw new CreateObjectException("Collector.createInstance | cannot generate identifier ", e);
 		}
 	}
 
@@ -268,16 +272,20 @@ public class Collector
 		int count = 0;
 		DoublePoint point = new DoublePoint(0.0, 0.0);
 
-		for(Iterator it = getPhysicalLinks().iterator(); it.hasNext();)
-		{
+		double x = 0.0;
+		double y = 0.0;
+		for(Iterator it = getPhysicalLinks().iterator(); it.hasNext();){
 			PhysicalLink mle = (PhysicalLink )it.next();
 			DoublePoint an = mle.getLocation();
-			point.x += an.x;
-			point.y += an.y;
-			count ++;
+			x += an.getX();
+			y += an.getY();
+			count++;
 		}
-		point.x /= count;
-		point.y /= count;
+		if (count > 0){			
+			x /= count;
+			y /= count;
+			point.setLocation(x, y);
+		}
 		
 		return point;
 	}
@@ -299,7 +307,7 @@ public class Collector
 
 	public boolean isRemoved()
 	{
-		return removed;
+		return this.removed;
 	}
 	
 	public void setRemoved(boolean removed)
@@ -309,7 +317,7 @@ public class Collector
 
 	public boolean isSelected()
 	{
-		return selected;
+		return this.selected;
 	}
 
 	public void setSelected(boolean selected)
@@ -320,7 +328,7 @@ public class Collector
 
 	public Map getMap()
 	{
-		return map;
+		return this.map;
 	}
 
 	public void setMap(Map map)
@@ -328,14 +336,14 @@ public class Collector
 		this.map = map;
 	}
 
-	public void setAlarmState(boolean i)
+	public void setAlarmState(boolean alarmState)
 	{
-		alarmState = i;
+		this.alarmState = alarmState;
 	}
 
 	public boolean getAlarmState()
 	{
-		return alarmState;
+		return this.alarmState;
 	}
 
 	/**
