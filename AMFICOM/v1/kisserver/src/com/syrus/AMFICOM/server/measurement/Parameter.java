@@ -87,8 +87,7 @@ public class Parameter {
 //		Log.debugMessage("Parameter.init | Trying: " + update, Log.DEBUGLEVEL05);
     st.executeUpdate(update);
 		st.close();
-    ByteArrayDatabase bdb  = new ByteArrayDatabase(this.value);
-    bdb.saveAsBlob(conn, table_name, "value", "id = '" + this.id + "'");
+    ByteArrayDatabase.saveAsBlob(this.value, conn, table_name, "value", "id = '" + this.id + "'");
   }
 
   public String getId() {

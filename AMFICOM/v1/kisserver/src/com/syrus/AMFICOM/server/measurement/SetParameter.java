@@ -81,8 +81,7 @@ public class SetParameter {
 //		Log.debugMessage("SetParameter.init | Trying: " + str, Log.DEBUGLEVEL05);
 		st.executeUpdate(str);
 		st.close();
-    ByteArrayDatabase bdb  = new ByteArrayDatabase(this.value);
-    bdb.saveAsBlob(conn, table_name, "value", "id = '" + this.id + "'");
+    ByteArrayDatabase.saveAsBlob(this.value, conn, table_name, "value", "id = '" + this.id + "'");
 	}
 
 	public String getId() {
@@ -125,8 +124,7 @@ public class SetParameter {
 
 		Connection conn = DatabaseConnection.getConnection();
     String table_name = this.set_sort + this.sort + "s";
-    ByteArrayDatabase badb = new ByteArrayDatabase(this.value);
-		badb.saveAsBlob(conn, table_name, "value", "id = '" + this.id + "'");
+		ByteArrayDatabase.saveAsBlob(this.value, conn, table_name, "value", "id = '" + this.id + "'");
 	}
 
 	public static SetParameter[] retrieveParameters(String set_id, String set_sort, String sort) throws SQLException {
