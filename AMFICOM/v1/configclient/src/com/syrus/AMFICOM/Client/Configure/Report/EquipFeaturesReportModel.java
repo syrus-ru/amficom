@@ -33,7 +33,7 @@ public class EquipFeaturesReportModel extends ReportModel
 
 	public String getReportsName(ObjectsReport rp)
 	{
-		return LangModelReport.String("rep_equipChars") + rp.reserveName;
+		return LangModelReport.getString("rep_equipChars") + rp.reserveName;
 	}
 
 	public String getReportsReserveName(ObjectsReport rp)

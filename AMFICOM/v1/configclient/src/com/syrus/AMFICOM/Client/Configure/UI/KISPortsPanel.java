@@ -78,11 +78,11 @@ public class KISPortsPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModelConfig.String("label_ports"));
+		setName(LangModelConfig.getString("label_ports"));
 
 		this.setLayout(borderLayout5);
 
-		idLabel.setText(LangModelConfig.String("label_port"));
+		idLabel.setText(LangModelConfig.getString("label_port"));
 		idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 		portBox.addActionListener(new java.awt.event.ActionListener() {
@@ -101,7 +101,7 @@ public class KISPortsPanel extends GeneralPanel
 		controlsPanel1.setLayout(verticalFlowLayout3);
 		labelsPanel1.setLayout(verticalFlowLayout4);
 		labelsPanel1.setMinimumSize(new Dimension(DEF_WIDTH + 5, 125));
-		jLabel1.setText(LangModelConfig.String("label_evalport"));
+		jLabel1.setText(LangModelConfig.getString("label_evalport"));
 		accessPortCheckBox.setEnabled(false);
 		apgp.setEnabled(false);
 		apgp.setBorder(BorderFactory.createLoweredBevelBorder());

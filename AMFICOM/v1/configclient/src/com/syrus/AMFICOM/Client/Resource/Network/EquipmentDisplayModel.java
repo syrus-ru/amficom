@@ -42,15 +42,15 @@ public class EquipmentDisplayModel extends StubDisplayModel
 	public String getColumnName(String col_id)
 	{
 		if(col_id.equals("id"))
-			return LangModelConfig.String("label_id");
+			return LangModelConfig.getString("label_id");
 		if(col_id.equals("name"))
-			return LangModelConfig.String("label_name");
+			return LangModelConfig.getString("label_name");
 		if(col_id.equals("type_id"))
-			return LangModelConfig.String("label_type");
+			return LangModelConfig.getString("label_type");
 		if(col_id.equals("longitude"))
-			return LangModelConfig.String("equip_longitude");
+			return LangModelConfig.getString("equip_longitude");
 		if(col_id.equals("latitude"))
-			return LangModelConfig.String("equip_latitude");
+			return LangModelConfig.getString("equip_latitude");
 		return "";
 	}
 

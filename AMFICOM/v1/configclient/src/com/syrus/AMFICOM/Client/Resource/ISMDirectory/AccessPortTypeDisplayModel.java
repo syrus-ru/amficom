@@ -39,9 +39,9 @@ public class AccessPortTypeDisplayModel extends StubDisplayModel
 	public String getColumnName(String col_id)
 	{
 		if(col_id.equals("id"))
-			return LangModelConfig.String("label_id");
+			return LangModelConfig.getString("label_id");
 		if(col_id.equals("name"))
-			return LangModelConfig.String("label_name");
+			return LangModelConfig.getString("label_name");
 		return "";
 	}
 

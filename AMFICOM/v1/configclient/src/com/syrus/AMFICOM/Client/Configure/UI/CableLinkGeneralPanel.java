@@ -113,52 +113,52 @@ public class CableLinkGeneralPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		typeLabel.setText(LangModelConfig.String("label_type"));
+		typeLabel.setText(LangModelConfig.getString("label_type"));
 		typeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		rnLabel1.setText(LangModelConfig.String("label_inventory_nr1"));
+		rnLabel1.setText(LangModelConfig.getString("label_inventory_nr1"));
 		rnLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		rnLabel2.setText(LangModelConfig.String("label_inventory_nr2"));
+		rnLabel2.setText(LangModelConfig.getString("label_inventory_nr2"));
 		rnLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		nameLabel.setText(LangModelConfig.String("label_name"));
+		nameLabel.setText(LangModelConfig.getString("label_name"));
 		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		manufacturerLabel.setText(LangModelConfig.String("label_manufacter"));
+		manufacturerLabel.setText(LangModelConfig.getString("label_manufacter"));
 		manufacturerLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		manufacturerCodeLabel.setText(LangModelConfig.String("label_manCode"));
+		manufacturerCodeLabel.setText(LangModelConfig.getString("label_manCode"));
 		manufacturerCodeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		manufacturerField.setEnabled(false);
 		manufacturerCodeField.setEnabled(false);
-		supplierLabel.setText(LangModelConfig.String("label_supplier"));
+		supplierLabel.setText(LangModelConfig.getString("label_supplier"));
 		supplierLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		supplierCodeLabel.setText(LangModelConfig.String("label_supCode"));
+		supplierCodeLabel.setText(LangModelConfig.getString("label_supCode"));
 		supplierCodeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		start_equipmentLabel.setText(LangModelConfig.String("link_start_equipment_id"));
+		start_equipmentLabel.setText(LangModelConfig.getString("link_start_equipment_id"));
 		start_equipmentLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		start_equipmentPortLabel1.setText(LangModelConfig.String("label_port"));
+		start_equipmentPortLabel1.setText(LangModelConfig.getString("label_port"));
 		start_equipmentPortLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		start_equipmentPortLabel2.setText(LangModelConfig.String("link_start_equipment_id1"));
+		start_equipmentPortLabel2.setText(LangModelConfig.getString("link_start_equipment_id1"));
 		start_equipmentPortLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		end_equipmentLabel.setText(LangModelConfig.String("link_end_equipment_id"));
+		end_equipmentLabel.setText(LangModelConfig.getString("link_end_equipment_id"));
 		end_equipmentLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		end_equipmentPortLabel1.setText(LangModelConfig.String("label_port"));
+		end_equipmentPortLabel1.setText(LangModelConfig.getString("label_port"));
 		end_equipmentPortLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		end_equipmentPortLabel2.setText(LangModelConfig.String("link_end_equipment_id1"));
+		end_equipmentPortLabel2.setText(LangModelConfig.getString("link_end_equipment_id1"));
 		end_equipmentPortLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		modifyLabel1.setText(LangModelConfig.String("label_modified1"));
+		modifyLabel1.setText(LangModelConfig.getString("label_modified1"));
 		modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		modifyLabel2.setText(LangModelConfig.String("label_modified2"));
+		modifyLabel2.setText(LangModelConfig.getString("label_modified2"));
 		modifyLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 		modifyField.setEnabled(false);
 
-		descLabel.setText(LangModelConfig.String("label_description"));
+		descLabel.setText(LangModelConfig.getString("label_description"));
 		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		idLabel.setText(LangModelConfig.String("label_id"));
+		idLabel.setText(LangModelConfig.getString("label_id"));
 		idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 		idField.setEnabled(false);
-		optLabel.setText(LangModelConfig.String("link_optical_length"));
+		optLabel.setText(LangModelConfig.getString("link_optical_length"));
 		optLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		physLabel.setText(LangModelConfig.String("link_physical_length"));
+		physLabel.setText(LangModelConfig.getString("link_physical_length"));
 		physLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		typeBox.setEnabled(false);
 		startEquipmentBox.setEnabled(false);
@@ -343,7 +343,7 @@ public class CableLinkGeneralPanel extends GeneralPanel
 			}
 
 			if(MyUtil.validName(nameField.getText()))
-			   cl.name = nameField.getText();
+				cl.name = nameField.getText();
 			else
 				return false;
 

@@ -85,237 +85,237 @@ public class KISGeneralPanel extends GeneralPanel
 
   public KISGeneralPanel()
   {
-    super();
-    try
-    {
-      jbInit();
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
+	 super();
+	 try
+	 {
+		jbInit();
+	 }
+	 catch (Exception e)
+	 {
+		e.printStackTrace();
+	 }
   }
 
   public KISGeneralPanel(KIS equipment)
   {
-    this();
-    setObjectResource(equipment);
+	 this();
+	 setObjectResource(equipment);
   }
 
   private void jbInit() throws Exception
   {
-    setName(LangModelConfig.String("menuNetCatEquipmentText"));
+	 setName(LangModelConfig.getString("menuNetCatEquipmentText"));
 
-    this.setLayout(gridBagLayout1);
+	 this.setLayout(gridBagLayout1);
 
-    saveButton.setText(LangModelConfig.String("menuMapSaveText"));
-    saveButton.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        saveButton_actionPerformed(e);
-      }
-    });
-    latitudeLabel.setText(LangModelConfig.String("equip_latitude"));
-    latitudeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+	 saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
+	 saveButton.addActionListener(new java.awt.event.ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		  saveButton_actionPerformed(e);
+		}
+	 });
+	 latitudeLabel.setText(LangModelConfig.getString("equip_latitude"));
+	 latitudeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-    longitudeLabel.setText(LangModelConfig.String("equip_longitude"));
-    longitudeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+	 longitudeLabel.setText(LangModelConfig.getString("equip_longitude"));
+	 longitudeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-    nameLabel.setText(LangModelConfig.String("label_name"));
-    nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+	 nameLabel.setText(LangModelConfig.getString("label_name"));
+	 nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-    portsNumberLabel.setText(LangModelConfig.String("equip_portsNumber"));
-    portsNumberLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-    portsNumberField.setEnabled(false);
+	 portsNumberLabel.setText(LangModelConfig.getString("equip_portsNumber"));
+	 portsNumberLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+	 portsNumberField.setEnabled(false);
 
-    domainLabel.setText(LangModelConfig.String("equip_domen"));
-    domainLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-    domainBox.setEnabled(false);
+	 domainLabel.setText(LangModelConfig.getString("equip_domen"));
+	 domainLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+	 domainBox.setEnabled(false);
 
-    modifyLabel1.setText(LangModelConfig.String("label_modified1"));
-    modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-    modifyLabel2.setText(LangModelConfig.String("label_modified2"));
-    modifyLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-    modifyField.setEnabled(false);
+	 modifyLabel1.setText(LangModelConfig.getString("label_modified1"));
+	 modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
+	 modifyLabel2.setText(LangModelConfig.getString("label_modified2"));
+	 modifyLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
+	 modifyField.setEnabled(false);
 
-    typeLabel.setText(LangModelConfig.String("label_type"));
-    typeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-    typeBox.setEnabled(false);
+	 typeLabel.setText(LangModelConfig.getString("label_type"));
+	 typeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+	 typeBox.setEnabled(false);
 
-    idLabel.setText(LangModelConfig.String("label_id"));
-    idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-    idField.setEnabled(false);
+	 idLabel.setText(LangModelConfig.getString("label_id"));
+	 idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+	 idField.setEnabled(false);
 
-    cabelPortsNumberLabel1.setText(LangModelConfig.String("equip_cablePortsNumber1"));
-    cabelPortsNumberLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-    cabelPortsNumberLabel2.setText(LangModelConfig.String("equip_cablePortsNumber2"));
-    cabelPortsNumberLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-    cabelPortsNumberField.setEnabled(false);
+	 cabelPortsNumberLabel1.setText(LangModelConfig.getString("equip_cablePortsNumber1"));
+	 cabelPortsNumberLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
+	 cabelPortsNumberLabel2.setText(LangModelConfig.getString("equip_cablePortsNumber2"));
+	 cabelPortsNumberLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
+	 cabelPortsNumberField.setEnabled(false);
 
-    agentLabel.setText(LangModelConfig.String("equip_agent"));
-    agentLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+	 agentLabel.setText(LangModelConfig.getString("equip_agent"));
+	 agentLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-    descLabel.setText(LangModelConfig.String("label_description"));
-    descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+	 descLabel.setText(LangModelConfig.getString("label_description"));
+	 descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-    descriptionPanel.setLayout(borderLayout1);
-    descriptionScrollPane.getViewport().add(descTextArea, null);
-    descriptionPanel.add(descriptionScrollPane, BorderLayout.CENTER);
+	 descriptionPanel.setLayout(borderLayout1);
+	 descriptionScrollPane.getViewport().add(descTextArea, null);
+	 descriptionPanel.add(descriptionScrollPane, BorderLayout.CENTER);
 
-    this.add(nameLabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(typeLabel, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(longitudeLabel, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(latitudeLabel, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(domainLabel, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(modifyLabel1,      new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 2, 0), 0, 0));
-    this.add(modifyLabel2,           new GridBagConstraints(0, 7, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 2, 0), 0, 0));
-    this.add(portsNumberLabel, new GridBagConstraints(0, 8, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(cabelPortsNumberLabel1,      new GridBagConstraints(0, 9, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 2, 0), 0, 0));
-    this.add(cabelPortsNumberLabel2,           new GridBagConstraints(0, 10, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 2, 0), 0, 0));
-    this.add(agentLabel, new GridBagConstraints(0, 11, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(descLabel,  new GridBagConstraints(0, 12, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-
-	if(Environment.isDebugMode())
-	    this.add(idLabel, new GridBagConstraints(0, 13, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-
-    this.add(nameField, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(typeBox, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(longitudeField, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(latitudeField, new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(domainBox, new GridBagConstraints(1, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(modifyField,       new GridBagConstraints(1, 6, 1, 2, 0.0, 0.0
-            ,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(portsNumberField, new GridBagConstraints(1, 8, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(cabelPortsNumberField, new GridBagConstraints(1, 9, 1, 2, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(agentField, new GridBagConstraints(1, 11, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(descriptionPanel,  new GridBagConstraints(1, 12, 1, 1, 1.0, 1.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(nameLabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(typeLabel, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(longitudeLabel, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(latitudeLabel, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(domainLabel, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(modifyLabel1,      new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 2, 0), 0, 0));
+	 this.add(modifyLabel2,           new GridBagConstraints(0, 7, 1, 1, 0.0, 0.0
+				,GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 2, 0), 0, 0));
+	 this.add(portsNumberLabel, new GridBagConstraints(0, 8, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(cabelPortsNumberLabel1,      new GridBagConstraints(0, 9, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 2, 0), 0, 0));
+	 this.add(cabelPortsNumberLabel2,           new GridBagConstraints(0, 10, 1, 1, 0.0, 0.0
+				,GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 2, 0), 0, 0));
+	 this.add(agentLabel, new GridBagConstraints(0, 11, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(descLabel,  new GridBagConstraints(0, 12, 1, 1, 0.0, 0.0
+				,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
 	if(Environment.isDebugMode())
-	    this.add(idField, new GridBagConstraints(1, 13, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		 this.add(idLabel, new GridBagConstraints(0, 13, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+
+	 this.add(nameField, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(typeBox, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(longitudeField, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(latitudeField, new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(domainBox, new GridBagConstraints(1, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(modifyField,       new GridBagConstraints(1, 6, 1, 2, 0.0, 0.0
+				,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(portsNumberField, new GridBagConstraints(1, 8, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(cabelPortsNumberField, new GridBagConstraints(1, 9, 1, 2, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(agentField, new GridBagConstraints(1, 11, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(descriptionPanel,  new GridBagConstraints(1, 12, 1, 1, 1.0, 1.0
+				,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+
+	if(Environment.isDebugMode())
+		 this.add(idField, new GridBagConstraints(1, 13, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 
 //		this.add(saveButton, new XYConstraints(200, 380, -1, -1));
   }
 
   public ObjectResource getObjectResource()
   {
-    return equipment;
+	 return equipment;
   }
 
   public boolean setObjectResource(ObjectResource or)
   {
-    this.equipment = (KIS )or;
+	 this.equipment = (KIS )or;
 
-    if(equipment != null)
-    {
-      idField.setText(equipment.getId());
-      nameField.setText(equipment.getName());
-      this.descTextArea.setText(equipment.description);
-      typeBox.setSelected(equipment.type_id);
+	 if(equipment != null)
+	 {
+		idField.setText(equipment.getId());
+		nameField.setText(equipment.getName());
+		this.descTextArea.setText(equipment.description);
+		typeBox.setSelected(equipment.type_id);
 
-      double d1 = 0.0;
-      try { d1 = Double.parseDouble(equipment.longitude); } catch(Exception ex) { }
-      d1 = MyUtil.fourdigits(d1);
-      this.longitudeField.setText(String.valueOf(d1));
-      double d2 = 0.0;
-      try { d2 = Double.parseDouble(equipment.latitude); } catch(Exception ex) { }
-      d2 = MyUtil.fourdigits(d1);
-      this.latitudeField.setText(String.valueOf(d2));
+		double d1 = 0.0;
+		try { d1 = Double.parseDouble(equipment.longitude); } catch(Exception ex) { }
+		d1 = MyUtil.fourdigits(d1);
+		this.longitudeField.setText(String.valueOf(d1));
+		double d2 = 0.0;
+		try { d2 = Double.parseDouble(equipment.latitude); } catch(Exception ex) { }
+		d2 = MyUtil.fourdigits(d1);
+		this.latitudeField.setText(String.valueOf(d2));
 
 //			this.longitudeField.setText(equipment.longitude);
 //			this.latitudeField.setText(equipment.latitude);
 
-      if(equipment instanceof KIS)
-      {
-        this.agentField.setEnabled(true);
-        this.agentField.setText(equipment.agent_id);
-      }
-      else
-      if(equipment instanceof Equipment)
-      {
-        this.agentField.setEnabled(false);
-        this.agentField.setText("");
-      }
-      this.domainBox.setSelected("sysdomain");//equipment.domain_id);
-      this.modifyField.setText(sdf.format(new Date(equipment.modified)));
-      this.portsNumberField.setText(Long.toString(equipment.ports.size()));
-      this.cabelPortsNumberField.setText(Long.toString(equipment.cports.size()));
-    }
-    else
-    {
-      idField.setText("");
-      nameField.setText("");
-      this.descTextArea.setText("");
-      typeBox.setSelected("");
-      this.longitudeField.setText("");
-      this.latitudeField.setText("");
-      this.agentField.setText("");
-      this.domainBox.setSelected("");
-      this.modifyField.setText("");
-      this.portsNumberField.setText("");
-      this.cabelPortsNumberField.setText("");
-   }
-    return true;
+		if(equipment instanceof KIS)
+		{
+		  this.agentField.setEnabled(true);
+		  this.agentField.setText(equipment.agent_id);
+		}
+		else
+		if(equipment instanceof Equipment)
+		{
+		  this.agentField.setEnabled(false);
+		  this.agentField.setText("");
+		}
+		this.domainBox.setSelected("sysdomain");//equipment.domain_id);
+		this.modifyField.setText(sdf.format(new Date(equipment.modified)));
+		this.portsNumberField.setText(Long.toString(equipment.ports.size()));
+		this.cabelPortsNumberField.setText(Long.toString(equipment.cports.size()));
+	 }
+	 else
+	 {
+		idField.setText("");
+		nameField.setText("");
+		this.descTextArea.setText("");
+		typeBox.setSelected("");
+		this.longitudeField.setText("");
+		this.latitudeField.setText("");
+		this.agentField.setText("");
+		this.domainBox.setSelected("");
+		this.modifyField.setText("");
+		this.portsNumberField.setText("");
+		this.cabelPortsNumberField.setText("");
+	}
+	 return true;
 
   }
 
   public boolean modify()
   {
-    try
-    {
-      try
-      {
-        double d1 = Double.parseDouble(this.longitudeField.getText());
-        d1 = MyUtil.fourdigits(d1);
-        double d2 = Double.parseDouble(this.latitudeField.getText());
-        d2 = MyUtil.fourdigits(d2);
-        equipment.longitude = String.valueOf(d1);
-        equipment.latitude = String.valueOf(d2);
-      }
-      catch (Exception ex)
-      {
-        System.out.println("Unknown coordinates' format!");
-        return false;
-      }
+	 try
+	 {
+		try
+		{
+		  double d1 = Double.parseDouble(this.longitudeField.getText());
+		  d1 = MyUtil.fourdigits(d1);
+		  double d2 = Double.parseDouble(this.latitudeField.getText());
+		  d2 = MyUtil.fourdigits(d2);
+		  equipment.longitude = String.valueOf(d1);
+		  equipment.latitude = String.valueOf(d2);
+		}
+		catch (Exception ex)
+		{
+		  System.out.println("Unknown coordinates' format!");
+		  return false;
+		}
 
-      if(MyUtil.validName(nameField.getText()))
-         equipment.name = nameField.getText();
-      else
-        return false;
+		if(MyUtil.validName(nameField.getText()))
+			equipment.name = nameField.getText();
+		else
+		  return false;
 
-      equipment.id = idField.getText();
+		equipment.id = idField.getText();
 //			equipment.name = nameField.getText();
-      equipment.description = this.descTextArea.getText();
-      equipment.type_id = (String )typeBox.getSelected();
+		equipment.description = this.descTextArea.getText();
+		equipment.type_id = (String )typeBox.getSelected();
 //			equipment.longitude = this.longitudeField.getText();
 //			equipment.latitude = this.latitudeField.getText();
-      equipment.agent_id = this.agentField.getText();
-      equipment.domain_id = (String )this.domainBox.getSelected();
-    }
-    catch(Exception ex)
-    {
-      return false;
-    }
-    return true;
+		equipment.agent_id = this.agentField.getText();
+		equipment.domain_id = (String )this.domainBox.getSelected();
+	 }
+	 catch(Exception ex)
+	 {
+		return false;
+	 }
+	 return true;
   }
 
   void saveButton_actionPerformed(ActionEvent e)
   {
-    if(!Checker.checkCommandByUserId(
-        aContext.getSessionInterface().getUserId(),
-        Checker.catalogCMediting))
-    {
-      return;
-    }
+	 if(!Checker.checkCommandByUserId(
+		  aContext.getSessionInterface().getUserId(),
+		  Checker.catalogCMediting))
+	 {
+		return;
+	 }
 
-    if(modify())
-    {
-      DataSourceInterface dataSource = aContext.getDataSourceInterface();
-      dataSource.SaveKIS(equipment.getId());
-    }
+	 if(modify())
+	 {
+		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		dataSource.SaveKIS(equipment.getId());
+	 }
   }
 }

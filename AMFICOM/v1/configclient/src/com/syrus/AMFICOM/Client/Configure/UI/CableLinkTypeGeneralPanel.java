@@ -84,27 +84,27 @@ public class CableLinkTypeGeneralPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModelConfig.String("label_general"));
+		setName(LangModelConfig.getString("label_general"));
 
-		idLabel.setText(LangModelConfig.String("label_id"));
+		idLabel.setText(LangModelConfig.getString("label_id"));
 		idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		nameLabel.setText(LangModelConfig.String("label_name"));
+		nameLabel.setText(LangModelConfig.getString("label_name"));
 		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 
-		descLabel.setText(LangModelConfig.String("label_description"));
+		descLabel.setText(LangModelConfig.getString("label_description"));
 		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		manufacturerCodeLabel.setText(LangModelConfig.String("label_manCode"));
+		manufacturerCodeLabel.setText(LangModelConfig.getString("label_manCode"));
 		manufacturerCodeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		manufacturerLabel.setText(LangModelConfig.String("label_manufacter"));
+		manufacturerLabel.setText(LangModelConfig.getString("label_manufacter"));
 		manufacturerLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		ModifyField.setEnabled(false);
-		modifyLabel1.setText(LangModelConfig.String("label_modified1"));
+		modifyLabel1.setText(LangModelConfig.getString("label_modified1"));
 		modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		modifyLabel2.setText(LangModelConfig.String("label_modified2"));
+		modifyLabel2.setText(LangModelConfig.getString("label_modified2"));
 		modifyLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 		idField.setEnabled(false);
-		saveButton.setText(LangModelConfig.String("menuMapSaveText"));
+		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveButton_actionPerformed(e);

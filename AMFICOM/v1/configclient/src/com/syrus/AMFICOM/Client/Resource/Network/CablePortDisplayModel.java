@@ -41,13 +41,13 @@ public class CablePortDisplayModel extends StubDisplayModel
 	public String getColumnName(String col_id)
 	{
 		if(col_id.equals("id"))
-			return LangModelConfig.String("label_id");
+			return LangModelConfig.getString("label_id");
 		if(col_id.equals("name"))
-			return LangModelConfig.String("label_name");
+			return LangModelConfig.getString("label_name");
 		if(col_id.equals("type_id"))
-			return LangModelConfig.String("label_type");
+			return LangModelConfig.getString("label_type");
 		if(col_id.equals("equipment_id"))
-			return LangModelConfig.String("menuNetCatEquipmentText");
+			return LangModelConfig.getString("menuNetCatEquipmentText");
 		return "";
 	}
 

@@ -57,7 +57,7 @@ public class AccessPortTypePane extends PropertiesPanel
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
 
-		saveButton.setText(LangModelConfig.String("menuMapSaveText"));
+		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveButton_actionPerformed(e);

@@ -57,7 +57,7 @@ public class LinkTypePane extends PropertiesPanel
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
 
-		saveButton.setText(LangModelConfig.String("menuMapSaveText"));
+		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveButton_actionPerformed(e);
@@ -113,7 +113,7 @@ public class LinkTypePane extends PropertiesPanel
 		}
 		else
 		{
-			new MessageBox(LangModelConfig.String("err_incorrect_data_input")).show();
+			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
 		}
 		return false;
 	}

@@ -35,7 +35,7 @@ public class CableLinkCharacteristicsPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModelConfig.String("label_chars"));
+		setName(LangModelConfig.getString("label_chars"));
 
 		this.setLayout(new BorderLayout());
 		this.add(charPane, BorderLayout.CENTER);

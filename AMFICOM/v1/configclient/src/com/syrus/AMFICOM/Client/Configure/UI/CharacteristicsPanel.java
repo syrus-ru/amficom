@@ -170,35 +170,35 @@ public class CharacteristicsPanel extends JPanel
 			elementSelected(char_hash);
 			showNoSelection();
 			return;
-    }
+	 }
 
-    if (type.equals(Equipment.typ))
-      char_hash = ((Equipment)res).characteristics;
-    else if (type.equals(KIS.typ))
-      char_hash = ((KIS)res).characteristics;
-    else if (type.equals(Port.typ))
-      char_hash = ((Port)res).characteristics;
-    else if (type.equals(CablePort.typ))
-      char_hash = ((CablePort)res).characteristics;
-    else if (type.equals(AccessPort.typ))
-      char_hash = ((AccessPort)res).characteristics;
-    else if (type.equals(Link.typ))
-      char_hash = ((Link)res).characteristics;
-    else if (type.equals(CableLink.typ))
-      char_hash = ((CableLink)res).characteristics;
+	 if (type.equals(Equipment.typ))
+		char_hash = ((Equipment)res).characteristics;
+	 else if (type.equals(KIS.typ))
+		char_hash = ((KIS)res).characteristics;
+	 else if (type.equals(Port.typ))
+		char_hash = ((Port)res).characteristics;
+	 else if (type.equals(CablePort.typ))
+		char_hash = ((CablePort)res).characteristics;
+	 else if (type.equals(AccessPort.typ))
+		char_hash = ((AccessPort)res).characteristics;
+	 else if (type.equals(Link.typ))
+		char_hash = ((Link)res).characteristics;
+	 else if (type.equals(CableLink.typ))
+		char_hash = ((CableLink)res).characteristics;
 
-    else if (type.equals(EquipmentType.typ))
-      char_hash = ((EquipmentType)res).characteristics;
-    else if (type.equals(PortType.typ))
-      char_hash = ((PortType)res).characteristics;
-    else if (type.equals(CablePortType.typ))
-      char_hash = ((CablePortType)res).characteristics;
-    else if (type.equals(AccessPortType.typ))
-      char_hash = ((AccessPortType)res).characteristics;
-    else if (type.equals(LinkType.typ))
-      char_hash = ((LinkType)res).characteristics;
-    else if (type.equals(CableLinkType.typ))
-      char_hash = ((CableLinkType)res).characteristics;
+	 else if (type.equals(EquipmentType.typ))
+		char_hash = ((EquipmentType)res).characteristics;
+	 else if (type.equals(PortType.typ))
+		char_hash = ((PortType)res).characteristics;
+	 else if (type.equals(CablePortType.typ))
+		char_hash = ((CablePortType)res).characteristics;
+	 else if (type.equals(AccessPortType.typ))
+		char_hash = ((AccessPortType)res).characteristics;
+	 else if (type.equals(LinkType.typ))
+		char_hash = ((LinkType)res).characteristics;
+	 else if (type.equals(CableLinkType.typ))
+		char_hash = ((CableLinkType)res).characteristics;
 
 		else
 		{
@@ -396,7 +396,7 @@ public class CharacteristicsPanel extends JPanel
 
 		private void jbInit() throws Exception
 		{
-			addButton.setToolTipText(LangModelConfig.String("label_add_char"));
+			addButton.setToolTipText(LangModelConfig.getString("label_add_char"));
 			addButton.setPreferredSize(btn_size);
 			addButton.setMaximumSize(btn_size);
 			//addButton.setFocusable(false);
@@ -412,7 +412,7 @@ public class CharacteristicsPanel extends JPanel
 				}
 			});
 
-			deleteButton.setToolTipText(LangModelConfig.String("label_delete_char"));
+			deleteButton.setToolTipText(LangModelConfig.getString("label_delete_char"));
 			deleteButton.setPreferredSize(btn_size);
 			deleteButton.setMaximumSize(btn_size);
 			//deleteButton.setFocusable(false);
@@ -494,7 +494,7 @@ class PropsTreeModel extends ObjectResourceTreeModel
 
 	public ObjectResourceTreeNode getRoot()
 	{
-		return new ObjectResourceTreeNode ("root", LangModelConfig.String("label_comp_chars"), true,
+		return new ObjectResourceTreeNode ("root", LangModelConfig.getString("label_comp_chars"), true,
 																			 new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
 	}
 
@@ -537,10 +537,10 @@ class PropsTreeModel extends ObjectResourceTreeModel
 
 			if(s.equals("root"))
 			{
-				vec.add(new ObjectResourceTreeNode("optical", LangModelConfig.String("label_opt_chars"), true, true));
-				vec.add(new ObjectResourceTreeNode("electrical", LangModelConfig.String("label_el_chars"), true, true));
-				vec.add(new ObjectResourceTreeNode("operational", LangModelConfig.String("label_exp_chars"), true, true));
-				vec.add(new ObjectResourceTreeNode("interface", LangModelConfig.String("label_interface_chars"), true, true));
+				vec.add(new ObjectResourceTreeNode("optical", LangModelConfig.getString("label_opt_chars"), true, true));
+				vec.add(new ObjectResourceTreeNode("electrical", LangModelConfig.getString("label_el_chars"), true, true));
+				vec.add(new ObjectResourceTreeNode("operational", LangModelConfig.getString("label_exp_chars"), true, true));
+				vec.add(new ObjectResourceTreeNode("interface", LangModelConfig.getString("label_interface_chars"), true, true));
 //				vec.add(new ObjectResourceTreeNode("attribute", "Атрибуты отображения", true, true));
 			}
 		}

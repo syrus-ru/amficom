@@ -98,7 +98,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 				if (obj.eq_class.equals(""))
 					visualType = "";
 				else
-					visualType = LangModelConfig.String(obj.eq_class);
+					visualType = LangModelConfig.getString(obj.eq_class);
 
 				mark = ((EquipmentType)Pool.get(EquipmentType.typ,obj.type_id)).name;
 				properties = obj.characteristics;
@@ -110,7 +110,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 			if (obj != null)
 			{
 				name = obj.name;
-				visualType = LangModelConfig.String("label_link");
+				visualType = LangModelConfig.getString("label_link");
 				mark = ((LinkType)Pool.get(LinkType.typ,obj.type_id)).name;
 				properties = obj.characteristics;
 			}
@@ -121,7 +121,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 			if (obj != null)
 			{
 				name = obj.name;
-				visualType = LangModelConfig.String("label_cablelink");
+				visualType = LangModelConfig.getString("label_cablelink");
 				mark = ((CableLinkType)Pool.get(CableLinkType.typ,obj.type_id)).name;
 				properties = obj.characteristics;
 			}
@@ -132,7 +132,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 			if (obj != null)
 			{
 				name = obj.name;
-				visualType = LangModelConfig.String("label_link");
+				visualType = LangModelConfig.getString("label_link");
 				properties = obj.characteristics;
 			}
 		}
@@ -142,7 +142,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 			if (obj != null)
 			{
 				name = obj.name;
-				visualType = LangModelConfig.String("label_cablelink");
+				visualType = LangModelConfig.getString("label_cablelink");
 				properties = obj.characteristics;
 			}
 		}
@@ -152,7 +152,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 			if (obj != null)
 			{
 				name = obj.name;
-				visualType = LangModelConfig.String(obj.eq_class);
+				visualType = LangModelConfig.getString(obj.eq_class);
 				properties = obj.characteristics;
 			}
 		}
@@ -162,7 +162,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 			if (obj != null)
 			{
 				name = obj.name;
-				visualType = LangModelConfig.String(obj.eq_class);
+				visualType = LangModelConfig.getString(obj.eq_class);
 				properties = obj.characteristics;
 			}
 		}
@@ -174,35 +174,35 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 
 		if (!mark.equals(""))
 		{
-			firstColumn.add(LangModelReport.String("label_equipName"));
+			firstColumn.add(LangModelReport.getString("label_equipName"));
 			secondColumn.add(name);
 
-			firstColumn.add(LangModelReport.String("label_equipClass"));
+			firstColumn.add(LangModelReport.getString("label_equipClass"));
 			secondColumn.add(visualType);
 
-			firstColumn.add(LangModelReport.String("label_equipMark"));
+			firstColumn.add(LangModelReport.getString("label_equipMark"));
 			secondColumn.add(mark);
 
 			firstColumn.add("");
 			secondColumn.add("");
 
-			firstColumn.add(LangModelReport.String("label_equipChars"));
+			firstColumn.add(LangModelReport.getString("label_equipChars"));
 			secondColumn.add("");
 
 			length += 4;
 		}
 		else
 		{
-			firstColumn.add(LangModelReport.String("label_equipClass"));
+			firstColumn.add(LangModelReport.getString("label_equipClass"));
 			secondColumn.add(visualType);
 
-			firstColumn.add(LangModelReport.String("label_equipMark"));
+			firstColumn.add(LangModelReport.getString("label_equipMark"));
 			secondColumn.add(name);
 
 			firstColumn.add("");
 			secondColumn.add("");
 
-			firstColumn.add(LangModelReport.String("label_equipChars"));
+			firstColumn.add(LangModelReport.getString("label_equipChars"));
 			secondColumn.add("");
 
 			length += 3;

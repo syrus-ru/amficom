@@ -16,49 +16,49 @@ public class CableLinkTypeCharacteristicsPanel extends GeneralPanel
 
   public CableLinkTypeCharacteristicsPanel()
   {
-    super();
-    try
-    {
-      jbInit();
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
+	 super();
+	 try
+	 {
+		jbInit();
+	 }
+	 catch (Exception e)
+	 {
+		e.printStackTrace();
+	 }
   }
 
   public CableLinkTypeCharacteristicsPanel(CableLinkType l)
   {
-    this();
-    setObjectResource(l);
+	 this();
+	 setObjectResource(l);
   }
 
   private void jbInit() throws Exception
   {
-    setName(LangModelConfig.String("label_chars"));
+	 setName(LangModelConfig.getString("label_chars"));
 
-    this.setLayout(new BorderLayout());
-    this.add(charPane, BorderLayout.CENTER);
+	 this.setLayout(new BorderLayout());
+	 this.add(charPane, BorderLayout.CENTER);
   }
 
   public ObjectResource getObjectResource()
   {
-    return link;
+	 return link;
   }
 
   public boolean setObjectResource(ObjectResource or)
   {
-    this.link = (CableLinkType)or;
+	 this.link = (CableLinkType)or;
 
-    if(link == null)
-      return true;
+	 if(link == null)
+		return true;
 
-    charPane.setCharHash(link);
-    return true;
+	 charPane.setCharHash(link);
+	 return true;
   }
 
   public boolean modify()
   {
-    return true;
+	 return true;
   }
 }

@@ -81,28 +81,28 @@ public class CablePortGeneralPanel extends GeneralPanel
 	{
 		this.setLayout(gridBagLayout1);
 
-		descLabel.setText(LangModelConfig.String("label_description"));
+		descLabel.setText(LangModelConfig.getString("label_description"));
 		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		idLabel.setText(LangModelConfig.String("label_id"));
+		idLabel.setText(LangModelConfig.getString("label_id"));
 		idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		idField.setEnabled(false);
 
-		nameLabel.setText(LangModelConfig.String("label_name"));
+		nameLabel.setText(LangModelConfig.getString("label_name"));
 		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		typeLabel.setText(LangModelConfig.String("label_type"));
+		typeLabel.setText(LangModelConfig.getString("label_type"));
 		typeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		typeBox.setEnabled(false);
 
-		equipLabel.setText(LangModelConfig.String("menuNetCatEquipmentText"));
+		equipLabel.setText(LangModelConfig.getString("menuNetCatEquipmentText"));
 		equipLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		equipBox.setEnabled(false);
 
 		modifyField.setEnabled(false);
-		modifyLabel1.setText(LangModelConfig.String("label_modified1"));
+		modifyLabel1.setText(LangModelConfig.getString("label_modified1"));
 		modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		modifyLabel2.setText(LangModelConfig.String("label_modified2"));
+		modifyLabel2.setText(LangModelConfig.getString("label_modified2"));
 		modifyLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 
 		descriptionScrollPane.getViewport().add(descTextArea, null);
@@ -168,7 +168,7 @@ public class CablePortGeneralPanel extends GeneralPanel
 		try
 		{
 			if(MyUtil.validName(nameField.getText()))
-			   cp.name = nameField.getText();
+				cp.name = nameField.getText();
 			else
 				return false;
 			cp.type_id = (String )typeBox.getSelected();

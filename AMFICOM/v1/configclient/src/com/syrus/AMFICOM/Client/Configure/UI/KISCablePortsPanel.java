@@ -78,14 +78,14 @@ public class KISCablePortsPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModelConfig.String("label_cableports"));
+		setName(LangModelConfig.getString("label_cableports"));
 		this.setLayout(borderLayout3);
 
 //		this.setPreferredSize(new Dimension(510, 410));
 //		this.setMaximumSize(new Dimension(510, 410));
 //		this.setMinimumSize(new Dimension(510, 410));
 
-		idLabel.setText(LangModelConfig.String("label_port"));
+		idLabel.setText(LangModelConfig.getString("label_port"));
 		idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 		cportBox.addActionListener(new java.awt.event.ActionListener() {
@@ -108,7 +108,7 @@ public class KISCablePortsPanel extends GeneralPanel
 		apgp.setEnabled(false);
 		apgp.setBorder(BorderFactory.createLoweredBevelBorder());
 		apgp.setBorder(BorderFactory.createLoweredBevelBorder());
-		jLabel1.setText(LangModelConfig.String("label_evalport"));
+		jLabel1.setText(LangModelConfig.getString("label_evalport"));
 		bottomPanel.add(mainPanel1, BorderLayout.NORTH);
 		bottomPanel.add(apgp, BorderLayout.CENTER);
 		mainPanel1.add(controlsPanel1, null);

@@ -65,7 +65,7 @@ public class CableLinkPane extends PropertiesPanel
 		tabbedPane.add(fPanel.getName(), fPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
 
-		saveButton.setText(LangModelConfig.String("menuMapSaveText"));
+		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveButton_actionPerformed(e);
@@ -100,7 +100,7 @@ public class CableLinkPane extends PropertiesPanel
 
 	public boolean modify()
 	{
-    if (gPanel.modify() &&
+	 if (gPanel.modify() &&
 				fPanel.modify() &&
 				chPanel.modify())
 			return true;
@@ -124,7 +124,7 @@ public class CableLinkPane extends PropertiesPanel
 		}
 		else
 		{
-			new MessageBox(LangModelConfig.String("err_incorrect_data_input")).show();
+			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
 		}
 		return false;
 	}

@@ -60,7 +60,7 @@ public class EquipmentPortsPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModelConfig.String("label_ports"));
+		setName(LangModelConfig.getString("label_ports"));
 
 		this.setLayout(borderLayout2);
 
@@ -73,7 +73,7 @@ public class EquipmentPortsPanel extends GeneralPanel
 		controlsPanel.setLayout(verticalFlowLayout2);
 		labelsPanel.setLayout(verticalFlowLayout1);
 		labelsPanel.setMinimumSize(new Dimension(145, 125));
-		idLabel.setText(LangModelConfig.String("label_port"));
+		idLabel.setText(LangModelConfig.getString("label_port"));
 		idLabel.setPreferredSize(new Dimension(140, DEF_HEIGHT));
 		mainPanel.add(controlsPanel, BorderLayout.CENTER);
 		mainPanel.add(labelsPanel, BorderLayout.WEST);

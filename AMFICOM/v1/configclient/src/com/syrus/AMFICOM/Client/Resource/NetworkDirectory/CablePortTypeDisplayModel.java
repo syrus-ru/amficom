@@ -19,54 +19,54 @@ public class CablePortTypeDisplayModel extends StubDisplayModel
 
   public CablePortTypeDisplayModel()
   {
-    this(new ApplicationContext());
+	 this(new ApplicationContext());
   }
 
   public CablePortTypeDisplayModel(ApplicationContext aContext)
   {
-    super();
-    this.aContext = aContext;
+	 super();
+	 this.aContext = aContext;
   }
 
   public Vector getColumns()
   {
-    Vector cols = new Vector();
+	 Vector cols = new Vector();
 //		cols.add("id");
-    cols.add("name");
-    return cols;
+	 cols.add("name");
+	 return cols;
   }
 
   public String getColumnName(String col_id)
   {
-    if(col_id.equals("id"))
-      return LangModelConfig.String("label_id");
-    if(col_id.equals("name"))
-      return LangModelConfig.String("label_name");
-    return "";
+	 if(col_id.equals("id"))
+		return LangModelConfig.getString("label_id");
+	 if(col_id.equals("name"))
+		return LangModelConfig.getString("label_name");
+	 return "";
   }
 
   public int getColumnSize(String col_id)
   {
-    if(col_id.equals("id"))
-      return 100;
-    if(col_id.equals("name"))
-      return 100;
-    return 100;
+	 if(col_id.equals("id"))
+		return 100;
+	 if(col_id.equals("name"))
+		return 100;
+	 return 100;
   }
 
   public PropertyRenderer getColumnRenderer(ObjectResource or, String col_id)
   {
-    CablePortType cpT = (CablePortType)or;
-    if(col_id.equals("id"))
-      return new TextFieldEditor(cpT.getId());
-    if(col_id.equals("name"))
-      return new TextFieldEditor(cpT.getName());
-    return null;
+	 CablePortType cpT = (CablePortType)or;
+	 if(col_id.equals("id"))
+		return new TextFieldEditor(cpT.getId());
+	 if(col_id.equals("name"))
+		return new TextFieldEditor(cpT.getName());
+	 return null;
   }
 
   public PropertyEditor getColumnEditor(ObjectResource or, String col_id)
   {
-    return (PropertyEditor )getColumnRenderer(or, col_id);
+	 return (PropertyEditor )getColumnRenderer(or, col_id);
   }
 }
 

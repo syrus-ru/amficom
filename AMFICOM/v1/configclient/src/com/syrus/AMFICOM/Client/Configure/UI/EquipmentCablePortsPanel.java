@@ -74,14 +74,14 @@ public class EquipmentCablePortsPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModelConfig.String("label_cableports"));
+		setName(LangModelConfig.getString("label_cableports"));
 		this.setLayout(borderLayout2);
 
 		mainPanel.setLayout(borderLayout1);
 		controlsPanel.setLayout(verticalFlowLayout2);
 		labelsPanel.setLayout(verticalFlowLayout1);
 		labelsPanel.setMinimumSize(new Dimension(145, 125));
-		idLabel.setText(LangModelConfig.String("label_port"));
+		idLabel.setText(LangModelConfig.getString("label_port"));
 		idLabel.setPreferredSize(new Dimension(140, DEF_HEIGHT));
 		cportBox.addActionListener(new ActionListener()
 			{

@@ -41,16 +41,16 @@ public class LinkDisplayModel extends StubDisplayModel
 
 	public String getColumnName(String col_id)
 	{
-    if(col_id.equals("id"))
-			return LangModelConfig.String("label_id");
-    if(col_id.equals("name"))
-      return LangModelConfig.String("label_name");
-    if(col_id.equals("type_id"))
-      return LangModelConfig.String("label_type");
-    if(col_id.equals("start_equipment_id"))
-      return LangModelConfig.String("link_start_equipment_id");
-    if(col_id.equals("end_equipment_id"))
-      return LangModelConfig.String("link_end_equipment_id");
+	 if(col_id.equals("id"))
+			return LangModelConfig.getString("label_id");
+	 if(col_id.equals("name"))
+		return LangModelConfig.getString("label_name");
+	 if(col_id.equals("type_id"))
+		return LangModelConfig.getString("label_type");
+	 if(col_id.equals("start_equipment_id"))
+		return LangModelConfig.getString("link_start_equipment_id");
+	 if(col_id.equals("end_equipment_id"))
+		return LangModelConfig.getString("link_end_equipment_id");
 		return "";
 	}
 

@@ -82,33 +82,33 @@ public class CablePortTypeGeneralPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModelConfig.String("label_general"));
+		setName(LangModelConfig.getString("label_general"));
 
-		idLabel.setText(LangModelConfig.String("label_id"));
+		idLabel.setText(LangModelConfig.getString("label_id"));
 		idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		idField.setEnabled(false);
 
-		nameLabel.setText(LangModelConfig.String("label_name"));
+		nameLabel.setText(LangModelConfig.getString("label_name"));
 		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		descLabel.setText(LangModelConfig.String("label_description"));
+		descLabel.setText(LangModelConfig.getString("label_description"));
 		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		interfaceLabel.setText(LangModelConfig.String("port_interface_id"));
+		interfaceLabel.setText(LangModelConfig.getString("port_interface_id"));
 		interfaceLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 	 // interfaceField.setEnabled(false);
 
-		classLabel.setText(LangModelConfig.String("port_class"));
+		classLabel.setText(LangModelConfig.getString("port_class"));
 		classLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 	 // classField.setEnabled(false);
 
 		ModifyField.setEnabled(false);
-		modifyLabel1.setText(LangModelConfig.String("label_modified1"));
+		modifyLabel1.setText(LangModelConfig.getString("label_modified1"));
 		modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		modifyLabel2.setText(LangModelConfig.String("label_modified2"));
+		modifyLabel2.setText(LangModelConfig.getString("label_modified2"));
 		modifyLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 
-		saveButton.setText(LangModelConfig.String("menuMapSaveText"));
+		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveButton_actionPerformed(e);

@@ -23,7 +23,7 @@ public class EquipmentTypePane extends PropertiesPanel
 	EquipmentTypeGeneralPanel gPanel = new EquipmentTypeGeneralPanel();
 	EquipmentTypeCharacteristicsPanel chPanel = new EquipmentTypeCharacteristicsPanel();
 
-  	EquipmentType eq;
+	EquipmentType eq;
 
 	public JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -98,14 +98,14 @@ public class EquipmentTypePane extends PropertiesPanel
 		if(modify())
 		{
 			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-      String[] s = new String[1];
-      s[0] = eq.getId();
+		String[] s = new String[1];
+		s[0] = eq.getId();
 			dataSource.SaveEquipmentTypes(s);
 			return true;
 		}
 		else
 		{
-			new MessageBox(LangModelConfig.String("err_incorrect_data_input")).show();
+			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
 		}
 		return false;
 	}

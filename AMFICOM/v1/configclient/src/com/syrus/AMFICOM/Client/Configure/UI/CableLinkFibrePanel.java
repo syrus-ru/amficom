@@ -71,17 +71,17 @@ public class CableLinkFibrePanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModelConfig.String("label_fibers"));
+		setName(LangModelConfig.getString("label_fibers"));
 
 		this.setLayout(gridBagLayout2);
 
-		linksTypeLabel.setText(LangModelConfig.String("label_type"));
+		linksTypeLabel.setText(LangModelConfig.getString("label_type"));
 		linksTypeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		linksMarkLabel.setText(LangModelConfig.String("label_mark"));
+		linksMarkLabel.setText(LangModelConfig.getString("label_mark"));
 		linksMarkLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		linksNameLabel.setText(LangModelConfig.String("label_name"));
+		linksNameLabel.setText(LangModelConfig.getString("label_name"));
 		linksNameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		linksIdLabel.setText(LangModelConfig.String("label_id"));
+		linksIdLabel.setText(LangModelConfig.getString("label_id"));
 		linksIdLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		linksIdField.setEnabled(false);
 		listPanel.setLayout(borderLayout1);
@@ -104,35 +104,35 @@ public class CableLinkFibrePanel extends GeneralPanel
 		jScrollPane1.getViewport().add(LinksList, null);
 		listPanel.add(jScrollPane1, BorderLayout.CENTER);
 
-    linksPanel.setLayout(gridBagLayout1);
+	 linksPanel.setLayout(gridBagLayout1);
 
-    linksPanel.add(linksNameLabel,   new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    linksPanel.add(linksMarkLabel,   new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    linksPanel.add(linksTypeLabel,            new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-
-	if(Environment.isDebugMode())
-	    linksPanel.add(linksIdLabel,     new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
-            ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-
-    linksPanel.add(linksNameField,   new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    linksPanel.add(linksMarkField,    new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    linksPanel.add(linksTypeBox,   new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	 linksPanel.add(linksNameLabel,   new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+	 linksPanel.add(linksMarkLabel,   new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+	 linksPanel.add(linksTypeLabel,            new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+				,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
 	if(Environment.isDebugMode())
-	    linksPanel.add(linksIdField,   new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		 linksPanel.add(linksIdLabel,     new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0
+				,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+
+	 linksPanel.add(linksNameField,   new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	 linksPanel.add(linksMarkField,    new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	 linksPanel.add(linksTypeBox,   new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+
+	if(Environment.isDebugMode())
+		 linksPanel.add(linksIdField,   new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 
 
-    this.add(listPanel,   new GridBagConstraints(0, 0, 1, 1, 0.0, 1.0
-            ,GridBagConstraints.NORTHWEST, GridBagConstraints.VERTICAL, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(linksPanel,   new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
-            ,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(listPanel,   new GridBagConstraints(0, 0, 1, 1, 0.0, 1.0
+				,GridBagConstraints.NORTHWEST, GridBagConstraints.VERTICAL, new Insets(0, 0, 0, 0), 0, 0));
+	 this.add(linksPanel,   new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+				,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
   }
 
 	public ObjectResource getObjectResource()

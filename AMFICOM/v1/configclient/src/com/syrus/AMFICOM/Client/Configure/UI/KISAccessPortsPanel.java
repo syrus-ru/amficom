@@ -57,11 +57,11 @@ public class KISAccessPortsPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModelConfig.String("label_accessports"));
+		setName(LangModelConfig.getString("label_accessports"));
 
 		this.setLayout(borderLayout2);
 
-		idLabel.setText(LangModelConfig.String("label_accessport"));
+		idLabel.setText(LangModelConfig.getString("label_accessport"));
 		idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 		portBox.addActionListener(new java.awt.event.ActionListener() {

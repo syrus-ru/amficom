@@ -93,26 +93,26 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 	{
 		this.setLayout(gridBagLayout1);
 
-		equipLabel.setText(LangModelConfig.String("menuNetCatEquipmentText"));
+		equipLabel.setText(LangModelConfig.getString("menuNetCatEquipmentText"));
 		equipLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		idLabel.setText(LangModelConfig.String("label_id"));
+		idLabel.setText(LangModelConfig.getString("label_id"));
 		idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		nameLabel.setText(LangModelConfig.String("label_name"));
+		nameLabel.setText(LangModelConfig.getString("label_name"));
 		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 
-		descLabel.setText(LangModelConfig.String("label_description"));
+		descLabel.setText(LangModelConfig.getString("label_description"));
 		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		portLabel.setText(LangModelConfig.String("label_port"));
+		portLabel.setText(LangModelConfig.getString("label_port"));
 		portLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		local_addLabel1.setText(LangModelConfig.String("label_local_addr1"));
+		local_addLabel1.setText(LangModelConfig.getString("label_local_addr1"));
 		local_addLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		local_addLabel2.setText(LangModelConfig.String("label_local_addr2"));
+		local_addLabel2.setText(LangModelConfig.getString("label_local_addr2"));
 		local_addLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 		modifyField.setEnabled(false);
-		modifyLabel1.setText(LangModelConfig.String("label_modified1"));
+		modifyLabel1.setText(LangModelConfig.getString("label_modified1"));
 		modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		modifyLabel2.setText(LangModelConfig.String("label_modified2"));
+		modifyLabel2.setText(LangModelConfig.getString("label_modified2"));
 		modifyLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 		descriptionPanel.setLayout(borderLayout1);
 
@@ -204,7 +204,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 		try
 		{
 			if(MyUtil.validName(nameField.getText()))
-			   tp.name = nameField.getText();
+				tp.name = nameField.getText();
 			else
 				return false;
 

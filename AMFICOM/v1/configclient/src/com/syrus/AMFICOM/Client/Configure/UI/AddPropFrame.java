@@ -38,7 +38,7 @@ public class AddPropFrame extends JDialog
 
 	protected int res = CANCEL;
 	protected String ch_class;
-	String selected = LangModelConfig.String("label_new_char");
+	String selected = LangModelConfig.getString("label_new_char");
 	Hashtable h;
 	Hashtable h_named = new Hashtable();
 	CharacteristicType type = new CharacteristicType();
@@ -77,10 +77,10 @@ public class AddPropFrame extends JDialog
 		setLocation((screenSize.width-frameSize.width)/2, (screenSize.height-frameSize.height)/2);
 		setSize(frameSize);
 		setResizable(false);
-		setTitle(LangModelConfig.String("label_char"));
+		setTitle(LangModelConfig.getString("label_char"));
 
-		name.setText(LangModelConfig.String("label_name"));
-		descr.setText(LangModelConfig.String("label_description"));
+		name.setText(LangModelConfig.getString("label_name"));
+		descr.setText(LangModelConfig.getString("label_description"));
 
 		nameField.addKeyListener(new KeyListener()
 		{
@@ -115,7 +115,7 @@ public class AddPropFrame extends JDialog
 		panel.add(n_panel, BorderLayout.NORTH);
 		panel.add(s_panel, BorderLayout.CENTER);
 
-		okButton.setText(LangModelConfig.String("buttonAdd"));
+		okButton.setText(LangModelConfig.getString("buttonAdd"));
 		okButton.setEnabled(false);
 		okButton.addActionListener(new ActionListener()
 		{
@@ -125,7 +125,7 @@ public class AddPropFrame extends JDialog
 			}
 		});
 
-		cancelButton.setText(LangModelConfig.String("buttonCancel"));
+		cancelButton.setText(LangModelConfig.getString("buttonCancel"));
 		cancelButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -138,7 +138,7 @@ public class AddPropFrame extends JDialog
 		buttonPanel.add(okButton);
 		buttonPanel.add(cancelButton);
 
-		jComboBox1.addItem(LangModelConfig.String("label_new_char"));
+		jComboBox1.addItem(LangModelConfig.getString("label_new_char"));
 		jComboBox1.addItemListener(new ItemListener()
 		{
 			public void itemStateChanged(ItemEvent e)
@@ -159,7 +159,7 @@ public class AddPropFrame extends JDialog
 	void okButton_actionPerformed(ActionEvent e)
 	{
 		res = OK;
-		if (selected.equals(LangModelConfig.String("label_new_char")))
+		if (selected.equals(LangModelConfig.getString("label_new_char")))
 		{
 			type.name = nameField.getText();
 			type.description = descrArea.getText();
@@ -189,7 +189,7 @@ public class AddPropFrame extends JDialog
 	void comboBoxItemSelected()
 	{
 		selected = (String)jComboBox1.getSelectedItem();
-		boolean b = selected.equals(LangModelConfig.String("label_new_char"));
+		boolean b = selected.equals(LangModelConfig.getString("label_new_char"));
 		nameField.setEnabled(b);
 		descrArea.setEnabled(b);
 		okButton.setEnabled(!b);

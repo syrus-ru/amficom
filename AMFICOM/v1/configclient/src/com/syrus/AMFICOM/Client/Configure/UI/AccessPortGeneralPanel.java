@@ -86,27 +86,27 @@ public class AccessPortGeneralPanel extends GeneralPanel
 	{
 		this.setLayout(borderLayout1);
 
-		saveButton.setText(LangModelConfig.String("menuMapSaveText"));
+		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveButton_actionPerformed(e);
 			}
 		});
 
-		localLabel.setText(LangModelConfig.String("label_local_addr1"));
+		localLabel.setText(LangModelConfig.getString("label_local_addr1"));
 		localLabel.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		localLabel1.setText(LangModelConfig.String("label_local_addr2"));
+		localLabel1.setText(LangModelConfig.getString("label_local_addr2"));
 		localLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 
-		kisLabel.setText(LangModelConfig.String("menuNetCatEquipmentText"));
+		kisLabel.setText(LangModelConfig.getString("menuNetCatEquipmentText"));
 		kisLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		portLabel.setText(LangModelConfig.String("label_port"));
+		portLabel.setText(LangModelConfig.getString("label_port"));
 		portLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		typeLabel.setText(LangModelConfig.String("label_type"));
+		typeLabel.setText(LangModelConfig.getString("label_type"));
 		typeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		nameLabel.setText(LangModelConfig.String("label_name"));
+		nameLabel.setText(LangModelConfig.getString("label_name"));
 		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		idLabel.setText(LangModelConfig.String("label_id"));
+		idLabel.setText(LangModelConfig.getString("label_id"));
 		idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 		idField.setEnabled(false);
@@ -183,7 +183,7 @@ public class AccessPortGeneralPanel extends GeneralPanel
 		try
 		{
 			if(MyUtil.validName(nameField.getText()))
-			   ap.name = nameField.getText();
+				ap.name = nameField.getText();
 			else
 				return false;
 			ap.id = idField.getText();

@@ -19,54 +19,54 @@ public class PortTypeDisplayModel extends StubDisplayModel
 
   public PortTypeDisplayModel()
   {
-    this(new ApplicationContext());
+	 this(new ApplicationContext());
   }
 
   public PortTypeDisplayModel(ApplicationContext aContext)
   {
-    super();
-    this.aContext = aContext;
+	 super();
+	 this.aContext = aContext;
   }
 
   public Vector getColumns()
   {
-    Vector cols = new Vector();
+	 Vector cols = new Vector();
 //		cols.add("id");
-    cols.add("name");
-    return cols;
+	 cols.add("name");
+	 return cols;
   }
 
   public String getColumnName(String col_id)
   {
-    if(col_id.equals("id"))
-      return LangModelConfig.String("label_id");
-    if(col_id.equals("name"))
-      return LangModelConfig.String("label_name");
-    return "";
+	 if(col_id.equals("id"))
+		return LangModelConfig.getString("label_id");
+	 if(col_id.equals("name"))
+		return LangModelConfig.getString("label_name");
+	 return "";
   }
 
   public int getColumnSize(String col_id)
   {
-    if(col_id.equals("id"))
-      return 100;
-    if(col_id.equals("name"))
-      return 100;
-    return 100;
+	 if(col_id.equals("id"))
+		return 100;
+	 if(col_id.equals("name"))
+		return 100;
+	 return 100;
   }
 
   public PropertyRenderer getColumnRenderer(ObjectResource or, String col_id)
   {
-    PortType lT = (PortType)or;
-    if(col_id.equals("id"))
-      return new TextFieldEditor(lT.getId());
-    if(col_id.equals("name"))
-      return new TextFieldEditor(lT.getName());
-    return null;
+	 PortType lT = (PortType)or;
+	 if(col_id.equals("id"))
+		return new TextFieldEditor(lT.getId());
+	 if(col_id.equals("name"))
+		return new TextFieldEditor(lT.getName());
+	 return null;
   }
 
   public PropertyEditor getColumnEditor(ObjectResource or, String col_id)
   {
-    return (PropertyEditor)getColumnRenderer(or, col_id);
+	 return (PropertyEditor)getColumnRenderer(or, col_id);
   }
 }
 

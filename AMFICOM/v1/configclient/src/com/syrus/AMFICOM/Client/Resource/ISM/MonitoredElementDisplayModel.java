@@ -41,13 +41,13 @@ public class MonitoredElementDisplayModel extends StubDisplayModel
 	public String getColumnName(String col_id)
 	{
 		if(col_id.equals("id"))
-			return LangModelConfig.String("label_id");
+			return LangModelConfig.getString("label_id");
 		if(col_id.equals("name"))
-			return LangModelConfig.String("label_name");
+			return LangModelConfig.getString("label_name");
 		if(col_id.equals("type_id"))
-			return LangModelConfig.String("label_type");
+			return LangModelConfig.getString("label_type");
 		if(col_id.equals("KIS_id"))
-			return LangModelConfig.String("label_KIS");
+			return LangModelConfig.getString("label_KIS");
 		return "";
 	}
 

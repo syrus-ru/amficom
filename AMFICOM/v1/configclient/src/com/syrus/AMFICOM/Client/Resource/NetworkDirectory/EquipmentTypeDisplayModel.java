@@ -19,60 +19,60 @@ public class EquipmentTypeDisplayModel extends StubDisplayModel
 
   public EquipmentTypeDisplayModel()
   {
-    this(new ApplicationContext());
+	 this(new ApplicationContext());
   }
 
   public EquipmentTypeDisplayModel(ApplicationContext aContext)
   {
-    super();
-    this.aContext = aContext;
+	 super();
+	 this.aContext = aContext;
   }
 
   public Vector getColumns()
   {
-    Vector cols = new Vector();
+	 Vector cols = new Vector();
 //		cols.add("id");
-    cols.add("name");
-    cols.add("eq_class_id");
-    return cols;
+	 cols.add("name");
+	 cols.add("eq_class_id");
+	 return cols;
   }
 
   public String getColumnName(String col_id)
   {
-    if(col_id.equals("id"))
-      return LangModelConfig.String("label_id");
-    if(col_id.equals("name"))
-      return LangModelConfig.String("label_name");
-    if(col_id.equals("eq_class_id"))
-      return LangModelConfig.String("port_class");
-    return "";
+	 if(col_id.equals("id"))
+		return LangModelConfig.getString("label_id");
+	 if(col_id.equals("name"))
+		return LangModelConfig.getString("label_name");
+	 if(col_id.equals("eq_class_id"))
+		return LangModelConfig.getString("port_class");
+	 return "";
   }
 
   public int getColumnSize(String col_id)
   {
-    if(col_id.equals("id"))
-      return 100;
-    if(col_id.equals("name"))
-      return 100;
-    if(col_id.equals("eq_class_id"))
-      return 100;
-    return 100;
+	 if(col_id.equals("id"))
+		return 100;
+	 if(col_id.equals("name"))
+		return 100;
+	 if(col_id.equals("eq_class_id"))
+		return 100;
+	 return 100;
   }
 
   public PropertyRenderer getColumnRenderer(ObjectResource or, String col_id)
   {
-    EquipmentType eqType = (EquipmentType)or;
-    if(col_id.equals("id"))
-      return new TextFieldEditor(eqType.getId());
-    if(col_id.equals("name"))
-      return new TextFieldEditor(eqType.getName());
-    if(col_id.equals("eq_class_id"))
-      return new TextFieldEditor(eqType.eq_class);
-    return null;
+	 EquipmentType eqType = (EquipmentType)or;
+	 if(col_id.equals("id"))
+		return new TextFieldEditor(eqType.getId());
+	 if(col_id.equals("name"))
+		return new TextFieldEditor(eqType.getName());
+	 if(col_id.equals("eq_class_id"))
+		return new TextFieldEditor(eqType.eq_class);
+	 return null;
   }
 
   public PropertyEditor getColumnEditor(ObjectResource or, String col_id)
   {
-    return (PropertyEditor )getColumnRenderer(or, col_id);
+	 return (PropertyEditor )getColumnRenderer(or, col_id);
   }
 }

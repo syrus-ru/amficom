@@ -48,7 +48,7 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 
 	public ObjectResourceTreeNode getRoot()
 	{
-		return new ObjectResourceTreeNode("root", LangModelConfig.String("label_configuration"), true);
+		return new ObjectResourceTreeNode("root", LangModelConfig.getString("label_configuration"), true);
 	}
 
 	public ImageIcon getNodeIcon(ObjectResourceTreeNode node)
@@ -261,13 +261,13 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 			if(s.equals("root"))
 			{
 				ObjectResourceTreeNode ortn;
-				ortn = new ObjectResourceTreeNode("domain", LangModelConfig.String("menuObjectDomainText"), true);
+				ortn = new ObjectResourceTreeNode("domain", LangModelConfig.getString("menuObjectDomainText"), true);
 				vec.add(ortn);
 				registerSearchableNode("domain", ortn);
-				vec.add(new ObjectResourceTreeNode("netdirectory", LangModelConfig.String("menuNetDirText"), true));
-				vec.add(new ObjectResourceTreeNode("netcatalogue", LangModelConfig.String("menuNetCatText"), true));
-				vec.add(new ObjectResourceTreeNode("jdirectory", LangModelConfig.String("menuJDirText"), true));
-				vec.add(new ObjectResourceTreeNode("jcatalogue", LangModelConfig.String("menuJCatText"), true));
+				vec.add(new ObjectResourceTreeNode("netdirectory", LangModelConfig.getString("menuNetDirText"), true));
+				vec.add(new ObjectResourceTreeNode("netcatalogue", LangModelConfig.getString("menuNetCatText"), true));
+				vec.add(new ObjectResourceTreeNode("jdirectory", LangModelConfig.getString("menuJDirText"), true));
+				vec.add(new ObjectResourceTreeNode("jcatalogue", LangModelConfig.getString("menuJCatText"), true));
 			}
 			else
 			if(s.equals("domain"))
@@ -318,41 +318,41 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 			else
 			if(s.equals("netdirectory"))
 			{
-				vec.add(new ObjectResourceTreeNode(EquipmentType.typ, LangModelConfig.String("menuNetDirEquipmentText"), true));
-				vec.add(new ObjectResourceTreeNode(LinkType.typ, LangModelConfig.String("menuNetDirLinkText"), true));
-				vec.add(new ObjectResourceTreeNode(CableLinkType.typ, LangModelConfig.String("menuNetDirCableText"), true));
-				vec.add(new ObjectResourceTreeNode(PortType.typ, LangModelConfig.String("menuNetDirPortText"), true));
-				vec.add(new ObjectResourceTreeNode(CablePortType.typ, LangModelConfig.String("menuNetDirCablePortText"), true));
+				vec.add(new ObjectResourceTreeNode(EquipmentType.typ, LangModelConfig.getString("menuNetDirEquipmentText"), true));
+				vec.add(new ObjectResourceTreeNode(LinkType.typ, LangModelConfig.getString("menuNetDirLinkText"), true));
+				vec.add(new ObjectResourceTreeNode(CableLinkType.typ, LangModelConfig.getString("menuNetDirCableText"), true));
+				vec.add(new ObjectResourceTreeNode(PortType.typ, LangModelConfig.getString("menuNetDirPortText"), true));
+				vec.add(new ObjectResourceTreeNode(CablePortType.typ, LangModelConfig.getString("menuNetDirCablePortText"), true));
 			}
 			else
 			if(s.equals("netcatalogue"))
 			{
 				ObjectResourceTreeNode ortn;
-				ortn = new ObjectResourceTreeNode(Equipment.typ, LangModelConfig.String("menuNetCatEquipmentText"), true);
+				ortn = new ObjectResourceTreeNode(Equipment.typ, LangModelConfig.getString("menuNetCatEquipmentText"), true);
 				vec.add(ortn);
 				registerSearchableNode(Equipment.typ, ortn);
-				ortn = new ObjectResourceTreeNode(Link.typ, LangModelConfig.String("menuNetCatLinkText"), true);
+				ortn = new ObjectResourceTreeNode(Link.typ, LangModelConfig.getString("menuNetCatLinkText"), true);
 				vec.add(ortn);
 				registerSearchableNode(Link.typ, ortn);
-				ortn = new ObjectResourceTreeNode(CableLink.typ, LangModelConfig.String("menuNetCatCableText"), true);
+				ortn = new ObjectResourceTreeNode(CableLink.typ, LangModelConfig.getString("menuNetCatCableText"), true);
 				vec.add(ortn);
 				registerSearchableNode(CableLink.typ, ortn);
 			}
 			else
 			if(s.equals("jdirectory"))
 			{
-				vec.add(new ObjectResourceTreeNode(KISType.typ, LangModelConfig.String("menuJDirKISText"), true));
-				vec.add(new ObjectResourceTreeNode(AccessPortType.typ, LangModelConfig.String("menuJDirAccessPointText"), true));
-				vec.add(new ObjectResourceTreeNode(TransmissionPathType.typ, LangModelConfig.String("menuJDirPathText"), true));
+				vec.add(new ObjectResourceTreeNode(KISType.typ, LangModelConfig.getString("menuJDirKISText"), true));
+				vec.add(new ObjectResourceTreeNode(AccessPortType.typ, LangModelConfig.getString("menuJDirAccessPointText"), true));
+				vec.add(new ObjectResourceTreeNode(TransmissionPathType.typ, LangModelConfig.getString("menuJDirPathText"), true));
 			}
 			else
 			if(s.equals("jcatalogue"))
 			{
 				ObjectResourceTreeNode ortn;
-				ortn = new ObjectResourceTreeNode(KIS.typ, LangModelConfig.String("menuJCatKISText"), true);
+				ortn = new ObjectResourceTreeNode(KIS.typ, LangModelConfig.getString("menuJCatKISText"), true);
 				vec.add(ortn);
 				registerSearchableNode(KIS.typ, ortn);
-				ortn = new ObjectResourceTreeNode(TransmissionPath.typ, LangModelConfig.String("menuJCatPathText"), true);
+				ortn = new ObjectResourceTreeNode(TransmissionPath.typ, LangModelConfig.getString("menuJCatPathText"), true);
 				vec.add(ortn);
 				registerSearchableNode(TransmissionPath.typ, ortn);
 			}
@@ -506,184 +506,184 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 					}
 				}
 			}
-      else
-      if(s.equals(EquipmentType.typ))
-      {
-        if (Pool.getHash(EquipmentType.typ) != null)
-        {
-          DataSet dSet = new DataSet(Pool.getHash(EquipmentType.typ));
+		else
+		if(s.equals(EquipmentType.typ))
+		{
+		  if (Pool.getHash(EquipmentType.typ) != null)
+		  {
+			 DataSet dSet = new DataSet(Pool.getHash(EquipmentType.typ));
 
-          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-          dSet = filter.filter(dSet);
-          ObjectResourceSorter sorter = EquipmentType.getDefaultSorter();
-          sorter.setDataSet(dSet);
-          dSet = sorter.default_sort();
+			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+			 dSet = filter.filter(dSet);
+			 ObjectResourceSorter sorter = EquipmentType.getDefaultSorter();
+			 sorter.setDataSet(dSet);
+			 dSet = sorter.default_sort();
 
-          Enumeration enum = dSet.elements();
-          for(; enum.hasMoreElements();)
-          {
-            EquipmentType eq = (EquipmentType)enum.nextElement();
-            ObjectResourceTreeNode n = new ObjectResourceTreeNode(eq, eq.getName(), true);
-            vec.add(n);
-          }
-        }
-      }
-      else
-      if(s.equals(LinkType.typ))
-      {
-        if (Pool.getHash(LinkType.typ) != null)
-        {
-          DataSet dSet = new DataSet(Pool.getHash(LinkType.typ));
+			 Enumeration enum = dSet.elements();
+			 for(; enum.hasMoreElements();)
+			 {
+				EquipmentType eq = (EquipmentType)enum.nextElement();
+				ObjectResourceTreeNode n = new ObjectResourceTreeNode(eq, eq.getName(), true);
+				vec.add(n);
+			 }
+		  }
+		}
+		else
+		if(s.equals(LinkType.typ))
+		{
+		  if (Pool.getHash(LinkType.typ) != null)
+		  {
+			 DataSet dSet = new DataSet(Pool.getHash(LinkType.typ));
 
-          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-          dSet = filter.filter(dSet);
-          ObjectResourceSorter sorter = LinkType.getDefaultSorter();
-          sorter.setDataSet(dSet);
-          dSet = sorter.default_sort();
+			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+			 dSet = filter.filter(dSet);
+			 ObjectResourceSorter sorter = LinkType.getDefaultSorter();
+			 sorter.setDataSet(dSet);
+			 dSet = sorter.default_sort();
 
-          Enumeration enum = dSet.elements();
-          for(; enum.hasMoreElements();)
-          {
-            LinkType l = (LinkType)enum.nextElement();
-            ObjectResourceTreeNode n = new ObjectResourceTreeNode(l, l.getName(), true, true);
-            vec.add(n);
-          }
-        }
-      }
-      else
-      if(s.equals(CableLinkType.typ))
-      {
-        if (Pool.getHash(CableLinkType.typ) != null)
-        {
-          DataSet dSet = new DataSet(Pool.getHash(CableLinkType.typ));
+			 Enumeration enum = dSet.elements();
+			 for(; enum.hasMoreElements();)
+			 {
+				LinkType l = (LinkType)enum.nextElement();
+				ObjectResourceTreeNode n = new ObjectResourceTreeNode(l, l.getName(), true, true);
+				vec.add(n);
+			 }
+		  }
+		}
+		else
+		if(s.equals(CableLinkType.typ))
+		{
+		  if (Pool.getHash(CableLinkType.typ) != null)
+		  {
+			 DataSet dSet = new DataSet(Pool.getHash(CableLinkType.typ));
 
-          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-          dSet = filter.filter(dSet);
-          ObjectResourceSorter sorter = CableLinkType.getDefaultSorter();
-          sorter.setDataSet(dSet);
-          dSet = sorter.default_sort();
+			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+			 dSet = filter.filter(dSet);
+			 ObjectResourceSorter sorter = CableLinkType.getDefaultSorter();
+			 sorter.setDataSet(dSet);
+			 dSet = sorter.default_sort();
 
-          Enumeration enum = dSet.elements();
-          for(; enum.hasMoreElements();)
-          {
-            CableLinkType l = (CableLinkType)enum.nextElement();
-            ObjectResourceTreeNode n = new ObjectResourceTreeNode(l, l.getName(), true, true);
-            vec.add(n);
-          }
-        }
-      }
-      else
-      if(s.equals(PortType.typ))
-      {
-        if (Pool.getHash(PortType.typ) != null)
-        {
-          DataSet dSet = new DataSet(Pool.getHash(PortType.typ));
+			 Enumeration enum = dSet.elements();
+			 for(; enum.hasMoreElements();)
+			 {
+				CableLinkType l = (CableLinkType)enum.nextElement();
+				ObjectResourceTreeNode n = new ObjectResourceTreeNode(l, l.getName(), true, true);
+				vec.add(n);
+			 }
+		  }
+		}
+		else
+		if(s.equals(PortType.typ))
+		{
+		  if (Pool.getHash(PortType.typ) != null)
+		  {
+			 DataSet dSet = new DataSet(Pool.getHash(PortType.typ));
 
-          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-          dSet = filter.filter(dSet);
-          ObjectResourceSorter sorter = PortType.getDefaultSorter();
-          sorter.setDataSet(dSet);
-          dSet = sorter.default_sort();
+			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+			 dSet = filter.filter(dSet);
+			 ObjectResourceSorter sorter = PortType.getDefaultSorter();
+			 sorter.setDataSet(dSet);
+			 dSet = sorter.default_sort();
 
-          Enumeration enum = dSet.elements();
-          for(; enum.hasMoreElements();)
-          {
-            PortType pt = (PortType)enum.nextElement();
-            ObjectResourceTreeNode n = new ObjectResourceTreeNode(pt, pt.getName(), true, true);
-            vec.add(n);
-          }
-        }
-      }
-      else
-      if(s.equals(CablePortType.typ))
-      {
-        if (Pool.getHash(CablePortType.typ) != null)
-        {
-          DataSet dSet = new DataSet(Pool.getHash(CablePortType.typ));
+			 Enumeration enum = dSet.elements();
+			 for(; enum.hasMoreElements();)
+			 {
+				PortType pt = (PortType)enum.nextElement();
+				ObjectResourceTreeNode n = new ObjectResourceTreeNode(pt, pt.getName(), true, true);
+				vec.add(n);
+			 }
+		  }
+		}
+		else
+		if(s.equals(CablePortType.typ))
+		{
+		  if (Pool.getHash(CablePortType.typ) != null)
+		  {
+			 DataSet dSet = new DataSet(Pool.getHash(CablePortType.typ));
 
-          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-          dSet = filter.filter(dSet);
-          ObjectResourceSorter sorter = CablePortType.getDefaultSorter();
-          sorter.setDataSet(dSet);
-          dSet = sorter.default_sort();
+			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+			 dSet = filter.filter(dSet);
+			 ObjectResourceSorter sorter = CablePortType.getDefaultSorter();
+			 sorter.setDataSet(dSet);
+			 dSet = sorter.default_sort();
 
-          Enumeration enum = dSet.elements();
-          for(; enum.hasMoreElements();)
-          {
-            CablePortType cpT = (CablePortType)enum.nextElement();
-            ObjectResourceTreeNode n = new ObjectResourceTreeNode(cpT, cpT.getName(), true, true);
-            vec.add(n);
-          }
-        }
-      }
-      else
-      if(s.equals(KISType.typ))
-      {
-        if (Pool.getHash(EquipmentType.typ) != null)
-        {
-          DataSet dSet = new DataSet(Pool.getHash(EquipmentType.typ));
+			 Enumeration enum = dSet.elements();
+			 for(; enum.hasMoreElements();)
+			 {
+				CablePortType cpT = (CablePortType)enum.nextElement();
+				ObjectResourceTreeNode n = new ObjectResourceTreeNode(cpT, cpT.getName(), true, true);
+				vec.add(n);
+			 }
+		  }
+		}
+		else
+		if(s.equals(KISType.typ))
+		{
+		  if (Pool.getHash(EquipmentType.typ) != null)
+		  {
+			 DataSet dSet = new DataSet(Pool.getHash(EquipmentType.typ));
 
-          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-          dSet = filter.filter(dSet);
-          ObjectResourceSorter sorter = KISType.getDefaultSorter();
-          sorter.setDataSet(dSet);
-          dSet = sorter.default_sort();
+			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+			 dSet = filter.filter(dSet);
+			 ObjectResourceSorter sorter = KISType.getDefaultSorter();
+			 sorter.setDataSet(dSet);
+			 dSet = sorter.default_sort();
 
-          Enumeration enum = dSet.elements();
-          for(; enum.hasMoreElements();)
-          {
-            EquipmentType k = (EquipmentType)enum.nextElement();
-            if (!k.eq_class.equals("tester"))
-              continue;
-            ObjectResourceTreeNode n = new ObjectResourceTreeNode(k, k.getName(), true);
-            vec.add(n);
-          }
-        }
-      }
-      else
-      if(s.equals(TransmissionPathType.typ))
-      {
-        if (Pool.getHash(TransmissionPathType.typ) != null)
-        {
-          DataSet dSet = new DataSet(Pool.getHash(TransmissionPathType.typ));
+			 Enumeration enum = dSet.elements();
+			 for(; enum.hasMoreElements();)
+			 {
+				EquipmentType k = (EquipmentType)enum.nextElement();
+				if (!k.eq_class.equals("tester"))
+				  continue;
+				ObjectResourceTreeNode n = new ObjectResourceTreeNode(k, k.getName(), true);
+				vec.add(n);
+			 }
+		  }
+		}
+		else
+		if(s.equals(TransmissionPathType.typ))
+		{
+		  if (Pool.getHash(TransmissionPathType.typ) != null)
+		  {
+			 DataSet dSet = new DataSet(Pool.getHash(TransmissionPathType.typ));
 
-          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-          dSet = filter.filter(dSet);
-          ObjectResourceSorter sorter = TransmissionPathType.getDefaultSorter();
-          sorter.setDataSet(dSet);
-          dSet = sorter.default_sort();
+			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+			 dSet = filter.filter(dSet);
+			 ObjectResourceSorter sorter = TransmissionPathType.getDefaultSorter();
+			 sorter.setDataSet(dSet);
+			 dSet = sorter.default_sort();
 
-          Enumeration enum = dSet.elements();
-          for(; enum.hasMoreElements();)
-          {
-            TransmissionPathType tp = (TransmissionPathType)enum.nextElement();
-            ObjectResourceTreeNode n = new ObjectResourceTreeNode(tp, tp.getName(), true, true);
-            vec.add(n);
-          }
-        }
-      }
-      else
-      if(s.equals(AccessPortType.typ))
-      {
-        if (Pool.getHash(AccessPortType.typ) != null)
-        {
-          DataSet dSet = new DataSet(Pool.getHash(AccessPortType.typ));
+			 Enumeration enum = dSet.elements();
+			 for(; enum.hasMoreElements();)
+			 {
+				TransmissionPathType tp = (TransmissionPathType)enum.nextElement();
+				ObjectResourceTreeNode n = new ObjectResourceTreeNode(tp, tp.getName(), true, true);
+				vec.add(n);
+			 }
+		  }
+		}
+		else
+		if(s.equals(AccessPortType.typ))
+		{
+		  if (Pool.getHash(AccessPortType.typ) != null)
+		  {
+			 DataSet dSet = new DataSet(Pool.getHash(AccessPortType.typ));
 
-          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-          dSet = filter.filter(dSet);
-          ObjectResourceSorter sorter = AccessPortType.getDefaultSorter();
-          sorter.setDataSet(dSet);
-          dSet = sorter.default_sort();
+			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+			 dSet = filter.filter(dSet);
+			 ObjectResourceSorter sorter = AccessPortType.getDefaultSorter();
+			 sorter.setDataSet(dSet);
+			 dSet = sorter.default_sort();
 
-          Enumeration enum = dSet.elements();
-          for(; enum.hasMoreElements();)
-          {
-            AccessPortType apt = (AccessPortType)enum.nextElement();
-            ObjectResourceTreeNode n = new ObjectResourceTreeNode(apt, apt.getName(), true, true);
-            vec.add(n);
-          }
-        }
-      }
+			 Enumeration enum = dSet.elements();
+			 for(; enum.hasMoreElements();)
+			 {
+				AccessPortType apt = (AccessPortType)enum.nextElement();
+				ObjectResourceTreeNode n = new ObjectResourceTreeNode(apt, apt.getName(), true, true);
+				vec.add(n);
+			 }
+		  }
+		}
 
 		}
 		else
@@ -717,8 +717,8 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 			else
 			if(node.getObject() instanceof Equipment)
 			{
-				vec.add(new ObjectResourceTreeNode(Port.typ, LangModelConfig.String("menuNetCatPortText"), true));
-				vec.add(new ObjectResourceTreeNode(CablePort.typ, LangModelConfig.String("menuNetCatCablePortText"), true));
+				vec.add(new ObjectResourceTreeNode(Port.typ, LangModelConfig.getString("menuNetCatPortText"), true));
+				vec.add(new ObjectResourceTreeNode(CablePort.typ, LangModelConfig.getString("menuNetCatCablePortText"), true));
 			}
 		}
 

@@ -104,57 +104,57 @@ public class EquipmentGeneralPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModelConfig.String("menuNetCatEquipmentText"));
+		setName(LangModelConfig.getString("menuNetCatEquipmentText"));
 
 		this.setLayout(gridBagLayout1);
 
-		saveButton.setText(LangModelConfig.String("menuMapSaveText"));
+		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveButton_actionPerformed(e);
 			}
 		});
-		latitudeLabel.setText(LangModelConfig.String("equip_latitude"));
+		latitudeLabel.setText(LangModelConfig.getString("equip_latitude"));
 		latitudeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		longitudeLabel.setText(LangModelConfig.String("equip_longitude"));
+		longitudeLabel.setText(LangModelConfig.getString("equip_longitude"));
 		longitudeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		nameLabel.setText(LangModelConfig.String("label_name"));
+		nameLabel.setText(LangModelConfig.getString("label_name"));
 		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		portsNumberLabel.setText(LangModelConfig.String("equip_portsNumber"));
+		portsNumberLabel.setText(LangModelConfig.getString("equip_portsNumber"));
 		portsNumberLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-	    portsNumberField.setEnabled(false);
+		 portsNumberField.setEnabled(false);
 
-		domainLabel.setText(LangModelConfig.String("equip_domen"));
+		domainLabel.setText(LangModelConfig.getString("equip_domen"));
 		domainLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		domainBox.setEnabled(false);
 
-		modifyLabel1.setText(LangModelConfig.String("label_modified1"));
+		modifyLabel1.setText(LangModelConfig.getString("label_modified1"));
 		modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		modifyLabel2.setText(LangModelConfig.String("label_modified2"));
+		modifyLabel2.setText(LangModelConfig.getString("label_modified2"));
 		modifyLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 		modifyField.setEnabled(false);
 
-		typeLabel.setText(LangModelConfig.String("label_type"));
+		typeLabel.setText(LangModelConfig.getString("label_type"));
 		typeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		typeBox.setEnabled(false);
 
-		idLabel.setText(LangModelConfig.String("label_id"));
+		idLabel.setText(LangModelConfig.getString("label_id"));
 		idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		idField.setEnabled(false);
 
-		cabelPortsNumberLabel1.setText(LangModelConfig.String("equip_cablePortsNumber1"));
+		cabelPortsNumberLabel1.setText(LangModelConfig.getString("equip_cablePortsNumber1"));
 		cabelPortsNumberLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		cabelPortsNumberLabel2.setText(LangModelConfig.String("equip_cablePortsNumber2"));
+		cabelPortsNumberLabel2.setText(LangModelConfig.getString("equip_cablePortsNumber2"));
 		cabelPortsNumberLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 		cabelPortsNumberField.setEnabled(false);
 
-		agentLabel.setText(LangModelConfig.String("equip_agent"));
+		agentLabel.setText(LangModelConfig.getString("equip_agent"));
 		agentLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		descLabel.setText(LangModelConfig.String("label_description"));
+		descLabel.setText(LangModelConfig.getString("label_description"));
 		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 		descriptionPanel.setLayout(borderLayout1);
@@ -290,7 +290,7 @@ public class EquipmentGeneralPanel extends GeneralPanel
 			}
 
 			if(MyUtil.validName(nameField.getText()))
-			   equipment.name = nameField.getText();
+				equipment.name = nameField.getText();
 			else
 				return false;
 
