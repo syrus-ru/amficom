@@ -1,87 +1,39 @@
+/*
+ * $Id: OrComboBox.java,v 1.3 2004/09/27 13:00:19 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.util.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import java.util.Map;
 
-
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 13:00:19 $
+ * @module generalclient_v1
+ */
 public class OrComboBox extends ObjectResourceComboBox
 {
-  public OrComboBox()
-  {
-    super();
-  }
+	public void setTyp(String typ)
+	{
+		if (typ != null)
+		{
+			Map map = Pool.getMap(typ);
+			if (map != null)
+				this.setContents(map, true);
+		}
+	}
 
-/*
-  public void setSelectedProfileByUser(String user_id)
-  {
-    if(user_id == null) return;
-    User user = (User)Pool.get(User.typ, user_id);
-    if(user == null) return;
-    ObjectResource or = (ObjectResource)Pool.get(user.type, user.object_id);
-    if(or == null) return;
-    this.setSelected(or);
-    return;
-  }
-
-  public void setSelectedProfileByUser(User user)
-  {
-    if(user == null) return;
-    ObjectResource or = (ObjectResource)Pool.get(user.type, user.object_id);
-    if(or == null) return;
-    this.setSelected(or);
-    return;
-  }
-
-  public String getSelectedUserIDfromProfile()
-  {
-    String s;
-    String objID = (String)this.getSelected();
-     if(objID != null && objID != "" )
-       s = ((OperatorProfile)(Pool.get(OperatorProfile.typ, objID))).user_id;
-     else
-       s = null;
-     return s;
-  }
-*/
-  public void setTyp(String typ)
-  {
-    if(typ == null)
-      return;
-    Hashtable h = Pool.getHash(typ);
-    if(h==null)
-      return;
-    this.setContents(h, true);
-  }
-
-  public void setSelectedTyp(String typ, String id)
-  {
-    if(id == null)
-      id = "";
-    Object o = Pool.get(typ, id);
-
-//    if(o!=null)
-      this.setSelected(o);
-  }
-
-/*
-  public String getSelectedId()
-  {
-    String s = (String)this.getSelected();
-    if(s!=null) return s;
-    return "";
-  }
-*/
-
-
-
-
-/*
-  public void addTyp(String typ)
-  {
-    Hashtable h = Pool.getHash(typ);
-    if(h==null) return;
-  }
-*/
+	public void setSelectedTyp(String typ, String id)
+	{
+		if (id == null)
+			this.setSelectedTyp(typ, "");
+		else
+			this.setSelected(Pool.get(typ, id));
+	}
 }

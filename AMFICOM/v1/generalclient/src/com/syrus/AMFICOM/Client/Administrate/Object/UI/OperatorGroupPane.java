@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorGroupPane.java,v 1.3 2004/08/20 12:05:00 peskovsky Exp $
+ * $Id: OperatorGroupPane.java,v 1.4 2004/09/27 13:03:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,30 +8,29 @@
 
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.awt.*;
-import java.text.*;
-import java.util.ArrayList;
-import java.util.Date;
-
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
+import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import javax.swing.*;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2004/08/20 12:05:00 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 13:03:49 $
  * @module generalclient_v1
  */
-public class OperatorGroupPane extends PropertiesPanel // implements OperationListener
-{
+public final class OperatorGroupPane extends JPanel implements ObjectResourcePropertiesPane {
+	private static OperatorGroupPane instance = null;
+
   OperatorGroupGeneralPanel genPanel = new OperatorGroupGeneralPanel();
   TwoListsPanel usersPanel = new TwoListsPanel("Подключенные пользователи",
                                                   "Неподключенные пользователи", User.typ);
@@ -46,33 +45,28 @@ public class OperatorGroupPane extends PropertiesPanel // implements OperationLi
 
   OperatorGroup group;
 
-  public OperatorGroupPane()
-  {
-    super();
-    try
-    {
-      jbInit();
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public OperatorGroupPane() {
+		jbInit();
+	}
 
-  public OperatorGroupPane(OperatorGroup group)
-  {
-    this();
-    setObjectResource(group);
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public OperatorGroupPane(OperatorGroup group) {
+		this();
+		setObjectResource(group);
+	}
 
-  private void jbInit() throws Exception
-  {
-    this.setPreferredSize(new Dimension(500, 500));
-    this.setLayout(borderLayout1);
-    this.add(jtp, BorderLayout.CENTER);
-    jtp.add(genPanel.getName(), genPanel);
-    jtp.add("Пользователи", usersPanel);
-  }
+	private void jbInit() {
+		this.setPreferredSize(new Dimension(500, 500));
+		this.setLayout(borderLayout1);
+		this.add(jtp, BorderLayout.CENTER);
+		jtp.add(genPanel.getName(), genPanel);
+		jtp.add("Пользователи", usersPanel);
+	}
 
   public ObjectResource getObjectResource()
   {
@@ -144,7 +138,7 @@ public class OperatorGroupPane extends PropertiesPanel // implements OperationLi
 
     updater.updateObjectResources(group, false);
     Pool.put(OperatorGroup.typ, group.id, group);
-    aContext.getDataSourceInterface().SaveGroup(group.id);
+		aContext.getDataSource().SaveGroup(group.id);
 
     this.setData(group);
     return true;
@@ -165,8 +159,7 @@ public class OperatorGroupPane extends PropertiesPanel // implements OperationLi
       return false;
     }
     this.showTheWindow(true);
-//    System.out.println("Creation of the group");
-    DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		DataSourceInterface dataSource = aContext.getDataSource();
     group = new OperatorGroup(); //creating of the new group
     group.id = dataSource.GetUId(OperatorGroup.typ);
     group.owner_id = user.id; // setting of the user (owner)
@@ -179,13 +172,9 @@ public class OperatorGroupPane extends PropertiesPanel // implements OperationLi
 
     setData(group);
 
-//    dispatcher.notify(new OperationEvent(this, 0, User.typ+"updated"));
-//    dispatcher.notify(new OperationEvent(this, 0, OperatorProfile.typ+"updated"));
-//    dispatcher.notify(new OperationEvent(this, 0,
-//        CommandPermissionAttributes.typ+"updated"));
-    this.aContext.getDataSourceInterface().SaveGroup(group.id);
-    return true;
-  }
+		this.aContext.getDataSource().SaveGroup(group.id);
+		return true;
+	}
 
   public boolean delete()
   {
@@ -199,13 +188,12 @@ public class OperatorGroupPane extends PropertiesPanel // implements OperationLi
 
       String[] s = new String[1];
       s[0] = group.id;
-      this.aContext.getDataSourceInterface().RemoveGroup(s);
-      Pool.remove(group);
-
-      return true;
-    }
-    return false;
-  }
+			this.aContext.getDataSource().RemoveGroup(s);
+			Pool.remove(group);
+			return true;
+		}
+		return false;
+	}
 
   public boolean open()
   {
@@ -224,5 +212,14 @@ public class OperatorGroupPane extends PropertiesPanel // implements OperationLi
     this.jtp.setVisible(key);
     repaint();
   }
+
+	public static OperatorGroupPane getInstance() {
+		if (instance == null)
+			synchronized (OperatorGroupPane.class) {
+				if (instance == null)
+					instance = new OperatorGroupPane();
+			}
+		return instance;
+	}
 }
 

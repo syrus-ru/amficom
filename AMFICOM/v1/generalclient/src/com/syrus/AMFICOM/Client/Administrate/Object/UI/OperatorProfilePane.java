@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfilePane.java,v 1.3 2004/08/20 12:05:00 peskovsky Exp $
+ * $Id: OperatorProfilePane.java,v 1.4 2004/09/27 13:01:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,31 +8,29 @@
 
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.awt.*;
-import java.text.*;
-import java.util.ArrayList;
-import java.util.Date;
-
-import javax.swing.*;
-import javax.swing.event.*;
-
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
+import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.event.*;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2004/08/20 12:05:00 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 13:01:57 $
  * @module generalclient_v1
  */
-public class OperatorProfilePane extends PropertiesPanel
-{
+public final class OperatorProfilePane extends JPanel implements ObjectResourcePropertiesPane {
+	private static OperatorProfilePane instance = null;
+
   ApplicationContext aContext = new ApplicationContext();
   SimpleDateFormat sdf = new SimpleDateFormat();
   User user;
@@ -40,7 +38,6 @@ public class OperatorProfilePane extends PropertiesPanel
   NewUpDater updater;
 
   OperatorProfileGeneralPanel genPanel = new OperatorProfileGeneralPanel();
-//  OperatorProfileGroupsPanel gPanel = new OperatorProfileGroupsPanel();
   TwoListsPanel groupsPanel = new TwoListsPanel("Подключенные группы", "Неподключенные группы", OperatorGroup.typ);
   OperatorProfileOtherPanel othPanel = new OperatorProfileOtherPanel();
 	OperatorProfilePasswordPanel passPanel = new OperatorProfilePasswordPanel();
@@ -52,41 +49,35 @@ public class OperatorProfilePane extends PropertiesPanel
 
   BorderLayout borderLayout1 = new BorderLayout();
 
-  public OperatorProfilePane()
-  {
-    super();
-    try
-    {
-      jbInit();
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public OperatorProfilePane() {
+		jbInit();
+	}
 
-  public OperatorProfilePane(OperatorProfile profile)
-  {
-    this();
-    setObjectResource(profile);
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public OperatorProfilePane(OperatorProfile profile) {
+		this();
+		setObjectResource(profile);
+	}
 
-  private void jbInit() throws Exception
-  {
-    this.setPreferredSize(new Dimension(500, 500));
-    this.setLayout(borderLayout1);
-    jtp.addChangeListener(new javax.swing.event.ChangeListener() {
-      public void stateChanged(ChangeEvent e) {
-        jtp_stateChanged(e);
-      }
-    });
-    this.add(jtp, BorderLayout.CENTER);
-    jtp.add(genPanel.getName(), genPanel);
+	private void jbInit() {
+		this.setPreferredSize(new Dimension(500, 500));
+		this.setLayout(borderLayout1);
+		jtp.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				OperatorProfilePane.this.passPanel.setLogin(OperatorProfilePane.this.genPanel.profileLogin.getText());
+			}
+		});
+		this.add(jtp, BorderLayout.CENTER);
+		jtp.add(genPanel.getName(), genPanel);
 		jtp.add(passPanel, passPanel.getName());
-    jtp.add("Группы", groupsPanel);
-    jtp.add(othPanel.getName(), othPanel);
-
-  }
+		jtp.add("Группы", groupsPanel);
+		jtp.add(othPanel.getName(), othPanel);
+	}
 
   public ObjectResource getObjectResource()
   {
@@ -153,7 +144,7 @@ public class OperatorProfilePane extends PropertiesPanel
 
 
     this.showTheWindow(true);
-    DataSourceInterface dataSource = aContext.getDataSourceInterface();
+    DataSourceInterface dataSource = aContext.getDataSource();
     genPanel.modify();
 //    gPanel.modify();
     groupsPanel.modify(profile.group_ids);
@@ -205,8 +196,8 @@ public class OperatorProfilePane extends PropertiesPanel
     profile.setTransferableFromLocal();
     operatorProfileUser.setTransferableFromLocal();
 
-    aContext.getDataSourceInterface().SaveUser(operatorProfileUser.id);
-    aContext.getDataSourceInterface().SaveOperatorProfile(profile.id);
+    aContext.getDataSource().SaveUser(operatorProfileUser.id);
+    aContext.getDataSource().SaveOperatorProfile(profile.id);
 
 
 
@@ -230,7 +221,7 @@ public class OperatorProfilePane extends PropertiesPanel
     this.showTheWindow(true);
     if(user == null)
       return false;
-    DataSourceInterface dataSource = aContext.getDataSourceInterface();
+    DataSourceInterface dataSource = aContext.getDataSource();
 
     profile = new OperatorProfile();
     profile.id = dataSource.GetUId(OperatorProfile.typ);
@@ -239,13 +230,12 @@ public class OperatorProfilePane extends PropertiesPanel
     profile.created_by = this.user.getId();
     profile.owner_id = this.user.getId();
     profile.modified_by = this.user.getId();
-    Date d = new Date(); // Setting of the creation time
-    profile.created = d.getTime();
-    profile.modified= d.getTime();
-    d.setYear(d.getYear() + 1);
-    profile.disabled= d.getTime();
-
-
+		Calendar calendar = Calendar.getInstance();
+		long timeInMillis = calendar.getTimeInMillis(); 
+		profile.created = timeInMillis;
+		profile.modified = timeInMillis;
+		calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 1);
+		profile.disabled = calendar.getTimeInMillis();
     operatorProfileUser = new User();
     operatorProfileUser.id = dataSource.GetUId(User.typ);
     operatorProfileUser.type = OperatorProfile.typ;
@@ -261,8 +251,8 @@ public class OperatorProfilePane extends PropertiesPanel
     setData(profile);
 
 
-    aContext.getDataSourceInterface().SaveUser(operatorProfileUser.id);
-    aContext.getDataSourceInterface().SaveOperatorProfile(profile.id);
+    aContext.getDataSource().SaveUser(operatorProfileUser.id);
+    aContext.getDataSource().SaveOperatorProfile(profile.id);
     return true;
   }
 
@@ -279,7 +269,7 @@ public class OperatorProfilePane extends PropertiesPanel
     String []loggedUsersIds;
     try
     {
-      loggedUsersIds = aContext.getDataSourceInterface().GetLoggedUserIds();
+      loggedUsersIds = aContext.getDataSource().GetLoggedUserIds();
     }
     catch (Exception ex)
     {
@@ -322,9 +312,9 @@ public class OperatorProfilePane extends PropertiesPanel
 
       String[]s = new String[1];
       s[0] = profile.id;
-      this.aContext.getDataSourceInterface().RemoveOperatorProfile(s);
+      this.aContext.getDataSource().RemoveOperatorProfile(s);
       s[0] = operatorProfileUser.id;
-      this.aContext.getDataSourceInterface().RemoveUser(s);
+      this.aContext.getDataSource().RemoveUser(s);
       Pool.remove(profile);
       Pool.remove(operatorProfileUser);
 
@@ -344,17 +334,18 @@ public class OperatorProfilePane extends PropertiesPanel
     return true;
   }
 
-	void jtp_stateChanged(ChangeEvent e)
-	{
-		this.passPanel.setLogin(this.genPanel.profileLogin.getText());
-	}
-
   void showTheWindow(boolean key)
   {
     this.jtp.setVisible(key);
     repaint();
   }
 
-
+	public static OperatorProfilePane getInstance() {
+		if (instance == null)
+			synchronized (OperatorProfilePane.class) {
+				if (instance == null)
+					instance = new OperatorProfilePane();
+			}
+		return instance;
+	}
 }
-
