@@ -54,7 +54,7 @@ public class FilterDialog extends JDialog
 	{
 //		this.setResizable(false);
 		setTitle("Фильтрация");// сигналов тревоги
-		this.getContentPane().setLayout(verticalFlowLayout1);
+
 		okButton.setText("Применить");
 		okButton.addActionListener(new ActionListener()
 			{
@@ -79,10 +79,12 @@ public class FilterDialog extends JDialog
 					clearButton_actionPerformed(e);
 				}
 			});
-		this.getContentPane().add(filterPanel, null);
 		buttonPanel.add(okButton, null);
 		buttonPanel.add(cancelButton, null);
 		buttonPanel.add(clearButton, null);
+
+		this.getContentPane().setLayout(verticalFlowLayout1);
+		this.getContentPane().add(filterPanel, null);
 		this.getContentPane().add(buttonPanel, null);
 	}
 
