@@ -7,7 +7,7 @@ EXTLIB=../../extlib
 #ORACLE_HOME=/mnt/d/oracle/product/9.0.2
 
 VBCLASSPATH=$(ORACLE_HOME)/lib/vbjapp.jar:$(ORACLE_HOME)/lib/vbjorb.jar
-MYCLASSPATH=$(LIB)/ServerInterface_Survey.jar:$(LIB)/ServerInterface_Alarm.jar:$(LIB)/ServerInterface_General.jar:$(LIB)/server.jar:$(LIB)/util.jar:$(LIB)/utilserver.jar
+MYCLASSPATH=$(LIB)/ServerInterface_Survey.jar:$(LIB)/ServerInterface_Alarm.jar:$(LIB)/ServerInterface_General.jar:$(LIB)/servermisc.jar:$(LIB)/util.jar
 SQLJCLASSPATH=$(JDEV_HOME)/sqlj/lib/translator.jar:$(JDEV_HOME)/sqlj/lib/runtime12.jar:$(JDEV_HOME)/jdbc/lib/classes12.jar
 
 #SERVERHOSTNAME=mgts
@@ -39,7 +39,6 @@ $(LIBNAME):	impl
 		-C $(CLASSES) com/syrus/AMFICOM/server/measurement\
 		-C $(CLASSES) com/syrus/AMFICOM/server/event\
 		-C $(CLASSES) com/syrus/AMFICOM/CORBA
-	cp -f ./$(LIBNAME) $(LIB)
 
 impl:	mach agsets
 	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) -classpath $(VBCLASSPATH):$(MYCLASSPATH):$(SQLJCLASSPATH) $(SRC)/com/syrus/AMFICOM/server/measurement/AMFICOMKISImplementation.java

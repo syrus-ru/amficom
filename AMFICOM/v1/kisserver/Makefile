@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.5 2004/07/06 13:42:51 bass Exp $
+# $Id: Makefile,v 1.6 2004/07/21 09:12:31 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -25,7 +25,7 @@ all: .all
 
 .all: .idl .sqlj
 	$(JAVAC) \
-		$(JAVACFLAGS) \
+		$(JAVACFLAGS) -nowarn \
 		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
 	 	$(shell find $(SRCDIR) -name '*.java')
 	touch $@

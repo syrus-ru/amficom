@@ -1,9 +1,11 @@
 MODULE_NAME = measurement_v1
+
 LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR=../idl_v1/idl
-LIBDIR=../lib
+
+APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
 HOST=mongol
 SERVICE_NAME=mongol
@@ -35,7 +37,7 @@ $(LIBNAME): .mach
 
 .mach:	.corba .ora $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(AMFICOMCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/resource/LangModelMeasurement.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementDatabaseContext.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterType.java \
@@ -82,7 +84,7 @@ $(LIBNAME): .mach
 		$(IDLDIR)/event.idl \
 		$(IDLDIR)/measurement.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(AMFICOMCLASSPATH) \
+		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/event/corba/*.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/corba/*.java
