@@ -1,9 +1,7 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -718,7 +716,7 @@ class PropsTreeModel extends ObjectResourceTreeModel
 
 	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		List vec = new ArrayList();
+		List vec = new ArrayList(5);
 
 		if(node.getObject() instanceof String)
 		{

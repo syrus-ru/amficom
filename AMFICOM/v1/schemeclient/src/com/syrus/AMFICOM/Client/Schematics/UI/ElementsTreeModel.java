@@ -1,12 +1,9 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 import java.awt.*;
-import java.util.ListIterator;
-import java.util.Map;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
@@ -164,9 +161,9 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			}
 /*			else if(s.equals(EquipmentType.typ))
 			{
-				if (Pool.getHash(EquipmentType.typ) != null)
+				if (Pool.getMap(EquipmentType.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(EquipmentType.typ));
+					DataSet dSet = new DataSet(Pool.getMap(EquipmentType.typ));
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
@@ -185,7 +182,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			}*/
 			else if(s.equals(LinkType.typ))
 			{
-				if (Pool.getHash(LinkType.typ) != null)
+				if (Pool.getMap(LinkType.typ) != null)
 				{
 					Map dSet = Pool.getMap(LinkType.typ);
 
@@ -204,9 +201,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals(CableLinkType.typ))
 			{
-				Map dSet = Pool.getMap(CableLinkType.typ);
-				if (dSet != null)
+				if (Pool.getMap(CableLinkType.typ) != null)
 				{
+					Map dSet = Pool.getMap(CableLinkType.typ);
+
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = CableLinkType.getDefaultSorter();
@@ -222,9 +220,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals(PortType.typ))
 			{
-				Map dSet = Pool.getMap(PortType.typ);
-				if (dSet != null)
+				if (Pool.getMap(PortType.typ) != null)
 				{
+					Map dSet = Pool.getMap(PortType.typ);
+
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = PortType.getDefaultSorter();
@@ -240,9 +239,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals(CablePortType.typ))
 			{
-				Map dSet = Pool.getMap(CablePortType.typ);
 				if (Pool.getMap(CablePortType.typ) != null)
 				{
+					Map dSet = Pool.getMap(CablePortType.typ);
+
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = CablePortType.getDefaultSorter();
@@ -258,9 +258,9 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			}
 	/*		else if(s.equals(KISType.typ))
 			{
-				if (Pool.getHash(EquipmentType.typ) != null)
+				if (Pool.getMap(EquipmentType.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(EquipmentType.typ));
+					DataSet dSet = new DataSet(Pool.getMap(EquipmentType.typ));
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
@@ -281,9 +281,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			}*/
 			else if(s.equals(TransmissionPathType.typ))
 			{
-				Map dSet = Pool.getMap(TransmissionPathType.typ);
-				if (dSet != null)
+				if (Pool.getMap(TransmissionPathType.typ) != null)
 				{
+					Map dSet = Pool.getMap(TransmissionPathType.typ);
+
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = TransmissionPathType.getDefaultSorter();
@@ -299,9 +300,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals(AccessPortType.typ))
 			{
-				Map dSet = Pool.getMap(AccessPortType.typ);
-				if (dSet != null)
+				if (Pool.getMap(AccessPortType.typ) != null)
 				{
+					Map dSet = Pool.getMap(AccessPortType.typ);
+
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = AccessPortType.getDefaultSorter();
@@ -334,23 +336,17 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			if(node.getObject() instanceof MapProtoGroup)
 			{
 				MapProtoGroup parent_group = (MapProtoGroup)node.getObject();
-        
-				for (ListIterator it = parent_group.group_ids.listIterator(); it.hasNext();)
+				for (int i = 0; i < parent_group.group_ids.size(); i++)
 				{
-					MapProtoGroup map_group =
-            (MapProtoGroup)Pool.get(MapProtoGroup.typ, (String)it.next());
+					MapProtoGroup map_group = (MapProtoGroup)Pool.get(MapProtoGroup.typ, (String)parent_group.group_ids.get(i));
 					vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true,
 							new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 				}
 				if (vec.isEmpty())
-        {
-					for (ListIterator it = parent_group.mapproto_ids.listIterator(); it.hasNext();)
+					for (int i = 0; i < parent_group.mapproto_ids.size(); i++)
 					{
-						MapProtoElement map_proto =
-              (MapProtoElement)Pool.get(MapProtoElement.typ, (String)it.next());
-						String image_id =
-              (map_proto.getImageID().equals("") ? "pc" : map_proto.getImageID());
-              
+						MapProtoElement map_proto = (MapProtoElement)Pool.get(MapProtoElement.typ, (String)parent_group.mapproto_ids.get(i));
+						String image_id = (map_proto.getImageID().equals("") ? "pc" : map_proto.getImageID());
 						map_proto.setImageID(image_id);
 						ImageResource ir = ImageCatalogue.get(image_id);
 
@@ -360,14 +356,13 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 							vec.add(new ObjectResourceTreeNode(map_proto, map_proto.getName(), true,
 									new ImageIcon(ir.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH))));
 					}
-        }
 			}
 			else if(node.getObject() instanceof MapProtoElement)
 			{
 				MapProtoElement map_proto = (MapProtoElement)node.getObject();
-				for (ListIterator it = map_proto.pe_ids.listIterator(); it.hasNext();)        
+				for (int i = 0; i < map_proto.pe_ids.size(); i++)
 				{
-					ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
+					ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, (String)map_proto.pe_ids.get(i));
 					proto.map_proto = map_proto;
 					vec.add(new ObjectResourceTreeNode(proto, proto.getName(), true, true));
 				}

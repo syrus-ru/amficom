@@ -1,12 +1,9 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 import java.awt.Color;
-import java.util.Map;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.Filter.*;

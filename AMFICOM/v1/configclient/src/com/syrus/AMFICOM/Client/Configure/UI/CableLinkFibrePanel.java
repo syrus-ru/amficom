@@ -1,31 +1,17 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-
 import java.text.SimpleDateFormat;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.BorderFactory;
-
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
-
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLinkThread;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
-
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
 import java.awt.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
 
 public class CableLinkFibrePanel extends GeneralPanel
 {

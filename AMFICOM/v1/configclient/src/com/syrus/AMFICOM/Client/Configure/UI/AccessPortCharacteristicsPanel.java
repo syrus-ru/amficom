@@ -2,12 +2,11 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.BorderLayout;
 
-import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
 
 public class AccessPortCharacteristicsPanel extends GeneralPanel
 {

@@ -1,35 +1,16 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.Insets;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import javax.swing.*;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.JTextField;
-
-import java.util.Date;
-import java.text.SimpleDateFormat;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.CablePort;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
-
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 
 public class CablePortGeneralPanel extends GeneralPanel
 {

@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Schematics.Report;
 
 import java.util.*;
+import java.util.List;
 
 import java.awt.*;
 import javax.swing.ImageIcon;
@@ -168,7 +169,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 				s.equals("reciever") ||
 				s.equals("tester"))
 			{
-				Map equipTypeHash = Pool.getHash(EquipmentType.typ);
+				Map equipTypeHash = Pool.getMap(EquipmentType.typ);
 				if (equipTypeHash == null)
 					return new Vector();
 
@@ -223,9 +224,9 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 			else if (s.equals("label_repPhysicalScheme"))
 			{
 				Set ht = new HashSet();
-				if (Pool.getHash(Scheme.typ) != null)
+				if (Pool.getMap(Scheme.typ) != null)
 				{
-					for(Iterator it = Pool.getHash(Scheme.typ).values().iterator(); it.hasNext();)
+					for(Iterator it = Pool.getMap(Scheme.typ).values().iterator(); it.hasNext();)
 					{
 						Scheme sch = (Scheme)it.next();
 						ht.add(sch.scheme_type);
@@ -251,7 +252,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 				"label_repPhysicalScheme"))
 			{
 
-				Map dSet = Pool.getHash(Scheme.typ);
+				Map dSet = Pool.getMap(Scheme.typ);
 
 				/*          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 				 dSet = filter.filter(dSet);
