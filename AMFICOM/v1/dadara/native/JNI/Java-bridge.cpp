@@ -69,7 +69,8 @@ void release_arr_region(JNIEnv *env, jdoubleArray array, double *pp)
 // J ModelFunction -> C ModelF
 // возвращает:
 //   == 0  ok, 
-//   != 0  error;
+//   <  0  inCorrect (or empty) mf;
+//   >  0  some problem
 // в случае ошибки JNI дает assertion fail
 int ModelF_J2C(JNIEnv *env, jobject obj, ModelF &mf)
 {
@@ -80,7 +81,7 @@ int ModelF_J2C(JNIEnv *env, jobject obj, ModelF &mf)
 
 	// инициализируем mf
 	jdoubleArray array = (jdoubleArray )env->GetObjectField(obj, env->GetFieldID(clazz, "pars", "[D"));
-	jsize sz = env->GetArrayLength(array);
+	jsize sz = array ? env->GetArrayLength(array) : 0;
 	mf.init(
 		env->GetIntField(obj, env->GetFieldID(clazz, N_shapeID, S_shapeID)),
 		sz);
@@ -91,12 +92,15 @@ int ModelF_J2C(JNIEnv *env, jobject obj, ModelF &mf)
 	if (sz != mf.getNPars())
 		return 1;
 
-	// копируем параметры mf
-	double *pp = env->GetDoubleArrayElements(array, 0);
-	int i;
-	for (i = 0; i < sz; i++)
-		mf[i] = pp[i];
-	env->ReleaseDoubleArrayElements(array, pp, 0);
+	if (sz)
+	{
+		// копируем параметры mf
+		double *pp = env->GetDoubleArrayElements(array, 0);
+		int i;
+		for (i = 0; i < sz; i++)
+			mf[i] = pp[i];
+		env->ReleaseDoubleArrayElements(array, pp, 0);
+	}
 
 	return 0;
 }
@@ -362,7 +366,7 @@ static void nFit
 {
 	prf_b("nFit - enter");
 	ModelF mf;
-	if (ModelF_J2C(env, obj, mf))
+	if (ModelF_J2C(env, obj, mf) > 0)
 		assert(0);
 
 	double *yy;
@@ -396,6 +400,8 @@ static void nFit
 	default:
 		assert(0);
 	}
+
+	assert(mf.isCorrect()); // FITMODE_VARY_* режимы недопустимы при фитировке пустого mf
 
 	if (mf.hasFixedNumberOfPars())
 	{
