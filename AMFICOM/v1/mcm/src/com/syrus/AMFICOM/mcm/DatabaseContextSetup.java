@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.7 2004/08/30 14:41:15 bob Exp $
+ * $Id: DatabaseContextSetup.java,v 1.8 2004/09/27 07:05:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
+import com.syrus.AMFICOM.measurement.ModelingDatabase;
 import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
@@ -43,7 +44,7 @@ import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/30 14:41:15 $
+ * @version $Revision: 1.8 $, $Date: 2004/09/27 07:05:01 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -74,6 +75,7 @@ public abstract class DatabaseContextSetup {
 																		new AnalysisTypeDatabase(),
 																		new EvaluationTypeDatabase(),
 																		new SetDatabase(),
+																		null,
 																		new MeasurementSetupDatabase(),
 																		new MeasurementDatabase(),
 																		new AnalysisDatabase(),

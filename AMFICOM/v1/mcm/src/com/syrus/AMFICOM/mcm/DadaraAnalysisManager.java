@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.13 2004/08/27 12:12:20 bob Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.14 2004/09/27 07:05:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/27 12:12:20 $
+ * @version $Revision: 1.14 $, $Date: 2004/09/27 07:05:01 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -74,7 +74,7 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
       Log.errorMessage(ule.getMessage());
     }
     	
-    	MeasurementDatabaseContext.init(new ParameterTypeDatabase(), null, null, null, null, null,
+    	MeasurementDatabaseContext.init(new ParameterTypeDatabase(), null, null, null, null, null, null,
 										null, null, null, null, null, null);
 
 		outParameterTypeIds = new HashMap();
