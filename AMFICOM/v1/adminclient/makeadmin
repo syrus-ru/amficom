@@ -13,7 +13,6 @@ TARGET=$(LIB)\administrate.jar
 TARGET_DLL=$(LIB)\dll\administrate.jar
 TARGET_RUN=$(LIB)\run\administraterun.jar
 TARGET_CLASS_LIST=src_admin.txt
-TARGET_PROPS_LIST=loc_admin.txt
 TARGET_SRC=$(LIBSRC)\administratesource.jar
 
 LIBNAME_OBJECT=$(LIB)\ServerObjectInterface.jar
@@ -40,7 +39,7 @@ JGRAPHCP=$(EXTLIB)\jgraphpad.jar
 
 .PHONY:	$(TARGET)
 
-$(TARGET):	impl loc jar
+$(TARGET):	clean impl loc jar
 
 jar:
 	$(JAR) -cf $(TARGET) -C $(CLASSES) com
@@ -59,5 +58,5 @@ loc:
 		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang
 
 clean:
-	rd /s /q $(CLASSES)\com
-	del /f /q $(TARGET)
+	rm -rf $(CLASSES)\com
+	rm -f $(TARGET) $(TARGET_SRC)

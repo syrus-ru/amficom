@@ -37,7 +37,7 @@ JGRAPHCP=$(EXTLIB)\jgraphpad.jar
 
 .PHONY:	$(TARGET)
 
-$(TARGET):	impl loc jar
+$(TARGET):	clean impl loc jar
 
 jar:
 	$(JAR) -cf $(TARGET) -C $(CLASSES) com
@@ -54,7 +54,6 @@ loc:
 		$(SRC)\com\syrus\AMFICOM\Client\General\Lang\config_ru.properties \
 		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang
 
-
 clean:
-	rd /s /q $(CLASSES)\com
-	del /f /q $(TARGET)
+	rm -rf $(CLASSES)\com
+	rm -f $(TARGET) $(TARGET_SRC)
