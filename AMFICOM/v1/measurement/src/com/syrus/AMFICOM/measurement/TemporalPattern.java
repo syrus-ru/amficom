@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.22 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: TemporalPattern.java,v 1.23 2004/07/28 06:45:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/07/27 15:52:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2004/07/28 06:45:40 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -637,8 +637,7 @@ public class TemporalPattern extends StorableObject {
 	private StorableObjectDatabase	temporalPatternDatabase;
 
 	private HashMap					templates;
-	private long[]					times;
-	private Date[]					timesDate;
+	private List					times;	
 
 	public TemporalPattern(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -809,57 +808,43 @@ public class TemporalPattern extends StorableObject {
 	 * 
 	 * @param start
 	 * @param end
-	 * @return
+	 * @return List of java.util.Data 
 	 */
-	public long[] getTimes(long start, long end) {
-		if (this.times == null) {
+	public List getTimes(Date start, Date end) {
+		if (this.times == null)
+			this.times = new ArrayList();
+		if (this.times.isEmpty()){
 			//int count = 0;
 			Collection list = this.templates.values();
-			List timeList = new ArrayList();
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				TimeLine timeLine = (TimeLine) it.next();
-				timeLine.setStartPeriod(start);
-				timeLine.setEndPeriod(end);
+				timeLine.setStartPeriod(start.getTime());
+				timeLine.setEndPeriod(end.getTime());
 				timeLine.parseTemplate();
 				if (timeLine.dateList != null) {
 					for (Iterator it2 = timeLine.dateList.iterator(); it2.hasNext();) {
 						Object obj = it2.next();
-						if (!timeList.contains(obj))
-							timeList.add(obj);
+						if (!this.times.contains(obj))
+							this.times.add(obj);
 					}
 
 				}
 
-			}
-
-			this.times = new long[timeList.size()];
-			this.timesDate = new Date[timeList.size()];
-			int count = 0;
-			for (Iterator it = timeList.iterator(); it.hasNext();) {
-				this.timesDate[count] = (Date) it.next();
-				this.times[count] = this.timesDate[count].getTime();
-				count++;
-			}
+			}			
 		}
 
 		return this.times;
 	}
 
-	public Date[] getTimesDate(long start, long end) {
-		if (this.times == null)
-			getTimes(start, end);
-		return this.timesDate;
-	}
-
 	public void removeAll() {
 		this.currentVersion = super.getNextVersion();
-		this.times = null;
+		this.times.clear();
 		this.templates.clear();
 	}
 
 	public void addTemplate(String template) {
 		this.currentVersion = super.getNextVersion();
-		this.times = null;
+		this.times.clear();
 		if (this.templates == null)
 			this.templates = new HashMap();
 		TimeLine timeLine = new TimeLine();
