@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.1 2004/06/07 15:36:09 bass Exp $
+# $Id: Makefile.inc,v 1.2 2004/06/11 13:26:19 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -77,6 +77,12 @@ endif
 runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12.jar)
 ifeq ($(runtime12),)
 runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12.zip)
+endif
+ifeq ($(runtime12),)
+runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12ee.jar)
+endif
+ifeq ($(runtime12),)
+runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12ee.zip)
 endif
 translator = $(wildcard $(ORACLE_HOME)/sqlj/lib/translator.jar)
 ifeq ($(translator),)
