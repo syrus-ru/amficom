@@ -486,9 +486,9 @@ class PropsTreeModel extends ObjectResourceTreeModel
 		return String.class;
 	}
 
-	public Vector getChildNodes(ObjectResourceTreeNode node)
+	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 
 		if(node.getObject() instanceof String)
 		{

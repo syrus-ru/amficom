@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Image;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.Enumeration;
 import javax.swing.ImageIcon;
@@ -83,9 +84,9 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 		return null;
 	}
 
-	public Vector getChildNodes(ObjectResourceTreeNode node)
+	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 
 		//для строки - общая часть для дерева отчётов + деревья топологоии и схемы
 		if (node.getObject()instanceof String)

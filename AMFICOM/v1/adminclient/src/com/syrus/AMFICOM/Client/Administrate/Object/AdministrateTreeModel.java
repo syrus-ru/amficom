@@ -1,8 +1,8 @@
 package com.syrus.AMFICOM.Client.Administrate.Object;
 import java.awt.*;
-import java.util.*;
 
 import java.util.List;
+import java.util.ArrayList;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.*;
@@ -314,9 +314,9 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
 
 
 //--------------------------------------------------------
-  public Vector getChildNodes(ObjectResourceTreeNode node)
+  public List getChildNodes(ObjectResourceTreeNode node)
   {
-    Vector vec = new Vector();
+    List vec = new ArrayList();
     ObjectResourceTreeNode ortn;
 
     if(node.getObject() instanceof String)

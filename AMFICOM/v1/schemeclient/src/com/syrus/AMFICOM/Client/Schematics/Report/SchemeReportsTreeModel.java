@@ -63,9 +63,9 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 		return null;
 	}
 
-	public Vector getChildNodes(ObjectResourceTreeNode node)
+	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 
 		//для строки - общая часть для дерева отчётов + деревья топологоии и схемы
 		if (node.getObject()instanceof String)

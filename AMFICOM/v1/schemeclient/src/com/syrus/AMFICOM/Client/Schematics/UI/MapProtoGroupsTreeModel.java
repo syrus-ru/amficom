@@ -57,9 +57,9 @@ public class MapProtoGroupsTreeModel extends ObjectResourceTreeModel
 		return MapProtoGroup.class;
 	}
 
-	public Vector getChildNodes(ObjectResourceTreeNode node)
+	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		Map map_groups = Pool.getHash(MapProtoGroup.typ);
 
 		if(node.getObject() instanceof String)

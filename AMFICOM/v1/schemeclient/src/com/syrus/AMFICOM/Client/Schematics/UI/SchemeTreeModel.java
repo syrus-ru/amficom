@@ -184,9 +184,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 		return null;
 	}
 
-	public Vector getChildNodes(ObjectResourceTreeNode node)
+	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		if(node.getObject() instanceof String)
 		{
 			String s = (String )node.getObject();
