@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
@@ -115,7 +116,7 @@ public class SaveTestSetupCommand extends VoidCommand
 		{
 			ms.attachToMonitoredElement(
 					bs.monitoredElementId,
-					new Identifier(aContext.getSessionInterface().getUserId()));
+					new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getUserId()));
 		}
 		catch(UpdateObjectException ex)
 		{
