@@ -444,10 +444,6 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		//DataSet testSet = new DataSet(hash);
 
 		//testSet = ordf.filter(testSet);
-		for (Iterator it = hash.keySet().iterator(); it.hasNext();) {
-			Test test = (Test) hash.get(it.next());
-			System.out.println("loaded tests:" + test.getId());		
-		}
 		ordf.filtrate(hash);
 
 		if (this.allTests == null)
@@ -457,7 +453,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 		for (Iterator it = hash.keySet().iterator(); it.hasNext();) {
 			Test test = (Test) hash.get(it.next());
-			System.out.println("loaded ordf tests:" + test.getId());
+			//System.out.println("loaded ordf tests:" + test.getId());
 			this.allTests.add(test);
 		}
 
