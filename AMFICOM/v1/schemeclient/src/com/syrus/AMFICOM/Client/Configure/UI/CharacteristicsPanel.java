@@ -41,13 +41,31 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 	{
 		CharacteristicSort sort;
 		Identifier characterizedId;
+		Characterized characterized;
 
-		CharacterizedObject(CharacteristicSort sort, Identifier characterizedId)
+		CharacterizedObject(CharacteristicSort sort, Characterized characterized, Identifier characterizedId)
 		{
+			this.characterized = characterized;
 			this.characterizedId = characterizedId;
 			this.sort = sort;
 		}
 	}
+
+	private class CharacterizableObject
+	{
+		CharacteristicSort sort;
+		Identifier characterizedId;
+		Characterizable characterizable;
+
+		CharacterizableObject(CharacteristicSort sort, Characterizable characterizable,
+												Identifier characterizedId)
+		{
+			this.characterizable = characterizable;
+			this.characterizedId = characterizedId;
+			this.sort = sort;
+		}
+	}
+
 
 	public CharacteristicsPanel()
 	{
@@ -146,15 +164,26 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 		elementSelected(selectedTypeSort);
 	}
 
-
-	public void setTypeSortMapping(CharacteristicTypeSort typeSort, CharacteristicSort sort, Identifier characterizedId, boolean isEditable)
+	public void setTypeSortMapping(CharacteristicTypeSort typeSort, CharacteristicSort sort,
+			Characterizable characterizable, Identifier characterizedId, boolean isEditable)
 	{
-		typeSortsCharacterizedIds.put(typeSort, new CharacterizedObject(sort, characterizedId));
+		typeSortsCharacterizedIds.put(typeSort, new CharacterizableObject(sort, characterizable, characterizedId));
 		if (isEditable)
 			editableSorts.add(sort);
 		else
 			editableSorts.remove(sort);
 	}
+
+	public void setTypeSortMapping(CharacteristicTypeSort typeSort, CharacteristicSort sort,
+			Characterized characterized, Identifier characterizedId, boolean isEditable)
+	{
+		typeSortsCharacterizedIds.put(typeSort,	new CharacterizedObject(sort, characterized, characterizedId));
+		if (isEditable)
+			editableSorts.add(sort);
+		else
+			editableSorts.remove(sort);
+	}
+
 
 	public void operationPerformed(OperationEvent ae)
 	{
@@ -244,12 +273,23 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 
 	void removeCharacterisric(List characteristics, String name)
 	{
+		Object obj = typeSortsCharacterizedIds.get(selectedTypeSort);
+		if (obj == null) {
+			System.err.println("CharacterizedObject not set for CharacteristicTypeSort " +
+												 selectedTypeSort);
+			return;
+		}
+
+
 		for (Iterator it = characteristics.iterator(); it.hasNext(); )
 		{
 			Characteristic ch = (Characteristic)it.next();
 			if (ch.getName().equals(name))
 			{
-				it.remove();
+				if (obj instanceof CharacterizableObject)
+					((CharacterizableObject)obj).characterizable.removeCharacteristic(ch);
+				else if (obj instanceof CharacterizedObject)
+					((CharacterizedObject)obj).characterized.removeCharacteristic(ch);
 				break;
 			}
 		}
@@ -353,7 +393,7 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 		{
 			if (selectedTypeSort == null)
 				return;
-			CharacterizedObject obj = (CharacterizedObject)typeSortsCharacterizedIds.get(selectedTypeSort);
+			Object obj = typeSortsCharacterizedIds.get(selectedTypeSort);
 			if (obj == null)
 			{
 				System.err.println("CharacterizedObject not set for CharacteristicTypeSort " + selectedTypeSort);
@@ -365,28 +405,59 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 				CharacteristicType type = frame.getSelectedType();
 				Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 
-				CharacteristicSort sort = obj.sort;
-				Identifier characterizedId = obj.characterizedId;
-				List chars = (List)characteristics.get(characterizedId);
+				if (obj instanceof CharacterizableObject) {
+					CharacteristicSort sort = ((CharacterizableObject)obj).sort;
+					Identifier characterizedId = ((CharacterizableObject)obj).characterizedId;
+					Characterizable characterizable = ((CharacterizableObject)obj).characterizable;
+					List chars = (List)characteristics.get(characterizedId);
 
-				try {
-					Characteristic ch = Characteristic.createInstance(
-							userId,
-							type,
-							type.getDescription(),
-							"",
-							sort.value(),
-							"",
-							characterizedId,
-							true,
-							true);
-					chars.add(ch);
-					int n = tModel.addRow(ch.getName(), new String[] {""});
-					jTable.setRowSelectionInterval(n, n);
+					try {
+						Characteristic ch = Characteristic.createInstance(
+								userId,
+								type,
+								type.getDescription(),
+								"",
+								sort.value(),
+								"",
+								characterizedId,
+								true,
+								true);
+						characterizable.addCharacteristic(ch);
+
+						int n = tModel.addRow(ch.getName(), new String[] {""});
+						jTable.setRowSelectionInterval(n, n);
+					}
+					catch (CreateObjectException ex) {
+						ex.printStackTrace();
+					}
 				}
-				catch (CreateObjectException ex) {
-					ex.printStackTrace();
+				else if (obj instanceof CharacterizedObject) {
+					CharacteristicSort sort = ((CharacterizedObject)obj).sort;
+					Identifier characterizedId = ((CharacterizedObject)obj).characterizedId;
+					Characterized characterized = ((CharacterizedObject)obj).characterized;
+					List chars = (List)characteristics.get(characterizedId);
+
+					try {
+						Characteristic ch = Characteristic.createInstance(
+								userId,
+								type,
+								type.getDescription(),
+								"",
+								sort.value(),
+								"",
+								characterizedId,
+								true,
+								true);
+						characterized.addCharacteristic(ch);
+
+						int n = tModel.addRow(ch.getName(), new String[] {""});
+						jTable.setRowSelectionInterval(n, n);
+					}
+					catch (CreateObjectException ex) {
+						ex.printStackTrace();
+					}
 				}
+
 			}
 			jTable.updateUI();
 		}

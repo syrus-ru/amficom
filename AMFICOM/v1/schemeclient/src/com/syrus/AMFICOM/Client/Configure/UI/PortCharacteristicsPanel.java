@@ -72,6 +72,7 @@ public class PortCharacteristicsPanel extends GeneralPanel
 			charPane.setTypeSortMapping(
 					sorts[i],
 					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPORT,
+					port,
 					portId,
 					false);
 		charPane.addCharacteristics(port.characteristicsImpl().getValue(), portId);
@@ -81,6 +82,7 @@ public class PortCharacteristicsPanel extends GeneralPanel
 			charPane.setTypeSortMapping(
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 					CharacteristicSort.CHARACTERISTIC_SORT_PORT,
+					port.portImpl(),
 					port.portImpl().getId(),
 					true);
 			charPane.addCharacteristics(port.portImpl().getCharacteristics(), port.portImpl().getId());

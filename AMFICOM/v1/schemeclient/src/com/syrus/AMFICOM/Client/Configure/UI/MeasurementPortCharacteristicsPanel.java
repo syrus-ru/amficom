@@ -65,6 +65,7 @@ public class MeasurementPortCharacteristicsPanel extends GeneralPanel
 			charPane.setTypeSortMapping(
 					sorts[i],
 					CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
+					port,
 					port.getId(),
 					false);
 		charPane.addCharacteristics(port.getCharacteristics(), port.getId());

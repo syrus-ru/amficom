@@ -1,8 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
 import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.RISDMapDataSource;
-import com.syrus.AMFICOM.Client.Resource.*;
 
 public class SchematicsApplicationModel extends ApplicationModel
 {
@@ -61,16 +59,5 @@ public class SchematicsApplicationModel extends ApplicationModel
 		add("menuWindowUgo");
 		add("menuWindowProps");
 		add("menuWindowList");
-	}
-
-	public DataSourceInterface getDataSource(SessionInterface si)
-	{
-//		String connection = Environment.getConnectionType();
-//		if(connection.equals("RISD"))
-//			return new RISDMapDataSource(si);
-//		else
-//		if(connection.equals("Empty"))
-//			return new EmptyConfigDataSource(si);
-		return null;
 	}
 }

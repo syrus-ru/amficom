@@ -12,9 +12,8 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.DomainCondition;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 public class MeasurementPortGeneralPanel extends GeneralPanel
 {
@@ -152,10 +151,7 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 				Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
 						domain_id, true);
 
-				LinkedIdsCondition condition = LinkedIdsCondition.getInstance();
-				condition.setDomain(domain);
-				condition.setIdentifier(port.getId());
-				condition.setEntityCode(ObjectEntities.ME_ENTITY_CODE);
+				LinkedIdsCondition condition = new LinkedIdsCondition(port.getId(), ObjectEntities.ME_ENTITY_CODE);
 
 				List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				if (list.size() > 0) {

@@ -37,6 +37,9 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 	Identifier characterizedId;
 	CharacteristicSort attributedSort;
 	CharacteristicSort characterizedSort;
+	Characterized characterizedObj;
+	Characterizable attributedObj;
+
 	boolean attributesEditable;
 	boolean characteristicsEditable;
 
@@ -116,6 +119,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 				SchemePort port = (SchemePort)objs[0];
 				attributes = port.characteristicsImpl().getValue();
 				attributedId = new Identifier(port.id().transferable());
+				attributedObj = port;
 				attributedSort = CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPORT;
 				attributesEditable = true;
 
@@ -123,6 +127,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 				{
 					characteristics = port.portImpl().getCharacteristics();
 					characterizedId = port.portImpl().getId();
+					characterizedObj = port.portImpl();
 					characterizedSort = CharacteristicSort.CHARACTERISTIC_SORT_PORT;
 					characteristicsEditable = true;
 				}
@@ -132,6 +137,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 					{
 						characteristics = port.portTypeImpl().getCharacteristics();
 						characterizedId = port.portTypeImpl().getId();
+						characterizedObj = port.portTypeImpl();
 						characterizedSort = CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE;
 						characteristicsEditable = false;
 					}
@@ -142,6 +148,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 				SchemeCablePort port = (SchemeCablePort)objs[0];
 				attributes = port.characteristicsImpl().getValue();
 				attributedId = new Identifier(port.id().transferable());
+				attributedObj = port;
 				attributedSort = CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLEPORT;
 				attributesEditable = true;
 
@@ -149,6 +156,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 				{
 					characteristics = port.portImpl().getCharacteristics();
 					characterizedId = port.portImpl().getId();
+					characterizedObj = port.portImpl();
 					characterizedSort = CharacteristicSort.CHARACTERISTIC_SORT_CABLEPORT;
 					characteristicsEditable = true;
 				}
@@ -158,6 +166,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 					{
 						characteristics = port.portTypeImpl().getCharacteristics();
 						characterizedId = port.portTypeImpl().getId();
+						characterizedObj = port.portTypeImpl();
 						characterizedSort = CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE;
 						characteristicsEditable = false;
 					}
@@ -168,6 +177,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 				SchemeLink link = (SchemeLink)objs[0];
 				attributes = link.characteristicsImpl().getValue();
 				attributedId = new Identifier(link.id().transferable());
+				attributedObj = link;
 				attributedSort = CharacteristicSort.CHARACTERISTIC_SORT_SCHEMELINK;
 				attributesEditable = true;
 
@@ -175,6 +185,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 				{
 					characteristics = link.linkImpl().getCharacteristics();
 					characterizedId = link.linkImpl().getId();
+					characterizedObj = link.linkImpl();
 					characterizedSort = CharacteristicSort.CHARACTERISTIC_SORT_LINK;
 					characteristicsEditable = true;
 				}
@@ -184,6 +195,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 					{
 						characteristics = link.linkTypeImpl().getCharacteristics();
 						characterizedId = link.linkTypeImpl().getId();
+						characterizedObj = link.linkTypeImpl();
 						characterizedSort = CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE;
 						characteristicsEditable = false;
 					}
@@ -194,6 +206,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 				SchemeCableLink link = (SchemeCableLink)objs[0];
 				attributes = link.characteristicsImpl().getValue();
 				attributedId = new Identifier(link.id().transferable());
+				attributedObj = link;
 				attributedSort = CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLELINK;
 				attributesEditable = true;
 
@@ -201,6 +214,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 				{
 					characteristics = link.linkImpl().getCharacteristics();
 					characterizedId = link.linkImpl().getId();
+					characterizedObj = link.linkImpl();
 					characterizedSort = CharacteristicSort.CHARACTERISTIC_SORT_CABLELINK;
 					characteristicsEditable = true;
 				}
@@ -210,6 +224,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 					{
 						characteristics = link.cableLinkTypeImpl().getCharacteristics();
 						characterizedId = link.cableLinkTypeImpl().getId();
+						characterizedObj = link.cableLinkTypeImpl();
 						characterizedSort = CharacteristicSort.CHARACTERISTIC_SORT_CABLELINKTYPE;
 						characteristicsEditable = false;
 					}
@@ -260,12 +275,14 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 	{
 		attributes = element.characteristicsImpl().getValue();
 		attributedId = new Identifier(element.id().transferable());
+		attributedObj = element;
 		attributedSort = CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPROTOELEMENT;
 		attributesEditable = true;
 
 		if (element.equipmentType() != null) {
 			characteristics = element.equipmentTypeImpl().getCharacteristics();
 			characterizedId = element.equipmentTypeImpl().getId();
+			characterizedObj = element.equipmentTypeImpl();
 			characterizedSort = CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE;
 			characteristicsEditable = false;
 		}
@@ -275,6 +292,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 	{
 		attributes = element.characteristicsImpl().getValue();
 		attributedId = new Identifier(element.id().transferable());
+		attributedObj = element;
 		attributedSort = CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEELEMENT;
 		attributesEditable = true;
 
@@ -282,6 +300,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 		{
 			characteristics = element.equipmentImpl().getCharacteristics();
 			characterizedId = element.equipmentImpl().getId();
+			characterizedObj = element.equipmentImpl();
 			characterizedSort = CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT;
 			characteristicsEditable = true;
 		}
@@ -291,6 +310,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 			{
 				characteristics = element.equipmentTypeImpl().getCharacteristics();
 				characterizedId = element.equipmentTypeImpl().getId();
+				characterizedObj = element.equipmentTypeImpl();
 				characterizedSort = CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE;
 				characteristicsEditable = false;
 			}
@@ -303,11 +323,13 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 			cPanel.setTypeSortMapping(
 					sorts[i],
 					characterizedSort,
+					characterizedObj,
 					characterizedId,
 					characteristicsEditable);
 		cPanel.setTypeSortMapping(
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 				attributedSort,
+				attributedObj,
 				attributedId,
 				attributesEditable);
 

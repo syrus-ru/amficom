@@ -71,6 +71,7 @@ public class LinkCharacteristicsPanel extends GeneralPanel
 			charPane.setTypeSortMapping(
 					sorts[i],
 					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMELINK,
+					link,
 					linkId,
 					false);
 		charPane.addCharacteristics(link.characteristicsImpl().getValue(), linkId);
@@ -80,6 +81,7 @@ public class LinkCharacteristicsPanel extends GeneralPanel
 			charPane.setTypeSortMapping(
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 					CharacteristicSort.CHARACTERISTIC_SORT_LINK,
+					link.linkImpl(),
 					link.linkImpl().getId(),
 					true);
 			charPane.addCharacteristics(link.linkImpl().getCharacteristics(), link.linkImpl().getId());

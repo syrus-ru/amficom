@@ -72,6 +72,7 @@ public class CableLinkCharacteristicsPanel extends GeneralPanel
 			charPane.setTypeSortMapping(
 					sorts[i],
 					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLELINK,
+					link,
 					linkId,
 					false);
 		charPane.addCharacteristics(link.characteristicsImpl().getValue(), linkId);
@@ -81,6 +82,7 @@ public class CableLinkCharacteristicsPanel extends GeneralPanel
 			charPane.setTypeSortMapping(
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 					CharacteristicSort.CHARACTERISTIC_SORT_CABLELINK,
+					link.linkImpl(),
 					link.linkImpl().getId(),
 					true);
 			charPane.addCharacteristics(link.linkImpl().getCharacteristics(), link.linkImpl().getId());

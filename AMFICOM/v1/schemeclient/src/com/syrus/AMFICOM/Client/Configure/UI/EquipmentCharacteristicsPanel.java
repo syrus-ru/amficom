@@ -69,6 +69,7 @@ public class EquipmentCharacteristicsPanel extends GeneralPanel
 			charPane.setTypeSortMapping(
 					sorts[i],
 					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEELEMENT,
+					element,
 					elementId,
 					false);
 		charPane.addCharacteristics(element.characteristicsImpl().getValue(), elementId);
@@ -78,6 +79,7 @@ public class EquipmentCharacteristicsPanel extends GeneralPanel
 			charPane.setTypeSortMapping(
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 					CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT,
+					element.equipmentImpl(),
 					element.equipmentImpl().getId(),
 					true);
 			charPane.addCharacteristics(element.equipmentImpl().getCharacteristics(), element.equipmentImpl().getId());

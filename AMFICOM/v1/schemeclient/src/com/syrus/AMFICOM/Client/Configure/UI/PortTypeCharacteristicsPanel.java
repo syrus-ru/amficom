@@ -69,6 +69,7 @@ public class PortTypeCharacteristicsPanel extends GeneralPanel
 			charPane.setTypeSortMapping(
 					sorts[i],
 					CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE,
+					type,
 					type.getId(),
 					false);
 		charPane.addCharacteristics(type.getCharacteristics(), type.getId());
