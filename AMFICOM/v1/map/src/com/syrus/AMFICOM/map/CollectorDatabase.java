@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.4 2004/12/03 19:21:55 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.5 2004/12/06 17:37:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
-import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -45,7 +44,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/03 19:21:55 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/06 17:37:09 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -459,13 +458,13 @@ public class CollectorDatabase extends StorableObjectDatabase {
 				physicalLinkId = (Identifier)collectorPhysicalLinkMap.get(collectorId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, collectorId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, physicalLinkId);
-				Log.debugMessage("SetDatabase.insertSetMELinks | Inserting link for collector " + collectorId + " and physical link " + physicalLinkId, Log.DEBUGLEVEL09);
+				Log.debugMessage(this.getEnityName() + "Database.insertPhysicalLinkIds | Inserting link for collector " + collectorId + " and physical link " + physicalLinkId, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "SetDatabase.insertSetMELinks | Cannot insert link for collector " + collectorId + " and physical link " + physicalLinkId + "' -- " + sqle.getMessage();
+			String mesg = this.getEnityName() + "Database.insertPhysicalLinkIds | Cannot insert link for collector " + collectorId + " and physical link " + physicalLinkId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -483,7 +482,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
 	}
 	
 	private void deletePhysicalLinkIds(java.util.Map collectorPhysicalLinkMap) {	
-		StringBuffer linkBuffer = new StringBuffer(LINK_COLUMN_COLLECTOR_ID);
+		StringBuffer linkBuffer = new StringBuffer(LINK_COLUMN_PHYSICAL_LINK_ID);
 		
 		linkBuffer.append(SQL_IN);
 		linkBuffer.append(OPEN_BRACKET);
@@ -503,7 +502,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
 					else {
 						linkBuffer.append(CLOSE_BRACKET);
 						linkBuffer.append(SQL_AND);
-						linkBuffer.append(LINK_COLUMN_COLLECTOR_ID);				
+						linkBuffer.append(LINK_COLUMN_PHYSICAL_LINK_ID);				
 						linkBuffer.append(SQL_IN);
 						linkBuffer.append(OPEN_BRACKET);
 					}
