@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.4 2004/12/07 10:42:03 bass Exp $
+ * $Id: StorableObjectCondition.java,v 1.5 2005/02/03 14:56:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,11 +11,11 @@ import java.util.List;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/07 10:42:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 14:56:29 $
+ * @author $Author: bob $
  * @module general_v1
  */
-public interface StorableObjectCondition {
+public interface StorableObjectCondition extends TransferableObject {
 	boolean isConditionTrue(Object object) throws ApplicationException;
 	
 	/**
@@ -33,6 +33,4 @@ public interface StorableObjectCondition {
 	Short getEntityCode();
 	
 	void setEntityCode(Short entityCode);
-	
-	Object getTransferable();
 }
