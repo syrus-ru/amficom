@@ -17,6 +17,11 @@ public class RefAnalysis
 
 	public void decode (double[] y, ReflectogramEvent[] re)
 	{
+		events = new TraceEvent[re.length];
+
+		if(re.length == 0)
+			return;
+
 		double max_y = 0;
 		double min_y = 0;
 		for (int i = 0; i < y.length; i++)
@@ -31,8 +36,6 @@ public class RefAnalysis
 		int type;
 		int last_point = re[re.length-1].begin;
 		double Po = 0;
-
-		events = new TraceEvent[re.length];
 
 		for (int i = 0; i < re.length; i++)
 		{

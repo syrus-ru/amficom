@@ -292,7 +292,7 @@ public class EventsFrame extends ATableFrame
 
 	void updTableModel(int activeEvent)
 	{
-		if (activeEvent != -1)
+		if (activeEvent != -1 && activeEvent < jTable.getRowCount())
 //			if (selected != activeEvent)
 			{
 				selected = activeEvent;
