@@ -3,10 +3,7 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 public abstract class Equipment extends DomainMember implements Characterized, TypedObject {
@@ -31,6 +28,8 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 	List portIds;
 	List cablePortIds;
 	List specialPortIds;
+	
+	int sort;
 
 	Equipment(Identifier id) {
 		super(id);
@@ -75,6 +74,8 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 		this.specialPortIds = new ArrayList(et.special_port_ids.length);
 		for (int i = 0; i < et.special_port_ids.length; i++)
 			this.specialPortIds.add(new Identifier(et.special_port_ids[i]));
+		
+		this.sort = et.sort.value();
 	}
 
 	public Identifier getTypeId() {
@@ -152,6 +153,10 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 	public List getSpecialPortIds() {
 		return this.specialPortIds;
 	}
+	
+	public int getSort(){
+		return this.sort;
+	}
 
 	public void setCharacteristicIds(List characteristicIds) {
 		this.characteristicIds = characteristicIds;
@@ -177,7 +182,8 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 																						String supplier,
 																						String supplierCode,
 																						String eqClass,
-																						Identifier imageId) {
+																						Identifier imageId,
+																						int sort) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
@@ -199,5 +205,6 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 		this.supplierCode = supplierCode;
 		this.eqClass = eqClass;
 		this.imageId = imageId;
+		this.sort = sort;
 	}
 }
