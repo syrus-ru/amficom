@@ -230,16 +230,39 @@ void BreakLSetRegionFromArray(ModelF &mf, int x0, int N, double *yarr)
 	BreakLReplaceRegion(mf, that);
 }
 
-// the caller should delete 'upd' by himself
-void BreakLUpdateRegionFromArray(ModelF &mf, int x0, int N, double *upd, int isUpper)
+// 1) the caller should delete 'upd' by himself
+// 2) return value: 1 if this threshold is responsible for dxCheckPosition, 0 if not
+int BreakLUpdateRegionFromArray(ModelF &mf, int x0, int N, double *upd, int isUpper, int dxCheckPosition)
 {
 	double *data = BreakLToArray(mf.getP(), mf.getNPars(), x0, N);
 	int i;
-	for (i = 0; i < N; i++)
-		if ((upd[i] > data[i]) == isUpper)
-			data[i] = upd[i];
+
+	int rc = 0;
+	if (isUpper)
+	{
+		for (i = 0; i < N; i++)
+			if (upd[i] > data[i])
+			{
+				data[i] = upd[i];
+				if (i == dxCheckPosition - x0)
+					rc = 1;
+			}
+	}
+	else
+	{
+		for (i = 0; i < N; i++)
+			if (upd[i] < data[i])
+			{
+				data[i] = upd[i];
+				if (i == dxCheckPosition - x0)
+					rc = 1;
+			}
+	}
+
 	BreakLSetRegionFromArray(mf, x0, N, data);
 	delete[] data;
+
+	return rc;
 }
 
 #define _FindExtrTemplate(op) \
@@ -365,16 +388,22 @@ struct UPDATE_REGION
 {
 	int x0;
 	int N;
+	int dxthid;
 	double *data;
-	UPDATE_REGION(int x0, int N, double *data)
+	UPDATE_REGION(int x0, int N, int dxthid, double *data)
 	{
 		this->x0 = x0;
 		this->N = N;
 		this->data = data;
+		this->dxthid = dxthid;
 	}
 };
 
-void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key)
+// Основное назначение функции соответствует названию - преобразовать м.ф. к ее порогу.
+// Вспомогательное назначение - поиск соответствующего координате DX-порога dXCheckPosition.
+// параметр dXCheckPosition: x-координата, для которой надо провести поиск ответственного DX-порога
+// возвращаемое значение будет либо -1, либо найденным номером в массиве taX
+int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key, int dXCheckPosition)
 {
 	//prf_b("BreakL_ChangeByThresh: entered");
 
@@ -504,6 +533,8 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, 
 
 	//prf_b("BreakL_ChangeByThresh: process DXLR threshd");
 
+	int rcDXID = -1;
+
 	// apply dx-thresholds
 	{
 		ArrList updateRegions;
@@ -554,40 +585,6 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, 
 			// собственно расширяем
 			enhance(arr1t, nEnh1, W, isUpper);
 
-			/*
-			// оформляем переход
-			if (isUpper) // для верхнего порога - прямая до пересечения с исх. кривой
-			{
-				// переход справа
-				double yA = arr1t[nEnh1 - 1];
-				double yB = arr2io[nEnh2 - 1];
-				for (j = 0; j < dxR; j++)
-				{
-					double yJ = yA + (yB - yA) * (j + 1) / dxR;
-					if (arr2io[nEnh2 - dxR + j] >= yJ)
-						break;
-					else
-						arr2io[nEnh2 - dxR + j] = yJ;
-				}
-				// переход слева
-				yA = arr1t[0];
-				yB = arr2io[0];
-				for (j = dxL - 1; j >= 0; j--)
-				{
-					double yJ = yB + (yA - yB) * j / dxL;
-					if (arr2io[j] >= yJ)
-						break;
-					else
-						arr2io[j] = yJ;
-				}
-			}
-			// убираем возможные пересечения результата с оригиналом
-			int sign = isUpper ? 1 : -1;
-			for (j = 0; j < nEnh1; j++)
-				if (arr2io[dxL + j] * sign < arr1t[j] * sign)
-					arr2io[dxL + j] = arr1t[j];
-			*/
-
 			// сглаживаем стык
 			{
 				double sign = isUpper ? 1.0 : -1.0;
@@ -602,6 +599,8 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, 
 				{
 					double y0 = arr1t[0];
 					double y1 = arr2io[0];
+					if (y1 * sign > y0 * sign) // XXX: в некоторых случаях лучше продолжить горизонтально до пересечения
+						y1 = y0;
 					for (j = 1; j < dxL; j++)
 					{
 						double yt = y0 + (y1 - y0) * (double )j / dxL;
@@ -615,6 +614,8 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, 
 				{
 					double y0 = arr1t[nEnh1 - 1];
 					double y1 = arr2io[nEnh2 - 1];
+					if (y1 * sign > y0 * sign) // XXX
+						y1 = y0;
 					for (j = 1; j < dxR; j++)
 					{
 						double yt = y0 + (y1 - y0) * (double )j / dxR;
@@ -627,7 +628,7 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, 
 			}
 
 			// планируем сохранение в mf
-			UPDATE_REGION *ur = new UPDATE_REGION(xBegin - dxL * 2, nEnh2, arr2io);
+			UPDATE_REGION *ur = new UPDATE_REGION(xBegin - dxL * 2, nEnh2, curT, arr2io);
 			assert(ur);
 			updateRegions.add(ur);
 			delete[] arr1t;
@@ -638,7 +639,8 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, 
 		for (i = 0; i < updateRegions.getLength(); i++)
 		{
 			UPDATE_REGION *urp = (UPDATE_REGION *)updateRegions[i];
-			BreakLUpdateRegionFromArray(mf, urp->x0, urp->N, urp->data, isUpper);
+			if (BreakLUpdateRegionFromArray(mf, urp->x0, urp->N, urp->data, isUpper, dXCheckPosition))
+				rcDXID = urp->dxthid;
 			delete[] urp->data;
 			delete urp;
 		}
@@ -652,4 +654,6 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, 
 		delete[] thX;
 	if (thNpY > 0)
 		delete[] thY;
+
+	return rcDXID;
 }

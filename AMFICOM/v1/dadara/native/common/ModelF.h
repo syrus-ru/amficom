@@ -38,15 +38,19 @@ void MF_init();
 
 const int MF_ID_INVALID = 0;
 
+// линейная функция
 const int MF_ID_LIN		= 21;
 
+// старые м.ф. сварки и коннектора
 const int MF_ID_SPL1	= 12;
-const int MF_ID_CON1c	= 13; // todo: rename
-const int MF_ID_CON1d	= 14; // todo: rename
-const int MF_ID_CON1e	= 15; // todo: rename
+const int MF_ID_CON1c	= 13;
+const int MF_ID_CON1d	= 14;
+const int MF_ID_CON1e	= 15;
 
+// ломаная BREAKL
 const int MF_ID_BREAKL	= 22;
 
+// гауссиана
 const int MF_ID_GAUSS	= 16;
 
 // получение характеристик параметров
@@ -57,19 +61,32 @@ const int MF_PAR_FLAG_L = 4;
 
 // выполнение команд (процедур) над функциями
 
+// проверить, лежат ли значения параметров в пределах, допустимых при предв. фитировке
 #define MF_CMD_CHECK_RANGE_PREFIT 1
-#define MF_CMD_CHECK_RANGE_FINFIT 2
-#define MF_CMD_FIX_RANGE_PREFIT 3
-#define MF_CMD_FIX_RANGE_FINFIT 4
-#define MF_CMD_ACXL_CHANGE 5
-#define MF_CMD_CHANGE_BY_THRESH 7 /* BREAKL only */
-//#define MF_CMD_FIX_THRESH 8 /* BREAKL only */
 
+// проверить, лежат ли значения параметров в пределах, допустимых при окончат. фитировке
+#define MF_CMD_CHECK_RANGE_FINFIT 2
+
+// ограничить значения параметров допустимыми пределами при предв. фитировке
+#define MF_CMD_FIX_RANGE_PREFIT 3
+
+// ограничить значения параметров допустимыми пределами при окончат. фитировке
+#define MF_CMD_FIX_RANGE_FINFIT 4
+
+// отработать преобразование от м.ф. к порогу на величину ACXL
+#define MF_CMD_ACXL_CHANGE 5
+
+// отбработать преобразование согласно ThreshDX, ThreshDY-порогам
+// и одновременно проследить, какой DX-порог срабатывает в данной x-координате
+// Определено только для ломаной, BREAKL
+#define MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXID 7 /* BREAKL only */
+
+// создать линейную м.ф.
 #define MF_CMD_LIN_SET_BY_X1Y1X2Y2 2101
 
-// номера параметров наиболее типичных функций
-// используется вне реализации ModelF
-// внутри же номера прописаны жестко, в т.ч. в строке сигнатуры
+// номера параметров наиболее типичных функций,
+// для использования вне реализации ModelF
+// внутри же реализации номера прописаны жестко, в т.ч. в строке сигнатуры
 const int MF_PARID_GAUSS_AMPLITUDE = 0;
 const int MF_PARID_GAUSS_CENTER = 1;
 const int MF_PARID_GAUSS_SIGMA = 2;

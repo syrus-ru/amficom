@@ -223,10 +223,34 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nCha
 	ThreshDXArray taDX(env, threshArrDX);
 	ThreshDYArray taDY(env, threshArrDY);
 	int key_ = key;
-	void *args[3] = { &key, &taDX, &taDY };
-	mf.execCmd(MF_CMD_CHANGE_BY_THRESH, args);
+	int xDXID = 0;
+	void *args[4] = { &key, &taDX, &taDY, &xDXID};
+	mf.execCmd(MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXID, args);
 	ModelF_C2J_update(env, mf, obj);
 	prf_e();
+}
+
+/*
+ * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
+ * Method:    nFindResponsibleThreshDXID
+ * Signature: ([Lcom/syrus/AMFICOM/analysis/dadara/ThreshDX;[Lcom/syrus/AMFICOM/analysis/dadara/ThreshDY;II)I
+ */
+JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFindResponsibleThreshDXID
+  (JNIEnv *env, jobject obj, jobjectArray threshArrDX, jobjectArray threshArrDY, jint key, jint x)
+{
+	prf_b("nFindResponsibleThreshDXID");
+	ModelF mf;
+	if (ModelF_J2C(env, obj, mf))
+		assert(0);
+	ThreshDXArray taDX(env, threshArrDX);
+	ThreshDYArray taDY(env, threshArrDY);
+	int key_ = key;
+	int xDXID = x;
+	void *args[4] = { &key, &taDX, &taDY, &xDXID};
+	int rcDXID = (int )mf.execCmd(MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXID, args);
+	// NB: do NOT update mf back to Java because mf is now changed but Java mf should not be modified
+	prf_e();
+	return rcDXID;
 }
 
 /*
