@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.54 2005/02/08 12:06:02 max Exp $
+ * $Id: general.idl,v 1.55 2005/02/09 08:59:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -268,13 +268,13 @@ module corba {
 	};
 
 	union StorableObjectCondition_Transferable switch(enum StorableObjectConditionSort {
-			STRING_FIELD,
+#			STRING_FIELD,
 			LINKED_IDS,
 			COMPOUND,
 			TYPICAL,
 			EQUIVALENT}) {
-		case STRING_FIELD:
-			StringFieldCondition_Transferable stringFieldCondition;
+#		case STRING_FIELD:
+#			StringFieldCondition_Transferable stringFieldCondition;
 		case LINKED_IDS:
 			LinkedIdsCondition_Transferable linkedIdsCondition;
 		case COMPOUND:
