@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.48 2005/02/19 20:34:06 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.49 2005/02/24 09:27:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/02/19 20:34:06 $
+ * @version $Revision: 1.49 $, $Date: 2005/02/24 09:27:19 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -187,28 +187,28 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		this.insertEntity(transmissionPath);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext
-				.getCharacteristicDatabase());
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
 			characteristicDatabase.updateCharacteristics(transmissionPath);
-		} catch (UpdateObjectException e) {
+		}
+		catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
 		}
 	}
 
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		insertEntities(storableObjects);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext
-				.getCharacteristicDatabase());
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
 			characteristicDatabase.updateCharacteristics(storableObjects);
-		} catch (UpdateObjectException e) {
+		}
+		catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException,
-			VersionCollisionException, UpdateObjectException {
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
@@ -219,8 +219,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 				super.checkAndUpdateEntity(transmissionPath, modifierId, true);
 				return;
 		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext
-				.getCharacteristicDatabase());
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		characteristicDatabase.updateCharacteristics(transmissionPath);
 	}
 
@@ -235,42 +234,10 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 				super.checkAndUpdateEntities(storableObjects, modifierId, true);
 				return;
 		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext
-				.getCharacteristicDatabase());
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
-/*
-	private void setModified(TransmissionPath transmissionPath) throws UpdateObjectException {
-		String tpIdStr = DatabaseIdentifier.toSQLString(transmissionPath.getId());
-		String sql = SQL_UPDATE + ObjectEntities.TRANSPATH_ENTITY + SQL_SET + StorableObjectWrapper.COLUMN_MODIFIED
-				+ EQUALS + DatabaseDate.toUpdateSubString(transmissionPath.getModified()) + COMMA
-				+ StorableObjectWrapper.COLUMN_MODIFIER_ID + EQUALS
-				+ DatabaseIdentifier.toSQLString(transmissionPath.getModifierId()) + SQL_WHERE
-				+ StorableObjectWrapper.COLUMN_ID + EQUALS + tpIdStr;
 
-		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TransmissionPathDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-			connection.commit();
-		} catch (SQLException sqle) {
-			String mesg = "TransmissionPathDatabase.setModified | Cannot set modified for transmission path " + tpIdStr;
-			throw new UpdateObjectException(mesg, sqle);
-		} finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-	}
-*/
 	public Collection retrieveAll() throws RetrieveObjectException {
 		Collection objects = null;
 		try {
@@ -290,10 +257,9 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 
 		if (objects != null) {
 			this.retrieveTransmissionPathMEIdsByOneQuery(objects);
-			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext
-					.getCharacteristicDatabase());
+			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(objects,
-				CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH);
+					CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH);
 			if (characteristicMap != null)
 				for (Iterator iter = objects.iterator(); iter.hasNext();) {
 					TransmissionPath transmissionPath = (TransmissionPath) iter.next();

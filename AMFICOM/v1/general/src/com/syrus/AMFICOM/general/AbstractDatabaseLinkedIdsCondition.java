@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.8 2005/02/10 09:54:24 bob Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.9 2005/02/24 09:25:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,12 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/10 09:54:24 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/02/24 09:25:01 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStorableObjectCondition {
@@ -40,7 +40,7 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 		buffer.append(StorableObjectDatabase.SQL_IN);
 		buffer.append(StorableObjectDatabase.OPEN_BRACKET);
 		int i = 1;
-		List ids = this.condition.getLinkedIds();
+		Collection ids = this.condition.getLinkedIds();
 		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
 			Object object = it.next();
 			Identifier id = null;

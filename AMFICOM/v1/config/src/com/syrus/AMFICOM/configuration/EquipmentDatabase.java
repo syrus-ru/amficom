@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.71 2005/02/24 09:26:13 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.72 2005/02/24 09:27:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/02/24 09:26:13 $
+ * @version $Revision: 1.72 $, $Date: 2005/02/24 09:27:50 $
  * @author $Author: arseniy $
  * @module config_v1
  */

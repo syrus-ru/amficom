@@ -1,5 +1,5 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.4 2005/02/22 17:02:15 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.5 2005/02/24 09:27:59 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SessionContext;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/22 17:02:15 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/24 09:27:59 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -107,15 +107,17 @@ public class TestMonitoredElement extends CommonConfigurationTest {
 			System.out.println("Monitored element: " + monitoredElements[j].getId() + ", name: '" + monitoredElements[j].getName() + "'");
 		}
 
-		monitoredElements[1].setName("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaAAAAAA");
-		monitoredElements[0].setName("BBBB");
+		monitoredElements[0].setName("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+		monitoredElements[1].setName("FFFFFFFFFFFFFF");
 
 		try {
 			ConfigurationStorableObjectPool.flush(false);
 		}
 		finally {
 			for (int i = 0; i < monitoredElements.length; i++)
-				System.out.println("version: " + monitoredElements[i].getVersion() + ", name: '" + monitoredElements[i].getName() + "'");
+				System.out.println("name: '" + monitoredElements[i].getName()
+						+ "' version: " + monitoredElements[i].getVersion()
+						+ ", changed: " + monitoredElements[i].isChanged());
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.49 2005/02/19 20:34:06 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.50 2005/02/24 09:26:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/02/19 20:34:06 $
+ * @version $Revision: 1.50 $, $Date: 2005/02/24 09:26:30 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -260,9 +260,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e);
 		}
+
 		Identifier meId;
 		Collection mdmIds;
-
 		MonitoredElement monitoredElement;
 		for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
 			monitoredElement = (MonitoredElement) it.next();
@@ -272,76 +272,6 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			monitoredElement.setMonitoredDomainMemberIds0(mdmIds);
 		}
 	}
-
-//	private void retrieveMDMIdsByOneQuery1(Collection monitoredElements, String linkTable, String linkColumn)
-//			throws RetrieveObjectException {
-//		if (monitoredElements == null || monitoredElements.isEmpty())
-//			return;
-//
-//		StringBuffer sql = new StringBuffer(SQL_SELECT
-//				+ MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID + COMMA
-//				+ linkColumn
-//				+ SQL_FROM + linkTable
-//				+ SQL_WHERE);
-//		try {
-//			sql.append(this.idsEnumerationString(monitoredElements, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, true));
-//		}
-//		catch (IllegalDataException ide) {
-//			throw new RetrieveObjectException(ide);
-//		}
-//
-//		Statement statement = null;
-//		ResultSet resultSet = null;
-//		Connection connection = DatabaseConnection.getConnection();
-//		try {
-//			statement = connection.createStatement();
-//			Log.debugMessage("MonitoredElementDatabase.retrieveMDMIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-//			resultSet = statement.executeQuery(sql.toString());
-//
-//			Map mdmIdsMap = new HashMap();
-//			Identifier meId;
-//			Collection mdmIds;
-//			while (resultSet.next()) {
-//				meId = DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
-//				mdmIds = (Collection) mdmIdsMap.get(meId);
-//				if (mdmIds == null) {
-//					mdmIds = new LinkedList();
-//					mdmIdsMap.put(meId, mdmIds);
-//				}
-//				mdmIds.add(DatabaseIdentifier.getIdentifier(resultSet, linkColumn));
-//			}
-//
-//			MonitoredElement monitoredElement;
-//			for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
-//				monitoredElement = (MonitoredElement) it.next();
-//				meId = monitoredElement.getId();
-//				mdmIds = (Collection) mdmIdsMap.get(meId);
-//
-//				monitoredElement.setMonitoredDomainMemberIds0(mdmIds);
-//			}
-//		}
-//		catch (SQLException sqle) {
-//			String mesg = "MonitoredElementDatabase.retrieveMDMIdsByOneQuery | Cannot retrieve parameters for result -- "
-//					+ sqle.getMessage();
-//			throw new RetrieveObjectException(mesg, sqle);
-//		}
-//		finally {
-//			try {
-//				if (statement != null)
-//					statement.close();
-//				if (resultSet != null)
-//					resultSet.close();
-//				statement = null;
-//				resultSet = null;
-//			}
-//			catch (SQLException sqle1) {
-//				Log.errorException(sqle1);
-//			}
-//			finally {
-//				DatabaseConnection.releaseConnection(connection);
-//			}
-//		}
-//	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {

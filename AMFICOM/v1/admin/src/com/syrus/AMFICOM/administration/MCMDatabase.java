@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.15 2005/02/24 09:07:19 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.16 2005/02/24 09:23:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,9 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/02/24 09:07:19 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/24 09:23:03 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
