@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.11 2004/08/16 10:48:22 arseniy Exp $
+ * $Id: KISReport.java,v 1.12 2004/08/22 19:10:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/16 10:48:22 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/22 19:10:57 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -62,8 +62,8 @@ public class KISReport {
 			for (int i = 0; i < parameters.length; i++) {
 				parameterType = (ParameterType)MeasurementStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(this.parameterCodenames[i]), true);
 				parameters[i] = new SetParameter(NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY_CODE, 20),
-																					 parameterType,
-																					 this.parameterValues[i]);
+																				 parameterType,
+																				 this.parameterValues[i]);
 			}
 		}
 		catch (IllegalObjectEntityException ioee) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.9 2004/08/14 19:37:27 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.10 2004/08/22 19:10:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/14 19:37:27 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/22 19:10:57 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -39,7 +40,7 @@ public class MCMImplementation extends MCMPOA {
 	}
 
 	public void receiveTests(Test_Transferable[] testsT) throws AMFICOMRemoteException {
-		Log.debugMessage("Received " + testsT.length + " tests", Log.DEBUGLEVEL03);
+		Log.debugMessage("Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
 		Test test;
 		for (int i = 0; i < testsT.length; i++) {
 			try {
@@ -51,6 +52,16 @@ public class MCMImplementation extends MCMPOA {
 				throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
 			}
 		}
+	}
+
+	public void abortTest(Identifier_Transferable testIdT) throws AMFICOMRemoteException {
+		Identifier testId = new Identifier(testIdT);
+		Log.debugMessage("Received signal to abort test '" + testId + "'", Log.DEBUGLEVEL07);
+		Test test = (Test)MeasurementStorableObjectPool.getStorableObject(testId, true);
+		if (test != null)
+			MeasurementControlModule.abortTest(test);
+		else
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, "Test '" + testIdT.identifier_string + "' not found");
 	}
 
 	public Measurement_Transferable transmitMeasurement(Identifier_Transferable idT) throws AMFICOMRemoteException {

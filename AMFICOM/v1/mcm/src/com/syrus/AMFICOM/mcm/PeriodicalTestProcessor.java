@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.14 2004/08/16 10:48:22 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.15 2004/08/22 19:10:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/16 10:48:22 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/22 19:10:57 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -36,46 +36,40 @@ public class PeriodicalTestProcessor extends TestProcessor {
 	public static final int FALL_CODE_CREATE_IDENTIFIER = 1;
 	public static final int FALL_CODE_CREATE_MEASUREMENT = 2;
 
-	private Date startTime;
-	private Date endTime;
+	private long endTime;
 	private TemporalPattern temporalPattern;
 
 	private List timeStampsList;	//List <Date timeStamp>
 	private Date currentTimeStamp;
 
-	private boolean allMeasurementsAcquired;
-
 	public PeriodicalTestProcessor(Test test) {
 		super(test);
 
-		this.startTime = test.getStartTime();
-		this.endTime = test.getEndTime();
-		try {
-			this.temporalPattern = new TemporalPattern(test.getTemporalPatternId());
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			super.shutdown();
+		this.endTime = test.getEndTime().getTime();
+		this.temporalPattern = test.getTemporalPattern();
+		if (this.temporalPattern == null) {
+			Log.errorMessage("Temporal pattern is NULL");
+			super.abort();
 		}
 
 		this.timeStampsList = new ArrayList(10);
 		this.currentTimeStamp = null;
-
-		this.allMeasurementsAcquired = false;
 	}
 
 	private Date getCurrentTimeStamp() {
 		Date timeStamp = null;
-		if (! this.allMeasurementsAcquired) {
+		if (! super.lastMeasurement) {
 			if (! this.timeStampsList.isEmpty()) {
 				timeStamp = (Date)this.timeStampsList.remove(0);
 			}
 			else {
 				long start = System.currentTimeMillis();
-				if (start <= this.endTime.getTime())
-					this.timeStampsList.addAll(this.temporalPattern.getTimes(start, start + FRAME));
+				if (start <= this.endTime) {
+					this.timeStampsList.addAll(this.temporalPattern.getTimes(start, Math.min(start + FRAME, this.endTime)));
+					timeStamp = (Date)this.timeStampsList.remove(0);
+				}
 				else
-					this.allMeasurementsAcquired = true;
+					super.lastMeasurement = true;
 			}
 		}
 		return timeStamp;
@@ -85,58 +79,72 @@ public class PeriodicalTestProcessor extends TestProcessor {
 		Identifier measurementId = null;
 		Measurement measurement = null;
 		while (super.running) {
-			if (! allMeasurementsAcquired) {
+			if (! super.lastMeasurement) {
 				if (this.currentTimeStamp == null) {
 					this.currentTimeStamp = this.getCurrentTimeStamp();
+					Log.debugMessage("Next measurement at: " + this.currentTimeStamp, Log.DEBUGLEVEL07);
 				}
 				else {
-					try {
-						measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE, 10);
-					}
-					catch (IllegalObjectEntityException ioee) {
-						Log.errorException(ioee);
-						Log.debugMessage("Aborting test '" + super.test.getId().toString() + "' because cannot create identifier for measurement", Log.DEBUGLEVEL03);
-						super.shutdown();
-					}
-					catch (AMFICOMRemoteException are) {
-						if (are.error_code.value() == ErrorCode._ERROR_ILLEGAL_OBJECT_ENTITY) {
-							Log.errorMessage("Server nothing knows about entity '" + ObjectEntities.MEASUREMENT_ENTITY + "', code " + ObjectEntities.MEASUREMENT_ENTITY_CODE);
-							super.shutdown();
-						}
-						else {
-							Log.errorMessage("Server cannot generate identifier -- " + are.message + "; sleepeng cause of fall");
-							super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
-							super.sleepCauseOfFall();
-						}
-					}	//catch
-
-					if (measurementId != null) {
+					if (this.currentTimeStamp.getTime() <= System.currentTimeMillis()) {
 						try {
-							measurement = super.test.createMeasurement(measurementId,
-																												 MeasurementControlModule.iAm.getUserId(),
-																												 this.startTime);
-							MeasurementStorableObjectPool.putStorableObject(measurement);
-							super.clearFalls();
-						}
-						catch (CreateObjectException coe) {
-							Log.errorException(coe);
-							super.sleepCauseOfFall();
+							measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE, 10);
 						}
 						catch (IllegalObjectEntityException ioee) {
 							Log.errorException(ioee);
+							Log.debugMessage("Aborting test '" + super.test.getId().toString() + "' because cannot create identifier for measurement", Log.DEBUGLEVEL03);
+							super.abort();
 						}
-					}	//if (measurementId != null)
+						catch (AMFICOMRemoteException are) {
+							if (are.error_code.value() == ErrorCode._ERROR_ILLEGAL_OBJECT_ENTITY) {
+								Log.errorMessage("Server nothing knows about entity '" + ObjectEntities.MEASUREMENT_ENTITY + "', code " + ObjectEntities.MEASUREMENT_ENTITY_CODE);
+								super.abort();
+							}
+							else {
+								Log.errorMessage("Server cannot generate identifier -- " + are.message + "; sleepeng cause of fall");
+								MeasurementControlModule.resetMServerConnection();
+								super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
+								super.sleepCauseOfFall();
+							}
+						}	//catch
+	
+						if (measurementId != null) {
+							try {
+								measurement = super.test.createMeasurement(measurementId,
+																													 MeasurementControlModule.iAm.getUserId(),
+																													 this.currentTimeStamp);
+								MeasurementStorableObjectPool.putStorableObject(measurement);
+								super.clearFalls();
+							}
+							catch (CreateObjectException coe) {
+								Log.errorException(coe);
+								super.sleepCauseOfFall();
+							}
+							catch (IllegalObjectEntityException ioee) {
+								Log.errorException(ioee);
+							}
+						}	//if (measurementId != null)
+	
+						if (measurement != null) {
+							super.transceiver.addMeasurement(measurement, this);
+							super.numberOfScheduledMeasurements ++;
+							this.currentTimeStamp = null;
+						}
 
-					if (measurement != null) {
-						super.transceiver.addMeasurement(measurement, this);
-						this.currentTimeStamp = null;
-					}
+					}	//if (this.currentTimeStamp.getTime() <= System.currentTimeMillis())
 				}	//if (this.currentTimeStamp == null)
-			}	//if (! allMeasurementsAcquired)
+			}	//if (! super.lastMeasurement)
 
 			super.processMeasurementResult();
-			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && this.allMeasurementsAcquired)
-				super.shutdown();
+System.out.println("numberOfReceivedMResults: " + super.numberOfReceivedMResults + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements + ", lastMeasurement: " + lastMeasurement);
+			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && super.lastMeasurement)
+				super.complete();
+
+			try {
+				sleep(super.initialTimeToSleep);
+			}
+			catch (InterruptedException ie) {
+				Log.errorException(ie);
+			}
 		}
 	}
 

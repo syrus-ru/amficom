@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.1 2004/08/14 19:37:27 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.2 2004/08/22 19:10:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
@@ -32,25 +33,30 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/14 19:37:27 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/22 19:10:57 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
-public class MCMMeasurementObjectLoader implements MeasurementObjectLoader {
+public final class MCMMeasurementObjectLoader implements MeasurementObjectLoader {
 
 	public MCMMeasurementObjectLoader() {
 	}
 
-	public ParameterType loadParameterType(Identifier id) throws RetrieveObjectException {
+	public ParameterType loadParameterType(Identifier id) throws RetrieveObjectException, CommunicationException {
 		ParameterType parameterType = null;
 		try {
 			parameterType = new ParameterType(id);
 		}
 		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("ParameterType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL05);
+			Log.debugMessage("ParameterType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 			try {
 				parameterType = new ParameterType(MeasurementControlModule.mServerRef.transmitParameterType((Identifier_Transferable)id.getTransferable()));
+			}
+			catch (org.omg.CORBA.SystemException se) {
+				Log.errorException(se);
+				MeasurementControlModule.activateMServerReference();
+				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
@@ -65,15 +71,20 @@ public class MCMMeasurementObjectLoader implements MeasurementObjectLoader {
 		return parameterType;
 	}
 
-	public MeasurementType loadMeasurementType(Identifier id) throws RetrieveObjectException {
+	public MeasurementType loadMeasurementType(Identifier id) throws RetrieveObjectException, CommunicationException {
 		MeasurementType measurementType = null;
 		try {
 			measurementType = new MeasurementType(id);
 		}
 		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("MeasurementType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 			try {
 				measurementType = new MeasurementType(MeasurementControlModule.mServerRef.transmitMeasurementType((Identifier_Transferable)id.getTransferable()));
+			}
+			catch (org.omg.CORBA.SystemException se) {
+				Log.errorException(se);
+				MeasurementControlModule.activateMServerReference();
+				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
@@ -88,15 +99,20 @@ public class MCMMeasurementObjectLoader implements MeasurementObjectLoader {
 		return measurementType;
 	}
 
-	public AnalysisType loadAnalysisType(Identifier id) throws RetrieveObjectException {
+	public AnalysisType loadAnalysisType(Identifier id) throws RetrieveObjectException, CommunicationException {
 		AnalysisType analysisType = null;
 		try {
 			analysisType = new AnalysisType(id);
 		}
 		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("AnalysisType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL05);
+			Log.debugMessage("AnalysisType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 			try {
 				analysisType = new AnalysisType(MeasurementControlModule.mServerRef.transmitAnalysisType((Identifier_Transferable)id.getTransferable()));
+			}
+			catch (org.omg.CORBA.SystemException se) {
+				Log.errorException(se);
+				MeasurementControlModule.activateMServerReference();
+				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
@@ -111,15 +127,20 @@ public class MCMMeasurementObjectLoader implements MeasurementObjectLoader {
 		return analysisType;
 	}
 
-	public EvaluationType loadEvaluationType(Identifier id) throws RetrieveObjectException {
+	public EvaluationType loadEvaluationType(Identifier id) throws RetrieveObjectException, CommunicationException {
 		EvaluationType evaluationType = null;
 		try {
 			evaluationType = new EvaluationType(id);
 		}
 		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("EvaluationType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL05);
+			Log.debugMessage("EvaluationType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 			try {
 				evaluationType = new EvaluationType(MeasurementControlModule.mServerRef.transmitEvaluationType((Identifier_Transferable)id.getTransferable()));
+			}
+			catch (org.omg.CORBA.SystemException se) {
+				Log.errorException(se);
+				MeasurementControlModule.activateMServerReference();
+				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
@@ -134,15 +155,20 @@ public class MCMMeasurementObjectLoader implements MeasurementObjectLoader {
 		return evaluationType;
 	}
 
-	public Set loadSet(Identifier id) throws RetrieveObjectException {
+	public Set loadSet(Identifier id) throws RetrieveObjectException, CommunicationException {
 		Set set = null;
 		try {
 			set = new Set(id);
 		}
 		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("Set '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL05);
+			Log.debugMessage("Set '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 			try {
 				set = new Set(MeasurementControlModule.mServerRef.transmitSet((Identifier_Transferable)id.getTransferable()));
+			}
+			catch (org.omg.CORBA.SystemException se) {
+				Log.errorException(se);
+				MeasurementControlModule.activateMServerReference();
+				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
@@ -157,15 +183,20 @@ public class MCMMeasurementObjectLoader implements MeasurementObjectLoader {
 		return set;
 	}
 
-	public MeasurementSetup loadMeasurementSetup(Identifier id) throws RetrieveObjectException {
+	public MeasurementSetup loadMeasurementSetup(Identifier id) throws RetrieveObjectException, CommunicationException {
 		MeasurementSetup measurementSetup = null;
 		try {
 			measurementSetup = new MeasurementSetup(id);
 		}
 		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("MeasurementSetup '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementSetup '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 			try {
 				measurementSetup = new MeasurementSetup(MeasurementControlModule.mServerRef.transmitMeasurementSetup((Identifier_Transferable)id.getTransferable()));
+			}
+			catch (org.omg.CORBA.SystemException se) {
+				Log.errorException(se);
+				MeasurementControlModule.activateMServerReference();
+				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
@@ -192,42 +223,28 @@ public class MCMMeasurementObjectLoader implements MeasurementObjectLoader {
 		return new Evaluation(id);
 	}
 
-	public Test loadTest(Identifier id) throws RetrieveObjectException {
-		Test test = null;
-		try {
-			test = new Test(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("Test '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL05);
-			try {
-				test = new Test(MeasurementControlModule.mServerRef.transmitTest((Identifier_Transferable)id.getTransferable()));
-			}
-			catch (AMFICOMRemoteException are) {
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("Test '" + id + "' not found on server database");
-				else
-					Log.errorMessage("Cannot retrieve test '" + id + "' from server database -- " + are.message);
-			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
-			}
-		}
-		return test;
+	public Test loadTest(Identifier id) throws DatabaseException {
+		return new Test(id);
 	}
 
 	public Result loadResult(Identifier id) throws DatabaseException {
 		return new Result(id);
 	}
 
-	public TemporalPattern loadTemporalPattern(Identifier id) throws RetrieveObjectException {
+	public TemporalPattern loadTemporalPattern(Identifier id) throws RetrieveObjectException, CommunicationException {
 		TemporalPattern temporalPattern = null;
 		try {
 			temporalPattern = new TemporalPattern(id);
 		}
 		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("TemporalPattern '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL05);
+			Log.debugMessage("TemporalPattern '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
 			try {
 				temporalPattern = new TemporalPattern(MeasurementControlModule.mServerRef.transmitTemporalPattern((Identifier_Transferable)id.getTransferable()));
+			}
+			catch (org.omg.CORBA.SystemException se) {
+				Log.errorException(se);
+				MeasurementControlModule.activateMServerReference();
+				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 			catch (AMFICOMRemoteException are) {
 				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))

@@ -33,91 +33,66 @@ int main() {
 
 JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEnv *env,
 									jobject obj,
-									jobject j_measurement) {
-	jfieldID fid;
+									jstring jmeasurement_id,
+									jstring jmeasurement_type_codename,
+									jstring jlocal_address,
+									jobjectArray jparameter_type_codenames,
+									jobjectArray jparameter_values) {
 	unsigned int l;
 	char* buffer;
 	const char* jbuffer;
-	jclass measurement_class = env->GetObjectClass(j_measurement);
+
 //measurement_id
-	fid = env->GetFieldID(measurement_class, "id", "Ljava/lang/String;");
-	jstring j_id = (jstring)env->GetObjectField(j_measurement, fid);
-	l = env->GetStringUTFLength(j_id);
+	l = env->GetStringUTFLength(jmeasurement_id);
 	buffer = new char[l];
-	jbuffer = env->GetStringUTFChars(j_id, NULL);
+	jbuffer = env->GetStringUTFChars(jmeasurement_id, NULL);
 	memcpy(buffer, jbuffer, l);
-	env->ReleaseStringUTFChars(j_id, jbuffer);
+	env->ReleaseStringUTFChars(jmeasurement_id, jbuffer);
 	ByteArray* bmeasurement_id = new ByteArray(l, buffer);
-//measurement_codename
-	fid = env->GetFieldID(measurement_class, "codename", "Ljava/lang/String;");
-	jstring j_measurement_codename = (jstring)env->GetObjectField(j_measurement, fid);
-	l = env->GetStringUTFLength(j_measurement_codename);
+
+//measurement_type_codename
+	l = env->GetStringUTFLength(jmeasurement_type_codename);
 	buffer = new char[l];
-	jbuffer = env->GetStringUTFChars(j_measurement_codename, NULL);
+	jbuffer = env->GetStringUTFChars(jmeasurement_type_codename, NULL);
 	memcpy(buffer, jbuffer, l);
-	env->ReleaseStringUTFChars(j_measurement_codename, jbuffer);
-	ByteArray* bmeasurement_codename = new ByteArray(l, buffer);
+	env->ReleaseStringUTFChars(jmeasurement_type_codename, jbuffer);
+	ByteArray* bmeasurement_type_codename = new ByteArray(l, buffer);
+
 //local_address
-	fid = env->GetFieldID(measurement_class, "localAddress", "Ljava/lang/String;");
-	jstring j_local_address = (jstring)env->GetObjectField(j_measurement, fid);
-	l = env->GetStringUTFLength(j_local_address);
+	l = env->GetStringUTFLength(jlocal_address);
 	buffer = new char[l];
-	jbuffer = env->GetStringUTFChars(j_local_address, NULL);
+	jbuffer = env->GetStringUTFChars(jlocal_address, NULL);
 	memcpy(buffer, jbuffer, l);
-	env->ReleaseStringUTFChars(j_local_address, jbuffer);
+	env->ReleaseStringUTFChars(jlocal_address, jbuffer);
 	ByteArray* blocal_address = new ByteArray(l, buffer);
+
 //parameters
-	fid = env->GetFieldID(measurement_class, "setup", "Lcom/syrus/AMFICOM/measurement/MeasurementSetup;");
-	jobject j_measurement_setup = env->GetObjectField(j_measurement, fid);
-
-	jclass measurement_setup_class = env->GetObjectClass(j_measurement_setup);
-	fid = env->GetFieldID(measurement_setup_class, "parameterSet", "Lcom/syrus/AMFICOM/measurement/Set;");
-	env->DeleteLocalRef(measurement_setup_class);
-	jobject j_parameter_set = env->GetObjectField(j_measurement_setup, fid);
-	env->DeleteLocalRef(j_measurement_setup);
-
-	jclass set_class = env->GetObjectClass(j_parameter_set);
-	fid = env->GetFieldID(set_class, "parameters", "[Lcom/syrus/AMFICOM/measurement/SetParameter;");
-	env->DeleteLocalRef(set_class);
-	jobjectArray j_parameters = (jobjectArray)env->GetObjectField(j_parameter_set, fid);
-	env->DeleteLocalRef(j_parameter_set);
-
-	jsize parameters_length = env->GetArrayLength(j_parameters);
+	jsize parameters_length = env->GetArrayLength(jparameter_type_codenames);
 	Parameter** parameters = new Parameter*[parameters_length];
-	jobject j_parameter;
-	jclass set_parameter_class;
-	jstring j_parameter_codename;
-	jbyteArray j_value;
+	jstring jparameter_type_codename;
+	jbyteArray jparameter_value;
 	for (jsize s = 0; s < parameters_length; s++) {
-		j_parameter = env->GetObjectArrayElement(j_parameters, s);
-		set_parameter_class = env->GetObjectClass(j_parameter);
-
-		fid = env->GetFieldID(set_parameter_class, "codename", "Ljava/lang/String;");
-		j_parameter_codename = (jstring)env->GetObjectField(j_parameter, fid);
-		l = env->GetStringUTFLength(j_parameter_codename);
+		jparameter_type_codename = (jstring)env->GetObjectArrayElement(jparameter_type_codenames, s);
+		l = env->GetStringUTFLength(jparameter_type_codename);
 		buffer = new char[l];
-		jbuffer = env->GetStringUTFChars(j_parameter_codename, NULL);
+		jbuffer = env->GetStringUTFChars(jparameter_type_codename, NULL);
 		memcpy(buffer, jbuffer, l);
-		env->ReleaseStringUTFChars(j_parameter_codename, jbuffer);
-		ByteArray* bpar_name = new ByteArray(l, buffer);
+		env->ReleaseStringUTFChars(jparameter_type_codename, jbuffer);
+		ByteArray* bpar_type_codename = new ByteArray(l, buffer);
 
-		fid = env->GetFieldID(set_parameter_class, "value", "[B");
-		j_value = (jbyteArray)env->GetObjectField(j_parameter, fid);
-		l = env->GetArrayLength(j_value);
+		jparameter_value = (jbyteArray)env->GetObjectArrayElement(jparameter_values, s);
+		l = env->GetArrayLength(jparameter_value);
 		buffer = new char[l];
-		jbuffer = (const char*)env->GetByteArrayElements(j_value, NULL);
+		jbuffer = (const char*)env->GetByteArrayElements(jparameter_value, NULL);
 		memcpy(buffer, jbuffer, l);
-		env->ReleaseByteArrayElements(j_value, (jbyte*)jbuffer, JNI_ABORT);
+		env->ReleaseByteArrayElements(jparameter_value, (jbyte*)jbuffer, JNI_ABORT);
 		ByteArray* bpar_value = new ByteArray(l, buffer);
 
-		env->DeleteLocalRef(set_parameter_class);
-		env->DeleteLocalRef(j_parameter);
-		parameters[s] = new Parameter(bpar_name, bpar_value);
+		parameters[s] = new Parameter(bpar_type_codename, bpar_value);
 	}
-	env->DeleteLocalRef(j_parameters);
-	
+
 	MeasurementSegment* measurementSegment = new MeasurementSegment(bmeasurement_id,
-									bmeasurement_codename,
+									bmeasurement_type_codename,
 									blocal_address,
 									parameters_length,
 									parameters);
@@ -133,13 +108,13 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 	char* fifoName = new char[MAXLENPATH];
 	strcpy(fifoName, FIFOROOTPATH);
 	strcat(fifoName, "/");
-	fid = env->GetFieldID(transceiver_class, "taskFileName", "Ljava/lang/String;");
+	jfieldID fid = env->GetFieldID(transceiver_class, "taskFileName", "Ljava/lang/String;");
 	jstring j_task_file_name = (jstring)env->GetObjectField(obj, fid);
 	const char* task_file_name = env->GetStringUTFChars(j_task_file_name, NULL);
 	strcat(fifoName, task_file_name);
 	env->ReleaseStringUTFChars(j_task_file_name, task_file_name);
 	strcat(fifoName, getenv("USER"));
-	printf("(native - agent - transmit) Opening FIFO: %s\n", fifoName);
+//	printf("(native - agent - transmit) Opening FIFO: %s\n", fifoName);
 	FILE* fp;
 	if ((fp = fopen(fifoName, "w")) == NULL) {
 		perror("(native - agent - transmit) Cannot open FIFO");
@@ -147,7 +122,7 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 		delete[] fifoName;
 		return JNI_FALSE;
 	}
-	printf("(native - agent - transmit) FIFO %s opened\n", fifoName);
+//	printf("(native - agent - transmit) FIFO %s opened\n", fifoName);
 	delete[] fifoName;
 
 	char* arr = new char[MAXLENTASK];
@@ -187,7 +162,7 @@ JNIEXPORT jobject JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_receive(JNIEnv 
 	strcat(fifoName, report_file_name);
 	env->ReleaseStringUTFChars(j_report_file_name, report_file_name);
 	strcat(fifoName, getenv("USER"));
-	printf("(native - agent - receive) Opening FIFO: %s\n", fifoName);
+//	printf("(native - agent - receive) Opening FIFO: %s\n", fifoName);
 
 	fid = env->GetFieldID(transceiver_class, "initialTimeToSleep", "J");
 	unsigned int kis_tick_time = (unsigned int)(((long)env->GetLongField(obj, fid))/1000);
@@ -203,7 +178,7 @@ JNIEXPORT jobject JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_receive(JNIEnv 
 		sleep(kis_tick_time);
 		return NULL;
 	}
-	printf("(native - agent - receive) FIFO %s opened\n", fifoName);
+//	printf("(native - agent - receive) FIFO %s opened\n", fifoName);
 
 	FD_ZERO(&in);
 	FD_SET(fd, &in);

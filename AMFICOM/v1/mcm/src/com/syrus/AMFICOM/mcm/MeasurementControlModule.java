@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.24 2004/08/19 12:23:10 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.25 2004/08/22 19:10:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,12 +46,12 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 //import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/08/19 12:23:10 $
+ * @version $Revision: 1.25 $, $Date: 2004/08/22 19:10:57 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
-public class MeasurementControlModule extends SleepButWorkThread {
+public final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String APPLICATION_NAME = "mcm";
 
 	public static final String KEY_ID = "ID";
@@ -193,7 +193,7 @@ public class MeasurementControlModule extends SleepButWorkThread {
 				transceiver = new Transceiver(kisId);
 				transceiver.start();
 				transceivers.put(kisId, transceiver);
-				Log.debugMessage("Started transceiver for kis '" + kisId.toString() + "'", Log.DEBUGLEVEL03);
+				Log.debugMessage("Started transceiver for kis '" + kisId.toString() + "'", Log.DEBUGLEVEL07);
 			}
 		}
 	}
@@ -247,7 +247,7 @@ public class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
-	private static void activateMServerReference() {
+	protected static void activateMServerReference() {
 		/*	Obtain reference to measurement server	*/
 		try {
 			mServerRef = MServerHelper.narrow(corbaServer.resolveReference(iAm.getServerId().toString()));
@@ -258,6 +258,11 @@ public class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
+	protected static void resetMServerConnection() {
+		activateMServerReference();
+		NewIdentifierPool.setIdentifierGeneratorServer(mServerRef);
+	}
+
 	public void run() {
 		Test test;
 		Result_Transferable[] resultsT;
@@ -265,49 +270,36 @@ public class MeasurementControlModule extends SleepButWorkThread {
 			if (! testList.isEmpty()) {
 				if (((Test)testList.get(0)).getStartTime().getTime() <= System.currentTimeMillis() + this.forwardProcessing) {
 						test = (Test)testList.remove(0);
-						Log.debugMessage("Starting test processor for test '" + test.getId() + "'", Log.DEBUGLEVEL08);
-//					startTestProcessor(test);
+						Log.debugMessage("Starting test processor for test '" + test.getId() + "'", Log.DEBUGLEVEL07);
+					startTestProcessor(test);
 				}
 			}
 			
 			if (mServerRef != null) {
-				resultsT = createTransferables();
-				if (resultsT != null) {
-					try {
-						mServerRef.receiveResults(resultsT);
-						super.clearFalls();
-					}
-					catch (org.omg.CORBA.COMM_FAILURE se) {
-						Log.errorException(se);
-						activateMServerReference();
-					}
-					catch (AMFICOMRemoteException are) {
-						Log.errorMessage("Cannot transmit results: " + are.message + "; sleeping cause of fall");
-						super.fallCode = FALL_CODE_RECEIVE_RESULTS;
-						this.resultsToRemove = resultList;
-						super.sleepCauseOfFall();
+				synchronized (resultList) {
+					resultsT = createTransferables();
+					if (resultsT.length > 0) {
+						try {
+							mServerRef.receiveResults(resultsT, (Identifier_Transferable)iAm.getId().getTransferable());
+							resultList.clear();
+							super.clearFalls();
+						}
+						catch (org.omg.CORBA.COMM_FAILURE se) {
+							Log.errorException(se);
+							resetMServerConnection();
+						}
+						catch (AMFICOMRemoteException are) {
+							Log.errorMessage("Cannot transmit results: " + are.message + "; sleeping cause of fall");
+							super.fallCode = FALL_CODE_RECEIVE_RESULTS;
+							this.resultsToRemove = resultList;
+							super.sleepCauseOfFall();
+						}
 					}
 				}
-			}
+			}	//if (mServerRef != null)
 			else
-				activateMServerReference();
+				resetMServerConnection();
 
-//--------------
-//			System.out.println(System.currentTimeMillis());
-//			AnalysisType at = (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier("AnalysisType_3"), true);
-//			System.out.println("Received from Pool: " + at.getCodename() + ", criteria: " + at.getCriteriaParameterTypeIds().size());
-//			try {
-//				AnalysisType_Transferable att = mServerRef.transmitAnalysisType(new Identifier_Transferable("AnalysisType_3"));
-//				System.out.println("Received: " + att.codename);
-//			}
-//			catch (org.omg.CORBA.SystemException se) {
-//				Log.errorException(se);
-//				activateMServerReference();
-//			}
-//			catch (AMFICOMRemoteException are) {
-//				Log.errorMessage("Cannot receive analysis type -- " + are.message);
-//			}
-//--------------
 			try {
 				sleep(super.initialTimeToSleep);
 			}
@@ -318,15 +310,10 @@ public class MeasurementControlModule extends SleepButWorkThread {
 	}
 
 	private static Result_Transferable[] createTransferables() {
-		Result_Transferable[] resultsT = null;
-		if (! resultList.isEmpty()) {
-			resultsT = new Result_Transferable[resultList.size()];
-			int i = 0;
-			synchronized (resultList) {
-				for (Iterator it = resultList.iterator(); it.hasNext();)
-					resultsT[i++] = (Result_Transferable)((Result)it.next()).getTransferable();
-			}
-		}
+		Result_Transferable[] resultsT = new Result_Transferable[resultList.size()];
+		int i = 0;
+		for (Iterator it = resultList.iterator(); it.hasNext();)
+			resultsT[i] = (Result_Transferable)((Result)it.next()).getTransferable();
 		return resultsT;
 	}
 
@@ -353,7 +340,7 @@ public class MeasurementControlModule extends SleepButWorkThread {
 	
 	protected static void addTest(Test test) {
 		Date startTime = test.getStartTime();
-    Log.debugMessage("Adding to testList test '" + test.getId() + "' with start time = " + startTime.toString(), Log.DEBUGLEVEL05);
+    Log.debugMessage("Adding to testList test '" + test.getId() + "' with start time = " + startTime.toString(), Log.DEBUGLEVEL07);
     if (testList.isEmpty())
       testList.add(test);
     else {
@@ -378,6 +365,27 @@ public class MeasurementControlModule extends SleepButWorkThread {
 		}
 		catch (UpdateObjectException uoe) {
 			Log.errorException(uoe);
+		}
+	}
+
+	protected static void abortTest(Test test) {
+		Identifier id = test.getId();
+		if (testList.contains(test)) {
+			Log.debugMessage("Test '" + id + "' found in testList -- removing and aborting ", Log.DEBUGLEVEL07);
+			testList.remove(test);
+			try {
+				test.updateStatus(TestStatus.TEST_STATUS_ABORTED, iAm.getUserId());
+			}
+			catch (UpdateObjectException uoe) {
+				Log.errorException(uoe);
+			}
+		}
+		else {
+			if (testProcessors.containsKey(id)) {
+				Log.debugMessage("Test '" + id + "' has test processor -- shutting down", Log.DEBUGLEVEL07);
+				TestProcessor testProcessor = (TestProcessor)testProcessors.get(id);
+				testProcessor.abort();
+			}
 		}
 	}
 
@@ -594,10 +602,6 @@ public class MeasurementControlModule extends SleepButWorkThread {
 
 		/*	Close database connection*/
 		DatabaseConnection.closeConnection();
-	}
-
-	private static void receiveMonitoredElements(Equipment_Transferable equipmentT) {
-		
 	}
 
 	private static void activateCORBASetupServer() {

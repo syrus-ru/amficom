@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.18 2004/08/16 10:48:22 arseniy Exp $
+ * $Id: Transceiver.java,v 1.19 2004/08/22 19:10:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/16 10:48:22 $
+ * @version $Revision: 1.19 $, $Date: 2004/08/22 19:10:57 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -75,23 +75,24 @@ public class Transceiver extends SleepButWorkThread {
 			this.testProcessors.put(measurementId, testProcessor);
 		}
 		else
-			Log.errorMessage("Status: " + measurement.getStatus().value() + " of measurement '" + measurementId.toString() + "' not SCHEDULED -- cannot add to queue");
+			Log.errorMessage("Status: " + measurement.getStatus().value() + " of measurement '" + measurementId + "' not SCHEDULED -- cannot add to queue");
 	}
 
 	public void run() {
-		Measurement measurement = null;
-		Identifier measurementId = null;
+		Measurement measurement;
+		Identifier measurementId;
 		TestProcessor testProcessor = null;
 		Result result;
+		
 		while (this.running) {
-			if (measurement == null) {
-				if (! this.measurementQueue.isEmpty()) {
-					measurement = (Measurement)this.measurementQueue.get(0);
-					measurementId = measurement.getId();
-				}
-			}
-			else {
-				if (this.transmit(measurement)) {
+			if (! this.measurementQueue.isEmpty()) {
+				measurement = (Measurement)this.measurementQueue.get(0);
+				measurementId = measurement.getId();
+				if (this.transmit(measurement.getId().toString(),
+													measurement.getType().getCodename(),
+													measurement.getLocalAddress(),
+													measurement.getSetup().getParameterTypeCodenames(),
+													measurement.getSetup().getParameterValues())) {
 					try {
 						measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING,
 																		 MeasurementControlModule.iAm.getUserId());
@@ -103,25 +104,24 @@ public class Transceiver extends SleepButWorkThread {
 					catch (IllegalObjectEntityException ioee) {
 						Log.errorException(ioee);
 					}
-					Log.debugMessage("Transmitted measurement '" + measurementId.toString() + "'", Log.DEBUGLEVEL03);
+					Log.debugMessage("Transmitted measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 					this.measurementQueue.remove(measurement);
-					measurement = null;
 					super.clearFalls();
 				}
 				else {
-					Log.errorMessage("Cannot transmit measurement '" + measurementId.toString() + "'");
+					Log.errorMessage("Cannot transmit measurement '" + measurementId + "'");
 					super.fallCode = FALL_CODE_TRANSMIT_MEASUREMENT;
 					this.measurementToRemove = measurement;
 					super.sleepCauseOfFall();
 				}
-			}	//else if (measurement == null)
+			}	//if (! this.measurementQueue.isEmpty())
 
 			if (this.kisReport == null) {
 				this.kisReport = this.receive();
 			}
 			else {
 				measurementId = this.kisReport.getMeasurementId();
-				Log.debugMessage("Received report for measurement '" + measurementId.toString() + "'", Log.DEBUGLEVEL03);
+				Log.debugMessage("Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 				measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(measurementId, true);
 				if (measurement != null) {
 					testProcessor = (TestProcessor)this.testProcessors.remove(measurementId);
@@ -135,12 +135,15 @@ public class Transceiver extends SleepButWorkThread {
 						}
 						catch (MeasurementException me) {
 							if (me.getCause() instanceof AMFICOMRemoteException) {
-								Log.debugMessage("Cannot get identifier - trying to wait", Log.DEBUGLEVEL03);
+								Log.debugMessage("Cannot get identifier - trying to wait", Log.DEBUGLEVEL07);
+								MeasurementControlModule.resetMServerConnection();
 								super.fallCode = FALL_CODE_GENERATE_IDENTIFIER;
 								super.sleepCauseOfFall();
 							}
-							else
+							else {
+								Log.errorException(me);
 								this.throwAwayKISReport();
+							}
 						}
 						catch (UpdateObjectException uoe) {
 							Log.errorException(uoe);
@@ -152,23 +155,24 @@ public class Transceiver extends SleepButWorkThread {
 						}
 					}	//if (testProcessor != null)
 					else {
-						Log.errorMessage("Cannot find test processor for measurement '" + measurementId.toString() + "'; throwing away it's report");
+						Log.errorMessage("Cannot find test processor for measurement '" + measurementId + "'; throwing away it's report");
 						this.throwAwayKISReport();
 					}
 				}	//if (measurement != null)
 				else {
-					Log.errorMessage("Cannot find measurement for id '" + measurementId.toString() + "'; throwing away it's report");
+					Log.errorMessage("Cannot find measurement for id '" + measurementId + "'; throwing away it's report");
 					this.throwAwayKISReport();
 				}
-
+				
 				try {
 					sleep(super.initialTimeToSleep);
 				}
 				catch (InterruptedException ie) {
 					Log.errorException(ie);
 				}
-			}	//else if (this.kisReport != null)
-		}
+			}	//else if (this.kisReport == null)
+
+		}	//while
 	}
 
 	protected void processFall() {
@@ -197,7 +201,7 @@ public class Transceiver extends SleepButWorkThread {
 	
 	private void throwAwayKISReport() {
 		if (this.kisReport != null) {
-			Log.debugMessage("Throwing away kis report for measurement '" + this.kisReport.getMeasurementId() + "'", Log.DEBUGLEVEL03);
+			Log.debugMessage("Throwing away kis report for measurement '" + this.kisReport.getMeasurementId() + "'", Log.DEBUGLEVEL07);
 			this.kisReport = null;
 		}
 	}
@@ -248,7 +252,12 @@ public class Transceiver extends SleepButWorkThread {
 //			Log.errorMessage("Test processor doesn't contain in table");
 //	}
 
-	private native boolean transmit(Measurement measurement);
+	//private native boolean transmit(Measurement measurement);
+	private native boolean transmit(String measurementId,
+																	String measurementTypeCodename,
+																	String localAddress,
+																	String[] parameterTypeCodenames,
+																	byte[][] parameterValues);
 
 	private native KISReport receive();
 }

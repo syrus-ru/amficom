@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.18 2004/08/16 10:48:22 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.19 2004/08/22 19:10:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -27,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/16 10:48:22 $
+ * @version $Revision: 1.19 $, $Date: 2004/08/22 19:10:57 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -40,8 +41,8 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	Transceiver transceiver;
 	int numberOfScheduledMeasurements;
 	int numberOfReceivedMResults;
-	
-	//protected Map measurementResultQueue;	//Map <Identifier measurementId, Result result>
+	boolean lastMeasurement;
+
 	private List measurementResultList;	//List <Result measurementResult>
 
 	public TestProcessor(Test test) {
@@ -49,8 +50,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 
 		this.test = test;
 		this.running = true;
-		
-		//this.measurementResultQueue = Collections.synchronizedMap(new HashMap());
+
 		this.measurementResultList = Collections.synchronizedList(new LinkedList());
 
 		MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(this.test.getMonitoredElement().getMeasurementPortId(), true);
@@ -58,20 +58,25 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		this.transceiver = (Transceiver)MeasurementControlModule.transceivers.get(kisId);
 		if (this.transceiver == null) {
 			Log.errorMessage("Cannot find transceiver for kis '" + kisId.toString() + "'");
-			this.shutdown();
+			this.abort();
 		}
 
 		this.numberOfScheduledMeasurements = this.numberOfReceivedMResults = 0;
+		this.lastMeasurement = false;
 
 		switch (this.test.getStatus().value()) {
 			case TestStatus._TEST_STATUS_SCHEDULED:
 				//Normal
+				TestStatusVerifier tsv = new TestStatusVerifier(this.test.getId(), TestStatus.TEST_STATUS_PROCESSING);
+				tsv.start();
+
 				try {
 					this.test.updateStatus(TestStatus.TEST_STATUS_PROCESSING, MeasurementControlModule.iAm.getUserId());
 				}
 				catch (UpdateObjectException uoe) {
 					Log.errorException(uoe);
 				}
+
 				try {
 					MeasurementStorableObjectPool.putStorableObject(this.test);
 				}
@@ -84,11 +89,11 @@ public abstract class TestProcessor extends SleepButWorkThread {
 				break;
 			default:
 				Log.errorMessage("Unappropriate status " + this.test.getStatus().value() + " of test '" + this.test.getId() + "'");
-				this.shutdown();
+				this.abort();
 		}
 	}
-	
-	protected void addMeasurementResult(Result result) {
+
+	protected final void addMeasurementResult(Result result) {
 		this.measurementResultList.add(result);
 	}
 
@@ -102,13 +107,13 @@ public abstract class TestProcessor extends SleepButWorkThread {
 			Result[] aeResults = null;
 			try {
 				aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
+				for (int i = 0; i < aeResults.length; i++)
+					if (aeResults[i] != null)
+						MeasurementControlModule.resultList.add(aeResults[i]);
 			}
 			catch (TestProcessingException tpe) {
 				Log.errorException(tpe);
 			}
-			for (int i = 0; i < aeResults.length; i++)
-				if (aeResults[i] != null)
-					MeasurementControlModule.resultList.add(aeResults[i]);
 
 			try {
 				((Measurement)measurementResult.getAction()).updateStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED,
@@ -119,20 +124,80 @@ public abstract class TestProcessor extends SleepButWorkThread {
 			}
 		}
 	}
-	
-	protected void shutdown() {
-		this.running = false;
+
+	protected void complete() {
+		TestStatusVerifier tsv = new TestStatusVerifier(this.test.getId(), TestStatus.TEST_STATUS_COMPLETED);
+		tsv.start();
+
+		try {
+			this.test.updateStatus(TestStatus.TEST_STATUS_COMPLETED, MeasurementControlModule.iAm.getUserId());
+		}
+		catch (UpdateObjectException uoe) {
+			Log.errorException(uoe);
+		}
+		this.shutdown();
+	}
+
+	protected void abort() {
+		TestStatusVerifier tsv = new TestStatusVerifier(this.test.getId(), TestStatus.TEST_STATUS_ABORTED);
+		tsv.start();
+
 		try {
 			this.test.updateStatus(TestStatus.TEST_STATUS_ABORTED, MeasurementControlModule.iAm.getUserId());
 		}
 		catch (UpdateObjectException uoe) {
 			Log.errorException(uoe);
 		}
+		this.shutdown();
+	}
+
+	protected void shutdown() {
+		this.running = false;
 		this.cleanup();
 	}
 
 	void cleanup() {
-		this.test = null;
 		this.measurementResultList.clear();
+		MeasurementControlModule.testProcessors.remove(this.test.getId());
+		this.test = null;
+	}
+
+	private class TestStatusVerifier extends SleepButWorkThread {
+		private Identifier testId;
+		private TestStatus testStatus;
+		private boolean running;
+
+		TestStatusVerifier (Identifier testId, TestStatus testStatus) {
+			super(ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000, ApplicationProperties.getInt("MaxFalls", MAX_FALLS));
+
+			this.testId = testId;
+			this.testStatus = testStatus;
+
+			this.running = true;
+		}
+
+		public void run() {
+			while (this.running) {
+				try {
+					Log.debugMessage("Updating on server status of test '" + this.testId + "' to " + this.testStatus.value(), Log.DEBUGLEVEL07);
+					MeasurementControlModule.mServerRef.updateTestStatus((Identifier_Transferable)this.testId.getTransferable(), this.testStatus);
+					super.clearFalls();
+					this.shutdown();
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.resetMServerConnection();
+					super.sleepCauseOfFall();
+				}
+			}
+		}
+
+		protected void processFall() {
+			this.shutdown();
+		}
+
+		private void shutdown() {
+			this.running = false;
+		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.8 2004/08/14 19:37:27 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.9 2004/08/22 19:10:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/14 19:37:27 $
+ * @version $Revision: 1.9 $, $Date: 2004/08/22 19:10:57 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -55,6 +55,7 @@ public abstract class AnalysisEvaluationProcessor {
 																								 monitoredElementId,
 																								 measurementSetup.getThresholdSet());
 				return analyseAndEvaluate(measurementResult, analysis, evaluation, measurementSetup.getEtalon());
+					
 			}
 			else
 				return new Result[1];//return analyse(measurementResult, analysis, measurementSetup.getEtalon());
@@ -74,6 +75,9 @@ public abstract class AnalysisEvaluationProcessor {
 	private static Analysis createAnalysis(AnalysisType analysisType,
 																				 Identifier monitoredElementId,
 																				 Set criteriaSet) throws AnalysisException {
+		if (criteriaSet == null)
+			throw new AnalysisException("Cirteria set is NULL");
+
 		Identifier analysisId = null;
 		try {
 			analysisId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_ENTITY_CODE, 10);
@@ -100,6 +104,9 @@ public abstract class AnalysisEvaluationProcessor {
 	private static Evaluation createEvaluation(EvaluationType evaluationType,
 																						 Identifier monitoredElementId,
 																						 Set thresholdSet) throws EvaluationException {
+		if (thresholdSet == null)
+			throw new EvaluationException("Threshold set is NULL");
+
 		Identifier evaluationId = null;
 		try {
 			evaluationId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_ENTITY_CODE, 10);
