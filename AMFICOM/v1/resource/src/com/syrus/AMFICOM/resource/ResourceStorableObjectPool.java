@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.4 2005/01/17 17:17:46 max Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.5 2005/01/18 15:31:13 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.4 $, $Date: 2005/01/17 17:17:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/01/18 15:31:13 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -44,8 +44,8 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 			clazz = Class.forName(cacheClass.getName());
 			instance = new ResourceStorableObjectPool(clazz);
 		} catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default '" 
-							 + ((clazz == null) ? "null" : clazz.getName()) + "'");
+			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default '"   //$NON-NLS-1$//$NON-NLS-2$
+							 + ((clazz == null) ? "null" : clazz.getName()) + "'");  //$NON-NLS-1$//$NON-NLS-2$
 		}
 		init(rObjectLoader1, size);
 	}
@@ -109,7 +109,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 			storableObject = rObjectLoader.loadImageResource(objectId);
 			break;
 		default:
-			Log.errorMessage("ResourceStorableObjectPool.loadStorableObject | Unknown entity: "
+			Log.errorMessage("ResourceStorableObjectPool.loadStorableObject | Unknown entity: " //$NON-NLS-1$
 							+ ObjectEntities.codeToString(objectId.getMajor()));
 			storableObject = null;
 		}
@@ -124,7 +124,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 			storableObjects = rObjectLoader.loadImageResources(ids);
 			break;
 		default:
-			Log.errorMessage("ResourceStorableObjectPool.loadStorableObjects | Unknown entityCode : " + entityCode);
+			Log.errorMessage("ResourceStorableObjectPool.loadStorableObjects | Unknown entityCode : " + entityCode); //$NON-NLS-1$
 			storableObjects = null;
 		}
 		return storableObjects;
@@ -139,7 +139,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 				loadedList = rObjectLoader.loadImageResourcesButIds(condition, ids);
 				break;
 			default:
-				Log.errorMessage("ResourceStorableObjectPool.loadStorableObjectsButIds | Unknown entity: " + ObjectEntities.codeToString(entityCode));
+				Log.errorMessage("ResourceStorableObjectPool.loadStorableObjectsButIds | Unknown entity: " + ObjectEntities.codeToString(entityCode)); //$NON-NLS-1$
 				loadedList = null;
 		}		
 		return loadedList;
@@ -149,21 +149,21 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		if (!list.isEmpty()) {
 			boolean alone = (list.size()==1);			
 			switch (code) {
-			case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
-				if (alone)
-					rObjectLoader.saveImageResource((AbstractImageResource)list.get(0), force);
-				else 
-					rObjectLoader.saveImageResources(list, force);
-				break;
-			default:
-				Log.errorMessage("ResourceStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '" + ObjectEntities.codeToString(code) + "'");
+				case ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE:
+					if (alone)
+						rObjectLoader.saveImageResource((AbstractImageResource)list.get(0), force);
+					else 
+						rObjectLoader.saveImageResources(list, force);
+					break;
+				default:
+					Log.errorMessage("ResourceStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '" + ObjectEntities.codeToString(code) + "'");  //$NON-NLS-1$//$NON-NLS-2$
 			}
 		}
 	}
 
 	public static StorableObject putStorableObject(StorableObject storableObject)
-		throws IllegalObjectEntityException {
-	return instance.putStorableObjectImpl(storableObject);
+			throws IllegalObjectEntityException {
+		return instance.putStorableObjectImpl(storableObject);
 	}
 	
 	public static void flush(boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{		 
@@ -180,31 +180,31 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 	
 	protected void deleteStorableObject(Identifier id) throws DatabaseException, CommunicationException {
 		try {
-            rObjectLoader.delete(id);
-        } catch (DatabaseException e) {
-            Log.errorMessage("ResourceStorableObjectPool.deleteStorableObject | DatabaseException: " + e.getMessage());
-            throw new DatabaseException("ResourceStorableObjectPool.deleteStorableObject", e);
-        }
+			rObjectLoader.delete(id);
+		} catch (DatabaseException e) {
+			Log.errorMessage("ResourceStorableObjectPool.deleteStorableObject | DatabaseException: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("ResourceStorableObjectPool.deleteStorableObject", e); //$NON-NLS-1$
+		}
 	}
 	
 	protected void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException {
 		try {
 			rObjectLoader.delete(ids);
-        } catch (DatabaseException e) {
-            Log.errorMessage("ResourceStorableObjectPool.deleteStorableObjects | DatabaseException: " + e.getMessage());
-            throw new DatabaseException("ResourceStorableObjectPool.deleteStorableObjects", e);
-        }
+		} catch (DatabaseException e) {
+			Log.errorMessage("ResourceStorableObjectPool.deleteStorableObjects | DatabaseException: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("ResourceStorableObjectPool.deleteStorableObjects", e); //$NON-NLS-1$
+		}
 	}
-	
+
 	public static void delete(Identifier id) throws DatabaseException, CommunicationException {
-        instance.deleteImpl(id);
+		instance.deleteImpl(id);
 	}
-    
-    public static void delete(List ids) throws DatabaseException, CommunicationException {
-    	instance.deleteImpl(ids);
-    }
-    
-    public static void serializePool(){
-    	instance.serializePoolImpl();
-    }
+
+	public static void delete(List ids) throws DatabaseException, CommunicationException {
+		instance.deleteImpl(ids);
+	}
+
+	public static void serializePool(){
+		instance.serializePoolImpl();
+	}
 }
