@@ -41,7 +41,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 	implements OperationListener
 {
 	protected Dispatcher dispatcher;
-	private JTable jTable;
+	JTable jTable;
 
 	private BellcoreStructure bs; // для доступа к самой р/г во время пересчета порогов
 
@@ -103,7 +103,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		);
 		jTable = new ATable(this.tModelEmpty);
 		
-		JButton nalysisInitialButton = new JButton();
+		JButton alysisInitialButton = new JButton();
 		JButton analysisDefaultsButton = new JButton();
 		JButton increaseThreshButton = new JButton();
 		JButton decreaseThreshButton = new JButton();
@@ -112,7 +112,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		JButton nextEventButton = new JButton();
 
 		{	// set up button size
-			JButton[] buttons = new JButton[] { nalysisInitialButton, analysisDefaultsButton, increaseThreshButton, decreaseThreshButton, previuosEventButton, 
+			JButton[] buttons = new JButton[] { alysisInitialButton, analysisDefaultsButton, increaseThreshButton, decreaseThreshButton, previuosEventButton, 
 					nextEventButton};
 			for (int i = 0; i < buttons.length; i++)
 			{
@@ -122,9 +122,9 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			}
 		}
 
-		nalysisInitialButton.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
-		nalysisInitialButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INITIAL));
-		nalysisInitialButton.addActionListener(new ActionListener()
+		alysisInitialButton.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
+		alysisInitialButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INITIAL));
+		alysisInitialButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -161,7 +161,9 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				if (ted != null)
 				{
 					ted.increaseValues();
+					int selectedColumn = jTable.getSelectedColumn();
 					dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+					jTable.setColumnSelectionInterval(selectedColumn, selectedColumn);
 				}
 			}
 		});
@@ -175,8 +177,10 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				ModelTraceManager.ThreshEditor ted = getCurrentTED();
 				if (ted != null)
 				{
+					int selectedColumn = jTable.getSelectedColumn();
 					ted.decreaseValues();
 					dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+					jTable.setColumnSelectionInterval(selectedColumn, selectedColumn);
 				}
 			}
 		});
@@ -207,7 +211,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 		//jToolBar1.setBorderPainted(true);
 		jToolBar1.setFloatable(false);
-		jToolBar1.add(nalysisInitialButton);
+		jToolBar1.add(alysisInitialButton);
 		jToolBar1.add(analysisDefaultsButton);
 		jToolBar1.add(decreaseThreshButton);
 		jToolBar1.add(increaseThreshButton);
