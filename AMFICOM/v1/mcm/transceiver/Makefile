@@ -1,19 +1,24 @@
-#LDLIBS=/usr/lib/libc.a
-OUT=libmcmtransceiver.so
-#CPP=g++#-3.3.1
-CFLAGS=-O0 -g -w -I$(AKP) -I$(TCPCONNECT) -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
-CXXFLAGS=-O0 -g -w -I$(AKP) -I$(TCPCONNECT) -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
+OUT=libtcpkisconnection.so
 
-AKP=../../akp
+CPP=g++#-3.3.1
+CFLAGS=-O0 -g -W -Wall -I$(AKP) -I$(TCPCONNECT) -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
+
+AKP=../../../HW/akp
 AKPA=$(AKP)/akp.a
 
-TCPCONNECT=tcpconnect
+TCPCONNECT=../../../HW/tcpconnect
 TCPCONNECTA=$(TCPCONNECT)/tcpconnect.a
 
-OBJS=mcmtransceiver.o tcpserver.o
+OBJS=tcpkisconnection.o transceiver.o
+
+
+.PHONY:	clean
 
 $(OUT):	$(OBJS) $(AKPA) $(TCPCONNECTA)
-	$(CXX) $(LDFLAGS) -shared -o $(OUT) $(OBJS) $(AKPA) $(TCPCONNECTA) $(LDLIBS)
+	$(CPP) $(LDFLAGS) -shared -o $(OUT) $(OBJS) $(AKPA) $(TCPCONNECTA)
+
+.cpp.o:
+	$(CPP) -c $(CFLAGS) -o $@ $<
 
 $(AKPA):
 	$(MAKE) -C $(AKP)
@@ -21,8 +26,5 @@ $(AKPA):
 $(TCPCONNECTA):
 	$(MAKE) -C $(TCPCONNECT)
 
-.PHONY:	clean
-
 clean:
 	$(RM) $(OBJS) $(OUT)
-	$(MAKE) -C $(TCPCONNECT) $@

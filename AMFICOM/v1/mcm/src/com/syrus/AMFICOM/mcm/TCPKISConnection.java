@@ -51,7 +51,8 @@ public class TCPKISConnection implements KISConnection {
 
 		long deadtime = System.currentTimeMillis() + kisConnectionTimeout;
 		while (System.currentTimeMillis() < deadtime && ! this.isEstablished()) {
-			if (! this.establishSocketConnection()) {
+			this.kisTCPSocket = this.establishSocketConnection();
+			if (! this.isEstablished()) {
 				Log.debugMessage("TCPKISConnection.establish | Cannot connect to KIS '" + this.kisId + "' on host '" + this.kisHostName + "', port " + this.kisTCPPort, Log.DEBUGLEVEL07);
 				Object obj = new Object();
 				try {
@@ -63,7 +64,8 @@ public class TCPKISConnection implements KISConnection {
 					Log.errorException(ex);
 				}
 			}
-		}
+		}	//while
+
 		if (this.isEstablished())
 			Log.debugMessage("TCPKISConnection.establish | Connected to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
 		else
@@ -71,6 +73,7 @@ public class TCPKISConnection implements KISConnection {
 	}
 
 	public void drop() {
+		this.kisTCPSocket = KIS_TCP_SOCKET_DISCONNECTED;
 		this.dropSocketConnection();
 	}
 
@@ -87,10 +90,29 @@ public class TCPKISConnection implements KISConnection {
 			throw new CommunicationException("TCPKISConnection.transmitMeasurement | Cannot transmit measurement '" + measurementId + "' to KIS '" + this.kisId + "'");
 	}
 
-	public native boolean establishSocketConnection();
+	/**
+	 * Establishes connection with remote KIS.
+	 * NOTE: this method is responsible for correct work of method isEstablished() after its invocation;
+	 * in this TCP implementation it returns KIS_TCP_SOCKET_DISCONNECTED on error.
+	 * @see #isEstablished
+	 * @return socket file descriptor.
+	 */
+	public native int establishSocketConnection();
 
+	/**
+	 * Drop connection. Set field kisTCPSocket to KIS_TCP_SOCKET_DISCONNECTED. 
+	 */
 	public native void dropSocketConnection();
 
+	/**
+	 * Transmits data to socket.
+	 * @param measurementId
+	 * @param measurementTypeCodename
+	 * @param localAddress
+	 * @param parameterTypeCodenames
+	 * @param parameterValues
+	 * @return true on success, false on failure.
+	 */
 	public native boolean transmitMeasurementBySocket(String measurementId,
 														String measurementTypeCodename,
 														String localAddress,

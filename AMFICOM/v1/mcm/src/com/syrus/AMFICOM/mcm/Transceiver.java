@@ -19,9 +19,14 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 public class Transceiver extends SleepButWorkThread {
+	private static final int TCP_SOCKET_DISCONNECTED = -1;
+
 /*	Error codes for method processFall()	*/
 	public static final int FALL_CODE_GENERATE_IDENTIFIER = 1;
+	public static final int FALL_CODE_RECEIVE_KIS_REPORT = 2;
 
+	private short tcpPort;
+	private int tcpSocket;
 	private Map testProcessors;//Map <Identifier measurementId, TestProcessor testProcessor>
 	private KISReport kisReport;
 
@@ -31,6 +36,9 @@ public class Transceiver extends SleepButWorkThread {
 		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TICK_TIME, MeasurementControlModule.KIS_TICK_TIME) * 1000,
 				ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_MAX_FALLS, MeasurementControlModule.KIS_MAX_FALLS));
 
+		this.tcpPort = MeasurementControlModule.iAm.getTCPPort();
+		if (this.tcpPort <= 0)
+			this.tcpPort = (short)ApplicationProperties.getInt(MeasurementControlModule.KEY_TCP_PORT, MeasurementControlModule.TCP_PORT);
 		this.setupReceiverInterface();
 
 		this.testProcessors = Collections.synchronizedMap(new Hashtable());
@@ -38,21 +46,6 @@ public class Transceiver extends SleepButWorkThread {
 
 		this.running = true;
 	}
-
-	private void setupReceiverInterface() throws CommunicationException {
-		short tcpPort = MeasurementControlModule.iAm.getTCPPort();
-		if (tcpPort <= 0)
-			tcpPort = (short)ApplicationProperties.getInt(MeasurementControlModule.KEY_TCP_PORT, MeasurementControlModule.TCP_PORT);
-
-		if (this.setupTCPInterface(tcpPort))
-			return;
-		else
-			throw new CommunicationException("Cannot setup network interface");
-	}
-
-	private native boolean setupTCPInterface(short tcpPort);
-
-	private native KISReport receive();
 
 	public void transmitMeasurementToKIS(Measurement measurement, KIS kis, TestProcessor testProcessor) {
 		Identifier measurementId = measurement.getId();
@@ -87,8 +80,31 @@ public class Transceiver extends SleepButWorkThread {
 		Result result;
 
 		while (this.running) {
-			if (this.kisReport == null)
-				this.kisReport = this.receive();
+			if (this.kisReport == null) {
+				if (this.receiverInterfaceIsUp()) {
+					if (! this.receive()) {
+						this.downReceiverInterface();
+						super.clearFalls();
+						try {
+							sleep(super.initialTimeToSleep);
+						}
+						catch (InterruptedException ie) {
+							Log.errorException(ie);
+						}
+					}
+				}
+				else {
+					Log.debugMessage("Transceiver.run | Receiver interface is down - trying set it up", Log.DEBUGLEVEL07);
+					try {
+						this.setupReceiverInterface();
+					}
+					catch (CommunicationException ce) {
+						Log.errorException(ce);
+						super.fallCode = FALL_CODE_RECEIVE_KIS_REPORT;
+						super.sleepCauseOfFall();
+					}
+				}
+			}
 			else {
 				measurementId = this.kisReport.getMeasurementId();
 				Log.debugMessage("Transceiver.run | Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
@@ -155,6 +171,8 @@ public class Transceiver extends SleepButWorkThread {
 				break;
 			case FALL_CODE_GENERATE_IDENTIFIER:
 				this.throwAwayKISReport();
+			case FALL_CODE_RECEIVE_KIS_REPORT:
+				Log.errorMessage("Cannot setup receiver interface");
 				break;
 		default:
 				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
@@ -168,6 +186,41 @@ public class Transceiver extends SleepButWorkThread {
 		}
 	}
 
+	private void setupReceiverInterface() throws CommunicationException {
+		this.tcpSocket = this.setupTCPInterface();
+		if (this.receiverInterfaceIsUp())
+			return;
+		else
+			throw new CommunicationException("Cannot setup network interface");
+	}
+
+	private void downReceiverInterface() {
+		this.tcpSocket = TCP_SOCKET_DISCONNECTED;
+		this.downTCPInterface();
+	}
+
+	private boolean receiverInterfaceIsUp() {
+		return (this.tcpSocket != TCP_SOCKET_DISCONNECTED);
+	}
+
+	/**
+	 * Creates listening socket on local machine.
+	 * @return socket file descriptor.
+	 */
+	private native int setupTCPInterface();
+
+	/**
+	 * Closes TCP socket
+	 */
+	private native void downTCPInterface();
+
+	/**
+	 * Receives result of measurement from remote KIS.
+	 * Writes received report to field kisReport
+	 * @return true on success, false on failure.
+	 */
+	private native boolean receive();
+
 
 	private class MeasurementTransmitter extends SleepButWorkThread {
 		/*	Error codes for method processFall()	*/
@@ -176,6 +229,7 @@ public class Transceiver extends SleepButWorkThread {
 		private Measurement measurement;
 		private KIS kis;
 		private TestProcessor testProcessor;
+		private KISConnection kisConnection;
 
 		private boolean moreTransmissionAttempts;
 
@@ -186,14 +240,14 @@ public class Transceiver extends SleepButWorkThread {
 			this.measurement = measurement;
 			this.kis = kis;
 			this.testProcessor = testProcessor;
+			this.kisConnection = null;
 
 			this.moreTransmissionAttempts = true;
 		}
 
 		public void run() {
-			KISConnection kisConnection = null;
 			try {
-				kisConnection = MeasurementControlModule.kisConnectionManager.getConnection(kis);
+				this.kisConnection = MeasurementControlModule.kisConnectionManager.getConnection(this.kis);
 			}
 			catch (CommunicationException ce) {
 				Log.errorException(ce);
@@ -204,7 +258,7 @@ public class Transceiver extends SleepButWorkThread {
 			Identifier measurementId = this.measurement.getId();
 			while (this.moreTransmissionAttempts) {
 				try {
-					kisConnection.transmitMeasurement(this.measurement);
+					this.kisConnection.transmitMeasurement(this.measurement);
 
 					this.moreTransmissionAttempts = false;
 					this.measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING, MeasurementControlModule.iAm.getUserId());
@@ -233,6 +287,7 @@ public class Transceiver extends SleepButWorkThread {
 					break;
 				case FALL_CODE_TRANSMIT_MEASUREMENT:
 					this.abortMeasurement();
+					MeasurementControlModule.kisConnectionManager.dropConnection(this.kis.getId());
 					this.moreTransmissionAttempts = false;
 					break;
 				default:
