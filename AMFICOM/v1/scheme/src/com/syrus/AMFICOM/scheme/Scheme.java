@@ -1,29 +1,28 @@
 /*
- * $Id: Scheme.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: Scheme.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.administration.AbstractCloneableDomainMember;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.scheme.SchemeCellContainer;
+import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
-public final class Scheme extends AbstractCloneableDomainMember implements Namable,
-		Describable, SchemeCellContainer {
+public final class Scheme extends AbstractCloneableDomainMember implements Describable, SchemeCellContainer {
 	protected String description = null;
 
 	protected Identifier mapId = null;
@@ -116,11 +115,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Namab
 		return scheme;
 	}
 
-	public String description() {
+	public String getDescription() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String description) {
+	public void setDescription(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -179,11 +178,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Namab
 		throw new UnsupportedOperationException();
 	}
 
-	public String name() {
+	public String getName() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String name) {
+	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -254,7 +253,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Namab
 
 	/**
 	 * @param newType
-	 * @see com.syrus.AMFICOM.scheme.corba.Scheme#type(com.syrus.AMFICOM.scheme.corba.SchemePackage.Type)
+	 * @see com.syrus.AMFICOM.scheme.Scheme#type(com.syrus.AMFICOM.scheme.corba.SchemePackage.Type)
 	 */
 	public void type(Type newType) {
 		throw new UnsupportedOperationException();

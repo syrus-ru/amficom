@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.12 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.13 2005/03/16 12:54:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,21 +23,16 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.PathElement;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-import com.syrus.AMFICOM.scheme.corba.SchemeLink;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 
 /**
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/02/18 12:19:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/03/16 12:54:57 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle

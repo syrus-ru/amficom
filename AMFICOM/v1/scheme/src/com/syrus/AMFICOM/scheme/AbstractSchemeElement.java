@@ -1,15 +1,14 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.*;
 import java.util.Date;
 
 /**
@@ -18,18 +17,18 @@ import java.util.Date;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends AbstractCloneableStorableObject implements
-		Namable, Describable, Characterizable {
+		Describable, Characterizable {
 	protected Identifier characteristicIds[] = null;
 
 	protected Identifier schemeId = null;
 
-	protected String thisDescription = null;
+	private String description;
 
-	protected String thisName = null;
+	private String name;
 
 	/**
 	 * @param id
@@ -63,6 +62,20 @@ public abstract class AbstractSchemeElement extends AbstractCloneableStorableObj
 	public abstract void alarmed(boolean newAlarmed);
 
 	/**
+	 * @see Describable#getDescription()
+	 */
+	public final String getDescription() {
+		return this.description;
+	}
+
+	/**
+	 * @see Namable#getName()
+	 */
+	public final String getName() {
+		return this.name;
+	}
+
+	/**
 	 * Getter returns scheme parent to this scheme link or scheme cable link
 	 * or scheme element.
 	 * 
@@ -77,4 +90,23 @@ public abstract class AbstractSchemeElement extends AbstractCloneableStorableObj
 	 * @see #schemeId
 	 */
 	public abstract void scheme(Scheme newScheme);
+
+	/**
+	 * @param description can be null.
+	 * @see Describable#setDescription(String)
+	 */
+	public final void setDescription(final String description) {
+		this.description = description;
+		this.changed = true;
+	}
+
+	/**
+	 * @param name
+	 * @see Namable#setName(String)
+	 */
+	public final void setName(final String name) {
+		assert name != null;
+		this.name = name;
+		this.changed = true;
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: PathDecomposer.java,v 1.1 2005/02/28 14:24:19 bass Exp $
+ * $Id: PathDecomposer.java,v 1.2 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/02/28 14:24:19 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/16 12:51:34 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -263,13 +263,13 @@ public final class PathDecomposer {
 	{
 		AbstractSchemePort port = pathElement.startAbstractSchemePort();
 		if (port instanceof SchemePort) {
-			PortType ptype = ((SchemePort)port).portTypeImpl();
+			PortType ptype = ((SchemePort)port).getPortType();
 			if (ptype.getSort().equals(PortTypeSort.PORTTYPESORT_OPTICAL))
 				return true;
 		}
 		port = pathElement.endAbstractSchemePort();
 		if (port instanceof SchemePort) {
-			PortType ptype = ((SchemePort)port).portTypeImpl();
+			PortType ptype = ((SchemePort)port).getPortType();
 			if (ptype.getSort().equals(PortTypeSort.PORTTYPESORT_OPTICAL))
 				return true;
 		}

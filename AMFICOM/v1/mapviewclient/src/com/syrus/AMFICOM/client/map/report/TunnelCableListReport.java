@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 public class TunnelCableListReport extends ReportData
 {
@@ -128,7 +128,7 @@ class TunnelCableListReportTableModel extends DividableTableModel
 			SchemeCableLink cableLink = (SchemeCableLink )sclIterator.next();
 
 			// Имя колодца/узла
-			this.tableData[0][tdIterator] = cableLink.name();
+			this.tableData[0][tdIterator] = cableLink.getName();
 			// Информация о тоннеле - строка типа Тоннель тон.1, место N, L =
 			// xxx
 			IntPoint binding = physicalLink.getBinding().getBinding(cableLink);

@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.7 2005/03/02 12:29:04 krupenn Exp $
+ * $Id: UnboundNode.java,v 1.8 2005/03/16 12:53:22 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,14 +23,14 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
  * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному 
  * ни к какому элементу топологической схемы.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/03/02 12:29:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/03/16 12:53:22 $
  * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
@@ -86,7 +86,7 @@ public class UnboundNode extends SiteNode
 				"");
 
 		this.schemeElement = schemeElement;
-		this.name = schemeElement.name();
+		this.name = schemeElement.getName();
 	}
 
 	/**
@@ -160,7 +160,7 @@ public class UnboundNode extends SiteNode
 	public void setSchemeElement(SchemeElement schemeElement)
 	{
 		this.schemeElement = schemeElement;
-		setName(schemeElement.name());
+		setName(schemeElement.getName());
 	}
 
 

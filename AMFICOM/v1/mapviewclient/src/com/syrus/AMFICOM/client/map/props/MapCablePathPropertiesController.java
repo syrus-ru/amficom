@@ -21,9 +21,8 @@ import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
 public final class MapCablePathPropertiesController 
 		extends MapElementPropertiesController 
@@ -93,7 +92,7 @@ public final class MapCablePathPropertiesController
 		if (key.equals(PROPERTY_SCHEME_CABLE_ID))
 		{
 			// remove .getName
-			result = path.getSchemeCableLink().name();
+			result = path.getSchemeCableLink().getName();
 		}
 		else
 		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
@@ -205,7 +204,7 @@ public final class MapCablePathPropertiesController
 				for(Iterator it2 = SchemeUtils.getAllCableLinks(scheme).iterator(); it2.hasNext();)
 				{
 					SchemeCableLink scl = (SchemeCableLink )it2.next();
-					this.schemeCableLinks.put(new ObjectResourceLabel(scl, scl.name()), scl);
+					this.schemeCableLinks.put(new ObjectResourceLabel(scl, scl.getName()), scl);
 				}
 			}
 			result = this.schemeCableLinks;

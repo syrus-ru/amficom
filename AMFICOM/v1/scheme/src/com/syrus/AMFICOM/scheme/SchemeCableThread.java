@@ -1,26 +1,26 @@
 /*
- * $Id: SchemeCableThread.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
-public final class SchemeCableThread extends AbstractCloneableStorableObject implements Namable,
-		Describable, Characterizable,
+public final class SchemeCableThread extends AbstractCloneableStorableObject implements Describable, Characterizable,
 		ComSyrusAmficomConfigurationSchemeCableThread {
 
 	protected Identifier cableThreadTypeId = null;
@@ -96,11 +96,11 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject imp
 		throw new UnsupportedOperationException();
 	}
 
-	public String description() {
+	public String getDescription() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String description) {
+	public void setDescription(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -147,11 +147,11 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject imp
 					"This scheme cable thread is in no way connected to the scheme device specified."); //$NON-NLS-1$
 	}
 
-	public String name() {
+	public String getName() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String name) {
+	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -169,7 +169,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject imp
 
 	/**
 	 * @param newSchemeCablelink
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeCableThread#schemeCablelink(com.syrus.AMFICOM.scheme.corba.SchemeCableLink)
+	 * @see com.syrus.AMFICOM.scheme.SchemeCableThread#schemeCablelink(com.syrus.AMFICOM.scheme.corba.SchemeCableLink)
 	 */
 	public void schemeCablelink(SchemeCableLink newSchemeCablelink) {
 		throw new UnsupportedOperationException();

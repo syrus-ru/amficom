@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.9 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.10 2005/03/16 12:54:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,12 +23,8 @@ import javax.swing.ImageIcon;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-import com.syrus.AMFICOM.scheme.corba.SchemeLink;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 
 
@@ -80,8 +76,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.9 $, $Date: 2005/02/10 11:48:39 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.10 $, $Date: 2005/03/16 12:54:57 $
+ * @author $Author: bass $
  * @module mapviewclient_v1
  */
 public class MapSchemeTreeModel extends ObjectResourceTreeModel
@@ -185,7 +181,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 							{
 								treeNode = new MapSchemeTreeNode(
 									schemeElement,
-									internalScheme.name(), 
+									internalScheme.getName(), 
 									true,
 									new ImageIcon(Toolkit
 										.getDefaultToolkit()
@@ -200,7 +196,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 							{
 								treeNode = new MapSchemeTreeNode(
 									schemeElement,
-									internalScheme.name(), 
+									internalScheme.getName(), 
 									true,
 									new ImageIcon(Toolkit
 										.getDefaultToolkit()
@@ -223,7 +219,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 										Image.SCALE_SMOOTH));
 							treeNode = new MapSchemeTreeNode(
 									schemeElement,
-									internalScheme.name(), 
+									internalScheme.getName(), 
 									true,
 									ii);
 							treeNode.setTopological(parentNode.isTopological());
@@ -281,7 +277,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 						{
 							treeNode = new MapSchemeTreeNode(
 									element, 
-									element.name(), 
+									element.getName(), 
 									true, 
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/placedelement.gif")),
 									isFinal);
@@ -290,7 +286,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 						else
 							treeNode = new MapSchemeTreeNode(
 									element, 
-									element.name(), 
+									element.getName(), 
 									true, 
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/device.gif")),
 									isFinal);
@@ -318,7 +314,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					for(int i = 0 ; i < scheme.schemeLinks().length; i++)
 					{
 						SchemeLink schemeLink = scheme.schemeLinks()[i];
-						childNodes.add(new MapSchemeTreeNode(schemeLink, schemeLink.name(), true, true));
+						childNodes.add(new MapSchemeTreeNode(schemeLink, schemeLink.getName(), true, true));
 					}
 				}
 				else if (parentObject instanceof SchemeElement)
@@ -327,7 +323,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					for(int i = 0; i < schemeElement.schemeLinks().length; i++)
 					{
 						SchemeLink schemeLink = schemeElement.schemeLinks()[i];
-						childNodes.add(new MapSchemeTreeNode(schemeLink, schemeLink.name(), true, true));
+						childNodes.add(new MapSchemeTreeNode(schemeLink, schemeLink.getName(), true, true));
 					}
 				}
 			}
@@ -350,7 +346,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					{
 						treeNode = new MapSchemeTreeNode(
 								schemeCableLink, 
-								schemeCableLink.name(), 
+								schemeCableLink.getName(), 
 								true, 
 								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/linkmode.gif")),
 								true);
@@ -360,7 +356,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					{
 						treeNode = new MapSchemeTreeNode(
 								schemeCableLink, 
-								schemeCableLink.name(), 
+								schemeCableLink.getName(), 
 								true,
 								true);
 					}
@@ -386,7 +382,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					{
 						treeNode = new MapSchemeTreeNode(
 								schemePath, 
-								schemePath.name(), 
+								schemePath.getName(), 
 								true, 
 								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pathmode.gif")),
 								true);
@@ -396,7 +392,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 					{
 						treeNode = new MapSchemeTreeNode(
 								schemePath, 
-								schemePath.name(), 
+								schemePath.getName(), 
 								true, 
 								true);
 					}
@@ -416,7 +412,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 
 					treeNode = new MapSchemeTreeNode(
 							scheme, 
-							scheme.name(), 
+							scheme.getName(), 
 							true,
 							new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")));
 /*
@@ -499,7 +495,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 						{
 							childNodes.add(new MapSchemeTreeNode(
 									internalElement, 
-									internalElement.name(), 
+									internalElement.getName(), 
 									true, 
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/device.gif")), 
 									true));
@@ -508,7 +504,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 						{
 							childNodes.add(new MapSchemeTreeNode(
 									internalElement, 
-									internalElement.name(), 
+									internalElement.getName(), 
 									true,
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")), 
 									true));

@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.28 2005/02/28 16:16:17 krupenn Exp $
+ * $Id: MapFrame.java,v 1.29 2005/03/16 12:54:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -68,8 +68,8 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
 /**
  * Класс $RCSfile: MapFrame.java,v $ используется для управления отображеним топологический схемы.
  * Основой является объект типа MapView. Отображение осуществляется объектом 
@@ -81,8 +81,8 @@ import com.syrus.AMFICOM.scheme.corba.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.28 $, $Date: 2005/02/28 16:16:17 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.29 $, $Date: 2005/03/16 12:54:57 $
+ * @author $Author: bass $
  * @module mapviewclient_v1
  */
 public class MapFrame extends JInternalFrame 

@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 public final class CableBindingController implements ObjectResourceController 
 {
@@ -90,7 +90,7 @@ public final class CableBindingController implements ObjectResourceController
 			if (key.equals(KEY_START_NODE))
 			{
 //				result = link.getStartNode().getName();
-				AbstractNode mne = cci.startSiteNodeImpl();
+				AbstractNode mne = cci.getStartSiteNode();
 				result = (mne == null) ? "" : mne.getName();
 			}
 			else
@@ -114,7 +114,7 @@ public final class CableBindingController implements ObjectResourceController
 			if (key.equals(KEY_END_NODE))
 			{
 //				result = link.getEndNode().getName();
-				AbstractNode mne = cci.endSiteNodeImpl();
+				AbstractNode mne = cci.getEndSiteNode();
 				result = (mne == null) ? "" : mne.getName();
 			}
 		}
@@ -140,13 +140,13 @@ public final class CableBindingController implements ObjectResourceController
 			CableChannelingItem cci = (CableChannelingItem )this.cablePath.getBinding().get(link);
 			if (key.equals(KEY_START_SPARE))
 			{
-				if(cci.physicalLink() != null)
+				if(cci.getPhysicalLink() != null)
 					cci.startSpare(Double.parseDouble((String )value));
 			}
 			else
 			if (key.equals(KEY_END_SPARE))
 			{
-				if(cci.physicalLink() != null)
+				if(cci.getPhysicalLink() != null)
 					cci.endSpare(Double.parseDouble((String )value));
 			}
 		}

@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.7 2005/03/10 15:05:00 bass Exp $
+ * $Id: CablePath.java,v 1.8 2005/03/16 12:53:22 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 import java.util.*;
 import java.util.Collections;
@@ -40,7 +40,7 @@ import java.util.ListIterator;
 /**
  * Ёлемент кабельного пути. ќписывает прив€зку кабел€ к топологическим лини€м.
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/03/10 15:05:00 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/16 12:53:22 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
@@ -147,7 +147,7 @@ public class CablePath implements MapElement
 		this.id = id;
 
 		this.schemeCableLink = schemeCableLink;
-		this.name = schemeCableLink.name();
+		this.name = schemeCableLink.getName();
 
 		if(mapView != null)
 		{
@@ -459,7 +459,7 @@ public class CablePath implements MapElement
 	public void setSchemeCableLink(SchemeCableLink schemeCableLink)
 	{
 		this.schemeCableLink = schemeCableLink;
-		this.setName(schemeCableLink.name());
+		this.setName(schemeCableLink.getName());
 	}
 
 	/**
@@ -614,8 +614,8 @@ public class CablePath implements MapElement
 						it.remove();
 						smne = link.getEndNode();
 						CableChannelingItem cci = this.getBinding().getCCI(link);
-						cci.startSiteNodeImpl((SiteNode )link.getStartNode());
-						cci.endSiteNodeImpl((SiteNode )link.getEndNode());
+						cci.setStartSiteNode((SiteNode )link.getStartNode());
+						cci.setEndSiteNode((SiteNode )link.getEndNode());
 						canSort = true;
 						break;
 					}
@@ -626,8 +626,8 @@ public class CablePath implements MapElement
 						it.remove();
 						smne = link.getStartNode();
 						CableChannelingItem cci = this.getBinding().getCCI(link);
-						cci.startSiteNodeImpl((SiteNode )link.getEndNode());
-						cci.endSiteNodeImpl((SiteNode )link.getStartNode());
+						cci.setStartSiteNode((SiteNode )link.getEndNode());
+						cci.setEndSiteNode((SiteNode )link.getStartNode());
 						canSort = true;
 						break;
 					}

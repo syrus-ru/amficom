@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.13 2005/03/04 19:17:32 bass Exp $
+* $Id: MapView.java,v 1.14 2005/03/16 12:53:22 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,12 +37,9 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.corba.MapView_Transferable;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 /**
  * Класс используется для хранения объектов, отображаемых на 
@@ -52,7 +49,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/03/04 19:17:32 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/16 12:53:22 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -73,7 +70,7 @@ public class MapView extends DomainMember {
 
 	private Map map;
 	/**
-	 *  List&lt;{@link com.syrus.AMFICOM.scheme.corba.Scheme}&gt;
+	 *  List&lt;{@link com.syrus.AMFICOM.scheme.Scheme}&gt;
 	 */
 	private List schemes;
 
@@ -560,8 +557,8 @@ public class MapView extends DomainMember {
 			if(node instanceof UnboundNode)
 				if(((UnboundNode)node).getSchemeElement().equals(se))
 					return node;
-			if(se.siteNodeImpl() != null
-				&& se.siteNodeImpl().equals(node))
+			if(se.getSiteNode() != null
+				&& se.getSiteNode().equals(node))
 						return node;
 		}
 		return null;

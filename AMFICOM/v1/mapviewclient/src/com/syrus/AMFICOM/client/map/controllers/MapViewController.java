@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.19 2005/03/01 15:43:01 krupenn Exp $
+ * $Id: MapViewController.java,v 1.20 2005/03/16 12:54:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,17 +50,14 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundNode;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/03/01 15:43:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/03/16 12:54:57 $
  * @module mapviewclient_v1
  */
 public final class MapViewController

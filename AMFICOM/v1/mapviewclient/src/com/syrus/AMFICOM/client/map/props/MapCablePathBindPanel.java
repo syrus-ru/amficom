@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -459,7 +459,7 @@ public final class MapCablePathBindPanel
 				&& previous instanceof UnboundLink)
 			{
 				CableChannelingItem cci = (CableChannelingItem )this.path.getBinding().get(link);
-				AbstractNode removedNode = cci.startSiteNodeImpl();
+				AbstractNode removedNode = cci.getStartSiteNode();
 			
 				if(previous.getEndNode().equals(removedNode))
 					previous.setEndNode(link.getOtherNode(removedNode));

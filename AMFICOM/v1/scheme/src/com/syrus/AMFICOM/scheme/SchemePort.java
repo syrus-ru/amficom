@@ -1,23 +1,24 @@
 /*
- * $Id: SchemePort.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: SchemePort.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -51,7 +52,7 @@ public final class SchemePort extends AbstractSchemePort {
 
 	/**
 	 * @param newAbstractSchemeLink
-	 * @see com.syrus.AMFICOM.scheme.corba.AbstractSchemePort#abstractSchemeLink(com.syrus.AMFICOM.scheme.corba.AbstractSchemeLink)
+	 * @see com.syrus.AMFICOM.scheme.AbstractSchemePort#abstractSchemeLink(com.syrus.AMFICOM.scheme.corba.AbstractSchemeLink)
 	 */
 	public void abstractSchemeLink(AbstractSchemeLink newAbstractSchemeLink) {
 		throw new UnsupportedOperationException();
@@ -65,11 +66,11 @@ public final class SchemePort extends AbstractSchemePort {
 		throw new UnsupportedOperationException();
 	}
 
-	public String description() {
+	public String getDescription() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String description) {
+	public void setDescription(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -79,7 +80,7 @@ public final class SchemePort extends AbstractSchemePort {
 
 	/**
 	 * @param newDirectionType
-	 * @see com.syrus.AMFICOM.scheme.corba.AbstractSchemePort#directionType(com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType)
+	 * @see com.syrus.AMFICOM.scheme.AbstractSchemePort#directionType(com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType)
 	 */
 	public void directionType(DirectionType newDirectionType) {
 		throw new UnsupportedOperationException();
@@ -106,122 +107,58 @@ public final class SchemePort extends AbstractSchemePort {
 		throw new UnsupportedOperationException();
 	}
 
-	public MeasurementPort_Transferable measurementPort() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newMeasurementPort
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#measurementPort(com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable)
-	 */
-	public void measurementPort(
-			MeasurementPort_Transferable newMeasurementPort) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#measurementPortImpl()
-	 */
-	public MeasurementPort measurementPortImpl() {
+	public MeasurementPort getMeasurementPort() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newMeasurementPortImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#measurementPortImpl(com.syrus.AMFICOM.configuration.MeasurementPort)
 	 */
-	public void measurementPortImpl(MeasurementPort newMeasurementPortImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public MeasurementPortType_Transferable measurementPortType() {
+	public void setMeasurementPort(MeasurementPort newMeasurementPortImpl) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param newMeasurementPortType
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#measurementPortType(com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable)
 	 */
-	public void measurementPortType(
-			MeasurementPortType_Transferable newMeasurementPortType) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#measurementPortTypeImpl()
-	 */
-	public MeasurementPortType measurementPortTypeImpl() {
+	public MeasurementPortType getMeasurementPortType() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newMeasurementPortTypeImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#measurementPortTypeImpl(com.syrus.AMFICOM.configuration.MeasurementPortType)
 	 */
-	public void measurementPortTypeImpl(
+	public void setMeasurementPortType(
 			MeasurementPortType newMeasurementPortTypeImpl) {
 		throw new UnsupportedOperationException();
 	}
 
-	public String name() {
+	public String getName() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String name) {
+	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 
-	public Port_Transferable port() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newPort
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#port(com.syrus.AMFICOM.configuration.corba.Port_Transferable)
-	 */
-	public void port(Port_Transferable newPort) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#portImpl()
-	 */
-	public Port portImpl() {
+	public Port getPort() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newPortImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#portImpl(com.syrus.AMFICOM.configuration.Port)
 	 */
-	public void portImpl(Port newPortImpl) {
+	public void setPort(Port newPortImpl) {
 		throw new UnsupportedOperationException();
 	}
 
-	public PortType_Transferable portType() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newPortType
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#portType(com.syrus.AMFICOM.configuration.corba.PortType_Transferable)
-	 */
-	public void portType(PortType_Transferable newPortType) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#portTypeImpl()
-	 */
-	public PortType portTypeImpl() {
+	public PortType getPortType() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newPortTypeImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#portTypeImpl(com.syrus.AMFICOM.configuration.PortType)
 	 */
-	public void portTypeImpl(PortType newPortTypeImpl) {
+	public void setPortType(PortType newPortTypeImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -239,7 +176,7 @@ public final class SchemePort extends AbstractSchemePort {
 
 	/**
 	 * @param newSchemeCableThread
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemePort#schemeCableThread(com.syrus.AMFICOM.scheme.corba.SchemeCableThread)
+	 * @see com.syrus.AMFICOM.scheme.SchemePort#schemeCableThread(com.syrus.AMFICOM.scheme.corba.SchemeCableThread)
 	 */
 	public void schemeCableThread(SchemeCableThread newSchemeCableThread) {
 		throw new UnsupportedOperationException();
@@ -251,7 +188,7 @@ public final class SchemePort extends AbstractSchemePort {
 
 	/**
 	 * @param newSchemeDevice
-	 * @see com.syrus.AMFICOM.scheme.corba.AbstractSchemePort#schemeDevice(com.syrus.AMFICOM.scheme.corba.SchemeDevice)
+	 * @see com.syrus.AMFICOM.scheme.AbstractSchemePort#schemeDevice(com.syrus.AMFICOM.scheme.corba.SchemeDevice)
 	 */
 	public void schemeDevice(SchemeDevice newSchemeDevice) {
 		throw new UnsupportedOperationException();
@@ -263,7 +200,7 @@ public final class SchemePort extends AbstractSchemePort {
 
 	/**
 	 * @param newSchemeLink
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemePort#schemeLink(com.syrus.AMFICOM.scheme.corba.SchemeLink)
+	 * @see com.syrus.AMFICOM.scheme.SchemePort#schemeLink(com.syrus.AMFICOM.scheme.corba.SchemeLink)
 	 */
 	public void schemeLink(SchemeLink newSchemeLink) {
 		throw new UnsupportedOperationException();

@@ -1,12 +1,12 @@
 /*
- * $Id: SchemeProtoElement.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
@@ -14,17 +14,17 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
-import com.syrus.AMFICOM.scheme.SchemeCellContainer;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.util.Log;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject implements
-		Namable, Describable, SchemeCellContainer, Characterizable,
+		Describable, SchemeCellContainer, Characterizable,
 		ComSyrusAmficomConfigurationSchemeProtoElement {
 
 	protected Identifier characteristicIds[] = null;
@@ -95,11 +95,11 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject im
 		return schemeProtoElement;
 	}
 
-	public String description() {
+	public String getDescription() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String description) {
+	public void setDescription(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -109,7 +109,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject im
 
 	/**
 	 * @param newDevices
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeProtoElement#devices(com.syrus.AMFICOM.scheme.corba.SchemeDevice[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeProtoElement#devices(com.syrus.AMFICOM.scheme.corba.SchemeDevice[])
 	 */
 	public void devices(SchemeDevice[] newDevices) {
 		throw new UnsupportedOperationException();
@@ -177,17 +177,17 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject im
 
 	/**
 	 * @param newLinks
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeProtoElement#links(com.syrus.AMFICOM.scheme.corba.SchemeLink[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeProtoElement#links(com.syrus.AMFICOM.scheme.corba.SchemeLink[])
 	 */
 	public void links(SchemeLink[] newLinks) {
 		throw new UnsupportedOperationException();
 	}
 
-	public String name() {
+	public String getName() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String name) {
+	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -212,7 +212,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject im
 
 	/**
 	 * @param newProtoElements
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeProtoElement#protoElements(com.syrus.AMFICOM.scheme.corba.SchemeProtoElement[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeProtoElement#protoElements(com.syrus.AMFICOM.scheme.corba.SchemeProtoElement[])
 	 */
 	public void protoElements(SchemeProtoElement[] newProtoElements) {
 		throw new UnsupportedOperationException();

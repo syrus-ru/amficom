@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.15 2005/03/11 10:50:06 bob Exp $
+* $Id: MapViewDatabase.java,v 1.16 2005/03/16 12:53:22 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
@@ -44,8 +44,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/03/11 10:50:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2005/03/16 12:53:22 $
+ * @author $Author: bass $
  * @module mapview_v1
  */
 public class MapViewDatabase extends CharacterizableDatabase {

@@ -1,18 +1,18 @@
 /*
- * $Id: SchemeProtoGroup.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
-import com.syrus.AMFICOM.scheme.SchemeSymbolContainer;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.util.Log;
 import java.util.*;
 
@@ -20,11 +20,10 @@ import java.util.*;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
-public final class SchemeProtoGroup extends AbstractCloneableStorableObject implements Namable,
-		Describable, SchemeSymbolContainer {
+public final class SchemeProtoGroup extends AbstractCloneableStorableObject implements Describable, SchemeSymbolContainer {
 
 	private static final Identifier EMPTY_DEPENDENCIES[] = new Identifier[0];
 
@@ -77,17 +76,17 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject impl
 	}
 
 	/**
-	 * @see Describable#description()
+	 * @see Describable#getDescription()
 	 */
-	public String description() {
+	public String getDescription() {
 		return this.thisDescription;
 	}
 
 	/**
 	 * @param description
-	 * @see Describable#description(String)
+	 * @see Describable#setDescription(String)
 	 */
-	public void description(final String description) {
+	public void setDescription(final String description) {
 		this.thisDescription = description;
 	}
 
@@ -143,17 +142,17 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject impl
 	}
 
 	/**
-	 * @see Namable#name()
+	 * @see Namable#getName()
 	 */
-	public String name() {
+	public String getName() {
 		return this.thisName;
 	}
 
 	/**
 	 * @param name
-	 * @see Namable#name(String)
+	 * @see Namable#setName(String)
 	 */
-	public void name(final String name) {
+	public void setName(final String name) {
 		this.thisName = name;
 	}
 
@@ -174,7 +173,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject impl
 
 	/**
 	 * @param newSchemeProtoElements
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup#schemeProtoElements(com.syrus.AMFICOM.scheme.corba.SchemeProtoElement[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeProtoGroup#schemeProtoElements(com.syrus.AMFICOM.scheme.corba.SchemeProtoElement[])
 	 */
 	public void schemeProtoElements(
 			SchemeProtoElement[] newSchemeProtoElements) {
@@ -191,7 +190,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject impl
 
 	/**
 	 * @param newSchemeProtoGroups
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup#schemeProtoGroups(com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeProtoGroup#schemeProtoGroups(com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup[])
 	 */
 	public void schemeProtoGroups(SchemeProtoGroup[] newSchemeProtoGroups) {
 		throw new UnsupportedOperationException();

@@ -16,10 +16,8 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -171,7 +169,7 @@ public final class MapSiteBindPanel
 	{
 		MapView mapView = getLogicalNetLayer().getMapView();
 
-		se.siteNodeImpl(null);
+		se.setSiteNode(null);
 		for (int i = 0; i < this.elementsBranch.getChildCount(); i++) 
 		{
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode )this.elementsBranch.getChildAt(i);
@@ -446,7 +444,7 @@ public final class MapSiteBindPanel
 				for(Iterator it = schemeElements.iterator(); it.hasNext();)
 				{
 					SchemeElement se = (SchemeElement )it.next();
-					if(se.siteNodeImpl().equals(siteNode.getId()))
+					if(se.getSiteNode().equals(siteNode.getId()))
 					{
 						elementNode = new DefaultMutableTreeNode(se);
 						this.elementsBranch.add(elementNode);

@@ -15,10 +15,8 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
 public class CableLayoutReport extends ReportData
 {
@@ -109,7 +107,7 @@ class CableLayoutReportTableModel extends DividableTableModel
 			CableChannelingItem chanellingItem = scLink.cableChannelingItems()[curCCI];
 
 			String fullName = this.getSiteFullName(map, chanellingItem
-					.startSiteNodeImpl());
+					.getStartSiteNode());
 			if(fullName == null)
 				throw new CreateReportException(
 						report.getName(),
@@ -135,7 +133,7 @@ class CableLayoutReportTableModel extends DividableTableModel
 			{
 				String tunnelInfo = "";
 
-				PhysicalLink physicalLink = chanellingItem.physicalLinkImpl();
+				PhysicalLink physicalLink = chanellingItem.getPhysicalLink();
 
 				if(physicalLink == null)
 					throw new CreateReportException(
@@ -149,7 +147,7 @@ class CableLayoutReportTableModel extends DividableTableModel
 							+ pipePath.getName();
 				else
 					tunnelInfo += LangModelMap.getString("Tunnel")
-							+ chanellingItem.name();
+							+ chanellingItem.getName();
 
 				int place = physicalLink.getBinding().getSequenceNumber(
 						chanellingItem.rowX(),
@@ -169,7 +167,7 @@ class CableLayoutReportTableModel extends DividableTableModel
 			if(curCCI == scLink.cableChannelingItems().length - 1)
 			{
 				fullName = this.getSiteFullName(map, chanellingItem
-						.endSiteNodeImpl());
+						.getEndSiteNode());
 				if(fullName == null)
 					throw new CreateReportException(
 							report.getName(),

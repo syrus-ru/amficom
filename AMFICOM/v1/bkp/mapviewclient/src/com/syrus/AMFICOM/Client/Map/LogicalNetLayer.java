@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.51 2005/03/10 17:43:58 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.52 2005/03/16 12:54:57 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -69,18 +69,16 @@ import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.PathDecomposer;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 /**
  * ”правл€ет отображением логической структуры сети.
  * 
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.51 $, $Date: 2005/03/10 17:43:58 $
+ * @author $Author: bass $
+ * @version $Revision: 1.52 $, $Date: 2005/03/16 12:54:57 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter

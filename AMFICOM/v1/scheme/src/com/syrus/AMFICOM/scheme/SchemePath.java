@@ -1,27 +1,27 @@
 /*
- * $Id: SchemePath.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: SchemePath.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.util.Log;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
-public final class SchemePath extends AbstractCloneableStorableObject implements Namable,
-		Describable, Characterizable,
+public final class SchemePath extends AbstractCloneableStorableObject implements Describable, Characterizable,
 		ComSyrusAmficomConfigurationSchemePath {
 	protected Identifier _typeId = null;
 
@@ -78,11 +78,11 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		return schemePath;
 	}
 
-	public String description() {
+	public String getDescription() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String description) {
+	public void setDescription(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -92,7 +92,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 	/**
 	 * @param newEndDevice
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemePath#endDevice(com.syrus.AMFICOM.scheme.corba.SchemeElement)
+	 * @see com.syrus.AMFICOM.scheme.SchemePath#endDevice(com.syrus.AMFICOM.scheme.corba.SchemeElement)
 	 */
 	public void endDevice(SchemeElement newEndDevice) {
 		throw new UnsupportedOperationException();
@@ -125,17 +125,17 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 	/**
 	 * @param newLinks
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemePath#links(com.syrus.AMFICOM.scheme.corba.PathElement[])
+	 * @see com.syrus.AMFICOM.scheme.SchemePath#links(com.syrus.AMFICOM.scheme.corba.PathElement[])
 	 */
 	public void links(PathElement[] newLinks) {
 		throw new UnsupportedOperationException();
 	}
 
-	public String name() {
+	public String getName() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String name) {
+	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -211,7 +211,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 	/**
 	 * @param newStartDevice
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemePath#startDevice(com.syrus.AMFICOM.scheme.corba.SchemeElement)
+	 * @see com.syrus.AMFICOM.scheme.SchemePath#startDevice(com.syrus.AMFICOM.scheme.corba.SchemeElement)
 	 */
 	public void startDevice(SchemeElement newStartDevice) {
 		throw new UnsupportedOperationException();

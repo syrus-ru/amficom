@@ -1,28 +1,27 @@
 /*
- * $Id: SchemeOptimizeInfo.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoPackage.OptimizationMode;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends
-		AbstractCloneableStorableObject implements
-		Namable,
-		Describable {
+		AbstractCloneableStorableObject implements Describable {
 
 	protected Identifier schemeId = null;
 
@@ -89,11 +88,11 @@ public final class SchemeOptimizeInfo extends
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
-	public String description() {
+	public String getDescription() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String description) {
+	public void setDescription(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -110,7 +109,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newIterations
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#iterations(double)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#iterations(double)
 	 */
 	public void iterations(double newIterations) {
 		throw new UnsupportedOperationException();
@@ -122,7 +121,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newLenMargin
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#lenMargin(double)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#lenMargin(double)
 	 */
 	public void lenMargin(double newLenMargin) {
 		throw new UnsupportedOperationException();
@@ -134,7 +133,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newMutationDegree
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#mutationDegree(double)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#mutationDegree(double)
 	 */
 	public void mutationDegree(double newMutationDegree) {
 		throw new UnsupportedOperationException();
@@ -146,17 +145,17 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newMutationRate
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#mutationRate(double)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#mutationRate(double)
 	 */
 	public void mutationRate(double newMutationRate) {
 		throw new UnsupportedOperationException();
 	}
 
-	public String name() {
+	public String getName() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String name) {
+	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -166,7 +165,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newNodesCutProb
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#nodesCutProb(double)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#nodesCutProb(double)
 	 */
 	public void nodesCutProb(double newNodesCutProb) {
 		throw new UnsupportedOperationException();
@@ -178,7 +177,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newNodesSpliceProb
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#nodesSpliceProb(double)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#nodesSpliceProb(double)
 	 */
 	public void nodesSpliceProb(double newNodesSpliceProb) {
 		throw new UnsupportedOperationException();
@@ -190,7 +189,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newOptimizationMode
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#optimizationMode(com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoPackage.OptimizationMode)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#optimizationMode(com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoPackage.OptimizationMode)
 	 */
 	public void optimizationMode(OptimizationMode newOptimizationMode) {
 		throw new UnsupportedOperationException();
@@ -202,7 +201,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newPrice
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#price(double)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#price(double)
 	 */
 	public void price(double newPrice) {
 		throw new UnsupportedOperationException();
@@ -214,7 +213,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newReflNames
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#reflNames(java.lang.String[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#reflNames(java.lang.String[])
 	 */
 	public void reflNames(String[] newReflNames) {
 		throw new UnsupportedOperationException();
@@ -226,7 +225,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newReflPrices
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#reflPrices(double[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#reflPrices(double[])
 	 */
 	public void reflPrices(double[] newReflPrices) {
 		throw new UnsupportedOperationException();
@@ -238,7 +237,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newReflRanges
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#reflRanges(double[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#reflRanges(double[])
 	 */
 	public void reflRanges(double[] newReflRanges) {
 		throw new UnsupportedOperationException();
@@ -250,7 +249,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newRtuCreateProb
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#rtuCreateProb(double)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#rtuCreateProb(double)
 	 */
 	public void rtuCreateProb(double newRtuCreateProb) {
 		throw new UnsupportedOperationException();
@@ -262,7 +261,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newRtuDeleteProb
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#rtuDeleteProb(double)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#rtuDeleteProb(double)
 	 */
 	public void rtuDeleteProb(double newRtuDeleteProb) {
 		throw new UnsupportedOperationException();
@@ -274,7 +273,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newScheme
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#scheme(com.syrus.AMFICOM.scheme.corba.Scheme)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#scheme(com.syrus.AMFICOM.scheme.corba.Scheme)
 	 */
 	public void scheme(Scheme newScheme) {
 		throw new UnsupportedOperationException();
@@ -286,7 +285,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newSchemeMonitoringSolution
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#schemeMonitoringSolution(com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#schemeMonitoringSolution(com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution)
 	 */
 	public void schemeMonitoringSolution(
 			SchemeMonitoringSolution newSchemeMonitoringSolution) {
@@ -299,7 +298,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newSurvivorRate
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#survivorRate(double)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#survivorRate(double)
 	 */
 	public void survivorRate(double newSurvivorRate) {
 		throw new UnsupportedOperationException();
@@ -311,7 +310,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newSwitchNames
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#switchNames(java.lang.String[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#switchNames(java.lang.String[])
 	 */
 	public void switchNames(String[] newSwitchNames) {
 		throw new UnsupportedOperationException();
@@ -323,7 +322,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newSwitchNports
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#switchNports(double[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#switchNports(double[])
 	 */
 	public void switchNports(double[] newSwitchNports) {
 		throw new UnsupportedOperationException();
@@ -335,7 +334,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newSwitchPrices
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#switchPrices(double[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#switchPrices(double[])
 	 */
 	public void switchPrices(double[] newSwitchPrices) {
 		throw new UnsupportedOperationException();
@@ -347,7 +346,7 @@ public final class SchemeOptimizeInfo extends
 
 	/**
 	 * @param newWavelength
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfo#wavelength(double)
+	 * @see com.syrus.AMFICOM.scheme.SchemeOptimizeInfo#wavelength(double)
 	 */
 	public void wavelength(double newWavelength) {
 		throw new UnsupportedOperationException();

@@ -1,26 +1,27 @@
 /*
- * $Id: SchemeCableLink.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
-public final class SchemeCableLink extends AbstractSchemeLink implements
-		ComSyrusAmficomConfigurationSchemeCableLink {
+public final class SchemeCableLink extends AbstractSchemeLink {
 	protected Identifier cableChannelingItemIds[] = null;
 
 	protected Identifier schemeCableThreadIds[] = null;
@@ -46,32 +47,11 @@ public final class SchemeCableLink extends AbstractSchemeLink implements
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
-	/**
-	 * @see #abstractLinkTypeImpl()
-	 */
-	public AbstractLinkType_Transferable abstractLinkType() {
+	public AbstractLinkType getAbstractLinkType() {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see #abstractLinkTypeImpl(AbstractLinkType)
-	 */
-	public void abstractLinkType(
-			final AbstractLinkType_Transferable abstractLinkType) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see #abstractLinkType()
-	 */
-	public AbstractLinkType abstractLinkTypeImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see #abstractLinkType(AbstractLinkType_Transferable)
-	 */
-	public void abstractLinkTypeImpl(final AbstractLinkType abstractLinkType) {
+	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -97,46 +77,18 @@ public final class SchemeCableLink extends AbstractSchemeLink implements
 
 	/**
 	 * @param newCableChannelingItems
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeCableLink#cableChannelingItems(com.syrus.AMFICOM.scheme.corba.CableChannelingItem[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeCableLink#cableChannelingItems(com.syrus.AMFICOM.scheme.corba.CableChannelingItem[])
 	 */
 	public void cableChannelingItems(
 			CableChannelingItem[] newCableChannelingItems) {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see #cableLinkTypeImpl()
-	 */
-	public CableLinkType_Transferable cableLinkType() {
+	public CableLinkType getCableLinkType() {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see #cableLinkTypeImpl(CableLinkType)
-	 */
-	public void cableLinkType(final CableLinkType_Transferable cableLinkType) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see #cableLinkType()
-	 */
-	public CableLinkType cableLinkTypeImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see #cableLinkType(CableLinkType_Transferable)
-	 */
-	public void cableLinkTypeImpl(final CableLinkType cableLinkType) {
-		throw new UnsupportedOperationException();
-	}
-
-	public String description() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void description(String description) {
+	public void setCableLinkType(final CableLinkType cableLinkType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -161,41 +113,14 @@ public final class SchemeCableLink extends AbstractSchemeLink implements
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see #linkImpl()
-	 */
-	public Link_Transferable link() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newLink
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemeLink#link(com.syrus.AMFICOM.configuration.corba.Link_Transferable)
-	 */
-	public void link(Link_Transferable newLink) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see #link()
-	 */
-	public Link linkImpl() {
+	public Link getLink() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newLinkImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemeLink#linkImpl(com.syrus.AMFICOM.configuration.Link)
 	 */
-	public void linkImpl(Link newLinkImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public String name() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void name(String name) {
+	public void setLink(Link newLinkImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -237,7 +162,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements
 
 	/**
 	 * @param newSchemeCableThreads
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeCableLink#schemeCableThreads(com.syrus.AMFICOM.scheme.corba.SchemeCableThread[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeCableLink#schemeCableThreads(com.syrus.AMFICOM.scheme.corba.SchemeCableThread[])
 	 */
 	public void schemeCableThreads(SchemeCableThread[] newSchemeCableThreads) {
 		throw new UnsupportedOperationException();
@@ -265,7 +190,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements
 
 	/**
 	 * @param newSourceAbstractSchemePort
-	 * @see com.syrus.AMFICOM.scheme.corba.AbstractSchemeLink#sourceAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
+	 * @see com.syrus.AMFICOM.scheme.AbstractSchemeLink#sourceAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
 	 */
 	public void sourceAbstractSchemePort(
 			AbstractSchemePort newSourceAbstractSchemePort) {
@@ -278,7 +203,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements
 
 	/**
 	 * @param newSourceSchemeCablePort
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeCableLink#sourceSchemeCablePort(com.syrus.AMFICOM.scheme.corba.SchemeCablePort)
+	 * @see com.syrus.AMFICOM.scheme.SchemeCableLink#sourceSchemeCablePort(com.syrus.AMFICOM.scheme.corba.SchemeCablePort)
 	 */
 	public void sourceSchemeCablePort(
 			SchemeCablePort newSourceSchemeCablePort) {
@@ -291,7 +216,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements
 
 	/**
 	 * @param newTargetAbstractSchemePort
-	 * @see com.syrus.AMFICOM.scheme.corba.AbstractSchemeLink#targetAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
+	 * @see com.syrus.AMFICOM.scheme.AbstractSchemeLink#targetAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
 	 */
 	public void targetAbstractSchemePort(
 			AbstractSchemePort newTargetAbstractSchemePort) {
@@ -304,7 +229,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements
 
 	/**
 	 * @param newTargetSchemeCablePort
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeCableLink#targetSchemeCablePort(com.syrus.AMFICOM.scheme.corba.SchemeCablePort)
+	 * @see com.syrus.AMFICOM.scheme.SchemeCableLink#targetSchemeCablePort(com.syrus.AMFICOM.scheme.corba.SchemeCablePort)
 	 */
 	public void targetSchemeCablePort(
 			SchemeCablePort newTargetSchemeCablePort) {

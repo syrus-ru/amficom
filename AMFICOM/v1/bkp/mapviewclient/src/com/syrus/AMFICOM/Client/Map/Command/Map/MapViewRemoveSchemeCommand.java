@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewRemoveSchemeCommand.java,v 1.5 2005/03/01 15:38:42 krupenn Exp $
+ * $Id: MapViewRemoveSchemeCommand.java,v 1.6 2005/03/16 12:54:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,12 +26,12 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.SchemeController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
  * убрать из вида выбранную схему 
- * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/03/01 15:38:42 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/03/16 12:54:57 $
  * @module mapviewclient_v1
  */
 public class MapViewRemoveSchemeCommand extends VoidCommand

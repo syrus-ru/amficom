@@ -28,10 +28,8 @@ import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewAddSchemeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewRemoveSchemeCommand;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.Scheme;
 
 public final class MapSchemeTreePanel extends JPanel 
 		implements OperationListener, TreeSelectionListener

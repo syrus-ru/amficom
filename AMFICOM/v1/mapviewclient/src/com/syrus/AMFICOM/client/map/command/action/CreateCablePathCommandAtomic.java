@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCablePathCommandAtomic.java,v 1.11 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: CreateCablePathCommandAtomic.java,v 1.12 2005/03/16 12:54:57 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * создание пути рпокладки кабел€, внесение его в пул и на карту - 
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
  * 
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/02/18 12:19:44 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/03/16 12:54:57 $
  * @module mapviewclient_v1
  */
 public class CreateCablePathCommandAtomic extends MapActionCommand

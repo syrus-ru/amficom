@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.9 2005/03/10 15:05:00 bass Exp $
+ * $Id: MeasurementPath.java,v 1.10 2005/03/16 12:53:21 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,14 +26,9 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.PathElement;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-import com.syrus.AMFICOM.scheme.corba.SchemeLink;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 import java.util.*;
 import java.util.Collections;
@@ -46,7 +41,7 @@ import java.util.ListIterator;
  * Элемент пути.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/03/10 15:05:00 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/16 12:53:21 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -115,7 +110,7 @@ public class MeasurementPath implements MapElement
 
 		this.id = id;
 		this.schemePath = schemePath;
-		this.name = schemePath.name();
+		this.name = schemePath.getName();
 		if(mapView != null)
 		{
 			this.map = mapView.getMap();
@@ -346,7 +341,7 @@ public class MeasurementPath implements MapElement
 	public void setSchemePath(SchemePath schemePath)
 	{
 		this.schemePath = schemePath;
-		this.name = schemePath.name();
+		this.name = schemePath.getName();
 		this.scheme = schemePath.scheme();
 	}
 

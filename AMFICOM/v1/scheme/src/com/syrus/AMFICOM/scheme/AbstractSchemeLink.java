@@ -1,14 +1,14 @@
 /*
- * $Id: AbstractSchemeLink.java,v 1.2 2005/03/11 17:26:58 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemeLink;
+import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.Identifier;
 import java.util.Date;
 
@@ -18,11 +18,10 @@ import java.util.Date;
  * {@link AbstractSchemeLink}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/11 17:26:58 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
-public abstract class AbstractSchemeLink extends AbstractSchemeElement
-		implements ComSyrusAmficomConfigurationAbstractSchemeLink {
+public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 
 	/**
 	 * Depending on implementation, may reference either
@@ -126,4 +125,12 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement
 
 	public abstract void targetAbstractSchemePort(
 			AbstractSchemePort newTargetAbstractSchemePort);
+
+	public abstract AbstractLinkType getAbstractLinkType();
+	
+	public abstract void setAbstractLinkType(final AbstractLinkType abstractLinkType);
+	
+	public abstract Link getLink();
+
+	public abstract void setLink(final Link link);
 }

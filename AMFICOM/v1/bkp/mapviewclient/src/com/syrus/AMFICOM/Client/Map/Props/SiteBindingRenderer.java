@@ -1,8 +1,8 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import java.awt.Component;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -38,12 +38,12 @@ class SiteBindingRenderer extends DefaultTreeCellRenderer
 		Object uo = node.getUserObject();
 		if(uo instanceof SchemeElement)
 		{
-			super.setText(((SchemeElement )uo).name());
+			super.setText(((SchemeElement )uo).getName());
 		}
 		else
 		if(uo instanceof SchemeCableLink)
 		{
-			super.setText(((SchemeCableLink )uo).name());
+			super.setText(((SchemeCableLink )uo).getName());
 		}
 
         return this;

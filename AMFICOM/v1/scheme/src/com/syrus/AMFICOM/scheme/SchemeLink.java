@@ -1,12 +1,12 @@
 /*
- * $Id: SchemeLink.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: SchemeLink.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
@@ -14,16 +14,16 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.map.*;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
+import com.syrus.AMFICOM.scheme.*;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink implements
-		ComSyrusAmficomConfigurationSchemeLink,
-		ComSyrusAmficomMapSchemeLink {
+		ComSyrusAmficomConfigurationSchemeLink {
 
 	protected Identifier siteId = null;
 
@@ -48,27 +48,14 @@ public final class SchemeLink extends AbstractSchemeLink implements
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
-	public AbstractLinkType_Transferable abstractLinkType() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void abstractLinkType(
-			AbstractLinkType_Transferable abstractLinkType) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemeLink#abstractLinkTypeImpl()
-	 */
-	public AbstractLinkType abstractLinkTypeImpl() {
+	public AbstractLinkType getAbstractLinkType() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newAbstractLinkTypeImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemeLink#abstractLinkTypeImpl(com.syrus.AMFICOM.configuration.AbstractLinkType)
 	 */
-	public void abstractLinkTypeImpl(
+	public void setAbstractLinkType(
 			AbstractLinkType newAbstractLinkTypeImpl) {
 		throw new UnsupportedOperationException();
 	}
@@ -86,14 +73,6 @@ public final class SchemeLink extends AbstractSchemeLink implements
 	}
 
 	public void alarmed(boolean alarmed) {
-		throw new UnsupportedOperationException();
-	}
-
-	public String description() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void description(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -118,30 +97,14 @@ public final class SchemeLink extends AbstractSchemeLink implements
 		throw new UnsupportedOperationException();
 	}
 
-	public Link_Transferable link() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newLink
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemeLink#link(com.syrus.AMFICOM.configuration.corba.Link_Transferable)
-	 */
-	public void link(Link_Transferable newLink) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemeLink#linkImpl()
-	 */
-	public Link linkImpl() {
+	public Link getLink() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newLinkImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemeLink#linkImpl(com.syrus.AMFICOM.configuration.Link)
 	 */
-	public void linkImpl(Link newLinkImpl) {
+	public void setLink(Link newLinkImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -165,14 +128,6 @@ public final class SchemeLink extends AbstractSchemeLink implements
 	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeLink#linkTypeImpl(com.syrus.AMFICOM.configuration.LinkType)
 	 */
 	public void linkTypeImpl(LinkType newLinkTypeImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public String name() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void name(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -224,33 +179,11 @@ public final class SchemeLink extends AbstractSchemeLink implements
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeLink#siteNode()
-	 */
-	public SiteNode_Transferable siteNode() {
+	public SiteNode getSiteNode() {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @param siteNode
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeLink#siteNode(SiteNode_Transferable)
-	 */
-	public void siteNode(final SiteNode_Transferable siteNode) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeLink#siteNodeImpl()
-	 */
-	public SiteNode siteNodeImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param siteNode
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeLink#siteNodeImpl(SiteNode)
-	 */
-	public void siteNodeImpl(final SiteNode siteNode) {
+	public void setSiteNode(final SiteNode siteNode) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -260,7 +193,7 @@ public final class SchemeLink extends AbstractSchemeLink implements
 
 	/**
 	 * @param newSourceAbstractSchemePort
-	 * @see com.syrus.AMFICOM.scheme.corba.AbstractSchemeLink#sourceAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
+	 * @see com.syrus.AMFICOM.scheme.AbstractSchemeLink#sourceAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
 	 */
 	public void sourceAbstractSchemePort(
 			AbstractSchemePort newSourceAbstractSchemePort) {
@@ -273,7 +206,7 @@ public final class SchemeLink extends AbstractSchemeLink implements
 
 	/**
 	 * @param newSourceSchemePort
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeLink#sourceSchemePort(com.syrus.AMFICOM.scheme.corba.SchemePort)
+	 * @see com.syrus.AMFICOM.scheme.SchemeLink#sourceSchemePort(com.syrus.AMFICOM.scheme.corba.SchemePort)
 	 */
 	public void sourceSchemePort(SchemePort newSourceSchemePort) {
 		throw new UnsupportedOperationException();
@@ -285,7 +218,7 @@ public final class SchemeLink extends AbstractSchemeLink implements
 
 	/**
 	 * @param newTargetAbstractSchemePort
-	 * @see com.syrus.AMFICOM.scheme.corba.AbstractSchemeLink#targetAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
+	 * @see com.syrus.AMFICOM.scheme.AbstractSchemeLink#targetAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
 	 */
 	public void targetAbstractSchemePort(
 			AbstractSchemePort newTargetAbstractSchemePort) {
@@ -298,7 +231,7 @@ public final class SchemeLink extends AbstractSchemeLink implements
 
 	/**
 	 * @param newTargetSchemePort
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeLink#targetSchemePort(com.syrus.AMFICOM.scheme.corba.SchemePort)
+	 * @see com.syrus.AMFICOM.scheme.SchemeLink#targetSchemePort(com.syrus.AMFICOM.scheme.corba.SchemePort)
 	 */
 	public void targetSchemePort(SchemePort newTargetSchemePort) {
 		throw new UnsupportedOperationException();

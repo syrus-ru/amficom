@@ -1,12 +1,12 @@
 /*
- * $Id: CableChannelingItem.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
@@ -16,12 +16,11 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
-public final class CableChannelingItem extends AbstractCloneableStorableObject implements
-		Namable, Describable, ComSyrusAmficomMapCableChannelingItem {
-
+public final class CableChannelingItem extends AbstractCloneableStorableObject
+		implements Describable {
 	protected Identifier endSiteNodeId = null;
 
 	protected Identifier physicalLinkId = null;
@@ -64,46 +63,27 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject i
 	}
 
 	/**
-	 * @see Describable#description()
+	 * @see Describable#getDescription()
 	 */
-	public String description() {
+	public String getDescription() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see Describable#description(String)
+	 * @see Describable#setDescription(String)
 	 */
-	public void description(String description) {
+	public void setDescription(String description) {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapCableChannelingItem#endSiteNode()
-	 */
-	public SiteNode_Transferable endSiteNode() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param endSiteNode
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapCableChannelingItem#endSiteNode(SiteNode_Transferable)
-	 */
-	public void endSiteNode(final SiteNode_Transferable endSiteNode) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapCableChannelingItem#endSiteNodeImpl()
-	 */
-	public SiteNode endSiteNodeImpl() {
+	public SiteNode getEndSiteNode() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param endSiteNode
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapCableChannelingItem#endSiteNodeImpl(SiteNode)
 	 */
-	public void endSiteNodeImpl(final SiteNode endSiteNode) {
+	public void setEndSiteNode(final SiteNode endSiteNode) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -129,45 +109,27 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject i
 	}
 
 	/**
-	 * @see Namable#name()
+	 * @see Namable#getName()
 	 */
-	public String name() {
+	public String getName() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see Namable#name(String)
+	 * @see Namable#setName(String)
 	 */
-	public void name(String name) {
+	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see CableChannelingItem#physicalLink()
-	 */
-	public PhysicalLink_Transferable physicalLink() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see CableChannelingItem#physicalLink(PhysicalLink_Transferable)
-	 */
-	public void physicalLink(final PhysicalLink_Transferable physicalLink) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see ComSyrusAmficomMapCableChannelingItem#physicalLinkImpl()
-	 */
-	public PhysicalLink physicalLinkImpl() {
+	public PhysicalLink getPhysicalLink() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param physicalLink
-	 * @see ComSyrusAmficomMapCableChannelingItem#physicalLinkImpl(PhysicalLink)
 	 */
-	public void physicalLinkImpl(final PhysicalLink physicalLink) {
+	public void setPhysicalLink(final PhysicalLink physicalLink) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -213,33 +175,14 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject i
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapCableChannelingItem#startSiteNode()
-	 */
-	public SiteNode_Transferable startSiteNode() {
+	public SiteNode getStartSiteNode() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param startSiteNode
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapCableChannelingItem#startSiteNode(SiteNode_Transferable)
 	 */
-	public void startSiteNode(final SiteNode_Transferable startSiteNode) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapCableChannelingItem#startSiteNodeImpl()
-	 */
-	public SiteNode startSiteNodeImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param startSiteNode
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapCableChannelingItem#startSiteNodeImpl(SiteNode)
-	 */
-	public void startSiteNodeImpl(final SiteNode startSiteNode) {
+	public void setStartSiteNode(final SiteNode startSiteNode) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.14 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.15 2005/03/16 12:54:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,12 +25,12 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundNode;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
  *  Команда привязывания непривязанного элемента к узлу.
- * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/02/18 12:19:44 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/03/16 12:54:57 $
  * @module mapviewclient_v1
  */
 public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
@@ -107,7 +107,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 			}//while(e.hasNext())
 			super.removeNode(this.unbound);
 			SchemeElement se = this.unbound.getSchemeElement();
-			se.siteNodeImpl(this.site);
+			se.setSiteNode(this.site);
 			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 		}
 		catch(Throwable e)

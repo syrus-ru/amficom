@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 public final class MapLinkBindPanel
 		extends JPanel 

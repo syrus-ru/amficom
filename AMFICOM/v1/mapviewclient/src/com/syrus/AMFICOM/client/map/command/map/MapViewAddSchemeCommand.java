@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewAddSchemeCommand.java,v 1.7 2005/03/01 15:38:42 krupenn Exp $
+ * $Id: MapViewAddSchemeCommand.java,v 1.8 2005/03/16 12:54:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,13 +32,13 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 /**
  * добавить в вид схему из списка
- * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/03/01 15:38:42 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/03/16 12:54:57 $
  * @module mapviewclient_v1
  */
 public class MapViewAddSchemeCommand extends VoidCommand

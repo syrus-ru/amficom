@@ -1,12 +1,12 @@
 /*
- * $Id: SchemeElement.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: SchemeElement.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
@@ -16,18 +16,18 @@ import com.syrus.AMFICOM.map.*;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
-import com.syrus.AMFICOM.scheme.SchemeCellContainer;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.util.Log;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
-		SchemeCellContainer, ComSyrusAmficomConfigurationSchemeElement,
-		ComSyrusAmficomMapSchemeElement {
+		SchemeCellContainer, ComSyrusAmficomConfigurationSchemeElement {
 	protected Identifier equipmentId = null;
 
 	/**
@@ -130,14 +130,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		return schemeElement;
 	}
 
-	public String description() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void description(String description) {
-		throw new UnsupportedOperationException();
-	}
-
 	public Equipment_Transferable equipment() {
 		throw new UnsupportedOperationException();
 	}
@@ -228,14 +220,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public String name() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void name(String name) {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * @param characteristic
 	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(Characteristic)
@@ -320,7 +304,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	/**
 	 * @param newSchemeProtoElement
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeElement#schemeProtoElement(com.syrus.AMFICOM.scheme.corba.SchemeProtoElement)
+	 * @see com.syrus.AMFICOM.scheme.SchemeElement#schemeProtoElement(com.syrus.AMFICOM.scheme.corba.SchemeProtoElement)
 	 */
 	public void schemeProtoElement(SchemeProtoElement newSchemeProtoElement) {
 		throw new UnsupportedOperationException();
@@ -342,33 +326,11 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeElement#siteNode()
-	 */
-	public SiteNode_Transferable siteNode() {
+	public SiteNode getSiteNode() {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @param siteNode
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeElement#siteNode(SiteNode_Transferable)
-	 */
-	public void siteNode(final SiteNode_Transferable siteNode) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeElement#siteNodeImpl()
-	 */
-	public SiteNode siteNodeImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param siteNode
-	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeElement#siteNodeImpl(SiteNode)
-	 */
-	public void siteNodeImpl(final SiteNode siteNode) {
+	public void setSiteNode(final SiteNode siteNode) {
 		throw new UnsupportedOperationException();
 	}
 

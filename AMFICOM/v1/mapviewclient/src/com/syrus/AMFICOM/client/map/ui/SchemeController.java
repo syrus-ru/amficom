@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.Scheme;
 
 public final class SchemeController implements ObjectResourceController 
 {
@@ -74,7 +74,7 @@ public final class SchemeController implements ObjectResourceController
 		Scheme sc = (Scheme )object;
 		if (key.equals(KEY_NAME))
 		{
-			result = sc.name();
+			result = sc.getName();
 		}
 		else
 		if (key.equals(KEY_DOMAIN))

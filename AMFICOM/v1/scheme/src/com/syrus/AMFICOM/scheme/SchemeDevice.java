@@ -1,12 +1,12 @@
 /*
- * $Id: SchemeDevice.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: SchemeDevice.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
@@ -14,11 +14,10 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
-public final class SchemeDevice extends AbstractCloneableStorableObject implements Namable,
-		Describable, Characterizable {
+public final class SchemeDevice extends AbstractCloneableStorableObject implements Describable, Characterizable {
 
 	protected Identifier characteristicIds[] = null;
 
@@ -59,11 +58,11 @@ public final class SchemeDevice extends AbstractCloneableStorableObject implemen
 		throw new UnsupportedOperationException();
 	}
 
-	public String description() {
+	public String getDescription() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String description) {
+	public void setDescription(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -88,11 +87,11 @@ public final class SchemeDevice extends AbstractCloneableStorableObject implemen
 		throw new UnsupportedOperationException();
 	}
 
-	public String name() {
+	public String getName() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String name) {
+	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -110,7 +109,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject implemen
 
 	/**
 	 * @param newSchemeCablePorts
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeDevice#schemeCablePorts(com.syrus.AMFICOM.scheme.corba.SchemeCablePort[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeDevice#schemeCablePorts(com.syrus.AMFICOM.scheme.corba.SchemeCablePort[])
 	 */
 	public void schemeCablePorts(SchemeCablePort[] newSchemeCablePorts) {
 		throw new UnsupportedOperationException();
@@ -122,7 +121,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject implemen
 
 	/**
 	 * @param newSchemePorts
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeDevice#schemePorts(com.syrus.AMFICOM.scheme.corba.SchemePort[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeDevice#schemePorts(com.syrus.AMFICOM.scheme.corba.SchemePort[])
 	 */
 	public void schemePorts(SchemePort[] newSchemePorts) {
 		throw new UnsupportedOperationException();

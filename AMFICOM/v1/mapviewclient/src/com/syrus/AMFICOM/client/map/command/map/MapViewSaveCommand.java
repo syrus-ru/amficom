@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.16 2005/03/15 17:48:43 bass Exp $
+ * $Id: MapViewSaveCommand.java,v 1.17 2005/03/16 12:54:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,13 +30,13 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/03/15 17:48:43 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/16 12:54:57 $
  * @module mapviewclietn_v1
  */
 public class MapViewSaveCommand extends VoidCommand

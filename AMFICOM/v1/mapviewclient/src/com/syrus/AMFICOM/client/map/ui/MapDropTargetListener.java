@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.17 2005/03/10 17:45:37 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.18 2005/03/16 12:54:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,16 +37,16 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundNode;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * Обработчик событий drag/drop в окне карты 
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2005/03/10 17:45:37 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/03/16 12:54:57 $
+ * @author $Author: bass $
  * @module mapviewclient_v1
  */
 public final class MapDropTargetListener implements DropTargetListener

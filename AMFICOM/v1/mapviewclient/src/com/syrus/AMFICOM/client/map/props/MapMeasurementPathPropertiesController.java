@@ -84,7 +84,7 @@ public final class MapMeasurementPathPropertiesController
 			if (key.equals(PROPERTY_SCHEME_PATH_ID))
 			{
 				// remove .getName()
-				result = path.getSchemePath().name();
+				result = path.getSchemePath().getName();
 			}
 			else
 			if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))

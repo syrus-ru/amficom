@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.15 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.16 2005/03/16 12:54:57 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -21,14 +21,14 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
  * –азместить кабель на карте.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/02/18 12:19:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/03/16 12:54:57 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -91,8 +91,8 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			for(int i = 0; i < this.scl.cableChannelingItems().length; i++)
 			{
 				CableChannelingItem cci = this.scl.cableChannelingItems()[i];
-				SiteNode smsne = cci.startSiteNodeImpl();
-				SiteNode emsne = cci.endSiteNodeImpl();
+				SiteNode smsne = cci.getStartSiteNode();
+				SiteNode emsne = cci.getEndSiteNode();
 
 				// если элемент прив€зки не соответствует топологической схеме
 				// (один из узлов прив€зки не нанесен на карту) то элемент
@@ -134,7 +134,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				// в противном случае прив€зать кабель к существующей линии
 				{
 					
-					PhysicalLink link = cci.physicalLinkImpl();
+					PhysicalLink link = cci.getPhysicalLink();
 					
 					// если лини€ не существует, опустить данный элемент прив€зки
 					if(link == null)

@@ -1,5 +1,5 @@
 /**
- * $Id: CablePathBinding.java,v 1.2 2005/02/02 15:17:30 krupenn Exp $
+ * $Id: CablePathBinding.java,v 1.3 2005/03/16 12:53:22 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,15 +13,15 @@ package com.syrus.AMFICOM.mapview;
 
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 import java.util.HashMap;
 import java.util.Iterator;
 
 /**
  * Класс хранит данные о привязке кабеля к линиям.
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/02/02 15:17:30 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/03/16 12:53:22 $
  * @module mapviewclient_v1
  */
 public final class CablePathBinding extends HashMap
@@ -64,7 +64,7 @@ public final class CablePathBinding extends HashMap
 		for(Iterator it = super.values().iterator(); it.hasNext();)
 		{
 			CableChannelingItem cci = (CableChannelingItem )it.next();
-			if(cci.startSiteNodeImpl().equals(node))
+			if(cci.getStartSiteNode().equals(node))
 				return cci;
 		}
 		return null;

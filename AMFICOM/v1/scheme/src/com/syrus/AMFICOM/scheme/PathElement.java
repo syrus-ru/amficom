@@ -1,31 +1,31 @@
 /*
- * $Id: PathElement.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: PathElement.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 import java.util.*;
 
 /**
- * PathElement has no associated <code>name</code> (or <code>thisName</code>)
- * field: its {@link PathElement#name() name()}method actually returns
+ * PathElement has no associated <code>name</code> (or <code>name</code>)
+ * field: its {@link PathElement#getName() name()}method actually returns
  * {@link PathElement#abstractSchemeElement() abstractSchemeElement()}
- * <code>.</code> {@link AbstractSchemeElement#name() name()}.
+ * <code>.</code> {@link AbstractSchemeElement#getName() name()}.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
-public final class PathElement extends AbstractCloneableStorableObject implements Namable,
-		Describable {
+public final class PathElement extends AbstractCloneableStorableObject implements Describable {
 
 	/**
 	 * Depending on {@link #thisType}, may reference either
@@ -108,16 +108,16 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	/**
-	 * @see Describable#description()
+	 * @see Describable#getDescription()
 	 */
-	public String description() {
+	public String getDescription() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see Describable#description(java.lang.String)
+	 * @see Describable#setDescription(java.lang.String)
 	 */
-	public void description(String description) {
+	public void setDescription(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -144,18 +144,18 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	/**
-	 * @see Namable#name()
+	 * @see Namable#getName()
 	 * @todo Maybe, use own private property. However, there's a problem
 	 *       with versioning.
 	 */
-	public String name() {
-		return this.abstractSchemeElement().name();
+	public String getName() {
+		return this.abstractSchemeElement().getName();
 	}
 
 	/**
-	 * @see Namable#name(java.lang.String)
+	 * @see Namable#setName(java.lang.String)
 	 */
-	public void name(String name) {
+	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 

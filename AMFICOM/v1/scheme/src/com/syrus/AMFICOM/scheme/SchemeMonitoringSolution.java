@@ -1,12 +1,12 @@
 /*
- * $Id: SchemeMonitoringSolution.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
@@ -14,11 +14,10 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
-public final class SchemeMonitoringSolution extends AbstractCloneableStorableObject implements
-		Namable, Describable {
+public final class SchemeMonitoringSolution extends AbstractCloneableStorableObject implements Describable {
 
 	protected Identifier schemeId = null;
 
@@ -51,11 +50,11 @@ public final class SchemeMonitoringSolution extends AbstractCloneableStorableObj
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
-	public String description() {
+	public String getDescription() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String description) {
+	public void setDescription(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -66,11 +65,11 @@ public final class SchemeMonitoringSolution extends AbstractCloneableStorableObj
 		throw new UnsupportedOperationException();
 	}
 
-	public String name() {
+	public String getName() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String name) {
+	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -80,7 +79,7 @@ public final class SchemeMonitoringSolution extends AbstractCloneableStorableObj
 
 	/**
 	 * @param newPrice
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution#price(double)
+	 * @see com.syrus.AMFICOM.scheme.SchemeMonitoringSolution#price(double)
 	 */
 	public void price(double newPrice) {
 		throw new UnsupportedOperationException();
@@ -92,7 +91,7 @@ public final class SchemeMonitoringSolution extends AbstractCloneableStorableObj
 
 	/**
 	 * @param newScheme
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution#scheme(com.syrus.AMFICOM.scheme.corba.Scheme)
+	 * @see com.syrus.AMFICOM.scheme.SchemeMonitoringSolution#scheme(com.syrus.AMFICOM.scheme.corba.Scheme)
 	 */
 	public void scheme(Scheme newScheme) {
 		throw new UnsupportedOperationException();
@@ -104,7 +103,7 @@ public final class SchemeMonitoringSolution extends AbstractCloneableStorableObj
 
 	/**
 	 * @param newSchemePaths
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution#schemePaths(com.syrus.AMFICOM.scheme.corba.SchemePath[])
+	 * @see com.syrus.AMFICOM.scheme.SchemeMonitoringSolution#schemePaths(com.syrus.AMFICOM.scheme.corba.SchemePath[])
 	 */
 	public void schemePaths(SchemePath[] newSchemePaths) {
 		throw new UnsupportedOperationException();

@@ -1,16 +1,18 @@
 /*
- * $Id: AbstractSchemePort.java,v 1.4 2005/03/15 17:47:57 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.1 2005/03/16 12:51:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.scheme.corba;
+package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
 import java.util.Date;
 
@@ -20,12 +22,11 @@ import java.util.Date;
  * {@link AbstractSchemePort}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/15 17:47:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/03/16 12:51:34 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends AbstractCloneableStorableObject implements
-		Namable, Describable, Characterizable,
-		ComSyrusAmficomConfigurationAbstractSchemePort {
+		Describable, Characterizable {
 
 	/**
 	 * Depending on implementation, may reference either {@link SchemeLink}
@@ -100,4 +101,20 @@ public abstract class AbstractSchemePort extends AbstractCloneableStorableObject
 	public abstract SchemeDevice schemeDevice();
 
 	public abstract void schemeDevice(SchemeDevice newSchemeDevice);
+
+	public abstract PortType getPortType();
+
+	public abstract void setPortType(final PortType portType);
+
+	public abstract Port getPort();
+	
+	public abstract void setPort(final Port port);
+
+	public abstract MeasurementPortType getMeasurementPortType();
+	
+	public abstract void setMeasurementPortType(final MeasurementPortType measurementPortType);
+
+	public abstract MeasurementPort getMeasurementPort();
+	
+	public abstract void setMeasurementPort(final MeasurementPort measurementPort);
 }

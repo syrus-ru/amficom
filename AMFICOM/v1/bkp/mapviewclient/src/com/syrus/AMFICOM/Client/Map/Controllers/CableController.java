@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.9 2005/03/11 17:27:33 bass Exp $
+ * $Id: CableController.java,v 1.10 2005/03/16 12:54:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,14 +34,14 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 
 /**
  * Контроллер кабеля.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/03/11 17:27:33 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/16 12:54:57 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController
@@ -261,14 +261,14 @@ public final class CableController extends AbstractLinkController
 	public static CableChannelingItem generateCCI(PhysicalLink link)
 	{
 		CableChannelingItem cci = CableChannelingItem.createInstance();
-		cci.startSiteNodeImpl((SiteNode )link.getStartNode());
+		cci.setStartSiteNode((SiteNode )link.getStartNode());
 		if(! (link instanceof UnboundLink))
 		{
 			cci.startSpare(MapPropertiesManager.getSpareLength());
-			cci.physicalLinkImpl(link);
+			cci.setPhysicalLink(link);
 			cci.endSpare(MapPropertiesManager.getSpareLength());
 		}
-		cci.endSiteNodeImpl((SiteNode )link.getEndNode());
+		cci.setEndSiteNode((SiteNode )link.getEndNode());
 		
 		try
 		{
