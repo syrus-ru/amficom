@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.52 2005/03/29 16:53:59 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.53 2005/03/31 15:13:31 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/03/29 16:53:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.53 $, $Date: 2005/03/31 15:13:31 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -402,28 +402,28 @@ public abstract class StorableObjectPool {
 		assert ids != null : "Supply an empty list instead";
 		assert condition != null : "Supply EquivalentCondition instead";
 
-		Collection collection = null;
+		Set soSet = null;
 		Short entityCode = condition.getEntityCode();
 		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 
 		assert objectPool != null : "Cannot find object pool for entity code " + condition.getEntityCode()
 				+ ", entity: '" + ObjectEntities.codeToString(entityCode) + " , condition class:" + condition.getClass().getName();
 
-		collection = new LinkedList();
+		soSet = new HashSet();
 		for (Iterator it = objectPool.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			Identifier id = storableObject.getId();
 			if (!ids.contains(id)
 					&& (this.deletedIds == null || !this.deletedIds.contains(id))
 					&& condition.isConditionTrue(storableObject))
-				collection.add(storableObject);
+				soSet.add(storableObject);
 		}
 
 		Collection loadedList = null;
 
-		if (useLoader && condition.isNeedMore(collection)) {
-			List idsList = new ArrayList(collection.size());
-			for (Iterator iter = collection.iterator(); iter.hasNext();) {
+		if (useLoader && condition.isNeedMore(soSet)) {
+			List idsList = new ArrayList(soSet.size());
+			for (Iterator iter = soSet.iterator(); iter.hasNext();) {
 				StorableObject storableObject = (StorableObject) iter.next();
 				idsList.add(storableObject.getId());
 			}
@@ -457,10 +457,10 @@ public abstract class StorableObjectPool {
 				StorableObject storableObject = (StorableObject) it.next();
 				objectPool.put(storableObject.getId(), storableObject);
 			}
-			collection.addAll(loadedList);
+			soSet.addAll(loadedList);
 		}
 
-		return collection;
+		return soSet;
 	}
 
 	protected Collection getStorableObjectsByConditionImpl(	final StorableObjectCondition condition,
@@ -479,7 +479,7 @@ public abstract class StorableObjectPool {
 	 */
 	protected Collection getStorableObjectsImpl(final Collection objectIds,
 												final boolean useLoader) throws ApplicationException {
-		List list = null;
+		Set list = null;
 		Map objectQueueMap = null;
 		if (objectIds != null) {
 			for (Iterator it = objectIds.iterator(); it.hasNext();) {
@@ -496,7 +496,7 @@ public abstract class StorableObjectPool {
 					storableObject = (StorableObject) objectPool.get(objectId);
 					if (storableObject != null) {
 						if (list == null)
-							list = new LinkedList();
+							list = new HashSet();
 						list.add(storableObject);
 					}
 					if (storableObject == null && useLoader) {
@@ -525,7 +525,7 @@ public abstract class StorableObjectPool {
 
 		if (objectQueueMap != null) {
 			if (list == null)
-				list = new LinkedList();
+				list = new HashSet();
 			for (Iterator it = objectQueueMap.keySet().iterator(); it.hasNext();) {
 				Short entityCode = (Short) it.next();
 				short code = entityCode.shortValue();
@@ -553,7 +553,7 @@ public abstract class StorableObjectPool {
 			}
 		}
 
-		return list == null ? Collections.EMPTY_LIST : list;
+		return list == null ? Collections.EMPTY_SET : list;
 	}
 
 	protected abstract StorableObject loadStorableObject(final Identifier objectId) throws ApplicationException;
