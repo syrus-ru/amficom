@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.2 2004/10/06 14:42:20 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.3 2004/10/13 11:07:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.measurement.corba.StringFieldCondition_Transferable;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/10/06 14:42:20 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/13 11:07:37 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -22,6 +22,27 @@ public class StringFieldCondition implements StorableObjectCondition {
 	private Short entityCode;
 	private String string;
 
+	private static StringFieldCondition	instance = null;
+	private static boolean			initialized	= false;
+	private static Object			lock		= new Object();
+	
+	private StringFieldCondition() {
+		// empty
+	}
+
+	public static StringFieldCondition getInstance() {
+		if (!initialized) {
+			synchronized (lock) {
+				if (!initialized && instance == null)
+					instance = new StringFieldCondition();
+			}
+			synchronized (lock) {
+				initialized = true;
+			}
+		}
+		return instance;
+	}
+	
 	public StringFieldCondition(StringFieldCondition_Transferable transferable){
 		this.string = transferable.field_string;
 		this.entityCode = new Short(transferable.entity_code);
@@ -42,6 +63,11 @@ public class StringFieldCondition implements StorableObjectCondition {
 		if (object instanceof ParameterType){
 			ParameterType parameterType = (ParameterType)object;
 			if (parameterType.getCodename().equals(this.string)){
+				condition = true;
+			}
+		} else if (object instanceof MeasurementType){
+			MeasurementType measurementType = (MeasurementType)object;
+			if (measurementType.getCodename().equals(this.string)){
 				condition = true;
 			}
 		}
