@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.8 2004/08/31 15:33:35 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.9 2004/09/08 13:48:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,11 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -24,11 +22,12 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/31 15:33:35 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/08 13:48:10 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -39,40 +38,70 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 	
+    private String updateColumns;
+    private String updateMultiplySQLValues;
+
+	
 	private PortType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof PortType)
 			return (PortType)storableObject;
 		throw new IllegalDataException("PortTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		PortType portType = this.fromStorableObject(storableObject);
-		this.retrievePortType(portType);
-	}
-
-	private String retrievePortTypeQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
-		+ COLUMN_CODENAME + COMMA
-		+ COLUMN_DESCRIPTION
-		+ SQL_FROM + ObjectEntities.PORTTYPE_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-
+	protected String getEnityName() {		
+		return "PortType";
+	}	
+	
+	protected String getTableName() {		
+		return ObjectEntities.PORTTYPE_ENTITY;
 	}
 	
-	private PortType updatePortTypeFromResultSet(PortType portType, ResultSet resultSet) throws SQLException{
-		PortType portType1 = portType;
-		if (portType1 == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			portType1 = new PortType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null);			
+	protected String getUpdateColumns() {		
+		if (this.updateColumns == null){
+			this.updateColumns = super.getUpdateColumns() + COMMA
+				+ COLUMN_CODENAME + COMMA
+				+ COLUMN_DESCRIPTION;		
 		}
-		portType1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+		return this.updateColumns;
+	}	
+	
+	protected String getUpdateMultiplySQLValues() {
+		if (this.updateMultiplySQLValues == null){
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;		
+		}
+		return this.updateMultiplySQLValues;
+	}	
+	
+	
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
+			UpdateObjectException {
+		PortType portType = fromStorableObject(storableObject);
+		return super.getUpdateSingleSQLValues(storableObject) + COMMA
+			+ APOSTOPHE + portType.getCodename() + APOSTOPHE + COMMA
+			+ APOSTOPHE + portType.getDescription() + APOSTOPHE;
+	}
+	
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		PortType portType = this.fromStorableObject(storableObject);
+		this.retrieveEntity(portType);
+	}
+
+	protected String retrieveQuery(String condition){
+		return super.retrieveQuery(condition) + COMMA
+			+ COLUMN_CODENAME + COMMA
+			+ COLUMN_DESCRIPTION
+			+ SQL_FROM + ObjectEntities.PORTTYPE_ENTITY
+			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+	}
+
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+			throws IllegalDataException, RetrieveObjectException, SQLException {
+		PortType portType = (storableObject==null)?
+				new PortType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null):
+					fromStorableObject(storableObject);
+		portType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 								DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 								/**
 									* @todo when change DB Identifier model ,change getString() to getLong()
@@ -84,42 +113,8 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 								new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 								resultSet.getString(COLUMN_CODENAME),
 								resultSet.getString(COLUMN_DESCRIPTION));
-		return portType1;
-	}
-	
-
-	private void retrievePortType(PortType portType) throws ObjectNotFoundException, RetrieveObjectException {
-		String ptIdStr = portType.getId().toSQLString();
-		String sql = retrievePortTypeQuery(COLUMN_ID + EQUALS + ptIdStr);
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("PortTypeDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			if (resultSet.next())
-				updatePortTypeFromResultSet(portType,resultSet);
-			else
-				throw new ObjectNotFoundException("No such port type: " + ptIdStr);
-		}
-		catch (SQLException sqle) {
-			String mesg = "PortTypeDatabase.retrieve | Cannot retrieve port type " + ptIdStr;
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
+		return portType;
+	}	
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		PortType portType = this.fromStorableObject(storableObject);
@@ -132,7 +127,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		PortType portType = this.fromStorableObject(storableObject);
 		try {
-			this.insertPortType(portType);
+			this.insertEntity(portType);
 		}
 		catch (CreateObjectException e) {
 			try {
@@ -152,214 +147,71 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 			Log.errorException(sqle);
 		}
 	}
-
-	private void insertPortType(PortType portType) throws CreateObjectException {
-		String ptIdStr = portType.getId().toSQLString();
-		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.PORTTYPE_ENTITY
-			+ OPEN_BRACKET
-			+ COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION
-			+ CLOSE_BRACKET
-			+ SQL_VALUES
-			+ OPEN_BRACKET
-			+ ptIdStr + COMMA
-			+ DatabaseDate.toUpdateSubString(portType.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(portType.getModified()) + COMMA
-			+ portType.getCreatorId().toSQLString() + COMMA
-			+ portType.getModifierId().toSQLString() + COMMA
-			+ APOSTOPHE + portType.getCodename() + APOSTOPHE + COMMA
-			+ APOSTOPHE + portType.getDescription() + APOSTOPHE
-			+ CLOSE_BRACKET;
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("PortTypeDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-		}
-		catch (SQLException sqle) {
-			String mesg = "PortTypeDatabase.insert | Cannot insert port type " + ptIdStr;
-			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
+	
+	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+		insertEntities(storableObjects);
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, 
+			VersionCollisionException, UpdateObjectException {
 		PortType portType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntity(storableObject, false);
+				break;
+			case UPDATE_FORCE:					
 			default:
+				super.checkAndUpdateEntity(storableObject, true);		
 				return;
 		}
 	}
+	
+	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+		VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {	
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntities(storableObjects, false);
+				break;
+			case UPDATE_FORCE:					
+			default:
+				super.checkAndUpdateEntities(storableObjects, true);		
+				return;
+		}
+		
+	}	
 
 	public List retrieveAll() throws RetrieveObjectException {
-		return retriveByIdsOneQuery(null);
-	}
-	
-	public void delete(PortType portType) {
-		String ptIdStr = portType.getId().toSQLString();
-		Statement statement = null;
+		List list = null;
 		try {
-			statement = connection.createStatement();
-			String sql = SQL_DELETE_FROM
-						+ ObjectEntities.PORTTYPE_ENTITY
-						+ SQL_WHERE
-						+ COLUMN_ID + EQUALS
-						+ ptIdStr;
-			Log.debugMessage("PortTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-			connection.commit();
+			list = retrieveByIds(null, null);
+		} catch (IllegalDataException ide) {
+			throw new RetrieveObjectException(ide);
 		}
-		catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		}
-		finally {
-			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
+		return list; 
 	}
 	
-	public List retrieveByIds(List ids) throws RetrieveObjectException {
+	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			return retriveByIdsOneQuery(null);
-		return retriveByIdsOneQuery(ids);	
-		//return retriveByIdsPreparedStatement(ids);
+			list = retriveByIdsOneQuery(null, condition);
+		else list = retriveByIdsOneQuery(ids, condition);		
+		return list;
 	}
 	
-	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			String condition = null;
-			if (ids!=null){
-				StringBuffer buffer = new StringBuffer(COLUMN_ID);
-				int idsLength = ids.size();
-				if (idsLength == 1){
-					buffer.append(EQUALS);
-					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-				} else{
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					
-					int i = 1;
-					for(Iterator it=ids.iterator();it.hasNext();i++){
-						Identifier id = (Identifier)it.next();
-						buffer.append(id.toSQLString());
-						if (i < idsLength)
-							buffer.append(COMMA);
-					}
-					
-					buffer.append(CLOSE_BRACKET);
-					condition = buffer.toString();
-				}
-			}
-			sql = retrievePortTypeQuery(condition);
+	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+		throws IllegalDataException, UpdateObjectException {
+		PortType portType = fromStorableObject(storableObject);
+		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		try {			
+			preparedStatement.setString(6, portType.getCodename());
+			preparedStatement.setString(7, portType.getDescription());
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(8, portType.getId().getCode());
+		} catch (SQLException sqle) {
+			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
-		
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("PortTypeDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()){
-				result.add(updatePortTypeFromResultSet(null, resultSet));
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "PortTypeDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return result;
-	}
 	
-	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				return retriveByIdsOneQuery(ids);
-			}
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			buffer.append(EQUALS);							
-			buffer.append(QUESTION);
-			
-			sql = retrievePortTypeQuery(buffer.toString());
-		}
-			
-		PreparedStatement stmt = null;
-		ResultSet resultSet = null;
-		try {
-			stmt = connection.prepareStatement(sql.toString());
-			for(Iterator it = ids.iterator();it.hasNext();){
-				Identifier id = (Identifier)it.next(); 
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				String idStr = id.getIdentifierString();
-				stmt.setString(1, idStr);
-				resultSet = stmt.executeQuery();
-				if (resultSet.next()){
-					result.add(updatePortTypeFromResultSet(null, resultSet));
-				} else{
-					Log.errorMessage("PortTypeDatabase.retriveByIdsPreparedStatement | No such port type: " + idStr);									
-				}
-				
-			}
-		}catch (SQLException sqle) {
-			String mesg = "PortTypeDatabase.retriveByIdsPreparedStatement | Cannot retrieve port type " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				if (stmt != null)
-					stmt.close();
-				stmt = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}			
-		
-		return result;
 	}
-
 }
