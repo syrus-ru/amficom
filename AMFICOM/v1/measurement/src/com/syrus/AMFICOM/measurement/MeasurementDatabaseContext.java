@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabaseContext.java,v 1.10 2004/07/28 11:58:31 arseniy Exp $
+ * $Id: MeasurementDatabaseContext.java,v 1.11 2004/08/09 12:15:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,12 +11,12 @@ package com.syrus.AMFICOM.measurement;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/07/28 11:58:31 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/09 12:15:45 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public abstract class MeasurementDatabaseContext {
+public class MeasurementDatabaseContext {
 	protected static StorableObjectDatabase	analysisDatabase;
 	protected static StorableObjectDatabase	analysisTypeDatabase;
 	protected static StorableObjectDatabase	evaluationDatabase;

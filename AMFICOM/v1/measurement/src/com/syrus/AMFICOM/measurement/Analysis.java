@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.17 2004/08/06 16:07:06 arseniy Exp $
+ * $Id: Analysis.java,v 1.18 2004/08/09 12:16:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,10 +19,9 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/06 16:07:06 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/09 12:16:59 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.11 2004/08/06 16:07:06 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.12 2004/08/09 12:15:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/06 16:07:06 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/09 12:15:45 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -38,7 +38,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	private Analysis fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Analysis)
 			return (Analysis) storableObject;
-	throw new IllegalDataException("AnalysisDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException("AnalysisDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
