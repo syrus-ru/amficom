@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.10 2004/10/19 15:40:43 bass Exp $
+ * $Id: RISDSessionInfo.java,v 1.11 2004/10/20 11:54:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2004/10/19 15:40:43 $
+ * @version $Revision: 1.11 $, $Date: 2004/10/20 11:54:19 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -188,8 +188,17 @@ public final class RISDSessionInfo extends SessionInterface {
 
 				new Identifier_Transferable("Null_0"));
 
-			MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(cmServer), ClientLRUMap.class, 200);
-			ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(cmServer), ClientLRUMap.class, 200);
+			final Class clazz = ClientLRUMap.class;
+			final int size = 200;
+
+			final ClientMeasurementObjectLoader clientMeasurementObjectLoader = new ClientMeasurementObjectLoader(cmServer);
+			clientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			MeasurementStorableObjectPool.init(clientMeasurementObjectLoader, clazz, size);
+
+			final ClientConfigurationObjectLoader clientConfigurationObjectLoader = new ClientConfigurationObjectLoader(cmServer);
+			clientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			ConfigurationStorableObjectPool.init(clientConfigurationObjectLoader, clazz, size);
+
 			IdentifierPool.init(cmServer);
 
 
