@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.28 2004/11/15 14:05:14 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.29 2004/11/16 11:00:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/11/15 14:05:14 $
+ * @version $Revision: 1.29 $, $Date: 2004/11/16 11:00:35 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -53,11 +53,13 @@ public class MCMDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_TYPE_ID = "type_id";
 	public static final String COLUMN_USER_ID = "user_id";
 	public static final String COLUMN_SERVER_ID = "server_id";
+	// tcp_port NUMBER(5,0),
+	public static final String COLUMN_TCP_PORT  		= "tcp_port";
 	//public static final String COLUMN_LOCATION = "location";
 	//public static final String COLUMN_HOSTNAME = "hostname";
 	private static String columns;
 	private static String updateMultiplySQLValues;
-	
+
 	private MCM fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MCM)
 			return (MCM) storableObject;
@@ -69,31 +71,32 @@ public class MCMDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getColumns() {
-		if (columns == null){
+		if (columns == null) {
     		columns = super.getColumns() + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_USER_ID + COMMA
-				+ COLUMN_SERVER_ID;
+				+ COLUMN_SERVER_ID + COMMA
+				+ COLUMN_TCP_PORT;
 		}
 		return columns;
 	}
-	
+
 	protected String getUpdateMultiplySQLValues() {
-    	if (updateMultiplySQLValues == null){
-    		updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION;
+    	if (updateMultiplySQLValues == null) {
+    		updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION;
     	}
 		return updateMultiplySQLValues;
 	}
-	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
 		MCM mcm = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ mcm.getDomainId().toSQLString() + COMMA
@@ -103,10 +106,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 			+ mcm.getServerId().toSQLString(); 
 		return sql;
 	}
-	
-	protected int setEntityForPreparedStatement(StorableObject storableObject,
-			PreparedStatement preparedStatement) throws IllegalDataException,
-			UpdateObjectException {
+
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+			throws IllegalDataException, UpdateObjectException {
 		MCM mcm = fromStorableObject(storableObject);
 		int i;
 		try {
@@ -116,13 +118,13 @@ public class MCMDatabase extends StorableObjectDatabase {
 			preparedStatement.setString( ++i, mcm.getDescription());
 			preparedStatement.setString( ++i, mcm.getUserId().toString());
 			preparedStatement.setString( ++i, mcm.getServerId().toString());
-		}catch (SQLException sqle) {
-			throw new UpdateObjectException("MCMDatabase." +
-					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
+		}
+		catch (SQLException sqle) {
+			throw new UpdateObjectException("MCMDatabase." + "setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
 		return i;
 	}	
-	
+
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		MCM mcm = this.fromStorableObject(storableObject);
@@ -131,45 +133,47 @@ public class MCMDatabase extends StorableObjectDatabase {
 		mcm.setCharacteristics(characteristicDatabase.retrieveCharacteristics(mcm.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MCM));
 	}
 
-	protected StorableObject updateEntityFromResultSet(
-			StorableObject storableObject, ResultSet resultSet)
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		MCM mcm = storableObject == null ? null : fromStorableObject(storableObject);
 		if (mcm == null){
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
-			mcm = new MCM(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null, null);			
+			mcm = new MCM(new Identifier(resultSet.getString(COLUMN_ID)),
+																	 null,
+																	 null,
+																	 null,
+																	 null,
+																	 null,
+																	 null,
+																	 (short)0);			
 		}
 		mcm.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-							DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-							/**
-							 * @todo when change DB Identifier model ,change getString() to
-							 *       getLong()
-							 */
-							 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-							/**
-							 * @todo when change DB Identifier model ,change getString() to
-							 *       getLong()
-							 */
-							 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-							/**
-							 * @todo when change DB Identifier model ,change getString() to
-							 *       getLong()
-							 */
-							 new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
-							 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-							 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-							 /**
-							 * @todo when change DB Identifier model ,change getString() to
-							 *       getLong()
-							 */
-							 new Identifier(resultSet.getString(COLUMN_USER_ID)),
-							 /**
-							 * @todo when change DB Identifier model ,change getString() to
-							 *       getLong()
-							 */
-							 new Identifier(resultSet.getString(COLUMN_SERVER_ID)));
+																											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+																											/**
+																												* @todo when change DB Identifier model ,change getString() to getLong()
+																												*/
+																											new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+																											/**
+																												* @todo when change DB Identifier model ,change getString() to getLong()
+																												*/
+																											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+																											/**
+																												* @todo when change DB Identifier model ,change getString() to getLong()
+																												*/
+																											new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
+																											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+																											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+																											/**
+																												* @todo when change DB Identifier model ,change getString() to getLong()
+																												*/
+																											new Identifier(resultSet.getString(COLUMN_USER_ID)),
+																											/**
+																												* @todo when change DB Identifier model ,change getString() to getLong()
+																												*/
+																											new Identifier(resultSet.getString(COLUMN_SERVER_ID)),
+																											resultSet.getShort(COLUMN_TCP_PORT));
 		
 		return mcm;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.26 2004/11/15 15:30:53 bob Exp $
+ * $Id: MCM.java,v 1.27 2004/11/16 11:00:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/11/15 15:30:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2004/11/16 11:00:35 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -36,6 +36,7 @@ public class MCM extends DomainMember implements Characterized {
 	private String description;
 	private Identifier userId;
 	private Identifier serverId;
+	private short tcpPort;
 
 	private List kiss;
 
@@ -56,12 +57,13 @@ public class MCM extends DomainMember implements Characterized {
 	}
 
 	public MCM(MCM_Transferable mt) throws CreateObjectException {
-		super(mt.header,
-			  new Identifier(mt.domain_id));
+		super(mt.header, new Identifier(mt.domain_id));
+
 		this.name = new String(mt.name);
 		this.description = new String(mt.description);
 		this.userId = new Identifier(mt.user_id);
 		this.serverId = new Identifier(mt.server_id);
+		this.tcpPort = mt.tcp_port;
 
 		try {
 			this.kiss = new ArrayList(mt.kis_ids.length);
@@ -78,22 +80,24 @@ public class MCM extends DomainMember implements Characterized {
 	}
 
 	protected MCM(Identifier id,
-				  Identifier creatorId,
-				  Identifier domainId,
-				  String name,
-				  String description,
-				  Identifier userId,
-				  Identifier serverId) {
+								Identifier creatorId,
+								Identifier domainId,
+								String name,
+								String description,
+								Identifier userId,
+								Identifier serverId,
+								short tcpPort) {
 		super(id,
-			  new Date(System.currentTimeMillis()),
-			  new Date(System.currentTimeMillis()),
-			  creatorId,
-			  creatorId,
-			  domainId);
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creatorId,
+					creatorId,
+					domainId);
 		this.name = name;
 		this.description = description;
 		this.userId = userId;
 		this.serverId = serverId;
+		this.tcpPort = tcpPort;
 
 		this.characteristics = new LinkedList();
 
@@ -137,6 +141,7 @@ public class MCM extends DomainMember implements Characterized {
 									new String(this.description),
 									(Identifier_Transferable)this.userId.getTransferable(),
 									(Identifier_Transferable)this.serverId.getTransferable(),
+									this.tcpPort,
 									charIds,
 									kisIdsT);
 	}
@@ -162,6 +167,9 @@ public class MCM extends DomainMember implements Characterized {
 		return this.serverId;
 	}
 
+	public short getTCPPort() {
+		return this.tcpPort;
+	}
 
 	public List getCharacteristics() {
 		return this.characteristics;
@@ -176,39 +184,43 @@ public class MCM extends DomainMember implements Characterized {
 	}
 
 	public static MCM createInstance(Identifier id,
-									 Identifier creatorId,
-									 Identifier domainId,
-									 String name,
-									 String description,
-									 Identifier userId,
-									 Identifier serverId) {
+																	 Identifier creatorId,
+																	 Identifier domainId,
+																	 String name,
+																	 String description,
+																	 Identifier userId,
+																	 Identifier serverId,
+																	 short tcpPort) {
 		return new MCM(id,
-					   creatorId,
-					   domainId,
-					   name,
-					   description,
-					   userId,
-					   serverId);
+									 creatorId,
+									 domainId,
+									 name,
+									 description,
+									 userId,
+									 serverId,
+									 tcpPort);
 	}
 
 	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  Identifier domainId,
-											  String name,
-											  String description,
-											  Identifier userId,
-											  Identifier serverId) {
+																						Date modified,
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						Identifier domainId,
+																						String name,
+																						String description,
+																						Identifier userId,
+																						Identifier serverId,
+																						short tcpPort) {
 		super.setAttributes(created,												
-							modified,
-							creatorId,
-							modifierId,
-							domainId);
+												modified,
+												creatorId,
+												modifierId,
+												domainId);
 		this.name = name;
 		this.description = description;
 		this.userId = userId;
-		this.serverId = serverId;		
+		this.serverId = serverId;
+		this.tcpPort = tcpPort;
 	}
 
 	protected synchronized void setKISs(List kiss) {

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.29 2004/11/12 12:42:49 max Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.30 2004/11/16 11:00:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/11/12 12:42:49 $
- * @author $Author: max $
+ * @version $Revision: 1.30 $, $Date: 2004/11/16 11:00:35 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -208,23 +208,24 @@ public class ConfigurationStorableObjectPool {
 						if (storableObject != null)
 							try {
 								putStorableObject(storableObject);
-							} catch (IllegalObjectEntityException ioee) {
+							}
+							catch (IllegalObjectEntityException ioee) {
 								Log.errorException(ioee);
 							}
 					}
 					return storableObject;
 				}
-			} else {
-				Log
-						.errorMessage("ConfigurationStorableObjectPool.getStorableObject | Cannot find object pool for objectId: '"
+			}
+			else {
+				Log.errorMessage("ConfigurationStorableObjectPool.getStorableObject | Cannot find object pool for objectId: '"
 								+ objectId.toString()
 								+ "' entity code: '"
 								+ objectEntityCode + "'");
 				return null;
 			}
-		} else {
-			Log
-					.errorMessage("ConfigurationStorableObjectPool.getStorableObject | NULL identifier supplied");
+		}
+		else {
+			Log.errorMessage("ConfigurationStorableObjectPool.getStorableObject | NULL identifier supplied");
 			return null;
 		}
 	}
