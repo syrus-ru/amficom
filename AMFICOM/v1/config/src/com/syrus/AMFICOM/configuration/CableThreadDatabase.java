@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.1 2004/12/10 08:16:46 max Exp $
+ * $Id: CableThreadDatabase.java,v 1.2 2004/12/10 08:50:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/10 08:16:46 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2004/12/10 08:50:35 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class CableThreadDatabase extends StorableObjectDatabase  {
@@ -79,13 +79,13 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
     
     protected String getUpdateSingleSQLValues(StorableObject storableObject)
     throws IllegalDataException, UpdateObjectException {
-        CableThread CableThread = fromStorableObject(storableObject);
+        CableThread cableThread = fromStorableObject(storableObject);
 		
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-				+ DatabaseIdentifier.toSQLString(CableThread.getDomainId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(CableThread.getType().getId())
-				+ APOSTOPHE	+ DatabaseString.toQuerySubString(CableThread.getName()) + APOSTOPHE+ COMMA 
-                + APOSTOPHE	+ DatabaseString.toQuerySubString(CableThread.getDescription())	+ APOSTOPHE;
+				+ DatabaseIdentifier.toSQLString(cableThread.getDomainId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(cableThread.getType().getId())
+				+ APOSTOPHE	+ DatabaseString.toQuerySubString(cableThread.getName()) + APOSTOPHE+ COMMA 
+                + APOSTOPHE	+ DatabaseString.toQuerySubString(cableThread.getDescription())	+ APOSTOPHE;
 		return sql;
     }
     
@@ -143,7 +143,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
     }
     
     public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-        CableThread cableThread = this.fromStorableObject(storableObject);
+//        CableThread cableThread = this.fromStorableObject(storableObject);
         switch (retrieveKind) {
             default:
                 return null;

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.1 2004/12/10 08:16:29 max Exp $
+ * $Id: CableThread.java,v 1.2 2004/12/10 08:50:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,13 +27,15 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/10 08:16:29 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2004/12/10 08:50:35 $
+ * @author $Author: bob $
  * @module config_v1
  */
-public class CableThread extends DomainMember implements TypedObject {
+public class CableThread extends DomainMember implements TypedObject {	
+    
+	private static final long	serialVersionUID	= 3258415027823063600L;
 	
-    private String name;
+	private String name;
     private String description;
     private CableThreadType type;
     
@@ -71,16 +73,16 @@ public class CableThread extends DomainMember implements TypedObject {
               String name,
               String description,
               CableThreadType type) {
-    super(id,
-                new Date(System.currentTimeMillis()),
-                new Date(System.currentTimeMillis()),
-                creatorId,
-                creatorId,
-                domainId);
-    this.name = name;
-    this.description = description;
-    this.type = type;
-    this.cableThreadDatabase = ConfigurationDatabaseContext.cableThreadDatabase;
+	    super(id,
+	                new Date(System.currentTimeMillis()),
+	                new Date(System.currentTimeMillis()),
+	                creatorId,
+	                creatorId,
+	                domainId);
+	    this.name = name;
+	    this.description = description;
+	    this.type = type;
+	    this.cableThreadDatabase = ConfigurationDatabaseContext.cableThreadDatabase;
     }
     
     public static CableThread createInstance(Identifier creatorId,
@@ -102,21 +104,15 @@ public class CableThread extends DomainMember implements TypedObject {
 		}
 	}
     
-    public static CableThread getInstance(CableThread_Transferable ctt) throws CreateObjectException{
-        
-        CableThread cableThread = new CableThread(ctt);
-        
-        cableThread.cableThreadDatabase = ConfigurationDatabaseContext.linkDatabase;
-        try {
-            if (cableThread.cableThreadDatabase != null)
-                cableThread.cableThreadDatabase.insert(cableThread);
-        }
-        catch (IllegalDataException ide) {
-            throw new CreateObjectException(ide.getMessage(), ide);
-        }
-        
-        return cableThread;
-    }
+	public void insert() throws CreateObjectException {
+		try {
+			if (this.cableThreadDatabase != null)
+				this.cableThreadDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
+		}
+	}
     
     public Object getTransferable() {       
         return new CableThread_Transferable(super.getHeaderTransferable(),
