@@ -79,7 +79,7 @@ install: $(LIBNAME)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(IDLDIR)/li\'lmapletty.idl \
+		$(IDLDIR)/map.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/map/*.java
 		
 .PHONY: pmd
