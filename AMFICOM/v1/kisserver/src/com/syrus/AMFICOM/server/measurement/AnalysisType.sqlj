@@ -1,0 +1,136 @@
+package com.syrus.AMFICOM.server.measurement;
+
+import java.util.Vector;
+import java.util.LinkedList;
+import java.sql.Timestamp;
+import java.sql.SQLException;
+import com.syrus.AMFICOM.CORBA.Survey.AnalysisType_Transferable;
+import com.syrus.AMFICOM.CORBA.Survey.ActionParameterType_Transferable;
+
+public class AnalysisType {
+  private String id;
+  private String name;
+  private String description;
+	private Timestamp modified;
+  private ParameterType[] type_parameters;
+  private ParameterType[] type_arguments;
+  private ParameterType[] type_criterias;
+
+  public AnalysisType(String id) throws SQLException {
+    this.id = id;
+    #sql {SELECT name,
+                 description,
+								 modified
+            INTO :(this.name),
+                 :(this.description),
+								 :(this.modified)
+            FROM amficom.analysistypes
+            WHERE id = :(this.id) };
+		this.name = (this.name == null)?"":this.name;
+		this.description = (this.description == null)?"":this.description;
+    
+    this.type_parameters = ParameterType.retrieveParameterTypes(this.id, "analysis", "parameter");
+    this.type_arguments = ParameterType.retrieveParameterTypes(this.id, "analysis", "argument");
+    this.type_criterias = ParameterType.retrieveParameterTypes(this.id, "analysis", "criteria");
+  }
+
+  public AnalysisType(AnalysisType_Transferable analysis_type_t) throws SQLException {
+    this.id = analysis_type_t.id;
+    this.name = analysis_type_t.name;
+    this.modified = new Timestamp(System.currentTimeMillis());
+    this.description = analysis_type_t.description;
+
+    #sql {INSERT INTO amficom.analysistypes (id,
+                                             name,
+                                             description,
+																						 modified)
+            VALUES (:(this.id),
+                    :(this.name),
+                    :(this.description),
+										:(this.modified) ) };
+    #sql { COMMIT };
+    this.type_parameters = new ParameterType[analysis_type_t.parameters.length];
+    for (int i = 0; i < this.type_parameters.length; i++)
+      this.type_parameters[i] = new ParameterType(analysis_type_t.parameters[i], "analysis", "parameter");
+    this.type_arguments = new ParameterType[analysis_type_t.arguments.length];
+    for (int i = 0; i < this.type_arguments.length; i++)
+      this.type_arguments[i] = new ParameterType(analysis_type_t.arguments[i], "analysis", "argument");
+    this.type_criterias = new ParameterType[analysis_type_t.criterias.length];
+    for (int i = 0; i < this.type_criterias.length; i++)
+      this.type_criterias[i] = new ParameterType(analysis_type_t.criterias[i], "analysis", "criteria");
+  }
+
+  public String getId() {
+    return this.id;
+  }
+
+	public ParameterType[] getTypeArguments() {
+		return this.type_arguments;
+	}
+
+	public ParameterType[] getTypeCriterias() {
+		return this.type_criterias;
+	}
+
+	public ParameterType[] getTypeParameters() {
+		return this.type_parameters;
+	}
+
+  public AnalysisType_Transferable getTransferable() {
+    ActionParameterType_Transferable[] parameters_type_t = new ActionParameterType_Transferable[this.type_parameters.length];
+    for (int i = 0; i < parameters_type_t.length; i++)
+      parameters_type_t[i] = this.type_parameters[i].getTransferable();
+    ActionParameterType_Transferable[] arguments_type_t = new ActionParameterType_Transferable[this.type_arguments.length];
+    for (int i = 0; i < arguments_type_t.length; i++)
+      arguments_type_t[i] = this.type_arguments[i].getTransferable();
+    ActionParameterType_Transferable[] criterias_type_t = new ActionParameterType_Transferable[this.type_criterias.length];
+    for (int i = 0; i < criterias_type_t.length; i++)
+      criterias_type_t[i] = this.type_criterias[i].getTransferable();
+
+    return new AnalysisType_Transferable(this.id,
+                                         this.name,
+                                         this.description,
+																				 this.modified.getTime(),
+                                         parameters_type_t,
+                                         arguments_type_t,
+                                         criterias_type_t);
+  }
+
+	#sql private static iterator AnalysisTypesIterator(String analysis_type_id);
+
+  protected static Vector retrieveAnalysisTypeIds(String test_type_id) throws SQLException {
+    AnalysisTypesIterator anTypIt;
+    #sql anTypIt = {SELECT analysis_type_id
+                      FROM amficom.analysistesttypelinks
+                      WHERE test_type_id = :test_type_id };
+    Vector vector = new Vector();
+    while (anTypIt.next()) {
+			vector.add(anTypIt.analysis_type_id());
+    }
+    anTypIt.close();
+    return vector;
+  }
+
+	public static AnalysisType[] retrieveAnalysisTypes(String test_type_id) throws SQLException {
+		AnalysisTypesIterator anTypIt;
+    #sql anTypIt = {SELECT analysis_type_id
+                      FROM amficom.analysistesttypelinks
+                      WHERE test_type_id = :test_type_id };
+		LinkedList llantyp = new LinkedList();
+		while (anTypIt.next())
+			llantyp.add(new AnalysisType(anTypIt.analysis_type_id()));
+		anTypIt.close();
+		return (AnalysisType[])llantyp.toArray(new AnalysisType[llantyp.size()]);
+	}
+
+	public static AnalysisType[] retrieveAnalysisTypes() throws SQLException {
+		AnalysisTypesIterator anTypIt;
+    #sql anTypIt = {SELECT id analysis_type_id
+                      FROM amficom.analysistypes };
+    LinkedList llantyp = new LinkedList();
+    while (anTypIt.next())
+			llantyp.add(new AnalysisType(anTypIt.analysis_type_id()));
+    anTypIt.close();
+    return (AnalysisType[])llantyp.toArray(new AnalysisType[llantyp.size()]);
+	}
+}

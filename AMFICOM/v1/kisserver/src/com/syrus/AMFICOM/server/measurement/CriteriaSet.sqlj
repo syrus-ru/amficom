@@ -1,0 +1,218 @@
+package com.syrus.AMFICOM.server.measurement;
+
+import java.util.Vector;
+import java.util.LinkedList;
+import java.sql.Timestamp;
+import java.sql.SQLException;
+import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
+import com.syrus.AMFICOM.CORBA.Survey.ClientCriteriaSet_Transferable;
+import com.syrus.AMFICOM.CORBA.Survey.ClientParameter_Transferable;
+import com.syrus.util.Log;
+
+public class CriteriaSet {
+  private String id;
+  private String analysis_type_id;
+  private String name;
+  private Timestamp created;
+  private String created_by;
+	private SetParameter[] criteria;
+  private Vector monitored_elements;
+
+  #sql private iterator CriteriaSetMELinkIterator (String monitored_element_id);
+
+  public CriteriaSet(String id) throws SQLException {
+    this.id = id;
+    #sql {SELECT analysis_type_id,
+                 name,
+                 created,
+                 created_by
+            INTO :(this.analysis_type_id),
+                 :(this.name),
+                 :(this.created),
+                 :(this.created_by)
+            FROM amficom.criteriasets
+            WHERE id = :(this.id) };
+		this.name = (this.name == null)?"":this.name;
+		this.created_by = (this.created_by == null)?"":this.created_by;
+
+		this.criteria = SetParameter.retrieveParameters(this.id, "analysis", "criteria");
+
+    CriteriaSetMELinkIterator melnkIt;
+    #sql melnkIt = {SELECT monitored_element_id
+                      FROM amficom.criteriasetmelinks
+                      WHERE set_id = :(this.id) };
+    this.monitored_elements = new Vector();
+    while (melnkIt.next())
+      this.monitored_elements.add(melnkIt.monitored_element_id());
+		melnkIt.close();
+		Log.debugMessage("CriteriaSet.<init> | Retrieved " + this.monitored_elements.size() + " monitored element identities for criteria set id: '" + this.id + "'", Log.DEBUGLEVEL05);
+  }
+
+  public CriteriaSet(ClientCriteriaSet_Transferable criteria_set_t) throws Exception {
+		this.id = criteria_set_t.id;
+//------------------------
+		Log.debugMessage("************* CREATING CRITERIA SET: '" + this.id + "'", Log.DEBUGLEVEL05);
+//------------------------
+    this.analysis_type_id = criteria_set_t.analysis_type_id;
+    this.name = criteria_set_t.name;
+    this.created_by = criteria_set_t.created_by;
+    this.created = new Timestamp(System.currentTimeMillis());
+
+		#sql {INSERT INTO amficom.criteriasets (id,
+			                                      name,
+					                                  analysis_type_id,
+						                                created,
+							                              created_by)
+						VALUES (:(this.id),
+							      :(this.name),
+								    :(this.analysis_type_id),
+									  :(this.created),
+										:(this.created_by) ) };
+
+		this.criteria = new SetParameter[criteria_set_t.criterias.length];
+		for (int i = 0; i < this.criteria.length; i++)
+			this.criteria[i] = new SetParameter(criteria_set_t.criterias[i],
+																					this.id,
+																					"analysis",
+																					"criteria");
+
+    #sql { COMMIT };
+
+    this.monitored_elements = new Vector(0);
+  }
+  
+  public String getId() {
+    return this.id;
+  }
+
+  public String getAnalysisTypeId() {
+    return this.analysis_type_id;
+  }
+
+  public String getName() {
+    return this.name;
+  }
+
+  public Timestamp getCreated() {
+    return this.created;
+  }
+
+  public String getCreatedBy() {
+    return this.created_by;
+  }
+
+  public SetParameter[] getCriteria() {
+    return this.criteria;
+  }
+
+  public Parameter_Transferable[] getKISCriteria() throws SQLException {
+    Parameter_Transferable[] kis_criteria = new Parameter_Transferable[this.criteria.length];
+    for (int i = 0; i < kis_criteria.length; i++)
+      kis_criteria[i] = this.criteria[i].getTransferable();
+    return kis_criteria;
+  }
+
+  public ClientCriteriaSet_Transferable getTransferable() throws SQLException {
+		ClientParameter_Transferable[] criteria_t = new ClientParameter_Transferable[this.criteria.length];
+		for (int i = 0; i < criteria_t.length; i++)
+			criteria_t[i] = this.criteria[i].getClientTransferable();
+    return new ClientCriteriaSet_Transferable(this.id,
+                                              this.name,
+                                              this.created.getTime(),
+                                              this.created_by,
+                                              this.analysis_type_id,
+                                              criteria_t);
+  }
+
+	public void update(ClientCriteriaSet_Transferable criteria_set_t) throws Exception {
+//------------------------
+		Log.debugMessage("************* UPDATING CRITERIA SET: '" + this.id + "'", Log.DEBUGLEVEL05);
+//------------------------
+		if (criteria_set_t.id.compareTo(this.id) != 0)
+			return;
+
+		this.analysis_type_id = criteria_set_t.analysis_type_id;
+    this.name = criteria_set_t.name;
+    this.created_by = criteria_set_t.created_by;
+    //this.created = new Timestamp(System.currentTimeMillis());
+
+		#sql {UPDATE amficom.criteriasets
+							SET name = :(this.name),
+									analysis_type_id = :(this.analysis_type_id),
+									created = :(this.created),
+									created_by = :(this.created_by)
+							WHERE id = :(this.id) };
+		for (int i = 0; i < this.criteria.length; i++)
+			this.criteria[i].update(criteria_set_t.criterias[i]);
+		#sql { COMMIT };
+	}
+
+  public void attachToMonitoredElement(String monitored_element_id) throws SQLException {
+    if (this.isAttachedToMonitoredElement(monitored_element_id))
+      return;
+    #sql {INSERT INTO amficom.criteriasetmelinks (set_id,
+                                                  monitored_element_id)
+            VALUES (:(this.id),
+                    :monitored_element_id) };
+		#sql { COMMIT };
+    this.monitored_elements.add(monitored_element_id);
+  }
+
+  public void detachFromMonitoredElement(String monitored_element_id) throws SQLException {
+    if (!this.isAttachedToMonitoredElement(monitored_element_id))
+      return;
+    #sql {DELETE FROM amficom.criteriasetmelinks
+            WHERE set_id = :(this.id)
+              AND monitored_element_id = :monitored_element_id };
+		#sql { COMMIT };
+    this.monitored_elements.remove(monitored_element_id);
+  }
+
+  public Vector getAttachedMonitoredElements() {
+    return this.monitored_elements;
+  }
+
+  public boolean isAttachedToMonitoredElement(String monitored_element_id) {
+    return this.monitored_elements.contains(monitored_element_id);
+  }
+
+  #sql private static iterator CriteriaSetIterator(String id);
+
+  public static CriteriaSet[] retrieveCriteriaSets() throws SQLException {
+    CriteriaSetIterator crisetIt;
+    #sql crisetIt = {SELECT id FROM amficom.criteriasets };
+    LinkedList linkedlist = new LinkedList();
+    while (crisetIt.next())
+      linkedlist.add(new CriteriaSet(crisetIt.id()));
+    crisetIt.close();
+    return (CriteriaSet[])linkedlist.toArray(new CriteriaSet[linkedlist.size()]);
+  }
+
+  public static CriteriaSet[] retrieveCriteriaSets(String monitored_element_id) throws SQLException {
+    CriteriaSetIterator crisetIt;
+    #sql crisetIt = { SELECT set_id id
+                        FROM amficom.criteriasetmelinks
+                        WHERE monitored_element_id = :monitored_element_id};
+    LinkedList linkedlist = new LinkedList();
+    while (crisetIt.next())
+      linkedlist.add(new CriteriaSet(crisetIt.id()));
+    crisetIt.close();
+    return (CriteriaSet[])linkedlist.toArray(new CriteriaSet[linkedlist.size()]);
+  }
+
+  public static CriteriaSet[] retrieveCriteriaSets(String monitored_element_id, String analysis_type_id) throws SQLException {
+    CriteriaSetIterator crisetIt;
+    #sql crisetIt = { SELECT id
+                        FROM amficom.criteriasets
+                        WHERE analysis_type_id = :analysis_type_id
+                          AND id IN (
+                            SELECT set_id 
+                              FROM amficom.criteriasetmelinks
+                              WHERE monitored_element_id = :monitored_element_id) };
+    LinkedList linkedlist = new LinkedList();
+    while (crisetIt.next())
+      linkedlist.add(new CriteriaSet(crisetIt.id()));
+    crisetIt.close();
+    return (CriteriaSet[])linkedlist.toArray(new CriteriaSet[linkedlist.size()]);
+  }
+}
