@@ -19,16 +19,16 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	//public TestRequest treq;
-	private TestRequest					treq;
+	//	private TestRequest treq;
 
 	private Test						test				= null;
 
 	protected static final Dimension	btn_size			= new Dimension(30,
 																	20);
 
-	private ApplicationContext			aContext;
+	//	private ApplicationContext aContext;
 
-	private Dispatcher					dispatcher;
+	Dispatcher					dispatcher;
 
 	private static final String			PARAM_PANEL_NAME	= "PARAM_PANEL";
 
@@ -50,9 +50,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	private DateSpinner					startDateSpinner;
 
-	private TimeSpinner					endTimeSpinner;
+	TimeSpinner							endTimeSpinner;
 
-	private DateSpinner					endDateSpinner;
+	DateSpinner							endDateSpinner;
 
 	private JRadioButton				patternRadioButton;
 
@@ -60,41 +60,41 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	private JRadioButton				paramsRadioButton;
 
-	private JRadioButton				oneRadioButton;
+	JRadioButton				oneRadioButton;
 
 	private JRadioButton				continuosRadioButton;
 
 	private JRadioButton				periodicalRadioButton;
 
-	private JRadioButton				hourRadioButton;
+	JRadioButton						hourRadioButton;
 
-	private JRadioButton				minuteRadioButton;
+	JRadioButton				minuteRadioButton;
 
-	private JRadioButton				dayRadioButton;
+	JRadioButton				dayRadioButton;
 
-	private JRadioButton				weekRadioButton;
+	JRadioButton				weekRadioButton;
 
-	private JRadioButton				monthRadioButton;
+	JRadioButton				monthRadioButton;
 
 	private JRadioButton				synchroRadioButton;
 
 	private JRadioButton				alternateRadioButton;
 
-	private JButton						createButton;
+	JButton						createButton;
 
-	private JButton						applyButton;
+	JButton						applyButton;
 
-	private MinutePanel					minPanel;
+	MinutePanel							minPanel;
 
-	private HourPanel					hourPanel;
+	HourPanel							hourPanel;
 
-	private DayPanel					dayPanel;
+	DayPanel							dayPanel;
 
-	private WeekPanel					weekPanel;
+	WeekPanel							weekPanel;
 
-	private MonthPanel					monthPanel;
+	MonthPanel							monthPanel;
 
-	private TimeStampFiller				tempPanel;
+	TimeStampFiller						tempPanel;
 
 	public TimeParametersPanel() {
 		try {
@@ -105,7 +105,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 	}
 
 	public TimeParametersPanel(ApplicationContext aContext) {
-		this.aContext = aContext;
+		//		this.aContext = aContext;
 		initModule(aContext.getDispatcher());
 		try {
 			jbInit();
@@ -122,7 +122,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	public void setTestRequest(TestRequest treq) {
 		System.out.println("set Test Request" + treq.getId());
-		this.treq = treq;
+		//		this.treq = treq;
 	}
 
 	/** 
@@ -556,7 +556,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		periodicalRadioButton.doClick();
 	}
 
-	private void showStartCalendar() {
+	void showStartCalendar() {
 		Calendar cal = Calendar.getInstance();
 		Date date = (Date) startDateSpinner.getModel().getValue();
 		cal.setTime(date);
@@ -713,7 +713,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		return ts;
 	}
 
-	private void showEndCalendar() {
+	void showEndCalendar() {
 		Calendar cal = Calendar.getInstance();
 		Date date = (Date) endDateSpinner.getModel().getValue();
 		cal.setTime(date);
@@ -730,8 +730,8 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				endDateSpinner.getModel().setValue(cal.getTime());
 	}
 
-	private void apply() {
-		TimeStamp ts = this.getTimeStamp();
+	void apply() {
+		//TimeStamp ts = this.getTimeStamp();
 		//		long[] times = ts.getTestTimes();
 		//		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd.MM.yyyy");
 		//		for (int i = 0; i < times.length; i++)
@@ -799,7 +799,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			gbc.gridx = 0;
 			gbc.gridy = 0;
 			gbc.gridheight = GridBagConstraints.REMAINDER;
-			JSeparator jsep = new JSeparator(JSeparator.VERTICAL);
+			JSeparator jsep = new JSeparator(SwingConstants.VERTICAL);
 			gbc.insets = addInsets;
 			jsep.setBorder(BorderFactory.createEtchedBorder());
 			add(jsep, gbc);
@@ -884,9 +884,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		private JSpinner	hourSpin	= new JSpinner(new SpinnerNumberModel(
 												1, 1, 23, 1));
 
-		private JList		list;
+		JList		list;
 
-		private Vector		time		= new Vector();
+		Vector		time		= new Vector();
 
 		protected HourPanel() {
 			super();
@@ -910,9 +910,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			list.setListData(time);
 			JScrollPane scroll = new JScrollPane(list);
 			scroll
-					.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+					.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			scroll
-					.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+					.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 			JButton addButton = addPlusButton();
 			addButton.addActionListener(new ActionListener() {
@@ -1044,9 +1044,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 															new SpinnerNumberModel(
 																	1, 1, 30, 1));
 
-		private Vector				time			= new Vector();
+		Vector				time			= new Vector();
 
-		private JList				list;
+		JList				list;
 
 		/**
 		 * todo set and fill dayType
@@ -1065,9 +1065,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			list.setListData(time);
 			JScrollPane scroll = new JScrollPane(list);
 			scroll
-					.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+					.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			scroll
-					.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+					.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 			JButton addButton = addPlusButton();
 			addButton.addActionListener(new ActionListener() {
@@ -1298,14 +1298,14 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 														new SpinnerNumberModel(
 																1, 1, 4, 1));
 
-		private Vector				time		= new Vector();
+		Vector				time		= new Vector();
 
 		private JCheckBox[]			days;
 
 		//private Hashtable ht = new Hashtable();
 		private int[]				daysIds;
 
-		private JList				list;
+		JList				list;
 
 		private SimpleDateFormat	sdf			= new SimpleDateFormat("E");
 
@@ -1329,9 +1329,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			list.setListData(time);
 			JScrollPane scroll = new JScrollPane(list);
 			scroll
-					.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+					.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			scroll
-					.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+					.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 			JButton addButton = addPlusButton();
 			addButton.addActionListener(new ActionListener() {
@@ -1511,13 +1511,13 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		private JSpinner	monthSpin	= new JSpinner(new SpinnerNumberModel(
 												1, 1, 30, 1));
 
-		private Vector		time		= new Vector();
+		Vector		time		= new Vector();
 
-		private Vector		days		= new Vector();
+		Vector				days		= new Vector();
 
-		private JList		list;
+		JList		list;
 
-		private JList		dayList;
+		JList				dayList;
 
 		protected MonthPanel() {
 			super();
@@ -1545,9 +1545,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			list.setListData(time);
 			JScrollPane scroll = new JScrollPane(list);
 			scroll
-					.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+					.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			scroll
-					.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+					.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 			JButton addButton = addPlusButton();
 			addButton.addActionListener(new ActionListener() {
@@ -1631,9 +1631,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			dayList.setListData(days);
 			JScrollPane dayscroll = new JScrollPane(dayList);
 			dayscroll
-					.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+					.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			dayscroll
-					.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+					.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 			JButton addDayButton = addPlusButton();
 			addDayButton.addActionListener(new ActionListener() {

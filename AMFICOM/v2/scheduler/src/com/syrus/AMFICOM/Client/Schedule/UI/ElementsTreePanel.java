@@ -217,7 +217,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 	void loadButton_actionPerformed() {
 	}
 
-	private void delMapGroupButton_actionPerformed() {
+	void delMapGroupButton_actionPerformed() {
 	}
 
 	// If expand is true, expands all nodes in the tree.
@@ -288,9 +288,9 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 	private class TestsTreeModel extends ObjectResourceTreeModel {
 
-		private DataSourceInterface		dsi;
+		//private DataSourceInterface dsi;
 
-		private ApplicationContext		aContext;
+		//private ApplicationContext aContext;
 
 		private Dispatcher				dispatcher;
 
@@ -305,8 +305,8 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		//	private Hashtable meTable;
 
 		public TestsTreeModel(ApplicationContext aContext) {
-			this.aContext = aContext;
-			this.dsi = aContext.getDataSourceInterface();
+			//this.aContext = aContext;
+			//this.dsi = aContext.getDataSourceInterface();
 			this.dispatcher = aContext.getDispatcher();
 
 			root = new ObjectResourceTreeNode("root", "Вид тестирования", true,
