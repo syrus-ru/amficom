@@ -96,7 +96,8 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 			Measurement m = null;
 			try
 			{
-				m = (Measurement)MeasurementStorableObjectPool.getStorableObject(bs.measurementId, true);
+				m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+								new Identifier(bs.measurementId), true);
 			}
 			catch(ApplicationException ex)
 			{

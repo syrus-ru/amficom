@@ -68,7 +68,8 @@ public class SaveTestSetupCommand extends VoidCommand
 		Measurement m = null;
 		try
 		{
-			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(bs.measurementId, true);
+			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+						 new Identifier(bs.measurementId), true);
 		}
 		catch(ApplicationException ex)
 		{
@@ -115,7 +116,7 @@ public class SaveTestSetupCommand extends VoidCommand
 		try
 		{
 			ms.attachToMonitoredElement(
-					bs.monitoredElementId,
+					new Identifier(bs.monitoredElementId),
 					new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id));
 		}
 		catch(UpdateObjectException ex)

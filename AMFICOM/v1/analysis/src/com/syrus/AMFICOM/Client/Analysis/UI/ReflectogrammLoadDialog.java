@@ -253,7 +253,7 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 		try
 		{
 			Test test = (Test)MeasurementStorableObjectPool.getStorableObject(measurement.getTestId(), true);
-			bs.monitoredElementId = test.getMonitoredElement().getId();
+			bs.monitoredElementId = test.getMonitoredElement().getId().getIdentifierString();
 			bs.title = test.getDescription();
 		}
 		catch(ApplicationException ex)

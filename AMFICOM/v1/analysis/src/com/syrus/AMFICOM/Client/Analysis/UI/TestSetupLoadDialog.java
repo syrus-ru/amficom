@@ -147,7 +147,8 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
 		try
 		{
-			MonitoredElement me = (MonitoredElement)MeasurementStorableObjectPool.getStorableObject(bs.monitoredElementId, true);
+			MonitoredElement me = (MonitoredElement)MeasurementStorableObjectPool.getStorableObject(
+						 new Identifier(bs.monitoredElementId), true);
 			return new ObjectResourceTreeNode("root", "Шаблоны на \"" +
 					(me.getName().equals("") ? me.getId().getIdentifierString() : me.getName()) + "\"", true);
 		}
@@ -204,7 +205,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
 				if (bs != null && !bs.monitoredElementId.equals(""))
 				{
-					Identifier me_id = bs.monitoredElementId;
+					Identifier me_id = new Identifier(bs.monitoredElementId);
 					Identifier domain_id = new Identifier(aContext.getSessionInterface().getDomainId());
 					try
 					{

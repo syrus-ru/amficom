@@ -63,7 +63,8 @@ public class SaveAnalysisCommand extends VoidCommand
 		Measurement m = null;
 		try
 		{
-			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(bs.measurementId, true);
+			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+						 new Identifier(bs.measurementId), true);
 		}
 		catch(ApplicationException ex)
 		{
@@ -90,7 +91,7 @@ public class SaveAnalysisCommand extends VoidCommand
 					IdentifierPool.generateId(ObjectEntities.ANALYSIS_ENTITY_CODE),
 					userId,
 					type,
-					bs.monitoredElementId,
+					new Identifier(bs.monitoredElementId),
 					m.getSetup().getCriteriaSet());
 		}
 		catch(CreateObjectException ex)

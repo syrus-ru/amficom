@@ -51,7 +51,8 @@ public class PathElementsFrame extends AnalysisFrame
 
 			try
 			{
-				MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(bs.monitoredElementId, true);
+				MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(
+								new Identifier(bs.monitoredElementId), true);
 				if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH))
 				{
 					List tpathIds = me.getMonitoredDomainMemberIds();

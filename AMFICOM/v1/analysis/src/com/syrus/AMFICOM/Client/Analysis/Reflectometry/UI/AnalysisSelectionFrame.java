@@ -75,7 +75,8 @@ public class AnalysisSelectionFrame extends ATableFrame
 					{
 						try
 						{
-							Measurement m = (Measurement)MeasurementStorableObjectPool.getStorableObject(bs.measurementId, true);
+							Measurement m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+												 new Identifier(bs.measurementId), true);
 							setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблон: " +
 										 (m.getSetup().getDescription().equals("") ? "(нет)" : m.getSetup().getDescription()) + ")");
 						}
@@ -103,7 +104,8 @@ public class AnalysisSelectionFrame extends ATableFrame
 				{
 					try
 					{
-						Measurement m = (Measurement)MeasurementStorableObjectPool.getStorableObject(bs.measurementId, true);
+						Measurement m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+											new Identifier(bs.measurementId), true);
 
 						MeasurementSetup ms = m.getSetup();
 						setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблон: " +

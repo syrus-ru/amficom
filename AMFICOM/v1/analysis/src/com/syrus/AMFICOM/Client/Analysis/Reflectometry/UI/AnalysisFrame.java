@@ -123,7 +123,8 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 		{
 			try
 			{
-				MonitoredElement me = (MonitoredElement)MeasurementStorableObjectPool.getStorableObject(bs.monitoredElementId, true);
+				MonitoredElement me = (MonitoredElement)MeasurementStorableObjectPool.getStorableObject(
+								new Identifier(bs.monitoredElementId), true);
 				setTitle(me.getName());
 			}
 			catch(Exception ex)
@@ -185,7 +186,8 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 			Measurement m = null;
 			try
 			{
-				m = (Measurement)MeasurementStorableObjectPool.getStorableObject(bs.measurementId, true);
+				m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+								new Identifier(bs.measurementId), true);
 			}
 			catch(ApplicationException ex)
 			{

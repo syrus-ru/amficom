@@ -114,7 +114,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		Measurement m = res.getMeasurement();
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 		bs.title = m.getName();
-		bs.monitoredElementId = m.getMonitoredElementId();
+		bs.monitoredElementId = m.getMonitoredElementId().getIdentifierString();
 
 			//Если нет тестсетапа создаем его
 			/*if (test.getTestSetupId().equals(""))
@@ -129,7 +129,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			}
 			else*/
 
-		bs.measurementId = m.getId();
+		bs.measurementId = m.getId().getIdentifierString();
 		Pool.put("testsetup", m.getId().getIdentifierString(), m);
 		MeasurementSetup ms = res.getMeasurement().getSetup();
 

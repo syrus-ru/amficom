@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -50,7 +51,8 @@ public class CreateTestSetupCommand extends VoidCommand
 		Measurement m = null;
 		try
 		{
-			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(bs.measurementId, true);
+			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+						 new Identifier(bs.measurementId), true);
 		}
 		catch(ApplicationException ex)
 		{
@@ -70,7 +72,7 @@ public class CreateTestSetupCommand extends VoidCommand
 
 		measurementSetup = MeasurementSetup.createInstance(
 				IdentifierPool.generateId(ObjectEntities.MS_ENTITY_CODE),
-				new Identifier(aContext.getSessionInterface().getUserId()),
+				new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id),
 				ms.getParameterSet(),
 				ms.getThresholdSet(),
 				ms.getEtalon(),
