@@ -170,28 +170,18 @@ public class RefAnalysis
 		noise = new double[y.length];
 		maxNoise = 0;
 
-
-//		noise = (double[])Pool.get("doublearray", "noise");
-//		//noise = ReflectogramMath.getDerivative(noise, 3, 0);
-//				//MathRef.getDerivative(y);
-//		for (int i = 0; i < noise.length; i++)
-//			noise[i] = Math.abs(noise[i]);
-//
-//		for (int i = 1; i < noise.length - 1; i++)
-//			filtered[i] = y[i] - noise[i - 1];
-//
-
 		//long t0 = System.currentTimeMillis();
   for(int i = 0; i < re.length; i++)
 		{
 			// for(int j = re[i].getBegin(); j < y.length; j++) -- changed just because was too slow -- saa
 	int posFrom = re[i].getBegin();
 	int posTo = re[i].getEnd();
+	double[] yArrMT = mt.getYArrayZeroPad(posFrom, posTo - posFrom);
 	for(int j = posFrom; j < posTo; j++)
 			{
 				if(j < lastPoint) // XXX: saa: I think there should be '<='
 				{
-					filtered[j] = Math.max(0, mt.getY(j));
+					filtered[j] = Math.max(0, yArrMT[j - posFrom]);
 					noise[j] = Math.abs(y[j] - filtered[j]);
 					if (noise[j] > maxNoise)
 						maxNoise = noise[j];
