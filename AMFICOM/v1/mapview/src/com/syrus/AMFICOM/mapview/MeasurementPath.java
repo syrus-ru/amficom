@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.16 2005/04/04 13:32:07 bass Exp $
+ * $Id: MeasurementPath.java,v 1.17 2005/04/05 12:48:52 max Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,8 +40,8 @@ import java.util.ListIterator;
 /**
  * Элемент пути.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/04/04 13:32:07 $
+ * @author $Author: max $
+ * @version $Revision: 1.17 $, $Date: 2005/04/05 12:48:52 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -544,14 +544,14 @@ public class MeasurementPath implements MapElement
 			}
 			else
 			{
-				for(ListIterator lit = cpath.getSortedNodeLinks().listIterator(cpath.getSortedNodeLinks().size()); lit.hasPrevious();)
-				{
-					this.sortedNodeLinks.add(lit.previous());
-				}
-				for(ListIterator lit = cpath.getSortedNodes().listIterator(cpath.getSortedNodes().size()); lit.hasPrevious();)
-				{
-					this.sortedNodes.add(lit.previous());
-				}
+				List reversedSortedNodeLinks = new ArrayList(cpath.getSortedNodeLinks());
+				Collections.reverse(reversedSortedNodeLinks);
+				for (int i = 0; i < reversedSortedNodeLinks.size(); i++)
+					this.sortedNodeLinks.add(reversedSortedNodeLinks.get(i));
+				List reversedSortedNodes = new ArrayList(cpath.getSortedNodes());
+				Collections.reverse(reversedSortedNodes);
+				for (int i = 0; i < reversedSortedNodes.size(); i++)
+					this.sortedNodes.add(reversedSortedNodes.get(i));
 			}
 			node = cpath.getOtherNode(node);
 
