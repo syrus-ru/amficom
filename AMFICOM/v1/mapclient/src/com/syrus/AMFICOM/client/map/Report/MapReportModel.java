@@ -18,21 +18,24 @@ import javax.swing.JComponent;
 
 /**
  * <p>Title: </p>
- * <p>Description: </p>
+ * <p>Description: Модель отчётов для карты</p>
  * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: </p>
- * @author not attributable
+ * <p>Company: Syrus Systems</p>
+ * @author Песковский Пётр
  * @version 1.0
  */
 
 public class MapReportModel extends ReportModel
 {
+	public static String rep_linkChars = "rep_linkChars";
+	public static String rep_topology = "rep_topology";
+
 	public String getName() {return "mapreportmodel";}
 	public String getObjectsName() {return ObjectResource.typ;}
 
 	public String getReportsName(ObjectsReport rp)
 	{
-		return LangModelReport.String("rep_linkChars") + rp.reserveName;
+		return LangModelReport.String(rp.field) + rp.reserveName;
 	}
 
 	public String getReportsReserveName(ObjectsReport rp)
@@ -61,9 +64,12 @@ public class MapReportModel extends ReportModel
 	{
 	}
 
-	public boolean isTableReport(ObjectsReport rp)
+	public int getReportKind(ObjectsReport rp)
 	{
-		return true;
+		if (rp.field.equals(MapReportModel.rep_linkChars))
+			return 1;
+
+		return 0;
 	}
 
 	public JComponent createReport(
@@ -73,14 +79,22 @@ public class MapReportModel extends ReportModel
 			ApplicationContext aContext,
 			boolean fromAnotherModule) throws CreateReportException
 	{
+		JComponent returnValue = null;
 
-		MapLinkFeatures osTable =
+		if (rp.field.equals(MapReportModel.rep_linkChars))
+		{
+			MapLinkFeatures osTable =
 				new MapLinkFeatures(rp, divisionsNumber);
 
-		JComponent returnValue = new ReportResultsTablePanel(
+			returnValue = new ReportResultsTablePanel(
 				osTable.columnModel,
 				osTable.tableModel,
 				rt.findROforReport(rp));
+		}
+		else
+		{
+			returnValue = new MapRenderPanel(rt.findROforReport(rp));
+		}
 
 		return returnValue;
 	}
