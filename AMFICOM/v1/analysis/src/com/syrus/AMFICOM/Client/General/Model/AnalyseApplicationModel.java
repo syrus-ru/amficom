@@ -1,5 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
+import java.awt.Toolkit;
+
+import javax.swing.ImageIcon;
+import javax.swing.UIManager;
+
 public class AnalyseApplicationModel extends ApplicationModel
 {
 
@@ -71,6 +76,32 @@ public class AnalyseApplicationModel extends ApplicationModel
 		add("toolBar");
 		add("statusBar");
 		add("reflectometryFrame");
+		this.initUIConstats();
+	}
+	
+	private void initUIConstats() {
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_MINI, Toolkit.getDefaultToolkit().getImage(
+			"images/main/analyse_mini.gif"));
+		UIManager.put(AnalysisResourceKeys.ICON_SURVEY_MINI, Toolkit.getDefaultToolkit().getImage(
+			"images/main/survey_mini.gif"));
+		UIManager.put(AnalysisResourceKeys.ICON_EVALUATE_MINI, Toolkit.getDefaultToolkit().getImage(
+			"images/main/evaluate_mini.gif"));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_CENTER_A, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/centerA.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_CENTER_B, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/centerB.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_LOSS, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/loss.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_REFLECT, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/reflect.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_NOANALYSIS, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/noanalyse.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/perform_analysis.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/cs_initial.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS, 
+		new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/cs_default.gif")));
 	}
 /*
 	public DataSourceInterface getDataSource(SessionInterface si)
