@@ -8,9 +8,9 @@
 #include "T5.h"
 #include "util.h"
 #include "BellcoreWriter.h"
-#include "com_syrus_util_TraceDataReader.h"
+#include "com_syrus_io_TraceDataReader.h"
 
-JNIEXPORT jbyteArray JNICALL Java_com_syrus_util_TraceDataReader_getBellcoreData__Ljava_lang_String_2(JNIEnv *env, jobject obj, jstring jfileName) {
+JNIEXPORT jbyteArray JNICALL Java_com_syrus_io_TraceDataReader_getBellcoreData__Ljava_lang_String_2(JNIEnv *env, jobject obj, jstring jfileName) {
 	const char* file_name = env->GetStringUTFChars(jfileName, 0);
 	unsigned char* bellcoredata;
 	unsigned int bellcoredata_size;
@@ -25,7 +25,7 @@ JNIEXPORT jbyteArray JNICALL Java_com_syrus_util_TraceDataReader_getBellcoreData
 	return jdata;
 }
 
-JNIEXPORT jbyteArray JNICALL Java_com_syrus_util_TraceDataReader_getBellcoreData___3B(JNIEnv *env, jobject obj, jbyteArray jt5data) {
+JNIEXPORT jbyteArray JNICALL Java_com_syrus_io_TraceDataReader_getBellcoreData___3B(JNIEnv *env, jobject obj, jbyteArray jt5data) {
 	jbyte* t5_data = env->GetByteArrayElements(jt5data, 0);
 	unsigned int t5_length = env->GetArrayLength(jt5data);
 	unsigned char* bellcoredata;
