@@ -24,11 +24,6 @@ import javax.swing.SwingUtilities;
 
 public class ProgressBar extends JPanel
 {
-	static
-	{
-		System.loadLibrary("ProgressBarRepainter");
-	}
-
 	private boolean active = false;
 	private BarRepaintThread thread = null;
 	private String caption = "";
