@@ -1,9 +1,9 @@
 /*
- * $Id: resource.idl,v 1.7 2004/11/12 14:38:59 bass Exp $
+ * $Id: resource.idl,v 1.8 2004/11/25 16:36:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 #ifndef RESOURCE_IDL
@@ -11,57 +11,76 @@
 
 #include <streams.idl>
 
-module com
-{
-module syrus
-{
-module AMFICOM
-{
-module CORBA
-{
+#include "general.idl"
 
-module Resource
-{
-	struct ImageResource_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring source_string;
+module com {
+	module syrus {
+		module AMFICOM {
+			module resource {
+				module corba {
+					enum ImageResourceSort {
+						BYTES,
+						FILE,
+						SCHEME
+					};
 
-		wstring filename;				// only one of these
-		::CORBA::OctetSeq image;	// should be valid
+					union ImageResourceData switch (ImageResourceSort) {
+						case FILE:
+							string fileName;
+						case BYTES:
+						case SCHEME:
+							::CORBA::OctetSeq image;
+					};
+
+					/**
+					 * @todo Once migration to valuetypes is
+					 *       complete, move enum and union
+					 *       inside.
+					 */
+					struct ImageResource_Transferable {
+						general::corba::Identifier_Transferable id;
+						ImageResourceData data;
+					};
+
+					typedef sequence<ImageResource_Transferable> ImageResourceSeq_Transferable;
+					typedef ImageResource_Transferable ImageResource;
+					typedef sequence<ImageResource> ImageResourceSeq;
+				};
+			};
+
+			module CORBA {
+				module Resource {
+					/**
+					 * @deprecated Use {@link com.syrus.AMFICOM.resource.corba.ImageResource_Transferable} instead.
+					 */
+					struct ImageResource_Transferable {
+						wstring id;
+						wstring name;
+						wstring source_string;
+
+						wstring filename;		// only one of these
+						::CORBA::OctetSeq image;	// should be valid
+					};
+					typedef sequence<ImageResource_Transferable> ImageResourceSeq_Transferable;
+
+					struct ResourceDescriptor_Transferable {
+						wstring resource_id;
+						long long resource_modified;
+					};
+
+					typedef sequence<ResourceDescriptor_Transferable> ResourceDescriptorSeq_Transferable;
+
+				   	struct Filter_Transferable {
+						wstring id;
+						wstring resource_typ;
+						::CORBA::OctetSeq logic_scheme;
+					};
+
+					typedef sequence<Filter_Transferable> FilterSeq_Transferable;
+				};
+			};
+		};
 	};
-	typedef sequence <ImageResource_Transferable> ImageResourceSeq_Transferable;
-	typedef ImageResource_Transferable ImageResource;
-	typedef sequence<ImageResource> ImageResourceSeq;
-
-	struct ImageCatalogue_Transferable
-	{
-		wstring id;
-		ImageResourceSeq_Transferable loaded_images;
-
-//		long getImage(in wstring image_id);
-	};
-
-	struct ResourceDescriptor_Transferable
-	{
-		wstring resource_id;
-		long long resource_modified;
-	};
-	typedef sequence <ResourceDescriptor_Transferable> ResourceDescriptorSeq_Transferable;
-
-   	struct Filter_Transferable
-	{
-		wstring id;
-		wstring resource_typ;
-//		long long modified;
-		::CORBA::OctetSeq logic_scheme;
-	};
-	typedef sequence <Filter_Transferable> FilterSeq_Transferable;
-};
-};
-};
-};
 };
 
-#endif
+#endif // RESOURCE_IDL
