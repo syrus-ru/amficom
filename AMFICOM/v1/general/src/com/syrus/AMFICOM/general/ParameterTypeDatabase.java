@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.10 2005/02/11 18:40:16 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.11 2005/02/15 15:15:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/11 18:40:16 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/15 15:15:55 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -142,25 +142,25 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 				return;
 		}
 	}
-
-	/**
-	 * @deprecated use {@link StorableObjectDatabase.retrieveByCondion} and {@link TypicalCondition}
-	 */
-	public ParameterType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {		
-		Collection collection = null;
-		
-		try {
-			collection = this.retrieveByIds( null , StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
-		}
-		catch (IllegalDataException ide) {				
-			throw new RetrieveObjectException(ide);
-		}
-		
-		if ((collection == null) || (collection.isEmpty()))
-				throw new ObjectNotFoundException("No parameter type with codename: '" + codename + "'");
-		
-		return (ParameterType) collection.iterator().next();
-	}
+//
+//	/**
+//	 * @deprecated use {@link StorableObjectDatabase.retrieveByCondion} and {@link TypicalCondition}
+//	 */
+//	public ParameterType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {		
+//		Collection collection = null;
+//		
+//		try {
+//			collection = this.retrieveByIds( null , StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+//		}
+//		catch (IllegalDataException ide) {				
+//			throw new RetrieveObjectException(ide);
+//		}
+//		
+//		if ((collection == null) || (collection.isEmpty()))
+//				throw new ObjectNotFoundException("No parameter type with codename: '" + codename + "'");
+//		
+//		return (ParameterType) collection.iterator().next();
+//	}
 	
 	public Collection retrieveAll() throws RetrieveObjectException {
 		try{
