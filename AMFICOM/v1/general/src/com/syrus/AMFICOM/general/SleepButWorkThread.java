@@ -1,5 +1,5 @@
 /*
- * $Id: SleepButWorkThread.java,v 1.7 2004/08/25 11:04:16 bob Exp $
+ * $Id: SleepButWorkThread.java,v 1.8 2004/12/08 13:10:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/25 11:04:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2004/12/08 13:10:49 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -23,7 +23,7 @@ public abstract class SleepButWorkThread extends Thread {
 
 	protected long initialTimeToSleep;
 	private long timeToSleep;
-	private int maxFalls;
+	protected int maxFalls;
 	private int fallsCounter;
 	protected int fallCode;
 
