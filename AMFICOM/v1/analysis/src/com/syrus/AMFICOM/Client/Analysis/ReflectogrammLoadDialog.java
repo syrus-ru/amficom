@@ -8,6 +8,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -16,7 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
+import com.syrus.AMFICOM.analysis.*;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -267,12 +268,12 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 				return null;
 
 			Result r = (Result)resource;
-			String type = r.result_type;
+			String type = r.getResultType();
 
 			String name = null;
 			if(type != null && type.equals("modeling"))
 			{
-				name = Pool.getName(Modeling.typ, r.modeling_id);
+				name = Pool.getName(Modeling.typ, r.getModelingId());
 			}
 
 			if(name != null)
@@ -291,14 +292,14 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 			if(res == null)
 				return null;
 
-			Enumeration enum = res.parameters.elements();
-			while (enum.hasMoreElements())
+			Iterator it = res.getParameterList().iterator();
+			while (it.hasNext())
 			{
-				Parameter param = (Parameter)enum.nextElement();
-				if (param.gpt.id.equals("reflectogramm"))
-					bs = new BellcoreReader().getData(param.value);
+				Parameter param = (Parameter)it.next();
+				if (param.getGpt().getId().equals(AnalysisUtil.REFLECTOGRAMM))
+					bs = new BellcoreReader().getData(param.getValue());
 			}
-			Test test = (Test)Pool.get(Test.typ, res.test_id);
+			Test test = (Test)Pool.get(Test.typ, res.getTestId());
 			if(test != null)
 				bs.monitored_element_id = test.monitored_element_id;
 			bs.title = res.getName();
@@ -554,7 +555,7 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 					for(Enumeration e = h.elements(); e.hasMoreElements();)
 					{
 						Modeling m = (Modeling)e.nextElement();
-						if(m.type_id.equals("optprognosis") && m.domain_id.equals(domainID))
+						if(m.getTypeId().equals("optprognosis") && m.getDomainId().equals(domainID))
 						{
 							String resultID = new SurveyDataSourceImage(dsi).GetModelingResult(m.getId());
 							v.add(resultID);
@@ -572,7 +573,7 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 					for(Enumeration e = h.elements(); e.hasMoreElements();)
 					{
 						Modeling m = (Modeling)e.nextElement();
-						if(m.type_id.equals("dadara") && m.domain_id.equals(domainID))
+						if(m.getTypeId().equals(AnalysisUtil.DADARA) && m.getDomainId().equals(domainID))
 						{
 							String resultID = new SurveyDataSourceImage(dsi).GetModelingResult(m.getId());
 							v.add(resultID);
@@ -698,7 +699,7 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 					Result r = (Result)Pool.get(Result.typ, predictionResultIds[i]);
 					if(r != null)
 					{
-						Modeling m = (Modeling)Pool.get(Modeling.typ, r.modeling_id);
+						Modeling m = (Modeling)Pool.get(Modeling.typ, r.getModelingId());
 						if(m != null)
 						{
 							ortn = new ObjectResourceTreeNode(r, m.getName(), true, getIcon("predictionresult"), true);
@@ -714,7 +715,7 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 					Result r = (Result)Pool.get(Result.typ, modelingResultIds[i]);
 					if(r != null)
 					{
-						Modeling m = (Modeling)Pool.get(Modeling.typ, r.modeling_id);
+						Modeling m = (Modeling)Pool.get(Modeling.typ, r.getModelingId());
 						if(m != null)
 						{
 							ortn = new ObjectResourceTreeNode(r, m.getName(), true, getIcon("modelingresult"), true);
