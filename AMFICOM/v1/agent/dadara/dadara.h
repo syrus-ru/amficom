@@ -1,27 +1,13 @@
 #include "EventParams.h"
 #include <stdio.h>
 
+#define DEBUG_DADARA
 
-//#define DEBUG_DADARA
-
-void fcnWeld(int &, double *, double &f, double *x, int iflag);
-void fcnLinear(int &, double *, double &f, double *x, int iflag);
-void fcnConnector(int &, double *, double &f, double *x, int iflag);
 double *setParRet(int n_events, EventParams **eventParams, int &Ret_Length);
-int checkFittness (int nEvents);
-void performLinearFitting(EventParams **ep, int start, int end, int strategy);
-void performSpliceFitting(EventParams **ep, int start, int end, int strategy);
-void performConnectorFitting(EventParams **ep, int start, int end, int strategy, int eventSize);
-
-EventParams **ep;
-double* data;
-//double *sigmaSquared;
-int nEvent;
-
-double chi2norma;
-
+void getEventParams(double *ep_data, int ep_data_length, EventParams **ep);
 
 #ifdef DEBUG_DADARA
-FILE* stream;
+extern FILE* dbg_stream;
+extern double dbg_delta_x; // globally saved delta_x
+extern int dbg_suppress_cf_messages;
 #endif
-

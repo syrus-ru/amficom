@@ -14,7 +14,7 @@
 #include <list>
 #include <algorithm>
 
-//#define DEBUG_INITIAL_ANALYSIS
+#define DEBUG_INITIAL_ANALYSIS
 
 using namespace std ;
 typedef list<EventParams> EPLIST;
@@ -33,13 +33,15 @@ public:
 					double maximalNoise,
 					int waveletType,
 					double formFactor,
-					int findEnd);
+					int reflectiveSize,
+					int nonReflectiveSize);
 	virtual ~InitialAnalysis();
 
 public:
 	int getEventSize();
 	EventParams **getEventParams();
 	int getEventsCount();
+	double getMeanAttenuation();
 
 private:
 	double *data;
@@ -49,7 +51,8 @@ private:
 	double *transC;
 	double *transW;
 	double *noise;
-	EventParams **ep;
+	double *data_woc;
+	EventParams **eps;
 
 //Parameters of the analysis (criteria);
 	double minimalThreshold;
@@ -59,7 +62,6 @@ private:
 	double maximalNoise;
 	int	   waveletType;
 	double formFactor;
-	int    findEnd;
 
 //Internal parameters;
 	int evSizeC; // характерная ширина отражательного события
@@ -73,32 +75,27 @@ private:
 	void performAnalysis();
 	void correctDataArray();
 	int getLastPoint();
-	void calcEventSize();
-	void calcMeanAttenuation();
-	void performTransformation(double *y, double y_length, double *trans, int freq, double* norma);
+	void calcEventSize(double level);
+	void performTransformation(double *y, int start, int end, double *trans, int freq, double norma);
 	void getNoise(double *noise, int freq);
 	double shiftToZeroAttenuation(double *trans);
-	void setNonZeroTransformation(double *trans, double threshold);
-	void createEventParams(double *trans, int evSize, int start, int end, EPLIST &vector);
-
-	void findAdditionalWelds(double *trans, int evSize, EPLIST &vector);
-
+	void setNonZeroTransformation(double *trans, double threshold, int start, int end);
+//	void createEventParams(double *trans, int evSize, int start, int end, EPLIST &vector);
+	void findConnectors(double *transC,	double *transW, int start, int end, EPLIST &vector);
+	void findWelds(double *trans, EPLIST &vector);
+	void correctConnectorCoords();
+	void correctWeldCoords();
+	void excludeConnectors(EPLIST &vector, double *data, double *data_woc);
 	void excludeShortEvents(int linearLength, int weldLength, int connectorLength);
-	void fixEndEvents(int count);
 	void siewLinearParts();
 	void excludeNonRecognizedEvents();
-	void correctConnectorsCoords();
 	void correctEnd();
 	void setEventParams();
 
-private:
-	double wLet(int arg, int freq, double* norma);
-	void getNormalizingCoeffs(double *wn, int freq);
-
 //Wavelet constants;
 private:
-	double* wn_w;
-	double* wn_c;
+	double wn_w;
+	double wn_c;
 
 //Helping functions;
 private:

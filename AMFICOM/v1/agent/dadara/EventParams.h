@@ -20,6 +20,7 @@ public:
 	void operator = (const EventParams& ep);
 	int operator < (const EventParams& ep);
 	int operator == (const EventParams& ep);
+	int operator == (const EventParams* ep);
 	int operator != (const EventParams* const &ep);
 
 	static const int LINEAR;

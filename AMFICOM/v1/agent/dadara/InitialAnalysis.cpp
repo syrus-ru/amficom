@@ -8,28 +8,31 @@
 #include "Histogramm.h"
 
 #ifdef DEBUG_INITIAL_ANALYSIS
-#include <time.h>
-#include <sys/time.h>
+#include <stdio.h>
+//#include <time.h>
+//#include <sys/time.h>
 #endif
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-InitialAnalysis::InitialAnalysis( double *data,					//ÔÏÞËÉ ÒÅÆÌÅËÔÏÇÒÁÍÍÙ
-								  int data_length,				//ÞÉÓÌÏ ÔÏÞÅË
-								  double delta_x,				//ÒÁÓÓÔÏÑÎÉÅ ÍÅÖÄÕ ÔÏÞËÁÍÉ (Í)
-							 	  double minimalThreshold,		//ÍÉÎÉÍÁÌØÎÙÊ ÕÒÏ×ÅÎØ ÓÏÂÙÔÉÑ
-								  double minimalWeld,			//ÍÉÎÉÍÁÌØÎÙÊ ÕÒÏ×ÅÎØ ÎÅÏÔÒÁÖÁÔÅÌØÎÏÇÏ ÓÏÂÙÔÉÑ
-								  double minimalConnector,		//ÍÉÎÉÍÁÌØÎÙÊ ÕÒÏ×ÅÎØ ÏÔÒÁÖÁÔÅÌØÎÏÇÏ ÓÏÂÙÔÉÑ
-								  double minimalEndingSplash,	//ÍÉÎÉÍÁÌØÎÙÊ ÕÒÏ×ÅÎØ ÐÏÓÌÅÄÎÅÇÏ ÏÔÒÁÖÅÎÉÑ
-								  double maximalNoise,			//ÍÁËÓÉÍÁÌØÎÙÊ ÕÒÏ×ÅÎØ ÛÕÍÁ
-								  int waveletType,				//ÎÏÍÅÒ ÉÓÐÏÌØÚÕÅÍÏÇÏ ×ÅÊ×ÌÅÔÁ
-								  double formFactor,			//ÆÏÒÍÆÁËÔÏÒ ÏÔÒÁÖÁÔÅÌØÎÏÇÏ ÓÏÂÙÔÉÑ
-								  int findEnd)					//ÈÁÒÁËÔÅÒÎÁÑ ÄÌÉÎÁ ÓÏÂÙÔÉÑ, ÏÐÒÅÄÅÌÅÎÎÁÑ × java (ÒÅÁÌØÎÏ ÎÅ ÉÓÐÏÌØÚÕÅÔÓÑ)
+InitialAnalysis::InitialAnalysis(
+	double *data,				//òî÷êè ðåôëåêòîãðàììû
+	int data_length,			//÷èñëî òî÷åê
+	double delta_x,				//ðàññòîÿíèå ìåæäó òî÷êàìè (ì)
+	double minimalThreshold,	//ìèíèìàëüíûé óðîâåíü ñîáûòèÿ
+	double minimalWeld,			//ìèíèìàëüíûé óðîâåíü íåîòðàæàòåëüíîãî ñîáûòèÿ
+	double minimalConnector,	//ìèíèìàëüíûé óðîâåíü îòðàæàòåëüíîãî ñîáûòèÿ
+	double minimalEndingSplash,	//ìèíèìàëüíûé óðîâåíü ïîñëåäíåãî îòðàæåíèÿ
+	double maximalNoise,		//ìàêñèìàëüíûé óðîâåíü øóìà
+	int waveletType,			//íîìåð èñïîëüçóåìîãî âåéâëåòà
+	double formFactor,			//ôîðìôàêòîð îòðàæàòåëüíîãî ñîáûòèÿ
+	int reflectiveSize,			//õàðàêòåðíàÿ äëèíà îòðàæàòåëüíîãî ñîáûòèÿ
+	int nonReflectiveSize)		//õàðàêòåðíàÿ äëèíà íåîòðàæàòåëüíîãî ñîáûòèÿ
 {
 #ifdef DEBUG_INITIAL_ANALYSIS
-	timeval tv;
+	/*timeval tv;
 	gettimeofday(&tv, NULL);
 	tm* t = localtime(&tv.tv_sec);
 	int size = 9 + 15 + 1 + 14 + 1 + 3 + 1;
@@ -37,7 +40,10 @@ InitialAnalysis::InitialAnalysis( double *data,					//ÔÏÞËÉ ÒÅÆÌÅËÔÏÇÒÁÍÍÙ
 	sprintf(filename, ".//logs//%04d%02d%02d%02d%02d%02d-InitialAnalysis.log", 1900 + t->tm_year, 1 + t->tm_mon, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec);
 	filename[size - 1] = 0;
 	this->str = fopen(filename, "a");
-	delete[] filename;
+	delete[] filename;*/
+	this->str = fopen("c:\\ia.log", "w");
+	fprintf (this->str, "*** InitialAnalysis::InitialAnalysis: data=%p, data_length=%d\n",
+		data,data_length);
 #endif
 
 	this->delta_x				= delta_x;
@@ -48,18 +54,10 @@ InitialAnalysis::InitialAnalysis( double *data,					//ÔÏÞËÉ ÒÅÆÌÅËÔÏÇÒÁÍÍÙ
 	this->maximalNoise			= maximalNoise;
 	this->waveletType			= waveletType;
 	this->formFactor			= formFactor;
-	this->findEnd				= findEnd;
 	this->data_length			= data_length;
 	this->data					= data;
-
-
-	{ //Inicializing of the arrays;
-		wn_c	= new double[10];
-		wn_w	= new double[10];
-		transC	= new double[data_length];
-		transW	= new double[data_length];
-		noise	= new double[data_length];
-	}
+	this->evSizeC				= reflectiveSize;
+	this->evSizeW				= nonReflectiveSize;
 
 	performAnalysis();
 }
@@ -69,17 +67,19 @@ InitialAnalysis::InitialAnalysis( double *data,					//ÔÏÞËÉ ÒÅÆÌÅËÔÏÇÒÁÍÍÙ
 
 InitialAnalysis::~InitialAnalysis()
 {
-	delete[] wn_w;
-	delete[] wn_c;
+	//delete[] wn_w;
+	//delete[] wn_c;
 	delete[] transC;
 	delete[] transW;
 	delete[] noise;
+	delete[] data_woc;
 
 	epVector.clear();
 
-	delete[] ep;
+	delete[] eps;
 
 #ifdef DEBUG_INITIAL_ANALYSIS
+	fprintf(this->str, "### InitialAnalysis::~InitialAnalysis\n");
 	fclose(this->str);
 #endif
 }
@@ -90,11 +90,16 @@ void InitialAnalysis::performAnalysis()
 	correctDataArray();
 
 	lastNonZeroPoint = getLastPoint();
-	
-	calcEventSize();
+	transC	 = new double[lastNonZeroPoint];
+	transW	 = new double[lastNonZeroPoint];
+	noise	 = new double[lastNonZeroPoint];
+	data_woc = new double[data_length];
 
-	getNormalizingCoeffs(wn_c, evSizeC);
-	getNormalizingCoeffs(wn_w, evSizeW);
+	//calcEventSize(0.5);
+
+	wn_c = getWLetNorma(evSizeC, waveletType);
+	wn_w = getWLetNorma(evSizeW, waveletType);
+
 #ifdef DEBUG_INITIAL_ANALYSIS
 		fprintf(this->str, "Reflecting event size = %d\n", evSizeC);
 		fprintf(this->str, "Nonreflecting event size = %d\n", evSizeW);
@@ -102,85 +107,89 @@ void InitialAnalysis::performAnalysis()
 
 //	FILE * f = fopen("c:\\io.log", "w");
 
-	// ×ÙÞÉÓÌÑÅÍ ÕÒÏ×ÅÎØ ÛÕÍÁ
+	// âû÷èñëÿåì óðîâåíü øóìà
 	getNoise(noise, evSizeC);
 
-/*	double *denoised = new double[data_length];
-	for (int i = 0; i < data_length; i++)
-		denoised[i] = data[i] - noise[i];
-*/
-	// ×ÙÐÏÌÎÑÅÍ ×ÅÊ×ÌÅÔ-ÐÒÅÏÂÒÁÚÏ×ÁÎÉÅ
-	performTransformation(data, data_length, transC, evSizeC, wn_c);
-	performTransformation(data, data_length, transW, evSizeW, wn_w);
+	// âûïîëíÿåì âåéâëåò-ïðåîáðàçîâàíèå
+	performTransformation(data, 0, lastNonZeroPoint, transC, evSizeC, wn_c);
+	performTransformation(data, 0, lastNonZeroPoint, transW, evSizeW, wn_w);
 
-//	delete[] denoised;
-
-	// ×ÙÞÉÔÁÅÍ ÉÚ ËÏÜÆÆÉÃÉÅÎÔÏ× ÐÒÅÏÂÒÁÚÏ×ÁÎÉÑ(ëð) ÐÏÓÔÏÑÎÎÕÀ ÓÏÓÔÁ×ÌÑÀÝÕÀ (ÓÒÅÄÎÅÅ ÚÁÔÕÈÁÎÉÅ)
+	// âû÷èòàåì èç êîýôôèöèåíòîâ ïðåîáðàçîâàíèÿ(ÊÏ) ïîñòîÿííóþ ñîñòàâëÿþùóþ (ñðåäíåå çàòóõàíèå)
 	meanAttenuation = shiftToZeroAttenuation(transC);
 	shiftToZeroAttenuation(transW);
 
-	// ÕÓÔÁÎÁ×ÌÉ×ÁÅÍ × 0 ëð, ËÏÔÏÒÙÅ ÍÅÎØÛÅ ÕÒÏ×ÎÑ ÛÕÍÁ ÉÌÉ ÍÉÎÉÍÁÌØÎÏÇÏ ÕÒÏ×ÎÑ ÓÏÂÙÔÉÑ
-	setNonZeroTransformation(transC, minimalThreshold);
-	setNonZeroTransformation(transW, minimalThreshold);
-	// ÏÐÒÅÄÅÌÑÅÍ ËÏÏÒÄÉÎÁÔÙ É ÔÉÐÙ ÓÏÂÙÔÉÊ ÐÏ ëð
-	createEventParams(
-		transC,
-		evSizeC,
-		0, 
-		min(lastNonZeroPoint + evSizeC, data_length - 10), 
-		epVector);
+	// óñòàíàâëèâàåì â 0 ÊÏ, êîòîðûå ìåíüøå óðîâíÿ øóìà èëè ìèíèìàëüíîãî óðîâíÿ ñîáûòèÿ
+	setNonZeroTransformation(transC, minimalThreshold, 0, lastNonZeroPoint);
+	setNonZeroTransformation(transW, minimalThreshold, 0, lastNonZeroPoint);
 
+#ifdef DEBUG_INITIAL_ANALYSIS
+		fprintf(this->str, "First transformation performed\nSearching for connectors...");
+#endif
+	// îïðåäåëÿåì êîîðäèíàòû è òèïû ñîáûòèé ïî ÊÏ
+	findConnectors(
+		transC,
+		transW,
+		0,
+		//min(lastNonZeroPoint + evSizeC, data_length - 10), 
+		lastNonZeroPoint - 1,
+		epVector);
+//	correctConnectorCoords();
+
+#ifdef DEBUG_INITIAL_ANALYSIS
+		fprintf(this->str, "done\nFound %d connectors\nSubstracting connectors from trace...", epVector.size());
+#endif
+	excludeConnectors(epVector, data, data_woc);
+#ifdef DEBUG_INITIAL_ANALYSIS
+		fprintf(this->str, "done\n");
+#endif
+
+	performTransformation(data_woc, 0, lastNonZeroPoint, transW, evSizeW, wn_w);
+	shiftToZeroAttenuation(transW);
+	setNonZeroTransformation(transW, minimalThreshold, 0, lastNonZeroPoint);
+
+#ifdef DEBUG_INITIAL_ANALYSIS
+		fprintf(this->str, "Second transformation performed\nSearching for welds...");
+#endif
+	findWelds(transW, epVector);
+	siewLinearParts();
+	correctWeldCoords();
+#ifdef DEBUG_INITIAL_ANALYSIS
+		fprintf(this->str, "done\nTotal %d events found\n", epVector.size());
+#endif
+
+	
 #ifdef DEBUG_INITIAL_ANALYSIS
 	EPLIST::iterator it;
 #endif
-/*	fprintf(f, "\n(0) after createEventParams()\n");
-	for (it = epVector.begin(); it != epVector.end(); it++)
-	{
-		fprintf(f, "#%d, type = %d, begin = %d, end = %d\n", it->n, it->type, it->begin, it->end);
-	}*/
 
-	// ËÏÒÒÅËÔÉÒÕÅÍ ËÏÏÒÄÉÎÁÔÙ ÏÔÒÁÖÁÔÅÌØÎÙÈ ÓÏÂÙÔÉÊ
-	correctConnectorsCoords();
-/*	fprintf(f, "\n(1) after correctConnectorsCoords()\n");
-	for (it = epVector.begin(); it != epVector.end(); it++)
-	{
-		fprintf(f, "#%d, type = %d, begin = %d, end = %d\n", it->n, it->type, it->begin, it->end);
-	}*/
+	// èñêëþ÷àåì íåèäåíòèôèöèðîâàííûå ñîáûòèÿ
+	//excludeNonRecognizedEvents();
 
-	findAdditionalWelds(transW, evSizeW, epVector);
-
-/*	fprintf(f, "\n(2) after findAdditionalWelds()\n");
-	for (it = epVector.begin(); it != epVector.end(); it++)
-	{
-		fprintf(f, "#%d, type = %d, begin = %d, end = %d\n", it->n, it->type, it->begin, it->end);
-	}*/
-
-	// ÉÓËÌÀÞÁÅÍ ÎÅÉÄÅÎÔÉÆÉÃÉÒÏ×ÁÎÎÙÅ ÓÏÂÙÔÉÑ
-	excludeNonRecognizedEvents();
-
-	/*fprintf(f, "\n(1) after correctConnectorsCoords()\n");
-	for (it = epVector.begin(); it != epVector.end(); it++)
-	{
-		fprintf(f, "#%d, type = %d, begin = %d, end = %d\n", it->n, it->type, it->begin, it->end);
-	}*/
-
-	// ÉÓËÌÀÞÁÅÍ ÓÏÂÙÔÉÑ Ó ÄÌÉÎÏÊ, ÍÅÎØÛÅÊ ÐÏÌÏ×ÉÎÙ ÈÁÒÁËÔÅÒÎÏÇÏ ÒÁÚÍÅÒÁ
-	excludeShortEvents(max(evSizeC/2, 10), max(evSizeW/2, 8), max(evSizeC/2, 10));
+#ifdef DEBUG_INITIAL_ANALYSIS
+		fprintf(this->str, "Excluding short events (linear = %d, weld = %d, connector = %d)...", 
+			max(evSizeW/2, 10), max(evSizeW/2, 3), max(evSizeC/2, 4));
+#endif
+	// èñêëþ÷àåì ñîáûòèÿ ñ äëèíîé, ìåíüøåé ïîëîâèíû õàðàêòåðíîãî ðàçìåðà
+	excludeShortEvents(max(evSizeW/2, 10), max(evSizeW/2, 3), max(evSizeC/2, 4));
 	siewLinearParts();
-	excludeShortEvents(max(evSizeC/2, 10), max(evSizeW/2, 8), max(evSizeC/2, 10));
-	siewLinearParts();
+#ifdef DEBUG_INITIAL_ANALYSIS
+		fprintf(this->str, "done\n");
+#endif
 
-/*	fprintf(f, "\n(3) after excludeShortEvents()\n");
-	for (it = epVector.begin(); it != epVector.end(); it++)
-	{
-		fprintf(f, "#%d, type = %d, begin = %d, end = %d\n", it->n, it->type, it->begin, it->end);
-	}*/
-
+	
+#ifdef DEBUG_INITIAL_ANALYSIS
+		fprintf(this->str, "Setting EventsParams...");
+#endif
 	setEventParams();
-printf("-------------------------\n");
-	// ËÏÒÒÅËÔÉÒÕÅÍ ËÏÎÅÃ ×ÏÌÏËÎÁ ÓÏÇÌÁÓÎÏ ÍÉÎÉÍÁÌØÎÏÇÏ ÏÔÒÁÖÅÎÉÑ
+#ifdef DEBUG_INITIAL_ANALYSIS
+		fprintf(this->str, "done\n%d events set\nCorrecting end...", epVector.size());
+#endif
+	// êîððåêòèðóåì êîíåö âîëîêíà ñîãëàñíî ìèíèìàëüíîãî îòðàæåíèÿ
 	correctEnd();
-printf("*************************\n");
+#ifdef DEBUG_INITIAL_ANALYSIS
+		fprintf(this->str, "done\nTotal number of events = %d\n", epVector.size());
+#endif
+
 //	fclose (f);
 #ifdef DEBUG_INITIAL_ANALYSIS
 	for (it = epVector.begin(); it != epVector.end(); it++)
@@ -188,6 +197,7 @@ printf("*************************\n");
 		if(it->end <= it->begin)
 			fprintf(this->str, "error in event bounds: x1 = %d, x2 = %d\n", it->begin, it->end);
 	}
+	fclose(this->str);
 #endif
 }
 
@@ -198,12 +208,17 @@ int InitialAnalysis::getEventSize()
 
 EventParams **InitialAnalysis::getEventParams()
 {
-	return ep;
+	return eps;
 }
 
 int InitialAnalysis::getEventsCount()
 {
 	return epVector.size();
+}
+
+double InitialAnalysis::getMeanAttenuation()
+{
+	return meanAttenuation;
 }
 
 void InitialAnalysis::correctDataArray()
@@ -264,56 +279,46 @@ int InitialAnalysis::getLastPoint()
 }
 
 
-void InitialAnalysis::calcEventSize()
+void InitialAnalysis::calcEventSize(double level)
 {
 	int eventSize = 0;
 	int maximumIndex = 4;
 	int i;
 
-	double maximum = data[maximumIndex];
-	
 	for (i = 0; i < min(300, data_length); i++)
-	{
-		if(data[i]>maximum)
-		{
-			maximum = data[i];
+		if(data[i] > data[maximumIndex])
 			maximumIndex = i;
-		}
-	}
 
 	eventSize = maximumIndex;
 
 	for(i = maximumIndex; i < data_length; i++)
 	{
-		if(data[i] < maximum - 0.5)
+		if(data[i] < data[maximumIndex] - level)
 		{
 			eventSize = i;
 			break;
 		}
 	}
 
-	eventSize = (int)(eventSize*0.8);
+	eventSize = (int)(eventSize*0.6);
 
 	if(eventSize<4)
 		eventSize = 4;
 
 	evSizeC = eventSize;
-	evSizeW = 2*eventSize/5;
+	evSizeW = 3*eventSize/5;
 }
 
 
-void InitialAnalysis::performTransformation(double* y, double y_length, double *trans, int freq, double* norma)
+void InitialAnalysis::performTransformation(double* y, int start, int end, double *trans, int freq, double norma)
 {
 	double tmp;
 
-	for(int i = 0; i < y_length; i++)
+	for(int i = start; i < end; i++)
 	{
 		tmp = 0.;
-		for(int j = i - freq; j < min(i + freq + 1, y_length); j++)
-		{
-			if(j>=0)
-				tmp = tmp + y[j] * wLet(j - i, freq, norma);
-		}
+		for(int j = max(i - freq, 0); j < min(i + freq + 1, end); j++)
+			tmp = tmp + y[j] * wLet(j - i, freq, norma, waveletType);
 		trans[i] = tmp;
 	}
 }
@@ -326,13 +331,13 @@ void InitialAnalysis::getNoise(double *noise, int freq)
 
 // First, we set that noise is euqal to the first derivative.
 
-	for(i = 0; i < data_length - 1; i++)
+	for(i = 0; i < lastNonZeroPoint - 1; i++)
 	{
 		noise[i] = fabs(data[i] - data[i+1]);
 		if (noise[i] > maximalNoise) 
 			noise[i] = maximalNoise;
 	}
-	noise[data_length-1] = 0.;
+	noise[lastNonZeroPoint - 1] = 0.;
     
 	double EXP;
 
@@ -351,13 +356,13 @@ void InitialAnalysis::getNoise(double *noise, int freq)
 double InitialAnalysis::shiftToZeroAttenuation(double *trans)
 {
 	Histogramm* histo = new Histogramm(-0.5, 0, 100);
-	//×ÏÚÍÏÖÎÏÅ ÚÁÔÕÈÁÎÉÅ ÎÁÈÏÄÉÔÓÑ × ÐÒÅÄÅÌÁÈ [0; -0.5] Äâ
+	//âîçìîæíîå çàòóõàíèå íàõîäèòñÿ â ïðåäåëàõ [0; -0.5] äÁ
 
-	histo->init(trans, data_length, 0, lastNonZeroPoint-1);
+	histo->init(trans, lastNonZeroPoint, 0, lastNonZeroPoint-1);
 	double meanAtt = histo->getMaximumValue();
 	delete histo;
 
-	for(int i=0; i<lastNonZeroPoint; i++)
+	for(int i=0; i < lastNonZeroPoint; i++)
 		trans[i] = trans[i] - meanAtt;
 
 #ifdef DEBUG_INITIAL_ANALYSIS
@@ -367,17 +372,17 @@ double InitialAnalysis::shiftToZeroAttenuation(double *trans)
 }
 
 
-void InitialAnalysis::setNonZeroTransformation(double* trans, double threshold)
+void InitialAnalysis::setNonZeroTransformation(double* trans, double threshold, int start, int end)
 {
 	int i;
-	for(i = 0; i < data_length; i++)
+	for(i = start; i < end; i++)
 	{
 		if(fabs(trans[i]) < max(threshold, noise[i] / 2.))
 			trans[i] = 0.;
 	}
 
 	//Excluding of the exidental zero points;
-	for(i = 1; i < data_length - 1; i++)
+	for(i = start; i < end - 1; i++)
 	{
 		if(fabs(trans[i]) < threshold)
 		{
@@ -388,57 +393,53 @@ void InitialAnalysis::setNonZeroTransformation(double* trans, double threshold)
 	}
 }
 
-
-void InitialAnalysis::createEventParams(double *trans, int evSize, int start, int end, EPLIST &vector)
+void InitialAnalysis::findConnectors(double *trans, double *correct, int start, int end, EPLIST &vector)
 {
-	int halfWidth = evSize / 2;
+	int halfWidth = evSizeC / 2;
 	if(halfWidth < 1) 
 		halfWidth = 1;
 
 	int type;
 
-    int x1; // ÎÁÞÁÌÏ ÓÏÂÙÔÉÑ
-    int x2; // ËÏÎÅÃ ÓÏÂÙÔÉÑ
+    int x1; // íà÷àëî ñîáûòèÿ
+    int x2; // êîíåö ñîáûòèÿ
 
-	int k1; // ÓÅÒÅÄÉÎÁ ÐÅÒ×ÏÇÏ ÕÞÁÓÔËÁ
-	int k2; // ÓÅÒÅÄÉÎÁ ×ÔÏÒÏÇÏ ÕÞÁÓÔËÁ
-	int k3; // ÓÅÒÅÄÉÎÁ ÔÒÅÔØÅÇÏ ÕÞÁÓÔËÁ
+	int k1; // ñåðåäèíà ïåðâîãî ó÷àñòêà
+	int k2; // ñåðåäèíà âòîðîãî ó÷àñòêà
+	int k3; // ñåðåäèíà òðåòüåãî ó÷àñòêà
+	int c1; // òî÷êà ìàêñèìóìà ïåðâîãî ó÷àñòêà
+	int c2; // òî÷êà ìàêñèìóìà âòîðîãî ó÷àñòêà
+	int c3; // òî÷êà ìàêñèìóìà òðåòüåãî ó÷àñòêà
+	int j; // êîíåö ïåðâîãî ó÷àñòêà
+	int k; // êîíåö âòîðîãî ó÷àñòêà
+	int s; // êîíåö òðåòüåãî ó÷àñòêà
 
-	int i;
-	int j;
-	int k; 
-	int s;
+	int counter = 0;
 
-	double max1;
-	double max2;
-	double max3;
-
-	for(i = start; i < end; i += (x2 - x1))
-//	for(i = 0; i < min (lastNonZeroPoint + 2, data_length - 10); i += (x2 - x1))
+	for(int i = start; i < end; i += (x2 - x1))
 	{
-		max1 = 0;
-		max2 = 0;
-		max3 = 0;
-
 		j = i + 1;
-		while(sign(trans[i]) == sign(trans[j]) && j < end)
+		c1 = j;
+		while(j < end && sign(trans[i]) == sign(trans[j]))
 		{
-			if(fabs(max1) < fabs(trans[j]))
-				max1 = trans[j];
+			if(fabs(trans[c1]) < fabs(trans[j]))
+				c1 = j;
 			j++;
 		}
 		k = j + 1;
-        while(sign(trans[j]) == sign(trans[k]) && k < end)
+		c2 = k;
+        while(k < end && sign(trans[j]) == sign(trans[k]))
 		{
-			if(fabs(max2) < fabs(trans[k])) 
-				max2 = trans[k];
+			if(fabs(trans[c2]) < fabs(trans[k])) 
+				c2 = k;
 			k++;
 		}
 		s = k + 1;
-        while(sign(trans[k]) == sign(trans[s]) && s < end)
+		c3 = s;
+        while(s < end && sign(trans[k]) == sign(trans[s]))
 		{
-			if(fabs(max3) < fabs(trans[s]))
-				max3 = trans[s];
+			if(fabs(trans[c3]) < fabs(trans[s]))
+				c3 = s;
 			s++;
 		}
 		k1 = (j + i) / 2;
@@ -446,60 +447,47 @@ void InitialAnalysis::createEventParams(double *trans, int evSize, int start, in
 		k3 = (s + k) / 2;
 
 		x1 = i;
-        if(fabs(max1) < minimalThreshold) // linear part
+        if(fabs(trans[c1]) < minimalThreshold) // linear part
         {
 			type = EventParams::LINEAR;
 			x2 = j;
         }
-        else if(max1 > minimalConnector && 
-				max2 < -minimalConnector)  // connector
+        else if(trans[c1] > minimalConnector && 
+				trans[c2] < -minimalConnector)  // connector
 		{
 			type = EventParams::CONNECTOR;
 			x2 = k;
+			for (int ii = c2; ii < s; ii++)
+				if (fabs(correct[ii]) < minimalWeld)
+				{
+					x2 = ii;
+					break;
+				}
+			//int infl = findInflectionPoint(correct, c2, s);
+			int infl = findFirstAbsMinimumPoint(correct, c2, s);
+			int constant = findConstantPoint(correct, c2, s);
+			x2 = min(constant, min(infl, x2));
 		}
-		else if(max1 > minimalConnector && 
-				fabs(max2) < minimalThreshold && 
-				max3 < -minimalConnector && 
+		else if(trans[c1] > minimalConnector && 
+				fabs(trans[c2]) < minimalThreshold && 
+				trans[c3] < -minimalConnector && 
 				k - j < (int)(halfWidth * 1.5)) //connector
 		{
 			type = EventParams::CONNECTOR;
 			x2 = s;
+			for (int ii = c3; ii < s; ii++)
+				if (fabs(correct[ii]) < minimalWeld)
+				{
+					x2 = ii;
+					break;
+				}
+			//int infl = findInflectionPoint(correct, c3, s);
+			int infl = findFirstAbsMinimumPoint(correct, c3, s);
+			int constant = findConstantPoint(correct, c3, s);
+			x2 = min(constant, min(infl, x2));
 		}
-		else if(max1 > noise[k1] * 3 && 
-				max2 < -noise[k2] * 3 && 
-				max1 > minimalConnector && 
-				max2 < -minimalConnector) //reflection (connector, anyway)
-		{
-			type = EventParams::CONNECTOR;
-			x2 = k;
-		}
-		else if(max1 > noise[k1] * 3 && 
-				max3 < -noise[k3] * 3 &&
-				max1 > minimalConnector && 
-				max3 < -minimalConnector &&	
-				k - j < (int)(halfWidth * 1.5) && 
-				fabs(max2) < .00001)//reflection (connector, anyway)
-		{
-			type = EventParams::CONNECTOR;
-			x2 = s;
-		}
-		else if(max1 > minimalConnector && 
-				max2 < minimalConnector && 
-				fabs((max1 + max2) / (max1 - max2)) < .5) //reflection		
-		{
-			type = EventParams::CONNECTOR;
-			x2=k;
-		}
-		else if(max1 > minimalConnector && 
-				max3 < minimalConnector && 
-				fabs((max1 + max3) / (max1 - max3)) < .5 &&
-				k - j < (int)(halfWidth * 1.5))  //reflection
-		{
-			type = EventParams::CONNECTOR;
-			x2 = s;
-		}
-		else if(max1 > minimalWeld * .8 || 
-				max1 < -minimalWeld * .8) //weld
+		else if(trans[c1] > minimalWeld * .8 || 
+				trans[c1] < -minimalWeld * .8) //weld
 		{
 			type = EventParams::SPLICE;
 			x2 = j;
@@ -510,14 +498,26 @@ void InitialAnalysis::createEventParams(double *trans, int evSize, int start, in
 			x2 = j;
 		}
 
-		if (x1 < lastNonZeroPoint)
+		if (x1 < lastNonZeroPoint && type == EventParams::CONNECTOR)
 		{
 			EventParams *ep = new EventParams();
 			ep->n = vector.size();
 			ep->type = type;
 			ep->begin = x1;
-			ep->end = x2;
+			if (i != 0)
+			{
+				ep->begin = c1 + (int)(0.6 * evSizeW);
+				for (int ii = x1; ii < c1; ii++)
+					if (fabs(correct[ii]) > minimalConnector)
+					{
+						ep->begin = ii + (int)(0.6 * evSizeW);
+						break;
+					}
+			}
+			ep->end = x2;// - (int)(0.5 * evSizeW);
 			vector.push_back(*ep);
+
+			counter++;
 		}
 #ifdef DEBUG_INITIAL_ANALYSIS
 	if (x2 <= x1)
@@ -526,148 +526,298 @@ void InitialAnalysis::createEventParams(double *trans, int evSize, int start, in
 	}
 }
 
-void InitialAnalysis::findAdditionalWelds(double *trans, int evSize, EPLIST &vector)
+void InitialAnalysis::correctConnectorCoords()
 {
-	int counter = 1000;
-	int del_count = 0;
-	EPLIST tmpVector;
 	EPLIST::iterator it;
-
-//printf("(0) vector size: %d\n", vector.size());
-
-	it = vector.begin();
-	while (it != vector.end()) {
-		EventParams *ep = &(*it);
-//printf("vector size: %d, n: %d\n", vector.size(), ep->n);
-		// ÉÝÅÍ Ó×ÁÒËÉ ÎÁ ÛÉÒÏËÉÈ Ó×ÁÒÎÙÈ ÕÞÁÓÔËÁÈ
-		if (ep->type == EventParams::SPLICE && ep->end - ep->begin > evSize) {
-			createEventParams(trans, evSize, ep->begin, ep->end, tmpVector);
-//printf("tmpVector size: %d\n", tmpVector.size());
-
-			if (tmpVector.size() > 1) {
-				for (EPLIST::iterator in = tmpVector.begin(); in != tmpVector.end(); in++) {
-					in->n = counter++;
-					EventParams* ep1 = (*in).clone();
-//printf("inserting n: %d\n", ep1->n);
-					vector.insert(it, *ep1);
-				}
-
-				it ++;
-				vector.remove(*ep);
-				del_count++;
-				tmpVector.clear();
-				continue;
-			}
-			else {
-				tmpVector.clear();
-			}
-		}
-		it ++;
-	}
-
-/*
-	for (it = vector.begin(); it != vector.end(); it++)
+	for (it = epVector.begin(); it != epVector.end(); it++)
 	{
-		EventParams *ep = &(*it);
-//printf("vector size: %d, n: %d\n", vector.size(), ep->n);
-		// ÉÝÅÍ Ó×ÁÒËÉ ÎÁ ÛÉÒÏËÉÈ Ó×ÁÒÎÙÈ ÕÞÁÓÔËÁÈ
-		if (ep->type == EventParams::SPLICE &&
-			ep->end - ep->begin > evSize)
+		EventParams* ep = &(*it);
+		it++;
+		if (it != epVector.end())
 		{
-			createEventParams(trans, evSize, ep->begin, ep->end, tmpVector);
-//printf("tmpVector size: %d\n", tmpVector.size());
-
-			if (tmpVector.size() > 1)
+			EventParams* ep_next = &(*it);
+			if (ep_next->begin - ep->end < 1.5 * evSizeW)
 			{
-				for (EPLIST::iterator in = tmpVector.begin(); in != tmpVector.end(); in++)
+				ep_next->begin -= (int)min(0.5 * evSizeW, 2 * (ep_next->begin - ep->end) / 5);
+				ep->end = ep_next->begin;
+			}
+		}
+		it--;
+	}
+}
+
+void InitialAnalysis::correctWeldCoords()
+{
+	double d[2];
+
+	EPLIST::iterator it = epVector.begin();
+	for (; it != epVector.end(); it++)
+	{
+		EventParams* ep = &(*it);
+		if (ep->type == EventParams::SPLICE)
+		{
+			// ïåðåäíèé ôðîíò
+			if (it != epVector.begin())
+			{
+				it--;
+				EventParams* ep_last = &(*it);
+				if (ep_last->type == EventParams::LINEAR &&
+					ep_last->end - ep_last->begin > 3)
 				{
-					in->n = counter++;
-					EventParams* ep1 = (*in).clone();
-printf("inserting n: %d\n", ep1->n);
-					vector.insert(it, *ep1);
+					linearize2point(data, ep_last->begin, ep_last->end, d);
+					for(int i = ep->begin; i < (ep->begin + ep->end) / 2; i++)
+					{
+						if(fabs(data[i] - (d[1] + d[0] * i)) > //max(minimalWeld, fabs(2 * noise[i])))
+							fabs(2 * noise[i]))
+						{
+							ep->begin = i;
+							if (ep->end - ep->begin < evSizeW)
+								ep->begin = ep->end - evSizeW;
+							ep_last->end = ep->begin;
+							if (ep_last->end <= ep_last->begin)
+								ep_last->begin = ep_last->end - 1;
+							break;
+						}
+					}
 				}
-
-				//vector.insert(it, tmpVector.begin(), tmpVector.end());
-				vector.erase(it);//remove (vector.begin(), vector.end(), ep);
-				del_count++;
-
+				it++;
 			}
-			tmpVector.clear();
-		
-		}*/
-	/*	// ÉÝÅÍ Ó×ÁÒËÉ ÎÁ ÄÌÉÎÎÙÈ ÌÉÎÅÊÎÙÈ ÕÞÁÓÔËÁÈ
-		else if (ep->type == EventParams::LINEAR &&
-				 ep->end - ep->begin > 3 * evSize)
-		{
-			createEventParams(trans, evSize, ep->begin, ep->end, tmpVector);
-			if (tmpVector.size() > 1)
-			{
-				for (EPLIST::iterator in = tmpVector.begin(); in != tmpVector.end(); in++)
-					in->n = counter++;
 
-				vector.insert(it, tmpVector.begin(), tmpVector.end());
-				remove (vector.begin(), vector.end(), ep);
-				del_count++;
-			}
-			tmpVector.clear();
-		}/
-		// ÉÝÅÍ Ó×ÁÒËÉ ÐÅÒÅÄ ËÏÎÅÎËÔÏÒÁÍÉ
-		else if (ep->type == EventParams::LINEAR)
-		{
+			// çàäíèé ôðîíò 
 			it++;
-			if (it != vector.end() && it->type == EventParams::CONNECTOR)
+			if (it != epVector.end()
+				&& it->type == EventParams::LINEAR 
+				&& it->end - it->begin > 3)
 			{
-				createEventParams(trans, evSize, ep->begin, ep->end, tmpVector);
-				if (tmpVector.size() > 1)
+				EventParams* ep_next = &(*it);
+				if (ep_next->type == EventParams::LINEAR &&
+					ep_next->end - ep_next->begin > 3)
 				{
-					for (EPLIST::iterator in = tmpVector.begin(); in != tmpVector.end(); in++)
-						in->n = counter++;
-
-					vector.insert(it, tmpVector.begin(), tmpVector.end());
-					remove (vector.begin(), vector.end(), ep);
-					del_count++;
+					linearize2point(data, ep_next->begin, ep_next->end, d);
+					for(int i = ep->end; i > ep->begin; i--)
+					{
+						if (fabs(data[i] - (d[1] + d[0] * i)) > //max(minimalWeld, fabs(2 * noise[i])))
+							fabs(2 * noise[i]))
+						{
+							ep->end = i;
+							if (ep->end - ep->begin < evSizeW)
+								ep->end = ep->begin + evSizeW;
+							ep_next->begin = ep->end;
+							if (ep_next->end <= ep_next->begin)
+								ep_next->begin = ep_next->end - 1;
+							break;
+						}
+					}
 				}
-				tmpVector.clear();
 			}
 			it--;
 		}
-		// ÉÝÅÍ Ó×ÁÒËÉ ÐÏÓÌÅ ËÏÎÅÎËÔÏÒÏ×
-		else if (ep->type == EventParams::CONNECTOR)
-		{
-			it++;
-			if (it != epVector.end() && it->type == EventParams::LINEAR)
-			{
-				EventParams *ep_next = &(*it);
-				createEventParams(trans, evSize, ep_next->begin, ep_next->end, tmpVector);
-				if (tmpVector.size() > 1)
-				{
-					for (EPLIST::iterator in = tmpVector.begin(); in != tmpVector.end(); in++)
-						in->n = counter++;
-
-					vector.insert(it, tmpVector.begin(), tmpVector.end());
-					remove (vector.begin(), vector.end(), ep_next);
-					del_count++;
-				}
-				tmpVector.clear();
-			}
-			it--;
-		}*/
-		
-/*	}*/
-
-	fixEndEvents(del_count);
-
-	counter = 0;
-	for (it = vector.begin(); it != vector.end(); it++)
-		it->n = counter++;
-	
-	siewLinearParts();
-
-	counter = 0;
-	for (it = vector.begin(); it != vector.end(); it++)
-		it->n = counter++;
+	}
 }
-  
+
+
+void InitialAnalysis::findWelds(double *trans, EPLIST &vector)
+{
+	int halfWidth = evSizeW / 2;
+	if(halfWidth < 1) 
+		halfWidth = 1;
+
+	int type;
+
+    int x1; // íà÷àëî ñîáûòèÿ
+    int x2; // êîíåö ñîáûòèÿ
+
+	int k1; // ñåðåäèíà ïåðâîãî ó÷àñòêà
+	int k2; // ñåðåäèíà âòîðîãî ó÷àñòêà
+	int k3; // ñåðåäèíà òðåòüåãî ó÷àñòêà
+	int c1; // òî÷êà ìàêñèìóìà ïåðâîãî ó÷àñòêà
+	int c2; // òî÷êà ìàêñèìóìà âòîðîãî ó÷àñòêà
+	int c3; // òî÷êà ìàêñèìóìà òðåòüåãî ó÷àñòêà
+	int j; // êîíåö ïåðâîãî ó÷àñòêà
+	int k; // êîíåö âòîðîãî ó÷àñòêà
+	int s; // êîíåö òðåòüåãî ó÷àñòêà
+
+	EPLIST::iterator it;
+	EPLIST clone;
+	for (it = vector.begin(); it != vector.end(); it++) 
+	{
+		EventParams* ep1 = (*it).clone();
+		clone.push_back(*ep1);
+	}
+	vector.clear();
+
+	for (it = clone.begin(); it != clone.end(); it++)
+	{
+		EventParams* ep1 = (*it).clone();
+
+	
+		ep1->n = vector.size();
+		vector.push_back(*ep1);
+		it++;
+		if (it != clone.end())
+		{
+			int i;
+			EventParams* ep_next = &(*it);
+			int start = ep1->end;
+			int end = ep_next->begin;
+			
+			double meanNoise = 0;
+			for (i = start; i < end; i++)
+				meanNoise += fabs(noise[i]);
+			meanNoise /= (double)(end - start);
+
+			setNonZeroTransformation(trans, meanNoise * 0.8, start, end);
+
+			for(i = start; i < end; i += (x2 - x1))
+			{
+				j = i + 1;
+				c1 = j;
+				while(sign(trans[i]) == sign(trans[j]) && j < end)
+				{
+					if(fabs(trans[c1]) < fabs(trans[j]))
+						c1 = j;
+					j++;
+				}
+				k = j + 1;
+				c2 = k;
+				while(sign(trans[j]) == sign(trans[k]) && k < end)
+				{
+					if(fabs(trans[c2]) < fabs(trans[k])) 
+						c2 = k;
+					k++;
+				}
+				s = k + 1;
+				c3 = s;
+				while(sign(trans[k]) == sign(trans[s]) && s < end)
+				{
+					if(fabs(trans[c3]) < fabs(trans[s]))
+						c3 = s;
+					s++;
+				}
+				k1 = (j + i) / 2;
+				k2 = (k + j) / 2;
+				k3 = (s + k) / 2;
+
+				x1 = i;
+				if(fabs(trans[c1]) < minimalThreshold) // linear part
+				{
+					type = EventParams::LINEAR;
+					x2 = j;
+				}
+				else if(trans[c1] > minimalWeld * .8 || 
+						trans[c1] < -minimalWeld * .8) //weld
+						//&& j - i < 3 * evSizeC)
+				{
+					type = EventParams::SPLICE;
+					x2 = j;
+				}
+				else if(trans[c1] > noise[k1] * 3 && 
+						trans[c2] < -noise[k2] * 3 && 
+						trans[c1] > minimalConnector && 
+						trans[c2] < -minimalConnector) //reflection (connector, anyway)
+				{
+					type = EventParams::CONNECTOR;
+					x2 = k;
+				}
+				else if(trans[c1] > minimalConnector && 
+						trans[c2] < minimalConnector && 
+						fabs((trans[c1] + trans[c2]) / (trans[c1] - trans[c2])) < .5) //reflection		
+				{
+					type = EventParams::CONNECTOR;
+					x2=k;
+				}
+				else if(trans[c1] > minimalConnector && 
+						trans[c3] < minimalConnector && 
+						fabs((trans[c1] + trans[c3]) / (trans[c1] - trans[c3])) < .5 &&
+						k - j < (int)(halfWidth * 1.5))  //reflection
+				{
+					type = EventParams::CONNECTOR;
+					x2 = s;
+				}
+				else //linear
+				{
+					type = EventParams::LINEAR;
+					x2 = j;
+				}
+
+				if (x1 < lastNonZeroPoint)
+				{
+					EventParams *ep1 = new EventParams();
+					ep1->n = vector.size();
+					ep1->type = type;
+					ep1->begin = x1;
+					ep1->end = x2;
+					vector.push_back(*ep1);
+				}
+#ifdef DEBUG_INITIAL_ANALYSIS
+	if (x2 <= x1)
+		fprintf(this->str, "(!!!!!!!!!Error setting ep.begin = %d; ep.end =  %d\n", x1, x2);
+#endif
+			}//for
+		}//if
+		it--;
+	}//for
+	clone.clear();
+}
+
+
+void InitialAnalysis::excludeConnectors(EPLIST &vector, double *data, double *data_woc)
+{
+	int i;
+	int j;
+	for (i = 0; i < data_length; i++)
+		data_woc[i] = data[i];
+
+	double delta = 0;
+	double *_d = NULL;
+
+	EPLIST::iterator it;
+	for (it = vector.begin(); it != vector.end(); it++) 
+	{
+
+		EventParams* ep_last = &(*it);
+		it++;
+		if (it != vector.end())
+		{
+			EventParams* ep1 = &(*it);
+
+			double d[2];
+			if (ep_last->end != ep1->begin)
+				linearize2point(data, ep_last->end, ep1->begin, d);
+			else
+			{
+				if (ep1 != &(*vector.begin()))
+				{
+					EPLIST::iterator it_2 = it;
+					it_2--;
+					it_2--;
+					EventParams* ep_beforelast = &(*it_2);
+					linearize2point(data, ep_beforelast->end, ep1->begin, d);
+				}
+				else
+					linearize2point(data, ep_last->begin, ep1->begin, d);
+			}
+
+			if (ep_last != &(*vector.begin()))
+			{
+				delta += ((data[ep_last->begin] + _d[0] * (ep_last->end - ep_last->begin)) - data[ep_last->end]);
+				for (j = ep_last->end; j < ep1->begin; j++)
+					data_woc[j] += delta;
+			}
+			else
+			{
+				for (j = ep_last->begin; j < ep_last->end; j++)
+					data_woc[j] = data[ep_last->end] + d[0] * (j - ep_last->end);
+			}
+			_d = d;
+
+			for (j = ep1->begin; j < ep1->end; j++)
+				data_woc[j] = data[ep1->begin] + d[0] * (j - ep1->begin) + delta;
+		}
+		it--;
+	}
+}
+
 void InitialAnalysis::siewLinearParts() {
 	EPLIST::iterator it = epVector.begin();
 	while (it != epVector.end()) {
@@ -693,163 +843,68 @@ void InitialAnalysis::siewLinearParts() {
 		it ++;
 	}
 
-/*
-	int counter;
-	while (true)
-	{
-		counter = 0;
-		for (EPLIST::iterator it = epVector.begin(); it != epVector.end(); it++)
-		{
-			EventParams *ep = &(*it);
-			if (ep->type == EventParams::LINEAR)
-			{
-				it++;
-				if (it != epVector.end())
-				{
-					EventParams* ep_next = &(*it);
-					if (ep_next->type == EventParams::LINEAR)
-					{
-						ep->end = ep_next->end;
-						epVector.remove(*ep_next);
-						counter++;
-					}
-					else if (ep->end > ep_next->begin)
-					{
-						ep->end = ep_next->begin;
-						if (ep->begin > ep->end)
-							ep->begin = ep->end;
-					}
-				}
-				it--;
-			}
-		}
-		if (counter == 0)
-			break;
-		else
-			fixEndEvents(counter);
-	}*/
 }
 
-void InitialAnalysis::fixEndEvents(int count)
-{/*
-	if (count == 0)
-		return;
-
-	EPLIST::iterator it = epVector.end();
-	it--;
-	for (; it != epVector.begin(); it--)
-	{
-		if (count > 0)
-		{
-			epVector.pop_back();
-			count--;
-		}
-		else
-			break;
-	}*/
-}
-
-void InitialAnalysis::excludeShortEvents(int linearLength, int weldLength, int connectorLength) {
-	int counter = 0;
-	bool key;
+void InitialAnalysis::excludeShortEvents(int linearLength, int weldLength, int connectorLength) 
+{
+	bool key = false;
 	EPLIST::iterator it = epVector.begin();
-	while (it != epVector.end()) {
-		EventParams* ep = &(*it);
-		key = false;
 
-		if (ep->type == EventParams::LINEAR) {
-			if (ep->end - ep->begin < linearLength)
-					key = true;
-		}
-		else
-			if (ep->type == EventParams::SPLICE) {
-				if (ep->end - ep->begin < weldLength)
-					key = true;
-			}
-			else
-				if (ep->type == EventParams::CONNECTOR) {
-					if (ep->end - ep->begin < connectorLength)
-						key = true;
-				}
-
-		if (key) {
-			it --;
-			EventParams* ep_last = &(*it);
-			it ++;
-			it ++;
-			EventParams* ep_next = &(*it);
-			if (it != epVector.end()) {
-				int delta = ep->end - ep->begin;
-				ep_last->end += delta;
-				ep_next->begin = ep_last->end;
-			}
-			else {
-				ep_last->end = ep->end;
-			}
-			it --;
-
-			it ++;
-			epVector.remove(*ep);
-			counter++;
-			key = false;
-			continue;
-		}
-		key = false;
-		it ++;
-	}
-	fixEndEvents(counter);
-
-/*
-	int counter = 0;
-	bool key;
-	EPLIST::iterator it = epVector.begin();
-	for (it++; it != epVector.end(); it++)
+	if (it != epVector.end())
+		it++;
+	while (it != epVector.end())
 	{
 		EventParams* ep = &(*it);
-		key = false;
-
+		
 		if (ep->type == EventParams::LINEAR)
-		{
-			if (ep->end - ep->begin < linearLength)
-					key = true;
+		{ 
+			if (ep->end - ep->begin <= linearLength)
+				key = true; 
 		}
 		else if (ep->type == EventParams::SPLICE)
-		{
-			if (ep->end - ep->begin < weldLength)
-					key = true;
+		{ 
+			if (ep->end - ep->begin <= weldLength)
+				key = true; 
 		}
 		else if (ep->type == EventParams::CONNECTOR)
 		{
-			if (ep->end - ep->begin < connectorLength)
-					key = true;
+			if (ep->end - ep->begin <= connectorLength)	
+				key = true; 
 		}
-
-		if (key)
+		
+		if (key) 
 		{
-			it--;
-			EventParams* ep_last = &(*it);
-			it++;
-			it++;
-			EventParams* ep_next = &(*it);
-			if (it != epVector.end())
+			key = false;
+			// find prev and next ep's
+			EPLIST::iterator it_2;
+			it_2 = it; it_2--;
+			EventParams* ep_prev = &(*it_2); // NULL if ep is first
+			it_2 = it; it_2++;
+			EventParams* ep_next = &(*it_2); // NULL if ep is last
+			
+			if (ep_next != &(*epVector.end()))
 			{
-				int delta = ep->end - ep->begin;
-				ep_last->end += delta;
-				ep_next->begin = ep_last->end;
+				if (ep_next->type == EventParams::LINEAR)
+					ep_next->begin = ep_prev->end;
+				else if (ep_prev->type == EventParams::LINEAR)
+					ep_prev->end = ep_next->begin;
+				else if(ep_next->type == EventParams::SPLICE)
+					ep_next->begin = ep_prev->end;
+				else
+					ep_prev->end = ep_next->begin;
 			}
 			else
-			{
-				ep_last->end = ep->end;
-			}
-			it--;
-			epVector.remove(*ep);
-			counter++;
-		}
-		key = false;
-	}
-	fixEndEvents(counter);*/
+				continue;
 
-	//siewLinearParts();
+//#ifdef DEBUG_INITIAL_ANALYSIS
+//		fprintf(this->str, "excludeShortEvents:(%p %p %p)\n",ep_prev,ep,ep_next);
+//#endif
+			it ++;
+			epVector.remove(*ep);
+			continue;
+		}
+		it ++;
+	}
 }
 
 void InitialAnalysis::excludeNonRecognizedEvents()
@@ -911,95 +966,17 @@ void InitialAnalysis::excludeNonRecognizedEvents()
 	//siewLinearParts();
 }
 
-void InitialAnalysis::correctConnectorsCoords()
-{
-	double A1;
-	double d[2];
-
-	EPLIST::iterator it = epVector.begin();
-	for (it++; it != epVector.end(); it++)
-	{
-		EventParams* ep = &(*it);
-		if (ep->type == EventParams::CONNECTOR)
-		{
-			// ÐÅÒÅÄÎÉÊ ÆÒÏÎÔ ËÏÎÎÅËÔÏÒÁ
-			it--;
-			EventParams* ep_last = &(*it);
-			if (ep_last->type == EventParams::LINEAR &&
-				ep_last->end - ep_last->begin > 3)
-			{
-				getLinearFittingCoefficients(data, ep_last->begin, ep_last->end, 0, d);
-				A1 = d[0] + d[1] * ep->begin;			
-			}
-			else
-			{
-				A1 = data[ep->begin];
-			}
-			it++;
-
-			for(int i = ep->begin; i < ep->end; i++)
-			{
-				if(data[i] - A1 > fabs(3 * noise[i]))
-				{
-					ep->begin = i - 3;
-					ep_last->end = i - 3;
-					// inserted by Stas to correct error x2 < x1
-					if (ep_last->end <= ep_last->begin)
-					{
-						#ifdef DEBUG_INITIAL_ANALYSIS
-							fprintf (this->str, "correctConnectorsCoords():\n\t correcting end from %d to %d\n", ep_last->begin, ep_last->end-1);
-						#endif
-
-						ep_last->begin = ep_last->end - 1;
-					}
-					break;
-				}
-			}
-
-			// ÚÁÄÎÉÊ ÆÒÏÎÔ ËÏÎÎÅËÔÏÒÁ
-	/*		it++;
-			if (it != epVector.end()
-				//&& it->type == EventParams::LINEAR 
-				//&& it->end - it->begin > 3)
-				)
-			{
-				fprintf(f, "\nevent = %d\n", ep->n);
-
-				EventParams* ep_next = &(*it);
-				for(int i = ep->end; i > ep->begin; i--)
-				{
-					double d[2];
-					getLinearFittingCoefficients(data, i, ep_next->end, i, d);
-					fprintf(f, "data[%d] = %f, d[0] = %f\n", i, data[i],d[0]);
-					if (data[i] - d[0] > minimalWeld + fabs(2 * noise[i]))
-					{
-						fprintf(f, "abs(***) = %f > %f; ep->end = %d\n", data[i] - d[0], minimalWeld + fabs(2 * noise[i]), i + 3);
-						ep->end = i + 3;
-						ep_next->begin = i + 3;
-						ep_next->a_linear = d[0];
-						ep_next->b_linear = d[1];
-						break;
-					}
-				}
-			}
-			it--;*/
-		}
-	}
-}
 
 void InitialAnalysis::correctEnd()
 {
 	EPLIST::iterator it;
-	if(findEnd <=0)
-		return;
-	
+
 	int l = (epVector.back()).begin + evSizeC * 2;
 #ifdef DEBUG_INITIAL_ANALYSIS
 	fprintf(this->str, "end point before correction = %d (%.3fkm)\n", l, delta_x * l / 1000.);
 	fprintf(this->str, "number of events before correction = %d\n", epVector.size());
 #endif
 
-	int counter = 0;
 	it = epVector.end();
 	it --;
 	while (it != epVector.begin()) {
@@ -1026,114 +1003,80 @@ void InitialAnalysis::correctEnd()
 		else {
 			it --;
 			epVector.remove(*ep);
-			counter ++;
 			continue;
 		}
 	}
-	fixEndEvents(counter);
-/*
-	int counter = 0;
-	it = epVector.end();
-	it--;
-	for (; it != epVector.begin(); it--)
-	{
-		EventParams* ep = &(*it);
-#ifdef DEBUG_INITIAL_ANALYSIS
-		fprintf(this->str, "event #%d, has type %d\n", ep->n, ep->type);
-#endif
-		if (ep->type == EventParams::CONNECTOR &&
-			ep->aLet_connector > minimalEndingSplash &&
-			ep->a1_connector >= 0 &&
-			ep->a2_connector >= 0 &&
-			ep->begin <= lastNonZeroPoint)// && 
-//			ep->end <= lastNonZeroPoint)
-		{
-#ifdef DEBUG_INITIAL_ANALYSIS
-			fprintf(this->str, "last event = #%d, with start = %d, end = %d \n", ep->n, ep->begin, ep->end);
-			fprintf(this->str, "\taLet = %f, a1 = %f, a2 = %f, minEnd = %f \n", ep->aLet_connector, ep->a1_connector, ep->a2_connector, minimalEndingSplash);
-#endif
 
-			l = min (lastNonZeroPoint - 1, min (ep->end, ep->begin + evSizeC * 2));
-
-			if (l >= lastNonZeroPoint)
-				l = lastNonZeroPoint-1;
-			ep->end = l;
-			break;
-		}
-		else
-		{
-			epVector.remove(*ep);
-			counter++;
-		}
-	}
-	fixEndEvents(counter);
-*/
 #ifdef DEBUG_INITIAL_ANALYSIS
-		fprintf(this->str, "end point after correction = %d (%.3fkm)\n", l, delta_x * l / 1000.);
-		fprintf(this->str, "number of events after correction = %d\n", epVector.size());
+	fprintf(this->str, "end point after correction = %d (%.3fkm)\n", l, delta_x * l / 1000.);
+	fprintf(this->str, "number of events after correction = %d\n", epVector.size());
 #endif
 }
-
 
 void InitialAnalysis::setEventParams()
 {
 	int counter = 0;
 	unsigned int i;
-	ep = new EventParams *[epVector.size()];
-	
+
+	eps = new EventParams *[epVector.size()];
+
 	double *d = new double[2];
+#ifdef DEBUG_INITIAL_ANALYSIS
+	fprintf(this->str,"InitialAnalysis::setEventParams(): epVector.size() = %d; eps = %p; d = %p\n",(int)epVector.size(),eps, d);
+#endif
+
 	for (EPLIST::iterator it = epVector.begin(); it != epVector.end(); it++)
 	{
 		getLinearFittingCoefficients(data, it->begin, it->end, it->begin, d);
 		it->a_linear = d[0];
 		it->b_linear = d[1];
-		ep[counter++] = &(*it);
+		eps[counter++] = &(*it);
 	}
+
 	delete[] d;
 
 	for(i = 0; i < epVector.size(); i++) //Setting of the weld params;
 	{
-
-		ep[i]->center_weld = (double)(ep[i]->begin+ep[i]->end)/2.;
-		ep[i]->width_weld = evSizeC*.9;
+		eps[i]->center_weld = (double)(eps[i]->begin+eps[i]->end)/2.;
+		eps[i]->width_weld = evSizeC*.9;
 
 		double A1;
 		double A2; 
 		double A3;
 		double k;
 
-		if(i>0 && i<epVector.size()-1 && ep[i-1]->type == EventParams::LINEAR && ep[i+1]->type == EventParams::LINEAR)
+		if(i>0 && i<epVector.size()-1 && eps[i-1]->type == EventParams::LINEAR && eps[i+1]->type == EventParams::LINEAR)
 		{
-			A1 = ep[i-1]->linearF(ep[i]->begin);
-			A2 = ep[i+1]->linearF(ep[i]->begin);
-			A3 = ep[i+1]->linearF(ep[i]->end);
-			k = (ep[i-1]->b_linear + ep[i+1]->b_linear)/2.;
+			A1 = eps[i-1]->linearF(eps[i]->begin);
+			A2 = eps[i+1]->linearF(eps[i]->begin);
+			A3 = eps[i+1]->linearF(eps[i]->end);
+			k = (eps[i-1]->b_linear + eps[i+1]->b_linear)/2.;
 		}
-		else if(i>0 && i<epVector.size()-1 && ep[i-1]->type == EventParams::LINEAR && ep[i+1]->type != EventParams::LINEAR)
+		else if(i>0 && i<epVector.size()-1 && eps[i-1]->type == EventParams::LINEAR && eps[i+1]->type != EventParams::LINEAR)
 		{
-			A1 = ep[i-1]->linearF(ep[i]->begin);
-			A2 = data[ep[i]->end];
-			A3 = data[ep[i]->end];
-			k = ep[i-1]->b_linear;
+			A1 = eps[i-1]->linearF(eps[i]->begin);
+			A2 = data[eps[i]->end];
+			A3 = data[eps[i]->end];
+			k = eps[i-1]->b_linear;
 		}
-		else if(i>0 && i<epVector.size()-1 && ep[i-1]->type != EventParams::LINEAR && ep[i+1]->type == EventParams::LINEAR)
+		else if(i>0 && i<epVector.size()-1 && eps[i-1]->type != EventParams::LINEAR && eps[i+1]->type == EventParams::LINEAR)
 		{
-			A1 = data[ep[i]->begin];
-			A2 = ep[i+1]->linearF(ep[i]->begin);
-			A3 = ep[i+1]->linearF(ep[i]->end);
-			k = ep[i+1]->b_linear;
+			A1 = data[eps[i]->begin];
+			A2 = eps[i+1]->linearF(eps[i]->begin);
+			A3 = eps[i+1]->linearF(eps[i]->end);
+			k = eps[i+1]->b_linear;
 		}
 		else
 		{
-			A1 = data[ep[i]->begin];
-			A2 = data[ep[i]->end];
-			A3 = data[ep[i]->end];
+			A1 = data[eps[i]->begin];
+			A2 = data[eps[i]->end];
+			A3 = data[eps[i]->end];
 			k = 0.;
 		}
 
-		ep[i]->a_weld = (A1+A3)/2.;
-		ep[i]->boost_weld = A2-A1;
-		ep[i]->b_weld = k;
+		eps[i]->a_weld = (A1+A3)/2.;
+		eps[i]->boost_weld = A2-A1;
+		eps[i]->b_weld = k;
 	}
 
 	for(i = 0; i < epVector.size(); i++) // Setting of the connector params;
@@ -1152,22 +1095,22 @@ void InitialAnalysis::setEventParams()
 		double sigmaFit = 0.;
 		int j;
 
-		if(i > 0 && ep[i-1]->type == EventParams::LINEAR)
+		if(i > 0 && eps[i-1]->type == EventParams::LINEAR)
 		{
-			A1 = ep[i-1]->linearF(ep[i]->begin);
+			A1 = eps[i-1]->linearF(eps[i]->begin);
 		}
 		else 
 		{
-			A1 = data[ep[i]->begin];
+			A1 = data[eps[i]->begin];
 		}
 
-		if(i < epVector.size() - 1 && ep[i+1]->type == EventParams::LINEAR)
-			A2 = ep[i+1]->linearF(ep[i]->end);
+		if(i < epVector.size() - 1 && eps[i+1]->type == EventParams::LINEAR)
+			A2 = eps[i+1]->linearF(eps[i]->end);
 		else
-			A2 = data[ep[i]->end];
+			A2 = data[eps[i]->end];
 	
 		ALet = A1;
-		for(j = ep[i]->begin; j <= ep[i]->end; j++)
+		for(j = eps[i]->begin; j <= eps[i]->end; j++)
 		{
 			if (ALet < data[j]) 
 				ALet = data[j];
@@ -1177,7 +1120,7 @@ void InitialAnalysis::setEventParams()
 		st = 0;
 		if(i > 0) // not deadzone
 		{
-			for(j = ep[i]->begin; j <= ep[i]->end; j++)
+			for(j = eps[i]->begin; j <= eps[i]->end; j++)
 			{
 				if(data[j] > A1 + ALet *.9)
 					width_90++;
@@ -1198,7 +1141,7 @@ void InitialAnalysis::setEventParams()
 		}
 		else	// deadzone
 		{
-			for(j = ep[i]->begin; j < ep[i]->end; j++)
+			for(j = eps[i]->begin; j < eps[i]->end; j++)
 			{
 				if(data[j] > A1 + ALet - 0.5)
 				{
@@ -1217,74 +1160,28 @@ void InitialAnalysis::setEventParams()
 		else
 //		if (width < 0.1)
 		{
-			centre = (ep[i]->begin+ep[i]->end)/2.;
+			centre = (eps[i]->begin+eps[i]->end)/2.;
 		}*/
 
-		sigma1 = (centre - ep[i]->begin)/20.;
-		sigma2 = (ep[i]->end - centre)*(1. - formFactor);
-		sigmaFit = (ep[i]->end - centre)*formFactor;
+		sigma1 = (centre - eps[i]->begin)/20.;
+		sigma2 = (eps[i]->end - centre)*(1. - formFactor);
+		sigmaFit = (eps[i]->end - centre)*formFactor;
 
-		ep[i]->a1_connector = A1;
-		ep[i]->a2_connector = A2;
+		eps[i]->a1_connector = A1;
+		eps[i]->a2_connector = A2;
 		
-		ep[i]->aLet_connector = ALet;
-		ep[i]->width_connector = width;
-		ep[i]->center_connector = centre;
-		ep[i]->sigma1_connector = sigma1;
-		ep[i]->sigma2_connector = sigma2;
-		ep[i]->sigmaFit_connector = sigmaFit;
-		ep[i]->k_connector = formFactor;
-
-	}
-}
-
-void InitialAnalysis::getNormalizingCoeffs(double *wn, int freq)
-{
-	double* n = new double[10];
-	int i;
-	for (i = 0; i < 10; i++)
-	{
-		wn[i] = 1.;
-		n[i] = 0;
+		eps[i]->aLet_connector = ALet;
+		eps[i]->width_connector = width;
+		eps[i]->center_connector = centre;
+		eps[i]->sigma1_connector = sigma1;
+		eps[i]->sigma2_connector = sigma2;
+		eps[i]->sigmaFit_connector = sigmaFit;
+		eps[i]->k_connector = formFactor;
 	}
 
-	for(i = -freq; i <= freq; i++)
-	{
-		n[0] = n[0] + fabs(wLet1(i, freq, 1.));
-		n[1] = n[1] + fabs(wLet2(i, freq, 1.));
-		n[2] = n[2] + fabs(wLet3(i, freq, 1.));
-		n[3] = n[3] + fabs(wLet4(i, freq, 1.));
-		n[4] = n[4] + fabs(wLet5(i, freq, 1.));
-
-		n[5] = n[5] + fabs(wLet6(i, freq, 1.));
-		n[6] = n[6] + fabs(wLet7(i, freq, 1.));
-		n[7] = n[7] + fabs(wLet8(i, freq, 1.));
-		n[8] = n[8] + fabs(wLet9(i, freq, 1.));
-		n[9] = n[9] + fabs(wLet10(i, freq, 1.));
-	}
-	for (i = 0; i < 10; i++)
-		wn[i] = n[i]/2.;
-	
-	delete n;
-}
-
-
-double InitialAnalysis::wLet(int arg, int freq, double* norma)
-{
-	switch (waveletType)
-	{
-		case  1: return  wLet1(arg, freq, norma[0]);
-		case  2: return  wLet2(arg, freq, norma[1]);
-		case  3: return  wLet3(arg, freq, norma[2]);
-		case  4: return  wLet4(arg, freq, norma[3]);
-		case  5: return  wLet5(arg, freq, norma[4]);
-		case  6: return  wLet6(arg, freq, norma[5]);
-		case  7: return  wLet7(arg, freq, norma[6]);
-		case  8: return  wLet8(arg, freq, norma[7]);
-		case  9: return  wLet9(arg, freq, norma[8]);
-		case 10: return wLet10(arg, freq, norma[9]);
-		default: return  wLet1(arg, freq, norma[0]);
-	}
+#ifdef DEBUG_INITIAL_ANALYSIS
+	fprintf(this->str,"InitialAnalysis::setEventParams(): exit\n");
+#endif
 }
 
 void InitialAnalysis::getLinearFittingCoefficients(double *data, int from, int to, int shift, double *res)
@@ -1300,7 +1197,7 @@ void InitialAnalysis::getLinearFittingCoefficients(double *data, int from, int t
 		dzeta = dzeta - data[i];
 		n = n + 1.;
 	}
-    double a = (n * beta / gamma - dzeta) / (gamma - n * alfa / gamma);
+    double a = (n * beta / gamma - dzeta) / (gamma - n * alfa / gamma); // == cov(dx,y)/D(dx)
     double b = - (alfa * a + beta) / gamma;
 
 	res[0] = b;
@@ -1328,11 +1225,11 @@ void InitialAnalysis::convolutionOfNoise(int n_points)
 	double meanValue;
 
 	int i;
-	for(i = 0; i < data_length; i++)
+	for(i = 0; i < lastNonZeroPoint; i++)
 	{
 		n=0;
 		meanValue = 0.;
-		for (int j = i; j < min(i + n_points, data_length); j++)
+		for (int j = i; j < min(i + n_points, lastNonZeroPoint); j++)
 		{
 			meanValue += noise[j];
 			n++;
@@ -1452,56 +1349,3 @@ void InitialAnalysis::shiftEventToCentre(double *wnd, int wndSize)
 	}
 }
 
-/*
-void InitialAnalysis::excludeNonRecognizedEvents()
-{
-	int i;
-
-	for(i=0; i<numberOfFoundEvents*3; i+=3)
-	{
-		if(eventsTable[i] == 3 || eventsTable[i] == 6) //case of weld;
-		{
-			double A1;
-			double A2; 
-
-			if(i/3>0 && i/3<numberOfFoundEvents-1 && eventsTable[i-3] == 0 && eventsTable[i+3] == 0)
-			{
-				getLinearFittingCoefficients(data, eventsTable[i-2], eventsTable[i-1]);
-				A1 = linearFittingParameters[0] + linearFittingParameters[1]*eventsTable[i+1];
-
-				getLinearFittingCoefficients(data, eventsTable[i+4], eventsTable[i+5]);
-				A2 = linearFittingParameters[0] + linearFittingParameters[1]*eventsTable[i+1];
-			}
-			else if(i/3>0 && i/3<numberOfFoundEvents-1 && eventsTable[i-3] == 0 && eventsTable[i+3] != 0)
-			{
-				getLinearFittingCoefficients(data, eventsTable[i-2], eventsTable[i-1]);
-				A1 = linearFittingParameters[0] + linearFittingParameters[1]*eventsTable[i+1];
-
-				A2 = data[eventsTable[i+2]] - meanAttenuation*evSizeC;
-			}
-			else if(i/3>0 && i/3<numberOfFoundEvents-1 && eventsTable[i-3] != 0 && eventsTable[i+3] == 0)
-			{
-				A1 = data[eventsTable[i+1]];
-
-				getLinearFittingCoefficients(data, eventsTable[i+4], eventsTable[i+5]);
-				A2 = linearFittingParameters[0] + linearFittingParameters[1]*eventsTable[i+1];
-			}
-			else
-			{
-				A1 = data[eventsTable[i+1]];
-
-				A2 = data[eventsTable[i+2]] - meanAttenuation*evSizeC;
-			}
-
-			if(fabs(A1-A2)<minimalWeld)
-			{
-				eventsTable[i] = 0;
-			}
-
-
-		}
-	}
-
-	siewLinearParts();
-}
-*/

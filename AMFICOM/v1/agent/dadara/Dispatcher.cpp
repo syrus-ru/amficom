@@ -2,6 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
+#include "stdafx.h"
 #include "Dispatcher.h"
 #include <stdio.h>
 #include "Neuron.h"
