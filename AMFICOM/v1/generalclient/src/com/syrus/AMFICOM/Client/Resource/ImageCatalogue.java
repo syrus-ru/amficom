@@ -159,4 +159,10 @@ public class ImageCatalogue extends Object
 	{
 		hash.clear();
 	}
+
+
+	public Hashtable getHash()
+	{
+		return hash;
+	}
 }
