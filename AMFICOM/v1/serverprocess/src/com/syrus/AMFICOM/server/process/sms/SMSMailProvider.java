@@ -1,5 +1,5 @@
 /*
- * $Id: SMSMailProvider.java,v 1.1 2004/06/22 09:57:10 bass Exp $
+ * $Id: SMSMailProvider.java,v 1.2 2004/10/13 07:30:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,12 @@
 
 package com.syrus.AMFICOM.server.process.sms;
 
-import com.syrus.AMFICOM.corba.portable.common.MessageDeliveryFailedException;
+import com.syrus.AMFICOM.corba.portable.common.*;
 import java.io.*;
 import java.net.*;
 
 /**
- * @verson $Revision: 1.1 $, $Date: 2004/06/22 09:57:10 $
+ * @verson $Revision: 1.2 $, $Date: 2004/10/13 07:30:43 $
  * @author $Author: bass $
  * @module serverprocess
  */
@@ -29,11 +29,11 @@ final class SMSMailProvider implements SMSProvider {
 
 	public void sendMessage(String from, String destination, String message) throws MessageDeliveryFailedException {
 		if ((from == null) || (from.length() == 0))
-			throw new MessageDeliveryFailedException("\"from\" parameter can't be empty");
+			throw new MessageDeliveryFailedException("\"from\" parameter can't be empty", new PortableStackTraceElement[0]);
 		if ((destination == null) || (destination.length() == 0))
-			throw new MessageDeliveryFailedException("\"destination\" parameter can't be empty");
+			throw new MessageDeliveryFailedException("\"destination\" parameter can't be empty", new PortableStackTraceElement[0]);
 		if ((message == null) || (message.length() == 0))
-			throw new MessageDeliveryFailedException("\"message\" parameter can't be empty");
+			throw new MessageDeliveryFailedException("\"message\" parameter can't be empty", new PortableStackTraceElement[0]);
 		String osName = System.getProperty("os.name");
 		String windowSystem;
 		String fileEncoding;
@@ -89,9 +89,9 @@ final class SMSMailProvider implements SMSProvider {
 			_in.close();
 			in.close();
 			if (responseCode != HttpURLConnection.HTTP_OK)
-				throw new MessageDeliveryFailedException(response);
+				throw new MessageDeliveryFailedException(response, new PortableStackTraceElement[0]);
 		} catch (IOException ioe) {
-			MessageDeliveryFailedException mdfe = new MessageDeliveryFailedException(ioe.getLocalizedMessage());
+			MessageDeliveryFailedException mdfe = new MessageDeliveryFailedException(ioe.getLocalizedMessage(), new PortableStackTraceElement[0]);
 			mdfe.initCause(ioe);
 			mdfe.setStackTrace(ioe.getStackTrace());
 			throw mdfe;

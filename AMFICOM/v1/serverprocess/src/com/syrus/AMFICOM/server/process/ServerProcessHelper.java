@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessHelper.java,v 1.2 2004/09/14 14:01:22 bass Exp $
+ * $Id: ServerProcessHelper.java,v 1.3 2004/10/13 07:30:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/09/14 14:01:22 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/13 07:30:43 $
  * @author $Author: bass $
  * @module serverprocess
  */
@@ -512,12 +512,12 @@ final class ServerProcessHelper {
 						+ "Text: " + message.getText() + '\n';
 					(new SimpleMailer()).sendMail(to, subject, body);
 				} catch (IllegalArgumentException iae) {
-					throw new MessageDeliveryFailedException("No valid e-mail address found.");
+					throw new MessageDeliveryFailedException("No valid e-mail address found.", new PortableStackTraceElement[0]);
 				} catch (IOException ioe) {
-					throw new MessageDeliveryFailedException("Errors while sending an e-mail message");
+					throw new MessageDeliveryFailedException("Errors while sending an e-mail message", new PortableStackTraceElement[0]);
 				}
 			} else
-				throw new MessageDeliveryFailedException("No suitable operator profile found.");
+				throw new MessageDeliveryFailedException("No suitable operator profile found.", new PortableStackTraceElement[0]);
 		} finally {
 			try {
 				operatorProfileResultSet.close();
@@ -564,7 +564,7 @@ final class ServerProcessHelper {
 				 */
 				SMSProviderFactory.getDefaultSMSProvider().sendMessage("SystemEvent", smsNumber, message.getText());
 			} else
-				throw new MessageDeliveryFailedException("No suitable operator profile found.");
+				throw new MessageDeliveryFailedException("No suitable operator profile found.", new PortableStackTraceElement[0]);
 		} finally {
 			try {
 				operatorProfileResultSet.close();
