@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.3 2005/01/31 13:17:01 arseniy Exp $
+ * $Id: EventParameter.java,v 1.4 2005/02/02 15:09:47 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/31 13:17:01 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/02 15:09:47 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -44,13 +44,13 @@ public class EventParameter implements TransferableObject, TypedObject, Identifi
 		this.type = (ParameterType) GeneralStorableObjectPool.getStorableObject(new Identifier(ept.type_id), true);
 		this.sort = ept.sort.value();
 		switch (this.sort) {
-			case EventParameterSort._SORT_NUMBER:
+			case EventParameterSort._PARAMETER_SORT_NUMBER:
 				this.valueNumber = ept.value.value_number();
 				break;
-			case EventParameterSort._SORT_STRING:
+			case EventParameterSort._PARAMETER_SORT_STRING:
 				this.valueString = new String(ept.value.value_string());
 				break;
-			case EventParameterSort._SORT_RAW:
+			case EventParameterSort._PARAMETER_SORT_RAW:
 				byte[] ba = ept.value.value_raw();
 				this.valueRaw = new byte[ba.length];
 				for (int i = 0; i < this.valueRaw.length; i++)
@@ -66,7 +66,7 @@ public class EventParameter implements TransferableObject, TypedObject, Identifi
 								int value) {
 		this.id = id;
 		this.type = type;
-		this.sort = EventParameterSort._SORT_NUMBER;
+		this.sort = EventParameterSort._PARAMETER_SORT_NUMBER;
 		this.valueNumber = value;
 	}
 
@@ -75,7 +75,7 @@ public class EventParameter implements TransferableObject, TypedObject, Identifi
 								String value) {
 		this.id = id;
 		this.type = type;
-		this.sort = EventParameterSort._SORT_STRING;
+		this.sort = EventParameterSort._PARAMETER_SORT_STRING;
 		this.valueString = value;
 	}
 
@@ -84,7 +84,7 @@ public class EventParameter implements TransferableObject, TypedObject, Identifi
 								byte[] value) {
 		this.id = id;
 		this.type = type;
-		this.sort = EventParameterSort._SORT_RAW;
+		this.sort = EventParameterSort._PARAMETER_SORT_RAW;
 		this.valueRaw = value;
 	}
 
@@ -124,12 +124,12 @@ public class EventParameter implements TransferableObject, TypedObject, Identifi
 	public Object getTransferable() {
 		EventParameterValue epv = new EventParameterValue();
 		switch (this.sort) {
-			case EventParameterSort._SORT_NUMBER:
+			case EventParameterSort._PARAMETER_SORT_NUMBER:
 				epv.value_number(this.valueNumber);
 				break;
-			case EventParameterSort._SORT_STRING:
+			case EventParameterSort._PARAMETER_SORT_STRING:
 				epv.value_string(new String(this.valueString));
-			case EventParameterSort._SORT_RAW:
+			case EventParameterSort._PARAMETER_SORT_RAW:
 				byte[] ba = new byte[this.valueRaw.length];
 				for (int i = 0; i < ba.length; i++)
 					ba[i] = this.valueRaw[i];
