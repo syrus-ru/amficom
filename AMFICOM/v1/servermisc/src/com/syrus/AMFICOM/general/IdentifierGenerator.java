@@ -40,6 +40,9 @@ public class IdentifierGenerator {
 		addEntity(ObjectEntities.RESULTPARAMETER_ENTITY, ObjectEntities.RESULTPARAMETER_ENTITY_CODE);
 		addEntity(ObjectEntities.TEMPORALPATTERN_ENTITY, ObjectEntities.TEMPORALPATTERN_ENTITY_CODE);
 	}
+	
+	private IdentifierGenerator() {
+	}
 
 	public static synchronized Identifier generateIdentifier(String entity) throws IllegalObjectEntityException, IdentifierGenerationException {
 		if (entity != null) {
@@ -99,7 +102,9 @@ public class IdentifierGenerator {
 				resultSet = null;
 				statement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
 		}
 
 		return minor;
