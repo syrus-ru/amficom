@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.13 2004/08/09 08:48:38 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.14 2004/08/09 13:40:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/09 08:48:38 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/09 13:40:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -284,7 +284,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		Identifier kisId = equipment.getKISId();
 		
 		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.SET_ENTITY
+			+ ObjectEntities.EQUIPMENT_ENTITY
 			+ OPEN_BRACKET
 			+ COLUMN_ID + COMMA
 			+ COLUMN_CREATED + COMMA

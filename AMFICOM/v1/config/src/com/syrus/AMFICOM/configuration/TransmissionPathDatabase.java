@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.3 2004/08/09 08:48:38 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.4 2004/08/09 13:40:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/09 08:48:38 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/09 13:40:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -182,7 +182,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		Identifier domainId = transmissionPath.getDomainId();
 		
 		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.SET_ENTITY
+			+ ObjectEntities.TRANSPATH_ENTITY
 			+ OPEN_BRACKET
 			+ COLUMN_ID + COMMA
 			+ COLUMN_CREATED + COMMA
