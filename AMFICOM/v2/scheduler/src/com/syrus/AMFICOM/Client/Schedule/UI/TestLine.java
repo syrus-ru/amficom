@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 
-public class TestLine extends JPanel {
+public class TestLine extends JPanel implements ActionListener {
 
 	public static final Color	COLOR_SCHEDULED		= Color.WHITE;
 	public static final Color	COLOR_PROCCESSING	= Color.BLUE;
@@ -20,27 +20,34 @@ public class TestLine extends JPanel {
 	public static final Color	COLOR_ABORDED		= Color.RED;
 	public static final Color	COLOR_UNRECOGNIZED	= new Color(20, 20, 60);
 
-	private ApplicationContext	aContext;
+	public static final int		TIME_OUT			= 500;
+	//private ApplicationContext aContext;
 	private String				title;
 
 	private HashMap				tests				= new HashMap();
-	private long				start;
+	long						start;
 	private long				end;
-	private double				scale;
-	private int					margin;
+	double						scale;
+	int							margin;
 
-	private int					titleHeight;
-	private int					minimalWidth		= 7;
+	int							titleHeight;
+	int							minimalWidth		= 7;
 
-	private ArrayList			unsavedTests;
-	private ArrayList			allTests;
-	private Test				currentTest;
+	ArrayList					unsavedTests;
+	ArrayList					allTests;
+	Test						currentTest;
 
-	private Dispatcher			dispatcher;
+	Dispatcher					dispatcher;
+
+	int							width;
+	int							height;
+
+	private javax.swing.Timer	timer;
+	private boolean				flash				= false;
 
 	public TestLine(ApplicationContext aContext, String title, long start,
 			long end, int margin) {
-		this.aContext = aContext;
+		//this.aContext = aContext;
 		this.title = title;
 		this.start = start;
 		this.end = end;
@@ -64,7 +71,7 @@ public class TestLine extends JPanel {
 				if (allTests != null) {
 					int x = e.getX();
 					int y = e.getY();
-					int width = getWidth();
+					//int width = getWidth();
 					//				System.out.println("mousePressed: (" + x + "," + y +
 					// ")");
 					// double scale = (double) (width - 2 * margin)/ (double)
@@ -131,7 +138,12 @@ public class TestLine extends JPanel {
 
 	public void addTest(Test test) {
 		if (test.id == null) {
-			if (unsavedTests == null) unsavedTests = new ArrayList();
+			if (unsavedTests == null) {
+				unsavedTests = new ArrayList();
+				timer = new javax.swing.Timer(TIME_OUT, this);
+				timer.start();
+				System.out.println("thread created");
+			}
 			unsavedTests.add(test);
 		} else
 			tests.put(test.getId(), test);
@@ -154,25 +166,53 @@ public class TestLine extends JPanel {
 	public void removeAllTests() {
 		tests.clear();
 		allTests.clear();
+		unsavedTests.clear();
 	}
 
-	public Collection getTests() {
-		return tests.values();
-	}
-
-	public Set getTestIds() {
-		return tests.keySet();
-	}
+	//	public Collection getTests() {
+	//		return tests.values();
+	//	}
+	//
+	//	public Set getTestIds() {
+	//		return tests.keySet();
+	//	}
 
 	public Test getTest(String id) {
 		return (Test) tests.get(id);
 	}
 
+	public void actionPerformed(ActionEvent ae) {
+		if (isVisible()) {
+			Graphics g = this.getGraphics();
+			if ((g != null) && (unsavedTests != null)) {
+				for (int i = 0; i < unsavedTests.size(); i++) {
+					Test test = (Test) unsavedTests.get(i);
+					g.setColor(flash ? COLOR_SCHEDULED : COLOR_UNRECOGNIZED);
+					flash = !flash;
+					draw3DRect(g, test);
+				}
+			}
+		}
+	}
+
+	private void draw3DRect(Graphics g, Test test) {
+		int x = margin
+				+ (int) (scale * (test.timeStamp.getPeriodStart() - start));
+		int en = margin
+				+ (int) (scale * (test.timeStamp.getPeriodEnd() - start));
+		int w = en - x + 1;
+		w = (w > minimalWidth) ? w : minimalWidth;
+		int y = titleHeight / 2 + 4;
+		int h = height - (titleHeight / 2 + 4) - 2;
+		g.fillRect(x + 2, y + 2, w - 3, h - 3);
+		g.draw3DRect(x, y, w, h, true);
+	}
+
 	public void paintComponent(Graphics g) {
-		//super.paint(g);
+		height = getHeight();
+		width = getWidth();
+
 		if (allTests != null) {
-			int height = getHeight();
-			int width = getWidth();
 			scale = (double) (width - 2 * margin) / (double) (end - start);
 			Font font = UIUtil.ARIAL_12_FONT;
 			g.setFont(font);
@@ -185,23 +225,14 @@ public class TestLine extends JPanel {
 			g.drawLine(0, this.titleHeight / 2 + 3, width,
 					this.titleHeight / 2 + 3);
 			g.drawLine(0, height - 1, width, height - 1);
-
-			//int curStatus = TestStatus._TEST_STATUS_COMPLETED;
-
 			//for (Iterator it = tests.values().iterator(); it.hasNext();) {
+			//			System.out.println(":" + allTests.size() + "\t"
+			//					+ System.currentTimeMillis());
 			for (int i = 0; i < allTests.size(); i++) {
 				//int tmpStatus = curStatus;
 				//Test test = (Test) it.next();
 				Color color;
-				// type of figure to draw
-				int type = 0;
 				Test test = (Test) allTests.get(i);
-				int st = margin
-						+ (int) (scale * (test.timeStamp.getPeriodStart() - start));
-				int en = margin
-						+ (int) (scale * (test.timeStamp.getPeriodEnd() - start));
-				int w = en - st + 1;
-				w = (w > minimalWidth) ? w : minimalWidth;
 				if (test.status.equals(TestStatus.TEST_STATUS_COMPLETED)) {
 					color = COLOR_COMPLETED;
 				} else if (test.status.equals(TestStatus.TEST_STATUS_SCHEDULED)) {
@@ -214,27 +245,24 @@ public class TestLine extends JPanel {
 				} else {
 					color = COLOR_UNRECOGNIZED;
 				}
-				if (tests.get(test) == null) {
-					type = 1;
-				}
+				//				if ((unsavedTests != null) && (unsavedTests.contains(test)))
+				// {
+				//					type = 1;
+				//				}
 
+				//				switch (type) {
+				//					case 1:
+				//						g
+				//								.setColor(flash ? COLOR_SCHEDULED
+				//										: COLOR_UNRECOGNIZED);
+				//						flash = !flash;
+				//						break;
+				//					default:
 				g.setColor(color);
-
-				switch (type) {
-					case 1:
-						g.fillOval(st, titleHeight / 2 + 3, w, height
-								- (titleHeight / 2 + 4));
-						g.setColor(Color.BLACK);
-						g.drawOval(st, titleHeight / 2 + 3, w, height
-								- (titleHeight / 2 + 4));
-
-						break;
-					default:
-						g.fill3DRect(st, titleHeight / 2 + 4, w, height
-								- (titleHeight / 2 + 4) - 1, true);
-						break;
-
-				}
+				//						break;
+				//
+				//				}
+				draw3DRect(g, test);
 			}
 		}
 	}
