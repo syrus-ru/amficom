@@ -1,82 +1,34 @@
-package com.syrus.AMFICOM.Client.General.Report;
-
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Toolkit;
-
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Enumeration;
-
-import javax.swing.JInternalFrame;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.ImageIcon;
-
-import javax.swing.JTree;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeCellRenderer;
-
-
-import oracle.jdeveloper.layout.XYLayout;
-
-/*import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.Analysis.ReflectogrammLoadDialog;
-
-import com.syrus.AMFICOM.Client.General.Command.Analysis.FileCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.InitialAnalysisCommand;*/
-
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
-import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
-
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilterPane;
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
-import com.syrus.AMFICOM.Client.General.Filter.SetRestrictionsWindow;
-
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
-/*import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;*/
-
-import com.syrus.AMFICOM.Client.Resource.DataSet;
-//import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
-//import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-//import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
-//import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-//import com.syrus.AMFICOM.Client.Resource.Network.Port;
-//import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-//import com.syrus.AMFICOM.Client.Resource.Result.Parameter;
-//import com.syrus.AMFICOM.Client.Resource.Result.Result;
-//import com.syrus.AMFICOM.Client.Resource.Result.Test;
-//import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-
-import com.syrus.AMFICOM.Client.General.Report.ObjectResourceReportModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-//import com.syrus.AMFICOM.Client.Optimize.Report.OptimizationReportModel;
-//import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationReportModel;
-//import com.syrus.AMFICOM.Client.Schematics.Report.SchemeReportModel;
-
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
-
-/**
- * <p>Description: Панель для отображения дерева доступных отчётов</p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: Syrus Systems</p>
- * @author Песковский Пётр
- * @version 1.0
+/*
+ * $Id: SelectReportsPanel.java,v 1.9 2004/09/27 08:26:24 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
  */
 
+package com.syrus.AMFICOM.Client.General.Report;
+
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Filter.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Report.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.tree.*;
+import oracle.jdeveloper.layout.XYLayout;
+
+/**
+ * Панель для отображения дерева доступных отчётов.
+ * 
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2004/09/27 08:26:24 $
+ * @module generalclient_v1
+ */
 public class SelectReportsPanel extends JInternalFrame implements
 	OperationListener
 
@@ -286,7 +238,7 @@ public class SelectReportsPanel extends JInternalFrame implements
 				if (curFilterChanging == null)
 					setFilterPanel(orrm);
 				else if (!curFilterChanging.equals(orrm.findORFilterforModel(
-					reportTemplate,aContext.getDataSourceInterface())))
+					reportTemplate,aContext.getDataSource())))
 					setFilterPanel(orrm);
 			}
 
@@ -371,7 +323,7 @@ public class SelectReportsPanel extends JInternalFrame implements
 
 	private void setFilterPanel(ObjectResourceReportModel model)
 	{
-		curFilterChanging = model.findORFilterforModel(reportTemplate,aContext.getDataSourceInterface());
+		curFilterChanging = model.findORFilterforModel(reportTemplate,aContext.getDataSource());
 
 		if (curFilterChanging == null)
 		{

@@ -1,57 +1,38 @@
+/*
+ * $Id: ReportTemplate.java,v 1.16 2004/09/27 08:31:08 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.Report;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-
-import com.syrus.AMFICOM.CORBA.Report.FirmedTextPane_Transferable;
-import com.syrus.AMFICOM.CORBA.Report.ImagePane_Transferable;
-import com.syrus.AMFICOM.CORBA.Report.RenderingObject_Transferable;
-import com.syrus.AMFICOM.CORBA.Report.ReportTemplate_Transferable;
+import com.syrus.AMFICOM.CORBA.Report.*;
 import com.syrus.AMFICOM.CORBA.Resource.Filter_Transferable;
-
-import com.syrus.AMFICOM.Client.Resource.StubResource;
+import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.filter.LogicSchemeBase;
-
-import java.io.Serializable;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.File;
-import java.io.IOException;
-
-import java.awt.Dimension;
-import java.awt.Font;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Date;
-import java.util.ArrayList;
+import java.awt.*;
+import java.io.*;
+import java.util.*;
 import java.util.List;
-
 import javax.swing.JOptionPane;
 
 /**
- * <p>Title: </p>
  * <p>Класс шаблона отчёта - включает в себя списки элементов, надписей и
  * фильтров, используемых в нём, а также средства их сериализации и подготовки
  * к передаче по CORBA. Также включает ряд служебных функций.</p>
-
+ * 
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
-
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: Syrus Systems</p>
- * @author Песковский Пётр
- * @version 1.0
+ * 
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2004/09/27 08:31:08 $
+ * @module generalclient_v1
  */
-
 public class ReportTemplate extends StubResource implements Serializable
 {
 	//общая часть - для совместимости с ObjectResource
@@ -460,11 +441,6 @@ public class ReportTemplate extends StubResource implements Serializable
 
 	public void updateLocalFromTransferable()
 	{
-	}
-
-	public String getPropertyPaneClassName()
-	{
-		return "";
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out)
