@@ -388,7 +388,7 @@ public class ElementsEditorMainFrame extends JFrame
 		new SchemeDataSourceImage(dataSource).LoadNetDirectory();
 		new SchemeDataSourceImage(dataSource).LoadISMDirectory();
 		new SchemeDataSourceImage(dataSource).LoadSchemeProto();
-		new MapDataSourceImage(dataSource).LoadProtoElements();
+		new MapDataSourceImage(dataSource).loadProtoElements();
 		//new SchemeDataSourceImage(dataSource).LoadSchemes();
 //    new ConfigDataSourceImage(dataSource).LoadNet();
 //		new ConfigDataSourceImage(dataSource).LoadISM();

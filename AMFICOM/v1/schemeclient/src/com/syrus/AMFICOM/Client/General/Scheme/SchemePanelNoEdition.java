@@ -48,12 +48,12 @@ public class SchemePanelNoEdition extends SchemePanel
 		if (ae.getActionCommand().equals(MapNavigateEvent.MAP_NAVIGATE))
 		{
 			MapNavigateEvent mne = (MapNavigateEvent)ae;
-			if (mne.DATA_ALARMMARKER_CREATED)
+			if (mne.isDataAlarmMarkerCreated())
 			{
 				//				System.out.println("DATA_ALARMMARKER_CREATED: " + mne.linkID);
 				startPathAnimator(mne.getLinkId());
 			}
-			if (mne.DATA_ALARMMARKER_DELETED)
+			if (mne.isDataAlarmMarkerDeleted())
 			{
 //				System.out.println("DATA_ALARMMARKER_DELETED: " + mne.linkID);
 				stopPathAnimator(mne.getLinkId());

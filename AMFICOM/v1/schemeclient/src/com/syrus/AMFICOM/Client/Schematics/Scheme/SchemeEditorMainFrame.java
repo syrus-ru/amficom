@@ -537,7 +537,7 @@ public class SchemeEditorMainFrame extends JFrame
 		new SchemeDataSourceImage(dataSource).LoadNetDirectory();
 		new SchemeDataSourceImage(dataSource).LoadISMDirectory();
 		new SchemeDataSourceImage(dataSource).LoadSchemeProto();
-		new MapDataSourceImage(dataSource).LoadProtoElements();
+		new MapDataSourceImage(dataSource).loadProtoElements();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionDomain", true);
