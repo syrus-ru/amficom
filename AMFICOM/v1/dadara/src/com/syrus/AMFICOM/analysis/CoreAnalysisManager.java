@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.17 2005/03/03 15:12:01 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.18 2005/03/03 15:58:30 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.17 $, $Date: 2005/03/03 15:12:01 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/03 15:58:30 $
  * @module
  */
 
@@ -182,6 +182,8 @@ public class CoreAnalysisManager
 				deltaX);
 		if (nReflSize > 3 * reflSize / 5) // @todo: remove?
 			nReflSize = 3 * reflSize / 5;
+
+		reflSize *= 5; // XXX -- ?
 
 		System.out.println("reflSize="+reflSize+"; nReflSize="+nReflSize);
 
