@@ -1,3 +1,11 @@
+/*
+ * $Id: IdentifierGenerator.java,v 1.4 2004/12/17 18:44:23 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.general;
 
 import java.util.LinkedList;
@@ -7,6 +15,11 @@ import java.sql.SQLException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
+/**
+ * @version $Revision: 1.4 $, $Date: 2004/12/17 18:44:23 $
+ * @author $Author: arseniy $
+ * @module general_v1
+ */
 public class IdentifierGenerator {
 	
 	private IdentifierGenerator() {

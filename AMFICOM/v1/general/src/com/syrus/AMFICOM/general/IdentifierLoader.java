@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierLoader.java,v 1.4 2004/12/09 11:51:49 arseniy Exp $
+ * $Id: IdentifierLoader.java,v 1.5 2004/12/17 18:44:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,9 +17,9 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/09 11:51:49 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/17 18:44:23 $
  * @author $Author: arseniy $
- * @module module
+ * @module general_v1
  */
 public class IdentifierLoader extends SleepButWorkThread {
 	private static final long TIME_TO_SLEEP = 200;
