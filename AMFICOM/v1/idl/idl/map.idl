@@ -1,5 +1,5 @@
 /*
- * $Id: map.idl,v 1.10 2004/11/11 10:28:31 bass Exp $
+ * $Id: map.idl,v 1.11 2004/11/12 14:39:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,6 +25,22 @@ module Map
 {
 	struct MapNodeProtoElement_Transferable
 	{
+#ifdef SERVER
+		wstring id;
+		wstring name;
+		wstring codename;
+		wstring description;
+		wstring owner_id;
+		wstring symbolId;
+		long long modified;
+		wstring pe_class;
+		boolean pe_is_kis;
+		boolean is_visual;
+		boolean isTopological;
+		wstring domain_id;
+		General::ElementAttributeSeq_Transferable attributes;
+		::CORBA::WStringSeq pe_ids;
+#else
 		wstring id;
 		wstring name;
 		wstring description;
@@ -36,11 +52,22 @@ module Map
 		boolean isTopological;
 
 		General::ElementAttributeSeq_Transferable attributes;
+#endif // SERVER
 	};
 	typedef sequence <MapNodeProtoElement_Transferable> MapNodeProtoElementSeq_Transferable;
 
 	struct MapLinkProtoElement_Transferable
 	{
+#ifdef SERVER
+		wstring id;
+		wstring name;
+		wstring description;
+		wstring owner_id;
+		wstring domain_id;
+		long long modified;
+		::CORBA::WStringSeq cable_type_ids;
+		General::ElementAttributeSeq_Transferable attributes;
+#else
 		wstring id;
 		wstring name;
 		wstring description;
@@ -48,6 +75,7 @@ module Map
 		long long modified;
 
 		General::ElementAttributeSeq_Transferable attributes;
+#endif // SERVER
 	};
 	typedef sequence <MapLinkProtoElement_Transferable> MapLinkProtoElementSeq_Transferable;
 
@@ -74,9 +102,76 @@ module Map
 		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <MapSiteElement_Transferable> MapSiteElementSeq_Transferable;
+	typedef MapSiteElement_Transferable MapSiteElement;
+	typedef sequence<MapSiteElement> MapSiteElementSeq;
+
+#ifdef SERVER
+	/**
+	 * @deprecated
+	 */
+	struct MapPathProtoElement_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring description;
+		wstring owner_id;
+		wstring domain_id;
+		long long modified;
+		::CORBA::WStringSeq path_type_ids;
+		General::ElementAttributeSeq_Transferable attributes;
+	};
+
+	/**
+	 * @deprecated
+	 */
+	typedef sequence<MapPathProtoElement_Transferable> MapPathProtoElementSeq_Transferable;
+
+	/**
+	 * @deprecated
+	 */
+	struct MapElement_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring type_id;
+		wstring description;
+		wstring owner_id;
+		wstring longitude;		// anchor
+		wstring latitude;		// anchor
+		wstring mapId;
+		wstring symbol_id;
+		wstring element_id;
+		wstring element_type_id;
+		long long modified;
+		boolean has_kis;
+		wstring kisElementTypeId;
+		wstring ism_map_id;
+		wstring map_kis_id;
+		General::ElementAttributeSeq_Transferable attributes;
+	};
+
+	/**
+	 * @deprecated
+	 */
+	typedef sequence<MapElement_Transferable> MapElementSeq_Transferable;
+#endif // SERVER
 
 	struct MapPhysicalNodeElement_Transferable
 	{
+#ifdef SERVER
+		wstring id;
+		wstring name;
+		wstring longitude;
+		wstring latitude;
+		wstring description;
+		wstring ownerId;
+		wstring mapId;
+		wstring ismMapId;
+		wstring symbolId;
+		wstring physicalLinkId;
+		boolean active;
+		General::ElementAttributeSeq_Transferable attributes;
+#else
 		wstring id;
 		wstring name;
 		wstring description;
@@ -90,11 +185,23 @@ module Map
 		boolean active;
 
 		General::ElementAttributeSeq_Transferable attributes;
+#endif // SERVER
 	};
 	typedef sequence <MapPhysicalNodeElement_Transferable> MapPhysicalNodeElementSeq_Transferable;
 
 	struct MapNodeLinkElement_Transferable
 	{
+#ifdef SERVER
+		wstring id;
+		wstring name;
+		wstring ownerId;
+		wstring mapId;
+		wstring ismMapId;
+		wstring startNodeId;
+		wstring endNodeId;
+		wstring physicalLinkId;
+		General::ElementAttributeSeq_Transferable attributes;
+#else
 		wstring id;
 		wstring name;
 
@@ -107,11 +214,27 @@ module Map
 		double length;
 
 		General::ElementAttributeSeq_Transferable attributes;
+#endif // SERVER
 	};
 	typedef sequence <MapNodeLinkElement_Transferable> MapNodeLinkElementSeq_Transferable;
 
 	struct MapPhysicalLinkElement_Transferable
 	{
+#ifdef SERVER
+		wstring id;
+		wstring name;
+		wstring _typeId;
+		wstring description;
+		wstring ownerId;
+		wstring mapId;
+		wstring ismMapId;
+		wstring startNodeId;
+		wstring endNodeId;
+		General::ElementAttributeSeq_Transferable attributes;
+		wstring linkId;
+		wstring linkTypeId;
+		::CORBA::WStringSeq nodeLinkIds;
+#else
 		wstring id;
 		wstring name;
 		wstring description;
@@ -136,11 +259,27 @@ module Map
 		::CORBA::WStringSeq nodeLinkIds;
 
 		General::ElementAttributeSeq_Transferable attributes;
+#endif // SERVER
 	};
 	typedef sequence <MapPhysicalLinkElement_Transferable> MapPhysicalLinkElementSeq_Transferable;
+	typedef MapPhysicalLinkElement_Transferable MapPhysicalLinkElement;
+	typedef sequence<MapPhysicalLinkElement> MapPhysicalLinkElementSeq;
 
 	struct MapMarkElement_Transferable
 	{
+#ifdef SERVER
+		wstring id;
+		wstring name;
+		wstring longitude;
+		wstring latitude;
+		wstring description;
+		wstring ownerId;
+		wstring mapId;
+		wstring symbolId;
+		wstring linkId;
+		double distance;
+		General::ElementAttributeSeq_Transferable attributes;
+#else
 		wstring id;
 		wstring name;
 		wstring description;
@@ -158,6 +297,7 @@ module Map
 		wstring building;
 
 		General::ElementAttributeSeq_Transferable attributes;
+#endif // SERVER
 	};
 	typedef sequence <MapMarkElement_Transferable> MapMarkElementSeq_Transferable;
 
@@ -175,8 +315,78 @@ module Map
 	};
 	typedef sequence <MapPipePathElement_Transferable> MapPipePathElementSeq_Transferable;
 
+#ifdef SERVER
+	/**
+	 * @deprecated
+	 */
+	struct MapPathElement_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring _typeId;
+		wstring description;
+		wstring ownerId;
+		wstring mapId;
+		wstring ismMapId;
+		wstring startNodeId;
+		wstring endNodeId;
+		General::ElementAttributeSeq_Transferable attributes;
+		wstring pathId;
+		::CORBA::WStringSeq physicalLinkIds;
+	};
+
+	/**
+	 * @deprecated
+	 */
+	typedef sequence<MapPathElement_Transferable> MapPathElementSeq_Transferable;
+#endif // SERVER
+
 	struct Map_Transferable
 	{
+#ifdef SERVER		
+		wstring id;
+		wstring name;
+		wstring codename;
+		wstring userId;
+		wstring description;
+		wstring domainId;
+		long long created;
+		wstring createdBy;
+		long long modified;
+		wstring modifiedBy;
+		wstring schemeId;
+		::CORBA::WStringSeq equipmentIds;
+		::CORBA::WStringSeq kisIds;
+		/**
+		 * Sequence of ids of <code>Node</code> class descendants.
+		 */
+		::CORBA::WStringSeq nodeIds;
+		/**
+		 * Sequence of <code>NodeLink</code> ids.
+		 */
+		::CORBA::WStringSeq nodeLinkIds;
+		::CORBA::WStringSeq physicalLinkIds;
+		::CORBA::WStringSeq pathIds;
+		::CORBA::WStringSeq markIds;
+		boolean showPhysicalNodeElement;
+		/**
+		 * @deprecated Use {@link MapView_Transferable#longitude} instead.
+		 */
+		wstring longitude;
+		/**
+		 * @deprecated Use {@link MapView_Transferable#latitude} instead.
+		 */
+		wstring latitude;
+		/**
+		 * @deprecated Use {@link MapView_Transferable#scale} instead.
+		 */
+		double scale;
+		/**
+		 * @deprecated Use {@link MapView_Transferable#defaultScale} instead.
+		 */
+		double defaultScale;
+		long mouseTolerancy;
+#else
 		wstring id;
 		wstring name;
 		wstring userId;
@@ -203,6 +413,7 @@ module Map
 		::CORBA::WStringSeq physicalLinkIds;
 		::CORBA::WStringSeq markIds;
 		::CORBA::WStringSeq collectorIds;
+#endif // SERVER
 	};
 	typedef sequence <Map_Transferable> MapSeq_Transferable;
 	typedef Map_Transferable Map;
@@ -237,4 +448,4 @@ module Map
 };
 };
 
-#endif
+#endif // MAP_IDL
