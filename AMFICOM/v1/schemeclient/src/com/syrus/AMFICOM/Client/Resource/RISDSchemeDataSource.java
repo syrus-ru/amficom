@@ -1,27 +1,14 @@
 package com.syrus.AMFICOM.Client.Resource;
 
-import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.Resource.ImageResourceSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Resource.ImageResource_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeMonitoringSolution_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeOptimizeInfo_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeProtoElementSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeProtoElement_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Scheme.Scheme_Transferable;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
+import java.util.*;
+
+import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.Resource.Optimize.SolutionCompact;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-
-import com.syrus1.AMFICOM.Client.Resource.RISDMapDataSource;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
 
 public class RISDSchemeDataSource
 		extends RISDMapDataSource
