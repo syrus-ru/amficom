@@ -1,0 +1,14 @@
+bak
+classes
+*.deploy
+*.jpr
+*.jar
+*.jpx*
+*.swp
+*.tar
+*.gz
+.idl
+.sqlj
+.all
+SQLChecker.cache
+sqlj.properties
