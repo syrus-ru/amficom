@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeType.java,v 1.11 2005/01/17 10:54:59 bob Exp $
+ * $Id: SiteNodeType.java,v 1.12 2005/01/24 16:48:55 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/01/17 10:54:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/01/24 16:48:55 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterized {
@@ -46,6 +46,14 @@ public class SiteNodeType extends StorableObjectType implements Characterized {
 	public static final String UNBOUND = "unbound";
 	public static final String CABLE_INLET = "cableinlet";
 	public static final String TOWER = "tower";
+
+	public static final String WELL_IMAGE = "images/well.gif";
+	public static final String PIQUET_IMAGE = "images/piquet.gif";
+	public static final String ATS_IMAGE = "images/ats.gif";
+	public static final String BUILDING_IMAGE = "images/building.gif";
+	public static final String UNBOUND_IMAGE = "images/unbound.gif";
+	public static final String CABLE_INLET_IMAGE = "images/cableinlet.gif";
+	public static final String TOWER_IMAGE = "images/tower.gif";
 
 	/**
 	 * Comment for <code>serialVersionUID</code>

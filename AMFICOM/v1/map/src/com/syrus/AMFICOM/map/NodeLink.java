@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLink.java,v 1.17 2005/01/20 14:44:30 krupenn Exp $
+ * $Id: NodeLink.java,v 1.18 2005/01/24 16:48:55 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/01/20 14:44:30 $
+ * @version $Revision: 1.18 $, $Date: 2005/01/24 16:48:55 $
  * @author $Author: krupenn $
  * @module map_v1
  */
@@ -448,7 +448,7 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
   			AbstractNode endNode = (AbstractNode )
   				MapStorableObjectPool.getStorableObject(
   					endNodeId, true);
-  			return new NodeLink(
+  			NodeLink nodeLink = new NodeLink(
   					id, 
   					creatorId, 
   					name,
@@ -456,6 +456,9 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
   					startNode,
   					endNode,
   					length);
+			physicalLink.addNodeLink(nodeLink);
+			
+			return nodeLink;
   		} catch (ApplicationException e) {
   			throw new CreateObjectException("NodeLink.createInstance |  ", e);
   		}

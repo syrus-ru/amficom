@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLink.java,v 1.17 2005/01/20 14:44:30 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.18 2005/01/24 16:48:55 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
@@ -38,7 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/01/20 14:44:30 $
+ * @version $Revision: 1.18 $, $Date: 2005/01/24 16:48:55 $
  * @author $Author: krupenn $
  * @module map_v1
  */
@@ -791,7 +792,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 			exportMap.put(COLUMN_ID, this.id);
 			exportMap.put(COLUMN_NAME, this.name);
 			exportMap.put(COLUMN_DESCRIPTION, this.description);
-			exportMap.put(COLUMN_PROTO_ID, this.physicalLinkType.getId());
+			exportMap.put(COLUMN_PROTO_ID, this.physicalLinkType.getCodename());
 			exportMap.put(COLUMN_START_NODE_ID, this.startNode.getId());
 			exportMap.put(COLUMN_END_NODE_ID, this.endNode.getId());
 			exportMap.put(COLUMN_CITY, this.city);
@@ -813,7 +814,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		Identifier id = (Identifier) exportMap.get(COLUMN_ID);
 		String name = (String) exportMap.get(COLUMN_NAME);
 		String description = (String) exportMap.get(COLUMN_DESCRIPTION);
-  		Identifier typeId = (Identifier) exportMap.get(COLUMN_PROTO_ID);
+  		String typeCodeName = (String) exportMap.get(COLUMN_PROTO_ID);
   		Identifier startNodeId = (Identifier) exportMap.get(COLUMN_START_NODE_ID);
   		Identifier endNodeId = (Identifier) exportMap.get(COLUMN_END_NODE_ID);
    		List nodeLinkIds = (List) exportMap.get(COLUMN_NODE_LINKS);
@@ -822,14 +823,34 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
   		String building = (String) exportMap.get(COLUMN_BUILDING);
 
  		if (id == null || creatorId == null || name == null || description == null 
-  				|| typeId == null || startNodeId == null || endNodeId == null
+  				|| startNodeId == null || endNodeId == null
   				|| city == null || street == null || building == null)
   			throw new IllegalArgumentException("Argument is 'null'");
 
   		try {
-  			PhysicalLinkType physicalLinkType = (PhysicalLinkType) 
-  				MapStorableObjectPool.getStorableObject(
-  					typeId, false);
+			PhysicalLinkType physicalLinkType;
+
+			StringFieldCondition condition = new StringFieldCondition(
+					typeCodeName,
+					ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
+			
+			List list = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if(list == null || list.size() == 0)
+			{
+				typeCodeName = PhysicalLinkType.TUNNEL;
+
+				condition = new StringFieldCondition(
+						typeCodeName,
+						ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
+				
+				list = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if(list == null || list.size() == 0)
+				{
+					throw new CreateObjectException("PhysicalLinkType \'" + PhysicalLinkType.TUNNEL + "\' not found");
+				}
+			}
+			physicalLinkType = (PhysicalLinkType ) list.get(0);
+
   			AbstractNode startNode = (AbstractNode)
   				MapStorableObjectPool.getStorableObject(
   					startNodeId, true);
@@ -852,13 +873,13 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
   					true,
   					true);
   					
-  			for(Iterator it = nodeLinkIds.iterator(); it.hasNext();){
-  				Identifier nodeLinkId = (Identifier)it.next();
-  				NodeLink nodeLink = (NodeLink) 
-  					MapStorableObjectPool.getStorableObject(
-  						nodeLinkId, false);
-  				link.addNodeLink(nodeLink);
-  			}
+//  			for(Iterator it = nodeLinkIds.iterator(); it.hasNext();){
+//  				Identifier nodeLinkId = (Identifier)it.next();
+//  				NodeLink nodeLink = (NodeLink) 
+//  					MapStorableObjectPool.getStorableObject(
+//  						nodeLinkId, false);
+//  				link.addNodeLink(nodeLink);
+//  			}
   			return link;
   		} catch (ApplicationException e) {
   			throw new CreateObjectException("PhysicalLink.createInstance |  ", e);

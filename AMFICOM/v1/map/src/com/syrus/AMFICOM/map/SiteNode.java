@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNode.java,v 1.13 2005/01/20 14:44:30 krupenn Exp $
+ * $Id: SiteNode.java,v 1.14 2005/01/24 16:48:55 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -23,10 +23,14 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 
+import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
+import com.syrus.AMFICOM.resource.AbstractImageResource;
+import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -36,7 +40,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/01/20 14:44:30 $
+ * @version $Revision: 1.14 $, $Date: 2005/01/24 16:48:55 $
  * @author $Author: krupenn $
  * @module map_v1
  */
@@ -57,7 +61,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	public static final String COLUMN_STREET = "street";	
 	public static final String COLUMN_BUILDING = "building";	
 	public static final String COLUMN_COEF = "coef";
-	public static final String COLUMN_IMAGE_ID = "image_id";
+	public static final String COLUMN_IMAGE = "image_id";
 
 	/** 
 	 * набор параметров для экспорта. инициализируется только в случае
@@ -367,16 +371,25 @@ public class SiteNode extends AbstractNode implements TypedObject {
 			exportMap = new HashMap();		
 		synchronized(exportMap) {
 			exportMap.clear();
-			exportMap.put(COLUMN_ID, this.id);
-			exportMap.put(COLUMN_NAME, this.name);
-			exportMap.put(COLUMN_DESCRIPTION, this.description);
-			exportMap.put(COLUMN_PROTO_ID, this.type.getId());
-			exportMap.put(COLUMN_X, String.valueOf(this.location.getX()));
-			exportMap.put(COLUMN_Y, String.valueOf(this.location.getY()));
-			exportMap.put(COLUMN_CITY, this.city);
-			exportMap.put(COLUMN_STREET, this.street);
-			exportMap.put(COLUMN_BUILDING, this.building);
-			exportMap.put(COLUMN_IMAGE_ID, this.imageId);
+			try
+			{
+				exportMap.put(COLUMN_ID, this.id);
+				exportMap.put(COLUMN_NAME, this.name);
+				exportMap.put(COLUMN_DESCRIPTION, this.description);
+				exportMap.put(COLUMN_PROTO_ID, this.type.getCodename());
+				exportMap.put(COLUMN_X, String.valueOf(this.location.getX()));
+				exportMap.put(COLUMN_Y, String.valueOf(this.location.getY()));
+				exportMap.put(COLUMN_CITY, this.city);
+				exportMap.put(COLUMN_STREET, this.street);
+				exportMap.put(COLUMN_BUILDING, this.building);
+				AbstractBitmapImageResource imageResource = (AbstractBitmapImageResource )
+					ResourceStorableObjectPool.getStorableObject(this.imageId, false);
+				exportMap.put(COLUMN_IMAGE, imageResource.getCodename());
+			}
+			catch (ApplicationException e)
+			{
+				return null;
+			}
 			return Collections.unmodifiableMap(exportMap);
 		}		
 	}
@@ -386,22 +399,65 @@ public class SiteNode extends AbstractNode implements TypedObject {
 			Identifier id = (Identifier) exportMap.get(COLUMN_ID);
 			String name = (String) exportMap.get(COLUMN_NAME);
 			String description = (String) exportMap.get(COLUMN_DESCRIPTION);
-      		Identifier typeId = (Identifier) exportMap.get(COLUMN_PROTO_ID);
+	  		String typeCodeName = (String) exportMap.get(COLUMN_PROTO_ID);
       		String city = (String) exportMap.get(COLUMN_CITY);
       		String street = (String) exportMap.get(COLUMN_STREET);
       		String building = (String) exportMap.get(COLUMN_BUILDING);
       		double x = Double.parseDouble((String) exportMap.get(COLUMN_X));
       		double y = Double.parseDouble((String) exportMap.get(COLUMN_Y));
-      		Identifier imageId = (Identifier) exportMap.get(COLUMN_IMAGE_ID);
+      		String imageCodeName = (String) exportMap.get(COLUMN_IMAGE);
 
-      		if (id == null || creatorId == null || name == null || description == null || typeId == null 
-      				|| city == null || street == null || building == null || imageId == null)
+      		if (id == null || creatorId == null || name == null || description == null
+      				|| city == null || street == null || building == null)
       			throw new IllegalArgumentException("Argument is 'null'");
 
       		try {
-      			SiteNodeType siteNodeType = (SiteNodeType ) 
-      				MapStorableObjectPool.getStorableObject(
-      					typeId, false);
+				SiteNodeType siteNodeType;
+	
+				StringFieldCondition condition = new StringFieldCondition(
+						typeCodeName,
+						ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
+				
+				List list = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if(list == null || list.size() == 0)
+				{
+					typeCodeName = SiteNodeType.BUILDING;
+	
+					condition = new StringFieldCondition(
+							typeCodeName,
+							ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
+					
+					list = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					if(list == null || list.size() == 0)
+					{
+						throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.BUILDING + "\' not found");
+					}
+				}
+				siteNodeType = (SiteNodeType) list.get(0);
+
+				Identifier imageId;
+	
+				condition = new StringFieldCondition(
+						imageCodeName,
+						ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE);
+				
+				list = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if(list == null || list.size() == 0)
+				{
+					imageCodeName = SiteNodeType.BUILDING_IMAGE;
+	
+					condition = new StringFieldCondition(
+							imageCodeName,
+							ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE);
+					
+					list = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					if(list == null || list.size() == 0)
+					{
+						throw new CreateObjectException("ImageResource \'" + SiteNodeType.BUILDING_IMAGE + "\' not found");
+					}
+				}
+				imageId = ((AbstractImageResource ) list.get(0)).getId();
+
       			return new SiteNode(
       					id, 
       					creatorId, 
