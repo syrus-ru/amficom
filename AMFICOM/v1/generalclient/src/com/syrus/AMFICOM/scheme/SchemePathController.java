@@ -83,9 +83,9 @@ public final class SchemePathController implements ObjectResourceController
 			else if (key.equals(COLUMN_NAME))
 				result = path.getName();
 			else if (key.equals(COLUMN_PATH_ID))
-				result = path.pathImpl().getId().getIdentifierString();
+				result = path.getTransmissionPath().getId().getIdentifierString();
 			else if (key.equals(COLUMN_TYPE_ID))
-				result = path.typeImpl().getId().getIdentifierString();
+				result = path.getTransmissionPathType().getId().getIdentifierString();
 			else if (key.equals(COLUMN_START_DEVICE_ID))
 				result = path.startDevice().getId().getIdentifierString();
 			else if (key.equals(COLUMN_END_DEVICE_ID))

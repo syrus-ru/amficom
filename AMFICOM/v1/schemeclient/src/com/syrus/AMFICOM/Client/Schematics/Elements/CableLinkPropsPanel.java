@@ -397,11 +397,11 @@ public class CableLinkPropsPanel extends JPanel
 				links[i].setCableLinkType(lt);
 				Iterator it = lt.getCableThreadTypes().iterator();
 				for (int j = 0; j < old_num; j++)
-					links[i].schemeCableThreads()[j].cableThreadTypeImpl((CableThreadType)it.next());
+					links[i].schemeCableThreads()[j].setCableThreadType((CableThreadType)it.next());
 				for (int j = old_num; j < num; j++) {
 					SchemeCableThread newct = SchemeCableThread.createInstance();
 					CableThreadType type = (CableThreadType)it.next();
-					newct.cableThreadTypeImpl(type);
+					newct.setCableThreadType(type);
 					newct.setName(String.valueOf(j));
 					newct.schemeCablelink(links[0]);
 				}
@@ -414,7 +414,7 @@ public class CableLinkPropsPanel extends JPanel
 				links[i].setCableLinkType(lt);
 				Iterator it = lt.getCableThreadTypes().iterator();
 				for (int j = 0; j < num; j++)
-					links[i].schemeCableThreads()[j].cableThreadTypeImpl((CableThreadType)it.next());
+					links[i].schemeCableThreads()[j].setCableThreadType((CableThreadType)it.next());
 
 					List toDelete = new LinkedList();
 					List threads = Arrays.asList(links[i].schemeCableThreads());

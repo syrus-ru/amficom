@@ -80,7 +80,7 @@ public class KISMeasurementPortsPanel extends GeneralPanel
 		this.schemeElement = (SchemeElement) schemeElement;
 		this.portBox.removeAll();
 
-		final KIS kis = this.schemeElement.rtuImpl();
+		final KIS kis = this.schemeElement.getKis();
 		if (kis != null)
 			this.portBox.addElements(kis.getMeasurementPorts());
 	}

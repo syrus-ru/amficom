@@ -172,22 +172,22 @@ public class EquipmentGeneralPanel extends GeneralPanel
 		nameField.setText(element.getName());
 		descTextArea.setText(element.getDescription());
 
-		typeBox.setSelectedItem(element.equipmentTypeImpl());
+		typeBox.setSelectedItem(element.getEquipmentType());
 		portsNumberField.setText(Long.toString(SchemeUtils.getPorts(element).size()));
 		cabelPortsNumberField.setText(Long.toString(SchemeUtils.getCablePorts(element).size()));
 
-		if(element.equipment() != null)
+		if(element.getEquipment() != null)
 		{
-			double d1 = element.equipmentImpl().getLongitude();
+			double d1 = element.getEquipment().getLongitude();
 			d1 = MiscUtil.fourdigits(d1);
 			longitudeField.setText(String.valueOf(d1));
 
-			double d2 = element.equipmentImpl().getLatitude();
+			double d2 = element.getEquipment().getLatitude();
 			d2 = MiscUtil.fourdigits(d1);
 			latitudeField.setText(String.valueOf(d2));
 
-			domainField.setText(element.equipmentImpl().getDomainId().getIdentifierString());
-			modifyField.setText(sdf.format(element.equipmentImpl().getModified()));
+			domainField.setText(element.getEquipment().getDomainId().getIdentifierString());
+			modifyField.setText(sdf.format(element.getEquipment().getModified()));
 		}
 		else
 		{
@@ -197,10 +197,10 @@ public class EquipmentGeneralPanel extends GeneralPanel
 			modifyField.setText("");
 		}
 
-		if(element.rtu() != null)
+		if(element.getKis() != null)
 		{
 			agentField.setEnabled(true);
-			agentField.setText(element.rtuImpl().getMCMId().getIdentifierString());
+			agentField.setText(element.getKis().getMCMId().getIdentifierString());
 			agentField.setVisible(true);
 			agentLabel.setVisible(true);
 		}
@@ -217,14 +217,14 @@ public class EquipmentGeneralPanel extends GeneralPanel
 	{
 		try
 		{
-			if (element.equipment() != null)
+			if (element.getEquipment() != null)
 			{
 				float d1 = Float.parseFloat(this.longitudeField.getText());
 				d1 = MiscUtil.fourdigits(d1);
 				float d2 = Float.parseFloat(this.latitudeField.getText());
 				d2 = MiscUtil.fourdigits(d2);
-				element.equipmentImpl().setLongitude(d1);
-				element.equipmentImpl().setLatitude(d2);
+				element.getEquipment().setLongitude(d1);
+				element.getEquipment().setLatitude(d2);
 			}
 
 			if(MiscUtil.validName(nameField.getText()))
@@ -233,10 +233,10 @@ public class EquipmentGeneralPanel extends GeneralPanel
 				return false;
 
 			element.setDescription(descTextArea.getText());
-			element.equipmentTypeImpl((EquipmentType)typeBox.getSelectedItem());
-			if (element.rtu() != null)
+			element.setEquipmentType((EquipmentType)typeBox.getSelectedItem());
+			if (element.getKis() != null)
 			{
-				element.rtuImpl().setMCMId(new Identifier(agentField.getText()));
+				element.getKis().setMCMId(new Identifier(agentField.getText()));
 			}
 		}
 		catch(Exception ex)

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeLink.java,v 1.2 2005/03/17 09:40:22 bass Exp $
+ * $Id: SchemeLink.java,v 1.3 2005/03/17 12:52:55 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -17,11 +16,10 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 09:40:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 12:52:55 $
  * @module scheme_v1
  */
-public final class SchemeLink extends AbstractSchemeLink implements
-		ComSyrusAmficomConfigurationSchemeLink {
+public final class SchemeLink extends AbstractSchemeLink {
 	private static final long serialVersionUID = 3834587703751947064L;
 
 	protected Identifier siteId = null;
@@ -107,26 +105,14 @@ public final class SchemeLink extends AbstractSchemeLink implements
 		throw new UnsupportedOperationException();
 	}
 
-	public LinkType_Transferable linkType() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void linkType(LinkType_Transferable linkType) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeLink#linkTypeImpl()
-	 */
-	public LinkType linkTypeImpl() {
+	public LinkType getLinkType() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newLinkTypeImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeLink#linkTypeImpl(com.syrus.AMFICOM.configuration.LinkType)
 	 */
-	public void linkTypeImpl(LinkType newLinkTypeImpl) {
+	public void setLinkType(LinkType newLinkTypeImpl) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElement.java,v 1.2 2005/03/17 09:40:22 bass Exp $
+ * $Id: SchemeElement.java,v 1.3 2005/03/17 12:52:55 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -18,11 +17,11 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 09:40:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 12:52:55 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
-		SchemeCellContainer, ComSyrusAmficomConfigurationSchemeElement {
+		SchemeCellContainer {
 	private static final long serialVersionUID = 3618977875802797368L;
 
 	protected Identifier equipmentId = null;
@@ -127,49 +126,25 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		return schemeElement;
 	}
 
-	public Equipment_Transferable equipment() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void equipment(Equipment_Transferable equipment) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#equipmentImpl()
-	 */
-	public Equipment equipmentImpl() {
+	public Equipment getEquipment() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newEquipmentImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#equipmentImpl(com.syrus.AMFICOM.configuration.Equipment)
 	 */
-	public void equipmentImpl(Equipment newEquipmentImpl) {
+	public void setEquipment(Equipment newEquipmentImpl) {
 		throw new UnsupportedOperationException();
 	}
 
-	public EquipmentType_Transferable equipmentType() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void equipmentType(EquipmentType_Transferable equipmentType) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#equipmentTypeImpl()
-	 */
-	public EquipmentType equipmentTypeImpl() {
+	public EquipmentType getEquipmentType() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newEquipmentTypeImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#equipmentTypeImpl(com.syrus.AMFICOM.configuration.EquipmentType)
 	 */
-	public void equipmentTypeImpl(EquipmentType newEquipmentTypeImpl) {
+	public void setEquipmentType(EquipmentType newEquipmentTypeImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -225,26 +200,14 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public KIS_Transferable rtu() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void rtu(KIS_Transferable rtu) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#rtuImpl()
-	 */
-	public KIS rtuImpl() {
+	public KIS getKis() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newRtuImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#rtuImpl(com.syrus.AMFICOM.configuration.KIS)
 	 */
-	public void rtuImpl(KIS newRtuImpl) {
+	public void setKis(KIS newRtuImpl) {
 		throw new UnsupportedOperationException();
 	}
 

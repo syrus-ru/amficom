@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableThread.java,v 1.2 2005/03/17 09:40:22 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.3 2005/03/17 12:52:55 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,18 +9,16 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 09:40:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 12:52:55 $
  * @module scheme_v1
  */
-public final class SchemeCableThread extends AbstractCloneableStorableObject implements Describable, Characterizable,
-		ComSyrusAmficomConfigurationSchemeCableThread {
+public final class SchemeCableThread extends AbstractCloneableStorableObject implements Describable, Characterizable {
 	private static final long serialVersionUID = 4050204133015171124L;
 
 	protected Identifier cableThreadTypeId = null;
@@ -68,31 +66,14 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject imp
 		throw new UnsupportedOperationException();
 	}
 
-	public CableThreadType_Transferable cableThreadType() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newCableThreadType
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread#cableThreadType(com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable)
-	 */
-	public void cableThreadType(
-			CableThreadType_Transferable newCableThreadType) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread#cableThreadTypeImpl()
-	 */
-	public CableThreadType cableThreadTypeImpl() {
+	public CableThreadType getCableThreadType() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newCableThreadTypeImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread#cableThreadTypeImpl(com.syrus.AMFICOM.configuration.CableThreadType)
 	 */
-	public void cableThreadTypeImpl(CableThreadType newCableThreadTypeImpl) {
+	public void setCableThreadType(CableThreadType newCableThreadTypeImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -232,30 +213,14 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject imp
 		throw new UnsupportedOperationException();
 	}
 
-	public Link_Transferable thread() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newThread
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread#thread(com.syrus.AMFICOM.configuration.corba.Link_Transferable)
-	 */
-	public void thread(Link_Transferable newThread) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread#threadImpl()
-	 */
-	public Link threadImpl() {
+	public Link getThread() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newThreadImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread#threadImpl(com.syrus.AMFICOM.configuration.Link)
 	 */
-	public void threadImpl(Link newThreadImpl) {
+	public void setThread(Link newThreadImpl) {
 		throw new UnsupportedOperationException();
 	}
 

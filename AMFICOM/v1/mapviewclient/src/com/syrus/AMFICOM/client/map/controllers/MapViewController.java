@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.20 2005/03/16 12:54:57 bass Exp $
+ * $Id: MapViewController.java,v 1.21 2005/03/17 12:56:19 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/03/16 12:54:57 $
+ * @version $Revision: 1.21 $, $Date: 2005/03/17 12:56:19 $
  * @module mapviewclient_v1
  */
 public final class MapViewController
@@ -312,7 +312,7 @@ public final class MapViewController
 				for(Iterator it = this.mapView.getMeasurementPaths().iterator(); it.hasNext();)
 				{
 					MeasurementPath mp = (MeasurementPath)it.next();
-					if(mp.getSchemePath().pathImpl().equals(tp))
+					if(mp.getSchemePath().getTransmissionPath().equals(tp))
 					{
 						path = mp;
 						break;
@@ -383,7 +383,7 @@ public final class MapViewController
 		SiteNode node = this.mapView.findElement(schemeElement);
 		if(node == null)
 		{
-			Equipment equipment = schemeElement.equipmentImpl();
+			Equipment equipment = schemeElement.getEquipment();
 			if(equipment != null 
 				&& (equipment.getLongitude() != 0.0D
 					|| equipment.getLatitude() != 0.0D) )

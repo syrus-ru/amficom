@@ -293,7 +293,7 @@ public class LinkPropsPanel extends JPanel
 	{
 		this.links = links;
 		if (links.length > 0)
-			lt = links[0].linkTypeImpl();
+			lt = links[0].getLinkType();
 		else
 		{
 			setEditable(false);
@@ -370,7 +370,7 @@ public class LinkPropsPanel extends JPanel
 		LinkType linkType = (LinkType)typeComboBox.getSelectedItem();
 		this.lt = linkType;
 		for (int i = 0; i < links.length; i++)
-			links[i].linkTypeImpl(linkType);
+			links[i].setLinkType(linkType);
 
 		descriptionTextArea.setText(linkType.getDescription());
 		manufacturerTextField.setText(linkType.getManufacturer());

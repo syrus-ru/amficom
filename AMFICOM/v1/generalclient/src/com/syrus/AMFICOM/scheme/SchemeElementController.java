@@ -103,15 +103,15 @@ public final class SchemeElementController implements ObjectResourceController
 			else if (key.equals(COLUMN_SYMBOL_ID))
 				result = element.getSymbol().getId().getIdentifierString();
 			else if (key.equals(COLUMN_EQUIPMENT_ID))
-				result = element.equipmentImpl().getId().getIdentifierString();
+				result = element.getEquipment().getId().getIdentifierString();
 			else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID))
-				result = element.equipmentTypeImpl().getId().getIdentifierString();
+				result = element.getEquipmentType().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_ID))
 				result = element.scheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_INTERNAL_SCHEME_ID))
 				result = element.internalScheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_KIS_ID))
-				result = element.rtuImpl().getId().getIdentifierString();
+				result = element.getKis().getId().getIdentifierString();
 			else if (key.equals(COLUMN_PROTO_ID))
 				result = element.schemeProtoElement().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SITE_NODE_ID))

@@ -95,8 +95,8 @@ class DeleteAction extends AbstractAction
 						if (panel.getGraph().getScheme() != null)
 						{
 							Arrays.asList(panel.getGraph().getScheme().schemeElements()).remove(element);
-							if (element.equipment() != null)
-								ConfigurationStorableObjectPool.delete(element.equipmentImpl().getId());
+							if (element.getEquipment() != null)
+								ConfigurationStorableObjectPool.delete(element.getEquipment().getId());
 							try {
 								SchemeStorableObjectPool.delete(element.getId());
 							}
@@ -580,7 +580,7 @@ class GroupAction extends AbstractAction
 				ex.printStackTrace();
 			}
 			SchemeProtoElement proto = SchemeProtoElement.createInstance();
-			proto.equipmentTypeImpl(eqt);
+			proto.setEquipmentType(eqt);
 			try {
 				ConfigurationStorableObjectPool.putStorableObject(eqt);
 				SchemeStorableObjectPool.putStorableObject(proto);
@@ -870,7 +870,7 @@ class CreateTopLevelElementAction extends AbstractAction
 			catch (CreateObjectException ex) {
 				ex.printStackTrace();
 			}
-			proto.equipmentTypeImpl(eqt);
+			proto.setEquipmentType(eqt);
 			List protos = Arrays.asList(proto.protoElements());
 			for (int i = 0; i < groups.length; i++)
 				protos.add(groups[i].getProtoElement());
@@ -954,9 +954,9 @@ class CreateUgoAction
 				proto.label(old_proto.label());
 //				proto.scheme_proto_group = old_proto.scheme_proto_group;
 				proto.setName(old_proto.getName());
-				proto.equipmentType(old_proto.equipmentType());
-				EquipmentType eqt = proto.equipmentTypeImpl();
-				EquipmentType old_eqt = old_proto.equipmentTypeImpl();
+				proto.setEquipmentType(old_proto.getEquipmentType());
+				EquipmentType eqt = proto.getEquipmentType();
+				EquipmentType old_eqt = old_proto.getEquipmentType();
 				eqt.setDescription(old_eqt.getDescription());
 //				eqt.eqClass = old_eqt.eqClass;
 				eqt.setCharacteristics(old_eqt.getCharacteristics());

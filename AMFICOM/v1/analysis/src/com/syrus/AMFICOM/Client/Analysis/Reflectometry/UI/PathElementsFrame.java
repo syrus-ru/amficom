@@ -74,7 +74,7 @@ public class PathElementsFrame extends AnalysisFrame
 						/**
 						 * @todo remove comment when SchemePath moves to new TransmissionPath
 						 */
-						if(sp.path() != null && tpathIds.contains(sp.pathImpl().getId()))
+						if(sp.getTransmissionPath() != null && tpathIds.contains(sp.getTransmissionPath().getId()))
 						{
 							path = sp;
 							break;

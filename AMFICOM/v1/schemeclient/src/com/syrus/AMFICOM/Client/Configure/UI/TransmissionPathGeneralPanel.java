@@ -144,7 +144,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 		nameField.setText(path.getName());
 		equipField.setText(path.startDevice().getName());
 
-		if(path.path() != null)
+		if(path.getTransmissionPath() != null)
 		{
 			try {
 				Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
@@ -153,7 +153,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 				Collection mes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				for (Iterator it = mes.iterator(); it.hasNext(); ) {
 					MonitoredElement monitoredelement = (MonitoredElement)it.next();
-					if (monitoredelement.getMonitoredDomainMemberIds().contains(path.pathImpl().getId())) {
+					if (monitoredelement.getMonitoredDomainMemberIds().contains(path.getTransmissionPath().getId())) {
 						this.me = monitoredelement;
 						break;
 					}
@@ -162,8 +162,8 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 			catch (ApplicationException ex) {
 				ex.printStackTrace();
 			}
-			descTextArea.setText(path.pathImpl().getDescription());
-			modifyField.setText(sdf.format(path.pathImpl().getModified()));
+			descTextArea.setText(path.getTransmissionPath().getDescription());
+			modifyField.setText(sdf.format(path.getTransmissionPath().getModified()));
 		}
 		else
 			modifyField.setText("");
@@ -187,9 +187,9 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 			else
 				return false;
 
-			if (path.path() != null)
+			if (path.getTransmissionPath() != null)
 			{
-				path.pathImpl().setDescription(descTextArea.getText());
+				path.getTransmissionPath().setDescription(descTextArea.getText());
 			}
 			if (me != null)
 			{
@@ -207,10 +207,10 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 	{
 		if(modify())
 		{
-			if (path.path() != null)
+			if (path.getTransmissionPath() != null)
 			{
 				try {
-					ConfigurationStorableObjectPool.putStorableObject(path.pathImpl());
+					ConfigurationStorableObjectPool.putStorableObject(path.getTransmissionPath());
 				}
 				catch (ApplicationException ex) {
 				}

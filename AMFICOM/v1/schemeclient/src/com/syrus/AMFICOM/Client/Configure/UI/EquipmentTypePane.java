@@ -65,7 +65,7 @@ public class EquipmentTypePane extends JPanel implements ObjectResourcePropertie
 	public void setObject(Object or)
 	{
 		proto = (SchemeProtoElement)or;
-		eq = proto.equipmentTypeImpl();
+		eq = proto.getEquipmentType();
 
 		gPanel.setObject(proto);
 		chPanel.setObject(proto);

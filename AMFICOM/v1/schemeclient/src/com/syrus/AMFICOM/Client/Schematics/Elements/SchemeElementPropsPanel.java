@@ -210,7 +210,7 @@ public class SchemeElementPropsPanel extends JPanel
 
 		if (p != null)
 		{
-			EquipmentType eqt = p.equipmentTypeImpl();
+			EquipmentType eqt = p.getEquipmentType();
 			if (eqt != null)
 				manufacturerTextField.setText(eqt.getManufacturer());
 			else

@@ -143,7 +143,7 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 	public void setObject(Object or)
 	{
 		proto = (SchemeProtoElement)or;
-		equipmentType = proto.equipmentTypeImpl();
+		equipmentType = proto.getEquipmentType();
 
 		int portsNumber = SchemeUtils.getPorts(proto).size();
 		int cablePortsNumber = SchemeUtils.getCablePorts(proto).size();

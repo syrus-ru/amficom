@@ -86,9 +86,9 @@ public class TransmissionPathPane extends JPanel implements ObjectResourceProper
 
 	public boolean save() {
 		if (modify()) {
-			if (path.path() != null) {
+			if (path.getTransmissionPath() != null) {
 				try {
-					ConfigurationStorableObjectPool.putStorableObject(path.pathImpl());
+					ConfigurationStorableObjectPool.putStorableObject(path.getTransmissionPath());
 					ConfigurationStorableObjectPool.flush(true);
 					return true;
 				} 

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePath.java,v 1.2 2005/03/17 09:40:22 bass Exp $
+ * $Id: SchemePath.java,v 1.3 2005/03/17 12:52:55 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,18 +9,16 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 09:40:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 12:52:55 $
  * @module scheme_v1
  */
-public final class SchemePath extends AbstractCloneableStorableObject implements Describable, Characterizable,
-		ComSyrusAmficomConfigurationSchemePath {
+public final class SchemePath extends AbstractCloneableStorableObject implements Describable, Characterizable {
 	private static final long serialVersionUID = 3257567312831132469L;
 
 	private Identifier typeId = null;
@@ -139,30 +137,14 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		throw new UnsupportedOperationException();
 	}
 
-	public TransmissionPath_Transferable path() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newPath
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemePath#path(com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable)
-	 */
-	public void path(TransmissionPath_Transferable newPath) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemePath#pathImpl()
-	 */
-	public TransmissionPath pathImpl() {
+	public TransmissionPath getTransmissionPath() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newPathImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemePath#pathImpl(com.syrus.AMFICOM.configuration.TransmissionPath)
 	 */
-	public void pathImpl(TransmissionPath newPathImpl) {
+	public void setTransmissionPath(TransmissionPath newPathImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -217,30 +199,14 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		throw new UnsupportedOperationException();
 	}
 
-	public TransmissionPathType_Transferable type() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newType
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemePath#type(com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable)
-	 */
-	public void type(TransmissionPathType_Transferable newType) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemePath#typeImpl()
-	 */
-	public TransmissionPathType typeImpl() {
+	public TransmissionPathType getTransmissionPathType() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newTypeImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemePath#typeImpl(com.syrus.AMFICOM.configuration.TransmissionPathType)
 	 */
-	public void typeImpl(TransmissionPathType newTypeImpl) {
+	public void setTransmissionPathType(TransmissionPathType newTypeImpl) {
 		throw new UnsupportedOperationException();
 	}
 

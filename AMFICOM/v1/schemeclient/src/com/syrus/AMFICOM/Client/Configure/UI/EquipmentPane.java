@@ -102,9 +102,9 @@ public class EquipmentPane extends JPanel implements ObjectResourcePropertiesPan
 	{
 		if (modify()) {
 			if (chPanel.save()) {
-				if (element.equipment() != null) {
+				if (element.getEquipment() != null) {
 					try {
-						ConfigurationStorableObjectPool.putStorableObject(element.equipmentImpl());
+						ConfigurationStorableObjectPool.putStorableObject(element.getEquipment());
 						ConfigurationStorableObjectPool.flush(true);
 						return true;
 					} catch (ApplicationException ex) {

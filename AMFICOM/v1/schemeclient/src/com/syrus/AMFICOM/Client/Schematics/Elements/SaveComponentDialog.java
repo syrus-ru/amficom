@@ -125,7 +125,7 @@ public class SaveComponentDialog extends JDialog
 		proto.parent(scheme_proto);
 
 		proto.setName(componentPanel.getProtoName());
-		EquipmentType eqt = proto.equipmentTypeImpl();
+		EquipmentType eqt = proto.getEquipmentType();
 
 		try {
 			SchemeStorableObjectPool.putStorableObject(proto);

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeProtoElement.java,v 1.2 2005/03/17 09:40:22 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.3 2005/03/17 12:52:55 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.resource.*;
@@ -17,12 +16,11 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 09:40:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 12:52:55 $
  * @module scheme_v1
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject implements
-		Describable, SchemeCellContainer, Characterizable,
-		ComSyrusAmficomConfigurationSchemeProtoElement {
+		Describable, SchemeCellContainer, Characterizable {
 	private static final long serialVersionUID = 3689348806202569782L;
 
 	protected Identifier characteristicIds[] = null;
@@ -113,30 +111,14 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject im
 		throw new UnsupportedOperationException();
 	}
 
-	public EquipmentType_Transferable equipmentType() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newEquipmentType
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeProtoElement#equipmentType(com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable)
-	 */
-	public void equipmentType(EquipmentType_Transferable newEquipmentType) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeProtoElement#equipmentTypeImpl()
-	 */
-	public EquipmentType equipmentTypeImpl() {
+	public EquipmentType getEquipmentType() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newEquipmentTypeImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeProtoElement#equipmentTypeImpl(com.syrus.AMFICOM.configuration.EquipmentType)
 	 */
-	public void equipmentTypeImpl(EquipmentType newEquipmentTypeImpl) {
+	public void setEquipmentType(EquipmentType newEquipmentTypeImpl) {
 		throw new UnsupportedOperationException();
 	}
 

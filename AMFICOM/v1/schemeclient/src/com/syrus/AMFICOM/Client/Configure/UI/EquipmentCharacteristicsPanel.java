@@ -76,15 +76,15 @@ public class EquipmentCharacteristicsPanel extends GeneralPanel
 					true);
 		charPane.addCharacteristics(element.getCharacteristics(), elementId);
 
-		if (element.equipment() != null)
+		if (element.getEquipment() != null)
 		{
 			charPane.setTypeSortMapping(
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 					CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT,
-					element.equipmentImpl(),
-					element.equipmentImpl().getId(),
+					element.getEquipment(),
+					element.getEquipment().getId(),
 					true);
-			charPane.addCharacteristics(element.equipmentImpl().getCharacteristics(), element.equipmentImpl().getId());
+			charPane.addCharacteristics(element.getEquipment().getCharacteristics(), element.getEquipment().getId());
 		}
 	}
 

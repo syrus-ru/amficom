@@ -166,8 +166,8 @@ public class CableLinkFibrePanel extends GeneralPanel
 		linksIdField.setText(clt.getId().getIdentifierString());
 		linksNameField.setText(clt.getName());
 
-		LinkType type = clt.cableThreadTypeImpl().getLinkType();
+		LinkType type = clt.getCableThreadType().getLinkType();
 		linksTypeBox.setSelectedItem(type);
-		linksMarkField.setText(clt.cableThreadTypeImpl().getDescription());
+		linksMarkField.setText(clt.getCableThreadType().getDescription());
 	}
 }

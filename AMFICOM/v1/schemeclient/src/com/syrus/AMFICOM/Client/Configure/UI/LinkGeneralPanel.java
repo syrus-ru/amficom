@@ -30,7 +30,7 @@ public class LinkGeneralPanel extends AbstractLinkGeneralPanel
 					LinkTypeController.getInstance(),
 					lTypes,
 					StorableObjectWrapper.COLUMN_NAME));
-			typeBox.setSelectedItem(((SchemeLink)link).linkType());
+			typeBox.setSelectedItem(((SchemeLink)link).getLinkType().getTransferable());
 		}
 		catch (ApplicationException ex) {
 		}
@@ -40,7 +40,7 @@ public class LinkGeneralPanel extends AbstractLinkGeneralPanel
 	{
 		if (super.modify())
 		{
-			((SchemeLink)link).linkTypeImpl((LinkType)typeBox.getSelectedItem());
+			((SchemeLink)link).setLinkType((LinkType)typeBox.getSelectedItem());
 			return true;
 		}
 		return false;

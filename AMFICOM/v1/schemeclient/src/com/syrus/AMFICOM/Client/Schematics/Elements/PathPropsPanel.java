@@ -169,7 +169,7 @@ public class PathPropsPanel extends JPanel
 					{ }
 			public void keyReleased(KeyEvent ae)
 			{
-				if (path == null || path.type() == null)
+				if (path == null || path.getTransmissionPathType() == null)
 					return;
 				path.setName(compNameTextField.getText());
 			}
@@ -217,7 +217,7 @@ public class PathPropsPanel extends JPanel
 			startDevTextField.setText("");
 		startDevTextField.setCaretPosition(0);
 
-		typeComboBox.setSelectedItem(path.typeImpl());
+		typeComboBox.setSelectedItem(path.getTransmissionPathType());
 		links = Arrays.asList(path.links());
 
 		PathTreeModel model = new PathTreeModel(path);
@@ -227,7 +227,7 @@ public class PathPropsPanel extends JPanel
 		scroll.getViewport().add(utp, BorderLayout.CENTER);
 
 		undoCompName = path.getName();
-		undoTypeId = path.typeImpl();
+		undoTypeId = path.getTransmissionPathType();
 
 		undoPathLinks = new ArrayList();
 		undoPeOrder = new HashMap();
@@ -248,7 +248,7 @@ public class PathPropsPanel extends JPanel
 		if (path == null)
 			return;
 		TransmissionPathType tpt = (TransmissionPathType)typeComboBox.getSelectedItem();
-		path.typeImpl(tpt);
+		path.setTransmissionPathType(tpt);
 	}
 
 	public void removeLink()
@@ -352,7 +352,7 @@ public class PathPropsPanel extends JPanel
 
 	public void undo()
 	{
-		path.typeImpl(undoTypeId);
+		path.setTransmissionPathType(undoTypeId);
 		path.setName(undoCompName);
 
 		PathElement[] pes = new PathElement[undoPathLinks.size()];

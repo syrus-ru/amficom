@@ -233,7 +233,7 @@ public class ProtoElementPropsPanel extends JPanel
 		if (show_is_kis)
 			compPanel.add(cl2Panel, BorderLayout.SOUTH);
 
-		eqt = proto.equipmentTypeImpl();
+		eqt = proto.getEquipmentType();
 
 		if (scheme_proto == null)
 			mapProtoTextField.setText("");

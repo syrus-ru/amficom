@@ -35,7 +35,7 @@ public class ComponentSaveCommand extends VoidCommand
 		{
 			DeviceGroup[] groups = GraphActions.findTopLevelGroups(cell_graph, cells);
 			SchemeProtoElement proto = groups[0].getProtoElement();
-			if (proto.equipmentType() == null)
+			if (proto.getEquipmentType() == null)
 			{
 				System.out.println("Error! Equipment_type_id is empty.");
 				return;
@@ -67,7 +67,7 @@ public class ComponentSaveCommand extends VoidCommand
 				if (groups.length == 1)
 				{
 					SchemeProtoElement proto = groups[0].getProtoElement();
-					if (proto.equipmentType() == null)
+					if (proto.getEquipmentType() == null)
 					{
 						System.out.println("Error! Equipment_type_id is empty.");
 						return;
