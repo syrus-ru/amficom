@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.81 2005/03/28 15:54:55 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.82 2005/03/28 15:59:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/03/28 15:54:55 $
+ * @version $Revision: 1.82 $, $Date: 2005/03/28 15:59:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -83,7 +83,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Result result = this.fromStorableObject(storableObject);
-		StringBuffer buffer = new StringBuffer(COMMA);
+		StringBuffer buffer = new StringBuffer();
 		int resultSort = result.getSort().value();
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
