@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.37 2005/02/28 09:32:02 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.38 2005/02/28 09:33:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,7 +27,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/02/28 09:32:02 $
+ * @version $Revision: 1.38 $, $Date: 2005/02/28 09:33:17 $
  * @author $Author: arseniy $
  * @module general_v1
  */
