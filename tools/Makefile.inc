@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.18 2004/09/28 11:04:19 bass Exp $
+# $Id: Makefile.inc,v 1.19 2005/01/20 10:15:51 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -23,11 +23,11 @@ SRCDIR ?= src
 CLASSDIR ?= classes
 
 ifeq ($(shell hostname -s),bass)
-LIBDIR = lib
-EXTLIBDIR = lib/ext
+LIBDIR ?= lib
+EXTLIBDIR ?= lib/ext
 else
-LIBDIR = ../lib
-EXTLIBDIR = ../../extlib
+LIBDIR ?= ../lib
+EXTLIBDIR ?= ../../extlib
 endif
 
 checkenve = $(if $($(1)), , $(error $(1) is undefined. Define it prior to issuing `$(MAKE)'))
