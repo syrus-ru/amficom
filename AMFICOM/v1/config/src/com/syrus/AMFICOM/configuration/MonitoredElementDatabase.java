@@ -3,17 +3,9 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.*;
 
 public class MonitoredElementDatabase extends StorableObjectDatabase {
 
@@ -140,7 +132,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int update_kind, Object obj) throws IllegalDataException, CreateObjectException {
+	public void update(StorableObject storableObject, int update_kind, Object obj) throws IllegalDataException, UpdateObjectException {
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		switch (update_kind) {
 			default:
