@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.7 2004/10/21 08:01:02 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.8 2004/12/07 10:47:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,15 +10,15 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.corba.StringFieldCondition_Transferable;
-import com.syrus.AMFICOM.configuration.corba.StringFieldSort;
+import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/10/21 08:01:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2004/12/07 10:47:23 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public class StringFieldCondition implements StorableObjectCondition {
@@ -60,9 +60,9 @@ public class StringFieldCondition implements StorableObjectCondition {
 	 * @return <code>true</code>
 	 *         <ul>
 	 * 
-	 * <li>if {@link entityCode} is {@link User} and sort is STRINGSORT_USERLOGIN for all users for
+	 * <li>if {@link #entityCode} is {@link User} and sort is STRINGSORT_USERLOGIN for all users for
 	 * login equals string;</li>
-	 * <li>if {@link entityCode} is {@link User} and sort is STRINGSORT_USERNAME for all users for
+	 * <li>if {@link #entityCode} is {@link User} and sort is STRINGSORT_USERNAME for all users for
 	 * name equals string;</li>
 	 * 
 	 * </ul>

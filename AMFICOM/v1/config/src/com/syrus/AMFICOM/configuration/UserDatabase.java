@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.23 2004/11/17 07:56:25 bob Exp $
+ * $Id: UserDatabase.java,v 1.24 2004/12/07 10:47:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.corba.StringFieldSort;
+import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/11/17 07:56:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2004/12/07 10:47:23 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 

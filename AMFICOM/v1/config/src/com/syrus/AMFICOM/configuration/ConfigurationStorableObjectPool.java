@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.49 2004/12/02 09:30:13 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.50 2004/12/07 10:47:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2004/12/02 09:30:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.50 $, $Date: 2004/12/07 10:47:23 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 
@@ -139,8 +139,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	 * @param cacheClass
 	 *                class must extend LRUMap
 	 * @param size
-	 * @throws CommunicationException
-	 * @throws DatabaseException
 	 */
 	public static void init(ConfigurationObjectLoader cObjectLoader1, Class cacheClass, final int size) {
 		Class clazz = null;
