@@ -1,69 +1,19 @@
 /*
- * $Id: general.idl,v 1.31 2004/11/22 12:58:15 bass Exp $
+ * $Id: general.idl,v 1.32 2004/11/23 08:59:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
- *
- *
- * Defines that can be specified at compile time:
- *
- * GENERAL_COMMON (off by default) -- will turn on compilation of valuetyped
- *  basic types, such as Identifier and StorableObject (as opposed to
- *  Identifier_Transferable and StorableObject_Transferable, respectively);
- *
- * NUMERIC_IDENTIFIER (off by default, implies GENERAL_COMMON) -- Identifier
- *  will hold primitive major and minor fields rather than a string;
- *
- * REDUNDANT_DEPS (off by default, implies GENERAL_COMMON) -- StorableObject
- *  will depend on User.
  */
 
 #ifndef GENERAL_IDL
 #define GENERAL_IDL
 
-#ifdef SCHEME_COMMON
-
-#define GENERAL_BASE
-#define GENERAL_COMMON
-
-#else // SCHEME_COMMON
-
-#ifdef NUMERIC_IDENTIFIER
-#define GENERAL_COMMON
-#else // NUMERIC_IDENTIFIER
-#ifdef REDUNDANT_DEPS
-#define GENERAL_COMMON
-#else // REDUNDANT_DEPS
-#ifndef GENERAL_COMMON
-#define GENERAL_BASE
-#endif // GENERAL_COMMON
-#endif // REDUNDANT_DEPS
-#endif // NUMERIC_IDENTIFIER
-
-#endif // SCHEME_COMMON
-
 module com {
 module syrus {
 module AMFICOM {
-
-#ifdef GENERAL_COMMON
-#ifdef REDUNDANT_DEPS
-
-module configuration {
-module corba {
-	valuetype User;
-};
-};
-
-#endif // REDUNDANT_DEPS
-#endif // GENERAL_COMMON
-
 module general {
 module corba {
-
-#ifdef GENERAL_BASE
-
 	struct Identifier_Transferable {
 		wstring identifier_string;
 	};
@@ -80,69 +30,6 @@ module corba {
 	};
 	
 	typedef sequence <StorableObject_Transferable> StorableObjectSeq_Transferable;
-
-#endif // GENERAL_BASE
-#ifdef GENERAL_COMMON
-
-	valuetype Identifier {
-		const char SEPARATOR = '_';
-#ifdef NUMERIC_IDENTIFIER
-		const string IDENTIFIER_STRING_UNINITIALIZED = "";
-#else // NUMERIC_IDENTIFIER
-		const short MAJOR_UNINITIALIZED = -1;
-		const long long MINOR_UNINITIALIZED = -1;
-#endif // NUMERIC_IDENTIFIER
-
-#ifdef NUMERIC_IDENTIFIER
-		private short thisMajor;
-		private long long thisMinor;
-#else // NUMERIC_IDENTIFIER  
-		private string thisIdentifierString;
-#endif // NUMERIC_IDENTIFIER
-
-		readonly attribute short major;
-		readonly attribute long long minor;
-		readonly attribute string identifierString;
-
-		Identifier cloneInstance();
-
-		factory newInstanceFromString(in string identifierString);
-		factory newInstanceFromPrimitive(in short major, in long long minor);
-	};
-
-	typedef sequence<Identifier> IdentifierSeq;
-
-	abstract valuetype Identifiable {
-		readonly attribute Identifier id;
-	};
-
-	abstract valuetype Namable {
-		attribute wstring name;
-	};
-
-	abstract valuetype Describable {
-		attribute wstring description;
-	};
-
-	valuetype StorableObject: Identifiable {
-		private Identifier thisId;
-		private long long thisCreated;
-		private long long thisModified;
-		private Identifier creatorId;
-		private Identifier modifierId;
-		private long long thisVersion;
-
-		readonly attribute long long created;
-		readonly attribute long long modified;
-#ifdef REDUNDANT_DEPS
-		readonly attribute configuration::corba::User creator;
-		readonly attribute configuration::corba::User modifier;
-#endif // REDUNDANT_DEPS
-		readonly attribute long long version;
-	};
-
-#endif // GENERAL_COMMON
-#ifdef GENERAL_BASE
 
 	enum DataType {
 		DATA_TYPE_INTEGER,
@@ -203,13 +90,8 @@ module corba {
 		Identifier_Transferable getGeneratedIdentifier(in unsigned short entity) raises (AMFICOMRemoteException);
 		IdentifierSeq_Transferable getGeneratedIdentifierRange(in unsigned short entity, in unsigned long size) raises (AMFICOMRemoteException);
 	};
-
-#endif // GENERAL_BASE
-
 };
 };
-
-#ifdef GENERAL_BASE
 
 module CORBA {
 module General {
@@ -330,40 +212,8 @@ module General {
 		long long modified;
 	};
 	typedef sequence <CharacteristicType_Transferable> CharacteristicTypeSeq_Transferable;
-
 };
 };
-
-#endif // GENERAL_BASE
-#ifdef GENERAL_COMMON
-#ifdef REDUNDANT_DEPS
-
-module configuration {
-module corba {
-	valuetype User:
-			general::corba::StorableObject,
-			general::corba::Namable,
-			general::corba::Describable {
-		enum Sort {
-			SYSADMIN,
-			REGULAR,
-			SERVER,
-			MCM
-		};
-
-		private wstring login;
-		private Sort sort;
-		private wstring thisName;
-		private wstring thisDescription;
-	};
-
-	typedef sequence<User> UserSeq;
-};
-};
-
-#endif // REDUNDANT_DEPS
-#endif // GENERAL_COMMON
-
 };
 };
 };
