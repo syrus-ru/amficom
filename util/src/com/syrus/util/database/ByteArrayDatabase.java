@@ -1,5 +1,6 @@
 package com.syrus.util.database;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.sql.Connection;
@@ -20,7 +21,7 @@ public class ByteArrayDatabase {
     this.bar = bArr.getBytes();
   }
 
-  public void saveAsBlob(Connection conn, String table, String column, String where) throws Exception {
+  public void saveAsBlob(Connection conn, String table, String column, String where) throws SQLException {
     boolean oldAutoCommit = conn.getAutoCommit();
     if (oldAutoCommit)
       conn.setAutoCommit(false);
@@ -36,14 +37,17 @@ public class ByteArrayDatabase {
       if (ors.next())
         blob = ors.getBLOB(column);
       else
-        throw new Exception("No record in " + table + " for '" + where + "'");
+        throw new SQLException("No record in " + table + " for '" + where + "'");
 			OutputStream os = null;
       os = blob.getBinaryOutputStream();
       os.write(this.bar);
 			os.close();
 		}
-		catch (Exception e) {
+		catch (SQLException e) {
 			throw e;
+		}
+		catch (IOException e){
+			throw new SQLException(e.getMessage());
 		}
 		finally {
 			if (statement != null)
