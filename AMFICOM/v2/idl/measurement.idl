@@ -121,12 +121,12 @@ module corba {
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable setup_id;
 		long long start_time;
 		long long duration;
 		MeasurementStatus status;
 		wstring local_address;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable test_id;
 	};
 
@@ -224,8 +224,8 @@ module corba {
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
     com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
-    com::syrus::AMFICOM::general::corba::Identifier_Transferable criteria_set_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
+    com::syrus::AMFICOM::general::corba::Identifier_Transferable criteria_set_id;
   };
 
 //////////////////// Evaluation /////////////////////
@@ -237,9 +237,9 @@ module corba {
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
     com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
     com::syrus::AMFICOM::general::corba::Identifier_Transferable threshold_set_id;
     com::syrus::AMFICOM::general::corba::Identifier_Transferable etalon_id;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
   };
 
 ////////////////////// Result ///////////////////////
