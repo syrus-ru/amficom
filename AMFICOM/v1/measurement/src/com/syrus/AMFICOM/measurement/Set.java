@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.41 2005/02/03 14:58:34 arseniy Exp $
+ * $Id: Set.java,v 1.42 2005/02/03 15:27:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/02/03 14:58:34 $
+ * @version $Revision: 1.42 $, $Date: 2005/02/03 15:27:50 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -272,9 +272,9 @@ public class Set extends StorableObject {
 	/**
 	 * @param sort The sort to set.
 	 */
-	public void setSort(int sort) {
+	public void setSort(SetSort sort) {
 		this.currentVersion = super.getNextVersion();
-		this.sort = sort;
+		this.sort = sort.value();
 	}
 	
 	public boolean equals(Object obj) {
