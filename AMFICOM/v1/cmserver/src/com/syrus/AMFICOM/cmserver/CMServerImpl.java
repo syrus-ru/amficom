@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.68 2004/11/19 11:19:15 bob Exp $
+ * $Id: CMServerImpl.java,v 1.69 2004/11/23 17:40:25 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
+import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.CharacteristicType;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -39,6 +40,7 @@ import com.syrus.AMFICOM.configuration.TransmissionPathType;
 import com.syrus.AMFICOM.configuration.User;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable;
@@ -64,6 +66,7 @@ import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
@@ -122,8 +125,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2004/11/19 11:19:15 $
- * @author $Author: bob $
+ * @version $Revision: 1.69 $, $Date: 2004/11/23 17:40:25 $
+ * @author $Author: max $
  * @module cmserver_v1
  */
 
@@ -263,12 +266,44 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
 
 
 	///////////// Configuration Transmit /////////////
+    
+	public CableThreadType_Transferable transmitCableThreadType(
+			Identifier_Transferable id_Transferable,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.transmitCableThreadType | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            CableThreadType cableThreadType = (CableThreadType) ConfigurationStorableObjectPool.getStorableObject(id, true);
+            return (CableThreadType_Transferable) cableThreadType.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+    
     public Characteristic_Transferable transmitCharacteristic(
             Identifier_Transferable id_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
             throws AMFICOMRemoteException {
         Identifier id = new Identifier(id_Transferable);
-        Log.debugMessage("CMServerImpl.Characteristic | require " + id.toString(), Log.DEBUGLEVEL07);
+        Log.debugMessage("CMServerImpl.transmitCharacteristic | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
             Characteristic characteristic = (Characteristic) ConfigurationStorableObjectPool.getStorableObject(id, true);
             return (Characteristic_Transferable) characteristic.getTransferable();
@@ -791,6 +826,104 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
+    public CableThreadType_Transferable[] transmitCableThreadTypes(
+            Identifier_Transferable[] ids_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        try {
+            Identifier domainId = new Identifier(accessIdentifier.domain_id);
+            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+            Log.debugMessage("CMServerImpl.transmitCableThreadTypes | requiere "
+                    + (ids_Transferable.length == 0 ? "all" : Integer
+                            .toString(ids_Transferable.length))
+                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
+            List list;
+            if (ids_Transferable.length > 0) {
+                List idsList = new ArrayList(ids_Transferable.length);
+                for (int i = 0; i < ids_Transferable.length; i++)
+                    idsList.add(new Identifier(ids_Transferable[i]));
+                list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
+            } else
+                list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), true);
+
+            CableThreadType_Transferable[] transferables = new CableThreadType_Transferable[list.size()];
+            int i = 0;
+            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+                CableThreadType cableThreadType = (CableThreadType) it.next();
+                transferables[i] = (CableThreadType_Transferable) cableThreadType.getTransferable();
+            }
+            return transferables;
+
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (IllegalDataException ide) {
+            Log.errorException(ide);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
+                    .getMessage());
+        } catch (IllegalObjectEntityException ioee) {
+            Log.errorException(ioee);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+    }
+    
+    public CableThreadType_Transferable[] transmitCableThreadTypesButIds(
+			Identifier_Transferable[] ids_Transferable,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+        try {
+            Identifier domainId = new Identifier(accessIdentifier.domain_id);
+            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+            Log.debugMessage("CMServerImpl.transmitCableThreadTypesButIds | requiere "
+                    + (ids_Transferable.length == 0 ? "all" : Integer
+                            .toString(ids_Transferable.length))
+                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
+            List list;
+            if (ids_Transferable.length > 0) {
+                List idsList = new ArrayList(ids_Transferable.length);
+                for (int i = 0; i < ids_Transferable.length; i++)
+                    idsList.add(new Identifier(ids_Transferable[i]));
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.CHARACTERISTIC_ENTITY_CODE), true);
+            } else
+                list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), true);
+
+            CableThreadType_Transferable[] transferables = new CableThreadType_Transferable[list.size()];
+            int i = 0;
+            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+                CableThreadType cableThreadType = (CableThreadType) it.next();
+                transferables[i] = (CableThreadType_Transferable) cableThreadType.getTransferable();
+            }
+            return transferables;
+
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (IllegalDataException ide) {
+            Log.errorException(ide);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
+                    .getMessage());
+        } catch (IllegalObjectEntityException ioee) {
+            Log.errorException(ioee);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+    
     public Characteristic_Transferable[] transmitCharacteristics(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
@@ -5894,6 +6027,65 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
 							                    .getMessage());
         }
     }
+    
+    // Delete methods
+
+	public void delete(Identifier_Transferable id_Transferable,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("CMServerImpl.delete | trying to delete... ", Log.DEBUGLEVEL03);
+        Identifier id = new Identifier(id_Transferable);
+        short entityCode = id.getMajor();
+        try {
+        if(ObjectGroupEntities.isInMeasurementGroup(entityCode))
+            MeasurementStorableObjectPool.delete(id);
+        if(ObjectGroupEntities.isInConfigurationGroup(entityCode))
+            ConfigurationStorableObjectPool.delete(id);
+        Log.errorMessage("CMServerImpl.delete | Wrong entity code: " + entityCode);
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+        
+	}
+    
+	public void deleteList(Identifier_Transferable[] id_Transferables,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("CMServerImpl.deleteList | Trying to delete... ", Log.DEBUGLEVEL03);
+		List idList = new ArrayList(id_Transferables.length);
+        List measurementList = new ArrayList(id_Transferables.length);
+        List configurationList = new ArrayList(id_Transferables.length);
+        for (int i = 0; i < id_Transferables.length; i++) {
+            idList.add(new Identifier(id_Transferables[i]));			
+		}
+        for (Iterator iter = idList.iterator(); iter.hasNext();) {
+			Identifier id = (Identifier) iter.next();
+            short entityCode = id.getMajor();
+            if(ObjectGroupEntities.isInMeasurementGroup(entityCode))
+                measurementList.add(id);
+            if(ObjectGroupEntities.isInConfigurationGroup(entityCode))
+                configurationList.add(id);
+            Log.errorMessage("CMServerImpl.deleteList | Wrong entity code: " + entityCode);
+		}
+        try {
+        MeasurementStorableObjectPool.delete(measurementList);
+        ConfigurationStorableObjectPool.delete(configurationList);
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+	}
 
 	///////////////////////////////////////// Identifier Generator
 	// ////////////////////////////////////////////////
