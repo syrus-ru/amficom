@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.34 2004/12/10 12:13:50 bob Exp $
+ * $Id: MCM.java,v 1.35 2004/12/20 14:03:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/12/10 12:13:50 $
+ * @version $Revision: 1.35 $, $Date: 2004/12/20 14:03:04 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -239,8 +239,7 @@ public class MCM extends DomainMember implements Characterized {
 											  String name,
 											  String description,
 											  Identifier userId,
-											  Identifier serverId,
-											  short tcpPort) {
+											  Identifier serverId) {
 		super.setAttributes(created,												
 				modified,
 				creatorId,
@@ -250,7 +249,7 @@ public class MCM extends DomainMember implements Characterized {
 		this.description = description;
 		this.userId = userId;
 		this.serverId = serverId;
-		this.tcpPort = tcpPort;
+//		this.tcpPort = tcpPort;
 	}
 
 	protected synchronized void setKISs0(List kiss) {
