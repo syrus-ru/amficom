@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.17 2005/01/18 07:29:55 bob Exp $
+# $Id: Makefile,v 1.18 2005/01/18 07:49:33 max Exp $
 #
 # vim:ft=make:
 #
@@ -42,6 +42,7 @@ all: .all
 xtra: .xtra
 
 .xtra: .idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/arserver.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/event.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/configuration.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/measurement.idl
