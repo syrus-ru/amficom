@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.60 2005/02/14 09:15:46 arseniy Exp $
+ * $Id: KIS.java,v 1.61 2005/02/24 10:20:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,10 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/02/14 09:15:46 $
+ * @version $Revision: 1.61 $, $Date: 2005/02/24 10:20:23 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -52,7 +54,7 @@ public class KIS extends DomainMember implements Characterized {
 	private String hostname;
 	private short tcpPort;
 
-	private List measurementPortIds;	//List <Identifier>
+	private Collection measurementPortIds;	//List <Identifier>
 
 	private List characteristics;
 	private StorableObjectDatabase kisDatabase;
@@ -60,7 +62,7 @@ public class KIS extends DomainMember implements Characterized {
 	public KIS(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.measurementPortIds = new LinkedList();
+		this.measurementPortIds = new HashSet();
 		this.characteristics = new ArrayList();
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 		try {
@@ -81,7 +83,7 @@ public class KIS extends DomainMember implements Characterized {
 		this.hostname = kt.hostname;
 		this.tcpPort = kt.tcp_port;
 
-		this.measurementPortIds = new ArrayList(kt.measurement_port_ids.length);
+		this.measurementPortIds = new HashSet(kt.measurement_port_ids.length);
 		for (int i = 0; i < kt.measurement_port_ids.length; i++)
 			this.measurementPortIds.add(new Identifier(kt.measurement_port_ids[i]));
 
@@ -120,7 +122,7 @@ public class KIS extends DomainMember implements Characterized {
 		this.tcpPort = tcpPort;
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
-		this.measurementPortIds = new LinkedList();
+		this.measurementPortIds = new HashSet();
 		this.characteristics = new ArrayList();
 
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
@@ -223,8 +225,8 @@ public class KIS extends DomainMember implements Characterized {
 		super.changed = true;
 	}
 
-	public List getMeasurementPortIds() {
-		return this.measurementPortIds;
+	public Collection getMeasurementPortIds() {
+		return Collections.unmodifiableCollection(this.measurementPortIds);
 	}
 
 	public List retrieveMonitoredElements() throws RetrieveObjectException, ObjectNotFoundException {
@@ -262,13 +264,13 @@ public class KIS extends DomainMember implements Characterized {
 		this.mcmId = mcmId;
 	}
 
-	protected synchronized void setMeasurementPortIds0(List measurementPortIds) {
+	protected synchronized void setMeasurementPortIds0(Collection measurementPortIds) {
 		this.measurementPortIds.clear();
 		if (measurementPortIds != null)
 			this.measurementPortIds.addAll(measurementPortIds);
 	}
 
-	public void setMeasurementPortIds(List measurementPortIds) {
+	public void setMeasurementPortIds(Collection measurementPortIds) {
 		this.setMeasurementPortIds0(measurementPortIds);
 		super.changed = true;
 	}
