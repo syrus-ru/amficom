@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.17 2004/09/03 10:43:32 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.18 2004/09/03 10:52:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/09/03 10:43:32 $
+ * @version $Revision: 1.18 $, $Date: 2004/09/03 10:52:14 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -95,7 +95,7 @@ public abstract class StorableObjectDatabase {
 	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException,
 			ObjectNotFoundException, RetrieveObjectException;
 
-	public abstract List retrieveByIds(List ids, String condition) throws RetrieveObjectException;
+	public abstract List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException;
 
 	public abstract Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
