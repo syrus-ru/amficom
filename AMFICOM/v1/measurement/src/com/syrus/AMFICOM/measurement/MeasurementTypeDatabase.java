@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.11 2004/07/28 11:58:31 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.12 2004/08/10 19:05:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/07/28 11:58:31 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/10 19:05:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -111,8 +111,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	private void retrieveParameterTypes(MeasurementType measurementType) throws RetrieveObjectException {
-		ArrayList inParTyps = new ArrayList();
-		ArrayList outParTyps = new ArrayList();
+		List inParTyps = new ArrayList();
+		List outParTyps = new ArrayList();
 
 		String measurementTypeIdStr = measurementType.getId().toSQLString();
 		String sql = SQL_SELECT
@@ -164,8 +164,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				Log.errorException(sqle1);
 			}
 		}
-		inParTyps.trimToSize();
-		outParTyps.trimToSize();
+		((ArrayList)inParTyps).trimToSize();
+		((ArrayList)outParTyps).trimToSize();
 		measurementType.setParameterTypes(inParTyps,
 																			outParTyps);
 	}

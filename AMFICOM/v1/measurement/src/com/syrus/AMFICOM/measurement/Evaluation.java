@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.18 2004/08/06 16:07:06 arseniy Exp $
+ * $Id: Evaluation.java,v 1.19 2004/08/10 19:05:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/06 16:07:06 $
+ * @version $Revision: 1.19 $, $Date: 2004/08/10 19:05:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -91,7 +91,7 @@ public class Evaluation extends Action {
 	}
 
 	public Object getTransferable() {
-		return new Evaluation_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+		return new Evaluation_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																			 super.created.getTime(),
 																			 super.modified.getTime(),
 																			 (Identifier_Transferable)super.creatorId.getTransferable(),

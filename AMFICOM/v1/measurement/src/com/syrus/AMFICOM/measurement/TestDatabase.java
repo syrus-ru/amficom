@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.14 2004/08/06 16:07:07 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.15 2004/08/10 19:05:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/06 16:07:07 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/10 19:05:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -83,8 +83,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ COLUMN_RETURN_TYPE + COMMA
 			+ COLUMN_DESCRIPTION
 			+ SQL_FROM + ObjectEntities.TEST_ENTITY
-			+ SQL_WHERE + COLUMN_ID + EQUALS
-			+ testIdStr;
+			+ SQL_WHERE + COLUMN_ID + EQUALS + testIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -160,10 +159,8 @@ public class TestDatabase extends StorableObjectDatabase {
 		String testIdStr = test.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ LINK_COLMN_MEASUREMENT_SETUP_ID
-			+ SQL_FROM
-			+ ObjectEntities.MSTESTLINK_ENTITY
-			+ SQL_WHERE + LINK_COLMN_TEST_ID + EQUALS
-			+ testIdStr;
+			+ SQL_FROM + ObjectEntities.MSTESTLINK_ENTITY
+			+ SQL_WHERE + LINK_COLMN_TEST_ID + EQUALS + testIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		ArrayList arraylist = new ArrayList();
@@ -210,20 +207,19 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private ArrayList retrieveMeasurementsOrderByStartTime(Test test, MeasurementStatus measurementStatus) throws RetrieveObjectException {
+	private List retrieveMeasurementsOrderByStartTime(Test test, MeasurementStatus measurementStatus) throws RetrieveObjectException {
+		List measurements = new ArrayList();
+
 		String testIdStr = test.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ COLUMN_ID
-			+ SQL_FROM
-			+ ObjectEntities.MEASUREMENT_ENTITY
-			+ SQL_WHERE
-			+ MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr
-			+ SQL_AND + MeasurementDatabase.COLUMN_STATUS + EQUALS
-			+ SQL_ORDER_BY + MeasurementDatabase.COLUMN_START_TIME
-			+ " ASC";
+			+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
+			+ SQL_WHERE + MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr
+			+ SQL_AND + MeasurementDatabase.COLUMN_STATUS + EQUALS + Integer.toString(measurementStatus.value())
+			+ SQL_ORDER_BY + MeasurementDatabase.COLUMN_START_TIME + " ASC";
+
 		Statement statement = null;
 		ResultSet resultSet = null;
-		ArrayList arraylist = new ArrayList();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("TestDatabase.retrieveMeasurementsOrderByStartTime | Trying: " + sql, Log.DEBUGLEVEL05);
@@ -232,7 +228,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				/**
 				  * @todo when change DB Identifier model ,change getString() to getLong()
 				  */
-				arraylist.add((Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true));
+				measurements.add((Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true));
 			}
 		}
 		catch (SQLException sqle) {
@@ -252,7 +248,8 @@ public class TestDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 		}
-		return arraylist;
+		((ArrayList)measurements).trimToSize();
+		return measurements;
 	}
 	
 	private Measurement retrieveLastMeasurement(Test test) throws RetrieveObjectException, ObjectNotFoundException {
@@ -440,8 +437,13 @@ public class TestDatabase extends StorableObjectDatabase {
 		List msIds = test.getMeasurementSetupIds();
 		String sql = SQL_INSERT_INTO + ObjectEntities.MSTESTLINK_ENTITY
 			+ OPEN_BRACKET
-			+ LINK_COLMN_TEST_ID + COMMA + LINK_COLMN_MEASUREMENT_SETUP_ID + CLOSE_BRACKET
-			+ SQL_VALUES + OPEN_BRACKET + QUESTION + COMMA + QUESTION + CLOSE_BRACKET;			
+			+ LINK_COLMN_TEST_ID + COMMA
+			+ LINK_COLMN_MEASUREMENT_SETUP_ID
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+			+ QUESTION + COMMA
+			+ QUESTION
+			+ CLOSE_BRACKET;
+
 		PreparedStatement preparedStatement = null;
 		/**
 		 * @todo when change DB Identifier model ,change String to long
@@ -497,14 +499,10 @@ public class TestDatabase extends StorableObjectDatabase {
 		String testIdStr = test.getId().toSQLString();
 		String sql = SQL_UPDATE + ObjectEntities.TEST_ENTITY
 			+ SQL_SET
-			+ COLUMN_STATUS + EQUALS
-			+ Integer.toString(test.getStatus().value()) + COMMA
-			+ COLUMN_MODIFIED + EQUALS
-			+ DatabaseDate.toUpdateSubString(test.getModified()) + COMMA
-			+ COLUMN_MODIFIER_ID +EQUALS
-			+ test.getModifierId().toSQLString()
-			+ SQL_WHERE + COLUMN_ID + EQUALS
-			+ testIdStr;
+			+ COLUMN_STATUS + EQUALS + Integer.toString(test.getStatus().value()) + COMMA
+			+ COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(test.getModified()) + COMMA
+			+ COLUMN_MODIFIER_ID + EQUALS + test.getModifierId().toSQLString()
+			+ SQL_WHERE + COLUMN_ID + EQUALS + testIdStr;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -532,12 +530,9 @@ public class TestDatabase extends StorableObjectDatabase {
 		String testIdStr = test.getId().toSQLString();
 		String sql = SQL_UPDATE + ObjectEntities.TEST_ENTITY
 			+ SQL_SET
-			+ COLUMN_MODIFIED + EQUALS
-			+ DatabaseDate.toUpdateSubString(test.getModified()) + COMMA
-			+ COLUMN_MODIFIER_ID + EQUALS
-			+ test.getModifierId().toSQLString()
-			+ SQL_WHERE + COLUMN_ID + EQUALS
-			+ testIdStr;
+			+ COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(test.getModified()) + COMMA
+			+ COLUMN_MODIFIER_ID + EQUALS + test.getModifierId().toSQLString()
+			+ SQL_WHERE + COLUMN_ID + EQUALS + testIdStr;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();

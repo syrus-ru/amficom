@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.18 2004/08/06 16:07:06 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.19 2004/08/10 19:05:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/06 16:07:06 $
+ * @version $Revision: 1.19 $, $Date: 2004/08/10 19:05:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -195,7 +195,7 @@ public class MeasurementSetup extends StorableObject {
 		for (int i = 0; i < meIds.length; i++)
 			meIds[i] = (Identifier_Transferable) ((Identifier) this.monitoredElementIds.get(i)).getTransferable();
 
-		return new MeasurementSetup_Transferable((Identifier_Transferable) super.getId().getTransferable(),
+		return new MeasurementSetup_Transferable((Identifier_Transferable) super.id.getTransferable(),
 																						 super.created.getTime(), super.modified.getTime(),
 																						 (Identifier_Transferable) super.creatorId.getTransferable(),
 																						 (Identifier_Transferable) super.modifierId.getTransferable(),

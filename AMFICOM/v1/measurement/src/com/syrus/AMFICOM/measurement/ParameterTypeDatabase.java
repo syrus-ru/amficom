@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.11 2004/07/28 11:58:31 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.12 2004/08/10 19:05:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/07/28 11:58:31 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/10 19:05:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -267,6 +267,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 				Log.errorException(sqle1);
 			}
 		}
+		((ArrayList)parameterTypes).trimToSize();
 		return parameterTypes;
 	}
 }

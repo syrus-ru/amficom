@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.12 2004/07/28 16:00:05 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.13 2004/08/10 19:05:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/07/28 16:00:05 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/10 19:05:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -114,10 +114,10 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveParameterTypes(EvaluationType evaluationType) throws RetrieveObjectException {	
-		ArrayList inParTyps = new ArrayList();
-		ArrayList thresholdParTyps = new ArrayList();
-		ArrayList etalonParTyps = new ArrayList();
-		ArrayList outParTyps = new ArrayList();
+		List inParTyps = new ArrayList();
+		List thresholdParTyps = new ArrayList();
+		List etalonParTyps = new ArrayList();
+		List outParTyps = new ArrayList();
 
 		String evaluationTypeIdStr = evaluationType.getId().toSQLString();
 		String sql = SQL_SELECT
@@ -177,10 +177,10 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 		}
-		inParTyps.trimToSize();
-		thresholdParTyps.trimToSize();
-		etalonParTyps.trimToSize();
-		outParTyps.trimToSize();
+		((ArrayList)inParTyps).trimToSize();
+		((ArrayList)thresholdParTyps).trimToSize();
+		((ArrayList)etalonParTyps).trimToSize();
+		((ArrayList)outParTyps).trimToSize();
 		evaluationType.setParameterTypes(inParTyps,
 																		 thresholdParTyps,
 																		 etalonParTyps,

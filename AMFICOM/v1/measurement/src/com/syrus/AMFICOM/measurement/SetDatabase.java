@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.14 2004/08/06 16:07:06 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.15 2004/08/10 19:05:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/06 16:07:06 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/10 19:05:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -115,6 +116,8 @@ public class SetDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveSetParameters(Set set) throws RetrieveObjectException {
+		List parameters = new ArrayList();
+
 		String setIdStr = set.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ COLUMN_ID + COMMA			
@@ -127,7 +130,6 @@ public class SetDatabase extends StorableObjectDatabase {
 			+ setIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
-		ArrayList arraylist = new ArrayList();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("SetDatabase.retrieveSetParameters | Trying: " + sql, Log.DEBUGLEVEL05);
@@ -148,7 +150,7 @@ public class SetDatabase extends StorableObjectDatabase {
 																				 */
 																				parameterType,
 																				ByteArrayDatabase.toByteArray((BLOB)resultSet.getBlob(LINK_COLUMN_VALUE)));
-					arraylist.add(parameter);
+					parameters.add(parameter);
 				}
 				catch (Exception e) {
 					Log.errorException(e);
@@ -173,10 +175,12 @@ public class SetDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 		}
-		set.setParameters((SetParameter[])arraylist.toArray(new SetParameter[arraylist.size()]));
+		set.setParameters((SetParameter[])parameters.toArray(new SetParameter[parameters.size()]));
 	}
 
 	private void retrieveSetMELinks(Set set) throws RetrieveObjectException {
+		List meIds = new ArrayList();
+
 		String setIdStr = set.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ LINK_COLUMN_ME_ID
@@ -185,7 +189,6 @@ public class SetDatabase extends StorableObjectDatabase {
 			+ setIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
-		ArrayList arraylist = new ArrayList();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("SetDatabase.retrieveSetMELinks | Trying: " + sql, Log.DEBUGLEVEL05);
@@ -194,7 +197,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				arraylist.add(new Identifier(resultSet.getString(LINK_COLUMN_ME_ID)));
+				meIds.add(new Identifier(resultSet.getString(LINK_COLUMN_ME_ID)));
 			}
 		}
 		catch (SQLException sqle) {
@@ -214,7 +217,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 		}
-		set.setMonitoredElementIds(arraylist);
+		set.setMonitoredElementIds(meIds);
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {

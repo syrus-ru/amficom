@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.11 2004/08/06 16:07:06 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.12 2004/08/10 19:05:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/06 16:07:06 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/10 19:05:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -149,6 +150,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveResultParameters(Result result) throws RetrieveObjectException {
+		List parameters = new ArrayList();
+
 		String resultIdStr = result.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ COLUMN_ID + COMMA
@@ -161,7 +164,6 @@ public class ResultDatabase extends StorableObjectDatabase {
 			+ resultIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
-		ArrayList arraylist = new ArrayList();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("ResultDatabase.retrieveResultParameters | Trying: " + sql, Log.DEBUGLEVEL05);
@@ -182,7 +184,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 																					*/
 																				parameterType,
 																				ByteArrayDatabase.toByteArray((BLOB)resultSet.getBlob(LINK_COLUMN_VALUE)));
-					arraylist.add(parameter);
+					parameters.add(parameter);
 				}
 				catch (Exception e) {
 					Log.errorException(e);
@@ -207,7 +209,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 		}
-		result.setParameters((SetParameter[])arraylist.toArray(new SetParameter[arraylist.size()]));
+		result.setParameters((SetParameter[])parameters.toArray(new SetParameter[parameters.size()]));
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {

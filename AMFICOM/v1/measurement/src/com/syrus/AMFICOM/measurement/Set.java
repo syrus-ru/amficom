@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.15 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: Set.java,v 1.16 2004/08/10 19:05:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/07/27 15:52:26 $
+ * @version $Revision: 1.16 $, $Date: 2004/08/10 19:05:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -166,7 +166,7 @@ public class Set extends StorableObject {
 		for (Iterator iterator = this.monitoredElementIds.iterator(); iterator.hasNext();)
 			meIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 	
-		return new Set_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+		return new Set_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																super.created.getTime(),
 																super.modified.getTime(),
 																(Identifier_Transferable)super.creatorId.getTransferable(),

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.12 2004/07/28 11:58:31 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.13 2004/08/10 19:05:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/07/28 11:58:31 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/10 19:05:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -117,10 +117,10 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveParameterTypes(AnalysisType analysisType) throws RetrieveObjectException {	
-		ArrayList inParTyps = new ArrayList();
-		ArrayList criteriaParTyps = new ArrayList();
-		ArrayList etalonParTyps = new ArrayList();
-		ArrayList outParTyps = new ArrayList();
+		List inParTyps = new ArrayList();
+		List criteriaParTyps = new ArrayList();
+		List etalonParTyps = new ArrayList();
+		List outParTyps = new ArrayList();
 		
 		String analysisTypeIdStr = analysisType.getId().toSQLString();
 		String sql = SQL_SELECT
@@ -174,10 +174,10 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 		}
-		inParTyps.trimToSize();
-		criteriaParTyps.trimToSize();
-		etalonParTyps.trimToSize();
-		outParTyps.trimToSize();
+		((ArrayList)inParTyps).trimToSize();
+		((ArrayList)criteriaParTyps).trimToSize();
+		((ArrayList)etalonParTyps).trimToSize();
+		((ArrayList)outParTyps).trimToSize();
 		analysisType.setParameterTypes(inParTyps,
 																	 criteriaParTyps,
 																	 etalonParTyps,
