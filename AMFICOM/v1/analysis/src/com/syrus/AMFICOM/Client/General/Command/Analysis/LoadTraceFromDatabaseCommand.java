@@ -116,24 +116,24 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		TestSetup ts;
 		if(test != null)
 		{
-			bs.monitored_element_id = test.monitored_element_id;
+			bs.monitored_element_id = test.getMonitoredElementId();
 
 			//Если нет тестсетапа создаем его
 
-			if (test.test_setup_id.equals(""))
+			if (test.getTestSetupId().equals(""))
 			{
 				ts = new TestSetup();
-				ts.settestTypeId(test.test_type_id);
+				ts.settestTypeId(test.getTestTypeId());
 				ts.setId(dataSource.GetUId(TestSetup.typ));
-				ts.setTestArgumentSetId(test.test_argument_set_id);
+				ts.setTestArgumentSetId(test.getTestArgumentSetId());
 
 				bs.test_setup_id = ts.getId();
 				Pool.put(TestSetup.typ, ts.getId(), ts);
 			}
 			else
 			{
-				dataSource.loadTestSetup(test.test_setup_id);
-				bs.test_setup_id = test.test_setup_id;
+				dataSource.loadTestSetup(test.getTestArgumentSetId());
+				bs.test_setup_id = test.getTestSetupId();
 				ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
 			}
 

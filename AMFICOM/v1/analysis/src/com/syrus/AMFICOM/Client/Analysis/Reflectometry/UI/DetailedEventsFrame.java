@@ -262,7 +262,7 @@ public class DetailedEventsFrame extends JInternalFrame
 			tabbedPane.setEnabledAt(1, false);
 			return;
 		}
-		if(nEvent>=data_.length || nEvent<0)
+		if(nEvent > data_.length || nEvent<0)
 		{
 			return;
 		}

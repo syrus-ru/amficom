@@ -39,8 +39,8 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 			if(id == null)
 				return;
 			Test test = (Test )Pool.get("test", id);
-			dataSource.LoadTestArgumentSets(new String[] {test.test_argument_set_id});
-			TestArgumentSet tas = (TestArgumentSet )Pool.get(TestArgumentSet.typ, test.test_argument_set_id);
+			dataSource.LoadTestArgumentSets(new String[] {test.getTestArgumentSetId()});
+			TestArgumentSet tas = (TestArgumentSet )Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
 			Evaluation eval = (Evaluation)Pool.get(Evaluation.typ, res.getEvaluationId());
 			MonitoredElement me = (MonitoredElement )Pool.get(MonitoredElement.typ, eval.getMonitoredElementId());
 			if(!me.element_type.equals("path"))
@@ -59,8 +59,8 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 			for(int i = 0; i < r_ids.length; i++)
 				if(r_ids[i].equals(event.descriptor))
 				{
-					new SurveyDataSourceImage(dataSource).GetResult(test.result_ids[i]);
-					tres = (Result )Pool.get(Result.typ, test.result_ids[i]);
+					new SurveyDataSourceImage(dataSource).GetResult(test.getResultIds()[i]);
+					tres = (Result )Pool.get(Result.typ, test.getResultIds()[i]);
 					break;
 				}
 
@@ -121,7 +121,7 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 				{
 					ra = ReflectogramAlarm.fromByteArray(param.getValue());
 					for(int i = 0; i < ra.length; i++)
-						add(new OpticalAlarmDescriptorEvent(test.monitored_element_id, delta_x, ra[i]));
+						add(new OpticalAlarmDescriptorEvent(test.getMonitoredElementId(), delta_x, ra[i]));
 					break;
 				}
 			}

@@ -171,11 +171,9 @@ public class FileOpenCommand extends VoidCommand
 			ReflectogramComparer comp = new ReflectogramComparer(re, etalon, threshs, false);
 			ReflectogramAlarm[] alarms = comp.getAlarms();
 */
-
 			dispatcher.notify(new RefChangeEvent("primarytrace",
 											RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
 			dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-
 
 //			dispatcher.notify(new RefUpdateEvent("etalon",
 //											RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));

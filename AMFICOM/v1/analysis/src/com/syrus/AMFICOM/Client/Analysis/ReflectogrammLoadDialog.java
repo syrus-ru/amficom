@@ -272,7 +272,7 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 			}
 			Test test = (Test)Pool.get(Test.typ, res.getTestId());
 			if(test != null)
-				bs.monitored_element_id = test.monitored_element_id;
+				bs.monitored_element_id = test.getMonitoredElementId();
 			bs.title = res.getName();
 				return bs;
 		}
@@ -564,7 +564,8 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 		{
 				Object o = node.getObject();
 					Test t = (Test)o;
-					new SurveyDataSourceImage(dsi).GetTestResult(t.getId());
+					//new SurveyDataSourceImage(dsi).GetTestResult(t.getId());
+					new SurveyDataSourceImage(dsi).GetResults(t.getResultIds());
 		}
 	}
 
@@ -727,9 +728,9 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 						for(Enumeration e = ht.elements(); e.hasMoreElements(); )
 						{
 							Test t = (Test)e.nextElement();
-							if(t.monitored_element_id.equals(me.id))// && t.getDomainId().equals(domainID))
+							if(t.getMonitoredElementId().equals(me.id))// && t.getDomainId().equals(domainID))
 							{
-								testsHt.put(t.id, t);
+								testsHt.put(t.getId(), t);
 							}
 						}
 					}
@@ -749,7 +750,7 @@ class ReflectogrammTreeModel extends ObjectResourceTreeModel
 			else if(or instanceof Test)
 			{
 				Test t = (Test)or;
-				DataSet dSet = new DataSet(t.getChildren("elementaryresult"));
+				DataSet dSet = new DataSet(t.getResults());
 				ObjectResourceSorter sorter = Result.getDefaultSorter();
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();

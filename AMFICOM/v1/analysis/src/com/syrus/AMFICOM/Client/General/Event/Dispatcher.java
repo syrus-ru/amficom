@@ -32,13 +32,11 @@
 
 package com.syrus.AMFICOM.Client.General.Event;
 
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 
 public class Dispatcher implements OperationListener
 {
-	private LinkedList events; // список событий
-	private Cmd tmp;
+	private HashMap events; // список событий
 
 	// на каждое событие может подписываться произвольное число наблюдателей
 	private class Cmd
@@ -59,45 +57,36 @@ public class Dispatcher implements OperationListener
 
 	public Dispatcher()
 	{
-		events = new LinkedList();
+		events = new HashMap();
 	}
 
 	// регистрация связывает подписчика с определенным событием
 	public synchronized void register (OperationListener listener, String command)
 	{
-		for (Iterator it = events.iterator(); it.hasNext();)
-		{
-			tmp = (Cmd)it.next();
-			// если событие найдено в списке, просто добавляется новый наблюдатель
-			if (tmp.command.equals(command))
-			{
-				tmp.listeners.add(listener);
-				return;
-			}
-		}
+		Cmd cmd = (Cmd)events.get(command);
 		// если событие не найдено в списке, создается новый экземпляр и
 		// добавляется новый наблюдатель
-		tmp = new Cmd(command);
-		tmp.listeners.add(listener);
-		events.add(tmp);
+		if (cmd == null)
+		{
+			cmd = new Cmd(command);
+			events.put(command, cmd);
+		}
+		// если событие найдено в списке, просто добавляется новый наблюдатель
+		cmd.listeners.add(listener);
 	}
 
 	// унрегистрация убирает связь подписчика с определенным событием
 	public synchronized void unregister (OperationListener listener, String command)
 	{
-		for (Iterator it = events.iterator(); it.hasNext();)
-		{
-			tmp = (Cmd)it.next();
-			if (tmp.command.equals(command))
-			{
-				tmp.listeners.remove(listener);
-				// в случае если не осталось ни одного подписчика,
-				//  событие удаляется из списка
-				if (tmp.listeners.isEmpty())
-					events.remove(tmp);
-				return;
-			}
-		}
+		Cmd cmd = (Cmd)events.get(command);
+		if (cmd == null)
+			return;
+
+		cmd.listeners.remove(listener);
+		// в случае если не осталось ни одного подписчика,
+		//  событие удаляется из списка
+		if (cmd.listeners.isEmpty())
+			events.remove(cmd);
 	}
 
 	public void operationPerformed(OperationEvent event)
@@ -108,25 +97,15 @@ public class Dispatcher implements OperationListener
 	public void notify (OperationEvent event)
 	{
 		String command = event.getActionCommand();
-		LinkedList clone = null;
-		synchronized(this)
-		{
-			clone = (LinkedList)events.clone();
-		}
+		Cmd cmd = (Cmd)events.get(command);
+		if (cmd == null)
+			return;
 
-		// ищем событие если список не пуст
-		for (Iterator it = clone.iterator(); it.hasNext();)
+		LinkedList listeners = cmd.cloneListeners();
+		for (Iterator it = listeners.iterator(); it.hasNext();)
 		{
-			tmp = (Cmd)it.next();
-			if (tmp.command.equals(command))// если найдено событие с таким command
-			{
-				for (it = tmp.cloneListeners().iterator(); it.hasNext();)
-				{
-					// у каждого наблюдателя вызываем метод actionPerformed(event)
-					((OperationListener)(it.next())).operationPerformed(event);
-				}
-				return;
-			}
+			// у каждого наблюдателя вызываем метод actionPerformed(event)
+			((OperationListener)(it.next())).operationPerformed(event);
 		}
 	}
 }
