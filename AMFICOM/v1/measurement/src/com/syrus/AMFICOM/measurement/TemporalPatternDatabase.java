@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.34 2005/02/03 14:57:22 arseniy Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.35 2005/02/08 14:51:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -36,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/02/03 14:57:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/02/08 14:51:53 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -226,12 +225,6 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 			return this.retrieveByIdsOneQuery(null, condition);
 
 		return this.retrieveByIdsOneQuery(ids, condition);
-	}
-	
-	public List retrieveByCondition(List ids, StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-		List list = this.retrieveButIds(ids, null);
-		return list;
 	}
 	
 }
