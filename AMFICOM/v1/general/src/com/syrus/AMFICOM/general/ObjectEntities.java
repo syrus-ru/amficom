@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.48 2005/02/02 14:58:22 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.49 2005/02/03 19:53:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/02/02 14:58:22 $
+ * @version $Revision: 1.49 $, $Date: 2005/02/03 19:53:59 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -26,7 +26,7 @@ public final class ObjectEntities {
 	public static final String PORTTYPE_ENTITY = "PortType";
 	public static final String MEASUREMENTPORTTYPE_ENTITY = "MeasurementPortType";
 	public static final String LINKTYPE_ENTITY = "LinkType";
-	public static final String CABLE_LINKTYPE_ENTITY = "CableLinkType";
+	public static final String CABLELINKTYPE_ENTITY = "CableLinkType";
 	public static final String CABLETHREADTYPE_ENTITY = "CableThreadType";
 
 	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";
@@ -71,7 +71,7 @@ public final class ObjectEntities {
 	public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort";
 	public static final String ME_ENTITY = "MonitoredElement";
 	public static final String LINK_ENTITY = "Link";
-	public static final String CABLE_THREAD_ENTITY = "CableThread";
+	public static final String CABLETHREAD_ENTITY = "CableThread";
 
 	/*	Measurement	*/
 	public static final String SET_ENTITY = "Set";
@@ -191,7 +191,7 @@ public final class ObjectEntities {
 	public static final short MEASUREMENTPORT_ENTITY_CODE = 0x0185;
 	public static final short ME_ENTITY_CODE = 0x0186;
 	public static final short LINK_ENTITY_CODE = 0x0187;
-	public static final short CABLE_THREAD_ENTITY_CODE = 0x0188;    
+	public static final short CABLETHREAD_ENTITY_CODE = 0x0188;    
 
 	public static final short EQUIPMENTTYPE_ENTITY_CODE = 0x01C1;
 	public static final short PORTTYPE_ENTITY_CODE = 0x01C2;
@@ -200,7 +200,7 @@ public final class ObjectEntities {
   //	public static final short KISTYPE_ENTITY_CODE = 0x01C5;
 	public static final short TRANSPATHTYPE_ENTITY_CODE = 0x01C6;
 	public static final short CABLETHREADTYPE_ENTITY_CODE = 0x01C7;
-	public static final short CABLE_LINKTYPE_ENTITY_CODE = 0x01C8;
+	public static final short CABLELINKTYPE_ENTITY_CODE = 0x01C8;
     
 	public static final short CONFIGURATION_MAX_ENTITY_CODE = 0x0200;
 
@@ -317,7 +317,7 @@ public final class ObjectEntities {
 		else if (entity.equals(MEASUREMENTPORTTYPE_ENTITY)) return MEASUREMENTPORTTYPE_ENTITY_CODE;
 		else if (entity.equals(LINKTYPE_ENTITY)) return LINKTYPE_ENTITY_CODE;
 		else if (entity.equals(CABLETHREADTYPE_ENTITY)) return CABLETHREADTYPE_ENTITY_CODE;
-		else if (entity.equals(CABLE_LINKTYPE_ENTITY)) return CABLE_LINKTYPE_ENTITY_CODE;
+		else if (entity.equals(CABLELINKTYPE_ENTITY)) return CABLELINKTYPE_ENTITY_CODE;
 		
 		else if (entity.equals(MEASUREMENTTYPE_ENTITY)) return MEASUREMENTTYPE_ENTITY_CODE;
 		else if (entity.equals(ANALYSISTYPE_ENTITY)) return ANALYSISTYPE_ENTITY_CODE;
@@ -349,7 +349,7 @@ public final class ObjectEntities {
 		else if (entity.equals(MEASUREMENTPORT_ENTITY)) return MEASUREMENTPORT_ENTITY_CODE;
 		else if (entity.equals(ME_ENTITY)) return ME_ENTITY_CODE;
 		else if (entity.equals(LINK_ENTITY)) return LINK_ENTITY_CODE;
-		else if (entity.equals(CABLE_THREAD_ENTITY)) return CABLE_THREAD_ENTITY_CODE;
+		else if (entity.equals(CABLETHREAD_ENTITY)) return CABLETHREAD_ENTITY_CODE;
 
 		else if (entity.equals(SET_ENTITY)) return SET_ENTITY_CODE;
 		else if (entity.equals(SETPARAMETER_ENTITY)) return SETPARAMETER_ENTITY_CODE;
@@ -421,8 +421,8 @@ public final class ObjectEntities {
 				return LINKTYPE_ENTITY;
 			case CABLETHREADTYPE_ENTITY_CODE:
 				return CABLETHREADTYPE_ENTITY;
-			case CABLE_LINKTYPE_ENTITY_CODE:
-				return CABLE_LINKTYPE_ENTITY;
+			case CABLELINKTYPE_ENTITY_CODE:
+				return CABLELINKTYPE_ENTITY;
 				
 			case MEASUREMENTTYPE_ENTITY_CODE:
 				return MEASUREMENTTYPE_ENTITY;
@@ -479,8 +479,8 @@ public final class ObjectEntities {
 				return ME_ENTITY;
 			case LINK_ENTITY_CODE:
 				return LINK_ENTITY;
-			case CABLE_THREAD_ENTITY_CODE:
-				return CABLE_THREAD_ENTITY;
+			case CABLETHREAD_ENTITY_CODE:
+				return CABLETHREAD_ENTITY;
 			case SET_ENTITY_CODE:
 				return SET_ENTITY;
 			case SETPARAMETER_ENTITY_CODE:
