@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.26 2005/02/10 13:40:30 arseniy Exp $
+ * $Id: StorableObject.java,v 1.27 2005/02/10 18:35:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/02/10 13:40:30 $
+ * @version $Revision: 1.27 $, $Date: 2005/02/10 18:35:54 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -140,7 +140,13 @@ public abstract class StorableObject implements Identified, TransferableObject, 
 		this.changed = true;
 	}
 
-	protected void incrementVersion() {
+	protected void setUpdated(Identifier modifierId1) {
+		this.incrementVersion();
+		this.modified = new Date(System.currentTimeMillis());
+		this.modifierId = modifierId1;
+	}
+
+	private void incrementVersion() {
 		if (this.version < Long.MAX_VALUE)
 			this.version++;
 		else
