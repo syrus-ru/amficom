@@ -78,6 +78,19 @@ public class SchemeUtils
 		return null;
 	}
 
+	public static double getKu(PathElement pe)
+	{
+		switch (pe.type().value())
+		{
+			case Type._SCHEME_CABLE_LINK:
+			case Type._SCHEME_LINK:
+				AbstractSchemeLink link = (AbstractSchemeLink)pe.abstractSchemeElement();
+				return link.opticalLength() / link.physicalLength();
+			default:
+				return 1;
+		}
+	}
+
 	public static SchemeElement getSchemeElementByDevice(Scheme scheme, SchemeDevice device)
 	{
 		SchemeElement[] elements = scheme.schemeElements();
@@ -97,6 +110,158 @@ public class SchemeUtils
 			if (Arrays.asList(elements[i].schemeDevices()).contains(device))
 				return elements[i];
 		return null;
+	}
+
+	// return all top level elements at scheme and at inner schemes
+	public static Collection getTopologicalElements(Scheme scheme)
+	{
+		HashSet ht = new HashSet();
+		for (int i = 0; i < scheme.schemeElements().length; i++) {
+			SchemeElement el = scheme.schemeElements()[i];
+			if (el.internalScheme() == null)
+				ht.add(el);
+			else {
+				Scheme sc = el.internalScheme();
+				if (sc.type().value() ==
+						com.syrus.AMFICOM.scheme.corba.SchemePackage.Type._CABLE_SUBNETWORK) {
+					for (Iterator it = getTopologicalElements(sc).iterator(); it.hasNext(); )
+						ht.add(it.next());
+				}
+				else
+					ht.add(el);
+			}
+		}
+		return ht;
+	}
+
+	// return all top level elements at scheme and at inner cable links
+	public static Collection getTopologicalCableLinks(Scheme scheme)
+	{
+		HashSet ht = new HashSet();
+		ht.addAll(Arrays.asList(scheme.schemeCableLinks()));
+
+		for (int i = 0; i < scheme.schemeElements().length; i++) {
+			SchemeElement el = scheme.schemeElements()[i];
+			if (el.internalScheme() != null) {
+				Scheme sc = el.internalScheme();
+				if (sc.type().value() ==
+						com.syrus.AMFICOM.scheme.corba.SchemePackage.Type._CABLE_SUBNETWORK) {
+					for (Iterator inner = getTopologicalCableLinks(sc).iterator(); inner.hasNext(); )
+						ht.add(inner.next());
+				}
+			}
+		}
+		return ht;
+	}
+
+	// return all cablelinks at scheme including inner schemes
+	public static Collection getAllCableLinks(Scheme scheme)
+	{
+		HashSet ht = new HashSet();
+		ht.addAll(Arrays.asList(scheme.schemeCableLinks()));
+
+		for (int i = 0; i < scheme.schemeElements().length; i++) {
+			SchemeElement el = scheme.schemeElements()[i];
+			if (el.internalScheme() != null) {
+				Scheme sc = el.internalScheme();
+				for (Iterator inner = getAllCableLinks(sc).iterator(); inner.hasNext(); )
+					ht.add(inner.next());
+
+			}
+		}
+		return ht;
+	}
+
+	public static Collection getTopologicalPaths(Scheme scheme)
+	{
+		HashSet ht = new HashSet();
+		ht.addAll(Arrays.asList(scheme.schemeMonitoringSolution().schemePaths()));
+
+		for (int i = 0; i < scheme.schemeElements().length; i++) {
+			SchemeElement el = scheme.schemeElements()[i];
+			if (el.internalScheme() != null) {
+				Scheme sc = el.internalScheme();
+				if (sc.type().value() ==
+						com.syrus.AMFICOM.scheme.corba.SchemePackage.Type._CABLE_SUBNETWORK) {
+					for (Iterator inner = getTopologicalPaths(sc).iterator(); inner.hasNext(); )
+						ht.add(inner.next());
+				}
+			}
+		}
+		return ht;
+	}
+
+	public static SchemeElement getTopologicalElement(Scheme scheme, SchemeElement element)
+	{
+		if (Arrays.asList(scheme.schemeElements()).contains(element))
+			return element;
+
+		for(int i = 0; i < scheme.schemeElements().length; i++) // Search inner elements
+		{
+			SchemeElement el = scheme.schemeElements()[i];
+			if (el.internalScheme() == null)
+			{
+				if (getAllChildElements(el).contains(element))
+						return el;
+			}
+		}
+
+		for(int i = 0; i < scheme.schemeElements().length; i++)  // Search inner schemes
+		{
+			SchemeElement el = scheme.schemeElements()[i];
+			if (el.internalScheme() != null)
+			{
+				Scheme inner = el.internalScheme();
+				SchemeElement inner_se = getTopologicalElement(inner, element);
+				if (inner_se != null)
+				{
+					if (inner.type().value() == com.syrus.AMFICOM.scheme.corba.SchemePackage.Type._CABLE_SUBNETWORK)
+						return inner_se;
+					else
+						return element;
+				}
+			}
+		}
+		return null;
+	}
+
+	public static Collection getAllChildElements(SchemeElement element)
+	{
+		if (element.internalScheme() == null) {
+			HashSet v = new HashSet();
+			for (int i = 0; i < element.schemeElements().length; i++) {
+				SchemeElement inner_se = element.schemeElements()[i];
+				for (Iterator it = getAllChildElements(inner_se).iterator(); it.hasNext(); )
+					v.add(it.next());
+				v.add(inner_se);
+			}
+			return v;
+		}
+		else {
+			Scheme scheme = element.internalScheme();
+			return getAllTopLevelElements(scheme);
+		}
+	}
+
+	public static Collection getTopLevelElements(Scheme scheme)
+	{
+		return Arrays.asList(scheme.schemeElements());
+	}
+
+	public static Collection getAllTopLevelElements(Scheme scheme)
+	{
+		HashSet ht = new HashSet();
+		for (int i = 0; i < scheme.schemeElements().length; i++) {
+			SchemeElement el = scheme.schemeElements()[i];
+			if (el.internalScheme() == null)
+				ht.add(el);
+			else {
+				Scheme sc = el.internalScheme();
+				for (Iterator inner = getAllTopLevelElements(sc).iterator(); inner.hasNext(); )
+					ht.add(inner.next());
+			}
+		}
+		return ht;
 	}
 
 	public static boolean isSchemeContainsLink(Scheme scheme, Identifier link_id)
@@ -244,13 +409,21 @@ public class SchemeUtils
 		return pos == name.length() ? name : name.substring(pos + 1);
 	}
 
+	public static double getOpticalLength(SchemePath path)
+	{
+		double length = 0;
+		PathElement[] links = path.links();
+		for (int i = 0; i < links.length; i++)
+			length += getOpticalLength(links[i]);
+		return length;
+	}
+
 	public static double getOpticalLength(PathElement pe)
 	{
-		switch (pe.type().value())
-		{
+		switch (pe.type().value()) {
 			case Type._SCHEME_CABLE_LINK:
 			case Type._SCHEME_LINK:
-				return ( (AbstractSchemeLink) pe.abstractSchemeElement()).opticalLength();
+				return ((AbstractSchemeLink)pe.abstractSchemeElement()).opticalLength();
 			default:
 				return 0;
 		}
@@ -258,21 +431,28 @@ public class SchemeUtils
 
 	public static void setOpticalLength(PathElement pe, double d)
 	{
-		switch (pe.type().value())
-		{
+		switch (pe.type().value()) {
 			case Type._SCHEME_CABLE_LINK:
 			case Type._SCHEME_LINK:
-				( (AbstractSchemeLink) pe.abstractSchemeElement()).opticalLength(d);
+				((AbstractSchemeLink)pe.abstractSchemeElement()).opticalLength(d);
 		}
+	}
+
+	public static double getPhysicalLength(SchemePath path)
+	{
+		double length = 0;
+		PathElement[] links = path.links();
+		for (int i = 0; i < links.length; i++)
+			length += getPhysicalLength(links[i]);
+		return length;
 	}
 
 	public static double getPhysicalLength(PathElement pe)
 	{
-		switch (pe.type().value())
-		{
+		switch (pe.type().value()) {
 			case Type._SCHEME_CABLE_LINK:
 			case Type._SCHEME_LINK:
-				return ( (AbstractSchemeLink) pe.abstractSchemeElement()).
+				return ((AbstractSchemeLink)pe.abstractSchemeElement()).
 						physicalLength();
 			default:
 				return 0;
@@ -281,11 +461,10 @@ public class SchemeUtils
 
 	public static void setPhysicalLength(PathElement pe, double d)
 	{
-		switch (pe.type().value())
-		{
+		switch (pe.type().value()) {
 			case Type._SCHEME_CABLE_LINK:
 			case Type._SCHEME_LINK:
-				( (AbstractSchemeLink) pe.abstractSchemeElement()).physicalLength(d);
+				((AbstractSchemeLink)pe.abstractSchemeElement()).physicalLength(d);
 		}
 	}
 }
