@@ -326,6 +326,13 @@ module corba {
 
 	typedef sequence <MonitoredElement_Transferable> MonitoredElementSeq_Transferable;
 
+//////////////// Conditions //////////////
+
+	struct DomainCondition_Transferable {
+		short	entity_code;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+	};
+
 };
 };
 };
