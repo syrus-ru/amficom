@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.46 2004/12/15 07:49:55 max Exp $
+ * $Id: Equipment.java,v 1.47 2004/12/15 10:35:31 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2004/12/15 07:49:55 $
+ * @version $Revision: 1.47 $, $Date: 2004/12/15 10:35:31 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -46,8 +46,8 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	private String                 name;
 	private String                 description;
 	private Identifier             imageId;
-	private double                 longitude;
-	private double                 latitude;
+	private float                  longitude;
+	private float                  latitude;
 	private String                 supplier;
 	private String                 supplierCode;
     private String                 hwSerial;
@@ -126,8 +126,8 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 										Identifier imageId,
                                         String supplier,
                                         String supplierCode,
-                                        double longitude,
-                                        double latitude,
+                                        float longitude,
+                                        float latitude,
 										String hwSerial,
                                         String hwVersion,
                                         String swSerial,
@@ -181,8 +181,8 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 										   Identifier imageId,
                                            String supplier,
                                            String supplierCode,
-                                           double longitude,
-                                           double latitude,
+                                           float longitude,
+                                           float latitude,
                                            String hwSerial,
                                            String hwVersion,
                                            String swSerial,
@@ -328,8 +328,8 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 											  Identifier imageId,
                                               String supplier,
                                               String supplierCode,
-                                              double longitude,
-                                              double latitude,
+                                              float longitude,
+                                              float latitude,
                                               String hwSerial,
                                               String hwVersion,
                                               String swSerial,
@@ -378,13 +378,13 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	public double getLatitude() {
 		return this.latitude;
 	}
-	public void setLatitude(double latitude) {
+	public void setLatitude(float latitude) {
 		this.latitude = latitude;
 	}
 	public double getLongitude() {
 		return this.longitude;
 	}
-	public void setLongitude(double longitude) {
+	public void setLongitude(float longitude) {
 		this.longitude = longitude;
 	}
 	public String getHwSerial() {
