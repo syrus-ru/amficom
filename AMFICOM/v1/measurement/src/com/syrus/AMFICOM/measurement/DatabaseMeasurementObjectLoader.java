@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.16 2004/10/08 12:17:06 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.17 2004/10/11 14:17:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/10/08 12:17:06 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/11 14:17:05 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -440,6 +440,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 			} else if (condition instanceof DomainCondition){
 				DomainCondition domainCondition = (DomainCondition)condition;
 				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
+			} else if (condition instanceof ResultSortCondition){
+				ResultSortCondition resultSortCondition = (ResultSortCondition) condition;
+				list = database.retrieveButIdsByMeasurementAndSort(ids, resultSortCondition.getMeasurementId(), resultSortCondition.getResultSort());
 			} else {
 				Log.errorMessage("DatabaseMeasumentObjectLoader.loadResultsButIds | Unknown condition class: " + condition);
 				list = database.retrieveButIds(ids);

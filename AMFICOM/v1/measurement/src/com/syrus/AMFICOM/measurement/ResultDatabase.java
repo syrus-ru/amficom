@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.25 2004/10/05 13:02:17 bob Exp $
+ * $Id: ResultDatabase.java,v 1.26 2004/10/11 14:17:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/10/05 13:02:17 $
+ * @version $Revision: 1.26 $, $Date: 2004/10/11 14:17:05 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -597,6 +597,22 @@ public class ResultDatabase extends StorableObjectDatabase {
 						Log.DEBUGLEVEL09);
 		}
 
+		return list;
+	}
+
+	public List retrieveButIdsByMeasurementAndSort(List ids, Identifier measurementId, ResultSort resultSort) throws RetrieveObjectException {
+		List list = null;
+
+		String sql = COLUMN_MEASUREMENT_ID + EQUALS + measurementId.toSQLString()
+		+ SQL_AND + COLUMN_SORT + EQUALS + resultSort.value();
+		
+		try{
+			list = retrieveButIds(ids, sql);
+		} catch (IllegalDataException ide) {
+			Log.debugMessage("ResultDatabase.retrieveButIdsByMeasurement | Error: " + ide.getMessage(),
+						Log.DEBUGLEVEL09);
+		}
+		
 		return list;
 	}
 
