@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.13 2004/12/24 13:03:33 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.14 2004/12/24 13:09:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.13 $, $Date: 2004/12/24 13:03:33 $
+ * @version $Revision: 1.14 $, $Date: 2004/12/24 13:09:34 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -426,7 +426,6 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				}
 			} else {
 				Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | unsupported condition class: " + condition.getClass().getName());
-				list = Collections.EMPTY_LIST;
 			}
 			return list;
 		}
