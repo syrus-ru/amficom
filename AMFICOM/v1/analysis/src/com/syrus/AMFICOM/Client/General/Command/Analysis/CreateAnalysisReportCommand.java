@@ -7,7 +7,7 @@ import com.syrus.AMFICOM.Client.General.Command.OpenTypedTemplateCommand;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReport;
+import com.syrus.AMFICOM.Client.General.Report.AMTReport;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ATableFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleResizableFrame;
@@ -63,7 +63,7 @@ public class CreateAnalysisReportCommand extends VoidCommand
 
 	public void execute()
 	{
-		AnalysisReport report = new AnalysisReport();
+		AMTReport report = new AMTReport();
 		for (Iterator it = tableFrames.iterator(); it.hasNext();)
 		{
 			ATableFrame tf = (ATableFrame)it.next();

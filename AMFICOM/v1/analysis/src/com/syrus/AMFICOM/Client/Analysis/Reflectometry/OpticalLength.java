@@ -1,18 +1,11 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.*;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.ISM.LengthContainer;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
-import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
-import com.syrus.AMFICOM.Client.Resource.Scheme.LengthContainer;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableThread;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePathDecompositor;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class OpticalLength extends SchemePathDecompositor
 {
