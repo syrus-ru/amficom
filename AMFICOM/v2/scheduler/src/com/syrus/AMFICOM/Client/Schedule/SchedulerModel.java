@@ -107,9 +107,11 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	private TestReturnType			returnType;
 
 	private List					tests;
+	private List					allTests;
 
 	private ObjectResourceTreeModel	treeModel;
 	private List					unsavedTests;
+	private List					allUnsavedTests;
 
 	public SchedulerModel(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -217,10 +219,13 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					if (this.unsavedTests == null)
 						this.unsavedTests = new ArrayList();
 					this.unsavedTests.add(this.receivedTest);
-				} else
+					this.allUnsavedTests.add(this.receivedTest);
+				} else{
 					this.tests.add(this.receivedTest);
-			}
-		} else if (commandName.equalsIgnoreCase(COMMAND_CREATE_TEST)) {
+					this.allTests.add(this.receivedTest);
+				}
+				}
+			} else if (commandName.equalsIgnoreCase(COMMAND_CREATE_TEST)) {
 			// creating test
 			//if (flag == 0) {
 			this.flag = FLAG_CREATE;
@@ -332,22 +337,32 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				this.tests.clear();
 			if (this.unsavedTests != null)
 				this.unsavedTests.clear();
+			if (this.allTests != null)
+				this.allTests.clear();
+			if (this.allUnsavedTests != null)
+				this.allUnsavedTests.clear();	
+			
 		} else if (commandName.equals(COMMAND_REMOVE_TEST)) {
 			Test test = (Test) ae.getSource();
 			if (this.tests != null)
 				this.tests.remove(test);
 			if (this.unsavedTests != null)
 				this.unsavedTests.remove(test);
+			if (this.allTests != null)
+				this.allTests.remove(test);
+			if (this.allUnsavedTests != null)
+				this.allUnsavedTests.remove(test);
+			
 		}
 	}
 
-	/**
-	 * @param tests
-	 *            The tests to set.
-	 */
-	public void setTests(List tests) {
-		this.tests = tests;
-	}
+//	/**
+//	 * @param tests
+//	 *            The tests to set.
+//	 */
+//	public void setTests(List tests) {
+//		this.tests = tests;
+//	}
 
 	/**
 	 * @param treeModel
@@ -357,13 +372,13 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		this.treeModel = treeModel;
 	}
 
-	/**
-	 * @param unsavedTests
-	 *            The unsavedTests to set.
-	 */
-	public void setUnsavedTests(List unsavedTests) {
-		this.unsavedTests = unsavedTests;
-	}
+//	/**
+//	 * @param unsavedTests
+//	 *            The unsavedTests to set.
+//	 */
+//	public void setUnsavedTests(List unsavedTests) {
+//		this.unsavedTests = unsavedTests;
+//	}
 
 	public void updateTests(long startTime, long endTime) {
 		//Environment.log(Environment.LOG_LEVEL_INFO, "updateTests",
@@ -382,7 +397,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		//выбираем необходимые тесты из пула
 		Hashtable hash = new Hashtable();
 		for (int i = 0; i < ids.length; i++) {
-			//Environment.log(Environment.LOG_LEVEL_INFO, "get test#" + ids[i]); //$NON-NLS-1$
+			//Environment.log(Environment.LOG_LEVEL_INFO, "get test#" +
+			// ids[i]); //$NON-NLS-1$
 			Test test = (Test) Pool.get(Test.TYPE, ids[i]);
 			if (test.getAnalysisId().length() > 0) //$NON-NLS-1$
 				dsi.GetAnalysis(test.getAnalysisId());
@@ -402,13 +418,23 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		DataSet testSet = new DataSet(hash);
 
 		testSet = ordf.filter(testSet);
+		
+		if (this.allTests == null)
+			this.allTests = new ArrayList();
+		else
+			this.allTests.clear();
+
+		for (Iterator it = testSet.iterator(); it.hasNext();) {
+			Test test = (Test) it.next();
+			this.allTests.add(test);
+		}		
 
 		testSet = this.filter.filter(testSet);
 
 		//подгружаем тестреквесты и недостающие тесты
 		HashSet treqs = new HashSet();
-		for (Enumeration en = testSet.elements(); en.hasMoreElements();) {
-			Test test = (Test) en.nextElement();
+		for (Iterator it = testSet.iterator(); it.hasNext();) {
+			Test test = (Test) it.next();
 			treqs.add(test.getRequestId());
 		}
 		dsi.GetRequests();
@@ -419,7 +445,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				java.util.List testIds = treq.getTestIds();
 				for (Iterator it2 = testIds.iterator(); it2.hasNext();) {
 					String testId = (String) it2.next();
-					//Environment.log(Environment.LOG_LEVEL_INFO, "test_id:" + testId); //$NON-NLS-1$
+					//Environment.log(Environment.LOG_LEVEL_INFO, "test_id:" +
+					// testId); //$NON-NLS-1$
 					if (testSet.get(testId) == null)
 						loadTests.add(testId);
 				}
@@ -433,8 +460,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		else
 			this.tests.clear();
 
-		for (Enumeration en = testSet.elements(); en.hasMoreElements();) {
-			Test test = (Test) en.nextElement();
+		for (Iterator it = testSet.iterator(); it.hasNext();) {
+			Test test = (Test) it.next();
 			this.tests.add(test);
 		}
 
@@ -688,5 +715,57 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		test.setName(ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(test.getStartTime())));
 		//testRequest.setName(test.getName());
 		this.dispatcher.notify(new TestUpdateEvent(this, test, TestUpdateEvent.TEST_SELECTED_EVENT));
+	}
+
+	/**
+	 * @return Returns the filter.
+	 */
+	public ObjectResourceFilter getFilter() {
+		return this.filter;
+	}
+
+	/**
+	 * @param filter
+	 *            The filter to set.
+	 */
+	public void setFilter(ObjectResourceFilter filter) {
+		this.filter = filter;
+		if (this.allTests != null && !this.allTests.isEmpty()) {
+			
+			for(Iterator it=this.tests.iterator();it.hasNext();){
+				Object obj = it.next();
+				if (!this.allTests.contains(obj))
+					this.allTests.add(obj);
+			}
+
+			if (this.unsavedTests!=null){
+			for(Iterator it=this.unsavedTests.iterator();it.hasNext();){
+				Object obj = it.next();
+				if (!this.allUnsavedTests.contains(obj))
+					this.allUnsavedTests.add(obj);
+			}
+			}
+
+			
+			DataSet testSet = new DataSet(this.allTests);
+			testSet = this.filter.filter(testSet);
+			this.tests.clear();
+			for (Iterator it = testSet.iterator(); it.hasNext();) {
+				Test test = (Test) it.next();
+				this.tests.add(test);
+			}
+			
+			if (this.allUnsavedTests!=null){
+			testSet = new DataSet(this.allUnsavedTests);
+			testSet = this.filter.filter(testSet);
+			this.unsavedTests.clear();
+			for (Iterator it = testSet.iterator(); it.hasNext();) {
+				Test test = (Test) it.next();
+				this.unsavedTests.add(test);
+			}
+			}
+			
+			this.dispatcher.notify(new OperationEvent(this.tests, 0, COMMAND_NAME_ALL_TESTS));
+		}
 	}
 }

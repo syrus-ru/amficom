@@ -56,6 +56,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	ElementsTreeFrame			treeFrame;
 	SaveParametersFrame			saveFrame;
 	TableFrame					tableFrame;
+	//TestFilterFrame				testFilterFrame;
 
 	public ScheduleMainFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -126,6 +127,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		tableFrame = new TableFrame(aContext);
 		desktopPane.add(tableFrame);
+		
+//		this.testFilterFrame = new TestFilterFrame(aContext);
+//		this.desktopPane.add(this.testFilterFrame);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = new Dimension(screenSize.width, screenSize.height - 24);
@@ -423,6 +427,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		planFrame.setVisible(true);
 		saveFrame.setVisible(true);
 		tableFrame.setVisible(true);
+//		testFilterFrame.setVisible(true);
 	}
 
 	public void setSessionOpened() {

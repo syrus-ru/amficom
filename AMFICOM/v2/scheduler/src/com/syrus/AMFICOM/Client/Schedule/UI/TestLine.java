@@ -6,26 +6,39 @@ import java.util.*;
 
 import javax.swing.*;
 
+import com.syrus.AMFICOM.CORBA.Constant.AlarmTypeConstants;
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
+import com.syrus.AMFICOM.CORBA.Survey.ElementaryTestAlarm;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class TestLine extends JLabel implements ActionListener, OperationListener {
 
+	/**
+	 * @TODO recast using alpha
+	 */
 	public static final Color	COLOR_ABORDED				= Color.RED;
 	public static final Color	COLOR_ABORDED_SELECTED		= new Color(255, 128, 128);
-	public static final Color	COLOR_COMPLETED				= Color.GREEN;
-	public static final Color	COLOR_COMPLETED_SELECTED	= new Color(128, 255, 128);
+	public static final Color	COLOR_COMPLETED				= new Color(0, 128, 0);
+	public static final Color	COLOR_COMPLETED_SELECTED	= new Color(0, 255, 0);
 	public static final Color	COLOR_PROCCESSING			= new Color(0, 128, 128);
 	public static final Color	COLOR_PROCCESSING_SELECTED	= new Color(64, 192, 192);
 
 	public static final Color	COLOR_SCHEDULED				= new Color(128, 128, 128);
-	public static final Color	COLOR_SCHEDULED_SELECTED	= new Color(255, 255, 255);
+	public static final Color	COLOR_SCHEDULED_SELECTED	= Color.WHITE;
 	public static final Color	COLOR_UNRECOGNIZED			= new Color(20, 20, 60);
+
+	public static final Color	COLOR_WARNING				= new Color(128, 128, 0);
+	public static final Color	COLOR_WARNING_SELECTED		= Color.YELLOW;
+
+	public static final Color	COLOR_ALARM					= new Color(128, 0, 128);
+	public static final Color	COLOR_ALARM_SELECTED		= new Color(255, 0, 255);
+
 	public static final int		MINIMAL_WIDTH				= 7;
 
 	public static final int		TIME_OUT					= 500;
@@ -38,7 +51,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	int							height;
 	int							margin;
 	double						scale;
-//	boolean						skipTestUpdate				= false;
+	//	boolean skipTestUpdate = false;
 	long						start;
 
 	int							titleHeight;
@@ -155,9 +168,9 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 			}
 
 			public void mouseReleased(MouseEvent e) {
-//				if (TestLine.this.test != null) {
-//					TestLine.this.test = null;
-//				}
+				//				if (TestLine.this.test != null) {
+				//					TestLine.this.test = null;
+				//				}
 
 			}
 		});
@@ -188,31 +201,33 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	}
 
 	public void addTest(Test test) {
-//		if (!this.skipTestUpdate) {
-			if (test.isChanged()) {
-				//System.out.println("test is changed");
-				if (this.unsavedTests == null) {
-					this.unsavedTests = new HashMap();
-					this.timer = new javax.swing.Timer(TIME_OUT, this);
-					this.timer.start();
-					//System.out.println("timer created");
-				}
-				if (this.unsavedTests.containsValue(test)) {
-					//System.out.println("unsavedTests.contains(test)"); //$NON-NLS-1$
-				} else {
-					//System.out.println("unsavedTests.put(" + test.getId() + ", test);");
-					this.unsavedTests.put(test.getId(), test);
-				}
-			} else {
-				//System.out.println("test is NOT changed");
-				this.tests.put(test.getId(), test);
+		//		if (!this.skipTestUpdate) {
+		if (test.isChanged()) {
+			//System.out.println("test is changed");
+			if (this.unsavedTests == null) {
+				this.unsavedTests = new HashMap();
+				this.timer = new javax.swing.Timer(TIME_OUT, this);
+				this.timer.start();
+				//System.out.println("timer created");
 			}
-			if (this.allTests == null)
-				this.allTests = new ArrayList();
-			if (!this.allTests.contains(test))
-				this.allTests.add(test);
-			this.revalidate();
-	//	}
+			if (this.unsavedTests.containsValue(test)) {
+				//System.out.println("unsavedTests.contains(test)");
+				// //$NON-NLS-1$
+			} else {
+				//System.out.println("unsavedTests.put(" + test.getId() + ",
+				// test);");
+				this.unsavedTests.put(test.getId(), test);
+			}
+		} else {
+			//System.out.println("test is NOT changed");
+			this.tests.put(test.getId(), test);
+		}
+		if (this.allTests == null)
+			this.allTests = new ArrayList();
+		if (!this.allTests.contains(test))
+			this.allTests.add(test);
+		this.revalidate();
+		//	}
 	}
 
 	public void flashUnsavedTest() {
@@ -223,7 +238,8 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				for (Iterator it = this.unsavedTests.keySet().iterator(); it.hasNext();) {
 					Test test = (Test) this.unsavedTests.get(it.next());
 					//System.out.println("testID:" + test.getId());
-					//System.out.println("test:" + (this.test == null ? " is null" : test.getId()));
+					//System.out.println("test:" + (this.test == null ? " is
+					// null" : test.getId()));
 					g.setColor(this.flash ? (((this.test == null) || (!this.test.getId().equals(test.getId())))
 							? COLOR_SCHEDULED : COLOR_SCHEDULED_SELECTED) : COLOR_UNRECOGNIZED);
 					//System.out.println(g.getColor());
@@ -392,11 +408,43 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		int y = this.titleHeight / 2 + 4;
 		int h = this.height - (this.titleHeight / 2 + 4) - 2;
 		//System.out.println(">>"+timeStamp.getType());
+
+		ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();
+
 		switch (timeStamp.getType()) {
 			case TimeStamp.TIMESTAMPTYPE_PERIODIC:
 
 				long[] times = timeStamp.getTestTimes();
 				for (int i = 0; i < times.length; i++) {
+					if (testAlarms.length > 0) {
+						for (int j = 0; j < testAlarms.length; j++) {
+							if (Math.abs(testAlarms[j].elementary_start_time - times[i]) < 1000 * 30) {
+								Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[j].alarm_id);
+								if (alarm != null) {
+									//System.out.println("alarm.type_id:" +
+									// alarm.type_id);
+									if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
+										//System.out.println("ID_RTU_TEST_ALARM");
+										if ((this.test != null) && (this.test.getId().equals(test.getId())))
+											g.setColor(TestLine.COLOR_ALARM_SELECTED);
+										else
+											g.setColor(TestLine.COLOR_ALARM);
+									} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING)) {
+										//System.out.println("ID_RTU_TEST_WARNING");
+										if ((this.test != null) && (this.test.getId().equals(test.getId())))
+											g.setColor(TestLine.COLOR_WARNING_SELECTED);
+										else
+											g.setColor(TestLine.COLOR_WARNING);
+									}
+								}
+
+							}
+							//System.out.println(
+							// (testAlarms[j].elementary_start_time-times[i]));
+
+							//alarm.
+						}
+					}
 					x = this.margin + (int) (this.scale * (times[i] - this.start));
 					g.fillRect(x + 2, y + 2, w - 3, h - 3);
 					//System.out.println(i + "\t" + times[i] + "\tx:" + x);
@@ -413,12 +461,38 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				}
 				break;
 			default:
+				/**
+				 * @TODO reuse code
+				 */
+				if (testAlarms.length > 0) {
+					for (int j = 0; j < testAlarms.length; j++) {
+							Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[j].alarm_id);
+							if (alarm != null) {
+								//System.out.println("alarm.type_id:" +
+								// alarm.type_id);
+								if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
+									//System.out.println("ID_RTU_TEST_ALARM");
+									if ((this.test != null) && (this.test.getId().equals(test.getId())))
+										g.setColor(TestLine.COLOR_ALARM_SELECTED);
+									else
+										g.setColor(TestLine.COLOR_ALARM);
+								} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING)) {
+									//System.out.println("ID_RTU_TEST_WARNING");
+									if ((this.test != null) && (this.test.getId().equals(test.getId())))
+										g.setColor(TestLine.COLOR_WARNING_SELECTED);
+									else
+										g.setColor(TestLine.COLOR_WARNING);
+								}
+							}
+					}
+				}
+
 				g.fillRect(x + 2, y + 2, w - 3, h - 3);
 				g.draw3DRect(x, y, w, h, true);
 				break;
 		}
 	}
-
+	
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);

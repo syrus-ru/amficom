@@ -39,6 +39,8 @@ public final class UIStorage {
 	public static final Icon				CALENDAR_ICON			= UIStorage.getStringIcon("..");						//$NON-NLS-1$
 
 	public static final Icon				TIME_ICON				= UIStorage.getStringIcon("t");						//$NON-NLS-1$
+	
+	public static final Icon				FILTER_ICON				= UIStorage.getStringIcon("F");						//$NON-NLS-1$
 
 	public static final Icon				OPEN_FILE_ICON			= new ImageIcon(Toolkit.getDefaultToolkit()
 																			.getImage("images/openfile.gif"));				//$NON-NLS-1$

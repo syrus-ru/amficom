@@ -58,10 +58,10 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 							//System.out.println("alarm.type_id:" + alarm.type_id);
 							if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
 								//System.out.println("ID_RTU_TEST_ALARM");
-								color = Color.RED;
+								color = TestLine.COLOR_ALARM;
 							} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING)){
-								//System.out.println("ID_RTU_TEST_WARNING");
-								color = Color.YELLOW;
+								//System.out.println("ID_RTU_TEST_WARNING");								
+								color = TestLine.COLOR_WARNING;
 							}
 						}
 					}

@@ -11,12 +11,16 @@ import javax.swing.event.ChangeListener;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Filter.FilterDialog;
+import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Report.ReportBuilder;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.Schedule.Filter.TestFilter;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.Client.Survey.Alarm.Filter.AlarmFilter;
 
 class PlanToolBar extends JPanel {
 
@@ -65,6 +69,9 @@ class PlanToolBar extends JPanel {
 	AComboBox			scaleComboBox;
 	JSpinner			timeSpinner		= new TimeSpinner();
 
+	FilterDialog		filterDialog;
+
+	private JButton		filterButton	= new JButton();
 	private JButton		zoomInButton	= new JButton();
 	private JButton		zoomNoneButton	= new JButton();
 	private JButton		zoomOutButton	= new JButton();
@@ -91,14 +98,15 @@ class PlanToolBar extends JPanel {
 			public void itemStateChanged(ItemEvent e) {
 				AComboBox comboBox = (AComboBox) e.getSource();
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					//System.out.println("comboBox.getSelectedIndex():" + comboBox.getSelectedIndex());
+					//System.out.println("comboBox.getSelectedIndex():" +
+					// comboBox.getSelectedIndex());
 					Calendar calDate = Calendar.getInstance();
-					calDate.setTime((Date) PlanToolBar.this.dateSpinner.getModel().getValue());				
+					calDate.setTime((Date) PlanToolBar.this.dateSpinner.getModel().getValue());
 					Calendar timeDate = Calendar.getInstance();
 					timeDate.setTime((Date) PlanToolBar.this.timeSpinner.getModel().getValue());
 					calDate.set(Calendar.HOUR_OF_DAY, timeDate.get(Calendar.HOUR_OF_DAY));
 					calDate.set(Calendar.MINUTE, timeDate.get(Calendar.MINUTE));
-					panel.setStartDate(calDate.getTime());					
+					panel.setStartDate(calDate.getTime());
 					panel.setScale(comboBox.getSelectedIndex());
 					panel.updateTests();
 				}
@@ -111,7 +119,7 @@ class PlanToolBar extends JPanel {
 			public void stateChanged(ChangeEvent e) {
 				DateSpinner spinner = (DateSpinner) e.getSource();
 				Calendar calDate = Calendar.getInstance();
-				calDate.setTime((Date) spinner.getModel().getValue());				
+				calDate.setTime((Date) spinner.getModel().getValue());
 				Calendar timeDate = Calendar.getInstance();
 				timeDate.setTime((Date) PlanToolBar.this.timeSpinner.getModel().getValue());
 				calDate.set(Calendar.HOUR_OF_DAY, timeDate.get(Calendar.HOUR_OF_DAY));
@@ -120,13 +128,13 @@ class PlanToolBar extends JPanel {
 				panel.updateTests();
 			}
 		});
-		
+
 		this.timeSpinner.addChangeListener(new ChangeListener() {
 
 			public void stateChanged(ChangeEvent e) {
 				TimeSpinner spinner = (TimeSpinner) e.getSource();
 				Calendar timeDate = Calendar.getInstance();
-				timeDate.setTime((Date) spinner.getModel().getValue());				
+				timeDate.setTime((Date) spinner.getModel().getValue());
 				Calendar calDate = Calendar.getInstance();
 				calDate.setTime((Date) PlanToolBar.this.dateSpinner.getModel().getValue());
 				calDate.set(Calendar.HOUR_OF_DAY, timeDate.get(Calendar.HOUR_OF_DAY));
@@ -135,8 +143,7 @@ class PlanToolBar extends JPanel {
 				panel.updateTests();
 			}
 		});
-		
-		
+
 		this.dateButton.setMargin(UIStorage.INSET_NULL);
 		this.dateButton.setFocusable(false);
 		this.dateButton.setToolTipText(LangModelSchedule.getString("Calendar")); //$NON-NLS-1$
@@ -169,6 +176,46 @@ class PlanToolBar extends JPanel {
 				PlanToolBar.this.panel.updateScale(1.25);
 			}
 		});
+
+		UIStorage.setRigidSize(this.filterButton, UIStorage.BUTTON_SIZE);
+		this.filterButton.setFocusable(false);
+		this.filterButton.setIcon(UIStorage.FILTER_ICON);
+		this.filterButton.setToolTipText(LangModelSchedule.getString("Filtration")); //$NON-NLS-1$
+		this.filterButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				/**
+				 * clean code
+				 */
+				ObjectResourceFilter filter = ((SchedulerModel) aContext.getApplicationModel()).getFilter();
+				TestFilter orf = (TestFilter) filter.clone();
+				if (PlanToolBar.this.filterDialog == null) {
+					PlanToolBar.this.filterDialog = new FilterDialog(orf, aContext);
+					Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+					Dimension frameSize = PlanToolBar.this.filterDialog.getSize();
+					frameSize.width = 450;
+					frameSize.height = frameSize.height + 20;
+					PlanToolBar.this.filterDialog.setSize(frameSize);
+
+					if (frameSize.height > screenSize.height)
+						frameSize.height = screenSize.height;
+					if (frameSize.width > screenSize.width)
+						frameSize.width = screenSize.width;
+					PlanToolBar.this.filterDialog.setLocation((screenSize.width - frameSize.width) / 2,
+																(screenSize.height - frameSize.height) / 2);
+				}
+				//else PlanToolBar.this.filterDialog.setF
+				PlanToolBar.this.filterDialog.pack();
+
+				PlanToolBar.this.filterDialog.setModal(true);
+				PlanToolBar.this.filterDialog.setVisible(true);
+
+				if (PlanToolBar.this.filterDialog.retcode == FilterDialog.RETURN_CODE_OK) {
+					((SchedulerModel) aContext.getApplicationModel()).setFilter(orf);
+				}
+			}
+		});
+
 		UIStorage.setRigidSize(this.zoomOutButton, UIStorage.BUTTON_SIZE);
 		this.zoomOutButton.setFocusable(false);
 		this.zoomOutButton.setIcon(UIStorage.ZOOMOUT_ICON);
@@ -249,6 +296,10 @@ class PlanToolBar extends JPanel {
 					.getColorIcon(TestLine.COLOR_PROCCESSING), SwingConstants.LEFT));
 			legendPanel.add(new JLabel(LangModelSchedule.getString("Aborted"), PlanToolBar
 					.getColorIcon(TestLine.COLOR_ABORDED), SwingConstants.LEFT));
+			legendPanel.add(new JLabel(LangModelSchedule.getString("Alarm"), PlanToolBar
+					.getColorIcon(TestLine.COLOR_ALARM), SwingConstants.LEFT));
+			legendPanel.add(new JLabel(LangModelSchedule.getString("Warning"), PlanToolBar
+					.getColorIcon(TestLine.COLOR_WARNING), SwingConstants.LEFT));
 			legendPanel.add(new JLabel(LangModelSchedule.getString("Unrecognized"), PlanToolBar
 					.getColorIcon(TestLine.COLOR_UNRECOGNIZED), SwingConstants.LEFT));
 			dialog.getContentPane().add(legendPanel);
@@ -270,6 +321,8 @@ class PlanToolBar extends JPanel {
 		this.applyButton.setToolTipText(LangModelSchedule.getString("Apply")); //$NON-NLS-1$
 		this.applyButton.setMargin(UIStorage.INSET_NULL);
 
+		box.add(Box.createHorizontalGlue());
+		box.add(this.filterButton);
 		box.add(Box.createHorizontalGlue());
 		box.add(this.zoomInButton);
 		box.add(this.zoomOutButton);
