@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.23 2005/02/11 15:53:32 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.24 2005/02/11 16:25:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/02/11 15:53:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2005/02/11 16:25:30 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -320,7 +320,7 @@ public abstract class StorableObjectPool {
 	 * @todo Check references within workspace, convert a run time warning
 	 *       (if objectIds is null) into a run time error.
 	 */
-	protected List getStorableObjectsImpl(final Collection objectIds, final boolean useLoader) throws DatabaseException, CommunicationException {
+	protected Collection getStorableObjectsImpl(final Collection objectIds, final boolean useLoader) throws DatabaseException, CommunicationException {
 		List list = null;
 		Map objectQueueMap = null;
 		if (objectIds != null) {
