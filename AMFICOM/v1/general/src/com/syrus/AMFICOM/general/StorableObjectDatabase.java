@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.115 2005/03/05 21:24:03 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.116 2005/03/09 15:38:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.115 $, $Date: 2005/03/05 21:24:03 $
+ * @version $Revision: 1.116 $, $Date: 2005/03/09 15:38:50 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -388,7 +388,7 @@ public abstract class StorableObjectDatabase {
 	 */
 	protected Collection retrieveButIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if (ids == null || ids.isEmpty())
-			return this.retrieveByIds(null, null);
+			return this.retrieveByIds(null, condition);
 
 		StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
 		if ((condition != null) && (condition.length() > 0)) {
@@ -396,7 +396,6 @@ public abstract class StorableObjectDatabase {
 				stringBuffer.append(SQL_AND);
 			stringBuffer.append(condition);
 		}
-
 		return this.retrieveByIds(null, stringBuffer.toString());
 	}
 
@@ -408,12 +407,8 @@ public abstract class StorableObjectDatabase {
 		String enityName = this.getEnityName();
 		enityName = enityName.replaceAll("\"", "");
 		if (ObjectEntities.stringToCode(enityName) != conditionCode)
-			throw new IllegalDataException(enityName
-					+ "Database.retrieveByCondition | Uncompatible condition ("
-					+ ObjectEntities.codeToString(conditionCode)
-					+ ") and database ("
-					+ this.getEnityName()
-					+ ") classes");
+			throw new IllegalDataException(enityName + "Database.retrieveByCondition | Uncompatible condition ("
+					+ ObjectEntities.codeToString(conditionCode) + ") and database (" + this.getEnityName() + ") classes");
 		String conditionQuery = databaseStorableObjectCondition.getSQLQuery();
 		Collection collection = this.retrieveButIds(ids, conditionQuery);
 		return collection;
