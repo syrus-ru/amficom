@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.9 2005/01/18 07:40:06 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.10 2005/01/20 08:11:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,6 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSortCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
@@ -50,7 +49,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/01/18 07:40:06 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/20 08:11:59 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -74,7 +73,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
         try {
             this.server.delete(identifier_Transferable, accessIdentifierTransferable);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientConfigurationObjectLoader.delete | Couldn't delete id ="
+            String msg = "ClientMeasurementObjectLoader.delete | Couldn't delete id ="
                     + id.toString() + ")";
             throw new CommunicationException(msg, e);
         }
@@ -90,21 +89,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
         try {
             this.server.deleteList(identifier_Transferables, accessIdentifierTransferable);
         } catch (AMFICOMRemoteException e) {
-            String msg = "ClientConfigurationObjectLoader.delete | AMFICOMRemoteException ";
+            String msg = "ClientMeasurementObjectLoader.delete | AMFICOMRemoteException ";
             throw new CommunicationException(msg, e);
         }
     }
-    
-    public ParameterType loadParameterType(Identifier id) throws RetrieveObjectException, CommunicationException {
-		try {
-			return new ParameterType(this.server.transmitParameterType((Identifier_Transferable) id
-					.getTransferable(), accessIdentifierTransferable));
-		} catch (AMFICOMRemoteException e) {
-			String msg = "ClientMeasurementObjectLoader.transmitParameterType | server.transmitParameterType("
-					+ id.toString() + ")";
-			throw new CommunicationException(msg, e);
-		}
-	}
 
 	public MeasurementType loadMeasurementType(Identifier id) throws RetrieveObjectException,
 			CommunicationException {
@@ -764,53 +752,6 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
         }
     }
 
-	public List loadParameterTypes(List ids) throws DatabaseException, CommunicationException {
-		try {
-			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
-			int i = 0;
-			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
-				Identifier id = (Identifier) it.next();
-				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
-			}
-			ParameterType_Transferable[] transferables = this.server
-					.transmitParameterTypes(identifierTransferables, accessIdentifierTransferable);
-			List list = new ArrayList(transferables.length);
-			for (int j = 0; j < transferables.length; j++) {
-				list.add(new ParameterType(transferables[j]));
-			}
-			return list;
-		} catch (AMFICOMRemoteException e) {
-			throw new CommunicationException(e);
-		}
-	}
-    
-    public List loadParameterTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-        try {
-            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
-            int i = 0;
-            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
-                Identifier id = (Identifier) it.next();
-                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
-            }
-            
-            ParameterType_Transferable[] transferables;
-            if (condition instanceof StringFieldCondition){
-            	StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
-            	transferables = this.server.transmitParameterTypesButIdsCondition(identifierTransferables,
-																				  accessIdentifierTransferable,
-																				  (StringFieldCondition_Transferable)stringFieldCondition.getTransferable());
-            } else transferables = this.server
-                    .transmitParameterTypesButIds(identifierTransferables, accessIdentifierTransferable);
-            List list = new ArrayList(transferables.length);
-            for (int j = 0; j < transferables.length; j++) {
-                list.add(new ParameterType(transferables[j]));
-            }
-            return list;
-        } catch (AMFICOMRemoteException e) {
-            throw new CommunicationException(e);
-        }
-    }
-
 	public List loadResults(List ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -1210,24 +1151,6 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
              throw new CommunicationException(msg, e);       
          }
      }
-
-     public void saveParameterTypes(List parameterTypes, boolean force) throws DatabaseException, CommunicationException, VersionCollisionException{
-         ParameterType_Transferable[] transferables = new ParameterType_Transferable[parameterTypes.size()];
-         int i=0;
-         for (Iterator it = parameterTypes.iterator(); it.hasNext();i++) {
-             transferables[i] = (ParameterType_Transferable)( (ParameterType)it.next() ).getTransferable();                        
-         }
-         try {
-             this.server.receiveParameterTypes(transferables, force, accessIdentifierTransferable);         
-         } catch (AMFICOMRemoteException e) {
-             String msg = "ClientMeasurementObjectLoader.saveParameterTypes | receiveParameterTypes";
-             
-             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
-                 throw new VersionCollisionException(msg, e);
-             
-             throw new CommunicationException(msg, e);       
-         }
-     }
      
      public void saveMeasurementTypes(List measurementTypes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
          MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[measurementTypes.size()];
@@ -1444,23 +1367,8 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
              
              throw new CommunicationException(msg, e);       
          }
-     }
-     
-    public void saveParameterType(ParameterType parameterType, boolean force)
-            throws VersionCollisionException, DatabaseException, CommunicationException {
-        ParameterType_Transferable transferables = (ParameterType_Transferable)parameterType.getTransferable();         
-        try {
-            this.server.receiveParameterType(transferables, force, accessIdentifierTransferable);         
-        } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.saveParameterType | receiveParameterTypes";
-            
-            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
-               throw new VersionCollisionException(msg, e);
-            
-            throw new CommunicationException(msg, e);       
-        }
-
-    }
+     }   
+   
     
     public java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException {
         try {
