@@ -91,7 +91,14 @@ class PlanToolBar extends JPanel {
 			public void itemStateChanged(ItemEvent e) {
 				AComboBox comboBox = (AComboBox) e.getSource();
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					System.out.println("comboBox.getSelectedIndex():" + comboBox.getSelectedIndex());
+					//System.out.println("comboBox.getSelectedIndex():" + comboBox.getSelectedIndex());
+					Calendar calDate = Calendar.getInstance();
+					calDate.setTime((Date) PlanToolBar.this.dateSpinner.getModel().getValue());				
+					Calendar timeDate = Calendar.getInstance();
+					timeDate.setTime((Date) PlanToolBar.this.timeSpinner.getModel().getValue());
+					calDate.set(Calendar.HOUR_OF_DAY, timeDate.get(Calendar.HOUR_OF_DAY));
+					calDate.set(Calendar.MINUTE, timeDate.get(Calendar.MINUTE));
+					panel.setStartDate(calDate.getTime());					
 					panel.setScale(comboBox.getSelectedIndex());
 					panel.updateTests();
 				}

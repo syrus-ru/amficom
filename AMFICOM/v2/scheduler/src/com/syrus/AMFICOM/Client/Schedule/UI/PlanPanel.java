@@ -587,9 +587,26 @@ public class PlanPanel extends JPanel implements OperationListener {
 			}
 		}
 	}
+	
+	private void updateTest(Test test){
+		TestLine testLine;
+		//System.out.println(">>test:" + test.getId());
+		if (this.testLines.containsKey(test.getMonitoredElementId()))
+			testLine = (TestLine) this.testLines.get(test.getMonitoredElementId());
+		else {
+			String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
+			testLine = new TestLine(this.aContext,
+			//parent.getViewport(),
+									meName, this.scaleStart.getTime(), this.scaleEnd.getTime(), this.margin / 2);
+			testLine.setPreferredSize(new Dimension(0, 25));
+			this.testLines.put(test.getMonitoredElementId(), testLine);
+		}
+		testLine.addTest(test);
+		add(testLine);
+	}
 
 	protected void updateTests() {
-		Environment.log(Environment.LOG_LEVEL_INFO, "updateTests", getClass().getName()); //$NON-NLS-1$
+		//Environment.log(Environment.LOG_LEVEL_INFO, "updateTests", getClass().getName()); //$NON-NLS-1$
 		//		this.setCursor(UIStorage.WAIT_CURSOR);
 		// clear old tests
 		if (this.testLines == null)
@@ -604,31 +621,26 @@ public class PlanPanel extends JPanel implements OperationListener {
 		if (unsavedTests != null) {
 			if (tests == null)
 				tests = unsavedTests;
-			else
-				tests.addAll(unsavedTests);
+//			else
+//				tests.addAll(unsavedTests);
 		}
 
 		//System.out.println("tests:" + (tests == null ? " is null" : "" + tests.size()));
 
 		if (tests != null) {
-			for (Iterator it = tests.iterator(); it.hasNext();) {
-				TestLine testLine;
+			for (Iterator it = tests.iterator(); it.hasNext();) {				
 				Test test = (Test) it.next();
-				//System.out.println(">>test:" + test.getId());
-				if (this.testLines.containsKey(test.getMonitoredElementId()))
-					testLine = (TestLine) this.testLines.get(test.getMonitoredElementId());
-				else {
-					String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
-					testLine = new TestLine(this.aContext,
-					//parent.getViewport(),
-											meName, this.scaleStart.getTime(), this.scaleEnd.getTime(), this.margin / 2);
-					testLine.setPreferredSize(new Dimension(0, 25));
-					this.testLines.put(test.getMonitoredElementId(), testLine);
-				}
-				testLine.addTest(test);
-				add(testLine);
+				updateTest(test);
 			}
 		}
+		
+		if (unsavedTests != null) {
+			for (Iterator it = unsavedTests.iterator(); it.hasNext();) {				
+				Test test = (Test) it.next();
+				updateTest(test);
+			}
+		}
+		
 		setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
 		updateRealScale();
 		revalidate();

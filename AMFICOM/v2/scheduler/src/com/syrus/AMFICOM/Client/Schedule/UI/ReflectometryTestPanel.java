@@ -101,7 +101,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	public static final String		PARAMETER_RESOLUTION		= PARAMETER_PREFIX + RESOLUTION;	//$NON-NLS-1$
 	public static final String		PARAMETER_WAVELENGHT		= "ref_wvlen";						//$NON-NLS-1$
 
-	private static final boolean	DEBUG						= false;
+	private static final boolean	DEBUG						= true;
 
 	ListNumberComparator			comparator					= new ListNumberComparator();
 	AComboBox						maxDistanceComboBox			= new AComboBox();
@@ -395,7 +395,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	}
 
 	public void setTest(Test test) {
+//		System.out.println("test:"+(test==null?" 'null' ":test.getId()));
+//		System.out.println("this.test:"+(this.test==null?" 'null' ":this.test.getId()));
 		if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
+//			System.out.println("RefPanel - select test");
 			this.test = test;
 			TestArgumentSet tas = test.getTestArgumentSet();
 			if (tas == null)
@@ -421,7 +424,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					setTestSetup(testSetup);
 
 			}
-		}
+		} //else System.out.println("RefPanel - not select test");
 
 	}
 

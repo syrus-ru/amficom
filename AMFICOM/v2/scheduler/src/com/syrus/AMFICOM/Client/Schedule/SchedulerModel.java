@@ -364,7 +364,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	}
 
 	public void updateTests(long startTime, long endTime) {
-		Environment.log(Environment.LOG_LEVEL_INFO, "updateTests", getClass().getName()); //$NON-NLS-1$
+		//Environment.log(Environment.LOG_LEVEL_INFO, "updateTests", getClass().getName()); //$NON-NLS-1$
 		//		this.setCursor(UIStorage.WAIT_CURSOR);
 		this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
 				.getString("Updating_tests_from_BD"))); //$NON-NLS-1$
@@ -395,9 +395,6 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		}
 		ObjectResourceDomainFilter ordf = new ObjectResourceDomainFilter(this.aContext.getSessionInterface()
 				.getDomainId());
-
-		System.out.println("this.aContext.getSessionInterface().getDomainId():"
-				+ this.aContext.getSessionInterface().getDomainId());
 
 		DataSet testSet = new DataSet(hash);
 

@@ -58,19 +58,19 @@ public class TestParametersFrame extends JInternalFrame implements
 					//System.out.println("portId:" + port.type_id);
 					if (port.type_id
 							.equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
-						if (!panel
+						if (!this.panel
 								.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
-							dispatcher
+							this.dispatcher
 									.notify(new OperationEvent(
 											new ReflectometryTestPanel(
-													aContext, port, test),
+													this.aContext, port, test),
 											0,
 											SchedulerModel.COMMAND_ADD_PARAM_PANEL));
 						}
 					}
 				}
 
-				panel.setTest(test);
+				this.panel.setTest(test);
 			} else {
 //				nothing
 			}
@@ -79,7 +79,7 @@ public class TestParametersFrame extends JInternalFrame implements
 			AccessPort port = (AccessPort) obj;
 			if (port.type_id
 					.equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
-				if (!panel
+				if (!this.panel
 						.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
 					dispatcher.notify(new OperationEvent(
 							new ReflectometryTestPanel(aContext, port), 0,

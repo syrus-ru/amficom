@@ -83,32 +83,32 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		}
 		setLayout(new BorderLayout());
 
-		patternRadioButton = UIStorage
+		this.patternRadioButton = UIStorage
 				.createRadioButton(LangModelSchedule.getString("UsePattern"), new AbstractAction() { //$NON-NLS-1$
 
 										public void actionPerformed(ActionEvent e) {
-											CardLayout cl = (CardLayout) (switchPanel.getLayout());
-											cl.show(switchPanel, PATTERN_PANEL_NAME);
+											CardLayout cl = (CardLayout) (TestParametersPanel.this.switchPanel.getLayout());
+											cl.show(TestParametersPanel.this.switchPanel, PATTERN_PANEL_NAME);
 											revalidate();
 										}
 									});
-		paramsRadioButton = UIStorage
+		this.paramsRadioButton = UIStorage
 				.createRadioButton(LangModelSchedule.getString("UseParameters"), new AbstractAction() { //$NON-NLS-1$
 
 										public void actionPerformed(ActionEvent e) {
-											CardLayout cl = (CardLayout) (switchPanel.getLayout());
-											cl.show(switchPanel, currentParametersPanelName);
+											CardLayout cl = (CardLayout) (TestParametersPanel.this.switchPanel.getLayout());
+											cl.show(TestParametersPanel.this.switchPanel, TestParametersPanel.this.currentParametersPanelName);
 											revalidate();
 										}
 									});
-		paramsRadioButton.setEnabled(false);
+		this.paramsRadioButton.setEnabled(false);
 		ButtonGroup group = new ButtonGroup();
-		group.add(patternRadioButton);
-		group.add(paramsRadioButton);
+		group.add(this.patternRadioButton);
+		group.add(this.paramsRadioButton);
 
 		Box typePanel = new Box(BoxLayout.Y_AXIS);
-		typePanel.add(patternRadioButton);
-		typePanel.add(paramsRadioButton);
+		typePanel.add(this.patternRadioButton);
+		typePanel.add(this.paramsRadioButton);
 
 		add(typePanel, BorderLayout.NORTH);
 
@@ -122,17 +122,17 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		gbc.weighty = 0.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		patternPanel.setBorder(BorderFactory.createEtchedBorder());
-		useAnalysisBox = new JCheckBox(LangModelSchedule.getString("PerformAnalys"), true); //$NON-NLS-1$
-		patternPanel.add(useAnalysisBox, gbc);
+		this.useAnalysisBox = new JCheckBox(LangModelSchedule.getString("PerformAnalys"), true); //$NON-NLS-1$
+		patternPanel.add(this.useAnalysisBox, gbc);
 		final JLabel analysisLabel = new JLabel(LangModelSchedule.getString("Analysis")); //$NON-NLS-1$
 		patternPanel.add(analysisLabel, gbc);
-		patternPanel.add(analysisComboBox, gbc);
+		patternPanel.add(this.analysisComboBox, gbc);
 		final JLabel evaluationLabel = new JLabel(LangModelSchedule.getString("EvaluationAnalysis")); //$NON-NLS-1$
 		patternPanel.add(evaluationLabel, gbc);
-		patternPanel.add(evaluationComboBox, gbc);
-		testMap = new HashMap();
-		testSetups = new ObjectResourceListBox();
-		testSetups.addListSelectionListener(new ListSelectionListener() {
+		patternPanel.add(this.evaluationComboBox, gbc);
+		this.testMap = new HashMap();
+		this.testSetups = new ObjectResourceListBox();
+		this.testSetups.addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged(ListSelectionEvent e) {
 				//if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -163,15 +163,15 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		gbc.weighty = 1.0;
 		patternPanel.add(scroll, gbc);
 
-		useAnalysisBox.addActionListener(new ActionListener() {
+		this.useAnalysisBox.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				JCheckBox checkBox = (JCheckBox) e.getSource();
 				boolean enable = checkBox.isSelected();
 				analysisLabel.setEnabled(enable);
-				analysisComboBox.setEnabled(enable);
+				TestParametersPanel.this.analysisComboBox.setEnabled(enable);
 				evaluationLabel.setEnabled(enable);
-				evaluationComboBox.setEnabled(enable);
+				TestParametersPanel.this.evaluationComboBox.setEnabled(enable);
 				//				if (enable) {
 				//					TestSetup ts = (TestSetup) testSetups
 				//							.getSelectedObjectResource();
@@ -182,14 +182,14 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			}
 		});
 		// it's for set enabled status for analysisComboBox & evaluationComboBox
-		useAnalysisBox.doClick();
-		useAnalysisBox.setEnabled(testSetups.getModel().getSize() > 0);
+		this.useAnalysisBox.doClick();
+		this.useAnalysisBox.setEnabled(this.testSetups.getModel().getSize() > 0);
 
 		//switchPanel.add(parametersPanel, PARAMETERS_PANEL_NAME);
-		switchPanel.add(patternPanel, PATTERN_PANEL_NAME);
-		add(switchPanel, BorderLayout.CENTER);
+		this.switchPanel.add(patternPanel, PATTERN_PANEL_NAME);
+		add(this.switchPanel, BorderLayout.CENTER);
 
-		patternRadioButton.doClick();
+		this.patternRadioButton.doClick();
 
 	}
 
@@ -203,13 +203,13 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	 *            ParametersTestPanel
 	 */
 	public void addParameterPanel(String command, ParametersTestPanel panel) {
-		testPanels.put(command, panel);
-		switchPanel.add(panel, command);
-		paramsRadioButton.setEnabled(true);
+		this.testPanels.put(command, panel);
+		this.switchPanel.add(panel, command);
+		this.paramsRadioButton.setEnabled(true);
 	}
 
 	public boolean isParameterPanelExists(String command) {
-		return testPanels.get(command) != null;
+		return this.testPanels.get(command) != null;
 	}
 
 	private void initModule(Dispatcher dispatcher) {
@@ -382,22 +382,37 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 			TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ, this.test.getTestSetupId());
 
+			if ((this.test.getEvalution() != null) || (this.test.getAnalysis() != null)
+					|| (this.test.getAnalysisId().length() > 0)) {
+				if (!this.useAnalysisBox.isSelected())
+					this.useAnalysisBox.doClick();
+			} else{
+				if (this.useAnalysisBox.isSelected())
+					this.useAnalysisBox.doClick();				
+			}
+			
+			
 			if (testsetup != null) {
 				System.out.println("testsetup:" + testsetup.getId());
 				this.testSetups.setSelected(testsetup);
 				this.patternRadioButton.doClick();
 
-				if ((this.test.getEvalution() != null) || (this.test.getAnalysis() != null)) {
-					if (!this.useAnalysisBox.isSelected())
-						this.useAnalysisBox.doClick();
-				}
-				if (test.getEvalution() != null) {
+				System.out.println("getAnalysisId:" + this.test.getAnalysisId());
+
+				if (this.test.getEvalution() != null) {
 					//System.out.println("test.evalution isn't null");
-					selectComboBox(this.evaluationComboBox, test.getEvalution().getTypeId());
+					selectComboBox(this.evaluationComboBox, this.test.getEvalution().getTypeId());
 				}
-				if (test.getAnalysis() != null) {
+				if (this.test.getAnalysisId().length() > 0) {
+					Analysis analysis = this.test.getAnalysis();
+					if (analysis == null) {
+						analysis = (Analysis) Pool.get(Analysis.typ, this.test.getAnalysisId());
+						this.test.setAnalysis(analysis);
+					}
+				}
+				if (this.test.getAnalysis() != null) {
 					//System.out.println("test.analysis isn't null");
-					selectComboBox(this.analysisComboBox, test.getAnalysis().getTypeId());
+					selectComboBox(this.analysisComboBox, this.test.getAnalysis().getTypeId());
 				}
 
 			} else {

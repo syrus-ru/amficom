@@ -291,7 +291,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 	}
 
 	Dispatcher			dispatcher;
-	ObjectResourceTable				listTable;
+	ObjectResourceTable	listTable;
 	ApplicationContext	aContext;
 	private JPanel		panel;
 	private Test		test;
@@ -372,11 +372,15 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			public void run() {
 				TestTableModel model = (TestTableModel) TableFrame.this.listTable.getModel();
 				model.removeAll();
+				TableFrame.this.listTable.removeAll();
 				java.util.List tests = ((SchedulerModel) TableFrame.this.aContext.getApplicationModel()).getTests();
 				for (Iterator it = tests.iterator(); it.hasNext();) {
 					Test test = (Test) it.next();
-					TestTableRow row = new TestTableRow(test);
-					model.addRow(row);
+					if (model.getObjectResourceIndex(test) < 0) {
+						System.out.println("add test:"+test.getId());
+						TestTableRow row = new TestTableRow(test);
+						model.addRow(row);
+					}
 				}
 				TableFrame.this.listTable.repaint();
 				TableFrame.this.listTable.revalidate();
@@ -466,58 +470,59 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 				}
 			}
 			JTableHeader header = this.listTable.getTableHeader();
-//			header.addMouseListener(new MouseAdapter() {
-//
-//				public void mouseClicked(MouseEvent evt) {
-//					JTableHeader header = (JTableHeader) evt.getSource();
-//					JTable table = header.getTable();
-//					TableColumnModel colModel = table.getColumnModel();
-//
-//					// The index of the column whose header was clicked
-//					int columnIndex = colModel.getColumnIndexAtX(evt.getX());
-//					int mColIndex = table.convertColumnIndexToModel(columnIndex);
-//					TestTableModel model = (TestTableModel) table.getModel();
-//					String s;
-//					if (model.getSortOrder(mColIndex))
-//						s = " v "; //$NON-NLS-1$
-//					else
-//						s = " ^ "; //$NON-NLS-1$
-//					table.getColumnModel().getColumn(columnIndex)
-//							.setHeaderValue(s + model.getColumnName(mColIndex) + s);
-//
-//					for (int i = 0; i < model.getColumnCount(); i++) {
-//						if (i != mColIndex)
-//							table.getColumnModel().getColumn(table.convertColumnIndexToView(i))
-//									.setHeaderValue(model.getColumnName(i));
-//					}
-//
-//					// Force the header to resize and repaint itself
-//					header.resizeAndRepaint();
-//					model.sortRows(mColIndex);
-//
-//					// Return if not clicked on any column header
-//					if (columnIndex == -1) { return; }
-//
-//					// Determine if mouse was clicked between column heads
-//					Rectangle headerRect = table.getTableHeader().getHeaderRect(columnIndex);
-//					if (columnIndex == 0) {
-//						headerRect.width -= 3; // Hard-coded constant
-//					} else {
-//						headerRect.grow(-3, 0); // Hard-coded constant
-//					}
-//					if (!headerRect.contains(evt.getX(), evt.getY())) {
-//						// Mouse was clicked between column heads
-//						// vColIndex is the column head closest to the click
-//
-//						// vLeftColIndex is the column head to the left of the
-//						// click
-//						int vLeftColIndex = columnIndex;
-//						if (evt.getX() < headerRect.x) {
-//							vLeftColIndex--;
-//						}
-//					}
-//				}
-//			});
+			//			header.addMouseListener(new MouseAdapter() {
+			//
+			//				public void mouseClicked(MouseEvent evt) {
+			//					JTableHeader header = (JTableHeader) evt.getSource();
+			//					JTable table = header.getTable();
+			//					TableColumnModel colModel = table.getColumnModel();
+			//
+			//					// The index of the column whose header was clicked
+			//					int columnIndex = colModel.getColumnIndexAtX(evt.getX());
+			//					int mColIndex = table.convertColumnIndexToModel(columnIndex);
+			//					TestTableModel model = (TestTableModel) table.getModel();
+			//					String s;
+			//					if (model.getSortOrder(mColIndex))
+			//						s = " v "; //$NON-NLS-1$
+			//					else
+			//						s = " ^ "; //$NON-NLS-1$
+			//					table.getColumnModel().getColumn(columnIndex)
+			//							.setHeaderValue(s + model.getColumnName(mColIndex) + s);
+			//
+			//					for (int i = 0; i < model.getColumnCount(); i++) {
+			//						if (i != mColIndex)
+			//							table.getColumnModel().getColumn(table.convertColumnIndexToView(i))
+			//									.setHeaderValue(model.getColumnName(i));
+			//					}
+			//
+			//					// Force the header to resize and repaint itself
+			//					header.resizeAndRepaint();
+			//					model.sortRows(mColIndex);
+			//
+			//					// Return if not clicked on any column header
+			//					if (columnIndex == -1) { return; }
+			//
+			//					// Determine if mouse was clicked between column heads
+			//					Rectangle headerRect =
+			// table.getTableHeader().getHeaderRect(columnIndex);
+			//					if (columnIndex == 0) {
+			//						headerRect.width -= 3; // Hard-coded constant
+			//					} else {
+			//						headerRect.grow(-3, 0); // Hard-coded constant
+			//					}
+			//					if (!headerRect.contains(evt.getX(), evt.getY())) {
+			//						// Mouse was clicked between column heads
+			//						// vColIndex is the column head closest to the click
+			//
+			//						// vLeftColIndex is the column head to the left of the
+			//						// click
+			//						int vLeftColIndex = columnIndex;
+			//						if (evt.getX() < headerRect.x) {
+			//							vLeftColIndex--;
+			//						}
+			//					}
+			//				}
+			//			});
 
 			this.panel.add(header, BorderLayout.NORTH);
 			this.panel.add(new JScrollPane(this.listTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
