@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.Client.Resource.Alarm.EventSource;
 import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
 import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
 import com.syrus.AMFICOM.Client.Resource.Map.MapEquipmentNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapKISNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapTransmissionPathElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -18,12 +17,13 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapMainFrame;
+import java.util.Iterator;
 
 ///Thread для перезагрузки аттрибутов элементов карты
 public class ReloadAttributes 
@@ -97,7 +97,7 @@ public class ReloadAttributes
 	{
 	try
 	{
-		Vector vec;
+		ArrayList vec;
 		int count;
 		int i;
 		if(lnl() == null)
@@ -124,10 +124,9 @@ public class ReloadAttributes
 
 		if(vec == null)
 			return;
-		count = vec.size();
-		for(i = 0; i < count; i++)
+		for(Iterator it = vec.iterator(); it.hasNext();)
 		{
-			MapTransmissionPathElement path = (MapTransmissionPathElement )vec.get(i);
+			MapTransmissionPathElement path = (MapTransmissionPathElement )it.next();
 
 			ElementAttribute ea = (ElementAttribute )path.attributes.get("alarmed");
 			if(ea != null)
@@ -209,7 +208,7 @@ public class ReloadAttributes
 	}
 		
 	}
-
+/*
 	public void updateAttributes1()
 	{
 		Vector vec;
@@ -251,5 +250,5 @@ public class ReloadAttributes
 			path.updateAttributes();
 		}
 	}
-
+*/
 }
