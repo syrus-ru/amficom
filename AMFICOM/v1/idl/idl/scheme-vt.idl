@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.8 2004/12/17 11:26:22 bass Exp $
+ * $Id: scheme-vt.idl,v 1.9 2004/12/17 14:49:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@
 #include "map.idl"
 #include "scheme-configuration.idl"
 #include "scheme-java.idl"
+#include "scheme-map.idl"
 #include "scheme-resource.idl"
 
 module com {
@@ -263,7 +264,8 @@ module com {
 					valuetype CableChannelingItem:
 							general::corba::StorableObject,
 							general::corba::Namable,
-							general::corba::Describable {
+							general::corba::Describable,
+							map::ComSyrusAmficomMapCableChannelingItem {
 						private wstring thisName;
 						private wstring thisDescription;
 						private long thisSequentialNumber;
@@ -272,8 +274,8 @@ module com {
 						private long thisPlaceY;
 						private double thisStartSpare;
 						private double thisEndSpare;
-						private general::corba::Identifier startSiteId;
-						private general::corba::Identifier endSiteId;
+						private general::corba::Identifier startSiteNodeId;
+						private general::corba::Identifier endSiteNodeId;
 
 						attribute long sequentialNumber;
 						attribute CORBA::Map::MapPhysicalLinkElement physicalLink;
@@ -281,8 +283,6 @@ module com {
 						attribute long placeY;
 						attribute double startSpare;
 						attribute double endSpare;
-						attribute CORBA::Map::MapSiteElement startSite;
-						attribute CORBA::Map::MapSiteElement endSite;
 
 						CableChannelingItem cloneInstance();
 

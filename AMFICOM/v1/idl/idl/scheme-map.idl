@@ -1,0 +1,31 @@
+/*
+ * $Id: scheme-map.idl,v 1.1 2004/12/17 14:49:51 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef SCHEME_MAP_IDL
+#define SCHEME_MAP_IDL
+
+#include "lilmapletty.idl"
+
+module com {
+	module syrus {
+		module AMFICOM {
+			module map {
+				native SiteNode;
+
+				abstract valuetype ComSyrusAmficomMapCableChannelingItem {
+					attribute map::corba::SiteNode startSiteNode;
+					attribute SiteNode startSiteNodeImpl;
+					attribute map::corba::SiteNode endSiteNode;
+					attribute SiteNode endSiteNodeImpl;
+				};
+			};
+		};
+	};
+};				
+
+#endif // SCHEME_MAP_IDL
