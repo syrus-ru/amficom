@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeIconLabelCellRenderer.java,v 1.1 2005/03/31 15:53:14 bob Exp $
+ * $Id: ItemTreeIconLabelCellRenderer.java,v 1.2 2005/03/31 15:54:02 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,10 +17,10 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/31 15:53:14 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/31 15:54:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
- * @module analysis_v1
+ * @module filter_v1
  */
 public class ItemTreeIconLabelCellRenderer extends DefaultTreeCellRenderer {
 
