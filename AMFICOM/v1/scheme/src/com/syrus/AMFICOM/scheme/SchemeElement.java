@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.7 2005/03/24 16:58:52 bass Exp $
+ * $Id: SchemeElement.java,v 1.8 2005/03/28 12:01:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,34 +19,34 @@ import java.util.*;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/03/24 16:58:52 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/28 12:01:28 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
 		SchemeCellContainer {
 	private static final long serialVersionUID = 3618977875802797368L;
 
-	protected Identifier equipmentId = null;
+	private Identifier equipmentId;
 
-	protected Identifier equipmentTypeId = null;
+	private Identifier equipmentTypeId;
 
-	protected Identifier rtuId = null;
+	private Identifier kisId;
 
-	/**
-	 * Takes non-null value at pack time.
-	 */
-	protected Identifier schemeCellId = null;
-
-	protected Identifier siteId = null;
-
-	protected Identifier symbolId = null;
-
-	protected String thisLabel = null;
+	private String label;
 
 	/**
 	 * Takes non-null value at pack time.
 	 */
-	protected Identifier ugoCellId = null;
+	private Identifier schemeCellId;
+
+	private Identifier siteId;
+
+	private Identifier symbolId;
+
+	/**
+	 * Takes non-null value at pack time.
+	 */
+	private Identifier ugoCellId;
 
 	/**
 	 * @param id
@@ -117,22 +117,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemePath alarmedPath() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void alarmedPath(SchemePath alarmedPath) {
-		throw new UnsupportedOperationException();
-	}
-
-	public PathElement alarmedPathElement() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void alarmedPathElement(PathElement alarmedPathElement) {
-		throw new UnsupportedOperationException();
-	}
-
 	public Object clone() {
 		final SchemeElement schemeElement = (SchemeElement) super
 				.clone();
@@ -140,6 +124,14 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		 * @todo Update the newly created object.
 		 */
 		return schemeElement;
+	}
+
+	public SchemePath getAlarmedPath() {
+		throw new UnsupportedOperationException();
+	}
+
+	public PathElement getAlarmedPathElement() {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -164,6 +156,18 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
+	public KIS getKis() {
+		throw new UnsupportedOperationException();
+	}
+
+	public String getLabel() {
+		throw new UnsupportedOperationException();
+	}
+
+	public SchemeElement getParentSchemeElement() {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
 	 * @return <em>the first</em> <code>Scheme</code> inner to this
 	 *         <code>SchemeElement</code>, or <code>null</code> if
@@ -174,14 +178,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		if (schemeIterator.hasNext())
 			return (Scheme) schemeIterator.next();
 		return null;
-	}
-
-	public Collection getSchemes() {
-		throw new UnsupportedOperationException();
-	}
-
-	public KIS getKis() {
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -224,6 +220,10 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
+	public Collection getSchemes() {
+		throw new UnsupportedOperationException();
+	}
+
 	public SiteNode getSiteNode() {
 		throw new UnsupportedOperationException();
 	}
@@ -249,21 +249,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see SchemeElement#label()
-	 */
-	public String label() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newLabel
-	 * @see SchemeElement#label(String)
-	 */
-	public void label(final String newLabel) {
-		throw new UnsupportedOperationException();
-	}
-
 	public void removeScheme(final Scheme scheme) {
 		throw new UnsupportedOperationException();
 	}
@@ -277,6 +262,14 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public void removeSchemeLink(final SchemeLink schemeLink) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setAlarmedPath(SchemePath alarmedPath) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setAlarmedPathElement(PathElement alarmedPathElement) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -294,24 +287,25 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
-	public void setScheme(final Scheme scheme) {
-		setSchemes(scheme == null 
-				? Collections.EMPTY_LIST
-				: Collections.singletonList(scheme));
-	}
-
-	public void setSchemes(final Collection schemes) {
-		/**
-		 * @todo Check for circualr deps.
-		 */
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * @param newRtuImpl
 	 */
 	public void setKis(KIS newRtuImpl) {
 		throw new UnsupportedOperationException();
+	}
+
+	public void setLabel(final String label) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setScheme(final Scheme scheme) {
+		setSchemes(scheme == null 
+				? Collections.EMPTY_LIST
+				: Collections.singletonList(scheme));
 	}
 
 	/**
@@ -334,6 +328,13 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException();
 	}
 
+	public void setSchemes(final Collection schemes) {
+		/**
+		 * @todo Check for circualr deps.
+		 */
+		throw new UnsupportedOperationException();
+	}
+
 	public void setSiteNode(final SiteNode siteNode) {
 		throw new UnsupportedOperationException();
 	}
@@ -351,14 +352,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setUgoCell(SchemeImageResource)
 	 */
 	public void setUgoCell(final SchemeImageResource ugoCellImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeElement getParentSchemeElement() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
 		throw new UnsupportedOperationException();
 	}
 }

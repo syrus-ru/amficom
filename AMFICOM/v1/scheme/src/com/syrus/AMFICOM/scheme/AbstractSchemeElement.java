@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.5 2005/03/23 14:55:35 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.6 2005/03/28 12:01:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.*;
  * {@link AbstractSchemeElement}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/23 14:55:35 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/28 12:01:28 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -25,6 +25,9 @@ public abstract class AbstractSchemeElement extends
 		Characterizable {
 	static final long serialVersionUID = 4644766113809681630L;
 
+	/**
+	 * @todo Check whether this attribute is necessary.
+	 */
 	private transient boolean alarmed;
 
 	private Collection characteristics;
@@ -33,6 +36,11 @@ public abstract class AbstractSchemeElement extends
 
 	private String name;
 
+	/**
+	 * @todo It may be necessary to allow accessor and modifier be
+	 *       overridden by descendants to add extra checks as SchemeElement
+	 *       and SchemeLink may be enclosed not by Scheme only.
+	 */
 	private Identifier parentSchemeId;
 
 	/**

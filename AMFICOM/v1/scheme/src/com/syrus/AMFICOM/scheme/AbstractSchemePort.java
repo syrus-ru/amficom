@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.5 2005/03/25 13:24:52 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.6 2005/03/28 12:01:28 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.*;
  * {@link AbstractSchemePort}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/25 13:24:52 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/28 12:01:28 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -42,16 +42,14 @@ public abstract class AbstractSchemePort extends
 	private Identifier parentSchemeDeviceId;
 
 	/**
-	 * Depending on implementation, may reference either
-	 * {@link com.syrus.AMFICOM.configuration.Port Port}or
-	 * {@link com.syrus.AMFICOM.configuration.Port CablePort}.
+	 * Depending on implementation, may reference either {@link Port Port}
+	 * or {@link Port CablePort}.
 	 */
 	private Identifier portId;
 
 	/**
 	 * Depending on implementation, may reference either
-	 * {@link com.syrus.AMFICOM.configuration.PortType PortType}or
-	 * {@link com.syrus.AMFICOM.configuration.PortType CablePortType}.
+	 * {@link PortType PortType} or {@link PortType CablePortType}.
 	 */
 	private Identifier portTypeId;
 
@@ -125,7 +123,10 @@ public abstract class AbstractSchemePort extends
 		throw new UnsupportedOperationException();
 	}
 
-	public final Port getPort() {
+	/**
+	 * Overridden by descendants to add extra checks.
+	 */
+	public Port getPort() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -147,11 +148,9 @@ public abstract class AbstractSchemePort extends
 	 *             <li>{@link SchemeCableLink#setTargetSchemeCablePort(SchemeCablePort)}</li></ul>
 	 *             -- instead.
 	 */
-	public abstract void setAbstractSchemeLink(
-			final AbstractSchemeLink abstractSchemeLink);
+	public abstract void setAbstractSchemeLink(final AbstractSchemeLink abstractSchemeLink);
 
-	public final void setAbstractSchemePortDirectionType(
-			final AbstractSchemePortDirectionType abstractSchemePortDirectionType) {
+	public final void setAbstractSchemePortDirectionType(final AbstractSchemePortDirectionType abstractSchemePortDirectionType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -175,13 +174,11 @@ public abstract class AbstractSchemePort extends
 		this.changed = true;
 	}
 
-	public final void setMeasurementPort(
-			final MeasurementPort measurementPort) {
+	public final void setMeasurementPort(final MeasurementPort measurementPort) {
 		throw new UnsupportedOperationException();
 	}
 
-	public final void setMeasurementPortType(
-			final MeasurementPortType measurementPortType) {
+	public final void setMeasurementPortType(final MeasurementPortType measurementPortType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -197,12 +194,16 @@ public abstract class AbstractSchemePort extends
 		this.changed = true;
 	}
 
-	public final void setParentSchemeDevice(
-			final SchemeDevice parentSchemeDevice) {
+	public final void setParentSchemeDevice(final SchemeDevice parentSchemeDevice) {
 		throw new UnsupportedOperationException();
 	}
 
-	public final void setPort(final Port port) {
+	/**
+	 * Overridden by descendants to add extra checks.
+	 *
+	 * @param port
+	 */
+	public void setPort(final Port port) {
 		throw new UnsupportedOperationException();
 	}
 

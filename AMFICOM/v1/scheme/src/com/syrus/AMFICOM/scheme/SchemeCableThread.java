@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.8 2005/03/28 08:24:52 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.9 2005/03/28 12:01:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.*;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/03/28 08:24:52 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/28 12:01:28 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -26,19 +26,19 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	private Identifier cableThreadTypeId;
 
-	private Identifier sourceSchemePortId;
-
-	private Identifier targetSchemePortId;
-
-	protected Identifier threadId = null;
-
 	private Collection characteristics;
 
 	private String description;
 
+	private Identifier linkId;
+
 	private String name;
 
 	private Identifier parentSchemeCableLinkId;
+
+	private Identifier sourceSchemePortId;
+
+	private Identifier targetSchemePortId;
 
 	/**
 	 * @param id
@@ -137,6 +137,10 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		return this.description;
 	}
 
+	public Link getLink() {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
 	 * @see Namable#getName()
 	 */
@@ -178,12 +182,8 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		throw new UnsupportedOperationException();
 	}
 
-	public Link getThread() {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @see TransferableObject#getTransferable()
 	 */
 	public Object getTransferable() {
 		throw new UnsupportedOperationException();
@@ -191,7 +191,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	/**
 	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(Characteristic)
+	 * @see Characterizable#removeCharacteristic(Characteristic)
 	 */
 	public void removeCharacteristic(final Characteristic characteristic) {
 		throw new UnsupportedOperationException();
@@ -232,6 +232,10 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		this.changed = true;
 	}
 
+	public void setLink(final Link link) {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
 	 * @see Namable#setName(String)
 	 */
@@ -250,7 +254,6 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	/**
 	 * @param schemePort
-	 * @see SchemeCableThread#setSchemePort(SchemePort)
 	 */
 	public void setSchemePort(final SchemePort schemePort) {
 		/**
@@ -264,13 +267,6 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	public void setTargetSchemePort(final SchemePort targetSchemePort) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newThreadImpl
-	 */
-	public void setThread(Link newThreadImpl) {
 		throw new UnsupportedOperationException();
 	}
 }

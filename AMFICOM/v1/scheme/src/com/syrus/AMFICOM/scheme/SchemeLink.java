@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.6 2005/03/25 13:24:52 bass Exp $
+ * $Id: SchemeLink.java,v 1.7 2005/03/28 12:01:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -18,13 +19,17 @@ import java.util.*;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/25 13:24:52 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/28 12:01:28 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
 	private static final long serialVersionUID = 3834587703751947064L;
 
-	protected Identifier siteId = null;
+	private Identifier parentSchemeElementId;
+
+	private Identifier parentSchemeProtoElementId;
+
+	private Identifier siteNodeId;
 
 	/**
 	 * @param id
@@ -80,8 +85,11 @@ public final class SchemeLink extends AbstractSchemeLink {
 		return schemeLink;
 	}
 
+	/**
+	 * @see AbstractSchemeLink#getAbstractLinkType()
+	 */
 	public AbstractLinkType getAbstractLinkType() {
-		throw new UnsupportedOperationException();
+		return getLinkType();
 	}
 
 	/**
@@ -98,11 +106,24 @@ public final class SchemeLink extends AbstractSchemeLink {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see AbstractSchemeLink#getLink()
+	 */
 	public Link getLink() {
-		throw new UnsupportedOperationException();
+		final Link link = super.getLink();
+		assert link == null || link.getSort().value() == LinkSort._LINKSORT_LINK: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		return link;
 	}
 
 	public LinkType getLinkType() {
+		throw new UnsupportedOperationException();
+	}
+
+	public SchemeElement getParentSchemeElement() {
+		throw new UnsupportedOperationException();
+	}
+
+	public SchemeProtoElement getParentSchemeProtoElement() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -139,41 +160,35 @@ public final class SchemeLink extends AbstractSchemeLink {
 		throw new UnsupportedOperationException();
 	}
 
-	public double opticalLength() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void opticalLength(double opticalLength) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double physicalLength() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void physicalLength(double physicalLength) {
-		throw new UnsupportedOperationException();
+	/**
+	 * @param abstractLinkType
+	 * @see AbstractSchemeLink#setAbstractLinkType(AbstractLinkType)
+	 */
+	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
+		setLinkType((LinkType) abstractLinkType);
 	}
 
 	/**
-	 * @param newAbstractLinkTypeImpl
+	 * @param link
+	 * @see AbstractSchemeLink#setLink(Link)
 	 */
-	public void setAbstractLinkType(
-			AbstractLinkType newAbstractLinkTypeImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newLinkImpl
-	 */
-	public void setLink(Link newLinkImpl) {
-		throw new UnsupportedOperationException();
+	public void setLink(final Link link) {
+		assert link == null || link.getSort().value() == LinkSort._LINKSORT_LINK: ErrorMessages.NATURE_INVALID;
+		super.setLink(link);
 	}
 
 	/**
 	 * @param newLinkTypeImpl
 	 */
 	public void setLinkType(LinkType newLinkTypeImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
 		throw new UnsupportedOperationException();
 	}
 

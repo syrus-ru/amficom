@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.3 2005/03/25 13:24:52 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.4 2005/03/28 12:01:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,51 +18,49 @@ import java.util.Date;
  * {@link AbstractSchemeLink}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/25 13:24:52 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/28 12:01:28 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	private static final long serialVersionUID = 1423195997939538835L;
 
 	/**
-	 * Depending on implementation, may reference either
-	 * {@link com.syrus.AMFICOM.configuration.LinkType}or
-	 * {@link com.syrus.AMFICOM.configuration.CableLinkType}.
+	 * Depending on implementation, may reference either {@link LinkType} or
+	 * {@link CableLinkType}.
 	 */
-	protected Identifier abstractLinkTypeId = null;
-
-	/**
-	 * Depending on implementation, may reference either
-	 * {@link com.syrus.AMFICOM.configuration.Link link}or
-	 * {@link com.syrus.AMFICOM.configuration.Link cable link}.
-	 */
-	protected Identifier linkId = null;
+	protected Identifier abstractLinkTypeId;
 
 	/**
 	 * Depending on implementation, may reference either {@link SchemePort}
 	 * or {@link SchemeCablePort}.
 	 */
-	protected Identifier sourceAbstractSchemePortId = null;
+	protected Identifier sourceAbstractSchemePortId;
 
 	/**
 	 * Depending on implementation, may reference either {@link SchemePort}
 	 * or {@link SchemeCablePort}.
 	 */
-	protected Identifier targetAbstractSchemePortId = null;
+	protected Identifier targetAbstractSchemePortId;
+
+	/**
+	 * Depending on implementation, may reference either {@link Link link}
+	 * or {@link Link cable link}.
+	 */
+	private Identifier linkId;
 
 	/**
 	 * 0 means either zero or unspecified length.
 	 * 
-	 * @see #opticalLength()
+	 * @see #getOpticalLength()
 	 */
-	protected double thisOpticalLength = 0;
+	private double opticalLength;
 
 	/**
 	 * 0 means either zero or unspecified length.
 	 * 
-	 * @see #physicalLength()
+	 * @see #getPhysicalLength()
 	 */
-	protected double thisPhysicalLength = 0;
+	private double physicalLength;
 
 	/**
 	 * @param id
@@ -85,51 +83,71 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
+	public abstract AbstractLinkType getAbstractLinkType();
+	
 	/**
-	 * Getter returns optical length of this scheme link or scheme cable
-	 * link.
-	 * 
-	 * @see #thisOpticalLength
+	 * Overridden by descendants to add extra checks.
 	 */
-	public abstract double opticalLength();
+	public Link getLink() {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * Getter returns optical length of this scheme link or scheme cable
 	 * link.
 	 * 
-	 * @see #thisOpticalLength
+	 * @see #opticalLength
 	 */
-	public abstract void opticalLength(double newOpticalLength);
+	public final double getOpticalLength() {
+		return this.opticalLength;
+	}
 
 	/**
 	 * Getter returns physical length of this scheme link or scheme cable
 	 * link.
 	 * 
-	 * @see #thisPhysicalLength
+	 * @see #physicalLength
 	 */
-	public abstract double physicalLength();
-
-	/**
-	 * Getter returns physical length of this scheme link or scheme cable
-	 * link.
-	 * 
-	 * @see #thisPhysicalLength
-	 */
-	public abstract void physicalLength(double newPhysicalLength);
+	public final double getPhysicalLength() {
+		return this.physicalLength;
+	}
 
 	public abstract AbstractSchemePort getSourceAbstractSchemePort();
 
-	public abstract void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort);
-
 	public abstract AbstractSchemePort getTargetAbstractSchemePort();
-
-	public abstract void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort);
-
-	public abstract AbstractLinkType getAbstractLinkType();
 	
 	public abstract void setAbstractLinkType(final AbstractLinkType abstractLinkType);
-	
-	public abstract Link getLink();
 
-	public abstract void setLink(final Link link);
+	/**
+	 * Overridden by descendants to add extra checks.
+	 *
+	 * @param link
+	 */
+	public void setLink(final Link link) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Getter returns optical length of this scheme link or scheme cable
+	 * link.
+	 * 
+	 * @see #opticalLength
+	 */
+	public final void setOpticalLength(final double opticalLength) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Getter returns physical length of this scheme link or scheme cable
+	 * link.
+	 * 
+	 * @see #physicalLength
+	 */
+	public final void setPhysicalLength(final double physicalLength) {
+		throw new UnsupportedOperationException();
+	}
+
+	public abstract void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort);
+
+	public abstract void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort);
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.7 2005/03/25 13:24:52 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.8 2005/03/28 12:01:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.*;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/03/25 13:24:52 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/28 12:01:28 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -111,7 +111,7 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	public double getPrice() {
-		throw new UnsupportedOperationException();
+		return this.price;
 	}
 
 	public Collection getSchemePaths() {

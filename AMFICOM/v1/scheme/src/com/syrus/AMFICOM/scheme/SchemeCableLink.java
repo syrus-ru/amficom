@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.6 2005/03/28 08:24:52 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.7 2005/03/28 12:01:27 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
@@ -17,13 +18,11 @@ import java.util.*;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/28 08:24:52 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/28 12:01:27 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
 	private static final long serialVersionUID = 3760847878314274867L;
-
-	protected Identifier schemeCableThreadIds[] = null;
 
 	/**
 	 * @param id
@@ -71,33 +70,11 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		}
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public CableChannelingItem[] getCableChannelingItemsAsArray() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void setCableChannelingItemsAsArray(final CableChannelingItem cableChannelingItems[]) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Collection getCableChannelingItems() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setCableChannelingItems(final Collection cableChannelingItems) {
-		throw new UnsupportedOperationException();
-	}
-
 	public void addCableChannelingItem(final CableChannelingItem cableChannelingItem) {
 		throw new UnsupportedOperationException();
 	}
 
-	public void removeCableChannelingItem(final CableChannelingItem cableChannelingItem) {
+	public void addSchemeCableThread(final SchemeCableThread schemeCableThread) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -110,7 +87,21 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		return schemeCableLink;
 	}
 
+	/**
+	 * @see AbstractSchemeLink#getAbstractLinkType()
+	 */
 	public AbstractLinkType getAbstractLinkType() {
+		return getCableLinkType();
+	}
+
+	public Collection getCableChannelingItems() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public CableChannelingItem[] getCableChannelingItemsAsArray() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -132,7 +123,23 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see AbstractSchemeLink#getLink()
+	 */
 	public Link getLink() {
+		final Link link = super.getLink();
+		assert link == null || link.getSort().value() == LinkSort._LINKSORT_CABLELINK: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		return link;
+	}
+
+	public Collection getSchemeCableThreads() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public SchemeCableThread[] getSchemeCableThreadsAsArray() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -165,45 +172,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		throw new UnsupportedOperationException();
 	}
 
-	public double opticalLength() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void opticalLength(double opticalLength) {
-		throw new UnsupportedOperationException();
-	}
-
-	public double physicalLength() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void physicalLength(double physicalLength) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public SchemeCableThread[] getSchemeCableThreadsAsArray() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void setSchemeCableThreadsAsArray(final SchemeCableThread schemeCableThreads[]) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Collection getSchemeCableThreads() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setSchemeCableThreads(final Collection schemeCableThreads) {
-		throw new UnsupportedOperationException();
-	}
-
-	public void addSchemeCableThread(final SchemeCableThread schemeCableThread) {
+	public void removeCableChannelingItem(final CableChannelingItem cableChannelingItem) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -211,7 +180,22 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param abstractLinkType
+	 * @see AbstractSchemeLink#setAbstractLinkType(AbstractLinkType)
+	 */
 	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
+		setCableLinkType((CableLinkType) abstractLinkType);
+	}
+
+	public void setCableChannelingItems(final Collection cableChannelingItems) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public void setCableChannelingItemsAsArray(final CableChannelingItem cableChannelingItems[]) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -220,9 +204,22 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	/**
-	 * @param newLinkImpl
+	 * @param link
+	 * @see AbstractSchemeLink#setLink(Link)
 	 */
-	public void setLink(Link newLinkImpl) {
+	public void setLink(final Link link) {
+		assert link == null || link.getSort().value() == LinkSort._LINKSORT_CABLELINK: ErrorMessages.NATURE_INVALID;
+		super.setLink(link);
+	}
+
+	public void setSchemeCableThreads(final Collection schemeCableThreads) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public void setSchemeCableThreadsAsArray(final SchemeCableThread schemeCableThreads[]) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.5 2005/03/25 13:24:52 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.6 2005/03/28 12:01:27 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import com.syrus.AMFICOM.configuration.Port;
+import com.syrus.AMFICOM.configuration.corba.PortSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
@@ -16,7 +18,7 @@ import java.util.*;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/25 13:24:52 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/28 12:01:27 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -99,6 +101,15 @@ public final class SchemeCablePort extends AbstractSchemePort {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see AbstractSchemePort#getPort()
+	 */
+	public Port getPort() {
+		final Port port = super.getPort();
+		assert port == null || port.getSort() == PortSort._PORT_SORT_CABLE_PORT: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		return port;
+	}
+
 	public SchemeCableLink getSchemeCableLink() {
 		throw new UnsupportedOperationException();
 	}
@@ -122,6 +133,15 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 */
 	public void setAbstractSchemeLink(final AbstractSchemeLink abstractSchemeLink) {
 		setSchemeCableLink((SchemeCableLink) abstractSchemeLink);
+	}
+
+	/**
+	 * @param port
+	 * @see AbstractSchemePort#setPort(Port)
+	 */
+	public void setPort(final Port port) {
+		assert port == null || port.getSort() == PortSort._PORT_SORT_CABLE_PORT: ErrorMessages.NATURE_INVALID;
+		super.setPort(port);
 	}
 
 	/**

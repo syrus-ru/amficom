@@ -1,7 +1,7 @@
-/*
- * $Id: SchemeUtils.java,v 1.18 2005/03/28 08:24:52 bass Exp $
+/*-
+ * $Id: SchemeUtils.java,v 1.19 2005/03/28 12:01:27 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -16,7 +16,7 @@ import java.util.*;
  * Functionality will be partially moved to {@link PathElement}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/03/28 08:24:52 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/28 12:01:27 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -81,7 +81,7 @@ public class SchemeUtils {
 			case PathElementKind._SCHEME_CABLE_LINK:
 			case PathElementKind._SCHEME_LINK:
 				AbstractSchemeLink link = (AbstractSchemeLink)pe.getAbstractSchemeElement();
-				return link.opticalLength() / link.physicalLength();
+				return link.getOpticalLength() / link.getPhysicalLength();
 			default:
 				return 1;
 		}
@@ -416,7 +416,7 @@ public class SchemeUtils {
 		switch (pe.getPathElementKind().value()) {
 			case PathElementKind._SCHEME_CABLE_LINK:
 			case PathElementKind._SCHEME_LINK:
-				return ((AbstractSchemeLink)pe.getAbstractSchemeElement()).opticalLength();
+				return ((AbstractSchemeLink)pe.getAbstractSchemeElement()).getOpticalLength();
 			default:
 				return 0;
 		}
@@ -427,7 +427,7 @@ public class SchemeUtils {
 		switch (pe.getPathElementKind().value()) {
 			case PathElementKind._SCHEME_CABLE_LINK:
 			case PathElementKind._SCHEME_LINK:
-				((AbstractSchemeLink)pe.getAbstractSchemeElement()).opticalLength(d);
+				((AbstractSchemeLink)pe.getAbstractSchemeElement()).setOpticalLength(d);
 		}
 	}
 
@@ -446,7 +446,7 @@ public class SchemeUtils {
 			case PathElementKind._SCHEME_CABLE_LINK:
 			case PathElementKind._SCHEME_LINK:
 				return ((AbstractSchemeLink)pe.getAbstractSchemeElement()).
-						physicalLength();
+						getPhysicalLength();
 			default:
 				return 0;
 		}
@@ -457,7 +457,7 @@ public class SchemeUtils {
 		switch (pe.getPathElementKind().value()) {
 			case PathElementKind._SCHEME_CABLE_LINK:
 			case PathElementKind._SCHEME_LINK:
-				((AbstractSchemeLink)pe.getAbstractSchemeElement()).physicalLength(d);
+				((AbstractSchemeLink)pe.getAbstractSchemeElement()).setPhysicalLength(d);
 		}
 	}
 }
