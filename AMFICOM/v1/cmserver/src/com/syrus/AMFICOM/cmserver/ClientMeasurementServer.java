@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.2 2004/09/20 12:20:55 bob Exp $
+ * $Id: ClientMeasurementServer.java,v 1.3 2004/09/20 14:21:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
 import org.omg.PortableServer.*;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/09/20 12:20:55 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/20 14:21:19 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -55,6 +55,9 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 	private static void startup() {
 		/* Create CORBA server with servant(s) */
 		activateCORBAServer();
+		
+		DatabaseContextSetup.initDatabaseContext();
+		DatabaseContextSetup.initObjectPools();
 		
 		/*	Start main loop	*/
 		final ClientMeasurementServer clientMeasurementServer = new ClientMeasurementServer();
