@@ -1,29 +1,49 @@
 package com.syrus.AMFICOM.Client.Analysis.UI;
 
-import java.util.List;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import javax.swing.*;
+import java.util.Collection;
+import java.util.Iterator;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.logic.IconPopulatableItem;
+import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.logic.ItemTreeIconLabelCellRenderer;
+import com.syrus.AMFICOM.logic.LogicalTreeUI;
+import com.syrus.AMFICOM.logic.PopulatableItem;
+import com.syrus.AMFICOM.logic.SelectionListener;
+import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.io.*;
+import com.syrus.io.BellcoreReader;
+import com.syrus.io.BellcoreStructure;
 
-public class ReflectogrammLoadDialog extends JDialog implements OperationListener
+public class ReflectogrammLoadDialog extends JDialog 
 {
 	public int ret_code = 0;
 	private Object resource;
 
-	private Dispatcher dispatcher = new Dispatcher();
 	private ApplicationContext aContext;
 	private Identifier domainId;
 
@@ -47,8 +67,6 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 		{
 			e.printStackTrace();
 		}
-
-		dispatcher.register(this, "treedataselectionevent");
 	}
 
 	private void jbInit() throws Exception
@@ -70,11 +88,6 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 		setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height - 30) / 2);
 
 		setResizable(true);
-
-//      ReflectogrammTreeModel lrtm =
-//      new ReflectogrammTreeModel(this.aContext.getDataSourceInterface());
-//
-//      UniTreePanel utp = new UniTreePanel(this.dispatcher, this.aContext, lrtm);
 
 		JPanel ocPanel = new JPanel();
 		ocPanel.setMinimumSize(new Dimension(293, 30));
@@ -155,15 +168,40 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 
 		try
 		{
-			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+			Identifier domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
 			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-					domain_id, true);
-
-			ArchiveTreeModel lrtm = new ArchiveTreeModel(domain);
-			UniTreePanel utp = new UniTreePanel(dispatcher, aContext, lrtm);
-
-			scrollPane.getViewport().add(utp, null);
-
+					domainId, true);		
+			
+			ArchiveChildrenFactory childrenFactory = ArchiveChildrenFactory.getInstance();
+			childrenFactory.setDomainId(domainId);
+			PopulatableItem item = new PopulatableItem();
+			item.setObject(ArchiveChildrenFactory.ROOT);
+			item.setName("Архив");
+			item.setChildrenFactory(childrenFactory);
+			item.populate();			
+			LogicalTreeUI treeUI = new LogicalTreeUI(item, false);
+			treeUI.setRenderer(IconPopulatableItem.class, new ItemTreeIconLabelCellRenderer());
+			treeUI.getTreeModel().setAllwaysSort(false);
+			this.scrollPane.getViewport().add(treeUI.getTree(), null);
+			treeUI.addSelectionListener(new SelectionListener() {
+				
+				public void selectedItems(Collection items) {
+					if (!items.isEmpty()) {
+						for (Iterator it = items.iterator(); it.hasNext();) {
+							Item item = (Item) it.next();
+							Object object = item.getObject();
+							if (object instanceof Result) {
+								okButton.setEnabled(true);
+								resource = object;
+							} else {
+								okButton.setEnabled(false);
+							}
+						}
+					}
+					
+				}
+			});
+			
 			getContentPane().add(scrollPane, BorderLayout.CENTER);
 			setTitle("Выберите рефлектограмму" + " (" + domain.getName() + ")");
 		}
@@ -171,26 +209,7 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 		{
 			ex.printStackTrace();
 		}
-	}
-
-	public void operationPerformed(OperationEvent oe)
-	{
-		if(oe instanceof TreeDataSelectionEvent)
-		{
-			TreeDataSelectionEvent ev = (TreeDataSelectionEvent)oe;
-			if(ev.getDataClass() != null && ev.getDataClass().equals(Result.class)
-					&& ev.getSelectionNumber() != -1)
-			{
-				okButton.setEnabled(true);
-				List data = ev.getList();
-				resource = data.get(ev.getSelectionNumber());
-			}
-			else
-			{
-				okButton.setEnabled(false);
-			}
-		}
-	}
+	}	
 
 	void okButton_actionPerformed(ActionEvent e)
 	{
