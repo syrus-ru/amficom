@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathWrapper.java,v 1.2 2005/01/26 15:09:22 bob Exp $
+ * $Id: TransmissionPathWrapper.java,v 1.3 2005/01/27 07:02:32 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,13 @@ import java.util.List;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/27 07:02:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -53,7 +54,8 @@ public final class TransmissionPathWrapper implements Wrapper {
 		// empty private constructor
 		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
 				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_CHARACTERISTICS};
+				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_CHARACTERISTICS,
+				ObjectEntities.TRANSPATHMELINK_ENTITY};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -98,6 +100,8 @@ public final class TransmissionPathWrapper implements Wrapper {
 				return path.getFinishPortId().getIdentifierString();
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return path.getCharacteristics();
+			if (key.equals(ObjectEntities.TRANSPATHMELINK_ENTITY))
+				return path.getMonitoredElementIds();
 		}
 		return null;
 	}
@@ -134,6 +138,11 @@ public final class TransmissionPathWrapper implements Wrapper {
 				} catch (ApplicationException e) {
 					Log.errorMessage("TransmissionPathWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				}
+			} else if (key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY)) {
+				List meIds = new ArrayList(((List) value).size());
+				for (Iterator it = ((List) value).iterator(); it.hasNext();)
+					meIds.add(new Identifier((String) it.next()));
+				path.setMonitoredElementIds(meIds);
 			}
 		}
 	}
@@ -152,7 +161,7 @@ public final class TransmissionPathWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS))
+		if (key.equals(COLUMN_CHARACTERISTICS) || key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY))
 			return List.class;
 		return String.class;
 	}

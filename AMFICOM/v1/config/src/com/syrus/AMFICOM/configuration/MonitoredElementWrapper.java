@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementWrapper.java,v 1.2 2005/01/26 15:09:22 bob Exp $
+ * $Id: MonitoredElementWrapper.java,v 1.3 2005/01/27 07:02:32 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
@@ -19,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/27 07:02:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -32,6 +33,12 @@ public final class MonitoredElementWrapper implements Wrapper {
 
 	public static final String COLUMN_LOCAL_ADDRESS = "local_address";
 
+	public static final String COLUMN_MONITORED_DOMAIN_MEMBER = "MonitoredDomainMember";
+	
+	public static final String LINK_COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
+	public static final String LINK_COLUMN_EQUIPMENT_ID = "equipment_id";
+	public static final String LINK_COLUMN_TRANSMISSION_PATH_ID = "transmission_path_id";
+
 	private static MonitoredElementWrapper	instance;
 
 	private List							keys;
@@ -41,7 +48,7 @@ public final class MonitoredElementWrapper implements Wrapper {
 		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
 				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
 				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_NAME, COLUMN_MEASUREMENT_PORT_ID, COLUMN_SORT,
-				COLUMN_LOCAL_ADDRESS};
+				COLUMN_LOCAL_ADDRESS, COLUMN_MONITORED_DOMAIN_MEMBER};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -82,6 +89,8 @@ public final class MonitoredElementWrapper implements Wrapper {
 				return Integer.toString(me.getSort().value());
 			if (key.equals(COLUMN_LOCAL_ADDRESS))
 				return me.getLocalAddress();
+			if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER))
+				return me.getMonitoredDomainMemberIds();
 		}
 		return null;
 	}
@@ -101,6 +110,12 @@ public final class MonitoredElementWrapper implements Wrapper {
 				me.setSort(MonitoredElementSort.from_int(Integer.parseInt((String) value)));
 			else if (key.equals(COLUMN_LOCAL_ADDRESS))
 				me.setLocalAddress((String) value);
+			if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER)) {
+				List meDomainMemeberIds = new ArrayList(((List) value).size());
+				for (Iterator it = ((List) value).iterator(); it.hasNext();)
+					meDomainMemeberIds.add(new Identifier((String) it.next()));
+				me.setMonitoredDomainMemberIds(meDomainMemeberIds);
+			}
 		}
 	}
 
@@ -118,6 +133,8 @@ public final class MonitoredElementWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {
+		if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER))
+			return List.class;
 		return String.class;
 	}
 }

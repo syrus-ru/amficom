@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeWrapper.java,v 1.2 2005/01/26 15:09:21 bob Exp $
+ * $Id: CableLinkTypeWrapper.java,v 1.3 2005/01/27 07:02:32 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:21 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/27 07:02:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -57,7 +57,7 @@ public final class CableLinkTypeWrapper implements Wrapper {
 				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
 				StorableObjectDatabase.COLUMN_MODIFIER_ID, StorableObjectType.COLUMN_CODENAME,
 				StorableObjectType.COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_SORT, COLUMN_MANUFACTURER,
-				COLUMN_MANUFACTURER_CODE, COLUMN_IMAGE_ID, COLUMN_CHARACTERISTICS};
+				COLUMN_MANUFACTURER_CODE, COLUMN_IMAGE_ID, COLUMN_CHARACTERISTICS, COLUMN_CABLE_THREAD_TYPES};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}

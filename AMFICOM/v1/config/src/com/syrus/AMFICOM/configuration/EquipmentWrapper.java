@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.2 2005/01/26 15:09:22 bob Exp $
+ * $Id: EquipmentWrapper.java,v 1.3 2005/01/27 07:02:32 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,13 @@ import java.util.List;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/27 07:02:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -70,7 +71,7 @@ public final class EquipmentWrapper implements Wrapper {
 				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID,
 				COLUMN_IMAGE_ID, COLUMN_LONGITUDE, COLUMN_LATITUDE, COLUMN_SUPPLIER, COLUMN_SUPPLIER_CODE,
 				COLUMN_HW_SERIAL, COLUMN_HW_VERSION, COLUMN_SW_SERIAL, COLUMN_SW_VERSION, COLUMN_INVENTORY_NUMBER,
-				COLUMN_PORT_IDS, COLUMN_CHARACTERISTICS};
+				COLUMN_PORT_IDS, COLUMN_CHARACTERISTICS, ObjectEntities.EQUIPMENTMELINK_ENTITY};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -133,6 +134,8 @@ public final class EquipmentWrapper implements Wrapper {
 				return equipment.getCharacteristics();
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return equipment.getCharacteristics();
+			if (key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY))
+				return equipment.getMonitoredElementIds();
 		}
 		return null;
 	}
@@ -179,7 +182,7 @@ public final class EquipmentWrapper implements Wrapper {
 				List portIds = new ArrayList(((List) value).size());
 				for (Iterator it = ((List) value).iterator(); it.hasNext();)
 					portIds.add(new Identifier((String) it.next()));
-				equipment.setPortIds0(portIds);
+				equipment.setPortIds(portIds);
 			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				List charIdStr = (List) value;
 				List characteristicIds = new ArrayList(charIdStr.size());
@@ -191,6 +194,11 @@ public final class EquipmentWrapper implements Wrapper {
 				} catch (ApplicationException e) {
 					Log.errorMessage("EquipmentWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				}
+			} else if (key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY)) {
+				List meIds = new ArrayList(((List) value).size());
+				for (Iterator it = ((List) value).iterator(); it.hasNext();)
+					meIds.add(new Identifier((String) it.next()));
+				equipment.setMonitoredElementIds(meIds);
 			}
 		}
 	}
@@ -209,7 +217,7 @@ public final class EquipmentWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_PORT_IDS) || key.equals(COLUMN_CHARACTERISTICS))
+		if (key.equals(COLUMN_PORT_IDS) || key.equals(COLUMN_CHARACTERISTICS) || key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY))
 			return List.class;
 		return String.class;
 	}
