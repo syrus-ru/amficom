@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredDomainMember.java,v 1.5 2004/12/10 12:13:50 bob Exp $
+ * $Id: MonitoredDomainMember.java,v 1.6 2004/12/27 09:56:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,13 +15,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/10 12:13:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2004/12/27 09:56:24 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
 public abstract class MonitoredDomainMember extends DomainMember {
-	static final long serialVersionUID = 7920469930983188858L;
+	private static final long serialVersionUID = 7920469930983188858L;
 
 	List monitoredElementIds;
 

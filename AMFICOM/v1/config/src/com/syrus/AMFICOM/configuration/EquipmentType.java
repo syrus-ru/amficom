@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.31 2004/12/24 18:49:40 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.32 2004/12/27 09:56:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,13 +30,13 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/12/24 18:49:40 $
+ * @version $Revision: 1.32 $, $Date: 2004/12/27 09:56:24 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
 
 public class EquipmentType extends StorableObjectType implements Characterized {
-	static final long serialVersionUID = 9157517478787463967L;
+	private static final long serialVersionUID = 9157517478787463967L;
 
 	private String                     name;
 	private String                     manufacturer;

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.17 2004/12/22 10:07:42 bob Exp $
+ * $Id: TransmissionPathType.java,v 1.18 2004/12/27 09:56:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,14 +29,14 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/12/22 10:07:42 $
- * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2004/12/27 09:56:24 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
 public class TransmissionPathType extends StorableObjectType implements Characterized {
 	
-	static final long serialVersionUID = 5311725679846973948L;	
+	private static final long serialVersionUID = 5311725679846973948L;	
 	
     private String name;
     private List characteristics;

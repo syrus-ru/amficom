@@ -1,5 +1,5 @@
 /*
- * $Id: ActionType.java,v 1.6 2004/11/16 15:48:44 bob Exp $
+ * $Id: ActionType.java,v 1.7 2004/12/27 09:58:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,13 +14,13 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/11/16 15:48:44 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2004/12/27 09:58:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public abstract class ActionType extends StorableObjectType {
-	static final long serialVersionUID = 8566361712792210504L;
+	private static final long serialVersionUID = 8566361712792210504L;
 
 	public ActionType(Identifier id) {
 		super(id);

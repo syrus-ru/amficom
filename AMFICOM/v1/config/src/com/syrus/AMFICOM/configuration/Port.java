@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.28 2004/12/22 10:07:42 bob Exp $
+ * $Id: Port.java,v 1.29 2004/12/27 09:56:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,12 +33,12 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/12/22 10:07:42 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2004/12/27 09:56:24 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public class Port extends StorableObject implements Characterized, TypedObject {
-	static final long serialVersionUID = -5139393638116159453L;
+	private static final long serialVersionUID = -5139393638116159453L;
 
 	private PortType type;	
 	private String description;

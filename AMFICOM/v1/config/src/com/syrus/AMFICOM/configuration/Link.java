@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.21 2004/12/22 10:07:41 bob Exp $
+ * $Id: Link.java,v 1.22 2004/12/27 09:56:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,12 +31,12 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/12/22 10:07:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2004/12/27 09:56:24 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterized, TypedObject {
-	static final long serialVersionUID = -4235048398372768515L;
+	private static final long serialVersionUID = -4235048398372768515L;
 
 	private String name;
 	private String description;		

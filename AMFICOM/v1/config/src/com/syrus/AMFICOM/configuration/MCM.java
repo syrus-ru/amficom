@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.37 2004/12/22 10:07:42 bob Exp $
+ * $Id: MCM.java,v 1.38 2004/12/27 09:56:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,13 +28,13 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/12/22 10:07:42 $
- * @author $Author: bob $
+ * @version $Revision: 1.38 $, $Date: 2004/12/27 09:56:24 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
 public class MCM extends DomainMember implements Characterized {
-	static final long serialVersionUID = 4622885259080741046L;
+	private static final long serialVersionUID = 4622885259080741046L;
 
 	private String name;
 	private String description;
