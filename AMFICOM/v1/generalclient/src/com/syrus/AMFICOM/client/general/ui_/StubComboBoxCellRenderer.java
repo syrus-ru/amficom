@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.client.general.ui;
+package com.syrus.AMFICOM.client.general.ui_;
 
 import javax.swing.JTable;
 
@@ -7,9 +7,9 @@ import com.syrus.AMFICOM.client.resource.ObjectResourceController;
 
 /**
  * Simple stub of AbstractComboBoxCellRenderer.
- * see {@link com.syrus.AMFICOM.client.general.ui.AbstractComboBoxCellRenderer}
+ * see {@link com.syrus.AMFICOM.client.general.ui_.AbstractComboBoxCellRenderer}
  * 
- * @version $Revision: 1.2 $, $Date: 2004/08/24 14:22:06 $
+ * @version $Revision: 1.1 $, $Date: 2004/08/25 06:07:01 $
  * @author $Author: bob $
  * @module generalclient_v1
  */

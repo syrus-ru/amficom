@@ -1,5 +1,4 @@
-
-package com.syrus.AMFICOM.client.general.ui;
+package com.syrus.AMFICOM.client.general.ui_;
 
 import java.awt.Component;
 
@@ -14,7 +13,7 @@ import javax.swing.border.EmptyBorder;
 
 /**
  * Renderer for JCheckBox items based on JLabel.
- * @version $Revision: 1.2 $, $Date: 2004/08/24 14:22:06 $
+ * @version $Revision: 1.1 $, $Date: 2004/08/25 06:07:01 $
  * @author $Author: bob $
  * @module generalclient_v1
  */

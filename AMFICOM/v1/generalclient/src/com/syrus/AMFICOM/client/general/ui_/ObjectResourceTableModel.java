@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.client.general.ui;
+package com.syrus.AMFICOM.client.general.ui_;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client.resource.ObjectResourceController;
@@ -12,7 +12,7 @@ import javax.swing.table.AbstractTableModel;
 import java.util.Iterator;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/24 14:22:06 $
+ * @version $Revision: 1.1 $, $Date: 2004/08/25 06:07:01 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
