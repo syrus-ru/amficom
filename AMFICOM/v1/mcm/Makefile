@@ -27,7 +27,7 @@ $(call checkenve,ORACLE_HOME)
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
-$(LIBNAME): .mach
+$(LIBNAME): .head
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
@@ -44,6 +44,9 @@ $(LIBNAME_INTERFACE):	.corba
 	$(JAVAH) $(JAVAH_FLAGS) \
 		-d $(TRANSCEIVER_DIR) \
 		com.syrus.AMFICOM.mcm.Transceiver
+	$(JAVAH) $(JAVAH_FLAGS) \
+		-d $(TRANSCEIVER_DIR) \
+		com.syrus.AMFICOM.mcm.TCPServer
 	$(JAVAH) $(JAVAH_FLAGS) \
 		-d $(DADARA_DIR) \
 		com.syrus.AMFICOM.mcm.DadaraAnalysisManager
@@ -86,7 +89,7 @@ $(CLASSDIR):
 	mkdir -p $@
 
 .PHONY:	clean
-clean:	cleanmach cleancorba
+clean:	cleanmach cleancorba cleanhead
 	rm -f $(LIBNAME) $(LIBNAME_INTERFACE)
 
 .PHONY:	cleanmach
@@ -98,6 +101,7 @@ cleanmach:
 cleanhead:
 	$(RM) -f \
 		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_Transceiver.h \
+		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_TCPServer.h \		
 		$(DADARA_DIR)/com_syrus_AMFICOM_mcm_DadaraAnalysisManager.h \
 		.head
 	
