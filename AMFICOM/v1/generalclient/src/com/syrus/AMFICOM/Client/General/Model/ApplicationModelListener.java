@@ -42,4 +42,3 @@ public interface ApplicationModelListener
 	// с указанием списка измененных элементов
 	void modelChanged(String e[]);
 }
-

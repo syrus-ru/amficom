@@ -429,4 +429,3 @@ public class LangModel extends ListResourceBundle
 	}
 
 }
-

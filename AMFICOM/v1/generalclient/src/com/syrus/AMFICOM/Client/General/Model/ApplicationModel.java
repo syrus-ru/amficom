@@ -473,4 +473,3 @@ public class ApplicationModel
 		return new ApplicationModel(this);
 	}
 }
-

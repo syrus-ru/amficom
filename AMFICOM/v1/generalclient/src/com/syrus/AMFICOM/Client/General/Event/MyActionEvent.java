@@ -35,4 +35,3 @@ public class MyActionEvent extends OperationEvent
 		return command_name;
 	}
 }
-

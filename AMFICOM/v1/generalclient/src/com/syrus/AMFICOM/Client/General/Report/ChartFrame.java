@@ -27,7 +27,7 @@
  * Original Author:  David Gilbert (for Object Refinery Limited);
  * Contributor(s):   -;
  *
- * $Id: ChartFrame.java,v 1.1 2004/06/09 08:03:04 peskovsky Exp $
+ * $Id: ChartFrame.java,v 1.2 2004/06/22 09:26:53 arseniy Exp $
  *
  * Changes
  * -------

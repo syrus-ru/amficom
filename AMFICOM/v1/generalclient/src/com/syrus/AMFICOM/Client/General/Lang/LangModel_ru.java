@@ -469,4 +469,3 @@ public class LangModel_ru extends LangModel
 		return contents;
 	}
 }
-
