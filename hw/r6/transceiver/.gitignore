@@ -1,0 +1,6 @@
+com_syrus_AMFICOM_kis_Transceiver.h
+*.so
+*.o
+*.swp
+*.tar
+*.gz

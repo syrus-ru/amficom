@@ -2,7 +2,7 @@ SRC=./src
 CLASSDIR=./classes
 LIB=$(HOME)/work/AMFICOM_v1/lib
 QPLIB=/mnt/e/Java/Nettest/2.0/lib/rtu
-TRANSCEIVER=../transceiver
+TRANSCEIVER=./transceiver
 
 QPCLASSPATH=$(QPLIB)/QuestFiberServer.jar:$(QPLIB)/QuestFiberServerClientInterface.jar:$(QPLIB)/QuestFiberServerRMI.jar:$(QPLIB)/QuestFiberGUI.jar
 APPCLASSPATH=$(LIB)/util.jar
