@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.25 2005/03/22 16:07:33 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.26 2005/03/23 12:37:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,23 +16,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
-import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.StorableObjectConditionSort;
 import com.syrus.AMFICOM.mcm.corba.MCMPOA;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
@@ -46,39 +42,12 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/03/22 16:07:33 $
+ * @version $Revision: 1.26 $, $Date: 2005/03/23 12:37:48 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public class MCMImplementation extends MCMPOA {
-
-	protected StorableObjectCondition restoreCondition(StorableObjectCondition_Transferable transferable)
-			throws IllegalDataException {
-		StorableObjectCondition condition = null;
-		switch (transferable.discriminator().value()) {
-			case StorableObjectConditionSort._COMPOUND:
-				condition = new CompoundCondition(transferable.compoundCondition());
-				break;
-			case StorableObjectConditionSort._LINKED_IDS:
-				condition = new LinkedIdsCondition(transferable.linkedIdsCondition());
-				break;
-			case StorableObjectConditionSort._TYPICAL:
-				condition = new TypicalCondition(transferable.typicalCondition());
-				break;
-			case StorableObjectConditionSort._EQUIVALENT:
-				condition = new EquivalentCondition(transferable.equialentCondition());
-				break;
-			default:
-				String msg = "CMGeneralReceive.restoreCondition | condition class "
-						+ transferable.getClass().getName()
-						+ " is not suppoted";
-				Log.errorMessage(msg);
-				throw new IllegalDataException(msg);
-
-		}
-		return condition;
-	}
 
 	public void receiveTests(Test_Transferable[] testsT) throws AMFICOMRemoteException {
 		try {
@@ -167,11 +136,12 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-	public Measurement_Transferable[] transmitMeasurementsButIds(StorableObjectCondition_Transferable storableObjectCondition_Transferable,
-			Identifier_Transferable[] identifier_Transferables) throws AMFICOMRemoteException {
+	public Measurement_Transferable[] transmitMeasurementsButIdsByCondition(Identifier_Transferable[] identifier_Transferables,
+			StorableObjectCondition_Transferable storableObjectCondition_Transferable)
+			throws AMFICOMRemoteException {
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(storableObjectCondition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -256,12 +226,13 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-	public Analysis_Transferable[] transmitAnalysesButIds(StorableObjectCondition_Transferable storableObjectCondition_Transferable,
-			Identifier_Transferable[] identifier_Transferables) throws AMFICOMRemoteException {
+	public Analysis_Transferable[] transmitAnalysesButIdsByCondition(Identifier_Transferable[] identifier_Transferables,
+			StorableObjectCondition_Transferable storableObjectCondition_Transferable)
+			throws AMFICOMRemoteException {
 
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(storableObjectCondition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -347,11 +318,12 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-	public Evaluation_Transferable[] transmitEvaluationsButIds(StorableObjectCondition_Transferable storableObjectCondition_Transferable,
-			Identifier_Transferable[] identifier_Transferables) throws AMFICOMRemoteException {
+	public Evaluation_Transferable[] transmitEvaluationsButIdsByCondition(Identifier_Transferable[] identifier_Transferables,
+			StorableObjectCondition_Transferable storableObjectCondition_Transferable)
+			throws AMFICOMRemoteException {
 		try {
 			Collection collection;
-			StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(storableObjectCondition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
