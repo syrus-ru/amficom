@@ -1,5 +1,5 @@
 /*
- * $Id: li'lmapletty.idl,v 1.4 2004/11/24 10:02:28 bob Exp $
+ * $Id: li'lmapletty.idl,v 1.5 2004/11/25 11:20:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,12 +39,13 @@ module com {
 					struct SiteNodeType_Transferable {
 							general::corba::StorableObject_Transferable header;
 							
+							wstring codename;
 							wstring name;
 							wstring description;
 							
 							general::corba::Identifier_Transferable imageId;
 							boolean topological;
-							configuration::corba::CharacteristicSeq_Transferable attributes;
+							general::corba::IdentifierSeq_Transferable characteristicIds;
 					};
 				
 					// was MapLinkProtoElement
@@ -56,7 +57,7 @@ module com {
 							wstring name;
 							wstring description;
 							
-							configuration::corba::CharacteristicSeq_Transferable attributes;
+							general::corba::IdentifierSeq_Transferable characteristicIds;
 					};
 					
 					// was MapSiteElement
@@ -80,7 +81,7 @@ module com {
 							wstring street;
 							wstring building;
 
-							configuration::corba::CharacteristicSeq_Transferable attributes;				
+							general::corba::IdentifierSeq_Transferable characteristicIds;				
 					};
 					
 					typedef sequence<SiteNode_Transferable> SiteNodeSeq_Transferable;
@@ -103,7 +104,7 @@ module com {
 
 							boolean active;
 
-							configuration::corba::CharacteristicSeq_Transferable attributes;
+							general::corba::IdentifierSeq_Transferable characteristicIds;
 					};
 					
 					typedef sequence<TopologicalNode_Transferable> TopologicalNodeSeq_Transferable;
@@ -126,7 +127,7 @@ module com {
 
 							double length;
 							
-							configuration::corba::CharacteristicSeq_Transferable attributes;							
+							general::corba::IdentifierSeq_Transferable characteristicIds;							
 					};
 					
 					typedef sequence<NodeLink_Transferable> NodeLinkSeq_Transferable;
@@ -152,7 +153,7 @@ module com {
 							wstring street;
 							wstring building;
 							
-							configuration::corba::CharacteristicSeq_Transferable attributes;
+							general::corba::IdentifierSeq_Transferable characteristicIds;
 					};
 					typedef sequence<Mark_Transferable> MarkSeq_Transferable;
 					
@@ -185,7 +186,7 @@ module com {
 							general::corba::IdentifierSeq_Transferable nodeLinkIds;
 							//NodeLinkSeq nodeLinks;
 
-							configuration::corba::CharacteristicSeq_Transferable attributes;
+							general::corba::IdentifierSeq_Transferable characteristicIds;
 					};					
 					
 					typedef sequence<PhysicalLink_Transferable> PhysicalLinkSeq;
@@ -201,7 +202,7 @@ module com {
 							general::corba::IdentifierSeq_Transferable physicalLinkIds;
 							//PhysicalLinkSeq physicalLinks;
 							
-							configuration::corba::CharacteristicSeq_Transferable attributes;
+							general::corba::IdentifierSeq_Transferable characteristicIds;
 					};
 					
 					typedef sequence<Collector_Transferable> CollectorSeq_Transferable;
