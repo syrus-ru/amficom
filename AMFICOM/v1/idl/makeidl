@@ -13,8 +13,9 @@ IDL2JAVAOPTIONS=-no_examples -no_tie -root_dir $(SRC)
 JAVAC=javac
 JAR=jar
 
-LIBNAME=$(LIB)\server\corba.jar
+LIBNAME=$(LIB)\corba.jar
 LIBNAME_SRC=$(LIBSRC)\corbasource.jar
+
 LIBNAME_OBJECT=$(LIB)\ServerObjectInterface.jar
 LIBNAME_ADMIN=$(LIB)\ServerInterface_Admin.jar
 LIBNAME_ALARM=$(LIB)\ServerInterface_Alarm.jar
@@ -40,7 +41,7 @@ ALL_LIBS=$(LIBNAME_GENERAL) \
 
 $(LIBNAME):	clean $(LIBNAME_OBJECT) jar
 
-jar: jars
+jar:
 	$(JAR) -cf $(LIBNAME) -C $(CLASSES) com\syrus\AMFICOM\CORBA
 	$(JAR) -cf $(LIBNAME_SRC) -C $(SRC) com
 
