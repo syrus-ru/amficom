@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.46 2005/03/11 10:17:12 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.47 2005/03/23 18:44:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/03/11 10:17:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.47 $, $Date: 2005/03/23 18:44:04 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -70,8 +70,8 @@ public class PortTypeDatabase extends CharacterizableDatabase {
 		PortType portType = this.fromStorableObject(storableObject);
 		return APOSTOPHE + DatabaseString.toQuerySubString(portType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE
-			+ portType.getSort().value() + COMMA;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ portType.getSort().value();
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
