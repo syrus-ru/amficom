@@ -7,7 +7,7 @@
 package com.syrus.AMFICOM.Client.Schedule;
 
 import java.awt.Component;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,13 +32,12 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.RISDSurveyDataSource;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -46,18 +45,20 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.TemporalCondition;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
+import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
@@ -96,36 +97,34 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 	private static final boolean	CREATE_ALLOW					= true;
 
-	//public static final int DEBUG_LEVEL = 3;
+	// public static final int DEBUG_LEVEL = 3;
 
 	private static final int		FLAG_APPLY						= 1 << 1;
 	private static final int		FLAG_CREATE						= 1 << 0;
 	// new
 	// Dispatcher();
 	private ApplicationContext		aContext;
-	private Dispatcher				dispatcher;												//						=
+	private Dispatcher				dispatcher;												// =
 
 	/**
 	 * TODO remove when will enable again
 	 */
-	//private ObjectResourceFilter filter = new TestFilter();
+	// private ObjectResourceFilter filter = new TestFilter();
 	private int						flag							= 0;
 	private HashMap					receiveData;
 
-	//private int receiveDataCount = 0;
+	// private int receiveDataCount = 0;
 	private Test					receivedTest;
 	private HashMap					receiveTreeElements;
 	private TestReturnType			returnType;
 	private TestTemporalStamps		receiveTestTimeStamps;
 
 	private List					tests;
-	private List					allTests;
+	private Collection				allTests;
 
 	private ObjectResourceTreeModel	treeModel;
 	private List					unsavedTests;
 	private List					allUnsavedTests;
-
-	private DomainCondition			domainCondition;
 
 	private DataSourceInterface		dataSourceInterface;
 
@@ -190,11 +189,11 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		/**
 		 * TODO remove when will enable again
 		 */
-		//		String connection = Environment.getConnectionType();
-		//		if (connection.equals("RISD"))
-		//			return new RISDSurveyDataSource(si);
-		//		else if (connection.equals("Empty"))
-		//			return new EmptySurveyDataSource(si);
+		// String connection = Environment.getConnectionType();
+		// if (connection.equals("RISD"))
+		// return new RISDSurveyDataSource(si);
+		// else if (connection.equals("Empty"))
+		// return new EmptySurveyDataSource(si);
 		if (this.dataSourceInterface == null)
 			this.dataSourceInterface = new RISDSurveyDataSource(si);
 		return this.dataSourceInterface;
@@ -223,32 +222,32 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		int id = ae.getID();
 		Object obj = ae.getSource();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
-		//		if (commandName.equals(TestUpdateEvent.TYPE)) {
-		//			TestUpdateEvent tue = (TestUpdateEvent) ae;
-		//			this.receivedTest = tue.test;
+		// if (commandName.equals(TestUpdateEvent.TYPE)) {
+		// TestUpdateEvent tue = (TestUpdateEvent) ae;
+		// this.receivedTest = tue.test;
 		//
-		//			if (tue.testSelected) {
-		//				//this.getContentPane().removeAll();
-		//				//this.getContentPane().add(panel, BorderLayout.CENTER);
-		//				//updateUI();
+		// if (tue.testSelected) {
+		// //this.getContentPane().removeAll();
+		// //this.getContentPane().add(panel, BorderLayout.CENTER);
+		// //updateUI();
 		//
-		//				TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE,
+		// TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE,
 		// this.receivedTest.getRequestId());
-		//				if (treq == null)
-		//					System.out.println("TestRequestFrame.operationPerformed()
+		// if (treq == null)
+		// System.out.println("TestRequestFrame.operationPerformed()
 		// treq not
 		// found id " //$NON-NLS-1$
-		//							+ this.receivedTest.getRequestId());
-		//				else {
-		//					System.out.println(this.getClass().getName() + " > treq.id: "
+		// + this.receivedTest.getRequestId());
+		// else {
+		// System.out.println(this.getClass().getName() + " > treq.id: "
 		// +
 		// treq.getId()); //$NON-NLS-1$
-		//					//panel.setTestRequest(treq);
-		//					//panel.setTest(receivedTest);
-		//				}
+		// //panel.setTestRequest(treq);
+		// //panel.setTest(receivedTest);
+		// }
 		//
-		//			}
-		//		}
+		// }
+		// }
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			this.receivedTest = tue.test;
@@ -267,10 +266,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			if (!found) {
 				if (this.receivedTest.isChanged()) {
 					if (this.unsavedTests == null)
-						this.unsavedTests = new ArrayList();
+						this.unsavedTests = new LinkedList();
 					this.unsavedTests.add(this.receivedTest);
 					if (this.allUnsavedTests == null)
-						this.allUnsavedTests = new ArrayList();
+						this.allUnsavedTests = new LinkedList();
 					this.allUnsavedTests.add(this.receivedTest);
 				} else {
 					this.tests.add(this.receivedTest);
@@ -279,7 +278,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			}
 		} else if (commandName.equalsIgnoreCase(COMMAND_CREATE_TEST)) {
 			// creating test
-			//if (flag == 0) {
+			// if (flag == 0) {
 			this.flag = FLAG_CREATE;
 			if (this.receiveData == null)
 				this.receiveData = new HashMap();
@@ -307,32 +306,32 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			}
 		} else if (commandName.equalsIgnoreCase(COMMAND_APPLY_TEST)) {
 			// apply test
-			//if (flag == 0) {
+			// if (flag == 0) {
 			this.flag = FLAG_APPLY;
 			this.receiveTreeElements = null;
 			if (this.receiveData == null)
 				this.receiveData = new HashMap();
 			else
 				this.receiveData.clear();
-			//receiveDataCount = 0;
+			// receiveDataCount = 0;
 			this.dispatcher.notify(new OperationEvent("", 0, //$NON-NLS-1$
 														COMMAND_DATA_REQUEST));
-			//}
+			// }
 		} else if (commandName.equalsIgnoreCase(COMMAND_SEND_DATA)) {
-			//receiveDataCount++;
+			// receiveDataCount++;
 			if (id == DATA_ID_PARAMETERS) {
-				//System.out.println("parameters id have got");
+				// System.out.println("parameters id have got");
 				// //$NON-NLS-1$
 			} else if (id == DATA_ID_ELEMENTS) {
 				System.out.println("elements id have got"); //$NON-NLS-1$
 				this.receiveTreeElements = (HashMap) obj;
 			} else if (id == DATA_ID_TIMESTAMP) {
-				//System.out.println("timestamp id have hot");
+				// System.out.println("timestamp id have hot");
 				// //$NON-NLS-1$
 			} else if (id == DATA_ID_PARAMETERS_ANALYSIS) {
 				this.receiveData.put(ObjectEntities.SET_ENTITY, obj);
 			} else if (id == DATA_ID_PARAMETERS_EVALUATION) {
-				//this.receiveData.put(ObjectEntities.EVALUATION_ENTITY,
+				// this.receiveData.put(ObjectEntities.EVALUATION_ENTITY,
 				// obj);
 			}
 
@@ -372,10 +371,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				System.out.println("TestTemporalStamps instanceof have got"); //$NON-NLS-1$
 				this.receiveTestTimeStamps = (TestTemporalStamps) obj;
 				this.receiveData.put(ObjectEntities.TEMPORALPATTERN_ENTITY, obj);
-			} else if (obj instanceof TestReturnType){
-				this.returnType = (TestReturnType)obj;
+			} else if (obj instanceof TestReturnType) {
+				this.returnType = (TestReturnType) obj;
 			}
-			
+
 			if ((this.returnType != null)
 					&& ((this.receiveData.get(ObjectEntities.SET_ENTITY) != null) || (((this.receiveData
 							.get(ObjectEntities.MS_ENTITY) != null)
@@ -420,13 +419,13 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		}
 	}
 
-	//	/**
-	//	 * @param tests
-	//	 * The tests to set.
-	//	 */
-	//	public void setTests(List tests) {
-	//		this.tests = tests;
-	//	}
+	// /**
+	// * @param tests
+	// * The tests to set.
+	// */
+	// public void setTests(List tests) {
+	// this.tests = tests;
+	// }
 
 	/**
 	 * @param treeModel
@@ -436,19 +435,20 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		this.treeModel = treeModel;
 	}
 
-	//	/**
-	//	 * @param unsavedTests
-	//	 * The unsavedTests to set.
-	//	 */
-	//	public void setUnsavedTests(List unsavedTests) {
-	//		this.unsavedTests = unsavedTests;
-	//	}
+	// /**
+	// * @param unsavedTests
+	// * The unsavedTests to set.
+	// */
+	// public void setUnsavedTests(List unsavedTests) {
+	// this.unsavedTests = unsavedTests;
+	// }
 
-	public void updateTests(long startTime, long endTime) {
+	public void updateTests(long startTime,
+							long endTime) {
 		try {
-			//Environment.log(Environment.LOG_LEVEL_INFO, "updateTests",
+			// Environment.log(Environment.LOG_LEVEL_INFO, "updateTests",
 			// getClass().getName()); //$NON-NLS-1$
-			//		this.setCursor(UIStorage.WAIT_CURSOR);
+			// this.setCursor(UIStorage.WAIT_CURSOR);
 			this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
 					.getString("Updating_tests_from_BD"))); //$NON-NLS-1$
 			DataSourceInterface dsi = this.aContext.getDataSource();
@@ -459,16 +459,27 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			MeasurementStorableObjectPool.refresh();
 
 			if (this.allTests == null)
-				this.allTests = new ArrayList();
+				this.allTests = new LinkedList();
 			else
 				this.allTests.clear();
 
 			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 
-			this.allTests = MeasurementStorableObjectPool
-					.getStorableObjectsByCondition(new TemporalCondition((Domain) AdministrationStorableObjectPool
-							.getStorableObject(sessionInterface.getDomainIdentifier(), true), new Date(startTime),
-																			new Date(endTime)), true);
+			Date startDate = new Date(startTime);
+			Date endDate = new Date(endTime);
+
+			TypicalCondition startTypicalCondition = new TypicalCondition(startDate, endDate,
+																			OperationSort.OPERATION_IN_RANGE,
+																			ObjectEntities.TEST_ENTITY_CODE,
+																			TestWrapper.COLUMN_START_TIME);
+			TypicalCondition endTypicalCondition = new TypicalCondition(startDate, endDate,
+																		OperationSort.OPERATION_IN_RANGE,
+																		ObjectEntities.TEST_ENTITY_CODE,
+																		TestWrapper.COLUMN_END_TIME);
+			CompoundCondition compoundCondition = new CompoundCondition(startTypicalCondition,
+																		CompoundConditionSort.AND, endTypicalCondition);
+
+			this.allTests = MeasurementStorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
 
 			if (this.tests == null)
 				this.tests = new LinkedList();
@@ -497,37 +508,38 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		}
 	}
 
-	private void commitChanges() throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
+	private void commitChanges() throws VersionCollisionException, DatabaseException, CommunicationException,
+			IllegalDataException {
 
 		/**
 		 * FIXME remove deleted tests
 		 */
 		// remove tests
-		//		if (unsavedTest != null) {
-		//			java.util.List deleteTests = new ArrayList();
-		//			for (Iterator it = unsavedTest.keySet().iterator(); it.hasNext();) {
-		//				Object key = it.next();
-		//				Test test = (Test) unsavedTest.get(key);
-		//				if (test.getDeleted() != 0) {
-		//					Identifier testId = test.getId();
-		//					if (test.getStatus().value() != TestStatus._TEST_STATUS_SCHEDULED)
-		//						deleteTests.add(testId);
-		//					TestRequest treq = (TestRequest) Pool
-		//							.get(TestRequest.TYPE, test.getRequestId());
-		//					//System.out.println("removing test:" +
-		//					// testId + " from
-		//					// testRequest:" + treq.getId());
-		//					treq.removeTest(test);
-		//					Pool.remove(Test.TYPE, testId);
-		//					it.remove();
-		//				}
+		// if (unsavedTest != null) {
+		// java.util.List deleteTests = new ArrayList();
+		// for (Iterator it = unsavedTest.keySet().iterator(); it.hasNext();) {
+		// Object key = it.next();
+		// Test test = (Test) unsavedTest.get(key);
+		// if (test.getDeleted() != 0) {
+		// Identifier testId = test.getId();
+		// if (test.getStatus().value() != TestStatus._TEST_STATUS_SCHEDULED)
+		// deleteTests.add(testId);
+		// TestRequest treq = (TestRequest) Pool
+		// .get(TestRequest.TYPE, test.getRequestId());
+		// //System.out.println("removing test:" +
+		// // testId + " from
+		// // testRequest:" + treq.getId());
+		// treq.removeTest(test);
+		// Pool.remove(Test.TYPE, testId);
+		// it.remove();
+		// }
 		//
-		//			}
-		//			String[] deleteTestIds = (String[]) deleteTests.toArray(new
+		// }
+		// String[] deleteTestIds = (String[]) deleteTests.toArray(new
 		// String[deleteTests.size()]);
-		//			this.dataSource.RemoveTests(deleteTestIds);
+		// this.dataSource.RemoveTests(deleteTestIds);
 		//
-		//		}
+		// }
 		MeasurementStorableObjectPool.flush(true);
 		this.aContext.getDispatcher().notify(new OperationEvent("", 0, SchedulerModel.COMMAND_TEST_SAVED_OK));
 	}
@@ -547,11 +559,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			Set set = (Set) this.receiveData.get(ObjectEntities.SET_ENTITY);
 			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 			try {
-			MeasurementSetup mSetup = MeasurementSetup.createInstance(sessionInterface.getUserIdentifier(), set, null, null,
-																		null, "created by Scheduler", 1000 * 60 * 10,
-																		Collections.singletonList(me.getId()));
-			measurementSetupIds = Collections.singletonList(mSetup.getId());
-			
+				MeasurementSetup mSetup = MeasurementSetup.createInstance(sessionInterface.getUserIdentifier(), set,
+					null, null, null, "created by Scheduler", 1000 * 60 * 10, Collections.singletonList(me.getId()));
+				measurementSetupIds = Collections.singletonList(mSetup.getId());
+
 				MeasurementStorableObjectPool.putStorableObject(mSetup);
 			} catch (IllegalObjectEntityException e) {
 				Log.debugException(e, Log.DEBUGLEVEL05);
@@ -560,7 +571,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			}
 		}
 
-		//		test.setChanged(true);
+		// test.setChanged(true);
 
 		Identifier modifierId = ((RISDSessionInfo) this.aContext.getSessionInterface()).getUserIdentifier();
 
@@ -571,10 +582,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 		if (test == null) {
 			try {
-			test = Test.createInstance(modifierId, startTime, endTime, temporalPattern, temporalType,
-										measurementType, analysisType, evaluationType, me, this.returnType,
-										ConstStorage.SIMPLE_DATE_FORMAT.format(startTime), measurementSetupIds);
-			
+				test = Test.createInstance(modifierId, startTime, endTime, temporalPattern, temporalType,
+					measurementType, analysisType, evaluationType, me, this.returnType, ConstStorage.SIMPLE_DATE_FORMAT
+							.format(startTime), measurementSetupIds);
+
 				MeasurementStorableObjectPool.putStorableObject(test);
 			} catch (IllegalObjectEntityException e) {
 				Log.errorException(e);
@@ -584,18 +595,18 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 		} else {
 			test.setAttributes(test.getCreated(), new Date(System.currentTimeMillis()), test.getCreatorId(),
-								modifierId, temporalType.value(), startTime, endTime, temporalPattern, measurementType,
-								analysisType, evaluationType, test.getStatus().value(), me, this.returnType.value(),
-								ConstStorage.SIMPLE_DATE_FORMAT.format(startTime));
+				modifierId, test.getVersion(), temporalType.value(), startTime, endTime, temporalPattern,
+				measurementType, analysisType, evaluationType, test.getStatus().value(), me, this.returnType.value(),
+				ConstStorage.SIMPLE_DATE_FORMAT.format(startTime));
 		}
 
-		//testRequest.setName(test.getName());
+		// testRequest.setName(test.getName());
 		try {
 			MeasurementStorableObjectPool.putStorableObject(test);
 		} catch (IllegalObjectEntityException e) {
 			Log.debugException(e, Log.DEBUGLEVEL05);
 		}
-		
+
 		try {
 			StorableObject storableObject = MeasurementStorableObjectPool.getStorableObject(test.getId(), false);
 			System.out.println(storableObject);
@@ -614,107 +625,96 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	/**
 	 * @return Returns the filter.
 	 */
-	//public ObjectResourceFilter getFilter() {
+	// public ObjectResourceFilter getFilter() {
 	/**
 	 * TODO remove when will enable again
 	 */
-	//	return this.filter;
-	//}
+	// return this.filter;
+	// }
 	/**
 	 * TODO remove when will enable again
 	 * 
 	 * @throws CommunicationException
 	 * @throws DatabaseException
 	 */
-	//	/**
-	//	 * @param filter
-	//	 * The filter to set.
-	//	 */
-	//	public void setFilter(ObjectResourceFilter filter) {
-	//		this.filter = filter;
-	//		// Vector v = this.filter.getCriteria();
-	//		// for(Iterator it=v.iterator();it.hasNext();){
-	//		// FilterExpressionInterface fei =
-	//		// (FilterExpressionInterface)it.next();
-	//		// System.out.println("name:"+fei.getName()+"\tid:"+fei.getId());
-	//		// Vector v2= fei.getVec();
-	//		// for(Iterator it2=v2.iterator();it2.hasNext();){
-	//		// Object obj = it2.next();
-	//		// System.out.println("'"+obj+"'");
-	//		// }
-	//		// }
-	//		if (this.allTests != null && !this.allTests.isEmpty()) {
-	//			this.dispatcher.notify(new OperationEvent(this, 0,
+	// /**
+	// * @param filter
+	// * The filter to set.
+	// */
+	// public void setFilter(ObjectResourceFilter filter) {
+	// this.filter = filter;
+	// // Vector v = this.filter.getCriteria();
+	// // for(Iterator it=v.iterator();it.hasNext();){
+	// // FilterExpressionInterface fei =
+	// // (FilterExpressionInterface)it.next();
+	// // System.out.println("name:"+fei.getName()+"\tid:"+fei.getId());
+	// // Vector v2= fei.getVec();
+	// // for(Iterator it2=v2.iterator();it2.hasNext();){
+	// // Object obj = it2.next();
+	// // System.out.println("'"+obj+"'");
+	// // }
+	// // }
+	// if (this.allTests != null && !this.allTests.isEmpty()) {
+	// this.dispatcher.notify(new OperationEvent(this, 0,
 	// SchedulerModel.COMMAND_CLEAN));
-	//			for (Iterator it = this.tests.iterator(); it.hasNext();) {
-	//				Object obj = it.next();
-	//				if (!this.allTests.contains(obj))
-	//					this.allTests.add(obj);
-	//			}
+	// for (Iterator it = this.tests.iterator(); it.hasNext();) {
+	// Object obj = it.next();
+	// if (!this.allTests.contains(obj))
+	// this.allTests.add(obj);
+	// }
 	//
-	//			// for (Iterator it = this.allTests.iterator();
-	//			// it.hasNext();) {
-	//			// Test test = (Test) it.next();
-	//			// System.out.println("allTests > filter:" +
-	//			// test.getId());
-	//			// }
+	// // for (Iterator it = this.allTests.iterator();
+	// // it.hasNext();) {
+	// // Test test = (Test) it.next();
+	// // System.out.println("allTests > filter:" +
+	// // test.getId());
+	// // }
 	//
-	//			if (this.unsavedTests != null) {
-	//				for (Iterator it = this.unsavedTests.iterator(); it.hasNext();) {
-	//					Object obj = it.next();
-	//					if (!this.allUnsavedTests.contains(obj))
-	//						this.allUnsavedTests.add(obj);
-	//				}
-	//			}
+	// if (this.unsavedTests != null) {
+	// for (Iterator it = this.unsavedTests.iterator(); it.hasNext();) {
+	// Object obj = it.next();
+	// if (!this.allUnsavedTests.contains(obj))
+	// this.allUnsavedTests.add(obj);
+	// }
+	// }
 	//
-	//			// DataSet testSet = new DataSet(this.allTests);
-	//			// testSet = this.filter.filter(testSet);
-	//			// this.tests.clear();
-	//			// for (Iterator it = testSet.iterator(); it.hasNext();)
-	//			// {
-	//			// Test test = (Test) it.next();
-	//			//// System.out.println("filtered test:" +
-	//			// test.getId());
-	//			// this.tests.add(test);
-	//			// }
-	//			this.filter.filtrate(this.allTests, this.tests);
+	// // DataSet testSet = new DataSet(this.allTests);
+	// // testSet = this.filter.filter(testSet);
+	// // this.tests.clear();
+	// // for (Iterator it = testSet.iterator(); it.hasNext();)
+	// // {
+	// // Test test = (Test) it.next();
+	// //// System.out.println("filtered test:" +
+	// // test.getId());
+	// // this.tests.add(test);
+	// // }
+	// this.filter.filtrate(this.allTests, this.tests);
 	//
-	//			if (this.allUnsavedTests != null) {
-	//				// testSet = new DataSet(this.allUnsavedTests);
-	//				// testSet = this.filter.filter(testSet);
-	//				// this.unsavedTests.clear();
-	//				// for (Iterator it = testSet.iterator();
-	//				// it.hasNext();) {
-	//				// Test test = (Test) it.next();
-	//				// this.unsavedTests.add(test);
-	//				// }
-	//				this.filter.filtrate(this.allUnsavedTests, this.unsavedTests);
-	//			}
-	//			// for (Iterator it = this.tests.iterator();
-	//			// it.hasNext();) {
-	//			// Test test = (Test) it.next();
-	//			// System.out.println("filtered test2send:" +
-	//			// test.getId());
-	//			// }
-	//			this.dispatcher.notify(new OperationEvent(this.tests, 0,
+	// if (this.allUnsavedTests != null) {
+	// // testSet = new DataSet(this.allUnsavedTests);
+	// // testSet = this.filter.filter(testSet);
+	// // this.unsavedTests.clear();
+	// // for (Iterator it = testSet.iterator();
+	// // it.hasNext();) {
+	// // Test test = (Test) it.next();
+	// // this.unsavedTests.add(test);
+	// // }
+	// this.filter.filtrate(this.allUnsavedTests, this.unsavedTests);
+	// }
+	// // for (Iterator it = this.tests.iterator();
+	// // it.hasNext();) {
+	// // Test test = (Test) it.next();
+	// // System.out.println("filtered test2send:" +
+	// // test.getId());
+	// // }
+	// this.dispatcher.notify(new OperationEvent(this.tests, 0,
 	// COMMAND_NAME_ALL_TESTS));
-	//		}
-	//	}
-	public DomainCondition getDomainCondition(short entityCode) throws DatabaseException, CommunicationException {
-		RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
-		Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(sessionInterface
-				.getDomainIdentifier(), true);
-		if (this.domainCondition == null)
-			this.domainCondition = new DomainCondition(domain, entityCode);
-		else {
-			this.domainCondition.setDomain(domain);
-			this.domainCondition.setEntityCode(new Short(entityCode));
-		}
-		return this.domainCondition;
-	}
+	// }
+	// }	
 
-	public static void showErrorMessage(Component component, Exception exc) {
+	public static void showErrorMessage(Component component,
+										Exception exc) {
 		JOptionPane.showMessageDialog(component, exc.getMessage(), LangModelSchedule.getString("Error"),
-										JOptionPane.OK_OPTION);
+			JOptionPane.OK_OPTION);
 	}
 }

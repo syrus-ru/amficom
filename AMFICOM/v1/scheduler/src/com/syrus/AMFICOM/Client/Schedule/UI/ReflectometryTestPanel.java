@@ -12,10 +12,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,16 +42,17 @@ import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.corba.StringFieldSort;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.ParameterType;
-import com.syrus.AMFICOM.measurement.ParameterTypeCodenames;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
-import com.syrus.AMFICOM.measurement.StringFieldCondition;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.util.ByteArray;
@@ -186,12 +187,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		try {
 			MeasurementType measurementType;
 			if (this.test == null) {
-				StringFieldCondition stringFieldCondition = StringFieldCondition.getInstance();
-				stringFieldCondition.setEntityCode(new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE));
-				stringFieldCondition.setSort(StringFieldSort.STRINGSORT_BASE);
-				stringFieldCondition.setString(TEST_TYPE);
+				TypicalCondition typicalCondition = new TypicalCondition(TEST_TYPE, OperationSort.OPERATION_EQUALS,
+					ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
 				measurementType = (MeasurementType) (MeasurementStorableObjectPool.getStorableObjectsByCondition(
-					stringFieldCondition, true).get(0));
+					typicalCondition, true).iterator().next());
 			} else {
 				measurementType = this.test.getMeasurementType();
 			}
@@ -200,34 +199,33 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			{
 				try {
 
+					TypicalCondition typicalCondition = new TypicalCondition(ParameterTypeCodenames.TRACE_WAVELENGTH, OperationSort.OPERATION_EQUALS,
+						ObjectEntities.PARAMETERTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+					
 					Short parameterTypeShort = new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
-
-					StringFieldCondition stringFieldCondition = new StringFieldCondition(
-																							ParameterTypeCodenames.TRACE_WAVELENGTH,
-																							parameterTypeShort);
-
+					
 					ParameterType wvlenParam = (ParameterType) MeasurementStorableObjectPool
-							.getStorableObjectsByCondition(stringFieldCondition, true).get(0);
+							.getStorableObjectsByCondition(typicalCondition, true).iterator().next();
 
-					stringFieldCondition.setString(ParameterTypeCodenames.TRACE_LENGTH);
+					typicalCondition.setValue(ParameterTypeCodenames.TRACE_LENGTH);
 					ParameterType trclenParam = (ParameterType) MeasurementStorableObjectPool
-							.getStorableObjectsByCondition(stringFieldCondition, true).get(0);
+							.getStorableObjectsByCondition(typicalCondition, true).iterator().next();
 
-					stringFieldCondition.setString(ParameterTypeCodenames.TRACE_RESOLUTION);
+					typicalCondition.setValue(ParameterTypeCodenames.TRACE_RESOLUTION);
 					ParameterType resParam = (ParameterType) MeasurementStorableObjectPool
-							.getStorableObjectsByCondition(stringFieldCondition, true).get(0);
+							.getStorableObjectsByCondition(typicalCondition, true).iterator().next();
 
-					stringFieldCondition.setString(ParameterTypeCodenames.TRACE_PULSE_WIDTH);
+					typicalCondition.setValue(ParameterTypeCodenames.TRACE_PULSE_WIDTH);
 					ParameterType pulswdParam = (ParameterType) MeasurementStorableObjectPool
-							.getStorableObjectsByCondition(stringFieldCondition, true).get(0);
+							.getStorableObjectsByCondition(typicalCondition, true).iterator().next();
 
-					stringFieldCondition.setString(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION);
+					typicalCondition.setValue(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION);
 					ParameterType iorParam = (ParameterType) MeasurementStorableObjectPool
-							.getStorableObjectsByCondition(stringFieldCondition, true).get(0);
+							.getStorableObjectsByCondition(typicalCondition, true).iterator().next();
 
-					stringFieldCondition.setString(ParameterTypeCodenames.TRACE_AVERAGE_COUNT);
+					typicalCondition.setValue(ParameterTypeCodenames.TRACE_AVERAGE_COUNT);
 					ParameterType scansParam = (ParameterType) MeasurementStorableObjectPool
-							.getStorableObjectsByCondition(stringFieldCondition, true).get(0);
+							.getStorableObjectsByCondition(typicalCondition, true).iterator().next();
 
 					SetParameter[] params = new SetParameter[6];
 
@@ -333,7 +331,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		try {
 			LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(port.getId(),
 																			ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
-			List characteristics = GeneralStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
+			Collection characteristics = GeneralStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
 				true);
 
 			if (this.traceLength == null)

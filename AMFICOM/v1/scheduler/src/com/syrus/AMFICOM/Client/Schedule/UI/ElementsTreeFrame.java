@@ -1,14 +1,12 @@
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import javax.swing.*;
+import javax.swing.JInternalFrame;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
-import com.syrus.AMFICOM.general.ApplicationException;
 
 public class ElementsTreeFrame extends JInternalFrame {
 
@@ -37,13 +35,9 @@ public class ElementsTreeFrame extends JInternalFrame {
 	}
 
 	public void init() {
-		try{
 		if (this.panel == null)
 			this.panel = new ElementsTreePanel(this.aContext);
 		setContentPane(this.panel);
-		}catch(ApplicationException ae){
-			SchedulerModel.showErrorMessage(this, ae);
-		}
 	}
 
 	public void unregisterDispatcher() {

@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -48,10 +49,10 @@ import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Test;
@@ -84,16 +85,17 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			this.root = new ObjectResourceTreeNode(ROOT_NODE_NAME, LangModelSchedule.getString("TestType"), true, //$NON-NLS-1$ //$NON-NLS-2$
 													(ImageIcon) UIStorage.FOLDER_ICON);
 
-			DomainCondition domainCondition = ((SchedulerModel) aContext.getApplicationModel())
-					.getDomainCondition(ObjectEntities.KIS_ENTITY_CODE);
-			List kisList = ConfigurationStorableObjectPool.getStorableObjectsByCondition(domainCondition, true);
-			domainCondition = ((SchedulerModel) aContext.getApplicationModel())
-					.getDomainCondition(ObjectEntities.ME_ENTITY_CODE);
-			List meList = ConfigurationStorableObjectPool.getStorableObjectsByCondition(domainCondition, true);
+			RISDSessionInfo sessionInterface = (RISDSessionInfo) aContext.getSessionInterface();
+			
+			LinkedIdsCondition domainCondition = new LinkedIdsCondition(sessionInterface
+				.getDomainIdentifier(), ObjectEntities.KIS_ENTITY_CODE);
+			
+			Collection kisList = ConfigurationStorableObjectPool.getStorableObjectsByCondition(domainCondition, true);
+			domainCondition.setEntityCode(ObjectEntities.ME_ENTITY_CODE);
+			Collection meList = ConfigurationStorableObjectPool.getStorableObjectsByCondition(domainCondition, true);
 
-			List measurementTypeList = MeasurementStorableObjectPool
-					.getStorableObjectsByCondition(((SchedulerModel) aContext.getApplicationModel())
-							.getDomainCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
+			Collection measurementTypeList = MeasurementStorableObjectPool
+					.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
 
 			for (Iterator measurementTypeIt = measurementTypeList.iterator(); measurementTypeIt.hasNext();) {
 				MeasurementType measurementType = (MeasurementType) measurementTypeIt.next();
@@ -101,10 +103,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				//ElementsTreePanel.this.surveyDsi.getTestSetupByTestType(testType.getId());
 
 				
-				RISDSessionInfo sessionInterface = (RISDSessionInfo) aContext.getSessionInterface();
 				LinkedIdsCondition condition = new LinkedIdsCondition(measurementType.getId(), ObjectEntities.MS_ENTITY_CODE);
-//				condition.setDomainId(sessionInterface
-//					.getDomainIdentifier());
 
 				MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				ObjectResourceTreeNode testTypeNode = new ObjectResourceTreeNode(measurementType, measurementType
@@ -126,7 +125,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 					LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(measurementPortTypeIds, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 //					linkedIdsCondition.setDomainId(sessionInterface.getDomainIdentifier());
 
-					List measurementTypesFormeasurementPortType = MeasurementStorableObjectPool
+					Collection measurementTypesFormeasurementPortType = MeasurementStorableObjectPool
 							.getStorableObjectsByCondition(linkedIdsCondition, true);
 					for (Iterator kisTypeIt = kisList.iterator(); kisTypeIt.hasNext();) {
 						KIS kis = (KIS) kisTypeIt.next();
@@ -315,7 +314,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 	private UniTreePanel		utp;
 	private Test				currentTest;
 
-	public ElementsTreePanel(ApplicationContext aContext) throws ApplicationException {
+	public ElementsTreePanel(ApplicationContext aContext) {
 		this.aContext = aContext;
 		this.dispatcher = aContext.getDispatcher();
 		//((SchedulerModel) this.aContext.getApplicationModel()).setTreeModel(new TestsTreeModel(aContext));

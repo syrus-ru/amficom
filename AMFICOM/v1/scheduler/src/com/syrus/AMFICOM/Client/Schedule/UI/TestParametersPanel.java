@@ -8,9 +8,11 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -204,7 +206,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 									list.add(setParameters[i].getId());
 								linkedIdsCondition.setLinkedIds(list);
 
-								List analysisTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+								Collection analysisTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 									linkedIdsCondition, true);
 
 								for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
@@ -225,7 +227,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 								for (int i = 0; i < setParameters.length; i++)
 									list.add(setParameters[i].getId());
 								linkedIdsCondition.setLinkedIds(list);
-								List evaluationTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+								Collection evaluationTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 									linkedIdsCondition, true);
 								for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
 									EvaluationType evaluationType = (EvaluationType) it.next();
@@ -334,7 +336,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			this.test = test;
 
 			if (this.meList == null)
-				this.meList = new ArrayList();
+				this.meList = new LinkedList();
 			else
 				this.meList.clear();
 			MonitoredElement monitoredElement = test.getMonitoredElement();
@@ -460,7 +462,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 					}
 					linkedIdsCondition = new LinkedIdsCondition(meIdList, ObjectEntities.MS_ENTITY_CODE);
 				}
-				List msList = MeasurementStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
+				Collection msList = MeasurementStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
 				for (Iterator it = msList.iterator(); it.hasNext();) {
 					MeasurementSetup ts = (MeasurementSetup) it.next();
 					List meIds = ts.getMonitoredElementIds();

@@ -10,8 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
@@ -447,7 +447,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 													.getString("ConfirmDeleting"), JOptionPane.YES_NO_OPTION);
 									if (temp == JOptionPane.YES_OPTION) {
 										if (TableFrame.this.rowToRemove == null)
-											TableFrame.this.rowToRemove = new ArrayList();
+											TableFrame.this.rowToRemove = new LinkedList();
 										else
 											TableFrame.this.rowToRemove.clear();
 										for (int i = 0; i < rowIndices.length; i++) {											

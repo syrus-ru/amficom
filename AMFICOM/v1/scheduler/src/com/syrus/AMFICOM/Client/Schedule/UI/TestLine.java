@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -257,7 +257,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 			LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_ENTITY_CODE);
 			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 			try {
-				List measurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
+				Collection measurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
 					true);
 				if (this.measurements == null)
 					this.measurements = new HashMap();
@@ -332,7 +332,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		
 
 		if (this.allTests == null)
-			this.allTests = new ArrayList();
+			this.allTests = new LinkedList();
 		if (!this.allTests.contains(test))
 			this.allTests.add(test);
 		this.revalidate();

@@ -16,10 +16,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -62,8 +62,8 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjList;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternController;
@@ -80,7 +80,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 
 		private static final long	serialVersionUID	= -7975294015403739057L;
 
-		ApplicationContext	aContext;
+		ApplicationContext			aContext;
 
 		Dispatcher					dispatcher;
 
@@ -107,7 +107,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 		JButton						createButton;
 
 		JButton						applyButton;
-		List						temporalPatterns;
+		Collection					temporalPatterns;
 
 		private Test				test;
 
@@ -223,7 +223,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 						TimeParametersPanel.this.endDateSpinner.setEnabled(true);
 						endDateButton.setEnabled(true);
 
-						//extraParamPanel.setVisible(false);
+						// extraParamPanel.setVisible(false);
 						TimeParametersPanel.this.revalidate();
 					}
 				}
@@ -242,14 +242,13 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 						final JList jlist = (JList) e.getSource();
 						TemporalPattern temporalPattern = (TemporalPattern) jlist.getSelectedValue();
 						if (temporalPattern.isChanged()) {
-							//JFrame mainFrame = demo.getTimeLineEditor();
+							// JFrame mainFrame = demo.getTimeLineEditor();
 							TimeLine timeLine = (TimeLine) temporalPattern.getTimeLines().iterator().next();
 							final String template = timeLine.getTemplate();
 							JSplitPane pane = demo.getPane();
 							demo.setTimeLine(timeLine);
 							int result = JOptionPane.showConfirmDialog(jlist, pane, "Time Line",
-																		JOptionPane.OK_CANCEL_OPTION,
-																		JOptionPane.PLAIN_MESSAGE);
+								JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 							if (result == JOptionPane.OK_OPTION) {
 								temporalPattern.removeTemplate(template);
 								String template2 = demo.getTemplate();
@@ -267,7 +266,6 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 
 				}
 
-				
 			});
 
 			final JScrollPane timeStampPane = new JScrollPane(this.timeStamps);
@@ -278,22 +276,22 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 
 				public void actionPerformed(ActionEvent e) {
 					JSplitPane pane = demo.getPane();
-					int result = JOptionPane
-							.showConfirmDialog(addTemporalPatternButton, pane, "Time Line",
-												JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+					int result = JOptionPane.showConfirmDialog(addTemporalPatternButton, pane, "Time Line",
+						JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 					if (result == JOptionPane.OK_OPTION) {
-						//							System.out.println("was:" + template);
-						//							timeStamp.removeTemplate(template);
+						// System.out.println("was:" + template);
+						// timeStamp.removeTemplate(template);
 						String template = demo.getTemplate();
 						System.out.println("now:" + template);
 						try {
-							RISDSessionInfo sessionInterface = (RISDSessionInfo) TimeParametersPanel.this.aContext.getSessionInterface();							
-							TemporalPattern temporalPattern = TemporalPattern.createInstance(sessionInterface.getUserIdentifier(), null,
-																								new LinkedList());
+							RISDSessionInfo sessionInterface = (RISDSessionInfo) TimeParametersPanel.this.aContext
+									.getSessionInterface();
+							TemporalPattern temporalPattern = TemporalPattern.createInstance(sessionInterface
+									.getUserIdentifier(), null, new LinkedList());
 							temporalPattern.addTemplate(template);
 							TimeParametersPanel.this.temporalPatterns.add(temporalPattern);
 
-							//							timeStamp.addTemplate(template2);
+							// timeStamp.addTemplate(template2);
 							DefaultListModel model = (DefaultListModel) TimeParametersPanel.this.timeStamps.getModel();
 							model.removeAllElements();
 							for (Iterator it = TimeParametersPanel.this.temporalPatterns.iterator(); it.hasNext();) {
@@ -346,21 +344,18 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 			});
 
 			this.oneRadioButton = UIStorage.createRadioButton(LangModelSchedule.getString("Onetime"),
-																new AbstractAction() {
+				new AbstractAction() {
 
-																	public void actionPerformed(ActionEvent e) {
-																		TimeParametersPanel.this.timeStamps
-																				.setEnabled(false);
-																		addTemporalPatternButton.setEnabled(false);
-																		removeTemporalPatternButton.setEnabled(false);
-																		TimeParametersPanel.this.endTimeSpinner
-																				.setEnabled(false);
-																		TimeParametersPanel.this.endDateSpinner
-																				.setEnabled(false);
-																		endDateButton.setEnabled(false);
-																		revalidate();
-																	}
-																});
+					public void actionPerformed(ActionEvent e) {
+						TimeParametersPanel.this.timeStamps.setEnabled(false);
+						addTemporalPatternButton.setEnabled(false);
+						removeTemporalPatternButton.setEnabled(false);
+						TimeParametersPanel.this.endTimeSpinner.setEnabled(false);
+						TimeParametersPanel.this.endDateSpinner.setEnabled(false);
+						endDateButton.setEnabled(false);
+						revalidate();
+					}
+				});
 
 			this.periodicalRadioButton.addItemListener(new ItemListener() {
 
@@ -499,7 +494,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 				} else if (this.continuosRadioButton.isSelected()) {
 					temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS;
 				} else {
-					//SchedulerModel.showErrorMessage(this, ne)
+					// SchedulerModel.showErrorMessage(this, ne)
 					return;
 				}
 
@@ -565,10 +560,8 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 		}
 
 		private void refreshTemporalPatterns() throws ApplicationException {
-			DomainCondition domainCondition = ((SchedulerModel) this.aContext.getApplicationModel())
-					.getDomainCondition(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE);
-
-			this.temporalPatterns = MeasurementStorableObjectPool.getStorableObjectsByCondition(domainCondition, true);
+			this.temporalPatterns = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+				new EquivalentCondition(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), true);
 			ObjListModel model = (ObjListModel) this.timeStamps.getModel();
 			for (Iterator it = this.temporalPatterns.iterator(); it.hasNext();) {
 				TemporalPattern pattern = (TemporalPattern) it.next();
@@ -639,7 +632,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 	}
 
 	public TimeParametersFrame(ApplicationContext aContext) {
-		//		this.aContext = aContext;
+		// this.aContext = aContext;
 		initModule(aContext.getDispatcher());
 		setTitle(LangModelSchedule.getString("TemporalType.Title")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
@@ -664,8 +657,8 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
-		//		int id = ae.getID();
-		//		Object obj = ae.getSource();
+		// int id = ae.getID();
+		// Object obj = ae.getSource();
 
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
