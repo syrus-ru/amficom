@@ -273,9 +273,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 				ortn = new ObjectResourceTreeNode("domain", LangModelConfig.String("menuObjectDomainText"), true);
 				vec.add(ortn);
 				registerSearchableNode("domain", ortn);
-//				vec.add(new ObjectResourceTreeNode("netdirectory", LangModelConfig.String("menuNetDirText"), true));
+				vec.add(new ObjectResourceTreeNode("netdirectory", LangModelConfig.String("menuNetDirText"), true));
 				vec.add(new ObjectResourceTreeNode("netcatalogue", LangModelConfig.String("menuNetCatText"), true));
-//				vec.add(new ObjectResourceTreeNode("jdirectory", LangModelConfig.String("menuJDirText"), true));
+				vec.add(new ObjectResourceTreeNode("jdirectory", LangModelConfig.String("menuJDirText"), true));
 				vec.add(new ObjectResourceTreeNode("jcatalogue", LangModelConfig.String("menuJCatText"), true));
 			}
 			else
