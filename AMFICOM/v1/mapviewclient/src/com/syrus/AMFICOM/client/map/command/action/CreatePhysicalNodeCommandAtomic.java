@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.9 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.10 2005/01/11 16:43:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/11 16:43:05 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -93,12 +93,12 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 
 		TopologicalNodeController tnc = (TopologicalNodeController)getLogicalNetLayer().getMapViewController().getController(node);
 
+		// по умолчанию топологиеский узел не активен
+		tnc.setActive(node, false);
 		// установить коэффициент для масштабирования изображения
 		// в соответствии с текущим масштабом отображения карты
 		tnc.updateScaleCoefficient(node);
 
-		// по умолчанию топологиеский узел не активен
-		node.setActive(false);
 		logicalNetLayer.getMapView().getMap().addNode(node);
 	}
 	

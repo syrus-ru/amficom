@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.2 2004/12/30 16:17:48 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.3 2005/01/11 16:43:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.CharacteristicType;
-import com.syrus.AMFICOM.configuration.StringFieldCondition;
+import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -48,7 +48,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/30 16:17:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/11 16:43:05 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -445,11 +445,16 @@ public final class LinkTypeController extends AbstractLinkController
 		mlpe = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.TUNNEL);
 		mlpe = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.COLLECTOR);
 
+		StorableObjectCondition pTypeCondition = new StringFieldCondition(
+			"",
+			ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
+			StringFieldSort.STRINGSORT_BASE);
+
 		List list = null;
 		try
 		{
 			list =
-				MapStorableObjectPool.getStorableObjectsByConditionButIds(null, null, true);
+				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 
 			list.remove(getDefaultUnboundPen(creatorId));
 		}

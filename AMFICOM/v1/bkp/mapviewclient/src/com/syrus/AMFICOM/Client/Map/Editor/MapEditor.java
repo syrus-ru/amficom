@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditor.java,v 1.2 2004/10/19 11:48:27 krupenn Exp $
+ * $Id: MapEditor.java,v 1.3 2005/01/11 16:43:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.General.Model.DefaultMapEditorApplicationModelFa
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapEditorApplicationModelFactory;
 
+import com.syrus.util.Application;
 import java.awt.Frame;
 import java.awt.Toolkit;
 
@@ -29,7 +30,7 @@ import javax.swing.UIManager;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/19 11:48:27 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/11 16:43:05 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -52,6 +53,7 @@ public class MapEditor
 
 	public static void main(String[] args)
 	{
+		Application.init("mapviewclient");
 		try
 		{
 			UIManager.setLookAndFeel(Environment.getLookAndFeel());

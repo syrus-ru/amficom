@@ -155,8 +155,8 @@ public class MapLinkGeneralPanel
 		this.add(descLabel, ReusedGridBagConstraints.get(0, 6, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
 		this.add(descTextArea, ReusedGridBagConstraints.get(1, 6, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 
-		startComboBox.setEnabled(false);
-		endComboBox.setEnabled(false);
+//		startComboBox.setEnabled(false);
+//		endComboBox.setEnabled(false);
 	}
 
 	public Object getObject()
@@ -194,7 +194,7 @@ public class MapLinkGeneralPanel
 			
 			typeComboBox.setEnabled(true);
 			typeComboBox.addElements(protos);
-			typeComboBox.setSelectedItem(link.getType());
+			typeComboBox.getModel().setSelectedItem(link.getType());
 
 			descTextArea.setEnabled(true);
 			descTextArea.setText(link.getDescription());

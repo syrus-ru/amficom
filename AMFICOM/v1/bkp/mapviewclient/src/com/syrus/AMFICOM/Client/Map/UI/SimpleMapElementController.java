@@ -61,37 +61,31 @@ public final class SimpleMapElementController implements ObjectResourceControlle
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (object instanceof MapElement) 
+
+		if (key.equals(KEY_NAME))
 		{
-			MapElement me = (MapElement)object;
-			if (key.equals(KEY_NAME))
-				result = ((ObjectResource )object).getName();
-			else
-			if (key.equals(KEY_TYPE))
+			Class clazz = object.getClass();
+			String methodName = "getName";
+			String name = "";
+			try
 			{
-				if(me instanceof SiteNode)
-				{
-					SiteNodeType mnpe = (SiteNodeType )(((SiteNode)me).getType());
-					result = mnpe.getName();
-				}
-				else
-				if(me instanceof PhysicalLink)
-				{
-					PhysicalLinkType mlpe = (PhysicalLinkType )(((PhysicalLink)me).getType());
-					result = mlpe.getName();
-				}
-				else
-					result = 
-						LangModel.getString("node" + ((ObjectResource )object).getTyp());
+				Method method = clazz.getMethod(methodName, new Class[0]);
+				name = (String )(method.invoke(object, new Object[0]));
+				result = name;
 			}
-		}
-		else
-		{
-			if (key.equals(KEY_NAME))
+			catch (InvocationTargetException iae)
 			{
-				Class clazz = object.getClass();
-				String methodName = "getName";
-				String name = "";
+			}
+			catch (IllegalAccessException iae)
+			{
+			}
+			catch (NoSuchMethodException nsme)
+			{
+			}
+			
+			if(result == null)
+			{
+				methodName = "name";
 				try
 				{
 					Method method = clazz.getMethod(methodName, new Class[0]);
@@ -107,27 +101,32 @@ public final class SimpleMapElementController implements ObjectResourceControlle
 				catch (NoSuchMethodException nsme)
 				{
 				}
-				
-				if(result == null)
-				{
-					methodName = "name";
-					try
-					{
-						Method method = clazz.getMethod(methodName, new Class[0]);
-						name = (String )(method.invoke(object, new Object[0]));
-						result = name;
-					}
-					catch (InvocationTargetException iae)
-					{
-					}
-					catch (IllegalAccessException iae)
-					{
-					}
-					catch (NoSuchMethodException nsme)
-					{
-					}
-				}
 			}
+		}
+		else
+		if (object instanceof MapElement) 
+		{
+			MapElement me = (MapElement)object;
+			if (key.equals(KEY_TYPE))
+			{
+				if(me instanceof SiteNode)
+				{
+					SiteNodeType mnpe = (SiteNodeType )(((SiteNode)me).getType());
+					result = mnpe.getName();
+				}
+				else
+				if(me instanceof PhysicalLink)
+				{
+					PhysicalLinkType mlpe = (PhysicalLinkType )(((PhysicalLink)me).getType());
+					result = mlpe.getName();
+				}
+//				else
+//					result = 
+//						LangModel.getString("node" + ((ObjectResource )object).getTyp());
+			}
+		}
+		else
+		{
 		}
 		return result;
 	}

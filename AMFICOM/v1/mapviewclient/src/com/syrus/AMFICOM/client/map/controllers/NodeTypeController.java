@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.2 2004/12/30 16:17:48 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.3 2005/01/11 16:43:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.configuration.StringFieldCondition;
+import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -37,14 +37,14 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
 import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * элемент карты - узел 
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/30 16:17:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/11 16:43:05 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -116,6 +116,7 @@ public class NodeTypeController extends AbstractNodeController
 				ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
 				StringFieldSort.STRINGSORT_INTEGER);
 			List bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+//			List bitMaps = Collections.EMPTY_LIST;
 
 			for (Iterator it = bitMaps.iterator(); it.hasNext(); ) 
 			{
@@ -126,6 +127,7 @@ public class NodeTypeController extends AbstractNodeController
 			}
 		}
 		catch (ApplicationException ex) 
+//		catch (Exception ex) 
 		{
 			ex.printStackTrace();
 		}
@@ -214,10 +216,15 @@ public class NodeTypeController extends AbstractNodeController
 		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.WELL));
 		topologicalProtos.add(NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET));
 
+		StorableObjectCondition pTypeCondition = new StringFieldCondition(
+			"",
+			ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
+			StringFieldSort.STRINGSORT_BASE);
+
 		try
 		{
 			List list2 =
-				MapStorableObjectPool.getStorableObjectsByConditionButIds(null, null, true);
+				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 
 			for(Iterator it = list2.iterator(); it.hasNext();)
 			{

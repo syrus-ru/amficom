@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.22 2004/12/30 16:17:48 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.23 2005/01/11 16:43:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceSelectionDialog;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateCollectorCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
@@ -63,7 +63,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.22 $, $Date: 2004/12/30 16:17:48 $
+ * @version $Revision: 1.23 $, $Date: 2005/01/11 16:43:05 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -105,7 +105,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 				Environment.getActiveWindow(), 
 				LangModel.getString("Properties"), 
 				true, 
-				(ObjectResource )me,
+				me,
 				prop);
 
 		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
