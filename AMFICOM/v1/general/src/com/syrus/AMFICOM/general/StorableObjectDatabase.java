@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.23 2004/09/09 09:01:47 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.24 2004/09/13 11:06:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.general;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -25,7 +24,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/09/09 09:01:47 $
+ * @version $Revision: 1.24 $, $Date: 2004/09/13 11:06:32 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -194,6 +193,18 @@ public abstract class StorableObjectDatabase {
 			insertEntity((StorableObject) storableObjects.get(0));
 			return;
 		}
+		
+		List idsList = new LinkedList();
+		for(Iterator it=storableObjects.iterator();it.hasNext();){
+			StorableObject storableObject = (StorableObject)it.next();
+			Identifier localId = storableObject.getId();
+			if (idsList.contains(localId))
+				throw new CreateObjectException(getEnityName()+"Database.insertEntities | Input collection contains entity with the same id " + localId.getCode());
+			idsList.add(storableObject.getId());
+		}
+		idsList.clear();
+		idsList = null;
+
 
 		String sql = SQL_INSERT_INTO + this.getTableName() + OPEN_BRACKET				
 				+ this.getUpdateColumns()
@@ -203,7 +214,8 @@ public abstract class StorableObjectDatabase {
 		String storableObjectIdCode = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			
+			Log.debugMessage(this.getEnityName() + "Database.insertEntities | Trying: " + sql,
+								Log.DEBUGLEVEL09);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
 				storableObjectIdCode = storableObject.getId().getCode();
@@ -666,7 +678,8 @@ public abstract class StorableObjectDatabase {
 		String storableObjectIdCode = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-
+			Log.debugMessage(this.getEnityName() + "Database.updateEntities | Trying: " + sql,
+								Log.DEBUGLEVEL09);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 
 				StorableObject storableObject = (StorableObject) it.next();
