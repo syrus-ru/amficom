@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.28 2004/11/23 15:24:41 bob Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.29 2004/12/01 14:44:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,11 +11,13 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/11/23 15:24:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2004/12/01 14:44:27 $
+ * @author $Author: bass $
+ * @todo Declare class &lt;default&gt; final instead of public as it's
+ *       referenced only within configuration package.
+ * @todo Because of the same, declare all fields &amp; methods &lt;package&gt;.
  * @module configuration_v1
  */
-
 public class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase characteristicTypeDatabase;
 	protected static StorableObjectDatabase equipmentTypeDatabase;
@@ -42,6 +44,13 @@ public class ConfigurationDatabaseContext {
 		// private constructor 
 	}
 
+	/**
+	 * @todo Rename formal parameters for their names to match the ones of
+	 *       class members: e. g.:
+	 *       <code>ConfigurationDatabaseContext.characteristicTypeDatabase
+	 *       = characteristicTypeDatabase;</code>
+	 * @todo Declare formal parameters final.
+	 */
 	public static void init(StorableObjectDatabase characteristicTypeDatabase1,
 													StorableObjectDatabase equipmentTypeDatabase1,
 													StorableObjectDatabase portTypeDatabase1,
@@ -77,65 +86,84 @@ public class ConfigurationDatabaseContext {
 		portDatabase = portDatabase1;
 		measurementPortDatabase = measurementPortDatabase1;
 		transmissionPathDatabase = transmissionPathDatabase1;
-        transmissionPathTypeDatabase = transmissionPathTypeDatabase1;
+		transmissionPathTypeDatabase = transmissionPathTypeDatabase1;
 		kisDatabase = kisDatabase1;
 		monitoredElementDatabase = monitoredElementDatabase1;
 		linkDatabase = linkDatabase1;
 	}
+
 	public static StorableObjectDatabase getCharacteristicDatabase() {
 		return characteristicDatabase;
 	}
+
 	public static StorableObjectDatabase getCharacteristicTypeDatabase() {
 		return characteristicTypeDatabase;
 	}
+
 	public static StorableObjectDatabase getDomainDatabase() {
 		return domainDatabase;
 	}
+
 	public static StorableObjectDatabase getEquipmentDatabase() {
 		return equipmentDatabase;
 	}
+
 	public static StorableObjectDatabase getEquipmentTypeDatabase() {
 		return equipmentTypeDatabase;
 	}
+
 	public static StorableObjectDatabase getKISDatabase() {
 		return kisDatabase;
 	}
+
 	public static StorableObjectDatabase getLinkDatabase() {
-        return linkDatabase;
-    }
-    public static StorableObjectDatabase getCableThreadTypeDatabase(){
-    	return cableThreadTypeDatabase;
-    }
-    public static StorableObjectDatabase getLinkTypeDatabase() {
-        return linkTypeDatabase;
-    }
+		return linkDatabase;
+	}
+
+	public static StorableObjectDatabase getCableThreadTypeDatabase(){
+		return cableThreadTypeDatabase;
+	}
+
+	public static StorableObjectDatabase getLinkTypeDatabase() {
+		return linkTypeDatabase;
+	}
+
 	public static StorableObjectDatabase getMCMDatabase() {
 		return mcmDatabase;
 	}
+
 	public static StorableObjectDatabase getMeasurementPortDatabase() {
 		return measurementPortDatabase;
 	}
+
 	public static StorableObjectDatabase getMeasurementPortTypeDatabase() {
 		return measurementPortTypeDatabase;
 	}
+
 	public static StorableObjectDatabase getMonitoredElementDatabase() {
 		return monitoredElementDatabase;
 	}
+
 	public static StorableObjectDatabase getPortDatabase() {
 		return portDatabase;
 	}
+
 	public static StorableObjectDatabase getPortTypeDatabase() {
 		return portTypeDatabase;
 	}
+
 	public static StorableObjectDatabase getServerDatabase() {
 		return serverDatabase;
 	}
+
 	public static StorableObjectDatabase getTransmissionPathDatabase() {
 		return transmissionPathDatabase;
 	}
-    public static StorableObjectDatabase getTransmissionPathTypeDatabase() {
-        return transmissionPathTypeDatabase;
-    }
+
+	public static StorableObjectDatabase getTransmissionPathTypeDatabase() {
+		return transmissionPathTypeDatabase;
+	}
+
 	public static StorableObjectDatabase getUserDatabase() {
 		return userDatabase;
 	}
