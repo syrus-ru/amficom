@@ -148,7 +148,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				KIS kis = (KIS) obj;
 				//System.out.println("KIS:" + kis.type_id);
 				skipTestUpdate = true;
-				dispatcher.notify(new OperationEvent(kis.id, 0,
+				dispatcher.notify(new OperationEvent(kis.getId(), 0,
 						TestParametersPanel.COMMAND_CHANGE_KIS));
 				//				Vector ports = kis.access_ports;
 				//				for (Enumeration e = ports.elements(); e.hasMoreElements();)
@@ -174,8 +174,8 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 							.get(i);
 					Object o = n.getObject();
 					MonitoredElement me = (MonitoredElement) o;
-					dispatcher.notify(new OperationEvent(me.id, 0,
-							TestParametersPanel.COMMAND_CHANGE_ME_TYPE));
+					dispatcher.notify(new OperationEvent(me.getId(), 0,
+							TestParametersPanel.COMMAND_CHANGE_ME_TYPE));					
 
 				}
 				skipTestUpdate = false;

@@ -17,7 +17,11 @@ public interface ParametersTest {
 	//String COMMAND_SEND_TEST = "SendTest";
 	String	PARAMETER_ID_NAME	= "testargument";	//$NON-NLS-1$
 
-	TestArgumentSet getParameters();
+	TestArgumentSet getTestArgumentSet();
+	
+	void setTestArgumentSet(TestArgumentSet tas);
+	
+	void setTestSetup(TestSetup testSetup);
 
 	String getPanelName();
 
