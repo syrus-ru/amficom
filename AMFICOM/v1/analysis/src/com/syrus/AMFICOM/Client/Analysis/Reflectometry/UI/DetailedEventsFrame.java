@@ -224,8 +224,8 @@ public class DetailedEventsFrame extends JInternalFrame
 						LangModelAnalyse.getString("eventLength"), // протяженность
 						LangModelAnalyse.getString("eventStartLevel"),
 						LangModelAnalyse.getString("eventEndLevel"),
-						LangModelAnalyse.getString("eventRMSDeviation"),
-						LangModelAnalyse.getString("eventMaxDeviation")
+						LangModelAnalyse.getString("eventEDZ"),
+						LangModelAnalyse.getString("eventADZ")
 				},
 				null);
 		tModels.put(initiate, initialModel);

@@ -9,12 +9,11 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 
 public class MapMarkersPanel extends ThresholdsPanel
 {
-	private final static boolean DEBUG = false;
 	protected String monitored_element_id = null;
 	protected String map_path_id = null;
 
-	public boolean show_markers = true;
-	public boolean creating_marker = false;
+	protected boolean show_markers = true;
+	protected boolean creating_marker = false;
 
 	protected ArrayList markers = new ArrayList();
 	protected Marker active_marker;
@@ -235,9 +234,6 @@ public class MapMarkersPanel extends ThresholdsPanel
 		g.drawLine(index2coord(m.pos), 0, index2coord(m.pos), jh);
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 		g.drawString(m.name, index2coord(m.pos)+2+(int)marker_w,10);
-
-		if (DEBUG)
-			g.drawString(String.valueOf(m.pos), index2coord(m.pos)+2+(int)marker_w,20);
 	}
 
 	protected void setPaintMode(boolean useXOR)

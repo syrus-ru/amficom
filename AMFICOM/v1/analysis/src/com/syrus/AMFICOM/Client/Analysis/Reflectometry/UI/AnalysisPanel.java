@@ -10,8 +10,9 @@ import com.syrus.AMFICOM.analysis.dadara.MathRef;
 public class AnalysisPanel extends MapMarkersPanel
 {
 	public boolean show_markers = true;
-	public boolean loss_analysis = true;
-	public boolean reflection_analysis = false;
+
+	protected boolean loss_analysis = true;
+	protected boolean reflection_analysis = false;
 
 	protected Marker markerA;
 	protected Marker markerB;
@@ -160,7 +161,6 @@ public class AnalysisPanel extends MapMarkersPanel
 				return;
 			}
 		}
-
 		super.this_mousePressed(e);
 	}
 
@@ -185,6 +185,7 @@ public class AnalysisPanel extends MapMarkersPanel
 						paint_reflection_ana(g);
 				}
 			}
+			int prev_pos = moving_marker.pos;
 			moveMarker (moving_marker, pos);
 
 			if (paintMarkerXOR)
@@ -200,23 +201,29 @@ public class AnalysisPanel extends MapMarkersPanel
 			}
 			else
 			{
-				//repaint marker
-				int x = Math.min(tmppos.x, currpos.x) - Math.round(marker_w) - 1;
-				int x2 = Math.max(tmppos.x, currpos.x) + Math.round(marker_w) + 1;
+				//repaint old marker place
+				int x = index2coord(prev_pos - 1) - 1;
+				int x2 = index2coord(prev_pos + 1) + 1;
 				parent.repaint(x, 0, x2 - x, parent.getHeight());
 				//repaint marker label
-				int width = g.getFontMetrics().stringWidth(moving_marker.name) + 3;
-				int height = g.getFontMetrics().getHeight();
+				int width = g.getFontMetrics().stringWidth(moving_marker.name) + 5;
+				int height = g.getFontMetrics().getHeight() + 2;
 				parent.repaint(x, 10, x2 - x + width, height);
+
+				//repaint new marker place
+				int n_x = index2coord(moving_marker.pos - 1) - 1;
+				int n_x2 = index2coord(moving_marker.pos + 1) + 1;
+				parent.repaint(x, 0, n_x2 - n_x, parent.getHeight());
+				parent.repaint(x, 10, n_x2 - n_x + width, height);
 
 				if (moving_marker.equals(markerA))
 				{
 					if (loss_analysis)
 					{
 						int delta_left = currpos.x - index2coord(lines[0].point[0]) + 5;
-						x = x - delta_left;
+						x = Math.min(x, n_x) - delta_left;
 						int delta_right = index2coord(lines[1].point[1]) - currpos.x + 5;
-						x2 = x2 + delta_right;
+						x2 = Math.max(x2, n_x2) + delta_right;
 
 						int y1 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[0]);
 						int y2 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[1]);
@@ -226,12 +233,12 @@ public class AnalysisPanel extends MapMarkersPanel
 						parent.repaint(x, Math.min(Math.min(y1, y2), Math.min(y3, y4)),
 													 x2 - x, Math.max(Math.max(y1, y2), Math.max(y3, y4)));
 					}
-					if (reflection_analysis)
+					else if (reflection_analysis)
 					{
 						int delta_left = currpos.x - index2coord(lines[0].point[0]) + 5;
-						x = x - delta_left;
+						x = Math.min(x, n_x) - delta_left;
 						int delta_right = index2coord(lines[1].point[1]) - currpos.x + 5;
-						x2 = x2 + delta_right;
+						x2 = Math.max(x2, n_x2) + delta_right;
 
 						int y1 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[0]);
 						int y2 = lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[1]);
@@ -240,9 +247,7 @@ public class AnalysisPanel extends MapMarkersPanel
 						parent.repaint(x, Math.min(Math.min(y1, y2), y3),
 													 x2 - x, Math.max(Math.max(y1, y2), y3));
 					}
-
 				}
-
 			}
 
 			updAnalysisMarkerInfo();

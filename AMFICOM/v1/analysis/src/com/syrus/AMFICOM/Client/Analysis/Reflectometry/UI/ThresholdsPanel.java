@@ -9,9 +9,10 @@ import com.syrus.AMFICOM.analysis.dadara.*;
 
 public class ThresholdsPanel extends ReflectogramEventsPanel
 {
-	public boolean paint_thresholds = true;
 	public boolean paint_all_thresholds = false;
-	public boolean edit_thresholds = true;
+	public boolean paint_thresholds = true;
+
+	protected boolean edit_thresholds = true;
 
 	protected ReflectogramEvent[] et_ep;
 
@@ -20,8 +21,8 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	protected boolean isRbutton = false;
 	protected double max_et_y = 0;
 
-	protected Color warningThresholdColor = new Color(255, 220, 0);
-	protected Color alarmThresholdColor = new Color(255, 150, 60);
+	protected static Color warningThresholdColor = new Color(255, 220, 0);
+	protected static Color alarmThresholdColor = new Color(255, 150, 60);
 
 	public ThresholdsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double delta_x)
 	{

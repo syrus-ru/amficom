@@ -53,6 +53,12 @@ public class SimpleGraphPanel extends JPanel
 		}
 	}
 
+	protected void setGraphBounds(int start, int end)
+	{
+		this.start = start;
+		this.end = end;
+	}
+
 	public void setGraphSize(Dimension d)
 	{
 		Dimension dim = getSize();
@@ -65,8 +71,7 @@ public class SimpleGraphPanel extends JPanel
 
 	public void setDefaultScales()
 	{
-		start = 0;
-		end = y.length;
+		setGraphBounds(0, y.length);
 		top = 0;
 		bottom = 0;
 

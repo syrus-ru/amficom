@@ -95,8 +95,9 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 			double factor_x = (panel.y.length*panel.delta_x)/(maxLength*maxDeltaX/scale_x);
 			double factor_y = ((double)(panel.max_y - panel.min_y))/((double)maxY/scale_y);
 
-			panel.start = ((int) (panel.y.length * hposition / (hsize * factor_x))) ;
-			panel.end = Math.min ((int) (panel.y.length * (hposition + hwidth) / (hsize * factor_x)) + 1, panel.y.length);
+			panel.setGraphBounds(
+					((int) (panel.y.length * hposition / (hsize * factor_x))),
+					(int) (panel.y.length * (hposition + hwidth) / (hsize * factor_x)) + 1);
 			panel.top = ((double)((panel.max_y - panel.min_y) * vposition) / (vsize * factor_y));
 			panel.bottom = ((double)((panel.max_y - panel.min_y) * (vsize - vposition - vheight)) / (vsize * factor_y));
 		}

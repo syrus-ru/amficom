@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.util.*;
+import java.util.Map;
 
 import java.awt.Toolkit;
 import java.awt.event.*;
@@ -20,19 +20,6 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 	public AnalysisLayeredPanel(Dispatcher dispatcher)
 	{
 		super(dispatcher);
-
-		try
-		{
-			jbInit();
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
-	}
-
-	private void jbInit() throws Exception
-	{
 	}
 
 	protected ToolBarPanel createToolBar()
@@ -142,7 +129,7 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 				((AnalysisPanel)panel).updAnalysisMarkerInfo();
 				jLayeredPane.repaint();
 				return;
-			};
+			}
 		}
 	}
 }

@@ -185,11 +185,10 @@ public class ResizableLayeredPanel extends JPanel
 		_width = jLayeredPane.getWidth();
 		_height = jLayeredPane.getHeight();
 
-		panel.start = start - ix;
-		if (panel.start < 0)
-			panel.end = end + ix - panel.start;
+		if (start - ix < 0)
+			panel.setGraphBounds(start - ix, end + ix - start + ix);
 		else
-			panel.end = end + ix;
+			panel.setGraphBounds(start - ix, end + ix);
 		panel.top = panel.max_y - max - iy;
 		panel.bottom = min - panel.min_y - iy;
 

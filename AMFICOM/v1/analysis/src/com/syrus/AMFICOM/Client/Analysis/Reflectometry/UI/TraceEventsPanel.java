@@ -7,7 +7,7 @@ import com.syrus.AMFICOM.analysis.dadara.*;
 
 public class TraceEventsPanel extends ScaledGraphPanel
 {
-	public boolean draw_events = true;
+	protected boolean draw_events = true;
 
 	protected TraceEvent[] events;
 

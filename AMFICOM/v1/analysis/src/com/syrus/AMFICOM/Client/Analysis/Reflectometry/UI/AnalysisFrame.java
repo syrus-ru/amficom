@@ -8,7 +8,7 @@ import java.awt.event.*;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
@@ -57,7 +57,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 		return LangModelAnalyse.getString("analysisTitle");
 	}
 
-	public Dispatcher getInternalDispatcher ()
+	public Dispatcher getInternalDispatcher()
 	{
 		return dispatcher;
 	}
@@ -119,7 +119,10 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 		if (id.equals("primarytrace") || id.equals("modeledtrace"))
 		{
 			if (!bs.monitored_element_id.equals(""))
-				setTitle(((ObjectResource)Pool.get(MonitoredElement.typ, bs.monitored_element_id)).getName());
+			{
+				MonitoredElement me = (MonitoredElement)Pool.get(MonitoredElement.typ, bs.monitored_element_id);
+				setTitle(me.getName());
+			}
 			else
 				setTitle(LangModelAnalyse.getString("analysisTitle"));
 

@@ -30,7 +30,7 @@ public class EventsFrame extends ATableFrame
 
 	private Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel;
-	private ATable jTable;
+	private JTable jTable;
 	private int selected = 0;
 	private boolean skip = false;
 

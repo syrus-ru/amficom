@@ -162,14 +162,14 @@ public class AnalyseMainFrameSimplified extends JFrame
 		aContext.setDispatcher(internal_dispatcher);
 		internal_dispatcher.register(this, RefChangeEvent.typ);
 		internal_dispatcher.register(this, "contextchange");
-		Environment.the_dispatcher.register(this, "contextchange");
+		Environment.getDispatcher().register(this, "contextchange");
 
-		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
-		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
 		aModel.setCommand("menuFileOpen", new FileOpenCommand(internal_dispatcher, aContext));
@@ -632,7 +632,7 @@ public class AnalyseMainFrameSimplified extends JFrame
 	void this_windowClosing(WindowEvent e)
 	{
 		internal_dispatcher.unregister(this, "contextchange");
-		Environment.the_dispatcher.unregister(this, "contextchange");
+		Environment.getDispatcher().unregister(this, "contextchange");
 		aContext.getApplicationModel().getCommand("menuExit").execute();
 	}
 
@@ -649,7 +649,7 @@ public class AnalyseMainFrameSimplified extends JFrame
 			ColorManager.saveIni();
 			aManager.saveIni();
 			internal_dispatcher.unregister(this, "contextchange");
-			Environment.the_dispatcher.unregister(this, "contextchange");
+			Environment.getDispatcher().unregister(this, "contextchange");
 			aContext.getApplicationModel().getCommand("menuExit").execute();
 			return;
 		}

@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.analysis.dadara.*;
 
 public class ReflectogramEventsPanel extends TraceEventsPanel
 {
-	public Dispatcher dispatcher;
+	protected Dispatcher dispatcher;
 
 	public boolean draw_modeled = false;
 	public boolean draw_alarms = false;

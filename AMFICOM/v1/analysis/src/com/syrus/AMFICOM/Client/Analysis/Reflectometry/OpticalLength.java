@@ -131,8 +131,7 @@ public class OpticalLength extends SchemePathDecompositor
 		{
 			if(pe[i].getType() == PathElement.CABLE_LINK) // CABLE LINK
 			{
-				SchemeCableLink schemeCableLink =
-						(SchemeCableLink)Pool.get(SchemeCableLink.typ, pe[i].link_id);
+				SchemeCableLink schemeCableLink = pe[i].getSchemeCableLink();
 				if(schemeCableLink == null)
 				{
 					System.out.println("Something wrong... - schemeCableLink == null");
@@ -161,8 +160,7 @@ public class OpticalLength extends SchemePathDecompositor
 			}
 			else if (pe[i].getType() == PathElement.LINK)              // simple link
 			{
-				SchemeLink schemeLink =
-						(SchemeLink)Pool.get(SchemeLink.typ, pe[i].link_id);
+				SchemeLink schemeLink = pe[i].getSchemeLink();
 				if(schemeLink == null)
 				{
 					System.out.println("Something is wrong...");
@@ -176,8 +174,7 @@ public class OpticalLength extends SchemePathDecompositor
 			}
 			else
 			{
-				SchemeElement se =
-					(SchemeElement)Pool.get(SchemeElement.typ, pe[i].scheme_element_id);
+				SchemeElement se = pe[i].getSchemeElement();
 				LengthContainer lc = new LengthContainer(se, 0, 0);
 				vec.add(lc);
 			}

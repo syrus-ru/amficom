@@ -19,7 +19,7 @@ class Marker
 	{
 		pos = initial_position;
 		this.name = name;
-		id = "marker"+String.valueOf(System.currentTimeMillis());
+		id = "M" + String.valueOf(System.currentTimeMillis()) + String.valueOf(Math.random());
 	}
 
 	void move (int new_position)
