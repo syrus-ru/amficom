@@ -326,7 +326,7 @@ class PlanToolBar extends JPanel {
 		Hashtable unsavedAnalysis = Pool.getChangedHash(Analysis.typ);
 		Hashtable unsavedEvaluation = Pool.getChangedHash(Evaluation.typ);
 		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.typ);
-		Hashtable unsavedTest = Pool.getChangedHash(Test.typ);
+		Hashtable unsavedTest = Pool.getChangedHash(Test.TYPE);
 
 		for (int i = 0; i < 5; i++) {
 			Hashtable table;

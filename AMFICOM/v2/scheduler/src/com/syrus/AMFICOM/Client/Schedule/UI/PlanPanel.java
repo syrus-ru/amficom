@@ -637,7 +637,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		for (int i = 0; i < ids.length; i++) {
 			if (SchedulerModel.DEBUG_LEVEL >= 5)
 					System.out.println("get test#" + ids[i]); //$NON-NLS-1$
-			Test test = (Test) Pool.get(Test.typ, ids[i]);
+			Test test = (Test) Pool.get(Test.TYPE, ids[i]);
 			//			DataSourceInterface dsi = aContext.getDataSourceInterface();
 			if (test.getAnalysisId().length() > 0) //$NON-NLS-1$
 					dsi.GetAnalysis(test.getAnalysisId());

@@ -93,7 +93,7 @@ public class TestLine extends JLabel implements ActionListener,
 	}
 
 	public void addTest(String id) {
-		Test test = (Test) Pool.get(Test.typ, id);
+		Test test = (Test) Pool.get(Test.TYPE, id);
 		if (test != null) addTest(test);
 	}
 

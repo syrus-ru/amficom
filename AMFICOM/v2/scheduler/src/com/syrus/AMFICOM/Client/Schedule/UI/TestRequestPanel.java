@@ -119,7 +119,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 			java.util.List list = testRequest.getTestIds();
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				String testId = (String) it.next();
-				Test test = (Test) Pool.get(Test.typ, testId);
+				Test test = (Test) Pool.get(Test.TYPE, testId);
 				System.out.println("testId:" + testId); //$NON-NLS-1$
 				if ((!test.isChanged()) && (testId.length() > 0)) {
 					System.out.println("saved test exists,"); //$NON-NLS-1$
@@ -218,7 +218,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		java.util.List list = testRequest.getTestIds();
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			String test_id = (String) it.next();
-			Test tst = (Test) Pool.get(Test.typ, test_id);
+			Test tst = (Test) Pool.get(Test.TYPE, test_id);
 			if (!tst.isChanged()) {
 				System.out
 						.println("test:" + tst.getId() + "\t" + tst.getName()); //$NON-NLS-1$ //$NON-NLS-2$

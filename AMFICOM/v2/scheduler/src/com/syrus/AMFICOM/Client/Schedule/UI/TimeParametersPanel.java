@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.general.Identifier;
 
 public class TimeParametersPanel extends JPanel implements OperationListener {
 
@@ -1420,7 +1421,10 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 	}
 
 	private TemporalPattern getTimeStamp() {
-		TemporalPattern ts = new TemporalPattern();
+		/**
+		 * @todo fix Identifier for TemporalPettern
+		 */
+		TemporalPattern ts = new TemporalPattern(new Identifier(TemporalPattern.TYPE));
 
 		Calendar dateCal = Calendar.getInstance();
 		Calendar timeCal = Calendar.getInstance();

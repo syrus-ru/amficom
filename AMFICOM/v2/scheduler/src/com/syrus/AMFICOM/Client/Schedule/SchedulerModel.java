@@ -173,9 +173,9 @@ public class SchedulerModel implements OperationListener {
 		DataSourceInterface dsi = this.aContext.getDataSourceInterface();
 		Test test = this.receivedTest;
 		if (test == null) {
-			test = new Test(dsi.GetUId(Test.typ)); //$NON-NLS-1$
+			test = new Test(dsi.GetUId(Test.TYPE)); //$NON-NLS-1$
 			test.setStatus(TestStatus.TEST_STATUS_SCHEDULED);
-			Pool.put(Test.typ, test.getId(), test);
+			Pool.put(Test.TYPE, test.getId(), test);
 		}
 
 		TestType testType = (TestType) this.receiveTreeElements
