@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.46 2004/12/27 13:26:52 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.47 2004/12/27 13:33:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2004/12/27 13:26:52 $
+ * @version $Revision: 1.47 $, $Date: 2004/12/27 13:33:58 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -410,8 +410,8 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			if (testIds == null)
 				testIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
 			for (Iterator it = testIds.iterator(); it.hasNext();) {
-				Test test = (Test) it.next();
-				Log.errorMessage("MeasurementDatabase.retrieveByCondition | get measurements for test " + test.getId().toString());
+				Identifier testId = (Identifier) it.next();
+				Log.errorMessage("MeasurementDatabase.retrieveByCondition | get measurements for test " + testId.toString());
 			}
 			list = this.retrieveButIdsByTest(ids, testIds);
 		}
