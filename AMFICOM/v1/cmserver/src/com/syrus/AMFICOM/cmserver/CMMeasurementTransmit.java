@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.12 2005/03/29 16:58:07 arseniy Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.13 2005/03/29 17:45:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -67,13 +67,13 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/03/29 16:58:07 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/29 17:45:46 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 
-	private static final long	serialVersionUID	= 3410028455480782250L;
+	private static final long serialVersionUID = 3410028455480782250L;
 
 	public AnalysisType_Transferable transmitAnalysisType(Identifier_Transferable identifier_Transferable,
 			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
