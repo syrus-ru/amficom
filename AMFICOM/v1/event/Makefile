@@ -28,6 +28,8 @@ SOURCES := com/syrus/AMFICOM/event/EventDatabaseContext.java \
 	com/syrus/AMFICOM/event/EventDatabase.java \
 	com/syrus/AMFICOM/event/EventWrapper.java \
 	com/syrus/AMFICOM/event/EventParameter.java \
+	com/syrus/AMFICOM/event/EventParameterDatabase.java \
+	com/syrus/AMFICOM/event/EventParameterWrapper.java \
 	com/syrus/AMFICOM/event/EventSource.java \
 	com/syrus/AMFICOM/event/EventSourceWrapper.java \
 	com/syrus/AMFICOM/event/EventSourceDatabase.java \
