@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.46 2005/04/01 14:10:28 arseniy Exp $
+ * $Id: Analysis.java,v 1.47 2005/04/01 14:34:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/04/01 14:10:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.47 $, $Date: 2005/04/01 14:34:27 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -45,7 +45,7 @@ public class Analysis extends Action {
 	public Analysis(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
+		this.analysisDatabase = MeasurementDatabaseContext.getAnalysisDatabase();
 		try {
 			this.analysisDatabase.retrieve(this);
 		}
@@ -70,7 +70,7 @@ public class Analysis extends Action {
 			throw new CreateObjectException(ae);
 		}
 
-		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
+		this.analysisDatabase = MeasurementDatabaseContext.getAnalysisDatabase();
 	}
 
 	protected Analysis(Identifier id,
@@ -94,7 +94,7 @@ public class Analysis extends Action {
 		this.name = name;
 		this.criteriaSet = criteriaSet;
 
-		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
+		this.analysisDatabase = MeasurementDatabaseContext.getAnalysisDatabase();
 
 	}
 

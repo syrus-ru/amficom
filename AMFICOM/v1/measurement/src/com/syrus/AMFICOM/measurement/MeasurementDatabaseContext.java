@@ -1,7 +1,7 @@
-/*
- * $Id: MeasurementDatabaseContext.java,v 1.24 2005/02/22 14:10:30 arseniy Exp $
+/*-
+ * $Id: MeasurementDatabaseContext.java,v 1.25 2005/04/01 14:34:27 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
@@ -10,176 +10,162 @@ package com.syrus.AMFICOM.measurement;
 
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/02/22 14:10:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/04/01 14:34:27 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
-
-public class MeasurementDatabaseContext {
-	protected static StorableObjectDatabase	measurementTypeDatabase;
-	protected static StorableObjectDatabase	analysisTypeDatabase;
-	protected static StorableObjectDatabase	evaluationTypeDatabase;
-	protected static StorableObjectDatabase	modelingTypeDatabase;
+public final class MeasurementDatabaseContext {
+	private static MeasurementTypeDatabase	measurementTypeDatabase;
+	private static AnalysisTypeDatabase	analysisTypeDatabase;
+	private static EvaluationTypeDatabase	evaluationTypeDatabase;
+	private static ModelingTypeDatabase	modelingTypeDatabase;
 	
-	protected static StorableObjectDatabase	setDatabase;
-	protected static StorableObjectDatabase	modelingDatabase;
-	protected static StorableObjectDatabase	measurementSetupDatabase;
-	protected static StorableObjectDatabase	measurementDatabase;
-	protected static StorableObjectDatabase	analysisDatabase;
-	protected static StorableObjectDatabase	evaluationDatabase;
-	protected static StorableObjectDatabase	testDatabase;
-	protected static StorableObjectDatabase	resultDatabase;
-	protected static StorableObjectDatabase	temporalPatternDatabase;
+	private static SetDatabase		setDatabase;
+	private static ModelingDatabase		modelingDatabase;
+	private static MeasurementSetupDatabase	measurementSetupDatabase;
+	private static MeasurementDatabase	measurementDatabase;
+	private static AnalysisDatabase		analysisDatabase;
+	private static EvaluationDatabase	evaluationDatabase;
+	private static TestDatabase		testDatabase;
+	private static ResultDatabase		resultDatabase;
+	private static TemporalPatternDatabase	temporalPatternDatabase;
 
 	private MeasurementDatabaseContext() {
-		// empty
+		assert false;
 	}
 
-	public static void init(final StorableObjectDatabase measurementTypeDatabase1,
-													final StorableObjectDatabase analysisTypeDatabase1,
-													final StorableObjectDatabase evaluationTypeDatabase1,
-													final StorableObjectDatabase modelingTypeDatabase1,
-													final StorableObjectDatabase setDatabase1,
-													final StorableObjectDatabase modelingDatabase1,
-													final StorableObjectDatabase measurementSetupDatabase1,
-													final StorableObjectDatabase measurementDatabase1,
-													final StorableObjectDatabase analysisDatabase1,
-													final StorableObjectDatabase evaluationDatabase1,
-													final StorableObjectDatabase testDatabase1,
-													final StorableObjectDatabase resultDatabase1,
-													final StorableObjectDatabase temporalPatternDatabase1) {
+	public static void init(
+			final MeasurementTypeDatabase	measurementTypeDatabase1,
+			final AnalysisTypeDatabase	analysisTypeDatabase1,
+			final EvaluationTypeDatabase	evaluationTypeDatabase1,
+			final ModelingTypeDatabase	modelingTypeDatabase1,
+			final SetDatabase		setDatabase1,
+			final ModelingDatabase		modelingDatabase1,
+			final MeasurementSetupDatabase	measurementSetupDatabase1,
+			final MeasurementDatabase	measurementDatabase1,
+			final AnalysisDatabase		analysisDatabase1,
+			final EvaluationDatabase	evaluationDatabase1,
+			final TestDatabase		testDatabase1,
+			final ResultDatabase		resultDatabase1,
+			final TemporalPatternDatabase	temporalPatternDatabase1) {
 		if (measurementTypeDatabase1 != null)
 			measurementTypeDatabase = measurementTypeDatabase1;
-
 		if (analysisTypeDatabase1 != null)
 			analysisTypeDatabase = analysisTypeDatabase1;
-
 		if (evaluationTypeDatabase1 != null)
 			evaluationTypeDatabase = evaluationTypeDatabase1;
-
 		if (modelingTypeDatabase1 != null)
 			modelingTypeDatabase = modelingTypeDatabase1;
-
 		if (setDatabase1 != null)
 			setDatabase = setDatabase1;
-
 		if (modelingDatabase1 != null)
 			modelingDatabase = modelingDatabase1;
-
 		if (measurementSetupDatabase1 != null)
 			measurementSetupDatabase = measurementSetupDatabase1;
-
 		if (measurementDatabase1 != null)
 			measurementDatabase = measurementDatabase1;
-
 		if (analysisDatabase1 != null)
 			analysisDatabase = analysisDatabase1;
-
 		if (evaluationDatabase1 != null)
 			evaluationDatabase = evaluationDatabase1;
-
 		if (testDatabase1 != null)
 			testDatabase = testDatabase1;
-
 		if (resultDatabase1 != null)
 			resultDatabase = resultDatabase1;
-
 		if (temporalPatternDatabase1 != null)
 			temporalPatternDatabase = temporalPatternDatabase1;
-
 	}
 
-	public static StorableObjectDatabase getDatabase(Short entityCode) {
+	public static StorableObjectDatabase getDatabase(final Short entityCode) {
 		return getDatabase(entityCode.shortValue());
 	}
 
-	public static StorableObjectDatabase getDatabase(short entityCode ) {
+	public static StorableObjectDatabase getDatabase(final short entityCode) {
 		switch (entityCode) {
-
 			case ObjectEntities.ANALYSIS_ENTITY_CODE:
-				return analysisDatabase;
-			
+				return getAnalysisDatabase();
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-				return analysisTypeDatabase;
-
+				return getAnalysisTypeDatabase();
 			case ObjectEntities.EVALUATION_ENTITY_CODE:
-				return evaluationDatabase;
-
+				return getEvaluationDatabase();
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-				return evaluationTypeDatabase;
-
+				return getEvaluationTypeDatabase();
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				return measurementDatabase;
-
+				return getMeasurementDatabase();
 			case ObjectEntities.MS_ENTITY_CODE:
-				return measurementSetupDatabase;
-
+				return getMeasurementSetupDatabase();
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-				return measurementTypeDatabase;
-
+				return getMeasurementTypeDatabase();
 			case ObjectEntities.MODELING_ENTITY_CODE:
-				return modelingDatabase;
-
+				return getModelingDatabase();
 			case ObjectEntities.MODELINGTYPE_ENTITY_CODE:
-				return modelingTypeDatabase;
-
+				return getModelingTypeDatabase();
 			case ObjectEntities.RESULT_ENTITY_CODE:
-				return resultDatabase;
-
+				return getResultDatabase();
 			case ObjectEntities.SET_ENTITY_CODE:
-				return setDatabase;
-
+				return getSetDatabase();
 			case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-				return temporalPatternDatabase;
-
+				return getTemporalPatternDatabase();
 			case ObjectEntities.TEST_ENTITY_CODE:
-				return testDatabase;
-
+				return getTestDatabase();
 			default:
+				Log.errorMessage("MeasurementDatabaseContext.getDatabase | Unknown entity: " + entityCode); //$NON-NLS-1$
 				return null;
 		}
 	}
 
-	public static StorableObjectDatabase getAnalysisDatabase() {
+	public static AnalysisDatabase getAnalysisDatabase() {
 		return analysisDatabase;
 	}
-	public static StorableObjectDatabase getAnalysisTypeDatabase() {
+
+	public static AnalysisTypeDatabase getAnalysisTypeDatabase() {
 		return analysisTypeDatabase;
 	}
-	public static StorableObjectDatabase getEvaluationDatabase() {
+
+	public static EvaluationDatabase getEvaluationDatabase() {
 		return evaluationDatabase;
 	}
-	public static StorableObjectDatabase getEvaluationTypeDatabase() {
+
+	public static EvaluationTypeDatabase getEvaluationTypeDatabase() {
 		return evaluationTypeDatabase;
 	}
-	public static StorableObjectDatabase getModelingDatabase() {
+
+	public static ModelingDatabase getModelingDatabase() {
 		return modelingDatabase;
 	}
-	public static StorableObjectDatabase getModelingTypeDatabase() {
+
+	public static ModelingTypeDatabase getModelingTypeDatabase() {
 		return modelingTypeDatabase;
 	}
-	public static StorableObjectDatabase getMeasurementDatabase() {
+
+	public static MeasurementDatabase getMeasurementDatabase() {
 		return measurementDatabase;
 	}
-	public static StorableObjectDatabase getMeasurementSetupDatabase() {
+
+	public static MeasurementSetupDatabase getMeasurementSetupDatabase() {
 		return measurementSetupDatabase;
 	}
-	public static StorableObjectDatabase getMeasurementTypeDatabase() {
+
+	public static MeasurementTypeDatabase getMeasurementTypeDatabase() {
 		return measurementTypeDatabase;
 	}
-	public static StorableObjectDatabase getResultDatabase() {
+
+	public static ResultDatabase getResultDatabase() {
 		return resultDatabase;
 	}
-	public static StorableObjectDatabase getSetDatabase() {
+
+	public static SetDatabase getSetDatabase() {
 		return setDatabase;
 	}
-	public static StorableObjectDatabase getTemporalPatternDatabase() {
+
+	public static TemporalPatternDatabase getTemporalPatternDatabase() {
 		return temporalPatternDatabase;
 	}
-	public static StorableObjectDatabase getTestDatabase() {
+
+	public static TestDatabase getTestDatabase() {
 		return testDatabase;
 	}
-	
 }

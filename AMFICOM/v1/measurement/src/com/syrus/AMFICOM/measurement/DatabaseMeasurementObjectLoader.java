@@ -1,7 +1,7 @@
-/*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.46 2005/04/01 08:43:32 bob Exp $
+/*-
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.47 2005/04/01 14:34:27 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.47 $, $Date: 2005/04/01 14:34:27 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -92,7 +92,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	// for multiple objects
 
 	public java.util.Set loadAnalyses(java.util.Set ids) throws ApplicationException {
-		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.analysisDatabase;
+		AnalysisDatabase database = MeasurementDatabaseContext.getAnalysisDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
@@ -105,7 +105,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadAnalysisTypes(java.util.Set ids) throws ApplicationException {
-		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.analysisTypeDatabase;
+		AnalysisTypeDatabase database = MeasurementDatabaseContext.getAnalysisTypeDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
@@ -119,7 +119,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadEvaluations(java.util.Set ids) throws ApplicationException {
-		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.evaluationDatabase;
+		EvaluationDatabase database = MeasurementDatabaseContext.getEvaluationDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
@@ -133,7 +133,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadEvaluationTypes(java.util.Set ids) throws ApplicationException {
-		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.evaluationTypeDatabase;
+		EvaluationTypeDatabase database = MeasurementDatabaseContext.getEvaluationTypeDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
@@ -147,7 +147,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadModelings(java.util.Set ids) throws ApplicationException {
-		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.modelingDatabase;
+		ModelingDatabase database = MeasurementDatabaseContext.getModelingDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
@@ -162,7 +162,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadModelingTypes(java.util.Set ids) throws ApplicationException {
-		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.modelingTypeDatabase;
+		ModelingTypeDatabase database = MeasurementDatabaseContext.getModelingTypeDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
@@ -176,7 +176,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadMeasurements(java.util.Set ids) throws ApplicationException {
-		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.measurementDatabase;
+		MeasurementDatabase database = MeasurementDatabaseContext.getMeasurementDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
@@ -190,7 +190,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadMeasurementSetups(java.util.Set ids) throws ApplicationException {
-		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.measurementSetupDatabase;
+		MeasurementSetupDatabase database = MeasurementDatabaseContext.getMeasurementSetupDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
@@ -205,7 +205,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadMeasurementTypes(java.util.Set ids) throws ApplicationException {
-		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.measurementTypeDatabase;
+		MeasurementTypeDatabase database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
@@ -220,7 +220,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadResults(java.util.Set ids) throws ApplicationException {
-		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.resultDatabase;
+		ResultDatabase database = MeasurementDatabaseContext.getResultDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
@@ -233,7 +233,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadSets(java.util.Set ids) throws ApplicationException {
-		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.setDatabase;
+		SetDatabase database = MeasurementDatabaseContext.getSetDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
@@ -246,7 +246,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadTemporalPatterns(java.util.Set ids) throws ApplicationException {
-		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.temporalPatternDatabase;
+		TemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
@@ -261,7 +261,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadTests(java.util.Set ids) throws ApplicationException {
-		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.testDatabase;
+		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveByIdsByCondition(ids, null);
@@ -278,7 +278,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 
 	public java.util.Set loadAnalysesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.analysisDatabase;
+		AnalysisDatabase database = MeasurementDatabaseContext.getAnalysisDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
@@ -292,7 +292,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadAnalysisTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.analysisTypeDatabase;
+		AnalysisTypeDatabase database = MeasurementDatabaseContext.getAnalysisTypeDatabase();
 		java.util.Set list;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
@@ -307,7 +307,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadEvaluationsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.evaluationDatabase;
+		EvaluationDatabase database = MeasurementDatabaseContext.getEvaluationDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
@@ -322,7 +322,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadEvaluationTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.evaluationTypeDatabase;
+		EvaluationTypeDatabase database = MeasurementDatabaseContext.getEvaluationTypeDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
@@ -337,7 +337,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadModelingsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.modelingDatabase;
+		ModelingDatabase database = MeasurementDatabaseContext.getModelingDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
@@ -351,7 +351,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadModelingTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.modelingTypeDatabase;
+		ModelingTypeDatabase database = MeasurementDatabaseContext.getModelingTypeDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
@@ -366,7 +366,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadMeasurementsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.measurementDatabase;
+		MeasurementDatabase database = MeasurementDatabaseContext.getMeasurementDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
@@ -381,7 +381,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadMeasurementSetupsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.measurementSetupDatabase;
+		MeasurementSetupDatabase database = MeasurementDatabaseContext.getMeasurementSetupDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
@@ -396,7 +396,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadMeasurementTypesButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.measurementTypeDatabase;
+		MeasurementTypeDatabase database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
@@ -411,7 +411,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadResultsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.resultDatabase;
+		ResultDatabase database = MeasurementDatabaseContext.getResultDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
@@ -425,7 +425,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadSetsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.setDatabase;
+		SetDatabase database = MeasurementDatabaseContext.getSetDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
@@ -439,7 +439,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadTemporalPatternsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.temporalPatternDatabase;
+		TemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
@@ -454,7 +454,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
 
 	public java.util.Set loadTestsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
-		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.testDatabase;
+		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
 		java.util.Set list = null;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
@@ -471,77 +471,77 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 
 	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws ApplicationException {
-		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.measurementTypeDatabase;
+		MeasurementTypeDatabase database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
 		database.update(measurementType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 				: StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveAnalysisType(AnalysisType analysisType, boolean force) throws ApplicationException {
-		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.analysisTypeDatabase;
+		AnalysisTypeDatabase database = MeasurementDatabaseContext.getAnalysisTypeDatabase();
 		database.update(analysisType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 				: StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws ApplicationException {
-		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.evaluationTypeDatabase;
+		EvaluationTypeDatabase database = MeasurementDatabaseContext.getEvaluationTypeDatabase();
 		database.update(evaluationType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 				: StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveSet(Set set, boolean force) throws ApplicationException {
-		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.setDatabase;
+		SetDatabase database = MeasurementDatabaseContext.getSetDatabase();
 		database.update(set, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws ApplicationException {
-		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.measurementSetupDatabase;
+		MeasurementSetupDatabase database = MeasurementDatabaseContext.getMeasurementSetupDatabase();
 		database.update(measurementSetup, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 				: StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveModeling(Modeling modeling, boolean force) throws ApplicationException {
-		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.modelingDatabase;
+		ModelingDatabase database = MeasurementDatabaseContext.getModelingDatabase();
 		database.update(modeling, SessionContext.getAccessIdentity().getUserId(), 
 			force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveModelingType(ModelingType modelingType, boolean force) throws ApplicationException {
-		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.modelingTypeDatabase;
+		ModelingTypeDatabase database = MeasurementDatabaseContext.getModelingTypeDatabase();
 		database.update(modelingType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 				: StorableObjectDatabase.UPDATE_CHECK);
 
 	}
 
 	public void saveMeasurement(Measurement measurement, boolean force) throws ApplicationException {
-		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.measurementDatabase;
+		MeasurementDatabase database = MeasurementDatabaseContext.getMeasurementDatabase();
 		database.update(measurement, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 				: StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveAnalysis(Analysis analysis, boolean force) throws ApplicationException {
-		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.analysisDatabase;
+		AnalysisDatabase database = MeasurementDatabaseContext.getAnalysisDatabase();
 		database.update(analysis, SessionContext.getAccessIdentity().getUserId(), 
 			force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEvaluation(Evaluation evaluation, boolean force) throws ApplicationException {
-		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.evaluationDatabase;
+		EvaluationDatabase database = MeasurementDatabaseContext.getEvaluationDatabase();
 		database.update(evaluation, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 				: StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveTest(Test test, boolean force) throws ApplicationException {
-		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.testDatabase;
+		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
 		database.update(test, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveResult(Result result, boolean force) throws ApplicationException {
-		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.resultDatabase;
+		ResultDatabase database = MeasurementDatabaseContext.getResultDatabase();
 		database.update(result, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws ApplicationException {
-		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.temporalPatternDatabase;
+		TemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
 		database.update(temporalPattern, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 				: StorableObjectDatabase.UPDATE_CHECK);
 	}
@@ -551,67 +551,67 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 
 	public void saveMeasurementTypes(java.util.Set list, boolean force) throws ApplicationException {
-		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.measurementTypeDatabase;
+		MeasurementTypeDatabase database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveAnalysisTypes(java.util.Set list, boolean force) throws ApplicationException {
-		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.analysisTypeDatabase;
+		AnalysisTypeDatabase database = MeasurementDatabaseContext.getAnalysisTypeDatabase();
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEvaluationTypes(java.util.Set list, boolean force) throws ApplicationException {
-		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.evaluationTypeDatabase;
+		EvaluationTypeDatabase database = MeasurementDatabaseContext.getEvaluationTypeDatabase();
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveSets(java.util.Set list, boolean force) throws ApplicationException {
-		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.setDatabase;
+		SetDatabase database = MeasurementDatabaseContext.getSetDatabase();
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveModelings(java.util.Set list, boolean force) throws ApplicationException {
-		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.modelingDatabase;
+		ModelingDatabase database = MeasurementDatabaseContext.getModelingDatabase();
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 	
 	public void saveModelingTypes(java.util.Set list, boolean force) throws ApplicationException {
-		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.modelingTypeDatabase;
+		ModelingTypeDatabase database = MeasurementDatabaseContext.getModelingTypeDatabase();
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveMeasurementSetups(java.util.Set list, boolean force) throws ApplicationException {
-		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.measurementSetupDatabase;
+		MeasurementSetupDatabase database = MeasurementDatabaseContext.getMeasurementSetupDatabase();
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveMeasurements(java.util.Set list, boolean force) throws ApplicationException {
-		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.measurementDatabase;
+		MeasurementDatabase database = MeasurementDatabaseContext.getMeasurementDatabase();
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveAnalyses(java.util.Set list, boolean force) throws ApplicationException {
-		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.analysisDatabase;
+		AnalysisDatabase database = MeasurementDatabaseContext.getAnalysisDatabase();
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEvaluations(java.util.Set list, boolean force) throws ApplicationException {
-		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.evaluationDatabase;
+		EvaluationDatabase database = MeasurementDatabaseContext.getEvaluationDatabase();
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveTests(java.util.Set list, boolean force) throws ApplicationException {
-		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.testDatabase;
+		TestDatabase database = MeasurementDatabaseContext.getTestDatabase();
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveResults(java.util.Set list, boolean force) throws ApplicationException {
-		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.resultDatabase;
+		ResultDatabase database = MeasurementDatabaseContext.getResultDatabase();
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveTemporalPatterns(java.util.Set list, boolean force) throws ApplicationException {
-		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.temporalPatternDatabase;
+		TemporalPatternDatabase database = MeasurementDatabaseContext.getTemporalPatternDatabase();
 		database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 

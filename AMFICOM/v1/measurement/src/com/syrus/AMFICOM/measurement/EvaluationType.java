@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.50 2005/04/01 08:43:32 bob Exp $
+ * $Id: EvaluationType.java,v 1.51 2005/04/01 14:34:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.51 $, $Date: 2005/04/01 14:34:27 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -62,7 +62,7 @@ public class EvaluationType extends ActionType {
 
 		this.measurementTypeIds = new HashSet();
 
-		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
+		this.evaluationTypeDatabase = MeasurementDatabaseContext.getEvaluationTypeDatabase();
 		try {
 			this.evaluationTypeDatabase.retrieve(this);
 		}
@@ -120,7 +120,7 @@ public class EvaluationType extends ActionType {
 			throw new CreateObjectException(ae);
 		}
 
-		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
+		this.evaluationTypeDatabase = MeasurementDatabaseContext.getEvaluationTypeDatabase();
 	}	
 	
 	protected EvaluationType(Identifier id,
@@ -158,7 +158,7 @@ public class EvaluationType extends ActionType {
 		this.measurementTypeIds = new HashSet();
 		this.setMeasurementTypeIds0(measurementTypeIds);
 
-		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
+		this.evaluationTypeDatabase = MeasurementDatabaseContext.getEvaluationTypeDatabase();
 	}
 
 	/**

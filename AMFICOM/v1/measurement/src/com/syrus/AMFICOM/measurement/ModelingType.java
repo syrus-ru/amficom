@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.12 2005/04/01 08:43:32 bob Exp $
+ * $Id: ModelingType.java,v 1.13 2005/04/01 14:34:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/04/01 14:34:27 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -54,7 +54,7 @@ public class ModelingType extends ActionType {
 		this.inParameterTypes = new HashSet();
 		this.outParameterTypes = new HashSet();
 
-		this.modelingTypeDatabase = MeasurementDatabaseContext.modelingTypeDatabase;
+		this.modelingTypeDatabase = MeasurementDatabaseContext.getModelingTypeDatabase();
 		try {
 			this.modelingTypeDatabase.retrieve(this);
 		}
@@ -95,7 +95,7 @@ public class ModelingType extends ActionType {
 			throw new CreateObjectException(ae);
 		}
 
-		this.modelingTypeDatabase = MeasurementDatabaseContext.modelingTypeDatabase;
+		this.modelingTypeDatabase = MeasurementDatabaseContext.getModelingTypeDatabase();
 	}
 
 	protected ModelingType(Identifier id,
@@ -120,7 +120,7 @@ public class ModelingType extends ActionType {
 		this.outParameterTypes = new HashSet();
 		this.setOutParameterTypes0(outParameterTypes);
 
-		this.modelingTypeDatabase = MeasurementDatabaseContext.modelingTypeDatabase;
+		this.modelingTypeDatabase = MeasurementDatabaseContext.getModelingTypeDatabase();
 	}
 
 	/**

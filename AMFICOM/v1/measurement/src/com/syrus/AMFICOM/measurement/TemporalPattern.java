@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.63 2005/04/01 08:43:32 bob Exp $
+ * $Id: TemporalPattern.java,v 1.64 2005/04/01 14:34:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.64 $, $Date: 2005/04/01 14:34:27 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -791,7 +791,7 @@ public class TemporalPattern extends StorableObject {
 
 	public TemporalPattern(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
+		this.temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
 		try {
 			this.temporalPatternDatabase.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -811,7 +811,7 @@ public class TemporalPattern extends StorableObject {
 		}
 
 		this.changed = false;
-		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
+		this.temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
 	}
 
 	protected TemporalPattern(Identifier id, Identifier creatorId, long version, String description, String[] cronStrings) {
@@ -830,7 +830,7 @@ public class TemporalPattern extends StorableObject {
 				this.addTemplate(cronStrings[i]);
 		}
 		this.changed = false;
-		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
+		this.temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
 	}
 
 	private TemporalPattern(Identifier id, Identifier creatorId, long version, String description, java.util.Set cronString) {
@@ -848,7 +848,7 @@ public class TemporalPattern extends StorableObject {
 
 		this.changed = false;
 
-		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
+		this.temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
 	}
 
 	/**

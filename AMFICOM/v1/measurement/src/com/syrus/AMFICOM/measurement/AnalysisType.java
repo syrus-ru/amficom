@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.54 2005/04/01 08:43:32 bob Exp $
+ * $Id: AnalysisType.java,v 1.55 2005/04/01 14:34:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.55 $, $Date: 2005/04/01 14:34:27 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -62,7 +62,7 @@ public class AnalysisType extends ActionType {
 
 		this.measurementTypeIds = new HashSet();
 
-		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
+		this.analysisTypeDatabase = MeasurementDatabaseContext.getAnalysisTypeDatabase();
 		try {
 			this.analysisTypeDatabase.retrieve(this);
 		}
@@ -120,7 +120,7 @@ public class AnalysisType extends ActionType {
 			throw new CreateObjectException(ae);
 		}
 
-		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
+		this.analysisTypeDatabase = MeasurementDatabaseContext.getAnalysisTypeDatabase();
 	}
 
 	protected AnalysisType(Identifier id,
@@ -158,7 +158,7 @@ public class AnalysisType extends ActionType {
 		this.measurementTypeIds = new HashSet();
 		this.setMeasurementTypeIds0(measurementTypeIds);
 
-		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
+		this.analysisTypeDatabase = MeasurementDatabaseContext.getAnalysisTypeDatabase();
 	}
 	
 	/**

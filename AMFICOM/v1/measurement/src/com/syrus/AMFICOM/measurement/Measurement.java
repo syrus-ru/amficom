@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.55 2005/04/01 08:43:32 bob Exp $
+ * $Id: Measurement.java,v 1.56 2005/04/01 14:34:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.56 $, $Date: 2005/04/01 14:34:27 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -57,7 +57,7 @@ public class Measurement extends Action {
 	public Measurement(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
+		this.measurementDatabase = MeasurementDatabaseContext.getMeasurementDatabase();
 		try {
 			this.measurementDatabase.retrieve(this);
 		}
@@ -86,7 +86,7 @@ public class Measurement extends Action {
 		this.localAddress = new String(mt.local_address);
 		this.testId = new Identifier(mt.test_id);
 
-		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
+		this.measurementDatabase = MeasurementDatabaseContext.getMeasurementDatabase();
 	}
 
 	protected Measurement(Identifier id,
@@ -117,7 +117,7 @@ public class Measurement extends Action {
 		this.localAddress = localAddress;
 		this.testId = testId;
 
-		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
+		this.measurementDatabase = MeasurementDatabaseContext.getMeasurementDatabase();
 	}
 
 	public Object getTransferable() {

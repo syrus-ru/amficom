@@ -1,5 +1,5 @@
 /*
- * $Id: TestSet.java,v 1.1 2005/02/22 14:09:11 arseniy Exp $
+ * $Id: TestSet.java,v 1.2 2005/04/01 14:34:27 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/22 14:09:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/04/01 14:34:27 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public class TestSet extends CommonMeasurementTest {
@@ -37,7 +37,7 @@ public class TestSet extends CommonMeasurementTest {
 	}
 
 	public void testRename() throws ApplicationException, SQLException {
-		SetDatabase setDatabase = (SetDatabase) MeasurementDatabaseContext.setDatabase;
+		SetDatabase setDatabase = MeasurementDatabaseContext.getSetDatabase();
 		Collection sets = setDatabase.retrieveAll();
 		System.out.println("Retrieved " + sets.size() + " sets");
 

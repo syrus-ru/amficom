@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.97 2005/04/01 08:43:32 bob Exp $
+ * $Id: Test.java,v 1.98 2005/04/01 14:34:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.98 $, $Date: 2005/04/01 14:34:27 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -87,7 +87,7 @@ public class Test extends StorableObject {
 		super(id);
 		this.measurementSetupIds = new HashSet();
 
-		this.testDatabase = MeasurementDatabaseContext.testDatabase;
+		this.testDatabase = MeasurementDatabaseContext.getTestDatabase();
 		try {
 			this.testDatabase.retrieve(this);
 		}
@@ -107,7 +107,7 @@ public class Test extends StorableObject {
 					startTime,
 					this.monitoredElement.getLocalAddress(),
 					this.id);
-			MeasurementDatabaseContext.measurementDatabase.update(measurement, measurementCreatorId, StorableObjectDatabase.UPDATE_FORCE);
+			MeasurementDatabaseContext.getMeasurementDatabase().update(measurement, measurementCreatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException("Cannot create measurement for test '" + this.id + "' -- " + ae.getMessage(), ae);
@@ -160,7 +160,7 @@ public class Test extends StorableObject {
 		this.setMeasurementSetupIds0(measurementSetupIds);
 		this.status = TestStatus._TEST_STATUS_NEW;
 		
-		this.testDatabase = MeasurementDatabaseContext.testDatabase;
+		this.testDatabase = MeasurementDatabaseContext.getTestDatabase();
 	}
 
 	/**
@@ -271,7 +271,7 @@ public class Test extends StorableObject {
 		else
 			throw new CreateObjectException("Cannot find measurement setup for test '" + this.id + '\'');
 
-		this.testDatabase = MeasurementDatabaseContext.testDatabase;
+		this.testDatabase = MeasurementDatabaseContext.getTestDatabase();
 	}
 
 	public short getEntityCode() {
@@ -469,7 +469,7 @@ public class Test extends StorableObject {
 		super.modified = new Date(System.currentTimeMillis());
 		super.modifierId = modifierId1;
 		try {
-			this.testDatabase = MeasurementDatabaseContext.testDatabase;
+			this.testDatabase = MeasurementDatabaseContext.getTestDatabase();
 			this.testDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (VersionCollisionException vce){

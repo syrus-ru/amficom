@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.45 2005/04/01 08:43:32 bob Exp $
+ * $Id: Evaluation.java,v 1.46 2005/04/01 14:34:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.46 $, $Date: 2005/04/01 14:34:27 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -44,7 +44,7 @@ public class Evaluation extends Action {
 	public Evaluation(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
+		this.evaluationDatabase = MeasurementDatabaseContext.getEvaluationDatabase();
 		try {
 			this.evaluationDatabase.retrieve(this);
 		}
@@ -69,7 +69,7 @@ public class Evaluation extends Action {
 			throw new CreateObjectException(ae);
 		}
 
-		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
+		this.evaluationDatabase = MeasurementDatabaseContext.getEvaluationDatabase();
 	}
 
 	protected Evaluation(Identifier id,
@@ -91,7 +91,7 @@ public class Evaluation extends Action {
 
 		this.thresholdSet = thresholdSet;
 
-		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
+		this.evaluationDatabase = MeasurementDatabaseContext.getEvaluationDatabase();
 	}
 
 	public Object getTransferable() {

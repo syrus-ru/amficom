@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.44 2005/04/01 08:43:32 bob Exp $
+ * $Id: Result.java,v 1.45 2005/04/01 14:34:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.45 $, $Date: 2005/04/01 14:34:27 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -48,7 +48,7 @@ public class Result extends StorableObject {
 	public Result(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
+		this.resultDatabase = MeasurementDatabaseContext.getResultDatabase();
 		try {
 			this.resultDatabase.retrieve(this);
 		}
@@ -126,7 +126,7 @@ public class Result extends StorableObject {
 		this.sort = sort;
 		this.parameters = parameters;
 
-		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
+		this.resultDatabase = MeasurementDatabaseContext.getResultDatabase();
 	}
 
 	public Object getTransferable() {

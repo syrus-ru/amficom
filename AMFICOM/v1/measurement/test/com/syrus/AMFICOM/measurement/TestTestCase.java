@@ -1,5 +1,5 @@
 /*
- * $Id: TestTestCase.java,v 1.5 2005/03/10 21:08:50 arseniy Exp $
+ * $Id: TestTestCase.java,v 1.6 2005/04/01 14:34:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,11 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -25,7 +24,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
@@ -34,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/10 21:08:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 14:34:27 $
+ * @author $Author: bass $
  * @module tools
  */
 public class TestTestCase extends AbstractMesurementTestCase {
@@ -76,8 +74,8 @@ public class TestTestCase extends AbstractMesurementTestCase {
 			fail("must be at less one measurement setup at db");
 		}
 
-		List measurementSetupIds = Collections
-				.singletonList(((MeasurementSetup) measurementSetupList.iterator().next()).getId());
+		java.util.Set measurementSetupIds = Collections
+				.singleton(((MeasurementSetup) measurementSetupList.iterator().next()).getId());
 
 		Collection measurementTypeList = measurementTypeDatabase.retrieveAll();
 
@@ -93,7 +91,7 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		TemporalPattern temporalPettern = (TemporalPattern) temporalPatternList.iterator().next();
 
-		Collection monitoredElementList = monitoredElementDatabase.retrieveAll();
+		java.util.Set monitoredElementList = monitoredElementDatabase.retrieveAll();
 
 		if (monitoredElementList.isEmpty())
 			fail("must be at less one monitored element at db");
@@ -149,8 +147,8 @@ public class TestTestCase extends AbstractMesurementTestCase {
 			fail("must be at less one measurement setup at db");
 		}
 
-		List measurementSetupIds = Collections
-				.singletonList(((MeasurementSetup) measurementSetupList.iterator().next()).getId());
+		java.util.Set measurementSetupIds = Collections
+				.singleton(((MeasurementSetup) measurementSetupList.iterator().next()).getId());
 
 		Collection measurementTypeList = measurementTypeDatabase.retrieveAll();
 
@@ -166,7 +164,7 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		TemporalPattern temporalPettern = (TemporalPattern) temporalPatternList.iterator().next();
 
-		Collection monitoredElementList = monitoredElementDatabase.retrieveAll();
+		java.util.Set monitoredElementList = monitoredElementDatabase.retrieveAll();
 
 		if (monitoredElementList.isEmpty())
 			fail("must be at less one monitored element at db");
@@ -306,7 +304,7 @@ public class TestTestCase extends AbstractMesurementTestCase {
 		if (measurementSetupList.isEmpty())
 			fail("must be at less one measurement setup at db");
 
-		List measurementSetupIds = new ArrayList();
+		java.util.Set measurementSetupIds = new HashSet();
 		measurementSetupIds.add(((MeasurementSetup) measurementSetupList.iterator().next()).getId());
 
 		Collection measurementTypeList = measurementTypeDatabase.retrieveAll();
@@ -316,7 +314,7 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		MeasurementType measurementType = (MeasurementType) measurementTypeList.iterator().next();
 
-		Collection monitoredElementList = monitoredElementDatabase.retrieveAll();
+		java.util.Set monitoredElementList = monitoredElementDatabase.retrieveAll();
 
 		if (monitoredElementList.isEmpty())
 			fail("must be at less one monitored element at db");
