@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.3 2005/02/10 08:38:47 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.2 2005/02/08 11:55:48 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,14 +9,19 @@
 package com.syrus.AMFICOM.general;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/10 08:38:47 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/08 11:55:48 $
  * @author $Author: max $
  * @module general_v1
  */
-class LinkedIdsConditionImpl extends LinkedIdsCondition {
+class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 
 	protected static final Short CHARACTERISTIC_SHORT	= new Short(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
 
@@ -41,9 +46,17 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				Characteristic characteristic = (Characteristic) object;
-				Identifier id = characteristic.getCharacterizedId();
-				condition = super.conditionTest(id);				
+				if (object instanceof Characteristic) {
+					Characteristic characteristic = (Characteristic) object;
+					Identifier id = characteristic.getCharacterizedId();
+					for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+						Identifier characterizedId = (Identifier) it.next();
+						if (characterizedId.equals(id)) {
+							condition = true;
+							break;
+						}
+					}
+				}
 				break;
 			default:
 				throw new UnsupportedOperationException("entityCode " + ObjectEntities.codeToString(this.entityCode.shortValue()) + " is unknown for this condition");

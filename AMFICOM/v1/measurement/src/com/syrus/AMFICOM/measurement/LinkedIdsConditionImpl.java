@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.11 2005/02/10 08:40:22 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.10 2005/02/09 13:25:42 bob Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -7,9 +7,12 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -17,8 +20,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/10 08:40:22 $
- * @author $Author: max $
+ * @version $Revision: 1.10 $, $Date: 2005/02/09 13:25:42 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -100,8 +103,29 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			}
 			case ObjectEntities.MS_ENTITY_CODE:
 				MeasurementSetup measurementSetup = (MeasurementSetup) object;
-				params.addAll(measurementSetup.getMonitoredElementIds());
-				return super.conditionTest(params);
+				Map codeIdsList = super.sort(this.linkedIds);
+				for (Iterator iterator = codeIdsList.keySet().iterator(); iterator.hasNext();) {
+					Short code = (Short) iterator.next();
+					List ids = (List) codeIdsList.get(code);
+					condition = super.conditionTest(ids);
+					if (condition)
+						return condition;
+
+					for (Iterator iter = ids.iterator(); iter.hasNext() && !condition;) {
+						Identifier id = (Identifier) iter.next();
+						MeasurementType measurementType = (MeasurementType) MeasurementStorableObjectPool
+								.getStorableObject(id, true);
+						SetParameter[] setParameters = measurementSetup.getParameterSet().getParameters();
+						List setParameterTypes = new ArrayList(setParameters.length);
+						for (int i = 0; i < setParameters.length; i++) 
+							setParameterTypes.add(setParameters[i].getType());						
+						params.addAll(measurementType.getInParameterTypes());
+						params.addAll(measurementType.getOutParameterTypes());						
+						condition = super.conditionTest(setParameterTypes, params);
+					}
+				}
+
+				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
 				Identifier actionId = ((Result) object).getAction().getId();
 				condition = super.conditionTest(actionId);
