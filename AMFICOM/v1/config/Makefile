@@ -29,7 +29,7 @@ ORACLECLASSPATH = $(ORACLE_HOME)/jdbc/lib/classes12.jar:$(ORACLE_HOME)/sqlj/lib/
 APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar
 EXTCLASSPATH = $(EXTLIBDIR)/jgraphpad.jar:$(EXTLIBDIR)/jfreechartK.jar:$(EXTLIBDIR)/ofx.spatialfx.jar
 
-IDL2JAVA_FLAGS = \
+IDL2JAVAFLAGS = \
 	-C \
 	-H \
 	-no_bind \
@@ -41,9 +41,9 @@ IDL2JAVA_FLAGS = \
 	-root_dir $(SRCDIR) \
 	-I$(IDLDIR)
 
-SUNJAVAC_FLAGS = -target 1.4.2
+SUNJAVACFLAGS = -target 1.4.2
 
-JIKES_FLAGS = \
+JIKESFLAGS = \
 	-target 1.4.2 \
 	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
 	-extdirs $(JAVA_HOME)/jre/lib/ext \
@@ -53,7 +53,7 @@ JIKES_FLAGS = \
 	+Pswitchcheck \
 	+Pnaming-convention \
 	+T=2
-JAVAC_FLAGS = \
+JAVACFLAGS = \
 	-d $(CLASSDIR) \
 	-source 1.4 \
 	-g \
@@ -72,7 +72,7 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com
 
 .mach:	.corba $(CLASSDIR)
-	$(JAVAC) $(JAVAC_FLAGS) \
+	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicType.java \
@@ -91,9 +91,9 @@ $(LIBNAME): .mach
 #		$(SRCDIR)/com/syrus/AMFICOM/configuration/KISDatabase.java 
 
 .corba:	$(CLASSDIR)
-	$(IDL2JAVA) $(IDL2JAVA_FLAGS) \
+	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
 		$(IDLDIR)/configuration.idl
-	$(JAVAC) $(JAVAC_FLAGS) -nowarn \
+	$(JAVAC) $(JAVACFLAGS) -nowarn \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/corba/*.java

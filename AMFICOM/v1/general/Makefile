@@ -17,7 +17,7 @@ ORACLECLASSPATH = $(ORACLE_HOME)/jdbc/lib/classes12.jar:$(ORACLE_HOME)/sqlj/lib/
 APPCLASSPATH = $(LIBDIR)/util.jar
 
 IDL2JAVA = idl2java
-IDL2JAVA_FLAGS = \
+IDL2JAVAFLAGS = \
 	-C \
 	-H \
 	-no_bind \
@@ -31,7 +31,7 @@ IDL2JAVA_FLAGS = \
 
 #JAVAC = javac
 JAVAC = jikes
-JIKES_FLAGS = \
+JIKESFLAGS = \
 	-target 1.4.2 \
 	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
 	-extdirs $(JAVA_HOME)/jre/lib/ext \
@@ -41,12 +41,12 @@ JIKES_FLAGS = \
 	+Pswitchcheck \
 	+Pnaming-convention \
 	+T=2
-JAVAC_FLAGS = \
+JAVACFLAGS = \
 	-d $(CLASSDIR) \
 	-g \
 	-O \
 	-deprecation
-JAVAC_FLAGS := $(JAVAC_FLAGS) $(JIKES_FLAGS)
+JAVACFLAGS := $(JAVACFLAGS) $(JIKESFLAGS)
 JAVAC_WARNOFF_FLAG=-nowarn
 
 JAR=jar-3.3.1
@@ -57,15 +57,15 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com
 
 .mach:	.corba $(CLASSDIR)
-	$(JAVAC) $(JAVAC_FLAGS) \
+	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/general/*.java
 	touch $@
 
 .corba:	$(CLASSDIR)
-	$(IDL2JAVA) $(IDL2JAVA_FLAGS) \
+	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
 		$(IDLDIR)/general.idl
-	$(JAVAC) $(JAVAC_FLAGS) $(JAVAC_WARNOFF_FLAG) \
+	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/general/corba/*.java
