@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.11 2005/02/04 14:58:01 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.12 2005/02/07 11:07:15 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -47,7 +48,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  * 
- * @version $Revision: 1.11 $, $Date: 2005/02/04 14:58:01 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/07 11:07:15 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -146,6 +147,7 @@ public class StorableObjectXMLDriver {
 	}
 
 	private Object parse(Node node) throws IllegalDataException {
+//		Log.debugMessage("StorableObjectXMLDriver.parse | node name:" + node.getNodeName(), Log.INFO);
 		Object object = null;
 		NamedNodeMap attributes = node.getAttributes();
 		if (attributes.getLength() > 0) {
@@ -181,7 +183,7 @@ public class StorableObjectXMLDriver {
 			throw new IllegalDataException("StorableObjectXMLDriver.getObject | more that one child for : "
 					+ childNodes.item(0).getParentNode().getNodeName());
 		if (childNodes.getLength() == 1)
-			childNodes.item(0).getNodeValue();
+			value = childNodes.item(0).getNodeValue();
 		Object object = null;
 		if (className.equals(StorableObject.class.getName())) {
 			Identifier identifier = new Identifier(value);
@@ -387,6 +389,7 @@ public class StorableObjectXMLDriver {
 
 			// Write the DOM document to the file
 			Transformer xformer = TransformerFactory.newInstance().newTransformer();
+			xformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			xformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {
 			Log.errorMessage("StorableObjectXMLDriver.writeXmlFile | Caught " + e.getMessage());
