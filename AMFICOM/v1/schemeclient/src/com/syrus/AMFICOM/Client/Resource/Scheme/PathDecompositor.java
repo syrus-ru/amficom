@@ -48,6 +48,8 @@ public class PathDecompositor
 			return;
 
 		double k = newLength / oldLength;
+		if (Math.abs(k - 1) < 0.001)
+			return;
 		for (ListIterator it = sp.links.listIterator(index); it.hasNext();)
 		{
 			PathElement pe = (PathElement)it.next();
@@ -67,7 +69,7 @@ public class PathDecompositor
 			if(d >= opticalDistance)
 				return pe;
 		}
-		return null;
+		return (PathElement)sp.links.listIterator(sp.links.size()).previous();
 	}
 
 	public PathElement getPathElementByPhysicalDistance(double physicalDistance)
@@ -80,7 +82,83 @@ public class PathDecompositor
 			if(d >= physicalDistance)
 				return pe;
 		}
-		return null;
+		return (PathElement)sp.links.listIterator(sp.links.size()).previous();
+	}
+
+	public double getOpticalDistanceFromStart(PathElement pathElement)
+	{
+		double d = 0;
+		for(Iterator it = sp.links.iterator(); it.hasNext();)
+		{
+			PathElement pe = (PathElement)it.next();
+			if (pe.equals(pathElement))
+				return d;
+			d += pe.getOpticalLength();
+		}
+		return d;
+	}
+
+	public double getPhysicalDistanceFromStart(PathElement pathElement)
+	{
+		double d = 0;
+		for(Iterator it = sp.links.iterator(); it.hasNext();)
+		{
+			PathElement pe = (PathElement)it.next();
+			if (pe.equals(pathElement))
+				return d;
+			d += pe.getPhysicalLength();
+		}
+		return d;
+	}
+
+	public double[] getOpticalDistancesFromStart(PathElement startPE, PathElement endPE)
+	{
+		double d = 0;
+		double[] res = new double[sp.links.indexOf(endPE) - sp.links.indexOf(startPE) + 1];
+		int counter = 0;
+
+		for(Iterator it = sp.links.iterator(); it.hasNext();)
+		{
+			PathElement pe = (PathElement)it.next();
+			if (pe.equals(endPE))
+			{
+				res[counter++] += pe.getOpticalLength();
+				return res;
+			}
+			d += pe.getOpticalLength();
+			if (counter > 0 || pe.equals(startPE))
+				res[counter++] = d;
+		}
+		return res;
+	}
+
+	public double[] getPhysicalDistancesFromStart(PathElement startPE, PathElement endPE)
+	{
+		double d = 0;
+		double[] res = new double[sp.links.indexOf(endPE) - sp.links.indexOf(startPE) + 1];
+		int counter = 0;
+
+		for(Iterator it = sp.links.iterator(); it.hasNext();)
+		{
+			PathElement pe = (PathElement)it.next();
+			if (pe.equals(endPE))
+			{
+				res[counter++] += pe.getPhysicalLength();
+				return res;
+			}
+			d += pe.getPhysicalLength();
+			if (counter > 0 || pe.equals(startPE))
+				res[counter++] = d;
+		}
+		return res;
+	}
+
+	public boolean hasPreviousPathElement(PathElement pe)
+	{
+		int index = sp.links.indexOf(pe);
+		if (index > 0)
+			return true;
+		return false;
 	}
 
 	public PathElement getPreviousPathElement(PathElement pe)
@@ -88,7 +166,15 @@ public class PathDecompositor
 		int index = sp.links.indexOf(pe);
 		if (index > 0)
 			return (PathElement)sp.links.get(index - 1);
-		return pe;
+		return null;
+	}
+
+	public boolean hasNextPathElement(PathElement pe)
+	{
+		int index = sp.links.indexOf(pe);
+		if (index != -1 && index < sp.links.size() - 2)
+			return true;
+		return false;
 	}
 
 	public PathElement getNextPathElement(PathElement pe)
@@ -96,7 +182,7 @@ public class PathDecompositor
 		int index = sp.links.indexOf(pe);
 		if (index != -1 && index < sp.links.size() - 2)
 			return (PathElement)sp.links.get(index + 1);
-		return pe;
+		return null;
 	}
 
 	public PathElement getPreviousNode(PathElement pe)
@@ -114,7 +200,7 @@ public class PathDecompositor
 					return pe;
 			}
 		}
-		return pe;
+		return null;
 	}
 
 	public PathElement getNextNode(PathElement pe)
@@ -132,7 +218,7 @@ public class PathDecompositor
 					return pe;
 			}
 		}
-		return pe;
+		return null;
 	}
 
 	private boolean hasOpticalPort(PathElement pe)
@@ -140,14 +226,14 @@ public class PathDecompositor
 		ObjectResource port = pe.getSourcePort();
 		if (port instanceof SchemePort)
 		{
-			PortType ptype = (PortType) Pool.get(PortType.typ, ((SchemePort)port).portTypeId);
+			PortType ptype = (PortType)Pool.get(PortType.typ, ((SchemePort)port).portTypeId);
 			if (ptype.pClass.equals("optical"))
 				return true;
 		}
 		port = pe.getTargetPort();
 		if (port instanceof SchemePort)
 		{
-			PortType ptype = (PortType) Pool.get(PortType.typ, ((SchemePort)port).portTypeId);
+			PortType ptype = (PortType)Pool.get(PortType.typ, ((SchemePort)port).portTypeId);
 			if (ptype.pClass.equals("optical"))
 				return true;
 		}

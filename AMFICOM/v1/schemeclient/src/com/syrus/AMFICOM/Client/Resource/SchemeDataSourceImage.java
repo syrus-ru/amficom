@@ -67,14 +67,14 @@ public class SchemeDataSourceImage extends DataSourceImage
 
 //		Pool.removeMap(ProtoElement.typ);
 
-		load("imageresource", ImageCatalogue.getHash());
+		load("imageresource", ImageCatalogue.hash);
 		load(ProtoElement.typ);
 		Vector ids = filter(ProtoElement.typ, desc, true);
 		if(ids.size() > 0)
 		{
 			di.LoadSchemeProto(ids);
 			save(ProtoElement.typ);
-			save("imageresource", ImageCatalogue.getHash());
+			save("imageresource", ImageCatalogue.hash);
 		}
 	}
 
@@ -161,14 +161,14 @@ public class SchemeDataSourceImage extends DataSourceImage
 //		Pool.removeMap("schemeelement");
 //		Pool.removeMap("schemecablelink");
 
-		load("imageresource", ImageCatalogue.getHash());
+		load("imageresource", ImageCatalogue.hash);
 		load("scheme");
 		Vector ids = filter("scheme", desc, true);
 		if(ids.size() > 0)
 		{
 			di.LoadSchemes(ids);
 			save("scheme");
-			save("imageresource", ImageCatalogue.getHash());
+			save("imageresource", ImageCatalogue.hash);
 		}
 	}
 
