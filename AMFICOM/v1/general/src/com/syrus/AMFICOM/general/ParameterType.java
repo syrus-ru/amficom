@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.10 2005/04/01 06:34:57 bob Exp $
+ * $Id: ParameterType.java,v 1.11 2005/04/01 10:27:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/01 06:34:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/04/01 10:27:37 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -32,7 +32,7 @@ public class ParameterType extends StorableObjectType {
 	public ParameterType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.parameterTypeDatabase = GeneralDatabaseContext.parameterTypeDatabase;
+		this.parameterTypeDatabase = GeneralDatabaseContext.getParameterTypeDatabase();
 		try {
 			this.parameterTypeDatabase.retrieve(this);
 		}
@@ -67,7 +67,7 @@ public class ParameterType extends StorableObjectType {
 		this.name = name;
 		this.dataType = dataType;
 
-		this.parameterTypeDatabase = GeneralDatabaseContext.parameterTypeDatabase;
+		this.parameterTypeDatabase = GeneralDatabaseContext.getParameterTypeDatabase();
 	}
 
 	/**

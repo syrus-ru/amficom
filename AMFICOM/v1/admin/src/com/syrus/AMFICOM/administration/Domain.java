@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.12 2005/04/01 06:51:54 bob Exp $
+ * $Id: Domain.java,v 1.13 2005/04/01 10:31:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/01 06:51:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/04/01 10:31:51 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -51,7 +51,7 @@ public class Domain extends DomainMember implements Characterizable {
 		super(id);	
 		
 		this.characteristics = new HashSet();
-		this.domainDatabase = AdministrationDatabaseContext.domainDatabase;
+		this.domainDatabase = AdministrationDatabaseContext.getDomainDatabase();
 		try {
 			this.domainDatabase.retrieve(this);
 		}
@@ -75,7 +75,7 @@ public class Domain extends DomainMember implements Characterizable {
 			throw new CreateObjectException(ae);
 		}
 
-		this.domainDatabase = AdministrationDatabaseContext.domainDatabase;
+		this.domainDatabase = AdministrationDatabaseContext.getDomainDatabase();
 	}
 
 	protected Domain(Identifier id,
@@ -96,7 +96,7 @@ public class Domain extends DomainMember implements Characterizable {
 
 		this.characteristics = new HashSet();
 
-		this.domainDatabase = AdministrationDatabaseContext.domainDatabase;
+		this.domainDatabase = AdministrationDatabaseContext.getDomainDatabase();
 	}
 
 	public Object getTransferable() {

@@ -1,75 +1,68 @@
-/*
- * $Id: GeneralDatabaseContext.java,v 1.5 2005/02/16 13:51:27 arseniy Exp $
+/*-
+ * $Id: GeneralDatabaseContext.java,v 1.6 2005/04/01 10:27:37 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 
 package com.syrus.AMFICOM.general;
 
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/16 13:51:27 $
- * @author $Author: arseniy $
- * @todo Declare all fields private as<ol>
- *       <li>they have public accessors; and</li>
- *       <li>there's {@link #init(StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase)}
- *       method which is supposed to be the only modifier for class' fields.</li></ol>
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 10:27:37 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public final class GeneralDatabaseContext {
-	protected static StorableObjectDatabase	parameterTypeDatabase;
-	protected static StorableObjectDatabase characteristicTypeDatabase;
-	protected static StorableObjectDatabase characteristicDatabase;
+	private static ParameterTypeDatabase		parameterTypeDatabase;
+	private static CharacteristicTypeDatabase	characteristicTypeDatabase;
+	private static CharacteristicDatabase		characteristicDatabase;
 
 	private GeneralDatabaseContext() {
-		// private constructor 
+		assert false; 
 	}
 
-	public static void init(final StorableObjectDatabase parameterTypeDatabase1,
-													final StorableObjectDatabase characteristicTypeDatabase1,
-													final StorableObjectDatabase characteristicDatabase1) {
+	public static void init(
+			final ParameterTypeDatabase		parameterTypeDatabase1,
+			final CharacteristicTypeDatabase	characteristicTypeDatabase1,
+			final CharacteristicDatabase		characteristicDatabase1) {
 		if (parameterTypeDatabase1 != null)
 			parameterTypeDatabase = parameterTypeDatabase1;
-
 		if (characteristicTypeDatabase1 != null)
 			characteristicTypeDatabase = characteristicTypeDatabase1;
-
 		if (characteristicDatabase1 != null)
 			characteristicDatabase = characteristicDatabase1;
 	}
 
-	public static StorableObjectDatabase getDatabase(Short entityCode) {
+	public static StorableObjectDatabase getDatabase(final Short entityCode) {
 		return getDatabase(entityCode.shortValue());
 	}
 
-	public static StorableObjectDatabase getDatabase(short entityCode ) {
+	public static StorableObjectDatabase getDatabase(final short entityCode ) {
 		switch (entityCode) {
-
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				return parameterTypeDatabase;
-
+				return getParameterTypeDatabase();
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-				return characteristicTypeDatabase;
-
+				return getCharacteristicTypeDatabase();
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				return characteristicDatabase;
-
+				return getCharacteristicDatabase();
 			default:
+				Log.errorMessage("GeneralDatabaseContext.getDatabase | Unknown entity: " + entityCode); //$NON-NLS-1$
 				return null;       
 		}
 	}
 
-	public static StorableObjectDatabase getParameterTypeDatabase() {
+	public static ParameterTypeDatabase getParameterTypeDatabase() {
 		return parameterTypeDatabase;
 	}
 
-	public static StorableObjectDatabase getCharacteristicDatabase() {
+	public static CharacteristicDatabase getCharacteristicDatabase() {
 		return characteristicDatabase;
 	}
 
-	public static StorableObjectDatabase getCharacteristicTypeDatabase() {
+	public static CharacteristicTypeDatabase getCharacteristicTypeDatabase() {
 		return characteristicTypeDatabase;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.7 2005/04/01 06:51:54 bob Exp $
+ * $Id: User.java,v 1.8 2005/04/01 10:31:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/01 06:51:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 10:31:51 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -44,7 +44,7 @@ public class User extends StorableObject {
 	public User(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.userDatabase = AdministrationDatabaseContext.userDatabase;
+		this.userDatabase = AdministrationDatabaseContext.getUserDatabase();
 		try {
 			this.userDatabase.retrieve(this);
 		}
@@ -60,7 +60,7 @@ public class User extends StorableObject {
 		this.name = new String(ut.name);
 		this.description = new String(ut.description);
 
-		this.userDatabase = AdministrationDatabaseContext.userDatabase;
+		this.userDatabase = AdministrationDatabaseContext.getUserDatabase();
 	}
 
 	protected User(Identifier id,
@@ -81,7 +81,7 @@ public class User extends StorableObject {
 		this.name = name;
 		this.description = description;
 
-		this.userDatabase = AdministrationDatabaseContext.userDatabase;
+		this.userDatabase = AdministrationDatabaseContext.getUserDatabase();
 	}
 
 	public Object getTransferable() {

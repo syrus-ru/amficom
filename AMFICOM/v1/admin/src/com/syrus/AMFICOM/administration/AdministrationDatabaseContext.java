@@ -1,7 +1,7 @@
-/*
- * $Id: AdministrationDatabaseContext.java,v 1.4 2005/02/16 13:51:47 arseniy Exp $
+/*-
+ * $Id: AdministrationDatabaseContext.java,v 1.5 2005/04/01 10:31:51 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
@@ -10,78 +10,74 @@ package com.syrus.AMFICOM.administration;
 
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/16 13:51:47 $
- * @author $Author: arseniy $
- * @todo Declare all fields private as<ol>
- *       <li>they have public accessors; and</li>
- *       <li>there's {@link #init(StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase)}
- *       method which is supposed to be the only modifier for class' fields.</li></ol>
+ * @version $Revision: 1.5 $, $Date: 2005/04/01 10:31:51 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 public final class AdministrationDatabaseContext {
-	protected static StorableObjectDatabase userDatabase;
-	protected static StorableObjectDatabase domainDatabase;
-	protected static StorableObjectDatabase serverDatabase;
-	protected static StorableObjectDatabase mcmDatabase;
+	private static UserDatabase	userDatabase;
+	private static DomainDatabase	domainDatabase;
+	private static ServerDatabase	serverDatabase;
+	private static MCMDatabase	mcmDatabase;
 
 	private AdministrationDatabaseContext() {
-		// private constructor 
+		assert false; 
 	}
 
-	public static void init(final StorableObjectDatabase userDatabase1,
-			final StorableObjectDatabase domainDatabase1,
-			final StorableObjectDatabase serverDatabase1,
-			final StorableObjectDatabase mcmDatabase1) {
-		userDatabase = userDatabase1;
-		domainDatabase = domainDatabase1;
-		serverDatabase = serverDatabase1;
-		mcmDatabase = mcmDatabase1;
+	public static void init(
+			final UserDatabase	userDatabase1,
+			final DomainDatabase	domainDatabase1,
+			final ServerDatabase	serverDatabase1,
+			final MCMDatabase	mcmDatabase1) {
+		if (userDatabase1 != null)
+			userDatabase = userDatabase1;
+		if (domainDatabase1 != null)
+			domainDatabase = domainDatabase1;
+		if (serverDatabase1 != null)
+			serverDatabase = serverDatabase1;
+		if (mcmDatabase1 != null)
+			mcmDatabase = mcmDatabase1;
 	}
 
-	public static StorableObjectDatabase getDatabase(Short entityCode) {
+	public static StorableObjectDatabase getDatabase(final Short entityCode) {
 		return getDatabase(entityCode.shortValue());
 	}
 
-	public static StorableObjectDatabase getDatabase(short entityCode) {
+	public static StorableObjectDatabase getDatabase(final short entityCode) {
 		switch (entityCode) {
-
 			case ObjectEntities.USER_ENTITY_CODE:
-				return userDatabase;
-
+				return getUserDatabase();
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
-				return domainDatabase;
-
+				return getDomainDatabase();
 			case ObjectEntities.SERVER_ENTITY_CODE:
-				return serverDatabase;
-
+				return getServerDatabase();
 			case ObjectEntities.MCM_ENTITY_CODE:
-				return mcmDatabase;
-
+				return getMCMDatabase();
 //			case ObjectEntities.PERMATTR_ENTITY_CODE:
-//			database = AdministrationDatabaseContext.getPermissionAttributesDatabase();
-//			break;
-
+//				database = AdministrationDatabaseContext.getPermissionAttributesDatabase();
+//				break;
 			default:
+				Log.errorMessage("AdminDatabaseContext.getDatabase | Unknown entity: " + entityCode); //$NON-NLS-1$
 				return null;
 		}
 	}
 
-	public static StorableObjectDatabase getUserDatabase() {
+	public static UserDatabase getUserDatabase() {
 		return userDatabase;
 	}
 
-	public static StorableObjectDatabase getDomainDatabase() {
+	public static DomainDatabase getDomainDatabase() {
 		return domainDatabase;
 	}
 
-	public static StorableObjectDatabase getServerDatabase() {
+	public static ServerDatabase getServerDatabase() {
 		return serverDatabase;
 	}
 
-	public static StorableObjectDatabase getMCMDatabase() {
+	public static MCMDatabase getMCMDatabase() {
 		return mcmDatabase;
 	}
-
 }

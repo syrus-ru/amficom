@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.19 2005/04/01 06:51:54 bob Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.20 2005/04/01 10:31:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/04/01 06:51:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2005/04/01 10:31:51 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -60,7 +60,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 	// for multiple objects
 
 	public Set loadUsers(Set ids) throws ApplicationException {
-		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
+		UserDatabase database = AdministrationDatabaseContext.getUserDatabase();
 		Set collection = null;
 		try {
 			collection = database.retrieveByIdsByCondition(ids, null);
@@ -74,7 +74,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 	}
 
 	public Set loadDomains(Set ids) throws ApplicationException {
-		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
+		DomainDatabase database = AdministrationDatabaseContext.getDomainDatabase();
 		Set collection = null;
 		try {
 			collection = database.retrieveByIdsByCondition(ids, null);
@@ -88,7 +88,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 	}
 
 	public Set loadServers(Set ids) throws ApplicationException {
-		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
+		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
 		Set collection = null;
 		try {
 			collection = database.retrieveByIdsByCondition(ids, null);
@@ -102,7 +102,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 	}
 
 	public Set loadMCMs(Set ids) throws ApplicationException {
-		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
+		MCMDatabase database = AdministrationDatabaseContext.getMCMDatabase();
 		Set collection = null;
 		try {
 			collection = database.retrieveByIdsByCondition(ids, null);
@@ -126,7 +126,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 
 	public Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
+		UserDatabase database = AdministrationDatabaseContext.getUserDatabase();
 		Set collection = null;
 		try {
 			collection = database.retrieveButIdsByCondition(ids, condition);
@@ -140,7 +140,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 	}
 
 	public Set loadDomainsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
+		DomainDatabase database = AdministrationDatabaseContext.getDomainDatabase();
 		Set collection = null;
 		try {
 			collection = database.retrieveButIdsByCondition(ids, condition);
@@ -154,7 +154,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 	}
 
 	public Set loadServersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
+		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
 		Set collection = null;
 		try {
 			collection = database.retrieveButIdsByCondition(ids, condition);
@@ -168,7 +168,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 	}
 
 	public Set loadMCMsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
+		MCMDatabase database = AdministrationDatabaseContext.getMCMDatabase();
 		Set collection = null;
 		try {
 			collection = database.retrieveButIdsByCondition(ids, condition);
@@ -189,22 +189,22 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 
 	public void saveUser(User user, boolean force) throws ApplicationException {
-		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
+		UserDatabase database = AdministrationDatabaseContext.getUserDatabase();
 		database.update(user, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveDomain(Domain domain, boolean force) throws ApplicationException {
-		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
+		DomainDatabase database = AdministrationDatabaseContext.getDomainDatabase();
 		database.update(domain, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveServer(Server server, boolean force) throws ApplicationException {
-		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
+		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
 		database.update(server, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveMCM(MCM mcm, boolean force) throws ApplicationException {
-		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
+		MCMDatabase database = AdministrationDatabaseContext.getMCMDatabase();
 		database.update(mcm, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
@@ -215,22 +215,22 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 
 	public void saveUsers(Set collection, boolean force) throws ApplicationException {
-		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
+		UserDatabase database = AdministrationDatabaseContext.getUserDatabase();
 		database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveDomains(Set collection, boolean force) throws ApplicationException {
-		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
+		DomainDatabase database = AdministrationDatabaseContext.getDomainDatabase();
 		database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveServers(Set collection, boolean force) throws ApplicationException {
-		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
+		ServerDatabase database = AdministrationDatabaseContext.getServerDatabase();
 		database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveMCMs(Set collection, boolean force) throws ApplicationException {
-		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
+		MCMDatabase database = AdministrationDatabaseContext.getMCMDatabase();
 		database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 

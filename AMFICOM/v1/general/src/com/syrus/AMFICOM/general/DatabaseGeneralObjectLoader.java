@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.17 2005/04/01 06:34:57 bob Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.18 2005/04/01 10:27:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/01 06:34:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2005/04/01 10:27:37 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -44,7 +44,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 	// for multiple objects
 
 	public Set loadParameterTypes(Set ids) throws ApplicationException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.parameterTypeDatabase;
+		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
 		Set collection = null;
 		try {
 			collection = database.retrieveByIdsByCondition(ids, null);
@@ -57,7 +57,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 	}
 
 	public Set loadCharacteristicTypes(Set ids) throws ApplicationException {
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
+		CharacteristicTypeDatabase database = GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		Set collection = null;
 		try {
 			collection = database.retrieveByIdsByCondition(ids, null);
@@ -71,7 +71,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 	}
 
 	public Set loadCharacteristics(Set ids) throws ApplicationException {
-		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
+		CharacteristicDatabase database = GeneralDatabaseContext.getCharacteristicDatabase();
 		Set collection = null;
 		try {
 			collection = database.retrieveByIdsByCondition(ids, null);
@@ -89,7 +89,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids)
 			throws ApplicationException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.parameterTypeDatabase;
+		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
 		Set collection = null;
 		try {
 			collection = database.retrieveButIdsByCondition(ids, condition);
@@ -104,7 +104,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 	public Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids)
 			throws ApplicationException {
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
+		CharacteristicTypeDatabase database = GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		Set collection = null;
 		try {
 			collection = database.retrieveButIdsByCondition(ids, condition);
@@ -119,7 +119,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 	public Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids)
 			throws ApplicationException {
-		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
+		CharacteristicDatabase database = GeneralDatabaseContext.getCharacteristicDatabase();
 		Set collection = null;
 		try {
 			collection = database.retrieveButIdsByCondition(ids, condition);
@@ -137,19 +137,19 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 
 	public void saveParameterType(ParameterType parameterType, boolean force) throws ApplicationException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase();
+		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
 		database.update(parameterType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force)
 			throws ApplicationException {
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
+		CharacteristicTypeDatabase database = GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		database.update(characteristicType, SessionContext.getAccessIdentity().getUserId(), force
 				? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveCharacteristic(Characteristic characteristic, boolean force) throws ApplicationException {
-		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
+		CharacteristicDatabase database = GeneralDatabaseContext.getCharacteristicDatabase();
 		database.update(characteristic, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
@@ -158,17 +158,17 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 
 	public void saveParameterTypes(Set objects, boolean force) throws ApplicationException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase();
+		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveCharacteristicTypes(Set objects, boolean force) throws ApplicationException {
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
+		CharacteristicTypeDatabase database = GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveCharacteristics(Set objects, boolean force) throws ApplicationException {
-		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
+		CharacteristicDatabase database = GeneralDatabaseContext.getCharacteristicDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 

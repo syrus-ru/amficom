@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.11 2005/04/01 06:51:54 bob Exp $
+ * $Id: MCM.java,v 1.12 2005/04/01 10:31:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/01 06:51:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/04/01 10:31:51 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -54,7 +54,7 @@ public class MCM extends DomainMember implements Characterizable {
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.mcmDatabase = AdministrationDatabaseContext.mcmDatabase;
+		this.mcmDatabase = AdministrationDatabaseContext.getMCMDatabase();
 		try {
 			this.mcmDatabase.retrieve(this);
 		}
@@ -81,7 +81,7 @@ public class MCM extends DomainMember implements Characterizable {
 			throw new CreateObjectException(ae);
 		}
 
-		this.mcmDatabase = AdministrationDatabaseContext.mcmDatabase;
+		this.mcmDatabase = AdministrationDatabaseContext.getMCMDatabase();
 	}
 
 	protected MCM(Identifier id,
@@ -108,7 +108,7 @@ public class MCM extends DomainMember implements Characterizable {
 
 		this.characteristics = new HashSet();
 
-		this.mcmDatabase = AdministrationDatabaseContext.mcmDatabase;
+		this.mcmDatabase = AdministrationDatabaseContext.getMCMDatabase();
 	}
 
 	public Object getTransferable() {

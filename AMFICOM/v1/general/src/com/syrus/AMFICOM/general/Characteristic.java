@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.16 2005/04/01 06:34:57 bob Exp $
+ * $Id: Characteristic.java,v 1.17 2005/04/01 10:27:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/04/01 06:34:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/04/01 10:27:37 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -39,7 +39,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	public Characteristic(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristicDatabase = GeneralDatabaseContext.characteristicDatabase;
+		this.characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
 			this.characteristicDatabase.retrieve(this);
 		}
@@ -65,7 +65,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 		this.editable = ct.is_editable;
 		this.visible = ct.is_visible;
 
-		this.characteristicDatabase = GeneralDatabaseContext.characteristicDatabase;
+		this.characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
 	}
 
 	protected Characteristic(Identifier id,
@@ -95,7 +95,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 				this.editable = editable;
 				this.visible = visible;
 
-				this.characteristicDatabase = GeneralDatabaseContext.characteristicDatabase;
+				this.characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
 	}
 
 	/**

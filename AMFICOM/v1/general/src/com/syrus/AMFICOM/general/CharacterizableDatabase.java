@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.6 2005/04/01 06:34:57 bob Exp $
+ * $Id: CharacterizableDatabase.java,v 1.7 2005/04/01 10:27:37 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/01 06:34:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/04/01 10:27:37 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class CharacterizableDatabase extends StorableObjectDatabase {
@@ -57,7 +57,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 				+ SQL_AND
 				+ CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID + EQUALS + cdIdStr;
 
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.characteristicDatabase;
+		CharacteristicDatabase characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
 		Set characteristics = characteristicDatabase.retrieveByCondition(sql);
 
 		characterizable.setCharacteristics0(characteristics);
@@ -74,7 +74,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 				+ SQL_AND);
 		stringBuffer.append(idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID, true));
 
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.characteristicDatabase;
+		CharacteristicDatabase characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
 		Set characteristics = characteristicDatabase.retrieveByCondition(stringBuffer.toString());
 
 		Map orderedCharacteristicsMap = new HashMap();
@@ -121,7 +121,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 		this.insertEntity(storableObject);
 
 		Characterizable characterizable = this.fromStorableObject(storableObject);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.characteristicDatabase;
+		CharacteristicDatabase characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
 		characteristicDatabase.insert(characterizable.getCharacteristics());
 	}
 
@@ -134,7 +134,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 			characterizable = this.fromStorableObject((StorableObject) it.next());
 			characteristics.addAll(characterizable.getCharacteristics());
 		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.characteristicDatabase;
+		CharacteristicDatabase characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
 		characteristicDatabase.insert(characteristics);
 	}
 
@@ -167,7 +167,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 				+ SQL_AND
 				+ CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID + EQUALS + cdIdStr;
 
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.characteristicDatabase;
+		CharacteristicDatabase characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
 			characteristics = characteristicDatabase.retrieveByCondition(sql);
 		}
@@ -241,7 +241,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 			throw new UpdateObjectException(ide);
 		}
 
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.characteristicDatabase;
+		CharacteristicDatabase characteristicDatabase = GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
 			characteristics = characteristicDatabase.retrieveByCondition(stringBuffer.toString());
 		}
