@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.19 2005/03/18 18:27:04 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.20 2005/03/22 16:09:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,14 +40,15 @@ import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
+import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/03/18 18:27:04 $
+ * @version $Revision: 1.20 $, $Date: 2005/03/22 16:09:43 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
-
 final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 
 	public MeasurementType loadMeasurementType(Identifier id) throws RetrieveObjectException, CommunicationException {
@@ -566,5 +567,48 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 		}
 		return collection;
 	}
+	
+	
+	/**
+	 * This method actually updates status of test, nothing more
+	 */
+	public void saveTest(Test test, boolean force) throws ApplicationException {
+		super.saveTest(test, force);
 
+		try {
+			MeasurementControlModule.mServerRef.updateTestStatus((Identifier_Transferable) test.getId().getTransferable(),
+					test.getStatus(),
+					(Identifier_Transferable) MeasurementControlModule.iAm.getId().getTransferable());
+		}
+		catch (org.omg.CORBA.SystemException se) {
+			Log.errorException(se);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException("System exception -- " + se.getMessage(), se);
+		}
+	}
+
+	public void saveTests(Collection collection, boolean force) throws ApplicationException {
+		if (collection == null || collection.isEmpty())
+			return;
+
+		super.saveTests(collection, force);
+
+		Identifier_Transferable[] idsT = new Identifier_Transferable[collection.size()];
+		int i = 0;
+		for (Iterator it = collection.iterator(); it.hasNext(); i++)
+			idsT[i] = (Identifier_Transferable) ((Test) it.next()).getId().getTransferable();
+
+		TestStatus status = ((Test) collection.iterator().next()).getStatus();
+
+		try {
+			MeasurementControlModule.mServerRef.updateTestsStatus(idsT,
+					status,
+					(Identifier_Transferable) MeasurementControlModule.iAm.getId().getTransferable());
+		}
+		catch (org.omg.CORBA.SystemException se) {
+			Log.errorException(se);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException("System exception -- " + se.getMessage(), se);
+		}
+	}
 }
