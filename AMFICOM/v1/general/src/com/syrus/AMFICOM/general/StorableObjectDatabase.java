@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.125 2005/03/18 14:24:28 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.126 2005/03/18 14:40:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.125 $, $Date: 2005/03/18 14:24:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.126 $, $Date: 2005/03/18 14:40:53 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -138,7 +138,7 @@ public abstract class StorableObjectDatabase {
 	}
 
 	protected abstract String getUpdateMultipleSQLValuesTmpl();
-	
+
 	protected final String getUpdateMultipleSQLValues() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -1402,8 +1402,8 @@ public abstract class StorableObjectDatabase {
 		Matcher matcher = pattern.matcher(values);
 		String[] parsedValues = new String[columnCount];
 		int valueCounter = 0;
-		Log.debugMessage("insertValue:\"" + values + "\"", Log.DEBUGLEVEL08);
-		Log.debugMessage("columnCount:" + columnCount, Log.DEBUGLEVEL08);
+		Log.debugMessage("insertValue:\"" + values + "\"", Log.DEBUGLEVEL09);
+		Log.debugMessage("columnCount:" + columnCount, Log.DEBUGLEVEL09);
 		while (matcher.find()) {			
 			for (int i = 1; i <= matcher.groupCount(); i++) {
 				int start = matcher.start(i);
