@@ -772,7 +772,9 @@ int RTUTransceiver::get_point_spacing_index(const double res, const WORD otdr_ca
 	if (max_point_spacings > 0) {
 		float* point_spacings = new float[MAX_SPACINGS];
 		QPOTDRGetAvailSpacings(otdr_card, point_spacings);
-		ret = get_index_in_array((float)res, point_spacings, max_point_spacings);
+		//FIXME: Total number of values is 8, but QPOTDRGetMaxPointSpacings returns 7
+		//ret = get_index_in_array((float)res, point_spacings, max_point_spacings);
+		ret = get_index_in_array((float)res, point_spacings, MAX_SPACINGS);
 		delete[] point_spacings;
 	}
 	else {
@@ -802,7 +804,6 @@ int RTUTransceiver::get_pulse_width_index(const int pulswd, const WORD otdr_card
 
 int RTUTransceiver::ior_is_valid(const double ior, const WORD otdr_card, const float wave) {
 	float default_ior = QPOTDRGetDefaultIOR(otdr_card, wave);
-	printf("RTUTransceiver | Default IOR == %f\n", default_ior);
 	return (((int)ior * 10000) == ((int)default_ior * 10000)) ? 1 : 0;
 }
 
