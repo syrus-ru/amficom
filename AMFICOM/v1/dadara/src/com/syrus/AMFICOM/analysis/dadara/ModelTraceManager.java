@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.38 2005/03/31 11:14:13 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.39 2005/03/31 11:16:18 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.38 $, $Date: 2005/03/31 11:14:13 $
+ * @version $Revision: 1.39 $, $Date: 2005/03/31 11:16:18 $
  * @module
  */
 public class ModelTraceManager
@@ -29,12 +29,15 @@ public class ModelTraceManager
 	public static final String CODENAME = "ModelTraceManager";
 
 	private SimpleReflectogramEventImpl[] se; // not null
-	private ModelFunction mf;
+	private ModelFunction mf; // not null
 	private int traceLength;
 	private ModelTrace[] thMTCache = null;
 	private double deltaX = 1; // XXX
-
 	private ModelTrace mt; // will just contain mt
+
+	protected Thresh[] tL; // полный список порогов
+	protected ThreshDX[] tDX; // список DX-порогов
+	protected ThreshDY[] tDY; // список DY-порогов
 
 	protected void invalidateThMTCache()
 	{
@@ -490,10 +493,6 @@ public class ModelTraceManager
 			e.printStackTrace();
 		}
 	}
-
-	protected Thresh[] tL; // полный список порогов
-	protected ThreshDX[] tDX; // список DX-порогов
-	protected ThreshDY[] tDY; // список DY-порогов
 
 	/**
 	 * Интерфейс для управления порогами мышью
