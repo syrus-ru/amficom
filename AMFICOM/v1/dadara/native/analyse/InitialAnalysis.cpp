@@ -96,7 +96,7 @@ void InitialAnalysis::performAnalysis()
     addLinearPartsBetweenEvents();
     correctAllSpliceCoords();// поскольку уточнение двигает соседние событи€, то к этому моменту динейные участки должы уже существовать ( поэтому вызов после addLinearPartsBetweenEvents() )
 }
-// -------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 void InitialAnalysis::findEventsBySplashes(ArrList& splashes)
 {   double mc = minimalConnector;
     double mw = minimalWeld;
@@ -123,8 +123,8 @@ void InitialAnalysis::findEventsBySplashes(ArrList& splashes)
         {	EventParams *ep = new EventParams;
 	        ep->n = events->getLength();
             ep->type = EventParams::SPLICE;
-            ep->begin = sp1.begin_nonoise;
-            ep->end = sp1.end_nonoise;
+            ep->begin = sp1.begin_nonoise-1;
+            ep->end = sp1.end_nonoise+1;
             events->add(ep);
         }
     }
@@ -325,7 +325,7 @@ void InitialAnalysis::correctSpliceCoords(int n)
     if(ev.type != EventParams::SPLICE)
 return;
 	const double noise_factor = 0;  // 0 , если мы не учитываем шум в пределах событий
-    const double angle_factor = 1; // расширени€ светового конуса дл€ защиты от низкочастотных помех на больших масштабах
+    const double angle_factor = 1.5; // расширени€ светового конуса дл€ защиты от низкочастотных помех на больших масштабах
 	const double factor = 1.1; // множитель геометрической прогрессии
 	const int nscale = 20; // количество разных масштабов
 	int width = wlet_width; // frame-width: ширина окна (относительно границы событи€), в котором мы проводим дополнительный анализ
@@ -367,7 +367,7 @@ return;
 		// ищем пересечение слева, пыта€сь сдвинуть границу влево ( то есть пока i+width<=left_cross )
         for(i=w_l; i<w_r && i+width*angle_factor<=left_cross; i++)
         {	if(fabs(f_wlet[i])>=minimalWeld+noise[i]*noise_factor+df_left)
-        	{	w_l=i;
+        	{	w_l=i-1;
 	            if(w_l+width*angle_factor<left_cross){ left_cross = (int )(w_l+width*angle_factor);}
         break;
             }
@@ -375,7 +375,7 @@ return;
    		// ищем пересечение справа
         for(int j=w_r; j>w_l && j-width*angle_factor>=right_cross; j--) // j-width>=right_cross - условие минимума в повЄрнутой на 45 — 
         {	if(fabs(f_wlet[j])>=minimalWeld+noise[j]*noise_factor+df_right)
-        	{	w_r=j;
+        	{	w_r=j+1;
 	            if(w_r-width*angle_factor>right_cross)
                 { right_cross = (int )(w_r-width*angle_factor);}
         break;
