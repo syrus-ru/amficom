@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.SchemePropsPanel;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;

@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.general.corba.*;
 
 public class MeasurementPortCharacteristicsPanel extends GeneralPanel
 {

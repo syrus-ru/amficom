@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
@@ -12,6 +13,10 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
+import com.syrus.AMFICOM.administration.*;
+import com.syrus.AMFICOM.administration.corba.*;
+import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 
 public class PathNewCommand extends VoidCommand
 {

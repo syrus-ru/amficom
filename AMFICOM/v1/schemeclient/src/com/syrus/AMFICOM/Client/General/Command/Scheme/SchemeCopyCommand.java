@@ -10,7 +10,8 @@ import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
@@ -100,6 +101,8 @@ public class SchemeCopyCommand extends VoidCommand
 		}
 		catch (ApplicationException ex) {
 			ex.printStackTrace();
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка сохранения схемы " +
+																		scheme.name(), "Ошибка", JOptionPane.OK_OPTION);
 		}
 
 		Pool.removeMap("clonedids");

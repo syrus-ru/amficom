@@ -19,6 +19,10 @@ import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
 import oracle.jdeveloper.layout.*;
+import com.syrus.AMFICOM.administration.*;
+import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Identifier;
 
 public class CharacteristicsPanel extends JPanel implements OperationListener
 {
@@ -289,7 +293,7 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 				if (obj instanceof CharacterizableObject)
 					((CharacterizableObject)obj).characterizable.removeCharacteristic(ch);
 				else if (obj instanceof CharacterizedObject)
-					((CharacterizedObject)obj).characterized.removeCharacteristic(ch);
+					((CharacterizedObject)obj).characterized.getCharacteristics().remove(ch);
 				break;
 			}
 		}
@@ -448,7 +452,7 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 								characterizedId,
 								true,
 								true);
-						characterized.addCharacteristic(ch);
+						characterized.getCharacteristics().add(ch);
 
 						int n = tModel.addRow(ch.getName(), new String[] {""});
 						jTable.setRowSelectionInterval(n, n);

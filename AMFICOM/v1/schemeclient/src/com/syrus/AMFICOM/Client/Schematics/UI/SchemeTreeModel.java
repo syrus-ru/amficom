@@ -10,6 +10,8 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
+import com.syrus.AMFICOM.administration.*;
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.configuration.*;
@@ -303,7 +305,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 							domain_id, true);
 					DomainCondition condition = new DomainCondition(domain,
 							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
-					List groups = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					List groups = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = groups.iterator(); it.hasNext(); ) {
 						SchemeProtoGroup group = (SchemeProtoGroup)it.next();

@@ -1,14 +1,13 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.BorderLayout;
-import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.configuration.corba.*;
-import com.syrus.AMFICOM.general.*;
 
 public class CableLinkCharacteristicsPanel extends GeneralPanel
 {

@@ -16,10 +16,10 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Schematics.Scheme.*;
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.*;
 
 public class ElementsEditorMainFrame extends JFrame

@@ -10,9 +10,9 @@ import com.syrus.AMFICOM.Client.Configure.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.scheme.corba.*;
 
 public class PropsFrame extends JInternalFrame implements OperationListener
@@ -320,19 +320,23 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 
 	void showSelection()
 	{
-		for (int i = 0; i < sorts.length; i++)
+		if (characterizedObj != null)
+		{
+			for (int i = 0; i < sorts.length; i++)
+				cPanel.setTypeSortMapping(
+						sorts[i],
+						characterizedSort,
+						characterizedObj,
+						characterizedId,
+						characteristicsEditable);
+		}
+		if (attributedObj != null)
 			cPanel.setTypeSortMapping(
-					sorts[i],
-					characterizedSort,
-					characterizedObj,
-					characterizedId,
-					characteristicsEditable);
-		cPanel.setTypeSortMapping(
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
-				attributedSort,
-				attributedObj,
-				attributedId,
-				attributesEditable);
+					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+					attributedSort,
+					attributedObj,
+					attributedId,
+					attributesEditable);
 
 		cPanel.addCharacteristics(characteristics, characterizedId);
 		cPanel.addCharacteristics(attributes, attributedId);

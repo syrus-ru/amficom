@@ -67,12 +67,12 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 			return (UgoPanel)tabs.getComponentAt(tabs.getSelectedIndex());
 
 		SchemePanel panel = new SchemePanel(aContext);
-		Scheme scheme = SchemeFactory.createScheme();
-		scheme.name("Новая схема");
-		panel.getGraph().setScheme(scheme);
+//		Scheme scheme = SchemeFactory.createScheme();
+//		scheme.name("Новая схема");
+//		panel.getGraph().setScheme(scheme);
 
 		addPanel(panel);
-		updateTitle(scheme.name());
+//		updateTitle(scheme.name());
 
 		return panel;
 	}

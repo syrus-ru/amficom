@@ -12,8 +12,10 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.administration.*;
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.tree.*;
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.*;
@@ -182,7 +184,8 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 
 	void refreshButton_actionPerformed()
 	{
-		dispatcher.notify(new TreeListSelectionEvent(selectedObject, TreeListSelectionEvent.REFRESH_EVENT));
+		dispatcher.notify(new TreeListSelectionEvent(
+					selectedObject instanceof String ? selectedObject : "", TreeListSelectionEvent.REFRESH_EVENT));
 	}
 
 	void delMapGroupButton_actionPerformed()

@@ -2,18 +2,17 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.administration.*;
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.Client.General.*;
-
-import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePort;
 
 public class AbstractPortGeneralPanel extends GeneralPanel

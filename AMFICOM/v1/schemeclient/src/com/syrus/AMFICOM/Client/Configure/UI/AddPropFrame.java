@@ -7,14 +7,17 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.administration.*;
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.*;
 
 public class AddPropFrame extends JDialog
 {
