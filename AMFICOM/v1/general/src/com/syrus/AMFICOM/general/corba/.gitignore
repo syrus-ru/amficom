@@ -18,3 +18,4 @@ IdentifierGeneratorServer.java
 Namable.java
 NameResolver.java
 StorableObject.java
+ElementAttribute.java
