@@ -1,170 +1,31 @@
-/**
- * $Id: ApplicationModel.java,v 1.6 2004/07/28 12:56:22 krupenn Exp $
+/*
+ * $Id: ApplicationModel.java,v 1.7 2004/09/27 09:58:44 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
  */
+
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.EmptyDataSource;
-import com.syrus.AMFICOM.Client.Resource.RISDDataSource;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
+import com.syrus.AMFICOM.Client.Resource.*;
+import java.util.*;
 
 /**
  * Модель приложения описывает действия, которые пользователь (оператор) 
  * может производить с системой
  * 
- * 
- * 
- * @version $Revision: 1.6 $, $Date: 2004/07/28 12:56:22 $
- * @module
- * @author $Author: krupenn $
- * @see
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2004/09/27 09:58:44 $
+ * @module generalclient_v1
  */
 public class ApplicationModel
 {
-	/**
-	 * запись об элементе модели включает имя элемента, связанную с ним команду 
-	 * и флаги видимости и доступности команды пользователю.
-	 * конструктора без параметров нет, так как элемент определяется 
-	 * идентификатором
-	 * 
-	 * @version $Revision: 1.6 $, $Date: 2004/07/28 12:56:22 $
-	 * @module
-	 * @author $Author: krupenn $
-	 * @see
-	 */
-	class ApplicationEntry
-	{
-		/**
-		 * выделен ли пункт (для пункта меню - отмечен галочкой, для 
-		 * западающей кнопки - западание
-		 */
-		boolean selected = false;
+	protected SessionInterface session = null;
 
-		/**
-		 * виден ли пункт в текущей инсталлированной конфигурации
-		 */
-		boolean installed = true;
-
-		/**
-		 * виден ли пункт в текущем контексте
-		 */
-		boolean visible = true;
-		
-		/**
-		 * доступен ли пункт в текущей инсталлированной конфигурации
-		 */
-		boolean usable = true;
-
-		/**
-		 * доступен ли пункт в текущем контексте
-		 */
-		boolean accessible = true;
-		
-		/**
-		 * идентификатор элемента меню
-		 */
-		String name; 
-		
-		/**
-		 * комманда, ассоциируемая с данным пунктом
-		 */
-		Command command = new VoidCommand();
-
-		/**
-		 * конструктор с указанием имени элемента и связанной с ним команды.
-		 * по умолчанию логические поля элемента устанавливаются следующим 
-		 * образом:
-		 * selected = false
-		 * visible = true
-		 * usable = true
-		 * accessible = true
-		 * 
-		 * @param name
-		 * @param command
-		 */
-		public ApplicationEntry(String name, Command command)
-		{
-			this.name = name;
-			this.command = command;
-		}
-
-		/**
-		 * по умолчанию с элементом модели связана пустая команда
-		 * @param name
-		 */
-		public ApplicationEntry(String name)
-		{
-			this.name = name;
-		}
-
-		// 
-		/**
-		 * конструктор с инициализацией всех членов класса
-		 * @param name
-		 * @param command
-		 * @param installed
-		 * @param visible
-		 * @param usable
-		 * @param accessible
-		 * @param selected
-		 */
-		public ApplicationEntry(
-				String name,
-				Command command,
-				boolean installed,
-				boolean visible,
-				boolean usable,
-				boolean accessible,
-				boolean selected)
-		{
-			this.name = name;
-			this.installed = installed;
-			this.visible = visible;
-			this.usable = usable;
-			this.accessible = accessible;
-			this.selected = selected;
-			this.command = command;
-		}
-
-		/**
-		 * при создании нового объекта берутся копии всех членов объекта
-		 * @param entry
-		 */
-		public ApplicationEntry(ApplicationEntry entry)
-		{
-			this.name = entry.name;
-			this.installed = entry.installed;
-			this.visible = entry.visible;
-			this.usable = entry.usable;
-			this.accessible = entry.accessible;
-			this.selected = entry.selected;
-			this.command = (Command )entry.command.clone();
-		}
-
-		/**
-		 * дублирование объекта включает создание нового объекта
-		 */
-		public Object clone()
-		{
-			return new ApplicationEntry(this);
-		}
-	}
-
-///////////////////////////////////////////////////////////////////////////////
-// поля и методы класса ApplicationModel
-///////////////////////////////////////////////////////////////////////////////
+	protected DataSourceInterface dataSource = null;
 
 	/**
 	 * список элементов модели
@@ -174,16 +35,21 @@ public class ApplicationModel
 	/**
 	 * список объектов, получающих информацию об изменениях в модели
 	 */
-	private ApplicationModelListenerList listenerList =
-			new ApplicationModelListenerList();
+	private ApplicationModelListenerList listenerList
+		= new ApplicationModelListenerList();
+
+	private static ApplicationModel instance = null;
 
 	/**
-	 * конструктор без параметров - инициализируются список элементов и
-	 * список объектов, принимающих уведомление об изменениях в модели
+	 * @deprecated This constructor shouldn't be used directly, and in the
+	 *             future its visibility will be narrowed to
+	 *             <code>protected</code> to allow it to be invoked by
+	 *             descendants only. To obtain a shared instance, use
+	 *             {@link #getInstance()} instead.
+	 * @see #getInstance()
 	 */
 	public ApplicationModel()
 	{
-		// nothing
 	}
 
 	/**
@@ -191,73 +57,65 @@ public class ApplicationModel
 	 * информацию об изменениях в модели
 	 * 
 	 * @param aModel
+	 * @deprecated Used only in {@link #clone()}.
 	 */
 	public ApplicationModel(ApplicationModel aModel)
 	{
 		// копируются Слушатели изменения модели
 		for (int i = aModel.listenerList.getListenerCount() - 1; i >= 0; i--)
-		{
-			listenerList.add(
-					aModel.listenerList.getListenerClass(i),
-					aModel.listenerList.getListener(i));
-		}
+			listenerList.add(aModel.listenerList.getListenerClass(i), aModel.listenerList.getListener(i));
 
 		// инициализируется список элементов
 		appHash = new Hashtable();
 
 		// копируются элементы модели, с тем, чтобы в каждой модели элементы
 		// изменялись независимо
-		for(Enumeration e = aModel.appHash.keys(); e.hasMoreElements();)
+		for (Enumeration e = aModel.appHash.keys(); e.hasMoreElements();)
 		{
 			String key = (String )e.nextElement();
-			ApplicationEntry entry = (ApplicationEntry )aModel.appHash.get(key);
-			appHash.put(key, entry.clone());
+			appHash.put(key, ((ApplicationEntry) (aModel.appHash.get(key))).clone());
 		}
+	}
+
+	public static ApplicationModel getInstance()
+	{
+		if (instance == null)
+			synchronized (ApplicationModel.class)
+			{
+				if (instance == null)
+					instance = new ApplicationModel();
+			}
+		return instance;
 	}
 
 	/**
 	 * добавить в модель элемент с указанием всех членов
 	 */
-	public void add(
-			String name,
-			Command command,
-			boolean installed,
-			boolean visible,
-			boolean usable,
-			boolean accessible,
-			boolean selected)
+	public void add(final String name, Command command, final boolean installed, final boolean visible, final boolean usable, final boolean accessible, final boolean selected)
 	{
-		if(command == null)
-			command = new VoidCommand();
-		ApplicationEntry entry = new ApplicationEntry(
-				name,
-				command,
-				installed,
-				visible,
-				usable,
-				accessible,
-				selected);
-		appHash.put(name, entry);
+		if (command == null)
+			add(name, new VoidCommand(), installed, visible, usable, accessible, selected);
+		else
+			appHash.put(name, new ApplicationEntry(name, command, installed, visible, usable, accessible, selected));
 	}
 
 	/**
 	 * добавить в модель элемент с установкой флагов по умолчанию
 	 */
-	public void add(String name, Command command)
+	public void add(final String name, Command command)
 	{
-		if(command == null)
-			command = new VoidCommand();
-		ApplicationEntry entry = new ApplicationEntry(name, command);
-		appHash.put(name, entry);
+		if (command == null)
+			add(name, new VoidCommand());
+		else
+			appHash.put(name, new ApplicationEntry(name, command));
 	}
 
 	/**
 	 * добавить в модель элемент с установкой флагов и команды по умолчанию
 	 */
-	public void add(String name)
+	public void add(final String name)
 	{
-		ApplicationEntry entry = new ApplicationEntry(name);
-		appHash.put(name, entry);
+		appHash.put(name, new ApplicationEntry(name));
 	}
 
 	/**
@@ -272,7 +130,7 @@ public class ApplicationModel
 	 * установить флаг "выбран" для элемента
 	 * @deprecated use {@link #setSelected(String, boolean) setSelected(name, true)}
 	 */
-	public void select(String name)
+	public void select(final String name)
 	{
 		setSelected(name, true);
 	}
@@ -281,7 +139,7 @@ public class ApplicationModel
 	 * снять флаг "выбран" для элемента
 	 * @deprecated use {@link #setSelected(String, boolean) setSelected(name, false)}
 	 */
-	public void deselect(String name)
+	public void deselect(final String name)
 	{
 		setSelected(name, false);
 	}
@@ -289,19 +147,18 @@ public class ApplicationModel
 	/**
 	 * установить флаг "выбран" для элемента в bool
 	 */
-	public void setSelected(String name, boolean bool)
+	public void setSelected(final String name, final boolean bool)
 	{
-		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
-		if(entry == null)
-			return;
-		entry.selected = bool;
+		ApplicationEntry entry = (ApplicationEntry) (appHash.get(name));
+		if (entry != null)
+			entry.selected = bool;
 	}
 
 	/**
 	 * установить флаг "разрешенный" для элемента
 	 * @deprecated use {@link #setEnabled(String, boolean) setEnabled(name, true)}
 	 */
-	public void enable(String name)
+	public void enable(final String name)
 	{
 		setEnabled(name, true);
 	}
@@ -310,7 +167,7 @@ public class ApplicationModel
 	 * снять флаг "разрешенный" для элемента
 	 * @deprecated use {@link #setEnabled(String, boolean) setEnabled(name, false)}
 	 */
-	public void disable(String name)
+	public void disable(final String name)
 	{
 		setEnabled(name, false);
 	}
@@ -318,19 +175,18 @@ public class ApplicationModel
 	/**
 	 * установить флаг "разрешенный" для элемента в bool
 	 */
-	public void setEnabled(String name, boolean bool)
+	public void setEnabled(final String name, boolean accessible)
 	{
-		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
-		if(entry == null)
-			return;
-		entry.accessible = bool;
+		ApplicationEntry entry = (ApplicationEntry) (appHash.get(name));
+		if (entry != null)
+			entry.accessible = accessible;
 	}
 
 	/**
 	 * установить флаг "видимый" для элемента
 	 * @deprecated use {@see #setVisible(String, boolean) setVisible(name, true)}
 	 */
-	public void show(String name)
+	public void show(final String name)
 	{
 		setVisible(name, true);
 	}
@@ -339,7 +195,7 @@ public class ApplicationModel
 	 * снять флаг "видимый" для элемента
 	 * @deprecated use {@link #setVisible(String, boolean) setVisible(name, false)}
 	 */
-	public void hide(String name)
+	public void hide(final String name)
 	{
 		setVisible(name, false);
 	}
@@ -347,188 +203,153 @@ public class ApplicationModel
 	/**
 	 * установить флаг "видимый" для элемента в bool
 	 */
-	public void setVisible(String name, boolean bool)
+	public void setVisible(final String name, final boolean visible)
 	{
-		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
-		if(entry == null)
-			return;
-		entry.visible = bool;
+		ApplicationEntry entry = (ApplicationEntry) (appHash.get(name));
+		if (entry != null)
+			entry.visible = visible;
 	}
 
 	/**
 	 * установить флаг "установленный" для элемента в bool
 	 */
-	public void setInstalled(String name, boolean bool)
+	public void setInstalled(final String name, final boolean bool)
 	{
-		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
-		if(entry == null)
-			return;
-		entry.installed = bool;
+		ApplicationEntry entry = (ApplicationEntry) (appHash.get(name));
+		if (entry != null)
+			entry.installed = bool;
 	}
 
 	/**
 	 * установить флаг "доступный" для элемента в bool
 	 */
-	public void setAccessible(String name, boolean bool)
+	public void setAccessible(final String name, final boolean accessible)
 	{
-		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
-		if(entry == null)
-			return;
-		entry.accessible = bool;
+		ApplicationEntry entry = (ApplicationEntry) (appHash.get(name));
+		if (entry != null)
+			entry.accessible = accessible;
 	}
 
 	/**
 	 * установить флаг "установленный" для элемента в bool
 	 */
-	public void setUsable(String name, boolean bool)
+	public void setUsable(final String name, final boolean usable)
 	{
-		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
-		if(entry == null)
-			return;
-		entry.usable = bool;
+		ApplicationEntry entry = (ApplicationEntry) (appHash.get(name));
+		if (entry != null)
+			entry.usable = usable;
 	}
 
 	/**
 	 * получить флаг "видимый"
 	 */
-	public boolean isVisible(String name)
+	public boolean isVisible(final String name)
 	{
-		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
-		if(entry == null)
-			return false;
-		return entry.visible && entry.installed;
+		ApplicationEntry entry = (ApplicationEntry) (appHash.get(name));
+		return ((entry != null) && entry.visible && entry.installed);
 	}
 
 	/**
 	 * получить флаг "доступный"
 	 */
-	public boolean isAccessible(String name)
+	public boolean isAccessible(final String name)
 	{
-		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
-		if(entry == null)
-			return false;
-		return entry.accessible;
+		ApplicationEntry entry = (ApplicationEntry) (appHash.get(name));
+		return ((entry != null) && entry.accessible);
 	}
 
 	/**
 	 * получить флаг "выбранный"
 	 */
-	public boolean isSelected(String name)
+	public boolean isSelected(final String name)
 	{
-		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
-		if(entry == null)
-			return false;
-		return entry.selected;
+		ApplicationEntry entry = (ApplicationEntry) (appHash.get(name));
+		return ((entry != null) && entry.selected);
 	}
 
 	/**
 	 * получить флаг "установленный"
 	 */
-	public boolean isUsable(String name)
+	public boolean isUsable(final String name)
 	{
-		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
-		if(entry == null)
-			return false;
-		return entry.usable;
+		ApplicationEntry entry = (ApplicationEntry) (appHash.get(name));
+		return ((entry != null) && entry.usable);
 	}
 
 	/**
 	 * получить флаг "разрешенный"
 	 */
-	public boolean isEnabled(String name)
+	public boolean isEnabled(final String name)
 	{
-		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
-		if(entry == null)
-			return false;
-		return entry.usable && entry.accessible;
+		ApplicationEntry entry = (ApplicationEntry) (appHash.get(name));
+		return ((entry != null) && entry.usable && entry.accessible);
 	}
 
 	/**
 	 * установить флаг "разрешенный" в bool для всех элементов
 	 */
-	public void setAllItemsEnabled(boolean bool)
+	public void setAllItemsEnabled(final boolean enabled)
 	{
-		setAllItemsAccessible(bool);
+		setAllItemsAccessible(enabled);
 	}
 
 	/**
 	 * установить флаг "доступный" в bool для всех элементов
 	 */
-	public void setAllItemsAccessible(boolean bool)
+	public void setAllItemsAccessible(final boolean accessible)
 	{
-		ApplicationEntry entry;
-		Enumeration enum = appHash.elements();
-		for(;enum.hasMoreElements();)
-		{
-			entry = (ApplicationEntry) enum.nextElement();
-			entry.accessible = bool;
-		}
+		for(Enumeration e = appHash.elements(); e.hasMoreElements();)
+			((ApplicationEntry) (e.nextElement())).accessible = accessible;
 	}
 
 	/**
 	 * установить флаг "видимый" в bool для всех элементов
 	 */
-	public void setAllItemsVisible(boolean bool)
+	public void setAllItemsVisible(final boolean visible)
 	{
-		ApplicationEntry entry;
-		Enumeration enum = appHash.elements();
-		for(;enum.hasMoreElements();)
-		{
-			entry = (ApplicationEntry) enum.nextElement();
-			entry.visible = bool;
-		}
+		for (Enumeration e = appHash.elements(); e.hasMoreElements();)
+			((ApplicationEntry) (e.nextElement())).visible = visible;
 	}
 
 	/**
 	 * установить флаг "установленный" в bool для всех элементов
 	 */
-	public void setAllItemsUsable(boolean bool)
+	public void setAllItemsUsable(final boolean usable)
 	{
-		ApplicationEntry entry;
-		Enumeration enum = appHash.elements();
-		for(;enum.hasMoreElements();)
-		{
-			entry = (ApplicationEntry) enum.nextElement();
-			entry.usable = bool;
-		}
+		for (Enumeration e = appHash.elements(); e.hasMoreElements();)
+			((ApplicationEntry) (e.nextElement())).usable = usable;
 	}
 
 	/**
 	 * установить флаг "выбранный" в bool для всех элементов
 	 */
-	public void setAllItemsSelected(boolean bool)
+	public void setAllItemsSelected(final boolean selected)
 	{
-		ApplicationEntry entry;
-		Enumeration enum = appHash.elements();
-		for(;enum.hasMoreElements();)
-		{
-			entry = (ApplicationEntry) enum.nextElement();
-			entry.selected = bool;
-		}
+		for (Enumeration e = appHash.elements(); e.hasMoreElements();)
+			((ApplicationEntry) (e.nextElement())).selected = selected;
 	}
 
 	/**
 	 * установить команду для элемента
 	 */
-	public void setCommand(String name, Command command)
+	public void setCommand(final String name, final Command command)
 	{
-		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
-		if(entry == null)
+		ApplicationEntry entry = (ApplicationEntry) (appHash.get(name));
+		if (entry == null)
 			return;
-		if(command == null)
-			command = new VoidCommand();
-		entry.command = command;
+		if (command == null)
+			setCommand(name, new VoidCommand());
+		else
+			entry.command = command;
 	}
 
 	/**
 	 * получить связанную с элементом команду
 	 */
-	public Command getCommand(String name)
+	public Command getCommand(final String name)
 	{
 		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
-		if(entry == null)
-			return new VoidCommand();
-		return entry.command;
+		return ((entry == null) ? (new VoidCommand()) : entry.command);
 	}
 
 	/**
@@ -569,46 +390,157 @@ public class ApplicationModel
 	 * проинформировать слушателей о том, что изменилось состояние элементов
 	 * @param e - массив имен элементов
 	 */
-	// 
-	// 
 	public void fireModelChanged(String e[])
 	{
-		int i;
-
 		// возвращается ненулевой список Слушателей
 		Object[] listeners = listenerList.getListenerList();
 		Object[] listenerclasses = listenerList.getListenerClassList();
 
 		// Идем по всем слушателям и каждого информируем об изменениях
 		// элементов e в модели
-		for (i = listeners.length - 1; i >= 0; i--)
-		{
+		for (int i = listeners.length - 1; i >= 0; i--)
 			if (listenerclasses[i] == ApplicationModelListener.class)
-			{
 				((ApplicationModelListener )listeners[i]).modelChanged(e);
-			}
-		}
 	}
 
-	/**
-	 * 
-	 */
-	public DataSourceInterface getDataSource(SessionInterface si)
+	public DataSourceInterface getDataSource(final SessionInterface session)
 	{
-		String connection = Environment.getConnectionType();
-		if(connection.equals(Environment.CONNECTION_RISD))
-			return new RISDDataSource(si);
-		else
-		if(connection.equals(Environment.CONNECTION_EMPTY))
-			return new EmptyDataSource(si);
-		return null;
+		if ((this.session == null) || (!this.session.equals(session)))
+			synchronized (this)
+			{
+				if ((this.session == null) || (!this.session.equals(session)))
+				{
+					this.session = session;
+					this.dataSource = new RISDDataSource(this.session);
+				}
+			}
+		return this.dataSource;
 	}
 
 	/**
-	 * дублирование модели
+	 * @deprecated Incorrectly implemented and never used.
 	 */
 	public Object clone()
 	{
 		return new ApplicationModel(this);
+	}
+
+	/**
+	 * запись об элементе модели включает имя элемента, связанную с ним команду 
+	 * и флаги видимости и доступности команды пользователю.
+	 * конструктора без параметров нет, так как элемент определяется 
+	 * идентификатором
+	 * 
+	 * @author $Author: bass $
+	 * @version $Revision: 1.7 $, $Date: 2004/09/27 09:58:44 $
+	 * @module generalclient_v1
+	 */
+	class ApplicationEntry
+	{
+		/**
+		 * выделен ли пункт (для пункта меню - отмечен галочкой, для 
+		 * западающей кнопки - западание
+		 */
+		boolean selected = false;
+
+		/**
+		 * виден ли пункт в текущей инсталлированной конфигурации
+		 */
+		boolean installed = true;
+
+		/**
+		 * виден ли пункт в текущем контексте
+		 */
+		boolean visible = true;
+		
+		/**
+		 * доступен ли пункт в текущей инсталлированной конфигурации
+		 */
+		boolean usable = true;
+
+		/**
+		 * доступен ли пункт в текущем контексте
+		 */
+		boolean accessible = true;
+		
+		/**
+		 * идентификатор элемента меню
+		 */
+		String name;
+
+		/**
+		 * комманда, ассоциируемая с данным пунктом
+		 */
+		Command command = new VoidCommand();
+
+		/**
+		 * конструктор с указанием имени элемента и связанной с ним команды.
+		 * по умолчанию логические поля элемента устанавливаются следующим 
+		 * образом:
+		 * selected = false
+		 * visible = true
+		 * usable = true
+		 * accessible = true
+		 * 
+		 * @param name
+		 * @param command
+		 */
+		public ApplicationEntry(final String name, Command command)
+		{
+			this.name = name;
+			this.command = command;
+		}
+
+		/**
+		 * по умолчанию с элементом модели связана пустая команда
+		 * @param name
+		 */
+		public ApplicationEntry(final String name)
+		{
+			this.name = name;
+		}
+
+		/**
+		 * конструктор с инициализацией всех членов класса
+		 * @param name
+		 * @param command
+		 * @param installed
+		 * @param visible
+		 * @param usable
+		 * @param accessible
+		 * @param selected
+		 */
+		public ApplicationEntry(final String name, Command command, final boolean installed, final boolean visible, final boolean usable, final boolean accessible, final boolean selected)
+		{
+			this.name = name;
+			this.installed = installed;
+			this.visible = visible;
+			this.usable = usable;
+			this.accessible = accessible;
+			this.selected = selected;
+			this.command = command;
+		}
+
+		/**
+		 * @deprecated
+		 */
+		public ApplicationEntry(ApplicationEntry entry)
+		{
+			this.name = entry.name;
+			this.installed = entry.installed;
+			this.visible = entry.visible;
+			this.usable = entry.usable;
+			this.accessible = entry.accessible;
+			this.selected = entry.selected;
+			this.command = (Command )entry.command.clone();
+		}
+
+		/**
+		 * @deprecated
+		 */
+		public Object clone()
+		{
+			return new ApplicationEntry(this);
+		}
 	}
 }

@@ -1,65 +1,90 @@
+/*
+ * $Id: ApplicationContext.java,v 1.3 2004/09/27 10:00:46 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.syrus.AMFICOM.Client.General.ConnectionInterface;
+import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
-public class ApplicationContext 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 10:00:46 $
+ * @module generalclient_v1
+ */
+public final class ApplicationContext
 {
-	ConnectionInterface ci;
-	SessionInterface si;
-	ApplicationModel aModel;
-	DataSourceInterface dataSource;
-	Dispatcher dispatcher;
+	private SessionInterface session;
+	
+	private ApplicationModel applicationModel;
+	
+	private Dispatcher dispatcher;
 
-	public ApplicationContext()
+
+	public void setSessionInterface(SessionInterface session)
 	{
+		this.session = session;
 	}
 
-	public void setConnectionInterface(ConnectionInterface ci)
+	public void setApplicationModel(ApplicationModel applicationModel)
 	{
-		this.ci = ci;
+		this.applicationModel = applicationModel;
 	}
 
-	public void setSessionInterface(SessionInterface si)
-	{
-		this.si = si;
-	}
-
-	public void setApplicationModel(ApplicationModel aModel)
-	{
-		this.aModel = aModel;
-	}
-
-	public void setDataSourceInterface(DataSourceInterface dataSource)
-	{
-		this.dataSource = dataSource;
-	}
 
 	public void setDispatcher(Dispatcher dispatcher)
 	{
 		this.dispatcher = dispatcher;
 	}
 
-	public ConnectionInterface getConnectionInterface()
-	{
-		return ci;
-	}
-
 	public SessionInterface getSessionInterface()
 	{
-		return si;
+		return session;
 	}
 
 	public ApplicationModel getApplicationModel()
 	{
-		return aModel;
+		return applicationModel;
 	}
 
+	public DataSourceInterface getDataSource()
+	{
+		return this.applicationModel.getDataSource(this.session);
+	}
+
+	/**
+	 * @deprecated Use {@link ConnectionInterface#getInstance()} instead. 
+	 */
+	public ConnectionInterface getConnectionInterface()
+	{
+		return ConnectionInterface.getInstance();
+	}
+
+	/**
+	 * @deprecated Does nothing.
+	 */
+	public void setConnectionInterface(ConnectionInterface connection)
+	{
+	}
+
+	/**
+	 * @deprecated Use {@link #getDataSource()} instead.
+	 */
 	public DataSourceInterface getDataSourceInterface()
 	{
-		return dataSource;
+		return getDataSource();
+	}
+
+	/**
+	 * @deprecated Does nothing.
+	 */
+	public void setDataSourceInterface(DataSourceInterface dataSource)
+	{
 	}
 
 	public Dispatcher getDispatcher()
