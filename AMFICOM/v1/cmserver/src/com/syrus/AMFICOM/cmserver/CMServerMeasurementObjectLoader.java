@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.6 2004/12/22 12:11:56 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.7 2004/12/22 13:01:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/22 12:11:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2004/12/22 13:01:41 $
+ * @author $Author: bob $
  * @module module_name
  */
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -105,7 +105,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 						database = MeasurementDatabaseContext.getResultDatabase();
 						break;
 					default:
-						Log.errorMessage("CMServerMeasurementObjectLoader.refresh | Unknown entity: " + entityCode);                
+						Log.errorMessage("CMServerMeasurementObjectLoader.refresh | there is no reason to refresh " + ObjectEntities.codeToString(entityCode));                
 				}
 				if (database != null)
 					return database.refresh(storableObjects);
