@@ -1,5 +1,5 @@
 /*
- * $Id: HashCodeGenerator.java,v 1.2 2004/08/17 05:24:16 bob Exp $
+ * $Id: HashCodeGenerator.java,v 1.3 2004/08/17 10:02:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,18 +9,18 @@
 package com.syrus.util;
 
 /**
- * HashCodeGenerator methods have got from 
- * Effective Java: Programming Language Guide by Joshua Bloch
+ * HashCodeGenerator methods have got from Effective Java: Programming Language
+ * Guide by Joshua Bloch
  * 
- * @version $Revision: 1.2 $, $Date: 2004/08/17 05:24:16 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/17 10:02:15 $
  * @author $Author: bob $
  * @module util
  */
 public class HashCodeGenerator {
 
 	private int	result	= 17;
-	
-	public void clear(){
+
+	public void clear() {
 		this.result = 17;
 	}
 
@@ -54,6 +54,16 @@ public class HashCodeGenerator {
 		addInt(value == null ? 0 : value.hashCode());
 	}
 
+	public void addByteArray(byte[] array) {
+		for (int i = 0; i < array.length; i++)
+			addInt(array[i]);
+	}
+
+	public void addShortArray(short[] array) {
+		for (int i = 0; i < array.length; i++)
+			addInt(array[i]);
+	}
+	
 	public void addIntArray(int[] array) {
 		for (int i = 0; i < array.length; i++)
 			addInt(array[i]);
@@ -84,8 +94,110 @@ public class HashCodeGenerator {
 			addObject(array[i]);
 	}
 
-	
-	public int getResult(){
+	public int getResult() {
 		return this.result;
+	}
+
+	public static boolean equalsArray(final Object[] array1, final Object[] array2) {
+		if (array1 == array2)
+			return true;
+		if (array1.length == array2.length) {
+			for (int i = 0; i < array1.length; i++) {
+				if (!array1[i].equals(array2[i]))
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean equalsArray(final byte[] array1, final byte[] array2) {
+		if (array1 == array2)
+			return true;
+		if (array1.length == array2.length) {
+			for (int i = 0; i < array1.length; i++) {
+				if (array1[i] != array2[i])
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean equalsArray(final short[] array1, final short[] array2) {
+		if (array1 == array2)
+			return true;
+		if (array1.length == array2.length) {
+			for (int i = 0; i < array1.length; i++) {
+				if (array1[i] != array2[i])
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean equalsArray(final int[] array1, final int[] array2) {
+		if (array1 == array2)
+			return true;
+		if (array1.length == array2.length) {
+			for (int i = 0; i < array1.length; i++) {
+				if (array1[i] != array2[i])
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean equalsArray(final long[] array1, final long[] array2) {
+		if (array1 == array2)
+			return true;
+		if (array1.length == array2.length) {
+			for (int i = 0; i < array1.length; i++) {
+				if (array1[i] != array2[i])
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean equalsArray(final float[] array1, final float[] array2, float tolerance) {
+		if (array1 == array2)
+			return true;
+		if (array1.length == array2.length) {
+			for (int i = 0; i < array1.length; i++) {
+				if (Math.abs(array1[i] - array2[i]) > tolerance)
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean equalsArray(final double[] array1, final double[] array2, double tolerance) {
+		if (array1 == array2)
+			return true;
+		if (array1.length == array2.length) {
+			for (int i = 0; i < array1.length; i++) {
+				if (Math.abs(array1[i] - array2[i]) > tolerance)
+					return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public boolean equals(Object obj) {
+		throw new UnsupportedOperationException();
+	}
+
+	public int hashCode() {
+		throw new UnsupportedOperationException();
+	}
+
+	public String toString() {
+		return "HashCodeGenerator result:" + this.result;
 	}
 }
