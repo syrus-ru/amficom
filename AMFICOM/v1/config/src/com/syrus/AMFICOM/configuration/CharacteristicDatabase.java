@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.44 2004/11/30 09:54:08 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.45 2004/12/03 18:32:48 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2004/11/30 09:54:08 $
- * @author $Author: bob $
+ * @version $Revision: 1.45 $, $Date: 2004/12/03 18:32:48 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -129,8 +129,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			preparedStatement.setString( ++i, characteristic.getName());
 			preparedStatement.setString( ++i, characteristic.getDescription());
 			preparedStatement.setString( ++i, characteristic.getValue());
-			preparedStatement.setInt( ++i, characteristic.isEditable()?'1':'0');
-			preparedStatement.setInt( ++i, characteristic.isVisible()?'1':'0');
+			preparedStatement.setInt( ++i, characteristic.isEditable()? 1:0);
+			preparedStatement.setInt( ++i, characteristic.isVisible()? 1:0);
 			preparedStatement.setInt( ++i, sort);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, characteristic.getCharacterizedId());
 		} catch (SQLException sqle) {
@@ -295,7 +295,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
                 else {
                     buff.append(CLOSE_BRACKET);
                     buff.append(SQL_OR);
-                    buff.append(COLUMN_ID);
+                    buff.append(COLUMN_CHARACTERIZED_ID);
                     buff.append(SQL_IN);
                     buff.append(OPEN_BRACKET);
                 }                   
@@ -387,8 +387,6 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
         }
         Characterized characterizedStorableObject = (Characterized) storableObject;
         List characteristics = characterizedStorableObject.getCharacteristics();
-        if (characteristics == null || characteristics.isEmpty())
-            return;
         List characteristicIds = new ArrayList(characteristics.size());
         for (Iterator it = characteristics.iterator(); it.hasNext();) {
             Characteristic characteristic = (Characteristic) it.next();
@@ -400,7 +398,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
         StringBuffer buff = new StringBuffer();
         buff.append(COLUMN_CHARACTERIZED_ID);
         buff.append(EQUALS);
-        buff.append(storableObject.getId());
+        buff.append(APOSTOPHE);
+		buff.append(storableObject.getId());
+        buff.append(APOSTOPHE);
         sql = retrieveQuery(buff.toString());
         Statement statement = null;
         ResultSet resultSet = null;
@@ -410,8 +410,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
             Log.debugMessage("CharacteristicDatabase.updateCharacteristics | Trying: " + sql, Log.DEBUGLEVEL09);
             resultSet = statement.executeQuery(sql.toString());
             while (resultSet.next()) {
-                Characteristic characteristic = null;
-                updateEntityFromResultSet(characteristic, resultSet);
+                Characteristic characteristic = (Characteristic)updateEntityFromResultSet(null, resultSet);
                 databaseIdCharacteristics.put(characteristic.getId(), characteristic);
             }
             
@@ -423,8 +422,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
                     
                 }
     		}
+            
             //  insert or update
-            super.checkAndUpdateEntities(characteristics, true);            
+            super.checkAndUpdateEntities(characteristics, true);
         } catch (SQLException sqle) {
             String mesg = "CharacteristicDatabase.updateCharacteristics | SQLException: " + sqle.getMessage();
             throw new UpdateObjectException(mesg, sqle);
@@ -440,10 +440,112 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
         }
         
 	}
-	
-	public void updateCharacteristics(List storableObjects) throws UpdateObjectException {
-		/**
-		 * TODO: implement method
-		 */
-	}
+
+    
+    public void updateCharacteristics(List storableObjects) throws UpdateObjectException {
+        
+    	// Construction of Map <StorableObjectIdentifier> <List <CharacteristicIdentifier>> 
+        Map storableObjectIdCharIdsMap = new HashMap();
+        List characteristics = new LinkedList();
+        for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+			StorableObject storableObject = (StorableObject) it.next();
+            if (!(storableObject instanceof Characterized)) {
+                String mesg = "CharacteristicDatabase.updateCharacteristics(List) | Storable object " + 
+                        storableObject.getClass().getName() + " is not a type of Characterized";
+                throw new UpdateObjectException(mesg);                
+            }
+            for (Iterator iter = ((Characterized) storableObject).getCharacteristics().iterator(); iter.hasNext();) {
+				Characteristic characteristic = (Characteristic) iter.next();
+                characteristics.add(characteristic);
+                List charIdList = (List) storableObjectIdCharIdsMap.get(storableObject.getId());
+                if (charIdList == null) {
+                    charIdList = new LinkedList();
+                    storableObjectIdCharIdsMap.put(storableObject.getId(), charIdList);
+                }
+                charIdList.add(characteristic.getId());				
+			}
+		}
+        // creating sql query. This query gets all Characteristics whose characterized_id contained in storableObjects 
+        StringBuffer buff = new StringBuffer();
+        buff.append(COLUMN_CHARACTERIZED_ID);
+        buff.append(SQL_IN);
+        buff.append(OPEN_BRACKET);
+        int i = 0;
+        for (Iterator it = storableObjects.iterator(); it.hasNext();i++) {
+			StorableObject storableObject = (StorableObject) it.next();
+            buff.append(APOSTOPHE);
+            buff.append(storableObject.getId());
+            buff.append(APOSTOPHE);
+            if (it.hasNext()){
+                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+                    buff.append(COMMA);
+                else {
+                    buff.append(CLOSE_BRACKET);
+                    buff.append(SQL_OR);
+                    buff.append(COLUMN_CHARACTERIZED_ID);
+                    buff.append(SQL_IN);
+                    buff.append(OPEN_BRACKET);
+                }                   
+            }
+		}
+        buff.append(CLOSE_BRACKET);        
+        String sql = retrieveQuery(buff.toString());
+        Map dbStorableObjectIdCharIdsMap = new HashMap();
+        List listIdToDelete = new LinkedList();
+        List listIdToInsert = new LinkedList();
+        List listIdToUpdate = new LinkedList();
+        List listToInsert = new LinkedList();
+        List listToUpdate = new LinkedList();        
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = DatabaseConnection.getConnection();
+        try {
+            statement = connection.createStatement();
+            Log.debugMessage("CharacteristicDatabase.updateCharacteristics(List) | Trying: " + sql, Log.DEBUGLEVEL09);
+            resultSet = statement.executeQuery(sql.toString());
+            //  Construction of Map <CharacterizedIdentifier> <List <CharacteristicIdentifier>>              
+            while (resultSet.next()) {
+                Characteristic characteristic = (Characteristic)updateEntityFromResultSet(null, resultSet);
+                List charIdList = (List) dbStorableObjectIdCharIdsMap.get(characteristic.getCharacterizedId());
+                if (charIdList == null) {
+                    charIdList = new LinkedList();
+                    dbStorableObjectIdCharIdsMap.put(characteristic.getCharacterizedId(), charIdList);
+                }
+                charIdList.add(characteristic.getId());
+            }
+            //  delete. Iterating through DBMap and matching it with DBMap InMap  
+            for (Iterator it = dbStorableObjectIdCharIdsMap.keySet().iterator(); it.hasNext();) {
+				Identifier storableObljectId = (Identifier) it.next();
+				List dbCharIds = (List) dbStorableObjectIdCharIdsMap.get(storableObljectId);
+                List charIds = (List) storableObjectIdCharIdsMap.get(storableObljectId);
+                if (charIds == null || charIds.isEmpty()) {
+                	for (Iterator iter = dbCharIds.iterator(); iter.hasNext();) {
+						Identifier dbCharacteristicId = (Identifier) iter.next();
+                        listIdToDelete.add(dbCharacteristicId);                        
+					}
+                    continue;
+                }
+                for (Iterator iter = dbCharIds.iterator(); iter.hasNext();) {
+					Identifier dbCharacteristicId = (Identifier) iter.next();
+                    if (!charIds.contains(dbCharacteristicId))
+                        listIdToDelete.add(dbCharacteristicId);
+				}                
+			}
+            super.delete(listIdToDelete);
+            // insert and update. Iterating through InMap and matching it with DBMap 
+            super.checkAndUpdateEntities(characteristics, true);
+        } catch (SQLException sqle) {
+            String mesg = "CharacteristicDatabase.updateCharacteristics | SQLException: " + sqle.getMessage();
+            throw new UpdateObjectException(mesg, sqle);        
+        } catch (IllegalDataException ide) {
+            String mesg = "CharacteristicDatabase.updateCharacteristics | IllegalDataException: " + ide.getMessage();
+            throw new UpdateObjectException(mesg, ide);
+        } catch (RetrieveObjectException roe) {
+            String mesg = "CharacteristicDatabase.updateCharacteristics | RetrieveObjectException: " + roe.getMessage();
+            throw new UpdateObjectException(mesg, roe);        
+        } catch (VersionCollisionException vce) {
+            String mesg = "CharacteristicDatabase.updateCharacteristics | VersionCollisionException: " + vce.getMessage();
+            throw new UpdateObjectException(mesg, vce);
+        }
+    }
 }
