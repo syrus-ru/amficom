@@ -425,8 +425,8 @@ public class DetailedEventsFrame extends JInternalFrame
 		difference           = ((int)(difference*1000.))/1000.; // точность 0.001 дБ
 		meanDeviation        = ((int)(meanDeviation*1000.))/1000.;
 
-		ctModel.setValueAt(difference+" " + LangModelAnalyse.getString("dB"), 2, 1);
-		ctModel.setValueAt(meanDeviation+" " + LangModelAnalyse.getString("dB"), 3, 1);
+		ctModel.setValueAt(difference + " " + LangModelAnalyse.getString("dB"), 2, 1);
+		ctModel.setValueAt(meanDeviation + " " + LangModelAnalyse.getString("dB"), 3, 1);
 
 		// сравнение с эталонным событием
 		if(etalonEvent != null) // из равенства следует, что эталонное событие найдено
@@ -439,9 +439,9 @@ public class DetailedEventsFrame extends JInternalFrame
 			widthDiff       = ((int)(widthDiff*1.))/1.;	// точность 1 м
 			locationDiff    = ((int)(locationDiff*1.))/1.;
 
-			ctModel.setValueAt(lossDiff+" " + LangModelAnalyse.getString("dB"), 4, 1);
-			ctModel.setValueAt(String.valueOf(widthDiff)+" " + LangModelAnalyse.getString("m"), 5, 1);
-			ctModel.setValueAt(String.valueOf(locationDiff)+" " + LangModelAnalyse.getString("m"), 6, 1);
+			ctModel.setValueAt(lossDiff + " " + LangModelAnalyse.getString("dB"), 4, 1);
+			ctModel.setValueAt(String.valueOf(widthDiff) + " " + LangModelAnalyse.getString("m"), 5, 1);
+			ctModel.setValueAt(String.valueOf(locationDiff) + " " + LangModelAnalyse.getString("m"), 6, 1);
 		}
 		else
 		{
@@ -480,12 +480,12 @@ public class DetailedEventsFrame extends JInternalFrame
 				tModel.setValueAt(linear, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
-						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + ' '
+						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.data[0]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.data[1]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_3(ev.data[3]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_3(ev.data[4]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
+						MathRef.round_2(ev.data[0]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.data[1]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_3(ev.data[3]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_3(ev.data[4]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
 					1);
 				break;
 			case TraceEvent.INITIATE:
@@ -493,13 +493,13 @@ public class DetailedEventsFrame extends JInternalFrame
 				tModel.setValueAt(initiate, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
-						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + ' '
+						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.data[0]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.data[1]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						Math.round(ev.data[2] * res_km * 1000d) + ' '
+						MathRef.round_2(ev.data[0]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.data[1]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						Math.round(ev.data[2] * res_km * 1000d) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT),
-						Math.round(ev.data[3] * res_km * 1000d) + ' '
+						Math.round(ev.data[3] * res_km * 1000d) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT)}, 1);
 				break;
 			case TraceEvent.NON_IDENTIFIED:
@@ -507,11 +507,11 @@ public class DetailedEventsFrame extends JInternalFrame
 				tModel.setValueAt(noid, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
-						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + ' '
+						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_3(ev.data[0]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_3(ev.data[1]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_3(ev.data[2]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
+						MathRef.round_3(ev.data[0]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_3(ev.data[1]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_3(ev.data[2]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
 					1);
 				break;
 			case TraceEvent.CONNECTOR:
@@ -519,11 +519,11 @@ public class DetailedEventsFrame extends JInternalFrame
 				tModel.setValueAt(connector, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
-						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + ' '
+						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.data[0]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.data[1]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.data[2]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)
+						MathRef.round_2(ev.data[0]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.data[1]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.data[2]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)
 				// String.valueOf(MathRef.round_3(ev.data[3])) // removed by saa
 					}, 1);
 				break;
@@ -532,10 +532,10 @@ public class DetailedEventsFrame extends JInternalFrame
 				tModel.setValueAt(loss, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
-						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + ' '
+						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.data[0]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.data[1]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
+						MathRef.round_2(ev.data[0]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.data[1]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
 					1);
 				break;
 			case TraceEvent.GAIN:
@@ -543,10 +543,10 @@ public class DetailedEventsFrame extends JInternalFrame
 				tModel.setValueAt(gain, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
-						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + ' '
+						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.data[0]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.data[1]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
+						MathRef.round_2(ev.data[0]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.data[1]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)},
 					1);
 				break;
 			case TraceEvent.TERMINATE:
@@ -554,10 +554,10 @@ public class DetailedEventsFrame extends JInternalFrame
 				tModel.setValueAt(terminate, 0, 0);
 				tModel.updateColumn(new Object[] {
 						String.valueOf(num + 1),
-						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + ' '
+						MathRef.round_3((ev.last_point - ev.first_point) * res_km) + " "
 								+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
-						MathRef.round_2(ev.data[0]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
-						MathRef.round_2(ev.data[1]) + ' ' + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)
+						MathRef.round_2(ev.data[0]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
+						MathRef.round_2(ev.data[1]) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB)
 				// String.valueOf(MathRef.round_3(ev.data[2])) // removed by saa
 					}, 1);
 				break;
