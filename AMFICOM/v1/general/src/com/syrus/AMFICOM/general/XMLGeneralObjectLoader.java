@@ -1,5 +1,5 @@
 /*
- * $Id: XMLGeneralObjectLoader.java,v 1.10 2005/02/15 07:11:32 bob Exp $
+ * $Id: XMLGeneralObjectLoader.java,v 1.11 2005/02/18 18:03:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/15 07:11:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/02/18 18:03:01 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
@@ -176,23 +176,15 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 		return Collections.EMPTY_SET;
 	}
 
-	public void delete(Identifier id) throws CommunicationException, DatabaseException {
-		try {
-			this.generalXML.delete(id);
-		} catch (IllegalDataException e) {
-			throw new CommunicationException("XMLGeneralObjectLoader.delete | caught " + e.getMessage(), e);
-		}
+	public void delete(Identifier id) throws IllegalDataException {
+		this.generalXML.delete(id);
 		this.generalXML.flush();
 	}
 
-	public void delete(Collection collection) throws CommunicationException, DatabaseException {
-		try {
-			for (Iterator it = collection.iterator(); it.hasNext();) {
-				Identifier id = (Identifier) it.next();
-				this.generalXML.delete(id);
-			}
-		} catch (IllegalDataException e) {
-			throw new CommunicationException("XMLGeneralObjectLoader.delete | caught " + e.getMessage(), e);
+	public void delete(Collection collection) throws IllegalDataException {
+		for (Iterator it = collection.iterator(); it.hasNext();) {
+			Identifier id = (Identifier) it.next();
+			this.generalXML.delete(id);
 		}
 		this.generalXML.flush();
 	}

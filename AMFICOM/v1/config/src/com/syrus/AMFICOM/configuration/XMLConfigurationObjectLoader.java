@@ -1,5 +1,5 @@
 /*
- * $Id: XMLConfigurationObjectLoader.java,v 1.6 2005/02/15 07:11:39 bob Exp $
+ * $Id: XMLConfigurationObjectLoader.java,v 1.7 2005/02/18 18:03:55 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/15 07:11:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/02/18 18:03:55 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -44,23 +44,15 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML = new StorableObjectXML(driver);
 	}
 
-	public void delete(Identifier id) throws CommunicationException, DatabaseException {
-		try {
-			this.configurationXML.delete(id);
-		} catch (IllegalDataException e) {
-			throw new CommunicationException("XMLConfigurationObjectLoader.delete | caught " + e.getMessage(), e);
-		}
+	public void delete(Identifier id) throws IllegalDataException {
+		this.configurationXML.delete(id);
 		this.configurationXML.flush();
 	}
 
-	public void delete(Collection ids) throws CommunicationException, DatabaseException {
-		try {
-			for (Iterator it = ids.iterator(); it.hasNext();) {
-				Identifier id = (Identifier) it.next();
-				this.configurationXML.delete(id);
-			}
-		} catch (IllegalDataException e) {
-			throw new CommunicationException("XMLConfigurationObjectLoader.delete | caught " + e.getMessage(), e);
+	public void delete(Collection ids) throws IllegalDataException {
+		for (Iterator it = ids.iterator(); it.hasNext();) {
+			Identifier id = (Identifier) it.next();
+			this.configurationXML.delete(id);
 		}
 		this.configurationXML.flush();
 	}

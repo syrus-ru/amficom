@@ -1,5 +1,5 @@
 /*
- * $Id: XMLAdministrationObjectLoader.java,v 1.7 2005/02/15 08:59:33 bob Exp $
+ * $Id: XMLAdministrationObjectLoader.java,v 1.8 2005/02/18 18:03:22 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/15 08:59:33 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/02/18 18:03:22 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class XMLAdministrationObjectLoader implements AdministrationObjectLoader {
@@ -45,26 +45,17 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		this.administrationXML = new StorableObjectXML(driver);
 	}
 
-	public void delete(Identifier id) throws CommunicationException, DatabaseException {
-		try {
-			this.administrationXML.delete(id);
-		} catch (IllegalDataException e) {
-			throw new CommunicationException("XMLAdministrationObjectLoader.delete | caught " + e.getMessage(), e);
-		}
+	public void delete(Identifier id) throws IllegalDataException {
+		this.administrationXML.delete(id);
 		this.administrationXML.flush();
 	}
 
-	public void delete(Collection ids) throws CommunicationException, DatabaseException {
-		try {
-			for (Iterator it = ids.iterator(); it.hasNext();) {
-				Identifier id = (Identifier) it.next();
-				this.administrationXML.delete(id);
-			}
-		} catch (IllegalDataException e) {
-			throw new CommunicationException("XMLAdministrationObjectLoader.delete | caught " + e.getMessage(), e);
+	public void delete(Collection ids) throws IllegalDataException {
+		for (Iterator it = ids.iterator(); it.hasNext();) {
+			Identifier id = (Identifier) it.next();
+			this.administrationXML.delete(id);
 		}
 		this.administrationXML.flush();
-
 	}
 
 	public Domain loadDomain(Identifier id) throws DatabaseException, CommunicationException {

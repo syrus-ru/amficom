@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMeasurementObjectLoader.java,v 1.7 2005/02/15 07:11:49 bob Exp $
+ * $Id: XMLMeasurementObjectLoader.java,v 1.8 2005/02/18 18:04:28 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/15 07:11:49 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/02/18 18:04:28 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
@@ -43,23 +43,15 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 		this.measurementXML = new StorableObjectXML(driver);
 	}
 
-	public void delete(Identifier id) throws CommunicationException, DatabaseException {
-		try {
-			this.measurementXML.delete(id);
-		} catch (IllegalDataException e) {
-			throw new CommunicationException("XMLMeasurementObjectLoader.delete | caught " + e.getMessage(), e);
-		}
+	public void delete(Identifier id) throws IllegalDataException {
+		this.measurementXML.delete(id);
 		this.measurementXML.flush();
 	}
 
-	public void delete(Collection ids) throws CommunicationException, DatabaseException {
-		try {
-			for (Iterator it = ids.iterator(); it.hasNext();) {
-				Identifier id = (Identifier) it.next();
-				this.measurementXML.delete(id);
-			}
-		} catch (IllegalDataException e) {
-			throw new CommunicationException("XMLMeasurementObjectLoader.delete | caught " + e.getMessage(), e);
+	public void delete(Collection ids) throws IllegalDataException {
+		for (Iterator it = ids.iterator(); it.hasNext();) {
+			Identifier id = (Identifier) it.next();
+			this.measurementXML.delete(id);
 		}
 		this.measurementXML.flush();
 	}
