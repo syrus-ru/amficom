@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.5 2004/09/27 12:24:10 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.6 2004/09/28 08:02:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,21 +11,21 @@ package com.syrus.AMFICOM.measurement;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/09/27 12:24:10 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/28 08:02:28 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader {
-
-	public DatabaseMeasurementObjectLoader() {
-	}
 
 	public ParameterType loadParameterType(Identifier id) throws DatabaseException {
 		return new ParameterType(id);
@@ -246,4 +246,422 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
         }
         return list;
 	}
+	
+	public void saveParameterType(ParameterType parameterType, boolean force) throws DatabaseException, CommunicationException {
+		ParameterTypeDatabase database = (ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase();
+		try {
+			database.update(parameterType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("DatabaseMeasumentObjectLoader.saveParameterType | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveParameterType | UpdateObjectException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseMeasumentObjectLoader.saveParameterType | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveParameterType | Illegal Storable Object: " + e.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("DatabaseMeasumentObjectLoader.saveParameterType | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveParameterType | VersionCollisionException: " + e.getMessage());
+		}
+	}
+
+		public void saveMeasurementType(MeasurementType measurementType, boolean force) throws DatabaseException, CommunicationException{
+			MeasurementTypeDatabase database = (MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase();
+			try {
+				database.update(measurementType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementType | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurementType | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementType | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurementType | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementType | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurementType | VersionCollisionException: " + e.getMessage());
+			}
+	}
+
+		public void saveAnalysisType(AnalysisType analysisType, boolean force) throws DatabaseException, CommunicationException{
+			AnalysisTypeDatabase database = (AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase();
+			try {
+				database.update(analysisType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysisType | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysisType | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysisType | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysisType | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysisType | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysisType | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws DatabaseException, CommunicationException{
+			EvaluationTypeDatabase database = (EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase();
+			try {
+				database.update(evaluationType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluationType | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveEvaluationType | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluationType | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveEvaluationType | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluationType | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveEvaluationType | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveSet(Set set, boolean force) throws DatabaseException, CommunicationException{
+			SetDatabase database = (SetDatabase)MeasurementDatabaseContext.getSetDatabase();
+			try {
+				database.update(set, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveSet | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveSet | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveSet | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveSet | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveSet | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveSet | VersionCollisionException: " + e.getMessage());
+			}
+		}
+		
+		public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws DatabaseException, CommunicationException{
+			MeasurementSetupDatabase database = (MeasurementSetupDatabase)MeasurementDatabaseContext.getMeasurementSetupDatabase();
+			try {
+				database.update(measurementSetup, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementSetup | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurementSetup | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementSetup | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurementSetup | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementSetup | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurementSetup | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveModeling(Modeling modeling, boolean force) throws DatabaseException, CommunicationException{
+			ModelingDatabase database = (ModelingDatabase)MeasurementDatabaseContext.getModelingDatabase();
+			try {
+				database.update(modeling, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveModeling | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveModeling | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveModeling | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveModeling | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveModeling | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveModeling | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveMeasurement(Measurement measurement, boolean force) throws DatabaseException, CommunicationException{
+			MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
+			try {
+				database.update(measurement, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurement | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurement | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurement | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurement | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurement | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurement | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveAnalysis(Analysis analysis, boolean force) throws DatabaseException, CommunicationException{
+			AnalysisDatabase database = (AnalysisDatabase)MeasurementDatabaseContext.getAnalysisDatabase();
+			try {
+				database.update(analysis, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysis | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysis | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysis | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysis | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysis | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysis | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveEvaluation(Evaluation evaluation, boolean force) throws DatabaseException, CommunicationException{
+			EvaluationDatabase database = (EvaluationDatabase)MeasurementDatabaseContext.getEvaluationDatabase();
+			try {
+				database.update(evaluation, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluation | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveEvaluation | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluation | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveEvaluation | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluation | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveEvaluation | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveTest(Test test, boolean force) throws DatabaseException, CommunicationException{
+			TestDatabase database = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
+			try {
+				database.update(test, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveTest | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTest | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveTest | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTest | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveTest | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTest | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveResult(Result result, boolean force) throws DatabaseException, CommunicationException{
+			ResultDatabase database = (ResultDatabase)MeasurementDatabaseContext.getResultDatabase();
+			try {
+				database.update(result, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveResult | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveResult | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveResult | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveResult | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveResult | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveResult | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws DatabaseException, CommunicationException{
+			TemporalPatternDatabase database = (TemporalPatternDatabase)MeasurementDatabaseContext.getTemporalPatternDatabase();
+			try {
+				database.update(temporalPattern, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveTemporalPattern | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTemporalPattern | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveTemporalPattern | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTemporalPattern | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveTemporalPattern | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTemporalPattern | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveParameterTypes(List list, boolean force) throws DatabaseException, CommunicationException{
+			ParameterTypeDatabase database = (ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase();
+			try {
+				database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveParameterTypes | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveParameterTypes | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveParameterTypes | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveParameterTypes | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveParameterTypes | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveParameterTypes | VersionCollisionException: " + e.getMessage());
+			}
+			
+		}
+
+		public void saveMeasurementTypes(List list, boolean force) throws DatabaseException, CommunicationException{
+			MeasurementTypeDatabase database = (MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase();
+			try {
+				database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementTypes | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurementTypes | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementTypes | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurementTypes | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementTypes | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurementTypes | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveAnalysisTypes(List list, boolean force) throws DatabaseException, CommunicationException{
+			AnalysisTypeDatabase database = (AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase();
+			try {
+				database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysisTypes | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysisTypes | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysisTypes | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysisTypes | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysisTypes | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysisTypes | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveEvaluationTypes(List list, boolean force) throws DatabaseException, CommunicationException{
+			EvaluationTypeDatabase database = (EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase();
+			try {
+				database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluationType | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveEvaluationType | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluationType | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveEvaluationType | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluationType | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveEvaluationType | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveSets(List list, boolean force) throws DatabaseException, CommunicationException{
+			SetDatabase database = (SetDatabase)MeasurementDatabaseContext.getSetDatabase();
+			try {
+				database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveSet | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveSet | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveSet | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveSet | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveSet | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveSet | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveModelings(List list, boolean force) throws DatabaseException, CommunicationException{
+			ModelingDatabase database = (ModelingDatabase)MeasurementDatabaseContext.getModelingDatabase();
+			try {
+				database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveModeling | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveModeling | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveModeling | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveModeling | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveModeling | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveModeling | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveMeasurementSetups(List list, boolean force) throws DatabaseException, CommunicationException{
+			MeasurementSetupDatabase database = (MeasurementSetupDatabase)MeasurementDatabaseContext.getMeasurementSetupDatabase();
+			try {
+				database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementSetup | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurementSetup | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementSetup | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurementSetup | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementSetup | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurementSetup | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveMeasurements(List list, boolean force) throws DatabaseException, CommunicationException{
+			MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
+			try {
+				database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurement | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurement | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurement | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurement | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurement | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveMeasurement | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveAnalyses(List list, boolean force) throws DatabaseException, CommunicationException{
+			AnalysisDatabase database = (AnalysisDatabase)MeasurementDatabaseContext.getAnalysisDatabase();
+			try {
+				database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysis | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysis | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysis | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysis | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysis | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysis | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveEvaluations(List list, boolean force) throws DatabaseException, CommunicationException{
+			EvaluationDatabase database = (EvaluationDatabase)MeasurementDatabaseContext.getEvaluationDatabase();
+			try {
+				database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluation | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveEvaluation | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluation | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveEvaluation | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluation | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveEvaluation | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveTests(List list, boolean force) throws DatabaseException, CommunicationException{
+			TestDatabase database = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
+			try {
+				database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveTest | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTest | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveTest | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTest | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveTest | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTest | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveResults(List list, boolean force) throws DatabaseException, CommunicationException{
+			ResultDatabase database = (ResultDatabase)MeasurementDatabaseContext.getResultDatabase();
+			try {
+				database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveResult | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveResult | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveResult | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveResult | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveResult | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveResult | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
+		public void saveTemporalPatterns(List list, boolean force) throws DatabaseException, CommunicationException{
+			TemporalPatternDatabase database = (TemporalPatternDatabase)MeasurementDatabaseContext.getTemporalPatternDatabase();
+			try {
+				database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			} catch (UpdateObjectException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveTemporalPattern | UpdateObjectException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTemporalPattern | UpdateObjectException: " + e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveTemporalPattern | Illegal Storable Object: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTemporalPattern | Illegal Storable Object: " + e.getMessage());
+			} catch (VersionCollisionException e) {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.saveTemporalPattern | VersionCollisionException: " + e.getMessage());
+	            throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTemporalPattern | VersionCollisionException: " + e.getMessage());
+			}
+		}
+
 }
