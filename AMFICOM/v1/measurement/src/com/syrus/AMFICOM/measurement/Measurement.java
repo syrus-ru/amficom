@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.49 2005/02/10 14:54:43 bob Exp $
+ * $Id: Measurement.java,v 1.50 2005/02/11 11:55:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/02/10 14:54:43 $
+ * @version $Revision: 1.50 $, $Date: 2005/02/11 11:55:22 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -124,7 +124,7 @@ public class Measurement extends Action {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.measurementDatabase != null)
-				this.measurementDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.measurementDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -187,7 +187,7 @@ public class Measurement extends Action {
 		super.modified = new Date(System.currentTimeMillis());
 		super.modifierId = (Identifier) modifierId1.clone();
 		try {
-			this.measurementDatabase.update(this, UPDATE_STATUS, null);
+			this.measurementDatabase.update(this, modifierId1, UPDATE_STATUS);
 		}
 		catch (IllegalDataException e) {
 			throw new UpdateObjectException(e.getMessage(), e);

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.12 2005/02/10 14:54:43 bob Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.13 2005/02/11 11:55:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,34 +8,31 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -43,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/10 14:54:43 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/11 11:55:22 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -398,29 +395,29 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj)
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 //		ModelingType modelingType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(storableObject, true);		
+				super.checkAndUpdateEntity(storableObject, modifierId, true);		
 				return;
 		}
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg)
+	public void update(List storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);		
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
 				return;
 		}
 	}
@@ -494,52 +491,4 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 		return list;	
 	}
 
-	private List retrieveButIdByArgumentSet(List ids, List argumentSetIds) throws RetrieveObjectException, IllegalDataException {
-		if (argumentSetIds != null && !argumentSetIds.isEmpty()) {
-			String condition = new String();
-			StringBuffer argumentIds = new StringBuffer();
-
-			int i = 1;
-			for (Iterator it = argumentSetIds.iterator(); it.hasNext(); i++) {
-				argumentIds.append(DatabaseIdentifier.toSQLString((Identifier) it.next()));
-				if (it.hasNext()) {
-					if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-						argumentIds.append(COMMA);
-					else {
-						argumentIds.append(CLOSE_BRACKET);
-						argumentIds.append(SQL_OR);
-						argumentIds.append(SetWrapper.LINK_COLUMN_SET_ID);
-						argumentIds.append(SQL_IN);
-						argumentIds.append(OPEN_BRACKET);
-					}
-				}
-			}
-
-			condition = ModelingTypeWrapper.PARAMETER_TYPE_ID + SQL_IN
-						+ OPEN_BRACKET
-						+ SQL_SELECT + StorableObjectWrapper.COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
-						+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN 
-							+ OPEN_BRACKET
-							+ argumentIds
-							+ CLOSE_BRACKET
-					+ CLOSE_BRACKET
-					+ SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + ModelingTypeWrapper.MODE_IN + APOSTOPHE;
-			return retrieveButIds(ids, condition);
-		}
-		return Collections.EMPTY_LIST;
-	}
-
-	public List retrieveByCondition(List ids, StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-		List list;
-		if (condition instanceof LinkedIdsCondition) {
-			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-			list = this.retrieveButIdByArgumentSet(ids, linkedIdsCondition.getLinkedIds());
-		}
-		else {
-			Log.errorMessage("ModelingTypeDatabase.retrieveByCondition | Unknown condition class: " + condition);
-			list = this.retrieveButIds(ids);
-		}
-		return list;
-	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.78 2005/02/10 14:54:43 bob Exp $
+ * $Id: Test.java,v 1.79 2005/02/11 11:55:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/02/10 14:54:43 $
+ * @version $Revision: 1.79 $, $Date: 2005/02/11 11:55:22 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -57,7 +57,13 @@ public class Test extends StorableObject {
 	protected static final int		RETRIEVE_LAST_MEASUREMENT	= 2;
 	protected static final int		RETRIEVE_NUMBER_OF_MEASUREMENTS	= 3;
 	protected static final int		RETRIEVE_NUMBER_OF_RESULTS	= 4;
+	/**
+	 * @deprecated
+	 */
 	protected static final int		UPDATE_MODIFIED			= 2;
+	/**
+	 * @deprecated
+	 */
 	protected static final int		UPDATE_STATUS			= 1;
 
 	private int temporalType;
@@ -103,7 +109,7 @@ public class Test extends StorableObject {
 		super.modified = new Date(System.currentTimeMillis());
 		super.modifierId = (Identifier) measurementCreatorId.clone();
 		try {
-			this.testDatabase.update(this, UPDATE_MODIFIED, null);
+			this.testDatabase.update(this, measurementCreatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -263,7 +269,7 @@ public class Test extends StorableObject {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.testDatabase != null)
-				this.testDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.testDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -454,7 +460,7 @@ public class Test extends StorableObject {
 		super.modifierId = (Identifier) modifierId1.clone();
 		try {
 			this.testDatabase = MeasurementDatabaseContext.testDatabase;
-			this.testDatabase.update(this, UPDATE_STATUS, null);
+			this.testDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (IllegalDataException e) {
 			throw new UpdateObjectException(e.getMessage(), e);

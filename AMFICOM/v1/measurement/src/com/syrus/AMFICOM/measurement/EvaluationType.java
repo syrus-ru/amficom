@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.45 2005/02/10 14:54:43 bob Exp $
+ * $Id: EvaluationType.java,v 1.46 2005/02/11 11:55:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/02/10 14:54:43 $
+ * @version $Revision: 1.46 $, $Date: 2005/02/11 11:55:22 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -181,7 +181,7 @@ public class EvaluationType extends ActionType {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.evaluationTypeDatabase != null)
-				this.evaluationTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.evaluationTypeDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);

@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.65 2005/02/10 14:54:43 bob Exp $
+ * $Id: TestDatabase.java,v 1.66 2005/02/11 11:55:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -50,7 +50,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/02/10 14:54:43 $
+ * @version $Revision: 1.66 $, $Date: 2005/02/11 11:55:22 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -618,47 +618,47 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object arg) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		Test test = this.fromStorableObject(storableObject);
 		switch (updateKind) {
-			case Test.UPDATE_STATUS:
-				this.updateStatus(test);
-				break;
-			case Test.UPDATE_MODIFIED:
-				this.updateModified(test);
-				break;
+//			case Test.UPDATE_STATUS:
+//				this.updateStatus(test);
+//				break;
+//			case Test.UPDATE_MODIFIED:
+//				this.updateModified(test);
+//				break;
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(storableObject, true);		
+				super.checkAndUpdateEntity(storableObject, modifierId, true);		
 				return;
 		}
 	}
 	
 	
-	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
-			case Test.UPDATE_STATUS:
-				for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-					Test test = (Test) it.next();
-					this.updateStatus(test);
-				}				
-				break;
-			case Test.UPDATE_MODIFIED:
-				for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-					Test test = (Test) it.next();
-					this.updateModified(test);
-				}
-				break;
+//			case Test.UPDATE_STATUS:
+//				for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+//					Test test = (Test) it.next();
+//					this.updateStatus(test);
+//				}				
+//				break;
+//			case Test.UPDATE_MODIFIED:
+//				for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+//					Test test = (Test) it.next();
+//					this.updateModified(test);
+//				}
+//				break;
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);		
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
 				return;
 		}
 

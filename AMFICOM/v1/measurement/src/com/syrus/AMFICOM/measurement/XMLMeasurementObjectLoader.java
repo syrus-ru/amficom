@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMeasurementObjectLoader.java,v 1.3 2005/02/02 08:16:17 bob Exp $
+ * $Id: XMLMeasurementObjectLoader.java,v 1.4 2005/02/11 11:55:22 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/02 08:16:17 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/11 11:55:22 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -237,160 +238,160 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 		return Collections.EMPTY_SET;
 	}
 
-	public void saveAnalyses(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveAnalyses(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveAnalysis(Analysis analysis, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveAnalysis(Analysis analysis, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(analysis);
+		this.saveStorableObject(analysis, accessIdentity);
 		this.measurementXML.flush();
 	}
 
-	public void saveAnalysisType(AnalysisType analysisType, boolean force) throws VersionCollisionException,
+	public void saveAnalysisType(AnalysisType analysisType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(analysisType);
+		this.saveStorableObject(analysisType, accessIdentity);
 		this.measurementXML.flush();
 	}
 
-	public void saveAnalysisTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveAnalysisTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 
 	}
 
-	public void saveEvaluation(Evaluation evaluation, boolean force) throws VersionCollisionException,
+	public void saveEvaluation(Evaluation evaluation, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(evaluation);
+		this.saveStorableObject(evaluation, accessIdentity);
 		this.measurementXML.flush();
 	}
 
-	public void saveEvaluations(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveEvaluations(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws VersionCollisionException,
+	public void saveEvaluationType(EvaluationType evaluationType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(evaluationType);
+		this.saveStorableObject(evaluationType, accessIdentity);
 		this.measurementXML.flush();
 
 	}
 
-	public void saveEvaluationTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveEvaluationTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 
 	}
 
-	public void saveMeasurement(Measurement measurement, boolean force) throws VersionCollisionException,
+	public void saveMeasurement(Measurement measurement, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(measurement);
+		this.saveStorableObject(measurement, accessIdentity);
 		this.measurementXML.flush();
 	}
 
-	public void saveMeasurements(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMeasurements(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 
 	}
 
-	public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force)
+	public void saveMeasurementSetup(MeasurementSetup measurementSetup, AccessIdentity accessIdentity, boolean force)
 			throws VersionCollisionException, DatabaseException, CommunicationException {
-		this.saveStorableObject(measurementSetup);
+		this.saveStorableObject(measurementSetup, accessIdentity);
 		this.measurementXML.flush();
 
 	}
 
-	public void saveMeasurementSetups(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMeasurementSetups(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 
 	}
 
-	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws VersionCollisionException,
+	public void saveMeasurementType(MeasurementType measurementType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(measurementType);
+		this.saveStorableObject(measurementType, accessIdentity);
 		this.measurementXML.flush();
 	}
 
-	public void saveMeasurementTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMeasurementTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 
 	}
 
-	public void saveModeling(Modeling modeling, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveModeling(Modeling modeling, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(modeling);
+		this.saveStorableObject(modeling, accessIdentity);
 		this.measurementXML.flush();
 	}
 
-	public void saveModelings(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveModelings(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 
 	}
 
-	public void saveModelingType(ModelingType modelingType, boolean force) throws VersionCollisionException,
+	public void saveModelingType(ModelingType modelingType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(modelingType);
+		this.saveStorableObject(modelingType, accessIdentity);
 		this.measurementXML.flush();
 	}
 
-	public void saveModelingTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveModelingTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 
 	}
 
-	public void saveResult(Result result, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveResult(Result result, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(result);
+		this.saveStorableObject(result, accessIdentity);
 		this.measurementXML.flush();
 
 	}
 
-	public void saveResults(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveResults(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveSet(Set set, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveSet(Set set, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(set);
+		this.saveStorableObject(set, accessIdentity);
 		this.measurementXML.flush();
 	}
 
-	public void saveSets(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveSets(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 
 	}
 
-	public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws VersionCollisionException,
+	public void saveTemporalPattern(TemporalPattern temporalPattern, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(temporalPattern);
+		this.saveStorableObject(temporalPattern, accessIdentity);
 		this.measurementXML.flush();
 
 	}
 
-	public void saveTemporalPatterns(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveTemporalPatterns(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
-	public void saveTest(Test test, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveTest(Test test, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(test);
+		this.saveStorableObject(test, accessIdentity);
 		this.measurementXML.flush();
 
 	}
 
-	public void saveTests(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveTests(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, accessIdentity);
 	}
 
 	private StorableObject loadStorableObject(Identifier id) throws CommunicationException {
@@ -430,10 +431,10 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 		return list;
 	}
 
-	private void saveStorableObject(StorableObject storableObject) throws CommunicationException {
+	private void saveStorableObject(StorableObject storableObject, AccessIdentity accessIdentity) throws CommunicationException {
 		Identifier id = storableObject.getId();
 		try {
-			this.measurementXML.updateObject(storableObject);
+			this.measurementXML.updateObject(storableObject, accessIdentity.getUserId());
 		} catch (UpdateObjectException e) {
 			throw new CommunicationException("XMLMeasurementObjectLoader.save"
 					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
@@ -447,10 +448,10 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 
 	}
 
-	private void saveStorableObjects(List storableObjects) throws CommunicationException {
+	private void saveStorableObjects(List storableObjects, AccessIdentity accessIdentity) throws CommunicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
-			this.saveStorableObject(storableObject);
+			this.saveStorableObject(storableObject, accessIdentity);
 		}
 		this.measurementXML.flush();
 	}

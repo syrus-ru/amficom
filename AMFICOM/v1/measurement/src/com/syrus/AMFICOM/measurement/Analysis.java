@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.42 2005/02/10 14:54:42 bob Exp $
+ * $Id: Analysis.java,v 1.43 2005/02/11 11:55:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/02/10 14:54:42 $
+ * @version $Revision: 1.43 $, $Date: 2005/02/11 11:55:22 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -99,7 +99,7 @@ public class Analysis extends Action {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.analysisDatabase != null)
-				this.analysisDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.analysisDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);

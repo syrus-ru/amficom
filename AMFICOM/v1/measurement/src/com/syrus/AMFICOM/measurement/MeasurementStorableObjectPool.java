@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.64 2005/02/08 09:29:57 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.65 2005/02/11 11:55:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -19,6 +20,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -26,8 +28,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/02/08 09:29:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.65 $, $Date: 2005/02/11 11:55:22 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -308,75 +310,76 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	}
 
 	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
+		AccessIdentity accessIdentity = SessionContext.getAccessIdentity();
 		if (!list.isEmpty()) {
 			boolean alone = (list.size() == 1);			
 
 			switch (code) {
 				case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveMeasurementType((MeasurementType)list.get(0), force);
+						mObjectLoader.saveMeasurementType((MeasurementType)list.get(0), accessIdentity, force);
 					else 
-						mObjectLoader.saveMeasurementTypes(list, force);
+						mObjectLoader.saveMeasurementTypes(list, accessIdentity, force);
 					break;
 				case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveAnalysisType((AnalysisType)list.get(0), force);
+						mObjectLoader.saveAnalysisType((AnalysisType)list.get(0), accessIdentity, force);
 					else 
-						mObjectLoader.saveAnalysisTypes(list, force);
+						mObjectLoader.saveAnalysisTypes(list, accessIdentity, force);
 					break;
 				case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveEvaluationType((EvaluationType)list.get(0), force);
+						mObjectLoader.saveEvaluationType((EvaluationType)list.get(0), accessIdentity, force);
 					else 
-						mObjectLoader.saveEvaluationTypes(list, force);
+						mObjectLoader.saveEvaluationTypes(list, accessIdentity, force);
 					break;
 				case ObjectEntities.SET_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveSet((Set)list.get(0), force);
+						mObjectLoader.saveSet((Set)list.get(0), accessIdentity, force);
 					else 
-						mObjectLoader.saveSets(list, force);
+						mObjectLoader.saveSets(list, accessIdentity, force);
 					break;
 				case ObjectEntities.MS_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveMeasurementSetup((MeasurementSetup)list.get(0), force);
+						mObjectLoader.saveMeasurementSetup((MeasurementSetup)list.get(0), accessIdentity, force);
 					else 
-						mObjectLoader.saveMeasurementSetups(list, force);
+						mObjectLoader.saveMeasurementSetups(list, accessIdentity, force);
 					break;
 				case ObjectEntities.ANALYSIS_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveAnalysis((Analysis)list.get(0), force);
+						mObjectLoader.saveAnalysis((Analysis)list.get(0), accessIdentity, force);
 					else 
-						mObjectLoader.saveAnalyses(list, force);
+						mObjectLoader.saveAnalyses(list, accessIdentity, force);
 					break;
 				case ObjectEntities.EVALUATION_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveEvaluation((Evaluation)list.get(0), force);
+						mObjectLoader.saveEvaluation((Evaluation)list.get(0), accessIdentity, force);
 					else 
-						mObjectLoader.saveEvaluations(list, force);
+						mObjectLoader.saveEvaluations(list, accessIdentity, force);
 					break;
 				case ObjectEntities.MEASUREMENT_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveMeasurement((Measurement)list.get(0), force);
+						mObjectLoader.saveMeasurement((Measurement)list.get(0), accessIdentity, force);
 					else 
-						mObjectLoader.saveMeasurements(list, force);
+						mObjectLoader.saveMeasurements(list, accessIdentity, force);
 					break;
 				case ObjectEntities.TEST_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveTest((Test)list.get(0), force);
+						mObjectLoader.saveTest((Test)list.get(0), accessIdentity, force);
 					else 
-						mObjectLoader.saveTests(list, force);
+						mObjectLoader.saveTests(list, accessIdentity, force);
 					break;
 				case ObjectEntities.RESULT_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveResult((Result)list.get(0), force);
+						mObjectLoader.saveResult((Result)list.get(0), accessIdentity, force);
 					else 
-						mObjectLoader.saveResults(list, force);
+						mObjectLoader.saveResults(list, accessIdentity, force);
 					break;
 				case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
 					if (alone)
-						mObjectLoader.saveTemporalPattern((TemporalPattern)list.get(0), force);
+						mObjectLoader.saveTemporalPattern((TemporalPattern)list.get(0), accessIdentity, force);
 					else 
-						mObjectLoader.saveTemporalPatterns(list, force);
+						mObjectLoader.saveTemporalPatterns(list, accessIdentity, force);
 					break;
 				default:
 					Log.errorMessage("MeasurementStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(code) + "', entity code: " + code);

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.64 2005/02/10 14:54:43 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.65 2005/02/11 11:55:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/02/10 14:54:43 $
+ * @version $Revision: 1.65 $, $Date: 2005/02/11 11:55:22 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -93,51 +93,51 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 			switch (updateKind) {
-				case MeasurementSetup.UPDATE_ATTACH_ME:
-					this.createMEAttachment(measurementSetup, (Identifier) obj);
-					this.setModified(measurementSetup);
-					break;
-				case MeasurementSetup.UPDATE_DETACH_ME:
-					this.deleteMEAttachment(measurementSetup, (Identifier) obj);
-					this.setModified(measurementSetup);
-					break;
+//				case MeasurementSetup.UPDATE_ATTACH_ME:
+//					this.createMEAttachment(measurementSetup, (Identifier) obj);
+//					this.setModified(measurementSetup);
+//					break;
+//				case MeasurementSetup.UPDATE_DETACH_ME:
+//					this.deleteMEAttachment(measurementSetup, (Identifier) obj);
+//					this.setModified(measurementSetup);
+//					break;
 				case UPDATE_CHECK:
-					super.checkAndUpdateEntity(storableObject, false);
+					super.checkAndUpdateEntity(storableObject, modifierId, false);
 					break;
 				case UPDATE_FORCE:					
 				default:
-					super.checkAndUpdateEntity(storableObject, true);					
+					super.checkAndUpdateEntity(storableObject, modifierId, true);					
 					return;
 			}		
 	}	
 	
 	
-	public void update(List storableObjects, int updateKind, Object obj) throws IllegalDataException,
+	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
-			case MeasurementSetup.UPDATE_ATTACH_ME:
-				for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
-					MeasurementSetup measurementSetup = (MeasurementSetup) iter.next();
-					this.createMEAttachment(measurementSetup, (Identifier) obj);
-					this.setModified(measurementSetup);					
-				}
-				break;
-			case MeasurementSetup.UPDATE_DETACH_ME:
-				for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
-					MeasurementSetup measurementSetup = (MeasurementSetup) iter.next();
-					this.deleteMEAttachment(measurementSetup, (Identifier) obj);
-					this.setModified(measurementSetup);
-				}
-				break;
+//			case MeasurementSetup.UPDATE_ATTACH_ME:
+//				for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
+//					MeasurementSetup measurementSetup = (MeasurementSetup) iter.next();
+//					this.createMEAttachment(measurementSetup, (Identifier) obj);
+//					this.setModified(measurementSetup);					
+//				}
+//				break;
+//			case MeasurementSetup.UPDATE_DETACH_ME:
+//				for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
+//					MeasurementSetup measurementSetup = (MeasurementSetup) iter.next();
+//					this.deleteMEAttachment(measurementSetup, (Identifier) obj);
+//					this.setModified(measurementSetup);
+//				}
+//				break;
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);					
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);					
 				return;
 		}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.41 2005/02/10 14:54:43 bob Exp $
+ * $Id: Result.java,v 1.42 2005/02/11 11:55:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/02/10 14:54:43 $
+ * @version $Revision: 1.42 $, $Date: 2005/02/11 11:55:22 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -133,7 +133,7 @@ public class Result extends StorableObject {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.resultDatabase != null)
-				this.resultDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.resultDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);

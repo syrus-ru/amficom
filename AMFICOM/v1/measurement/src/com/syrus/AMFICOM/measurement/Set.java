@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.43 2005/02/10 14:54:43 bob Exp $
+ * $Id: Set.java,v 1.44 2005/02/11 11:55:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/02/10 14:54:43 $
+ * @version $Revision: 1.44 $, $Date: 2005/02/11 11:55:22 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -44,7 +44,13 @@ public class Set extends StorableObject {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3977303222014457399L;
+	/**
+	 * @deprecated
+	 */
 	protected static final int UPDATE_ATTACH_ME = 1;
+	/**
+	 * @deprecated
+	 */
 	protected static final int UPDATE_DETACH_ME = 2;
 
 	private int sort;
@@ -149,7 +155,7 @@ public class Set extends StorableObject {
 	public void insert() throws CreateObjectException {
 		try {
 			if (this.setDatabase != null)
-				this.setDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+				this.setDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae.getMessage(), ae);
@@ -165,8 +171,9 @@ public class Set extends StorableObject {
 		if (this.isAttachedToMonitoredElement(monitoredElementId))
       return;
 		super.modifierId = (Identifier) modifierId1.clone();
+		this.monitoredElementIds.add(monitoredElementId);
 		try {
-			this.setDatabase.update(this, UPDATE_ATTACH_ME, monitoredElementId);
+			this.setDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (IllegalDataException e) {
 			throw new UpdateObjectException("MeasurementSetup.attachToMonitoredElement | Cannot attach measurement setup '" + this.id + "' to monitored element '" + monitoredElementId + "' -- " + e.getMessage(), e);
@@ -182,8 +189,9 @@ public class Set extends StorableObject {
     if (!this.isAttachedToMonitoredElement(monitoredElementId))
       return;
 		super.modifierId = (Identifier) modifierId1.clone();
+		this.monitoredElementIds.remove(monitoredElementId);
 		try {
-	    this.setDatabase.update(this, UPDATE_DETACH_ME, monitoredElementId);
+	    this.setDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);
 		}
 		catch (IllegalDataException e) {
 			throw new UpdateObjectException("MeasurementSetup.detachFromMonitoredElement | Cannot dettach measurement setup '" + this.id + "' from monitored element '" + monitoredElementId + "' -- " + e.getMessage(), e);
