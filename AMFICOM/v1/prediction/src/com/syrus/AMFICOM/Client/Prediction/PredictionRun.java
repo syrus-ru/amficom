@@ -21,9 +21,9 @@ public class PredictionRun
 		{
 			e.printStackTrace();
 		}
-		LangModelPrediction.initialize();
-		LangModelAnalyse.initialize();
-		com.syrus.AMFICOM.Client.General.Lang.LangModelReport.initialize();
+//		LangModelPrediction.initialize();
+//		LangModelAnalyse.initialize();
+//		com.syrus.AMFICOM.Client.General.Lang.LangModelReport.initialize();
 
 		new Prediction(new DefaultPredictionApplicationModelFactory());
 	}

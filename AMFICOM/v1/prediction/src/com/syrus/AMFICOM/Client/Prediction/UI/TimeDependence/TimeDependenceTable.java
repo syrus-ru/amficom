@@ -65,7 +65,7 @@ public class TimeDependenceTable extends ATableFrame implements OperationListene
 
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 		getImage("images/general.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		setTitle(LangModelPrediction.String("TimedTableTitle"));
+		setTitle(LangModelPrediction.getString("TimedTableTitle"));
 
 //jTable.getColumnModel().getColumn(0).setPreferredWidth(120);
 
@@ -75,7 +75,7 @@ public class TimeDependenceTable extends ATableFrame implements OperationListene
 
 	public String getReportTitle()
 	{
-		return LangModelPrediction.String("TimedTableTitle");
+		return LangModelPrediction.getString("TimedTableTitle");
 	}
 
 	public TableModel getTableModel()

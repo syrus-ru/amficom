@@ -353,7 +353,7 @@ class TimedToolBar extends ToolBarPanel
 		attButton.setMinimumSize(btn_size);
 		attButton.setPreferredSize(btn_size);
 //		attButton.setFocusable(false);
-		attButton.setToolTipText(LangModelPrediction.String("attenuation"));
+		attButton.setToolTipText(LangModelPrediction.getString("attenuation"));
 		attButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/attenuation.gif")));
 		attButton.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -366,7 +366,7 @@ class TimedToolBar extends ToolBarPanel
 		lossButton.setMinimumSize(btn_size);
 		lossButton.setPreferredSize(btn_size);
 //		attButton.setFocusable(false);
-		lossButton.setToolTipText(LangModelPrediction.String("loss"));
+		lossButton.setToolTipText(LangModelPrediction.getString("loss"));
 		lossButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/loss.gif")));
 		lossButton.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -379,7 +379,7 @@ class TimedToolBar extends ToolBarPanel
 		plevelButton.setMinimumSize(btn_size);
 		plevelButton.setPreferredSize(btn_size);
 //		amplButton.setFocusable(false);
-		plevelButton.setToolTipText(LangModelPrediction.String("power_level"));
+		plevelButton.setToolTipText(LangModelPrediction.getString("power_level"));
 		plevelButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/entrance.gif")));
 		plevelButton.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -392,7 +392,7 @@ class TimedToolBar extends ToolBarPanel
 		amplButton.setMinimumSize(btn_size);
 		amplButton.setPreferredSize(btn_size);
 //		reflButton.setFocusable(false);
-		amplButton.setToolTipText(LangModelPrediction.String("amplitude"));
+		amplButton.setToolTipText(LangModelPrediction.getString("amplitude"));
 		amplButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/amplitude.gif")));
 		amplButton.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -406,7 +406,7 @@ class TimedToolBar extends ToolBarPanel
 		reflButton.setMinimumSize(btn_size);
 		reflButton.setPreferredSize(btn_size);
 //		reflButton.setFocusable(false);
-		reflButton.setToolTipText(LangModelPrediction.String("reflectance"));
+		reflButton.setToolTipText(LangModelPrediction.getString("reflectance"));
 		reflButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reflect.gif")));
 		reflButton.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -420,7 +420,7 @@ class TimedToolBar extends ToolBarPanel
 		pointsButton.setMinimumSize(btn_size);
 		pointsButton.setPreferredSize(btn_size);
 //		attButton.setFocusable(false);
-		pointsButton.setToolTipText(LangModelPrediction.String("show_points"));
+		pointsButton.setToolTipText(LangModelPrediction.getString("show_points"));
 		pointsButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/points.gif")));
 		pointsButton.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -433,7 +433,7 @@ class TimedToolBar extends ToolBarPanel
 		linesButton.setMinimumSize(btn_size);
 		linesButton.setPreferredSize(btn_size);
 //		amplButton.setFocusable(false);
-		linesButton.setToolTipText(LangModelPrediction.String("show_lines"));
+		linesButton.setToolTipText(LangModelPrediction.getString("show_lines"));
 		linesButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/lines.gif")));
 		linesButton.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -446,7 +446,7 @@ class TimedToolBar extends ToolBarPanel
 		approximationButton.setMinimumSize(btn_size);
 		approximationButton.setPreferredSize(btn_size);
 //		reflButton.setFocusable(false);
-		approximationButton.setToolTipText(LangModelPrediction.String("show_approximation"));
+		approximationButton.setToolTipText(LangModelPrediction.getString("show_approximation"));
 		approximationButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/approximation.gif")));
 		approximationButton.addActionListener(new java.awt.event.ActionListener()
 		{

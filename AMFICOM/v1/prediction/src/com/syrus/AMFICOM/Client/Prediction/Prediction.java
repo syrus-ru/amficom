@@ -40,9 +40,9 @@ public class Prediction
 		{
 			e.printStackTrace();
 		}
-		com.syrus.AMFICOM.Client.General.Lang.LangModelReport.initialize();
-		LangModelPrediction.initialize();
-		LangModelAnalyse.initialize();
+//		com.syrus.AMFICOM.Client.General.Lang.LangModelReport.initialize();
+//		LangModelPrediction.initialize();
+//		LangModelAnalyse.initialize();
 
 		new Prediction(new DefaultPredictionApplicationModelFactory());
 	}

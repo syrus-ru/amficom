@@ -70,7 +70,7 @@ public class TimeDependenceFrame extends ScalableFrame implements OperationListe
 
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 															 getImage("images/general.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		 setTitle(LangModelPrediction.String("TimedGraphTitle"));
+		 setTitle(LangModelPrediction.getString("TimedGraphTitle"));
 
 		showLinesButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/show_stat_lines.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		showLinesButton.setToolTipText("Связать точки линиями");

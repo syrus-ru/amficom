@@ -75,42 +75,42 @@ public class PredictionMenuBar extends JMenuBar
 		StatisticsMenuBar_this_actionAdapter actionAdapter =
 				new StatisticsMenuBar_this_actionAdapter(this);
 
-		menuSession.setText(LangModelPrediction.Text("menuSession"));
+		menuSession.setText(LangModelPrediction.getString("menuSession"));
 		menuSession.setName("menuSession");
-		menuSessionOpen.setText(LangModelPrediction.Text("menuSessionOpen"));
+		menuSessionOpen.setText(LangModelPrediction.getString("menuSessionOpen"));
 		menuSessionOpen.setName("menuSessionOpen");
 		menuSessionOpen.addActionListener(actionAdapter);
-		menuSessionClose.setText(LangModelPrediction.Text("menuSessionClose"));
+		menuSessionClose.setText(LangModelPrediction.getString("menuSessionClose"));
 		menuSessionClose.setName("menuSessionClose");
 		menuSessionClose.addActionListener(actionAdapter);
-		menuSessionOptions.setText(LangModelPrediction.Text("menuSessionOptions"));
+		menuSessionOptions.setText(LangModelPrediction.getString("menuSessionOptions"));
 		menuSessionOptions.setName("menuSessionOptions");
 		menuSessionOptions.addActionListener(actionAdapter);
-		menuSessionConnection.setText(LangModelPrediction.Text("menuSessionConnection"));
+		menuSessionConnection.setText(LangModelPrediction.getString("menuSessionConnection"));
 		menuSessionConnection.setName("menuSessionConnection");
 		menuSessionConnection.addActionListener(actionAdapter);
 		menuSessionChangePassword.setText(
-				LangModelPrediction.Text("menuSessionChangePassword"));
+				LangModelPrediction.getString("menuSessionChangePassword"));
 		menuSessionChangePassword.setName("menuSessionChangePassword");
 		menuSessionChangePassword.addActionListener(actionAdapter);
 
-		menuSessionDomain.setText(LangModelPrediction.Text("menuSessionDomain"));
+		menuSessionDomain.setText(LangModelPrediction.getString("menuSessionDomain"));
 		menuSessionDomain.setName("menuSessionDomain");
 		menuSessionDomain.addActionListener(actionAdapter);
-//		menuSessionSave.setText(LangModelPrediction.Text("menuSessionSave"));
+//		menuSessionSave.setText(LangModelPrediction.getString("menuSessionSave"));
 //		menuSessionSave.setName("menuSessionSave");
 //		menuSessionSave.addActionListener(actionAdapter);
-//		menuSessionUndo.setText(LangModelPrediction.Text("menuSessionUndo"));
+//		menuSessionUndo.setText(LangModelPrediction.getString("menuSessionUndo"));
 //		menuSessionUndo.setName("menuSessionUndo");
 //		menuSessionUndo.addActionListener(actionAdapter);
-		menuExit.setText(LangModelPrediction.Text("menuExit"));
+		menuExit.setText(LangModelPrediction.getString("menuExit"));
 		menuExit.setName("menuExit");
 		menuExit.addActionListener(actionAdapter);
 
-		menuView.setText(LangModelPrediction.Text("menuView"));
+		menuView.setText(LangModelPrediction.getString("menuView"));
 		menuView.setName("menuView");
 
-		menuViewDataLoad.setText(LangModelPrediction.Text("menuViewDataLoad"));
+		menuViewDataLoad.setText(LangModelPrediction.getString("menuViewDataLoad"));
 		menuViewDataLoad.setName("menuViewDataLoad");
 		menuViewDataLoad.addActionListener(actionAdapter);
 
@@ -124,11 +124,11 @@ public class PredictionMenuBar extends JMenuBar
 		menuTraceClose.setName("menuTraceClose");
 		menuTraceClose.addActionListener(actionAdapter);
 
-		menuViewCountPrediction.setText(LangModelPrediction.Text("menuViewCountPrediction"));
+		menuViewCountPrediction.setText(LangModelPrediction.getString("menuViewCountPrediction"));
 		menuViewCountPrediction.setName("menuViewCountPrediction");
 		menuViewCountPrediction.addActionListener(actionAdapter);
 
-		menuViewSavePrediction.setText(LangModelPrediction.Text("menuViewSavePrediction"));
+		menuViewSavePrediction.setText(LangModelPrediction.getString("menuViewSavePrediction"));
 		menuViewSavePrediction.setName("menuViewSavePrediction");
 		menuViewSavePrediction.addActionListener(actionAdapter);
 
@@ -139,33 +139,33 @@ public class PredictionMenuBar extends JMenuBar
 		menuReportCreate.addActionListener(actionAdapter);
 		menuReport.add(menuReportCreate);
 
-		menuHelp.setText(LangModelPrediction.Text("menuHelp"));
+		menuHelp.setText(LangModelPrediction.getString("menuHelp"));
 		menuHelp.setName("menuHelp");
-		menuHelpContents.setText(LangModelPrediction.Text("menuHelpContents"));
+		menuHelpContents.setText(LangModelPrediction.getString("menuHelpContents"));
 		menuHelpContents.setName("menuHelpContents");
 		menuHelpContents.addActionListener(actionAdapter);
-		menuHelpFind.setText(LangModelPrediction.Text("menuHelpFind"));
+		menuHelpFind.setText(LangModelPrediction.getString("menuHelpFind"));
 		menuHelpFind.setName("menuHelpFind");
 		menuHelpFind.addActionListener(actionAdapter);
-		menuHelpTips.setText(LangModelPrediction.Text("menuHelpTips"));
+		menuHelpTips.setText(LangModelPrediction.getString("menuHelpTips"));
 		menuHelpTips.setName("menuHelpTips");
 		menuHelpTips.addActionListener(actionAdapter);
-		menuHelpStart.setText(LangModelPrediction.Text("menuHelpStart"));
+		menuHelpStart.setText(LangModelPrediction.getString("menuHelpStart"));
 		menuHelpStart.setName("menuHelpStart");
 		menuHelpStart.addActionListener(actionAdapter);
-		menuHelpCourse.setText(LangModelPrediction.Text("menuHelpCourse"));
+		menuHelpCourse.setText(LangModelPrediction.getString("menuHelpCourse"));
 		menuHelpCourse.setName("menuHelpCourse");
 		menuHelpCourse.addActionListener(actionAdapter);
-		menuHelpHelp.setText(LangModelPrediction.Text("menuHelpHelp"));
+		menuHelpHelp.setText(LangModelPrediction.getString("menuHelpHelp"));
 		menuHelpHelp.setName("menuHelpHelp");
 		menuHelpHelp.addActionListener(actionAdapter);
-		menuHelpSupport.setText(LangModelPrediction.Text("menuHelpSupport"));
+		menuHelpSupport.setText(LangModelPrediction.getString("menuHelpSupport"));
 		menuHelpSupport.setName("menuHelpSupport");
 		menuHelpSupport.addActionListener(actionAdapter);
-		menuHelpLicense.setText(LangModelPrediction.Text("menuHelpLicense"));
+		menuHelpLicense.setText(LangModelPrediction.getString("menuHelpLicense"));
 		menuHelpLicense.setName("menuHelpLicense");
 		menuHelpLicense.addActionListener(actionAdapter);
-		menuHelpAbout.setText(LangModelPrediction.Text("menuHelpAbout"));
+		menuHelpAbout.setText(LangModelPrediction.getString("menuHelpAbout"));
 		menuHelpAbout.setName("menuHelpAbout");
 		menuHelpAbout.addActionListener(actionAdapter);
 

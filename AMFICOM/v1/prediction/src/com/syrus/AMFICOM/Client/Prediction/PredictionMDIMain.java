@@ -146,7 +146,7 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 	{
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 		setContentPane(mainPanel);
-		setTitle(LangModelPrediction.String("AppTitle"));
+		setTitle(LangModelPrediction.getString("AppTitle"));
 		addComponentListener(new StatisticsMDIMain_this_componentAdapter(this));
 		addWindowListener(new java.awt.event.WindowAdapter()
 		{
@@ -258,10 +258,10 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		statusBar.setWidth("user", 100);
 		statusBar.setWidth("time", 50);
 
-		statusBar.setText("status", LangModel.String("statusReady"));
-		statusBar.setText("server", LangModel.String("statusNoConnection"));
-		statusBar.setText("session", LangModel.String("statusNoSession"));
-		statusBar.setText("user", LangModel.String("statusNoUser"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
+		statusBar.setText("server", LangModel.getString("statusNoConnection"));
+		statusBar.setText("session", LangModel.getString("statusNoSession"));
+		statusBar.setText("user", LangModel.getString("statusNoUser"));
 		statusBar.setText("time", " ");
 		statusBar.organize();
 
@@ -505,7 +505,7 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 					aContext.setDataSourceInterface(aContext.getApplicationModel().getDataSource(aContext.getSessionInterface()));
 					DataSourceInterface dataSource = aContext.getDataSourceInterface();
 					setSessionOpened();
-					statusBar.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
 					statusBar.setText("user", aContext.getSessionInterface().getUser());
 				}
@@ -519,9 +519,9 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 
 					setSessionClosed();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
-					statusBar.setText("session", LangModel.String("statusNoSession"));
-					statusBar.setText("user", LangModel.String("statusNoUser"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
+					statusBar.setText("session", LangModel.getString("statusNoSession"));
+					statusBar.setText("user", LangModel.getString("statusNoUser"));
 				}
 			}
 			if(cce.CONNECTION_OPENED)
@@ -531,7 +531,7 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 				{
 					setConnectionOpened();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
 				}
 			}
@@ -540,11 +540,11 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModel.String("statusError"));
-					statusBar.setText("server", LangModel.String("statusConnectionError"));
+					statusBar.setText("status", LangModel.getString("statusError"));
+					statusBar.setText("server", LangModel.getString("statusConnectionError"));
 
-					statusBar.setText("status", LangModel.String("statusDisconnected"));
-					statusBar.setText("server", LangModel.String("statusNoConnection"));
+					statusBar.setText("status", LangModel.getString("statusDisconnected"));
+					statusBar.setText("server", LangModel.getString("statusNoConnection"));
 
 					setConnectionClosed();
 				}
@@ -554,8 +554,8 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModel.String("statusError"));
-					statusBar.setText("server", LangModel.String("statusConnectionError"));
+					statusBar.setText("status", LangModel.getString("statusError"));
+					statusBar.setText("server", LangModel.getString("statusConnectionError"));
 
 					setConnectionFailed();
 				}

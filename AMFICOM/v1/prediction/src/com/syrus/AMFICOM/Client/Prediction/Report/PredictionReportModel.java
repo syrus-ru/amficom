@@ -37,7 +37,7 @@ public class PredictionReportModel extends ESAPEReportModel
 
 	public String getObjectsName()
 	{
-		return LangModelReport.String("label_repPredictionResults");
+		return LangModelReport.getString("label_repPredictionResults");
 	}
 
 	public String getLangForField(String field)
@@ -47,7 +47,7 @@ public class PredictionReportModel extends ESAPEReportModel
 		{
 			if (field.equals(ESAPEReportModel.pred_stat_data)
 				|| field.equals(ESAPEReportModel.pred_time_distrib))
-				strToReturn = LangModelPrediction.String(field);
+				strToReturn = LangModelPrediction.getString(field);
 			else
 				strToReturn = LangModelAnalyse.String(field);
 		}
