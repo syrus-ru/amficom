@@ -92,13 +92,37 @@ public class TestFilter extends ObjectResourceFilter {
 	}
 
 	public FilterPanel getColumnFilterPanel(String colId, String type) {
-		Object obj = this.columnFilterPanel.get(type);
-		FilterPanel panel = null;
-		if (obj instanceof FilterPanel)
-			panel = (FilterPanel) obj;
-		else if (obj instanceof Map)
-			panel = (FilterPanel) ((Map) obj).get(colId);
-		return panel;
+//		Object obj = this.columnFilterPanel.get(type);
+//		FilterPanel panel = null;
+//		if (obj instanceof FilterPanel)
+//			panel = (FilterPanel) obj;
+//		else if (obj instanceof Map)
+//			panel = (FilterPanel) ((Map) obj).get(colId);
+//		return panel;
+		if(colId == null)
+			return null;
+			if(type.equals("numeric"))
+				return new GeneralEquationFilterPanel();
+			if(type.equals("time"))
+				return new GeneralTimeFilterPanel();
+			if(type.equals("string"))
+				return new GeneralStringFilterPanel();
+			if(type.equals("range"))
+				return new GeneralRangeFilterPanel();
+			if(type.equals("list") && colId.equals("kis"))
+				return new GeneralTreeFilterPanel(new KISTree());
+			if(type.equals("list") && colId.equals("mone"))
+				return new GeneralTreeFilterPanel(new MoneTree());
+			if(type.equals("list") && colId.equals("test_type"))
+				return new GeneralTreeFilterPanel(new TestTypeTree());
+			if(type.equals("list") && colId.equals("temp_type"))
+				return new GeneralTreeFilterPanel(new TempTypeTree());
+			if(type.equals("list") && colId.equals("status"))
+				return new GeneralTreeFilterPanel(new StatusTree());
+			if(type.equals("list") && colId.equals("alarm"))
+				return new GeneralTreeFilterPanel(new AlarmTree());
+		return null;
+
 	}
 
 	public boolean expression(FilterExpressionInterface exp, ObjectResource or) {
@@ -270,6 +294,9 @@ public class TestFilter extends ObjectResourceFilter {
 						FilterTreeNode down_mte = (FilterTreeNode) enum.nextElement();
 						int downMteStatus = Integer.parseInt(down_mte.getId());
 						int status = test.getTemporalType().value();
+						System.out.println("COLUMN_TEMPORAL_TYPE");
+						System.out.println("downMteStatus:"+downMteStatus);
+						System.out.println("status:"+status);
 						if ((downMteStatus == status) && (down_mte.state == 2))
 							result = true;
 					}

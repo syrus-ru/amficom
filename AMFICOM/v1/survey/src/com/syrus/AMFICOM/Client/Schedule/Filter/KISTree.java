@@ -25,11 +25,14 @@ public class KISTree extends FilterTree
 		this.aContext = aContext;
 		DataSourceInterface dsi = aContext.getDataSourceInterface();
 		ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-		DataSet dSet = new DataSet(Pool.getHash(KIS.typ));
-		dSet = filter.filter(dSet);
-		for(Enumeration en = dSet.elements(); en.hasMoreElements();)
+		//DataSet dSet = new DataSet(Pool.getHash(KIS.typ));
+		Map dSet = Pool.getHash(KIS.typ);
+		filter.filtrate(dSet);
+		//for(Enumeration en = dSet.elements(); en.hasMoreElements();)
+		for(Iterator it=dSet.keySet().iterator();it.hasNext();)
 		{
-			KIS kis = (KIS )en.nextElement();
+			//KIS kis = (KIS )en.nextElement();
+			KIS kis = (KIS)dSet.get(it.next());
 			FilterTreeNode kisnode = new FilterTreeNode(kis.getName(), kis.getId());
 			root.add(kisnode);
 			for(Enumeration enu = kis.access_ports.elements(); enu.hasMoreElements();)

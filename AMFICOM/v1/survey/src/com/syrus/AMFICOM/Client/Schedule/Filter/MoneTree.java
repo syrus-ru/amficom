@@ -23,15 +23,17 @@ public class MoneTree extends FilterTree
 		this.aContext = aContext;
 		DataSourceInterface dsi = aContext.getDataSourceInterface();
 		ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-		DataSet dSet = new DataSet(Pool.getHash(MonitoredElement.typ));
-		dSet = filter.filter(dSet);
-		for(Enumeration en = dSet.elements(); en.hasMoreElements();)
+		//DataSet dSet = new DataSet(Pool.getHash(MonitoredElement.typ));
+		Map dSet = Pool.getHash(MonitoredElement.typ);
+		filter.filtrate(dSet);
+		//for(Enumeration en = dSet.elements(); en.hasMoreElements();)
+		for(Iterator it=dSet.keySet().iterator();it.hasNext();)
 		{
-			MonitoredElement path = (MonitoredElement )en.nextElement();
-			root.add(new FilterTreeNode(path.getName(), path.getId()));
+			MonitoredElement path = (MonitoredElement )dSet.get(it.next());
+			this.root.add(new FilterTreeNode(path.getName(), path.getId()));
 		}
-		TreeModelClone myModel = new TreeModelClone(root);
-		tree = new JTree(myModel);
+		TreeModelClone myModel = new TreeModelClone(this.root);
+		this.tree = new JTree(myModel);
 	}
 }
 
