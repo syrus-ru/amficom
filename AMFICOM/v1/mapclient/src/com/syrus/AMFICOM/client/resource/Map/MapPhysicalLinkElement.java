@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.14 2004/09/27 07:39:57 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.15 2004/09/28 07:58:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2004/09/27 07:39:57 $
+ * @version $Revision: 1.15 $, $Date: 2004/09/28 07:58:37 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -502,24 +502,19 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	 */
 	public Point2D.Double getAnchor()
 	{
-		LinkedList vec = new LinkedList();
-		Point2D.Double pts[];
+		int count = 0;
+		Point2D.Double point = new Point2D.Double(0.0, 0.0);
 
 		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
 		{
 			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
-			vec.add(mnle.getAnchor());
+			Point2D.Double an = mnle.getAnchor();
+			point.x += an.x;
+			point.y += an.y;
+			count ++;
 		}
-
-		pts = (Point2D.Double[] )vec.toArray(new Point2D.Double[vec.size()]);
-		Point2D.Double point = new Point2D.Double(0.0, 0.0);
-		for(int i = 0; i < pts.length; i++)
-		{
-			point.x += pts[i].x;
-			point.y += pts[i].y;
-		}
-		point.x /= pts.length;
-		point.y /= pts.length;
+		point.x /= count;
+		point.y /= count;
 		
 		return point;
 	}

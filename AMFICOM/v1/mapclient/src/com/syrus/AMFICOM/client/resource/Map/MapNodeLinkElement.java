@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.12 2004/09/27 07:39:57 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.13 2004/09/28 07:58:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/09/27 07:39:57 $
+ * @version $Revision: 1.13 $, $Date: 2004/09/28 07:58:37 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -275,8 +275,13 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 
 	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
-		return visibleBounds.contains(getStartNode().getAnchor()) 
-			|| visibleBounds.contains(getEndNode().getAnchor());
+		return visibleBounds.intersectsLine(
+			getStartNode().getAnchor().x,
+			getStartNode().getAnchor().y,
+			getEndNode().getAnchor().x,
+			getEndNode().getAnchor().y);
+//		return visibleBounds.contains(getStartNode().getAnchor()) 
+//			|| visibleBounds.contains(getEndNode().getAnchor());
 	}
 
 	/**
@@ -427,6 +432,8 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 
 	}
 
+	private static Polygon searchPolygon = new Polygon(new int[6], new int[6], 6);
+
 	/**
 	 * точка находится на фрагменте, если она находится в рамках линий выделения
 	 */
@@ -434,8 +441,8 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	{
 		MapCoordinatesConverter converter = getMap().getConverter();
 
-		int[] xx = new int[6];
-		int[] yy = new int[6];
+		int[] xx = searchPolygon.xpoints;
+		int[] yy = searchPolygon.ypoints;
 
 		Point from = converter.convertMapToScreen(startNode.getAnchor());
 		Point to = converter.convertMapToScreen(endNode.getAnchor());
@@ -467,8 +474,8 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 			xx[5] = minX - mouseTolerancy; yy[5] = minY;
 		}
 
-		Polygon curPoly = new Polygon(xx, yy, 6);
-		if(curPoly.contains(currentMousePoint))
+		searchPolygon.invalidate();
+		if(searchPolygon.contains(currentMousePoint))
 		{
 			return true;
 		}

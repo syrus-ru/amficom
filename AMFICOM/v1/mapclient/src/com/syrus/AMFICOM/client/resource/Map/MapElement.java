@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.8 2004/09/27 07:39:57 krupenn Exp $
+ * $Id: MapElement.java,v 1.9 2004/09/28 07:58:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
+//import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -24,7 +25,7 @@ import java.awt.geom.Rectangle2D;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/09/27 07:39:57 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/28 07:58:36 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -120,5 +121,7 @@ public interface MapElement
 	String[][] getExportColumns();
 
 	void setColumn(String field, String value);
+	
+//	ObjectResourceController getPropertiesController();
 }
 

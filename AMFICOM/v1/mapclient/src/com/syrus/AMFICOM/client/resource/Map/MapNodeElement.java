@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElement.java,v 1.9 2004/09/27 07:39:57 krupenn Exp $
+ * $Id: MapNodeElement.java,v 1.10 2004/09/28 07:58:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/09/27 07:39:57 $
+ * @version $Revision: 1.10 $, $Date: 2004/09/28 07:58:36 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -74,9 +74,6 @@ public abstract class MapNodeElement extends StubResource
 	/** флаг выделения элемента */
 	protected boolean selected = false;
 
-	/** пиктограмма */
-//	protected Image icon;
-
 	protected String id = "";
 	protected String name = "";
 	protected String description = "";
@@ -94,11 +91,6 @@ public abstract class MapNodeElement extends StubResource
 	/** флаг наличия сигнала тревоги */
 	protected boolean alarmState = false;
 	
-	/** объекты, необходимые для отрисовки пиктограмм */
-//    private static final Component component = new Component() {};
-//    private static final MediaTracker tracker = new MediaTracker(component);
-//    private static int mediaTrackerID = 0;
-
 	/** флаг того, что элемент удален */
 	protected boolean removed = false;
 
@@ -151,11 +143,6 @@ public abstract class MapNodeElement extends StubResource
 		setBounds(new Rectangle(w, h));
 
 		MapPropertiesManager.setScaledImageSize(getImageId(), w, h);
-//		icon = getImage().getScaledInstance(
-//			w,
-//			h,
-//			Image.SCALE_SMOOTH);
-//		loadImage(icon);
 	}
 	
 	/**
@@ -180,13 +167,6 @@ public abstract class MapNodeElement extends StubResource
 	public Image getImage()
 	{
 		return MapPropertiesManager.getScaledImage(getImageId());
-//		ImageResource ir = ImageCatalogue.get(imageId);
-//		if(ir == null)
-//		{
-//			ImageIcon imageIcon = new ImageIcon(DEFAULT_IMAGE);
-//			return imageIcon.getImage();
-//		}
-//		return ir.getImage();
 	}
 
 	/**
@@ -196,14 +176,6 @@ public abstract class MapNodeElement extends StubResource
 	public void setImageId(String iconPath)
 	{
 		imageId = iconPath;
-
-//		int width = (int )Math.round(getBounds().getWidth());
-//		int height = (int )Math.round(getBounds().getHeight());
-//		icon = getImage().getScaledInstance(
-//			width,
-//			height,
-//			Image.SCALE_SMOOTH);
-//		loadImage(icon);
 	}
 
 	/**
@@ -342,6 +314,8 @@ public abstract class MapNodeElement extends StubResource
 		return alarmState;
 	}
 
+	private static Rectangle searchBounds = new Rectangle();
+
 	public boolean isMouseOnThisObject (Point currentMousePoint)
 	{
 		MapCoordinatesConverter converter = getMap().getConverter();
@@ -350,12 +324,12 @@ public abstract class MapNodeElement extends StubResource
 		int width = (int )getBounds().getWidth();
 		int height = (int )getBounds().getHeight();
 		Point p = converter.convertMapToScreen(getAnchor());
-		Rectangle imageBounds = new Rectangle( 
+		searchBounds.setBounds(
 				p.x - width / 2 , 
 				p.y - height / 2 , 
 				width, 
 				height);
-		if (imageBounds.contains(currentMousePoint))
+		if (searchBounds.contains(currentMousePoint))
 		{
 			return true;
 		}
@@ -484,43 +458,9 @@ public abstract class MapNodeElement extends StubResource
 		setName(mnes.name);
 		setDescription(mnes.description);
 		setImageId(mnes.imageId);
-//		icon = mnes.icon;
 		setAnchor(mnes.anchor);
 		optimizerAttribute = mnes.optimizerAttribute;
 		attributes = new HashMap(mnes.attributes);
 	}
-
-//	/**
-//	 * обеспечивает подгрузку пиктограммы для мгновенного ее отображения
-//	 */
-//    protected final void loadImage(Image image) 
-//	{
-//		synchronized(tracker) 
-//		{
-//            int id = getNextID();
-//
-//			tracker.addImage(image, id);
-//			try 
-//			{
-//				tracker.waitForID(id, 0);
-//			} 
-//			catch (InterruptedException e) 
-//			{
-//				System.out.println("INTERRUPTED while loading Image");
-//			}
-//			tracker.removeImage(image, id);
-//		}
-//    }
-//
-//	/**
-//	 * получить идентификатор для подгрузки пиктограммы
-//	 */
-//    private int getNextID() 
-//	{
-//        synchronized(tracker) 
-//		{
-//            return ++mediaTrackerID;
-//        }
-//    }
 
 }

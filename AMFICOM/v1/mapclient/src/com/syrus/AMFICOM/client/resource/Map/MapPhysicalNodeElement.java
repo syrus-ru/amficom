@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElement.java,v 1.11 2004/09/27 07:39:57 krupenn Exp $
+ * $Id: MapPhysicalNodeElement.java,v 1.12 2004/09/28 07:58:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/09/27 07:39:57 $
+ * @version $Revision: 1.12 $, $Date: 2004/09/28 07:58:37 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -73,8 +73,6 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		MapPropertiesManager.setOriginalImage(CLOSED_NODE, new ImageIcon(CLOSED_NODE_IMAGE).getImage());
 	}
 
-//	protected Image originalImage;
-
 	protected static String[][] exportColumns = null;
 
 	/**
@@ -87,7 +85,6 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 
 	public MapPhysicalNodeElement()
 	{
-//		setImage(CLOSED_NODE_IMAGE);
 		setImageId(CLOSED_NODE);
 		attributes = new HashMap();
 
@@ -115,7 +112,6 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		this.name = id;
 		setAnchor(anchor);
 		this.mapId = map.getId();
-//		setImage(CLOSED_NODE_IMAGE);
 		setImageId(CLOSED_NODE);
 		this.physicalLinkId = physicalLinkId;
 		attributes = new HashMap();
@@ -254,10 +250,8 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	{
 		if(active)
 			setImageId(CLOSED_NODE);
-//			setImage(CLOSED_NODE_IMAGE);
 		else
 			setImageId(OPEN_NODE);
-//			setImage(OPEN_NODE_IMAGE);
 		setScaleCoefficient(this.scaleCoefficient);
 		this.active = active;
 	}
@@ -277,60 +271,6 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		this.physicalLinkId = pId;
 	}
 
-//	public Image getImage()
-//	{
-//		return originalImage;
-//	}
-	
-	/**
-	 * установить идентификатор изображения, по которому определяется 
-	 * пиктограмма
-	 */
-//	public void setImage(String iconPath)
-//	{
-//		imageId = iconPath;
-//
-//		int width = (int )Math.round(getBounds().getWidth());
-//		int height = (int )Math.round(getBounds().getHeight());
-//		ImageIcon imageIcon = new ImageIcon(iconPath);
-//		originalImage = imageIcon.getImage();
-//		
-//		icon = originalImage.getScaledInstance(
-//			width,
-//			height,
-//			Image.SCALE_SMOOTH);
-//		loadImage(icon);
-//	}
-/*
-	public void paint (Graphics g)
-	{
-		MapCoordinatesConverter converter = getMap().getConverter();
-		
-		Point p = converter.convertMapToScreen(getAnchor());
-
-		Graphics2D pg = (Graphics2D )g;
-		pg.setStroke(new BasicStroke(3));
-
-		int width = getBounds().width;
-		int height = getBounds().height;
-		
-		pg.drawImage(
-				icon,
-				p.x - width / 2,
-				p.y - height / 2,
-				null);
-
-		if (isSelected())
-		{
-			pg.setColor( MapPropertiesManager.getSelectionColor());
-			pg.drawRect( 
-					p.x - width / 2,
-					p.y - height / 2,
-					width,
-					height);
-		}
-	}
-*/
 	public MapElementState getState()
 	{
 		return new MapPhysicalNodeElementState(this);
@@ -391,7 +331,7 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 			anchor.y = Double.parseDouble(value);
 		else
 		if(field.equals(COLUMN_ACTIVE))
-			setActive(Boolean.getBoolean(value));
+			setActive(Boolean.valueOf(value).booleanValue());
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException

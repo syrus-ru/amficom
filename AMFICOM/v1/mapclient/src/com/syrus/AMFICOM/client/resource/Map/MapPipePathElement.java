@@ -215,24 +215,19 @@ public class MapPipePathElement extends MapLinkElement
 	 */
 	public Point2D.Double getAnchor()
 	{
-		LinkedList vec = new LinkedList();
-		Point2D.Double pts[];
+		int count = 0;
+		Point2D.Double point = new Point2D.Double(0.0, 0.0);
 
 		for(Iterator it = getLinks().iterator(); it.hasNext();)
 		{
 			MapPhysicalLinkElement mle = (MapPhysicalLinkElement )it.next();
-			vec.add(mle.getAnchor());
+			Point2D.Double an = mle.getAnchor();
+			point.x += an.x;
+			point.y += an.y;
+			count ++;
 		}
-
-		pts = (Point2D.Double[] )vec.toArray(new Point2D.Double[vec.size()]);
-		Point2D.Double point = new Point2D.Double(0.0, 0.0);
-		for(int i = 0; i < pts.length; i++)
-		{
-			point.x += pts[i].x;
-			point.y += pts[i].y;
-		}
-		point.x /= pts.length;
-		point.y /= pts.length;
+		point.x /= count;
+		point.y /= count;
 		
 		return point;
 	}

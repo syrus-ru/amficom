@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElement.java,v 1.7 2004/09/27 07:39:57 krupenn Exp $
+ * $Id: MapSiteNodeElement.java,v 1.8 2004/09/28 07:58:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/09/27 07:39:57 $
+ * @version $Revision: 1.8 $, $Date: 2004/09/28 07:58:37 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -376,6 +376,8 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 	public void setMapProtoId(String mapProtoId)
 	{
 		this.mapProtoId = mapProtoId;
+		MapNodeProtoElement proto = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, mapProtoId);
+		setImageId(proto.getImageId());
 	}
 
 
