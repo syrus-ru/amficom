@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.44 2005/03/21 11:29:22 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.45 2005/03/21 12:13:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/03/21 11:29:22 $
+ * @version $Revision: 1.45 $, $Date: 2005/03/21 12:13:38 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -114,7 +114,6 @@ public abstract class StorableObjectPool {
 	}
 
 	protected void cleanChangedStorableObjectImpl(final Short entityCode) {
-
 		short code = entityCode.shortValue();
 		if (this.deletedIds != null) {
 			for (Iterator it = this.deletedIds.iterator(); it.hasNext();) {
