@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.24 2004/10/06 05:39:46 bob Exp $
+ * $Id: measurement.idl,v 1.25 2004/10/06 06:47:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -343,6 +343,11 @@ module corba {
 			com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 			long long start;
 			long long end;
+	};
+
+	struct StringFieldCondition_Transferable {	
+			short	entity_code;
+			wstring field_string;
 	};
 	
 };

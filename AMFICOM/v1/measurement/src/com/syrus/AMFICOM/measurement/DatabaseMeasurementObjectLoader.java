@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.12 2004/10/05 13:02:17 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.13 2004/10/06 06:47:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -22,7 +23,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/10/05 13:02:17 $
+ * @version $Revision: 1.13 $, $Date: 2004/10/06 06:47:51 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -258,7 +259,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 				DomainCondition domainCondition = (DomainCondition)condition;
 				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
 			} else {
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadAnalysesButIds | Unknown condition class: " + condition.getClass().getName());
+				Log.errorMessage("DatabaseMeasumentObjectLoader.loadAnalysesButIds | Unknown condition class: " + condition);
 				list = database.retrieveButIds(ids);
 			}
 		} catch (IllegalDataException e) {
@@ -290,7 +291,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 				DomainCondition domainCondition = (DomainCondition)condition;
 				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
 			} else {
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluationsButIds | Unknown condition class: " + condition.getClass().getName());
+				Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluationsButIds | Unknown condition class: " + condition);
 				list = database.retrieveButIds(ids);
 			}
 		} catch (IllegalDataException e) {
@@ -321,7 +322,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 				DomainCondition domainCondition = (DomainCondition)condition;
 				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
 			} else {
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadModelingsButIds | Unknown condition class: " + condition.getClass().getName());
+				Log.errorMessage("DatabaseMeasumentObjectLoader.loadModelingsButIds | Unknown condition class: " + condition);
 				list = database.retrieveButIds(ids);
 			}
 		} catch (IllegalDataException e) {
@@ -343,7 +344,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 				DomainCondition domainCondition = (DomainCondition)condition;
 				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain()); 
 			} else{
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementsButIds | Unknown condition class: " + condition.getClass().getName());
+				Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementsButIds | Unknown condition class: " + condition);
 				list = database.retrieveButIds(ids);
 			}
 		} catch (IllegalDataException e) {
@@ -368,7 +369,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 					list = database.retrieveButIdsByMonitoredElement(ids, monitoredElement);			
 			}
 			else{
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementSetupsButIds | Unknown condition class: " + condition.getClass().getName());
+				Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementSetupsButIds | Unknown condition class: " + condition);
 				list = database.retrieveButIds(ids);
 			}
 		} catch (IllegalDataException e) {
@@ -396,7 +397,15 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		ParameterTypeDatabase database = (ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase();
 		List list = null;
 		try {
-		    list = database.retrieveButIds(ids);
+			if (condition instanceof StringFieldCondition){
+				StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
+				ParameterType type = database.retrieveForCodename(stringFieldCondition.getString());
+				list = new ArrayList(1);
+				list.add(type);
+			} else {
+				Log.errorMessage("DatabaseMeasumentObjectLoader.loadParameterTypesButIds | Unknown condition class: " + condition);
+				list = database.retrieveButIds(ids);
+			}
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadParameterTypesButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadParameterTypesButIds | Illegal Storable Object: " + e.getMessage());
@@ -416,7 +425,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 				DomainCondition domainCondition = (DomainCondition)condition;
 				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
 			} else {
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadResultsButIds | Unknown condition class: " + condition.getClass().getName());
+				Log.errorMessage("DatabaseMeasumentObjectLoader.loadResultsButIds | Unknown condition class: " + condition);
 				list = database.retrieveButIds(ids);
 			}
 		} catch (IllegalDataException e) {
@@ -435,7 +444,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 				DomainCondition domainCondition = (DomainCondition)condition;
 				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
 			} else {
-				Log.errorMessage("DatabaseMeasumentObjectLoader.loadSetsButIds | Unknown condition class: " + condition.getClass().getName());
+				Log.errorMessage("DatabaseMeasumentObjectLoader.loadSetsButIds | Unknown condition class: " + condition);
 				list = database.retrieveButIds(ids);
 			}
 		} catch (IllegalDataException e) {
@@ -467,7 +476,7 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 				TestCondition testCondition = (TestCondition) condition;
 				list = database.retrieveButIdsByTimeRange(ids, testCondition.getDomain(), testCondition.getStart(), testCondition.getEnd());
 			} else				
-				throw new DatabaseException("DatabaseMeasumentObjectLoader.loadTestsButIds | Condition class doesn't support : " + condition.getClass().getName() );
+				throw new DatabaseException("DatabaseMeasumentObjectLoader.loadTestsButIds | Condition class doesn't support : " + condition );
 				
 		} 
 		return list;
