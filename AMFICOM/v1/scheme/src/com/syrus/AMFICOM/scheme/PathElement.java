@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.7 2005/03/28 08:24:52 bass Exp $
+ * $Id: PathElement.java,v 1.8 2005/03/29 15:59:03 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.corba.PathElementKind;
 import com.syrus.util.Log;
@@ -21,10 +22,10 @@ import java.util.*;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/03/28 08:24:52 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/29 15:59:03 $
  * @module scheme_v1
  */
-public final class PathElement extends AbstractCloneableStorableObject implements Describable {
+public final class PathElement extends AbstractCloneableStorableObject implements Describable, Comparable {
 	private static final long serialVersionUID = 3905799768986038576L;
 
 	/**
@@ -110,6 +111,22 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		 * @todo Update the newly created object.
 		 */
 		return pathElement;
+	}
+
+	/**
+	 * @param o
+	 * @see Comparable#compareTo(Object)
+	 */
+	public int compareTo(final Object o) {
+		return compareTo((PathElement) o);
+	}
+
+	/**
+	 * @param that
+	 */
+	public int compareTo(final PathElement that) {
+		assert this.parentSchemePathId.equals(that.parentSchemePathId): ErrorMessages.NO_COMMON_PARENT; 
+		return this.sequentialNumber <= that.sequentialNumber ? this.sequentialNumber < that.sequentialNumber ? -1 : 0 : 1; 
 	}
 
 	public AbstractSchemeElement getAbstractSchemeElement() {
@@ -363,5 +380,18 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			return;
 		this.startAbstractSchemePortId = newStartAbstractSchemePortId;
 		this.changed = true;
+	}
+
+	public boolean hasOpticalPort() {
+		final AbstractSchemePort startAbstractSchemePort = getStartAbstractSchemePort();
+		if (startAbstractSchemePort instanceof SchemePort
+				&& startAbstractSchemePort.getPortType().getSort().value() == PortTypeSort._PORTTYPESORT_OPTICAL)
+			return true;
+		
+		final AbstractSchemePort endAbstractSchemePort = getEndAbstractSchemePort();
+		if (endAbstractSchemePort instanceof SchemePort
+				&& endAbstractSchemePort.getPortType().getSort().value() == PortTypeSort._PORTTYPESORT_OPTICAL)
+			return true;
+		return false;
 	}
 }
