@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.14 2004/11/16 15:48:45 bob Exp $
+ * $Id: Modeling.java,v 1.15 2004/11/19 12:25:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.15 $, $Date: 2004/11/19 12:25:34 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -40,7 +40,7 @@ public class Modeling extends Action {
 	 */
 	private static final long	serialVersionUID	= 3544387028533065264L;
 	private String name;
-	private String schemePathId;
+	private Identifier schemePathId;
 	private MeasurementType measurementType;
 	private Set argumentSet;
 	
@@ -62,7 +62,7 @@ public class Modeling extends Action {
 	
 	protected Modeling(Identifier id,
 							 Identifier creatorId,
-							 String schemePathId,
+							 Identifier schemePathId,
 							 Identifier monitoredElementId,
 							 String name,
 							 Set argumentSet,
@@ -90,7 +90,7 @@ public class Modeling extends Action {
 
 	public static Modeling createInstance(Identifier id,
 																		Identifier creatorId,
-																		String schemePathId,
+																		Identifier schemePathId,
 																		Identifier monitoredElementId,
 																		String name,
 																		Set argumentSet,
@@ -111,14 +111,11 @@ public class Modeling extends Action {
 				  null);
 		this.name = mt.name;
 		this.sort = mt.sort.value();
-		/**
-		 * @todo when change DB Identifier model ,change identifier_string to
-		 *       identifier_code
-		 */
+		
 		try {
 			switch(this.sort){
 				case ModelingSort._MODELINGSORT_MODELING:
-					this.schemePathId = mt.scheme_path_id;
+					this.schemePathId = new Identifier(mt.scheme_path_id);
 					break;
 				case ModelingSort._MODELINGSORT_PREDICTION:
 					this.monitoredElementId = new Identifier(mt.monitored_element_id);
@@ -128,10 +125,7 @@ public class Modeling extends Action {
 			}
 			
 			this.measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.measurement_type_id), true);
-			/**
-			 * @todo when change DB Identifier model ,change identifier_string to
-			 *       identifier_code
-			 */
+			
 			this.argumentSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.argument_set_id), true);
 		}
 		catch (ApplicationException ae) {
@@ -182,7 +176,7 @@ public class Modeling extends Action {
 	public Object getTransferable() {
 		return new Modeling_Transferable(super.getHeaderTransferable(),
 										 new String(this.name),
-										 (this.schemePathId != null) ? this.schemePathId : "" ,
+										 (this.schemePathId != null) ? (Identifier_Transferable)this.schemePathId.getTransferable() : (new Identifier_Transferable("")),
 										 (this.monitoredElementId != null) ? (Identifier_Transferable)this.monitoredElementId.getTransferable() : (new Identifier_Transferable("")),
 										 (Identifier_Transferable)this.measurementType.getId().getTransferable(),
 										 (Identifier_Transferable)this.argumentSet.getId().getTransferable(),
@@ -195,7 +189,7 @@ public class Modeling extends Action {
 																						Identifier modifierId,
 																						String name,
 																						Identifier monitoredElementId,
-																						String schemePathId,
+																						Identifier schemePathId,
 																						MeasurementType measurementType,
 																						Set argumentSet,
 																						int sort) {
@@ -261,7 +255,7 @@ public class Modeling extends Action {
 		return this.argumentSet;
 	}
     
-	public String getSchemePathId() {
+	public Identifier getSchemePathId() {
 		return this.schemePathId;
 	}
 	

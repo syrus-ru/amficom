@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.11 2004/11/17 07:56:31 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.12 2004/11/19 12:25:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/11/17 07:56:31 $
+ * @version $Revision: 1.12 $, $Date: 2004/11/19 12:25:34 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -104,14 +104,9 @@ public class ModelingDatabase extends StorableObjectDatabase {
         Modeling modeling = fromStorableObject(storableObject);
         int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
         try {
-        	Identifier monitoredElementId = modeling.getMonitoredElementId();
-        	String schemePathId = modeling.getSchemePathId();
             preparedStatement.setString(++i, modeling.getName());            
-            DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElementId);     
-            /**
-             * @TODO during schemePathId use old identifier as {@link java.lang.String} use setString, fix after modifications
-             */
-            preparedStatement.setString(++i, (schemePathId != null) ? schemePathId : "");
+            DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getMonitoredElementId());     
+            DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getSchemePathId());
             /**
              * TODO other fields!!!
              */
@@ -127,13 +122,11 @@ public class ModelingDatabase extends StorableObjectDatabase {
     protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
             UpdateObjectException {
         Modeling modeling = fromStorableObject(storableObject);
-        Identifier monitoredElementId = modeling.getMonitoredElementId();
-    	String schemePathId = modeling.getSchemePathId();
     	
         String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
             + APOSTOPHE + DatabaseString.toQuerySubString(modeling.getName()) + APOSTOPHE + COMMA
-            + DatabaseIdentifier.toSQLString(monitoredElementId) + COMMA
-			+ APOSTOPHE + ((schemePathId != null) ? schemePathId : "") + APOSTOPHE + COMMA
+            + DatabaseIdentifier.toSQLString(modeling.getMonitoredElementId()) + COMMA
+			+ APOSTOPHE + DatabaseIdentifier.toSQLString(modeling.getSchemePathId()) + APOSTOPHE + COMMA
             + DatabaseIdentifier.toSQLString(modeling.getMeasurementType().getId()) + COMMA
             + DatabaseIdentifier.toSQLString(modeling.getArgumentSet().getId()) + COMMA
 			+ modeling.getSort().value();
@@ -162,10 +155,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
                                meId,
-                               /**
-                                * @TODO during schemePathId use old identifier as {@link java.lang.String} use getString, fix after modifications
-                                */
-							   resultSet.getString(COLUMN_SCHEME_PATH_ID),
+                               DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SCHEME_PATH_ID),
 							   measurementType,
 							   argumentSet,
 							   resultSet.getInt(COLUMN_SORT));      
