@@ -1,5 +1,5 @@
 /**
- * $Id: map.idl,v 1.6 2004/09/15 10:58:40 krupenn Exp $
+ * $Id: map.idl,v 1.7 2004/09/17 11:26:51 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -183,6 +183,21 @@ module Map
 		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <MapMarkElement_Transferable> MapMarkElementSeq_Transferable;
+
+	struct MapPipePathElement_Transferable
+	{
+		wstring id;
+		wstring name;
+		wstring description;
+
+		wstring mapId;
+
+		General::ElementAttributeSeq_Transferable attributes;
+
+		::CORBA::WStringSeq physicalLinkIds;
+	};
+	typedef sequence <MapPipePathElement_Transferable> MapPipePathElementSeq_Transferable;
+
 /*
 	struct MapCablePathElement_Transferable
 	{
@@ -236,6 +251,7 @@ module Map
 		::CORBA::WStringSeq nodeLinkIds;//Вектор элементов типа NodeLinks
 		::CORBA::WStringSeq physicalLinkIds;
 		::CORBA::WStringSeq markIds;
+		::CORBA::WStringSeq collectorIds;
 	};
 	typedef sequence <Map_Transferable> MapSeq_Transferable;
 

@@ -218,7 +218,8 @@ interface AMFICOM
 			out Map::MapMarkElementSeq_Transferable markseq,
 			out Map::MapPhysicalNodeElementSeq_Transferable nodeseq,
 			out Map::MapNodeLinkElementSeq_Transferable nodelinkseq,
-			out Map::MapPhysicalLinkElementSeq_Transferable linkseq)
+			out Map::MapPhysicalLinkElementSeq_Transferable linkseq,
+			out Map::MapPipePathElementSeq_Transferable collectorseq)
 		raises (General::AMFICOMRemoteException);
 
 	long GetStatedMaps(
@@ -230,7 +231,8 @@ interface AMFICOM
 			out Map::MapMarkElementSeq_Transferable markseq,
 			out Map::MapPhysicalNodeElementSeq_Transferable nodeseq,
 			out Map::MapNodeLinkElementSeq_Transferable nodelinkseq,
-			out Map::MapPhysicalLinkElementSeq_Transferable linkseq)
+			out Map::MapPhysicalLinkElementSeq_Transferable linkseq,
+			out Map::MapPipePathElementSeq_Transferable collectorseq)
 		raises (General::AMFICOMRemoteException);
 
 	long SaveMaps(
@@ -241,7 +243,8 @@ interface AMFICOM
 			in Map::MapMarkElementSeq_Transferable markseq,
 			in Map::MapPhysicalNodeElementSeq_Transferable nodeseq,
 			in Map::MapNodeLinkElementSeq_Transferable nodelinkseq,
-			in Map::MapPhysicalLinkElementSeq_Transferable linkseq)
+			in Map::MapPhysicalLinkElementSeq_Transferable linkseq,
+			in Map::MapPipePathElementSeq_Transferable collectorseq)
 		raises (General::AMFICOMRemoteException);
 
 	long RemoveMaps(
@@ -251,7 +254,8 @@ interface AMFICOM
 			in ::CORBA::WStringSeq markseq,
 			in ::CORBA::WStringSeq nodeseq,
 			in ::CORBA::WStringSeq nodelinkseq,
-			in ::CORBA::WStringSeq linkseq)
+			in ::CORBA::WStringSeq linkseq,
+			in ::CORBA::WStringSeq collectorseq)
 		raises (General::AMFICOMRemoteException);
 
 	long GetStatedMapViews(
