@@ -1,6 +1,9 @@
 /*
- * $Id: SchemeProtoElement.java,v 1.4 2005/03/17 18:17:27 bass Exp $ Copyright ¿
- * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
+ * $Id: SchemeProtoElement.java,v 1.5 2005/03/18 19:21:26 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
@@ -14,7 +17,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/17 18:17:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/18 19:21:26 $
  * @module scheme_v1
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject

@@ -1,13 +1,15 @@
 /*
- * $Id: SchemeProtoGroup.java,v 1.3 2005/03/17 18:17:27 bass Exp $ Copyright ¿
- * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
+ * $Id: SchemeProtoGroup.java,v 1.4 2005/03/18 19:21:26 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.util.Log;
 import java.util.*;
 
@@ -15,155 +17,42 @@ import java.util.*;
  * #01 in hierarchy.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 18:17:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/18 19:21:26 $
  * @module scheme_v1
+ * @todo Implement equals() and hashCode().
  */
 public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		implements Describable, SchemeSymbolContainer {
 	private static final long serialVersionUID = 3256721788422862901L;
 
-	private static final Identifier EMPTY_DEPENDENCIES[] = new Identifier[0];
-
-	protected StorableObject delegate = null;
-
-	protected Identifier parentSchemeProtoGroupId = null;
-
-	protected Identifier symbolId = null;
-
 	private String description;
 
 	private String name;
 
-	private Identifier cachedDependencies[];
+	private Identifier parentSchemeProtoGroupId;
 
-	private final Identifier ownDependencies[] = new Identifier[1];
+	private StorableObjectDatabase schemeProtoGroupDatabase; 
+
+	private Identifier symbolId;
 
 	/**
 	 * @param id
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
 	 */
-	SchemeProtoGroup(final Identifier id) {
+	SchemeProtoGroup(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
+
+		this.schemeProtoGroupDatabase = SchemeDatabaseContext.schemeProtoGroupDatabase;
+		try {
+			this.schemeProtoGroupDatabase.retrieve(this);
+		} catch (final IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 
 	/**
 	 * @param id
-	 * @param created
-	 * @param modified
-	 * @param creatorId
-	 * @param modifierId
-	 * @param version
-	 * @param name
-	 * @param parentSchemeProtoGroup
-	 */
-	SchemeProtoGroup(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name,
-			final SchemeProtoGroup parentSchemeProtoGroup) {
-		super(id, created, modified, creatorId, modifierId, version);
-	}
-
-	public Object clone() {
-		final SchemeProtoGroup schemeProtoGroup = (SchemeProtoGroup) super
-				.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeProtoGroup;
-	}
-
-	public List getDependencies() {
-		return Arrays.asList(getDependenciesAsArray());
-	}
-
-	/**
-	 * @see StorableObject#getDependencies()
-	 */
-	public synchronized Identifier[] getDependenciesAsArray() {
-		Identifier localOwnDependencies[];
-		if (this.parentSchemeProtoGroupId == null) {
-			assert parentSchemeProtoGroup() == null;
-			localOwnDependencies = EMPTY_DEPENDENCIES;
-		} else {
-			assert parentSchemeProtoGroup().getId().equals(
-					this.parentSchemeProtoGroupId);
-			this.ownDependencies[0] = this.parentSchemeProtoGroupId;
-			localOwnDependencies = this.ownDependencies;
-		}
-
-		final Identifier delegateDependencies[] = (Identifier[]) this.delegate
-				.getDependencies()
-				.toArray(
-						new Identifier[this.delegate
-								.getDependencies()
-								.size()]);
-		assert delegateDependencies != null;
-
-		final int delegateDependenciesLength = delegateDependencies.length;
-		final int localOwnDependenciesLength = localOwnDependencies.length;
-
-		if (delegateDependenciesLength == 0)
-			return localOwnDependencies;
-		else if (localOwnDependenciesLength == 0)
-			return delegateDependencies;
-		else {
-			if (this.cachedDependencies == null
-					|| this.cachedDependencies.length != delegateDependenciesLength
-							+ localOwnDependenciesLength)
-				this.cachedDependencies = new Identifier[delegateDependenciesLength
-						+ localOwnDependenciesLength];
-			System.arraycopy(delegateDependencies, 0,
-					this.cachedDependencies, 0,
-					delegateDependenciesLength);
-			System.arraycopy(localOwnDependencies, 0,
-					this.cachedDependencies,
-					delegateDependenciesLength,
-					localOwnDependenciesLength);
-			return this.cachedDependencies;
-		}
-	}
-
-	/**
-	 * @see SchemeProtoGroup#parentSchemeProtoGroup()
-	 */
-	public SchemeProtoGroup parentSchemeProtoGroup() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see SchemeProtoGroup#schemeProtoElements()
-	 * @todo Implement.
-	 */
-	public SchemeProtoElement[] schemeProtoElements() {
-		return new SchemeProtoElement[0];
-	}
-
-	/**
-	 * @param newSchemeProtoElements
-	 * @see com.syrus.AMFICOM.scheme.SchemeProtoGroup#schemeProtoElements(com.syrus.AMFICOM.scheme.corba.SchemeProtoElement[])
-	 */
-	public void schemeProtoElements(
-			SchemeProtoElement[] newSchemeProtoElements) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see SchemeProtoGroup#schemeProtoGroups()
-	 * @todo Implement.
-	 */
-	public SchemeProtoGroup[] schemeProtoGroups() {
-		return new SchemeProtoGroup[0];
-	}
-
-	/**
-	 * @param newSchemeProtoGroups
-	 * @see com.syrus.AMFICOM.scheme.SchemeProtoGroup#schemeProtoGroups(com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup[])
-	 */
-	public void schemeProtoGroups(SchemeProtoGroup[] newSchemeProtoGroups) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param created
 	 * @param modified
 	 * @param creatorId
@@ -173,26 +62,187 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @param description
 	 * @param symbol
 	 * @param parentSchemeProtoGroup
-	 * @see SchemeProtoGroup#setAttributes(long, long, Identifier,
-	 *      Identifier, long, String, String, ImageResource_Transferable,
-	 *      SchemeProtoGroup)
 	 */
-	public void setAttributes(final long created, final long modified,
-			final Identifier creatorId,
+	SchemeProtoGroup(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
-			final String name, final String description,
-			final ImageResource_Transferable symbol,
+			final String name,
+			final String description,
+			final BitmapImageResource symbol,
 			final SchemeProtoGroup parentSchemeProtoGroup) {
-		throw new UnsupportedOperationException();
+		super(id, created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+		this.symbolId
+				= symbol == null
+				? Identifier.VOID_IDENTIFIER
+				: symbol.getId();
+		this.parentSchemeProtoGroupId
+				= parentSchemeProtoGroup == null
+				? Identifier.VOID_IDENTIFIER
+				: parentSchemeProtoGroup.getId();
+
+		this.schemeProtoGroupDatabase = SchemeDatabaseContext.schemeProtoGroupDatabase;
 	}
 
 	/**
-	 * @return <code>symbol</code> associated with this
-	 *         <code>SchemeProtoGroup</code>, or <code>null</code> if
+	 * @param creatorId cannot be <code>null</code>.
+	 * @param name cannot be <code>null</code>.
+	 * @param description cannot be <code>null</code>, but can be empty.
+	 * @param symbol may be <code>null</code>.
+	 * @param parentSchemeProtoGroup may be <code>null</code> (for a top-level group).
+	 * @throws CreateObjectException
+	 */
+	public static SchemeProtoGroup createInstance(
+			final Identifier creatorId, final String name,
+			final String description,
+			final BitmapImageResource symbol,
+			final SchemeProtoGroup parentSchemeProtoGroup)
+			throws CreateObjectException {
+		assert creatorId != null && creatorId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		
+		try {
+			final Date created = new Date();
+			final SchemeProtoGroup schemeProtoGroup = new SchemeProtoGroup(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L, name, description, symbol,
+					parentSchemeProtoGroup);
+			schemeProtoGroup.changed = true;
+			return schemeProtoGroup;
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemeProtoGroup.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * @param schemeProtoElement cannot be <code>null</code>.
+	 */
+	public void addSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
+		assert schemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
+		schemeProtoElement.parent(this);
+	}
+
+	/**
+	 * @param schemeProtoGroup can be neither <code>null</code> nor
+	 *        <code>this</code>.
+	 * @bug provide a check to disallow addition of higher-level objects as
+	 *      children for lower-level ones (within the same hierarchy tree).
+	 * @todo add sanity checks for my own id.
+	 */
+	public void addSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup) {
+		assert schemeProtoGroup != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeProtoGroup != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		schemeProtoGroup.parentSchemeProtoGroupId = this.getId();
+	}
+
+	/**
+	 * @see Object#clone()
+	 * @bug If a parent <code>schemeProtoGroup</code> is <code>null</code>
+	 *      for <em>this</em> object, that doesn't mean it'll be
+	 *      <code>null</code> for its clone (since there can't be
+	 *      <em>two</em> roots of hierarchy).
+	 * @todo Decide whether it's necessary to clone child
+	 *       <code>schemeProtoGroup</code>s and
+	 *       <code>schemeProtoElement</code>s.
+	 */
+	public Object clone() {
+		final SchemeProtoGroup clone = (SchemeProtoGroup) super.clone();
+		clone.name = this.name;
+		clone.description = this.description;
+		clone.symbolId = this.symbolId;
+		clone.parentSchemeProtoGroupId = this.parentSchemeProtoGroupId;
+		return clone;
+	}
+
+	/**
+	 * @see StorableObject#getDependencies()
+	 */
+	public List getDependencies() {
+		assert this.symbolId != null
+				&& this.parentSchemeProtoGroupId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.symbolId.equals(Identifier.VOID_IDENTIFIER)) {
+			if (this.parentSchemeProtoGroupId
+					.equals(Identifier.VOID_IDENTIFIER))
+				return Collections.EMPTY_LIST;
+			return Collections
+					.singletonList(this.parentSchemeProtoGroupId);
+		}
+		if (this.parentSchemeProtoGroupId
+				.equals(Identifier.VOID_IDENTIFIER))
+			return Collections.singletonList(this.symbolId);
+		final List dependencies = new ArrayList(2);
+		dependencies.add(this.symbolId);
+		dependencies.add(this.parentSchemeProtoGroupId);
+		return Collections.unmodifiableList(dependencies);
+	}
+
+	/**
+	 * @see Describable#getDescription()
+	 */
+	public String getDescription() {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.description;
+	}
+
+	/**
+	 * @see Namable#getName()
+	 */
+	public String getName() {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.name;
+	}
+
+	/**
+	 * @return <code>schemeProtoGroup</code> parent for this
+	 *         <code>schemeProtoGroup</code>, or <code>null</code> if
 	 *         none.
+	 */
+	public SchemeProtoGroup getParentSchemeProtoGroup() {
+		assert this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		if (this.parentSchemeProtoGroupId.equals(Identifier.VOID_IDENTIFIER))
+			return null;
+		try {
+			return (SchemeProtoGroup) SchemeStorableObjectPool.getStorableObject(this.parentSchemeProtoGroupId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
+	}
+
+	/**
+	 * @return an immutable collection.
+	 */
+	public Collection getSchemeProtoElements() {
+		try {
+			return Collections.unmodifiableList(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_LIST;
+		}
+	}
+
+	/**
+	 * @return an immutable collection.
+	 */
+	public Collection getSchemeProtoGroups() {
+		try {
+			return Collections.unmodifiableList(SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE), true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_LIST;
+		}
+	}
+
+	/**
 	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
+		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		if (this.symbolId.equals(Identifier.VOID_IDENTIFIER))
 			return null;
 		try {
@@ -205,52 +255,86 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @param symbol can be <code>null</code>.
-	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
-	 */
-	public void setSymbol(final BitmapImageResource symbol) {
-		Identifier newSymbolId;
-		if (symbol == null)
-			newSymbolId = Identifier.VOID_IDENTIFIER;
-		else
-			newSymbolId = symbol.getId();
-		if (!this.symbolId.equals(newSymbolId)) {
-			this.symbolId = newSymbolId;
-			this.changed = true;
-		}
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 * @see TransferableObject#getTransferable()
+	 * @todo Implement.
 	 */
 	public Object getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param creatorId cannot be null
-	 * @param name cannot be null
-	 * @param parentSchemeProtoGroup may be null (for a top-level group).
-	 * @throws CreateObjectException
+	 * The <code>schemeProtoElement</code> must belong to this
+	 * <code>schemeProtoGroup</code>, or crap will meet the fan.
+	 *
+	 * @param schemeProtoElement
+	 * @todo Decide how removal should be interpreted: setting a parent of
+	 *       <code>null</code> (which is impossible for a
+	 *       <code>schemeProtoElement</code>) or physical removal (which is
+	 *       done so far).
 	 */
-	public static SchemeProtoGroup createInstance(
-			final Identifier creatorId, final String name,
-			final SchemeProtoGroup parentSchemeProtoGroup)
-			throws CreateObjectException {
-		assert creatorId != null && name != null;
+	public void removeSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
+		assert schemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
+		Collection schemeProtoElements;
 		try {
-			final Date created = new Date();
-			final SchemeProtoGroup schemeProtoGroup = new SchemeProtoGroup(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, parentSchemeProtoGroup);
-			schemeProtoGroup.changed = true;
-			return schemeProtoGroup;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeProtoGroup.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+			schemeProtoElements = SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			schemeProtoElements = Collections.EMPTY_LIST;
 		}
+		assert schemeProtoElements.contains(schemeProtoElement);
+		SchemeStorableObjectPool.delete(schemeProtoElement.getId());
+	}
+
+	/**
+	 * The <code>schemeProtoGroup</code> must belong to this
+	 * <code>schemeProtoGroup</code>, or crap will meet the fan.
+	 * 
+	 * @param schemeProtoGroup
+	 * @todo Decide whether it's good to have more than one top-level
+	 *       <code>schemeProtoGroup</code>.
+	 */
+	public void removeSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup) {
+		assert schemeProtoGroup != null: ErrorMessages.NON_NULL_EXPECTED;
+		Collection schemeProtoGroups;
+		try {
+			schemeProtoGroups = SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE), true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			schemeProtoGroups = Collections.EMPTY_LIST;
+		}
+		assert schemeProtoGroups.contains(schemeProtoGroup);
+		schemeProtoGroup.parentSchemeProtoGroupId = Identifier.VOID_IDENTIFIER;
+	}
+
+	/**
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param name can be neither <code>null</code> nor an empty string.
+	 * @param description cannot be <code>null</code>. For this purpose,
+	 *        supply an empty string as an argument.
+	 * @param symbolId cannot be <code>null</code>. For this purpose,
+	 *        supply {@link Identifier#VOID_IDENTIFIER} as an argument.
+	 * @param parentSchemeProtoGroupId
+	 */
+	public void setAttributes(final Date created, final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId, final long version,
+			final String name, final String description,
+			final Identifier symbolId,
+			final Identifier parentSchemeProtoGroupId) {
+		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert symbolId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert parentSchemeProtoGroupId != null: ErrorMessages.NON_NULL_EXPECTED;
+		super.setAttributes(created, modified, creatorId, modifierId,
+				version);
+		this.name = name;
+		this.description = description;
+		this.symbolId = symbolId;
+		this.parentSchemeProtoGroupId = parentSchemeProtoGroupId;
 	}
 
 	/**
@@ -266,14 +350,6 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Describable#getDescription()
-	 */
-	public String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.description;
-	}
-
-	/**
 	 * @see Namable#setName(String)
 	 */
 	public void setName(final String name) {
@@ -286,10 +362,74 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Namable#getName()
+	 * To make a slight alteration of <code>schemeProtoGroups</code> for
+	 * this <code>schemeProtoGroup</code>, use
+	 * {@link #addSchemeProtoGroup(SchemeProtoGroup)} and/or
+	 * {@link #removeSchemeProtoGroup(SchemeProtoGroup)}. This method
+	 * will completely overwrite old <code>schemeProtoGroups</code> with
+	 * the new ones (i. e. remove old and add new ones).
+	 * 
+	 * @param schemeProtoGroups
 	 */
-	public String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.name;
+	public void setSchemeProtoGroups(final Collection schemeProtoGroups) {
+		assert schemeProtoGroups != null: ErrorMessages.NON_NULL_EXPECTED;
+		Collection oldSchemeProtoGroups;
+		try {
+			oldSchemeProtoGroups = SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE), true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			oldSchemeProtoGroups = Collections.EMPTY_LIST;
+		}
+		for (final Iterator oldSchemeProtoGroupIterator = oldSchemeProtoGroups.iterator(); oldSchemeProtoGroupIterator.hasNext();)
+			removeSchemeProtoGroup((SchemeProtoGroup) oldSchemeProtoGroupIterator.next());
+		for (final Iterator schemeProtoGroupIterator = schemeProtoGroups.iterator(); schemeProtoGroupIterator.hasNext();)
+			addSchemeProtoGroup((SchemeProtoGroup) schemeProtoGroupIterator.next());
+	}
+
+	/**
+	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
+	 */
+	public void setSymbol(final BitmapImageResource symbol) {
+		Identifier newSymbolId;
+		if (symbol == null)
+			newSymbolId = Identifier.VOID_IDENTIFIER;
+		else
+			newSymbolId = symbol.getId();
+		if (!this.symbolId.equals(newSymbolId)) {
+			this.symbolId = newSymbolId;
+			this.changed = true;
+		}
+	}
+
+	/**
+	 * To make a slight alteration of <code>schemeProtoElements</code> for
+	 * this <code>schemeProtoGroup</code>, use
+	 * {@link #addSchemeProtoElement(SchemeProtoElement)} and/or
+	 * {@link #removeSchemeProtoElement(SchemeProtoElement)}. This method
+	 * will completely overwrite old <code>schemeProtoElements</code> with
+	 * the new ones (i. e. remove old and add new ones). Since
+	 * <em>removal</em> of a <code>schemeProtoElement</code> means its
+	 * <em>physical removal</em>, the collection of new ones <em>must
+	 * not</em> contain any <code>schemeProtoElement</code> from old ones,
+	 * or crap will meet the fan.
+	 * 
+	 * @param schemeProtoElements
+	 */
+	void setSchemeProtoElements(final Collection schemeProtoElements) {
+		assert schemeProtoElements != null: ErrorMessages.NON_NULL_EXPECTED;
+		Collection oldSchemeProtoElements;
+		try {
+			oldSchemeProtoElements = SchemeStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE), true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			oldSchemeProtoElements = Collections.EMPTY_LIST;
+		}
+		for (final Iterator oldSchemeProtoElementIterator = oldSchemeProtoElements.iterator(); oldSchemeProtoElementIterator.hasNext();) {
+			final SchemeProtoElement oldSchemeProtoElement = (SchemeProtoElement) oldSchemeProtoElementIterator.next();
+			assert !schemeProtoElements.contains(oldSchemeProtoElement);
+			removeSchemeProtoElement(oldSchemeProtoElement);
+		}
+		for (final Iterator schemeProtoElementIterator = schemeProtoElements.iterator(); schemeProtoElementIterator.hasNext();)
+			addSchemeProtoElement((SchemeProtoElement) schemeProtoElementIterator.next());
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.8 2005/03/11 17:26:59 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.9 2005/03/18 19:21:26 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,19 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.*;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/03/11 17:26:59 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/18 19:21:26 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
+	private static SchemeStorableObjectPool instance;
+
 	private SchemeStorableObjectPool() {
 		super(ObjectGroupEntities.SCHEME_GROUP_CODE);
 	}
@@ -34,8 +37,8 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 		throw new UnsupportedOperationException();
 	}
 
-	public static void delete(final Identifier id) throws DatabaseException, CommunicationException {
-		throw new UnsupportedOperationException();
+	public static void delete(final Identifier id) {
+		instance.deleteImpl(id);
 	}
 
 	public static void delete(final List ids) throws DatabaseException, CommunicationException {
