@@ -75,7 +75,7 @@ module Resource
 
    	struct Filter_Transferable
 	{
-//		wstring id;
+		wstring id;
 		wstring resource_typ;
 //		long long modified;
 		General::octetSeq logic_scheme;

@@ -1,5 +1,5 @@
 /*
- * $Id: report.idl,v 1.4 2004/06/03 08:14:20 bass Exp $
+ * $Id: report.idl,v 1.5 2004/06/18 07:50:59 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@
 #define _report_idl_
 
 #include <general.idl>
+#include <resource.idl>
 
 module com
 {
@@ -77,7 +78,7 @@ module Report
 		sequence <ImagePane_Transferable> imagePanes;
 
 		//фильтры
-		//sequence <ObjectResourceFilter_Transferable> objectResourceFilters;
+		sequence <Resource::Filter_Transferable> filters;
 	};
 	typedef sequence <ReportTemplate_Transferable> ReportTemplateSeq_Transferable;
 };
