@@ -1,30 +1,59 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.util.*;
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
-import java.awt.*;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
-import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeModel;
+import com.syrus.AMFICOM.client_.general.ui_.tree.CheckableTreeNode;
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.client_.general.ui_.tree.StorableObjectTreeNode;
+import com.syrus.AMFICOM.client_.general.ui_.tree.TreeDataModel;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.CableLinkTypeController;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.LinkType;
+import com.syrus.AMFICOM.configuration.LinkTypeController;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.MeasurementPortTypeController;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.PortTypeController;
+import com.syrus.AMFICOM.configuration.TransmissionPathType;
+import com.syrus.AMFICOM.configuration.TransmissionPathTypeController;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeController;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.SchemeLink;
+import com.syrus.AMFICOM.scheme.corba.SchemePath;
+import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement;
+import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public class SchemeTreeModel extends ObjectResourceTreeModel
+public class SchemeTreeModel implements TreeDataModel
 {
 	ApplicationContext aContext;
 
@@ -39,30 +68,24 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 		this.aContext = aContext;
 	}
 
-	public ObjectResourceTreeNode getRoot()
+	public StorableObjectTreeNode getRoot()
 	{
-		return new ObjectResourceTreeNode(
+		return new StorableObjectTreeNode(
 				"root",
 				"Сеть",
-				true,
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
 	}
 
-	public ImageIcon getNodeIcon(ObjectResourceTreeNode node)
+	public Color getNodeTextColor(StorableObjectTreeNode node)
 	{
 		return null;
 	}
 
-	public Color getNodeTextColor(ObjectResourceTreeNode node)
-	{
-		return null;
-	}
-
-	public void nodeAfterSelected(ObjectResourceTreeNode node)
+	public void nodeAfterSelected(StorableObjectTreeNode node)
 	{
 	}
 
-	public void nodeBeforeExpanded(ObjectResourceTreeNode node)
+	public void nodeBeforeExpanded(StorableObjectTreeNode node)
 	{
 	}
 
@@ -109,7 +132,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
 	}
 
-	public Class getNodeChildClass(ObjectResourceTreeNode node)
+	public Class getNodeChildClass(StorableObjectTreeNode node)
 	{
 		if(node.getObject() instanceof String)
 		{
@@ -158,7 +181,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 		return null;
 	}
 
-	public ObjectResourceController getNodeChildController(ObjectResourceTreeNode node)
+	public ObjectResourceController getNodeChildController(StorableObjectTreeNode node)
 	{
 		if(node.getObject() instanceof String)
 		{
@@ -244,7 +267,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 		return null;
 	}
 
-	public List getChildNodes(ObjectResourceTreeNode node)
+	public List getChildNodes(StorableObjectTreeNode node)
 	{
 		List vec = new ArrayList();
 		if(node.getObject() instanceof String)
@@ -252,33 +275,35 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			String s = (String )node.getObject();
 			if(s.equals("root"))
 			{
-				vec.add(new ObjectResourceTreeNode("configure", LangModelConfig.getString("label_configuration"), true,
+				vec.add(new StorableObjectTreeNode("configure", LangModelConfig.getString("label_configuration"),
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
-				vec.add(new ObjectResourceTreeNode ("SchemeProtoGroup", "Компоненты сети", true,
+				vec.add(new StorableObjectTreeNode ("SchemeProtoGroup", "Компоненты сети", 
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
-				ObjectResourceTreeNode sch = new ObjectResourceTreeNode ("schemeTypes", "Схемы", true,
+				StorableObjectTreeNode sch = new StorableObjectTreeNode ("schemeTypes", "Схемы", 
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
+			
 				vec.add(sch);
 //				registerSearchableNode(Scheme.typ, sch);
 			}
 			else if(s.equals("configure"))
 			{
-				vec.add(new ObjectResourceTreeNode("netdirectory", LangModelConfig.getString("menuNetDirText"), true,
+				vec.add(new StorableObjectTreeNode("netdirectory", LangModelConfig.getString("menuNetDirText"),
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
-				vec.add(new ObjectResourceTreeNode("jdirectory", LangModelConfig.getString("menuJDirText"), true,
+				vec.add(new StorableObjectTreeNode("jdirectory", LangModelConfig.getString("menuJDirText"),
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 			}
 			else if(s.equals("netdirectory"))
 			{
-				vec.add(new ObjectResourceTreeNode("LinkType", LangModelConfig.getString("menuNetDirLinkText"), true));
-				vec.add(new ObjectResourceTreeNode("CableLinkType", LangModelConfig.getString("menuNetDirCableText"), true));
-				vec.add(new ObjectResourceTreeNode("PortType", LangModelConfig.getString("menuNetDirPortText"), true));
+//				vec.add(new StorableObjectTreeNode("LinkType", LangModelConfig.getString("menuNetDirLinkText")));
+				vec.add(new CheckableTreeNode("LinkType", LangModelConfig.getString("menuNetDirLinkText")));
+				vec.add(new StorableObjectTreeNode("CableLinkType", LangModelConfig.getString("menuNetDirCableText")));
+				vec.add(new StorableObjectTreeNode("PortType", LangModelConfig.getString("menuNetDirPortText")));
 			}
 			else if(s.equals("jdirectory"))
 			{
-				vec.add(new ObjectResourceTreeNode("MeasurementType", LangModelConfig.getString("MeasurementType"), true));
-				vec.add(new ObjectResourceTreeNode("MeasurementPortType", LangModelConfig.getString("menuJDirAccessPointText"), true));
-//				vec.add(new ObjectResourceTreeNode("TransmissionPathType", LangModelConfig.getString("menuJDirPathText"), true));
+				vec.add(new StorableObjectTreeNode("MeasurementType", LangModelConfig.getString("MeasurementType")));
+				vec.add(new StorableObjectTreeNode("MeasurementPortType", LangModelConfig.getString("menuJDirAccessPointText")));
+//				vec.add(new StorableObjectTreeNode("TransmissionPathType", LangModelConfig.getString("menuJDirPathText"), true));
 			}
 			else if(s.equals("schemeTypes"))
 			{
@@ -296,7 +321,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 							type = LangModelSchematics.getString("BUILDING");
 					}
 
-					vec.add(new ObjectResourceTreeNode(schemeTypes[i], type, true,
+					vec.add(new StorableObjectTreeNode(schemeTypes[i], type,
 								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 				}
 			}
@@ -308,7 +333,8 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 
 					for (Iterator it = linkTypes.iterator(); it.hasNext(); ) {
 						LinkType type = (LinkType)it.next();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
+//						StorableObjectTreeNode n = new StorableObjectTreeNode(type, type.getName(), true);
+						CheckableTreeNode n = new CheckableTreeNode(type, type.getName(), true);
 						vec.add(n);
 					}
 				}
@@ -325,7 +351,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 
 					for (Iterator it = linkTypes.iterator(); it.hasNext(); ) {
 						CableLinkType type = (CableLinkType)it.next();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
+						StorableObjectTreeNode n = new StorableObjectTreeNode(type, type.getName(), true);
 						vec.add(n);
 					}
 				}
@@ -340,7 +366,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 
 					for (Iterator it = portTypes.iterator(); it.hasNext(); ) {
 						PortType type = (PortType)it.next();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
+						StorableObjectTreeNode n = new StorableObjectTreeNode(type, type.getName(), true);
 						vec.add(n);
 					}
 				}
@@ -355,7 +381,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 
 					for (Iterator it = pathTypes.iterator(); it.hasNext(); ) {
 						TransmissionPathType type = (TransmissionPathType)it.next();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
+						StorableObjectTreeNode n = new StorableObjectTreeNode(type, type.getName(), true);
 						vec.add(n);
 					}
 				}
@@ -370,7 +396,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 
 					for (Iterator it = pathTypes.iterator(); it.hasNext(); ) {
 						MeasurementPortType type = (MeasurementPortType)it.next();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
+						StorableObjectTreeNode n = new StorableObjectTreeNode(type, type.getName(), true);
 						vec.add(n);
 					}
 				}
@@ -386,7 +412,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 
 					for (Iterator it = measurementTypes.iterator(); it.hasNext(); ) {
 						MeasurementType type = (MeasurementType)it.next();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getDescription(), true, true);
+						StorableObjectTreeNode n = new StorableObjectTreeNode(type, type.getDescription(), true);
 						vec.add(n);
 					}
 				}
@@ -405,7 +431,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 
 					for (Iterator it = groups.iterator(); it.hasNext(); ) {
 						SchemeProtoGroup group = (SchemeProtoGroup)it.next();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(group, group.name(), true, true);
+						StorableObjectTreeNode n = new StorableObjectTreeNode(group, group.name(), true);
 						vec.add(n);
 					}
 				}
@@ -415,7 +441,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			}
 			else if (s.equals("Scheme"))
 			{
-				Scheme parent = (Scheme)((ObjectResourceTreeNode)node.getParent()).getObject();
+				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getObject();
 				List ds = new LinkedList();
 				for (int i = 0; i < parent.schemeElements().length; i++)
 				{
@@ -428,14 +454,14 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					for(Iterator it = ds.iterator(); it.hasNext();)
 					{
 						Scheme sch = (Scheme)it.next();
-						vec.add(new ObjectResourceTreeNode(sch, sch.name(), true,
+						vec.add(new StorableObjectTreeNode(sch, sch.name(), 
 							new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")), false));
 					}
 				}
 			}
 			else if (s.equals("SchemeElement"))
 			{
-				Object parent = ((ObjectResourceTreeNode)node.getParent()).getObject();
+				Object parent = ((StorableObjectTreeNode)node.getParent()).getObject();
 				List ds = new LinkedList();
 				if (parent instanceof Scheme)
 				{
@@ -458,22 +484,22 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					{
 						SchemeElement element = (SchemeElement)it.next();
 						if (element.schemeLinks().length != 0 || element.schemeElements().length != 0)
-							vec.add(new ObjectResourceTreeNode(element, element.name(), true, false));
+							vec.add(new StorableObjectTreeNode(element, element.name(), false));
 						else
-							vec.add(new ObjectResourceTreeNode(element, element.name(), true, true));
+							vec.add(new StorableObjectTreeNode(element, element.name(), true));
 					}
 				}
 			}
 			else if (s.equals("SchemeLink"))
 			{
-				Object parent = ((ObjectResourceTreeNode)node.getParent()).getObject();
+				Object parent = ((StorableObjectTreeNode)node.getParent()).getObject();
 				if (parent instanceof Scheme)
 				{
 					Scheme scheme = (Scheme)parent;
 					for(int i = 0; i < scheme.schemeLinks().length; i++)
 					{
 						SchemeLink link = scheme.schemeLinks()[i];
-						vec.add(new ObjectResourceTreeNode(link, link.name(), true, true));
+						vec.add(new StorableObjectTreeNode(link, link.name(), true));
 					}
 				}
 				else if (parent instanceof SchemeElement)
@@ -482,26 +508,26 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					for(int i = 0; i < el.schemeLinks().length; i++)
 					{
 						SchemeLink link = el.schemeLinks()[i];
-						vec.add(new ObjectResourceTreeNode(link, link.name(), true, true));
+						vec.add(new StorableObjectTreeNode(link, link.name(), true));
 					}
 				}
 			}
 			else if (s.equals("SchemeCableLink"))
 			{
-				Scheme parent = (Scheme)((ObjectResourceTreeNode)node.getParent()).getObject();
+				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getObject();
 				for(int i = 0; i < parent.schemeCableLinks().length; i++)
 				{
 					SchemeCableLink link = parent.schemeCableLinks()[i];
-					vec.add(new ObjectResourceTreeNode(link, link.name(), true, true));
+					vec.add(new StorableObjectTreeNode(link, link.name(), true));
 				}
 			}
 			else if (s.equals("SchemePath"))
 			{
-				Scheme parent = (Scheme)((ObjectResourceTreeNode)node.getParent()).getObject();
+				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getObject();
 				for(int i = 0; i < parent.schemeMonitoringSolution().schemePaths().length; i++)
 				{
 					SchemePath path = parent.schemeMonitoringSolution().schemePaths()[i];
-					vec.add(new ObjectResourceTreeNode(path, path.name(), true, true));
+					vec.add(new StorableObjectTreeNode(path, path.name(), true));
 				}
 			}
 		}
@@ -519,7 +545,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 
 					for (Iterator it = schemes.iterator(); it.hasNext(); ) {
 						Scheme sc = (Scheme)it.next();
-						vec.add(new ObjectResourceTreeNode(sc, sc.name(), true,
+						vec.add(new StorableObjectTreeNode(sc, sc.name(),
 								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif"))));
 					}
 				}
@@ -542,7 +568,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 						icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(map_group.symbolImpl().getImage())
 																 .getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 
-					vec.add(new ObjectResourceTreeNode(map_group, map_group.name(), true, icon,
+					vec.add(new StorableObjectTreeNode(map_group, map_group.name(), icon,
 							map_group.schemeProtoGroups().length == 0 && map_group.schemeProtoElements().length == 0));
 				}
 				if (vec.isEmpty())
@@ -551,7 +577,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					{
 						SchemeProtoElement proto = parent_group.schemeProtoElements()[i];
 //						proto.scheme_proto_group = parent_group;
-						vec.add(new ObjectResourceTreeNode(proto, proto.name().length() == 0 ? "Без названия" : proto.name(), true, true));
+						vec.add(new StorableObjectTreeNode(proto, proto.name().length() == 0 ? "Без названия" : proto.name(), true));
 					}
 				}
 			}
@@ -581,16 +607,16 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 						}
 					}
 					if (has_schemes)
-						vec.add(new ObjectResourceTreeNode("Scheme", "Вложенные схемы", true));
+						vec.add(new StorableObjectTreeNode("Scheme", "Вложенные схемы", true));
 					if (has_elements)
-						vec.add(new ObjectResourceTreeNode("SchemeElement", "Узлы", true));
+						vec.add(new StorableObjectTreeNode("SchemeElement", "Узлы", true));
 				}
 				if (s.schemeLinks().length != 0)
-					vec.add(new ObjectResourceTreeNode("SchemeLink", "Линии", true));
+					vec.add(new StorableObjectTreeNode("SchemeLink", "Линии", true));
 				if (s.schemeCableLinks().length != 0)
-					vec.add(new ObjectResourceTreeNode("SchemeCableLink", "Кабели", true));
+					vec.add(new StorableObjectTreeNode("SchemeCableLink", "Кабели", true));
 				if (s.schemeMonitoringSolution().schemePaths().length != 0)
-					vec.add(new ObjectResourceTreeNode("SchemePath", "Пути", true));
+					vec.add(new StorableObjectTreeNode("SchemePath", "Пути", true));
 			}
 			else if(node.getObject() instanceof SchemeElement)
 			{
@@ -604,21 +630,21 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 						if (element.internalScheme() == null)
 						{
 							if (element.schemeLinks().length != 0 || element.schemeElements().length != 0)
-								vec.add(new ObjectResourceTreeNode(element, element.name(), true, false));
+								vec.add(new StorableObjectTreeNode(element, element.name(), false));
 							else
-								vec.add(new ObjectResourceTreeNode(element, element.name(), true, true));
+								vec.add(new StorableObjectTreeNode(element, element.name(), true));
 						}
 						else
-							vec.add(new ObjectResourceTreeNode(element, element.internalScheme().name(), true,
+							vec.add(new StorableObjectTreeNode(element, element.internalScheme().name(), 
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")), false));
 					}
 				}
 				else
 				{
 					if (schel.schemeElements().length != 0)
-						vec.add(new ObjectResourceTreeNode("SchemeElement", "Вложенные элементы", true));
+						vec.add(new StorableObjectTreeNode("SchemeElement", "Вложенные элементы", true));
 				 if (schel.schemeLinks().length != 0)
-						vec.add(new ObjectResourceTreeNode("SchemeLink", "Линии", true));
+						vec.add(new StorableObjectTreeNode("SchemeLink", "Линии", true));
 				}
 			}
 		}

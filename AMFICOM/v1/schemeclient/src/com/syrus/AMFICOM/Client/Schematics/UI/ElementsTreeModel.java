@@ -73,6 +73,23 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				ObjectResourceCatalogActionModel.PROPS_BUTTON,
 				ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
 		}*/
+		if(node.getObject() instanceof String)
+		{
+			String s = (String )node.getObject();
+			if(s.equals("LinkType") ||
+					s.equals("CableLinkType.typ") ||
+					s.equals("PortType.typ") ||
+					s.equals("CablePortType.typ") ||
+					s.equals("MeasurementPortType.typ") ||
+					s.equals("TransmissionPathType.typ"))
+				return new ObjectResourceCatalogActionModel(
+						ObjectResourceCatalogActionModel.NO_PANEL,
+						ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
+						ObjectResourceCatalogActionModel.NO_SAVE_BUTTON,
+						ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
+						ObjectResourceCatalogActionModel.NO_PROPS_BUTTON,
+						ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
+		}
 		return new ObjectResourceCatalogActionModel(
 				ObjectResourceCatalogActionModel.NO_PANEL,
 				ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
@@ -177,7 +194,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 				vec.add(new ObjectResourceTreeNode("jdirectory", LangModelConfig.getString("menuJDirText"), true,
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
-			}
+			} 
 			else if(s.equals("netdirectory"))
 			{
 //				vec.add(new ObjectResourceTreeNode(EquipmentType.typ, LangModelConfig.getString("menuNetDirEquipmentText"), true));

@@ -179,7 +179,7 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 				colorComboBox_itemStateChanged(e);
 			}
 		});
-		cmbColorCombo.setRenderer(new ListColorRenderer());
+		cmbColorCombo.setRenderer(ColorListCellRenderer.getInstance());
 		for (int i = 0; i < defaultColors.length; i++)
 			cmbColorCombo.addItem(defaultColors[i]);
 		gbcMainPanel.gridx = 4;
@@ -384,8 +384,11 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 		this.taDescrArea.setText("");
 		// this.linksTypeBox.setSelectedItem(null);
 
-		if (clt != null)
+		if (clt != null) {
 			lsThreadsList.addElements(clt.getCableThreadTypes());
+			if (!clt.getCableThreadTypes().isEmpty())
+				lsThreadsList.setSelectedIndex(0);
+		}
 		layout.setObject(or);
 	}
 
@@ -465,26 +468,6 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 			layout.getInternalDispatcher().notify(
 					new SchemeNavigateEvent(new Object[] { layout.getCell(ctt) },
 							SchemeNavigateEvent.OTHER_OBJECT_SELECTED_EVENT));
-		}
-	}
-
-	static String EMPTY_STRING = " ";
-
-	class ListColorRenderer extends JLabel implements ListCellRenderer {
-
-		public ListColorRenderer() {
-			setOpaque(true); // MUST do this for background to show up.
-		}
-
-		public Component getListCellRendererComponent(JList list, Object color,
-				int index, boolean isSelected, boolean hasFocus) {
-			Color newColor = (Color) color;
-			super.setBackground(newColor);
-			setText(EMPTY_STRING);
-
-			setToolTipText("RGB value: " + newColor.getRed() + ", "
-					+ newColor.getGreen() + ", " + newColor.getBlue());
-			return this;
 		}
 	}
 }

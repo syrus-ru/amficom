@@ -1,16 +1,21 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.util.*;
+import java.awt.Color;
+import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import java.awt.*;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.tree.*;
+import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeModel;
+import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;

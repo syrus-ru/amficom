@@ -1,21 +1,21 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.util.Arrays;
-
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
+
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
+import oracle.jdeveloper.layout.*;
+
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.tree.*;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.*;
-import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup;
-import oracle.jdeveloper.layout.*;
-import com.syrus.AMFICOM.general.*;
 
 public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationListener
 {
@@ -145,18 +145,20 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 		String ret = JOptionPane.showInputDialog(Environment.getActiveWindow(), "Название:", "Новая группа", JOptionPane.QUESTION_MESSAGE);
 		if (ret == null || ret.equals(""))
 			return;
+		
+		Identifier userId = new Identifier(((RISDSessionInfo) aContext.getSessionInterface()).getAccessIdentifier().user_id); 
 
-		SchemeProtoGroup new_group = SchemeStorableObjectFactory.createSchemeProtoGroup();
-		new_group.name(ret);
+		SchemeProtoGroup new_group;
 		if (selectedObject instanceof SchemeProtoGroup)
 		{
 			SchemeProtoGroup parent_group = (SchemeProtoGroup)selectedObject;
-			/**
-			 * @todo Set parent at creation time.
-			 */
-//			new_group.parent(parent_group);
+			new_group = SchemeStorableObjectFactory.newSchemeProtoGroup(
+					userId, ret, parent_group);
 			Arrays.asList(parent_group.schemeProtoGroups()).add(new_group);
 		}
+		else
+			new_group = SchemeStorableObjectFactory.newSchemeProtoGroup(
+					userId, ret, null);
 
 		try {
 			SchemeStorableObjectPool.putStorableObject(new_group);

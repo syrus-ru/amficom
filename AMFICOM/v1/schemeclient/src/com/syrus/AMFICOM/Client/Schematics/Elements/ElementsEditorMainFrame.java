@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Schematics.Scheme.*;
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
 import com.syrus.AMFICOM.administration.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceCatalogFrame;
 import com.syrus.AMFICOM.general.*;
 
 public class ElementsEditorMainFrame extends JFrame
@@ -41,9 +42,10 @@ public class ElementsEditorMainFrame extends JFrame
 	PrimaryElementsEditorFrame editorFrame;
 //	ElementsPanel epanel;
 	SchemeViewerFrame ugoFrame;
+	ObjectResourceCatalogFrame catalogFrame;
 //	UgoPanel upanel;
-	PropsFrame propsFrame;
-	ElementsListFrame elementsListFrame;
+//	PropsFrame propsFrame;
+//	ElementsListFrame elementsListFrame;
 	//ElementsUploadListFrame elementsListFrame;
 	JInternalFrame treeFrame;
 
@@ -120,12 +122,15 @@ public class ElementsEditorMainFrame extends JFrame
 		ugoFrame.setTitle(LangModelSchematics.getString("elementsUGOTitle"));
 		desktopPane.add(ugoFrame);
 
-		propsFrame = new PropsFrame(aContext, true);
-		desktopPane.add(propsFrame);
+		catalogFrame = new ObjectResourceCatalogFrame(LangModelConfig.getString("catalogFrameTitle"), aContext);
+		desktopPane.add(catalogFrame);
+		
+//		propsFrame = new PropsFrame(aContext, true);
+//		desktopPane.add(propsFrame);
 
-		elementsListFrame = new ElementsListFrame(aContext, true);
+//		elementsListFrame = new ElementsListFrame(aContext, true);
 		//elementsListFrame = new ElementsUploadListFrame(aContext, true);
-		desktopPane.add(elementsListFrame);
+//		desktopPane.add(elementsListFrame);
 
 		//SchemeTreeFrame treeFrame = new SchemeTreeFrame(aContext, SchemeTreeFrame.COMPONENT);
 		//desktopPane.add(treeFrame);
@@ -190,10 +195,11 @@ public class ElementsEditorMainFrame extends JFrame
 		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(new ElementsEditorWindowArranger(this)));
 		aModel.setCommand("menuWindowTree", new ShowFrameCommand(desktopPane, treeFrame));
 		aModel.setCommand("menuWindowScheme", new ShowFrameCommand(desktopPane, editorFrame));
-		aModel.setCommand("menuWindowCatalog", new ShowCatalogFrameCommand(aContext, desktopPane));
+//		aModel.setCommand("menuWindowCatalog", new ShowCatalogFrameCommand(aContext, desktopPane));
+		aModel.setCommand("menuWindowCatalog", new ShowFrameCommand(desktopPane, catalogFrame));
 		aModel.setCommand("menuWindowUgo", new ShowFrameCommand(desktopPane, ugoFrame));
-		aModel.setCommand("menuWindowProps", new ShowFrameCommand(desktopPane, propsFrame));
-		aModel.setCommand("menuWindowList", new ShowFrameCommand(desktopPane, elementsListFrame));
+//		aModel.setCommand("menuWindowProps", new ShowFrameCommand(desktopPane, propsFrame));
+//		aModel.setCommand("menuWindowList", new ShowFrameCommand(desktopPane, elementsListFrame));
 
 		aModel.fireModelChanged("");
 
@@ -397,17 +403,18 @@ public class ElementsEditorMainFrame extends JFrame
 
 		editorFrame.setVisible(true);
 		ugoFrame.setVisible(true);
-		propsFrame.setVisible(true);
-		elementsListFrame.setVisible(true);
+//		propsFrame.setVisible(true);
+//		elementsListFrame.setVisible(true);
+		catalogFrame.setVisible(true);
 		treeFrame.setVisible(true);
 
-		ElementsTreeModel model = new ElementsTreeModel(aContext);
-		ElementsNavigatorPanel utp = new ElementsNavigatorPanel(aContext, internal_dispatcher, model);
-		utp.getTree().setRootVisible(false);
+//		ElementsTreeModel model = new ElementsTreeModel(aContext);
+//		ElementsNavigatorPanel utp = new ElementsNavigatorPanel(aContext, internal_dispatcher, model);
+//		utp.getTree().setRootVisible(false);
 		//UniTreePanel utp = new UniTreePanel(internal_dispatcher, aContext, model);
 		//utp.setBorder(BorderFactory.createLoweredBevelBorder());
 		treeFrame.getContentPane().removeAll();
-		treeFrame.getContentPane().add(utp, BorderLayout.CENTER);
+//		treeFrame.getContentPane().add(utp, BorderLayout.CENTER);
 		treeFrame.updateUI();
 	}
 
@@ -457,9 +464,10 @@ public class ElementsEditorMainFrame extends JFrame
 
 		editorFrame.setVisible(false);
 		ugoFrame.setVisible(false);
-		propsFrame.setVisible(false);
-		elementsListFrame.setVisible(false);
+//		propsFrame.setVisible(false);
+//		elementsListFrame.setVisible(false);
 		treeFrame.setVisible(false);
+		catalogFrame.setVisible(false);
 
 		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 	}
@@ -519,21 +527,24 @@ class ElementsEditorWindowArranger extends WindowArranger
 
 		normalize(f.editorFrame);
 		normalize(f.ugoFrame);
-		normalize(f.elementsListFrame);
-		normalize(f.propsFrame);
+//		normalize(f.elementsListFrame);
+//		normalize(f.propsFrame);
 		normalize(f.treeFrame);
+		normalize(f.catalogFrame);
 
-		f.editorFrame.setSize(3*w/5, h);
+		f.editorFrame.setSize(3*w / 5, h);
 		f.ugoFrame.setSize(w/5, 2 * h / 5);
-		f.elementsListFrame.setSize(w/5, 3 * h / 10);
-		f.propsFrame.setSize(w/5, 3 * h / 10);
-		f.treeFrame.setSize(w/5, h);
+//		f.elementsListFrame.setSize(w/5, 3 * h / 10);
+//		f.propsFrame.setSize(w/5, 3 * h / 10);
+		f.treeFrame.setSize(w/5, 2 * h / 5);
+		f.catalogFrame.setSize(2 * w/5, 3 * h / 5);
 
-		f.editorFrame.setLocation(w/5, 0);
-		f.ugoFrame.setLocation(4*w/5, 3 * h / 5);
-		f.elementsListFrame.setLocation(4*w/5, 0);
-		f.propsFrame.setLocation(4*w/5, 3*h/10);
+		f.editorFrame.setLocation(2 * w/5, 0);
+		f.ugoFrame.setLocation(w/5, 0);
+//		f.elementsListFrame.setLocation(4*w/5, 0);
+//		f.propsFrame.setLocation(4*w/5, 3*h/10);
 		f.treeFrame.setLocation(0, 0);
+		f.catalogFrame.setLocation(0, 2 * h / 5);
 	}
 }
 

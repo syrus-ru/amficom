@@ -20,6 +20,8 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.*;
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
 import com.syrus.AMFICOM.administration.*;
+import com.syrus.AMFICOM.client_.scheme.ui.*;
+import com.syrus.AMFICOM.client_.scheme.ui.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.*;
@@ -45,8 +47,9 @@ public class SchemeEditorMainFrame extends JFrame
 	static int scheme_count = 0;
 	PrimarySchemeEditorFrame editorFrame;
 	SchemeViewerFrame ugoFrame;
-	PropsFrame propsFrame;
-	ElementsListFrame elementsListFrame;
+	GeneralPropertiesFrame generalFrame;
+//	ElementsListFrame elementsListFrame;
+	CharacteristicPropertiesFrame characteristicFrame;
 	JInternalFrame treeFrame;
 	ArrayList graphs = new ArrayList();
 
@@ -143,11 +146,14 @@ public class SchemeEditorMainFrame extends JFrame
 
 //		scheme_graph = epanel.getGraph();
 
-		propsFrame = new PropsFrame(aContext, true);
-		desktopPane.add(propsFrame);
+		generalFrame = new GeneralPropertiesFrame("Title", aContext);
+		desktopPane.add(generalFrame);
 
-		elementsListFrame = new ElementsListFrame(aContext, true);
-		desktopPane.add(elementsListFrame);
+//		elementsListFrame = new ElementsListFrame(aContext, true);
+//		desktopPane.add(elementsListFrame);
+		
+		characteristicFrame = new CharacteristicPropertiesFrame("Title", aContext);
+		desktopPane.add(characteristicFrame);
 
 		//SchemeTreeFrame treeFrame = new SchemeTreeFrame(aContext, SchemeTreeFrame.SCHEME);
 		//desktopPane.add(treeFrame);
@@ -243,8 +249,8 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setCommand("menuWindowScheme", new ShowFrameCommand(desktopPane, editorFrame));
 		aModel.setCommand("menuWindowCatalog", new ShowCatalogFrameCommand(aContext, desktopPane));
 		aModel.setCommand("menuWindowUgo", new ShowFrameCommand(desktopPane, ugoFrame));
-		aModel.setCommand("menuWindowProps", new ShowFrameCommand(desktopPane, propsFrame));
-		aModel.setCommand("menuWindowList", new ShowFrameCommand(desktopPane, elementsListFrame));
+		aModel.setCommand("menuWindowProps", new ShowFrameCommand(desktopPane, generalFrame));
+		aModel.setCommand("menuWindowList", new ShowFrameCommand(desktopPane, characteristicFrame));
 
 		aModel.fireModelChanged("");
 
@@ -549,8 +555,8 @@ public class SchemeEditorMainFrame extends JFrame
 
 		editorFrame.setVisible(true);
 		ugoFrame.setVisible(true);
-		propsFrame.setVisible(true);
-		elementsListFrame.setVisible(true);
+		generalFrame.setVisible(true);
+		characteristicFrame.setVisible(true);
 		treeFrame.setVisible(true);
 
 		SchemeTreeModel model = new SchemeTreeModel(aContext);
@@ -629,8 +635,8 @@ public class SchemeEditorMainFrame extends JFrame
 
 		editorFrame.setVisible(false);
 		ugoFrame.setVisible(false);
-		propsFrame.setVisible(false);
-		elementsListFrame.setVisible(false);
+		generalFrame.setVisible(false);
+		characteristicFrame.setVisible(false);
 		treeFrame.setVisible(false);
 
 		statusBar.setText("domain", "Домен не установлен");
@@ -750,24 +756,24 @@ class SchemeEditorWindowArranger extends WindowArranger
 
 		normalize(f.editorFrame);
 		normalize(f.ugoFrame);
-		normalize(f.elementsListFrame);
-		normalize(f.propsFrame);
+		normalize(f.generalFrame);
+		normalize(f.characteristicFrame);
 		normalize(f.treeFrame);
 		if (catalogFrame != null)
 			normalize(catalogFrame);
 
 		f.editorFrame.setSize(3*w/5, h);
 		f.ugoFrame.setSize(w/5, 2 * h / 5);
-		f.elementsListFrame.setSize(w/5, 3 * h / 10);
-		f.propsFrame.setSize(w/5, 3 * h / 10);
+		f.generalFrame.setSize(w/5, 3 * h / 10);
+		f.characteristicFrame.setSize(w/5, 3 * h / 10);
 		f.treeFrame.setSize(w/5, h);
 		if (catalogFrame != null)
 			catalogFrame.setSize(3*w/5, h);
 
 		f.editorFrame.setLocation(w/5, 0);
 		f.ugoFrame.setLocation(4*w/5, 3 * h / 5);
-		f.elementsListFrame.setLocation(4*w/5, 0);
-		f.propsFrame.setLocation(4*w/5, 3*h/10);
+		f.generalFrame.setLocation(4*w/5, 0);
+		f.characteristicFrame.setLocation(4*w/5, 3*h/10);
 		f.treeFrame.setLocation(0, 0);
 		if (catalogFrame != null)
 			catalogFrame.setLocation(w/5, 0);

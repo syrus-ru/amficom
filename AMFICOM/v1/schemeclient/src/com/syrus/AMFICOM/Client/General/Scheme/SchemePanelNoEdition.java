@@ -1,14 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.util.*;
-
 import java.awt.event.KeyEvent;
+import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.*;
 

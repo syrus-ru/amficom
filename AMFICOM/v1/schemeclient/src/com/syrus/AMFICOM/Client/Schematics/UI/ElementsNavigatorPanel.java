@@ -25,12 +25,12 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 	JButton refreshButton;
 	ApplicationContext aContext;
 	Dispatcher dispatcher;
-	ObjectResourceTreeModel model;
-	UniTreePanel utp;
+	TreeDataModel model;
+	TreePanel utp;
 
 	Object selectedObject;
 
-	public ElementsNavigatorPanel(ApplicationContext aContext, Dispatcher dispatcher, ObjectResourceTreeModel model)
+	public ElementsNavigatorPanel(ApplicationContext aContext, Dispatcher dispatcher, TreeDataModel model)
 	{
 		this.aContext = aContext;
 		this.dispatcher = dispatcher;
@@ -104,7 +104,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 		add(toolBar, BorderLayout.NORTH);
 
 		// TREE
-		utp = new UniTreePanel(dispatcher, aContext, model);
+		utp = new TreePanel(dispatcher, model);
 
 		JScrollPane scroll_pane = new JScrollPane();
 		scroll_pane.getViewport().add(utp);
