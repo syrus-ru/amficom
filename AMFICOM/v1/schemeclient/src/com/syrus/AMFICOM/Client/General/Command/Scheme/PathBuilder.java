@@ -403,8 +403,8 @@ public class PathBuilder
 					for (Iterator it = SchemeUtils.getPorts(se).iterator(); it.hasNext();)
 					{
 						SchemePort port = (SchemePort)it.next();
-						if (port.equals(link.sourceSchemePort()) ||
-								port.equals(link.targetSchemePort()))
+						if (port.equals(link.getSourceSchemePort()) ||
+								port.equals(link.getTargetSchemePort()))
 						{
 							pe.endAbstractSchemePort(port);
 							return addLink(pes, port, link);
@@ -436,15 +436,15 @@ public class PathBuilder
 		newPE.scheme(link.getParentScheme());
 		newPE.sequentialNumber(number);
 
-		if (port.equals(link.sourceSchemePort()))
+		if (port.equals(link.getSourceSchemePort()))
 		{
-			newPE.startAbstractSchemePort(link.sourceSchemePort());
-			newPE.endAbstractSchemePort(link.targetSchemePort());
+			newPE.startAbstractSchemePort(link.getSourceSchemePort());
+			newPE.endAbstractSchemePort(link.getTargetSchemePort());
 		}
-		else if (port.equals(link.targetSchemePort()))
+		else if (port.equals(link.getTargetSchemePort()))
 		{
-			newPE.startAbstractSchemePort(link.targetSchemePort());
-			newPE.endAbstractSchemePort(link.sourceSchemePort());
+			newPE.startAbstractSchemePort(link.getTargetSchemePort());
+			newPE.endAbstractSchemePort(link.getSourceSchemePort());
 		}
 		else //нет общих портов
 			return null;
@@ -483,8 +483,8 @@ public class PathBuilder
 					for (Iterator it = SchemeUtils.getCablePorts(se).iterator(); it.hasNext();)
 					{
 						SchemeCablePort port = (SchemeCablePort)it.next();
-						if (port.equals(link.sourceSchemeCablePort()) ||
-								port.equals(link.targetSchemeCablePort()))
+						if (port.equals(link.getSourceSchemeCablePort()) ||
+								port.equals(link.getTargetSchemeCablePort()))
 						{
 							pe.endAbstractSchemePort(port);
 							if (pe.startAbstractSchemePort() instanceof SchemePort)
@@ -530,15 +530,15 @@ public class PathBuilder
 		newPE.scheme(link.getParentScheme());
 		newPE.sequentialNumber(number);
 
-		if (port.equals(link.sourceSchemeCablePort()))
+		if (port.equals(link.getSourceSchemeCablePort()))
 		{
-			newPE.startAbstractSchemePort(link.sourceSchemeCablePort());
-			newPE.endAbstractSchemePort(link.targetSchemeCablePort());
+			newPE.startAbstractSchemePort(link.getSourceSchemeCablePort());
+			newPE.endAbstractSchemePort(link.getTargetSchemeCablePort());
 		}
-		else if (port.equals(link.targetSchemeCablePort()))
+		else if (port.equals(link.getTargetSchemeCablePort()))
 		{
-			newPE.startAbstractSchemePort(link.targetSchemeCablePort());
-			newPE.endAbstractSchemePort(link.sourceSchemeCablePort());
+			newPE.startAbstractSchemePort(link.getTargetSchemeCablePort());
+			newPE.endAbstractSchemePort(link.getSourceSchemeCablePort());
 		}
 		else //нет общих портов
 			return null;

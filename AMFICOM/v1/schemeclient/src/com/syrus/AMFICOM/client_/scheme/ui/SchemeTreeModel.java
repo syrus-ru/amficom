@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.10 2005/03/25 10:27:12 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.11 2005/03/25 13:30:24 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/03/25 10:27:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/03/25 13:30:24 $
  * @module schemeclient_v1
  */
 
@@ -436,8 +436,8 @@ public class SchemeTreeModel implements PopulateChildrenFactory {
 			} 
 			else if (s.equals(Constants.SCHEME_PATH)) {
 				Scheme parent = (Scheme) ((SONode) node.getParent()).getUserObject();
-				for (int i = 0; i < parent.getCurrentSchemeMonitoringSolution().schemePaths().length; i++) {
-					SchemePath path = parent.getCurrentSchemeMonitoringSolution().schemePaths()[i];
+				for (int i = 0; i < parent.getCurrentSchemeMonitoringSolution().getSchemePathsAsArray().length; i++) {
+					SchemePath path = parent.getCurrentSchemeMonitoringSolution().getSchemePathsAsArray()[i];
 					if (!contents.contains(path))
 						node.addChild(new IconedNode(this, path, path.getName(), false));
 				}
@@ -525,7 +525,7 @@ public class SchemeTreeModel implements PopulateChildrenFactory {
 					if (!contents.contains(Constants.SCHEME_CABLELINK))
 						node.addChild(new IconedNode(this, Constants.SCHEME_CABLELINK));
 				}
-				if (s.getCurrentSchemeMonitoringSolution().schemePaths().length != 0) {
+				if (s.getCurrentSchemeMonitoringSolution().getSchemePathsAsArray().length != 0) {
 					if (!contents.contains(Constants.SCHEME_PATH))
 						node.addChild(new IconedNode(this, Constants.SCHEME_PATH));
 				}

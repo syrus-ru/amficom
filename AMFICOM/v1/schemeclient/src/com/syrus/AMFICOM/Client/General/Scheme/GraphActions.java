@@ -1218,9 +1218,9 @@ public class GraphActions
 
 		sp.setSchemeLink(sl);
 		if (is_source)
-			sl.sourceSchemePort(sp);
+			sl.setSourceSchemePort(sp);
 		else
-			sl.targetSchemePort(sp);
+			sl.setTargetSchemePort(sp);
 
 		PortType pt = sp.getPortType();
 		if (pt == null)
@@ -1244,13 +1244,13 @@ public class GraphActions
 		SchemePort sp;
 		if (is_source)
 		{
-			sp = sl.sourceSchemePort();
-			sl.sourceSchemePort(null);
+			sp = sl.getSourceSchemePort();
+			sl.setSourceSchemePort(null);
 		}
 		else
 		{
-			sp = sl.targetSchemePort();
-			sl.targetSchemePort(null);
+			sp = sl.getTargetSchemePort();
+			sl.setTargetSchemePort(null);
 		}
 		if (sp != null)
 		{
@@ -1289,9 +1289,9 @@ public class GraphActions
 
 		sp.setSchemeCableLink(sl);
 		if (is_source)
-			sl.sourceSchemeCablePort(sp);
+			sl.setSourceSchemeCablePort(sp);
 		else
-			sl.targetSchemeCablePort(sp);
+			sl.setTargetSchemeCablePort(sp);
 
 		PortType pt = sp.getPortType();
 		if (pt == null)
@@ -1313,13 +1313,13 @@ public class GraphActions
 		SchemeCablePort sp;
 		if (is_source)
 		{
-			sp = sl.sourceSchemeCablePort();
-			sl.sourceSchemeCablePort(null);
+			sp = sl.getSourceSchemeCablePort();
+			sl.setSourceSchemeCablePort(null);
 		}
 		else
 		{
-			sp = sl.targetSchemeCablePort();
-			sl.targetSchemeCablePort(null);
+			sp = sl.getTargetSchemeCablePort();
+			sl.setTargetSchemeCablePort(null);
 		}
 
 		sp.setSchemeCableLink(null);

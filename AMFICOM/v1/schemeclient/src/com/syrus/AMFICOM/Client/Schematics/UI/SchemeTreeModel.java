@@ -436,9 +436,9 @@ public class SchemeTreeModel implements TreeDataModel
 			else if (s.equals("SchemePath"))
 			{
 				Scheme parent = (Scheme)((StorableObjectTreeNode)node.getParent()).getUserObject();
-				for(int i = 0; i < parent.getCurrentSchemeMonitoringSolution().schemePaths().length; i++)
+				for(int i = 0; i < parent.getCurrentSchemeMonitoringSolution().getSchemePathsAsArray().length; i++)
 				{
-					SchemePath path = parent.getCurrentSchemeMonitoringSolution().schemePaths()[i];
+					SchemePath path = parent.getCurrentSchemeMonitoringSolution().getSchemePathsAsArray()[i];
 					vec.add(new StorableObjectTreeNode(path, path.getName(), true));
 				}
 			}
@@ -529,7 +529,7 @@ public class SchemeTreeModel implements TreeDataModel
 					vec.add(new StorableObjectTreeNode("SchemeLink", "Линии", true));
 				if (s.getSchemeCableLinksAsArray().length != 0)
 					vec.add(new StorableObjectTreeNode("SchemeCableLink", "Кабели", true));
-				if (s.getCurrentSchemeMonitoringSolution().schemePaths().length != 0)
+				if (s.getCurrentSchemeMonitoringSolution().getSchemePathsAsArray().length != 0)
 					vec.add(new StorableObjectTreeNode("SchemePath", "Пути", true));
 			}
 			else if(node.getUserObject() instanceof SchemeElement)

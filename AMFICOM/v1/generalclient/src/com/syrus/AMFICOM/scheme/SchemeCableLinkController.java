@@ -71,9 +71,9 @@ public final class SchemeCableLinkController implements ObjectResourceController
 			else if (key.equals(COLUMN_TYPE_ID))
 				result = link.getCableLinkType().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SOURCE_SCHEME_PORT_ID))
-				result = link.sourceSchemeCablePort().getId().getIdentifierString();
+				result = link.getSourceSchemeCablePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_TARGET_SCHEME_PORT_ID))
-				result = link.targetSchemeCablePort().getId().getIdentifierString();
+				result = link.getTargetSchemeCablePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_OPTICAL_LENGTH))
 				result = Double.toString(link.opticalLength());
 			else if (key.equals(COLUMN_PHYSICAL_LENGTH))

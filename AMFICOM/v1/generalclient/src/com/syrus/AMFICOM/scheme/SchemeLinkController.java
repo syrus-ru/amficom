@@ -91,9 +91,9 @@ public final class SchemeLinkController implements ObjectResourceController
 			else if (key.equals(COLUMN_TYPE_ID))
 				result = link.getLinkType().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SOURCE_SCHEME_PORT_ID))
-				result = link.sourceSchemePort().getId().getIdentifierString();
+				result = link.getSourceSchemePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_TARGET_SCHEME_PORT_ID))
-				result = link.targetSchemePort().getId().getIdentifierString();
+				result = link.getTargetSchemePort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SITE_NODE_ID))
 				result = link.getSiteNode().getId().getIdentifierString();
 			else if (key.equals(COLUMN_OPTICAL_LENGTH))

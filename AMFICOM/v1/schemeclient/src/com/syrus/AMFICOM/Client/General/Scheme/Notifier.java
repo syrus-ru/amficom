@@ -112,7 +112,7 @@ public class Notifier
 					}
 					else if (graph.mode.equals(Constants.PATH_MODE))
 					{
-						SchemePath[] paths = graph.getScheme().getCurrentSchemeMonitoringSolution().schemePaths();
+						SchemePath[] paths = graph.getScheme().getCurrentSchemeMonitoringSolution().getSchemePathsAsArray();
 						for (int i = 0; i < paths.length; i++)
 						{
 							if (SchemeUtils.isElementInPath(paths[i], link.getId()))
@@ -135,7 +135,7 @@ public class Notifier
 					}
 					else if (graph.mode.equals(Constants.PATH_MODE))
 					{
-						SchemePath[] paths = graph.getScheme().getCurrentSchemeMonitoringSolution().schemePaths();
+						SchemePath[] paths = graph.getScheme().getCurrentSchemeMonitoringSolution().getSchemePathsAsArray();
 						for (int i = 0; i < paths.length; i++)
 						{
 							if (SchemeUtils.isElementInPath(paths[i], link.getId()))

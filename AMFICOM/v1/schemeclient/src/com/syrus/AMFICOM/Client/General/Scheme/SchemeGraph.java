@@ -855,10 +855,10 @@ public class SchemeGraph extends GPGraph
 						Arrays.asList(getScheme().getSchemeCableLinksAsArray()).add(link);
 						if (!getScheme().getSchemeKind().equals(SchemeKind.CABLE_SUBNETWORK))
 						{
-							if (link.sourceSchemeCablePort() != null)
+							if (link.getSourceSchemeCablePort() != null)
 							{
 								SchemeElement se = SchemeUtils.getSchemeElementByDevice(
-										getScheme(), link.sourceSchemeCablePort().getParentSchemeDevice());
+										getScheme(), link.getSourceSchemeCablePort().getParentSchemeDevice());
 								if (se.getScheme() != null)
 								{
 									Scheme source_scheme = se.getScheme();
@@ -870,10 +870,10 @@ public class SchemeGraph extends GPGraph
 									}
 								}
 							}
-							if (!inserted && link.targetSchemeCablePort() != null)
+							if (!inserted && link.getTargetSchemeCablePort() != null)
 							{
 								SchemeElement se = SchemeUtils.getSchemeElementByDevice(
-										getScheme(), link.targetSchemeCablePort().getParentSchemeDevice());
+										getScheme(), link.getTargetSchemeCablePort().getParentSchemeDevice());
 								if (se.getScheme() != null)
 								{
 									Scheme target_scheme = se.getScheme();

@@ -306,7 +306,7 @@ public class SchemePanel extends ElementsPanel
 
 	public void removeAllPathsFromScheme()
 	{
-		getGraph().getScheme().getCurrentSchemeMonitoringSolution().schemePaths(new SchemePath[0]);
+		getGraph().getScheme().getCurrentSchemeMonitoringSolution().setSchemePathsAsArray(new SchemePath[0]);
 	}
 
 	public boolean updatePathsAtScheme(Collection paths)
@@ -319,12 +319,12 @@ public class SchemePanel extends ElementsPanel
 
 	public void removePathFromScheme(SchemePath path)
 	{
-		Arrays.asList(getGraph().getScheme().getCurrentSchemeMonitoringSolution().schemePaths()).remove(path);
+		Arrays.asList(getGraph().getScheme().getCurrentSchemeMonitoringSolution().getSchemePathsAsArray()).remove(path);
 	}
 
 	public void insertPathToScheme(SchemePath path)
 	{
-		List paths = Arrays.asList(getGraph().getScheme().getCurrentSchemeMonitoringSolution().schemePaths());
+		List paths = Arrays.asList(getGraph().getScheme().getCurrentSchemeMonitoringSolution().getSchemePathsAsArray());
 		if (!paths.contains(path))
 			paths.add(path);
 		editing_path = null;
