@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertyFrame.java,v 1.3 2004/09/29 15:11:26 krupenn Exp $
+ * $Id: MapPropertyFrame.java,v 1.4 2004/10/01 16:34:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesTableModel;
 
 import java.awt.BorderLayout;
+import java.awt.SystemColor;
 import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
@@ -39,7 +40,7 @@ import javax.swing.event.TableModelListener;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/29 15:11:26 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/01 16:34:08 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -54,6 +55,8 @@ public final class MapPropertyFrame extends JInternalFrame
 	ObjectResourcePropertiesController controller = null;
 	
 	ObjectResource or;
+
+	JScrollPane scrollPane = new JScrollPane();
 
 	public MapPropertyFrame(String title)
 	{
@@ -79,7 +82,13 @@ public final class MapPropertyFrame extends JInternalFrame
 
 		getContentPane().setLayout(new BorderLayout());
 
-		getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
+		scrollPane.getViewport().add(table);
+
+		scrollPane.setWheelScrollingEnabled(true);
+		scrollPane.getViewport().setBackground(SystemColor.window);
+		table.setBackground(SystemColor.window);
+
+		getContentPane().add(scrollPane, BorderLayout.CENTER);
 	}
 
 	public void setContext(ApplicationContext aContext)
