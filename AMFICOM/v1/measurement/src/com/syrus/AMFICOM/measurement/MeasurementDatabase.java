@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.24 2004/09/16 10:02:14 max Exp $
+ * $Id: MeasurementDatabase.java,v 1.25 2004/09/20 13:15:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -17,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainMember;
@@ -34,8 +36,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/09/16 10:02:14 $
- * @author $Author: max $
+ * @version $Revision: 1.25 $, $Date: 2004/09/20 13:15:07 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -237,6 +239,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			+ SQL_AND + LINK_SORT + EQUALS + Integer.toString(resultSortNum);
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementDatabase.retrieveResult | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -269,32 +272,15 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally {
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		Measurement measurement = this.fromStorableObject(storableObject);
-		try {
-			this.insertEntity(measurement);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		this.insertEntity(measurement);
 	}
 	
 	
@@ -304,36 +290,17 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws  IllegalDataException, VersionCollisionException, UpdateObjectException {
 		Measurement measurement = this.fromStorableObject(storableObject);
-		try {
-			switch (updateKind) {
-				case Measurement.UPDATE_STATUS:
-					this.updateStatus(measurement);
-					break;
-				case UPDATE_CHECK:
-					super.checkAndUpdateEntity(storableObject, false);
-					break;
-				case UPDATE_FORCE:					
-				default:
-					super.checkAndUpdateEntity(storableObject, true);					
-					return;
-			}
-		}
-		catch (UpdateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
+		switch (updateKind) {
+			case Measurement.UPDATE_STATUS:
+				this.updateStatus(measurement);
+				break;
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntity(storableObject, false);
+				break;
+			case UPDATE_FORCE:					
+			default:
+				super.checkAndUpdateEntity(storableObject, true);					
+				return;
 		}
 	}	
 	
@@ -371,6 +338,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			+ COLUMN_MODIFIER_ID + EQUALS + measurement.getModifierId().toSQLString()
 			+ SQL_WHERE + COLUMN_ID + EQUALS + measurementIdStr;
 		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementDatabase.updateStatus | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -388,6 +356,8 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally{
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}	
