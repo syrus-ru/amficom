@@ -1,5 +1,5 @@
 /*
- * $Id: MapWrapper.java,v 1.4 2005/02/03 08:38:02 bob Exp $
+ * $Id: MapWrapper.java,v 1.5 2005/03/04 08:06:28 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/03 08:38:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/03/04 08:06:28 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class MapWrapper implements StorableObjectWrapper {
@@ -130,7 +130,7 @@ public class MapWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				map.setDescription((String) value);
 			else if (key.equals(COLUMN_DOMAIN_ID))
-				map.setDomainId(new Identifier((String) value));
+				map.setDomainId((Identifier) value);
 			else if (key.equals(LINK_COLUMN_COLLECTOR_ID))
 				map.setCollectors((List) value);
 			else if (key.equals(LINK_COLUMN_MARK_ID))
