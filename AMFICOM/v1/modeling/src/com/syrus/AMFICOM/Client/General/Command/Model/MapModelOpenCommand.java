@@ -1,23 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Command.Model;
 
+import javax.swing.JDesktopPane;
+
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Model.MapModelingApplicationModelFactory;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorOpenViewCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapElementsCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapPropertiesCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapWindowCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewOpenCommand;
-import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
-import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
-import com.syrus.AMFICOM.Client.Model.ModelMDIMain;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import javax.swing.JDesktopPane;
 
 public class MapModelOpenCommand extends MapEditorOpenViewCommand
 {

@@ -1,21 +1,35 @@
 package com.syrus.AMFICOM.Client.General.Command.Model;
 
-import com.syrus.AMFICOM.general.corba.StringFieldSort;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.General.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StringFieldCondition;
+import com.syrus.AMFICOM.general.corba.StringFieldSort;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.Modeling;
+import com.syrus.AMFICOM.measurement.ModelingType;
 import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.corba.*;
-import com.syrus.io.*;
+import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.corba.SetSort;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.io.BellcoreWriter;
 
 public class SaveModelingCommand extends VoidCommand
 {
@@ -103,7 +117,7 @@ public class SaveModelingCommand extends VoidCommand
 
 			Modeling m = Modeling.createInstance(
 					userId,
-					getModelingType(ParameterTypeCodenames.DADARA_MODELING),
+					getModelingType(ModelingType.CODENAME_DADARA),
 					new Identifier(bs.monitoredElementId),
 					name,
 					argumentSet);

@@ -11,9 +11,6 @@ public class ViewModelMapPropertiesCommand  extends ViewMapPropertiesCommand
 {
 	JDesktopPane desktop;
 	ModelMDIMain parent;
-	public ViewModelMapPropertiesCommand()
-	{
-	}
 
 	public ViewModelMapPropertiesCommand(ModelMDIMain parent, JDesktopPane desktop, ApplicationContext aContext)
 	{
