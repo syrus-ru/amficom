@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.10 2005/03/24 16:58:52 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.11 2005/03/25 10:15:12 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import java.util.*;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/03/24 16:58:52 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/25 10:15:12 $
  * @module scheme_v1
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -144,6 +144,15 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	/**
 	 * @param creatorId cannot be <code>null</code>.
 	 * @param name cannot be <code>null</code>.
+	 * @throws CreateObjectException
+	 */
+	public static SchemeProtoElement createInstance(final Identifier creatorId, final String name) throws CreateObjectException {
+		return createInstance(creatorId, name, "", "", null, null, null, null);  //$NON-NLS-1$//$NON-NLS-2$
+	}
+
+	/**
+	 * @param creatorId cannot be <code>null</code>.
+	 * @param name cannot be <code>null</code>.
 	 * @param description cannot be <code>null</code>, but can be empty.
 	 * @param label cannot be <code>null</code>, but can be empty.
 	 * @param equipmentType may be <code>null</code>.
@@ -181,7 +190,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 					"SchemeProtoElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
 	}
-	
+
 	/**
 	 * @param creatorId cannot be <code>null</code>.
 	 * @param name cannot be <code>null</code>.
@@ -728,6 +737,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			 */
 			assert !this.parentSchemeProtoElementId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			if (parentSchemeProtoElement == null) {
+				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
 				SchemeStorableObjectPool.delete(this.id);
 				return;
 			}
@@ -739,8 +749,10 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			 * Moving from a group to an element.
 			 */
 			assert this.parentSchemeProtoElementId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
-			if (parentSchemeProtoElement == null)
+			if (parentSchemeProtoElement == null) {
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 				return;
+			}
 			newParentSchemeProtoElementId = parentSchemeProtoElement.id;
 			this.parentSchemeProtoGroupId = Identifier.VOID_IDENTIFIER;
 		}
@@ -771,6 +783,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			 */
 			assert !this.parentSchemeProtoGroupId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.PARENTLESS_CHILD_PROHIBITED;
 			if (parentSchemeProtoGroup == null) {
+				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
 				SchemeStorableObjectPool.delete(this.id);
 				return;
 			}
@@ -782,8 +795,10 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			 * Moving from an element to a group.
 			 */
 			assert this.parentSchemeProtoGroupId.equals(Identifier.VOID_IDENTIFIER): ErrorMessages.MULTIPLE_PARENTS_PROHIBITED;
-			if (parentSchemeProtoGroup == null)
+			if (parentSchemeProtoGroup == null) {
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
 				return;
+			}
 			newParentSchemeProtoGroupId = parentSchemeProtoGroup.getId();
 			this.parentSchemeProtoElementId = Identifier.VOID_IDENTIFIER;
 		}

@@ -1,22 +1,20 @@
-/*
- * $Id: SchemeCablePort.java,v 1.3 2005/03/17 18:17:27 bass Exp $
+/*-
+ * $Id: SchemeCablePort.java,v 1.4 2005/03/25 10:15:12 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
-import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 18:17:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/25 10:15:12 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -43,50 +41,26 @@ public final class SchemeCablePort extends AbstractSchemePort {
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
-	public AbstractSchemeLink abstractSchemeLink() {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
-	 * @param newAbstractSchemeLink
-	 * @see com.syrus.AMFICOM.scheme.AbstractSchemePort#abstractSchemeLink(com.syrus.AMFICOM.scheme.corba.AbstractSchemeLink)
+	 * @see AbstractSchemePort#getAbstractSchemeLink()
 	 */
-	public void abstractSchemeLink(AbstractSchemeLink newAbstractSchemeLink) {
-		throw new UnsupportedOperationException();
+	public AbstractSchemeLink getAbstractSchemeLink() {
+		return getSchemeCableLink();
 	}
 
 	/**
-	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
+	 * @param abstractSchemeLink
+	 * @see AbstractSchemePort#setAbstractSchemeLink(AbstractSchemeLink)
 	 */
-	public void addCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
-	}
-
-	public DirectionType directionType() {
-		throw new UnsupportedOperationException();
+	public void setAbstractSchemeLink(final AbstractSchemeLink abstractSchemeLink) {
+		setSchemeCableLink((SchemeCableLink) abstractSchemeLink);
 	}
 
 	/**
-	 * @param newDirectionType
-	 * @see com.syrus.AMFICOM.scheme.AbstractSchemePort#directionType(com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType)
-	 */
-	public void directionType(DirectionType newDirectionType) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
-	 */
-	public Collection getCharacteristics() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 * @see Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
+		return CharacteristicSort.CHARACTERISTIC_SORT_SCHEMECABLEPORT;
 	}
 
 	/**
@@ -96,96 +70,11 @@ public final class SchemeCablePort extends AbstractSchemePort {
 		throw new UnsupportedOperationException();
 	}
 
-	public MeasurementPort getMeasurementPort() {
+	public SchemeCableLink getSchemeCableLink() {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @param newMeasurementPortImpl
-	 */
-	public void setMeasurementPort(MeasurementPort newMeasurementPortImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public MeasurementPortType getMeasurementPortType() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newMeasurementPortTypeImpl
-	 */
-	public void setMeasurementPortType(
-			MeasurementPortType newMeasurementPortTypeImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Port getPort() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newPortImpl
-	 */
-	public void setPort(Port newPortImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public PortType getPortType() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newPortTypeImpl
-	 */
-	public void setPortType(PortType newPortTypeImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(Characteristic)
-	 */
-	public void removeCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeCableLink schemeCableLink() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSchemeCableLink
-	 * @see com.syrus.AMFICOM.scheme.SchemeCablePort#schemeCableLink(com.syrus.AMFICOM.scheme.corba.SchemeCableLink)
-	 */
-	public void schemeCableLink(SchemeCableLink newSchemeCableLink) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeDevice schemeDevice() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newSchemeDevice
-	 * @see com.syrus.AMFICOM.scheme.AbstractSchemePort#schemeDevice(com.syrus.AMFICOM.scheme.corba.SchemeDevice)
-	 */
-	public void schemeDevice(SchemeDevice newSchemeDevice) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
-	 */
-	public void setCharacteristics(Collection characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
-	 */
-	public void setCharacteristics0(Collection characteristics) {
+	public void setSchemeCableLink(final SchemeCableLink schemeCableLink) {
 		throw new UnsupportedOperationException();
 	}
 

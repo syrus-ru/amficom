@@ -1,14 +1,17 @@
-/*
- * $Id: AbstractSchemePort.java,v 1.3 2005/03/17 18:17:27 bass Exp $ Copyright ¿
- * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
+/*-
+ * $Id: AbstractSchemePort.java,v 1.4 2005/03/25 10:15:12 bass Exp $
+ * 
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
-import java.util.Date;
+import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
+import java.util.*;
 
 /**
  * This class is never used directly, it was provided just in order for source
@@ -16,7 +19,7 @@ import java.util.Date;
  * {@link AbstractSchemePort}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 18:17:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/25 10:15:12 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -24,39 +27,33 @@ public abstract class AbstractSchemePort extends
 		Characterizable {
 	private static final long serialVersionUID = 6943625949984422779L;
 
-	/**
-	 * Depending on implementation, may reference either {@link SchemeLink}
-	 * or {@link SchemeCableLink}.
-	 */
-	protected Identifier abstractSchemeLinkId = null;
+	private AbstractSchemePortDirectionType abstractSchemePortDirectionType;
 
-	protected Identifier characteristicIds[] = null;
-
-	protected Identifier measurementPortId = null;
-
-	protected Identifier measurementPortTypeId = null;
-
-	/**
-	 * Depending on implementation, may reference either
-	 * {@link com.syrus.AMFICOM.configuration.Port port}or
-	 * {@link com.syrus.AMFICOM.configuration.Port cable port}.
-	 */
-	protected Identifier portId = null;
-
-	/**
-	 * Depending on implementation, may reference either
-	 * {@link com.syrus.AMFICOM.configuration.PortType port type}or
-	 * {@link com.syrus.AMFICOM.configuration.PortType cable port type}.
-	 */
-	protected Identifier portTypeId = null;
-
-	protected Identifier schemeDeviceId = null;
+	private Collection characteristics;
 
 	private String description;
 
-	protected DirectionType thisDirectionType = null;
+	private Identifier measurementPortId;
+
+	private Identifier measurementPortTypeId;
 
 	private String name;
+
+	private Identifier parentSchemeDeviceId;
+
+	/**
+	 * Depending on implementation, may reference either
+	 * {@link com.syrus.AMFICOM.configuration.Port Port} or
+	 * {@link com.syrus.AMFICOM.configuration.Port CablePort}.
+	 */
+	private Identifier portId;
+
+	/**
+	 * Depending on implementation, may reference either
+	 * {@link com.syrus.AMFICOM.configuration.PortType PortType} or
+	 * {@link com.syrus.AMFICOM.configuration.PortType CablePortType}.
+	 */
+	private Identifier portTypeId;
 
 	/**
 	 * @param id
@@ -78,43 +75,84 @@ public abstract class AbstractSchemePort extends
 			Identifier modifierId, long version) {
 		super(id, created, modified, creatorId, modifierId, version);
 	}
+	
+	public final void addCharacteristic(final Characteristic characteristic) {
+		throw new UnsupportedOperationException();
+	}
+
+	public abstract AbstractSchemeLink getAbstractSchemeLink();
+
+	public final AbstractSchemePortDirectionType getAbstractSchemePortDirectionType() {
+		throw new UnsupportedOperationException();
+	}
+
+	public final Collection getCharacteristics() {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
-	 * @see #abstractSchemeLinkId
+	 * @see StorableObject#getDependencies()
 	 */
-	public abstract AbstractSchemeLink abstractSchemeLink();
+	public List getDependencies() {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
-	 * @see #abstractSchemeLinkId
+	 * @see Describable#getDescription()
 	 */
-	public abstract void abstractSchemeLink(
-			AbstractSchemeLink newAbstractSchemeLink);
+	public final String getDescription() {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.description;
+	}
 
-	public abstract DirectionType directionType();
+	public final MeasurementPort getMeasurementPort() {
+		throw new UnsupportedOperationException();
+	}
 
-	public abstract void directionType(DirectionType newDirectionType);
+	public final MeasurementPortType getMeasurementPortType() {
+		throw new UnsupportedOperationException();
+	}
 
-	public abstract SchemeDevice schemeDevice();
+	/**
+	 * @see Namable#getName()
+	 */
+	public final String getName() {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.name;
+	}
 
-	public abstract void schemeDevice(SchemeDevice newSchemeDevice);
+	public final SchemeDevice getParentSchemeDevice() {
+		throw new UnsupportedOperationException();
+	}
 
-	public abstract PortType getPortType();
+	public final Port getPort() {
+		throw new UnsupportedOperationException();
+	}
 
-	public abstract void setPortType(final PortType portType);
+	public final PortType getPortType() {
+		throw new UnsupportedOperationException();
+	}
+	
+	public final void removeCharacteristic(final Characteristic characteristic) {
+		throw new UnsupportedOperationException();
+	}
 
-	public abstract Port getPort();
+	/**
+	 * @deprecated
+	 */
+	public abstract void setAbstractSchemeLink(final AbstractSchemeLink abstractSchemeLink);
 
-	public abstract void setPort(final Port port);
+	public final void setAbstractSchemePortDirectionType(final AbstractSchemePortDirectionType abstractSchemePortDirectionType) {
+		throw new UnsupportedOperationException();
+	}
 
-	public abstract MeasurementPortType getMeasurementPortType();
+	public final void setCharacteristics(final Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
 
-	public abstract void setMeasurementPortType(
-			final MeasurementPortType measurementPortType);
-
-	public abstract MeasurementPort getMeasurementPort();
-
-	public abstract void setMeasurementPort(
-			final MeasurementPort measurementPort);
+	public final void setCharacteristics0(final Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * @see Describable#setDescription(String)
@@ -128,12 +166,12 @@ public abstract class AbstractSchemePort extends
 		this.changed = true;
 	}
 
-	/**
-	 * @see Describable#getDescription()
-	 */
-	public final String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.description;
+	public final void setMeasurementPort(final MeasurementPort measurementPort) {
+		throw new UnsupportedOperationException();
+	}
+
+	public final void setMeasurementPortType(final MeasurementPortType measurementPortType) {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -148,11 +186,15 @@ public abstract class AbstractSchemePort extends
 		this.changed = true;
 	}
 
-	/**
-	 * @see Namable#getName()
-	 */
-	public final String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.name;
+	public final void setParentSchemeDevice(final SchemeDevice parentSchemeDevice) {
+		throw new UnsupportedOperationException();
+	}
+
+	public final void setPort(final Port port) {
+		throw new UnsupportedOperationException();
+	}
+
+	public final void setPortType(final PortType portType) {
+		throw new UnsupportedOperationException();
 	}
 }

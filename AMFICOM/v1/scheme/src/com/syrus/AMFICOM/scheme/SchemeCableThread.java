@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableThread.java,v 1.4 2005/03/17 18:17:27 bass Exp $ Copyright ¿
+ * $Id: SchemeCableThread.java,v 1.5 2005/03/25 10:15:12 bass Exp $ Copyright ¿
  * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
@@ -12,7 +12,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/17 18:17:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/25 10:15:12 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -105,9 +105,9 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		final SchemePort sourceSchemePort = sourceSchemePort();
 		final SchemePort targetSchemePort = targetSchemePort();
 		final Identifier sourceSchemeDeviceId = sourceSchemePort
-				.schemeDevice().getId();
+				.getParentSchemeDevice().getId();
 		final Identifier targetSchemeDeviceId = targetSchemePort
-				.schemeDevice().getId();
+				.getParentSchemeDevice().getId();
 		final Identifier schemeDeviceId = schemeDevice.getId();
 		if (schemeDeviceId.equals(sourceSchemeDeviceId))
 			return sourceSchemePort;

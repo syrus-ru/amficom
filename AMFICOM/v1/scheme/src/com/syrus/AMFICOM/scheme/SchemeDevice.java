@@ -1,5 +1,5 @@
-/*
- * $Id: SchemeDevice.java,v 1.5 2005/03/24 16:58:52 bass Exp $
+/*-
+ * $Id: SchemeDevice.java,v 1.6 2005/03/25 10:15:12 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.*;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/24 16:58:52 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/25 10:15:12 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
