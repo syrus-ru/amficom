@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.18 2005/03/09 14:49:53 bass Exp $
+ * $Id: SiteNodeDatabase.java,v 1.19 2005/03/10 09:03:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,15 +11,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -29,14 +25,13 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/03/09 14:49:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/03/10 09:03:20 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class SiteNodeDatabase extends CharacterizableDatabase {
@@ -53,10 +48,7 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 	
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		SiteNode siteNode = this.fromStorableObject(storableObject);
-		this.retrieveEntity(siteNode);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
-		siteNode.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(siteNode.getId(), 
-			CharacteristicSort.CHARACTERISTIC_SORT_SITE_NODE));
+		super.retrieveEntity(siteNode);
 	}	
 	
 	protected String getEnityName() {		
@@ -171,53 +163,35 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		SiteNode siteNode = this.fromStorableObject(storableObject);
-		this.insertEntity(siteNode);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
-		try {
-			characteristicDatabase.updateCharacteristics(siteNode);
-		} catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
-		}
+		super.insertEntity(siteNode);
 	}
 	
 	
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
-		insertEntities(storableObjects);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
-		try {
-			characteristicDatabase.updateCharacteristics(storableObjects);
-		} catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
-		}
+		super.insertEntities(storableObjects);
 	}
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObject);
 				break;
 			case UPDATE_FORCE:					
 			default:
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				characteristicDatabase.updateCharacteristics(storableObject);
 				return;
 		}
 	}
 	
 	
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObjects);
 				break;
 			case UPDATE_FORCE:					
 			default:
 				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
-				characteristicDatabase.updateCharacteristics(storableObjects);
 				return;
 		}
 
@@ -227,16 +201,9 @@ public class SiteNodeDatabase extends CharacterizableDatabase {
 	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
 		Collection siteNodes;
 		if ((ids == null) || (ids.isEmpty()))
-			siteNodes = retrieveByIdsOneQuery(null, conditions);
+			siteNodes = super.retrieveByIds(null, conditions);
 		else
-			siteNodes = retrieveByIdsOneQuery(ids, conditions);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
-        Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(siteNodes, CharacteristicSort.CHARACTERISTIC_SORT_SITE_NODE);
-        for (Iterator iter = siteNodes.iterator(); iter.hasNext();) {
-            Collector collector = (Collector) iter.next();
-            Collection characteristics = (Collection)characteristicMap.get(collector);
-            collector.setCharacteristics0(characteristics);
-        }
+			siteNodes = super.retrieveByIds(ids, conditions);
         return siteNodes;
 		//return retriveByIdsPreparedStatement(ids, conditions);
 	}	

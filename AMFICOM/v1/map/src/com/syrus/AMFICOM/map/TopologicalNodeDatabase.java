@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.18 2005/03/09 14:49:53 bass Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.19 2005/03/10 09:03:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,11 +18,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -40,8 +38,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/03/09 14:49:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/03/10 09:03:20 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class TopologicalNodeDatabase extends CharacterizableDatabase {
@@ -316,53 +314,35 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		TopologicalNode topologicalNode = this.fromStorableObject(storableObject);
-		this.insertEntity(topologicalNode);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
-		try {
-			characteristicDatabase.updateCharacteristics(topologicalNode);
-		} catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
-		}
+		super.insertEntity(topologicalNode);
 	}
 	
 	
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
-		insertEntities(storableObjects);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
-		try {
-			characteristicDatabase.updateCharacteristics(storableObjects);
-		} catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
-		}
+		super.insertEntities(storableObjects);
 	}
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObject);
 				break;
 			case UPDATE_FORCE:					
 			default:
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				characteristicDatabase.updateCharacteristics(storableObject);
 				return;
 		}
 	}
 	
 	
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObjects);
 				break;
 			case UPDATE_FORCE:					
 			default:
 				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
-				characteristicDatabase.updateCharacteristics(storableObjects);
 				return;
 		}
 
@@ -372,8 +352,8 @@ public class TopologicalNodeDatabase extends CharacterizableDatabase {
 	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
 		Collection topologicalNodes;
 		if ((ids == null) || (ids.isEmpty()))
-			topologicalNodes = retrieveByIdsOneQuery(null, conditions);
-		else topologicalNodes = retrieveByIdsOneQuery(ids, conditions);
+			topologicalNodes = super.retrieveByIds(null, conditions);
+		else topologicalNodes = super.retrieveByIds(ids, conditions);
 		
 		this.retrievePhysicalLinks(topologicalNodes);
 		

@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.20 2005/03/09 14:49:53 bass Exp $
+ * $Id: CollectorDatabase.java,v 1.21 2005/03/10 09:03:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,14 +17,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -34,7 +31,6 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
@@ -42,8 +38,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/03/09 14:49:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/03/10 09:03:20 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class CollectorDatabase extends CharacterizableDatabase {
@@ -62,10 +58,8 @@ public class CollectorDatabase extends CharacterizableDatabase {
 	
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Collector collector = this.fromStorableObject(storableObject);
-		this.retrieveEntity(collector);
+		super.retrieveEntity(collector);
 		this.retrievePhysicalLinks(Collections.singletonList(collector));
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
-		collector.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(collector.getId(), CharacteristicSort.CHARACTERISTIC_SORT_COLLECTOR));
 	}
 	
 	private void retrievePhysicalLinks(Collection collectors) throws RetrieveObjectException, IllegalDataException{
@@ -150,10 +144,8 @@ public class CollectorDatabase extends CharacterizableDatabase {
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		Collector collector = this.fromStorableObject(storableObject);
-		this.insertEntity(collector);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
+		super.insertEntity(collector);
 		try {
-			characteristicDatabase.updateCharacteristics(collector);
 			this.updatePhysicalLinks(Collections.singletonList(storableObject));
 		} catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
@@ -163,10 +155,8 @@ public class CollectorDatabase extends CharacterizableDatabase {
 	
 	
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
-		insertEntities(storableObjects);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
+		super.insertEntities(storableObjects);
 		try {
-			characteristicDatabase.updateCharacteristics(storableObjects);
 			this.updatePhysicalLinks(storableObjects);
 		} catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
@@ -174,16 +164,13 @@ public class CollectorDatabase extends CharacterizableDatabase {
 	}
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObject);
 				break;
 			case UPDATE_FORCE:					
 			default:
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				characteristicDatabase.updateCharacteristics(storableObject);
 				return;
 		}
 		this.updatePhysicalLinks(Collections.singletonList(storableObject));
@@ -192,16 +179,13 @@ public class CollectorDatabase extends CharacterizableDatabase {
 	
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws 
 		VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObjects);
 				break;
 			case UPDATE_FORCE:					
 			default:
 				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
-				characteristicDatabase.updateCharacteristics(storableObjects);
 				return;
 		}
 		this.updatePhysicalLinks(storableObjects);
@@ -227,18 +211,14 @@ public class CollectorDatabase extends CharacterizableDatabase {
 			collectorIdPhysicalLinkIdsMap.put(collector.getId(), physicalLinkIds);
 		}		
 		
-		try {
-			super.updateLinkedEntities(collectorIdPhysicalLinkIdsMap, COLLECTOR_PHYSICAL_LINK, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
-		} catch (IllegalDataException e) {
-			throw new UpdateObjectException("CollectorDatabase.updatePhysicalLinks | cannot update physical links ", e);
-		}
+		super.updateLinkedEntities(collectorIdPhysicalLinkIdsMap, COLLECTOR_PHYSICAL_LINK, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
 	}	
 	
 	public void delete(Identifier id) throws IllegalDataException {
 		this.delete(Collections.singletonList(id));
 	}
 	
-	public void delete(Collection ids) throws IllegalDataException {	
+	public void delete(Collection ids) {	
 		StringBuffer linkBuffer = new StringBuffer(CollectorWrapper.LINK_COLUMN_COLLECTOR_ID);
 		StringBuffer buffer = new StringBuffer(StorableObjectWrapper.COLUMN_ID);
 		
@@ -313,22 +293,12 @@ public class CollectorDatabase extends CharacterizableDatabase {
 	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
 		Collection collectors;
 		if ((ids == null) || (ids.isEmpty()))
-			collectors = retrieveByIdsOneQuery(null, conditions);
+			collectors = super.retrieveByIds(null, conditions);
 		else 
-			collectors = retrieveByIdsOneQuery(ids, conditions);
-		this.retrievePhysicalLinks(collectors);
-		
+			collectors = super.retrieveByIds(ids, conditions);
+		this.retrievePhysicalLinks(collectors);		
 
-        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
-        Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(collectors, CharacteristicSort.CHARACTERISTIC_SORT_COLLECTOR);
-        for (Iterator iter = collectors.iterator(); iter.hasNext();) {
-            Collector collector = (Collector) iter.next();
-            Collection characteristics = (Collection)characteristicMap.get(collector);
-            collector.setCharacteristics0(characteristics);
-        }
-		
 		return collectors;
-		//return retriveByIdsPreparedStatement(ids, conditions);
 	}	
 	
 }

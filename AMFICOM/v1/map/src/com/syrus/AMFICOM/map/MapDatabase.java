@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.19 2005/03/04 19:50:01 bass Exp $
+ * $Id: MapDatabase.java,v 1.20 2005/03/10 09:03:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,17 +19,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CharacteristicDatabase;
+import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -40,11 +38,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/03/04 19:50:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/03/10 09:03:20 $
+ * @author $Author: bob $
  * @module map_v1
  */
-public class MapDatabase extends StorableObjectDatabase {
+public class MapDatabase extends CharacterizableDatabase {
 	 // linked tables :: 
     private static final String MAP_COLLECTOR 			= "MapCollector";    
     private static final String MAP_MARK 				= "MapMark";
@@ -291,10 +289,8 @@ public class MapDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		Map map = this.fromStorableObject(storableObject);
 		super.insertEntity(map);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		Collection maps = Collections.singletonList(map);
 		try {
-			characteristicDatabase.updateCharacteristics(map);
 			this.updateLinkedObjectIds(maps, _MAP_COLLECTOR);
 			this.updateLinkedObjectIds(maps, _MAP_MARK);
 			this.updateLinkedObjectIds(maps, _MAP_NODE_LINK);
@@ -308,10 +304,8 @@ public class MapDatabase extends StorableObjectDatabase {
 	
 	
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
-		insertEntities(storableObjects);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
+		super.insertEntities(storableObjects);
 		try {
-			characteristicDatabase.updateCharacteristics(storableObjects);
 			this.updateLinkedObjectIds(storableObjects, _MAP_COLLECTOR);
 			this.updateLinkedObjectIds(storableObjects, _MAP_MARK);
 			this.updateLinkedObjectIds(storableObjects, _MAP_NODE_LINK);
@@ -324,16 +318,13 @@ public class MapDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObject);
 				break;
 			case UPDATE_FORCE:					
 			default:
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				characteristicDatabase.updateCharacteristics(storableObject);
 				return;
 		}
 		Collection maps = Collections.singletonList(storableObject);
@@ -347,16 +338,13 @@ public class MapDatabase extends StorableObjectDatabase {
 	
 	
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObjects);
 				break;
 			case UPDATE_FORCE:					
 			default:
 				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
-				characteristicDatabase.updateCharacteristics(storableObjects);
 				return;
 		}
 		this.updateLinkedObjectIds(storableObjects, _MAP_COLLECTOR);
@@ -422,19 +410,14 @@ public class MapDatabase extends StorableObjectDatabase {
 	        mapIdLinkedObjectIds.put(map.getId(), linkedObjectIds);
 		}
 		
-		try {
-			super.updateLinkedEntities(mapIdLinkedObjectIds, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
-		} catch (IllegalDataException e) {
-			throw new UpdateObjectException(e);
-		}
-
+		super.updateLinkedEntities(mapIdLinkedObjectIds, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
 	}
 	
 	public void delete(Identifier id) throws IllegalDataException {
 		this.delete(Collections.singletonList(id));
 	}
 	
-	public void delete(Collection ids) throws IllegalDataException {
+	public void delete(Collection ids) {
 		super.delete(ids);
 		
 		java.util.Map linkedObjectIds = new HashMap();
@@ -446,7 +429,7 @@ public class MapDatabase extends StorableObjectDatabase {
 				Map map = (Map)MapStorableObjectPool.getStorableObject(mapId, true);
 				mapIds.put(mapId, map);
 			}catch(ApplicationException ae){
-				throw new IllegalDataException(this.getEnityName()+"Database.delete | Couldn't found map for " + mapId);
+				Log.errorMessage(this.getEnityName()+"Database.delete | Couldn't found map for " + mapId);
 			} 
 		}
 		
@@ -504,8 +487,15 @@ public class MapDatabase extends StorableObjectDatabase {
 		this.delete(Collections.singletonList(map.getId()));
 	}
 	
-	private void deleteLinkedObjectIds(java.util.Map linkedObjectIds, int linkedTable) throws IllegalDataException {	
-		String tableName = this.getLinkedTableName(linkedTable);
+	private void deleteLinkedObjectIds(java.util.Map linkedObjectIds, int linkedTable) {
+		
+		String tableName;
+		try {
+			tableName = this.getLinkedTableName(linkedTable);
+		} catch (IllegalDataException e) {
+			Log.errorMessage(getEnityName() + "Database.deleteLinkedObjectIds | illegal linked database table id " + linkedTable + " -- " + e.getMessage());
+			return;
+		}
 		String columnName = (String)dbTableColumnName.get(tableName);
 
 		StringBuffer linkBuffer = new StringBuffer(columnName);
@@ -564,8 +554,8 @@ public class MapDatabase extends StorableObjectDatabase {
 	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
 		Collection maps;
 		if ((ids == null) || (ids.isEmpty()))
-			maps = retrieveByIdsOneQuery(null, conditions);
-		else maps = retrieveByIdsOneQuery(ids, conditions);	
+			maps = super.retrieveByIds(null, conditions);
+		else maps = super.retrieveByIds(ids, conditions);	
 		
 		java.util.Map mapIds = new HashMap();
 		for (Iterator it = maps.iterator(); it.hasNext();) {

@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.16 2005/03/09 14:49:53 bass Exp $
+ * $Id: NodeLinkDatabase.java,v 1.17 2005/03/10 09:03:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,11 +13,9 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -32,8 +30,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/03/09 14:49:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/03/10 09:03:20 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class NodeLinkDatabase extends CharacterizableDatabase {
@@ -151,53 +149,35 @@ public class NodeLinkDatabase extends CharacterizableDatabase {
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		NodeLink nodeLink = this.fromStorableObject(storableObject);
-		this.insertEntity(nodeLink);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
-		try {
-			characteristicDatabase.updateCharacteristics(nodeLink);
-		} catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
-		}
+		super.insertEntity(nodeLink);
 	}
 	
 	
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
-		insertEntities(storableObjects);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
-		try {
-			characteristicDatabase.updateCharacteristics(storableObjects);
-		} catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
-		}
+		super.insertEntities(storableObjects);
 	}
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObject);
 				break;
 			case UPDATE_FORCE:					
 			default:
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				characteristicDatabase.updateCharacteristics(storableObject);
 				return;
 		}
 	}
 	
 	
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObjects);
 				break;
 			case UPDATE_FORCE:					
 			default:
 				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
-				characteristicDatabase.updateCharacteristics(storableObjects);
 				return;
 		}
 
@@ -206,8 +186,8 @@ public class NodeLinkDatabase extends CharacterizableDatabase {
 
 	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retrieveByIdsOneQuery(null, conditions);
-		return retrieveByIdsOneQuery(ids, conditions);	
+			return super.retrieveByIds(null, conditions);
+		return super.retrieveByIds(ids, conditions);	
 		//return retriveByIdsPreparedStatement(ids, conditions);
 	}	
 
