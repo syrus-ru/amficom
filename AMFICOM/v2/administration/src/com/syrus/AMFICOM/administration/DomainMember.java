@@ -5,7 +5,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 
 public abstract class DomainMember extends StorableObject {
-	Identifier domain_id;
+	protected Identifier domain_id;
 
 	public DomainMember(Identifier id) {
 		super(id);
