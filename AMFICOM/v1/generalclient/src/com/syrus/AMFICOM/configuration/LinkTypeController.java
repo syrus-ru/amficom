@@ -107,7 +107,14 @@ public final class LinkTypeController implements ObjectResourceController {
 		return clazz;
 	}
 
+	/**
+	 * @deprecated use PropertyManager
+	 */
 	public static String getPropertyPaneClassName() {
 		return "com.syrus.AMFICOM.Client.Configure.UI.LinkTypePane";
+	}
+	
+	public static String getPropertyManagerClassName () {
+		return "com.syrus.AMFICOM.client_.configuration.ui.LinkTypePropertiesManager";  //$NON-NLS-1$
 	}
 }

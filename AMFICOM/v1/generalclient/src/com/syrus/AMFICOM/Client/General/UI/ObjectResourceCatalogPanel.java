@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogPanel.java,v 1.7 2004/09/25 19:28:29 bass Exp $
+ * $Id: ObjectResourceCatalogPanel.java,v 1.8 2005/03/05 15:23:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import javax.swing.event.*;
 import oracle.jdeveloper.layout.XYConstraints;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/09/25 19:28:29 $
+ * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2005/03/05 15:23:50 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogPanel extends JPanel implements OperationListener
@@ -547,7 +547,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 			List data = tdse.getList();
 			int n = tdse.getSelectionNumber();
 			Class cl = tdse.getDataClass();
-			ObjectResourceCatalogActionModel orcam = (ObjectResourceCatalogActionModel )tdse.getParam();
+			ObjectResourceCatalogActionModel orcam = ObjectResourceCatalogActionModel.getDefaultModel();
 
 			if (n != -1)
 			{

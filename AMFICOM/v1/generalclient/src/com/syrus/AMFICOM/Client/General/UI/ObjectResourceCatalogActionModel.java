@@ -22,6 +22,10 @@ public final class ObjectResourceCatalogActionModel
 	boolean props_button = false;
 	boolean cancel_button = false;
 
+	public static ObjectResourceCatalogActionModel getDefaultModel() {
+		return new ObjectResourceCatalogActionModel(true, true, true, true, true, true);
+	}
+	
 	public ObjectResourceCatalogActionModel(
 			boolean panel,
 			boolean add_button,

@@ -97,4 +97,8 @@ public final class PortTypeController implements ObjectResourceController
 	public static String getPropertyPaneClassName() {
 		return "com.syrus.AMFICOM.Client.Configure.UI.PortTypePane";
 	}
+	
+	public static String getPropertyManagerClassName () {
+		return "com.syrus.AMFICOM.client_.configuration.ui.PortTypePropertiesManager";  //$NON-NLS-1$
+	}
 }

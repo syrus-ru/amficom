@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogFrame.java,v 1.3 2005/03/01 08:55:22 stas Exp $
+ * $Id: ObjectResourceCatalogFrame.java,v 1.4 2005/03/05 15:23:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/03/01 08:55:22 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/05 15:23:50 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogFrame
@@ -64,10 +64,10 @@ public class ObjectResourceCatalogFrame
 		panel.setObjectResourceController(controller);
 	}
 
-	public void setActionModel(ObjectResourceCatalogActionModel orcam)
-	{
-		panel.setActionModel(orcam);
-	}
+//	public void setActionModel(ObjectResourceCatalogActionModel orcam)
+//	{
+//		panel.setActionModel(orcam);
+//	}
 
 	private void jbInit() throws Exception
 	{

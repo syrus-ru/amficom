@@ -118,4 +118,8 @@ public final class CableLinkTypeController implements ObjectResourceController {
 	public static String getPropertyPaneClassName() {
 		return "com.syrus.AMFICOM.Client.Configure.UI.CableLinkTypePane";
 	}
+	
+	public static String getPropertyManagerClassName () {
+		return "com.syrus.AMFICOM.client_.configuration.ui.CableLinkTypePropertiesManager";  //$NON-NLS-1$
+	}
 }

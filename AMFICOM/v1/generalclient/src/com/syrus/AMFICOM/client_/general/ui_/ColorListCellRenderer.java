@@ -1,5 +1,5 @@
 /*
- * $Id: ColorListCellRenderer.java,v 1.1 2005/03/01 11:12:07 stas Exp $
+ * $Id: ColorListCellRenderer.java,v 1.2 2005/03/05 15:23:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.general.ui_;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/01 11:12:07 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/05 15:23:50 $
  * @module generalclient_v1
  */
 
@@ -18,18 +18,18 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 
-import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 /**
  * Renderer for java.awt.Color cell at JList.
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/01 11:12:07 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/05 15:23:50 $
  * @module generalclient_v1
  */
 
-public class ColorListCellRenderer extends JComponent implements ListCellRenderer {
+public class ColorListCellRenderer extends JLabel implements ListCellRenderer {
 
 	private static ColorListCellRenderer	instance;
 	private Color				curColor;
@@ -44,8 +44,10 @@ public class ColorListCellRenderer extends JComponent implements ListCellRendere
 	 * @return ColorCellRenderer instance. 
 	 */
 	public static ColorListCellRenderer getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new ColorListCellRenderer();
+			instance.setText(" ");
+		}
 		return instance;
 	}
 
@@ -89,7 +91,7 @@ public class ColorListCellRenderer extends JComponent implements ListCellRendere
 		int w = getWidth();
 		int h = getHeight();
 		g.setColor(this.curColor);
-		g.fill3DRect(0, 0, w - 1, h - 1, true);
+		g.fillRect(0, 0, w, h);
 	}
 
 }

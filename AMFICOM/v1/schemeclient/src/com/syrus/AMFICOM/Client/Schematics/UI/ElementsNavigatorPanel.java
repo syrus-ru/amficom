@@ -26,7 +26,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 	ApplicationContext aContext;
 	Dispatcher dispatcher;
 	TreeDataModel model;
-	TreePanel utp;
+	StorableObjectTree utp;
 
 	Object selectedObject;
 
@@ -104,7 +104,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 		add(toolBar, BorderLayout.NORTH);
 
 		// TREE
-		utp = new TreePanel(dispatcher, model);
+		utp = new StorableObjectTree(dispatcher, model);
 
 		JScrollPane scroll_pane = new JScrollPane();
 		scroll_pane.getViewport().add(utp);
@@ -119,7 +119,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 
 	public JTree getTree()
 	{
-		return utp.getTree();
+		return utp;
 	}
 
 	public void operationPerformed(OperationEvent oe)

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeController.java,v 1.1 2005/02/21 14:18:36 stas Exp $
+ * $Id: MeasurementTypeController.java,v 1.2 2005/03/05 15:23:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/02/21 14:18:36 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/05 15:23:50 $
  * @module generalclient_v1
  */
 
@@ -103,5 +103,9 @@ public final class MeasurementTypeController implements ObjectResourceController
 	
 	public static String getPropertyPaneClassName() {
 		return "com.syrus.AMFICOM.Client.Configure.UI.MeasurementTypePane";
+	}
+	
+	public static String getPropertyManagerClassName () {
+		return "com.syrus.AMFICOM.client_.configuration.ui.MeasurementTypePropertiesManager";  //$NON-NLS-1$
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: UniTreePanel.java,v 1.11 2005/01/31 15:03:07 stas Exp $
+ * $Id: UniTreePanel.java,v 1.12 2005/03/05 15:23:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ registerSearchableNode(String criteria, ObjectResourceTreeNode tn).
 зарегистрированная ветвь станет выделенной.
  *
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/01/31 15:03:07 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/05 15:23:50 $
  * @module generalclient_v1
  */
 public class UniTreePanel extends JPanel
@@ -448,7 +448,6 @@ public class UniTreePanel extends JPanel
 		}
 
 		TreeDataSelectionEvent event = new TreeDataSelectionEvent(this, res, cl, n, selectedObject, controller);
-		event.setParam(orcam);
 
 //				System.out.println("ORTreePanel notify " + dispatcher + " with event " + event);
 		send_event = true;

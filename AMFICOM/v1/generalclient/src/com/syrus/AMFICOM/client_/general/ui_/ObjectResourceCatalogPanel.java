@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogPanel.java,v 1.8 2005/03/01 10:11:23 stas Exp $
+ * $Id: ObjectResourceCatalogPanel.java,v 1.9 2005/03/05 15:23:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/03/01 10:11:23 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/05 15:23:50 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogPanel extends JPanel implements OperationListener
@@ -130,7 +130,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 		buttonsPanel.setVisible(bool);
 	}
 
-	public void setActionModel(ObjectResourceCatalogActionModel orcam)
+	/*public void setActionModel(ObjectResourceCatalogActionModel orcam)
 	{
 		if (orcam == null)
 			buttonsPanel.setVisible(false);
@@ -143,7 +143,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 		buttonProperties.setVisible(ObjectResourceCatalogActionModel.PROPS_BUTTON);
 		buttonSave.setVisible(ObjectResourceCatalogActionModel.SAVE_BUTTON);
 
-		if (ObjectResourceCatalogActionModel.ADD_BUTTON)
+		if (orcam.ADD_BUTTON)
 			buttonsPanel.add(buttonAdd);
 		if (ObjectResourceCatalogActionModel.SAVE_BUTTON)
 			buttonsPanel.add(buttonSave);
@@ -153,7 +153,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 			buttonsPanel.add(buttonProperties);
 		if (ObjectResourceCatalogActionModel.CANCEL_BUTTON)
 			buttonsPanel.add(buttonCancel);
-	}
+	}*/
 
 	public void setObjectResourceController(ObjectResourceController controller)
 	{
@@ -504,15 +504,14 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 			List data = tdse.getList();
 			int n = tdse.getSelectionNumber();
 			Class cl = tdse.getDataClass();
-			ObjectResourceController controller = (ObjectResourceController)tdse.orcc;
-			ObjectResourceCatalogActionModel orcam = (ObjectResourceCatalogActionModel )tdse.getParam();
+			ObjectResourceController controller = tdse.getController();
 
 			table.getSelectionModel().clearSelection();
 			if (this.controller == null || !this.controller.equals(controller))
 				setObjectResourceController(controller);
 			if (this.dataSet == null || !this.dataSet.equals(data))
 				setContents(data);
-			setActionModel(orcam);
+//			setActionModel(orcam);
 
 			if (n != -1)
 			{

@@ -1,56 +1,22 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.awt.Color;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
+import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
-import com.syrus.AMFICOM.client_.general.ui_.tree.CheckableTreeNode;
-import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
-import com.syrus.AMFICOM.client_.general.ui_.tree.StorableObjectTreeNode;
-import com.syrus.AMFICOM.client_.general.ui_.tree.TreeDataModel;
+import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.configuration.CableLinkType;
-import com.syrus.AMFICOM.configuration.CableLinkTypeController;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.LinkType;
-import com.syrus.AMFICOM.configuration.LinkTypeController;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.MeasurementPortTypeController;
-import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.PortTypeController;
-import com.syrus.AMFICOM.configuration.TransmissionPathType;
-import com.syrus.AMFICOM.configuration.TransmissionPathTypeController;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StringFieldCondition;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.MeasurementTypeController;
+import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-import com.syrus.AMFICOM.scheme.corba.SchemeLink;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
-import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement;
-import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup;
+import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 
 public class SchemeTreeModel implements TreeDataModel
@@ -79,57 +45,6 @@ public class SchemeTreeModel implements TreeDataModel
 	public Color getNodeTextColor(StorableObjectTreeNode node)
 	{
 		return null;
-	}
-
-	public void nodeAfterSelected(StorableObjectTreeNode node)
-	{
-	}
-
-	public void nodeBeforeExpanded(StorableObjectTreeNode node)
-	{
-	}
-
-	public ObjectResourceCatalogActionModel getNodeActionModel(ObjectResourceTreeNode node)
-	{
-	/*	if(node.getObject() instanceof String)
-		{
-			String s = (String )node.getObject();
-			if(s.equals(LinkType.typ) ||
-							s.equals(CableLinkType.typ) ||
-							s.equals(PortType.typ) ||
-							s.equals(CablePortType.typ) ||
-							s.equals(MeasurementPortType.typ) ||
-							s.equals(TransmissionPathType.typ))
-				return new ObjectResourceCatalogActionModel(
-						ObjectResourceCatalogActionModel.PANEL,
-						ObjectResourceCatalogActionModel.ADD_BUTTON,
-						ObjectResourceCatalogActionModel.SAVE_BUTTON,
-						ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
-						ObjectResourceCatalogActionModel.PROPS_BUTTON,
-						ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
-			else if(s.equals(SchemeCableLink.typ) ||
-							s.equals(SchemeLink.typ) ||
-							s.equals(SchemePath.typ) ||
-							s.equals(SchemePort.typ) ||
-							s.equals(SchemeCablePort.typ) ||
-							s.equals(MeasurementPort.typ) ||
-							s.equals(Scheme.typ) ||
-							s.equals(SchemeElement.typ))
-				return new ObjectResourceCatalogActionModel(
-						ObjectResourceCatalogActionModel.PANEL,
-						ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
-						ObjectResourceCatalogActionModel.SAVE_BUTTON,
-						ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
-						ObjectResourceCatalogActionModel.PROPS_BUTTON,
-						ObjectResourceCatalogActionModel.CANCEL_BUTTON);
-			}*/
-		return new ObjectResourceCatalogActionModel(
-				ObjectResourceCatalogActionModel.NO_PANEL,
-				ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
-				ObjectResourceCatalogActionModel.NO_SAVE_BUTTON,
-				ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
-				ObjectResourceCatalogActionModel.NO_PROPS_BUTTON,
-				ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
 	}
 
 	public Class getNodeChildClass(StorableObjectTreeNode node)

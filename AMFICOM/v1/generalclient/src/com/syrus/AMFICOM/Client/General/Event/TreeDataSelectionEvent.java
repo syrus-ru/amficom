@@ -1,5 +1,5 @@
 /*
- * $Id: TreeDataSelectionEvent.java,v 1.8 2004/10/26 08:18:34 stas Exp $
+ * $Id: TreeDataSelectionEvent.java,v 1.9 2005/03/05 15:23:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,35 +10,28 @@ package com.syrus.AMFICOM.Client.General.Event;
 
 import java.util.List;
 
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2004/10/26 08:18:34 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/05 15:23:50 $
  * @module generalclient_v1
  */
-public class TreeDataSelectionEvent extends OperationEvent
-{
+public class TreeDataSelectionEvent extends OperationEvent {
 	private Class dataClass;
-
 	private int selected;
-
 	private List list;
-
-	private Object param = null;
-
-	private Object selectedObject = null;
-
+	private Object selectedObject;
+	private ObjectResourceController controller;
+	
 	public static final String type = "treedataselectionevent";
 
-	public Object orcc = null;
-
-	public TreeDataSelectionEvent(Object source, List list, Class dataClass, int selected, Object selectedObject, Object orcc)
-	{
+	public TreeDataSelectionEvent(Object source, List list, Class dataClass, int selected, Object selectedObject, ObjectResourceController controller) {
 		this(source, list, dataClass, selected, selectedObject);
-		this.orcc = orcc;
+		this.controller = controller;
 	}
 
-	public TreeDataSelectionEvent(Object source, List list, Class dataClass, int selected, Object selectedObject)
-	{
+	public TreeDataSelectionEvent(Object source, List list, Class dataClass, int selected, Object selectedObject) {
 		super(source, 0, type);
 		this.list = list;
 		this.dataClass = dataClass;
@@ -46,36 +39,26 @@ public class TreeDataSelectionEvent extends OperationEvent
 		this.selectedObject = selectedObject;
 	}
 
-	public void setParam(Object param)
-	{
-		this.param = param;
-	}
-
-	public Object getParam()
-	{
-		return this.param;
-	}
-
-	public List getList()
-	{
+	public List getList() {
 		return this.list;
 	}
 
-	public Class getDataClass()
-	{
+	public Class getDataClass() {
 		return this.dataClass;
 	}
 
-	public int getSelectionNumber()
-	{
+	public int getSelectionNumber() {
 		return this.selected;
 	}
 
 	/**
 	 * @return Returns the selectedObject.
 	 */
-	public Object getSelectedObject()
-	{
+	public Object getSelectedObject() {
 		return this.selectedObject;
+	}
+	
+	public ObjectResourceController getController() {
+		return this.controller;
 	}
 }

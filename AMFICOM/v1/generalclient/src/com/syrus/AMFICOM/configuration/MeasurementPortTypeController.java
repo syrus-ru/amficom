@@ -112,4 +112,8 @@ public final class MeasurementPortTypeController implements ObjectResourceContro
 	public static String getPropertyPaneClassName() {
 		return "com.syrus.AMFICOM.Client.Configure.UI.MeasurementPortTypePane";
 	}
+	
+	public static String getPropertyManagerClassName () {
+		return "com.syrus.AMFICOM.client_.configuration.ui.MeasurementPortTypePropertiesManager";  //$NON-NLS-1$
+	}
 }
