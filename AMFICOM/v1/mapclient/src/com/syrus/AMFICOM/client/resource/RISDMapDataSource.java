@@ -180,6 +180,9 @@ public class RISDMapDataSource
 		}
 	}
 */
+
+
+/*
 	public void loadMapProtoElements(String[] eids, String[] lids)
 	{
 		if(getSession() == null)
@@ -355,76 +358,6 @@ public class RISDMapDataSource
 			return;
 		}
 	}
-/*	
-	public void SaveMapProtoGroups(String[] nids, String[] lids)
-	{
-		if(getSession() == null)
-			return;
-		if(!getSession().isOpened())
-			return;
-
-		int ecode;
-
-		Vector imageVec = new Vector();
-		ImageResource_Transferable images[] = new ImageResource_Transferable[0];;
-		MapProtoElement_Transferable mpes[] = new MapProtoElement_Transferable[0];
-		MapProtoGroup_Transferable mpgs[] = new MapProtoGroup_Transferable[ids.length];
-		for(int i = 0; i < ids.length; i++)
-		{
-			MapProtoGroup mpg = (MapProtoGroup )Pool.get(MapProtoGroup.typ, ids[i]);
-			mpg.setTransferableFromLocal();
-			mpgs[i] = (MapProtoGroup_Transferable )mpg.getTransferable();
-		}
-
-		try
-		{
-			ecode = si.ci.getServer().SaveMapProtoElements(
-					si.accessIdentity, 
-					images,
-					mpgs,
-					mpes);
-		}
-		catch (Exception ex)
-		{
-			System.err.print("Error saving LinkTypes: " + ex.getMessage());
-			ex.printStackTrace();
-			return;
-		}
-
-		if (ecode != Constants.ERROR_NO_ERROR)
-		{
-			System.out.println ("Failed SaveLinkTypes! status = " + ecode);
-			return;
-		}
-	}
-	
-	public void RemoveMapProtoGroups(String[] ids)
-	{
-		if(si == null)
-			return;
-		if(!si.isOpened())
-			return;
-
-		int ecode;
-		String []pids = new String[0];
-		try
-		{
-			ecode = si.ci.getServer().RemoveMapProtoElements(si.accessIdentity, ids, pids);
-		}
-		catch (Exception ex)
-		{
-			System.err.print("Error removing MapProtos: " + ex.getMessage());
-			ex.printStackTrace();
-			return;
-		}
-
-		if (ecode != Constants.ERROR_NO_ERROR)
-		{
-			System.out.println ("Failed RemoveMapProtoElements! status = " + ecode);
-			return;
-		}
-	}
-*/	
 
 	public void loadMaps(String[] ids)
 	{
@@ -843,6 +776,6 @@ public class RISDMapDataSource
 			return;
 		}
 	}
-
+*/
 
 }

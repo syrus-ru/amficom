@@ -1,5 +1,5 @@
 /**
- * $Id: MapDataSourceImage.java,v 1.6 2004/09/21 14:56:16 krupenn Exp $
+ * $Id: MapDataSourceImage.java,v 1.7 2004/12/22 16:19:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import java.util.Vector;
  * на наличие необходимых объектов, и в случае их отсутствия
  * они подгружаются с сервера
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/21 14:56:16 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/22 16:19:05 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -40,7 +40,7 @@ public class MapDataSourceImage extends DataSourceImage
 	{
 		super(di);
 	}
-
+/*
 	public void loadProtoElements()
 	{
 		ResourceDescriptor_Transferable[] desc = GetDescriptors(MapNodeProtoElement.typ);
@@ -75,23 +75,6 @@ public class MapDataSourceImage extends DataSourceImage
 			save(MapLinkProtoElement.typ);
 			save(ImageResource.typ, ImageCatalogue.getHash());
 		}
-/*		
-		ImageCatalogue.add(
-				"node",
-				new ImageResource("node", "node", "images/node.gif"));
-		ImageCatalogue.add(
-				"void",
-				new ImageResource("void", "void", "images/void.gif"));
-		ImageCatalogue.add(
-				"cable",
-				new ImageResource("cable", "cable", "images/linkmode.gif"));
-		ImageCatalogue.add(
-				"path",
-				new ImageResource("path", "path", "images/pathmode.gif"));
-		ImageCatalogue.add(
-				"net",
-				new ImageResource("net", "net", "images/net.gif"));
-*/
 	}
 
 	public void loadMaps()
@@ -123,6 +106,6 @@ public class MapDataSourceImage extends DataSourceImage
 			save(ImageResource.typ, ImageCatalogue.getHash());
 		}
 	}
-	
+*/	
 }
 

@@ -3,11 +3,11 @@ package com.syrus.AMFICOM.Client.Resource;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+//import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttributeType;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.SiteNodeType;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -43,7 +43,7 @@ public class EmptyMapDataSource
 		int len = Math.min(5, type.length());
 		return type.substring(0, len) + idcounter++;
 	}
-
+/*
 	public void loadMapProtoElements(String[] eids, String[] lids)
 	{
 		LoadMapProtoElements();
@@ -84,74 +84,6 @@ public class EmptyMapDataSource
 		ImageCatalogue.add(
 				"mark",
 				new ImageResource("mark", "mark", "images/mark.gif"));
-/*
-	    mnpe = new MapNodeProtoElement(
-			"building",
-			"Дом",
-			true,
-			"pc",
-			"descrioption");
-		Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
-
-	    mnpe = new MapNodeProtoElement(
-			"well",
-			"Колодец",
-			true,
-			"well",
-			"descrioption");
-		Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
-
-		mnpe = new MapNodeProtoElement(
-			"unbound",
-			"Непривязанный элемент",
-			true,
-			"unbound",
-			"desc");
-		Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
-
-	    mnpe = new MapNodeProtoElement(
-			"net",
-			"Сеть",
-			true,
-			"net",
-			"descrioption");
-		Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
-
-	    mnpe = new MapNodeProtoElement(
-			"khren",
-			"Хрень",
-			false,
-			"wins",
-			"description");
-		Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
-
-	    mlpe = new MapLinkProtoElement(
-			"truba",
-			"Труба",
-			"desc",
-			new Dimension(10, 14));
-		mlpe.setLineSize(2);
-		mlpe.setColor(Color.BLACK);
-		Pool.put(MapLinkProtoElement.typ, mlpe.getId(), mlpe);
-
-	    mlpe = new MapLinkProtoElement(
-			"collector",
-			"Коллектор",
-			"desc",
-			new Dimension(30, 40));
-		mlpe.setLineSize(4);
-		mlpe.setColor(Color.DARK_GRAY);
-		Pool.put(MapLinkProtoElement.typ, mlpe.getId(), mlpe);
-
-	    mlpe = new MapLinkProtoElement(
-			"cable",
-			"Непривязанный кабель",
-			"desc",
-			new Dimension(0, 0));
-		mlpe.setLineSize(1);
-		mlpe.setColor(Color.RED);
-		Pool.put(MapLinkProtoElement.typ, mlpe.getId(), mlpe);
-*/
 	}
 
 	public void LoadAttributeTypes()
@@ -300,7 +232,7 @@ public class EmptyMapDataSource
 		{
 		}
 	}
-
+*/
 	String openFileForWriting()
 	{
 		String fileName = null;
@@ -363,4 +295,5 @@ public class EmptyMapDataSource
 
 		return fileName;
 	}
+
 }
