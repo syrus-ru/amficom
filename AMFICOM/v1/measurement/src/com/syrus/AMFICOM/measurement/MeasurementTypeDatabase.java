@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.85 2005/04/01 08:43:32 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.86 2005/04/05 07:50:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.86 $, $Date: 2005/04/05 07:50:31 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -52,7 +52,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	private MeasurementType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementType)
 			return (MeasurementType)storableObject;
-		throw new IllegalDataException("MeasurementTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException("MeasurementTypeDatabase.fromStorableObject | Illegal Storable Object: "
+				+ storableObject.getClass().getName());
 	}	
 
 	protected String getEnityName() {
@@ -140,11 +141,13 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 					if (parameterMode.equals(MeasurementTypeWrapper.MODE_OUT))
 						outParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					else
-						Log.errorMessage("MeasurementTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeId);
+						Log.errorMessage("MeasurementTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '"
+								+ parameterMode + "' for parameterTypeId " + parameterTypeId);
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for measurement type '" + measurementTypeIdStr + "' -- " + sqle.getMessage();
+			String mesg = "MeasurementTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for measurement type '"
+					+ measurementTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		catch (ApplicationException ae) {
@@ -225,7 +228,9 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 						outParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					}
 					else
-						Log.errorMessage("MeasurementTypeDatabase.retrieveParameterTypesByOneQuery | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId '" + parameterTypeId + "' of measurement type '" + measurementTypeId + "'");
+						Log.errorMessage("MeasurementTypeDatabase.retrieveParameterTypesByOneQuery | ERROR: Unknown parameter mode '"
+								+ parameterMode + "' for parameterTypeId '" + parameterTypeId
+								+ "' of measurement type '" + measurementTypeId + "'");
 
 			}
 
@@ -241,7 +246,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.retrieveParameterTypesByOneQuery | Cannot retrieve parameter type ids for measurement types -- " + sqle.getMessage();
+			String mesg = "MeasurementTypeDatabase.retrieveParameterTypesByOneQuery | Cannot retrieve parameter type ids for measurement types -- "
+					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		catch (ApplicationException ae) {
@@ -287,7 +293,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.retrieveMeasurementPortTypes | Cannot retrieve measurement port type ids for measurement type '" + measurementTypeIdStr + "' -- " + sqle.getMessage();
+			String mesg = "MeasurementTypeDatabase.retrieveMeasurementPortTypes | Cannot retrieve measurement port type ids for measurement type '"
+					+ measurementTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		catch (ApplicationException ae) {
@@ -332,7 +339,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementDatabase.retrieveMeasurementPortTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("MeasurementTypeDatabase.retrieveMeasurementPortTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
 			Map measurementPortTypesMap = new HashMap();
@@ -362,7 +369,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementDatabase.retrieveMeasurementPortTypesByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+			String mesg = "MeasurementTypeDatabase.retrieveMeasurementPortTypesByOneQuery | Cannot retrieve parameters for result -- "
+					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		catch (ApplicationException ae) {
@@ -386,11 +394,13 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}        
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  measurementType.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+						+ " '" + measurementType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
@@ -454,7 +464,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		return preparedStatement;
 	}
 
-	private void updatePrepareStatementValues(PreparedStatement preparedStatement, MeasurementType measurementType) throws SQLException {
+	private void updatePrepareStatementValues(PreparedStatement preparedStatement, MeasurementType measurementType)
+			throws SQLException {
 		java.util.Set inParTyps = measurementType.getInParameterTypes();
 		java.util.Set outParTyps = measurementType.getOutParameterTypes();
 		Identifier measurementTypeId = measurementType.getId();
@@ -467,7 +478,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
 			parameterMode = MeasurementTypeWrapper.MODE_IN;
 			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("MeasurementTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId + " of parameter mode '" + parameterMode + "' for measurement type " + measurementTypeId, Log.DEBUGLEVEL09);
+			Log.debugMessage("MeasurementTypeDatabase.updatePrepareStatementValues | Inserting parameter type " + parameterTypeId
+					+ " of parameter mode '" + parameterMode + "' for measurement type " + measurementTypeId, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
 		for (Iterator iterator = outParTyps.iterator(); iterator.hasNext();) {
@@ -476,12 +488,14 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
 			parameterMode = MeasurementTypeWrapper.MODE_OUT;
 			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("MeasurementTypeDatabase.insertParameterTypes | Inserting parameter type '" + parameterTypeId + "' of parameter mode '" + parameterMode + "' for measurement type '" + measurementTypeId + "'", Log.DEBUGLEVEL09);
+			Log.debugMessage("MeasurementTypeDatabase.updatePrepareStatementValues | Inserting parameter type '" + parameterTypeId
+					+ "' of parameter mode '" + parameterMode + "' for measurement type '" + measurementTypeId + "'", Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
 	}
 
-	private void updateMeasurementPortTypePrepareStatementValues(PreparedStatement preparedStatement,MeasurementType measurementType) throws SQLException{
+	private void updateMeasurementPortTypePrepareStatementValues(PreparedStatement preparedStatement,
+			MeasurementType measurementType) throws SQLException {
 		java.util.Set measurementPortTypes = measurementType.getMeasurementPortTypes();
 		Identifier measurementTypeId = measurementType.getId();
 		Identifier measurementPortTypeId = null;
@@ -490,7 +504,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			measurementPortTypeId = ((MeasurementPortType) iterator.next()).getId();			
 			DatabaseIdentifier.setIdentifier(preparedStatement, 1, measurementTypeId);
 			DatabaseIdentifier.setIdentifier(preparedStatement, 2, measurementPortTypeId);
-			Log.debugMessage("MeasurementTypeDatabase.updateMeasurementPortTypePrepareStatementValues | Inserting measurement port type " + measurementPortTypeId + "' for measurement type " + measurementTypeId, Log.DEBUGLEVEL09);
+			Log.debugMessage("MeasurementTypeDatabase.updateMeasurementPortTypePrepareStatementValues | Inserting measurement port type "
+					+ measurementPortTypeId + "' for measurement type " + measurementTypeId, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
 	}
@@ -503,7 +518,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			this.updatePrepareStatementValues(preparedStatement, measurementType);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.insertParameterTypes | Cannot insert parameter type for measurement type '" + measurementTypeId + "' -- " + sqle.getMessage();
+			String mesg = "MeasurementTypeDatabase.insertParameterTypes | Cannot insert parameter type for measurement type '"
+					+ measurementTypeId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -526,7 +542,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			this.updateMeasurementPortTypePrepareStatementValues(preparedStatement, measurementType);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.insertMeasurementPortTypes | Cannot insert measurement port type for measurement type '" + measurementTypeId + "' -- " + sqle.getMessage();
+			String mesg = "MeasurementTypeDatabase.insertMeasurementPortTypes | Cannot insert measurement port type for measurement type '"
+					+ measurementTypeId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -588,7 +605,9 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		return collection;
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
+			PreparedStatement preparedStatement,
+			int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 			DatabaseString.setString(preparedStatement, ++startParameterNumber, measurementType.getCodename(), SIZE_CODENAME_COLUMN);

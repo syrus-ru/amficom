@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.59 2005/04/04 14:32:28 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.60 2005/04/05 07:48:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/04/04 14:32:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.60 $, $Date: 2005/04/05 07:48:28 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -568,7 +568,7 @@ public abstract class StorableObjectPool {
 				Short objectEntityCode = (Short) it.next();
 				Set keys = LRUMapSaver.load(ObjectEntities.codeToString(objectEntityCode));
 				if (keys != null)
-					getStorableObjectsImpl(keys, true);
+					this.getStorableObjectsImpl(keys, true);
 			}
 		} catch (ApplicationException ae) {
 			Log.errorException(ae);

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.74 2005/04/01 08:43:32 bob Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.75 2005/04/05 07:50:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.75 $, $Date: 2005/04/05 07:50:31 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -51,7 +51,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	private EvaluationType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof EvaluationType)
 			return (EvaluationType) storableObject;
-		throw new IllegalDataException("EvaluationTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException("EvaluationTypeDatabase.fromStorableObject | Illegal Storable Object: "
+				+ storableObject.getClass().getName());
 	}	
 
 	protected String getEnityName() {
@@ -149,11 +150,13 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 							if (parameterMode.equals(EvaluationTypeWrapper.MODE_OUT))
 								outParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 							else
-								Log.errorMessage("EvaluationTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeId);
+								Log.errorMessage("EvaluationTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '"
+										+ parameterMode + "' for parameterTypeId " + parameterTypeId);
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "EvaluationTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for evaluation type '" + evaluationTypeIdStr + "' -- " + sqle.getMessage();
+			String mesg = "EvaluationTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for evaluation type '"
+					+ evaluationTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		catch (ApplicationException ae) {
@@ -260,7 +263,9 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 								outParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 							}
 							else
-								Log.errorMessage("EvaluationTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId '" + parameterTypeId + "' of evaluation type '" + evaluationTypeId + "'");
+								Log.errorMessage("EvaluationTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '"
+										+ parameterMode + "' for parameterTypeId '" + parameterTypeId
+										+ "' of evaluation type '" + evaluationTypeId + "'");
 			}
 
 			EvaluationType evaluationType;
@@ -277,7 +282,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 
 		}
 		catch (SQLException sqle) {
-			String mesg = "EvaluationTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for evaluation types -- " + sqle.getMessage();
+			String mesg = "EvaluationTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for evaluation types -- "
+					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		catch (ApplicationException ae) {
@@ -351,7 +357,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "EvaluationTypeDatabase.retrieveMeasurementTypeIdsByOneQuery | Cannot retrieve parameter type ids for evaluation types -- " + sqle.getMessage();
+			String mesg = "EvaluationTypeDatabase.retrieveMeasurementTypeIdsByOneQuery | Cannot retrieve parameter type ids for evaluation types -- "
+					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -376,7 +383,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  evaluationType.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+						+ " '" + evaluationType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
@@ -417,7 +425,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		return preparedStatement;
 	}
 	
-	private void updatePrepareStatementValues(PreparedStatement preparedStatement, EvaluationType evaluationType) throws SQLException {
+	private void updatePrepareStatementValues(PreparedStatement preparedStatement, EvaluationType evaluationType)
+			throws SQLException {
 		java.util.Set inParTyps = evaluationType.getInParameterTypes();
 		java.util.Set thresholdParTyps = evaluationType.getThresholdParameterTypes();
 		java.util.Set etalonParTyps = evaluationType.getEtalonParameterTypes();
@@ -432,7 +441,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
 			parameterMode = EvaluationTypeWrapper.MODE_IN;
 			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("EvaluationTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId + " of parameter mode '" + parameterMode + "' for evaluation type " + evaluationTypeId, Log.DEBUGLEVEL09);
+			Log.debugMessage("EvaluationTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId
+					+ " of parameter mode '" + parameterMode + "' for evaluation type " + evaluationTypeId, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
 		for (Iterator iterator = thresholdParTyps.iterator(); iterator.hasNext();) {
@@ -441,7 +451,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
 			parameterMode = EvaluationTypeWrapper.MODE_THRESHOLD;
 			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("EvaluationTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId + " of parameter mode '" + parameterMode + "' for evaluation type " + evaluationTypeId, Log.DEBUGLEVEL09);
+			Log.debugMessage("EvaluationTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId
+					+ " of parameter mode '" + parameterMode + "' for evaluation type " + evaluationTypeId, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
 		for (Iterator iterator = etalonParTyps.iterator(); iterator.hasNext();) {
@@ -450,7 +461,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
 			parameterMode = EvaluationTypeWrapper.MODE_ETALON;
 			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("EvaluationTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId + " of parameter mode '" + parameterMode + "' for evaluation type " + evaluationTypeId, Log.DEBUGLEVEL09);
+			Log.debugMessage("EvaluationTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId
+					+ " of parameter mode '" + parameterMode + "' for evaluation type " + evaluationTypeId, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
 		for (Iterator iterator = outParTyps.iterator(); iterator.hasNext();) {
@@ -459,7 +471,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
 			parameterMode = EvaluationTypeWrapper.MODE_OUT;
 			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("EvaluationTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId + " of parameter mode '" + parameterMode + "' for evaluation type " + evaluationTypeId, Log.DEBUGLEVEL09);
+			Log.debugMessage("EvaluationTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId
+					+ " of parameter mode '" + parameterMode + "' for evaluation type " + evaluationTypeId, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
 	}
@@ -472,7 +485,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			this.updatePrepareStatementValues(preparedStatement, evaluationType);
 		}
 		catch (SQLException sqle) {
-			String mesg = "EvaluationTypeDatabase.insertParameterTypes | Cannot insert parameter type for evaluation type '" + evaluationTypeId + "' -- " + sqle.getMessage();
+			String mesg = "EvaluationTypeDatabase.insertParameterTypes | Cannot insert parameter type for evaluation type '"
+					+ evaluationTypeId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.79 2005/04/01 08:43:32 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.80 2005/04/05 07:50:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.80 $, $Date: 2005/04/05 07:50:31 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -51,7 +51,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	private AnalysisType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof AnalysisType)
 			return (AnalysisType) storableObject;
-		throw new IllegalDataException("AnalysisTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException("AnalysisTypeDatabase.fromStorableObject | Illegal Storable Object: "
+				+ storableObject.getClass().getName());
 	}
 
 	protected String getEnityName() {
@@ -144,7 +145,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for analysis type '" + analysisTypeIdStr + "' -- " + sqle.getMessage();
+			String mesg = "AnalysisTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for analysis type '"
+					+ analysisTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		catch (ApplicationException ae) {
@@ -265,7 +267,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retrieveParameterTypesByOneQuery | Cannot retrieve parameter type ids for analysis types -- " + sqle.getMessage();
+			String mesg = "AnalysisTypeDatabase.retrieveParameterTypesByOneQuery | Cannot retrieve parameter type ids for analysis types -- "
+					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		catch (ApplicationException ae) {
@@ -339,7 +342,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retrieveMeasurementTypeIdsByOneQuery | Cannot retrieve parameter type ids for analysis types -- " + sqle.getMessage();
+			String mesg = "AnalysisTypeDatabase.retrieveMeasurementTypeIdsByOneQuery | Cannot retrieve parameter type ids for analysis types -- "
+					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -364,7 +368,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  analysisType.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+						+ " '" + analysisType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
@@ -420,7 +425,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
 			parameterMode = AnalysisTypeWrapper.MODE_IN;
 			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId + " of parameter mode '" + parameterMode + "' for analysis type " + analysisTypeId, Log.DEBUGLEVEL09);
+			Log.debugMessage("AnalysisTypeDatabase.updatePrepareStatementValues | Inserting parameter type " + parameterTypeId
+					+ " of parameter mode '" + parameterMode + "' for analysis type " + analysisTypeId, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
 		for (Iterator iterator = criteriaParTyps.iterator(); iterator.hasNext();) {
@@ -429,7 +435,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
 			parameterMode = AnalysisTypeWrapper.MODE_CRITERION;
 			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId + " of parameter mode '" + parameterMode + "' for analysis type " + analysisTypeId, Log.DEBUGLEVEL09);
+			Log.debugMessage("AnalysisTypeDatabase.updatePrepareStatementValues | Inserting parameter type " + parameterTypeId
+					+ " of parameter mode '" + parameterMode + "' for analysis type " + analysisTypeId, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
 		for (Iterator iterator = etalonParTyps.iterator(); iterator.hasNext();) {
@@ -438,7 +445,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
 			parameterMode = AnalysisTypeWrapper.MODE_ETALON;
 			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId + " of parameter mode '" + parameterMode + "' for analysis type " + analysisTypeId, Log.DEBUGLEVEL09);
+			Log.debugMessage("AnalysisTypeDatabase.updatePrepareStatementValues | Inserting parameter type "+ parameterTypeId
+					+ " of parameter mode '" + parameterMode + "' for analysis type " + analysisTypeId, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
 		for (Iterator iterator = outParTyps.iterator(); iterator.hasNext();) {
@@ -447,7 +455,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
 			parameterMode = AnalysisTypeWrapper.MODE_OUT;
 			preparedStatement.setString(3, parameterMode);
-			Log.debugMessage("AnalysisTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId + " of parameter mode '" + parameterMode + "' for analysis type " + analysisTypeId, Log.DEBUGLEVEL09);
+			Log.debugMessage("AnalysisTypeDatabase.updatePrepareStatementValues | Inserting parameter type " + parameterTypeId
+					+ " of parameter mode '" + parameterMode + "' for analysis type " + analysisTypeId, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
 	}
@@ -460,7 +469,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			this.updatePrepareStatementValues(preparedStatement, analysisType);
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.insertParameterTypes | Cannot insert parameter type for analysis type '" + analysisTypeId + "' -- " + sqle.getMessage();
+			String mesg = "AnalysisTypeDatabase.insertParameterTypes | Cannot insert parameter type for analysis type '"
+					+ analysisTypeId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
