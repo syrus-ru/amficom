@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.3 2005/02/11 10:34:58 bob Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.4 2005/02/11 12:55:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -21,7 +20,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -29,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/11 10:34:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/11 12:55:19 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -215,33 +213,32 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	//public static void save()
 
 	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
-		AccessIdentity accessIdentity = SessionContext.getAccessIdentity();
 		if (!list.isEmpty()) {
 			boolean alone = (list.size() == 1);
 			switch (code) {
 				case ObjectEntities.USER_ENTITY_CODE:
 					if (alone)
-						aObjectLoader.saveUser((User) list.get(0), accessIdentity, force);
+						aObjectLoader.saveUser((User) list.get(0), force);
 					else
-						aObjectLoader.saveUsers(list, accessIdentity, force);
+						aObjectLoader.saveUsers(list, force);
 					break;
 				case ObjectEntities.DOMAIN_ENTITY_CODE:
 					if (alone)
-						aObjectLoader.saveDomain((Domain) list.get(0), accessIdentity, force);
+						aObjectLoader.saveDomain((Domain) list.get(0), force);
 					else
-						aObjectLoader.saveDomains(list, accessIdentity, force);
+						aObjectLoader.saveDomains(list, force);
 					break;
 				case ObjectEntities.SERVER_ENTITY_CODE:
 					if (alone)
-						aObjectLoader.saveServer((Server) list.get(0), accessIdentity, force);
+						aObjectLoader.saveServer((Server) list.get(0), force);
 					else
-						aObjectLoader.saveServers(list, accessIdentity, force);
+						aObjectLoader.saveServers(list, force);
 					break;
 				case ObjectEntities.MCM_ENTITY_CODE:
 					if (alone)
-						aObjectLoader.saveMCM((MCM) list.get(0), accessIdentity, force);
+						aObjectLoader.saveMCM((MCM) list.get(0), force);
 					else
-						aObjectLoader.saveMCMs(list, accessIdentity, force);
+						aObjectLoader.saveMCMs(list, force);
 					break;
 				default:
 					Log.errorMessage("AdministrationStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(code) + "', entity code: " + code);

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.9 2005/02/11 11:56:08 bob Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.10 2005/02/11 12:55:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/11 11:56:08 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/11 12:55:19 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -191,10 +191,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 
 
-	public void saveUser(User user, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveUser(User user, boolean force) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
 		try {
-			database.update(user, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(user, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.saveUser | UpdateObjectException: " + e.getMessage();
@@ -213,10 +213,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		}
 	}
 
-	public void saveDomain(Domain domain, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveDomain(Domain domain, boolean force) throws DatabaseException, CommunicationException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
 		try {
-			database.update(domain, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(domain, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.saveDomain | UpdateObjectException: " + e.getMessage();
@@ -235,10 +235,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		}
 	}
 
-	public void saveServer(Server server, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveServer(Server server, boolean force) throws DatabaseException, CommunicationException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
 		try {
-			database.update(server, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(server, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.saveServer | UpdateObjectException: " + e.getMessage();
@@ -257,10 +257,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		}
 	}
 
-	public void saveMCM(MCM mcm, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMCM(MCM mcm, boolean force) throws DatabaseException, CommunicationException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
 		try {
-			database.update(mcm, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(mcm, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.saveMCM | UpdateObjectException: " + e.getMessage();
@@ -285,10 +285,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 
 
-	public void saveUsers(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveUsers(List list, boolean force) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.saveUsers | UpdateObjectException: " + e.getMessage();
@@ -307,10 +307,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		}
 	}
 
-	public void saveDomains(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveDomains(List list, boolean force) throws DatabaseException, CommunicationException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.saveDomains | UpdateObjectException: " + e.getMessage();
@@ -329,10 +329,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		}
 	}
 
-	public void saveServers(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveServers(List list, boolean force) throws DatabaseException, CommunicationException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.saveServers | UpdateObjectException: " + e.getMessage();
@@ -351,10 +351,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		}
 	}
 
-	public void saveMCMs(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMCMs(List list, boolean force) throws DatabaseException, CommunicationException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.saveMCMs | UpdateObjectException: " + e.getMessage();

@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.4 2005/02/11 10:22:30 bob Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.5 2005/02/11 12:52:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/11 10:22:30 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/11 12:52:22 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -180,27 +180,26 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 	//public static void save()
 
 	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
-		AccessIdentity accessIdentity = SessionContext.getAccessIdentity();
 		if (!list.isEmpty()) {
 			boolean alone = (list.size() == 1);
 			switch (code) {
 				case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
 					if (alone)
-						gObjectLoader.saveParameterType((ParameterType)list.get(0), accessIdentity, force);
+						gObjectLoader.saveParameterType((ParameterType)list.get(0), force);
 					else 
-						gObjectLoader.saveParameterTypes(list, accessIdentity, force);
+						gObjectLoader.saveParameterTypes(list, force);
 					break;
 				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
 					if (alone)
-						gObjectLoader.saveCharacteristicType((CharacteristicType) list.get(0), accessIdentity, force);
+						gObjectLoader.saveCharacteristicType((CharacteristicType) list.get(0), force);
 					else
-						gObjectLoader.saveCharacteristicTypes(list, accessIdentity, force);
+						gObjectLoader.saveCharacteristicTypes(list, force);
 					break;
 				case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
 					if (alone)
-						gObjectLoader.saveCharacteristic((Characteristic) list.get(0), accessIdentity, force);
+						gObjectLoader.saveCharacteristic((Characteristic) list.get(0), force);
 					else
-						gObjectLoader.saveCharacteristics(list, accessIdentity, force);
+						gObjectLoader.saveCharacteristics(list, force);
 					break;
 				default:
 					Log.errorMessage("GeneralStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(code) + "', entity code: " + code);

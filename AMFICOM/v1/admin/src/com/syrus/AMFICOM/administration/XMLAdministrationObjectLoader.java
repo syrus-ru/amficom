@@ -1,5 +1,5 @@
 /*
- * $Id: XMLAdministrationObjectLoader.java,v 1.2 2005/02/11 10:34:58 bob Exp $
+ * $Id: XMLAdministrationObjectLoader.java,v 1.3 2005/02/11 12:55:20 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -23,6 +22,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectXML;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/11 10:34:58 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/11 12:55:20 $
  * @author $Author: bob $
  * @module admin_v1
  */
@@ -143,52 +143,52 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return Collections.EMPTY_SET;
 	}
 
-	public void saveDomain(Domain domain, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveDomain(Domain domain, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(domain, accessIdentity);
+		this.saveStorableObject(domain);
 		this.administrationXML.flush();
 	}
 
-	public void saveDomains(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveDomains(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list, accessIdentity);
+		this.saveStorableObjects(list);
 
 	}
 
-	public void saveMCM(MCM mcm, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMCM(MCM mcm, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(mcm, accessIdentity);
+		this.saveStorableObject(mcm);
 		this.administrationXML.flush();
 
 	}
 
-	public void saveMCMs(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMCMs(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list, accessIdentity);
+		this.saveStorableObjects(list);
 
 	}
 
-	public void saveServer(Server server, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveServer(Server server, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(server, accessIdentity);
+		this.saveStorableObject(server);
 		this.administrationXML.flush();
 	}
 
-	public void saveServers(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveServers(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list, accessIdentity);
+		this.saveStorableObjects(list);
 
 	}
 
-	public void saveUser(User user, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveUser(User user, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(user, accessIdentity);
+		this.saveStorableObject(user);
 		this.administrationXML.flush();
 	}
 
-	public void saveUsers(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveUsers(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list, accessIdentity);
+		this.saveStorableObjects(list);
 
 	}
 
@@ -220,10 +220,11 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 
 	}
 
-	private void saveStorableObject(StorableObject storableObject, AccessIdentity accessIdentity) throws CommunicationException {
+	private void saveStorableObject(StorableObject storableObject) throws CommunicationException {
 		Identifier id = storableObject.getId();
+		Identifier modifierId = SessionContext.getAccessIdentity().getUserId();
 		try {
-			this.administrationXML.updateObject(storableObject, accessIdentity.getUserId());
+			this.administrationXML.updateObject(storableObject, modifierId);
 		} catch (UpdateObjectException e) {
 			throw new CommunicationException("XMLAdministrationObjectLoader.save"
 					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
@@ -237,10 +238,10 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 
 	}
 
-	private void saveStorableObjects(List storableObjects, AccessIdentity accessIdentity) throws CommunicationException {
+	private void saveStorableObjects(List storableObjects) throws CommunicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
-			this.saveStorableObject(storableObject, accessIdentity);
+			this.saveStorableObject(storableObject);
 		}
 		this.administrationXML.flush();
 	}

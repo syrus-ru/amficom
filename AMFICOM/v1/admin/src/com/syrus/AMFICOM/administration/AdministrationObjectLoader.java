@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationObjectLoader.java,v 1.3 2005/02/11 10:34:58 bob Exp $
+ * $Id: AdministrationObjectLoader.java,v 1.4 2005/02/11 12:55:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,16 +11,15 @@ package com.syrus.AMFICOM.administration;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.AccessIdentity;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/11 10:34:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/11 12:55:19 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -64,24 +63,24 @@ public interface AdministrationObjectLoader {
 //  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 
-	void saveUser(User user, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveUser(User user, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveDomain(Domain domain, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveDomain(Domain domain, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveServer(Server server, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveServer(Server server, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveMCM(MCM mcm, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMCM(MCM mcm, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 
-	void saveUsers(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveUsers(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveDomains(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveDomains(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveServers(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveServers(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveMCMs(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMCMs(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 

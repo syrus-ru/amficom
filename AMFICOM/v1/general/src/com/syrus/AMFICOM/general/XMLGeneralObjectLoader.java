@@ -1,5 +1,5 @@
 /*
- * $Id: XMLGeneralObjectLoader.java,v 1.6 2005/02/11 10:22:30 bob Exp $
+ * $Id: XMLGeneralObjectLoader.java,v 1.7 2005/02/11 12:52:22 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/11 10:22:30 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/11 12:52:22 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -111,10 +111,11 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	private void saveStorableObject(StorableObject storableObject, AccessIdentity accessIdentity) throws CommunicationException {
+	private void saveStorableObject(StorableObject storableObject) throws CommunicationException {
 		Identifier id = storableObject.getId();
+		Identifier modifierId = SessionContext.getAccessIdentity().getUserId();
 		try {
-			this.generalXML.updateObject(storableObject, accessIdentity.getUserId());
+			this.generalXML.updateObject(storableObject, modifierId);
 		} catch (UpdateObjectException e) {
 			throw new CommunicationException("XMLGeneralObjectLoader.save" + ObjectEntities.codeToString(id.getMajor())
 					+ " | caught " + e.getMessage(), e);
@@ -128,45 +129,45 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 
 	}
 
-	public void saveParameterType(ParameterType parameterType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	public void saveParameterType(ParameterType parameterType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(parameterType, accessIdentity);
+		this.saveStorableObject(parameterType);
 		this.generalXML.flush();
 	}
 
-	public void saveCharacteristicType(CharacteristicType characteristicType, AccessIdentity accessIdentity, boolean force)
+	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force)
 			throws VersionCollisionException, DatabaseException, CommunicationException {
-		this.saveStorableObject(characteristicType, accessIdentity);
+		this.saveStorableObject(characteristicType);
 		this.generalXML.flush();
 	}
 
-	public void saveCharacteristic(Characteristic characteristic, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	public void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(characteristic, accessIdentity);
+		this.saveStorableObject(characteristic);
 		this.generalXML.flush();
 	}
 
-	private void saveStorableObjects(List storableObjects, AccessIdentity accessIdentity) throws CommunicationException {
+	private void saveStorableObjects(List storableObjects) throws CommunicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
-			this.saveStorableObject(storableObject, accessIdentity);
+			this.saveStorableObject(storableObject);
 		}
 		this.generalXML.flush();
 	}
 
-	public void saveParameterTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveParameterTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list, accessIdentity);
+		this.saveStorableObjects(list);
 	}
 
-	public void saveCharacteristicTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCharacteristicTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list, accessIdentity);
+		this.saveStorableObjects(list);
 	}
 
-	public void saveCharacteristics(List list,AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCharacteristics(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(list, accessIdentity);
+		this.saveStorableObjects(list);
 	}
 
 	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
