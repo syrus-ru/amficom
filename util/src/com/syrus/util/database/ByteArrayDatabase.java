@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArrayDatabase.java,v 1.11 2004/09/09 12:10:11 bass Exp $
+ * $Id: ByteArrayDatabase.java,v 1.12 2004/12/17 12:52:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.sql.*;
 import com.syrus.util.*;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2004/09/09 12:10:11 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2004/12/17 12:52:08 $
  * @module util
  */
 public class ByteArrayDatabase {
@@ -67,6 +67,7 @@ public class ByteArrayDatabase {
 			OutputStream os = null;
 			os = blob.setBinaryStream(0L);
 			os.write(bar);
+			os.flush();
 			os.close();
 		}
 		catch (IOException ioe) {
