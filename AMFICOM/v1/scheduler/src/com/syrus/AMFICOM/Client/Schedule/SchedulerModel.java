@@ -429,8 +429,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	}
 
 	public void setSelectedTest(Test selectedTest) throws ApplicationException {
-		this.selectedTest = selectedTest;
-		this.refreshTest();
+		if (this.selectedTest == null || selectedTest == null || !this.selectedTest.getId().equals(selectedTest.getId())) {
+			this.selectedTest = selectedTest;
+			this.refreshTest();
+		}
 	}
 
 	public void commitChanges() throws ApplicationException {

@@ -60,20 +60,20 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 	 * @TODO recast using alpha
 	 */
 	public static final Color	COLOR_ABORDED				= Color.RED;
-	public static final Color	COLOR_ABORDED_SELECTED		= new Color(255, 128, 128);
+	public static final Color	COLOR_ABORDED_SELECTED		= Color.RED.darker();
 
-	public static final Color	COLOR_ALARM					= new Color(128, 0, 128);
-	public static final Color	COLOR_ALARM_SELECTED		= new Color(255, 0, 255);
-	public static final Color	COLOR_COMPLETED				= new Color(0, 128, 0);
-	public static final Color	COLOR_COMPLETED_SELECTED	= new Color(0, 255, 0);
-	public static final Color	COLOR_PROCCESSING			= new Color(0, 128, 128);
-	public static final Color	COLOR_PROCCESSING_SELECTED	= new Color(64, 192, 192);
+	public static final Color	COLOR_ALARM					= Color.ORANGE.darker();
+	public static final Color	COLOR_ALARM_SELECTED		= Color.ORANGE;
+	public static final Color	COLOR_COMPLETED				= Color.GREEN.darker();
+	public static final Color	COLOR_COMPLETED_SELECTED	= Color.GREEN;
+	public static final Color	COLOR_PROCCESSING			= Color.CYAN.darker();
+	public static final Color	COLOR_PROCCESSING_SELECTED	= Color.CYAN;
 
-	public static final Color	COLOR_SCHEDULED				= new Color(128, 128, 128);
+	public static final Color	COLOR_SCHEDULED				= Color.WHITE.darker();
 	public static final Color	COLOR_SCHEDULED_SELECTED	= Color.WHITE;
 	public static final Color	COLOR_UNRECOGNIZED			= new Color(20, 20, 60);
 
-	public static final Color	COLOR_WARNING				= new Color(128, 128, 0);
+	public static final Color	COLOR_WARNING				= Color.YELLOW.darker();
 	public static final Color	COLOR_WARNING_SELECTED		= Color.YELLOW;
 
 	public static final int		MINIMAL_WIDTH				= 7;
