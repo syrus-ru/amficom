@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.20 2004/10/20 06:29:19 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.21 2004/10/21 05:33:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/10/20 06:29:19 $
+ * @version $Revision: 1.21 $, $Date: 2004/10/21 05:33:37 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -74,6 +74,7 @@ public class ConfigurationStorableObjectPool {
 	private static Class				cacheMapClass				= LRUMap.class;
 
 	private ConfigurationStorableObjectPool() {
+		// singleton
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1, final int size) {
@@ -273,7 +274,10 @@ public class ConfigurationStorableObjectPool {
 				}
 			}
 		}
-
+		
+		if (list == null)
+			list = Collections.EMPTY_LIST;
+		
 		return list;
 	}
 
@@ -323,6 +327,9 @@ public class ConfigurationStorableObjectPool {
 
 		}
 
+		if (list == null)
+			list = Collections.EMPTY_LIST;
+		
 		return list;
 	}
 
@@ -378,7 +385,10 @@ public class ConfigurationStorableObjectPool {
 			}
 
 		}
-
+		
+		if (list == null)
+			list = Collections.EMPTY_LIST;
+		
 		return list;
 	}
 
@@ -447,7 +457,6 @@ public class ConfigurationStorableObjectPool {
 
 	private static List loadStorableObjects(Short entityCode, List ids) throws DatabaseException,
 			CommunicationException {
-		List storableObjects;
 		List loadedList = null;
 		switch (entityCode.shortValue()) {
 				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
