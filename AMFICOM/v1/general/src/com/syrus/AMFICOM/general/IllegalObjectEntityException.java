@@ -1,5 +1,5 @@
 /*
- * $Id: IllegalObjectEntityException.java,v 1.4 2004/08/06 13:43:43 arseniy Exp $
+ * $Id: IllegalObjectEntityException.java,v 1.5 2004/08/10 19:04:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/06 13:43:43 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/10 19:04:51 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -19,7 +19,8 @@ public class IllegalObjectEntityException extends Exception {
 
 	public static final int OTHER_CODE = 0;
 	public static final int NULL_ENTITY_CODE = 1;
-	public static final int ENTITY_NOT_REGISTERED_CODE = 2;
+	public static final int UNKNOWN_ENTITY_CODE = 2;
+	public static final int ENTITY_NOT_REGISTERED_CODE = 3;
 	
 	private int code;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.13 2004/08/09 14:13:53 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.14 2004/08/10 19:04:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/09 14:13:53 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/10 19:04:51 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -32,7 +32,7 @@ public abstract class ObjectEntities {
 	/*	Configuration	*/
 	public static final String CHARACTERISTIC_ENTITY = "Characterisctic";
 	public static final String PERMATTR_ENTITY = "PermissionAttributes";
-	public static final String USER_ENTITY = "User";
+	public static final String USER_ENTITY = "Users";
 	public static final String DOMAIN_ENTITY = "Domain";
 	public static final String SERVER_ENTITY = "Server";
 	public static final String MCM_ENTITY = "MCM";
@@ -96,7 +96,7 @@ public abstract class ObjectEntities {
 	public static final short RESULTPARAMETER_ENTITY_CODE = 0x0189;
 	public static final short TEMPORALPATTERN_ENTITY_CODE = 0x018A;
 
-	public static short getCodeForString(String entity) {
+	public static short stringToCode(String entity) {
 		if (entity.equals(CHARACTERISTICTYPE_ENTITY)) return CHARACTERISTICTYPE_ENTITY_CODE;
 		else if (entity.equals(EQUIPMENTTYPE_ENTITY)) return EQUIPMENTTYPE_ENTITY_CODE;
 
@@ -128,5 +128,71 @@ public abstract class ObjectEntities {
 		else if (entity.equals(TEMPORALPATTERN_ENTITY)) return TEMPORALPATTERN_ENTITY_CODE;
 
 		else return UNKNOWN_ENTITY_CODE;
+	}
+
+	public static String codeToString(short code) {
+		switch (code) {
+			case CHARACTERISTICTYPE_ENTITY_CODE:
+				return CHARACTERISTICTYPE_ENTITY;
+			case EQUIPMENTTYPE_ENTITY_CODE:
+				return EQUIPMENTTYPE_ENTITY;
+
+			case PARAMETERTYPE_ENTITY_CODE:
+				return PARAMETERTYPE_ENTITY;
+			case MEASUREMENTTYPE_ENTITY_CODE:
+				return MEASUREMENTTYPE_ENTITY;
+			case ANALYSISTYPE_ENTITY_CODE:
+				return ANALYSISTYPE_ENTITY;
+			case EVALUATIONTYPE_ENTITY_CODE:
+				return EVALUATIONTYPE_ENTITY;
+
+			case CHARACTERISTIC_ENTITY_CODE:
+				return CHARACTERISTIC_ENTITY;
+			case PERMATTR_ENTITY_CODE:
+				return PERMATTR_ENTITY;
+			case USER_ENTITY_CODE:
+				return USER_ENTITY;
+			case DOMAIN_ENTITY_CODE:
+				return DOMAIN_ENTITY;
+			case SERVER_ENTITY_CODE:
+				return SERVER_ENTITY;
+			case MCM_ENTITY_CODE:
+				return MCM_ENTITY;
+			case EQUIPMENT_ENTITY_CODE:
+				return EQUIPMENT_ENTITY;
+			case TRANSPATH_ENTITY_CODE:
+				return TRANSPATH_ENTITY;
+			case KIS_ENTITY_CODE:
+				return KIS_ENTITY;
+			case ME_ENTITY_CODE:
+				return ME_ENTITY;
+
+			case SET_ENTITY_CODE:
+				return SET_ENTITY;
+			case SETPARAMETER_ENTITY_CODE:
+				return SETPARAMETER_ENTITY;
+			case MS_ENTITY_CODE:
+				return MS_ENTITY;
+			case MEASUREMENT_ENTITY_CODE:
+				return MEASUREMENT_ENTITY;
+			case ANALYSIS_ENTITY_CODE:
+				return ANALYSIS_ENTITY;
+			case EVALUATION_ENTITY_CODE:
+				return EVALUATION_ENTITY;
+			case TEST_ENTITY_CODE:
+				return TEST_ENTITY;
+			case RESULT_ENTITY_CODE:
+				return RESULT_ENTITY;
+			case RESULTPARAMETER_ENTITY_CODE:
+				return RESULTPARAMETER_ENTITY;
+			case TEMPORALPATTERN_ENTITY_CODE:
+				return TEMPORALPATTERN_ENTITY;
+
+			case UNKNOWN_ENTITY_CODE:
+				return null;
+
+			default:
+				return null;
+		}
 	}
 }

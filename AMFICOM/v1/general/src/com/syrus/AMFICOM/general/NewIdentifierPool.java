@@ -1,5 +1,5 @@
 /*
- * $Id: NewIdentifierPool.java,v 1.4 2004/08/06 13:43:43 arseniy Exp $
+ * $Id: NewIdentifierPool.java,v 1.5 2004/08/10 19:04:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/06 13:43:43 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/10 19:04:51 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -27,7 +27,7 @@ public class NewIdentifierPool {
 	public static final int DEFAULT_ENTITY_POOL_SIZE = 10;
 	public static final int MAX_ENTITY_POOL_SIZE = 50;
 
-	private static Map entityIdentifierPools;
+	private static Map entityIdentifierPools;	//Map <Short entityCode, List <Identifier> >
 	private static IdentifierGeneratorServer igServer;
 	
 	private NewIdentifierPool() {
@@ -39,62 +39,69 @@ public class NewIdentifierPool {
 
 		entityIdentifierPools = new Hashtable(100);
 
-		createEntityIdentifierPool(ObjectEntities.SET_ENTITY);
-		createEntityIdentifierPool(ObjectEntities.SETPARAMETER_ENTITY);
-		createEntityIdentifierPool(ObjectEntities.MS_ENTITY);
-		createEntityIdentifierPool(ObjectEntities.MEASUREMENT_ENTITY);
-		createEntityIdentifierPool(ObjectEntities.ANALYSIS_ENTITY);
-		createEntityIdentifierPool(ObjectEntities.EVALUATION_ENTITY);
-		createEntityIdentifierPool(ObjectEntities.TEST_ENTITY);
-		createEntityIdentifierPool(ObjectEntities.RESULT_ENTITY);
-		createEntityIdentifierPool(ObjectEntities.RESULTPARAMETER_ENTITY);
-		createEntityIdentifierPool(ObjectEntities.TEMPORALPATTERN_ENTITY);
+		createEntityIdentifierPool(ObjectEntities.SET_ENTITY_CODE);
+		createEntityIdentifierPool(ObjectEntities.SETPARAMETER_ENTITY_CODE);
+		createEntityIdentifierPool(ObjectEntities.MS_ENTITY_CODE);
+		createEntityIdentifierPool(ObjectEntities.MEASUREMENT_ENTITY_CODE);
+		createEntityIdentifierPool(ObjectEntities.ANALYSIS_ENTITY_CODE);
+		createEntityIdentifierPool(ObjectEntities.EVALUATION_ENTITY_CODE);
+		createEntityIdentifierPool(ObjectEntities.TEST_ENTITY_CODE);
+		createEntityIdentifierPool(ObjectEntities.RESULT_ENTITY_CODE);
+		createEntityIdentifierPool(ObjectEntities.RESULTPARAMETER_ENTITY_CODE);
+		createEntityIdentifierPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE);
 	}
 	
-	public static Identifier getGeneratedIdentifier(String entity, int preferredRangeSize) throws IllegalObjectEntityException, AMFICOMRemoteException {
-		List entityIdPool = (List)entityIdentifierPools.get(entity);
+	public static Identifier getGeneratedIdentifier(short entityCode, int preferredRangeSize) throws IllegalObjectEntityException, AMFICOMRemoteException {
+		Short eCode = new Short(entityCode);
+		List entityIdPool = (List)entityIdentifierPools.get(eCode);
 		if (entityIdPool != null) {
 			if (entityIdPool.isEmpty())
-				updateIdentifierPool(entity, preferredRangeSize);
+				updateIdentifierPool(eCode, preferredRangeSize);
 
 			Identifier identifier = (Identifier)entityIdPool.remove(0);
 			return identifier;
 		}
 		else
-			throw new IllegalObjectEntityException("Identifier pool for entity '" + entity + "' not found", IllegalObjectEntityException.NULL_ENTITY_CODE);
+			throw new IllegalObjectEntityException("Identifier pool for entity '" + ObjectEntities.codeToString(entityCode) + "' not found", IllegalObjectEntityException.NULL_ENTITY_CODE);
 	}
 		
-	public static void updateIdentifierPool(String entity, int size) throws IllegalObjectEntityException, AMFICOMRemoteException {
-		List entityIdPool = (List)entityIdentifierPools.get(entity);
+	public static void updateIdentifierPool(short entityCode, int size) throws IllegalObjectEntityException, AMFICOMRemoteException {
+		updateIdentifierPool(new Short(entityCode), size);
+	}
+
+	private static void updateIdentifierPool(Short eCode, int size) throws IllegalObjectEntityException, AMFICOMRemoteException {
+		List entityIdPool = (List)entityIdentifierPools.get(eCode);
 		if (entityIdPool != null) {
 			if (size <= 1) {
-				Identifier identifier = new Identifier(igServer.getGeneratedIdentifier(entity));
+				Identifier identifier = new Identifier(igServer.getGeneratedIdentifier(eCode.shortValue()));
 				entityIdPool.add(identifier);
 			}
 			else {
-				Identifier_Transferable[] idst = igServer.getGeneratedIdentifierRange(entity, (size < MAX_ENTITY_POOL_SIZE)?size:MAX_ENTITY_POOL_SIZE);
+				Identifier_Transferable[] idst = igServer.getGeneratedIdentifierRange(eCode.shortValue(), (size < MAX_ENTITY_POOL_SIZE)?size:MAX_ENTITY_POOL_SIZE);
 				for (int i = 0; i < idst.length; i++)
 					entityIdPool.add(new Identifier(idst[i]));
 			}
 		}
 		else
-			throw new IllegalObjectEntityException("Identifier pool for entity '" + entity + "' not found", IllegalObjectEntityException.NULL_ENTITY_CODE);
+			throw new IllegalObjectEntityException("Identifier pool for entity '" + ObjectEntities.codeToString(eCode.shortValue()) + "' not found", IllegalObjectEntityException.NULL_ENTITY_CODE);
 	}
 	
-	public static int getIdentifierPoolSize(String entity) throws IllegalObjectEntityException {
-		List entityIdPool = (List)entityIdentifierPools.get(entity);
+	public static int getIdentifierPoolSize(short entityCode) throws IllegalObjectEntityException {
+		Short eCode = new Short(entityCode);
+		List entityIdPool = (List)entityIdentifierPools.get(eCode);
 		if (entityIdPool != null) {
 			return entityIdPool.size();
 		}
 		else
-			throw new IllegalObjectEntityException("Identifier pool for entity '" + entity + "' not found", IllegalObjectEntityException.NULL_ENTITY_CODE);
+			throw new IllegalObjectEntityException("Identifier pool for entity '" + ObjectEntities.codeToString(entityCode) + "' not found", IllegalObjectEntityException.NULL_ENTITY_CODE);
 	}
 	
-	private static void createEntityIdentifierPool(String entity) {
-		if (! entityIdentifierPools.containsKey(entity)) {
-			entityIdentifierPools.put(entity, new ArrayList(DEFAULT_ENTITY_POOL_SIZE));
+	private static void createEntityIdentifierPool(short entityCode) {
+		Short eCode = new Short(entityCode);
+		if (! entityIdentifierPools.containsKey(eCode)) {
+			entityIdentifierPools.put(eCode, new ArrayList(DEFAULT_ENTITY_POOL_SIZE));
 		}
 		else
-			Log.errorMessage("IdentifierPool | Pool of identifiers for entity: " + entity + " already created");
+			Log.errorMessage("IdentifierPool | Pool of identifiers for entity: " + ObjectEntities.codeToString(entityCode) + " already created");
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.7 2004/08/09 07:49:09 arseniy Exp $
+ * $Id: Identifier.java,v 1.8 2004/08/10 19:04:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/09 07:49:09 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/10 19:04:51 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -27,7 +27,7 @@ public class Identifier implements Comparable, Cloneable, TransferableObject {
 
 	public Identifier(String identifierString) {
 		this.majorString = identifierString.substring(0, identifierString.indexOf(SEPARATOR));
-		this.major = ObjectEntities.getCodeForString(this.majorString);
+		this.major = ObjectEntities.stringToCode(this.majorString);
 		this.minor = Long.parseLong(identifierString.substring(identifierString.indexOf(SEPARATOR) + 1));
 		this.identifierString = identifierString;
 	}
@@ -35,13 +35,23 @@ public class Identifier implements Comparable, Cloneable, TransferableObject {
 	public Identifier(Identifier_Transferable id_t) {
 		this(id_t.identifier_string);
 	}
-/*
-	protected Identifier(String major, long minor) {
+
+//	/*	Only for IdentifierGenerator	*/
+//	protected Identifier(String majorString, long minor) {
+//		this.major = ObjectEntities.codeForString(majorString);
+//		this.majorString = majorString;
+//		this.minor = minor;
+//		this.identifierString = this.majorString + SEPARATOR + Long.toString(this.minor);
+//	}
+
+	/*	Only for IdentifierGenerator	*/
+	protected Identifier(short major, long minor) {
 		this.major = major;
 		this.minor = minor;
-		this.identifierString = this.major + SEPARATOR + Long.toString(this.minor);
+		this.majorString = ObjectEntities.codeToString(this.major);
+		this.identifierString = this.majorString + SEPARATOR + Long.toString(this.minor);
 	}
-*/
+
 	public Object clone() {
 		Identifier id = null;
 		try {
