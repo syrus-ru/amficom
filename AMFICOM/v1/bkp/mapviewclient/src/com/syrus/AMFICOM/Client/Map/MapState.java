@@ -1,5 +1,5 @@
 /**
- * $Id: MapState.java,v 1.2 2004/09/15 08:21:49 krupenn Exp $
+ * $Id: MapState.java,v 1.3 2004/09/16 10:39:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ package com.syrus.AMFICOM.Client.Map;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/15 08:21:49 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/16 10:39:53 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -66,6 +66,7 @@ public final class MapState
 	public final static int MOVE_TO_CENTER = 303;
 	public final static int MOVE_HAND = 304;
 	public final static int NODELINK_SIZE_EDIT = 305;
+	public final static int MEASURE_DISTANCE = 306;
 
 	/** Флаг состояния режимов для работы с картой */
 	protected int operationMode = NO_OPERATION;

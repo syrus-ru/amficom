@@ -1,5 +1,5 @@
 /**
- * $Id: ZoomToPointCommand.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
+ * $Id: MeasureDistanceCommand.java,v 1.1 2004/09/16 10:39:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,21 +20,21 @@ import com.syrus.AMFICOM.Client.Map.MapState;
 import java.awt.Cursor;
 
 /**
- * Команда включения/выкллючения режима приближения точки
+ * Команда включения/выключения масштабирования по выбранной области 
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
+ * @version $Revision: 1.1 $, $Date: 2004/09/16 10:39:53 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class ZoomToPointCommand extends VoidCommand
+public class MeasureDistanceCommand extends VoidCommand
 {
 	LogicalNetLayer logicalNetLayer;
 	ApplicationModel aModel;
 	
-	public ZoomToPointCommand(LogicalNetLayer logicalNetLayer)
+	public MeasureDistanceCommand(LogicalNetLayer logicalNetLayer)
 	{
 		this.logicalNetLayer = logicalNetLayer;
 	}
@@ -47,34 +47,29 @@ public class ZoomToPointCommand extends VoidCommand
 			aModel = (ApplicationModel )value;
 	}
 
-	public Object clone()
-	{
-		return new ZoomToPointCommand(logicalNetLayer);
-	}
-
 	public void execute()
 	{
-		if(aModel.isSelected("mapActionZoomToPoint"))
+		if(aModel.isSelected("mapActionMeasureDistance"))
 		{
 			logicalNetLayer.getMapState().setActionMode(MapState.NULL_ACTION_MODE);
 			logicalNetLayer.getMapState().setOperationMode(MapState.NO_OPERATION);
 			logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
-			aModel.setSelected("mapActionZoomToPoint", false);
+			aModel.setSelected("mapActionMeasureDistance", false);
 			aModel.fireModelChanged("");
 		}
 		else
-		if(!aModel.isSelected("mapActionZoomToPoint"))
+		if(!aModel.isSelected("mapActionMeasureDistance"))
 		{
-			aModel.setSelected("mapActionZoomToPoint", true);
+			aModel.setSelected("mapActionMeasureDistance", true);
 
-			aModel.setSelected("mapActionMeasureDistance", false);
-			aModel.setSelected("mapActionMoveToCenter", false);
 			aModel.setSelected("mapActionZoomBox", false);
+			aModel.setSelected("mapActionMoveToCenter", false);
+			aModel.setSelected("mapActionZoomToPoint", false);
 			aModel.setSelected("mapActionHandPan", false);
 			aModel.fireModelChanged("");
 
-			logicalNetLayer.getMapState().setOperationMode(MapState.ZOOM_TO_POINT);
+			logicalNetLayer.getMapState().setOperationMode(MapState.MEASURE_DISTANCE);
 			logicalNetLayer.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
 		}
 	}

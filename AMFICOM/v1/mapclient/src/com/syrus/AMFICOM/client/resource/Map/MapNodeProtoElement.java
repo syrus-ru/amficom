@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeProtoElement.java,v 1.3 2004/09/15 08:28:52 krupenn Exp $
+ * $Id: MapNodeProtoElement.java,v 1.4 2004/09/16 10:37:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/15 08:28:52 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/16 10:37:49 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -55,6 +55,12 @@ public final class MapNodeProtoElement
 {
 	private static final long serialVersionUID = 02L;
 	public static final String typ = "mapprotoelement";
+	
+	public static final String WELL = "well";
+	public static final String PIQUET = "piquet";
+	public static final String ATS = "ats";
+	public static final String BUILDING = "building";
+	public static final String UNBOUND = "unbound";
 
 	protected MapNodeProtoElement_Transferable transferable;
 

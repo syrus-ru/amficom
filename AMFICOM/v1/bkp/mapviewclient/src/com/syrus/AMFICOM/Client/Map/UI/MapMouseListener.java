@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.1 2004/09/13 12:33:43 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,8 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenu;
@@ -27,6 +29,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import java.awt.Cursor;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -35,6 +38,7 @@ import java.awt.geom.Point2D;
 
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
@@ -46,7 +50,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -81,8 +85,9 @@ public final class MapMouseListener implements MouseListener
 			switch ( mapState.getOperationMode())
 			{
 				case MapState.MOVE_HAND://Флаг для меремещения карты лапкой
-					break;
-
+					// fall throuth
+				case MapState.MEASURE_DISTANCE:
+					// fall throuth
 				case MapState.ZOOM_TO_POINT:
 					// fall throuth
 				case MapState.ZOOM_TO_RECT:
@@ -196,6 +201,30 @@ public final class MapMouseListener implements MouseListener
 			//Обрабатывает события на панели инстрементов
 			switch (mapState.getOperationMode())
 			{
+				case MapState.MEASURE_DISTANCE :
+
+					Point2D.Double sp = logicalNetLayer.convertScreenToMap(logicalNetLayer.getStartPoint());
+					Point2D.Double ep = logicalNetLayer.convertScreenToMap(me.getPoint());
+
+					double distance = logicalNetLayer.distance(sp, ep);
+
+					logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
+					logicalNetLayer.getContext().getApplicationModel().setSelected("mapActionMeasureDistance", false);
+					logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
+
+					JOptionPane.showMessageDialog(
+							Environment.getActiveWindow(),
+							LangModelMap.getString("Distane") + " = " + String.valueOf(MiscUtil.fourdigits(distance)),
+							LangModelMap.getString("MeasureDistane"),
+							JOptionPane.PLAIN_MESSAGE);
+
+//					Command com = logicalNetLayer.getContext().getApplicationModel().getCommand("mapActionMeasureDistance");
+//					com.setParameter("applicationModel", logicalNetLayer.getContext().getApplicationModel());
+//					com.setParameter("logicalNetLayer", logicalNetLayer);
+//					com.execute();
+					
+					break;
 				case MapState.ZOOM_TO_POINT :
 					Point2D.Double pp = logicalNetLayer.convertScreenToMap(me.getPoint());
 
@@ -203,10 +232,13 @@ public final class MapMouseListener implements MouseListener
 					logicalNetLayer.zoomIn();
 					logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
-					Command com = logicalNetLayer.getContext().getApplicationModel().getCommand("mapActionZoomToPoint");
-					com.setParameter("applicationModel", logicalNetLayer.getContext().getApplicationModel());
-					com.setParameter("logicalNetLayer", logicalNetLayer);
-					com.execute();
+					logicalNetLayer.getContext().getApplicationModel().setSelected("mapActionZoomToPoint", false);
+					logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
+
+//					Command com = logicalNetLayer.getContext().getApplicationModel().getCommand("mapActionZoomToPoint");
+//					com.setParameter("applicationModel", logicalNetLayer.getContext().getApplicationModel());
+//					com.setParameter("logicalNetLayer", logicalNetLayer);
+//					com.execute();
 					
 					logicalNetLayer.getMapView().setScale(logicalNetLayer.getScale());
 					logicalNetLayer.getMapView().setCenter(logicalNetLayer.getCenter());
@@ -215,10 +247,13 @@ public final class MapMouseListener implements MouseListener
 				case MapState.ZOOM_TO_RECT:
 					logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 					
-					Command com2 = logicalNetLayer.getContext().getApplicationModel().getCommand("mapActionZoomBox");
-					com2.setParameter("applicationModel", logicalNetLayer.getContext().getApplicationModel());
-					com2.setParameter("logicalNetLayer", logicalNetLayer);
-					com2.execute();
+					logicalNetLayer.getContext().getApplicationModel().setSelected("mapActionZoomBox", false);
+					logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
+
+//					Command com2 = logicalNetLayer.getContext().getApplicationModel().getCommand("mapActionZoomBox");
+//					com2.setParameter("applicationModel", logicalNetLayer.getContext().getApplicationModel());
+//					com2.setParameter("logicalNetLayer", logicalNetLayer);
+//					com2.execute();
 					
 					if (!logicalNetLayer.getStartPoint().equals(logicalNetLayer.getEndPoint()))
 					{
@@ -236,10 +271,13 @@ public final class MapMouseListener implements MouseListener
 					logicalNetLayer.setCenter(
 						logicalNetLayer.convertScreenToMap(me.getPoint()));
 					
-					Command com3 = logicalNetLayer.getContext().getApplicationModel().getCommand("mapActionMoveToCenter");
-					com3.setParameter("applicationModel", logicalNetLayer.getContext().getApplicationModel());
-					com3.setParameter("logicalNetLayer", logicalNetLayer);
-					com3.execute();
+					logicalNetLayer.getContext().getApplicationModel().setSelected("mapActionMoveToCenter", false);
+					logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
+
+//					Command com3 = logicalNetLayer.getContext().getApplicationModel().getCommand("mapActionMoveToCenter");
+//					com3.setParameter("applicationModel", logicalNetLayer.getContext().getApplicationModel());
+//					com3.setParameter("logicalNetLayer", logicalNetLayer);
+//					com3.execute();
 					
 					logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 

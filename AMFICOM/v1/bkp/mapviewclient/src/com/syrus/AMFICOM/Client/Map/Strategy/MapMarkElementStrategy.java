@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -114,7 +114,8 @@ public final class MapMarkElementStrategy implements  MapStrategy
 						Point end = converter.convertMapToScreen(mark.getNodeLink().getEndNode().getAnchor());
 
 						double lengthFromStartNode = mark.getSizeInDoubleLt();
-
+						
+						mark.getNodeLink().updateLengthLt();
 						double nodeLinkLength =  mark.getNodeLink().getLengthLt();
 						mark.getNodeLink().calcScreenSlope();
 						double cos_b = mark.getNodeLink().getScreenCos();
@@ -141,6 +142,7 @@ public final class MapMarkElementStrategy implements  MapStrategy
 						if ( lengthFromStartNode < 0 )
 						{
 							mark.setNodeLink(mark.getLink().previousNodeLink(mark.getNodeLink()));
+							mark.getNodeLink().updateLengthLt();
 							lengthFromStartNode += mark.getNodeLink().getLengthLt();
 						}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.8 2004/09/14 14:48:26 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.9 2004/09/16 10:37:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/09/14 14:48:26 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/16 10:37:49 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -64,6 +64,10 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	protected ArrayList nodeLinks = new ArrayList();
 
 	protected String mapProtoId = "";
+
+	protected String city = "";
+	protected String street = "";
+	protected String building = "";
 
 	protected ArrayList sortedNodes = new ArrayList();
 	protected boolean nodeLinksSorted = false;
@@ -677,6 +681,42 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	public MapPhysicalLinkBinding getBinding()
 	{
 		return binding;
+	}
+
+
+	public void setCity(String city)
+	{
+		this.city = city;
+	}
+
+
+	public String getCity()
+	{
+		return city;
+	}
+
+
+	public void setStreet(String street)
+	{
+		this.street = street;
+	}
+
+
+	public String getStreet()
+	{
+		return street;
+	}
+
+
+	public void setBuilding(String building)
+	{
+		this.building = building;
+	}
+
+
+	public String getBuilding()
+	{
+		return building;
 	}
 
 }

@@ -375,7 +375,9 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 				break;
 			}
 			else
+			{
 				pathLength += nl.getLengthLt();
+			}
 		}
 		return pathLength;
 	}
@@ -634,6 +636,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{
 			nodeLink = (MapNodeLinkElement )it.next();
+			nodeLink.updateLengthLt();
 			if(path + nodeLink.getLengthLt() > distance)
 				break;
 			else

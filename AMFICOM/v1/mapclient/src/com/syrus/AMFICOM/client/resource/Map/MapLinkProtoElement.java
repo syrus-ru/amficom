@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkProtoElement.java,v 1.3 2004/09/15 08:28:52 krupenn Exp $
+ * $Id: MapLinkProtoElement.java,v 1.4 2004/09/16 10:37:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/15 08:28:52 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/16 10:37:49 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -45,6 +45,10 @@ public final class MapLinkProtoElement
 {
 	private static final long serialVersionUID = 02L;
 	public static final String typ = "maplinkproto";
+
+	public static final String TUNNEL = "tunnel";
+	public static final String COLLECTIOR = "collector";
+	public static final String UNBOUND = "cable";
 
 	protected MapLinkProtoElement_Transferable transferable;
 

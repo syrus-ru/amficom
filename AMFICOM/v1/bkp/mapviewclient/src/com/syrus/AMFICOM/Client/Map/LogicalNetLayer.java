@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.1 2004/09/13 12:33:41 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -64,7 +64,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:41 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -770,15 +770,15 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		switch (mapState.getActionMode())
 		{
 			case MapState.SELECT_MARKER_ACTION_MODE:
-				p.setColor( Color.blue);
+				p.setColor( Color.BLUE);
 				p.drawRect(
-						Math.min(startX,endX),
-						Math.min(startY,endY),
-						Math.abs(endX-startX),
-						Math.abs(endY-startY));
+						Math.min(startX, endX),
+						Math.min(startY, endY),
+						Math.abs(endX - startX),
+						Math.abs(endY - startY));
 				break;
 			case MapState.DRAW_LINES_ACTION_MODE:
-				p.setColor( Color.red);
+				p.setColor( Color.RED);
 				p.drawLine( startX, startY, endX, endY);
 				break;
 			default:
@@ -788,12 +788,18 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		//То рисовать прямоугольник
 		if (mapState.getOperationMode() == MapState.ZOOM_TO_RECT )
 		{
-			p.setColor(Color.yellow);
+			p.setColor(Color.YELLOW);
 			p.drawRect(
 					Math.min(startX, endX),
 					Math.min(startY, endY),
 					Math.abs(endX - startX),
 					Math.abs(endY - startY));
+		}
+		else
+		if (mapState.getOperationMode() == MapState.MEASURE_DISTANCE )
+		{
+			p.setColor(Color.GREEN);
+			p.drawLine(startX, startY, endX, endY);
 		}
 	}
 
@@ -1828,7 +1834,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		MapNodeProtoElement mnpe = null;
 		
-		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, "unbound");
+		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, MapNodeProtoElement.UNBOUND);
 		if(mnpe == null)
 		{
 			ImageCatalogue.add(
@@ -1836,7 +1842,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				new ImageResource("unbound", "unbound", "images/unbound.gif"));
 
 			mnpe = new MapNodeProtoElement(
-				"unbound",
+				MapNodeProtoElement.UNBOUND,
 				LangModelMap.getString("UnboundElement"),
 				true,
 				"unbound",
@@ -1847,16 +1853,16 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		return mnpe;
 	}
 
-	protected MapLinkProtoElement getDefaultPen()
+	public List getPens()
 	{
 		MapLinkProtoElement mlpe = null;
 		
-		mlpe = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, "truba");
+		mlpe = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, MapLinkProtoElement.TUNNEL);
 		if(mlpe == null)
 		{
 			mlpe = new MapLinkProtoElement(
-				"truba",
-				LangModelMap.getString("Pipe"),
+				MapLinkProtoElement.TUNNEL,
+				LangModelMap.getString("Tunnel"),
 				"desc",
 				new Dimension(3, 4));
 			mlpe.setLineSize(2);
@@ -1864,19 +1870,53 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			Pool.put(MapLinkProtoElement.typ, mlpe.getId(), mlpe);
 		}
 		
-		return mlpe;
+		mlpe = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, MapLinkProtoElement.COLLECTIOR);
+		if(mlpe == null)
+		{
+			mlpe = new MapLinkProtoElement(
+				MapLinkProtoElement.COLLECTIOR,
+				LangModelMap.getString("CollectorFragment"),
+				"desc",
+				new Dimension(3, 4));
+			mlpe.setLineSize(2);
+			mlpe.setColor(Color.DARK_GRAY);
+			Pool.put(MapLinkProtoElement.typ, mlpe.getId(), mlpe);
+		}
+
+		List list = new LinkedList();
+		
+		for(Iterator it = Pool.getList(MapLinkProtoElement.typ).iterator(); it.hasNext();)
+		{
+			try
+			{
+				mlpe = (MapLinkProtoElement )it.next();
+				list.add(mlpe);
+			}
+			catch(Exception e)
+			{
+				System.out.println(e.getMessage());
+			}
+		}
+		list.remove(getUnboundPen());
+		
+		return list;
+	}
+	
+	protected MapLinkProtoElement getDefaultPen()
+	{
+		return (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, MapLinkProtoElement.TUNNEL);
 	}
 
 	protected MapLinkProtoElement getDefaultCable()
 	{
 		MapLinkProtoElement mlpe = null;
 		
-		mlpe = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, "cable");
+		mlpe = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, MapLinkProtoElement.UNBOUND);
 		if(mlpe == null)
 		{
 			mlpe = new MapLinkProtoElement(
-				"cable",
-				"Непривязанный кабель",
+				MapLinkProtoElement.UNBOUND,
+				LangModelMap.getString("Unbound"),
 				"desc",
 				new Dimension(0, 0));
 			mlpe.setLineSize(1);
@@ -1886,28 +1926,60 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		
 		return mlpe;
 	}
-	
+
 	public List getTopologicalProtos()
 	{
 		MapNodeProtoElement mnpe = null;
 		
-		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, "building");
+		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, MapNodeProtoElement.ATS);
 		if(mnpe == null)
 		{
 			ImageCatalogue.add(
-				"pc",
-				new ImageResource("pc", "pc", "images/pc.gif"));
+				"ats",
+				new ImageResource("ats", "ats", "images/ats.gif"));
 
 			mnpe = new MapNodeProtoElement(
-				"building",
-				LangModelMap.getString("Building"),
+				MapNodeProtoElement.ATS,
+				LangModelMap.getString("Ats"),
 				true,
-				"pc",
-				"descrioption");
+				"ats",
+				"description");
 			Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
 		}
 
-		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, "well");
+		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, MapNodeProtoElement.BUILDING);
+		if(mnpe == null)
+		{
+			ImageCatalogue.add(
+				"building",
+				new ImageResource("building", "building", "images/building.gif"));
+
+			mnpe = new MapNodeProtoElement(
+				MapNodeProtoElement.BUILDING,
+				LangModelMap.getString("Building"),
+				true,
+				"building",
+				"description");
+			Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
+		}
+
+		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, MapNodeProtoElement.PIQUET);
+		if(mnpe == null)
+		{
+			ImageCatalogue.add(
+				"piquet",
+				new ImageResource("piquet", "piquet", "images/piquet.gif"));
+
+			mnpe = new MapNodeProtoElement(
+				MapNodeProtoElement.PIQUET,
+				LangModelMap.getString("Piquet"),
+				true,
+				"piquet",
+				"description");
+			Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
+		}
+
+		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, MapNodeProtoElement.WELL);
 		if(mnpe == null)
 		{
 			ImageCatalogue.add(
@@ -1915,27 +1987,11 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				new ImageResource("well", "well", "images/well.gif"));
 
 			mnpe = new MapNodeProtoElement(
-				"well",
+				MapNodeProtoElement.WELL,
 				LangModelMap.getString("Well"),
 				true,
 				"well",
-				"descrioption");
-			Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
-		}
-
-		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, "net");
-		if(mnpe == null)
-		{
-			ImageCatalogue.add(
-				"net",
-				new ImageResource("net", "net", "images/net.gif"));
-
-			mnpe = new MapNodeProtoElement(
-				"net",
-				LangModelMap.getString("Net"),
-				true,
-				"net",
-				"descrioption");
+				"description");
 			Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
 		}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElement.java,v 1.2 2004/09/14 14:48:26 krupenn Exp $
+ * $Id: MapSiteNodeElement.java,v 1.3 2004/09/16 10:37:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/14 14:48:26 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/16 10:37:49 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -46,6 +46,10 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 	public static final String typ = "mapequipmentelement";
 
 	protected MapSiteElement_Transferable transferable;
+
+	protected String city = "";
+	protected String street = "";
+	protected String building = "";
 
 	protected String mapProtoId = "";
 
@@ -286,5 +290,41 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 	public String getMapProtoId()
 	{
 		return mapProtoId;
+	}
+
+
+	public void setCity(String city)
+	{
+		this.city = city;
+	}
+
+
+	public String getCity()
+	{
+		return city;
+	}
+
+
+	public void setStreet(String street)
+	{
+		this.street = street;
+	}
+
+
+	public String getStreet()
+	{
+		return street;
+	}
+
+
+	public void setBuilding(String building)
+	{
+		this.building = building;
+	}
+
+
+	public String getBuilding()
+	{
+		return building;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommand.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: CreateMarkCommand.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.util.Iterator;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -90,7 +90,10 @@ public class CreateMarkCommand extends MapActionCommand
 				break;
 			}
 			else
+			{
+				mnle.updateLengthLt();
 				distance += mnle.getLengthLt();
+			}
 
 			if(mnle.getStartNode().equals(node))
 				node = mnle.getEndNode();

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.2 2004/09/15 08:21:49 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.3 2004/09/16 10:39:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import java.awt.event.MouseMotionListener;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/15 08:21:49 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/16 10:39:53 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -55,6 +55,9 @@ public final class MapMouseMotionListener implements MouseMotionListener
 			//Обрабатывает события на панели инстрементов
 			switch (mapState.getOperationMode())
 			{
+				case MapState.MEASURE_DISTANCE:
+					logicalNetLayer.repaint();
+					break;
 				case MapState.MOVE_HAND:
 					//Если перемещают карту лапкой
 					logicalNetLayer.handDragged(me);

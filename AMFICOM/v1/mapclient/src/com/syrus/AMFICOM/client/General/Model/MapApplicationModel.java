@@ -124,6 +124,8 @@ public class MapApplicationModel extends ApplicationModel
 		add("mapModeViewNodes");
 
 		add("mapActionHandPan");
+		
+		add("mapActionMeasureDistance");
 
 	}
 

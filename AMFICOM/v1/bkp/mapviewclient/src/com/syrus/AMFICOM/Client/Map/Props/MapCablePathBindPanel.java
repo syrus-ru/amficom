@@ -42,9 +42,9 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 	MapCablePathElement path;
 	
 	/**
-	 * таблица с найденными элементами
+	 * таблица
 	 */
-	ObjectResourceController controller;
+	CableBindingController controller;
 	ObjectResourceTableModel model;
 	ObjectResourceTable table;
 
@@ -185,7 +185,7 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 
 	public void setObjectResource(ObjectResource objectResource)
 	{
-		path = (MapCablePathElement)objectResource;
+		path = (MapCablePathElement )objectResource;
 
 		table.removeAll();
 
@@ -199,6 +199,7 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		}
 		else
 		{
+			controller.setMap(path.getMap());
 			channellingItems = new LinkedList();
 			if(path.getSchemeCableLink().channelingItems == null)
 				path.getSchemeCableLink().channelingItems = new LinkedList();

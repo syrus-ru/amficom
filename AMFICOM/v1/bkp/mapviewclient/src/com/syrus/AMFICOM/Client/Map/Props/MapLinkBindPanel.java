@@ -1,25 +1,21 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Props.BindingLabel;
 import com.syrus.AMFICOM.Client.Map.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkBinding;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import java.util.Iterator;
 import java.util.List;
@@ -29,12 +25,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 
 public final class MapLinkBindPanel extends JPanel implements ObjectResourcePropertiesPane
 {
@@ -44,22 +36,11 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 	
 	private JLabel titleLabel = new JLabel();
 	private ObjectResourceListBox cableList = new ObjectResourceListBox();
-	private JPanel bindingPanel = new JPanel();
-	private GridBagLayout gridBagLayout2 = new GridBagLayout();
 
-	/**
-	 * таблица с найденными элементами
-	 */
-	JTable table = new JTable();
-
-	/**
-	 * модель для таблицы найденных элементов
-	 */
-	BindingTableModel model;
+	private TunnelLayout tunnelLayout = new TunnelLayout();
 
 	JScrollPane scrollPane = new JScrollPane();
 	
-	BindingLabel renderer = new BindingLabel();
 	private JPanel jPanel1 = new JPanel();
 	private JButton bindButton = new JButton();
 	private JButton unbindButton = new JButton();
@@ -82,7 +63,6 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 		this.setLayout(gridBagLayout1);
 		this.setName(LangModelMap.getString("LinkBinding"));
 		titleLabel.setText(LangModelMap.getString("LinkBinding"));
-		bindingPanel.setLayout(gridBagLayout2);
 		cableList.addListSelectionListener(new ListSelectionListener()
 			{
 				public void valueChanged(ListSelectionEvent e)
@@ -91,7 +71,7 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 					cableSelected(or);
 				}
 			});
-			
+/*			
 		table.addMouseListener(new MouseListener()
 			{
 				public void mouseClicked(MouseEvent e)
@@ -105,7 +85,7 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 				public void mousePressed(MouseEvent e) {}
 				public void mouseReleased(MouseEvent e) {}
 			});
-
+*/
 		bindButton.setText("Привязать");
 		bindButton.addActionListener(new ActionListener()
 			{
@@ -127,19 +107,16 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 		jPanel1.add(bindButton, null);
 		jPanel1.add(unbindButton, null);
 
-		scrollPane.getViewport().add(table);
+//		scrollPane.getViewport().add(tunnelLayout.getPanel());
 
-		scrollPane.setWheelScrollingEnabled(true);
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		table.setBackground(SystemColor.window);
-		table.setDefaultRenderer(ObjectResource.class, renderer);
-		table.setRowHeight(40);
+//		scrollPane.setWheelScrollingEnabled(true);
+//		scrollPane.getViewport().setBackground(SystemColor.window);
 		
 		this.add(titleLabel, ReusedGridBagConstraints.get(0, 0, 3, 1, 0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.add(cableList, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 100, 150));
 		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
-//		this.add(bindingPanel, ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
-		this.add(scrollPane, ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+//		this.add(scrollPane, ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(tunnelLayout.getPanel(), ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 		this.add(jPanel1, ReusedGridBagConstraints.get(0, 2, 3, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 	}
 
@@ -150,30 +127,19 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 
 	public void setObjectResource(ObjectResource objectResource)
 	{
-		model = new BindingTableModel(null);
-		table.setModel(model);
 		cableList.removeAll();
-		bindingPanel.removeAll();
 		link = (MapPhysicalLinkElement )objectResource;
 		if(link == null)
 		{
 			cableList.setEnabled(false);
+			tunnelLayout.setBinding(null);
 		}
 		else
 		{
 			cableList.setEnabled(true);
 			MapPhysicalLinkBinding binding = link.getBinding();
 
-			model = new BindingTableModel(binding);
-			table.setModel(model);
-			
-			TableColumnModel tcm = table.getColumnModel();
-			for(int i = 0; i < tcm.getColumnCount(); i++)
-			{
-				TableColumn tc = tcm.getColumn(i);
-				tc.setWidth(100);
-			}
-			table.setColumnModel(tcm);
+			tunnelLayout.setBinding(binding);
 
 			List list = binding.getBindObjects();
 			if(list != null)
@@ -184,26 +150,6 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 				}
 			}
 
-			Dimension dim = binding.getDimension();
-			for (int j = 0; j < dim.height; j++) 
-			{
-				for (int i = 0; i < dim.width; i++) 
-				{
-					BindingLabel bl = new BindingLabel();
-					bl.bind(binding.getBound(i, j));
-					bindingPanel.add(bl, ReusedGridBagConstraints.get(i * 2, j * 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
-					if(i != dim.width - 1)
-					{
-						JSeparator js = new JSeparator(JSeparator.VERTICAL);
-						bindingPanel.add(js, ReusedGridBagConstraints.get(i * 2 + 1, j * 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
-					}
-				}
-				if(j != dim.height - 1)
-				{
-					JSeparator js = new JSeparator(JSeparator.HORIZONTAL);
-					bindingPanel.add(js, ReusedGridBagConstraints.get(0, j * 2 + 1, dim.width * 2 - 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
-				}
-			}
 		}
 	}
 
@@ -213,22 +159,22 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 
 	public void cableSelected(ObjectResource or)
 	{
-		model.setActiveElement(or);
+		tunnelLayout.setActiveElement(or);
 	}
 
-	public void cableBindingSelected(int col, int row)
-	{
-		model.setActiveCoordinates(new Point(col, row));
-	}
+//	public void cableBindingSelected(int col, int row)
+//	{
+//		model.setActiveCoordinates(new Point(col, row));
+//	}
 
 	public void bind(ObjectResource or)
 	{
 		MapPhysicalLinkBinding binding = link.getBinding();
-		Point pt = model.getActiveCoordinates();
+		Point pt = tunnelLayout.getActiveCoordinates();
 		if(pt != null)
 		{
 			binding.bind(or, pt.x, pt.y);
-			model.fireTableDataChanged();
+			tunnelLayout.updateElements();
 		}
 	}
 
@@ -236,7 +182,7 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 	{
 		MapPhysicalLinkBinding binding = link.getBinding();
 		binding.unbind(or);
-		model.fireTableDataChanged();
+		tunnelLayout.updateElements();
 	}
 
 	public boolean modify()

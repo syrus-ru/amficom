@@ -1,5 +1,5 @@
 /**
- * $Id: OfxNetMapViewer.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: OfxNetMapViewer.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,7 +52,7 @@ import javax.swing.ToolTipManager;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -120,7 +120,7 @@ public class OfxNetMapViewer extends NetMapViewer
 		{
 			lnl = new OfxLogicalNetLayer(this);
 
-			lnl.getMapState().setActionMode(com.syrus.AMFICOM.Client.Map.MapState.DRAW_ACTION_MODE);
+//			lnl.getMapState().setActionMode(com.syrus.AMFICOM.Client.Map.MapState.DRAW_ACTION_MODE);
 
 			dtl = new MapDropTargetListener(lnl);
 			dropTarget = new DropTarget( jMapViewer.getMapCanvas(), dtl);

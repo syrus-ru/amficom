@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.7 2004/09/15 08:28:52 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.8 2004/09/16 10:37:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/09/15 08:28:52 $
+ * @version $Revision: 1.8 $, $Date: 2004/09/16 10:37:49 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -433,6 +433,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	 */
 	public String getSizeAsString()
 	{
+		updateLengthLt();
 		double d = getLengthLt();
 
 		double d100 = d * 10;
@@ -450,7 +451,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		return lengthLt;
 	}
 	
-	private void updateLengthLt()
+	public void updateLengthLt()
 	{
 		MapCoordinatesConverter converter = getMap().getConverter();
 

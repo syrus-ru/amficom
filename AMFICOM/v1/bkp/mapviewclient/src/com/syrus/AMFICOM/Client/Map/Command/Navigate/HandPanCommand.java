@@ -1,5 +1,5 @@
 /**
- * $Id: HandPanCommand.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: HandPanCommand.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import java.awt.Cursor;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -70,6 +70,7 @@ public class HandPanCommand extends VoidCommand
 		{
 			aModel.setSelected("mapActionHandPan", true);
 
+			aModel.setSelected("mapActionMeasureDistance", false);
 			aModel.setSelected("mapActionMoveToCenter", false);
 			aModel.setSelected("mapActionZoomToPoint", false);
 			aModel.setSelected("mapActionZoomBox", false);

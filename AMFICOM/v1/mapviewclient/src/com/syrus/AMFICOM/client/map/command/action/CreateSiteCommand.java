@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommand.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: CreateSiteCommand.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,7 +30,7 @@ import java.util.HashMap;
  * –азместить элемент типа mpe на карте. используетс€ при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -48,7 +48,17 @@ public class CreateSiteCommand extends MapActionCommand
 	/**
 	 * точка, в которой создаетс€ новый топологический узел
 	 */
-	Point point;
+	Point point = null;
+	Point2D.Double coordinatePoint = null;
+
+	public CreateSiteCommand(
+			MapNodeProtoElement proto,
+			Point2D.Double dpoint)
+	{
+		super(MapActionCommand.ACTION_DRAW_NODE);
+		this.proto = proto;
+		this.coordinatePoint = dpoint;
+	}
 
 	public CreateSiteCommand(
 			MapNodeProtoElement proto,
@@ -57,6 +67,11 @@ public class CreateSiteCommand extends MapActionCommand
 		super(MapActionCommand.ACTION_DRAW_NODE);
 		this.proto = proto;
 		this.point = point;
+	}
+
+	public MapSiteNodeElement getSite()
+	{
+		return site;
 	}
 
 	public void execute()
@@ -69,7 +84,8 @@ public class CreateSiteCommand extends MapActionCommand
 		
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 	
-		Point2D.Double coordinatePoint = logicalNetLayer.convertScreenToMap(point);
+		if(coordinatePoint == null)
+			coordinatePoint = logicalNetLayer.convertScreenToMap(point);
 		
 		map = logicalNetLayer.getMapView().getMap();
 

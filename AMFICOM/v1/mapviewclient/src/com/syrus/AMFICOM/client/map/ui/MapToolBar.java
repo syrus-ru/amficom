@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.2 2004/09/14 14:48:51 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.3 2004/09/16 10:39:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.UI.NodeSizePanel;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -30,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
+import javax.swing.JToolBar;
 import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
 
@@ -38,12 +40,12 @@ import oracle.jdeveloper.layout.XYLayout;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/14 14:48:51 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/16 10:39:53 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public class MapToolBar extends JPanel 
+public final class MapToolBar extends JToolBar 
 		implements ApplicationModelListener//, OperationListener
 {
 	private ApplicationModel aModel = null;
@@ -53,9 +55,11 @@ public class MapToolBar extends JPanel
 	private JButton centerObjectButton = new JButton();
 
 	private JToggleButton zoomToPointButton = new JToggleButton();
-	private JToggleButton zoomToRect = new JToggleButton();
-	private JToggleButton moveToCenter = new JToggleButton();
+	private JToggleButton zoomToRectButton = new JToggleButton();
+	private JToggleButton moveToCenterButton = new JToggleButton();
 	private JToggleButton moveHandButton = new JToggleButton();
+
+	private JToggleButton measureDistanceButton = new JToggleButton();
 
 	private JToggleButton showNodesButton = new JToggleButton();
 
@@ -72,13 +76,13 @@ public class MapToolBar extends JPanel
 
 	private JButton optionsButton = new JButton();
 
-	private Dimension buttonSize = new Dimension(24, 24);
+	private static Dimension buttonSize = new Dimension(24, 24);
+	private static Dimension fieldSize = new Dimension(60, 24);
 	private XYLayout xYLayout1 = new XYLayout();
 
 	public NodeSizePanel sp;
-
-	public final static int img_siz = 16;
-	public final static int btn_siz = 24;
+	
+	private MapPenBarPanel penp;
 
 	public MapToolBar(LogicalNetLayer lnl)
 	{
@@ -88,6 +92,7 @@ public class MapToolBar extends JPanel
 	
 	public MapToolBar()
 	{
+		super();
 		try
 		{
 			jbInit();
@@ -102,6 +107,7 @@ public class MapToolBar extends JPanel
 	{
 		this.logicalNetLayer = logicalNetLayer;
 		sp.setLogicalNetLayer(logicalNetLayer);
+		penp.setLogicalNetLayer(logicalNetLayer);
 	}
 
 	public void showLatLong (double latitude, double longitude)
@@ -122,8 +128,8 @@ public class MapToolBar extends JPanel
 	
 	private void jbInit()
 	{
-		MapToolBar_this_actionAdapter actionAdapter =
-				new MapToolBar_this_actionAdapter(this);
+		MapToolBarActionAdapter actionAdapter =
+				new MapToolBarActionAdapter(this);
 
 		zoomInButton.setIcon(new ImageIcon("images/zoom_in.gif"));
 		zoomInButton.addActionListener(actionAdapter);
@@ -149,21 +155,21 @@ public class MapToolBar extends JPanel
 		zoomToPointButton.setMinimumSize(buttonSize);
 		zoomToPointButton.setName("mapActionZoomToPoint");
 
-		zoomToRect.setIcon(new ImageIcon("images/zoom_area.gif"));
-		zoomToRect.addActionListener(actionAdapter);
-		zoomToRect.setToolTipText(LangModelMap.getString("ZoomBox"));
-		zoomToRect.setPreferredSize(buttonSize);
-		zoomToRect.setMaximumSize(buttonSize);
-		zoomToRect.setMinimumSize(buttonSize);
-		zoomToRect.setName("mapActionZoomBox");
+		zoomToRectButton.setIcon(new ImageIcon("images/zoom_area.gif"));
+		zoomToRectButton.addActionListener(actionAdapter);
+		zoomToRectButton.setToolTipText(LangModelMap.getString("ZoomBox"));
+		zoomToRectButton.setPreferredSize(buttonSize);
+		zoomToRectButton.setMaximumSize(buttonSize);
+		zoomToRectButton.setMinimumSize(buttonSize);
+		zoomToRectButton.setName("mapActionZoomBox");
 
-		moveToCenter.setIcon(new ImageIcon("images/map_centr.gif"));
-		moveToCenter.addActionListener(actionAdapter);
-		moveToCenter.setToolTipText(LangModelMap.getString("MoveToCenter"));
-		moveToCenter.setPreferredSize(buttonSize);
-		moveToCenter.setMaximumSize(buttonSize);
-		moveToCenter.setMinimumSize(buttonSize);
-		moveToCenter.setName("mapActionMoveToCenter");
+		moveToCenterButton.setIcon(new ImageIcon("images/map_centr.gif"));
+		moveToCenterButton.addActionListener(actionAdapter);
+		moveToCenterButton.setToolTipText(LangModelMap.getString("MoveToCenter"));
+		moveToCenterButton.setPreferredSize(buttonSize);
+		moveToCenterButton.setMaximumSize(buttonSize);
+		moveToCenterButton.setMinimumSize(buttonSize);
+		moveToCenterButton.setName("mapActionMoveToCenter");
 
 		moveHandButton.setIcon(new ImageIcon("images/hand.gif"));
 		moveHandButton.addActionListener(actionAdapter);
@@ -172,6 +178,14 @@ public class MapToolBar extends JPanel
 		moveHandButton.setMaximumSize(buttonSize);
 		moveHandButton.setMinimumSize(buttonSize);
 		moveHandButton.setName("mapActionHandPan");
+
+		measureDistanceButton.setIcon(new ImageIcon("images/distance.gif"));
+		measureDistanceButton.addActionListener(actionAdapter);
+		measureDistanceButton.setToolTipText(LangModelMap.getString("MeasureDistance"));
+		measureDistanceButton.setPreferredSize(buttonSize);
+		measureDistanceButton.setMaximumSize(buttonSize);
+		measureDistanceButton.setMinimumSize(buttonSize);
+		measureDistanceButton.setName("mapActionMeasureDistance");
 
 		showNodesButton.setIcon(new ImageIcon("images/nodes_visible.gif"));
 		showNodesButton.addActionListener(actionAdapter);
@@ -244,35 +258,47 @@ public class MapToolBar extends JPanel
 		
 		latitudeLabel.setText(LangModelMap.getString("Latitude"));
 		latitudeTextField.setText("0.0000");
+		latitudeTextField.setPreferredSize(fieldSize);
+		latitudeTextField.setMaximumSize(fieldSize);
+		latitudeTextField.setMinimumSize(fieldSize);
 		longitudeLabel.setText(LangModelMap.getString("Longitude"));
 		longitudeField.setText("0.0000");
-
-		this.setLayout(xYLayout1);
-		this.setBorder(BorderFactory.createEtchedBorder());
-		
-		xYLayout1.setWidth(720);
-		xYLayout1.setHeight(buttonSize.height + 5);
-		this.add(zoomInButton, new XYConstraints(5, 2, 25, 25));
-		this.add(zoomOutButton, new XYConstraints(30, 2, 25, 25));
-		this.add(zoomToPointButton, new XYConstraints(55, 2, 25, 25));
-		this.add(zoomToRect, new XYConstraints(80, 2, 25, 25));
-		this.add(moveToCenter, new XYConstraints(105, 2, 25, 25));
-		this.add(moveHandButton, new XYConstraints(130, 2, 25, 25));
-		this.add(centerObjectButton, new XYConstraints(155, 2, 25, 25));
-		this.add(showNodesButton, new XYConstraints(180, 2, 25, 25));
-		this.add(showNodeLinkToggleButton, new XYConstraints(205, 2, 25, 25));
-		this.add(showPhysicalToggleButton, new XYConstraints(230, 2, 25, 25));
-		this.add(showCablePathToggleButton, new XYConstraints(255, 2, 25, 25));
-		this.add(showTransPathToggleButton, new XYConstraints(280, 2, 25, 25));
-		this.add(latitudeLabel, new XYConstraints(305, 2, 50, 25));
-		this.add(latitudeTextField, new XYConstraints(355, 2, 50, 25));
-		this.add(longitudeLabel, new XYConstraints(405, 2, 50, 25));
-		this.add(longitudeField, new XYConstraints(455, 2, 50, 25));
+		longitudeField.setPreferredSize(fieldSize);
+		longitudeField.setMaximumSize(fieldSize);
+		longitudeField.setMinimumSize(fieldSize);
 
 		sp = new NodeSizePanel(logicalNetLayer);
-		this.add(sp, new XYConstraints(515, 0, 70, 29));
+		penp = new MapPenBarPanel(logicalNetLayer);
 
-		this.add(optionsButton, new XYConstraints(595, 2, 25, 25));
+		this.setBorder(BorderFactory.createEtchedBorder());
+
+		this.add(zoomInButton);
+		this.add(zoomOutButton);
+		this.add(zoomToPointButton);
+		this.add(zoomToRectButton);
+		this.addSeparator();
+		this.add(moveToCenterButton);
+		this.add(moveHandButton);
+		this.add(centerObjectButton);
+		this.add(measureDistanceButton);
+		this.addSeparator();
+		this.add(showNodesButton);
+		this.addSeparator();
+		this.add(showNodeLinkToggleButton);
+		this.add(showPhysicalToggleButton);
+		this.add(showCablePathToggleButton);
+		this.add(showTransPathToggleButton);
+		this.addSeparator();
+		this.add(latitudeLabel);
+		this.add(latitudeTextField);
+		this.add(longitudeLabel);
+		this.add(longitudeField);
+		this.addSeparator();
+		this.add(sp);
+		this.addSeparator();
+		this.add(optionsButton);
+		this.addSeparator();
+		this.add(penp);
 	}
 
 //Включить выключить панель
@@ -290,6 +316,7 @@ public class MapToolBar extends JPanel
 		aModel.setEnabled("mapActionMoveToCenter", b);
 		aModel.setEnabled("mapModeViewNodes", b);
 		aModel.setEnabled("mapActionHandPan", b);
+		aModel.setEnabled("mapActionMeasureDistance", b);
 
 		aModel.fireModelChanged("");
 
@@ -312,6 +339,7 @@ public class MapToolBar extends JPanel
 		aModel.getCommand("mapActionMoveToCenter").setParameter("applicationModel", aModel);
 		aModel.getCommand("mapModeViewNodes").setParameter("applicationModel", aModel);
 		aModel.getCommand("mapActionHandPan").setParameter("applicationModel", aModel);
+		aModel.getCommand("mapActionMeasureDistance").setParameter("applicationModel", aModel);
 
 		aModel.getCommand("mapActionCenterSelection").setParameter("logicalNetLayer", logicalNetLayer);
 		aModel.getCommand("mapModeNodeLink").setParameter("logicalNetLayer", logicalNetLayer);
@@ -325,6 +353,7 @@ public class MapToolBar extends JPanel
 		aModel.getCommand("mapActionMoveToCenter").setParameter("logicalNetLayer", logicalNetLayer);
 		aModel.getCommand("mapModeViewNodes").setParameter("logicalNetLayer", logicalNetLayer);
 		aModel.getCommand("mapActionHandPan").setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand("mapActionMeasureDistance").setParameter("logicalNetLayer", logicalNetLayer);
 
 		Command command = aModel.getCommand("mapModeViewNodes");
 		command.setParameter("button", showNodesButton);
@@ -354,17 +383,21 @@ public class MapToolBar extends JPanel
 		zoomToPointButton.setEnabled(aModel.isEnabled("mapActionZoomToPoint"));
 		zoomToPointButton.setSelected(aModel.isSelected("mapActionZoomToPoint"));
 
-		zoomToRect.setVisible(aModel.isVisible("mapActionZoomBox"));
-		zoomToRect.setEnabled(aModel.isEnabled("mapActionZoomBox"));
-		zoomToRect.setSelected(aModel.isSelected("mapActionZoomBox"));
+		zoomToRectButton.setVisible(aModel.isVisible("mapActionZoomBox"));
+		zoomToRectButton.setEnabled(aModel.isEnabled("mapActionZoomBox"));
+		zoomToRectButton.setSelected(aModel.isSelected("mapActionZoomBox"));
 
-		moveToCenter.setVisible(aModel.isVisible("mapActionMoveToCenter"));
-		moveToCenter.setEnabled(aModel.isEnabled("mapActionMoveToCenter"));
-		moveToCenter.setSelected(aModel.isSelected("mapActionMoveToCenter"));
+		moveToCenterButton.setVisible(aModel.isVisible("mapActionMoveToCenter"));
+		moveToCenterButton.setEnabled(aModel.isEnabled("mapActionMoveToCenter"));
+		moveToCenterButton.setSelected(aModel.isSelected("mapActionMoveToCenter"));
 
 		moveHandButton.setVisible(aModel.isVisible("mapActionHandPan"));
 		moveHandButton.setEnabled(aModel.isEnabled("mapActionHandPan"));
 		moveHandButton.setSelected(aModel.isSelected("mapActionHandPan"));
+
+		measureDistanceButton.setVisible(aModel.isVisible("mapActionMeasureDistance"));
+		measureDistanceButton.setEnabled(aModel.isEnabled("mapActionMeasureDistance"));
+		measureDistanceButton.setSelected(aModel.isSelected("mapActionMeasureDistance"));
 
 		showNodesButton.setVisible(aModel.isVisible("mapModeViewNodes"));
 		showNodesButton.setEnabled(aModel.isEnabled("mapModeViewNodes"));
@@ -387,14 +420,13 @@ public class MapToolBar extends JPanel
 		showTransPathToggleButton.setSelected(aModel.isSelected("mapModePath"));
 	}
 
-	public void this_actionPerformed(ActionEvent e)
+	public void buttonPressed(ActionEvent e)
 	{
 		if(aModel == null)
 			return;
 		AbstractButton jb = (AbstractButton )e.getSource();
 		String s = jb.getName();
 		Command command = aModel.getCommand(s);
-//		command = (Command )command.clone();
 		command.setParameter("applicationModel", aModel);
 		command.setParameter("logicalNetLayer", getLogicalNetLayer());
 		command.execute();
@@ -405,18 +437,18 @@ public class MapToolBar extends JPanel
 		return logicalNetLayer;
 	}
 
-	private class MapToolBar_this_actionAdapter implements java.awt.event.ActionListener
+	private class MapToolBarActionAdapter implements java.awt.event.ActionListener
 	{
 		MapToolBar adaptee;
 	
-		MapToolBar_this_actionAdapter(MapToolBar adaptee)
+		MapToolBarActionAdapter(MapToolBar adaptee)
 		{
 			this.adaptee = adaptee;
 		}
 	
 		public void actionPerformed(ActionEvent e)
 		{
-			adaptee.this_actionPerformed(e);
+			adaptee.buttonPressed(e);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,8 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Command.CommandBundle;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
@@ -32,7 +34,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -67,6 +69,18 @@ public class MapActionCommandBundle extends CommandBundle
 		super.setParameter(field, value);
 	}
 	
+	/**
+	 * Создается топологический конечный узел в неактивном состоянии
+	 */
+	protected MapSiteNodeElement createSite(Point2D.Double point,  MapNodeProtoElement proto)
+	{
+		CreateSiteCommand cmd = new CreateSiteCommand(proto, point);
+		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.execute();
+		add(cmd);
+		return cmd.getSite();
+	}
+
 	/**
 	 * Создается топологический конечный узел в неактивном состоянии
 	 */
