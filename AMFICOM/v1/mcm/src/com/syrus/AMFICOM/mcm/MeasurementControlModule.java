@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.29 2004/08/31 15:35:23 bob Exp $
+ * $Id: MeasurementControlModule.java,v 1.30 2004/09/20 06:35:15 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/08/31 15:35:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2004/09/20 06:35:15 $
+ * @author $Author: peskovsky $
  * @module mcm_v1
  */
 
@@ -179,19 +179,30 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	}
 
 	private static void activateKISTransceivers() {
-		List kisIds = iAm.getKISIds();
-		transceivers = new Hashtable(kisIds.size());
-		Identifier kisId;
-		Transceiver transceiver;
-		synchronized (kisIds) {
-			for (Iterator it = kisIds.iterator(); it.hasNext();) {
-				kisId = (Identifier)it.next();
-				transceiver = new Transceiver(kisId);
-				transceiver.start();
-				transceivers.put(kisId, transceiver);
-				Log.debugMessage("Started transceiver for kis '" + kisId.toString() + "'", Log.DEBUGLEVEL07);
-			}
-		}
+		transceivers = new Hashtable();
+    String serviceName = "7500";
+    try
+    {
+      TCPServer tcpServer = new TCPServer(serviceName,transceivers);  
+    }
+    catch (Exception exc)
+    {
+      Log.errorMessage("Failed creating TCPServer at service " + serviceName);
+    }
+ 
+//		List kisIds = iAm.getKISIds();
+//		transceivers = new Hashtable(kisIds.size());
+//		Identifier kisId;
+//		Transceiver transceiver;
+//		synchronized (kisIds) {
+//			for (Iterator it = kisIds.iterator(); it.hasNext();) {
+//				kisId = (Identifier)it.next();
+//				transceiver = new Transceiver(kisId);
+//				transceiver.start();
+//				transceivers.put(kisId, transceiver);
+//				Log.debugMessage("Started transceiver for kis '" + kisId.toString() + "'", Log.DEBUGLEVEL07);
+//			}
+//		}
 	}
 
 	private static void prepareTestList() {

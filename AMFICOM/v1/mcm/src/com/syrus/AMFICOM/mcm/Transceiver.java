@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.20 2004/08/23 20:48:29 arseniy Exp $
+ * $Id: Transceiver.java,v 1.21 2004/09/20 06:35:15 peskovsky Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Ó¡’ﬁŒœ-‘≈»Œ…ﬁ≈”À…  √≈Œ‘“.
@@ -27,8 +27,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/08/23 20:48:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2004/09/20 06:35:15 $
+ * @author $Author: peskovsky $
  * @module mcm_v1
  */
 
@@ -39,9 +39,16 @@ public class Transceiver extends SleepButWorkThread {
 	public static final int FALL_CODE_TRANSMIT_MEASUREMENT = 1;
 	public static final int FALL_CODE_GENERATE_IDENTIFIER = 2;
 
-	private final String taskFileName;
-	private final String reportFileName;
-	private boolean running;
+//	private final String taskFileName;
+//	private final String reportFileName;
+/*
+ * œÓÚ Ì‡ ÍÓÚÓÓÏ ·Û‰ÂÚ ‡·ÓÚ‡Ú¸ mcmtransceiver (ÒÂ‚Â)
+ */
+ 
+  private Identifier kisID = null;
+  private int socket = -1;
+ 
+  private boolean running;
 
 	private List measurementQueue;//List <Measurement measurement>
 	private Map testProcessors;//Map <Identifier measurementId, TestProcessor testProcessor>
@@ -57,9 +64,9 @@ public class Transceiver extends SleepButWorkThread {
 	public Transceiver(Identifier kisId) {
 		super(ApplicationProperties.getInt("KISTickTime", KIS_TICK_TIME) * 1000, ApplicationProperties.getInt("KISMaxFalls", KIS_MAX_FALLS));
 
-		String kisIdStr = kisId.toString();
-		this.taskFileName = "task" + kisIdStr;
-    this.reportFileName = "report" + kisIdStr;
+		this.kisID = kisId;
+    this.socket = TCPServer.getSocketForKisID(kisID);
+
 		this.running = true;
 		
 		this.measurementQueue = Collections.synchronizedList(new ArrayList());
@@ -103,14 +110,23 @@ public class Transceiver extends SleepButWorkThread {
 		Result result;
 		
 		while (this.running) {
+      this.socket = TCPServer.getSocketForKisID(this.kisID);
+      if (this.socket == -1)
+      {
+        Log.errorMessage("Corresponding KIS (" + this.kisID.toString() +
+                         ")disconnected. Closing Transceiver.");
+        break;
+      }
 			if (! this.measurementQueue.isEmpty()) {
 				measurement = (Measurement)this.measurementQueue.get(0);
 				measurementId = measurement.getId();
-				if (this.transmit(measurement.getId().toString(),
-													measurement.getType().getCodename(),
-													measurement.getLocalAddress(),
-													measurement.getSetup().getParameterTypeCodenames(),
-													measurement.getSetup().getParameterValues())) {
+				if (this.transmit(
+          this.socket,
+          measurement.getId().toString(),
+					measurement.getType().getCodename(),
+					measurement.getLocalAddress(),
+					measurement.getSetup().getParameterTypeCodenames(),
+					measurement.getSetup().getParameterValues())) {
 					try {
 						measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING,
 																		 MeasurementControlModule.iAm.getUserId());
@@ -135,7 +151,7 @@ public class Transceiver extends SleepButWorkThread {
 			}	//if (! this.measurementQueue.isEmpty())
 
 			if (this.kisReport == null) {
-				this.kisReport = this.receive();
+				this.kisReport = this.receive(this.socket);
 			}
 			else {
 				measurementId = this.kisReport.getMeasurementId();
@@ -277,11 +293,14 @@ public class Transceiver extends SleepButWorkThread {
 //	}
 
 	//private native boolean transmit(Measurement measurement);
-	private native boolean transmit(String measurementId,
+ 
+	private native boolean transmit(int server_socket,
+                                  String measurementId,
 																	String measurementTypeCodename,
-																	String localAddress,
+																	String rtuCardIndex,
 																	String[] parameterTypeCodenames,
 																	byte[][] parameterValues);
 
-	private native KISReport receive();
+	private native KISReport receive(int server_socket);
+  
 }
