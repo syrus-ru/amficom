@@ -5,6 +5,7 @@
 @@measurementsetupmelink
 @@temporalpattern
 @@test
+@@modeling
 @@measurementsetuptestlink
 @@measurement
 @@analysis
