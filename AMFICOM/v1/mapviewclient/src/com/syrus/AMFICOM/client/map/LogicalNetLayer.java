@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.13 2004/10/19 11:48:27 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.14 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -70,7 +70,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/10/19 11:48:27 $
+ * @version $Revision: 1.14 $, $Date: 2004/10/20 10:14:39 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -380,7 +380,9 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		//Поумолчанию текущий элемент Void
 		currentMapElement = VoidMapElement.getInstance(this.mapView);
-		
+
+		commandList.flush();
+
 		repaint();
 	}
 
@@ -761,8 +763,15 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		if(!performProcessing)
 			return;
 
+		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CHANGED))
+		{
+			getMapView().setChanged(true);
+		}
+		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_CHANGED))
 		{
+			getMapView().getMap().setChanged(true);
+
 			Set selectedElements = getMapView().getMap().getSelectedElements();
 			if(selectedElements.size() > 1)
 			{

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.4 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: MapViewOpenCommand.java,v 1.5 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapViewController;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.MapViewDataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -36,7 +37,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/20 10:14:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -119,6 +120,12 @@ public class MapViewOpenCommand extends VoidCommand
 			}
 			else
 			{
+				MapView mapView = mapFrame.getMapView();
+				Pool.remove(MapView.typ, mapView.getId());
+		
+				Map map = mapView.getMap();
+				Pool.remove(Map.typ, map.getId());
+		
 				mapFrame.setMapView((MapView)mcd.getReturnObject());
 				setResult(Command.RESULT_OK);
 			}

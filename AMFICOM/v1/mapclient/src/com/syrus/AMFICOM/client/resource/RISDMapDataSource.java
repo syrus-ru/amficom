@@ -583,7 +583,17 @@ public class RISDMapDataSource
 		}
 	}
 
+	public void SaveMap(String mc_id)
+	{
+		saveMaps(new String[] {mc_id});
+	}
+
 	public void SaveMaps(String[] mc_ids)
+	{
+		saveMaps(mc_ids);
+	}
+	
+	public void saveMaps(String[] mc_ids)
 	{
 		if(getSession() == null)
 			return;
@@ -748,6 +758,11 @@ public class RISDMapDataSource
 	}
 
 	public void RemoveFromMap(String mc_id)
+	{
+		removeFromMap(mc_id);
+	}
+
+	public void removeFromMap(String mc_id)
 	{
 		Map mc = (Map )Pool.get(Map.typ, mc_id);
 

@@ -246,7 +246,7 @@ public class EmptyMapDataSource
 			Map mc = (Map )ias.readObject();
 			ias.close();
 			
-			Pool.put(Map.typ, mc.getId(), mc);
+//			Pool.put(Map.typ, mc.getId(), mc);
 		}
 		catch(FileNotFoundException e)
 		{
@@ -259,7 +259,17 @@ public class EmptyMapDataSource
 		}
 	}
 	
+	public void SaveMap(String mc_id)
+	{
+		saveMaps(new String[] {mc_id});
+	}
+
 	public void SaveMaps(String[] mc_ids)
+	{
+		saveMaps(mc_ids);
+	}
+	
+	public void saveMaps(String[] mc_ids)
 	{
 		Map mc = (Map )Pool.get(Map.typ, mc_ids[0]);
 

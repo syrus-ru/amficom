@@ -3,7 +3,9 @@ package com.syrus.AMFICOM.Client.General.Model;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.EmptyMapDataSource;
+import com.syrus.AMFICOM.Client.Resource.EmptyMapViewDataSource;
 import com.syrus.AMFICOM.Client.Resource.RISDMapDataSource;
+import com.syrus.AMFICOM.Client.Resource.RISDMapViewDataSource;
 
 public class MapApplicationModel extends ApplicationModel
 {
@@ -76,10 +78,10 @@ public class MapApplicationModel extends ApplicationModel
 					{
 						this.session = session;
 						if(connection.equalsIgnoreCase(Environment.CONNECTION_RISD))
-							this.dataSource = new RISDMapDataSource(this.session);
+							this.dataSource = new RISDMapViewDataSource(this.session);
 						else
 						if(connection.equalsIgnoreCase(Environment.CONNECTION_EMPTY))
-							this.dataSource = new EmptyMapDataSource(this.session);
+							this.dataSource = new EmptyMapViewDataSource(this.session);
 					}
 			}
         return this.dataSource;

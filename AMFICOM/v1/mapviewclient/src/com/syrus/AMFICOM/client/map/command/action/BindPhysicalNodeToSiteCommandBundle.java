@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.6 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.7 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
@@ -30,7 +31,7 @@ import java.util.Iterator;
  *  принадлежит данный узел, делится на 2 части
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/20 10:14:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -169,7 +170,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 			startNodeLink = startNode.getOtherNodeLink(startNodeLink);
 		}//for(;;)
 */
-		logicalNetLayer.repaint();
+		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 }
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.14 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.15 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.15 $, $Date: 2004/10/20 10:14:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -615,7 +615,8 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		endNodeId = (String )in.readObject();
 		attributes = (HashMap )in.readObject();
 
-		updateLocalFromTransferable();
+//		updateLocalFromTransferable();
+
 		Pool.put(getTyp(), getId(), this);
 		Pool.put("serverimage", getId(), this);
 	}

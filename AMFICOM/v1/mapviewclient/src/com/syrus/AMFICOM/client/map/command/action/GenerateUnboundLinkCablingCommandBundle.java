@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.3 2004/10/19 10:07:43 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.4 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
@@ -26,7 +27,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 10:07:43 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/20 10:14:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -87,6 +88,8 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 		}
 		path.addLink(link);
 		link.getBinding().add(path);
+
+		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 
 }

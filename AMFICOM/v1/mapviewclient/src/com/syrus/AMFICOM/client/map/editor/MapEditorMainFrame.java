@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.4 2004/10/19 11:48:27 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.5 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -62,6 +62,8 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -95,7 +97,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:27 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/20 10:14:39 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -325,7 +327,7 @@ public class MapEditorMainFrame extends JFrame
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
 		aModel.setCommand("menuMapNew", new MapEditorNewMapCommand(this, aContext));
-		aModel.setCommand("menuMapOpen", new MapEditorOpenMapCommand(null, aContext));
+		aModel.setCommand("menuMapOpen", new MapEditorOpenMapCommand(getDesktop(), aContext));
 		aModel.setCommand("menuMapClose", new MapEditorCloseMapCommand(this, internalDispatcher));
 		aModel.setCommand("menuMapSave", new MapEditorSaveMapCommand(null, aContext));
 		aModel.setCommand("menuMapSaveAs", new MapEditorSaveMapAsCommand(null, aContext));

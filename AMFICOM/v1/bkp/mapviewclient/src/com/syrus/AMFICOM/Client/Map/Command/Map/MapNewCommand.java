@@ -1,5 +1,5 @@
 /**
- * $Id: MapNewCommand.java,v 1.7 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: MapNewCommand.java,v 1.8 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/20 10:14:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -82,6 +82,13 @@ public class MapNewCommand extends VoidCommand
 
 		if (mapFrame != null)
 		{
+
+			MapView mapView = mapFrame.getMapView();
+			Pool.remove(MapView.typ, mapView.getId());
+	
+			Map map = mapView.getMap();
+			Pool.remove(Map.typ, map.getId());
+	
 			mv.setLogicalNetLayer(mapFrame.getMapViewer().getLogicalNetLayer());
 			mapFrame.setMapView(mv);
 			mapFrame.setTitle( LangModelMap.getString("Map") + " - " + mv.getName());

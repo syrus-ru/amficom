@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.24 2004/10/18 15:21:50 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.25 2004/10/20 10:13:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.24 $, $Date: 2004/10/18 15:21:50 $
+ * @version $Revision: 1.25 $, $Date: 2004/10/20 10:13:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -263,7 +263,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		this.endNode = (MapNodeElement )Pool.get(MapSiteNodeElement.typ, endNodeId);
 		if(this.endNode == null)
 			this.endNode = (MapNodeElement )Pool.get(MapPhysicalNodeElement.typ, endNodeId);
-		this.map = (Map)Pool.get(Map.typ, this.mapId);
+		this.map = (Map )Pool.get(Map.typ, this.mapId);
 
 		this.nodeLinks = new ArrayList();
 		for (int i = 0; i < nodeLinkIds.size(); i++)
@@ -763,7 +763,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 
 		transferable = new MapPhysicalLinkElement_Transferable();
 
-		updateLocalFromTransferable();
+//		updateLocalFromTransferable();
 		Pool.put(getTyp(), getId(), this);
 		Pool.put("serverimage", getId(), this);
 	}

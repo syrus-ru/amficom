@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.4 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.5 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/20 10:14:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -92,7 +92,7 @@ public class ViewMapWindowCommand extends VoidCommand
 		if(dataSource == null)
 			return;
 
-		frame = com.syrus.AMFICOM.Client.Map.UI.MapFrame.getMapMainFrame();
+		frame = MapFrame.getMapMainFrame();
 		
 		MapView mv = null;
 		

@@ -1,5 +1,5 @@
 /**
- * $Id: MapOpenCommand.java,v 1.6 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: MapOpenCommand.java,v 1.7 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/20 10:14:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -82,7 +82,7 @@ public class MapOpenCommand extends VoidCommand
 
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
-				LangModelMap.getString("MapContextOpening")));
+				LangModelMap.getString("MapOpening")));
 
 		new MapDataSourceImage(dataSource).loadMaps();
 
@@ -124,6 +124,13 @@ public class MapOpenCommand extends VoidCommand
 				cmd.execute();
 				MapView mv = cmd.mv;
 				mv.setMap((Map )mcd.getReturnObject());
+
+				MapView mapView = mapFrame.getMapView();
+				Pool.remove(MapView.typ, mapView.getId());
+		
+				Map map = mapView.getMap();
+				Pool.remove(Map.typ, map.getId());
+		
 				mapFrame.setMapView(mv);
 				setResult(Command.RESULT_OK);
 			}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPipePathElement.java,v 1.8 2004/10/18 12:43:13 krupenn Exp $
+ * $Id: MapPipePathElement.java,v 1.9 2004/10/20 10:13:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,6 +28,7 @@ import java.awt.geom.Rectangle2D;
 
 import java.io.IOException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,12 +40,12 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/18 12:43:13 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/20 10:13:59 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class MapPipePathElement extends MapLinkElement 
+public class MapPipePathElement extends MapLinkElement implements Serializable
 {
 	private static final long serialVersionUID = 02L;
 	public static final String typ = "mappipepathelement";
@@ -140,6 +141,9 @@ public class MapPipePathElement extends MapLinkElement
 	public void updateLocalFromTransferable()
 	{
 		this.map = (Map )Pool.get(Map.typ, this.mapId);
+
+		links = new LinkedList();
+
 		for(Iterator it = physicalLinkIds.iterator(); it.hasNext();)
 		{
 			String pli = (String )it.next();
@@ -318,7 +322,7 @@ public class MapPipePathElement extends MapLinkElement
 
 		transferable = new MapPipePathElement_Transferable();
 
-		updateLocalFromTransferable();
+//		updateLocalFromTransferable();
 		Pool.put(getTyp(), getId(), this);
 		Pool.put("serverimage", getId(), this);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MapCloseCommand.java,v 1.3 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: MapCloseCommand.java,v 1.4 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -14,7 +14,9 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
 /**
  *  ласс $RCSfile: MapCloseCommand.java,v $ используетс€ дл€ закрыти€ 
@@ -22,7 +24,7 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
  * самого окна карты. ѕри этом в азголовке окна отображаетс€ информаци€ о том,
  * что активной карты нет, и карта центрируетс€ по умолчанию
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/20 10:14:39 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -50,6 +52,12 @@ public class MapCloseCommand extends VoidCommand
         System.out.println("Closing map");
 		mapFrame.saveConfig();
         mapFrame.setMapView(null);
+		
+		MapView mapView = mapFrame.getMapView();
+		Pool.remove(MapView.typ, mapView.getId());
+
+		Map map = mapView.getMap();
+		Pool.remove(Map.typ, map.getId());
 
 		MapViewNewCommand cmd = new MapViewNewCommand(mapFrame, mapFrame.getContext());
 		cmd.execute();

@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.5 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: MapViewSaveCommand.java,v 1.6 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/20 10:14:39 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -94,7 +94,9 @@ public class MapViewSaveCommand extends VoidCommand
 			aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModelMap.getString("MapSaving")));
-//			dataSource.SaveMapView(mapFrame.getMapView().getId());
+
+			dataSource.SaveMapView(mapFrame.getMapView().getId());
+
 			aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Finished")));

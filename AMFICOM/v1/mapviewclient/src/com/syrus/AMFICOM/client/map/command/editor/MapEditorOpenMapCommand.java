@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenMapCommand.java,v 1.3 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: MapEditorOpenMapCommand.java,v 1.4 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,9 +13,16 @@ package com.syrus.AMFICOM.Client.Map.Command.Editor;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
+import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapOpenCommand;
 import com.syrus.AMFICOM.Client.Map.Editor.MapEditorMainFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
+import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import javax.swing.JDesktopPane;
 
 /**
  *  ласс $RCSfile: MapEditorOpenMapCommand.java,v $ используетс€ дл€ открыти€ топологической схемы в модуле
@@ -23,15 +30,22 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
  * пользователь выбрал MapContext, открываетс€ окно карты и сопутствующие окна
  * и MapContext передаетс€ в окно карты
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/20 10:14:39 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
  */
 public class MapEditorOpenMapCommand extends VoidCommand
 {
-	MapEditorMainFrame mainFrame;
 	ApplicationContext aContext;
+	JDesktopPane desktop;
+
+	MapFrame mapFrame = null;
+	MapPropertyFrame propFrame = null;
+	MapElementsFrame elementsFrame = null;
+	
+	Map map = null;
+	MapView mapView = null;
 
 	public MapEditorOpenMapCommand()
 	{
@@ -42,26 +56,56 @@ public class MapEditorOpenMapCommand extends VoidCommand
 	 * @param desktop куда класть окно карты
 	 * @param aContext  онтекст модул€ "–едактор топологических схем"
 	 */
-	public MapEditorOpenMapCommand(MapEditorMainFrame mainFrame, ApplicationContext aContext)
+	public MapEditorOpenMapCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
-		this.mainFrame = mainFrame;
+		this.desktop = desktop;
 		this.aContext = aContext;
 	}
 
 	public void execute()
 	{
-		if(mainFrame == null)
-			return;
+		if(mapFrame.getMapMainFrame() != null)
+		{
+			if(!mapFrame.getMapMainFrame().checkCanCloseMap())
+				return;
+			if(!mapFrame.getMapMainFrame().checkCanCloseMapView())
+				return;
+		}
 
-		MapFrame mmf = mainFrame.getMapFrame();
+		ApplicationModelFactory factory = new MapMapEditorApplicationModelFactory();
 
-		MapOpenCommand moc = new MapOpenCommand(mainFrame.getDesktop(), mmf, aContext);
+		MapOpenCommand moc = new MapOpenCommand(desktop, MapFrame.getMapMainFrame(), aContext);
 		// в модуле редактировани€ топологических схем у пользовател€ есть
 		// возможность удал€ть MapContext в окне управлени€ схемами
 		moc.setCanDelete(true);
 		moc.execute();
+		
+		if (moc.getResult() == Command.RESULT_OK)
+		{
+			map = (Map )moc.getReturnObject();
+			if(MapFrame.getMapMainFrame() != null)
+				mapView = MapFrame.getMapMainFrame().getMapView();
 
-		setResult(Command.RESULT_OK);
+			ViewMapWindowCommand mapCommand = new ViewMapWindowCommand(aContext.getDispatcher(), desktop, aContext, factory);
+			mapCommand.execute();
+			this.mapFrame = mapCommand.frame;
+
+			if(mapFrame == null)
+				return;
+				
+			if(mapView != null)
+				mapFrame.setMapView(mapView);
+			else
+				mapFrame.getMapView().setMap(map);
+
+			ViewMapPropertiesCommand propCommand = new ViewMapPropertiesCommand(desktop, aContext);
+			propCommand.execute();
+			this.propFrame = propCommand.frame;
+
+			ViewMapElementsCommand elementsCommand = new ViewMapElementsCommand(desktop, aContext);
+			elementsCommand.execute();
+			this.elementsFrame = elementsCommand.frame;
+		}
 	}
 
 }

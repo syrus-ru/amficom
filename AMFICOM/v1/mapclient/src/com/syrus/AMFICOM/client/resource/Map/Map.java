@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.13 2004/10/19 14:09:42 krupenn Exp $
+ * $Id: Map.java,v 1.14 2004/10/20 10:13:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/10/19 14:09:42 $
+ * @version $Revision: 1.14 $, $Date: 2004/10/20 10:13:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -394,7 +394,7 @@ public final class Map extends StubResource implements Serializable
 				"method call", 
 				getClass().getName(), 
 				"updateFromPool()");
-		
+
 		for(Iterator it = nodes.iterator(); it.hasNext();)
 		{
 			ObjectResource os = (ObjectResource )it.next();
@@ -975,11 +975,14 @@ public final class Map extends StubResource implements Serializable
 		nodelinkIds = new LinkedList();
 		linkIds = new LinkedList();
 		markIds = new LinkedList();
+		collectorIds = new LinkedList();
 	
 		removedElements = new LinkedList();
 	
-		this.updateFromPool();
+		Pool.put(getTyp(), getId(), this);
 //		Pool.put("serverimage", getId(), this);
+
+		this.updateFromPool();
 	}
 
 	public String getTyp()

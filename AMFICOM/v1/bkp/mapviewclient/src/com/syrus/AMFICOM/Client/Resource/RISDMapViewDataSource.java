@@ -276,6 +276,11 @@ public class RISDMapViewDataSource
 		}
 	}
 
+	public void SaveMapView(String mvId)
+	{
+		saveMapViews(new String[] {mvId});
+	}
+
 	public void saveMapViews(String[] mvIds)
 	{
 		if(getSession() == null)

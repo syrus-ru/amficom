@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.6 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.7 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import javax.swing.JDesktopPane;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/20 10:14:39 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -42,6 +42,8 @@ public class MapEditorOpenViewCommand extends VoidCommand
 	MapFrame mapFrame = null;
 	MapPropertyFrame propFrame = null;
 	MapElementsFrame elementsFrame = null;
+	
+	MapView mapView = null;
 
 	public MapEditorOpenViewCommand()
 	{
@@ -60,21 +62,34 @@ public class MapEditorOpenViewCommand extends VoidCommand
 
 	public void execute()
 	{
+
+		if(mapFrame.getMapMainFrame() != null)
+		{
+			if(!mapFrame.getMapMainFrame().checkCanCloseMap())
+				return;
+			if(!mapFrame.getMapMainFrame().checkCanCloseMapView())
+				return;
+		}
+
 		ApplicationModelFactory factory = new MapMapEditorApplicationModelFactory();
 
-		MapViewOpenCommand moc = new MapViewOpenCommand(desktop, null, aContext);
+		MapViewOpenCommand moc = new MapViewOpenCommand(desktop, MapFrame.getMapMainFrame(), aContext);
 		// в модуле редактирования топологических схем у пользователя есть
 		// возможность удалять MapContext в окне управления схемами
 		moc.setCanDelete(true);
 		moc.execute();
 		if (moc.getResult() == Command.RESULT_OK)
 		{
+			mapView = (MapView )moc.getReturnObject();
+		
 			ViewMapWindowCommand mapCommand = new ViewMapWindowCommand(aContext.getDispatcher(), desktop, aContext, factory);
 			mapCommand.execute();
 			this.mapFrame = mapCommand.frame;
 
 			if(mapFrame == null)
 				return;
+
+			mapFrame.setMapView(mapView);
 
 			ViewMapPropertiesCommand propCommand = new ViewMapPropertiesCommand(desktop, aContext);
 			propCommand.execute();
@@ -83,8 +98,6 @@ public class MapEditorOpenViewCommand extends VoidCommand
 			ViewMapElementsCommand elementsCommand = new ViewMapElementsCommand(desktop, aContext);
 			elementsCommand.execute();
 			this.elementsFrame = elementsCommand.frame;
-
-			mapFrame.setMapView((MapView)moc.getReturnObject());
 		}
 	}
 

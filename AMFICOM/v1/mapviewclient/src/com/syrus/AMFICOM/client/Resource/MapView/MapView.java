@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.15 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: MapView.java,v 1.16 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,7 +51,7 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.16 $, $Date: 2004/10/20 10:14:39 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -277,6 +277,8 @@ public final class MapView extends StubResource implements Serializable
 	public void setMap(Map mc)
 	{
 		this.map = mc;
+		if(map != null)
+			mapId = mc.getId();
 	}
 	
 	public List getSchemes()
@@ -295,13 +297,13 @@ public final class MapView extends StubResource implements Serializable
 				"method call", 
 				getClass().getName(), 
 				"updateLocalFromTransferable()");
+
+		map = (Map )Pool.get(Map.typ, mapId);
 		
 		schemes = new LinkedList();
 
 		for(Iterator it = schemeIds.iterator(); it.hasNext();)
 			addScheme((Scheme )Pool.get(Scheme.typ, (String )it.next()));
-
-		map = (Map )Pool.get(Map.typ, mapId);
 	}
 
 	/**
@@ -1070,7 +1072,6 @@ public final class MapView extends StubResource implements Serializable
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "writeObject(out)");
-		setTransferableFromLocal();
 		
 		out.writeObject(id);
 		out.writeObject(name);
@@ -1080,7 +1081,16 @@ public final class MapView extends StubResource implements Serializable
 		out.writeObject(createdBy);
 		out.writeLong(modified);
 		out.writeObject(modifiedBy);
-		out.writeObject(mapId);
+		out.writeObject(getMap().getId());
+
+		schemeIds = new LinkedList();
+		
+		for(Iterator it = schemes.iterator(); it.hasNext();)
+		{
+			Scheme sch = (Scheme )it.next();
+			schemeIds.add(sch.getId());
+		}
+
 		out.writeObject(schemeIds);
 		out.writeDouble(scale);
 		out.writeDouble(longitude);

@@ -217,7 +217,7 @@ public class EmptyMapViewDataSource
 				MapView mv = (MapView )ias.readObject();
 				ias.close();
 				
-				Pool.put(MapView.typ, mv.getId(), mv);
+//				Pool.put(MapView.typ, mv.getId(), mv);
 			}
 			catch(FileNotFoundException e)
 			{
@@ -231,6 +231,11 @@ public class EmptyMapViewDataSource
 		}
 	}
 	
+	public void SaveMapView(String mvId)
+	{
+		saveMapViews(new String[] {mvId});
+	}
+
 	public void saveMapViews(String[] mv_ids)
 	{
 		MapView mv = (MapView )Pool.get(MapView.typ, mv_ids[0]);

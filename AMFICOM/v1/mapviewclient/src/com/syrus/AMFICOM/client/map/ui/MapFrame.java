@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.6 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapFrame.java,v 1.7 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
@@ -51,6 +52,7 @@ import java.awt.geom.Point2D;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.InternalFrameEvent;
 /**
@@ -64,7 +66,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/20 10:14:39 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -270,20 +272,7 @@ public class MapFrame extends JInternalFrame
 
 		aModel.fireModelChanged();
 	}
-/*
-	public void setMap( String dataBasePath , String dataBaseName )
-	{
-		mapViewer.setMap(dataBasePath , dataBaseName);
-	}
 
-	public void closeMap()
-	{
-		System.out.println("Closing map");
-		setMap(null);
-		setContext(null);
-		mapViewer.closeMap();
-	}
-*/
 	public void setContext(ApplicationContext aContext)
 	{
 		if(this.aContext != null)
@@ -457,7 +446,6 @@ public class MapFrame extends JInternalFrame
 
 	}
 
-//Установка Map
 	 void setMap( Map map)
 	{
 		getMapViewer().getLogicalNetLayer().setMap(map);
@@ -529,6 +517,92 @@ public class MapFrame extends JInternalFrame
 		System.out.println("Closing map");
 		setMapView(null);
 		setContext(null);
+	}
+
+	public boolean checkCanCloseMap()
+	{
+		boolean canClose;
+	
+		Map map = getMapView().getMap();
+		
+		if(map.isChanged())
+		{
+			String message = "Объект " + map.getName() 
+				+ " [" + LangModel.getString("node" + Map.typ) + "] "
+				+ "изменен. Сохранить?";
+				
+			String title = "Сохранение объекта";
+
+			int ret = JOptionPane.showConfirmDialog(
+					Environment.getActiveWindow(),
+					message,
+					title,
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
+			if(ret == JOptionPane.CANCEL_OPTION)
+			{
+				canClose = false;
+			}
+			else
+			if(ret == JOptionPane.NO_OPTION)
+			{
+				canClose = true;
+			}
+			else
+			if(ret == JOptionPane.YES_OPTION)
+			{
+				getContext().getDataSource().SaveMap(map.getId());
+				canClose = true;
+			}
+			else
+				canClose = false;
+		}
+		else
+			canClose = true;
+		return canClose;
+	}
+
+	public boolean checkCanCloseMapView()
+	{
+		boolean canClose;
+	
+		MapView mapView = getMapView();
+		
+		if(mapView.isChanged())
+		{
+			String message = "Объект " + mapView.getName() 
+				+ " [" + LangModel.getString("node" + MapView.typ) + "] "
+				+ "изменен. Сохранить?";
+				
+			String title = "Сохранение объекта";
+
+			int ret = JOptionPane.showConfirmDialog(
+					Environment.getActiveWindow(),
+					message,
+					title,
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.QUESTION_MESSAGE);
+			if(ret == JOptionPane.CANCEL_OPTION)
+			{
+				canClose = false;
+			}
+			else
+			if(ret == JOptionPane.NO_OPTION)
+			{
+				canClose = true;
+			}
+			else
+			if(ret == JOptionPane.YES_OPTION)
+			{
+				getContext().getDataSource().SaveMapView(mapView.getId());
+				canClose = true;
+			}
+			else
+				canClose = false;
+		}
+		else
+			canClose = true;
+		return canClose;
 	}
 
 	/**

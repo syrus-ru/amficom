@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.5 2004/10/19 10:07:43 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.6 2004/10/20 10:14:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
@@ -34,7 +35,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/19 10:07:43 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/20 10:14:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -124,6 +125,8 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 				link.getBinding().add(path);
 			}
 		}
+
+		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 
 	/**
