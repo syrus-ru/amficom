@@ -73,8 +73,6 @@ void BreakL_Enh (ModelF &mf, int x0, int x1, int width, int isUpper)
 	double *tmp = new double[len];
 	assert(tmp);
 
-	//prf_b("BreakL_Enh: #1");
-
 	// заполняем врем. массив
 	int j;
 	int k;
@@ -95,17 +93,11 @@ void BreakL_Enh (ModelF &mf, int x0, int x1, int width, int isUpper)
 			tmp[j] = P[k + 1];
 	}
 
-	//prf_b("BreakL_Enh: #2");
-
 	// формируем порог
 	enhance(tmp, len, width, isUpper);
 
-	//prf_b("BreakL_Enh: #3");
-
 	// преобразуем к ломаной
 	BreakL_FitI (mf, tmp, width, x0, len - width, 0, 0, 1);
-
-	//prf_b("BreakL_Enh: #4");
 
 	//fprintf(stderr, "BreakL_Enh: done, input N %d x0 %d x1 %d len %d, output N = %d\n",
 	//	N, x0, x1, len, mf.getNPars() / 2);
@@ -384,7 +376,7 @@ struct UPDATE_REGION
 
 void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key)
 {
-	prf_b("BreakL_ChangeByThresh: entered");
+	//prf_b("BreakL_ChangeByThresh: entered");
 
 	const int thNpX = taX.getLength();
 	const int thNpY = taY.getLength();
@@ -424,7 +416,7 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, 
 		thY[j].typeL = taY.getTypeL(j);
 	}
 
-	prf_b("BreakL_ChangeByThresh: add nodes");
+	//prf_b("BreakL_ChangeByThresh: add nodes");
 
 	// добавляем узлы в точках начала и конца всех событий
 	// это изменяет mf
@@ -442,7 +434,7 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, 
 		BreakL_AddInternalNodesFromTempList(mf, thNpY * 2, nodeList);
 	}
 
-	prf_b("BreakL_ChangeByThresh: process AL threshs");
+	//prf_b("BreakL_ChangeByThresh: process AL threshs");
 
 	// process A and L threshs
 	{
@@ -510,7 +502,7 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, 
 		}
 	}
 
-	prf_b("BreakL_ChangeByThresh: process DXLR threshd");
+	//prf_b("BreakL_ChangeByThresh: process DXLR threshd");
 
 	// apply dx-thresholds
 	{
@@ -652,7 +644,7 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, 
 		}
 	}
 
-	prf_b("BreakL_ChangeByThresh: done");
+	//prf_b("BreakL_ChangeByThresh: done");
 
 	//fflush(stderr);
 

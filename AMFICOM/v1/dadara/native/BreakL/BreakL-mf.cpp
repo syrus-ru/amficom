@@ -62,7 +62,6 @@ double f_BREAKL_GETY(int k, int nEv, double *pars, double x)
 
 double f_BREAKL(double *pars, int npars, double x, double *, int)
 {
-	//prf_b("f_BREAKL");
 	int nEv = npars / 2;
 	int k = f_BREAKL_GETPOS(nEv, pars, x, -1);
 	return f_BREAKL_GETY(k, nEv, pars, x);
@@ -95,7 +94,6 @@ void farr_BREAKL(double *pars, int npars, double x_s, double step, int N, double
 
 double fc_BREAKL(double *pars, ModelF &mf, int command, void *extra)
 {
-	//prf_b("fc_BREAKL");
 	if (command == MF_CMD_ACXL_CHANGE)
 	{
 		// эта операция изменяет число узлов,
@@ -186,11 +184,6 @@ double fc_BREAKL(double *pars, ModelF &mf, int command, void *extra)
 		void **args = (void** )(void* )extra;
 		BreakL_ChangeByThresh(mf, *(ThreshDXArray *)args[1], *(ThreshDYArray *)args[2], *(int *)args[0]);
 	}
-	//if (command == MF_CMD_FIX_THRESH)
-	//{
-	//	BreakL_FixThresh(mf, *(ThreshArray *)extra);
-	//}
-	//prf_e();
 	return 0;
 }
 
