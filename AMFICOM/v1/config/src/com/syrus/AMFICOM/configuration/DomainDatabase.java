@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.16 2004/10/20 10:18:26 bob Exp $
+ * $Id: DomainDatabase.java,v 1.17 2004/10/29 12:48:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/10/20 10:18:26 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/29 12:48:24 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -49,7 +49,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String getEnityName() {
-		return "Domain";
+		return ObjectEntities.DOMAIN_ENTITY;
 	}
 	
 	protected String getTableName() {
