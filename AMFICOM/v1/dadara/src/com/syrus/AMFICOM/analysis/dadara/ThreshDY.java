@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.9 2005/03/18 14:21:39 saa Exp $
+ * $Id: ThreshDY.java,v 1.10 2005/03/21 17:09:31 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/03/18 14:21:39 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/21 17:09:31 $
  * @module
  */
 public class ThreshDY extends Thresh
@@ -32,7 +32,7 @@ public class ThreshDY extends Thresh
 		this.typeL = typeL;
 		this.values = new double[] { 0.1, 0.2, -0.1, -0.2 }; // defaults -- XXX
 	}
-	
+
 	protected void readSpecificFromDIS(DataInputStream dis) throws IOException
 	{
 		values = new double[4];
@@ -87,5 +87,11 @@ public class ThreshDY extends Thresh
 		}
 		for (int key = 0; key < 4; key++)
 			interLimit(key);
+	}
+	protected void roundUp(int key)
+	{
+		int sign = IS_KEY_UPPER[key] ? 1 : -1;
+		if (VALUE_FRACTION > 0)
+			values[key] = Math.ceil(values[key] * VALUE_FRACTION * sign) / VALUE_FRACTION / sign;
 	}
 }

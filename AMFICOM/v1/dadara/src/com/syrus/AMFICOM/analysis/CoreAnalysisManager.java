@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.22 2005/03/15 13:46:34 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.23 2005/03/21 17:09:31 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.22 $, $Date: 2005/03/15 13:46:34 $
+ * @version $Revision: 1.23 $, $Date: 2005/03/21 17:09:31 $
  * @module
  */
 
@@ -18,9 +18,10 @@ import java.util.Map;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
-import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventImpl;
+import com.syrus.AMFICOM.analysis.dadara.ThreshDX;
+import com.syrus.AMFICOM.analysis.dadara.ThreshDY;
 
 public class CoreAnalysisManager
 {
@@ -102,6 +103,17 @@ public class CoreAnalysisManager
 	 * @return длина до "первого нул€" или по другому критерию
 	 */
 	private static native int nCalcTraceLength(double[] y);
+
+	/**
+	 * testing...
+	 */
+	public static native void nExtendThreshToCoverCurve( // XXX: public native?
+			double[] yBase,
+			double[] yCover,
+			ThreshDX[] thDX,
+			ThreshDY[] thDY,
+			int softYeyToUpdate,
+			int hardKeyToUpdate);
 
 	/**
 	 * ќценка уровн€ шума по кривой рефлектограммы.
@@ -256,14 +268,21 @@ public class CoreAnalysisManager
 
 		long t4 = System.currentTimeMillis();
 
-		// теперь еще и формируем пороги -- FIXME - сделать
+		// теперь еще и формируем пороги -- FIXME - сделать(?)
 //		for (int i = 0; i < ep.length; i++)
 //			ep[i].setDefaultThreshold(bs, bellcoreTraces);
+
+		ModelTraceManager mtm = new ModelTraceManager(se, mf, deltaX);
+
+		// теперь формируем пороги
+		// FIXME: testing...
+		mtm.updateUpperThreshToContain(y);
+		mtm.updateLowerThreshToContain(y);
 
 		long t5 = System.currentTimeMillis();
 		System.out.println("makeAnalysis: getDataAndLength: " + (t1-t0) + "; noiseArray:" + (t2-t1) + "; IA: " + (t3-t2) + "; fit: " + (t4-t3) + "; postProcess: " + (t5-t4));
 
-		return new ModelTraceManager(se, mf, deltaX);
+		return mtm;
 	}
 
 	/**

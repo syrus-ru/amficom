@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.6 2005/03/17 18:33:21 saa Exp $
+ * $Id: Thresh.java,v 1.7 2005/03/21 17:09:31 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/03/17 18:33:21 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/21 17:09:31 $
  * @module
  */
 
@@ -114,6 +114,12 @@ public abstract class Thresh
 
 	// при необходимости упор€дочить все warn/soft параметры, предполага€ что редактировалс€ только key 
 	protected void arrangeLimits(int key)
+	{ // empty
+	}
+
+	// увеличить порог до совпадени€ с сеткой
+	// используетс€ в native-коде
+	protected void roundUp(int key)
 	{ // empty
 	}
 }

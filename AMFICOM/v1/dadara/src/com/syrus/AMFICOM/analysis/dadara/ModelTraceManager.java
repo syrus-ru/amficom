@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.22 2005/03/15 13:39:08 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.23 2005/03/21 17:09:31 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.22 $, $Date: 2005/03/15 13:39:08 $
+ * @version $Revision: 1.23 $, $Date: 2005/03/21 17:09:31 $
  * @module
  */
 public class ModelTraceManager
@@ -348,6 +348,18 @@ public class ModelTraceManager
 		throw new UnsupportedOperationException();
 		//invalidateThMFCache();
 		//re[nEvent].setThreshold(th);
+	}
+
+	public void updateUpperThreshToContain(double[] yTop)
+	{
+		CoreAnalysisManager.nExtendThreshToCoverCurve(mt.getYArray(), yTop,
+			tDX, tDY, Thresh.SOFT_UP, Thresh.HARD_UP);
+	}
+
+	public void updateLowerThreshToContain(double[] yTop)
+	{
+		CoreAnalysisManager.nExtendThreshToCoverCurve(mt.getYArray(), yTop,
+			tDX, tDY, Thresh.SOFT_DOWN, Thresh.HARD_DOWN);
 	}
 
 	public void setDefaultThreshold(int nEvent)

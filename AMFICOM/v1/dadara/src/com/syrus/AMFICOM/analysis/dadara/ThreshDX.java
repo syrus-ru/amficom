@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.8 2005/03/18 14:21:39 saa Exp $
+ * $Id: ThreshDX.java,v 1.9 2005/03/21 17:09:31 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/03/18 14:21:39 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/21 17:09:31 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -91,5 +91,8 @@ public class ThreshDX extends Thresh
 		}
 		for (int key = 0; key < 4; key++)
 			limit(key);
+	}
+	protected void roundUp(int key)
+	{ // empty: we do not anything
 	}
 }
