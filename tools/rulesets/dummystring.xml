@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<ruleset name="dummystring">
+
+  <description>
+  This ruleset check for dummies' ``ear feint'' on Strings:
+  only final static String fields declaration available,
+  using literals only in declarated possible methods   
+  </description>
+  
+  <rule name="dummystring"
+        message="Avoid using {0}; see http://bass/bugzilla/show_bug.cgi?id=53"
+        class="com.syrus.AMFICOM.pmd.rules.DummiesStrings">
+    <description>
+    Avoid using something other than getString() on String objects;
+    </description>
+       <priority>3</priority>    
+    <properties>
+        <property name="possibleMethod.1" value="getString"/>
+        <property name="possibleMethod.2" value="System.out.println"/>
+    </properties>
+
+  </rule>
+
+
+  
+</ruleset>
