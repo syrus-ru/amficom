@@ -105,7 +105,7 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 	public void unbind(ObjectResource or)
 	{
 		SchemeElement se = (SchemeElement )or;
-		se.site_id = "";
+		se.siteId = "";
 		elementsList.remove(se);
 	}
 
@@ -132,7 +132,7 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 				for(Iterator it = list.iterator(); it.hasNext();)
 				{
 					SchemeElement se = (SchemeElement )it.next();
-					if(se.site_id.equals(site.getId()))
+					if(se.siteId.equals(site.getId()))
 						elementsList.add(se);
 				}
 			}

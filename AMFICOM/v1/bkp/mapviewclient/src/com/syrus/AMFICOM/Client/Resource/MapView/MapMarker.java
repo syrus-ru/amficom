@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.2 2004/09/14 14:48:51 krupenn Exp $
+ * $Id: MapMarker.java,v 1.3 2004/09/15 08:12:50 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePathDecompositor;
+import com.syrus.AMFICOM.Client.Resource.Scheme.PathDecompositor;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
@@ -62,7 +62,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/14 14:48:51 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/15 08:12:50 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -106,7 +106,7 @@ public class MapMarker extends StubResource implements MapElement
 	protected TransmissionPath catalogPath = null;
 	protected String me_id = "";
 
-	protected SchemePathDecompositor spd = null;
+	protected PathDecompositor spd = null;
 
 	protected boolean removed = false;
 
@@ -770,7 +770,7 @@ public class MapMarker extends StubResource implements MapElement
 		}// if ( lnl.mapMainFrame
 */
 	}
-
+/*
 	public double getFromStartLengthLo()
 	{
 		if(spd == null)
@@ -786,7 +786,7 @@ public class MapMarker extends StubResource implements MapElement
 		else
 			moveToFromStartLf(spd.getPhysicalDistance(dist));
 	}
-
+*/
 	//ѕередвинуть в точку на заданном рассто€нии от начала (физ)
 	public void moveToFromStartLf(double dist)
 	{

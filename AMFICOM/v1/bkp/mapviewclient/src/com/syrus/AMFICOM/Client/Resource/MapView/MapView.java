@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.1 2004/09/13 12:33:43 krupenn Exp $
+ * $Id: MapView.java,v 1.2 2004/09/15 08:12:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -49,7 +49,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/15 08:12:50 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -568,11 +568,11 @@ public class MapView extends StubResource
 				if(sch.getAllCableLinks().contains(scl))
 				{
 					SchemeElement se = sch.getTopologicalElement(
-							sch.getSchemeElementByCablePort(scl.source_port_id));
+							sch.getSchemeElementByCablePort(scl.sourcePortId));
 					linkSideNodes[0] = findElement(se);
 
 					SchemeElement se2 = sch.getTopologicalElement(
-							sch.getSchemeElementByCablePort(scl.target_port_id));
+							sch.getSchemeElementByCablePort(scl.targetPortId));
 					linkSideNodes[1] = findElement(se2);
 					break;
 				}
@@ -598,17 +598,17 @@ public class MapView extends StubResource
 			if(scl == null)
 				return;
 
-			Scheme scheme = (Scheme )Pool.get(Scheme.typ, getMap().scheme_id);
+			Scheme scheme = (Scheme )Pool.get(Scheme.typ, getMap().schemeId);
 
 			MapSiteNodeElement smne;
 			MapSiteNodeElement emne;
 			try
 			{
-//				SchemeElement se = scheme.getTopLevelElement(scheme.getSchemeElementByCablePort(scl.source_port_id));
-				SchemeElement se = scheme.getTopologicalElement(scheme.getSchemeElementByCablePort(scl.source_port_id));
+//				SchemeElement se = scheme.getTopLevelElement(scheme.getSchemeElementByCablePort(scl.sourceportId));
+				SchemeElement se = scheme.getTopologicalElement(scheme.getSchemeElementByCablePort(scl.sourcePortId));
 				smne = findElement(se.getId());
-//				SchemeElement se2 = scheme.getTopLevelElement(scheme.getSchemeElementByCablePort(scl.target_port_id));
-				SchemeElement se2 = scheme.getTopologicalElement(scheme.getSchemeElementByCablePort(scl.target_port_id));
+//				SchemeElement se2 = scheme.getTopLevelElement(scheme.getSchemeElementByCablePort(scl.targetPortId));
+				SchemeElement se2 = scheme.getTopologicalElement(scheme.getSchemeElementByCablePort(scl.targetPortId));
 				emne = findElement(se2.getId());
 			}
 			catch(Exception ex)
@@ -635,7 +635,7 @@ public class MapView extends StubResource
 					emne,
 					getMap());
 
-			theLink.type_id = mplpe.getId();
+			theLink.typeId = mplpe.getId();
 			theLink.attributes = ResourceUtil.copyAttributes(dataSource, mplpe.attributes);
 			theLink.nodeLink_ids.add( nodeLink.getId());
 			theLink.link_type_id = scl.cable_link_type_id;
@@ -832,8 +832,8 @@ public class MapView extends StubResource
 				if(((MapUnboundNodeElement)node).getSchemeElement().equals(se))
 					return node;
 			if(se != null)
-				if(se.site_id != null)
-					if(se.site_id.equals(node.getId()))
+				if(se.siteId != null)
+					if(se.siteId.equals(node.getId()))
 						return node;
 		}
 		return null;

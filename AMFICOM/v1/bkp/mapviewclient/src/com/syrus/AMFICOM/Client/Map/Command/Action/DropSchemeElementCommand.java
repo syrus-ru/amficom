@@ -1,5 +1,5 @@
 /**
- * $Id: DropSchemeElementCommand.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: DropSchemeElementCommand.java,v 1.2 2004/09/15 08:12:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import java.awt.geom.Point2D;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/15 08:12:50 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -80,7 +80,7 @@ public class DropSchemeElementCommand extends MapActionCommand
 			&& !(me instanceof MapUnboundNodeElement))
 		{
 			site = (MapSiteNodeElement )me;
-			se.site_id = site.getId();
+			se.siteId = site.getId();
 		}
 		else
 		{
@@ -113,7 +113,7 @@ public class DropSchemeElementCommand extends MapActionCommand
 	{
 		if(unbound == null)
 		{
-			se.site_id = prevSiteId;
+			se.siteId = prevSiteId;
 		}
 		else
 		{
@@ -125,7 +125,7 @@ public class DropSchemeElementCommand extends MapActionCommand
 	{
 		if(unbound == null)
 		{
-			se.site_id = site.getId();
+			se.siteId = site.getId();
 		}
 		else
 		{

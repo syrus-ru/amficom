@@ -24,10 +24,6 @@ src\com\syrus\AMFICOM\Client\Map\UI\MapDataFlavor.java
 src\com\syrus\AMFICOM\Client\Resource\EmptyMapDataSource.java
 src\com\syrus\AMFICOM\Client\Resource\MapDataSourceImage.java
 src\com\syrus\AMFICOM\Client\Resource\RISDMapDataSource.java
-src\com\syrus\AMFICOM\Client\Resource\General\Characteristic.java
-src\com\syrus\AMFICOM\Client\Resource\General\CharacteristicType.java
-src\com\syrus\AMFICOM\Client\Resource\General\ElementAttribute.java
-src\com\syrus\AMFICOM\Client\Resource\General\ElementAttributeType.java
 src\com\syrus\AMFICOM\Client\Resource\Map\Map.java
 src\com\syrus\AMFICOM\Client\Resource\Map\MapElement.java
 src\com\syrus\AMFICOM\Client\Resource\Map\MapElementState.java

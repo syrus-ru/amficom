@@ -200,9 +200,9 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		else
 		{
 			channellingItems = new LinkedList();
-			if(path.getSchemeCableLink().channeling_items == null)
-				path.getSchemeCableLink().channeling_items = new LinkedList();
-			channellingItems.addAll(path.getSchemeCableLink().channeling_items);
+			if(path.getSchemeCableLink().channelingItems == null)
+				path.getSchemeCableLink().channelingItems = new LinkedList();
+			channellingItems.addAll(path.getSchemeCableLink().channelingItems);
 			
 			model.setContents(channellingItems);
 			
@@ -252,11 +252,11 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 						.getContext()
 							.getDataSourceInterface()
 								.GetUId(CableChannelingItem.typ));
-		cci.start_site_id = startNode.getId();
-		cci.start_spare = MapPropertiesManager.getSpareLength();
-		cci.physical_link_id = mle.getId();
-		cci.end_spare = MapPropertiesManager.getSpareLength();
-		cci.end_site_id = endNode.getId();
+		cci.startSiteId = startNode.getId();
+		cci.startSpare = MapPropertiesManager.getSpareLength();
+		cci.physicalLinkId = mle.getId();
+		cci.endSpare = MapPropertiesManager.getSpareLength();
+		cci.endSiteId = endNode.getId();
 		
 		channellingItems.add(cci);
 		
@@ -293,7 +293,7 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 	{
 		try 
 		{
-			path.getSchemeCableLink().channeling_items = this.channellingItems;
+			path.getSchemeCableLink().channelingItems = this.channellingItems;
 			return true;
 		} 
 		catch (Exception ex) 

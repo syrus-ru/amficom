@@ -88,29 +88,29 @@ public final class CableBindingController implements ObjectResourceController
 			CableChannelingItem cci = (CableChannelingItem )objectResource;
 			if (key.equals(KEY_START_NODE))
 			{
-				MapNodeElement mne = (MapNodeElement )path.getMap().getNode(cci.start_site_id);
+				MapNodeElement mne = (MapNodeElement )path.getMap().getNode(cci.startSiteId);
 				result = mne.getName();
 			}
 			else
 			if (key.equals(KEY_START_SPARE))
 			{
-				result = String.valueOf(cci.start_spare);
+				result = String.valueOf(cci.startSpare);
 			}
 			else
 			if (key.equals(KEY_LINK))
 			{
-				MapLinkElement mle = (MapLinkElement )path.getMap().getPhysicalLink(cci.physical_link_id);
+				MapLinkElement mle = (MapLinkElement )path.getMap().getPhysicalLink(cci.physicalLinkId);
 				result = mle.getName();
 			}
 			else
 			if (key.equals(KEY_END_SPARE))
 			{
-				result = String.valueOf(cci.end_spare);
+				result = String.valueOf(cci.endSpare);
 			}
 			else
 			if (key.equals(KEY_END_NODE))
 			{
-				MapNodeElement mne = (MapNodeElement )path.getMap().getNode(cci.end_site_id);
+				MapNodeElement mne = (MapNodeElement )path.getMap().getNode(cci.endSiteId);
 				result = mne.getName();
 			}
 		}

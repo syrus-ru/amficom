@@ -1,5 +1,5 @@
 /**
- * $Id: BindToSiteCommandBundle.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: BindToSiteCommandBundle.java,v 1.2 2004/09/15 08:12:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/15 08:12:50 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -94,8 +94,8 @@ public class BindToSiteCommandBundle extends MapActionCommandBundle
 		removeNode(unbound);
 		
 		SchemeElement se = unbound.getSchemeElement();
-		prevSiteId = se.site_id;		
-		se.site_id = site.getId();
+		prevSiteId = se.siteId;		
+		se.siteId = site.getId();
 	}
 	
 	public void undo()
@@ -104,7 +104,7 @@ public class BindToSiteCommandBundle extends MapActionCommandBundle
 		
 		unbound.setCanBind(false);
 		SchemeElement se = unbound.getSchemeElement();
-		se.site_id = prevSiteId;
+		se.siteId = prevSiteId;
 	}
 
 	public void redo()
@@ -112,7 +112,7 @@ public class BindToSiteCommandBundle extends MapActionCommandBundle
 		super.redo();
 		
 		SchemeElement se = unbound.getSchemeElement();
-		se.site_id = site.getId();
+		se.siteId = site.getId();
 	}
 
 }
