@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.12 2004/08/06 16:07:06 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.13 2004/08/17 14:58:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/06 16:07:06 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/17 14:58:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -115,7 +115,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such measurement: " + measurementIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementDatabase.retrieve | Cannot retrieve measurement " + measurementIdStr;
+			String mesg = "MeasurementDatabase.retrieve | Cannot retrieve measurement '" + measurementIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -166,7 +166,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			throw new ObjectNotFoundException("No result of sort: " + resultSortNum + " for measurement " + measurementIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementDatabase.retrieveResult | Cannot retrieve result of sort " + resultSortNum + " for measurement " + measurementIdStr;
+			String mesg = "MeasurementDatabase.retrieveResult | Cannot retrieve result of sort " + resultSortNum + " for measurement '" + measurementIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -247,7 +247,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementDatabase.insert | Cannot insert measurement " + measurementIdStr;
+			String mesg = "MeasurementDatabase.insert | Cannot insert measurement '" + measurementIdStr + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -308,7 +308,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementDatabase.updateStatus | Cannot update status of measurement " + measurementIdStr;
+			String mesg = "MeasurementDatabase.updateStatus | Cannot update status of measurement '" + measurementIdStr + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {

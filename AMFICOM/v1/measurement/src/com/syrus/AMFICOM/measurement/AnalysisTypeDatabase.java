@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.15 2004/08/11 13:10:17 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.16 2004/08/17 14:58:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/11 13:10:17 $
+ * @version $Revision: 1.16 $, $Date: 2004/08/17 14:58:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -98,7 +98,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such analysis type: " + analysisTypeIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retrieveAnalysisType | Cannot retrieve analysis type " + analysisTypeIdStr;
+			String mesg = "AnalysisTypeDatabase.retrieveAnalysisType | Cannot retrieve analysis type '" + analysisTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -158,7 +158,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retrieveParameterTypeIds | Cannot retrieve parameter type ids for analysis type " + analysisTypeIdStr;
+			String mesg = "AnalysisTypeDatabase.retrieveParameterTypeIds | Cannot retrieve parameter type ids for analysis type '" + analysisTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -244,7 +244,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.insertAnalysisType | Cannot insert analysis type " + analysisTypeIdStr;
+			String mesg = "AnalysisTypeDatabase.insertAnalysisType | Cannot insert analysis type '" + analysisTypeIdStr + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -343,9 +343,9 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.insertParameterTypeIds | Cannot insert parameter type "
-					+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
-					+ analysisTypeIdCode;
+			String mesg = "AnalysisTypeDatabase.insertParameterTypeIds | Cannot insert parameter type '"
+					+ parameterTypeIdCode + "' of parameter mode '" + parameterMode + "' for analysis type '"
+					+ analysisTypeIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -412,7 +412,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			throw new ObjectNotFoundException("No analysis type with codename: '" + codename + "'");
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retrieveForCodename | Cannot retrieve analysis type with codename: '" + codename + "'";
+			String mesg = "AnalysisTypeDatabase.retrieveForCodename | Cannot retrieve analysis type with codename: '" + codename + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -448,7 +448,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			Log.errorException(onfe);
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisTypeDatabase.retrieveAll | Cannot retrieve analysis type";
+			String mesg = "AnalysisTypeDatabase.retrieveAll | Cannot retrieve analysis type -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {

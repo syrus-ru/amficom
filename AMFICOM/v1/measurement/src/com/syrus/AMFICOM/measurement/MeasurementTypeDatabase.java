@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.14 2004/08/11 13:10:17 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.15 2004/08/17 14:58:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/11 13:10:17 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/17 14:58:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -92,7 +92,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				throw new ObjectNotFoundException("No such measurement type: " + measurementTypeIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.retrieveMeasurementType | Cannot retrieve measurement type " + measurementTypeIdStr;
+			String mesg = "MeasurementTypeDatabase.retrieveMeasurementType | Cannot retrieve measurement type '" + measurementTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -148,7 +148,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.retrieveParameterTypeIds | Cannot retrieve parameter type ids for measurement type " + measurementTypeIdStr;
+			String mesg = "MeasurementTypeDatabase.retrieveParameterTypeIds | Cannot retrieve parameter type ids for measurement type '" + measurementTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -230,7 +230,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.insertMeasurementType | Cannot insert measurement type " + measurementTypeIdStr;
+			String mesg = "MeasurementTypeDatabase.insertMeasurementType | Cannot insert measurement type '" + measurementTypeIdStr + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -301,12 +301,12 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				preparedStatement.setString(2, parameterTypeIdCode);
 				parameterMode = MODE_OUT;
 				preparedStatement.setString(3, parameterMode);
-				Log.debugMessage("MeasurementTypeDatabase.insertParameterTypeIds | Inserting parameter type " + parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for measurement type " + measurementTypeIdCode, Log.DEBUGLEVEL05);
+				Log.debugMessage("MeasurementTypeDatabase.insertParameterTypeIds | Inserting parameter type '" + parameterTypeIdCode + "' of parameter mode '" + parameterMode + "' for measurement type '" + measurementTypeIdCode + "'", Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.insertParameterTypeIds | Cannot insert parameter type " + parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for measurement type " + measurementTypeIdCode;
+			String mesg = "MeasurementTypeDatabase.insertParameterTypeIds | Cannot insert parameter type '" + parameterTypeIdCode + "' of parameter mode '" + parameterMode + "' for measurement type '" + measurementTypeIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -378,7 +378,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			throw new ObjectNotFoundException("No measurement type with codename: '" + codename + "'");
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.retrieveForCodename | Cannot retrieve measurement type with codename: '" + codename + "'";
+			String mesg = "MeasurementTypeDatabase.retrieveForCodename | Cannot retrieve measurement type with codename: '" + codename + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -414,7 +414,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			Log.errorException(onfe);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.retrieveAll | Cannot retrieve measurement type";
+			String mesg = "MeasurementTypeDatabase.retrieveAll | Cannot retrieve measurement type -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {

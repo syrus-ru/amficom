@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.12 2004/08/09 12:15:45 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.13 2004/08/17 14:58:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/09 12:15:45 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/17 14:58:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -94,7 +94,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such analysis: " + analysisIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisDatabase.retrieve | Cannot retrieve analysis " + analysisIdStr;
+			String mesg = "AnalysisDatabase.retrieve | Cannot retrieve analysis '" + analysisIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -173,7 +173,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "AnalysisDatabase.insert | Cannot insert analysis " + analysisIdStr;
+			String mesg = "AnalysisDatabase.insert | Cannot insert analysis '" + analysisIdStr + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {

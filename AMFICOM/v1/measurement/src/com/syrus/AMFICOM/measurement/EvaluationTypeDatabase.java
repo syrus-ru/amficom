@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.14 2004/08/11 10:59:55 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.15 2004/08/17 14:58:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/11 10:59:55 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/17 14:58:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -95,7 +95,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such evaluation type: " + evaluationTypeIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "EvaluationTypeDatabase.retrieveEvaluationType | Cannot retrieve evaluation type " + evaluationTypeIdStr;
+			String mesg = "EvaluationTypeDatabase.retrieveEvaluationType | Cannot retrieve evaluation type '" + evaluationTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -161,7 +161,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "EvaluationTypeDatabase.retrieveParameterTypeIds | Cannot retrieve parameter type ids for evaluation type " + evaluationTypeIdStr;
+			String mesg = "EvaluationTypeDatabase.retrieveParameterTypeIds | Cannot retrieve parameter type ids for evaluation type '" + evaluationTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -248,7 +248,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "EvaluationTypeDatabase.insertEvaluationType | Cannot insert evaluation type " + evaluationTypeIdStr;
+			String mesg = "EvaluationTypeDatabase.insertEvaluationType | Cannot insert evaluation type '" + evaluationTypeIdStr + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -344,12 +344,12 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "EvaluationTypeDatabase.insertParameterTypeIds | Cannot insert parameter type "
+			String mesg = "EvaluationTypeDatabase.insertParameterTypeIds | Cannot insert parameter type '"
 					+ parameterTypeIdCode
-					+ " of parameter mode '"
+					+ "' of parameter mode '"
 					+ parameterMode
-					+ "' for evaluation type "
-					+ evaluationTypeIdCode;
+					+ "' for evaluation type '"
+					+ evaluationTypeIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -422,7 +422,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			throw new ObjectNotFoundException("No evaluation type with codename: '" + codename + "'");
 		}
 		catch (SQLException sqle) {
-			String mesg = "EvaluationTypeDatabase.retrieveForCodename | Cannot retrieve evaluation type with codename: '" + codename + "'";
+			String mesg = "EvaluationTypeDatabase.retrieveForCodename | Cannot retrieve evaluation type with codename: '" + codename + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -458,7 +458,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			Log.errorException(onfe);
 		}
 		catch (SQLException sqle) {
-			String mesg = "EvaluationTypeDatabase.retrieveAll | Cannot retrieve evaluation type";
+			String mesg = "EvaluationTypeDatabase.retrieveAll | Cannot retrieve evaluation type -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {

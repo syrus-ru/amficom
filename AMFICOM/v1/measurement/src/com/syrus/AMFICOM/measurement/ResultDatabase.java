@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.12 2004/08/10 19:05:19 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.13 2004/08/17 14:58:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/10 19:05:19 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/17 14:58:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -131,7 +131,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such result: " + resultIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "ResultDatabase.retrieveResult | Cannot retrieve result " + resultIdStr;
+			String mesg = "ResultDatabase.retrieveResult | Cannot retrieve result '" + resultIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -193,7 +193,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for result " + resultIdStr;
+			String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for result '" + resultIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -310,7 +310,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "ResultDatabase.insertResult | Cannot insert result " + resultIdStr;
+			String mesg = "ResultDatabase.insertResult | Cannot insert result '" + resultIdStr + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -376,7 +376,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter " + parameterId.toString() + " of type " + parameterTypeId.toString() + " for result " + resultIdCode;
+			String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter '" + parameterId.toString() + "' of type '" + parameterTypeId.toString() + "' for result '" + resultIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.13 2004/08/11 13:10:17 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.14 2004/08/17 14:58:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/11 13:10:17 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/17 14:58:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -89,7 +89,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 				throw new ObjectNotFoundException("No such parameter type: " + parameterTypeIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "ParameterTypeDatabase.retrieve | Cannot retrieve parameter type " + parameterTypeIdStr;
+			String mesg = "ParameterTypeDatabase.retrieve | Cannot retrieve parameter type '" + parameterTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -168,7 +168,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "ParameterTypeDatabase.insert | Cannot insert parameter type " + parameterTypeIdStr;
+			String mesg = "ParameterTypeDatabase.insert | Cannot insert parameter type '" + parameterTypeIdStr + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -211,7 +211,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			throw new ObjectNotFoundException("No such parameter type with codename: '" + codename + "'");
 		}
 		catch (SQLException sqle) {
-			String mesg = "ParameterTypeDatabase.retrieveForCodename | Cannot retrieve parameter type with codename: '" + codename + "'";
+			String mesg = "ParameterTypeDatabase.retrieveForCodename | Cannot retrieve parameter type with codename: '" + codename + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -251,7 +251,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			Log.errorException(onfe);
 		}
 		catch (SQLException sqle) {
-			String mesg = "ParameterTypeDatabase.retrieveAll | Cannot retrieve parameter type";
+			String mesg = "ParameterTypeDatabase.retrieveAll | Cannot retrieve parameter type -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {

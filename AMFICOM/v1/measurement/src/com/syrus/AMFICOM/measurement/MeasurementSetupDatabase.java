@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.12 2004/08/16 10:49:49 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.13 2004/08/17 14:58:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/16 10:49:49 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2004/08/17 14:58:58 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -145,7 +145,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.createMEAttachment | Cannot attach measurement setup " + msIdStr + " to monitored element " + meIdStr;
+			String mesg = "MeasurementSetupDatabase.createMEAttachment | Cannot attach measurement setup '" + msIdStr + "' to monitored element '" + meIdStr + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
@@ -176,7 +176,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.deleteMEAttachment | Cannot detach measurement setup " + msIdStr + " from monitored element " + meIdStr;
+			String mesg = "MeasurementSetupDatabase.deleteMEAttachment | Cannot detach measurement setup '" + msIdStr + "' from monitored element '" + meIdStr + "' -- " + sqle.getMessage();
 			throw new IllegalDataException(mesg, sqle);
 		}
 		finally {
@@ -233,7 +233,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.insertMeasurementSetup | Cannot insert Measurement Setup " + msIdStr;
+			String mesg = "MeasurementSetupDatabase.insertMeasurementSetup | Cannot insert Measurement Setup '" + msIdStr + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -289,7 +289,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.insertMeasurementSetupMELinks | Cannot insert link for monitored element " + meIdCode + " and Measurement Setup " + msIdCode;
+			String mesg = "MeasurementSetupDatabase.insertMeasurementSetupMELinks | Cannot insert link for monitored element '" + meIdCode + "' and Measurement Setup '" + msIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -377,7 +377,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such measurement setup: " + msIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetup | Cannot retrieve measurement setup " + msIdStr;
+			String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetup | Cannot retrieve measurement setup '" + msIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -418,7 +418,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				meIds.add(new Identifier(resultSet.getString(LINK_COLUMN_ME_ID)));
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetupMELinks | Cannot retrieve monitored element ids for measurement setup " + msIdStr;
+			String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetupMELinks | Cannot retrieve monitored element ids for measurement setup '" + msIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -452,7 +452,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.setModified | Cannot set modified for measurement setup "	+ msIdStr;
+			String mesg = "MeasurementSetupDatabase.setModified | Cannot set modified for measurement setup '"	+ msIdStr + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
@@ -485,7 +485,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			Log.errorException(onfe);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.retrieveAll | Cannot retrieve measurement setup ";
+			String mesg = "MeasurementSetupDatabase.retrieveAll | Cannot retrieve measurement setup -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {

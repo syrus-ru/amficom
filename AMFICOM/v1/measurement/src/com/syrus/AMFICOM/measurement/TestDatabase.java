@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.21 2004/08/17 09:04:29 bob Exp $
+ * $Id: TestDatabase.java,v 1.22 2004/08/17 14:58:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/08/17 09:04:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2004/08/17 14:58:58 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -145,7 +145,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such test: " + testIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveTest | Cannot retrieve test " + testIdStr;
+			String mesg = "TestDatabase.retrieveTest | Cannot retrieve test '" + testIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -184,7 +184,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveMeasurementSetupTestLinks | Cannot retrieve measurement setup ids for test " + testIdStr;
+			String mesg = "TestDatabase.retrieveMeasurementSetupTestLinks | Cannot retrieve measurement setup ids for test '" + testIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -240,7 +240,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveMeasurementsOrderByStartTime | Cannot retrieve measurements for test " + testIdStr + " and status " + Integer.toString(measurementStatus.value());
+			String mesg = "TestDatabase.retrieveMeasurementsOrderByStartTime | Cannot retrieve measurements for test '" + testIdStr + "' and status " + Integer.toString(measurementStatus.value()) + " -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -287,7 +287,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No last measurement for test: " + testIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveLastMeasurement | Cannot retrieve last measurement for test " + testIdStr;
+			String mesg = "TestDatabase.retrieveLastMeasurement | Cannot retrieve last measurement for test '" + testIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -423,7 +423,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			preparedStatement.executeUpdate();
 		}
 		catch (SQLException sqle) {
-			String mesg = "TestDatabase.insertTest | Cannot insert test " + testIdCode;
+			String mesg = "TestDatabase.insertTest | Cannot insert test '" + testIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -475,7 +475,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "TestDatabase.insertMeasurementSetupTestLinks | Cannot insert link for measurement setup " + msIdCode + " and test " + testIdCode;
+			String mesg = "TestDatabase.insertMeasurementSetupTestLinks | Cannot insert link for measurement setup '" + msIdCode + "' and test '" + testIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -520,7 +520,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "TestDatabase.updateStatus | Cannot update status of test " + testIdStr;
+			String mesg = "TestDatabase.updateStatus | Cannot update status of test '" + testIdStr + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
@@ -550,7 +550,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "TestDatabase.updateStatus | Cannot update modified of test " + testIdStr;
+			String mesg = "TestDatabase.updateStatus | Cannot update modified of test '" + testIdStr + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
@@ -593,7 +593,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveTestsForMCM | Cannot retrieve test of status " + status.value();
+			String mesg = "TestDatabase.retrieveTestsForMCM | Cannot retrieve test of status " + status.value() + " -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -657,7 +657,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveTestsForMCM | Cannot retrieve test of status " + status.value() + " for mcm " + mcmIdStr;
+			String mesg = "TestDatabase.retrieveTestsForMCM | Cannot retrieve test of status " + status.value() + " for mcm '" + mcmIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -707,7 +707,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			Log.errorException(onfe);
 		}
 		catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveAll | Cannot retrieve test ";
+			String mesg = "TestDatabase.retrieveAll | Cannot retrieve test -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {

@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.34 2004/08/17 14:35:48 bob Exp $
+ * $Id: Test.java,v 1.35 2004/08/17 14:58:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/08/17 14:35:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.35 $, $Date: 2004/08/17 14:58:58 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -196,12 +196,12 @@ public class Test extends StorableObject {
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
 		 */
-		this.analysisType = (tt.analysis_type_id.identifier_string != "") ? (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(tt.analysis_type_id), true) : null;
+		this.analysisType = (! tt.analysis_type_id.identifier_string.equals("")) ? (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(tt.analysis_type_id), true) : null;
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
 		 */
-		this.evaluationType = (tt.evaluation_type_id.identifier_string != "")	? (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(tt.evaluation_type_id), true) : null;
+		this.evaluationType = (! tt.evaluation_type_id.identifier_string.equals(""))	? (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(tt.evaluation_type_id), true) : null;
 		this.status = tt.status.value();
 		this.monitoredElement = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(tt.monitored_element_id), true);
 		this.returnType = tt.return_type.value();

@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.9 2004/08/17 09:04:29 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.10 2004/08/17 14:58:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/17 09:04:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2004/08/17 14:58:58 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -84,7 +84,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such temporal pattern: " + tpIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "TemporalPatternDatabase.retrieveTemporalPattern | Cannot retrieve temporal pattern " + tpIdStr;
+			String mesg = "TemporalPatternDatabase.retrieveTemporalPattern | Cannot retrieve temporal pattern '" + tpIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -169,7 +169,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 			preparedStatement.executeUpdate();
 		}
 		catch (SQLException sqle) {
-			String mesg = "TemporalPatternDatabase.insertTemporalPattern | Cannot insert temporal pattern " + tpIdCode;
+			String mesg = "TemporalPatternDatabase.insertTemporalPattern | Cannot insert temporal pattern '" + tpIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -210,7 +210,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 			Log.errorException(onfe);
 		}
 		catch (SQLException sqle) {
-			String mesg = "TemporalPatternDatabase.retrieveAll | Cannot retrieve temporal pattern ";
+			String mesg = "TemporalPatternDatabase.retrieveAll | Cannot retrieve temporal pattern -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {

@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.16 2004/08/16 10:49:49 bob Exp $
+ * $Id: SetDatabase.java,v 1.17 2004/08/17 14:58:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,10 +16,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import oracle.sql.BLOB;
-import com.syrus.util.Log;
-import com.syrus.util.database.ByteArrayDatabase;
-import com.syrus.util.database.DatabaseDate;
-import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -29,10 +25,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.util.Log;
+import com.syrus.util.database.ByteArrayDatabase;
+import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/16 10:49:49 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2004/08/17 14:58:58 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -99,7 +98,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such set: " + setIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "SetDatabase.retrieveSet | Cannot retrieve set " + setIdStr;
+			String mesg = "SetDatabase.retrieveSet | Cannot retrieve set '" + setIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -161,7 +160,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "SetDatabase.retrieveSetParameters | Cannot retrieve parameters for set " + setIdStr;
+			String mesg = "SetDatabase.retrieveSetParameters | Cannot retrieve parameters for set '" + setIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -203,7 +202,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "SetDatabase.retrieveSetMELinks | Cannot retrieve monitored element ids for set " + setIdStr;
+			String mesg = "SetDatabase.retrieveSetMELinks | Cannot retrieve monitored element ids for set '" + setIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -273,7 +272,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "SetDatabase.insertSet | Cannot insert set " + setIdStr;
+			String mesg = "SetDatabase.insertSet | Cannot insert set '" + setIdStr + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -337,7 +336,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "SetDatabase.insertSetParameters | Cannot insert parameter " + parameterId.toString() + " of type " + parameterTypeId.toString() + " for set " + setIdStr;
+			String mesg = "SetDatabase.insertSetParameters | Cannot insert parameter '" + parameterId.toString() + "' of type '" + parameterTypeId.toString() + "' for set '" + setIdStr + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -391,7 +390,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "SetDatabase.insertSetMELinks | Cannot insert link for monitored element " + meIdCode + " and set " + setIdCode;
+			String mesg = "SetDatabase.insertSetMELinks | Cannot insert link for monitored element '" + meIdCode + "' and set '" + setIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -444,7 +443,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "Set.createMEAttachment | Cannot attach set " + setIdStr + " to monitored element " + meIdStr;
+			String mesg = "Set.createMEAttachment | Cannot attach set '" + setIdStr + "' to monitored element '" + meIdStr + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
@@ -478,7 +477,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "SetDatabase.deleteMEAttachment | Cannot detach set " + setIdStr + " from monitored element " + meIdStr;
+			String mesg = "SetDatabase.deleteMEAttachment | Cannot detach set '" + setIdStr + "' from monitored element '" + meIdStr + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
@@ -510,7 +509,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "SetDatabase.setModified | Cannot set modified for set " + setIdStr;
+			String mesg = "SetDatabase.setModified | Cannot set modified for set '" + setIdStr + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
@@ -580,7 +579,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			Log.errorException(onfe);
 		}
 		catch (SQLException sqle) {
-			String mesg = "SetDatabase.retrieveAll | Cannot retrieve set";
+			String mesg = "SetDatabase.retrieveAll | Cannot retrieve set -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {

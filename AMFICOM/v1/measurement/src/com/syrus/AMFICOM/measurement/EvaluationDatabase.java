@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.10 2004/08/06 16:07:06 arseniy Exp $
+ * $Id: EvaluationDatabase.java,v 1.11 2004/08/17 14:58:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/06 16:07:06 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/17 14:58:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -91,7 +91,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such evaluation: " + evaluationIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "EvaluationDatabase.retrieve | Cannot retrieve evaluation " + evaluationIdStr;
+			String mesg = "EvaluationDatabase.retrieve | Cannot retrieve evaluation '" + evaluationIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -170,7 +170,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "EvaluationDatabase.insert | Cannot insert evaluation " + evaluationIdStr;
+			String mesg = "EvaluationDatabase.insert | Cannot insert evaluation '" + evaluationIdStr + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
