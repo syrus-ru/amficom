@@ -12,3 +12,5 @@ lib
 .corba
 .client
 Makefile.inc
+.project
+.classpath
