@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicsPanel.java,v 1.1 2005/03/10 08:09:08 stas Exp $
+ * $Id: CharacteristicsPanel.java,v 1.2 2005/03/10 08:33:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -66,8 +67,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/10 08:09:08 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/03/10 08:33:01 $
  * @module schemeclient_v1
  */
 
@@ -231,7 +232,7 @@ public abstract class CharacteristicsPanel extends GeneralPanel implements
 		return true;
 	}
 
-	public void addCharacteristics(List chars, Identifier characterizedId) {
+	public void addCharacteristics(final Collection chars, Identifier characterizedId) {
 		this.characteristics.put(characterizedId, chars);
 		elementSelected(selectedTypeSort);
 	}
