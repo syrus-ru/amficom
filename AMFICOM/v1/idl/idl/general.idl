@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.28 2004/11/16 15:17:31 bass Exp $
+ * $Id: general.idl,v 1.29 2004/11/17 09:33:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,6 +64,8 @@ module corba {
 		Identifier_Transferable modifier_id;
 		long long version;
 	};
+	
+	typedef sequence <StorableObject_Transferable> StorableObjectSeq_Transferable;
 
 #else // SCHEME_COMMON
 
