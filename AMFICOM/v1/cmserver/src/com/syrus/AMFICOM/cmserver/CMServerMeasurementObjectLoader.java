@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.15 2004/12/24 13:20:20 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.16 2004/12/24 13:51:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -48,7 +49,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.15 $, $Date: 2004/12/24 13:20:20 $
+ * @version $Revision: 1.16 $, $Date: 2004/12/24 13:51:41 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -240,7 +241,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				if(ids.contains(id))
 					it.remove();
 			}
-			List insertToDB = new LinkedList();
+			List loadedFromMCM = new LinkedList();
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("Analysis '" + id + "' not found in database; trying to load from MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
@@ -249,7 +250,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					try {
 						analysis = new Analysis(mcmRef.transmitAnalysis((Identifier_Transferable)id.getTransferable()));
 						list.add(analysis);
-						insertToDB.add(analysis);
+						loadedFromMCM.add(analysis);
 					}
 					catch (org.omg.CORBA.SystemException se) {
 						Log.errorException(se);
@@ -271,8 +272,12 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
 				}
 			}
-			AnalysisDatabase analysisDatabase = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
-			analysisDatabase.insert(insertToDB);
+			try{
+				database.update(loadedFromMCM, StorableObjectDatabase.UPDATE_FORCE, null);
+			}catch(VersionCollisionException vce){
+				// exception isn't expected
+				Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalyses | exception isn't expected, but its occur: " + vce.getMessage());
+			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalyses | Illegal Storable Object: " + e.getMessage());
@@ -294,7 +299,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				if(ids.contains(id))
 					it.remove();
 			}
-			List insertToDB = new LinkedList();
+			List loadedFromMCM = new LinkedList();
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("Evaluation '" + id + "' not found in database; trying to load from MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
@@ -303,7 +308,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					try {
 						evaluation = new Evaluation(mcmRef.transmitEvaluation((Identifier_Transferable)id.getTransferable()));
 						list.add(evaluation);
-						insertToDB.add(evaluation);
+						loadedFromMCM.add(evaluation);
 					}
 					catch (org.omg.CORBA.SystemException se) {
 						Log.errorException(se);
@@ -325,8 +330,12 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
 				}
 			}
-			EvaluationDatabase evaluationDatabase = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
-			evaluationDatabase.insert(insertToDB);
+			try{
+				database.update(loadedFromMCM, StorableObjectDatabase.UPDATE_FORCE, null);
+			}catch(VersionCollisionException vce){
+				// exception isn't expected
+				Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluations | exception isn't expected, but its occur: " + vce.getMessage());
+			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
@@ -348,7 +357,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				if(ids.contains(id))
 					it.remove();
 			}
-			List insertToDB = new LinkedList();
+			List loadedFromMCM = new LinkedList();
 			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
 				Identifier id = ((StorableObject) it.next()).getId();
 				Log.debugMessage("Measurement '" + id + "' not found in database; trying to load from MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
@@ -357,7 +366,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					try {
 						measurement = new Measurement(mcmRef.transmitMeasurement((Identifier_Transferable)id.getTransferable()));
 						list.add(measurement);
-						insertToDB.add(measurement);
+						loadedFromMCM.add(measurement);
 					}
 					catch (org.omg.CORBA.SystemException se) {
 						Log.errorException(se);
@@ -379,8 +388,12 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 						ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
 				}
 			}
-			MeasurementDatabase measurementDatabase = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
-			measurementDatabase.insert(insertToDB);
+			try{
+				database.update(loadedFromMCM, StorableObjectDatabase.UPDATE_FORCE, null);
+			}catch(VersionCollisionException vce){
+				// exception isn't expected
+				Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluations | exception isn't expected, but its occur: " + vce.getMessage());
+			}
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
@@ -422,9 +435,9 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					measurementTransferables = mcmRef.transmitMeasurementsButIds(  linkedIdsConditionTransferable , identifierTransferables);
 					for (int j = 0; j < measurementTransferables.length; j++) {
 						Measurement measurement = new Measurement(measurementTransferables[j]);
-						list.add(measurement);
 						loadedFromMCM.add(measurement);
 					}
+					list.addAll(loadedFromMCM);
 				}
 				/* force update measurements that loaded from mcm because of client want it to use*/
 				database.update(loadedFromMCM, StorableObjectDatabase.UPDATE_FORCE, null);
@@ -474,7 +487,17 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)ClientMeasurementServer.mcmRefs.get(mcmId);
 										 
 			analysesTransferables = mcmRef.transmitAnalysesButIds((LinkedIdsCondition_Transferable)condition.getTransferable(), identifierTransferables);
-			list.add(analysesTransferables);
+			List loadedFromMCM = new LinkedList();
+			for (int j = 0; j < analysesTransferables.length; j++) 
+				loadedFromMCM.add(new Analysis(analysesTransferables[j]));			
+			try{
+				/* force update analyses that loaded from mcm because of client want it to use*/
+				database.update(loadedFromMCM, StorableObjectDatabase.UPDATE_FORCE, null);
+			}catch(VersionCollisionException vce){
+				//	 exception isn't expected
+				Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalysesButIds | exception isn't expected, but its occur: " + vce.getMessage()); 
+			}
+			list.addAll(loadedFromMCM);
 			return list;
 		}
 		catch (org.omg.CORBA.SystemException se) {
@@ -501,7 +524,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		try {
 			list = database.retrieveByCondition(ids2, condition);
 			for (Iterator it = list.iterator(); it.hasNext();) {
-				ids2.add( ((Analysis)it.next()).getId() );
+				ids2.add( ((Evaluation)it.next()).getId() );
 			}
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids2.size()];
 			int i = 0;
@@ -511,7 +534,17 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)ClientMeasurementServer.mcmRefs.get(mcmId);
 													 
 			evaluationTransferables = mcmRef.transmitEvaluationsButIds((LinkedIdsCondition_Transferable)((LinkedIdsCondition) condition).getTransferable(), identifierTransferables);
-			list.add(evaluationTransferables);
+			List loadedFromMCM = new LinkedList();
+			for (int j = 0; j < evaluationTransferables.length; j++) 
+				loadedFromMCM.add(new Evaluation(evaluationTransferables[j]));			
+			try{
+				/* force update evaluations that loaded from mcm because of client want it to use*/
+				database.update(loadedFromMCM, StorableObjectDatabase.UPDATE_FORCE, null);
+			}catch(VersionCollisionException vce){
+//				 exception isn't expected
+				Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluationsButIds | exception isn't expected, but its occur: " + vce.getMessage());
+			}
+			list.addAll(loadedFromMCM);
 			return list;               
 		}
 		catch (org.omg.CORBA.SystemException se) {
