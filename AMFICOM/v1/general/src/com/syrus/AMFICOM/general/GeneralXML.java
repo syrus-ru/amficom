@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralXML.java,v 1.1 2005/01/24 15:29:27 bob Exp $
+ * $Id: GeneralXML.java,v 1.2 2005/01/25 06:10:48 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,17 +9,17 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/24 15:29:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/25 06:10:48 $
  * @author $Author: bob $
  * @module general_v1
  */
 public class GeneralXML extends StorableObjectXML {
 
-	public GeneralXML(StorableObjectXMLDriver driver) {
+	public GeneralXML(final StorableObjectXMLDriver driver) {
 		super(driver);
 	}
 
-	protected Class getStorableObjectClass(short entityCode) {
+	protected Class getStorableObjectClass(final short entityCode) {
 		Class clazz = null;
 		switch (entityCode) {
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
@@ -35,7 +35,7 @@ public class GeneralXML extends StorableObjectXML {
 		return clazz;
 	}
 
-	protected Wrapper getWrapper(short entityCode) {
+	protected Wrapper getWrapper(final short entityCode) {
 		Wrapper wrapper = null;
 		switch (entityCode) {
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:

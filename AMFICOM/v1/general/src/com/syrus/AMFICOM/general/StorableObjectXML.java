@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.1 2005/01/24 15:29:27 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.2 2005/01/25 06:10:48 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/24 15:29:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/25 06:10:48 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -25,15 +25,15 @@ public abstract class StorableObjectXML {
 
 	private StorableObjectXMLDriver	driver;
 
-	public StorableObjectXML(StorableObjectXMLDriver driver) {
+	public StorableObjectXML(final StorableObjectXMLDriver driver) {
 		this.driver = driver;
 	}
 
-	protected abstract Class getStorableObjectClass(short entityCode);
+	protected abstract Class getStorableObjectClass(final short entityCode);
 
-	protected abstract Wrapper getWrapper(short entityCode);
+	protected abstract Wrapper getWrapper(final short entityCode);
 
-	public StorableObject retrieve(Identifier identifier) throws IllegalDataException, ObjectNotFoundException,
+	public StorableObject retrieve(final Identifier identifier) throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
 		Map objectMap = this.driver.getObjectMap(identifier);
 		short entityCode = identifier.getMajor();
@@ -51,7 +51,7 @@ public abstract class StorableObjectXML {
 		return storableObject;
 	}
 
-	public void updateObject(StorableObject storableObject) throws IllegalDataException, VersionCollisionException,
+	public void updateObject(final StorableObject storableObject) throws IllegalDataException, VersionCollisionException,
 			UpdateObjectException {
 		Wrapper wrapper = this.getWrapper(storableObject.getId().getMajor());
 		List keys = wrapper.getKeys();
@@ -63,7 +63,7 @@ public abstract class StorableObjectXML {
 		this.driver.putObjectMap(storableObject.getId(), objectMap);
 	}
 
-	private StorableObject getStorableObject(Class clazz, Identifier identifier) throws IllegalDataException {
+	private StorableObject getStorableObject(final Class clazz, final Identifier identifier) throws IllegalDataException {
 		Constructor[] constructors = clazz.getDeclaredConstructors();
 		for (int i = 0; i < constructors.length; i++) {
 			Class[] parameterTypes = constructors[i].getParameterTypes();
@@ -111,7 +111,7 @@ public abstract class StorableObjectXML {
 		this.driver.writeXmlFile();
 	}
 	
-	public void delete(Identifier id) throws IllegalDataException {
+	public void delete(final Identifier id) throws IllegalDataException {
 		this.driver.deleteObject(id);
 	}
 }

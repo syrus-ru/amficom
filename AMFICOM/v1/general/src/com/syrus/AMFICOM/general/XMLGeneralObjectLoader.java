@@ -1,5 +1,5 @@
 /*
- * $Id: XMLGeneralObjectLoader.java,v 1.1 2005/01/24 15:29:27 bob Exp $
+ * $Id: XMLGeneralObjectLoader.java,v 1.2 2005/01/25 06:10:48 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/24 15:29:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/25 06:10:48 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -23,7 +23,7 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 
 	private GeneralXML	generalXML;
 
-	public XMLGeneralObjectLoader(File path) {
+	public XMLGeneralObjectLoader(final File path) {
 		StorableObjectXMLDriver driver = new StorableObjectXMLDriver(path, "general");
 		this.generalXML = new GeneralXML(driver);
 	}

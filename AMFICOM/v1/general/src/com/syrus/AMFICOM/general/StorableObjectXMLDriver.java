@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.2 2005/01/24 15:38:31 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.3 2005/01/25 06:10:48 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/24 15:38:31 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/25 06:10:48 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -52,21 +52,23 @@ public class StorableObjectXMLDriver {
 	private String		packageName;
 	private Node		root;
 
-	public StorableObjectXMLDriver(File path, String packageName) {
+	public StorableObjectXMLDriver(final File path, final String packageName) {
+		String dir;
 		if (path.exists()) {
 			if (path.isDirectory())
-				this.fileName = path.getAbsolutePath() + File.separatorChar + packageName + ".xml";
+				dir = path.getAbsolutePath();
 			else
-				this.fileName = path.getParent() + File.separatorChar + packageName + ".xml";
+				dir = path.getParent();
 		} else {
 			path.mkdirs();
-			this.fileName = path.getAbsolutePath() + File.separatorChar + packageName + ".xml";
+			dir = path.getAbsolutePath();
 		}
+		this.fileName = dir + File.separatorChar + packageName + ".xml";
 		this.packageName = packageName;
 		this.parseXmlFile(false);
 	}
 
-	public void putObjectMap(Identifier identifier, Map objects) throws IllegalDataException {
+	public void putObjectMap(final Identifier identifier, final Map objects) throws IllegalDataException {
 		this.deleteObject(identifier);
 		Element element = this.doc.createElement(identifier.getIdentifierString());
 		for (Iterator it = objects.keySet().iterator(); it.hasNext();) {
@@ -115,13 +117,12 @@ public class StorableObjectXMLDriver {
 		this.root.appendChild(element);
 	}
 
-	public Map getObjectMap(Identifier identifier) throws IllegalDataException, ObjectNotFoundException,
+	public Map getObjectMap(final Identifier identifier) throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
 		Map map = null;
 		try {
 			NodeList objList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/"
 					+ identifier.getIdentifierString());
-			// System.out.println("objList size:" + objList.getLength());
 			if (objList.getLength() > 1)
 				throw new IllegalDataException("StorableObjectXMLDriver.getObjectMap | more that one entity with id "
 						+ identifier.getIdentifierString());
@@ -131,36 +132,24 @@ public class StorableObjectXMLDriver {
 			for (int i = 0; i < objList.getLength(); i++) {
 				Node children = objList.item(i);
 				if (children.hasAttributes()) {
-					// System.out.println();
-					// System.out.println("hasAttributes");
 					NamedNodeMap namedNodeMap = children.getAttributes();
 					for (int j = 0; j < namedNodeMap.getLength(); j++) {
-						// System.out.println("Attribute#" + j + ":");
 						Node node = namedNodeMap.item(j);
 						if (map == null)
 							map = new HashMap();
 						map.put(node.getNodeName(), node.getNodeValue());
-						// System.out.println(node.getNodeName() + "\t" +
-						// node.getNodeValue());
 					}
 				}
 
 				if (children.hasChildNodes()) {
-					// System.out.println();
-					// System.out.println("hasChildNodes");
 					NodeList childNodes = children.getChildNodes();
 					for (int j = 0; j < childNodes.getLength(); j++) {
 						Node node = childNodes.item(j);
 						List nodeItems = new LinkedList();
-						// System.out.println("\t>" + node.getNodeName() + " ::
-						// ");
 						if (node.hasAttributes()) {
 							NamedNodeMap namedNodeMap = node.getAttributes();
 							for (int k = 0; k < namedNodeMap.getLength(); k++) {
 								Node nodeAttribute = namedNodeMap.item(k);
-								// System.out.println("\t>\t" +
-								// nodeAttribute.getNodeName() + "\t" +
-								// nodeAttribute.getNodeValue());
 								nodeItems.add(nodeAttribute.getNodeValue());
 							}
 						}
@@ -181,7 +170,7 @@ public class StorableObjectXMLDriver {
 		return map;
 	}
 
-	public void deleteObject(Identifier identifier) throws IllegalDataException {
+	public void deleteObject(final Identifier identifier) throws IllegalDataException {
 		try {
 			NodeList sizeList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/"
 					+ identifier.getIdentifierString());
@@ -202,7 +191,7 @@ public class StorableObjectXMLDriver {
 	// Parses an XML file and returns a DOM document.
 	// If validating is true, the contents is validated against the DTD
 	// specified in the file.
-	private Document parseXmlFile(boolean validating) {
+	private Document parseXmlFile(final boolean validating) {
 		try {
 			// Create a builder factory
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
