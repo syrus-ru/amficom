@@ -83,7 +83,7 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 					(MapTransmissionPathProtoElement )Pool.get(
 							MapTransmissionPathProtoElement.typ,
 							path.type_id);
-			path.attributes = (Hashtable )ResourceUtil.copyAttributes(null, mppe.attributes);
+			path.attributes = (Hashtable )ResourceUtil.copyAttributes1(null, mppe.attributes);
 	//		type_id = (String )mppe.ID;
 		}
 		if(col_id.equals("path_id"))

@@ -70,7 +70,7 @@ public class MapPhysicalLinkElementModel extends MapLinkElementModel
 					(MapPhysicalLinkProtoElement )Pool.get(
 							MapPhysicalLinkProtoElement.typ,
 							link.type_id);
-			link.attributes = (Hashtable )ResourceUtil.copyAttributes(null, mplpe.attributes);
+			link.attributes = (Hashtable )ResourceUtil.copyAttributes1(null, mplpe.attributes);
 		}
 		if(col_id.equals("link_id"))
 		{
