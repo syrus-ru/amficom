@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNode.java,v 1.22 2005/03/04 14:24:46 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.23 2005/03/09 14:49:53 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.map;
 
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -32,6 +33,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 
@@ -40,8 +42,8 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
- * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/03/04 14:24:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/03/09 14:49:53 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -440,5 +442,28 @@ public class TopologicalNode extends AbstractNode {
 	private PhysicalLink findPhysicalLink()
 	{
 		return this.map.getNodeLink(this).getPhysicalLink();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 */
+	public void setCharacteristics0(Collection characteristics) {
+		throw new UnsupportedOperationException();
 	}
 }

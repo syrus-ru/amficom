@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.8 2005/02/09 15:12:53 krupenn Exp $
+ * $Id: MapElement.java,v 1.9 2005/03/09 14:49:53 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,10 +11,8 @@
 
 package com.syrus.AMFICOM.map;
 
-import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifier;
-
-import java.util.List;
 
 /**
  *  Интерфейс для всех элементов карты. Нужен для определения координат
@@ -22,11 +20,11 @@ import java.util.List;
  * 
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/09 15:12:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/03/09 14:49:53 $
  * @module map_v1
  */
-public interface MapElement 
+public interface MapElement extends Characterizable
 {
 	/**
 	 * Поучить идентификатор элемента.
@@ -44,7 +42,7 @@ public interface MapElement
 	 * Установить название элемента.
 	 * @param name Новое название.
 	 */
-	void setName(String name);
+	void setName(final String name);
 
 	/**
 	 * Поулчить ссылку на топологическую схему, на которую нанесен данный элемент.
@@ -57,7 +55,7 @@ public interface MapElement
 	 * подргузке элемента из базы данных и при 
 	 * @param map ссылка на объект карты
 	 */
-	void setMap(Map map);
+	void setMap(final Map map);
 
 	/**
 	 * Получить флаг выделения элемента.
@@ -69,13 +67,13 @@ public interface MapElement
 	 * Установить значения флага выделения элемента.
 	 * @param selected новое значение флага выделения элемента
 	 */
-	void setSelected(boolean selected);
+	void setSelected(final boolean selected);
 
 	/**
 	 * Установить значение флага сигнала тревоги.
 	 * @param alarmState новое значение флага сигнала тревоги
 	 */
-	void setAlarmState(boolean alarmState);
+	void setAlarmState(final boolean alarmState);
 	
 	/**
 	 * Поучить значение флага сигнала тревоги.
@@ -99,7 +97,7 @@ public interface MapElement
 	 * Восстановить состояние элемента.
 	 * @param state состояние элемента
 	 */
-	void revert(MapElementState state);
+	void revert(final MapElementState state);
 	
 	/**
 	 * флаг того, что элемент удален.
@@ -111,25 +109,7 @@ public interface MapElement
 	 * Установить флаг удаления элемента.
 	 * @param removed флаг удаления элемента
 	 */
-	void setRemoved(boolean removed);
-
-	/**
-	 * Получить список атрибутов отображения.
-	 * @return список атрибутов отображения
-	 */
-	List getCharacteristics();
-	
-	/**
-	 * Добавить элементу новый атрибут отображения.
-	 * @param characteristic новый атрибут отображения
-	 */
-	void addCharacteristic(Characteristic characteristic);
-
-	/**
-	 * Убрать из элемента атрибут отображения.
-	 * @param characteristic атрибут отображения
-	 */
-	void removeCharacteristic(Characteristic characteristic);
+	void setRemoved(final boolean removed);
 
 	/**
 	 * Возвращает описывающий элемент набор параметров,

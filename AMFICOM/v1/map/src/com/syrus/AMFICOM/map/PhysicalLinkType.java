@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkType.java,v 1.20 2005/03/04 13:34:49 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.21 2005/03/09 14:49:53 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
 
@@ -32,6 +33,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Collection;
 
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных 
@@ -39,7 +41,7 @@ import java.util.List;
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/03/04 13:34:49 $
+ * @version $Revision: 1.21 $, $Date: 2005/03/09 14:49:53 $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterizable {
@@ -167,7 +169,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		}
 	}
 
-	public List getCharacteristics() {
+	public Collection getCharacteristics() {
 		return  Collections.unmodifiableList(this.characteristics);
 	}
 	
@@ -277,5 +279,28 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 
 	protected void setCodename0(String codename){
 		super.setCodename0(codename);
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 */
+	public void setCharacteristics0(Collection characteristics) {
+		throw new UnsupportedOperationException();
 	}
 }

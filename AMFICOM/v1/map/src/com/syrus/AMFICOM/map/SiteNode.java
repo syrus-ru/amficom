@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNode.java,v 1.23 2005/03/01 15:32:05 krupenn Exp $
+ * $Id: SiteNode.java,v 1.24 2005/03/09 14:49:53 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
@@ -55,8 +56,8 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
- * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/03/01 15:32:05 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/03/09 14:49:53 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -458,4 +459,27 @@ public class SiteNode extends AbstractNode implements TypedObject {
       			throw new CreateObjectException("SiteNode.createInstance |  ", e);
       		}
       	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 */
+	public void setCharacteristics0(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
 }

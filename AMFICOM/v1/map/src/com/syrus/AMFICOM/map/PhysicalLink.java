@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.34 2005/03/04 14:24:15 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.35 2005/03/09 14:49:53 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -20,7 +20,6 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -36,6 +35,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
@@ -48,13 +48,13 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * ѕредуствновленными €вл€ютс€  два типа - 
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.34 $, $Date: 2005/03/04 14:24:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/03/09 14:49:53 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
  */
-public class PhysicalLink extends StorableObject implements Characterizable, TypedObject, MapElement {
+public class PhysicalLink extends StorableObject implements TypedObject, MapElement {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -333,7 +333,7 @@ public class PhysicalLink extends StorableObject implements Characterizable, Typ
 		this.changed = true;
 	}
 
-	public List getCharacteristics() {
+	public Collection getCharacteristics() {
 		return  Collections.unmodifiableList(this.characteristics);
 	}
 	
@@ -1019,5 +1019,28 @@ public class PhysicalLink extends StorableObject implements Characterizable, Typ
 	private List findNodeLinks()
 	{
 		return this.map.getNodeLinks(this);
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 */
+	public void setCharacteristics0(Collection characteristics) {
+		throw new UnsupportedOperationException();
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNode.java,v 1.13 2005/03/04 13:34:49 bass Exp $
+ * $Id: AbstractNode.java,v 1.14 2005/03/09 14:49:53 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,12 +11,12 @@
 package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 import java.util.Collections;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -28,14 +28,14 @@ import java.util.List;
  * ({@link #location}) и изображением ({@link #imageId}).
  * 
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/03/04 13:34:49 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/09 14:49:53 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
  */
 public abstract class AbstractNode 
 	extends StorableObject 
-	implements Characterizable, MapElement
+	implements MapElement
 {
 
 	static final long serialVersionUID = -2623880496462305233L;
@@ -137,7 +137,7 @@ public abstract class AbstractNode
 		this.changed = true;
 	}
 	
-	public List getCharacteristics() {
+	public Collection getCharacteristics() {
 		return Collections.unmodifiableList(this.characteristics);
 	}
 

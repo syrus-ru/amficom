@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeType.java,v 1.16 2005/03/04 13:34:49 bass Exp $
+ * $Id: SiteNodeType.java,v 1.17 2005/03/09 14:49:53 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 
@@ -34,6 +35,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Collection;
 
 /**
  * Тип сетевого узла топологической схемы. Существует несколько 
@@ -42,7 +44,7 @@ import java.util.List;
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/03/04 13:34:49 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/09 14:49:53 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterizable {
@@ -172,7 +174,7 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		}
 	}
 
-	public List getCharacteristics() {
+	public Collection getCharacteristics() {
 		return  Collections.unmodifiableList(this.characteristics);
 	}
 
@@ -269,5 +271,28 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 			this.name = name;
 			this.imageId = imageId;
 			this.topological = topological;		
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 */
+	public void setCharacteristics0(Collection characteristics) {
+		throw new UnsupportedOperationException();
 	}
 }

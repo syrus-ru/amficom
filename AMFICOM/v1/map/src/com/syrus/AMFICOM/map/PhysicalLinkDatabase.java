@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.16 2005/03/04 19:50:01 bass Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.17 2005/03/09 14:49:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
+import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
@@ -23,7 +24,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -31,11 +31,11 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/03/04 19:50:01 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/09 14:49:53 $
  * @author $Author: bass $
  * @module map_v1
  */
-public class PhysicalLinkDatabase extends StorableObjectDatabase {
+public class PhysicalLinkDatabase extends CharacterizableDatabase {
 	private static final int LEFT_RIGHT = 0x01;
     private static final int TOP_BOTTOM = 0x02;
     

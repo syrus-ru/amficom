@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.17 2005/03/04 19:50:01 bass Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.18 2005/03/09 14:49:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
+import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
@@ -29,7 +30,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -40,11 +40,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/03/04 19:50:01 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/09 14:49:53 $
  * @author $Author: bass $
  * @module map_v1
  */
-public class TopologicalNodeDatabase extends StorableObjectDatabase {
+public class TopologicalNodeDatabase extends CharacterizableDatabase {
 	private static String columns;
 	
 	private static String updateMultipleSQLValues;

@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLink.java,v 1.25 2005/03/04 13:34:49 bass Exp $
+ * $Id: NodeLink.java,v 1.26 2005/03/09 14:49:53 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.map;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,7 +22,6 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
 
@@ -42,10 +43,10 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * не живут сами по себе, а вход€т в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/03/04 13:34:49 $
+ * @version $Revision: 1.26 $, $Date: 2005/03/09 14:49:53 $
  * @module map_v1
  */
-public class NodeLink extends StorableObject implements Characterizable, MapElement {
+public class NodeLink extends StorableObject implements MapElement {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -226,7 +227,7 @@ public class NodeLink extends StorableObject implements Characterizable, MapElem
 	}
 
 	
-	public List getCharacteristics() {
+	public Collection getCharacteristics() {
 		return  Collections.unmodifiableList(this.characteristics);
 	}
 	
@@ -538,4 +539,27 @@ public class NodeLink extends StorableObject implements Characterizable, MapElem
   			throw new CreateObjectException("NodeLink.createInstance |  ", e);
   		}
   	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 */
+	public void setCharacteristics0(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: Collector.java,v 1.24 2005/03/04 13:34:49 bass Exp $
+ * $Id: Collector.java,v 1.25 2005/03/09 14:49:53 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -25,6 +24,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 
@@ -42,12 +42,12 @@ import java.util.List;
  * в него линий. Линии не обязаны быть связными.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/03/04 13:34:49 $
+ * @version $Revision: 1.25 $, $Date: 2005/03/09 14:49:53 $
  * @module map_v1
  */
 public class Collector 
 	extends StorableObject 
-	implements Characterizable, MapElement {
+	implements MapElement {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -195,7 +195,7 @@ public class Collector
 								charIds);
 	}
 
-	public List getCharacteristics() {
+	public Collection getCharacteristics() {
 		return Collections.unmodifiableList(this.characteristics);
 	}	
 
@@ -211,7 +211,7 @@ public class Collector
 		this.changed = true;
 	}
 
-	protected void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Collection characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
@@ -467,5 +467,20 @@ public class Collector
 		} catch (ApplicationException e) {
 			throw new CreateObjectException("Collector.createInstance |  ", e);
 		}
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		throw new UnsupportedOperationException();
 	}
 }
