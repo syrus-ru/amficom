@@ -180,3 +180,4 @@ class BarRepaintThread extends Thread
 	  }
   }
 }
+

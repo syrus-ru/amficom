@@ -1,10 +1,10 @@
 #
-# $Id: Makefile,v 1.5 2004/06/22 11:27:59 arseniy Exp $
+# $Id: Makefile,v 1.6 2004/06/25 09:33:54 cvsadmin Exp $
 #
 # vim:set ft=make:
 #
 
-MODULE_NAME = general_v1
+MODULE_NAME = generalclient_v1
 MODULE_VERSION = $(shell date +%Y%m%d)
 
 USER = AMFICOM
@@ -12,7 +12,7 @@ PASSWORD = amficom
 HOST = RESEARCH
 SERVICE_NAME = SHAITAN
 
-LIBNAME = general.jar
+LIBNAME = generalclient.jar
 SRC_SUFFIXES = \
 	.java \
 	.generated.java
@@ -31,6 +31,8 @@ LIBDIR = lib
 else
 LIBDIR = ../lib
 endif
+EXTLIBDIR = ../../extlib
+EXTCLASSPATH = $(EXTLIBDIR)/jgraphpad.jar:$(EXTLIBDIR)/jfreechartK.jar:$(EXTLIBDIR)/ofx.spatialfx.jar:$(EXTLIBDIR)/kunststoff.jar
 ENCODING = windows-1251
 JAVACFLAGS = -source 1.4 -sourcepath $(SRCDIR) -deprecation -g -O
 SUNJAVACFLAGS = -target 1.4.2
@@ -88,7 +90,7 @@ all: .all
 .all: .idl .sqlj
 	$(JAVAC) \
 		$(JAVACFLAGS) \
-		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(DEPRECATEDCLASSPATH):$(CLASSDIR) \
+		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(DEPRECATEDCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		-d $(CLASSDIR) \
 		-encoding $(ENCODING) \
 	 	$(shell find $(SRCDIR) -name '*.java')
@@ -98,16 +100,11 @@ all: .all
 idl: .idl
 
 .idl: $(SRCDIR) $(CLASSDIR)
-	$(IDL2JAVA) \
-		$(IDL2JAVAFLAGS) \
-		$(IDLDIR)/general.idl
 	touch $@
 
 .PHONY: idlclean
 idlclean:
 	$(RM) -r \
-		$(SRCDIR)/com/syrus/AMFICOM/general/corba \
-		$(CLASSDIR)/com/syrus/AMFICOM/general/corba \
 		.idl
 
 .PHONY: sqlj
