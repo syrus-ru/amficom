@@ -1898,6 +1898,9 @@ getHeight();
 	{
 		if (oe.getActionCommand().equals(SelectReportsPanel.ev_onlyReportRealized))
 		{
+			if (!rtbWindow.isTemplateSchemeMode)
+				this.rtbWindow.innerToolBar.changeViewButton_actionPerformed();
+
 			this.removeAll();
 			this.reportTemplate.objectRenderers.clear();
 			this.reportTemplate.labels.clear();

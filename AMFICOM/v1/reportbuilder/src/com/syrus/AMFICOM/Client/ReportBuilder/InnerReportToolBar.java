@@ -297,8 +297,7 @@ else
 										 objectRenderers;
 		Vector labels = mainWindow.layoutWOCPanel.reportTemplate.labels;
 
-		if (changeViewButton.getToolTipText().equals(
-			LangModelReport.String("label_viewReport")))
+		if (mainWindow.isTemplateSchemeMode)
 		{
 			try
 			{
@@ -371,6 +370,8 @@ else
 
 					mainWindow.additionalPanel.dispose();
 				}
+
+				mainWindow.isTemplateSchemeMode = false;
 			}
 			catch (CreateReportException cre)
 			{
@@ -419,6 +420,8 @@ else
 			saveReportButton.setEnabled(false);
 			printReportButton.setEnabled(false);
 			mainWindow.selectReportsPanel.setEnabled(true);
+
+			mainWindow.isTemplateSchemeMode = true;
 		}
 	}
 

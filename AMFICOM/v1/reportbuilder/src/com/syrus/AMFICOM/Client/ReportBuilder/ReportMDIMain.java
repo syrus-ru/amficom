@@ -81,15 +81,8 @@ public class ReportMDIMain extends JFrame implements OperationListener
 	static SimpleDateFormat sdf =
 			new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
-	BorderLayout borderLayout = new BorderLayout();
+	public boolean isTemplateSchemeMode = true;
 
-	JPanel mainPanel = new JPanel();
-	JScrollPane scrollPane = new JScrollPane();
-	JViewport viewport = new JViewport();
-	JDesktopPane desktopPane = new JDesktopPane();
-	JPanel statusBarPanel = new JPanel();
-	StatusBarModel statusBar = new StatusBarModel(0);
-	ReportMenuBar menuBar = new ReportMenuBar();
 	public ReportToolBar toolBar = new ReportToolBar(this);
 	public InnerReportToolBar innerToolBar = new InnerReportToolBar(this);
 
@@ -101,6 +94,15 @@ public class ReportMDIMain extends JFrame implements OperationListener
 
 	public JInternalFrame additionalPanel = null;
 
+	BorderLayout borderLayout = new BorderLayout();
+
+	JPanel mainPanel = new JPanel();
+	JScrollPane scrollPane = new JScrollPane();
+	JViewport viewport = new JViewport();
+	JDesktopPane desktopPane = new JDesktopPane();
+	JPanel statusBarPanel = new JPanel();
+	StatusBarModel statusBar = new StatusBarModel(0);
+	ReportMenuBar menuBar = new ReportMenuBar();
 
 	public ReportMDIMain(ApplicationContext aContext)
 	{
@@ -488,12 +490,14 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				new MapDataSourceImage(dsi).LoadProtoElements();
 				new MapDataSourceImage(dsi).LoadMaps();
 
-				new SurveyDataSourceImage(dsi).LoadParameterTypes();
+				new SurveyDataSourceImage(dsi).GetAlarms();
+
+/*				new SurveyDataSourceImage(dsi).LoadParameterTypes();
 				new SurveyDataSourceImage(dsi).LoadTestTypes();
 				new SurveyDataSourceImage(dsi).LoadAnalysisTypes();
 				new SurveyDataSourceImage(dsi).LoadEvaluationTypes();
 				new SurveyDataSourceImage(dsi).LoadModelingTypes();
-
+*/
 				toolBar.setTemplateToolBarState(true);
 				setTemplate(null);
 

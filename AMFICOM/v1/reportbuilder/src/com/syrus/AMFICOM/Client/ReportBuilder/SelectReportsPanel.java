@@ -192,7 +192,7 @@ ReportTemplate rT)
 		{
 			public void mouseClicked(MouseEvent e)
 			{
-				if ((e.getClickCount() == 2) && objectsDraggable)
+				if (e.getClickCount() == 2)
 				{
 					TreePath treePath = reportsTreePanel.getTree().getSelectionPath();
 					if (treePath == null)
@@ -468,26 +468,6 @@ class AvailableReportsTreeRenderer implements TreeCellRenderer
 		int row, boolean hasFocus)
 	{
 		ObjectResourceTreeNode node = (ObjectResourceTreeNode) value;
-
-/*		JPanel curPanel = null;
-		JLabel curLabel = null;
-		if (node.getComponent() instanceof JPanel)
-		{
-			curPanel = (JPanel) node.getComponent();
-			curLabel = (JLabel) curPanel.getComponent(0);
-		}
-		else
-		{
-			curLabel = (JLabel) node.getComponent();
-			if (curLabel == null)
-				curLabel = new JLabel(node.getName());
-
-			curPanel = new JPanel();
-			curPanel.setLayout(new BorderLayout());
-			curPanel.add(curLabel,BorderLayout.CENTER);
-
-			node.setComponent(curPanel);
-		}*/
 
 		node.setForeground(Color.black);
 		node.setBackground(Color.white);
