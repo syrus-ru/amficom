@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.5 2004/12/08 17:29:11 bass Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.6 2004/12/15 12:01:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/08 17:29:11 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/15 12:01:09 $
  * @author $Author: bass $
  * @module generalclient_v1
  */
@@ -98,10 +98,6 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		try {
 			return new ParameterType(this.server.transmitParameterType((Identifier_Transferable) id
 					.getTransferable(), accessIdentifierTransferable));
-		} catch (CreateObjectException e) {
-			String msg = "ClientMeasurementObjectLoader.transmitParameterType | new ParameterType("
-					+ id.toString() + ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientMeasurementObjectLoader.transmitParameterType | server.transmitParameterType("
 					+ id.toString() + ")";
@@ -782,8 +778,6 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				list.add(new ParameterType(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
@@ -811,8 +805,6 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
                 list.add(new ParameterType(transferables[j]));
             }
             return list;
-        } catch (CreateObjectException e) {
-            throw new RetrieveObjectException(e);
         } catch (AMFICOMRemoteException e) {
             throw new CommunicationException(e);
         }

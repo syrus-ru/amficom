@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.7 2004/12/08 17:29:10 bass Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.8 2004/12/15 12:01:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/08 17:29:10 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/15 12:01:09 $
  * @author $Author: bass $
  * @module generalclient_v1
  */
@@ -120,10 +120,6 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				try {
 						return new CharacteristicType(this.server.transmitCharacteristicType((Identifier_Transferable) id
 										.getTransferable(), accessIdentifierTransferable));
-				} catch (CreateObjectException e) {
-						String msg = "ClientConfigurationObjectLoader.loadCharacteristicType | new CharacteristicType(" + id.toString()
-										+ ")";
-						throw new RetrieveObjectException(msg, e);
 				} catch (AMFICOMRemoteException e) {
 						String msg = "ClientConfigurationObjectLoader.loadCharacteristicType | server.transmitCharacteristicType("
 										+ id.toString() + ")";
@@ -235,10 +231,6 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				try {
 						return new User(this.server.transmitUser((Identifier_Transferable) id
 										.getTransferable(), accessIdentifierTransferable));
-				} catch (CreateObjectException e) {
-						String msg = "ClientConfigurationObjectLoader.loadUser | new User(" + id.toString()
-										+ ")";
-						throw new RetrieveObjectException(msg, e);
 				} catch (AMFICOMRemoteException e) {
 						String msg = "ClientConfigurationObjectLoader.loadUser | server.transmitUser("
 										+ id.toString() + ")";
@@ -389,10 +381,6 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		try {
 			return new MonitoredElement(this.server.transmitMonitoredElement((Identifier_Transferable) id
 					.getTransferable(), accessIdentifierTransferable));
-		} catch (CreateObjectException e) {
-			String msg = "ClientConfigurationObjectLoader.loadMonitoredElement | new MonitoredElement("
-					+ id.toString() + ")";
-			throw new RetrieveObjectException(msg, e);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.loadMonitoredElement | server.loadMonitoredElement("
 					+ id.toString() + ")";
@@ -400,7 +388,8 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
-	public List loadCableThreadTypes(List ids) throws CommunicationException {
+	public List loadCableThreadTypes(List ids)
+			throws DatabaseException, CommunicationException {
 		try {
 						Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 						int i = 0;
@@ -482,8 +471,6 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 								list.add(new CharacteristicType(transferables[j]));
 						}
 						return list;
-				} catch (CreateObjectException e) {
-						throw new RetrieveObjectException(e);
 				} catch (AMFICOMRemoteException e) {
 						throw new CommunicationException(e);
 				}
@@ -645,11 +632,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 						for (int j = 0; j < transferables.length; j++) {
 
 								CableThreadType cableThreadType;
-								LinkType linkType;
+								CableLinkType cableLinkType;
 								switch(transferables[i].discriminator().value()) {
 										case AbstractLinkTypeSort._CABLE_LINK_TYPE:
-												linkType = new LinkType(transferables[i].cableLinkType());
-												list.add(linkType);
+												cableLinkType = new CableLinkType(transferables[i].cableLinkType());
+												list.add(cableLinkType);
 												break;
 										case AbstractLinkTypeSort._CABLE_THREAD_TYPE:
 												cableThreadType = new CableThreadType(transferables[i].cableThreadType());
@@ -683,11 +670,11 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 						for (int j = 0; j < transferables.length; j++) {
 
 								CableThreadType cableThreadType;
-								LinkType linkType;
+								CableLinkType cableLinkType;
 								switch(transferables[i].discriminator().value()) {
 										case AbstractLinkTypeSort._CABLE_LINK_TYPE:
-												linkType = new LinkType(transferables[i].cableLinkType());
-												list.add(linkType);
+												cableLinkType = new CableLinkType(transferables[i].cableLinkType());
+												list.add(cableLinkType);
 												break;
 										case AbstractLinkTypeSort._CABLE_THREAD_TYPE:
 												cableThreadType = new CableThreadType(transferables[i].cableThreadType());
@@ -838,8 +825,6 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				list.add(new MonitoredElement(transferables[j]));
 			}
 			return list;
-		} catch (CreateObjectException e) {
-			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
@@ -953,8 +938,6 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 								list.add(new User(transferables[j]));
 						}
 						return list;
-				} catch (CreateObjectException e) {
-						throw new RetrieveObjectException(e);
 				} catch (AMFICOMRemoteException e) {
 						throw new CommunicationException(e);
 				}
@@ -1611,8 +1594,6 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 								list.add(new CharacteristicType(transferables[j]));
 						}
 						return list;
-				} catch (CreateObjectException e) {
-						throw new RetrieveObjectException(e);
 				} catch (AMFICOMRemoteException e) {
 						throw new CommunicationException(e);
 				}
@@ -1738,8 +1719,6 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 								}
 						}
 						return list;
-				} catch (CreateObjectException e) {
-						throw new RetrieveObjectException(e);
 				} catch (AMFICOMRemoteException e) {
 						throw new CommunicationException(e);
 				}
@@ -2066,8 +2045,6 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 								list.add(new MonitoredElement(transferables[j]));
 						}
 						return list;
-				} catch (CreateObjectException e) {
-						throw new RetrieveObjectException(e);
 				} catch (AMFICOMRemoteException e) {
 						throw new CommunicationException(e);
 				}

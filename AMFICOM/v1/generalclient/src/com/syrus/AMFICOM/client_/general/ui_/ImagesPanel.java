@@ -1,51 +1,55 @@
+/*
+ * $Id: ImagesPanel.java,v 1.2 2004/12/15 12:01:09 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client_.general.ui_;
-
-import java.io.*;
-import java.util.*;
-import java.util.List;
-
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.BevelBorder;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.resource.corba.ImageResourceSort;
+import com.syrus.AMFICOM.resource.corba.ImageResourceDataPackage.ImageResourceSort;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.*;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.border.BevelBorder;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/12/15 12:01:09 $
+ * @module generalclient_v1
+ */
 public class ImagesPanel extends JPanel
 		implements OperationListener
 {
-	private FlowLayout flowLayout1 = new FlowLayout();
-	private BorderLayout borderLayout1 = new BorderLayout();
-	private JPanel imagesPanel = new JPanel();
 	public JPanel buttonsPanel = new JPanel();
-	public JButton chooseButton = new JButton();
-	private JButton addButton = new JButton();
 	public JButton cancelButton = new JButton();
+	public JButton chooseButton = new JButton();
+	public BitmapImageResource ir = null;
+
+	ApplicationContext applicationContext;
 
 	Dispatcher disp = new Dispatcher();
-	public BitmapImageResource ir = null;
+	private JButton addButton = new JButton();
+	private BorderLayout borderLayout1 = new BorderLayout();
+	private FlowLayout flowLayout1 = new FlowLayout();
+	private JPanel imagesPanel = new JPanel();
 	private JScrollPane jScrollPane1 = new JScrollPane();
-
-	ApplicationContext aContext;
 
 	public ImagesPanel(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
-		try
-		{
-			jbInit();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		this.applicationContext = aContext;
+		jbInit();
 		initImages();
 	}
 
@@ -55,7 +59,110 @@ public class ImagesPanel extends JPanel
 		setImageResource(ir);
 	}
 
-	private void jbInit() throws Exception
+	public BitmapImageResource getImageResource()
+	{
+		return ir;
+	}
+
+	public void initImages()
+	{
+		disp.register(this, "select");
+		disp.register(this, "selectir");
+
+		try {
+			StringFieldCondition condition = new StringFieldCondition(
+					String.valueOf(ImageResourceSort._BITMAP),
+					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
+					StringFieldSort.STRINGSORT_INTEGER);
+			List bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+			for (Iterator it = bitMaps.iterator(); it.hasNext(); ) {
+				BitmapImageResource ir = (BitmapImageResource)it.next();
+				ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(ir.getImage()).getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+				ImagesPanelLabel ipl = new ImagesPanelLabel(disp, icon, ir);
+				imagesPanel.add(ipl);
+			}
+		}
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public void operationPerformed(OperationEvent oe)
+	{
+		if(oe.getActionCommand().equals("select"))
+		{
+			ImagesPanelLabel ipl = (ImagesPanelLabel )oe.getSource();
+			ir = (BitmapImageResource)ipl.ir;
+			chooseButton.setEnabled(true);
+		}
+		else
+		if(oe.getActionCommand().equals("selectir"))
+		{
+			ir = (BitmapImageResource)oe.getSource();
+			chooseButton.setEnabled(true);
+		}
+	}
+
+	public void setImageResource(BitmapImageResource ir)
+	{
+		disp.notify(new OperationEvent(ir, 0, "selectir"));
+	}
+
+	private void addButton_actionPerformed(ActionEvent e)
+	{
+		JFileChooser chooser = new JFileChooser();
+		chooser.addChoosableFileFilter(new ChoosableFileFilter("gif", "Picture"));
+		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+		{
+			try
+			{
+				File file = chooser.getSelectedFile();
+				FileInputStream in = new FileInputStream(file);
+				byte[] data = new byte[(int) file.length()];
+				in.read(data);
+				in.close();
+
+				/**
+				 * @todo Fill in your own codename.
+				 */
+				BitmapImageResource bitmapImageResource = BitmapImageResource.createInstance(
+						((RISDSessionInfo) applicationContext.getSessionInterface()).getUserIdentifier(),
+						"Sample Codename",
+						data);
+
+				try
+				{
+					ResourceStorableObjectPool.putStorableObject(bitmapImageResource);
+				}
+				catch (IllegalObjectEntityException ioee)
+				{
+					ioee.printStackTrace();
+				}
+
+				imagesPanel.add(new ImagesPanelLabel(
+						disp,
+						new ImageIcon(
+							Toolkit
+							.getDefaultToolkit()
+							.createImage(bitmapImageResource.getImage())
+							.getScaledInstance(30, 30, Image.SCALE_SMOOTH)),
+						bitmapImageResource));
+				if (disp != null)
+					disp.notify(new OperationEvent(bitmapImageResource, 0, "selectir"));
+				imagesPanel.revalidate();
+			} catch (IOException ioe)
+			{
+				ioe.printStackTrace();
+			}
+			catch (CreateObjectException coe)
+			{
+				coe.printStackTrace();
+			}
+		}
+	}
+
+	private void jbInit()
 	{
 		this.setLayout(borderLayout1);
 
@@ -91,95 +198,6 @@ public class ImagesPanel extends JPanel
 					addButton_actionPerformed(e);
 				}
 			});
-	}
-
-	public void initImages()
-	{
-		disp.register(this, "select");
-		disp.register(this, "selectir");
-
-		try {
-			StringFieldCondition condition = new StringFieldCondition(
-					String.valueOf(ImageResourceSort._BYTES),
-					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
-					StringFieldSort.STRINGSORT_INTEGER);
-			List bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
-
-			for (Iterator it = bitMaps.iterator(); it.hasNext(); ) {
-				BitmapImageResource ir = (BitmapImageResource)it.next();
-				ImageIcon icon = new ImageIcon(ir.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-				ImagesPanelLabel ipl = new ImagesPanelLabel(disp, icon, ir);
-				imagesPanel.add(ipl);
-			}
-		}
-		catch (ApplicationException ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	public void operationPerformed(OperationEvent oe)
-	{
-		if(oe.getActionCommand().equals("select"))
-		{
-			ImagesPanelLabel ipl = (ImagesPanelLabel )oe.getSource();
-			ir = (BitmapImageResource)ipl.ir;
-			chooseButton.setEnabled(true);
-		}
-		else
-		if(oe.getActionCommand().equals("selectir"))
-		{
-			ir = (BitmapImageResource)oe.getSource();
-			chooseButton.setEnabled(true);
-		}
-	}
-
-	public BitmapImageResource getImageResource()
-	{
-		return ir;
-	}
-
-	public void setImageResource(BitmapImageResource ir)
-	{
-		disp.notify(new OperationEvent(ir, 0, "selectir"));
-	}
-
-	private void addButton_actionPerformed(ActionEvent e)
-	{
-		JFileChooser chooser = new JFileChooser();
-			chooser.addChoosableFileFilter(new ChoosableFileFilter("gif", "Picture"));
-			int returnVal = chooser.showOpenDialog(null);
-			if(returnVal == JFileChooser.APPROVE_OPTION)
-			{
-				try {
-					FileInputStream in = new FileInputStream(chooser.getSelectedFile());
-					byte[] data = new byte[(int)chooser.getSelectedFile().length()];
-					in.read(data);
-
-					Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-							getAccessIdentifier().domain_id);
-					Date date = new Date(System.currentTimeMillis());
-					BitmapImageResource ir = BitmapImageResource.createInstance(
-							date, date, user_id, user_id, new ImageIcon(data).getImage());
-
-					try {
-						ResourceStorableObjectPool.putStorableObject(ir);
-					}
-					catch (IllegalObjectEntityException ex1) {
-						ex1.printStackTrace();
-					}
-
-					ImageIcon icon = new ImageIcon(ir.getImage().getScaledInstance(30, 30,
-							Image.SCALE_SMOOTH));
-					ImagesPanelLabel ipl = new ImagesPanelLabel(disp, icon, ir);
-					imagesPanel.add(ipl);
-					if (disp != null) {
-						disp.notify(new OperationEvent(ir, 0, "selectir"));
-					}
-					imagesPanel.revalidate();
-				}
-				catch (IOException ex) {
-				}
-			}
 	}
 
 }
