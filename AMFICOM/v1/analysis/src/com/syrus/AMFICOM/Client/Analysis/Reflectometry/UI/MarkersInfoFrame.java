@@ -14,7 +14,7 @@ import com.syrus.io.BellcoreStructure;
 public class MarkersInfoFrame extends JInternalFrame
 implements OperationListener, bsHashChangeListener
 {
-	private static StringBuffer km = new StringBuffer(" ").append(LangModelAnalyse.getString("km"));
+//	private static StringBuffer km = new StringBuffer(" ").append(LangModelAnalyse.getString("km"));
 	private static StringBuffer mt = new StringBuffer(" ").append(LangModelAnalyse.getString("mt"));
 	private static StringBuffer db = new StringBuffer(" ").append(LangModelAnalyse.getString("dB"));
 	private static StringBuffer dbkm = new StringBuffer(" ").append(LangModelAnalyse.getString("dB")).

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.10 2005/03/25 09:34:28 bob Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.11 2005/04/04 12:55:27 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,19 @@ package com.syrus.AMFICOM.Client.General.Model;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/03/25 09:34:28 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/04 12:55:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
  */
 public interface AnalysisResourceKeys extends ResourceKeys {
 
+	String	COLOR_DEADZONE							= "deadzone";
+	String	COLOR_WELD								= "weld";
+	Object	COLOR_LINEZONE							= "lineZone";
+	Object	COLOR_NON_ID							= "nonId";
+	Object	COLOR_NOISE								= "noise";
+	
 	String	COLOR_EVENTS_NEW						= "com.syrus.AMFICOM.color.analisys.events.new";
 	String	COLOR_EVENTS_LOSS_CHANGED				= "com.syrus.AMFICOM.color.analisys.events.losschanged";
 	String	COLOR_EVENTS_AMPLITUDE_CHANGED			= "com.syrus.AMFICOM.color.analisys.events.amplitudechanged";
@@ -75,5 +81,5 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 	String	TEXT_NM									= "nm";
 	String	TEXT_MT									= "mt";
 	String	TEXT_NO_PATTERN							= "no_pattern";
-	String	TEXT_PATTERN							= "pattern";
+	String	TEXT_PATTERN							= "pattern";		
 }

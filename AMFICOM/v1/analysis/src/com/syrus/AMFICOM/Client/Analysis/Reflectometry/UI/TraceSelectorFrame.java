@@ -1,19 +1,34 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.List;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.util.Log;
 
 public class TraceSelectorFrame extends JInternalFrame
 implements bsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
@@ -123,8 +138,8 @@ implements bsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 	class DefaultTableModel extends AbstractTableModel {
 		final String[] columnNames = {"Element", "Color"};
 		final Object[][] data = {
-				{"DefaultElement", new Color(255, 255, 255)},
-				{"DefaultElement2", new Color(255, 255, 255)}
+				{"DefaultElement", Color.WHITE},
+				{"DefaultElement2", Color.WHITE}
 				};
 
 		public int getColumnCount() {
@@ -184,8 +199,8 @@ implements bsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 
 		if (bs != null)
 			title = bs.title;
-
-		tModel.addRow(title, new Color[] {ColorManager.getColor(id)});
+		Log.debugMessage("TraceSelectorFrame.bsHashAdded | id is '" + id + '\'', Log.FINEST);
+		tModel.addRow(title, new Color[] {Heap.getColor(id)});
 		setVisible(true);
 	}
 
@@ -218,7 +233,8 @@ implements bsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 		if (bs != null)
 			title = bs.title;
 
-		tModel.addRow(title, new Color[] {ColorManager.getColor(id)});
+		Log.debugMessage("TraceSelectorFrame.etalonMTMCUpdated | id is '" + id + '\'', Log.FINEST);
+		tModel.addRow(title, new Color[] {Heap.getColor(id)});
 		setVisible(true);
 	}
 

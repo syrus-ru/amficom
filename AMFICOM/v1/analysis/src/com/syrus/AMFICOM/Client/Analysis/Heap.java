@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.12 2005/04/01 12:56:15 saa Exp $
+ * $Id: Heap.java,v 1.13 2005/04/04 12:55:27 bob Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,15 @@
 
 package com.syrus.AMFICOM.Client.Analysis;
 
+import java.awt.Color;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Random;
+
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
@@ -20,6 +24,7 @@ import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -31,8 +36,8 @@ import com.syrus.io.BellcoreStructure;
  * пока что API этой замены избыточна - например, getAllBSMap() делает необязательным
  * использование остальных методов работы с BS
  * 
- * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/04/01 12:56:15 $
+ * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/04/04 12:55:27 $
  * @module
  */
 public class Heap
@@ -53,6 +58,8 @@ public class Heap
 	private static HashMap dialogHash = new HashMap();	// "dialog", "*"
 	private static ModelTraceManager primaryMTM = null;
 	private static ModelTraceManager etalonMTM = null;
+
+	private static Map idColorMap = new HashMap();
 
 	private static String currentTrace = ""; // XXX: initialize to avoid crushes
 
@@ -114,6 +121,38 @@ public class Heap
 	public static boolean hasEmptyAllBSMap() {
 		return bsHash.isEmpty();
 	}
+	
+	public static Color getColor(String id) {
+		Color color = null;
+		System.out.println("id is '" + id + "'");
+		color = (Color) idColorMap.get(id);
+		if (color == null) {
+			int i = 0;
+			String id1 = null;
+			while (id1 == null) {
+				id1 = AnalysisResourceKeys.COLOR_TRACE_PREFIX + i++;
+				System.out.println("search by " + id1);
+				color = (Color) idColorMap.get(id1);
+				if (color != null)
+					id1 = null;
+			}
+			System.out.println("by id:" + id1);
+			color = UIManager.getColor(id1);
+			if (color == null) {
+				Random random = new Random();
+				System.out.println("by random");
+				color = new Color(Math.abs(random.nextInt()) % 256, Math.abs(random.nextInt()) % 256, Math
+						.abs(random.nextInt()) % 256);
+			}
+			idColorMap.put(id1, color);
+			if (!id1.equals(id))
+				idColorMap.put(id, color);
+		}
+		System.out.println(color);
+		System.out.println();
+		return color;
+	}
+	
 	private static String getFirstSecondaryBSKey() {
 		Iterator it = bsHash.entrySet().iterator();
 		while (it.hasNext())

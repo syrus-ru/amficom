@@ -1,14 +1,12 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 
 public class SimpleGraphPanel extends JPanel
 {
@@ -31,8 +29,6 @@ public class SimpleGraphPanel extends JPanel
 	protected double top = 0; // столько находится за пределами экрана вверху (в единицах измерения - для рефлектограммы дБ)
 	protected double bottom = 0; // столько находится за пределами экрана внизу (в единицах измерения - для рефлектограммы дБ)
 	
-	private static Map idColorMap = new HashMap(); 
-
 	public SimpleGraphPanel (double[] y, double deltaX, Color color)
 	{
 		init (y, deltaX);
@@ -97,32 +93,8 @@ public class SimpleGraphPanel extends JPanel
 		scaleY = getHeight() / (maxY - minY);
 	}
 
-	public synchronized void setColorModel(String id)
-	{
-//		System.out.println("id is '" + id + "'");
-		this.color = (Color) idColorMap.get(id);
-		if (this.color == null) {
-			int i = 0;
-			String id1 = null;
-			while(id1 == null) {
-				id1 = AnalysisResourceKeys.COLOR_TRACE_PREFIX + i++;
-//				System.out.println("search by " + id1);
-				this.color = (Color) idColorMap.get(id1);
-				if (this.color != null)
-					id1 = null;
-			}
-//			System.out.println("by id:" + id1);
-			this.color = UIManager.getColor(id1);
-			if (this.color == null) {
-				Random random = new Random();
-//				System.out.println("by random");
-				this.color = new Color(Math.abs(random.nextInt()) % 256, Math.abs(random.nextInt()) % 256, Math.abs(random.nextInt()) % 256);
-			}
-			idColorMap.put(id1, this.color);
-			if (!id1.equals(id))
-				idColorMap.put(id, this.color);
-		}		
-//		System.out.println(this.color);
+	public synchronized void setColorModel(String id) {
+		this.color = Heap.getColor(id);
 		updColorModel();
 	}
 	

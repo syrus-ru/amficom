@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -42,12 +41,12 @@ import com.syrus.io.BellcoreStructure;
 public class ReflectogrammLoadDialog extends JDialog 
 {
 	public int ret_code = 0;
-	private Object resource;
+	Object resource;
 
 	private ApplicationContext aContext;
 	private Identifier domainId;
 
-	private JButton okButton;
+	JButton okButton;
 	private JButton cancelButton;
 	private JButton updateButton1 = new JButton();
 

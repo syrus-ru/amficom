@@ -42,12 +42,12 @@ public class TraceEventsPanel extends ScaledGraphPanel
 		super.updColorModel();
 
 		connectColor = UIManager.getColor(AnalysisResourceKeys.COLOR_CONNECTOR);
-		deadzoneColor = ColorManager.getColor("deadzoneColor");
-		weldColor = ColorManager.getColor("weldColor");
-		linezoneColor = ColorManager.getColor("linezoneColor");
-		nonidColor = ColorManager.getColor("nonidColor");
+		deadzoneColor = UIManager.getColor(AnalysisResourceKeys.COLOR_DEADZONE);
+		weldColor =  UIManager.getColor(AnalysisResourceKeys.COLOR_WELD);
+		linezoneColor = UIManager.getColor(AnalysisResourceKeys.COLOR_LINEZONE);
+		nonidColor = UIManager.getColor(AnalysisResourceKeys.COLOR_NON_ID);
 		endColor = UIManager.getColor(AnalysisResourceKeys.COLOR_END);
-		noiseColor = ColorManager.getColor("noiseColor");
+		noiseColor = UIManager.getColor(AnalysisResourceKeys.COLOR_NOISE);
 	}
 
 	public void paint(Graphics g)

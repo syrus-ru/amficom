@@ -593,7 +593,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener, CurrentTr
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING)
 		{
-			ColorManager.saveIni();
+//			ColorManager.saveIni();
 			aManager.saveIni();
 			internal_dispatcher.unregister(this, "contextchange");
 			Environment.getDispatcher().unregister(this, "contextchange");

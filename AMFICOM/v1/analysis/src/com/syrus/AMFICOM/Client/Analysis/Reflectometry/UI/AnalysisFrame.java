@@ -1,20 +1,17 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.io.IOException;
+import java.awt.event.ComponentEvent;
 import java.util.HashMap;
 
-import java.awt.event.*;
-
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.io.BellcoreStructure;
-import com.syrus.util.ByteArray;
 
 public class AnalysisFrame extends ScalableFrame implements bsHashChangeListener, EtalonMTMListener
 {

@@ -8,6 +8,8 @@ import javax.swing.ImageIcon;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+
 public class AnalyseApplicationModel extends ApplicationModel {
 
 	public static final String SELECT_PREVIOUS_EVENT = "SelectPreviousEvent";
@@ -163,7 +165,14 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		defaults.put(AnalysisResourceKeys.COLOR_END, new Color(160,32,255));
 		defaults.put(AnalysisResourceKeys.COLOR_MARKER, Color.BLACK);
 		
+		defaults.put(AnalysisResourceKeys.COLOR_DEADZONE, new Color(192, 32, 255));
+		defaults.put(AnalysisResourceKeys.COLOR_WELD, new Color(0, 220, 16));
+		defaults.put(AnalysisResourceKeys.COLOR_LINEZONE, new Color(0, 0, 255));
+		defaults.put(AnalysisResourceKeys.COLOR_NON_ID, new Color (200,9,0));
+		defaults.put(AnalysisResourceKeys.COLOR_NOISE, new Color(160, 160, 160));
+		
 		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 0, new Color(0, 128, 128));
+		defaults.put(Heap.PRIMARY_TRACE_KEY, UIManager.get(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 0));
 		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 1, new Color(128, 64, 0));
 		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 2, new Color(128, 0, 128));
 		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 3, new Color(0, 96, 0));
