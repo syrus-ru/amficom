@@ -177,6 +177,10 @@ class DeleteAction extends AbstractAction
 							{
 								DefaultEdge edge = (DefaultEdge)it.next();
 								new_cells.add(edge);
+
+								removePortFromParent((DefaultPort)edge.getSource(), ((PortCell)cells[i]).getSchemePort());
+								removePortFromParent((DefaultPort)edge.getTarget(), ((PortCell)cells[i]).getSchemePort());
+
 								deleteConnections(edge, (DefaultPort)edge.getSource());
 								deleteConnections(edge, (DefaultPort)edge.getTarget());
 							}
@@ -192,6 +196,10 @@ class DeleteAction extends AbstractAction
 							{
 								DefaultEdge edge = (DefaultEdge)it.next();
 								new_cells.add(edge);
+
+								removeCablePortFromParent((DefaultPort)edge.getSource(), ((CablePortCell)cells[i]).getSchemeCablePort());
+								removeCablePortFromParent((DefaultPort)edge.getTarget(), ((CablePortCell)cells[i]).getSchemeCablePort());
+
 								deleteConnections(edge, (DefaultPort)edge.getSource());
 								deleteConnections(edge, (DefaultPort)edge.getTarget());
 							}
@@ -201,6 +209,32 @@ class DeleteAction extends AbstractAction
 					{
 						DefaultEdge edge = (DefaultEdge)cells[i];
 						new_cells.add(edge);
+
+						Object p = ((DefaultPort)edge.getSource()).getParent();
+						if (p instanceof PortCell)
+						{
+							removePortFromParent((DefaultPort)edge.getTarget(), ((PortCell)p).getSchemePort());
+							new_cells.add(p);
+						}
+						else if (p instanceof CablePortCell)
+						{
+							removeCablePortFromParent((DefaultPort)edge.getTarget(), ((CablePortCell)p).getSchemeCablePort());
+							new_cells.add(p);
+						}
+						else
+						{
+							p = ((DefaultPort)edge.getTarget()).getParent();
+							if (p instanceof PortCell)
+							{
+								removePortFromParent((DefaultPort)edge.getSource(), ((PortCell)p).getSchemePort());
+								new_cells.add(p);
+							}
+							else if (p instanceof CablePortCell)
+							{
+								removeCablePortFromParent((DefaultPort)edge.getSource(), ((CablePortCell)p).getSchemeCablePort());
+								new_cells.add(p);
+							}
+						}
 						deleteConnections(edge, (DefaultPort)edge.getSource());
 						deleteConnections(edge, (DefaultPort)edge.getTarget());
 					}
@@ -225,7 +259,34 @@ class DeleteAction extends AbstractAction
 				GraphActions.removePort(graph, cell, port, cell.getAttributes());
 			}
 		}
+	}
 
+	private void removePortFromParent(DefaultPort port, SchemePort sp)
+	{
+		if (port != null)
+		{
+			DefaultGraphCell parent = (DefaultGraphCell)port.getParent();
+			if (parent instanceof DeviceCell)
+			{
+				SchemeDevice dev = ((DeviceCell)parent).getSchemeDevice();
+				if (dev != null)
+					dev.ports.remove(sp);
+			}
+		}
+	}
+
+	private void removeCablePortFromParent(DefaultPort port, SchemeCablePort scp)
+	{
+		if (port != null)
+		{
+			DefaultGraphCell parent = (DefaultGraphCell)port.getParent();
+			if (parent instanceof DeviceCell)
+			{
+				SchemeDevice dev = ((DeviceCell)parent).getSchemeDevice();
+				if (dev != null)
+					dev.cableports.remove(scp);
+			}
+		}
 	}
 }
 

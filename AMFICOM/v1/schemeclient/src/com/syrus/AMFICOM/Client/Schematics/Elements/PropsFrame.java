@@ -94,7 +94,7 @@ public class PropsFrame extends JInternalFrame
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.getViewport().add(jTable);
-		scrollPane.getViewport().setBackground(SystemColor.window);
+		scrollPane.getViewport().setBackground(Color.white);
 		scrollPane.setAutoscrolls(true);
 
 		PropsTreeModel model = new PropsTreeModel(aContext.getDataSourceInterface());

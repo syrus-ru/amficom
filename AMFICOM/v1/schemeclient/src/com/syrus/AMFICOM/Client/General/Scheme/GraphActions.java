@@ -980,7 +980,7 @@ public class GraphActions
 
 			Vector v = (Vector)se.serializable_ugo;
 			if (!se.element_ids.isEmpty() ||
-					(v.size() != 0 && ((Object[])v.get(0)).length != 0))
+					(v != null && v.size() != 0 && ((Object[])v.get(0)).length != 0))
 			{
 				JMenuItem menu1 = new JMenuItem(new AbstractAction()
 				{
