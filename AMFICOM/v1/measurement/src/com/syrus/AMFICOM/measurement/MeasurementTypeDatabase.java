@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.67 2005/02/11 18:39:52 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.68 2005/02/14 11:16:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,13 +43,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/02/11 18:39:52 $
+ * @version $Revision: 1.68 $, $Date: 2005/02/14 11:16:17 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class MeasurementTypeDatabase extends StorableObjectDatabase  {
-	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private static String columns;
 	private static String updateMultiplySQLValues;
@@ -186,30 +185,18 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		if ((measurementTypes == null) || (measurementTypes.isEmpty()))
 			return;
 
-    StringBuffer sql = new StringBuffer(SQL_SELECT
+		StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
 				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE + COMMA
 				+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID
 				+ SQL_FROM + ObjectEntities.MNTTYPPARTYPLINK_ENTITY
-				+ SQL_WHERE + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + SQL_IN + OPEN_BRACKET);
-
-		int i = 1;
-		for (Iterator it = measurementTypes.iterator(); it.hasNext(); i++) {
-			MeasurementType measurementType = (MeasurementType)it.next();
-			sql.append(DatabaseIdentifier.toSQLString(measurementType.getId()));
-			if (it.hasNext()) {
-				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-					sql.append(COMMA);
-				else {
-					sql.append(CLOSE_BRACKET);
-					sql.append(SQL_OR);
-					sql.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
-					sql.append(SQL_IN);
-					sql.append(OPEN_BRACKET);
-				}
-			}
+				+ SQL_WHERE);
+		try {
+			sql.append(this.idsEnumerationString(measurementTypes, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID, true));
 		}
-		sql.append(CLOSE_BRACKET);
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e);
+		}
 
     Statement statement = null;
 		ResultSet resultSet = null;
@@ -461,7 +448,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
-	private PreparedStatement insertParameterTypesPreparedStatement() throws SQLException{
+	private PreparedStatement insertParameterTypesPreparedStatement() throws SQLException {
 		PreparedStatement preparedStatement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
