@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.41 2004/12/24 14:09:49 arseniy Exp $
+ * $Id: measurement.idl,v 1.42 2004/12/24 14:49:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@
 #define	MEASUREMENT_IDL
 
 #include "event.idl"
-#include "general.idl"
 
 module com {
 module syrus {
@@ -23,10 +22,10 @@ module corba {
 	struct ParameterType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
-		wstring codename;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString32 codename;
+		com::syrus::AMFICOM::general::corba::WString32 description;
 
-		wstring name;
+		com::syrus::AMFICOM::general::corba::WString64 name;
 		com::syrus::AMFICOM::general::corba::DataType data_type;
 	};
 
@@ -35,8 +34,8 @@ module corba {
 	struct MeasurementType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
-		wstring codename;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString32 codename;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable in_parameter_type_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable out_parameter_type_ids;
@@ -48,8 +47,8 @@ module corba {
 	struct AnalysisType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
-		wstring codename;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString32 codename;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable in_parameter_type_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable criteria_parameter_type_ids;
@@ -62,8 +61,8 @@ module corba {
 	struct EvaluationType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
-		wstring codename;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString32 codename;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable in_parameter_type_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable threshold_parameter_type_ids;
@@ -79,8 +78,6 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		sequence <octet> value;
-		
-		wstring typeCodename;
 	};
 
 	typedef sequence <Parameter_Transferable> ParameterSeq_Transferable;
@@ -98,7 +95,7 @@ module corba {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		SetSort sort;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 		ParameterSeq_Transferable parameters;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable monitored_element_ids;
 	};
@@ -114,7 +111,7 @@ module corba {
 	struct Modeling_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 		
-		wstring name;
+		com::syrus::AMFICOM::general::corba::WString64 name;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable scheme_path_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable measurement_type_id;
@@ -133,7 +130,7 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable criteria_set_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable threshold_set_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable etalon_id;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 		long long measurement_duration;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable monitored_element_ids;
 	};
@@ -155,13 +152,13 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
 		
-		wstring name;
+		com::syrus::AMFICOM::general::corba::WString64 name;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable setup_id;
 		long long start_time;
 		long long duration;
 		MeasurementStatus status;
-		wstring local_address;
+		com::syrus::AMFICOM::general::corba::WString64 local_address;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable test_id;
 	};
 
@@ -173,8 +170,8 @@ module corba {
 	struct TemporalPattern_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
-		wstring description;
-		sequence <wstring> cron_strings;
+		com::syrus::AMFICOM::general::corba::WString256 description;
+		sequence <com::syrus::AMFICOM::general::corba::WString64> cron_strings;
 	};
 
 	typedef sequence <TemporalPattern_Transferable> TemporalPatternSeq_Transferable;
@@ -229,7 +226,7 @@ module corba {
 	    TestStatus status;
     	com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
 		TestReturnType return_type;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable measurement_setup_ids;
 	};
 
