@@ -2,6 +2,7 @@ bak
 classes
 docs
 lib
+patches
 *.deploy
 *.jpr
 *.jar

@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.5 2005/01/25 06:35:57 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.6 2005/01/26 15:17:25 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import java.util.*;
  * }</pre></li>
  * <li>It must override {@link #isConditionTrue(Object)}.</li></ul> 
  *
- * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/01/25 06:35:57 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/01/26 15:17:25 $
  * @module general_v1
  */
 public class StringFieldCondition implements StorableObjectCondition {
@@ -186,7 +186,7 @@ public class StringFieldCondition implements StorableObjectCondition {
 		return this.delegate.entityCode;
 	}
 	
-	public final StringFieldSort getSort(){
+	public final StringFieldSort getSort() {
 		return StringFieldSort.from_int(this.delegate.sort);
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.70 2005/01/21 10:38:27 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.71 2005/01/26 15:17:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/01/21 10:38:27 $
+ * @version $Revision: 1.71 $, $Date: 2005/01/26 15:17:25 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -502,12 +502,12 @@ public abstract class StorableObjectDatabase {
 			try {
 				if (resultSet.next()) {
 					updateEntityFromResultSet(storableObject, resultSet);
-					
+
 					boolean update = force;
 					if (!update)
 						update =	((storableObject.getModifierId().equals(localStorableObject.getModifierId()))&&
 						(Math.abs(storableObject.getModified().getTime()-localStorableObject.getModified().getTime())<1000));
-					
+
 					if (update) {
 						localStorableObject.setAttributes(localStorableObject.getCreated(), new Date(System.currentTimeMillis()), 
 														  localStorableObject.getCreatorId(), localStorableObject.getModifierId());
@@ -572,7 +572,7 @@ public abstract class StorableObjectDatabase {
 			}
 		}
 	}
-	
+
 	protected void checkAndUpdateEntities(List localStorableObjects, boolean force) throws IllegalDataException, UpdateObjectException, VersionCollisionException {
 		if (localStorableObjects == null || localStorableObjects.isEmpty())
 			return;
@@ -622,7 +622,7 @@ public abstract class StorableObjectDatabase {
 				if (!update)
 					update = ((storableObject.getModifierId().equals(localStorableObject.getModifierId()))&&
 					(Math.abs(storableObject.getModified().getTime()-localStorableObject.getModified().getTime())<1000));
-				
+
 				if (update) {
 					localStorableObject.setAttributes(localStorableObject.getCreated(),
 																	new Date(System.currentTimeMillis()),

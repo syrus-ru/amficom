@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.11 2005/01/20 09:57:52 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.12 2005/01/26 15:17:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/01/20 09:57:52 $
+ * @version $Revision: 1.12 $, $Date: 2005/01/26 15:17:25 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -297,7 +297,7 @@ public abstract class StorableObjectPool {
 
 	protected List getStorableObjectsByConditionImpl(final StorableObjectCondition condition, final boolean useLoader)
 			throws ApplicationException {
-		return getStorableObjectsByConditionButIdsImpl(Collections.EMPTY_LIST, condition, useLoader);
+		return this.getStorableObjectsByConditionButIdsImpl(Collections.EMPTY_LIST, condition, useLoader);
 	}
 
 	/**
