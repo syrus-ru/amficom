@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.4 2004/08/12 11:46:44 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.5 2004/08/16 08:17:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/12 11:46:44 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/16 08:17:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -87,7 +87,8 @@ public class MeasurementStorableObjectPool {
 				if (useLoader) {
 					try {
 						storableObject = loadStorableObject(objectId);
-						putStorableObject(storableObject);
+						if (storableObject != null)
+							putStorableObject(storableObject);
 					}
 					catch (Exception e) {
 						Log.errorException(e);
@@ -97,7 +98,7 @@ public class MeasurementStorableObjectPool {
 			}
 		}
 		else {
-			Log.errorMessage("Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");
+			Log.errorMessage("MeasurementStorableObjectPool.getStorableObject | Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");
 			return null;
 		}
 	}
@@ -142,7 +143,7 @@ public class MeasurementStorableObjectPool {
 				storableObject = mObjectLoader.loadTemporalPattern(objectId);
 				break;
 			default:
-				Log.errorMessage("Unknown entity: " + objectId.getObjectEntity());
+				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObject | Unknown entity: " + objectId.getObjectEntity());
 				storableObject = null;
 		}
 		return storableObject;
@@ -154,6 +155,6 @@ public class MeasurementStorableObjectPool {
 		if (objectPool != null) {
 			return (StorableObject)objectPool.put(objectId, storableObject);
 		}
-		throw new IllegalObjectEntityException("Illegal object entity: '" + objectId.getObjectEntity() + "'", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+		throw new IllegalObjectEntityException("MeasurementStorableObjectPool.putStorableObject | Illegal object entity: '" + objectId.getObjectEntity() + "'", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 }
