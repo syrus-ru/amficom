@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.83 2005/03/04 13:30:46 arseniy Exp $
+ * $Id: configuration.idl,v 1.84 2005/03/05 10:00:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -193,8 +193,6 @@ module corba {
 		general::corba::WString64 inventoryNumber;	
 		
 		general::corba::Identifier_Transferable image_id;
-
-		general::corba::IdentifierSeq_Transferable port_ids;
 
 		general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
