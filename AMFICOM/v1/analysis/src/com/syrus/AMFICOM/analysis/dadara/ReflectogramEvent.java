@@ -1,7 +1,7 @@
 /**
  * ReflectogramEvent.java
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/13 15:47:19 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/13 18:09:27 $
  * @author $Author: saa $
  * @module general_v1
  */
@@ -29,6 +29,8 @@ public class ReflectogramEvent
 {
     //private static final long serialVersionUID = 8468909716459300200L;
     private static final long signature = 8468920041210182200L;
+    
+    // event types
 	public static final int RESERVED_VALUE = -1; // заведомо не использующееся значение
 	public static final int LINEAR = 1;
 	public static final int WELD = 2;
@@ -533,7 +535,7 @@ public class ReflectogramEvent
 	 */
 	private void readFromDIS(DataInputStream dis) throws IOException
 	{
-	    long tsig = dis.readLong(); 
+	    long tsig = dis.readLong();
 	    if (tsig != signature)
 	    {
 	        throw new IOException("Signature mismatch"); // XXX
@@ -550,8 +552,8 @@ public class ReflectogramEvent
 		{
 			if ((flags & i) != 0)
 			{
-			    int ti = 0; // unused
-			    long tl = 0;
+			    int ti = 0;
+			    long tl = 0; // unused
 			    double td = 0;
 			    if ((i & STORE_MASK_INT) != 0)
 			        ti = dis.readInt();
