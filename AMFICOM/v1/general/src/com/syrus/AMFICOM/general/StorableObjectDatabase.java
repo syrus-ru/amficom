@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.21 2004/09/08 10:20:23 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.22 2004/09/09 08:53:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.general;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -24,7 +25,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/09/08 10:20:23 $
+ * @version $Revision: 1.22 $, $Date: 2004/09/09 08:53:47 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -202,15 +203,10 @@ public abstract class StorableObjectDatabase {
 		String storableObjectIdCode = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-
+			
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
 				storableObjectIdCode = storableObject.getId().getCode();
-				/**
-				 * @todo when change DB Identifier model ,change
-				 *       setString() to setLong()
-				 */
-				preparedStatement.setString(1, storableObjectIdCode);
 				this.setEntityForPreparedStatement(storableObject, preparedStatement);
 				Log.debugMessage(this.getEnityName() + "Database.insertEntities | Inserting  "
 						+ this.getEnityName() + " " + storableObjectIdCode, Log.DEBUGLEVEL09);
@@ -284,7 +280,7 @@ public abstract class StorableObjectDatabase {
 		return this.retrieveQueryString; 
 	}
 
-	protected void setEntityForPreparedStatement(StorableObject storableObject,
+	protected int setEntityForPreparedStatement(StorableObject storableObject,
 								PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException{
 		try {
@@ -305,6 +301,7 @@ public abstract class StorableObjectDatabase {
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
+		return 5;
 	}
 
 	protected void checkAndUpdateEntity(StorableObject localStorableObject,final boolean force) 
@@ -636,7 +633,12 @@ public abstract class StorableObjectDatabase {
 
 				StorableObject storableObject = (StorableObject) it.next();
 				storableObjectIdCode = storableObject.getId().getCode();
-				this.setEntityForPreparedStatement(storableObject, preparedStatement);
+				int i = this.setEntityForPreparedStatement(storableObject, preparedStatement);
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				preparedStatement.setString(++i, storableObject.getId().getCode());
+				
 				Log.debugMessage(this.getEnityName() + "Database.updateEntities | Inserting  "
 						+ this.getEnityName() + " " + storableObjectIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
