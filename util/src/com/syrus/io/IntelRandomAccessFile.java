@@ -1,9 +1,22 @@
+/*
+ * $Id: IntelRandomAccessFile.java,v 1.3 2004/12/08 13:39:55 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.io;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+/**
+ * @version $Revision: 1.3 $, $Date: 2004/12/08 13:39:55 $
+ * @author $Author: bass $
+ * @module util
+ */
 public class IntelRandomAccessFile extends RandomAccessFile
 {
 	public IntelRandomAccessFile(File file, String mode) throws IOException
@@ -20,7 +33,7 @@ public class IntelRandomAccessFile extends RandomAccessFile
 	{
 		byte b[] = new byte[1];
 		read(b);
-		return (byte)b[0];
+		return b[0];
 	}
 
 	public final short readIUnsignedByte() throws IOException
@@ -47,7 +60,7 @@ public class IntelRandomAccessFile extends RandomAccessFile
 	{
 		byte b[] = new byte[2];
 		read(b);
-		return (int)(((b[1] & 0xff) << 8) | (b[0] & 0xff));
+		return (b[1] & 0xff) << 8 | b[0] & 0xff;
 	}
 
 	public final void writeIUnsignedShort(int v) throws IOException
@@ -76,26 +89,26 @@ public class IntelRandomAccessFile extends RandomAccessFile
 	{
 		byte b[] = new byte[4];
 		read(b);
-		return (long)(((long)(b[3] & 0xff) << 24) | ((long)(b[2] & 0xff) << 16) |
-									((long)(b[1] & 0xff) << 8) | (long)(b[0] & 0xff));
+		return (long)(b[3] & 0xff) << 24 | (long)(b[2] & 0xff) << 16 |
+			(long)(b[1] & 0xff) << 8 | b[0] & 0xff;
 	}
 
 	public final long readUnsignedInt() throws IOException
 	{
 		byte b[] = new byte[4];
 		read(b);
-		return (long)(((long)(b[0] & 0xff) << 24) | ((long)(b[1] & 0xff) << 16) |
-									((long)(b[2] & 0xff) << 8) | (long)(b[3] & 0xff));
+		return (long)(b[0] & 0xff) << 24 | (long)(b[1] & 0xff) << 16 |
+			(long)(b[2] & 0xff) << 8 | b[3] & 0xff;
 	}
 
 	public final long readILong() throws IOException
 	{
 		byte b[] = new byte[8];
 		read(b);
-		return (long)((long)b[7] << 56) + ((long)b[6] << 48) +
-									((long)b[5] << 40) + ((long)b[4] << 32) +
-									((long)b[3] << 24) + ((long)b[2] << 16) +
-									((long)b[1] << 8) + b[0];
+		return ((long)b[7] << 56) + ((long)b[6] << 48) +
+			((long)b[5] << 40) + ((long)b[4] << 32) +
+			((long)b[3] << 24) + ((long)b[2] << 16) +
+			((long)b[1] << 8) + b[0];
 	}
 
 	public final void writeIUnsignedInt(long v) throws IOException
@@ -116,37 +129,13 @@ public class IntelRandomAccessFile extends RandomAccessFile
 				read(b);
 				if (b[0] == 0x20)
 					break;
-				else
-					s += new String(b);
+				s += new String(b);
 		}
 		return s;
 	}
 
 	public final String readIString() throws IOException
 	{
-/*    byte b[] = new byte[1];
-		byte nul = 0x00;
-		String s = "";
-
-		while (true)
-		{
-			try
-			{
-
-				read(b);
-			if ((b[0] == nul) || (b[0] == '\r') || (b[0] == '\n'))
-//			this.readLine()
-				break;
-			else
-				{
-					s += (char)((nul << 8) | (b[0] & 0xff));
-				}
-			}
-			catch (java.io.IOException ex)
-			{
-				break;
-			}
-		}*/
 		return  readLine();
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: IntelDataInputStream.java,v 1.4 2004/11/15 12:43:56 arseniy Exp $
+ * $Id: IntelDataInputStream.java,v 1.5 2004/12/08 13:44:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.io;
 import java.io.*;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/15 12:43:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2004/12/08 13:44:11 $
+ * @author $Author: bass $
  * @module util
  */
 public class IntelDataInputStream extends DataInputStream
@@ -33,7 +33,7 @@ public class IntelDataInputStream extends DataInputStream
 	{
 		byte b[] = new byte[2];
 		read(b);
-		return (int)(((b[1] & 0xff) << 8) | (b[0] & 0xff));
+		return (b[1] & 0xff) << 8 | b[0] & 0xff;
 	}
 
 	public final int readIInt() throws IOException
@@ -58,16 +58,16 @@ public class IntelDataInputStream extends DataInputStream
 	{
 		byte b[] = new byte[4];
 		read(b);
-		return (long)((((long)b[3] & 0xff) << 24) | (((long)b[2] & 0xff) << 16) |
-			(((long)b[1] & 0xff) << 8) | ((long)b[0] & 0xff));
+		return ((long)b[3] & 0xff) << 24 | ((long)b[2] & 0xff) << 16 |
+			((long)b[1] & 0xff) << 8 | (long)b[0] & 0xff;
 	}
 
 	public final long readUnsignedInt() throws IOException
 	{
 		byte b[] = new byte[4];
 		read(b);
-		return (long)((((long)b[0] & 0xff) << 24) | (((long)b[1] & 0xff) << 16) |
-			(((long)b[2] & 0xff) << 8) | ((long)b[3] & 0xff));
+		return ((long)b[0] & 0xff) << 24 | ((long)b[1] & 0xff) << 16 |
+			((long)b[2] & 0xff) << 8 | (long)b[3] & 0xff;
 	}
 
 	public final String readIString() throws IOException
@@ -80,8 +80,7 @@ public class IntelDataInputStream extends DataInputStream
 			read(b);
 			if (b[0] == 0x00)
 				break;
-			else
-				s += new String(b);
+			s += new String(b);
 		}
 		return  s;
 	}
