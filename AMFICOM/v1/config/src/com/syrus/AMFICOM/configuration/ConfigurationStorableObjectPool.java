@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.35 2004/11/17 13:39:39 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.36 2004/11/17 17:32:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/11/17 13:39:39 $
+ * @version $Revision: 1.36 $, $Date: 2004/11/17 17:32:29 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -164,12 +164,8 @@ public class ConfigurationStorableObjectPool {
             			+ " must extends LRUMap");
             List keys = LRUMapSaver.load(ObjectEntities.codeToString(objectEntityCode));
             if (keys == null)
-                return;
-            for (Iterator it = keys.iterator(); it.hasNext();) {
-            	Identifier id = (Identifier) it.next();
-            	StorableObject storableObject = getStorableObject(id, true);
-           		objectPool.put(id , storableObject);                
-            }
+                return;            
+            getStorableObjects(keys, true);
         } catch (CommunicationException e) {
             Log.errorException(e);
             Log.errorMessage("ConfigurationStorableObjectPool.addObjectPool | Error: " + e.getMessage());
@@ -213,17 +209,14 @@ public class ConfigurationStorableObjectPool {
     				storableObjects.add(it2.next());                
     			}
                 if (storableObjects == null || storableObjects.isEmpty()) {
-                	Log.debugMessage("ConfigurationStorableObjectPool.refresh | LruMap has no elements",Log.DEBUGLEVEL08);
+                	Log.debugMessage("ConfigurationStorableObjectPool.refresh | LRUMap for '" + ObjectEntities.codeToString(entityCode.shortValue())+ "' entity has no elements",Log.DEBUGLEVEL08);
                     continue;
-                }
+                }  
+                Log.debugMessage("ConfigurationStorableObjectPool.refresh | try refresh LRUMap for '" + ObjectEntities.codeToString(entityCode.shortValue())+ "' entity",Log.DEBUGLEVEL08);
+                
                 returnedStorableObjectsIds = cObjectLoader.refresh(storableObjects);
                 
-                for (Iterator it3 = lruMap.keyIterator(); it3.hasNext();) {
-    				Identifier id = (Identifier) it3.next();
-                    if (returnedStorableObjectsIds.contains(id)) {
-                    	lruMap.remove(id);
-                    }                				
-    			}           
+                getStorableObjects(new ArrayList(returnedStorableObjectsIds), true);
     		}
         } catch (DatabaseException e) {
             Log.errorMessage("ConfigurationStorableObjectPool.refresh | DatabaseException: " + e.getMessage());

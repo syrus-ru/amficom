@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.49 2004/11/17 13:40:02 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.50 2004/11/17 17:32:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2004/11/17 13:40:02 $
+ * @version $Revision: 1.50 $, $Date: 2004/11/17 17:32:39 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -120,9 +120,10 @@ public class MeasurementStorableObjectPool {
 		addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.TEST_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, size);
-		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, size);
+		
 	}
 
 	public static void init(MeasurementObjectLoader mObjectLoader1) {
@@ -141,9 +142,10 @@ public class MeasurementStorableObjectPool {
 		addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, MEASUREMENT_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, ANALYSIS_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, EVALUATION_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.TEST_ENTITY_CODE, TEST_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
+		
 	}
     
     public static void serializePool() {
@@ -170,12 +172,8 @@ public class MeasurementStorableObjectPool {
             List keys = LRUMapSaver.load(ObjectEntities.codeToString(objectEntityCode));
             if (keys == null)
                 return;
-            for (Iterator it = keys.iterator(); it.hasNext();) {
-				Identifier id = (Identifier) it.next();
-                StorableObject so = getStorableObject(id, true);
-                objectPool.put(id , so);
-				
-            }
+            
+           	getStorableObjects(keys, true);
         } catch (CommunicationException e) {
 			Log.errorException(e);
             Log.errorMessage("MeasurementStorableObjectPool.addObjectPool | Error: " + e.getMessage());
@@ -220,12 +218,7 @@ public class MeasurementStorableObjectPool {
                 }
                 returnedStorableObjectsIds = mObjectLoader.refresh(storableObjects);
                 
-                for (Iterator it3 = lruMap.keyIterator(); it3.hasNext();) {
-                    Identifier id = (Identifier) it3.next();
-                    if (returnedStorableObjectsIds.contains(id)) {
-                        lruMap.remove(id);
-                    }                               
-                }           
+                getStorableObjects(new ArrayList(returnedStorableObjectsIds), true);        
             }
         } catch (DatabaseException e) {
             Log.errorMessage("MeasurementStorableObjectPool.refresh | DatabaseException: " + e.getMessage());
@@ -289,25 +282,26 @@ public class MeasurementStorableObjectPool {
 						if (list == null)
 							list = new LinkedList();
 						list.add(storableObject);
-					}
-				}
-				if (storableObject == null) {
-					Log
-							.errorMessage("MeasurementStorableObjectPool.getStorableObjects | Cannot find object pool for objectId: '"
-									+ objectId.toString()
-									+ "' entity code: '"
-									+ ObjectEntities.codeToString(objectEntityCode)
-									+ "'");
-					if (useLoader) {
-						if (objectQueueMap == null)
-							objectQueueMap = new HashMap();
-						List objectQueue = (List) objectQueueMap.get(entityCode);
-						if (objectQueue == null) {
-							objectQueue = new LinkedList();
-							objectQueueMap.put(entityCode, objectQueue);
+					}				
+					if (storableObject == null) {
+						if (useLoader) {
+							if (objectQueueMap == null)
+								objectQueueMap = new HashMap();
+							List objectQueue = (List) objectQueueMap.get(entityCode);
+							if (objectQueue == null) {
+								objectQueue = new LinkedList();
+								objectQueueMap.put(entityCode, objectQueue);
+							}
+							objectQueue.add(objectId);
 						}
-						objectQueue.add(objectId);
 					}
+				} else {
+					Log
+					.errorMessage("MeasurementStorableObjectPool.getStorableObjects | Cannot find object pool for objectId: '"
+							+ objectId.toString()
+							+ "' entity code: '"
+							+ ObjectEntities.codeToString(objectEntityCode)
+							+ "'");
 				}
 			}
 
