@@ -1,7 +1,7 @@
-/*
- * $Id: EventDatabaseContext.java,v 1.7 2005/03/01 16:43:43 arseniy Exp $
+/*-
+ * $Id: EventDatabaseContext.java,v 1.8 2005/04/01 11:08:47 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
@@ -10,92 +10,83 @@ package com.syrus.AMFICOM.event;
 
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/01 16:43:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 11:08:47 $
+ * @author $Author: bass $
  * @module event_v1
  */
+public final class EventDatabaseContext {
+	private static EventTypeDatabase	eventTypeDatabase;
+//	private static AlarmTypeDatabase	alarmTypeDatabase;
 
-public class EventDatabaseContext {
-	protected static StorableObjectDatabase	eventTypeDatabase;
-//	protected static StorableObjectDatabase	alarmTypeDatabase;
-
-	protected static StorableObjectDatabase	eventDatabase;
-	protected static StorableObjectDatabase	eventSourceDatabase;
-//	protected static StorableObjectDatabase	alarmDatabase;
+	private static EventDatabase		eventDatabase;
+	private static EventSourceDatabase	eventSourceDatabase;
+//	private static AlarmDatabase		alarmDatabase;
 
 	private EventDatabaseContext() {
-		//singleton
+		assert false;
 	}
 
-	public static void init(StorableObjectDatabase eventTypeDatabase1,
-//													StorableObjectDatabase alarmTypeDatabase1,
-													StorableObjectDatabase eventDatabase1,
-													StorableObjectDatabase eventSourceDatabase1
-//													StorableObjectDatabase alarmDatabase1
-													) {
-
+	public static void init(
+			final EventTypeDatabase		eventTypeDatabase1,
+//			final AlarmTypeDatabase		alarmTypeDatabase1,
+			final EventDatabase		eventDatabase1,
+			final EventSourceDatabase	eventSourceDatabase1
+//			final AlarmDatabase		alarmDatabase1
+			) {
 		if (eventTypeDatabase1 != null)
 			eventTypeDatabase = eventTypeDatabase1;
-
 //		if (alarmTypeDatabase1 != null)
 //			alarmTypeDatabase = alarmTypeDatabase1;
-
 		if (eventDatabase1 != null)
 			eventDatabase = eventDatabase1;
-
 		if (eventSourceDatabase1 != null)
 			eventSourceDatabase = eventSourceDatabase1;
-
 //		if (alarmDatabase1 != null)
 //			alarmDatabase = alarmDatabase1;
 	}
 
-	public static StorableObjectDatabase getDatabase(Short entityCode) {
+	public static StorableObjectDatabase getDatabase(final Short entityCode) {
 		return getDatabase(entityCode.shortValue());
 	}
 
-	public static StorableObjectDatabase getDatabase(short entityCode) {
+	public static StorableObjectDatabase getDatabase(final short entityCode) {
 		switch (entityCode) {
-
 			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
-				return eventTypeDatabase;
-
+				return getEventTypeDatabase();
 			case ObjectEntities.EVENT_ENTITY_CODE:
-				return eventDatabase;
-
+				return getEventDatabase();
 			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
-				return eventSourceDatabase;
-
+				return getEventSourceDatabase();
 //			case ObjectEntities.ALARMTYPE_ENTITY_CODE:
-//				return alarmTypeDatabase;
-//
+//				return getAlarmTypeDatabase();
 //			case ObjectEntities.ALARM_ENTITY_CODE:
-//				return alarmDatabase;
-
+//				return getAlarmDatabase();
 			default:
+				Log.errorMessage("EventDatabaseContext.getDatabase | Unknown entity: " + entityCode); //$NON-NLS-1$
 				return null;
-			}
+		}
 	}
 
-	public static StorableObjectDatabase getEventTypeDatabase() {
+	public static EventTypeDatabase getEventTypeDatabase() {
 		return eventTypeDatabase;
 	}
 
-	public static StorableObjectDatabase getEventDatabase() {
+	public static EventDatabase getEventDatabase() {
 		return eventDatabase;
 	}
 
-	public static StorableObjectDatabase getEventSourceDatabase() {
+	public static EventSourceDatabase getEventSourceDatabase() {
 		return eventSourceDatabase;
 	}
 
-//	public static StorableObjectDatabase getAlarmTypeDatabase() {
+//	public static AlarmTypeDatabase getAlarmTypeDatabase() {
 //		return alarmTypeDatabase;
 //	}
 //
-//	public static StorableObjectDatabase getAlarmDatabase() {
+//	public static AlarmDatabase getAlarmDatabase() {
 //		return alarmDatabase;
 //	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.12 2005/04/01 09:00:59 bob Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.13 2005/04/01 11:08:47 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/01 09:00:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/04/01 11:08:47 $
+ * @author $Author: bass $
  * @module event_v1
  */
 public class DatabaseEventObjectLoader implements EventObjectLoader {
@@ -47,7 +47,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 
 	public Set loadEventTypes(Set ids) throws ApplicationException {
-		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
+		EventTypeDatabase eventTypeDatabase = EventDatabaseContext.getEventTypeDatabase();
 		Set collection = null;
 		try {
 			collection = eventTypeDatabase.retrieveByIdsByCondition(ids, null);
@@ -61,7 +61,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 	}
 
 	public Set loadEvents(Set ids) throws ApplicationException {
-		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
+		EventDatabase eventDatabase = EventDatabaseContext.getEventDatabase();
 		Set collection = null;
 		try {
 			collection = eventDatabase.retrieveByIdsByCondition(ids, null);
@@ -75,7 +75,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 	}
 
 	public Set loadEventSources(Set ids) throws ApplicationException {
-		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
+		EventSourceDatabase eventSourceDatabase = EventDatabaseContext.getEventSourceDatabase();
 		Set collection = null;
 		try {
 			collection = eventSourceDatabase.retrieveByIdsByCondition(ids, null);
@@ -92,7 +92,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 
 	public Set loadEventTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
+		EventTypeDatabase eventTypeDatabase = EventDatabaseContext.getEventTypeDatabase();
 		Set collection = null;
 		try {
 			collection = eventTypeDatabase.retrieveButIdsByCondition(ids, condition);
@@ -106,7 +106,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 	}
 
 	public Set loadEventsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
+		EventDatabase eventDatabase = EventDatabaseContext.getEventDatabase();
 		Set collection = null;
 		try {
 			collection = eventDatabase.retrieveButIdsByCondition(ids, condition);
@@ -120,7 +120,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 	}
 
 	public Set loadEventSourcesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
+		EventSourceDatabase eventSourceDatabase = EventDatabaseContext.getEventSourceDatabase();
 		Set collection = null;
 		try {
 			collection = eventSourceDatabase.retrieveButIdsByCondition(ids, condition);
@@ -137,17 +137,17 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 
 	public void saveEventType(EventType eventType, boolean force) throws ApplicationException {
-		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
+		EventTypeDatabase eventTypeDatabase = EventDatabaseContext.getEventTypeDatabase();
 		eventTypeDatabase.update(eventType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEvent(Event event, boolean force) throws ApplicationException {
-		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
+		EventDatabase eventDatabase = EventDatabaseContext.getEventDatabase();
 		eventDatabase.update(event, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEventSource(EventSource eventSource, boolean force) throws ApplicationException {
-		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
+		EventSourceDatabase eventSourceDatabase = EventDatabaseContext.getEventSourceDatabase();
 		eventSourceDatabase.update(eventSource, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
@@ -155,17 +155,17 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 
 	public void saveEventTypes(Set collection, boolean force) throws ApplicationException {
-		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
+		EventTypeDatabase eventTypeDatabase = EventDatabaseContext.getEventTypeDatabase();
 		eventTypeDatabase.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEvents(Set collection, boolean force) throws ApplicationException {
-		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
+		EventDatabase eventDatabase = EventDatabaseContext.getEventDatabase();
 		eventDatabase.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEventSources(Set collection, boolean force) throws ApplicationException {
-		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
+		EventSourceDatabase eventSourceDatabase = EventDatabaseContext.getEventSourceDatabase();
 		eventSourceDatabase.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 

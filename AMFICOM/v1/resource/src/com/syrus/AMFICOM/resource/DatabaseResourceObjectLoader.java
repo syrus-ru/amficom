@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.10 2005/04/01 09:07:53 bob Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.11 2005/04/01 11:11:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,15 +31,15 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/01 09:07:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/04/01 11:11:38 $
+ * @author $Author: bass $
  * @module resource_v1
  */
 public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 
 	public StorableObject loadImageResource(Identifier id) throws DatabaseException {
 		StorableObject storableObject;
-		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
+		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
 		try {
 			int sort = database.getSort(id);
 			switch (sort) {
@@ -65,7 +65,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 	}
 
 	public Set loadImageResources(Set ids) throws DatabaseException {
-		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
+		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
 		Set set = Collections.EMPTY_SET;
 		try {
 			set = database.retrieveByIdsByCondition(ids, null);
@@ -77,7 +77,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 	}
 
 	public Set loadImageResourcesButIds (StorableObjectCondition condition, Set ids) throws DatabaseException {
-		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
+		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
 		Set list = Collections.EMPTY_SET;
 		try {
 			list = database.retrieveButIdsByCondition(ids, condition);
@@ -117,7 +117,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 	}
 
 	public void saveImageResource(AbstractImageResource abstractImageResource, boolean force) throws DatabaseException {
-		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
+		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
 		try {
 			database.update(abstractImageResource, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
@@ -130,7 +130,7 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 	}
 
 	public void saveImageResources(Set list, boolean force) throws DatabaseException {
-		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
+		ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {

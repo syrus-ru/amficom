@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.8 2005/04/01 09:00:59 bob Exp $
+ * $Id: EventType.java,v 1.9 2005/04/01 11:08:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.event.corba.EventType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/01 09:00:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/04/01 11:08:47 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -52,7 +52,7 @@ public class EventType extends StorableObjectType {
 
 		this.parameterTypes = new HashSet();
 
-		this.eventTypeDatabase = EventDatabaseContext.eventTypeDatabase;
+		this.eventTypeDatabase = EventDatabaseContext.getEventTypeDatabase();
 		try {
 			this.eventTypeDatabase.retrieve(this);
 		}
@@ -85,7 +85,7 @@ public class EventType extends StorableObjectType {
 			throw new CreateObjectException(ae);
 		}
 
-		this.eventTypeDatabase = EventDatabaseContext.eventTypeDatabase;
+		this.eventTypeDatabase = EventDatabaseContext.getEventTypeDatabase();
 	}
 
 	protected EventType(Identifier id,
@@ -106,7 +106,7 @@ public class EventType extends StorableObjectType {
 		this.parameterTypes = new HashSet(); 
 		this.setParameterTypes0(parameterTypes);
 
-		this.eventTypeDatabase = EventDatabaseContext.eventTypeDatabase;
+		this.eventTypeDatabase = EventDatabaseContext.getEventTypeDatabase();
 	}
 
 	/**
