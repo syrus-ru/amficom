@@ -85,13 +85,15 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		}
 		finally {
 			try {
-				if (statement != null) statement.close();
-				if (resultSet != null) resultSet.close();
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
 				statement = null;
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-//				 nothing yet.
+//			nothing yet.
 			}
 		}
 	}

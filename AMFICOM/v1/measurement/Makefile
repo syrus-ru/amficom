@@ -48,6 +48,7 @@ JIKES_FLAGS = \
 	+T=2
 JAVAC_FLAGS = \
 	-d $(CLASSDIR) \
+	-source 1.4 \
 	-g \
 	-O \
 	-deprecation
@@ -64,6 +65,13 @@ JPUB_FLAGS = \
 	-dir=$(SRCDIR) \
 	-usertypes=oracle \
 	-methods=all
+
+
+include ../tools/Makefile.inc
+$(call checkenve,JAVA_HOME)
+$(call checkenve,ORACLE_HOME)
+$(call checkenve,IDL2JAVA)
+
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
