@@ -66,14 +66,14 @@ public class DatabaseConnection {
 			long deadtime = System.currentTimeMillis() + db_conn_timeout;
 			boolean connected;
 			for (connected = false; System.currentTimeMillis() < deadtime && !connected;) {
-				Log.debugMessage("Attemting to connect to database: " + url + " as " + db_login_name, Log.DEBUGLEVEL03);
+				Log.debugMessage("Attemting to connect to database: " + url + " as " + db_login_name, Log.DEBUGLEVEL07);
 				try {
 					connection = DriverManager.getConnection(url, db_login_name, PASSWORD);
 					connection.setAutoCommit(autocommit);
 					connected = true;
 				}
 				catch (SQLException e) {
-					Log.debugMessage("Cannot connect to database: " + url + ", " + e.getMessage(), Log.DEBUGLEVEL03);
+					Log.debugMessage("Cannot connect to database: " + url + ", " + e.getMessage(), Log.DEBUGLEVEL07);
 					Object obj = new Object();
 					try {
 						synchronized (obj) {
@@ -98,9 +98,10 @@ public class DatabaseConnection {
 
 	public static void closeConnection() {
 		if (connection != null) {
+			Log.debugMessage("Disconnecting from database...", Log.DEBUGLEVEL07);
 			try {
 				connection.close();
-				Log.debugMessage("Disconnected from database", Log.DEBUGLEVEL03);
+				Log.debugMessage("Disconnected from database", Log.DEBUGLEVEL07);
 			}
 			catch (Exception e) {
 				Log.errorException(e);

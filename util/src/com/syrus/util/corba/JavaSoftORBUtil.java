@@ -1,5 +1,5 @@
 /*
- * $Id: JavaSoftORBUtil.java,v 1.3 2004/07/30 10:40:58 bass Exp $
+ * $Id: JavaSoftORBUtil.java,v 1.4 2004/12/23 11:18:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.util.Properties;
 import org.omg.CORBA.ORB;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/07/30 10:40:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/12/23 11:18:51 $
+ * @author $Author: arseniy $
  * @module util
  */
 public final class JavaSoftORBUtil extends ORBUtil {
@@ -25,8 +25,7 @@ public final class JavaSoftORBUtil extends ORBUtil {
 	private static final String ORB_SINGLETON_CLASS;
 
 	static {
-		String javaSpecificationVersion
-			= System.getProperty("java.specification.version");
+		String javaSpecificationVersion = System.getProperty("java.specification.version");
 		if ((javaSpecificationVersion != null)
 				&& (javaSpecificationVersion.length() == 3)
 				&& (javaSpecificationVersion.charAt(0) == '1')
@@ -43,8 +42,7 @@ public final class JavaSoftORBUtil extends ORBUtil {
 				throw new UnsupportedOperationException(
 					"Only java specifications v1.4 and 1.5 are supported.");
 		} else
-			throw new UnsupportedOperationException(
-				"Java specification major version is not 1.");
+			throw new UnsupportedOperationException("Java specification major version is not 1.");
 
 		try {
 			Class.forName(IIOPConnectionManager.class.getName());
@@ -66,10 +64,8 @@ public final class JavaSoftORBUtil extends ORBUtil {
 		Properties properties = new Properties();
 		properties.put("org.omg.CORBA.ORBClass", ORB_CLASS);
 		properties.put("org.omg.CORBA.ORBSingletonClass", ORB_SINGLETON_CLASS);
-		properties.put("org.omg.CORBA.ORBInitialHost",
-			IIOPConnectionManager.getORBInitialHost());
-		properties.put("org.omg.CORBA.ORBInitialPort",
-			String.valueOf(IIOPConnectionManager.getORBInitialPort()));
+		properties.put("org.omg.CORBA.ORBInitialHost", IIOPConnectionManager.getORBInitialHost());
+		properties.put("org.omg.CORBA.ORBInitialPort", String.valueOf(IIOPConnectionManager.getORBInitialPort()));
 		this.orb = ORB.init(new String[0], properties);
 		Thread thread = new Thread() {
 			public void run() {
@@ -90,12 +86,9 @@ public final class JavaSoftORBUtil extends ORBUtil {
 		if (this.orbSingleton != null)
 			return;
 		System.setProperty("org.omg.CORBA.ORBClass", ORB_CLASS);
-		System.setProperty("org.omg.CORBA.ORBSingletonClass",
-			ORB_SINGLETON_CLASS);
-		System.setProperty("org.omg.CORBA.ORBInitialHost",
-			IIOPConnectionManager.getORBInitialHost());
-		System.setProperty("org.omg.CORBA.ORBInitialPort",
-			String.valueOf(IIOPConnectionManager.getORBInitialPort()));
+		System.setProperty("org.omg.CORBA.ORBSingletonClass", ORB_SINGLETON_CLASS);
+		System.setProperty("org.omg.CORBA.ORBInitialHost", IIOPConnectionManager.getORBInitialHost());
+		System.setProperty("org.omg.CORBA.ORBInitialPort", String.valueOf(IIOPConnectionManager.getORBInitialPort()));
 		this.orbSingleton = ORB.init();
 	}
 }

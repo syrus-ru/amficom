@@ -39,11 +39,11 @@ public class ApplicationProperties {
 				value = resourceBundle.getString(key);
 			}
 			catch (Exception e) {
-				Log.debugMessage("Cannot get resource " + key + " from " + fileName, Log.DEBUGLEVEL02);
+				Log.debugMessage("Cannot get resource '" + key + "' from " + fileName + "; using default -- '" + defaultValue + "'", Log.DEBUGLEVEL02);
 				value = defaultValue;
 			}
 		else {
-			Log.errorMessage("File " + fileName + " not loaded; returning default");
+			Log.errorMessage("File " + fileName + " not loaded; for key '" + key + "' returning default -- '" + defaultValue + "'");
 			value = defaultValue;
 		}
 		return value;
@@ -56,11 +56,11 @@ public class ApplicationProperties {
 				value = Integer.parseInt(resourceBundle.getString(key));
 			}
 			catch (Exception e) {
-				Log.debugMessage("Cannot get resource " + key + " from " + fileName, Log.DEBUGLEVEL02);
+				Log.debugMessage("Cannot get resource '" + key + "' from " + fileName + "; using default -- " + defaultValue, Log.DEBUGLEVEL02);
 				value = defaultValue;
 			}
 		else {
-			Log.errorMessage("File " + fileName + " not loaded; returning default");
+			Log.errorMessage("File " + fileName + " not loaded; for key '" + key + "' returning default -- " + defaultValue);
 			value = defaultValue;
 		}
 		return value;
