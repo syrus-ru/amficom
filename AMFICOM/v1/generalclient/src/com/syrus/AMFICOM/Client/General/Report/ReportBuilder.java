@@ -6,8 +6,8 @@ import java.awt.Toolkit;
 import java.awt.GridBagConstraints;
 import java.util.Date;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+/*import oracle.jdeveloper.layout.XYConstraints;
+import oracle.jdeveloper.layout.XYLayout;*/
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -17,6 +17,7 @@ import javax.swing.JDialog;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 
 /**
  * <p>Title: </p>
@@ -49,6 +50,13 @@ public class ReportBuilder
 			final ApplicationContext aContext,
 			final ReportTemplate rt)
 	{
+		//Подгружаем данные в шаблоны фильтров
+		for (int i = 0; i < rt.objectResourceFilters.size(); i++)
+		{
+			ObjectResourceFilter curFilter = (ObjectResourceFilter)rt.objectResourceFilters.get(i);
+			curFilter.logicScheme.setUnfilledFilterExpressions(aContext);
+		}
+
 //		aContext.getDispatcher().notify(new OperationEvent("",0,ReportBuilder.ev_startProgressBar));
 
 		ReportBuilder.invokeAsynchronously(new Runnable() {

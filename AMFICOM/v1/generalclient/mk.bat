@@ -1,1 +1,1 @@
-nmake /f makegeneral %1
+make -f makegeneral %1

@@ -403,6 +403,13 @@ repaint();
 			 applyButton_actionPerformed(e);
 			}
 		  });*/
+		templateCheckBox.addActionListener(new java.awt.event.ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				templateCheckBox_actionPerformed(e);
+			}
+		});
 		typePanel.add(eqRadioButton, null);
 		typePanel.add(rangeRadioButton, null);
 		typePanel.add(timeRadioButton, null);
@@ -714,6 +721,19 @@ repaint();
 					ObjectResourceFilterPane.state_filterChanged));
 
 //    applyButton.setEnabled(false);
+	}
+
+	void templateCheckBox_actionPerformed(ActionEvent e)
+	{
+		if (fp == null)
+			return;
+
+		boolean curState = templateCheckBox.isSelected();
+		for (int i = 0; i < fp.getComponentCount(); i++)
+		{
+			Component curComponent = fp.getComponent(i);
+			curComponent.setEnabled(!curState);
+		}
 	}
 }
 

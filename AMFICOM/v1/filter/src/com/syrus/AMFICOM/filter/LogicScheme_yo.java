@@ -1,5 +1,5 @@
 /*
- * $Id: LogicScheme_yo.java,v 1.3 2004/06/08 15:44:01 bass Exp $
+ * $Id: LogicScheme_yo.java,v 1.4 2004/06/11 10:33:33 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/06/08 15:44:01 $
+ * @version $Revision: 1.4 $, $Date: 2004/06/11 10:33:33 $
  * @module filter_v1
  */
 public class LogicScheme_yo implements Serializable
@@ -21,12 +21,12 @@ public class LogicScheme_yo implements Serializable
 	public Vector finishedLinks = new Vector();
 	public Vector activeZones = new Vector();
 
-	protected LogicSchemeElement_yo treeResult = null;
-
-	Filter filter;
+	public Filter filter;
 
 	public int schemeWidth = 0;
 	public int schemeHeight = 0;
+
+	protected LogicSchemeElement_yo treeResult = null;
 
 	public LogicScheme_yo(Filter filter)
 	{

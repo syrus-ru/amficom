@@ -1,7 +1,13 @@
+bak
 classes
+docs
+lib
+test
 *.deploy
 *.jpr
 *.jpx
+*.jpx.local
 *.tar
 *.gz
 *.swp
+*~
