@@ -10,6 +10,7 @@ import javax.swing.event.ListSelectionListener;
 
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
@@ -34,68 +35,48 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	//	public static final String COMMAND_REMOVE_PARAM_FRAME =
 	// "RemoveParamFrame";
 	//	public static final String COMMAND_REMOVE_3A_FRAME = "Remove3aFrame";
-	public static final boolean		DEBUG						= true;
-	public static final String		COMMAND_CHANGE_PARAM_PANEL	= "ChangeParamPanel";									//$NON-NLS-1$
-	public static final String		COMMAND_ADD_PARAM_PANEL		= "AddParamPanel";										//$NON-NLS-1$
-	public static final String		COMMAND_CHANGE_PORT_TYPE	= "ChangePortType";									//$NON-NLS-1$
-	public static final String		COMMAND_CHANGE_TEST_TYPE	= "ChangeTestType";									//$NON-NLS-1$
-	public static final String		COMMAND_CHANGE_ME_TYPE		= "ChangeMEType";										//$NON-NLS-1$
-	public static final String		COMMAND_CHANGE_KIS			= "ChangeKIS";											//$NON-NLS-1$
+	public static final boolean	DEBUG						= true;
+	public static final String	COMMAND_CHANGE_PARAM_PANEL	= "ChangeParamPanel";									//$NON-NLS-1$
+	public static final String	COMMAND_ADD_PARAM_PANEL		= "AddParamPanel";										//$NON-NLS-1$
+	public static final String	COMMAND_CHANGE_PORT_TYPE	= "ChangePortType";									//$NON-NLS-1$
+	public static final String	COMMAND_CHANGE_TEST_TYPE	= "ChangeTestType";									//$NON-NLS-1$
+	public static final String	COMMAND_CHANGE_ME_TYPE		= "ChangeMEType";										//$NON-NLS-1$
+	public static final String	COMMAND_CHANGE_KIS			= "ChangeKIS";											//$NON-NLS-1$
 	//public static final String COMMAND_ADD_PARAM_PANEL = "ParamPanel";
-	public static final String		TEST_TYPE_TRACE_AND_ANALYSE	= "trace_and_analyse";									//$NON-NLS-1$
-	public static final String		TEST_TYPE_VOICE_ANALYSE		= "voice_analyse";										//$NON-NLS-1$
-	public static final String		PARAMETER_PARAMETER			= "Parameter";											//$NON-NLS-1$
-	public static final String		PARAMETERS_PANEL_PREFIX		= "PARAMETERS_PANEL";									//$NON-NLS-1$
+	public static final String	TEST_TYPE_TRACE_AND_ANALYSE	= "trace_and_analyse";									//$NON-NLS-1$
+	public static final String	TEST_TYPE_VOICE_ANALYSE		= "voice_analyse";										//$NON-NLS-1$
+	public static final String	PARAMETER_PARAMETER			= "Parameter";											//$NON-NLS-1$
+	public static final String	PARAMETERS_PANEL_PREFIX		= "PARAMETERS_PANEL";									//$NON-NLS-1$
 
-	private Dispatcher				dispatcher;
-	ApplicationContext				aContext;
+	private Dispatcher			dispatcher;
+	ApplicationContext			aContext;
 
-	private JRadioButton			patternRadioButton;
-	JRadioButton					paramsRadioButton;
+	private JRadioButton		patternRadioButton;
+	JRadioButton				paramsRadioButton;
 
-	JCheckBox						useAnalysisBox;
-	ObjectResourceComboBox			analysisComboBox			= new ObjectResourceComboBox(AnalysisType.typ, true);
-	ObjectResourceComboBox			evaluationComboBox			= new ObjectResourceComboBox(EvaluationType.typ, true);
+	JCheckBox					useAnalysisBox;
+	ObjectResourceComboBox		analysisComboBox			= new ObjectResourceComboBox(AnalysisType.typ, true);
+	ObjectResourceComboBox		evaluationComboBox			= new ObjectResourceComboBox(EvaluationType.typ, true);
 
-	final JPanel					switchPanel					= new JPanel(new CardLayout());
+	final JPanel				switchPanel					= new JPanel(new CardLayout());
 
 	//	private HashMap objMap = new HashMap();
 	//	private String testTypeId;
 	//	private String meId;
 
-	ObjectResourceListBox			testSetups;
-	private HashMap					testMap;
+	ObjectResourceListBox		testSetups;
+	private HashMap				testMap;
 
-	private static final String		PATTERN_PANEL_NAME			= "PATTERN_PANEL";										//$NON-NLS-1$
+	private static final String	PATTERN_PANEL_NAME			= "PATTERN_PANEL";										//$NON-NLS-1$
 
-	HashMap							testPanels					= new HashMap();
+	HashMap						testPanels					= new HashMap();
 
-	private Test					test;
+	private Test				test;
 
-	private SurveyDataSourceImage	surveyDsi;
-	private HashMap					parameters;
+	private HashMap				parameters;
+	private java.util.List		meList;
 
-	String							currentParametersPanelName;
-
-	/**
-	 * @todo only for testing mode
-	 */
-	public static void main(String[] args) {
-		Environment.initialize();
-		TestParametersPanel demo = new TestParametersPanel(null);
-		JFrame mainFrame = new JFrame("TimeParametersPanel"); //$NON-NLS-1$
-		mainFrame.addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
-		//mainFrame.getContentPane().add(demo);
-		mainFrame.getContentPane().add(demo);
-		mainFrame.pack();
-		mainFrame.setSize(new Dimension(600, 465));
-		mainFrame.setVisible(true);
-	}
+	String						currentParametersPanelName;
 
 	public TestParametersPanel(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -181,7 +162,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			}
 			//}
 			});
-		JScrollPane scroll = new JScrollPane(testSetups);
+		JScrollPane scroll = new JScrollPane(this.testSetups);
 		gbc.weighty = 1.0;
 		patternPanel.add(scroll, gbc);
 
@@ -249,79 +230,71 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 		this.dispatcher.register(this, COMMAND_CHANGE_PARAM_PANEL);
 		this.dispatcher.register(this, COMMAND_ADD_PARAM_PANEL);
-		this.dispatcher.register(this, COMMAND_CHANGE_TEST_TYPE);
+		//		this.dispatcher.register(this, COMMAND_CHANGE_TEST_TYPE);
 		this.dispatcher.register(this, COMMAND_CHANGE_ME_TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_AVAILABLE_ME);
 	}
 
 	public void setTest(Test test) {
-		this.test = test;		
-		String meid = test.getMonitoredElementId();
-		String testtypeid = test.getTestTypeId();
-		if (surveyDsi == null)
-			surveyDsi = new SurveyDataSourceImage(aContext.getDataSourceInterface());
-		String[] testSetupME = surveyDsi.getTestSetupByME(meid);
-		String[] testSetupTestType = surveyDsi.getTestSetupByTestType(testtypeid);
-		for (int i = 0; i < testSetupME.length; i++) {
-			//System.out.println("ts_me:" + ts_me[i]);
-			TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, testSetupME[i]);
-			//testSetups.add(ts);
-			testMap.put(ts.getId(), ts);
+		this.test = test;
+
+		this.meList.clear();
+		this.meList.add(Pool.get(MonitoredElement.typ, test.getMonitoredElementId()));
+		updateTestSetupList();
+
+		if (this.test != null) {
+
+			TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ, this.test.getTestSetupId());
+			if (testsetup != null) {
+				this.testSetups.setSelected(testsetup);
+				this.patternRadioButton.doClick();
+
+				if ((this.test.getEvalution() != null) || (this.test.getAnalysis() != null)) {
+					if (!this.useAnalysisBox.isSelected())
+						this.useAnalysisBox.doClick();
+				}
+				if (test.getEvalution() != null) {
+					//System.out.println("test.evalution isn't null");
+					selectComboBox(this.evaluationComboBox, test.getEvalution().getTypeId());
+				}
+				if (test.getAnalysis() != null) {
+					//System.out.println("test.analysis isn't null");
+					selectComboBox(this.analysisComboBox, test.getAnalysis().getTypeId());
+				}
+
+			} else {
+				this.paramsRadioButton.doClick();
+			}
 		}
-		for (int i = 0; i < testSetupTestType.length; i++) {
-			//System.out.println("ts_tt:" + ts_tt[i]);
-			TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, testSetupTestType[i]);
-			//testSetups.add(ts);
-			testMap.put(ts.getId(), ts);
-		}
-				updateTestSetupList();
-		
-//				boolean selected = false;
-//				TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ,
-//						test.getTestSetupId());
-//				if (testsetup != null) {
-//					//orList.setSelected(testsetup);
-//					System.out.println("selected:" + testsetup.id);
-//					testSetups.setSelected(testsetup);
-//					selected = true;
-//				}
-//				if (selected)
-//					patternRadioButton.doClick();
-//				else
-//					paramsRadioButton.doClick();
-//				useAnalysisBox.setEnabled(testSetups.getModel().getSize() > 0);
-//		System.out.println("end of setTest");
 	}
 
 	private void getParameters() {
-		if (parameters == null)
-			parameters = new HashMap();
-		TestSetup ts = (TestSetup) testSetups.getSelectedObjectResource();
+		if (this.parameters == null)
+			this.parameters = new HashMap();
+		TestSetup ts = (TestSetup) this.testSetups.getSelectedObjectResource();
 		if (ts == null) {
 			JOptionPane
 					.showMessageDialog(
 										this,
 										LangModelSchedule.getString("Do_not_choose_measurement_pattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 										JOptionPane.OK_OPTION);
-			parameters = null;
+			this.parameters = null;
 			return;
 		}
-		parameters.put(TestSetup.typ, ts);
+		this.parameters.put(TestSetup.typ, ts);
 		EvaluationType evaluationType = null;
 		AnalysisType analysisType = null;
 		//DataSourceInterface dsi = aContext.getDataSourceInterface();
-		if (useAnalysisBox.isSelected()) {
-			/**
-			 * @todo neeed to put evaluation and analysis
-			 */
-			evaluationType = (EvaluationType) evaluationComboBox.getSelectedObjectResource();
-			analysisType = (AnalysisType) analysisComboBox.getSelectedObjectResource();
+		if (this.useAnalysisBox.isSelected()) {
+			evaluationType = (EvaluationType) this.evaluationComboBox.getSelectedObjectResource();
+			analysisType = (AnalysisType) this.analysisComboBox.getSelectedObjectResource();
 
 		}
 		//if (evaluationType != null)
-		parameters.put(EvaluationType.typ, evaluationType);
+		this.parameters.put(EvaluationType.typ, evaluationType);
 		//if (analysisType != null)
-		parameters.put(AnalysisType.typ, analysisType);
+		this.parameters.put(AnalysisType.typ, analysisType);
 	}
 
 	public void operationPerformed(OperationEvent ae) {
@@ -349,15 +322,15 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 					dispatcher.notify(new OperationEvent((analysisType == null) ? (Object) "" //$NON-NLS-1$
 							: (Object) analysisType, SchedulerModel.DATA_ID_PARAMETERS_ANALYSIS,
 															SchedulerModel.COMMAND_SEND_DATA));
-					dispatcher.notify(new OperationEvent((evaluationType == null) ? (Object) "" //$NON-NLS-1$
+					this.dispatcher.notify(new OperationEvent((evaluationType == null) ? (Object) "" //$NON-NLS-1$
 							: (Object) evaluationType, SchedulerModel.DATA_ID_PARAMETERS_EVALUATION,
-															SchedulerModel.COMMAND_SEND_DATA));
+																SchedulerModel.COMMAND_SEND_DATA));
 				}
 			}
 
 		} else if (commandName.equals(COMMAND_CHANGE_PARAM_PANEL)) {
-			currentParametersPanelName = obj.toString();
-			paramsRadioButton.doClick();
+			this.currentParametersPanelName = obj.toString();
+			this.paramsRadioButton.doClick();
 		} else if (commandName.equals(COMMAND_ADD_PARAM_PANEL)) {
 			ParametersTestPanel panel = (ParametersTestPanel) obj;
 			String name = panel.getPanelName();
@@ -366,43 +339,28 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 				//System.out.println("name isn't at map");
 				addParameterPanel(name, panel);
 			}
-			currentParametersPanelName = name;
-			paramsRadioButton.doClick();
+			this.currentParametersPanelName = name;
+			this.paramsRadioButton.doClick();
 		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			setTest(tue.test);
-		} else if (commandName.equals(COMMAND_CHANGE_TEST_TYPE)) {
-			String testtypeid = obj.toString();
-			//testSetups.removeAll();
-			if (surveyDsi == null)
-				surveyDsi = new SurveyDataSourceImage(aContext.getDataSourceInterface());
-			String[] testSetupTestType = surveyDsi.getTestSetupByTestType(testtypeid);
-			for (int i = 0; i < testSetupTestType.length; i++) {
-				//System.out.println(">" + ts_tt[i]);
-				TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, testSetupTestType[i]);
-				//System.out.println("ts:" + ts.id);
-				//testSetups.add(ts);
-				testMap.put(ts.getId(), ts);
-			}
-			updateTestSetupList();
-
-		} else if (commandName.equals(COMMAND_CHANGE_ME_TYPE)) {
-			String meId = (String) obj;
-			//			DataSourceInterface dsi = aContext.getDataSourceInterface();
-			if (this.surveyDsi == null)
-				this.surveyDsi = new SurveyDataSourceImage(aContext.getDataSourceInterface());
-			this.testMap.clear();
-			String[] testSetupME = this.surveyDsi.getTestSetupByME(meId);
-			for (int i = 0; i < testSetupME.length; i++) {
-				TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, testSetupME[i]);
-				//testSetups.add(ts);
-				testMap.put(ts.getId(), ts);
-			}
-			updateTestSetupList();
 		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
 			this.testMap.clear();
 			this.patternRadioButton.doClick();
 			this.testPanels.clear();
+			if (this.meList != null)
+				this.meList.clear();
+			updateTestSetupList();
+		} else if (commandName.equals(SchedulerModel.COMMAND_AVAILABLE_ME)) {
+			//this.meList = (java.util.List) obj;
+			//updateTestSetupList();
+		} else if (commandName.equals(COMMAND_CHANGE_ME_TYPE)) {
+			String meId = (String) obj;
+			if (this.meList == null)
+				this.meList = new ArrayList();
+			this.meList.clear();
+			this.meList.add(Pool.get(MonitoredElement.typ, meId));
+			System.out.println("get me:" + meId);
 			updateTestSetupList();
 		}
 
@@ -410,49 +368,37 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	}
 
 	private void updateTestSetupList() {
-		//System.out.println("updateTestSetupList");
-		//TestSetup selectedTs = (TestSetup)
-		// testSetups.getSelectedObjectResource();
 		this.testSetups.removeAll();
+		this.testMap.clear();
+		if (this.meList != null) {
+			Hashtable tsTable = Pool.getHash(TestSetup.typ);
+			if (tsTable != null) {
+				for (Iterator it = tsTable.keySet().iterator(); it.hasNext();) {
+					TestSetup ts = (TestSetup) tsTable.get(it.next());
+					String[] meIds = ts.getMonitoredElementIds();
+					if (meIds.length == 0) {
+						System.out.println("meIds.length == 0\t" + ts.getId());
+						this.testMap.put(ts.getId(), ts);
+					} else
+						for (Iterator iter = this.meList.iterator(); iter.hasNext();) {
+							MonitoredElement me = (MonitoredElement) iter.next();
+							String meId = me.getId();
+							for (int i = 0; i < meIds.length; i++) {
+								if (meIds[i].equals(meId)) {
+									System.out.println("meId:" + meId + "\t" + ts.getId());
+									this.testMap.put(ts.getId(), ts);
+								}
+							}
+						}
+
+				}
+			}
+		}
 		for (Iterator it = this.testMap.values().iterator(); it.hasNext();) {
 			TestSetup ts = (TestSetup) it.next();
 			this.testSetups.add(ts);
 		}
 		//testSetups.setSelected(selectedTs);
-		if (this.test != null) {
-			System.out.println("test.test_setup_id:" + this.test.getTestSetupId());		
-			
-			TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ, this.test.getTestSetupId());
-			System.out.println((testsetup==null)?"testSetup is null":"testSetupID:"+testsetup.getId());
-			if (testsetup != null) {
-				//orList.setSelected(testsetup);
-				//System.out.println("selected:" + testsetup.id);				
-				ListModel lmodel = this.testSetups.getModel();
-				for(int i=0;i<lmodel.getSize();i++){
-					TestSetup ts2 = (TestSetup)lmodel.getElementAt(i);
-					System.out.println("ts2.getId():"+ts2.getId());
-				}
-				
-				this.testSetups.setSelected(testsetup);
-				this.patternRadioButton.doClick();
-
-				if ((this.test.getEvalution() != null) || (this.test.getAnalysis() != null)) {
-					if (!useAnalysisBox.isSelected())
-						useAnalysisBox.doClick();
-				}
-				if (test.getEvalution() != null) {
-					//System.out.println("test.evalution isn't null");
-					selectComboBox(evaluationComboBox, test.getEvalution().getTypeId());
-				}
-				if (test.getAnalysis() != null) {
-					//System.out.println("test.analysis isn't null");
-					selectComboBox(analysisComboBox, test.getAnalysis().getTypeId());
-				}
-
-			} else {
-				this.paramsRadioButton.doClick();
-			}
-		}
 	}
 
 	private void selectComboBox(ObjectResourceComboBox cb, String value) {

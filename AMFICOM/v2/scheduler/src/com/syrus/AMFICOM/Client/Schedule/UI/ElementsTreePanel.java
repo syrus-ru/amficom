@@ -46,17 +46,23 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			//this.dsi = aContext.getDataSourceInterface();
 			this.dispatcher = aContext.getDispatcher();
 
-			this.root = new ObjectResourceTreeNode("root", LangModelSchedule.getString("TestType"), true, //$NON-NLS-1$ //$NON-NLS-2$
+			this.root = new ObjectResourceTreeNode(ROOT_NODE_NAME, LangModelSchedule.getString("TestType"), true, //$NON-NLS-1$ //$NON-NLS-2$
 													(ImageIcon) UIStorage.FOLDER_ICON);
 
 			Hashtable kisTable = Pool.getHash(KIS.typ);
 			Hashtable meTable = Pool.getHash(MonitoredElement.typ);
 			Hashtable aptTable = Pool.getHash(AccessPortType.typ);
+			java.util.List meList = new ArrayList();
+
+			if (ElementsTreePanel.this.surveyDsi == null)
+				ElementsTreePanel.this.surveyDsi = new SurveyDataSourceImage(aContext.getDataSourceInterface());
+			
 			for (Enumeration testTypeEn = Pool.getHash(TestType.typ).elements(); testTypeEn.hasMoreElements();) {
 				TestType testType = (TestType) testTypeEn.nextElement();
+				ElementsTreePanel.this.surveyDsi.getTestSetupByTestType(testType.getId());
 				ObjectResourceTreeNode testTypeNode = new ObjectResourceTreeNode(testType, testType.getName(), true,
 																					(ImageIcon) UIStorage.FOLDER_ICON);
-				root.add(testTypeNode);
+				this.root.add(testTypeNode);
 				if (kisTable != null) {
 					for (Enumeration kisTypeEnum = kisTable.elements(); kisTypeEnum.hasMoreElements();) {
 						KIS kis = (KIS) kisTypeEnum.nextElement();
@@ -79,7 +85,9 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 										kisNode.add(accessPortNode);
 										for (Enumeration meEnum = meTable.elements(); meEnum.hasMoreElements();) {
 											MonitoredElement me = (MonitoredElement) meEnum.nextElement();
+											ElementsTreePanel.this.surveyDsi.getTestSetupByME(me.getId());
 											if (me.access_port_id.equals(aport.getId())) {
+												meList.add(me);
 												ObjectResourceTreeNode meNode = new ObjectResourceTreeNode(me, me
 														.getName(), true, (ImageIcon) UIStorage.PATHMODE_ICON, true);
 												accessPortNode.add(meNode);
@@ -93,7 +101,8 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 					}
 				}
 			}
-			model = new DefaultTreeModel(root);
+			dispatcher.notify(new OperationEvent(meList, 0, SchedulerModel.COMMAND_AVAILABLE_ME));
+			this.model = new DefaultTreeModel(this.root);
 
 		}
 
@@ -116,47 +125,48 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			Object obj = node.getObject();
 			Class ret = null;
 			if (obj instanceof String) {
-				if (node.getObject().equals("root"))ret = TestType.class; //$NON-NLS-1$
+				if (node.getObject().equals(ROOT_NODE_NAME))
+					ret = TestType.class; //$NON-NLS-1$
 			} else if (obj instanceof TestType) {
-				//System.out.println("testType:" + ((TestType) obj).name);
-				TestType testType = (TestType) obj;
-				//System.out.println("testType.id:"+testType.id);
-				skipTestUpdate = true;
-				dispatcher
-						.notify(new OperationEvent(testType.getId(), 0, TestParametersPanel.COMMAND_CHANGE_TEST_TYPE));
-				skipTestUpdate = false;
+//				//System.out.println("testType:" + ((TestType) obj).name);
+//				TestType testType = (TestType) obj;
+//				//System.out.println("testType.id:"+testType.id);
+//				skipTestUpdate = true;
+//				dispatcher
+//						.notify(new OperationEvent(testType.getId(), 0, TestParametersPanel.COMMAND_CHANGE_TEST_TYPE));
+//				skipTestUpdate = false;
 				ret = KIS.class;
 			} else if (obj instanceof KIS) {
 				KIS kis = (KIS) obj;
 				//System.out.println("KIS:" + kis.type_id);
-				skipTestUpdate = true;
-				dispatcher.notify(new OperationEvent(kis.getId(), 0, TestParametersPanel.COMMAND_CHANGE_KIS));
-				//				Vector ports = kis.access_ports;
-				//				for (Enumeration e = ports.elements(); e.hasMoreElements();)
-				// {
-				//					AccessPort port = (AccessPort) e.nextElement();
-				//					dispatcher.notify(new OperationEvent(port.type_id, 0,
-				//							TestParametersPanel.COMMAND_CHANGE_PORT_TYPE));
-				//				}
-				skipTestUpdate = false;
+//				skipTestUpdate = true;
+//				dispatcher.notify(new OperationEvent(kis.getId(), 0, TestParametersPanel.COMMAND_CHANGE_KIS));
+//				//				Vector ports = kis.access_ports;
+//				//				for (Enumeration e = ports.elements(); e.hasMoreElements();)
+//				// {
+//				//					AccessPort port = (AccessPort) e.nextElement();
+//				//					dispatcher.notify(new OperationEvent(port.type_id, 0,
+//				//							TestParametersPanel.COMMAND_CHANGE_PORT_TYPE));
+//				//				}
+//				skipTestUpdate = false;
 				ret = AccessPort.class;
 			} else if (obj instanceof AccessPort) {
 				//System.out.println("AccessPort:" + ((AccessPort)
 				// obj).type_id);
-				skipTestUpdate = true;
+				ElementsTreePanel.this.skipTestUpdate = true;
 				AccessPort port = (AccessPort) obj;
 				ret = MonitoredElement.class;
-				dispatcher.notify(new OperationEvent(port, 0, TestParametersPanel.COMMAND_CHANGE_PORT_TYPE));
+				this.dispatcher.notify(new OperationEvent(port, 0, TestParametersPanel.COMMAND_CHANGE_PORT_TYPE));
 
-				Vector vec = this.getChildNodes(node);
-				for (int i = 0; i < vec.size(); i++) {
-					ObjectResourceTreeNode n = (ObjectResourceTreeNode) vec.get(i);
-					Object o = n.getObject();
-					MonitoredElement me = (MonitoredElement) o;
-					dispatcher.notify(new OperationEvent(me.getId(), 0, TestParametersPanel.COMMAND_CHANGE_ME_TYPE));
-
-				}
-				skipTestUpdate = false;
+//				Vector vec = this.getChildNodes(node);
+//				for (int i = 0; i < vec.size(); i++) {
+//					ObjectResourceTreeNode n = (ObjectResourceTreeNode) vec.get(i);
+//					Object o = n.getObject();
+//					MonitoredElement me = (MonitoredElement) o;
+//					this.dispatcher.notify(new OperationEvent(me.getId(), 0, TestParametersPanel.COMMAND_CHANGE_ME_TYPE));
+//
+//				}
+				ElementsTreePanel.this.skipTestUpdate = false;
 			}
 			return ret;
 		}
@@ -186,6 +196,12 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 	}
 
 	public static final String		ACCESSPORT_NAME_REFLECTOMETER	= "reflectometeringnt"; //$NON-NLS-1$
+
+	private static final String		ROOT_NODE_NAME					= "root";
+
+	boolean							skipTestUpdate					= false;
+
+	private ApplicationContext		aContext;
 	//	private
 	// ApplicationContext
 	// aContext;
@@ -194,15 +210,12 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 	private Dispatcher				dispatcher;
 	private JButton					loadButton;
 	private ObjectResourceTreeModel	model;
-
-	private ApplicationContext		aContext;
+	SurveyDataSourceImage			surveyDsi;
 
 	//private Object selectedObject;
 	private HashMap					paramMap;
-
-	boolean							skipTestUpdate					= false;
+	private JScrollPane				scrollPane						= new JScrollPane();
 	private UniTreePanel			utp;
-	private JScrollPane scrollPane = new JScrollPane();
 
 	public ElementsTreePanel(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -261,7 +274,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		// TREE
 		this.utp = new UniTreePanel(this.dispatcher, aContext, this.model);
 		this.utp.getTree().setRootVisible(true);
-		this.utp.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);		
+		this.utp.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		scrollPane.getViewport().add(this.utp);
 		add(scrollPane, BorderLayout.CENTER);
 
@@ -315,16 +328,15 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			TreeDataSelectionEvent dse = (TreeDataSelectionEvent) oe;
 			//			selectedObject = dse.selectedObject;
 			Class selectedClass = dse.getDataClass();
+			DataSet set = dse.getDataSet();
 
 			if (selectedClass.equals(MonitoredElement.class)) {
 				this.loadButton.setEnabled(true);
+				MonitoredElement me = (MonitoredElement)set.get(dse.getSelectionNumber());
+				this.dispatcher.notify(new OperationEvent(me.getId(), 0, TestParametersPanel.COMMAND_CHANGE_ME_TYPE));
 			} else
 				this.loadButton.setEnabled(false);
 
-			if (dse.getSelectionNumber() != -1) {
-				// can smbody explain me this?
-				// I don't understand
-			}
 		} else if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 
 			HashMap param = getParameters();
@@ -375,20 +387,10 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				this.paramMap = new HashMap();
 			this.paramMap.clear();
 			this.model = new TestsTreeModel(this.aContext);
-			this.utp = new UniTreePanel(this.dispatcher, this.aContext, this.model);
-			this.utp.getTree().setRootVisible(true);
-			this.utp.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-			
-			this.scrollPane.getViewport().removeAll();
-			this.scrollPane.getViewport().add(this.utp);
+			this.utp.setModel(this.model);
+			this.utp.revalidate();
 		}
 	}
-
-	//	void loadButton_actionPerformed() {
-	//	}
-	//
-	//	void delMapGroupButton_actionPerformed() {
-	//	}
 
 	// If expand is true, expands all nodes in the tree.
 	// Otherwise, collapses all nodes in the tree.
