@@ -1,0 +1,202 @@
+#ifndef _CMSERVER_IDL_
+#define _CMSERVER_IDL_
+
+#include <general.idl>
+#include <configuration.idl>
+#include <lilmapletty.idl>
+
+module com {
+module syrus {
+module AMFICOM {
+module mshserver {
+module corba {
+
+	interface MSHServer:
+		::com::syrus::AMFICOM::general::corba::NameResolver,
+		::com::syrus::AMFICOM::general::corba::IdentifierGeneratorServer {
+/////////////////////////////////////////// Characteristic Recieve ////////////////////////////////////////////
+		void delete(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+				in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+				raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+				
+		void deleteList(in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable id_Transferables,
+				in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+				raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);		
+		
+		void receiveSiteNode(in com::syrus::AMFICOM::map::corba::SiteNode_Transferable siteNode_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveTopologicalNode(in com::syrus::AMFICOM::map::corba::TopologicalNode_Transferable topologicalNode_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveNodeLink(in com::syrus::AMFICOM::map::corba::NodeLink_Transferable nodeLink_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+					
+		void receiveMark(in com::syrus::AMFICOM::map::corba::Mark_Transferable mark_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+
+		void receivePhysicalLink(in com::syrus::AMFICOM::map::corba::PhysicalLink_Transferable physicalLink_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+			
+		void receiveCollector(in com::syrus::AMFICOM::map::corba::Collector_Transferable collector_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+
+		void receiveMap(in com::syrus::AMFICOM::map::corba::Map_Transferable map_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+			
+		void receiveSiteNodeType(in com::syrus::AMFICOM::map::corba::SiteNodeType_Transferable siteNodeType_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receivePhysicalLinkType(in com::syrus::AMFICOM::map::corba::PhysicalLinkType_Transferable physicalLinkType_Transferable,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+
+		void receiveSiteNodes(in com::syrus::AMFICOM::map::corba::SiteNodeSeq_Transferable siteNode_Transferables,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveTopologicalNodes(in com::syrus::AMFICOM::map::corba::TopologicalNodeSeq_Transferable topologicalNode_Transferables,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receiveNodeLinks(in com::syrus::AMFICOM::map::corba::NodeLinkSeq_Transferable nodeLink_Transferables,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+					
+		void receiveMarks(in com::syrus::AMFICOM::map::corba::MarkSeq_Transferable mark_Transferables,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+
+		void receivePhysicalLinks(in com::syrus::AMFICOM::map::corba::PhysicalLinkSeq_Transferable physicalLink_Transferables,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+			
+		void receiveCollectors(in com::syrus::AMFICOM::map::corba::CollectorSeq_Transferable collector_Transferables,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+
+		void receiveMaps(in com::syrus::AMFICOM::map::corba::MapSeq_Transferable map_Transferables,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+			
+		void receiveSiteNodeTypes(in com::syrus::AMFICOM::map::corba::SiteNodeTypeSeq_Transferable siteNodeType_Transferables,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		void receivePhysicalLinkTypes(in com::syrus::AMFICOM::map::corba::PhysicalLinkTypeSeq_Transferable physicalLinkType_Transferables,
+								  in boolean force, 	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		
+		// transmit
+		
+		com::syrus::AMFICOM::map::corba::SiteNode_Transferable transmitSiteNode(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::map::corba::TopologicalNode_Transferable transmitTopologicalNode(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::map::corba::NodeLink_Transferable transmitNodeLink(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+					
+		com::syrus::AMFICOM::map::corba::Mark_Transferable transmitMark(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+
+		com::syrus::AMFICOM::map::corba::PhysicalLink_Transferable transmitPhysicalLink(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+			
+		com::syrus::AMFICOM::map::corba::Collector_Transferable transmitCollector(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+
+		com::syrus::AMFICOM::map::corba::Map_Transferable transmitMap(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+			
+		com::syrus::AMFICOM::map::corba::SiteNodeType_Transferable transmitSiteNodeType(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::map::corba::PhysicalLinkType_Transferable transmitPhysicalLinkType(in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+			
+		com::syrus::AMFICOM::map::corba::SiteNodeSeq_Transferable transmitSiteNodes(in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::map::corba::TopologicalNodeSeq_Transferable transmitTopologicalNodes(in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::map::corba::NodeLinkSeq_Transferable transmitNodeLinks(in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+					
+		com::syrus::AMFICOM::map::corba::MarkSeq_Transferable transmitMarks(in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+
+		com::syrus::AMFICOM::map::corba::PhysicalLinkSeq_Transferable transmitPhysicalLinks(in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+			
+		com::syrus::AMFICOM::map::corba::CollectorSeq_Transferable transmitCollectors(in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+
+		com::syrus::AMFICOM::map::corba::MapSeq_Transferable transmitMaps(in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
+			
+		com::syrus::AMFICOM::map::corba::SiteNodeTypeSeq_Transferable transmitSiteNodeTypes(in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,	
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::map::corba::PhysicalLinkTypeSeq_Transferable transmitPhysicalLinkTypes(in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+						 		  in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+	};
+};
+};
+};
+};
+};
+
+
+
+
+#endif
