@@ -126,11 +126,14 @@ public class LangModel
 		country = c;
 		try
 		{
+			lang = ResourceBundle.getBundle(resourceBundle);
+/*
 			locale = new Locale(language, country);
 			lang = ResourceBundle.getBundle(
 					resourceBundle,
 //					"com.syrus.AMFICOM.Client.General.Lang.LangModel",
 					locale);
+*/
 			System.out.println("initialize locale - " + locale.toString());
 			symbols = new DateFormatSymbols(locale);
 		}

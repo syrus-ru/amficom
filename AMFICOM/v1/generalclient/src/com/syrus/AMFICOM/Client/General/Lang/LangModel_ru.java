@@ -155,7 +155,7 @@ public class LangModel_ru extends LangModel
 		{ "ChangePasswordTitle", "Изменение пароля" },
 		{ "SessionInfoTitle", "Параметры сессии" },
 		{ "ConnectionTitle", "Параметры соединения с сервером" },
-		{ "SessionOpenTitle", "Открыть сессию" },//,"Петя - дурак!" }
+		{ "SessionOpenTitle", "Открыть сессию" },
 		{ "SessionDomainTitle", "Выбор домена" },
 
 		{ "CalendarTitle", "Календарь" },
@@ -169,7 +169,7 @@ public class LangModel_ru extends LangModel
 		{ "buttonCancel", "Отменить" },
 		{ "buttonChange", "Изменить" },
 		{ "buttonClose", "Закрыть" },
-		{ "buttonEnter", "Войти в систему" },//"Вставить Пете" },
+		{ "buttonEnter", "Войти в систему" },
 		{ "buttonStandard", "Стандартные" },
 		{ "buttonCheck", "Тест" },
 		{ "buttonSelect", "Выбрать" },

@@ -235,4 +235,3 @@ src/com/syrus/AMFICOM/Client/General/Report/SelectTypeTemplateWindow.java
 src/com/syrus/AMFICOM/Client/General/Report/SelectReportsPanel.java
 src/com/syrus/AMFICOM/Client/General/Report/Statistics.java
 src/com/syrus/AMFICOM/Client/General/Report/TitledPanel.java
-
