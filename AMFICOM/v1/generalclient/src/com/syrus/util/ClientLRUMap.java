@@ -1,5 +1,5 @@
 /*
- * $Id: ClientLRUMap.java,v 1.3 2004/11/18 12:18:14 max Exp $
+ * $Id: ClientLRUMap.java,v 1.4 2004/11/25 14:44:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/18 12:18:14 $
- * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2004/11/25 14:44:44 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 
@@ -75,7 +75,7 @@ public class ClientLRUMap extends LRUMap {
     
 	public synchronized Object put(Object key, Object value) {
 		StorableObject trowedOutObject = (StorableObject) super.put(key, value);
-        if(!trowedOutObject.isChanged()) { 
+        if(trowedOutObject == null || !trowedOutObject.isChanged()) { 
             return trowedOutObject;
         } 
         for (int i = super.array.length - 1; i >= 0; i--) {
