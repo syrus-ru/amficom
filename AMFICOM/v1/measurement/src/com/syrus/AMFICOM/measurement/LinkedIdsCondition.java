@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.16 2004/11/03 12:04:52 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.17 2004/11/03 17:16:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/11/03 12:04:52 $
+ * @version $Revision: 1.17 $, $Date: 2004/11/03 17:16:11 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -185,27 +185,31 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 				if (object instanceof MeasurementType) {
 					MeasurementType measurementType = (MeasurementType) object;
 					List measurementPortTypes = measurementType.getMeasurementPortTypes();
-					for (Iterator it = measurementPortTypes.iterator(); it.hasNext();) {
-						MeasurementPortType measurementPortType = (MeasurementPortType) it.next();
-						Identifier id2 = measurementPortType.getId();
-						if (!condition) {
-							if (this.linkedIds == null) {
-								Identifier id = this.identifier;
-								if (id.equals(id2)) {
-									condition = true;
-									break;
-								}
-							} else {
-								for (Iterator iter = this.linkedIds.iterator(); iter.hasNext();) {
-									Identifier id = (Identifier) iter.next();
-									if (id2.equals(id)) {
+					if (measurementPortTypes != null){
+						for (Iterator it = measurementPortTypes.iterator(); it.hasNext();) {
+							MeasurementPortType measurementPortType = (MeasurementPortType) it.next();
+							Identifier id2 = measurementPortType.getId();
+							if (!condition) {
+								if (this.linkedIds == null) {
+									Identifier id = this.identifier;
+									if (id.equals(id2)) {
 										condition = true;
 										break;
 									}
-
+								} else {
+									for (Iterator iter = this.linkedIds.iterator(); iter.hasNext();) {
+										Identifier id = (Identifier) iter.next();
+										if (id2.equals(id)) {
+											condition = true;
+											break;
+										}
+	
+									}
 								}
 							}
 						}
+					} else {
+						condition = false;
 					}
 				}
 				break;

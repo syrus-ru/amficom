@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.36 2004/10/27 07:39:39 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.37 2004/11/03 17:16:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/10/27 07:39:39 $
+ * @version $Revision: 1.37 $, $Date: 2004/11/03 17:16:11 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -283,6 +283,14 @@ public class MeasurementStorableObjectPool {
 		return list;
 	}
 
+	/**
+	 * @deprecated
+	 * @param entityCode
+	 * @param ids
+	 * @param useLoader
+	 * @return
+	 * @throws ApplicationException
+	 */
 	public static List getStorableObjectsButIds(Short entityCode, List ids, boolean useLoader) throws ApplicationException {
 		List list = null;
 		LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
@@ -559,10 +567,13 @@ public class MeasurementStorableObjectPool {
 		switch (entityCode) {
 			case ObjectEntities.TEST_ENTITY_CODE:
 				{
-					Test test = (Test) storableObject;
-					TestStatus status = test.getStatus();
-					cache = (status.value() == TestStatus._TEST_STATUS_ABORTED)
-							|| (status.value() == TestStatus._TEST_STATUS_ABORTED);
+				/**
+				 * FIXME how to cache ?
+				 */
+//					Test test = (Test) storableObject;
+//					TestStatus status = test.getStatus();
+//					cache = (status.value() == TestStatus._TEST_STATUS_ABORTED)
+//							|| (status.value() == TestStatus._TEST_STATUS_ABORTED);
 				}
 				break;
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
@@ -601,9 +612,11 @@ public class MeasurementStorableObjectPool {
 				list.clear();
 				for(Iterator poolIt = objectPool.iterator();poolIt.hasNext();){
 					StorableObject storableObject = (StorableObject)poolIt.next();
-					if (storableObject.isChanged())
-						list.add(storableObject);				
-				}
+					if (storableObject.isChanged()){
+						list.add(storableObject);
+						Log.debugMessage("'" + storableObject.getId() + "' is changed", Log.DEBUGLEVEL05);
+					}
+				} 
 				
 				short code = entityCode.shortValue();
 				if (!list.isEmpty()){
@@ -688,6 +701,11 @@ public class MeasurementStorableObjectPool {
 					}
 
 				}
+			} else {
+				Log
+				.errorMessage("MeasurementStorableObjectPool.flush | Cannot find object pool for entity code: '"
+						+ ObjectEntities.codeToString(entityCode.shortValue())
+						+ "'");
 			}
 		}
 	}
