@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.Client.Survey.Report;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
@@ -43,7 +43,7 @@ public class AlarmReportModel extends ObjectResourceReportModel
 */
 	public String getObjectsName()
 	{
-		return LangModelConfig.String("label_alarm");
+		return LangModelSurvey.String("label_alarm");
 	}
 
 	/**
@@ -86,18 +86,18 @@ public class AlarmReportModel extends ObjectResourceReportModel
 	{
 		Vector result = new Vector();
 
-		result.add(LangModelConfig.String("alarm_Source"));
-		result.add(LangModelConfig.String("alarm_Monitoredelement"));
-		result.add(LangModelConfig.String("alarm_Type"));
-		result.add(LangModelConfig.String("alarm_Status"));
-		result.add(LangModelConfig.String("alarm_Time"));
+		result.add(LangModelSurvey.String("alarm_Source"));
+		result.add(LangModelSurvey.String("alarm_Monitoredelement"));
+		result.add(LangModelSurvey.String("alarm_Type"));
+		result.add(LangModelSurvey.String("alarm_Status"));
+		result.add(LangModelSurvey.String("alarm_Time"));
 
-		result.add(LangModelConfig.String("alarm_Assigned"));
-		result.add(LangModelConfig.String("alarm_Fixed_when"));
-		result.add(LangModelConfig.String("alarm_Assigned_to"));
-		result.add(LangModelConfig.String("alarm_Fixed_by"));
+		result.add(LangModelSurvey.String("alarm_Assigned"));
+		result.add(LangModelSurvey.String("alarm_Fixed_when"));
+		result.add(LangModelSurvey.String("alarm_Assigned_to"));
+		result.add(LangModelSurvey.String("alarm_Fixed_by"));
 
-		result.add(LangModelConfig.String("alarm_Comments"));
+		result.add(LangModelSurvey.String("alarm_Comments"));
 
 		return result;
 	}
@@ -213,7 +213,8 @@ public class AlarmReportModel extends ObjectResourceReportModel
 		}
 	}
 
-	public ObjectResourceFilter findORFilterforModel(ReportTemplate rt)
+	public ObjectResourceFilter findORFilterforModel(
+		  ReportTemplate rt,DataSourceInterface dsi)
 	{
 		Vector filters = rt.objectResourceFilters;
 
@@ -225,6 +226,9 @@ public class AlarmReportModel extends ObjectResourceReportModel
 		}
 
 		AlarmFilter af = new AlarmFilter();
+
+		loadRequiredObjects(dsi,null,rt);
+
 		rt.objectResourceFilters.add(af);
 		return af;
 	}
