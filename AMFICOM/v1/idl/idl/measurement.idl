@@ -176,6 +176,8 @@ module corba {
 		sequence <wstring> cron_strings;
 	};
 
+	typedef sequence <TemporalPattern_Transferable> TemporalPatternSeq_Transferable;
+
 /////////////////////// Test ////////////////////////
 
 	enum TestStatus {
