@@ -13,7 +13,13 @@ import com.syrus.AMFICOM.analysis.dadara.*;
 
 public class HistogrammPanel extends ScaledGraphPanel
 {
-	public static int wLetTyp = 1;
+	// Note about SINX or ABSXSINX
+	// ABSXSINX is harder for computations than TYPE_SINX, and
+	// seem to produce results of the same as TYPE_SINX.
+	// So I prefer to use SINX //saa
+
+	//private static int wLetTyp = Wavelet.TYPE_ABSXSINX;
+	private static int wLetTyp = Wavelet.TYPE_SINX;
 
 	protected int nBins = 400;
 	protected double down_limit = -0.4;
