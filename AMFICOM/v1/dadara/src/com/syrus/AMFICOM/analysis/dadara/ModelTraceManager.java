@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.39 2005/03/31 11:16:18 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.40 2005/03/31 11:46:23 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,22 +19,15 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.39 $, $Date: 2005/03/31 11:16:18 $
+ * @version $Revision: 1.40 $, $Date: 2005/03/31 11:46:23 $
  * @module
  */
 public class ModelTraceManager
+extends ModelTraceAndEvents
 {
-	private static final long SIGNATURE_EVENTS = 3353520050119193102L;
-	private static final long SIGNATURE_THRESH = 3353620050119193102L;
 	public static final String CODENAME = "ModelTraceManager";
 
-	private SimpleReflectogramEventImpl[] se; // not null
-	private ModelFunction mf; // not null
-	private int traceLength;
 	private ModelTrace[] thMTCache = null;
-	private double deltaX = 1; // XXX
-	private ModelTrace mt; // will just contain mt
-
 	protected Thresh[] tL; // полный список порогов
 	protected ThreshDX[] tDX; // список DX-порогов
 	protected ThreshDY[] tDY; // список DY-порогов
@@ -71,11 +64,11 @@ public class ModelTraceManager
 		LinkedList thresholds = new LinkedList();
 		Thresh last; // далее будет всегда указывать на текущий порог "линейного" типа
 		thresholds.add(last = new ThreshDY(-1, false, 0, 0)); // "C" coding style
-		for (int i = 0; i < se.length; i++)
+		for (int i = 0; i < getSE().length; i++)
 		{
-			int evBegin = se[i].getBegin();
-			int evEnd = se[i].getEnd();
-			switch(se[i].getEventType())
+			int evBegin = getSE()[i].getBegin();
+			int evEnd = getSE()[i].getEnd();
+			switch(getSE()[i].getEventType())
 			{
 			case SimpleReflectogramEvent.LINEAR:
 				last.xMax = evEnd;
@@ -94,7 +87,7 @@ public class ModelTraceManager
 				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
 				break;
 			case SimpleReflectogramEvent.REFLECTIVE:
-				int[] pos = CoreAnalysisManager.getConnectorMinMaxMin(mf, evBegin, evEnd);
+				int[] pos = CoreAnalysisManager.getConnectorMinMaxMin(getMF(), evBegin, evEnd);
 				evBegin = pos[0];
 				int evCenter = pos[1];
 				evEnd = pos[2];
@@ -143,57 +136,8 @@ public class ModelTraceManager
 	 */
 	public ModelTraceManager(SimpleReflectogramEventImpl[] se, ModelFunction mf, double deltaX)
 	{
-		this.se = se;
-		this.mf = mf;
-		this.deltaX = deltaX;
-		this.traceLength = calcTraceLength();
-		this.mt = new ModelTraceImplMF(this.mf, this.traceLength);
+		super(se, mf, deltaX);
 		createTH();
-	}
-
-	private int calcTraceLength()
-	{
-		if (se.length == 0)
-			return 0;
-		else
-			return se[se.length - 1].getEnd() + 1;
-	}
-
-	public ModelTrace getModelTrace()
-	{
-		return mt;
-	}
-
-	public int getNEvents()
-	{
-		return se.length;
-	}
-
-	public SimpleReflectogramEvent getSimpleEvent(int nEvent)
-	{
-		return se[nEvent];
-	}
-
-	public SimpleReflectogramEvent[] getSimpleEvents()
-	{
-		// Copy an array and all its references to protect se array.
-		// Array elements are unmodifiable, so no need to clone them.
-		return (SimpleReflectogramEvent[] )se.clone();
-	}
-
-	public ComplexReflectogramEvent[] getComplexEvents()
-	{
-		return ComplexReflectogramEvent.createEvents(se, mt);
-	}
-
-	public void setDeltaX(double deltaX)
-	{
-		this.deltaX = deltaX;
-	}
-
-	public double getDeltaX()
-	{
-		return deltaX;
 	}
 
 	/**
@@ -208,25 +152,6 @@ public class ModelTraceManager
 	{
 		ModelTrace th = getThresholdMT(key);
 		return th.getY(x);
-	}
-
-	/**
-	 * Возвращает номер события, соответствующего данному
-	 * иксу. Если x попадает на границу двух событий,
-	 * то выбор левого или правого зависит от реализации.
-	 * Если x не попадает ни на одно событие,
-	 * то возвращает -1.
-	 * <p> Относительно медленный метод и не очень удобный. 
-	 */
-	public int getEventByCoord(int x)
-	{
-		int ret = -1;
-		for (int i = 0; i < se.length; i++)
-		{
-			if (x >= se[i].getBegin() && x <= se[i].getEnd())
-				ret = i;
-		}
-		return ret;
 	}
 
 	public class ThreshEditor
@@ -346,9 +271,9 @@ public class ModelTraceManager
 			//for (int i = 0; i < 500; i++)
 			//	mf.copy().changeByThresh(tDX, tDY, key);
 
-			ModelFunction tmp = mf.copy();
+			ModelFunction tmp = getMF().copy();
 			tmp.changeByThresh(tDX, tDY, key);
-			thMt = new ModelTraceImplMF(tmp, traceLength);
+			thMt = new ModelTraceImplMF(tmp, getTraceLength());
 			emptyThMTEntry(key);
 			thMTCache[key] = thMt;
 		}
@@ -373,13 +298,13 @@ public class ModelTraceManager
 
 	public void updateUpperThreshToContain(double[] yTop)
 	{
-		CoreAnalysisManager.nExtendThreshToCoverCurve(mt.getYArray(), yTop,
+		CoreAnalysisManager.nExtendThreshToCoverCurve(getModelTrace().getYArray(), yTop,
 			tDX, tDY, Thresh.SOFT_UP, Thresh.HARD_UP);
 	}
 
 	public void updateLowerThreshToContain(double[] yTop)
 	{
-		CoreAnalysisManager.nExtendThreshToCoverCurve(mt.getYArray(), yTop,
+		CoreAnalysisManager.nExtendThreshToCoverCurve(getModelTrace().getYArray(), yTop,
 			tDX, tDY, Thresh.SOFT_DOWN, Thresh.HARD_DOWN);
 	}
 
@@ -388,62 +313,6 @@ public class ModelTraceManager
 		throw new UnsupportedOperationException(); // FIXME
 		//invalidateThMFCache();
 		//re[nEvent].setThreshold(new Threshold());
-	}
-
-	public byte[] eventsAndTraceToByteArray()
-	{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		DataOutputStream dos = new DataOutputStream(baos);
-		try
-		{
-			dos.writeLong(SIGNATURE_EVENTS);
-			mf.writeToDOS(dos);
-			dos.writeDouble(deltaX);
-			dos.writeInt(se.length);
-			for (int i = 0; i < se.length; i++)
-				se[i].writeToDOS(dos);
-			return baos.toByteArray();
-		} catch (IOException e)
-		{
-			System.out.println("IOException caught: " + e);
-			e.printStackTrace();
-			return new byte[0]; //null // XXX
-		}
-	}
-
-	//@todo: throw exceptions when there are errors
-	public static ModelTraceManager eventsAndTraceFromByteArray(byte[] bar)
-	{
-		try
-		{
-			ByteArrayInputStream bais = new ByteArrayInputStream(bar);
-			DataInputStream dis = new DataInputStream(bais);
-			long signature = dis.readLong();
-			if (signature != SIGNATURE_EVENTS)
-				throw new SignatureMismatchException();
-			ModelFunction mf = ModelFunction.createFromDIS(dis);
-			double deltaX = dis.readDouble();
-			int len = dis.readInt();
-			SimpleReflectogramEventImpl[] se = new SimpleReflectogramEventImpl[len];
-			for (int i = 0; i < len; i++)
-				se[i] = SimpleReflectogramEventImpl.createFromDIS(dis);
-			return new ModelTraceManager(se, mf, deltaX);
-		}
-		catch (IOException e)
-		{
-			// FIXME: what to do?
-			// we should not catch exceptions here?
-			System.out.println("IOException caught, wanna die: " + e);
-			e.printStackTrace();
-			return null; // FIXME
-		}
-		catch (SignatureMismatchException e)
-		{
-			System.out.println("SignatureMismatchException caught, wanna die: " + e);
-			e.printStackTrace();
-			return null; // FIXME
-			//return new ModelTraceManager(new ReflectogramEvent[0]); // FIXME
-		}
 	}
 
 	public byte[] toThresholdsByteArray()
@@ -747,7 +616,7 @@ public class ModelTraceManager
 
 		if (button == 0)
 		{
-			int thId = mf.findResponsibleThreshDYID(tDX, tDY, bestKey, bestX);
+			int thId = getMF().findResponsibleThreshDYID(tDX, tDY, bestKey, bestX);
 			if (thId == -1)
 				return null;
 			ThresholdHandleDY handle = new ThresholdHandleDY(thId, bestKey, bestX, bestY);
@@ -756,7 +625,7 @@ public class ModelTraceManager
 		}
 		else
 		{
-			int thId = mf.findResponsibleThreshDXID(tDX, tDY, bestKey, bestX);
+			int thId = getMF().findResponsibleThreshDXID(tDX, tDY, bestKey, bestX);
 			if (thId == -1)
 				return null;
 			ThresholdHandleDX handle = new ThresholdHandleDX(thId, bestKey, bestX, bestY);
@@ -770,10 +639,10 @@ public class ModelTraceManager
 	{
 		int begin = -1;
 		int end = -1;
-		int[] aX = mf.findResponsibleThreshDXArray(tDX, tDY, key, 0, traceLength - 1);
-		for (int i = 0; i < traceLength; i++)
+		int[] aX = getMF().findResponsibleThreshDXArray(tDX, tDY, key, 0, getTraceLength() - 1);
+		for (int i = 0; i < getTraceLength(); i++)
 		{
-			boolean belongs = i >= se[nEvent].getBegin() && i <= se[nEvent].getEnd();
+			boolean belongs = i >= getSE()[nEvent].getBegin() && i <= getSE()[nEvent].getEnd();
 			if (aX[i] >= 0)
 				belongs = tDX[aX[i]].isRelevantToNEvent(nEvent);
 			if (belongs)
@@ -785,6 +654,6 @@ public class ModelTraceManager
 		}
 		if (begin < 0)
 			return null;
-		return new SimpleReflectogramEventImpl(begin, end, se[nEvent].getEventType());
+		return new SimpleReflectogramEventImpl(begin, end, getSE()[nEvent].getEventType());
 	}
 }
