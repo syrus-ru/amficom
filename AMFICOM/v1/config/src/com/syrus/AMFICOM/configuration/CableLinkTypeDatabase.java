@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.26 2005/03/29 11:31:20 bob Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.27 2005/03/29 12:09:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/03/29 11:31:20 $
+ * @version $Revision: 1.27 $, $Date: 2005/03/29 12:09:09 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -67,6 +67,7 @@ public class CableLinkTypeDatabase extends CharacterizableDatabase {
 	}
 	
 	protected boolean checkEntity(short conditionCode) {
+		Log.debugMessage("CableLinkTypeDatabase.checkEntity | conditionCode is " + conditionCode + ", self is " + ObjectEntities.CABLELINKTYPE_ENTITY_CODE, Log.FINEST);
 		return ObjectEntities.CABLELINKTYPE_ENTITY_CODE == conditionCode;		
 	}
 
