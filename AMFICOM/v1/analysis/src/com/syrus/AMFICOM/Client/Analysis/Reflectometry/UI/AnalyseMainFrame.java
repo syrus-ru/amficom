@@ -720,7 +720,7 @@ public class AnalyseMainFrame extends JFrame
 	void updFrames(String id)
 	{
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-		double delta_x = bs.getDeltaX();
+		double delta_x = bs.getResolution();
 //		double[] y = bs.getTraceData();
 
 		double[] filtered = ((RefAnalysis)Pool.get("refanalysis", id)).filtered;

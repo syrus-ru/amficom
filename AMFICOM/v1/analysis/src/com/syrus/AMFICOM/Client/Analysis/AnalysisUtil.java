@@ -253,7 +253,7 @@ public class AnalysisUtil
 
 		if(bsEt!=null && events!=null)
 		{
-			double delta_x = bsEt.getDeltaX();
+			double delta_x = bsEt.getResolution();
 			for(int i=0; i<events.length; i++)
 				events[i].setDeltaX(delta_x);
 		}

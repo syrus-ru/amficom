@@ -111,7 +111,7 @@ public class FileOpenCommand extends VoidCommand
 			String activeRefId = chooser.getSelectedFile().getName();
 			bs.title = activeRefId;
 			Pool.put("bellcorestructure", "primarytrace", bs);
-			Pool.put("activecontext", "activepathid", bs.supParams.OT);
+			Pool.put("activecontext", "activepathid", "");
 
 			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
 

@@ -172,7 +172,7 @@ public class DetailedEventsFrame extends JInternalFrame
 					{
 						a = (RefAnalysis)Pool.get("refanalysis", id);
 						bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-						res = (double)(3 * bs.fxdParams.DS[0]) / (double)(bs.fxdParams.GI * 10000);
+						res = bs.getResolution();
 						this.data =  (ReflectogramEvent [])Pool.get("eventparams", "primarytrace");
 						if(data != null && etalon != null)
 							this.data_ = ReflectogramMath.alignClone(data, etalon);

@@ -17,7 +17,7 @@ public class InitialAnalysisCommand extends VoidCommand
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
 		if (bs != null)
 		{
-			double delta_x = bs.getDeltaX();
+			double delta_x = bs.getResolution();
 			double[] y = bs.getTraceData();
 
 			double[] params = (double[])Pool.get("analysisparameters", "minuitanalysis");
@@ -38,7 +38,7 @@ public class InitialAnalysisCommand extends VoidCommand
 			int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
 					y,
 					1000,
-					((double)bs.fxdParams.GI) / 100000d,
+					bs.getIOR(),
 					delta_x);
 			if (nReflSize > 3 * reflSize / 5)
 				nReflSize = 3 * reflSize / 5;

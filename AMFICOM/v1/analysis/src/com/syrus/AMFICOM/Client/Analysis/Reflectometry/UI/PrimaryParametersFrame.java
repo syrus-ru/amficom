@@ -159,27 +159,28 @@ public class PrimaryParametersFrame extends ATableFrame
 		if (bs == null)
 			return;
 
-		double res = (double)bs.fxdParams.DS[0] * .3d / (double)bs.fxdParams.GI;
+//		double res = (double)bs.fxdParams.DS[0] * .3d / (double)bs.fxdParams.GI;
 //		double res2 = (bs.fxdParams.AR - bs.fxdParams.AO) * 3d / ((double)bs.dataPts.TNDP * (double)bs.fxdParams.GI/1000d);
+		double res = bs.getResolution();
 
-		if (bs.fxdParams.UD.equals("km"))
+		if (bs.getUnits().equals("km"))
 			res *= 1000d;
-		double range = (double)(bs.fxdParams.AR - bs.fxdParams.AO) * 3d / (double)bs.fxdParams.GI * 1000;
-		if (bs.fxdParams.UD.equals("mt"))
+		double range = bs.getRange();
+		if (bs.getUnits().equals("mt"))
 			range /= 1000d;
-		String date = sdf.format(new Date(bs.fxdParams.DTS * 1000));
+		String date = sdf.format(bs.getDate());
 
 		tModel.updateColumn(new Object[] {
-			bs.supParams.OMID,
-			new StringBuffer().append(bs.fxdParams.AW / 10).append(nm).toString(),
-			new StringBuffer().append(bs.fxdParams.PWU[0]).append(ns).toString(),
-			String.valueOf((double)bs.fxdParams.GI / 100000d),
-			String.valueOf(bs.fxdParams.NAV),
+			bs.getOpticalModuleId(),
+			new StringBuffer().append(bs.getWavelength()).append(nm).toString(),
+			new StringBuffer().append(bs.getPulsewidth()).append(ns).toString(),
+			String.valueOf(bs.getIOR()),
+			String.valueOf(bs.getAverages()),
 			new StringBuffer().append(Math.round(res)).append(mt).toString(),
 			new StringBuffer().append(Math.round(range)).append(km).toString(),
 			date.substring(0, 9),
 			date.substring(9),
-			new StringBuffer().append(-(double)bs.fxdParams.BC / 10.).append(db).toString(),
+			new StringBuffer().append(bs.getBackscatter()).append(db).toString(),
 		}, 1);
 		jTable.updateUI();
 	}

@@ -56,7 +56,7 @@ public class OpticalAlarmDescriptor extends AlarmDescriptor
 					return;
 				}
 
-				delta_x = bs.getDeltaX();
+				delta_x = bs.getResolution();
 
 				SetParameter[] parameters = res.getParameters();
 				for(int i = 0; i < parameters.length; i++)

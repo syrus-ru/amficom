@@ -51,7 +51,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 		{
 			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
-			double delta_x = bs.getDeltaX();
+			double delta_x = bs.getResolution();
 			double[] y = bs.getTraceData();
 
 			double[] params = (double[])Pool.get("analysisparameters", "minuitanalysis");
@@ -70,7 +70,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 			int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
 					y,
 					1000,
-					((double)bs.fxdParams.GI) / 100000d,
+					bs.getIOR(),
 					delta_x);
 			if (nReflSize > 3 * reflSize / 5)
 				nReflSize = 3 * reflSize / 5;

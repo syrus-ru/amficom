@@ -75,7 +75,7 @@ public class MarkersInfoFrame extends JInternalFrame implements OperationListene
 				if (id.equals("primarytrace"))
 				{
 					bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-					sigma = MathRef.calcSigma(bs.fxdParams.AW/10, bs.fxdParams.PWU[0]);
+					sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
 					setVisible(true);
 				}
 			}

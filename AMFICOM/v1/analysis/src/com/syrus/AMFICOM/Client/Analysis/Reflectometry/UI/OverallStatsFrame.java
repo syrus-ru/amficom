@@ -276,11 +276,11 @@ public class OverallStatsFrame extends ATableFrame
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 		double alpha;
 
-		switch ((int)bs.fxdParams.AW)
+		switch (bs.getWavelength())
 		{
-			case 13100: alpha = .063; break;
-			case 15500: alpha = .032; break;
-			case 16250: alpha = .0265; break;
+			case 1310: alpha = .063; break;
+			case 1550: alpha = .032; break;
+			case 1625: alpha = .0265; break;
 			default: alpha = .032;
 		}
 
@@ -288,7 +288,7 @@ public class OverallStatsFrame extends ATableFrame
 		if (ev == null)
 			return;
 
-		double range = (ev.last_point) * (double)(3 * bs.fxdParams.DS[0]) / (double)(bs.fxdParams.GI * 10000);
+		double range = ev.last_point * bs.getResolution();
 		double loss = Math.abs(ev.data[0] -  ev.data[1]);
 		double attenuation = loss / range;
 		double orl = MathRef.ORL(ev.data[0], ev.data[1]);

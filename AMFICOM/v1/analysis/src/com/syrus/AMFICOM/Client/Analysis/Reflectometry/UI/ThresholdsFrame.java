@@ -168,7 +168,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		SimpleGraphPanel p;
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 
-		double delta_x = bs.getDeltaX();
+		double delta_x = bs.getResolution();
 		double[] y = bs.getTraceData();
 
 		if (id.equals("primarytrace") || id.equals("modeledtrace"))

@@ -99,7 +99,7 @@ public class FileOpenAsBellcoreCommand extends VoidCommand
 			String activeRefId = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			bs.title = chooser.getSelectedFile().getName();
 			Pool.put("bellcorestructure", "primarytrace", bs);
-			Pool.put("activecontext", "activepathid", bs.supParams.OT);
+			Pool.put("activecontext", "activepathid", "");
 
 			new InitialAnalysisCommand().execute();
 
