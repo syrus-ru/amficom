@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.3 2004/08/16 09:02:05 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.4 2004/08/17 09:04:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/16 09:02:05 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/17 09:04:11 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -240,8 +241,8 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
 			preparedStatement.setString(1, mpIdCode);
-			preparedStatement.setDate(2, new java.sql.Date(measurementPort.getCreated().getTime()));
-			preparedStatement.setDate(3, new java.sql.Date(measurementPort.getModified().getTime()));
+			preparedStatement.setTimestamp(2, new Timestamp(measurementPort.getCreated().getTime()));
+			preparedStatement.setTimestamp(3, new Timestamp(measurementPort.getModified().getTime()));
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.19 2004/08/13 14:08:14 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.20 2004/08/17 09:04:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/13 14:08:14 $
+ * @version $Revision: 1.20 $, $Date: 2004/08/17 09:04:11 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -319,8 +320,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
 			preparedStatement.setString(1, eqIdCode);
-			preparedStatement.setDate(2, new java.sql.Date(equipment.getCreated().getTime()));
-			preparedStatement.setDate(3, new java.sql.Date(equipment.getModified().getTime()));
+			preparedStatement.setTimestamp(2, new Timestamp(equipment.getCreated().getTime()));
+			preparedStatement.setTimestamp(3, new Timestamp(equipment.getModified().getTime()));
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */

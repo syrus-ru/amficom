@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.9 2004/08/16 09:02:05 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.10 2004/08/17 09:04:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/16 09:02:05 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/17 09:04:11 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -283,8 +284,8 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
 			preparedStatement.setString(1, trIdCode);
-			preparedStatement.setDate(2, new java.sql.Date(transmissionPath.getCreated().getTime()));
-			preparedStatement.setDate(3, new java.sql.Date(transmissionPath.getModified().getTime()));
+			preparedStatement.setTimestamp(2, new Timestamp(transmissionPath.getCreated().getTime()));
+			preparedStatement.setTimestamp(3, new Timestamp(transmissionPath.getModified().getTime()));
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */

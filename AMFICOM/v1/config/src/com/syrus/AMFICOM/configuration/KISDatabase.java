@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.13 2004/08/13 14:08:15 bob Exp $
+ * $Id: KISDatabase.java,v 1.14 2004/08/17 09:04:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/13 14:08:15 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/17 09:04:11 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -215,8 +216,8 @@ public class KISDatabase extends StorableObjectDatabase {
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
 			preparedStatement.setString(1, kisIdCode);
-			preparedStatement.setDate(2, new java.sql.Date(kis.getCreated().getTime()));
-			preparedStatement.setDate(3, new java.sql.Date(kis.getModified().getTime()));
+			preparedStatement.setTimestamp(2, new Timestamp(kis.getCreated().getTime()));
+			preparedStatement.setTimestamp(3, new Timestamp(kis.getModified().getTime()));
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
