@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupTestCase.java,v 1.3 2004/09/09 14:28:26 bob Exp $
+ * $Id: MeasurementSetupTestCase.java,v 1.4 2004/09/10 06:51:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/09/09 14:28:26 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/10 06:51:04 $
  * @author $Author: bob $
  * @module tools
  */
@@ -108,8 +108,8 @@ public class MeasurementSetupTestCase extends AbstractMesurementTestCase {
 	}
 
 	public void testMultipleCreationAndUpdate() throws IdentifierGenerationException, IllegalObjectEntityException,
-			CreateObjectException, RetrieveObjectException, IllegalDataException, UpdateObjectException,
-			VersionCollisionException {
+			CreateObjectException, IllegalDataException, UpdateObjectException, RetrieveObjectException,
+			ObjectNotFoundException {
 
 		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext
 				.getMeasurementSetupDatabase();
@@ -152,12 +152,51 @@ public class MeasurementSetupTestCase extends AbstractMesurementTestCase {
 		measurementSetupList.add(mSetup1);
 		measurementSetupList.add(mSetup2);
 
-		measurementSetupDatabase.insert(measurementSetupList);
+		boolean versionCollision = false;
+
+		try {
+			measurementSetupDatabase
+					.update(measurementSetupList, StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (VersionCollisionException e) {
+			versionCollision = true;
+		}
+
+		if (versionCollision)
+			fail("VersionCollision occur, but dont");
+
+		versionCollision = false;
+
+		MeasurementSetup measurementSetup3 = new MeasurementSetup(mSetup1.getId());
+		MeasurementSetup measurementSetup4 = new MeasurementSetup(mSetup2.getId());
+
+		List measurementSetupList2 = new LinkedList();
+		measurementSetupList2.add(measurementSetup3);
+		measurementSetupList2.add(measurementSetup4);
 
 		mSetup1.setDescription("newOneDesc1");
 		mSetup2.setDescription("newOneDesc2");
 
-		measurementSetupDatabase.update(measurementSetupList, StorableObjectDatabase.UPDATE_CHECK, null);
+		try {
+			measurementSetupDatabase
+					.update(measurementSetupList, StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (VersionCollisionException e) {
+			versionCollision = true;
+		}
+
+		if (versionCollision)
+			fail("VersionCollision occur, but dont");
+
+		versionCollision = false;
+
+		try {
+			measurementSetupDatabase.update(measurementSetupList2, StorableObjectDatabase.UPDATE_CHECK,
+							null);
+		} catch (VersionCollisionException vce) {
+			versionCollision = true;
+		}
+
+		if (!versionCollision)
+			fail("VersionCollision must be occur");
 
 		if (!list.isEmpty()) {
 			for (Iterator it = measurementSetupList.iterator(); it.hasNext();) {

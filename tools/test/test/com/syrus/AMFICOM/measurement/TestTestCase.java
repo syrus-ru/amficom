@@ -1,5 +1,5 @@
 /*
- * $Id: TestTestCase.java,v 1.7 2004/09/09 14:28:26 bob Exp $
+ * $Id: TestTestCase.java,v 1.8 2004/09/10 06:51:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/09/09 14:28:26 $
+ * @version $Revision: 1.8 $, $Date: 2004/09/10 06:51:04 $
  * @author $Author: bob $
  * @module tools
  */
@@ -111,8 +111,8 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);
 
-		Test test = Test.createInstance(id, creatorId, new Date(System.currentTimeMillis() + 1000 * 60 * 60), new Date(System
-				.currentTimeMillis() + 1000 * 60 * 60 *14), temporalPettern, temporalType, measurementType,
+		Test test = Test.createInstance(id, creatorId, new Date(System.currentTimeMillis()), new Date(System
+				.currentTimeMillis() + 1000 * 60 * 60 ), temporalPettern, temporalType, measurementType,
 						analysisType, evaluationType, me,
 						TestReturnType.TEST_RETURN_TYPE_WHOLE, "cretated by TestTestCase",
 						measurementSetupIds);
