@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.15 2005/02/18 12:19:46 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.16 2005/03/02 12:35:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,10 +26,10 @@ import java.awt.Point;
 /**
  * Стратегия управления выделенными объектами.
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/02/18 12:19:46 $
+ * @version $Revision: 1.16 $, $Date: 2005/03/02 12:35:40 $
  * @module mapviewclient_v1
  */
-public final class MapSelectionElementStrategy extends MapStrategy 
+public final class MapSelectionElementStrategy extends AbstractMapStrategy 
 {
 	/**
 	 * Набор выделенных элементов.

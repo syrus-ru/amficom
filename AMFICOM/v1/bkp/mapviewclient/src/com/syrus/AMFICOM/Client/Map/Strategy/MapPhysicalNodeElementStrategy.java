@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.17 2005/02/18 12:19:46 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.18 2005/03/02 12:35:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,10 +37,10 @@ import java.util.Iterator;
 /**
  * Стратегия управления топологическим узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/02/18 12:19:46 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/02 12:35:40 $
  * @module mapviewclient_v1
  */
-public final class MapPhysicalNodeElementStrategy extends MapStrategy 
+public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy 
 {
 	/**
 	 * Топологический узел.

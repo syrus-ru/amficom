@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.20 2005/02/18 12:19:46 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.21 2005/03/02 12:35:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,10 +32,10 @@ import java.util.Set;
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/02/18 12:19:46 $
+ * @version $Revision: 1.21 $, $Date: 2005/03/02 12:35:40 $
  * @module mapviewclient_v1
  */
-public final class MapVoidElementStrategy extends MapStrategy 
+public final class MapVoidElementStrategy extends AbstractMapStrategy 
 {
 	/**
 	 * Топологическая схема.

@@ -1,5 +1,5 @@
 /**
- * $Id: VoidStrategy.java,v 1.6 2005/02/07 16:09:27 krupenn Exp $
+ * $Id: VoidStrategy.java,v 1.7 2005/03/02 12:35:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,10 +14,10 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Пустая стратегия. Ничего не делает.
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/07 16:09:27 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/02 12:35:40 $
  * @module mapviewclient_v1
  */
-public final class VoidStrategy extends MapStrategy 
+public final class VoidStrategy extends AbstractMapStrategy 
 {
 	/**
 	 * Instance.

@@ -1,5 +1,5 @@
 /**
- * $Id: MapAlarmMarkerStrategy.java,v 1.12 2005/02/18 12:19:46 krupenn Exp $
+ * $Id: MapAlarmMarkerStrategy.java,v 1.13 2005/03/02 12:35:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,10 +23,10 @@ import java.awt.Point;
 /**
  * Стратегия управления маркером сигнала тревоги.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/02/18 12:19:46 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/02 12:35:40 $
  * @module mapviewclient_v1
  */
-public final class MapAlarmMarkerStrategy extends MapStrategy 
+public final class MapAlarmMarkerStrategy extends AbstractMapStrategy 
 {
 	/**
 	 * Маркер сигнала тревоги.

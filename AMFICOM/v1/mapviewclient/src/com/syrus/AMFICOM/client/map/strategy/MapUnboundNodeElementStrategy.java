@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.16 2005/02/18 12:19:46 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.17 2005/03/02 12:35:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,10 +31,10 @@ import java.util.Iterator;
 /**
  * Стратегия управления непривязанным узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/02/18 12:19:46 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/02 12:35:40 $
  * @module mapviewclient_v1
  */
-public final class MapUnboundNodeElementStrategy extends MapStrategy 
+public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy 
 {
 	/**
 	 * Непривязанный узел.

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPathElementStrategy.java,v 1.13 2005/02/18 12:19:46 krupenn Exp $
+ * $Id: MapPathElementStrategy.java,v 1.14 2005/03/02 12:35:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,10 +23,10 @@ import java.awt.Point;
 /**
  * Стратегия управления измерительным путем.
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/02/18 12:19:46 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/02 12:35:40 $
  * @module mapviewclient_v1
  */
-public final class MapPathElementStrategy extends MapStrategy 
+public final class MapPathElementStrategy extends AbstractMapStrategy 
 {
 	/**
 	 * Измерительный путь.
