@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.20 2004/10/19 09:35:57 max Exp $
+ * $Id: CMServerTestCase.java,v 1.21 2004/10/19 15:12:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,14 +39,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.Analysis;
-import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.EvaluationType;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.ParameterType;
-import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
@@ -62,8 +55,8 @@ import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/10/19 09:35:57 $
- * @author $Author: max $
+ * @version $Revision: 1.21 $, $Date: 2004/10/19 15:12:26 $
+ * @author $Author: bass $
  * @module module
  */
 public class CMServerTestCase extends TestCase {

@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerIdentifierTestCase.java,v 1.1 2004/09/24 09:38:55 bob Exp $
+ * $Id: CMServerIdentifierTestCase.java,v 1.2 2004/10/19 15:12:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.cmserver.test;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Date;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
@@ -19,7 +18,6 @@ import junit.framework.TestSuite;
 
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.UserException;
-import org.omg.CORBA.ORBPackage.InvalidName;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.PortableServer.POA;
@@ -29,31 +27,17 @@ import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.cmserver.corba.CMServerHelper;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
-import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
-import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.measurement.*;
 import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/24 09:38:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2004/10/19 15:12:26 $
+ * @author $Author: bass $
  * @module module
  */
 public class CMServerIdentifierTestCase extends TestCase {

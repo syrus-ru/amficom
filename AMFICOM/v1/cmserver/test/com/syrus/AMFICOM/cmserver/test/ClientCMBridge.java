@@ -1,5 +1,5 @@
 /*
- * $Id: ClientCMBridge.java,v 1.2 2004/09/27 12:23:55 bob Exp $
+ * $Id: ClientCMBridge.java,v 1.3 2004/10/19 15:12:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,13 +26,13 @@ import com.syrus.AMFICOM.configuration.User;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.*;
 import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/09/27 12:23:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 15:12:27 $
+ * @author $Author: bass $
  * @module module
  */
 public class ClientCMBridge {
