@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.10 2005/03/21 18:06:53 saa Exp $
+ * $Id: ThreshDX.java,v 1.11 2005/03/28 12:01:54 bob Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,14 +12,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/03/21 18:06:53 $
+ * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/03/28 12:01:54 $
  * @module
  */
 public class ThreshDX extends Thresh
 {
 	private int[] dX;
-	private boolean isRise;
+	private boolean rise;
 
 	protected ThreshDX()
 	{ // do nothing
@@ -27,49 +27,49 @@ public class ThreshDX extends Thresh
 	
 	private int goodSign(int key)
 	{
-		return isRise ^ IS_KEY_UPPER[key] ? 1 : -1;
+		return this.rise ^ IS_KEY_UPPER[key] ? 1 : -1;
 	}
 
 	protected ThreshDX(int eventId, int xMin, int xMax, boolean isRise)
 	{
 		super(eventId, eventId, xMin, xMax);
 		int dx = isRise ? -1 : +1;
-		this.isRise = isRise;
-		dX = new int[] { dx, 2 * dx, -dx, -2 * dx };
+		this.rise = isRise;
+		this.dX = new int[] { dx, 2 * dx, -dx, -2 * dx };
 	}
 
 	protected void readSpecificFromDIS(DataInputStream dis) throws IOException
 	{
 		for (int k = 0; k < 4; k++)
-			dX[k] = dis.readInt();
+			this.dX[k] = dis.readInt();
 	}
 	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException
 	{
 		for (int k = 0; k < 4; k++)
-			dos.writeInt(dX[k]);
+			dos.writeInt(this.dX[k]);
 	}
-	protected boolean getRise()
+	protected boolean isRise()
 	{
-		return isRise;
+		return this.rise;
 	}
 	protected double getDX(int key)
 	{
-		return dX[key];
+		return this.dX[key];
 	}
 	private void correctDX(int key)
 	{
-		if (dX[key] * goodSign(key) < 0)
-			dX[key] = 0;
+		if (this.dX[key] * goodSign(key) < 0)
+			this.dX[key] = 0;
 	}
 	private void limit(int key) // impose limiting according to LIMIT_KEY
 	{
 		int compareSign = goodSign(key) * (IS_KEY_HARD[key] ? 1 : -1);
-		if (dX[key] * compareSign < dX[LIMIT_KEY[key]] * compareSign)
-			dX[key] = dX[LIMIT_KEY[key]];
+		if (this.dX[key] * compareSign < this.dX[LIMIT_KEY[key]] * compareSign)
+			this.dX[key] = this.dX[LIMIT_KEY[key]];
 	}
 	protected void setDX(int key, double val)
 	{
-		dX[key] = (int )val;
+		this.dX[key] = (int )val;
 		correctDX(key);
 		limit(key);
 	}
@@ -78,15 +78,15 @@ public class ThreshDX extends Thresh
 	{
 		correctDX(key);
 		int compareSign = goodSign(key) * (IS_KEY_HARD[key] ? 1 : -1);
-		if (dX[key] * compareSign < dX[FORCEMOVE_KEY[key]] * compareSign)
-			dX[FORCEMOVE_KEY[key]] = dX[key];
+		if (this.dX[key] * compareSign < this.dX[FORCEMOVE_KEY[key]] * compareSign)
+			this.dX[FORCEMOVE_KEY[key]] = this.dX[key];
 	}
 
 	public void changeAllBy(int delta)
 	{
 		for (int key = 0; key < 4; key++)
 		{
-			dX[key] += goodSign(key) * delta * (IS_KEY_HARD[key] ? 2 : 1);
+			this.dX[key] += goodSign(key) * delta * (IS_KEY_HARD[key] ? 2 : 1);
 			correctDX(key);
 		}
 		for (int key = 0; key < 4; key++)
