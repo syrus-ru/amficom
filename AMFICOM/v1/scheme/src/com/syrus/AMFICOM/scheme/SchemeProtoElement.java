@@ -1,26 +1,24 @@
 /*
- * $Id: SchemeProtoElement.java,v 1.3 2005/03/17 12:52:55 bass Exp $
- *
- * Copyright ¿ 2004 Syrus Systems.
- * Dept. of Science & Technology.
- * Project: AMFICOM.
+ * $Id: SchemeProtoElement.java,v 1.4 2005/03/17 18:17:27 bass Exp $ Copyright ¿
+ * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.resource.*;
+import com.syrus.util.Log;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 12:52:55 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/17 18:17:27 $
  * @module scheme_v1
  */
-public final class SchemeProtoElement extends AbstractCloneableStorableObject implements
-		Describable, SchemeCellContainer, Characterizable {
+public final class SchemeProtoElement extends AbstractCloneableStorableObject
+		implements Describable, SchemeCellContainer, Characterizable {
 	private static final long serialVersionUID = 3689348806202569782L;
 
 	protected Identifier characteristicIds[] = null;
@@ -42,16 +40,16 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject im
 
 	protected Identifier symbolId = null;
 
-	protected String thisDescription = null;
-
 	protected String thisLabel = null;
-
-	protected String thisName = null;
 
 	/**
 	 * Takes non-null value at pack time.
 	 */
 	protected Identifier ugoCellId = null;
+
+	private String description;
+
+	private String name;
 
 	/**
 	 * @param id
@@ -75,6 +73,32 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject im
 	}
 
 	/**
+	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 */
+	public static SchemeProtoElement createInstance() {
+		throw new UnsupportedOperationException();
+	}
+
+	public static SchemeProtoElement createInstance(
+			final Identifier creatorId)
+			throws CreateObjectException {
+		assert creatorId != null;
+		try {
+			final Date created = new Date();
+			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L);
+			schemeProtoElement.changed = true;
+			return schemeProtoElement;
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemeProtoElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+	}
+
+	/**
 	 * @param characteristic
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
 	 */
@@ -91,14 +115,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject im
 		return schemeProtoElement;
 	}
 
-	public String getDescription() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setDescription(String description) {
-		throw new UnsupportedOperationException();
-	}
-
 	public SchemeDevice[] devices() {
 		throw new UnsupportedOperationException();
 	}
@@ -108,17 +124,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject im
 	 * @see com.syrus.AMFICOM.scheme.SchemeProtoElement#devices(com.syrus.AMFICOM.scheme.corba.SchemeDevice[])
 	 */
 	public void devices(SchemeDevice[] newDevices) {
-		throw new UnsupportedOperationException();
-	}
-
-	public EquipmentType getEquipmentType() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newEquipmentTypeImpl
-	 */
-	public void setEquipmentType(EquipmentType newEquipmentTypeImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -143,6 +148,49 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject im
 		throw new UnsupportedOperationException();
 	}
 
+	public EquipmentType getEquipmentType() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getSchemeCell()
+	 */
+	public SchemeImageResource getSchemeCell() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.scheme.SchemeSymbolContainer#getSymbol()
+	 */
+	public BitmapImageResource getSymbol() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 */
+	public Object getTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return <code>ugoCell</code> associated with this
+	 *         <code>SchemeProtoElement</code>, or <code>null</code> if
+	 *         none.
+	 * @see SchemeCellContainer#getUgoCell()
+	 */
+	public SchemeImageResource getUgoCell() {
+		if (this.ugoCellId.equals(Identifier.VOID_IDENTIFIER))
+			return null;
+		try {
+			return (SchemeImageResource) ResourceStorableObjectPool
+					.getStorableObject(this.ugoCellId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return null;
+		}
+	}
+
 	public String label() {
 		throw new UnsupportedOperationException();
 	}
@@ -160,14 +208,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject im
 	 * @see com.syrus.AMFICOM.scheme.SchemeProtoElement#links(com.syrus.AMFICOM.scheme.corba.SchemeLink[])
 	 */
 	public void links(SchemeLink[] newLinks) {
-		throw new UnsupportedOperationException();
-	}
-
-	public String getName() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -207,21 +247,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject im
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getSchemeCell()
-	 */
-	public SchemeImageResource getSchemeCell() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param schemeCellImpl
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setSchemeCell(SchemeImageResource)
-	 */
-	public void setSchemeCell(SchemeImageResource schemeCellImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
 	 */
@@ -238,9 +263,17 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject im
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.scheme.SchemeSymbolContainer#getSymbol()
+	 * @param newEquipmentTypeImpl
 	 */
-	public BitmapImageResource getSymbol() {
+	public void setEquipmentType(EquipmentType newEquipmentTypeImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param schemeCellImpl
+	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setSchemeCell(SchemeImageResource)
+	 */
+	public void setSchemeCell(SchemeImageResource schemeCellImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -253,49 +286,58 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject im
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#getUgoCell()
+	 * @param ugoCell can be <code>null</code>.
+	 * @see SchemeCellContainer#setUgoCell(SchemeImageResource)
 	 */
-	public SchemeImageResource getUgoCell() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param ugoCellImpl
-	 * @see com.syrus.AMFICOM.scheme.SchemeCellContainer#setUgoCell(SchemeImageResource)
-	 */
-	public void setUgoCell(SchemeImageResource ugoCellImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
-	 */
-	public Object getTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	public static SchemeProtoElement createInstance(final Identifier creatorId)
-			throws CreateObjectException {
-		assert creatorId != null;
-		try {
-			final Date created = new Date();
-			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_PROTO_ELEMENT_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L);
-			schemeProtoElement.changed = true;
-			return schemeProtoElement;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeProtoElement.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+	public void setUgoCell(final SchemeImageResource ugoCell) {
+		Identifier newUgoCellId;
+		if (ugoCell == null)
+			newUgoCellId = Identifier.VOID_IDENTIFIER;
+		else
+			newUgoCellId = ugoCell.getId();
+		if (!this.ugoCellId.equals(newUgoCellId)) {
+			this.ugoCellId = newUgoCellId;
+			this.changed = true;
 		}
 	}
 
 	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 * @see Describable#setDescription(String)
 	 */
-	public static SchemeProtoElement createInstance() {
-		throw new UnsupportedOperationException();
+	public void setDescription(final String description) {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		if (description.equals(this.description))
+			return;
+		this.description = description;
+		this.changed = true;
+	}
+
+	/**
+	 * @see Describable#getDescription()
+	 */
+	public String getDescription() {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.description;
+	}
+
+	/**
+	 * @see Namable#setName(String)
+	 */
+	public void setName(final String name) {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		if (name.equals(this.name))
+			return;
+		this.name = name;
+		this.changed = true;
+	}
+
+	/**
+	 * @see Namable#getName()
+	 */
+	public String getName() {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.name;
 	}
 }

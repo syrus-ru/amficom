@@ -1,9 +1,6 @@
 /*
- * $Id: AbstractSchemePort.java,v 1.2 2005/03/17 09:40:22 bass Exp $
- *
- * Copyright ¿ 2004 Syrus Systems.
- * Dept. of Science & Technology.
- * Project: AMFICOM.
+ * $Id: AbstractSchemePort.java,v 1.3 2005/03/17 18:17:27 bass Exp $ Copyright ¿
+ * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
@@ -19,11 +16,12 @@ import java.util.Date;
  * {@link AbstractSchemePort}instead.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 09:40:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 18:17:27 $
  * @module scheme_v1
  */
-public abstract class AbstractSchemePort extends AbstractCloneableStorableObject implements
-		Describable, Characterizable {
+public abstract class AbstractSchemePort extends
+		AbstractCloneableStorableObject implements Describable,
+		Characterizable {
 	private static final long serialVersionUID = 6943625949984422779L;
 
 	/**
@@ -54,11 +52,11 @@ public abstract class AbstractSchemePort extends AbstractCloneableStorableObject
 
 	protected Identifier schemeDeviceId = null;
 
-	protected String thisDescription = null;
+	private String description;
 
 	protected DirectionType thisDirectionType = null;
 
-	protected String thisName = null;
+	private String name;
 
 	/**
 	 * @param id
@@ -105,14 +103,56 @@ public abstract class AbstractSchemePort extends AbstractCloneableStorableObject
 	public abstract void setPortType(final PortType portType);
 
 	public abstract Port getPort();
-	
+
 	public abstract void setPort(final Port port);
 
 	public abstract MeasurementPortType getMeasurementPortType();
-	
-	public abstract void setMeasurementPortType(final MeasurementPortType measurementPortType);
+
+	public abstract void setMeasurementPortType(
+			final MeasurementPortType measurementPortType);
 
 	public abstract MeasurementPort getMeasurementPort();
-	
-	public abstract void setMeasurementPort(final MeasurementPort measurementPort);
+
+	public abstract void setMeasurementPort(
+			final MeasurementPort measurementPort);
+
+	/**
+	 * @see Describable#setDescription(String)
+	 */
+	public final void setDescription(final String description) {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		if (description.equals(this.description))
+			return;
+		this.description = description;
+		this.changed = true;
+	}
+
+	/**
+	 * @see Describable#getDescription()
+	 */
+	public final String getDescription() {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.description;
+	}
+
+	/**
+	 * @see Namable#setName(String)
+	 */
+	public final void setName(final String name) {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		if (name.equals(this.name))
+			return;
+		this.name = name;
+		this.changed = true;
+	}
+
+	/**
+	 * @see Namable#getName()
+	 */
+	public final String getName() {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.name;
+	}
 }

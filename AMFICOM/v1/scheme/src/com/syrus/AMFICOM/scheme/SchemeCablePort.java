@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCablePort.java,v 1.2 2005/03/17 09:40:22 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.3 2005/03/17 18:17:27 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 09:40:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 18:17:27 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -60,14 +60,6 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
 	 */
 	public void addCharacteristic(final Characteristic characteristic) {
-		throw new UnsupportedOperationException();
-	}
-
-	public String getDescription() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setDescription(String description) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -124,14 +116,6 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 */
 	public void setMeasurementPortType(
 			MeasurementPortType newMeasurementPortTypeImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public String getName() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,23 +1,21 @@
 /*
- * $Id: SchemeDevice.java,v 1.2 2005/03/17 09:40:22 bass Exp $
- *
- * Copyright ¿ 2004 Syrus Systems.
- * Dept. of Science & Technology.
- * Project: AMFICOM.
+ * $Id: SchemeDevice.java,v 1.3 2005/03/17 18:17:27 bass Exp $ Copyright ¿ 2004
+ * Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 09:40:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 18:17:27 $
  * @module scheme_v1
  */
-public final class SchemeDevice extends AbstractCloneableStorableObject implements Describable, Characterizable {
+public final class SchemeDevice extends AbstractCloneableStorableObject
+		implements Describable, Characterizable {
 	private static final long serialVersionUID = 3762529027398644793L;
 
 	protected Identifier characteristicIds[] = null;
@@ -26,9 +24,9 @@ public final class SchemeDevice extends AbstractCloneableStorableObject implemen
 
 	protected Identifier schemePortIds[] = null;
 
-	protected String thisDescription = null;
+	private String description;
 
-	protected String thisName = null;
+	private String name;
 
 	/**
 	 * @param id
@@ -59,14 +57,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject implemen
 		throw new UnsupportedOperationException();
 	}
 
-	public String getDescription() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setDescription(String description) {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
@@ -85,14 +75,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject implemen
 	 * @see StorableObject#getDependencies()
 	 */
 	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	public String getName() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -182,5 +164,45 @@ public final class SchemeDevice extends AbstractCloneableStorableObject implemen
 	 */
 	public static SchemeDevice createInstance() {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see Describable#setDescription(String)
+	 */
+	public void setDescription(final String description) {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		if (description.equals(this.description))
+			return;
+		this.description = description;
+		this.changed = true;
+	}
+
+	/**
+	 * @see Describable#getDescription()
+	 */
+	public String getDescription() {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.description;
+	}
+
+	/**
+	 * @see Namable#setName(String)
+	 */
+	public void setName(final String name) {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		if (name.equals(this.name))
+			return;
+		this.name = name;
+		this.changed = true;
+	}
+
+	/**
+	 * @see Namable#getName()
+	 */
+	public String getName() {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.name;
 	}
 }

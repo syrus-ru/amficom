@@ -1,5 +1,5 @@
 /*
- * $Id: PathElement.java,v 1.2 2005/03/17 09:40:22 bass Exp $
+ * $Id: PathElement.java,v 1.3 2005/03/17 18:17:27 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.*;
  * <code>.</code> {@link AbstractSchemeElement#getName() name()}.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 09:40:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 18:17:27 $
  * @module scheme_v1
  */
 public final class PathElement extends AbstractCloneableStorableObject implements Describable {
@@ -51,8 +51,6 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 * {@link SchemePort}or {@link SchemeCablePort}.
 	 */
 	protected Identifier startAbstractSchemePortId = null;
-
-	protected String thisDescription = null;
 
 	protected int thisSequentialNumber = 0;
 
@@ -107,16 +105,20 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 
 	/**
 	 * @see Describable#getDescription()
+	 * @todo Check whether {@link #abstractSchemeElement()}can return
+	 *       <code>null</code>.
 	 */
 	public String getDescription() {
-		throw new UnsupportedOperationException();
+		return abstractSchemeElement().getDescription();
 	}
 
 	/**
-	 * @see Describable#setDescription(java.lang.String)
+	 * @see Describable#setDescription(String)
+	 * @todo Check whether {@link #abstractSchemeElement()}can return
+	 *       <code>null</code>.
 	 */
-	public void setDescription(String description) {
-		throw new UnsupportedOperationException();
+	public void setDescription(final String description) {
+		abstractSchemeElement().setDescription(description);
 	}
 
 	/**
@@ -143,18 +145,20 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 
 	/**
 	 * @see Namable#getName()
-	 * @todo Maybe, use own private property. However, there's a problem
-	 *       with versioning.
+	 * @todo Check whether {@link #abstractSchemeElement()}can return
+	 *       <code>null</code>.
 	 */
 	public String getName() {
-		return this.abstractSchemeElement().getName();
+		return abstractSchemeElement().getName();
 	}
 
 	/**
-	 * @see Namable#setName(java.lang.String)
+	 * @see Namable#setName(String)
+	 * @todo Check whether {@link #abstractSchemeElement()}can return
+	 *       <code>null</code>.
 	 */
-	public void setName(String name) {
-		throw new UnsupportedOperationException();
+	public void setName(final String name) {
+		abstractSchemeElement().setName(name);
 	}
 
 	/**

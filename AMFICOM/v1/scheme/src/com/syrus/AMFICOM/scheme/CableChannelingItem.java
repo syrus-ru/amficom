@@ -1,9 +1,6 @@
 /*
- * $Id: CableChannelingItem.java,v 1.2 2005/03/17 09:40:22 bass Exp $
- *
- * Copyright ¿ 2004 Syrus Systems.
- * Dept. of Science & Technology.
- * Project: AMFICOM.
+ * $Id: CableChannelingItem.java,v 1.3 2005/03/17 18:17:27 bass Exp $ Copyright ¿
+ * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
@@ -14,7 +11,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 09:40:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 18:17:27 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject
@@ -27,11 +24,11 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 
 	protected Identifier startSiteNodeId = null;
 
-	protected String thisDescription = null;
+	private String description = null;
 
 	protected double thisEndSpare = 0;
 
-	protected String thisName = null;
+	private String name = null;
 
 	protected int thisPlaceY = 0;
 
@@ -60,20 +57,6 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 			Date modified, Identifier creatorId,
 			Identifier modifierId, long version) {
 		super(id, created, modified, creatorId, modifierId, version);
-	}
-
-	/**
-	 * @see Describable#getDescription()
-	 */
-	public String getDescription() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see Describable#setDescription(String)
-	 */
-	public void setDescription(String description) {
-		throw new UnsupportedOperationException();
 	}
 
 	public SiteNode getEndSiteNode() {
@@ -105,20 +88,6 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see Namable#getName()
-	 */
-	public String getName() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see Namable#setName(String)
-	 */
-	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -236,9 +205,49 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @deprecated Use {@link #createInstance(Identifier)} instead.
+	 * @deprecated Use {@link #createInstance(Identifier)}instead.
 	 */
 	public static CableChannelingItem createInstance() {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see Describable#setDescription(String)
+	 */
+	public void setDescription(final String description) {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		if (description.equals(this.description))
+			return;
+		this.description = description;
+		this.changed = true;
+	}
+
+	/**
+	 * @see Describable#getDescription()
+	 */
+	public String getDescription() {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.description;
+	}
+
+	/**
+	 * @see Namable#setName(String)
+	 */
+	public void setName(final String name) {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		if (name.equals(this.name))
+			return;
+		this.name = name;
+		this.changed = true;
+	}
+
+	/**
+	 * @see Namable#getName()
+	 */
+	public String getName() {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.name;
 	}
 }

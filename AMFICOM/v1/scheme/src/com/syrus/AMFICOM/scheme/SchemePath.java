@@ -1,9 +1,6 @@
 /*
- * $Id: SchemePath.java,v 1.3 2005/03/17 12:52:55 bass Exp $
- *
- * Copyright ¿ 2004 Syrus Systems.
- * Dept. of Science & Technology.
- * Project: AMFICOM.
+ * $Id: SchemePath.java,v 1.4 2005/03/17 18:17:27 bass Exp $ Copyright ¿ 2004
+ * Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
@@ -15,10 +12,11 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 12:52:55 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/17 18:17:27 $
  * @module scheme_v1
  */
-public final class SchemePath extends AbstractCloneableStorableObject implements Describable, Characterizable {
+public final class SchemePath extends AbstractCloneableStorableObject implements
+		Describable, Characterizable {
 	private static final long serialVersionUID = 3257567312831132469L;
 
 	private Identifier typeId = null;
@@ -35,9 +33,9 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 	protected Identifier startDeviceId = null;
 
-	protected String thisDescription = null;
+	private String description;
 
-	protected String thisName = null;
+	private String name;
 
 	/**
 	 * @param id
@@ -74,14 +72,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		 * @todo Update the newly created object.
 		 */
 		return schemePath;
-	}
-
-	public String getDescription() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setDescription(String description) {
-		throw new UnsupportedOperationException();
 	}
 
 	public SchemeElement endDevice() {
@@ -126,14 +116,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @see com.syrus.AMFICOM.scheme.SchemePath#links(com.syrus.AMFICOM.scheme.corba.PathElement[])
 	 */
 	public void links(PathElement[] newLinks) {
-		throw new UnsupportedOperationException();
-	}
-
-	public String getName() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setName(String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -236,9 +218,49 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	/**
-	 * @deprecated Use {@link #createInstance(Identifier)} instead.
+	 * @deprecated Use {@link #createInstance(Identifier)}instead.
 	 */
 	public static SchemePath createInstance() {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see Describable#setDescription(String)
+	 */
+	public void setDescription(final String description) {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		if (description.equals(this.description))
+			return;
+		this.description = description;
+		this.changed = true;
+	}
+
+	/**
+	 * @see Describable#getDescription()
+	 */
+	public String getDescription() {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.description;
+	}
+
+	/**
+	 * @see Namable#setName(String)
+	 */
+	public void setName(final String name) {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		if (name.equals(this.name))
+			return;
+		this.name = name;
+		this.changed = true;
+	}
+
+	/**
+	 * @see Namable#getName()
+	 */
+	public String getName() {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.name;
 	}
 }
