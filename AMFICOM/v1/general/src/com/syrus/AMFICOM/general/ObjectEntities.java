@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.38 2004/12/21 16:32:06 bob Exp $
+ * $Id: ObjectEntities.java,v 1.39 2004/12/24 18:25:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,19 +9,22 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/12/21 16:32:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.39 $, $Date: 2004/12/24 18:25:10 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class ObjectEntities {
 	/*	Object Types	*/
+	public static final String EVENTTYPE_ENTITY = "EventType";
+	public static final String ALARMTYPE_ENTITY = "AlarmType";
+
 	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteristicType";
 	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType";
 	public static final String PORTTYPE_ENTITY = "PortType";
 	public static final String MEASUREMENTPORTTYPE_ENTITY = "MeasurementPortType";
 	public static final String LINKTYPE_ENTITY = "LinkType";
 	public static final String CABLE_LINKTYPE_ENTITY = "CableLinkType";
-    public static final String CABLETHREADTYPE_ENTITY = "CableThreadType";
+	public static final String CABLETHREADTYPE_ENTITY = "CableThreadType";
 
 	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
 	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";
@@ -36,6 +39,10 @@ public final class ObjectEntities {
 
 	public static final String SITE_NODE_TYPE_ENTITY = "SiteNodeType";
 	public static final String PHYSICAL_LINK_TYPE_ENTITY = "PhysicalLinkType";
+
+	/*	Event	*/
+	public static final String EVENT_ENTITY = "Event";
+	public static final String ALARM_ENTITY = "Alarm";
 
 	/*	Administration	*/
 
@@ -115,8 +122,23 @@ public final class ObjectEntities {
 	public static final short UNKNOWN_ENTITY_CODE = 0x0000;	
 
 	/*
-	 * Здесь могла бы быть ваша реклама: 001-128 (0x0001-0x0080)
+	 * Здесь могла бы быть ваша реклама: 1-64 (0x0001-0x0040)
+	 * (Места для вашей рекламы всё меньше и меньше...)
 	 */
+
+	/*
+	 * Event:				65-96		(0x0041-0x0060)
+	 * Event Types:	97-128	(0x0061-0x0080)
+	 */
+	public static final short EVENT_MIN_ENTITY_CODE = 0x0041;
+
+	public static final short EVENT_ENTITY_CODE = EVENT_MIN_ENTITY_CODE;
+	public static final short ALARM_ENTITY_CODE = 0x0042;
+
+	public static final short EVENTTYPE_ENTITY_CODE = 0x0061;
+	public static final short ALARMTYPE_ENTITY_CODE = 0x0062;
+
+	public static final short EVENT_MAX_ENTITY_CODE = 0x0080;
 
 	/*
 	 * Administration:       129-192 (0x0081-0x00C0)
@@ -145,7 +167,7 @@ public final class ObjectEntities {
 	public static final short MEASUREMENTPORT_ENTITY_CODE = 0x010B;
 	public static final short ME_ENTITY_CODE = 0x010C;
 	public static final short LINK_ENTITY_CODE = 0x010D;
-    public static final short CABLE_THREAD_ENTITY_CODE = 0x010E;    
+	public static final short CABLE_THREAD_ENTITY_CODE = 0x010E;    
 
 	public static final short CHARACTERISTICTYPE_ENTITY_CODE = 0x0141;
 	public static final short EQUIPMENTTYPE_ENTITY_CODE = 0x0142;
@@ -214,7 +236,7 @@ public final class ObjectEntities {
 	 */
 	public static final short MAP_MIN_ENTITY_CODE = 0x0281;
 
-	public static final short SITE_NODE_ENTITY_CODE = 0x0281;
+	public static final short SITE_NODE_ENTITY_CODE = MAP_MIN_ENTITY_CODE;
 	public static final short TOPOLOGICAL_NODE_ENTITY_CODE = 0x0282;
 	public static final short NODE_LINK_ENTITY_CODE = 0x0283;
 	public static final short MARK_ENTITY_CODE = 0x0284;
@@ -242,7 +264,7 @@ public final class ObjectEntities {
 	 */
 	public static final short MAPVIEW_MIN_ENTITY_CODE = 0x380;
 	
-	public static final short MAPVIEW_ENTITY_CODE = 0x380;
+	public static final short MAPVIEW_ENTITY_CODE = MAPVIEW_MIN_ENTITY_CODE;
 	
 	public static final short MAPVIEW_MAX_ENTITY_CODE = 0x400;
 
@@ -260,13 +282,16 @@ public final class ObjectEntities {
 		/**
 		 * TODO recast using Trove Collections
 		 */
-		if (entity.equals(CHARACTERISTICTYPE_ENTITY)) return CHARACTERISTICTYPE_ENTITY_CODE;
+		if (entity.equals(EVENTTYPE_ENTITY)) return EVENTTYPE_ENTITY_CODE;
+		else if (entity.equals(ALARMTYPE_ENTITY)) return ALARMTYPE_ENTITY_CODE;
+	
+		else if (entity.equals(CHARACTERISTICTYPE_ENTITY)) return CHARACTERISTICTYPE_ENTITY_CODE;
 		else if (entity.equals(EQUIPMENTTYPE_ENTITY)) return EQUIPMENTTYPE_ENTITY_CODE;
 		else if (entity.equals(PORTTYPE_ENTITY)) return PORTTYPE_ENTITY_CODE;
 		else if (entity.equals(MEASUREMENTPORTTYPE_ENTITY)) return MEASUREMENTPORTTYPE_ENTITY_CODE;
 		else if (entity.equals(LINKTYPE_ENTITY)) return LINKTYPE_ENTITY_CODE;
 		else if (entity.equals(CABLETHREADTYPE_ENTITY)) return CABLETHREADTYPE_ENTITY_CODE;
-        else if (entity.equals(CABLE_LINKTYPE_ENTITY)) return CABLE_LINKTYPE_ENTITY_CODE;
+		else if (entity.equals(CABLE_LINKTYPE_ENTITY)) return CABLE_LINKTYPE_ENTITY_CODE;
 		
 		else if (entity.equals(PARAMETERTYPE_ENTITY)) return PARAMETERTYPE_ENTITY_CODE;
 		else if (entity.equals(MEASUREMENTTYPE_ENTITY)) return MEASUREMENTTYPE_ENTITY_CODE;
@@ -275,6 +300,9 @@ public final class ObjectEntities {
 
 		else if (entity.equals(SITE_NODE_TYPE_ENTITY)) return SITE_NODE_TYPE_ENTITY_CODE;
 		else if (entity.equals(PHYSICAL_LINK_TYPE_ENTITY)) return PHYSICAL_LINK_TYPE_ENTITY_CODE;
+
+		else if (entity.equals(EVENT_ENTITY)) return EVENT_ENTITY_CODE;
+		else if (entity.equals(ALARM_ENTITY)) return ALARM_ENTITY_CODE;
 
 		else if (entity.equals(CHARACTERISTIC_ENTITY)) return CHARACTERISTIC_ENTITY_CODE;
 		else if (entity.equals(PERMATTR_ENTITY)) return PERMATTR_ENTITY_CODE;
@@ -292,6 +320,7 @@ public final class ObjectEntities {
 		else if (entity.equals(ME_ENTITY)) return ME_ENTITY_CODE;
 		else if (entity.equals(LINK_ENTITY)) return LINK_ENTITY_CODE;
 		else if (entity.equals(CABLE_THREAD_ENTITY)) return CABLE_THREAD_ENTITY_CODE;
+
 		else if (entity.equals(SET_ENTITY)) return SET_ENTITY_CODE;
 		else if (entity.equals(SETPARAMETER_ENTITY)) return SETPARAMETER_ENTITY_CODE;
 		else if (entity.equals(MS_ENTITY)) return MS_ENTITY_CODE;
@@ -342,6 +371,11 @@ public final class ObjectEntities {
 		 * TODO recast using Trove Collections
 		 */
 		switch (code) {
+			case EVENTTYPE_ENTITY_CODE:
+				return EVENTTYPE_ENTITY;
+			case ALARMTYPE_ENTITY_CODE:
+				return ALARMTYPE_ENTITY;
+
 			case CHARACTERISTICTYPE_ENTITY_CODE:
 				return CHARACTERISTICTYPE_ENTITY;
 			case EQUIPMENTTYPE_ENTITY_CODE:
@@ -354,8 +388,8 @@ public final class ObjectEntities {
 				return LINKTYPE_ENTITY;
 			case CABLETHREADTYPE_ENTITY_CODE:
 				return CABLETHREADTYPE_ENTITY;
-            case CABLE_LINKTYPE_ENTITY_CODE:
-                return CABLE_LINKTYPE_ENTITY;
+			case CABLE_LINKTYPE_ENTITY_CODE:
+				return CABLE_LINKTYPE_ENTITY;
 				
 			case PARAMETERTYPE_ENTITY_CODE:
 				return PARAMETERTYPE_ENTITY;
@@ -370,6 +404,11 @@ public final class ObjectEntities {
 				return SITE_NODE_ENTITY;
 			case PHYSICAL_LINK_TYPE_ENTITY_CODE:
 				return PHYSICAL_LINK_TYPE_ENTITY;
+
+			case EVENT_ENTITY_CODE:
+				return EVENT_ENTITY;
+			case ALARM_ENTITY_CODE:
+				return ALARM_ENTITY;
 
 			case CHARACTERISTIC_ENTITY_CODE:
 				return CHARACTERISTIC_ENTITY;
@@ -390,7 +429,7 @@ public final class ObjectEntities {
 			case TRANSPATH_ENTITY_CODE:
 				return TRANSPATH_ENTITY;
 			case TRANSPATHTYPE_ENTITY_CODE:
-            			return TRANSPATHTYPE_ENTITY;
+				return TRANSPATHTYPE_ENTITY;
 			case KIS_ENTITY_CODE:
 				return KIS_ENTITY;
 //			case KISTYPE_ENTITY_CODE:
@@ -401,8 +440,8 @@ public final class ObjectEntities {
 				return ME_ENTITY;
 			case LINK_ENTITY_CODE:
 				return LINK_ENTITY;
-            case CABLE_THREAD_ENTITY_CODE:
-                return CABLE_THREAD_ENTITY;
+			case CABLE_THREAD_ENTITY_CODE:
+				return CABLE_THREAD_ENTITY;
 			case SET_ENTITY_CODE:
 				return SET_ENTITY;
 			case SETPARAMETER_ENTITY_CODE:
