@@ -60,7 +60,7 @@ public class RISDMapDataSource
 	{
 		super(si);
 	}
-
+/*
 	public void LoadAttributeTypes(String[] ids)
 	{
 		if(getSession() == null)
@@ -105,7 +105,7 @@ public class RISDMapDataSource
 			Pool.put(ElementAttributeType.typ, atype.getId(), atype);
 			}
 	}
-
+*/
 /*
 	public void LoadMapProtoElements()
 	{
