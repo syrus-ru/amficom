@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralObjectLoader.java,v 1.3 2005/02/08 09:14:37 arseniy Exp $
+ * $Id: GeneralObjectLoader.java,v 1.4 2005/02/11 09:29:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/08 09:14:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/02/11 09:29:42 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -42,22 +42,22 @@ public interface GeneralObjectLoader {
 	List loadCharacteristicsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 
-	void saveParameterType(ParameterType parameterType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveParameterType(ParameterType parameterType, AccessIdentity  accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveCharacteristicType(CharacteristicType characteristicType, AccessIdentity  accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveCharacteristic(Characteristic characteristic, AccessIdentity  accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 
-	void saveParameterTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveParameterTypes(List list, AccessIdentity  accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveCharacteristicTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveCharacteristicTypes(List list, AccessIdentity  accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveCharacteristics(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveCharacteristics(List list, AccessIdentity  accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 
 	Set refresh(Set storableObjects) throws CommunicationException, DatabaseException;
-
+	
 
 	void delete(Identifier id) throws CommunicationException, DatabaseException;
 
