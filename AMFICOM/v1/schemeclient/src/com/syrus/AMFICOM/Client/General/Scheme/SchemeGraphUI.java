@@ -11,7 +11,6 @@ import java.awt.event.*;
 import com.jgraph.graph.*;
 import com.jgraph.pad.GPGraphUI;
 import com.jgraph.plaf.basic.*;
-import com.jgraph.plaf.basic.BasicGraphUI.*;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 
@@ -54,7 +53,7 @@ public class SchemeGraphUI extends GPGraphUI
 
 		public void drop(DropTargetDropEvent e)
 		{
-			Point p = e.getLocation();
+//			Point p = e.getLocation();
 			DataFlavor[] df = e.getCurrentDataFlavors();
 
 			if (df[0].getHumanPresentableName().equals("ProtoElementLabel"))

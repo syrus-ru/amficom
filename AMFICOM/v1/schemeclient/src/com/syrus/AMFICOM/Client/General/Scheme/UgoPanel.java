@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.general.corba.Identifier;
-import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 
@@ -39,7 +37,7 @@ public class UgoPanel extends JPanel
 
 	protected SchemePath editing_path = null;
 
-	protected static String[] buttons = new String[]
+	private static String[] buttons = new String[]
 	{
 		Constants.marqueeTool
 	};
@@ -120,18 +118,17 @@ public class UgoPanel extends JPanel
 
 	protected ToolBarPanel createToolBar()
 	{
-		ToolBarPanel toolbar = new ToolBarPanel();
-		commands.putAll(toolbar.createGraphButtons(this));
+		ToolBarPanel toolBarPanel = new ToolBarPanel();
+		commands.putAll(toolBarPanel.createGraphButtons(this));
 
-		String[] buttons = getButtons();
 		for (int i = 0; i < buttons.length; i++)
 		{
 			if (buttons[i].equals(Constants.separator))
-				toolbar.insert(new JToolBar.Separator());
+				toolBarPanel.insert(new JToolBar.Separator());
 			else
-				toolbar.insert((Component)commands.get(buttons[i]));
+				toolBarPanel.insert((Component)commands.get(buttons[i]));
 		}
-		return toolbar;
+		return toolBarPanel;
 	}
 
 	public SchemeGraph getGraph()
@@ -156,7 +153,7 @@ public class UgoPanel extends JPanel
 				DeviceGroup[] groups = GraphActions.findTopLevelGroups(getGraph(), getGraph().getSelectionCells());
 				if (groups.length == 1)
 				{
-					DeviceGroup cell = (DeviceGroup)groups[0];
+					DeviceGroup cell = groups[0];
 					if (cell.getProtoElementId().equals(id) || cell.getSchemeElementId().equals(id) || cell.getSchemeId().equals(id))
 					{
 						if (cell.getChildCount() > 0)
@@ -166,7 +163,7 @@ public class UgoPanel extends JPanel
 								Object child = en.nextElement();
 								if (child instanceof DeviceCell)
 								{
-									GraphActions.setText(getGraph(), ((DeviceCell)child), text);
+									GraphActions.setText(getGraph(), child, text);
 									break;
 								}
 							}
@@ -183,7 +180,7 @@ public class UgoPanel extends JPanel
 				DeviceGroup[] groups = GraphActions.findTopLevelGroups(getGraph(), getGraph().getSelectionCells());
 				if (groups.length == 1)
 				{
-					DeviceGroup cell = (DeviceGroup)groups[0];
+					DeviceGroup cell = groups[0];
 					if (cell.getProtoElementId().equals(id) || cell.getSchemeElementId().equals(id) || cell.getSchemeId().equals(id))
 					{
 						if (cell.getChildCount() > 0)
@@ -472,11 +469,11 @@ public class UgoPanel extends JPanel
 		if (remove_old)
 			GraphActions.clearGraph(getGraph());
 
-		if (serializable_cell != null && serializable_cell instanceof List)
+		if (serializable_cell != null)
 		{
 			Map clones = getGraph().copyFromArchivedState(serializable_cell, p);
 
-			List v = (List) serializable_cell;
+			List v = serializable_cell;
 			Object[] cells = (Object[]) v.get(0);
 			ArrayList new_cells = new ArrayList();
 
@@ -591,7 +588,7 @@ public class UgoPanel extends JPanel
 		}
 	}
 
-	public int print(Graphics g, PageFormat pf, int pi) throws PrinterException
+	public int print(Graphics g, PageFormat pf, int pi)
 	{
 		if (pi > 0)
 			return Printable.NO_SUCH_PAGE;
@@ -645,7 +642,6 @@ public class UgoPanel extends JPanel
 	{
 		public final Dimension btn_size = new Dimension(24, 24);
 		protected int position = 0;
-		Map buttons = new HashMap();
 
 		public ToolBarPanel ()
 		{
@@ -667,22 +663,22 @@ public class UgoPanel extends JPanel
 
 		protected Map createGraphButtons (UgoPanel p)
 		{
-			Map buttons = new HashMap();
+			Map bttns = new HashMap();
 
 			if (getGraph().getMarqueeHandler() instanceof SchemeGraph.ShemeMarqueeHandler)
 			{
 				SchemeGraph.ShemeMarqueeHandler mh = (SchemeGraph.ShemeMarqueeHandler) getGraph().getMarqueeHandler();
 
-				buttons.put(Constants.marqueeTool,
+				bttns.put(Constants.marqueeTool,
 										createToolButton(mh.s, btn_size, null, null,
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pointer.gif")),
 										new MarqeeAction(getGraph()), true));
 				ButtonGroup group = new ButtonGroup();
-				for (Iterator it = buttons.values().iterator(); it.hasNext();)
+				for (Iterator it = bttns.values().iterator(); it.hasNext();)
 					group.add((AbstractButton)it.next());
 				mh.s.doClick();
 			}
-			return buttons;
+			return bttns;
 		}
 
 		AbstractButton createToolButton (
@@ -706,7 +702,7 @@ public class UgoPanel extends JPanel
 			if (action != null)
 			{
 				b.addActionListener(new EventRedirector(action));
-				b.setActionCommand(action.NAME);
+				b.setActionCommand(Action.NAME);
 			}
 			b.setEnabled(isEnabled);
 			b.setFocusable(false);

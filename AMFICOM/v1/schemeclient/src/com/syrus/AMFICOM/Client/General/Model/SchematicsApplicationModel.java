@@ -1,13 +1,9 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-
 public class SchematicsApplicationModel extends ApplicationModel
 {
 	public SchematicsApplicationModel()
 	{
-		super();
-
 		add("menuSession");
 		add("menuSessionNew");
 		add("menuSessionClose");

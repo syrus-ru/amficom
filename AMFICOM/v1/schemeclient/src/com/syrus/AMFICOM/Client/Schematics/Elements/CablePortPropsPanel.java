@@ -21,19 +21,19 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCablePort;
 
 public class CablePortPropsPanel extends JPanel
 {
-	private AComboBox sortComboBox = new AComboBox();
-	private ObjComboBox typeComboBox = new ObjComboBox(
+	AComboBox sortComboBox = new AComboBox();
+	ObjComboBox typeComboBox = new ObjComboBox(
 			 PortTypeController.getInstance(),
-			 PortTypeController.KEY_NAME);
-	private JTextField nameText = new JTextField();
-	private JButton addTypeButton = new JButton("...");
-	private JTextArea descriptionTextArea = new JTextArea();
-	private String undoDescription;
-	private boolean skip_changes = false;
+			 StorableObjectWrapper.COLUMN_NAME);
+	JTextField nameText = new JTextField();
+	JButton addTypeButton = new JButton("...");
+	JTextArea descriptionTextArea = new JTextArea();
+	String undoDescription;
+	boolean skip_changes = false;
 
-	SchemeCablePort[] ports;
-	List portTypes;
-	PortType pt;
+	protected SchemeCablePort[] ports;
+	protected List portTypes;
+	protected PortType pt;
 	ApplicationContext aContext;
 
 	private static PortTypeSort[] portTypeSorts = new PortTypeSort[] {
@@ -165,7 +165,7 @@ public class CablePortPropsPanel extends JPanel
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 					domain_id, true);
 			DomainCondition condition = new DomainCondition(domain, ObjectEntities.PORTTYPE_ENTITY_CODE);
 			portTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -284,7 +284,7 @@ public class CablePortPropsPanel extends JPanel
 		dialog.setLocation(loc.x, loc.y + 30);
 		dialog.setVisible(true);
 
-		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
+		if (dialog.getStatus() == PopupNameFrame.OK && !dialog.getName().equals(""))
 		{
 			String name = dialog.getName();
 			for (int i = 0; i < typeComboBox.getItemCount(); i++)

@@ -19,8 +19,7 @@ import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.*;
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.*;
@@ -156,7 +155,7 @@ public class SchemeEditorMainFrame extends JFrame
 		treeFrame.setIconifiable(true);
 		treeFrame.setClosable(true);
 		treeFrame.setResizable(true);
-		treeFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		treeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		treeFrame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
 		treeFrame.getContentPane().setLayout(new BorderLayout());
@@ -209,7 +208,7 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
-		SchemePanel epanel = (SchemePanel)schemeTab.getPanel();
+//		SchemePanel epanel = (SchemePanel)schemeTab.getPanel();
 
 		aModel.setCommand("menuSchemeNew", new SchemeNewCommand(aContext));
 		aModel.setCommand("menuSchemeLoad", new SchemeOpenCommand(aContext));
@@ -326,7 +325,6 @@ public class SchemeEditorMainFrame extends JFrame
 		{
 			ContextChangeEvent cce = (ContextChangeEvent)ae;
 			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at " + this.getTitle());
-			ApplicationModel aModel = aContext.getApplicationModel();
 			if(cce.SESSION_OPENED)
 			{
 				SessionInterface ssi = (SessionInterface)cce.getSource();
@@ -583,14 +581,14 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setEnabled("menuPathNew", true);
 		aModel.setEnabled("menuReportCreate", true);
 
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 					domain_id, true);
-			statusBar.setText("domain", domain.getName());
+			statusBar.setText(StatusBarModel.FIELD_DOMAIN, domain.getName());
 		}
 		catch (ApplicationException ex) {
 		}

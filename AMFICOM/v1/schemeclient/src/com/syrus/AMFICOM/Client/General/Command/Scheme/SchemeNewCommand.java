@@ -5,8 +5,7 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Scheme.SchemeFactory;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 
@@ -74,7 +73,7 @@ public class SchemeNewCommand extends VoidCommand
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 					domain_id, true);
 			scheme.domainImpl(domain);
 		}

@@ -49,11 +49,9 @@ public class SchemeViewerFrame extends JInternalFrame implements OperationListen
 			{
 				if (see.obj instanceof Scheme)
 				{
-					Scheme sch = (Scheme)see.obj;
+//					Scheme sch = (Scheme)see.obj;
 //					if (panel.removeScheme(sch))
-					{
 						closeFrame();
-					}
 				}
 			}
 		}
@@ -69,7 +67,7 @@ public class SchemeViewerFrame extends JInternalFrame implements OperationListen
 	private void jbInit() throws Exception
 	{
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		setResizable(true);
 		setClosable(true);
 		setMaximizable(true);

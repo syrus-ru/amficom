@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.General.Scheme;
 import java.awt.*;
 
 import com.jgraph.graph.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.corba.SchemeLink;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.general.corba.Identifier;
@@ -12,7 +11,6 @@ public class DefaultLink extends DefaultEdge
 {
 	private static final long serialVersionUID = 02L;
 	private Identifier scheme_link_id;
-	private Identifier scheme_path_id;
 	protected Point[] routed;
 	protected transient Object _source, _target;
 	protected transient Object source, target;
@@ -113,10 +111,10 @@ public class DefaultLink extends DefaultEdge
 
 			int n = points.size();
 			Point from = edge.getPoint(0);
-			if (edge.getSource() instanceof PortView)
+			if (edge.getSource() != null)
 				from = edge.getSource().getLocation(null);
 			Point to = edge.getPoint(n - 1);
-			if (edge.getTarget() instanceof PortView)
+			if (edge.getTarget() != null)
 				to = edge.getTarget().getLocation(null);
 			if (from != null && to != null)
 			{
@@ -137,10 +135,10 @@ public class DefaultLink extends DefaultEdge
 					boolean bendable = GraphConstants.isBendable(edge.getAllAttributes());
 					if (!bendable || routed == null)
 					{
-						int dx = Math.abs(from.x - to.x);
-						int dy = Math.abs(from.y - to.y);
+//						int dx = Math.abs(from.x - to.x);
+//						int dy = Math.abs(from.y - to.y);
 						int x2 = from.x + ((to.x - from.x) / 2);
-						int y2 = from.y + ((to.y - from.y) / 2);
+//						int y2 = from.y + ((to.y - from.y) / 2);
 						routed = new Point[4];
 						routed[0] = graph.snap(new Point(x2, from.y));
 						routed[1] = graph.snap(new Point(x2, from.y));

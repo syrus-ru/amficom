@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
 import java.io.*;
-import java.util.Date;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -38,8 +37,6 @@ public class SchemeProtoGroupPropsPanel extends JPanel
 		}
 
 		Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
-		Date date = new Date(System.currentTimeMillis());
-
 		try {
 			File f = new File("images/folder.gif");
 			byte[] buf = new byte[(int)f.length()];
@@ -140,7 +137,7 @@ public class SchemeProtoGroupPropsPanel extends JPanel
 		updateUI();
 	}
 
-	private void imageButton_actionPerformed(ActionEvent e)
+	void imageButton_actionPerformed(ActionEvent e)
 	{
 		ImagesDialog frame = new ImagesDialog(aContext);
 //		frame.setImageResource(image == null ? : image);

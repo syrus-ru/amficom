@@ -28,8 +28,8 @@ public class PathDecompositor
 			return;
 
 		setOpticalLength(
-				(PathElement)sp.links()[0],
-				(PathElement)sp.links()[sp.links().length - 1],
+				sp.links()[0],
+				sp.links()[sp.links().length - 1],
 				newLength);
 	}
 

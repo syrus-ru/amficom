@@ -5,223 +5,202 @@ import java.util.List;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.*;
 
-public class AddPropFrame extends JDialog
-{
+public class AddPropFrame extends JDialog {
+	private ApplicationContext aContext;
+
 	public static final int OK = 1;
 	public static final int CANCEL = 0;
-
 	protected int res = CANCEL;
+
 	protected CharacteristicTypeSort sort;
-	protected CharacteristicType type;
-	Object selected = LangModelConfig.getString("label_new_char");
+	private CharacteristicType selectedType;
+	ObjComboBox characteristicTypeComboBox;
+	JRadioButton existingRadioButton = new JRadioButton(LangModelConfig
+			.getString("label_existingType"));
+	JRadioButton newRadioButton = new JRadioButton(LangModelConfig
+			.getString("label_newType"));
+	ButtonGroup buttonGroup = new ButtonGroup();
+	JPanel panel = new JPanel();
+	JPanel buttonPanel = new JPanel();
+	JTextField nameField = new JTextField();
+	JTextArea descrArea = new JTextArea();
+	JLabel name = new JLabel();
+	JLabel descr = new JLabel();
+	JButton okButton = new JButton();
+	JButton cancelButton = new JButton();
 
-	private ObjComboBox comboBox;
-	private JPanel panel = new JPanel();
-	private JPanel buttonPanel = new JPanel();
-	private JTextField nameField = new JTextField();
-	private JTextArea descrArea = new JTextArea();
-	private JLabel name = new JLabel();
-	private JLabel descr = new JLabel();
-	private JButton okButton = new JButton();
-	private JButton cancelButton = new JButton();
-	ApplicationContext aContext;
-
-	public AddPropFrame(Frame parent, String title, ApplicationContext aContext)
-	{
+	public AddPropFrame(Frame parent, String title, ApplicationContext aContext) {
 		super(parent, title);
 		this.aContext = aContext;
 
-		try
-		{
+		try {
 			jbInit();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void jbInit() throws Exception
-	{
-		comboBox = new ObjComboBox(
-					CharacteristicTypeController.getInstance(),
-					new LinkedList(),
-					CharacteristicTypeController.KEY_NAME);
+	private void jbInit() throws Exception {
+		buttonGroup.add(existingRadioButton);
+		buttonGroup.add(newRadioButton);
+		existingRadioButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				radioButtonStateChanged();
+			}
+		});
+		newRadioButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				radioButtonStateChanged();
+			}
+		});
+
+		EquivalentCondition condition = new EquivalentCondition(
+				ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
+		List charTypes = ConfigurationStorableObjectPool
+				.getStorableObjectsByCondition(condition, true);
+
+		characteristicTypeComboBox = new ObjComboBox(CharacteristicTypeController
+				.getInstance(), charTypes, StorableObjectWrapper.COLUMN_DESCRIPTION);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = new Dimension(350, 170);
+		Dimension frameSize = new Dimension(350, 250);
 
-		setLocation((screenSize.width-frameSize.width)/2, (screenSize.height-frameSize.height)/2);
+		setLocation((screenSize.width - frameSize.width) / 2,
+				(screenSize.height - frameSize.height) / 2);
 		setSize(frameSize);
-		setResizable(false);
 		setTitle(LangModelConfig.getString("label_char"));
 
 		name.setText(LangModelConfig.getString("label_name"));
 		descr.setText(LangModelConfig.getString("label_description"));
-
-		nameField.addKeyListener(new KeyListener()
-		{
-			public void keyPressed(KeyEvent e)
-			{}
-			public void keyReleased(KeyEvent e)
-			{
-				okButton.setEnabled(!nameField.getText().equals(""));
-			}
-			public void keyTyped(KeyEvent e)
-			{}
-		});
-
-		panel.setLayout(new BorderLayout());
-
-		JPanel n_panel = new JPanel();
-		n_panel.setLayout(new BorderLayout());
-		name.setPreferredSize(new Dimension(65, 5));
-		n_panel.add(name, BorderLayout.WEST);
-		n_panel.add(nameField, BorderLayout.CENTER);
-
-		JPanel s_panel = new JPanel();
-		s_panel.setLayout(new BorderLayout());
-		descr.setPreferredSize(new Dimension(65, 5));
-		s_panel.add(descr, BorderLayout.WEST);
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.getViewport().add(descrArea);
 		descrArea.setAutoscrolls(true);
 		scrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
-		s_panel.add(scrollPane, BorderLayout.CENTER);
 
-		panel.add(n_panel, BorderLayout.NORTH);
-		panel.add(s_panel, BorderLayout.CENTER);
+		GridBagLayout gridbag = new GridBagLayout();
+		GridBagConstraints c = new GridBagConstraints();
+		panel.setLayout(gridbag);
 
-		okButton.setText(LangModelConfig.getString("buttonAdd"));
-		okButton.setEnabled(false);
-		okButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				okButton_actionPerformed(e);
-			}
-		});
-
-		cancelButton.setText(LangModelConfig.getString("buttonCancel"));
-		cancelButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				cancelButton_actionPerformed(e);
-			}
-		});
+		c.fill = GridBagConstraints.BOTH;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		addToPanel(existingRadioButton, gridbag, c);
+		addToPanel(characteristicTypeComboBox, gridbag, c);
+		addToPanel(newRadioButton, gridbag, c);
+		c.gridwidth = GridBagConstraints.RELATIVE;
+		addToPanel(name, gridbag, c);
+		c.weightx = 1.0;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		addToPanel(nameField, gridbag, c);
+		c.weightx = 0.0;
+		c.gridwidth = GridBagConstraints.RELATIVE;
+		addToPanel(descr, gridbag, c);
+		c.weighty = 1.0;
+		c.weightx = 1.0;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		addToPanel(scrollPane, gridbag, c);
+		c.weighty = 0.0;
+		c.weightx = 0.0;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		addToPanel(buttonPanel, gridbag, c);
 
 		buttonPanel.setLayout(new FlowLayout());
 		buttonPanel.add(okButton);
 		buttonPanel.add(cancelButton);
 
-		comboBox.addItem(LangModelConfig.getString("label_new_char"));
-		comboBox.addItemListener(new ItemListener()
-		{
-			public void itemStateChanged(ItemEvent e)
-			{
-				if (e.getStateChange() == ItemEvent.SELECTED)
-				{
-					comboBoxItemSelected();
-				}
+		okButton.setText(LangModelConfig.getString("buttonAdd"));
+		okButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				okButton_actionPerformed(e);
+			}
+		});
+		cancelButton.setText(LangModelConfig.getString("buttonCancel"));
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cancelButton_actionPerformed(e);
 			}
 		});
 
 		this.getContentPane().setLayout(new BorderLayout());
-		this.getContentPane().add(comboBox, BorderLayout.NORTH);
 		this.getContentPane().add(panel, BorderLayout.CENTER);
-		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+		
+		if (charTypes.isEmpty())
+			newRadioButton.doClick();
+		else
+			existingRadioButton.doClick();
 	}
 
-	void okButton_actionPerformed(ActionEvent e)
-	{
+	private void addToPanel(Component comp, GridBagLayout gridbag,
+			GridBagConstraints c) {
+		gridbag.setConstraints(comp, c);
+		panel.add(comp);
+	}
+
+	void radioButtonStateChanged() {
+		boolean b = existingRadioButton.isSelected();
+		characteristicTypeComboBox.setEnabled(b);
+		nameField.setEnabled(!b);
+		descrArea.setEnabled(!b);
+	}
+
+	void okButton_actionPerformed(ActionEvent e) {
+		if (existingRadioButton.isSelected()) {
+			if (characteristicTypeComboBox.getSelectedItem() != null) {
+				selectedType = (CharacteristicType) characteristicTypeComboBox
+						.getSelectedItem();
+			}
+			else
+				return;
+		} 
+		else {
+			if (!nameField.getText().equals("")) {
+				try {
+					Identifier userId = new Identifier(((RISDSessionInfo) aContext
+							.getSessionInterface()).getAccessIdentifier().user_id);
+					selectedType = CharacteristicType
+							.createInstance(userId, nameField.getText(), nameField.getText(),
+									DataType._DATA_TYPE_STRING, sort);
+				} catch (CreateObjectException ex) {
+					ex.printStackTrace();
+					return;
+				}
+			}
+			else
+				return;
+		}
 		res = OK;
-		if (selected.equals(LangModelConfig.getString("label_new_char")))
-		{
-			Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
-			try {
-				type = CharacteristicType.createInstance(
-						userId,
-						"",
-						descrArea.getText(),
-						DataType._DATA_TYPE_STRING,
-						sort);
-			}
-			catch (CreateObjectException ex) {
-				ex.printStackTrace();
-			}
-		}
-		else
-		{
-			/*h = Pool.getMap(CharacteristicType.typ);
-			for (Enumeration enum = h.elements(); enum.hasMoreElements();)
-			{
-				CharacteristicType type = (CharacteristicType)enum.nextElement();
-				if (type.getName().equals(selected))
-
-			}*/
-		}
-
 		dispose();
 	}
 
-	void cancelButton_actionPerformed(ActionEvent e)
-	{
+	void cancelButton_actionPerformed(ActionEvent e) {
 		dispose();
 	}
 
-	void comboBoxItemSelected()
-	{
-		selected = comboBox.getSelectedItem();
-		boolean b = selected.equals(LangModelConfig.getString("label_new_char"));
-		nameField.setEnabled(b);
-		descrArea.setEnabled(b);
-		okButton.setEnabled(!b);
-		if (!b)
-		{
-			type = (CharacteristicType)selected;
-			nameField.setText(type.getDescription());
-		}
-		else
-		{
-			type = null;
-			nameField.setText("");
-			descrArea.setText("");
-		}
-	}
-
-	public int showDialog(CharacteristicTypeSort sort, List chars)
-	{
+	public int showDialog(CharacteristicTypeSort sort, List chars) {
 		this.sort = sort;
 
-		Identifier domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
 		try {
-			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(domainId, true);
-			DomainCondition condition = new DomainCondition(domain, ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
-			List characteristicTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
-						 condition, true);
-			for (Iterator it = characteristicTypes.iterator(); it.hasNext();)
-			{
-				CharacteristicType type = (CharacteristicType)it.next();
-				if (type.getSort().equals(sort) && !chars.contains(type))
-					comboBox.addItem(type);
+			EquivalentCondition condition = new EquivalentCondition(
+					ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
+			List characteristicTypes = ConfigurationStorableObjectPool
+					.getStorableObjectsByCondition(condition, true);
+			for (Iterator it = characteristicTypes.iterator(); it.hasNext();) {
+				CharacteristicType ctype = (CharacteristicType) it.next();
+				if (ctype.getSort().equals(sort) && !chars.contains(ctype))
+					characteristicTypeComboBox.addItem(ctype);
 			}
-		}
-		catch (ApplicationException ex) {
+		} catch (ApplicationException ex) {
 			ex.printStackTrace();
 		}
 		setModal(true);
@@ -229,16 +208,7 @@ public class AddPropFrame extends JDialog
 		return res;
 	}
 
-	public String getSelectedName()
-	{
-		if (selected instanceof String)
-			return (String)selected;
-		else
-			return ((CharacteristicType)selected).getDescription();
-	}
-
-	public CharacteristicType getSelectedType()
-	{
-		return type;
+	public CharacteristicType getCharacteristicType() {
+		return selectedType;
 	}
 }

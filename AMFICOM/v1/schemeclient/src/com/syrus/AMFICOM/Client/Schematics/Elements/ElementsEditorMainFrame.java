@@ -18,8 +18,7 @@ import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Schematics.Scheme.*;
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.general.*;
 
 public class ElementsEditorMainFrame extends JFrame
@@ -135,7 +134,7 @@ public class ElementsEditorMainFrame extends JFrame
 		treeFrame.setIconifiable(true);
 		treeFrame.setClosable(true);
 		treeFrame.setResizable(true);
-		treeFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		treeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		treeFrame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
 		treeFrame.getContentPane().setLayout(new BorderLayout());
@@ -272,7 +271,6 @@ public class ElementsEditorMainFrame extends JFrame
 		{
 			ContextChangeEvent cce = (ContextChangeEvent)ae;
 			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at " + this.getTitle());
-			ApplicationModel aModel = aContext.getApplicationModel();
 			if(cce.SESSION_OPENED)
 			{
 				SessionInterface ssi = (SessionInterface)cce.getSource();
@@ -428,7 +426,7 @@ public class ElementsEditorMainFrame extends JFrame
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 					domain_id, true);
 			statusBar.setText("domain", domain.getName());
 		}

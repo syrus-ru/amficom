@@ -7,13 +7,12 @@ import java.awt.event.MouseEvent;
 
 import com.jgraph.JGraph;
 import com.jgraph.graph.*;
-import com.jgraph.graph.VertexView.*;
 
 public class DeviceView extends VertexView
 {
 	DeviceCell cell;
 	Rectangle _bounds;
-	public static VertexRenderer renderer = new SchemeVertexRenderer();
+	public static VertexRenderer schemerenderer = new SchemeVertexRenderer();
 
 	public DeviceView(Object cell, JGraph graph, CellMapper mapper)
 	{
@@ -23,7 +22,7 @@ public class DeviceView extends VertexView
 
 	public CellViewRenderer getRenderer()
 	{
-		return renderer;
+		return schemerenderer;
 	}
 
 	public CellHandle getHandle(GraphContext context)
@@ -57,11 +56,11 @@ public class DeviceView extends VertexView
 		{
 			super.mouseDragged(event);
 
-			Rectangle bounds = computeBounds(event);
+			Rectangle bounds1 = computeBounds(event);
 
-			if (!bounds.equals(_bounds))
+			if (!bounds1.equals(_bounds))
 			{
-				double u = (double)GraphConstants.PERCENT;
+				double u = GraphConstants.PERCENT;
 				java.util.List list = cell.getChildren();
 				Iterator iterator = list.iterator();
 				while (iterator.hasNext())
@@ -83,7 +82,7 @@ public class DeviceView extends VertexView
 									{
 										Rectangle rect = GraphConstants.getBounds(visualPort.getAttributes());
 
-										Point newpos = new Point(pos.x, (int)(u * ( (double)(rect.y + 4 - bounds.y) / (double)bounds.height)));
+										Point newpos = new Point(pos.x, (int)(u * ( (double)(rect.y + 4 - bounds1.y) / (double)bounds1.height)));
 										GraphConstants.setOffset(port.getAttributes(), newpos);
 									}
 								}
@@ -95,7 +94,7 @@ public class DeviceView extends VertexView
 						m.put(port, port.getAttributes());*/
 					}
 				}
-				_bounds = bounds;
+				_bounds = bounds1;
 			}
 		}
 	}

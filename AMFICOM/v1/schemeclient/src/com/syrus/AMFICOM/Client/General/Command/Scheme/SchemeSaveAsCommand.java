@@ -9,12 +9,10 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.SchemePropsPanel;
-import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
@@ -105,17 +103,17 @@ public class SchemeSaveAsCommand extends VoidCommand
 			if (se.schemeElements().length != 0)
 			{
 				SchemePanel.copySchemeElementFromArchivedState_virtual(se.schemeCellImpl().getData());
-			};
+			}
 		}
 
 			/*********/
 
-		SchemePanel.assignClonedIds(graph.getAll());
+		UgoPanel.assignClonedIds(graph.getAll());
 
 		scheme.schemeCellImpl().setData((List)graph.getArchiveableState(graph.getRoots()));
 		if (graph.getScheme().equals(ugograph.getScheme()))
 		{
-			SchemePanel.assignClonedIds(ugograph.getAll());
+			UgoPanel.assignClonedIds(ugograph.getAll());
 			scheme.ugoCellImpl().setData((List)ugograph.getArchiveableState(ugograph.getRoots()));
 			ugoTab.setGraphChanged(false);
 		}
@@ -135,7 +133,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 					domain_id, true);
 			scheme.domainImpl(domain);
 		}
@@ -208,26 +206,12 @@ class SaveDialog extends JDialog
 		setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
 	}
 
-	public int init(Scheme scheme, String name, boolean show_ugo)
+	public int init(Scheme scheme, String initialName, boolean show_ugo)
 	{
 		panel = new SchemePropsPanel(aContext, dispatcher, show_ugo);
-		panel.schemeNameTextField.setText(name);
-		panel.schemeDescrTextArea.setText(scheme.description());
-
-		String type;
-		switch (scheme.type().value())
-		{
-			case Type._NETWORK:
-				type = LangModelSchematics.getString("NETWORK");
-				break;
-			case Type._CABLE_SUBNETWORK:
-				type = LangModelSchematics.getString("CABLE_SUBNETWORK");
-				break;
-			default:
-				type = LangModelSchematics.getString("BUILDING");
-		}
-
-		panel.schemeTypeComboBox.setSelectedItem(LangModelSchematics.getString(type));
+		panel.setSchemeName(initialName);
+		panel.setSchemeDescription(scheme.description());
+		panel.setSchemeType(scheme.type());
 	//	panel.init(graph.scheme, aContext.getDataSourceInterface());
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(panel, BorderLayout.CENTER);

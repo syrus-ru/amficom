@@ -6,17 +6,12 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
 import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.corba.*;
-import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.general.corba.*;
 
 
 public class PortTypeCharacteristicsPanel extends GeneralPanel
 {
-	PortType type;
-
-	CharacteristicsPanel charPane;
-
+	protected PortType type;
 	private static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
@@ -24,7 +19,9 @@ public class PortTypeCharacteristicsPanel extends GeneralPanel
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
 	};
 
-	public PortTypeCharacteristicsPanel()
+	private CharacteristicsPanel charPane;
+
+	protected PortTypeCharacteristicsPanel()
 	{
 		super();
 
@@ -38,7 +35,7 @@ public class PortTypeCharacteristicsPanel extends GeneralPanel
 		}
 	}
 
-	public PortTypeCharacteristicsPanel(PortType type)
+	protected PortTypeCharacteristicsPanel(PortType type)
 	{
 		this();
 		setObject(type);
@@ -73,7 +70,7 @@ public class PortTypeCharacteristicsPanel extends GeneralPanel
 					CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE,
 					type,
 					type.getId(),
-					false);
+					true);
 		charPane.addCharacteristics(type.getCharacteristics(), type.getId());
 	}
 

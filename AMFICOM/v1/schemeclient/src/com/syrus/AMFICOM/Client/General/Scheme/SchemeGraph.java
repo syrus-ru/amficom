@@ -11,11 +11,9 @@ import javax.swing.*;
 import com.jgraph.graph.*;
 import com.jgraph.pad.*;
 import com.jgraph.graph.Port;
-import com.jgraph.pad.GPGraph.*;
 import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
@@ -328,7 +326,7 @@ public class SchemeGraph extends GPGraph
 		}
 
 		public CellViewRenderer getRenderer() {
-			return DeviceView.renderer;
+			return VertexView.renderer;
 		}
 
 		public Rectangle getPureBounds() {
@@ -594,8 +592,8 @@ public class SchemeGraph extends GPGraph
 			Map cell_attr = GraphConstants.createAttributes(cells, getGraphLayoutCache());
 			Map new_attributes = GraphConstants.cloneMap(cell_attr);
 			// клонируем коннекшены
-			Object[] flat = getDescendants(cells);
-			//ConnectionSet cs = ConnectionSet.create(getGraphLayoutCache().getModel(), flat, false);
+//			Object[] flat = getDescendants(cells);
+//			ConnectionSet cs = ConnectionSet.create(getGraphLayoutCache().getModel(), flat, false);
 			cs = cs.clone(clones);
 			// устанавливаем аттрибуты для клона
 			new_attributes = GraphConstants.replaceKeys(clones, new_attributes);
@@ -711,23 +709,20 @@ public class SchemeGraph extends GPGraph
 			bp.setEnabled(false);
 			{
 				int ports = 0;
-				PortCell port = null;
 				int cablePorts = 0;
-				CablePortCell cablePort = null;
 				int devices = 0;
 				DeviceCell device = null;
 				int groups = 0;
-				DeviceGroup group = null;
-				for (int i = 0; i < cells.length; i++)
+				for (int j = 0; j < cells.length; j++)
 				{
-					if (cells[i] instanceof DeviceCell)
-							{ devices++; device = (DeviceCell)cells[i]; }
-					else if (cells[i] instanceof DeviceGroup)
-							{ groups++; group = (DeviceGroup)cells[i]; }
-					else if (cells[i] instanceof PortCell)
-							{ ports++; port = (PortCell)cells[i]; }
-					else if (cells[i] instanceof CablePortCell)
-							{ cablePorts++; cablePort = (CablePortCell)cells[i]; }
+					if (cells[j] instanceof DeviceCell)
+							{ devices++; device = (DeviceCell)cells[j]; }
+					else if (cells[j] instanceof DeviceGroup)
+							{ groups++; }
+					else if (cells[j] instanceof PortCell)
+							{ ports++; }
+					else if (cells[j] instanceof CablePortCell)
+							{ cablePorts++; }
 				}
 				if ((ports == 1 && cablePorts == 0 && devices == 0 && groups == 0) ||
 						(ports == 0 && cablePorts == 1 && devices == 0 && groups == 0))
@@ -804,8 +799,7 @@ public class SchemeGraph extends GPGraph
 					port = getPortViewAt(event.getX(), event.getY(), !event.isShiftDown());
 					if (port != null)
 					{
-						Port p1 = (Port)port.getCell();
-						Map map = getModel().getAttributes(p1);
+						Map map = getModel().getAttributes(port.getCell());
 						if (map != null)
 						{
 							if (!GraphConstants.isConnectable(map))
@@ -843,7 +837,7 @@ public class SchemeGraph extends GPGraph
 						fromScreen(bounds);
 						bounds.width+=2;
 						bounds.height+=2;
-						DefaultGraphCell cell = GraphActions.CreateDeviceAction(SchemeGraph.this, "", bounds, false, Color.black);
+						GraphActions.CreateDeviceAction(SchemeGraph.this, "", bounds, false, Color.black);
 						reinit();
 					}
 					else if (ce.isSelected())
@@ -928,11 +922,9 @@ public class SchemeGraph extends GPGraph
 					}
 					else if (l.isSelected())
 					{
-						Point p = fromScreen(new Point(start));
-						Point p2 = toScreen(new Point(current));
 						List list = new ArrayList();
-						list.add(p);
-						list.add(p2);
+						list.add(fromScreen(new Point(start)));
+						list.add(toScreen(new Point(current)));
 						Map map = GraphConstants.createMap();
 						GraphConstants.setPoints(map, list);
 						GraphConstants.setLineEnd(map, GraphConstants.ARROW_NONE);
@@ -1025,8 +1017,7 @@ public class SchemeGraph extends GPGraph
 
 					if (newPort != null)
 					{
-						Port p1 = (Port)newPort.getCell();
-						Map map = getModel().getAttributes(p1);
+						Map map = getModel().getAttributes(newPort.getCell());
 						if (oldPort != newPort && GraphConstants.isConnectable(map))
 						{
 							Graphics g = getGraphics();

@@ -12,23 +12,22 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import oracle.jdeveloper.layout.XYConstraints;
 
 public class LinkTypePane extends JPanel implements ObjectResourcePropertiesPane
 {
-	public ApplicationContext aContext;
+	private ApplicationContext aContext;
+	protected LinkType linkType;
+	private static ObjectResourcePropertiesPane instance;
 
-	AbstractLinkTypeGeneralPanel gPanel = new AbstractLinkTypeGeneralPanel();
-	LinkTypeCharacteristicsPanel chPanel = new LinkTypeCharacteristicsPanel();
-
-	LinkType linkType;
-
-	public JTabbedPane tabbedPane = new JTabbedPane();
-
+	private AbstractLinkTypeGeneralPanel gPanel = new AbstractLinkTypeGeneralPanel();
+	private LinkTypeCharacteristicsPanel chPanel = new LinkTypeCharacteristicsPanel();
+	private JTabbedPane tabbedPane = new JTabbedPane();
 	private JButton saveButton = new JButton();
 	private JPanel buttonsPanel = new JPanel();
 
-	public LinkTypePane()
+	protected LinkTypePane()
 	{
 		super();
 		try
@@ -41,10 +40,17 @@ public class LinkTypePane extends JPanel implements ObjectResourcePropertiesPane
 		}
 	}
 
-	public LinkTypePane(LinkType l)
+	protected LinkTypePane(LinkType l)
 	{
 		this();
 		setObject(l);
+	}
+
+	public static ObjectResourcePropertiesPane getInstance()
+	{
+		if (instance == null)
+			instance = new LinkTypePane();
+		return instance;
 	}
 
 	private void jbInit() throws Exception
@@ -52,7 +58,7 @@ public class LinkTypePane extends JPanel implements ObjectResourcePropertiesPane
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.setTabPlacement(SwingConstants.TOP);
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
@@ -139,7 +145,7 @@ public class LinkTypePane extends JPanel implements ObjectResourcePropertiesPane
 											 (screenSize.height - dialog.getPreferredSize().height) / 2);
 		dialog.setVisible(true);
 
-		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
+		if (dialog.getStatus() == PopupNameFrame.OK && !dialog.getName().equals(""))
 		{
 			String name = dialog.getName();
 			Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
@@ -152,10 +158,13 @@ public class LinkTypePane extends JPanel implements ObjectResourcePropertiesPane
 						LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER,
 						"",
 						"",
-						null);
+						IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE));
 
 				setObject(new_type);
 				return true;
+			}
+			catch (IllegalObjectEntityException ex) {
+				ex.printStackTrace();
 			}
 			catch (CreateObjectException ex) {
 				ex.printStackTrace();

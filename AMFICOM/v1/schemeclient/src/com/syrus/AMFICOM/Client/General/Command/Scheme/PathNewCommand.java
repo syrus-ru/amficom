@@ -5,18 +5,18 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemeFactory;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemeTabbedPane;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
-import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.corba.*;
-import com.syrus.AMFICOM.general.corba.*;
-import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 
 public class PathNewCommand extends VoidCommand
 {

@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.tree.*;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
@@ -67,6 +68,18 @@ public class SchemeOpenTreeModel extends ObjectResourceTreeModel
 		}
 		else if (node.getObject() instanceof Type)
 			return Scheme.class;
+		return null;
+	}
+
+	public ObjectResourceController getNodeChildController(ObjectResourceTreeNode node)
+	{
+		if (node.getObject() instanceof String) {
+			String s = (String)node.getObject();
+			if (s.equals("root"))
+				return null;
+		}
+		else if (node.getObject() instanceof Type)
+			return SchemeController.getInstance();
 		return null;
 	}
 

@@ -56,7 +56,6 @@ public class AddToPathFrame extends JDialog
 	{
 		for (int i = 0; i < resources.length; i++)
 		{
-			;
 			if (resources[i] instanceof SchemeLink)
 			{
 				v.add(resources[i]);

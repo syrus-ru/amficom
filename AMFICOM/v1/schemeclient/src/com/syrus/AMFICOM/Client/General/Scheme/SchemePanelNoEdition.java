@@ -33,7 +33,7 @@ public class SchemePanelNoEdition extends SchemePanel
 	public void init_module()
 	{
 		super.init_module();
-		dispatcher.register(this, MapNavigateEvent.MAP_NAVIGATE);
+		dispatcher.register(this, MapEvent.MAP_NAVIGATE);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -54,7 +54,7 @@ public class SchemePanelNoEdition extends SchemePanel
 				return;
 
 		}
-		if (ae.getActionCommand().equals(MapNavigateEvent.MAP_NAVIGATE))
+		if (ae.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
 		{
 			MapNavigateEvent mne = (MapNavigateEvent)ae;
 			if (mne.isDataMarkerCreated())

@@ -11,9 +11,9 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
 import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.corba.*;
@@ -104,13 +104,53 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 		{
 			if (((SchemeProtoGroup)node.getObject()).schemeProtoGroups().length != 0)
 				return SchemeProtoGroup.class;
-			else
-				return SchemeProtoElement.class;
+			return SchemeProtoElement.class;
 		}
 		else if (node.getObject() instanceof SchemeProtoGroup)
 			return SchemeProtoElement.class;
 		return null;
 	}
+
+	public ObjectResourceController getNodeChildController(ObjectResourceTreeNode node)
+	{
+		if(node.getObject() instanceof String)
+		{
+			String s = (String )node.getObject();
+			if(s.equals("SchemeProtoGroup"))
+				return null;
+			/**
+			 * @todo write SchemeProtoGroupController
+			 * return SchemeProtoGroupController.getInstance();
+			 */
+			if(s.equals("LinkType"))
+				return LinkTypeController.getInstance();
+			if(s.equals("CableLinkType"))
+				return CableLinkTypeController.getInstance();
+			if(s.equals("PortType"))
+				return PortTypeController.getInstance();
+			if(s.equals("TransmissionPathType"))
+				return TransmissionPathTypeController.getInstance();
+			if(s.equals("MeasurementPortType"))
+				return MeasurementPortTypeController.getInstance();
+		}
+		else if (node.getObject() instanceof SchemeProtoGroup)
+		{
+			if (((SchemeProtoGroup)node.getObject()).schemeProtoGroups().length != 0)
+				return null;
+			/**
+			 * @todo write SchemeProtoGroupController
+			 * return SchemeProtoGroupController.getInstance();
+			 */
+			else
+				return null;
+			/**
+			 * @todo write SchemeProtoElementController
+			 * return SchemeProtoElementController.getInstance();
+			 */
+		}
+		return null;
+	}
+
 
 	public List getChildNodes(ObjectResourceTreeNode node)
 	{
@@ -151,7 +191,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				try {
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 							domain_id, true);
 					DomainCondition condition = new DomainCondition(domain,
 							ObjectEntities.LINKTYPE_ENTITY_CODE);
@@ -175,7 +215,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				try {
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 							domain_id, true);
 					DomainCondition condition = new DomainCondition(domain,
 							ObjectEntities.PORTTYPE_ENTITY_CODE);
@@ -196,7 +236,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				try {
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 							domain_id, true);
 					DomainCondition condition = new DomainCondition(domain,
 							ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
@@ -217,7 +257,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				try {
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 							domain_id, true);
 					DomainCondition condition = new DomainCondition(domain,
 							ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
@@ -238,7 +278,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				try {
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 							domain_id, true);
 					DomainCondition condition = new DomainCondition(domain,
 							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);

@@ -4,6 +4,7 @@ import java.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.event.UndoableEditEvent;
 
@@ -11,9 +12,6 @@ import com.jgraph.graph.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.scheme.corba.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.Identifier;
-import com.syrus.AMFICOM.configuration.*;
 
 public class ElementsPanel extends UgoPanel
 		implements KeyListener
@@ -29,7 +27,7 @@ public class ElementsPanel extends UgoPanel
 		}
 	};
 
-	protected static String[] buttons = new String[]
+	private static String[] buttons = new String[]
 	{
 		Constants.marqueeTool,
 		Constants.separator,
@@ -103,18 +101,17 @@ public class ElementsPanel extends UgoPanel
 
 	protected UgoPanel.ToolBarPanel createToolBar()
 	{
-		ToolBarPanel toolbar = new ToolBarPanel();
-		commands.putAll(toolbar.createGraphButtons(this));
+		ToolBarPanel toolBarPanel = new ToolBarPanel();
+		commands.putAll(toolBarPanel.createGraphButtons(this));
 
-		String[] buttons = getButtons();
 		for (int i = 0; i < buttons.length; i++)
 		{
 			if (buttons[i].equals(Constants.separator))
-				toolbar.insert(new JToolBar.Separator());
+				toolBarPanel.insert(new JToolBar.Separator());
 			else
-				toolbar.insert((Component)commands.get(buttons[i]));
+				toolBarPanel.insert((Component)commands.get(buttons[i]));
 		}
-		return toolbar;
+		return toolBarPanel;
 	}
 
 	protected String[] getButtons()
@@ -138,7 +135,7 @@ public class ElementsPanel extends UgoPanel
 			}
 			else
 			{
-				if (getGraph().path_creation_mode != Constants.CREATING_PATH_MODE)
+				if (SchemeGraph.path_creation_mode != Constants.CREATING_PATH_MODE)
 					getGraph().setCurrentPath(null);
 			}
 			if (SchemeGraph.skip_notify)
@@ -220,7 +217,7 @@ public class ElementsPanel extends UgoPanel
 	{
 		getGraph().setScheme(null);
 		getGraph().setSchemeElement(se);
-		Map clones = getGraph().copyFromArchivedState(se.schemeCellImpl().getData(), new java.awt.Point(0, 0));
+//		Map clones = getGraph().copyFromArchivedState(se.schemeCellImpl().getData(), new java.awt.Point(0, 0));
 //		getGraph().setGraphChanged(false);
 		getGraph().selectionNotify();
 		//assignClonedIds(clones);
@@ -255,7 +252,7 @@ public class ElementsPanel extends UgoPanel
 			GraphActions.alignToGrid(getGraph(), getGraph().getSelectionCells());
 		}
 		// CTRL + ...
-		if (e.getModifiers() == KeyEvent.CTRL_MASK)
+		if (e.getModifiers() == InputEvent.CTRL_MASK)
 		{
 			if (e.getKeyCode() == KeyEvent.VK_Z)
 			{
@@ -276,7 +273,7 @@ public class ElementsPanel extends UgoPanel
 			}
 		}
 		// CTRL + SHIFT + ...
-		if (e.getModifiers() == KeyEvent.CTRL_MASK + KeyEvent.SHIFT_MASK)
+		if (e.getModifiers() == InputEvent.CTRL_MASK + InputEvent.SHIFT_MASK)
 		{
 			if (e.getKeyCode() == KeyEvent.VK_Z)
 			{
@@ -285,7 +282,7 @@ public class ElementsPanel extends UgoPanel
 			}
 		}
 		// CTRL + ALT + ...
-		if (e.getModifiers() == KeyEvent.CTRL_MASK + KeyEvent.ALT_MASK)
+		if (e.getModifiers() == InputEvent.CTRL_MASK + InputEvent.ALT_MASK)
 		{
 			if (e.getKeyCode() == KeyEvent.VK_D)
 			{
@@ -298,94 +295,94 @@ class ToolBarPanel extends UgoPanel.ToolBarPanel
 {
 	protected Map createGraphButtons (ElementsPanel p)
 	{
-		Map buttons = new HashMap();
+		Map bttns = new HashMap();
 
 		if (getGraph().getMarqueeHandler() instanceof SchemeGraph.ShemeMarqueeHandler)
 		{
 			SchemeGraph.ShemeMarqueeHandler mh = (SchemeGraph.ShemeMarqueeHandler) getGraph().getMarqueeHandler();
 
-			buttons.put(Constants.marqueeTool,
+			bttns.put(Constants.marqueeTool,
 									createToolButton(mh.s, btn_size, null, null,
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pointer.gif")),
 									new MarqeeAction(getGraph()), true));
-			buttons.put("s_cell", mh.s_cell);
-			buttons.put(Constants.deviceTool,
+			bttns.put("s_cell", mh.s_cell);
+			bttns.put(Constants.deviceTool,
 									createToolButton(mh.dev, btn_size, null, "устройство",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/device.gif")),
 									null, true));
-			buttons.put(Constants.rectangleTool,
+			bttns.put(Constants.rectangleTool,
 									createToolButton(mh.r, btn_size, null, "прямоугольник",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/rectangle.gif")),
 									null, true));
-			buttons.put(Constants.ellipseTool,
+			bttns.put(Constants.ellipseTool,
 									createToolButton(mh.c, btn_size, null, "эллипс",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/ellipse.gif")),
 									null, true));
-			buttons.put(Constants.textTool,
+			bttns.put(Constants.textTool,
 									createToolButton(mh.t, btn_size, null, "текст",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/text.gif")),
 									null, true));
-			buttons.put(Constants.iconTool,
+			bttns.put(Constants.iconTool,
 									createToolButton(mh.i, btn_size, "иконка", "иконка",
 									null, null, true));
-			buttons.put(Constants.lineTool,
+			bttns.put(Constants.lineTool,
 									createToolButton(mh.l, btn_size, null, "линия",
 									 new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/line.gif")),
 									null, true));
-			buttons.put(Constants.cableTool,
+			bttns.put(Constants.cableTool,
 									createToolButton(mh.ce, btn_size, null, "кабель",
 									 new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/thick_edge.gif")),
 									null, true));
-			buttons.put(Constants.linkTool,
+			bttns.put(Constants.linkTool,
 									createToolButton(mh.e, btn_size, null, "связь",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/edge.gif")),
 									null, true));
-			buttons.put(Constants.zoomTool,
+			bttns.put(Constants.zoomTool,
 									createToolButton(mh.z, btn_size, "зум", "зум",
 									null, null, true));
-			buttons.put(Constants.portOutKey,
+			bttns.put(Constants.portOutKey,
 									createToolButton(mh.p1, btn_size, null, "порт",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/port.gif")),
 									new PortToolAction(), false));
-			buttons.put(Constants.portInKey,
+			bttns.put(Constants.portInKey,
 									createToolButton(mh.p2, btn_size, null, "кабельный порт",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/cableport.gif")),
 									new PortToolAction(), false));
-			buttons.put(Constants.groupKey,
+			bttns.put(Constants.groupKey,
 									createToolButton(mh.gr, btn_size, null, "создать компонент",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/group.gif")),
 									new GroupAction(getGraph()), false));
-			buttons.put(Constants.ungroupKey,
+			bttns.put(Constants.ungroupKey,
 									createToolButton(mh.ugr, btn_size, null, "разобрать",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/ungroup.gif")),
 									new UngroupAction(getGraph()), false));
-			buttons.put(Constants.undoKey,
+			bttns.put(Constants.undoKey,
 									createToolButton(mh.undo, btn_size, null, "отменить",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/undo.gif")),
 									new UndoAction(getGraph(), undoManager), false));
-			buttons.put(Constants.redoKey,
+			bttns.put(Constants.redoKey,
 									createToolButton(mh.redo, btn_size, null, "вернуть",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/redo.gif")),
 									new RedoAction(getGraph(), undoManager), false));
-			buttons.put(Constants.zoomInKey,
+			bttns.put(Constants.zoomInKey,
 									createToolButton(mh.zi, btn_size, null, "увеличить",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_in.gif")),
 									new ZoomInAction(getGraph()), true));
 									//new SaveLibraryAction(getGraph(), libPanel), true));
-			buttons.put(Constants.zoomOutKey,
+			bttns.put(Constants.zoomOutKey,
 									createToolButton(mh.zo, btn_size, null, "уменьшить",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_out.gif")),
 									new ZoomOutAction(getGraph()), true));
 									//new OpenLibraryAction(getGraph(), libPanel), true));
-			buttons.put(Constants.zoomActualKey,
+			bttns.put(Constants.zoomActualKey,
 									createToolButton(mh.za, btn_size, null, "фактический размер",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_actual.gif")),
 									new ZoomActualAction(getGraph()), true));
-			buttons.put(Constants.deleteKey,
+			bttns.put(Constants.deleteKey,
 									createToolButton(mh.del, btn_size, null, "удалить",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/delete.gif")),
 									new DeleteAction(ElementsPanel.this, aContext), false));
-			buttons.put(Constants.hierarchyUpKey,
+			bttns.put(Constants.hierarchyUpKey,
 									createToolButton(mh.hup, btn_size, null, "вверх",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/hand.gif")),
 									new HierarchyUpAction (getGraph()), true));
@@ -393,25 +390,25 @@ class ToolBarPanel extends UgoPanel.ToolBarPanel
 //									createToolButton(mh.addlib, btn_size, null, "сохранить компонент",
 //									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/library.gif")),
 //									new InsertIntoLibraryAction (getGraph()), false));
-			buttons.put(Constants.createTopLevelElementKey,
+			bttns.put(Constants.createTopLevelElementKey,
 									createToolButton(mh.ugo, btn_size, null, "создать УГО",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/component_ugo.gif")),
 									new CreateTopLevelElementAction (getGraph()), false));
-			buttons.put(Constants.blockPortKey,
+			bttns.put(Constants.blockPortKey,
 									createToolButton(mh.bp, btn_size, null, "связной порт",
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/hierarchy_port.gif")),
 									new CreateBlockPortAction (getGraph()), false));
 
 
 			ButtonGroup group = new ButtonGroup();
-			for (Iterator it = buttons.values().iterator(); it.hasNext();)
+			for (Iterator it = bttns.values().iterator(); it.hasNext();)
 			{
 				AbstractButton button = (AbstractButton)it.next();
 				group.add(button);
 			}
 			mh.s.doClick();
 		}
-		return buttons;
+		return bttns;
 	}
 }
 }

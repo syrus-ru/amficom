@@ -21,18 +21,18 @@ import com.syrus.AMFICOM.scheme.corba.SchemePort;
 
 public class PortPropsPanel extends JPanel
 {
-	private AComboBox sortComboBox = new AComboBox();
-	private ObjComboBox typeComboBox = new ObjComboBox(
+	AComboBox sortComboBox = new AComboBox();
+	ObjComboBox typeComboBox = new ObjComboBox(
 			 PortTypeController.getInstance(),
-			 PortTypeController.KEY_NAME);
+			 StorableObjectWrapper.COLUMN_NAME);
 
-	private JButton addTypeButton = new JButton("...");
-	private JTextArea descriptionTextArea = new JTextArea();
-	private JTextField nameText = new JTextField();
-	private JCheckBox isAccessCheckBox = new JCheckBox();
-	private ObjComboBox accessTypeComboBox = new ObjComboBox(
+	JButton addTypeButton = new JButton("...");
+	JTextArea descriptionTextArea = new JTextArea();
+	JTextField nameText = new JTextField();
+	JCheckBox isAccessCheckBox = new JCheckBox();
+	ObjComboBox accessTypeComboBox = new ObjComboBox(
 			 MeasurementPortController.getInstance(),
-			 MeasurementPortController.KEY_NAME);
+			 StorableObjectWrapper.COLUMN_NAME);
 	private String undoDescription;
 	ApplicationContext aContext;
 	private boolean skip_changes = false;
@@ -322,9 +322,9 @@ public class PortPropsPanel extends JPanel
 
 		for(Iterator it = portTypes.iterator(); it.hasNext();)
 		{
-			PortType pt = (PortType)it.next();
-			if (pt.getSort().equals(selected_sort))
-				typeComboBox.addItem(pt);
+			PortType portType = (PortType)it.next();
+			if (portType.getSort().equals(selected_sort))
+				typeComboBox.addItem(portType);
 		}
 		if (pt != null)
 			typeComboBox.setSelectedItem(pt);
@@ -353,7 +353,7 @@ public class PortPropsPanel extends JPanel
 		dialog.setLocation(loc.x, loc.y + 30);
 		dialog.setVisible(true);
 
-		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
+		if (dialog.getStatus() == PopupNameFrame.OK && !dialog.getName().equals(""))
 		{
 			String name = dialog.getName();
 			for (int i = 0; i < typeComboBox.getItemCount(); i++)
@@ -364,7 +364,7 @@ public class PortPropsPanel extends JPanel
 					return;
 				}
 			}
-			PortType type = ports[0].portTypeImpl();
+//			PortType type = ports[0].portTypeImpl();
 			Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
 			PortType new_type = null;
 			try {

@@ -10,16 +10,17 @@ import com.syrus.AMFICOM.general.corba.*;
 
 public class MeasurementPortCharacteristicsPanel extends GeneralPanel
 {
-	MeasurementPort port;
-	CharacteristicsPanel charPane = new CharacteristicsPanel();
+	protected MeasurementPort port;
 	private static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
-		};
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
+	};
 
-	public MeasurementPortCharacteristicsPanel()
+	private CharacteristicsPanel charPane = new CharacteristicsPanel();
+
+	protected MeasurementPortCharacteristicsPanel()
 	{
 		super();
 		try
@@ -32,7 +33,7 @@ public class MeasurementPortCharacteristicsPanel extends GeneralPanel
 		}
 	}
 
-	public MeasurementPortCharacteristicsPanel(MeasurementPort p)
+	protected MeasurementPortCharacteristicsPanel(MeasurementPort p)
 	{
 		this();
 		setObject(p);

@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.text.SimpleDateFormat;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
@@ -14,44 +12,34 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
 public class EquipmentGeneralPanelAdd extends GeneralPanel
 {
-	SchemeElement element;
+	protected SchemeElement element;
 
 	private JPanel mainPanel = new JPanel();
-
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-
 	private JLabel sw_versionLabel1 = new JLabel();
 	private JLabel sw_versionLabel2 = new JLabel();
 	private JTextField sw_versionField = new JTextField();
-
 	private JLabel rnLabel1 = new JLabel();
 	private JLabel rnLabel2 = new JLabel();
 	private JTextField rnField = new JTextField();
-
 	private JLabel sw_serialLabel1 = new JLabel();
 	private JLabel sw_serialLabel2 = new JLabel();
 	private JTextField sw_serialField = new JTextField();
-
 	private JLabel hw_serialLabel1 = new JLabel();
 	private JLabel hw_serialLabel2 = new JLabel();
 	private JTextField hw_serialField = new JTextField();
-
 	private JLabel supplierLabel = new JLabel();
 	private JTextField supplierField = new JTextField();
 	private JLabel supplierCodeLabel = new JLabel();
 	private JTextField supplierCodeField = new JTextField();
-
 	private JLabel hw_versionLabel1 = new JLabel();
 	private JLabel hw_versionLabel2 = new JLabel();
 	private JTextField hw_versionField = new JTextField();
-
 	private JLabel manufacturerCodeLabel = new JLabel();
 	private JTextField manufacturerCodeField = new JTextField();
-
 	private JLabel manufacturerLabel = new JLabel();
 	private JTextField manufacturerField = new JTextField();
 
-	public EquipmentGeneralPanelAdd()
+	protected EquipmentGeneralPanelAdd()
 	{
 		super();
 		try
@@ -64,7 +52,7 @@ public class EquipmentGeneralPanelAdd extends GeneralPanel
 		}
 	}
 
-	public EquipmentGeneralPanelAdd(SchemeElement element)
+	protected EquipmentGeneralPanelAdd(SchemeElement element)
 	{
 		this();
 		setObject(element);

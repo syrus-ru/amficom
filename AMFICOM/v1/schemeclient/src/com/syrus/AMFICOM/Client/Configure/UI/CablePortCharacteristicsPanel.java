@@ -11,11 +11,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCablePort;
 
 public class CablePortCharacteristicsPanel extends GeneralPanel
 {
-	SchemeCablePort port;
-	Identifier portId;
-
-	CharacteristicsPanel charPane;
-
+	protected SchemeCablePort port;
+	protected Identifier portId;
 	private static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
 		CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
 		CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
@@ -23,7 +20,9 @@ public class CablePortCharacteristicsPanel extends GeneralPanel
 		CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
 	};
 
-	public CablePortCharacteristicsPanel()
+	private CharacteristicsPanel charPane;
+
+	protected CablePortCharacteristicsPanel()
 	{
 		super();
 
@@ -37,7 +36,7 @@ public class CablePortCharacteristicsPanel extends GeneralPanel
 		}
 	}
 
-	public CablePortCharacteristicsPanel(SchemeCablePort p)
+	protected CablePortCharacteristicsPanel(SchemeCablePort p)
 	{
 		this();
 		setObject(p);

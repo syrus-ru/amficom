@@ -12,24 +12,22 @@ import com.syrus.AMFICOM.Client.General.Command.Scheme.PathBuilder;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
-import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
-import com.syrus.AMFICOM.client_.general.ui_.tree.UniTreePanel;
+import com.syrus.AMFICOM.client_.general.ui_.tree.*;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.corba.*;
 
 public class PathPropsPanel extends JPanel
 {
-	private ObjComboBox typeComboBox = new ObjComboBox(
+	ObjComboBox typeComboBox = new ObjComboBox(
 			 TransmissionPathTypeController.getInstance(),
-			 TransmissionPathTypeController.KEY_NAME);
-	private JButton addTypeButton = new JButton("...");
-	private JTextField compNameTextField = new JTextField();
-	private JTextField startDevTextField = new JTextField();
-	private JTextField endDevTextField = new JTextField();
+			 StorableObjectWrapper.COLUMN_NAME);
+	JButton addTypeButton = new JButton("...");
+	JTextField compNameTextField = new JTextField();
+	JTextField startDevTextField = new JTextField();
+	JTextField endDevTextField = new JTextField();
 //	ObjectResourceTablePane table = new ObjectResourceTablePane();
 	//JTable table = new JTable();
 
@@ -151,7 +149,7 @@ public class PathPropsPanel extends JPanel
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 					domain_id, true);
 			DomainCondition condition = new DomainCondition(domain, ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
 			pathTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -363,7 +361,7 @@ public class PathPropsPanel extends JPanel
 		dialog.setLocation(loc.x, loc.y + 30);
 		dialog.setVisible(true);
 
-		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
+		if (dialog.getStatus() == PopupNameFrame.OK && !dialog.getName().equals(""))
 		{
 			String name = dialog.getName();
 			for (int i = 0; i < typeComboBox.getItemCount(); i++)
@@ -436,9 +434,14 @@ class PathTreeModel extends ObjectResourceTreeModel
 	{
 		if(node.getObject() instanceof String)
 		{
-			String s = (String )node.getObject();
+//			String s = (String )node.getObject();
 			return Object.class;
 		}
+		return null;
+	}
+
+	public ObjectResourceController getNodeChildController(ObjectResourceTreeNode node)
+	{
 		return null;
 	}
 

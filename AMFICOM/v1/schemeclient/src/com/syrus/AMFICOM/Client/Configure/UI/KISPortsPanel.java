@@ -6,35 +6,34 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.scheme.AbstractSchemePortController;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.*;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class KISPortsPanel extends GeneralPanel
 {
-	SchemeElement element;
+	protected SchemeElement element;
 
-	JLabel idLabel = new JLabel();
+	private JLabel idLabel = new JLabel();
 	private ObjComboBox portBox = new ObjComboBox(
-			 AbstractSchemePortController.getInstance(),
-			 AbstractSchemePortController.KEY_NAME);
+			 SchemePortController.getInstance(),
+			 StorableObjectWrapper.COLUMN_NAME);
 	private JPanel topPanel = new JPanel();
 	private JPanel mainPanel = new JPanel();
 	private JPanel controlsPanel = new JPanel();
 	private JPanel labelsPanel = new JPanel();
-	PortPane pgp = new PortPane();
+	private PortPane pgp = new PortPane();
 	private JPanel bottomPanel = new JPanel();
 	private JPanel mainPanel1 = new JPanel();
 	private JPanel controlsPanel1 = new JPanel();
 	private JPanel labelsPanel1 = new JPanel();
 	private JLabel jLabel1 = new JLabel();
 	private JCheckBox accessPortCheckBox = new JCheckBox();
-	MeasurementPortPane apgp = new MeasurementPortPane();
-	private FlowLayout flowLayout1 = new FlowLayout();
+	private MeasurementPortPane apgp = new MeasurementPortPane();
 
-	public KISPortsPanel()
+	protected KISPortsPanel()
 	{
 		super();
 		try
@@ -47,7 +46,7 @@ public class KISPortsPanel extends GeneralPanel
 		}
 	}
 
-	public KISPortsPanel(SchemeElement element)
+	protected KISPortsPanel(SchemeElement element)
 	{
 		this();
 		setObject(element);
@@ -74,6 +73,7 @@ public class KISPortsPanel extends GeneralPanel
 		labelsPanel.setMinimumSize(new Dimension(DEF_WIDTH + 5, 125));
 		pgp.setBorder(BorderFactory.createLoweredBevelBorder());
 		bottomPanel.setLayout(new BorderLayout());
+		FlowLayout flowLayout1 = new FlowLayout();
 		mainPanel1.setLayout(flowLayout1);
 		controlsPanel1.setLayout(new VerticalFlowLayout());
 		labelsPanel1.setLayout(new VerticalFlowLayout());

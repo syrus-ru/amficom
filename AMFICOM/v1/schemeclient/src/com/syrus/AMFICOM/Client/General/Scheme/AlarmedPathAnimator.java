@@ -27,7 +27,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 		this.panel = panel;
 		this.aContext = aContext;
 
-		Object[] cells = findAlarmedObjects(panel, path, alarmedPE);
+		Object[] cells = findAlarmedObjects(path, alarmedPE);
 		System.out.println("found " + cells.length + " cells to repaint");
 
 		ArrayList _edges = new ArrayList();
@@ -120,7 +120,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 		panel.repaint();
 	}
 
-	Object[] findAlarmedObjects(SchemePanel panel, SchemePath path, PathElement alarmedPE)
+	private Object[] findAlarmedObjects(SchemePath path, PathElement alarmedPE)
 	{
 		if (alarmedPE != null)
 			return new Object[0];

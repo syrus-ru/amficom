@@ -10,8 +10,7 @@ import com.syrus.AMFICOM.general.corba.*;
 
 public class EquipmentTypeCharacteristicsPanel extends GeneralPanel
 {
-	EquipmentType type;
-	CharacteristicsPanel charPane = new CharacteristicsPanel();
+	protected EquipmentType type;
 	private static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
@@ -19,7 +18,9 @@ public class EquipmentTypeCharacteristicsPanel extends GeneralPanel
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
 	};
 
-	public EquipmentTypeCharacteristicsPanel()
+	private CharacteristicsPanel charPane = new CharacteristicsPanel();
+
+	protected EquipmentTypeCharacteristicsPanel()
 	{
 		super();
 		try
@@ -32,7 +33,7 @@ public class EquipmentTypeCharacteristicsPanel extends GeneralPanel
 		}
 	}
 
-	public EquipmentTypeCharacteristicsPanel(EquipmentType eq)
+	protected EquipmentTypeCharacteristicsPanel(EquipmentType eq)
 	{
 		this();
 		setObject(eq);

@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.*;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
@@ -15,19 +15,17 @@ import oracle.jdeveloper.layout.XYConstraints;
 
 public class MeasurementPortTypePane extends JPanel implements ObjectResourcePropertiesPane
 {
-	public ApplicationContext aContext;
+	private ApplicationContext aContext;
+	protected MeasurementPortType portType;
+	private static ObjectResourcePropertiesPane instance;
 
-	MeasurementPortTypeGeneralPanel gPanel = new MeasurementPortTypeGeneralPanel();
-	MeasurementPortTypeCharacteristicsPanel chPanel = new MeasurementPortTypeCharacteristicsPanel();
-
-	MeasurementPortType portType;
-
-	public JTabbedPane tabbedPane = new JTabbedPane();
-
+	private MeasurementPortTypeGeneralPanel gPanel = new MeasurementPortTypeGeneralPanel();
+	private MeasurementPortTypeCharacteristicsPanel chPanel = new MeasurementPortTypeCharacteristicsPanel();
+	private JTabbedPane tabbedPane = new JTabbedPane();
 	private JButton saveButton = new JButton();
 	private JPanel buttonsPanel = new JPanel();
 
-	public MeasurementPortTypePane()
+	protected MeasurementPortTypePane()
 	{
 		super();
 		try
@@ -40,10 +38,17 @@ public class MeasurementPortTypePane extends JPanel implements ObjectResourcePro
 		}
 	}
 
-	public MeasurementPortTypePane(MeasurementPortType p)
+	protected MeasurementPortTypePane(MeasurementPortType p)
 	{
 		this();
 		setObject(p);
+	}
+
+	public static ObjectResourcePropertiesPane getInstance()
+	{
+		if (instance == null)
+			instance = new MeasurementPortTypePane();
+		return instance;
 	}
 
 	private void jbInit() throws Exception
@@ -51,7 +56,7 @@ public class MeasurementPortTypePane extends JPanel implements ObjectResourcePro
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.setTabPlacement(SwingConstants.TOP);
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
@@ -137,7 +142,7 @@ public class MeasurementPortTypePane extends JPanel implements ObjectResourcePro
 											 (screenSize.height - dialog.getPreferredSize().height) / 2);
 		dialog.setVisible(true);
 
-		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
+		if (dialog.getStatus() == PopupNameFrame.OK && !dialog.getName().equals(""))
 		{
 			Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 			String name = dialog.getName();

@@ -26,8 +26,8 @@ public class SchemeRenderPanel extends SchemePanelNoEdition
 
 		try
 		{
-			Rectangle bounds = sGraph.getCellBounds(sGraph.getRoots());
-			double scaleValue = this.getScale(bounds);
+//			Rectangle bounds = sGraph.getCellBounds(sGraph.getRoots());
+//			double scaleValue = this.getScale(bounds);
 
 /*			double formKoeff = ((double)((bounds.width + 2 * bounds.x + 10)) / ((double)(bounds.height + 2 * bounds.y + 20)));
 			this.setPreferredSize(new Dimension(reportsRO.width,(int)(reportsRO.width / formKoeff)));*/
@@ -88,7 +88,7 @@ public class SchemeRenderPanel extends SchemePanelNoEdition
 		else
 			curWidth = reportsRO.width;
 
-		return (double) (curWidth / (bounds.width + 2 * bounds.x));
+		return (curWidth / (bounds.width + 2 * bounds.x));
 	}
 
 /*	public void paint (Graphics g)

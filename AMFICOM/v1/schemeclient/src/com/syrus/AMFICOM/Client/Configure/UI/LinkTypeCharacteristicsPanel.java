@@ -3,15 +3,14 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 import java.awt.BorderLayout;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.corba.*;
 
 public class LinkTypeCharacteristicsPanel extends GeneralPanel
 {
-	LinkType type;
-	CharacteristicsPanel charPane;
-
+	protected LinkType type;
 	private static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
@@ -19,7 +18,9 @@ public class LinkTypeCharacteristicsPanel extends GeneralPanel
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
 	};
 
-	public LinkTypeCharacteristicsPanel()
+	private CharacteristicsPanel charPane;
+
+	protected LinkTypeCharacteristicsPanel()
 	{
 		super();
 
@@ -31,7 +32,7 @@ public class LinkTypeCharacteristicsPanel extends GeneralPanel
 		}
 	}
 
-	public LinkTypeCharacteristicsPanel(LinkType l)
+	protected LinkTypeCharacteristicsPanel(LinkType l)
 	{
 		this();
 		setObject(l);
@@ -51,6 +52,12 @@ public class LinkTypeCharacteristicsPanel extends GeneralPanel
 		return type;
 	}
 
+	public void setContext(ApplicationContext aContext)
+	{
+		super.setContext(aContext);
+		charPane.setContext(aContext);
+	}
+
 	public void setObject(Object or)
 	{
 		this.type = (LinkType)or;
@@ -61,7 +68,7 @@ public class LinkTypeCharacteristicsPanel extends GeneralPanel
 					CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
 					type,
 					type.getId(),
-					false);
+					true);
 		charPane.addCharacteristics(type.getCharacteristics(), type.getId());
 	}
 

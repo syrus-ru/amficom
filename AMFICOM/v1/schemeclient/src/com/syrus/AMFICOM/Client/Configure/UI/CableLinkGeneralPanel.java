@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
@@ -10,13 +9,18 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
 public class CableLinkGeneralPanel extends AbstractLinkGeneralPanel
 {
-	public CableLinkGeneralPanel()
+	protected CableLinkGeneralPanel()
 	{
+		super();
+		typeBox.setModel(new ObjListModel(CableLinkTypeController.getInstance(),
+				StorableObjectWrapper.COLUMN_NAME));
 	}
 
-	public CableLinkGeneralPanel(SchemeCableLink link)
+	protected CableLinkGeneralPanel(SchemeCableLink link)
 	{
 		super(link);
+		typeBox.setModel(new ObjListModel(CableLinkTypeController.getInstance(),
+				StorableObjectWrapper.COLUMN_NAME));
 	}
 
 	public void setObject(Object or)
@@ -26,13 +30,13 @@ public class CableLinkGeneralPanel extends AbstractLinkGeneralPanel
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 					domain_id, true);
-			DomainCondition condition = new DomainCondition(domain, ObjectEntities.CABLE_LINKTYPE_ENTITY_CODE);
+			DomainCondition condition = new DomainCondition(domain, ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
 			typeBox.setModel(new ObjListModel(
-					LinkTypeController.getInstance(),
+					CableLinkTypeController.getInstance(),
 					ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true),
-					LinkTypeController.KEY_NAME));
+					StorableObjectWrapper.COLUMN_NAME));
 			typeBox.setSelectedItem(((SchemeCableLink)link).cableLinkType());
 		}
 		catch (ApplicationException ex) {
@@ -51,7 +55,7 @@ public class CableLinkGeneralPanel extends AbstractLinkGeneralPanel
 
 	protected void typeBox_actionPerformed()
 	{
-		LinkType type = (LinkType)typeBox.getSelectedItem();
+		CableLinkType type = (CableLinkType)typeBox.getSelectedItem();
 		manufacturerField.setText(type.getManufacturer());
 		manufacturerCodeField.setText(type.getManufacturerCode());
 	}

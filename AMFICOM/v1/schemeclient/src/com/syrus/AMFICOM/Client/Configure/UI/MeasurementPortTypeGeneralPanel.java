@@ -15,32 +15,25 @@ import com.syrus.AMFICOM.configuration.MeasurementPortType;
 
 public class MeasurementPortTypeGeneralPanel extends GeneralPanel
 {
-	MeasurementPortType apt;
+	protected MeasurementPortType apt;
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-
-	public JLabel idLabel = new JLabel();
-	public JTextField idField = new JTextField();
-
-	public JLabel nameLabel = new JLabel();
-	public JTextField nameField = new JTextField();
-
-	public JLabel typesLabel = new JLabel();
-	public JList typeBox = new JList();
-
+	private JLabel idLabel = new JLabel();
+	private JTextField idField = new JTextField();
+	private JLabel nameLabel = new JLabel();
+	private JTextField nameField = new JTextField();
+	private JLabel typesLabel = new JLabel();
+	private JList typeBox = new JList();
 	private JLabel modifyLabel2 = new JLabel();
 	private JLabel modifyLabel1 = new JLabel();
 	private JTextField modifyField = new JTextField();
-
 	private JLabel descLabel = new JLabel();
 	private JPanel descriptionPanel = new JPanel();
-	JScrollPane descriptionScrollPane = new JScrollPane();
-	public JTextPane descTextArea = new JTextPane();
+	private JScrollPane descriptionScrollPane = new JScrollPane();
+	private JTextPane descTextArea = new JTextPane();
+	private JButton saveButton = new JButton();
 
-
-	public JButton saveButton = new JButton();
-
-	public MeasurementPortTypeGeneralPanel()
+	protected MeasurementPortTypeGeneralPanel()
 	{
 		super();
 		try
@@ -53,7 +46,7 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel
 		}
 	}
 
-	public MeasurementPortTypeGeneralPanel(MeasurementPortType apt)
+	protected MeasurementPortTypeGeneralPanel(MeasurementPortType apt)
 	{
 		this();
 		setObject(apt);

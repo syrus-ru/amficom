@@ -66,8 +66,9 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 		setTitle(LangModelSchematics.getString("characteristicsTitle"));
 
 		cPanel = new CharacteristicsPanel();
+		cPanel.setContext(aContext);
 
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
@@ -347,15 +348,15 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 		cPanel.clear();
 	}
 
-	void removeCharacterisric(List characteristics, String name)
+	void removeCharacterisric(Characterized object, String name)
 	{
-		for (Iterator it = characteristics.iterator(); it.hasNext();)
+		for (Iterator it = object.getCharacteristics().iterator(); it.hasNext();)
 		{
 			Characteristic ch = (Characteristic)it.next();
 			CharacteristicType t = (CharacteristicType)ch.getType();
 			if (t.getDependencies().equals(name))
 			{
-				it.remove();
+				object.removeCharacteristic(ch);
 				break;
 			}
 		}

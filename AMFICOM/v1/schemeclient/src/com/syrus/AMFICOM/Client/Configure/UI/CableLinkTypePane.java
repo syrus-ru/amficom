@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.*;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
@@ -16,20 +16,18 @@ import oracle.jdeveloper.layout.XYConstraints;
 
 public class CableLinkTypePane extends JPanel implements ObjectResourcePropertiesPane
 {
-	public ApplicationContext aContext;
+	private ApplicationContext aContext;
+	protected CableLinkType linkType;
+	private static ObjectResourcePropertiesPane instance;
 
-	AbstractLinkTypeGeneralPanel gPanel = new AbstractLinkTypeGeneralPanel();
-	CableLinkTypeFibrePanel fPanel = new CableLinkTypeFibrePanel();
-	LinkTypeCharacteristicsPanel chPanel = new LinkTypeCharacteristicsPanel();
-
-	CableLinkType linkType;
-
-	public JTabbedPane tabbedPane = new JTabbedPane();
-
+	private AbstractLinkTypeGeneralPanel gPanel = new AbstractLinkTypeGeneralPanel();
+	private CableLinkTypeFibrePanel fPanel = new CableLinkTypeFibrePanel();
+	private CableLinkTypeCharacteristicsPanel chPanel = new CableLinkTypeCharacteristicsPanel();
+	private JTabbedPane tabbedPane = new JTabbedPane();
 	private JButton saveButton = new JButton();
 	private JPanel buttonsPanel = new JPanel();
 
-	public CableLinkTypePane()
+	protected CableLinkTypePane()
 	{
 		super();
 		try
@@ -42,10 +40,17 @@ public class CableLinkTypePane extends JPanel implements ObjectResourcePropertie
 		}
 	}
 
-	public CableLinkTypePane(LinkType l)
+	protected CableLinkTypePane(LinkType l)
 	{
 		this();
 		setObject(l);
+	}
+
+	public static ObjectResourcePropertiesPane getInstance()
+	{
+		if (instance == null)
+			instance = new CableLinkTypePane();
+		return instance;
 	}
 
 	private void jbInit() throws Exception
@@ -53,7 +58,7 @@ public class CableLinkTypePane extends JPanel implements ObjectResourcePropertie
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.setTabPlacement(SwingConstants.TOP);
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(fPanel.getName(), fPanel);
@@ -143,7 +148,7 @@ public class CableLinkTypePane extends JPanel implements ObjectResourcePropertie
 											 (screenSize.height - dialog.getPreferredSize().height) / 2);
 		dialog.setVisible(true);
 
-		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
+		if (dialog.getStatus() == PopupNameFrame.OK && !dialog.getName().equals(""))
 		{
 			String name = dialog.getName();
 			Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
@@ -156,10 +161,13 @@ public class CableLinkTypePane extends JPanel implements ObjectResourcePropertie
 						LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER,
 						"",
 						"",
-						null);
+						IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE));
 
 				setObject(new_type);
 				return true;
+			}
+			catch (IllegalObjectEntityException ex) {
+				ex.printStackTrace();
 			}
 			catch (CreateObjectException ex) {
 				ex.printStackTrace();

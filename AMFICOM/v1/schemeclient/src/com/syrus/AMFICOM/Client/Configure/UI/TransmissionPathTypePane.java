@@ -12,15 +12,13 @@ import com.syrus.AMFICOM.general.*;
 
 public class TransmissionPathTypePane extends JPanel implements ObjectResourcePropertiesPane
 {
-	public ApplicationContext aContext;
+	private ApplicationContext aContext;
+	protected TransmissionPathType pathType;
 
-	TransmissionPathTypeGeneralPanel gPanel = new TransmissionPathTypeGeneralPanel();
+	private TransmissionPathTypeGeneralPanel gPanel = new TransmissionPathTypeGeneralPanel();
+	private JTabbedPane tabbedPane = new JTabbedPane();
 
-	TransmissionPathType pathType;
-
-	public JTabbedPane tabbedPane = new JTabbedPane();
-
-	public TransmissionPathTypePane()
+	protected TransmissionPathTypePane()
 	{
 		super();
 		try
@@ -33,7 +31,7 @@ public class TransmissionPathTypePane extends JPanel implements ObjectResourcePr
 		}
 	}
 
-	public TransmissionPathTypePane(TransmissionPathType tp)
+	protected TransmissionPathTypePane(TransmissionPathType tp)
 	{
 		this();
 		setObject(tp);
@@ -44,7 +42,7 @@ public class TransmissionPathTypePane extends JPanel implements ObjectResourcePr
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.setTabPlacement(SwingConstants.TOP);
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 	}
@@ -133,7 +131,7 @@ public class TransmissionPathTypePane extends JPanel implements ObjectResourcePr
 											 (screenSize.height - dialog.getPreferredSize().height) / 2);
 		dialog.setVisible(true);
 
-		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
+		if (dialog.getStatus() == PopupNameFrame.OK && !dialog.getName().equals(""))
 		{
 			String name = dialog.getName();
 			Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);

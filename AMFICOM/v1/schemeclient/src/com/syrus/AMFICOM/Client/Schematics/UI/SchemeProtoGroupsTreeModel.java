@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 {
@@ -61,13 +62,35 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 		return SchemeProtoGroup.class;
 	}
 
+	public ObjectResourceController getNodeChildController(ObjectResourceTreeNode node)
+	{
+		if (node.getObject() instanceof SchemeProtoGroup)
+		{
+			SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getObject();
+			if (parent_group.schemeProtoElements().length != 0)
+				return null;
+			/**
+			 * @todo write SchemeProtoGroupController
+			 */
+//				return SchemeProtoGroupController.getInstance();
+		}
+		else if (node.getObject() instanceof SchemeProtoGroup)
+			return null;
+			/**
+			 * @todo write SchemeProtoElementController
+			 */
+//			return SchemeProtoElementController.getInstance();
+		return null;
+	}
+
+
 	public List getChildNodes(ObjectResourceTreeNode node)
 	{
 		List vec = new ArrayList();
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 					domain_id, true);
 			DomainCondition condition = new DomainCondition(domain, ObjectEntities.LINKTYPE_ENTITY_CODE);
 			List groups = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);

@@ -43,7 +43,7 @@ public class PathBuilder
 			if (pe.type() == Type.SCHEME_ELEMENT)
 			{
 				PathElement newPE = null;
-				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
+//				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
 				AbstractSchemePort port = pe.endAbstractSchemePort();
 				if (port instanceof SchemePort)
 				{
@@ -95,7 +95,7 @@ public class PathBuilder
 			if (pe.type() == Type.SCHEME_ELEMENT)
 			{
 				PathElement newPE = null;
-				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
+//				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
 				AbstractSchemePort port = pe.endAbstractSchemePort();
 				if (port instanceof SchemePort)
 				{
@@ -174,7 +174,7 @@ public class PathBuilder
 			if (pe.type() == Type.SCHEME_ELEMENT)
 			{
 				PathElement newPE = null;
-				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
+//				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
 				AbstractSchemePort port = pe.endAbstractSchemePort();
 				if (port instanceof SchemePort)
 				{
@@ -241,7 +241,7 @@ public class PathBuilder
 
 			if (pe.type() == Type.SCHEME_LINK)
 			{
-				SchemeLink link = (SchemeLink)pe.abstractSchemeElement();
+//				SchemeLink link = (SchemeLink)pe.abstractSchemeElement();
 				SchemePort startPort = (SchemePort)pe.endAbstractSchemePort();
 				if (!SchemeUtils.isSchemeElementContainsPort(se, startPort)) //нет общих портов
 					return null;
@@ -283,7 +283,7 @@ public class PathBuilder
 			}
 			else if (pe.type() == Type.SCHEME_CABLE_LINK)
 			{
-				SchemeCableLink link = (SchemeCableLink)pe.abstractSchemeElement();
+//				SchemeCableLink link = (SchemeCableLink)pe.abstractSchemeElement();
 				SchemeCablePort startPort = (SchemeCablePort)pe.endAbstractSchemePort();
 				if (!SchemeUtils.isSchemeElementContainsPort(se, startPort)) //нет общих портов
 					return null;

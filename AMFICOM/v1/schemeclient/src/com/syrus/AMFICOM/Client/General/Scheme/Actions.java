@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 
 
@@ -368,7 +367,6 @@ class GroupSEAction extends AbstractAction
 	public void actionPerformed(ActionEvent e)
 	{
 		Object[] cells = graph.getGraphLayoutCache().order(graph.getSelectionCells());
-		String text = "";
 		if (cells != null && cells.length > 0)
 		{
 			ArrayList new_cells = new ArrayList();
@@ -380,10 +378,9 @@ class GroupSEAction extends AbstractAction
 					if (box.getChildCount() > 1)
 					{
 						new_cells.add(box);
-						text = (String)box.getUserObject();
-						for (Enumeration enum = box.children(); enum.hasMoreElements(); )
+						for (Enumeration it = box.children(); it.hasMoreElements(); )
 						{
-							DefaultPort dev_port = (DefaultPort)enum.nextElement();
+							DefaultPort dev_port = (DefaultPort)it.nextElement();
 							if (GraphConstants.getOffset(dev_port.getAttributes()) != null)
 							{
 								if (dev_port.edges().hasNext())
@@ -540,9 +537,9 @@ class GroupAction extends AbstractAction
 					{
 						new_cells.add(box);
 						text = (String)box.getUserObject();
-						for (Enumeration enum = box.children(); enum.hasMoreElements(); )
+						for (Enumeration enumeration = box.children(); enumeration.hasMoreElements(); )
 						{
-							DefaultPort dev_port = (DefaultPort)enum.nextElement();
+							DefaultPort dev_port = (DefaultPort)enumeration.nextElement();
 							if (GraphConstants.getOffset(dev_port.getAttributes()) != null)
 							{
 								if (dev_port.edges().hasNext())
@@ -968,7 +965,7 @@ class CreateUgoAction
 	{
 		ArrayList blockports_in = (ArrayList)v.get(0);
 		ArrayList blockports_out = (ArrayList)v.get(1);
-		Rectangle oldrect = (Rectangle)v.get(2);
+//		Rectangle oldrect = (Rectangle)v.get(2);
 		SchemeProtoElement proto = (SchemeProtoElement)v.get(3);
 
 		Object[] old_devs = graph.getRoots();
@@ -1077,9 +1074,9 @@ class CreateUgoAction
 		{
 			DeviceGroup old_dev = (DeviceGroup)old_devs[0];
 
-			for (Enumeration enum = group.children(); enum.hasMoreElements();)
+			for (Enumeration enumeration = group.children(); enumeration.hasMoreElements();)
 			{
-				Object child = enum.nextElement();
+				Object child = enumeration.nextElement();
 				if (child instanceof DeviceCell)
 				{
 //					((DeviceCell)child).getSchemeDevice().schemePorts() = new ArrayList();
@@ -1093,7 +1090,7 @@ class CreateUgoAction
 							ImageIcon icon = GraphActions.getImage(graph, (DeviceCell)ch);
 							if (icon != null)
 							{
-								GraphActions.setImage(graph, (DeviceCell)child, new ImageIcon(((ImageIcon)icon).getImage()));
+								GraphActions.setImage(graph, (DeviceCell)child, new ImageIcon(icon.getImage()));
 								break;
 							}
 						}
@@ -1279,7 +1276,7 @@ class CreateSchemeUgoAction
 	{
 		ArrayList blockports_in = (ArrayList)v.get(0);
 		ArrayList blockports_out = (ArrayList)v.get(1);
-		Rectangle oldrect = (Rectangle)v.get(2);
+//		Rectangle oldrect = (Rectangle)v.get(2);
 		Scheme scheme = (Scheme)v.get(3);
 
 		//remove old cells
@@ -1344,7 +1341,7 @@ class CreateSchemeUgoAction
 			}
 		}
 
-		scheme.ugoCellImpl().setData(createSchemeUgo(graph));
+		scheme.ugoCellImpl().setData(createSchemeUgo());
 
 		Object[] cells = graph.getRoots();
 		DeviceGroup group = (DeviceGroup)cells[0];
@@ -1372,7 +1369,7 @@ class CreateSchemeUgoAction
 		graph.setSelectionCells(new Object[0]);
 	}
 
-	List createSchemeUgo (SchemeGraph graph)
+	private List createSchemeUgo()
 	{
 		Object[] cells = graph.getGraphLayoutCache().order(graph.getSelectionCells());
 
@@ -1387,9 +1384,9 @@ class CreateSchemeUgoAction
 					//if (box.getChildCount() > 1)
 					{
 						new_cells.add(box);
-						for (Enumeration enum = box.children(); enum.hasMoreElements(); )
+						for (Enumeration enumeration = box.children(); enumeration.hasMoreElements(); )
 						{
-							DefaultPort dev_port = (DefaultPort)enum.nextElement();
+							DefaultPort dev_port = (DefaultPort)enumeration.nextElement();
 							if (GraphConstants.getOffset(dev_port.getAttributes()) != null)
 							{
 								if (dev_port.edges().hasNext())
@@ -1465,9 +1462,9 @@ class CreateBlockPortAction extends AbstractAction
 			SchemePort sport = port.getSchemePort();
 			port_id = sport.id();
 			name = sport.name();
-			for (Enumeration enum = port.children(); enum.hasMoreElements(); )
+			for (Enumeration enumeration = port.children(); enumeration.hasMoreElements(); )
 			{
-				DefaultPort p = (DefaultPort)enum.nextElement();
+				DefaultPort p = (DefaultPort)enumeration.nextElement();
 				if (p.getUserObject().equals("Center"))
 				{
 					vport = p;
@@ -1493,9 +1490,9 @@ class CreateBlockPortAction extends AbstractAction
 			SchemeCablePort scport = port.getSchemeCablePort();
 			port_id = scport.id();
 			name = scport.name();
-			for (Enumeration enum = port.children(); enum.hasMoreElements(); )
+			for (Enumeration enumeration = port.children(); enumeration.hasMoreElements(); )
 			{
-				DefaultPort p = (DefaultPort)enum.nextElement();
+				DefaultPort p = (DefaultPort)enumeration.nextElement();
 				if (p.getUserObject().equals("Center"))
 				{
 					vport = p;
@@ -1581,9 +1578,9 @@ class CreateBlockPortAction extends AbstractAction
 		map = GraphConstants.createMap();
 		Point p;
 		if (direction.equals("in"))
-			p = new Point(u, (int) (u / 2));
+			p = new Point(u, u / 2);
 		else
-			p = new Point(0, (int) (u / 2));
+			p = new Point(0, u / 2);
 		GraphConstants.setOffset(map, p);
 		GraphConstants.setConnectable(map, false);
 		GraphConstants.setDisconnectable(map, false);

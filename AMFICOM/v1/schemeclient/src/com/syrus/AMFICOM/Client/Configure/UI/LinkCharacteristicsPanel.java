@@ -11,10 +11,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemeLink;
 
 public class LinkCharacteristicsPanel extends GeneralPanel
 {
-	SchemeLink link;
-	Identifier linkId;
-
-	CharacteristicsPanel charPane;
+	protected SchemeLink link;
+	protected Identifier linkId;
 	private static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
@@ -22,7 +20,9 @@ public class LinkCharacteristicsPanel extends GeneralPanel
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
 	};
 
-	public LinkCharacteristicsPanel()
+	private CharacteristicsPanel charPane;
+
+	protected LinkCharacteristicsPanel()
 	{
 		super();
 
@@ -36,7 +36,7 @@ public class LinkCharacteristicsPanel extends GeneralPanel
 		}
 	}
 
-	public LinkCharacteristicsPanel(SchemeLink l)
+	protected LinkCharacteristicsPanel(SchemeLink l)
 	{
 		this();
 		setObject(l);

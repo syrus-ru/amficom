@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
 import com.jgraph.graph.DefaultGraphCell;
-import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.Identifier;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.*;

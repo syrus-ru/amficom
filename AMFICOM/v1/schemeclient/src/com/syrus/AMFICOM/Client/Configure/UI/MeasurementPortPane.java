@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
@@ -14,19 +13,16 @@ import oracle.jdeveloper.layout.XYConstraints;
 
 public class MeasurementPortPane extends JPanel implements ObjectResourcePropertiesPane
 {
-	public ApplicationContext aContext;
+	protected MeasurementPort port;
+	private static ObjectResourcePropertiesPane instance;
 
-	MeasurementPortGeneralPanel gPanel = new MeasurementPortGeneralPanel();
-	MeasurementPortCharacteristicsPanel chPanel = new MeasurementPortCharacteristicsPanel();
-
-	MeasurementPort port;
-
-	public JTabbedPane tabbedPane = new JTabbedPane();
-
+	private MeasurementPortGeneralPanel gPanel = new MeasurementPortGeneralPanel();
+	private MeasurementPortCharacteristicsPanel chPanel = new MeasurementPortCharacteristicsPanel();
+	private JTabbedPane tabbedPane = new JTabbedPane();
 	private JButton saveButton = new JButton();
 	private JPanel buttonsPanel = new JPanel();
 
-	public MeasurementPortPane()
+	protected MeasurementPortPane()
 	{
 		super();
 		try
@@ -39,10 +35,17 @@ public class MeasurementPortPane extends JPanel implements ObjectResourcePropert
 		}
 	}
 
-	public MeasurementPortPane(MeasurementPort p)
+	protected MeasurementPortPane(MeasurementPort p)
 	{
 		this();
 		setObject(p);
+	}
+
+	public static ObjectResourcePropertiesPane getInstance()
+	{
+		if (instance == null)
+			instance = new MeasurementPortPane();
+		return instance;
 	}
 
 	private void jbInit() throws Exception
@@ -50,7 +53,7 @@ public class MeasurementPortPane extends JPanel implements ObjectResourcePropert
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.setTabPlacement(SwingConstants.TOP);
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
@@ -80,7 +83,6 @@ public class MeasurementPortPane extends JPanel implements ObjectResourcePropert
 
 	public void setContext(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
 		gPanel.setContext(aContext);
 		chPanel.setContext(aContext);
 	}

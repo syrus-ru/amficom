@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 public class SchemeTreeModel extends ObjectResourceTreeModel
 {
@@ -127,8 +128,6 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				return SchemePath.class;
 			if(s.equals("SchemeProtoGroup"))
 				return SchemeProtoGroup.class;
-//			if(s.equals(EquipmentType.typ))
-//				return EquipmentType.class;
 			if(s.equals("LinkType"))
 				return LinkType.class;
 			if(s.equals("CableLinkType"))
@@ -148,13 +147,96 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 		{
 			if (((SchemeProtoGroup)node.getObject()).schemeProtoGroups().length != 0)
 				return SchemeProtoGroup.class;
-			else
-				return SchemeProtoElement.class;
+			return SchemeProtoElement.class;
 		}
 		else if (node.getObject() instanceof Scheme)
 			return Scheme.class;
 		else if (node.getObject() instanceof SchemeElement)
 			return SchemeElement.class;
+		return null;
+	}
+
+	public ObjectResourceController getNodeChildController(ObjectResourceTreeNode node)
+	{
+		if(node.getObject() instanceof String)
+		{
+			String s = (String )node.getObject();
+			if(s.equals("SchemeProtoGroup"))
+				return null;
+			/**
+			 * @todo write SchemeProtoGroupController
+			 * return SchemeProtoGroupController.getInstance();
+			 */
+			if(s.equals("Scheme"))
+				return SchemeController.getInstance();
+			if(s.equals("SchemeElement"))
+				return null;
+			/**
+			 * @todo write SchemeElementController
+			 * return SchemeElementController.getInstance();
+			 */
+			if(s.equals("SchemeLink"))
+				return null;
+			/**
+			 * @todo write SchemeLinkController
+			 * return SchemeLinkController.getInstance();
+			 */
+			if(s.equals("SchemeCableLink"))
+				return null;
+			/**
+			 * @todo write SchemeCableLinkController
+			 * return SchemeCableLinkController.getInstance();
+			 */
+			if(s.equals("SchemePath"))
+				return null;
+			/**
+			 * @todo write SchemePathController
+			 * return SchemePathController.getInstance();
+			 */
+			if(s.equals("SchemeProtoGroup"))
+				return null;
+			/**
+			 * @todo write SchemeProtoGroupController
+			 * return SchemeProtoGroupController.getInstance();
+			 */
+			if(s.equals("LinkType"))
+				return LinkTypeController.getInstance();
+			if(s.equals("CableLinkType"))
+				return CableLinkTypeController.getInstance();
+			if(s.equals("PortType"))
+				return PortTypeController.getInstance();
+			if(s.equals("TransmissionPathType"))
+				return TransmissionPathTypeController.getInstance();
+			if(s.equals("MeasurementPortType"))
+				return MeasurementPortTypeController.getInstance();
+			if(s.equals("schemeTypes"))
+				return null;
+		}
+		else if (node.getObject() instanceof Type)
+			return SchemeController.getInstance();
+		else if (node.getObject() instanceof SchemeProtoGroup)
+		{
+			if (((SchemeProtoGroup)node.getObject()).schemeProtoGroups().length != 0)
+				return null;
+			/**
+			 * @todo write SchemeProtoGroupController
+			 * return SchemeProtoGroupController.getInstance();
+			 */
+			else
+				return null;
+			/**
+			 * @todo write SchemeProtoElementController
+			 * return SchemeProtoElementController.getInstance();
+			 */
+		}
+		else if (node.getObject() instanceof Scheme)
+			return SchemeController.getInstance();
+		else if (node.getObject() instanceof SchemeElement)
+			return null;
+			/**
+			 * @todo write SchemeElementController
+			 * return SchemeElementController.getInstance();
+			 */
 		return null;
 	}
 
@@ -215,12 +297,8 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			}
 			else if (s.equals("LinkType")) {
 				try {
-					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
-							domain_id, true);
-					DomainCondition condition = new DomainCondition(domain,
-							ObjectEntities.LINKTYPE_ENTITY_CODE);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINKTYPE_ENTITY_CODE);
+
 					List linkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = linkTypes.iterator(); it.hasNext(); ) {
@@ -228,6 +306,12 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
 						vec.add(n);
 					}
+
+//					File configPath = new File("/catalog");
+//					final Class clazz = ClientLRUMap.class;
+//					final int size = 200;
+//					ConfigurationStorableObjectPool.init(new XMLConfigurationObjectLoader(configPath), clazz, size);
+
 				}
 				catch (ApplicationException ex) {
 					ex.printStackTrace();
@@ -240,7 +324,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				try {
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 							domain_id, true);
 					DomainCondition condition = new DomainCondition(domain,
 							ObjectEntities.PORTTYPE_ENTITY_CODE);
@@ -260,7 +344,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				try {
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 							domain_id, true);
 					DomainCondition condition = new DomainCondition(domain,
 							ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
@@ -280,7 +364,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				try {
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 							domain_id, true);
 					DomainCondition condition = new DomainCondition(domain,
 							ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
@@ -301,7 +385,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				try {
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 							domain_id, true);
 					DomainCondition condition = new DomainCondition(domain,
 							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
@@ -323,7 +407,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				List ds = new LinkedList();
 				for (int i = 0; i < parent.schemeElements().length; i++)
 				{
-					SchemeElement el = (SchemeElement)parent.schemeElements()[i];
+					SchemeElement el = parent.schemeElements()[i];
 					if (el.internalScheme() != null)
 						ds.add(el.internalScheme());
 				}
@@ -468,7 +552,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					boolean has_elements = false;
 					for (int i = 0; i < s.schemeElements().length; i++)
 					{
-						SchemeElement el = (SchemeElement)s.schemeElements()[i];
+						SchemeElement el = s.schemeElements()[i];
 						if (el.internalScheme() == null)
 						{
 							has_elements = true;
@@ -477,7 +561,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					}
 					for (int i = 0; i < s.schemeElements().length; i++)
 					{
-						SchemeElement el = (SchemeElement)s.schemeElements()[i];
+						SchemeElement el = s.schemeElements()[i];
 						if (el.internalScheme() != null)
 						{
 							has_schemes = true;

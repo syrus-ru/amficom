@@ -16,19 +16,17 @@ import oracle.jdeveloper.layout.XYConstraints;
 
 public class PortTypePane extends JPanel implements ObjectResourcePropertiesPane
 {
-	public ApplicationContext aContext;
+	private ApplicationContext aContext;
+	protected PortType portType;
+	private static ObjectResourcePropertiesPane instance;
 
-	PortTypeGeneralPanel gPanel;
-	PortTypeCharacteristicsPanel chPanel;
-
-	PortType portType;
-
-	public JTabbedPane tabbedPane = new JTabbedPane();
-
+	private PortTypeGeneralPanel gPanel;
+	private PortTypeCharacteristicsPanel chPanel;
+	private JTabbedPane tabbedPane = new JTabbedPane();
 	private JButton saveButton = new JButton();
 	private JPanel buttonsPanel = new JPanel();
 
-	public PortTypePane()
+	protected PortTypePane()
 	{
 		super();
 
@@ -42,10 +40,17 @@ public class PortTypePane extends JPanel implements ObjectResourcePropertiesPane
 		}
 	}
 
-	public PortTypePane(PortType pt)
+	protected PortTypePane(PortType pt)
 	{
 		this();
 		setObject(pt);
+	}
+
+	public static ObjectResourcePropertiesPane getInstance()
+	{
+		if (instance == null)
+			instance = new PortTypePane();
+		return instance;
 	}
 
 	private void jbInit() throws Exception
@@ -56,7 +61,7 @@ public class PortTypePane extends JPanel implements ObjectResourcePropertiesPane
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.setTabPlacement(SwingConstants.TOP);
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
@@ -106,17 +111,15 @@ public class PortTypePane extends JPanel implements ObjectResourcePropertiesPane
 			try {
 				ConfigurationStorableObjectPool.putStorableObject(portType);
 				ConfigurationStorableObjectPool.flush(true);
+				return true;
 			}
 			catch (ApplicationException ex) {
 			}
-			return true;
 		}
-		else
-		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelConfig.getString("err_incorrect_data_input"));
-		}
+		JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelConfig.getString("err_incorrect_data_input"));
+		
 		return false;
 	}
 
@@ -155,7 +158,7 @@ public class PortTypePane extends JPanel implements ObjectResourcePropertiesPane
 											 (screenSize.height - dialog.getPreferredSize().height) / 2);
 		dialog.setVisible(true);
 
-		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
+		if (dialog.getStatus() == PopupNameFrame.OK && !dialog.getName().equals(""))
 		{
 			String name = dialog.getName();
 

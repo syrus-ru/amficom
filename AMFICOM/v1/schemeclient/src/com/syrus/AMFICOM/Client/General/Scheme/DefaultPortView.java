@@ -7,11 +7,10 @@ import java.awt.*;
 import com.jgraph.JGraph;
 import com.jgraph.graph.*;
 import com.jgraph.pad.*;
-import com.jgraph.pad.EllipseView.*;
 
 class DefaultPortView extends EllipseView
 {
-	public static SchemeEllipseRenderer renderer = new SchemeEllipseRenderer();
+	public static SchemeEllipseRenderer schemerenderer = new SchemeEllipseRenderer();
 
 	public DefaultPortView(Object cell, JGraph jgraph, CellMapper mapper)
 	{
@@ -20,7 +19,7 @@ class DefaultPortView extends EllipseView
 
 	public CellViewRenderer getRenderer()
 	{
-		return renderer;
+		return schemerenderer;
 	}
 
 	public void update()

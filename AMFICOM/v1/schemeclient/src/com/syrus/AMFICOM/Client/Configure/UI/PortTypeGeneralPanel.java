@@ -16,40 +16,30 @@ import com.syrus.AMFICOM.general.ApplicationException;
 
 public class PortTypeGeneralPanel extends GeneralPanel
 {
+	protected PortType portType;
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 	private static String[] typeSorts = new String[] {
 		"Оптический",
 		"Сварное соединение",
 		"Электрический"
 	};
 
-	PortType portType;
-
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-
-	JLabel idLabel = new JLabel();
-	JTextField idField = new JTextField();
-
-	JLabel nameLabel = new JLabel();
-	JTextField nameField = new JTextField();
-
-//	private JLabel interfaceLabel = new JLabel();
-//	private JTextField interfaceField = new JTextField();
-
+	private JLabel idLabel = new JLabel();
+	private JTextField idField = new JTextField();
+	private JLabel nameLabel = new JLabel();
+	private JTextField nameField = new JTextField();
 	private JLabel classLabel = new JLabel();
 	private JComboBox classBox = new JComboBox();
-
 	private JLabel modifyLabel2 = new JLabel();
 	private JLabel modifyLabel1 = new JLabel();
 	private JTextField ModifyField = new JTextField();
-
 	private JLabel descLabel = new JLabel();
 	private JPanel descriptionPanel = new JPanel();
-	JScrollPane descriptionScrollPane = new JScrollPane();
-	public JTextPane descTextArea = new JTextPane();
-
+	private JScrollPane descriptionScrollPane = new JScrollPane();
+	private JTextPane descTextArea = new JTextPane();
 	private JButton saveButton = new JButton();
 
-	public PortTypeGeneralPanel()
+	protected PortTypeGeneralPanel()
 	{
 		super();
 		try
@@ -62,7 +52,7 @@ public class PortTypeGeneralPanel extends GeneralPanel
 		}
 	}
 
-	public PortTypeGeneralPanel(PortType portType)
+	protected PortTypeGeneralPanel(PortType portType)
 	{
 		this();
 		setObject(portType);

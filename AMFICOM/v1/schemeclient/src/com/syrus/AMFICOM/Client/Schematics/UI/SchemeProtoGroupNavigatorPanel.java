@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup;
 import oracle.jdeveloper.layout.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.*;
 
 public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationListener
 {

@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.awt.Dimension;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.Client.General.Command.ViewNavigatorCommand;
@@ -10,8 +9,6 @@ import com.syrus.AMFICOM.Client.Schematics.UI.ElementsTreeModel;
 public class ViewElementsNavigatorCommand extends ViewNavigatorCommand
 {
 	String parameter;
-	JDesktopPane desktop;
-	ApplicationContext aContext;
 
 	public ViewElementsNavigatorCommand(JDesktopPane desktop, ApplicationContext aContext, String parameter)
 	{
@@ -54,7 +51,7 @@ public class ViewElementsNavigatorCommand extends ViewNavigatorCommand
 		super.setApplicationContext(aContext);
 		super.execute();
 
-		Dimension dim = new Dimension(desktop.getWidth(), desktop.getHeight());
+//		Dimension dim = new Dimension(desktop.getWidth(), desktop.getHeight());
 		frame.setLocation(0, 0);
 		frame.setSize(1000 / 5, 2 * 700 / 5);
 		frame.setVisible(true);

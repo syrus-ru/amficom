@@ -12,17 +12,15 @@ import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement;
 
 public class EquipmentTypePane extends JPanel implements ObjectResourcePropertiesPane
 {
-	public ApplicationContext aContext;
+	protected SchemeProtoElement proto;
+	protected EquipmentType eq;
+	private static ObjectResourcePropertiesPane instance;
 
-	EquipmentTypeGeneralPanel gPanel = new EquipmentTypeGeneralPanel();
-	EquipmentTypeCharacteristicsPanel chPanel = new EquipmentTypeCharacteristicsPanel();
+	private EquipmentTypeGeneralPanel gPanel = new EquipmentTypeGeneralPanel();
+	private EquipmentTypeCharacteristicsPanel chPanel = new EquipmentTypeCharacteristicsPanel();
+	private JTabbedPane tabbedPane = new JTabbedPane();
 
-	SchemeProtoElement proto;
-	EquipmentType eq;
-
-	public JTabbedPane tabbedPane = new JTabbedPane();
-
-	public EquipmentTypePane()
+	protected EquipmentTypePane()
 	{
 		super();
 		try
@@ -35,10 +33,17 @@ public class EquipmentTypePane extends JPanel implements ObjectResourcePropertie
 		}
 	}
 
-	public EquipmentTypePane(SchemeProtoElement pe)
+	protected EquipmentTypePane(SchemeProtoElement pe)
 	{
 		this();
 		setObject(pe);
+	}
+
+	public static ObjectResourcePropertiesPane getInstance()
+	{
+		if (instance == null)
+			instance = new EquipmentTypePane();
+		return instance;
 	}
 
 	private void jbInit() throws Exception
@@ -46,7 +51,7 @@ public class EquipmentTypePane extends JPanel implements ObjectResourcePropertie
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.setTabPlacement(SwingConstants.TOP);
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
@@ -68,7 +73,6 @@ public class EquipmentTypePane extends JPanel implements ObjectResourcePropertie
 
 	public void setContext(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
 		gPanel.setContext(aContext);
 		chPanel.setContext(aContext);
 	}

@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.util.Map;
-
 import java.awt.BorderLayout;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -31,7 +29,7 @@ public class ElementsTabbedPane extends UgoTabbedPane
 		SchemeGraph graph = getPanel().getGraph();
 		graph.setScheme(null);
 		graph.setSchemeElement(se);
-		Map clones = graph.copyFromArchivedState(se.schemeCellImpl().getData(), new java.awt.Point(0, 0));
+		graph.copyFromArchivedState(se.schemeCellImpl().getData(), new java.awt.Point(0, 0));
 		graph.selectionNotify();
 	}
 

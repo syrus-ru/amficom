@@ -41,7 +41,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 	private void jbInit() throws Exception
 	{
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);

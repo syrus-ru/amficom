@@ -20,24 +20,24 @@ import com.syrus.AMFICOM.scheme.corba.SchemeLink;
 
 public class LinkPropsPanel extends JPanel
 {
-	private AComboBox sortComboBox = new AComboBox();
-	private ObjComboBox typeComboBox = new ObjComboBox(
+	AComboBox sortComboBox = new AComboBox();
+	ObjComboBox typeComboBox = new ObjComboBox(
 			 LinkTypeController.getInstance(),
-			 LinkTypeController.KEY_NAME);
-	private JButton addTypeButton = new JButton("...");
-	private JTextField nameText = new JTextField();
-	private JTextArea descriptionTextArea = new JTextArea();
-	private JTextField manufacturerTextField = new JTextField();
-	private JTextField optLen = new JTextField();
-	private JTextField strLen = new JTextField();
+			 LinkTypeController.COLUMN_NAME);
+	JButton addTypeButton = new JButton("...");
+	JTextField nameText = new JTextField();
+	JTextArea descriptionTextArea = new JTextArea();
+	JTextField manufacturerTextField = new JTextField();
+	JTextField optLen = new JTextField();
+	JTextField strLen = new JTextField();
 	private String undoDescr;
 	private String undoManufacturer;
 	ApplicationContext aContext;
 	private boolean skip_changes = false;
 
-	SchemeLink[] links;
-	List linkTypes;
-	LinkType lt;
+	protected SchemeLink[] links;
+	protected List linkTypes;
+	protected LinkType lt;
 
 	private static LinkTypeSort[] linkTypeSorts = new LinkTypeSort[] {
 		LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER,
@@ -369,13 +369,13 @@ public class LinkPropsPanel extends JPanel
 		undo();
 		if (typeComboBox.getItemCount() == 0)
 			return;
-		LinkType lt = (LinkType)typeComboBox.getSelectedItem();
-		this.lt = lt;
+		LinkType linkType = (LinkType)typeComboBox.getSelectedItem();
+		this.lt = linkType;
 		for (int i = 0; i < links.length; i++)
-			links[i].linkTypeImpl(lt);
+			links[i].linkTypeImpl(linkType);
 
-		descriptionTextArea.setText(lt.getDescription());
-		manufacturerTextField.setText(lt.getManufacturer());
+		descriptionTextArea.setText(linkType.getDescription());
+		manufacturerTextField.setText(linkType.getManufacturer());
 		manufacturerTextField.setCaretPosition(0);
 	//	aContext.getDispatcher().notify(new OperationEvent(lt, 1, "elementslistvaluechanged"));
 		//aContext.getDispatcher().notify(new SchemeElementsEvent(links, lt, SchemeElementsEvent.LINK_TYPE_UPDATE_EVENT));
@@ -389,7 +389,7 @@ public class LinkPropsPanel extends JPanel
 		dialog.setLocation(loc.x, loc.y + 30);
 		dialog.setVisible(true);
 
-		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
+		if (dialog.getStatus() == PopupNameFrame.OK && !dialog.getName().equals(""))
 		{
 			String name = dialog.getName();
 			for (int i = 0; i < typeComboBox.getItemCount(); i++)

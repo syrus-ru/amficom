@@ -7,11 +7,10 @@ import java.awt.event.MouseEvent;
 
 import com.jgraph.JGraph;
 import com.jgraph.graph.*;
-import com.jgraph.graph.EdgeView.*;
 
 public class LinkView extends EdgeView
 {
-	public static LinkRenderer renderer = new LinkRenderer();
+	public static LinkRenderer linkrenderer = new LinkRenderer();
 
 	public LinkView(Object cell, JGraph graph, CellMapper mapper, int i)
 	{
@@ -30,7 +29,7 @@ public class LinkView extends EdgeView
 
 	public CellViewRenderer getRenderer()
 	{
-		return renderer;
+		return linkrenderer;
 	}
 
 	public Map setAttributes(Map change)
@@ -69,19 +68,18 @@ public class LinkView extends EdgeView
 			else
 				graph.setSelectionCell(getCell());*/
 		}
-
+/*
 		public void mouseDragged(MouseEvent event)
 		{
-	//		if (!event.isShiftDown())
+			if (!event.isShiftDown())
 				super.mouseDragged(event);
-				Point p = labelPosition;
-			if (cell instanceof DefaultLink)
+				if (cell instanceof DefaultLink)
 			{
 				DefaultLink link = (DefaultLink)cell;
-			//	link.routed[0] = new Point(link.routed[0].x + counter++, link.routed[0].y + counter);
+				link.routed[0] = new Point(link.routed[0].x + counter++, link.routed[0].y + counter);
 			}
 		}
-
+*/
 		// Update and paint control points
 		public void paint(Graphics g)
 		{
@@ -131,12 +129,12 @@ public class LinkView extends EdgeView
 					return;
 
 			boolean offset = (GraphConstants.getOffset(p.getAllAttributes()) != null);
-			Rectangle r = (offset) ? p.getBounds() : p.getParentView().getBounds();
-			r = graph.toScreen(new Rectangle(r));
+			Rectangle rect = (offset) ? p.getBounds() : p.getParentView().getBounds();
+			rect = graph.toScreen(new Rectangle(rect));
 			int s = 3;
-			r.translate(-s, -s);
-			r.setSize(r.width + 2 * s, r.height + 2 * s);
-			graph.getUI().paintCell(g, p, r, true);
+			rect.translate(-s, -s);
+			rect.setSize(rect.width + 2 * s, rect.height + 2 * s);
+			graph.getUI().paintCell(g, p, rect, true);
 		}
 	}
 }

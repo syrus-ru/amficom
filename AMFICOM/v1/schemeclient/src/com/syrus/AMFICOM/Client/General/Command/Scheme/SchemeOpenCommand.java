@@ -10,7 +10,6 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.Schematics.UI.SchemeController;
 import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
@@ -35,7 +34,7 @@ public class SchemeOpenCommand extends VoidCommand
 
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 					domain_id, true);
 			DomainCondition condition = new DomainCondition(domain, ObjectEntities.SCHEME_ENTITY_CODE);
 			List schemes = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -48,10 +47,10 @@ public class SchemeOpenCommand extends VoidCommand
 		mcd.setModal(true);
 		mcd.setVisible(true);
 
-		if(mcd.getReturnCode() == mcd.RET_CANCEL)
+		if(mcd.getReturnCode() == ObjectResourceChooserDialog.RET_CANCEL)
 			return;
 
-		if(mcd.getReturnCode() == mcd.RET_OK)
+		if(mcd.getReturnCode() == ObjectResourceChooserDialog.RET_OK)
 		{
 			Scheme scheme = (Scheme)mcd.getReturnObject();
 			aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme,

@@ -7,56 +7,44 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement;
 
 public class EquipmentTypeGeneralPanel extends GeneralPanel
 {
-	EquipmentType equipmentType;
-	SchemeProtoElement proto;
+	protected EquipmentType equipmentType;
+	protected SchemeProtoElement proto;
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-
-	JLabel idLabel = new JLabel();
-	JTextField idField = new JTextField();
-
-	JLabel nameLabel = new JLabel();
-	JTextField nameField = new JTextField();
-
+	private JLabel idLabel = new JLabel();
+	private JTextField idField = new JTextField();
+	private JLabel nameLabel = new JLabel();
+	private JTextField nameField = new JTextField();
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
-
 	private JLabel manufacturerLabel = new JLabel();
 	private JTextField manufacturerField = new JTextField();
-
 	private JLabel manufacturerCodeLabel = new JLabel();
 	private JTextField manufacturerCodeField = new JTextField();
-
 	private JLabel modifyLabel2 = new JLabel();
 	private JLabel modifyLabel1 = new JLabel();
 	private JTextField ModifyField = new JTextField();
-
 	private JLabel descLabel = new JLabel();
 	private JPanel descriptionPanel = new JPanel();
-	JScrollPane descriptionScrollPane = new JScrollPane();
-	public JTextPane descTextArea = new JTextPane();
-
+	private JScrollPane descriptionScrollPane = new JScrollPane();
+	private JTextPane descTextArea = new JTextPane();
 	private JLabel portsNumberLabel = new JLabel();
 	private JTextField portsNumberField = new JTextField();
-
 	private JLabel cabelPortsNumberLabel1 = new JLabel();
 	private JLabel cabelPortsNumberLabel2 = new JLabel();
 	private JTextField cabelPortsNumberField = new JTextField();
-
-
 	private JButton saveButton = new JButton();
-
 	private BorderLayout borderLayout1 = new BorderLayout();
 
-	public EquipmentTypeGeneralPanel()
+	protected EquipmentTypeGeneralPanel()
 	{
 		super();
 		try
@@ -69,7 +57,7 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 		}
 	}
 
-	public EquipmentTypeGeneralPanel(EquipmentType eqType)
+	protected EquipmentTypeGeneralPanel(EquipmentType eqType)
 	{
 		this();
 		setObject(eqType);

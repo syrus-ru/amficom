@@ -9,7 +9,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
@@ -17,29 +16,24 @@ import com.syrus.AMFICOM.scheme.corba.AbstractSchemePort;
 
 public class AbstractPortGeneralPanel extends GeneralPanel
 {
-	AbstractSchemePort port;
+	protected AbstractSchemePort port;
 
-	JLabel descLabel = new JLabel();
-	JScrollPane descriptionScrollPane = new JScrollPane();
-	public JTextPane descTextArea = new JTextPane();
-
-	JLabel idLabel = new JLabel();
-	JTextField idField = new JTextField();
-
-	JLabel nameLabel = new JLabel();
-	JTextField nameField = new JTextField();
-
-	JLabel typeLabel = new JLabel();
-	ObjComboBox typeBox;
-
+	private JLabel descLabel = new JLabel();
+	private JScrollPane descriptionScrollPane = new JScrollPane();
+	private JTextPane descTextArea = new JTextPane();
+	private JLabel idLabel = new JLabel();
+	private JTextField idField = new JTextField();
+	private JLabel nameLabel = new JLabel();
+	private JTextField nameField = new JTextField();
+	private JLabel typeLabel = new JLabel();
+	private ObjComboBox typeBox;
 	private JLabel equipLabel = new JLabel();
 	private JTextField equipField = new JTextField();
-
 	private JTextField modifyField = new JTextField();
 	private JLabel modifyLabel2 = new JLabel();
 	private JLabel modifyLabel1 = new JLabel();
 
-	public AbstractPortGeneralPanel()
+	protected AbstractPortGeneralPanel()
 	{
 		super();
 		try
@@ -52,7 +46,7 @@ public class AbstractPortGeneralPanel extends GeneralPanel
 		}
 	}
 
-	public AbstractPortGeneralPanel(AbstractSchemePort port)
+	protected AbstractPortGeneralPanel(AbstractSchemePort port)
 	{
 		this();
 		setObject(port);
@@ -61,38 +55,38 @@ public class AbstractPortGeneralPanel extends GeneralPanel
 	private void jbInit() throws Exception
 	{
 		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-		Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+		Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 				domain_id, true);
 		DomainCondition condition = new DomainCondition(domain, ObjectEntities.PORTTYPE_ENTITY_CODE);
 		typeBox = new ObjComboBox(
 					PortTypeController.getInstance(),
 					ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true),
-					PortTypeController.KEY_NAME);
+					StorableObjectWrapper.COLUMN_NAME);
 
 		this.setLayout(new GridBagLayout());
 
-		descLabel.setText(LangModelConfig.getString("label_description"));
+		descLabel.setText(LangModelConfig.getString("label_description")); //$NON-NLS-1$
 		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		idLabel.setText(LangModelConfig.getString("label_id"));
+		idLabel.setText(LangModelConfig.getString("label_id")); //$NON-NLS-1$
 		idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		idField.setEnabled(false);
 
-		nameLabel.setText(LangModelConfig.getString("label_name"));
+		nameLabel.setText(LangModelConfig.getString("label_name")); //$NON-NLS-1$
 		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		typeLabel.setText(LangModelConfig.getString("label_type"));
+		typeLabel.setText(LangModelConfig.getString("label_type")); //$NON-NLS-1$
 		typeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		typeBox.setEnabled(false);
 
-		equipLabel.setText(LangModelConfig.getString("menuNetCatEquipmentText"));
+		equipLabel.setText(LangModelConfig.getString("menuNetCatEquipmentText")); //$NON-NLS-1$
 		equipLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		equipField.setEnabled(false);
 
 		modifyField.setEnabled(false);
-		modifyLabel1.setText(LangModelConfig.getString("label_modified1"));
+		modifyLabel1.setText(LangModelConfig.getString("label_modified1")); //$NON-NLS-1$
 		modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		modifyLabel2.setText(LangModelConfig.getString("label_modified2"));
+		modifyLabel2.setText(LangModelConfig.getString("label_modified2")); //$NON-NLS-1$
 		modifyLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 
 		descriptionScrollPane.getViewport().add(descTextArea, null);
@@ -131,7 +125,7 @@ public class AbstractPortGeneralPanel extends GeneralPanel
 
 	public void setObject(Object or)
 	{
-		port = (AbstractSchemePort)port;
+		port = (AbstractSchemePort)or;
 
 		idField.setText(port.id().identifierString());
 		nameField.setText(port.name());
@@ -146,9 +140,9 @@ public class AbstractPortGeneralPanel extends GeneralPanel
 		}
 		else
 		{
-			typeBox.setSelectedItem("");
-			descTextArea.setText("");
-			equipField.setText("");
+			typeBox.setSelectedItem(""); //$NON-NLS-1$
+			descTextArea.setText(""); //$NON-NLS-1$
+			equipField.setText(""); //$NON-NLS-1$
 		}
 	}
 

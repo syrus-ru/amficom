@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 import java.awt.BorderLayout;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
@@ -13,16 +12,13 @@ import com.syrus.AMFICOM.scheme.corba.SchemeLink;
 
 public abstract class LinkPane extends JPanel implements ObjectResourcePropertiesPane
 {
-	public ApplicationContext aContext;
-
-	protected LinkGeneralPanel gPanel;
-	protected LinkCharacteristicsPanel chPanel;
-
-	protected JTabbedPane tabbedPane = new JTabbedPane();
-
 	protected SchemeLink link;
 
-	public LinkPane()
+	private LinkGeneralPanel gPanel;
+	private LinkCharacteristicsPanel chPanel;
+	private JTabbedPane tabbedPane = new JTabbedPane();
+
+	protected LinkPane()
 	{
 		super();
 		try
@@ -35,7 +31,7 @@ public abstract class LinkPane extends JPanel implements ObjectResourcePropertie
 		}
 	}
 
-	public LinkPane(SchemeLink link)
+	protected LinkPane(SchemeLink link)
 	{
 		this();
 		setObject(link);
@@ -46,7 +42,7 @@ public abstract class LinkPane extends JPanel implements ObjectResourcePropertie
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.setTabPlacement(SwingConstants.TOP);
 
 		gPanel = new LinkGeneralPanel();
 		chPanel = new LinkCharacteristicsPanel();
@@ -70,7 +66,6 @@ public abstract class LinkPane extends JPanel implements ObjectResourcePropertie
 
 	public void setContext(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
 		gPanel.setContext(aContext);
 		chPanel.setContext(aContext);
 	}

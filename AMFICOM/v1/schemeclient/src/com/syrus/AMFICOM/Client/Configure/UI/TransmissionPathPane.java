@@ -12,16 +12,14 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 public class TransmissionPathPane extends JPanel implements ObjectResourcePropertiesPane
 {
-	public ApplicationContext aContext;
+	protected SchemePath path;
+	private static ObjectResourcePropertiesPane instance;
 
-	TransmissionPathGeneralPanel gPanel = new TransmissionPathGeneralPanel();
-	TransmissionPathFibrePanel fPanel = new TransmissionPathFibrePanel();
+	private TransmissionPathGeneralPanel gPanel = new TransmissionPathGeneralPanel();
+	private TransmissionPathFibrePanel fPanel = new TransmissionPathFibrePanel();
+	private JTabbedPane tabbedPane = new JTabbedPane();
 
-	SchemePath path;
-
-	public JTabbedPane tabbedPane = new JTabbedPane();
-
-	public TransmissionPathPane()
+	protected TransmissionPathPane()
 	{
 		super();
 		try
@@ -34,10 +32,17 @@ public class TransmissionPathPane extends JPanel implements ObjectResourceProper
 		}
 	}
 
-	public TransmissionPathPane(SchemePath path)
+	protected TransmissionPathPane(SchemePath path)
 	{
 		this();
 		setObject(path);
+	}
+
+	public static ObjectResourcePropertiesPane getInstance()
+	{
+		if (instance == null)
+			instance = new TransmissionPathPane();
+		return instance;
 	}
 
 	private void jbInit() throws Exception
@@ -45,7 +50,7 @@ public class TransmissionPathPane extends JPanel implements ObjectResourceProper
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.setTabPlacement(SwingConstants.TOP);
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(fPanel.getName(), fPanel);
@@ -68,7 +73,6 @@ public class TransmissionPathPane extends JPanel implements ObjectResourceProper
 
 	public void setContext(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
 		gPanel.setContext(aContext);
 		fPanel.setContext(aContext);
 	}

@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Scheme.SchemeFactory;
@@ -22,23 +21,23 @@ import com.syrus.AMFICOM.scheme.corba.*;
 
 public class CableLinkPropsPanel extends JPanel
 {
-	private AComboBox sortComboBox = new AComboBox();
+	AComboBox sortComboBox = new AComboBox();
 
-	private ObjComboBox typeComboBox = new ObjComboBox(
-			 LinkTypeController.getInstance(),
-			 LinkTypeController.KEY_NAME);
-	private JButton addTypeButton = new JButton("...");
-	private JTextArea descriptionTextArea = new JTextArea();
-	private JTextField manufacturerTextField = new JTextField();
-	private JTextField nameText = new JTextField();
-	private JTextField optLen = new JTextField();
-	private JTextField strLen = new JTextField();
+	ObjComboBox typeComboBox = new ObjComboBox(
+			 CableLinkTypeController.getInstance(),
+			 StorableObjectWrapper.COLUMN_NAME);
+	JButton addTypeButton = new JButton("...");
+	JTextArea descriptionTextArea = new JTextArea();
+	JTextField manufacturerTextField = new JTextField();
+	JTextField nameText = new JTextField();
+	JTextField optLen = new JTextField();
+	JTextField strLen = new JTextField();
 	private String undoDescr;
 	private String undoManufacturer;
 	ApplicationContext aContext;
 	private boolean skip_changes = false;
 
-	private boolean smooth_length = false;
+	boolean smooth_length = false;
 
 	SchemeCableLink[] links;
 	List cablelinkTypes;
@@ -271,7 +270,7 @@ public class CableLinkPropsPanel extends JPanel
 		descriptionTextArea.setAutoscrolls(true);
 
 		try {
-			DomainCondition condition = new DomainCondition(null, ObjectEntities.CABLE_LINKTYPE_ENTITY_CODE);
+			DomainCondition condition = new DomainCondition(null, ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
 			cablelinkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			for (int i = 0; i < linkTypeSorts.length; i++) {
@@ -388,10 +387,10 @@ public class CableLinkPropsPanel extends JPanel
 		lt = (CableLinkType)typeComboBox.getSelectedItem();
 		int num = lt.getCableThreadTypes().size();
 
-		CableThreadType ctt = (CableThreadType)lt.getCableThreadTypes().get(0);
-		String codename = ctt.getCodename();
-		Identifier user_id = new Identifier(((RISDSessionInfo)aContext.
-							getSessionInterface()).getAccessIdentifier().user_id);
+//		CableThreadType ctt = (CableThreadType)lt.getCableThreadTypes().get(0);
+//		String codename = ctt.getCodename();
+//		Identifier user_id = new Identifier(((RISDSessionInfo)aContext.
+//							getSessionInterface()).getAccessIdentifier().user_id);
 
 		if (num > old_num)
 		{

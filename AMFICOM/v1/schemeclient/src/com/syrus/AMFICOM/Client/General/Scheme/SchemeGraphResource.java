@@ -2,13 +2,6 @@ package com.syrus.AMFICOM.Client.General.Scheme;
 
 import java.util.*;
 
-import com.jgraph.graph.*;
-import com.jgraph.pad.*;
-import com.jgraph.pad.GPGraph.*;
-import com.jgraph.plaf.GraphUI;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.scheme.corba.*;
 
 public class SchemeGraphResource

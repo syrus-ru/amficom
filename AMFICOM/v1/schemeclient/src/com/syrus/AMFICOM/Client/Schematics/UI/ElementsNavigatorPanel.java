@@ -15,7 +15,6 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.tree.*;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.*;
@@ -199,14 +198,15 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 					JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.YES_OPTION)
 			{
-//				aContext.getDataSourceInterface().RemoveMapProtoGroups(new String[] {group.getId()});
-//				Pool.remove(SchemeProtoGroup.typ, group.getId());
-//				if (group.parentId != null && !group.parentId.equals(""))
-//				{
-//					SchemeProtoGroup parent_group = (SchemeProtoGroup)Pool.get(SchemeProtoGroup.typ, group.parentId);
-//					parent_group.groupIds.remove(group.getId());
-//				}
-//				dispatcher.notify(new TreeListSelectionEvent(SchemeProtoGroup.typ, TreeListSelectionEvent.REFRESH_EVENT));
+				try {
+					SchemeStorableObjectPool.delete(group.id());
+					if (group.parent() != null)
+						Arrays.asList(group.parent().schemeProtoGroups()).remove(group);
+				dispatcher.notify(new TreeListSelectionEvent("", TreeListSelectionEvent.REFRESH_EVENT));
+				} catch (ApplicationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			else
 				return;
@@ -230,7 +230,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 				try {
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 							domain_id, true);
 					DomainCondition condition = new DomainCondition(domain,
 							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);

@@ -13,33 +13,30 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.*;
-import com.syrus.AMFICOM.general.*;
-import oracle.jdeveloper.layout.*;
-import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeModel;
+import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
+import com.syrus.AMFICOM.client_.general.ui_.tree.UniTreePanel;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.*;
+import oracle.jdeveloper.layout.*;
 
 public class CharacteristicsPanel extends JPanel implements OperationListener
 {
-	public ApplicationContext aContext;
-
-	private PropsADToolBar toolBar;
-	private UniTreePanel utp;
-
-	protected Dispatcher dispatcher = new Dispatcher();
-	protected JTable jTable;
-	protected PropsTableModel tModel;
-
+	ApplicationContext aContext;
+	private Dispatcher dispatcher = new Dispatcher();
 	protected CharacteristicTypeSort selectedTypeSort;
 
-	private Map characteristics = new HashMap();
-	private Set editableSorts = new HashSet();
-	private Map typeSortsCharacterizedIds = new HashMap();
+	Map characteristics = new HashMap();
+	Set editableSorts = new HashSet();
+	Map typeSortsCharacterizedIds = new HashMap();
+
+	PropsADToolBar toolBar;
+	UniTreePanel utp;
+	JTable jTable;
+	PropsTableModel tModel;
 
 	private class CharacterizedObject
 	{
@@ -74,8 +71,6 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 	public CharacteristicsPanel()
 	{
 		super();
-		aContext = new ApplicationContext();
-		aContext.setDispatcher(dispatcher);
 
 		try
 		{
@@ -94,7 +89,7 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 		addCharacteristics(characteristics, characterizedId);
 	}
 
-	public CharacteristicsPanel(Characteristic[] characteristics, Identifier characterizedId)
+	public CharacteristicsPanel(ApplicationContext aContext, Characteristic[] characteristics, Identifier characterizedId)
 	{
 		this();
 		addCharacteristics(characteristics, characterizedId);
@@ -102,7 +97,10 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 
 	public void setContext(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
+		this.aContext = new ApplicationContext();
+		this.aContext.setDispatcher(dispatcher);
+		this.aContext.setSessionInterface(aContext.getSessionInterface());
+		this.aContext.setApplicationModel(aContext.getApplicationModel());
 	}
 
 	private void jbInit() throws Exception
@@ -156,15 +154,15 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 		this.editableSorts.clear();
 	}
 
-	public void addCharacteristics(List characteristics, Identifier characterizedId)
+	public void addCharacteristics(List chars, Identifier characterizedId)
 	{
-		this.characteristics.put(characterizedId, characteristics);
+		this.characteristics.put(characterizedId, chars);
 		elementSelected(selectedTypeSort);
 	}
 
-	public void addCharacteristics(Characteristic[] characteristics, Identifier characterizedId)
+	public void addCharacteristics(Characteristic[] chars, Identifier characterizedId)
 	{
-		this.characteristics.put(characterizedId, Arrays.asList(characteristics));
+		this.characteristics.put(characterizedId, Arrays.asList(chars));
 		elementSelected(selectedTypeSort);
 	}
 
@@ -173,9 +171,9 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 	{
 		typeSortsCharacterizedIds.put(typeSort, new CharacterizableObject(sort, characterizable, characterizedId));
 		if (isEditable)
-			editableSorts.add(sort);
+			editableSorts.add(typeSort);
 		else
-			editableSorts.remove(sort);
+			editableSorts.remove(typeSort);
 	}
 
 	public void setTypeSortMapping(CharacteristicTypeSort typeSort, CharacteristicSort sort,
@@ -183,9 +181,9 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 	{
 		typeSortsCharacterizedIds.put(typeSort,	new CharacterizedObject(sort, characterized, characterizedId));
 		if (isEditable)
-			editableSorts.add(sort);
+			editableSorts.add(typeSort);
 		else
-			editableSorts.remove(sort);
+			editableSorts.remove(typeSort);
 	}
 
 
@@ -227,9 +225,9 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 		tModel.clearTable();
 		for (Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic[] chars = (Characteristic[])it.next();
-			for (int i = 0; i < chars.length; i++) {
-				Characteristic ch = chars[i];
+			List chars = (List)it.next();
+			for (Iterator it2 = chars.iterator(); it2.hasNext();) {
+				Characteristic ch = (Characteristic)it2.next();
 				if (((CharacteristicType)ch.getType()).getSort().equals(selected_type)) {
 					tModel.addRow(ch.getName(), new Object[] {ch.getValue()});
 				}
@@ -275,7 +273,7 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 		}
 	}
 
-	void removeCharacterisric(List characteristics, String name)
+	void removeCharacterisric(List chars, String name)
 	{
 		Object obj = typeSortsCharacterizedIds.get(selectedTypeSort);
 		if (obj == null) {
@@ -285,7 +283,7 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 		}
 
 
-		for (Iterator it = characteristics.iterator(); it.hasNext(); )
+		for (Iterator it = chars.iterator(); it.hasNext(); )
 		{
 			Characteristic ch = (Characteristic)it.next();
 			if (ch.getName().equals(name))
@@ -293,7 +291,7 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 				if (obj instanceof CharacterizableObject)
 					((CharacterizableObject)obj).characterizable.removeCharacteristic(ch);
 				else if (obj instanceof CharacterizedObject)
-					((CharacterizedObject)obj).characterized.getCharacteristics().remove(ch);
+					((CharacterizedObject)obj).characterized.removeCharacteristic(ch);
 				break;
 			}
 		}
@@ -406,14 +404,13 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 
 			AddPropFrame frame = new AddPropFrame(Environment.getActiveWindow(), "", aContext);
 			if (frame.showDialog(selectedTypeSort, tModel.getData()) == AddPropFrame.OK) {
-				CharacteristicType type = frame.getSelectedType();
+				CharacteristicType type = frame.getCharacteristicType();
 				Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 
 				if (obj instanceof CharacterizableObject) {
 					CharacteristicSort sort = ((CharacterizableObject)obj).sort;
 					Identifier characterizedId = ((CharacterizableObject)obj).characterizedId;
 					Characterizable characterizable = ((CharacterizableObject)obj).characterizable;
-					List chars = (List)characteristics.get(characterizedId);
 
 					try {
 						Characteristic ch = Characteristic.createInstance(
@@ -439,7 +436,6 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 					CharacteristicSort sort = ((CharacterizedObject)obj).sort;
 					Identifier characterizedId = ((CharacterizedObject)obj).characterizedId;
 					Characterized characterized = ((CharacterizedObject)obj).characterized;
-					List chars = (List)characteristics.get(characterizedId);
 
 					try {
 						Characteristic ch = Characteristic.createInstance(
@@ -452,7 +448,7 @@ public class CharacteristicsPanel extends JPanel implements OperationListener
 								characterizedId,
 								true,
 								true);
-						characterized.getCharacteristics().add(ch);
+						characterized.addCharacteristic(ch);
 
 						int n = tModel.addRow(ch.getName(), new String[] {""});
 						jTable.setRowSelectionInterval(n, n);
@@ -519,6 +515,11 @@ class PropsTreeModel extends ObjectResourceTreeModel
 	public Class getNodeChildClass(ObjectResourceTreeNode node)
 	{
 		return CharacteristicTypeSort.class;
+	}
+
+	public ObjectResourceController getNodeChildController(ObjectResourceTreeNode node)
+	{
+		return CharacteristicTypeController.getInstance();
 	}
 
 	public List getChildNodes(ObjectResourceTreeNode node)

@@ -124,8 +124,8 @@ class GraphSizeFrame extends JDialog
 		else
 		{
 			arbRButton.doClick();
-			xsizeTextField.setText(String.valueOf(Math.round((double)(scheme.width() * 10) / 40d)));
-			ysizeTextField.setText(String.valueOf(Math.round((double)(scheme.height() * 10) / 40.067)));
+			xsizeTextField.setText(String.valueOf(Math.round((scheme.width() * 10) / 40d)));
+			ysizeTextField.setText(String.valueOf(Math.round((scheme.height() * 10) / 40.067)));
 		}
 
 		setVisible(true);

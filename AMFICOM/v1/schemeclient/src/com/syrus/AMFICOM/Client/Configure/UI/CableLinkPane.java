@@ -12,17 +12,14 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
 public abstract class CableLinkPane extends JPanel implements ObjectResourcePropertiesPane
 {
-	public ApplicationContext aContext;
-
-	protected CableLinkGeneralPanel gPanel;
-	protected CableLinkCharacteristicsPanel chPanel;
-	protected CableLinkFibrePanel fPanel;
-
-	protected JTabbedPane tabbedPane = new JTabbedPane();
-
 	protected SchemeCableLink link;
 
-	public CableLinkPane()
+	private CableLinkGeneralPanel gPanel;
+	private CableLinkCharacteristicsPanel chPanel;
+	private CableLinkFibrePanel fPanel;
+	private JTabbedPane tabbedPane = new JTabbedPane();
+
+	protected CableLinkPane()
 	{
 		super();
 		try
@@ -35,7 +32,7 @@ public abstract class CableLinkPane extends JPanel implements ObjectResourceProp
 		}
 	}
 
-	public CableLinkPane(SchemeCableLink link)
+	protected CableLinkPane(SchemeCableLink link)
 	{
 		this();
 		setObject(link);
@@ -46,7 +43,7 @@ public abstract class CableLinkPane extends JPanel implements ObjectResourceProp
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.setTabPlacement(SwingConstants.TOP);
 
 		fPanel = new CableLinkFibrePanel();
 		gPanel = new CableLinkGeneralPanel();
@@ -73,7 +70,6 @@ public abstract class CableLinkPane extends JPanel implements ObjectResourceProp
 
 	public void setContext(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
 		gPanel.setContext(aContext);
 		chPanel.setContext(aContext);
 		fPanel.setContext(aContext);

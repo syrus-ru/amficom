@@ -47,7 +47,7 @@ public class GraphActions
 		viewMap.put(cell, map);
 
 		// Create Ports
-		int u = GraphConstants.PERCENT;
+//		int u = GraphConstants.PERCENT;
 		DefaultPort port;
 
 		// Floating Center Port (Child 0 is Default)
@@ -69,7 +69,6 @@ public class GraphActions
 
 //		GraphConstants.setRouting(map, GraphConstants.ROUTING_SIMPLE);
 
-		Font f = graph.getFont();
 		ArrayList list = new ArrayList();
 		list.add(p);
 		list.add(p2);
@@ -121,7 +120,7 @@ public class GraphActions
 		viewMap.put(cell, map);
 
 		// Create Ports
-		int u = GraphConstants.PERCENT;
+//		int u = GraphConstants.PERCENT;
 		DefaultPort port;
 
 		// Floating Center Port (Child 0 is Default)
@@ -180,7 +179,7 @@ public class GraphActions
 			String name = "l" + String.valueOf(counter+1);
 
 			cell = new DefaultLink(name);
-			GraphConstants.setRouting(map, ((DefaultLink)cell).getRouting());
+			GraphConstants.setRouting(map, cell.getRouting());
 			link = SchemeFactory.createSchemeLink();
 			link.name(name);
 			cell.setSchemeLinkId(link.id());
@@ -194,7 +193,6 @@ public class GraphActions
 		else
 			return null;
 
-		Font f = graph.getFont();
 		ArrayList list = new ArrayList();
 		list.add(p);
 		list.add(p2);
@@ -265,7 +263,7 @@ public class GraphActions
 			String name = "cl" + String.valueOf(counter+1);
 
 			cell = new DefaultCableLink(name);
-			GraphConstants.setRouting(map, ((DefaultCableLink)cell).getRouting());
+			GraphConstants.setRouting(map, cell.getRouting());
 			link = SchemeFactory.createSchemeCableLink();
 			cell.setSchemeCableLinkId(link.id());
 			link.name(name);
@@ -282,7 +280,6 @@ public class GraphActions
 		else
 			return null;
 
-		Font f = graph.getFont();
 		ArrayList list = new ArrayList();
 		list.add(p);
 		list.add(p2);
@@ -345,13 +342,13 @@ public class GraphActions
 			if (isPort)
 			{
 				visualPort = addVisualPort(graph, "", new Rectangle(p.x - 6, p.y - 3, 7, 7), dev, DirectionType._OUT);
-				Arrays.asList(((SchemeDevice)dev.getSchemeDevice()).schemePorts()).add(((PortCell)visualPort).getSchemePort());
+				Arrays.asList(dev.getSchemeDevice().schemePorts()).add(((PortCell)visualPort).getSchemePort());
 				((PortCell)visualPort).getSchemePort().name(name);
 			}
 			else
 			{
 				visualPort = addVisualCablePort(graph, "", new Rectangle(p.x - 6, p.y - 3, 7, 7), dev, DirectionType._OUT);
-				Arrays.asList(((SchemeDevice)dev.getSchemeDevice()).schemeCablePorts()).add(((CablePortCell)visualPort).getSchemeCablePort());
+				Arrays.asList(dev.getSchemeDevice().schemeCablePorts()).add(((CablePortCell)visualPort).getSchemeCablePort());
 				((CablePortCell)visualPort).getSchemeCablePort().name(name);
 			}
 			devPort = addPort (graph, "", dev, new Point(u, (int)(u * ( (double)(p.y + 1 - dev_rect.y) / (double)dev_rect.height))));
@@ -364,13 +361,13 @@ public class GraphActions
 			if (isPort)
 			{
 				visualPort = addVisualPort(graph, "", new Rectangle(p.x, p.y - 3, 7, 7), dev, DirectionType._IN);
-				Arrays.asList(((SchemeDevice)dev.getSchemeDevice()).schemePorts()).add(((PortCell)visualPort).getSchemePort());
+				Arrays.asList(dev.getSchemeDevice().schemePorts()).add(((PortCell)visualPort).getSchemePort());
 				((PortCell)visualPort).getSchemePort().name(name);
 			}
 			else
 			{
 				visualPort = addVisualCablePort(graph, "", new Rectangle(p.x, p.y - 3, 7, 7), dev, DirectionType._IN);
-				Arrays.asList(((SchemeDevice)dev.getSchemeDevice()).schemeCablePorts()).add(((CablePortCell)visualPort).getSchemeCablePort());
+				Arrays.asList(dev.getSchemeDevice().schemeCablePorts()).add(((CablePortCell)visualPort).getSchemeCablePort());
 				((CablePortCell)visualPort).getSchemeCablePort().name(name);
 			}
 			devPort = addPort(graph, "", dev, new Point(0, (int)(u * ( (double)(p.y + 1 - dev_rect.y) / (double)dev_rect.height))));
@@ -457,7 +454,7 @@ public class GraphActions
 		SchemeCablePort scp = SchemeFactory.createSchemeCablePort();
 		scp.schemeDevice(dev.getSchemeDevice());
 		scp.directionType(direction);
-		((CablePortCell)cell).setSchemeCablePortId(scp.id());
+		cell.setSchemeCablePortId(scp.id());
 
 		map = GraphConstants.createMap();
 		GraphConstants.setBounds(map, bounds);
@@ -473,7 +470,7 @@ public class GraphActions
 
 		port = new DefaultPort("Center");
 		map = GraphConstants.createMap();
-		GraphConstants.setOffset(map, new Point((int) (u / 2), (int) (u / 2)));
+		GraphConstants.setOffset(map, new Point(u / 2, u / 2));
 		viewMap.put(port, map);
 		cell.add(port);
 
@@ -553,7 +550,7 @@ public class GraphActions
 			map = GraphConstants.createMap();
 			GraphConstants.setOffset(
 					map,
-					new Point((int) (u / 2), (int) (u / 2)));
+					new Point(u / 2, u / 2));
 			viewMap.put(port, map);
 		}
 		else
@@ -573,11 +570,11 @@ public class GraphActions
 
 	public static void clearGraph(SchemeGraph graph)
 	{
-		graph.skip_notify = true;
+		SchemeGraph.skip_notify = true;
 		graph.setSelectionCells(new Object[0]);
 		Object[] cells = graph.getAll();
 		graph.getModel().remove(cells);
-		graph.skip_notify = false;
+		SchemeGraph.skip_notify = false;
 	}
 
 	public static void setObjectsBackColor(SchemeGraph graph, Object[] objs, Color color)
@@ -655,9 +652,9 @@ public class GraphActions
 		if (obj instanceof CablePortCell || obj instanceof PortCell)
 		{
 			DefaultGraphCell cell = (DefaultGraphCell)obj;
-			for (Enumeration enum = cell.children(); enum.hasMoreElements();)
+			for (Enumeration enumeration = cell.children(); enumeration.hasMoreElements();)
 			{
-				Port p = (Port)enum.nextElement();
+				Port p = (Port)enumeration.nextElement();
 				for (Iterator i = p.edges(); i.hasNext();)
 				{
 					DefaultEdge edge = (DefaultEdge)i.next();
@@ -692,7 +689,7 @@ public class GraphActions
 			viewMap.put(cell, GraphConstants.cloneMap(map));
 			graph.getGraphLayoutCache().edit(viewMap, null, null, null);
 		}
-		if (icon instanceof ImageIcon)
+		else
 		{
 			if (icon.getIconHeight() > 20 || icon.getIconWidth() > 20)
 				icon = new ImageIcon(icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
@@ -744,9 +741,9 @@ public class GraphActions
 	{
 		Map viewMap = new HashMap();
 		int grid = graph.getGridSize();
-		double delta_x = 0;
+		/*double delta_x = 0;
 		double delta_y = 0;
-		/*for (int i = 0; i < cells.length; i++)
+		for (int i = 0; i < cells.length; i++)
 		{
 			if (cells[i] instanceof DeviceCell ||
 					cells[i] instanceof DeviceGroup)
@@ -779,38 +776,38 @@ public class GraphActions
 				if (cells[i] instanceof DeviceCell ||
 						cells[i] instanceof DeviceGroup)
 				{
-					bounds.x = (int)(bounds.x / grid) * grid;
-					bounds.y = (int)(bounds.y / grid) * grid;
+					bounds.x = (bounds.x / grid) * grid;
+					bounds.y = (bounds.y / grid) * grid;
 				}
 				else if (cells[i] instanceof BlockPortCell)
 				{
-					bounds.x = ((int)(bounds.x / grid)) * grid;
-					bounds.y = ((int)(bounds.y / grid) + 1) * grid - 5;
+					bounds.x = (bounds.x / grid) * grid;
+					bounds.y = ((bounds.y / grid) + 1) * grid - 5;
 				}
 				else if (cells[i] instanceof PortCell)
 				{
 					if (((PortCell)cells[i]).getSchemePort().directionType().equals(DirectionType._OUT))
 					{
-						bounds.x = ((int)(bounds.x / grid) + 1) * grid - 6;
-						bounds.y = ((int)(bounds.y / grid) + 1) * grid - 3;
+						bounds.x = ((bounds.x / grid) + 1) * grid - 6;
+						bounds.y = ((bounds.y / grid) + 1) * grid - 3;
 					}
 					else
 					{
-						bounds.x = ((int)(bounds.x / grid)) * grid;
-						bounds.y = ((int)(bounds.y / grid) + 1) * grid - 3;
+						bounds.x = (bounds.x / grid) * grid;
+						bounds.y = ((bounds.y / grid) + 1) * grid - 3;
 					}
 				}
 				else if (cells[i] instanceof CablePortCell)
 				{
 					if (((CablePortCell)cells[i]).getSchemeCablePort().directionType().equals(DirectionType._OUT))
 					{
-						bounds.x = ((int)(bounds.x / grid) + 1) * grid - 6;
-						bounds.y = ((int)(bounds.y / grid) + 1) * grid - 3;
+						bounds.x = ((bounds.x / grid) + 1) * grid - 6;
+						bounds.y = ((bounds.y / grid) + 1) * grid - 3;
 					}
 					else
 					{
-						bounds.x = ((int)(bounds.x / grid)) * grid;
-						bounds.y = ((int)(bounds.y / grid) + 1) * grid - 3;
+						bounds.x = (bounds.x / grid) * grid;
+						bounds.y = ((bounds.y / grid) + 1) * grid - 3;
 					}
 				}
 				GraphConstants.setBounds(map, new Rectangle(bounds));
@@ -822,9 +819,9 @@ public class GraphActions
 
 	static BlockPortCell getBlockPort (SchemeGraph graph, DefaultGraphCell port)
 	{
-		for (Enumeration enum = port.children(); enum.hasMoreElements();)
+		for (Enumeration enumeration = port.children(); enumeration.hasMoreElements();)
 		{
-			Object obj = enum.nextElement();
+			Object obj = enumeration.nextElement();
 			if (obj instanceof Port)
 			{
 				Port p = (Port)obj;
@@ -843,9 +840,9 @@ public class GraphActions
 	public static DefaultGraphCell[] findVisualPorts(SchemeGraph graph, DeviceCell cell)
 	{
 		ArrayList v = new ArrayList();
-		for (Enumeration enum = cell.children(); enum.hasMoreElements();)
+		for (Enumeration enumeration = cell.children(); enumeration.hasMoreElements();)
 		{
-			Object obj = enum.nextElement();
+			Object obj = enumeration.nextElement();
 			if (obj instanceof Port)
 			{
 				Port p = (Port)obj;
@@ -867,9 +864,9 @@ public class GraphActions
 		ArrayList edges = new ArrayList();
 		for (int i = 0; i < cells.length; i++)
 		{
-			for (Enumeration enum = cells[i].children(); enum.hasMoreElements();)
+			for (Enumeration enumeration = cells[i].children(); enumeration.hasMoreElements();)
 			{
-				Object obj = enum.nextElement();
+				Object obj = enumeration.nextElement();
 				if (obj instanceof Port)
 				{
 					Port p = (Port)obj;
@@ -925,7 +922,7 @@ public class GraphActions
 		Object[] objs = graph.getDescendants(cells);
 		for (int i = 0; i < objs.length; i++)
 			if (objs[i] instanceof BlockPortCell)
-				v.add((BlockPortCell)objs[i]);
+				v.add(objs[i]);
 		return (BlockPortCell[])v.toArray(new BlockPortCell[v.size()]);
 	}
 
@@ -955,8 +952,6 @@ public class GraphActions
 		{
 			final SchemeElement se = group.getSchemeElement();
 
-			boolean show_catalog = true;
-
 			JPopupMenu pop = new JPopupMenu();
 			if (!group.getSchemeId().equals(""))
 			{
@@ -981,7 +976,6 @@ public class GraphActions
 				}
 				else
 				{
-					show_catalog = false;
 					JMenuItem menu1 = new JMenuItem("ќшибка! —хема не найдена");
 					pop.add(menu1);
 				}

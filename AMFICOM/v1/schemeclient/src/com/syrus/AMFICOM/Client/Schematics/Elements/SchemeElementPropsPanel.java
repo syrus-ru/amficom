@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.util.Iterator;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -9,7 +7,6 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.scheme.corba.*;
 
@@ -17,16 +14,16 @@ public class SchemeElementPropsPanel extends JPanel
 {
 	JPanel compPanel;
 	JPanel cl2Panel;
-	private JTextField mapProtoTextField = new JTextField();
-	private JTextField nameTextField = new JTextField();
-	private JTextField titleTextField = new JTextField();
-	private JTextArea descriptionTextArea = new JTextArea();
-	private JTextField manufacturerTextField = new JTextField();
-	private JTextField ugoNameTextField = new JTextField();
-	private JButton ugoIconButton = new JButton();
-	private String undoType;
-	private String undoDescription;
-	private String undoUgoName;
+	JTextField mapProtoTextField = new JTextField();
+	JTextField nameTextField = new JTextField();
+	JTextField titleTextField = new JTextField();
+	JTextArea descriptionTextArea = new JTextArea();
+	JTextField manufacturerTextField = new JTextField();
+	JTextField ugoNameTextField = new JTextField();
+	JButton ugoIconButton = new JButton();
+	String undoType;
+	String undoDescription;
+	String undoUgoName;
 
 	SchemeElement element;
 	ApplicationContext aContext;

@@ -9,8 +9,10 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
-import com.syrus.AMFICOM.scheme.CableThreadController;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.scheme.SchemeCableThreadController;
 import com.syrus.AMFICOM.scheme.corba.*;
 
 public class DevicePropsPanel extends JPanel
@@ -35,7 +37,7 @@ public class DevicePropsPanel extends JPanel
 	{
 		setLayout(new BorderLayout());
 		table = new JTable();
-		table.setSelectionMode(table.getSelectionModel().SINGLE_SELECTION);
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JScrollPane scrollPane = new JScrollPane(table);
 		add(new JLabel("Соответствие волокон кабеля портам"), BorderLayout.NORTH);
@@ -106,7 +108,7 @@ public class DevicePropsPanel extends JPanel
 
 		RouteTableModel(SchemePort[] ports)
 		{
-			List sortedPorts = Arrays.asList(ports);
+//			List sortedPorts = Arrays.asList(ports);
 			Set schemeCables = new HashSet();
 			List sortedThreads = new LinkedList();
 
@@ -131,10 +133,10 @@ public class DevicePropsPanel extends JPanel
 
 				SchemeCableThread thread = ports[i].schemeCableThread();
 				ObjComboBox box = new ObjComboBox(
-								CableThreadController.getInstance(),
-								CableThreadController.KEY_NAME);
+								SchemeCableThreadController.getInstance(),
+								StorableObjectWrapper.COLUMN_NAME);
 				box.addItemListener(itemListener);
-				box.setFontSize(ObjComboBox.SMALL_FONT);
+				box.setFontSize(AComboBox.SMALL_FONT);
 				data[i][1] = box;
 				box.addItem("");
 				box.addElements(sortedThreads);
@@ -180,7 +182,7 @@ public class DevicePropsPanel extends JPanel
 			setClickCountToStart(1);
 		}
 
-		public Component getTableCellEditorComponent(JTable table, Object value,
+		public Component getTableCellEditorComponent(JTable jTable, Object value,
 				boolean isSelected,
 				int row, int column)
 		{
@@ -189,7 +191,7 @@ public class DevicePropsPanel extends JPanel
 			{
 				return (Component) model.getValueAt(row, 1);
 			}
-			return super.getTableCellEditorComponent(table, value, isSelected, row, column);
+			return super.getTableCellEditorComponent(jTable, value, isSelected, row, column);
 		}
 
 		public Object getCellEditorValue()
@@ -209,13 +211,13 @@ public class DevicePropsPanel extends JPanel
 			this.model = model;
 		}
 
-		public Component getTableCellRendererComponent(JTable table, Object value,
+		public Component getTableCellRendererComponent(JTable jTable, Object value,
 				boolean isSelected, boolean hasFocus, int row, int column)
 		{
 			if (column == 1)
 				return (Component) model.getValueAt(row, 1);
 
-			return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			return super.getTableCellRendererComponent(jTable, value, isSelected, hasFocus, row, column);
 		}
 	}
 }

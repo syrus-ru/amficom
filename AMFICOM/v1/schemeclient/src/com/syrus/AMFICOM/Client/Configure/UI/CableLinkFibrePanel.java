@@ -10,16 +10,14 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.CableThreadController;
 import com.syrus.AMFICOM.scheme.corba.*;
 
 public class CableLinkFibrePanel extends GeneralPanel
 {
-	SchemeCableLink link;
+	protected SchemeCableLink link;
 
 	private JPanel linksPanel = new JPanel();
 	private JLabel linksTypeLabel = new JLabel();
@@ -32,9 +30,9 @@ public class CableLinkFibrePanel extends GeneralPanel
 	private JTextField linksIdField = new JTextField();
 	private JPanel listPanel = new JPanel();
 	private JScrollPane jScrollPane1 = new JScrollPane();
-	ObjList threadsList = new ObjList(CableThreadController.getInstance(), CableThreadController.KEY_NAME);
+	private ObjList threadsList = new ObjList(CableThreadController.getInstance(), StorableObjectWrapper.COLUMN_NAME);
 
-	public CableLinkFibrePanel()
+	protected CableLinkFibrePanel()
 	{
 		super();
 		try
@@ -47,7 +45,7 @@ public class CableLinkFibrePanel extends GeneralPanel
 		}
 	}
 
-	public CableLinkFibrePanel(SchemeCableLink link)
+	protected CableLinkFibrePanel(SchemeCableLink link)
 	{
 		this();
 		setObject(link);
@@ -57,13 +55,13 @@ public class CableLinkFibrePanel extends GeneralPanel
 	{
 		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 				getAccessIdentifier().domain_id);
-		Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+		Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 				domain_id, true);
 		DomainCondition condition = new DomainCondition(domain, ObjectEntities.LINKTYPE_ENTITY_CODE);
 		linksTypeBox = new ObjComboBox(
 				LinkTypeController.getInstance(),
 				ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true),
-				LinkTypeController.KEY_NAME);
+				StorableObjectWrapper.COLUMN_NAME);
 
 		setName(LangModelConfig.getString("label_fibers"));
 
@@ -159,7 +157,7 @@ public class CableLinkFibrePanel extends GeneralPanel
 		return true;
 	}
 
-	private void threadsList_valueChanged(ListSelectionEvent e)
+	void threadsList_valueChanged(ListSelectionEvent e)
 	{
 		if (e.getValueIsAdjusting())
 			return;

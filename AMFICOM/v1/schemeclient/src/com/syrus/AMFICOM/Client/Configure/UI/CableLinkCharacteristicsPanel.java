@@ -11,11 +11,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
 public class CableLinkCharacteristicsPanel extends GeneralPanel
 {
-	SchemeCableLink link;
-	Identifier linkId;
-
-	CharacteristicsPanel charPane;
-
+	protected SchemeCableLink link;
+	protected Identifier linkId;
 	private static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
@@ -23,7 +20,9 @@ public class CableLinkCharacteristicsPanel extends GeneralPanel
 			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
 	};
 
-	public CableLinkCharacteristicsPanel()
+	private CharacteristicsPanel charPane;
+
+	protected CableLinkCharacteristicsPanel()
 	{
 		super();
 
@@ -37,7 +36,7 @@ public class CableLinkCharacteristicsPanel extends GeneralPanel
 		}
 	}
 
-	public CableLinkCharacteristicsPanel(SchemeCableLink l)
+	protected CableLinkCharacteristicsPanel(SchemeCableLink l)
 	{
 		this();
 		setObject(l);

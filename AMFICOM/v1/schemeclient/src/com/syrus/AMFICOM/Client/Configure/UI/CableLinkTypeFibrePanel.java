@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -12,44 +11,30 @@ import javax.swing.event.*;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.CableThreadController;
-
 
 public class CableLinkTypeFibrePanel extends GeneralPanel
 {
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-	CableLinkType clt;
+	protected CableLinkType clt;
 
-	private GridBagLayout gridBagLayout1 = new GridBagLayout();
-	private GridBagLayout gridBagLayout2 = new GridBagLayout();
+	JPanel linksPanel = new JPanel();
+	JLabel linksTypeLabel = new JLabel();
+	JLabel linksMarkLabel = new JLabel();
+	JLabel linksNameLabel = new JLabel();
+	JLabel linksNumberLabel = new JLabel();
+	JLabel linksIdLabel = new JLabel();
+	ObjComboBox linksTypeBox;
+	JTextField linksMarkField = new JTextField();
+	JTextField linksNameField = new JTextField();
+	JTextField linksNumberField = new JTextField();
+	JButton linksNumberButton = new JButton();
+	JPanel listPanel = new JPanel();
+	JScrollPane jScrollPane1 = new JScrollPane();
+	ObjList threadsList = new ObjList(CableThreadTypeController.getInstance(), StorableObjectWrapper.COLUMN_NAME);
 
-	private JPanel linksPanel = new JPanel();
-	private JLabel linksTypeLabel = new JLabel();
-	private JLabel linksMarkLabel = new JLabel();
-	private JLabel linksNameLabel = new JLabel();
-	private JLabel linksNumberLabel = new JLabel();
-	private JLabel linksIdLabel = new JLabel();
-	private ObjComboBox linksTypeBox;
-	private JTextField linksMarkField = new JTextField();
-	private JTextField linksNameField = new JTextField();
-	private JTextField linksIdField = new JTextField();
-	private JTextField linksNumberField = new JTextField();
-	private JButton linksNumberButton = new JButton();
-	private JPanel listPanel = new JPanel();
-	private JScrollPane jScrollPane1 = new JScrollPane();
-	private BorderLayout borderLayout1 = new BorderLayout();
-
-	/**
-	 * @todo  CableThreadController -> CableThreadTypeController
-	 */
-	private ObjList threadsList = new ObjList(CableThreadController.getInstance(), CableThreadController.KEY_NAME);
-
-	public CableLinkTypeFibrePanel()
+	protected CableLinkTypeFibrePanel()
 	{
 		super();
 		try
@@ -62,7 +47,7 @@ public class CableLinkTypeFibrePanel extends GeneralPanel
 		}
 	}
 
-	public CableLinkTypeFibrePanel(LinkType clt)
+	protected CableLinkTypeFibrePanel(LinkType clt)
 	{
 		this();
 		setObject(clt);
@@ -70,19 +55,15 @@ public class CableLinkTypeFibrePanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().domain_id);
-		Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
-				domain_id, true);
-		DomainCondition condition = new DomainCondition(domain, ObjectEntities.LINKTYPE_ENTITY_CODE);
+		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINKTYPE_ENTITY_CODE);
+
 		linksTypeBox = new ObjComboBox(
 				LinkTypeController.getInstance(),
 				ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true),
-				LinkTypeController.KEY_NAME);
-
+				StorableObjectWrapper.COLUMN_NAME);
 		setName(LangModelConfig.getString("label_fibers"));
 
-		this.setLayout(gridBagLayout2);
+		this.setLayout(new GridBagLayout());
 
 		linksTypeLabel.setText(LangModelConfig.getString("label_type"));
 		linksTypeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
@@ -98,8 +79,7 @@ public class CableLinkTypeFibrePanel extends GeneralPanel
 
 		linksIdLabel.setText(LangModelConfig.getString("label_id"));
 		linksIdLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		linksIdField.setEnabled(false);
-		listPanel.setLayout(borderLayout1);
+		listPanel.setLayout(new BorderLayout());
 
 		jScrollPane1.setPreferredSize(new Dimension(145, 125));
 		jScrollPane1.setMinimumSize(new Dimension(145, 125));
@@ -119,7 +99,7 @@ public class CableLinkTypeFibrePanel extends GeneralPanel
 		jScrollPane1.getViewport().add(threadsList, null);
 		listPanel.add(jScrollPane1, BorderLayout.CENTER);
 
-		linksPanel.setLayout(gridBagLayout1);
+		linksPanel.setLayout(new GridBagLayout());
 
 		linksPanel.add(linksNameLabel,   new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
 				,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
@@ -147,11 +127,6 @@ public class CableLinkTypeFibrePanel extends GeneralPanel
 		linksPanel.add(p1,   new GridBagConstraints(1, 3, 1, 1, 0.8, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 
-		if(Environment.isDebugMode())
-			linksPanel.add(linksIdField,   new GridBagConstraints(1, 45, 1, 1, 1.0, 0.0
-				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-
-
 		this.add(listPanel,   new GridBagConstraints(0, 0, 1, 1, 0.0, 1.0
 				,GridBagConstraints.NORTHWEST, GridBagConstraints.VERTICAL, new Insets(0, 0, 0, 0), 0, 0));
 		this.add(linksPanel,   new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
@@ -171,17 +146,27 @@ public class CableLinkTypeFibrePanel extends GeneralPanel
 				int old_num = clt.getCableThreadTypes().size();
 				if (num > old_num)
 				{
-					LinkType link_type = null;
-					String codename = "";
-					if (old_num > 0)
-					{
-						CableThreadType ctt = (CableThreadType)clt.getCableThreadTypes().get(0);
-						link_type = ctt.getLinkType();
-						codename = ctt.getCodename();
-					}
+//					LinkType link_type = null;
+//					String codename = "";
+//					if (old_num > 0)
+//					{
+//						CableThreadType ctt = (CableThreadType)clt.getCableThreadTypes().get(0);
+//						link_type = ctt.getLinkType();
+//						codename = ctt.getCodename();
+//					}
+					LinkType link_type = (LinkType)linksTypeBox.getSelectedItem();
+					if (link_type == null)
+						return;
+					String codename = link_type.getCodename();
+					if (codename == null)
+						codename = "";
+
 					Identifier user_id = new Identifier(((RISDSessionInfo)aContext.
 							getSessionInterface()).getAccessIdentifier().user_id);
 					try {
+						List newCableThreadTypes = new ArrayList(num);
+						newCableThreadTypes.addAll(clt.getCableThreadTypes());
+
 						for (int i = old_num; i < num; i++) {
 							CableThreadType newctt = CableThreadType.createInstance(
 									user_id,
@@ -190,8 +175,9 @@ public class CableLinkTypeFibrePanel extends GeneralPanel
 									"fiber" + (i + 1),
 									Color.BLACK.getRGB(),
 									link_type);
-							clt.getCableThreadTypes().add(newctt);
+							newCableThreadTypes.add(newctt);
 						}
+						clt.setCableThreadTypes(newCableThreadTypes);
 					}
 					catch (CreateObjectException ex) {
 						ex.printStackTrace();
@@ -252,7 +238,6 @@ public class CableLinkTypeFibrePanel extends GeneralPanel
 		this.clt = (CableLinkType)or;
 
 		this.threadsList.removeAll();
-		this.linksIdField.setText("");
 		this.linksNameField.setText("");
 		this.linksNumberField.setText(String.valueOf(clt.getCableThreadTypes().size()));
 		this.linksMarkField.setText("");
@@ -266,11 +251,13 @@ public class CableLinkTypeFibrePanel extends GeneralPanel
 	{
 		try
 		{
-			CableThreadType clt = (CableThreadType)threadsList.getSelectedValue();
-
-			clt.setName(linksNameField.getText());
-			clt.setDescription(this.linksMarkLabel.getText());
-			clt.setLinkType((LinkType)this.linksTypeBox.getSelectedItem());
+			CableThreadType ctt = (CableThreadType)threadsList.getSelectedValue();
+			if (clt != null)
+			{
+				ctt.setName(linksNameField.getText());
+				ctt.setDescription(this.linksMarkLabel.getText());
+				ctt.setLinkType((LinkType)this.linksTypeBox.getSelectedItem());
+			}
 		}
 		catch(Exception ex)
 		{
@@ -279,18 +266,17 @@ public class CableLinkTypeFibrePanel extends GeneralPanel
 		return true;
 	}
 
-	private void threadsList_valueChanged(ListSelectionEvent e)
+	void threadsList_valueChanged(ListSelectionEvent e)
 	{
 		if(e.getValueIsAdjusting())
 			return;
 
-		CableThreadType clt = (CableThreadType)threadsList.getSelectedValue();
-		if (clt != null)
+		CableThreadType ctt = (CableThreadType)this.threadsList.getSelectedValue();
+		if (ctt != null)
 		{
-			this.linksIdField.setText(clt.getId().getIdentifierString());
-			this.linksNameField.setText(clt.getName());
-			this.linksMarkField.setText(clt.getDescription());
-			this.linksTypeBox.setSelectedItem(clt.getLinkType());
+			this.linksNameField.setText(ctt.getName());
+			this.linksMarkField.setText(ctt.getDescription());
+			this.linksTypeBox.setSelectedItem(ctt.getLinkType());
 		}
 	}
 }

@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.scheme.*;
@@ -125,7 +124,7 @@ public class SchemeSaveCommand extends VoidCommand
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 					domain_id, true);
 			scheme.domainImpl(domain);
 		}

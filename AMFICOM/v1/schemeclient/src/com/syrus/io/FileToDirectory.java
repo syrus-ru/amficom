@@ -48,7 +48,7 @@ public class FileToDirectory
 		elements = readFromFile();
 	}
 
-	public Object read(String key) throws IOException
+	public Object read(String key)
 	{
 		return currentHash.get(key);
 	}
@@ -119,8 +119,7 @@ public class FileToDirectory
 		String[] s = analyseString (isr.readASCIIString());
 		if (s[0].equals("@type"))
 			return s[1];
-		else
-			return "";
+		return "";
 	}
 
 	protected String[] analyseString (String s)

@@ -9,18 +9,17 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 import com.syrus.AMFICOM.resource.*;
 
 public class SchemePropsPanel extends JPanel
 {
-	public JTextField schemeNameTextField = new JTextField();
-	public JTextArea schemeDescrTextArea = new JTextArea();
-	private JTextField ugoNameTextField = new JTextField();
-	private JButton ugoIconButton = new JButton();
-	public AComboBox schemeTypeComboBox = new AComboBox(schemeType_names);
+	JTextField schemeNameTextField = new JTextField();
+	JTextArea schemeDescrTextArea = new JTextArea();
+	JTextField ugoNameTextField = new JTextField();
+	JButton ugoIconButton = new JButton();
+	AComboBox schemeTypeComboBox = new AComboBox(schemeType_names);
 
 	Scheme scheme;
 	ApplicationContext aContext;
@@ -252,6 +251,11 @@ public class SchemePropsPanel extends JPanel
 		ugoNameTextField.setEnabled(b);
 	}
 
+	public void setSchemeName(String name)
+	{
+		schemeNameTextField.setText(name);
+	}
+	
 	public String getSchemeName()
 	{
 		return schemeNameTextField.getText();
@@ -262,9 +266,31 @@ public class SchemePropsPanel extends JPanel
 		return schemeDescrTextArea.getText();
 	}
 
+	public void setSchemeDescription(String description)
+	{
+		schemeDescrTextArea.setText(description);
+	}
+	
 	public Type getSchemeType()
 	{
 		return schemeTypes[schemeTypeComboBox.getSelectedIndex()];
+	}
+	
+	public void setSchemeType(Type type)
+	{
+		String typeString;
+		switch (type.value())
+		{
+			case Type._NETWORK:
+				typeString = LangModelSchematics.getString("NETWORK");
+				break;
+			case Type._CABLE_SUBNETWORK:
+				typeString = LangModelSchematics.getString("CABLE_SUBNETWORK");
+				break;
+			default:
+				typeString = LangModelSchematics.getString("BUILDING");
+		}
+		schemeTypeComboBox.setSelectedItem(typeString);
 	}
 }
 

@@ -17,15 +17,15 @@ public class AddProtoFrame extends JDialog
 	protected int res = CANCEL;
 	protected String proto_class;
 
-	private AComboBox jComboBox1 = new AComboBox();
-	private JPanel panel = new JPanel();
-	private JPanel buttonPanel = new JPanel();
-	private JTextField nameField = new JTextField();
-	private JTextField descrField = new JTextField();
-	private JLabel name = new JLabel();
-	private JLabel descr = new JLabel();
-	private JButton okButton = new JButton();
-	private JButton cancelButton = new JButton();
+	AComboBox jComboBox1 = new AComboBox();
+	JPanel panel = new JPanel();
+	JPanel buttonPanel = new JPanel();
+	JTextField nameField = new JTextField();
+	JTextField descrField = new JTextField();
+	JLabel name = new JLabel();
+	JLabel descr = new JLabel();
+	JButton okButton = new JButton();
+	JButton cancelButton = new JButton();
 
 	public AddProtoFrame(Frame parent, String title)
 	{

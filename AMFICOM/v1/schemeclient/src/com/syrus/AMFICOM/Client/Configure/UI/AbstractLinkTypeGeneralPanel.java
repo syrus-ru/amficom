@@ -15,38 +15,27 @@ import com.syrus.AMFICOM.general.ApplicationException;
 
 public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 {
-	AbstractLinkType linkType;
+	protected AbstractLinkType linkType;
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss"); //$NON-NLS-1$
 
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-
-	JLabel idLabel = new JLabel();
-	JTextField idField = new JTextField();
-
-	JLabel nameLabel = new JLabel();
-	JTextField nameField = new JTextField();
-
-	private GridBagLayout gridBagLayout1 = new GridBagLayout();
-
+	private JLabel idLabel = new JLabel();
+	private JTextField idField = new JTextField();
+	private JLabel nameLabel = new JLabel();
+	private JTextField nameField = new JTextField();
 	private JLabel manufacturerLabel = new JLabel();
 	private JTextField manufacturerField = new JTextField();
-
 	private JLabel manufacturerCodeLabel = new JLabel();
 	private JTextField manufacturerCodeField = new JTextField();
-
 	private JLabel modifyLabel2 = new JLabel();
 	private JLabel modifyLabel1 = new JLabel();
 	private JTextField ModifyField = new JTextField();
-
 	private JLabel descLabel = new JLabel();
 	private JPanel descriptionPanel = new JPanel();
-	JScrollPane descriptionScrollPane = new JScrollPane();
-	public JTextPane descTextArea = new JTextPane();
-
+	private JScrollPane descriptionScrollPane = new JScrollPane();
+	private JTextPane descTextArea = new JTextPane();
 	private JButton saveButton = new JButton();
 
-	private BorderLayout borderLayout1 = new BorderLayout();
-
-	public AbstractLinkTypeGeneralPanel()
+	protected AbstractLinkTypeGeneralPanel()
 	{
 		super();
 		try
@@ -59,7 +48,7 @@ public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 		}
 	}
 
-	public AbstractLinkTypeGeneralPanel(LinkType linkType)
+	protected AbstractLinkTypeGeneralPanel(LinkType linkType)
 	{
 		this();
 		setObject(linkType);
@@ -67,38 +56,38 @@ public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModelConfig.getString("label_general"));
+		setName(LangModelConfig.getString("label_general")); //$NON-NLS-1$
 
-		idLabel.setText(LangModelConfig.getString("label_id"));
+		idLabel.setText(LangModelConfig.getString("label_id")); //$NON-NLS-1$
 		idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		nameLabel.setText(LangModelConfig.getString("label_name"));
+		nameLabel.setText(LangModelConfig.getString("label_name")); //$NON-NLS-1$
 		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 
-		descLabel.setText(LangModelConfig.getString("label_description"));
+		descLabel.setText(LangModelConfig.getString("label_description")); //$NON-NLS-1$
 		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		manufacturerCodeLabel.setText(LangModelConfig.getString("label_manCode"));
+		manufacturerCodeLabel.setText(LangModelConfig.getString("label_manCode")); //$NON-NLS-1$
 		manufacturerCodeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		manufacturerLabel.setText(LangModelConfig.getString("label_manufacter"));
+		manufacturerLabel.setText(LangModelConfig.getString("label_manufacter")); //$NON-NLS-1$
 		manufacturerLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		ModifyField.setEnabled(false);
-		modifyLabel1.setText(LangModelConfig.getString("label_modified1"));
+		modifyLabel1.setText(LangModelConfig.getString("label_modified1")); //$NON-NLS-1$
 		modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		modifyLabel2.setText(LangModelConfig.getString("label_modified2"));
+		modifyLabel2.setText(LangModelConfig.getString("label_modified2")); //$NON-NLS-1$
 		modifyLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 		idField.setEnabled(false);
-		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
+		saveButton.setText(LangModelConfig.getString("menuMapSaveText")); //$NON-NLS-1$
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveButton_actionPerformed(e);
 			}
 		});
 
-		descriptionPanel.setLayout(borderLayout1);
+		descriptionPanel.setLayout(new BorderLayout());
 		descriptionScrollPane.getViewport().add(descTextArea, null);
 		descriptionPanel.add(descriptionScrollPane, BorderLayout.CENTER);
 
-		this.setLayout(gridBagLayout1);
+		this.setLayout(new GridBagLayout());
 
 		this.add(nameLabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 		this.add(manufacturerLabel, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
@@ -146,13 +135,13 @@ public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 		}
 		else
 		{
-			idField.setText("");
-			nameField.setText("");
-			this.descTextArea.setText("");
-			this.manufacturerField.setText("");
-			this.manufacturerCodeField.setText("");
+			idField.setText(""); //$NON-NLS-1$
+			nameField.setText(""); //$NON-NLS-1$
+			this.descTextArea.setText(""); //$NON-NLS-1$
+			this.manufacturerField.setText(""); //$NON-NLS-1$
+			this.manufacturerCodeField.setText(""); //$NON-NLS-1$
 
-			this.ModifyField.setText("");
+			this.ModifyField.setText(""); //$NON-NLS-1$
 		}
 	}
 

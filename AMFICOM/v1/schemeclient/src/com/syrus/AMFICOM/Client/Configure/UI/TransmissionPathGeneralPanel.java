@@ -14,49 +14,36 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 public class TransmissionPathGeneralPanel extends GeneralPanel
 {
-	SchemePath path;
-	MonitoredElement me;
+	protected SchemePath path;
+	protected MonitoredElement me;
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
-	private GridBagLayout gridBagLayout1 = new GridBagLayout();
-
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-
-	JLabel equipLabel = new JLabel();
-	JTextField equipField = new JTextField();
-
-	JLabel idLabel = new JLabel();
-	JTextField idField = new JTextField();
-
-	JLabel local_addLabel1 = new JLabel();
+	private JLabel equipLabel = new JLabel();
+	private JTextField equipField = new JTextField();
+	private JLabel idLabel = new JLabel();
+	private JTextField idField = new JTextField();
+	private JLabel local_addLabel1 = new JLabel();
 	private JLabel local_addLabel2 = new JLabel();
-	JTextField localAdressField = new JTextField();
-
-	JLabel nameLabel = new JLabel();
-	JTextField nameField = new JTextField();
-
+	private JTextField localAdressField = new JTextField();
+	private JLabel nameLabel = new JLabel();
+	private JTextField nameField = new JTextField();
 	private JTextField portField = new JTextField();
 	private JLabel portLabel = new JLabel();
-
 	private JTextField modifyField = new JTextField();
 	private JLabel modifyLabel1 = new JLabel();
 	private JLabel modifyLabel2 = new JLabel();
-
 	private JLabel descLabel = new JLabel();
 	private JPanel descriptionPanel = new JPanel();
-	JScrollPane descriptionScrollPane = new JScrollPane();
-	public JTextPane descTextArea = new JTextPane();
-	private BorderLayout borderLayout1 = new BorderLayout();
+	private JScrollPane descriptionScrollPane = new JScrollPane();
+	private JTextPane descTextArea = new JTextPane();
 
-	Domain domain;
-
-	public TransmissionPathGeneralPanel()
+	protected TransmissionPathGeneralPanel()
 	{
 		super();
 		try
@@ -67,19 +54,9 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 		{
 			e.printStackTrace();
 		}
-
-		try {
-			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-					getAccessIdentifier().domain_id);
-			domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
-					domain_id, true);
-		}
-		catch (ApplicationException ex) {
-			ex.printStackTrace();
-		}
 	}
 
-	public TransmissionPathGeneralPanel(TransmissionPath tp)
+	protected TransmissionPathGeneralPanel(TransmissionPath tp)
 	{
 		this();
 		setObject(tp);
@@ -87,7 +64,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		this.setLayout(gridBagLayout1);
+		this.setLayout(new GridBagLayout());
 
 		equipLabel.setText(LangModelConfig.getString("menuNetCatEquipmentText"));
 		equipLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
@@ -110,13 +87,12 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 		modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 		modifyLabel2.setText(LangModelConfig.getString("label_modified2"));
 		modifyLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-		descriptionPanel.setLayout(borderLayout1);
+		descriptionPanel.setLayout(new BorderLayout());
 
 		idField.setEnabled(false);
 		equipField.setEnabled(false);
 		portField.setEnabled(false);
 
-		descriptionPanel.setLayout(borderLayout1);
 		descriptionScrollPane.getViewport().add(descTextArea, null);
 		descriptionPanel.add(descriptionScrollPane, BorderLayout.CENTER);
 
@@ -172,16 +148,20 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 
 		if(path.path() != null)
 		{
-			StorableObjectCondition condition = new DomainCondition(domain, ObjectEntities.ME_ENTITY_CODE);
-				try {
-					List mes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-					for (Iterator it = mes.iterator(); it.hasNext(); ) {
-						MonitoredElement me = (MonitoredElement)it.next();
-						if (me.getMonitoredDomainMemberIds().contains(path.pathImpl().getId())) {
-							this.me = me;
-							break;
-						}
+			try {
+				Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+						getAccessIdentifier().domain_id);
+				Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
+						domain_id, true);
+				StorableObjectCondition condition = new DomainCondition(domain, ObjectEntities.ME_ENTITY_CODE);
+				List mes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				for (Iterator it = mes.iterator(); it.hasNext(); ) {
+					MonitoredElement monitoredelement = (MonitoredElement)it.next();
+					if (monitoredelement.getMonitoredDomainMemberIds().contains(path.pathImpl().getId())) {
+						this.me = monitoredelement;
+						break;
 					}
+				}
 			}
 			catch (ApplicationException ex) {
 				ex.printStackTrace();

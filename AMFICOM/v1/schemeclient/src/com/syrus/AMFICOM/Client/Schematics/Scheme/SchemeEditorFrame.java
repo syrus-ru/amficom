@@ -1,11 +1,7 @@
 package com.syrus.AMFICOM.Client.Schematics.Scheme;
 
-import javax.swing.JOptionPane;
-
-import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveCommand;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 public class SchemeEditorFrame extends SchemeViewerFrame
 {

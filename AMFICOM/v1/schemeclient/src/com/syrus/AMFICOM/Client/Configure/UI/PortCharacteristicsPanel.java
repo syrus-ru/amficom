@@ -11,19 +11,18 @@ import com.syrus.AMFICOM.scheme.corba.SchemePort;
 
 public class PortCharacteristicsPanel extends GeneralPanel
 {
-	SchemePort port;
-	Identifier portId;
-
-	CharacteristicsPanel charPane;
-
+	protected SchemePort port;
+	protected Identifier portId;
 	private static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
-		CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
-		CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
-		CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
-		CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
 	};
 
-	public PortCharacteristicsPanel()
+	private CharacteristicsPanel charPane;
+
+	protected PortCharacteristicsPanel()
 	{
 		super();
 
@@ -37,7 +36,7 @@ public class PortCharacteristicsPanel extends GeneralPanel
 		}
 	}
 
-	public PortCharacteristicsPanel(SchemePort p)
+	protected PortCharacteristicsPanel(SchemePort p)
 	{
 		this();
 		setObject(p);

@@ -12,19 +12,17 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
 public class EquipmentPane extends JPanel implements ObjectResourcePropertiesPane
 {
-	public ApplicationContext aContext;
+	protected SchemeElement element;
+	private static ObjectResourcePropertiesPane instance;
 
-	EquipmentGeneralPanel gPanel = new EquipmentGeneralPanel();
-	EquipmentGeneralPanelAdd gaPanel = new EquipmentGeneralPanelAdd();
-	EquipmentPortsPanel pPanel = new EquipmentPortsPanel();
-	EquipmentCablePortsPanel cpPanel = new EquipmentCablePortsPanel();
-	EquipmentCharacteristicsPanel chPanel = new EquipmentCharacteristicsPanel();
+	private EquipmentGeneralPanel gPanel = new EquipmentGeneralPanel();
+	private EquipmentGeneralPanelAdd gaPanel = new EquipmentGeneralPanelAdd();
+	private EquipmentPortsPanel pPanel = new EquipmentPortsPanel();
+	private EquipmentCablePortsPanel cpPanel = new EquipmentCablePortsPanel();
+	private EquipmentCharacteristicsPanel chPanel = new EquipmentCharacteristicsPanel();
+	private JTabbedPane tabbedPane = new JTabbedPane();
 
-	SchemeElement element;
-
-	public JTabbedPane tabbedPane = new JTabbedPane();
-
-	public EquipmentPane()
+	protected EquipmentPane()
 	{
 		super();
 		try
@@ -37,10 +35,17 @@ public class EquipmentPane extends JPanel implements ObjectResourcePropertiesPan
 		}
 	}
 
-	public EquipmentPane(SchemeElement element)
+	protected EquipmentPane(SchemeElement element)
 	{
 		this();
 		setObject(element);
+	}
+
+	public static ObjectResourcePropertiesPane getInstance()
+	{
+		if (instance == null)
+			instance = new EquipmentPane();
+		return instance;
 	}
 
 	private void jbInit() throws Exception
@@ -48,7 +53,7 @@ public class EquipmentPane extends JPanel implements ObjectResourcePropertiesPan
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.setTabPlacement(SwingConstants.TOP);
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(gaPanel.getName(), gaPanel);
@@ -75,7 +80,6 @@ public class EquipmentPane extends JPanel implements ObjectResourcePropertiesPan
 
 	public void setContext(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
 		gPanel.setContext(aContext);
 		gaPanel.setContext(aContext);
 		pPanel.setContext(aContext);
@@ -131,8 +135,8 @@ public class EquipmentPane extends JPanel implements ObjectResourcePropertiesPan
 
 	public boolean delete()
 	{
-		int i = 0;
-/*
+/*		int i = 0;
+
 		if(kis != null)
 		{
 			Collection measurementPorts = element.getMeasurementPorts();

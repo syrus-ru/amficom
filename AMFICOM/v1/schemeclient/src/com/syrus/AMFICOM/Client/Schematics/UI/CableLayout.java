@@ -57,8 +57,8 @@ public class CableLayout implements OperationListener
 		int moduleFibers = nFibers / nModules;
 		int additionalFibers = nFibers - (nModules * moduleFibers);
 
-		double angle = 2 * Math.PI / (double)(nModules);
-		double inner_angle = 2 * Math.PI / (double)(moduleFibers + (additionalFibers == 0 ? 0 : 1));
+		double angle = 2 * Math.PI / nModules;
+		double inner_angle = 2 * Math.PI / (moduleFibers + (additionalFibers == 0 ? 0 : 1));
 		int r1 = radius;
 		int r2 = (int)((radius * nModules) / Math.PI);
 		if (r2 < (1.415 * r1))
@@ -82,7 +82,7 @@ public class CableLayout implements OperationListener
 
 	private void createModules(int nModules)
 	{
-		double angle = 2 * Math.PI / (double)(nModules);
+		double angle = 2 * Math.PI / nModules;
 		int r1 = radius;
 		int r2 = (int)((radius * nModules) / Math.PI);
 		if (r2 < (1.415 * r1))
@@ -136,7 +136,7 @@ public class CableLayout implements OperationListener
 					}
 					else if (objs[i] instanceof EllipseCell)
 					{
-						EllipseCell cell = (EllipseCell)objs[i];
+//						EllipseCell cell = (EllipseCell)objs[i];
 						panel.getGraph().clearSelection();
 					}
 				}

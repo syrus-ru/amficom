@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.scheme.corba.*;
 
 public class SchemePanel extends ElementsPanel
 {
-	protected static String[] buttons = new String[]
+	private static String[] buttons = new String[]
 	{
 		Constants.marqueeTool,
 		Constants.separator,
@@ -76,18 +76,18 @@ public class SchemePanel extends ElementsPanel
 
 	protected UgoPanel.ToolBarPanel createToolBar()
 	{
-		ToolBarPanel toolbar = new ToolBarPanel();
-		commands.putAll(toolbar.createGraphButtons(this));
+		ToolBarPanel toolBarPanel = new ToolBarPanel();
+		commands.putAll(toolBarPanel.createGraphButtons(this));
 
-		String[] buttons = getButtons();
-		for (int i = 0; i < buttons.length; i++)
+		String[] bttns = getButtons();
+		for (int i = 0; i < bttns.length; i++)
 		{
-			if (buttons[i].equals(Constants.separator))
-				toolbar.insert(new JToolBar.Separator());
+			if (bttns[i].equals(Constants.separator))
+				toolBarPanel.insert(new JToolBar.Separator());
 			else
-				toolbar.insert((Component)commands.get(buttons[i]));
+				toolBarPanel.insert((Component)commands.get(bttns[i]));
 		}
-		return toolbar;
+		return toolBarPanel;
 	}
 
 	public void init_module()
@@ -205,7 +205,7 @@ public class SchemePanel extends ElementsPanel
 			{
 				// клонируем схемеэлемент
 				DeviceGroup group = (DeviceGroup)cells[0];
-				SchemeProtoElement proto = (SchemeProtoElement)group.getProtoElement();
+				SchemeProtoElement proto = group.getProtoElement();
 				//EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
 
 				//SchemeElement element = new SchemeElement(proto, dataSource);
@@ -226,12 +226,12 @@ public class SchemePanel extends ElementsPanel
 
 	public void openScheme(Scheme sch)
 	{
-		SchemeGraph graph = getGraph();
+//		SchemeGraph graph = getGraph();
 		graph.setScheme(sch); //(Scheme)sch.clone(aContext.getDataSourceInterface());
 //		sch.schemeCell(null);
 //		sch.ugoCell(null);
 //		sch.unpack();
-		Map clones = graph.copyFromArchivedState(sch.schemeCellImpl().getData(), new Point(0, 0));
+		graph.copyFromArchivedState(sch.schemeCellImpl().getData(), new Point(0, 0));
 //		graph.setGraphChanged(false);
 		graph.selectionNotify();
 		graph.setActualSize(new Dimension(sch.width() == 0 ? 840 : sch.width(),
@@ -258,7 +258,7 @@ public class SchemePanel extends ElementsPanel
 
 	public Scheme updateScheme()
 	{
-		SchemeGraph graph = getGraph();
+//		SchemeGraph graph = getGraph();
 		Scheme scheme = graph.getScheme();
 		if (scheme != null)
 			scheme.schemeCellImpl().setData((List)graph.getArchiveableState(graph.getRoots()));
@@ -284,8 +284,6 @@ public class SchemePanel extends ElementsPanel
 
 			if (cells.length == 1 && cells[0] instanceof DeviceGroup)
 			{
-				DeviceGroup group = (DeviceGroup)cells[0];
-
 				SchemeElement element = SchemeFactory.createSchemeElement();
 				element.internalScheme(sch);
 				element.scheme(getGraph().getScheme());
@@ -347,13 +345,13 @@ public class SchemePanel extends ElementsPanel
 
 	class ToolBarPanel extends ElementsPanel.ToolBarPanel
 	{
-		JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane tabs = new JTabbedPane(SwingConstants.TOP);
 
 		public ToolBarPanel ()
 		{
 			super();
 
-			tabs = new JTabbedPane(JTabbedPane.TOP);
+			tabs = new JTabbedPane(SwingConstants.TOP);
 			tabs.addMouseListener(new MouseAdapter()
 			{
 				public void mouseReleased(MouseEvent e)
@@ -379,36 +377,36 @@ public class SchemePanel extends ElementsPanel
 
 		protected Map createGraphButtons (ElementsPanel p)
 		{
-			Map buttons = super.createGraphButtons(p);
+			Map bttns = super.createGraphButtons(p);
 
 			if (getGraph().getMarqueeHandler() instanceof SchemeGraph.ShemeMarqueeHandler)
 			{
 				SchemeGraph.ShemeMarqueeHandler mh = (SchemeGraph.ShemeMarqueeHandler) getGraph().getMarqueeHandler();
 
-				buttons.put(Constants.groupSEKey,
+				bttns.put(Constants.groupSEKey,
 										createToolButton(mh.gr2, btn_size, null, "создать компонент",
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/group.gif")),
 										new GroupSEAction(getGraph()), false));
 
-				buttons.put(Constants.createTopLevelSchemeKey,
+				bttns.put(Constants.createTopLevelSchemeKey,
 										createToolButton(mh.scheme_ugo, btn_size, null, "УГО схемы",
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/sheme_ugo.gif")),
 										new CreateTopLevelSchemeAction (getGraph(), SchemePanel.this), true));
-				buttons.put(Constants.backgroundSize,
+				bttns.put(Constants.backgroundSize,
 										createToolButton(mh.bSize, btn_size, null, "размер схемы",
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/sheme_size.gif")),
 										new SetBackgroundSizeAction(aContext, SchemePanel.this), true));
 
-				buttons.put(Constants.LINK_MODE,
+				bttns.put(Constants.LINK_MODE,
 										createToolButton(mh.linkButt, btn_size, null, "режим линий",
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/linkmode.gif")),
 										new SetLinkModeAction (SchemePanel.this), true));
-				buttons.put(Constants.PATH_MODE,
+				bttns.put(Constants.PATH_MODE,
 										createToolButton(mh.pathButt, btn_size, null, "режим путей",
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pathmode.gif")),
 										new SetPathModeAction (SchemePanel.this), true));
 
-				buttons.put(Constants.TOP_LEVEL_SCHEME_MODE,
+				bttns.put(Constants.TOP_LEVEL_SCHEME_MODE,
 										createToolButton(mh.topModeButt, btn_size, null, "режим схематичного изображения",
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")),
 										new SetTopLevelModeAction(SchemePanel.this), true));
@@ -424,7 +422,7 @@ public class SchemePanel extends ElementsPanel
 //				}
 				mh.s.doClick();
 			}
-			return buttons;
+			return bttns;
 		}
 	}
 }

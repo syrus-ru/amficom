@@ -1,10 +1,8 @@
 package com.syrus.AMFICOM.Client.Schematics.Scheme;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 public class PrimarySchemeEditorFrame extends //SchemeViewerFrame
 		SchemeEditorFrame

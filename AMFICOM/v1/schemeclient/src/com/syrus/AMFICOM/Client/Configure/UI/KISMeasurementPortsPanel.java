@@ -10,22 +10,23 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class KISMeasurementPortsPanel extends GeneralPanel
 {
-	SchemeElement element;
+	protected SchemeElement element;
 
-	JLabel idLabel = new JLabel();
+	private JLabel idLabel = new JLabel();
 	private ObjComboBox portBox = new ObjComboBox(MeasurementPortController.getInstance(),
-			MeasurementPortController.KEY_NAME);
-	MeasurementPortGeneralPanel pgp = new MeasurementPortGeneralPanel();
+			StorableObjectWrapper.COLUMN_NAME);
+	private MeasurementPortGeneralPanel pgp = new MeasurementPortGeneralPanel();
 	private JPanel mainPanel = new JPanel();
 	private JPanel controlsPanel = new JPanel();
 	private JPanel labelsPanel = new JPanel();
 
-	public KISMeasurementPortsPanel()
+	protected KISMeasurementPortsPanel()
 	{
 		super();
 		try
@@ -38,7 +39,7 @@ public class KISMeasurementPortsPanel extends GeneralPanel
 		}
 	}
 
-	public KISMeasurementPortsPanel(SchemeElement element)
+	protected KISMeasurementPortsPanel(SchemeElement element)
 	{
 		this();
 		setObject(element);
@@ -78,7 +79,7 @@ public class KISMeasurementPortsPanel extends GeneralPanel
 
 	public void setObject(Object or)
 	{
-		element = (SchemeElement)element;
+		element = (SchemeElement)or;
 		portBox.removeAll();
 
 		if(element.rtu() != null)
@@ -95,6 +96,6 @@ public class KISMeasurementPortsPanel extends GeneralPanel
 
 	void portBox_actionPerformed(ActionEvent e)
 	{
-		pgp.setObject((MeasurementPort)portBox.getSelectedItem());
+		pgp.setObject(portBox.getSelectedItem());
 	}
 }

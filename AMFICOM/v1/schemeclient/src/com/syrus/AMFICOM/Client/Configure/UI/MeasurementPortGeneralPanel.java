@@ -11,39 +11,32 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 
 public class MeasurementPortGeneralPanel extends GeneralPanel
 {
-	MeasurementPort port;
-	MonitoredElement me;
+	protected MeasurementPort port;
+	protected MonitoredElement me;
 
-	JPanel mainPanel = new JPanel();
-	public JButton saveButton = new JButton();
+	private JPanel mainPanel = new JPanel();
+	private JButton saveButton = new JButton();
+	private JLabel localLabel1 = new JLabel();
+	private JLabel localLabel = new JLabel();
+	private JTextField localField = new JTextField();
+	private JLabel kisLabel = new JLabel();
+	private JTextField KISField = new JTextField();
+	private JLabel portLabel = new JLabel();
+	private JTextField portField = new JTextField();
+	private JLabel typeLabel = new JLabel();
+	private ObjComboBox typeBox;
+	private JLabel nameLabel = new JLabel();
+	private JTextField nameField = new JTextField();
+	private JLabel idLabel = new JLabel();
+	private JTextField idField = new JTextField();
 
-	public JLabel localLabel1 = new JLabel();
-	public JLabel localLabel = new JLabel();
-	public JTextField localField = new JTextField();
-
-	public JLabel kisLabel = new JLabel();
-	public JTextField KISField = new JTextField();
-
-	public JLabel portLabel = new JLabel();
-	public JTextField portField = new JTextField();
-
-	public JLabel typeLabel = new JLabel();
-	public ObjComboBox typeBox;
-
-	public JLabel nameLabel = new JLabel();
-	public JTextField nameField = new JTextField();
-
-	public JLabel idLabel = new JLabel();
-	public JTextField idField = new JTextField();
-
-	public MeasurementPortGeneralPanel()
+	protected MeasurementPortGeneralPanel()
 	{
 		super();
 		try
@@ -56,7 +49,7 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 		}
 	}
 
-	public MeasurementPortGeneralPanel(MeasurementPort ap)
+	protected MeasurementPortGeneralPanel(MeasurementPort ap)
 	{
 		this();
 		setObject(ap);
@@ -65,14 +58,14 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 	private void jbInit() throws Exception
 	{
 		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-		Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+		Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 				domain_id, true);
 		DomainCondition condition = new DomainCondition(domain, ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
 
 		typeBox = new ObjComboBox(
 				MeasurementPortTypeController.getInstance(),
 				ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true),
-				MeasurementPortTypeController.KEY_NAME);
+				StorableObjectWrapper.COLUMN_NAME);
 
 
 		this.setLayout(new BorderLayout());
@@ -147,11 +140,6 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 		if(port != null)
 		{
 			try {
-				Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-						getAccessIdentifier().domain_id);
-				Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
-						domain_id, true);
-
 				LinkedIdsCondition condition = new LinkedIdsCondition(port.getId(), ObjectEntities.ME_ENTITY_CODE);
 
 				List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);

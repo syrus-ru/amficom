@@ -18,18 +18,18 @@ public class ProtoElementPropsPanel extends JPanel
 {
 	JPanel compPanel;
 	JPanel cl2Panel;
-	private JTextField mapProtoTextField = new JTextField();
-	private JButton chooseMapProtoButton = new JButton("...");
-	private JTextField nameTextField = new JTextField();
-	private JTextArea descriptionTextArea = new JTextArea();
-	private JTextField manufacturerTextField = new JTextField();
-	private JTextField ugoNameTextField = new JTextField();
-	private JButton ugoIconButton = new JButton();
-	private JButton assignEqtButton = new JButton();
-	private String undoType;
-	private String undoDescription;
-	private String undoManufacturer;
-	private String undoUgoName;
+	JTextField mapProtoTextField = new JTextField();
+	JButton chooseMapProtoButton = new JButton("...");
+	JTextField nameTextField = new JTextField();
+	JTextArea descriptionTextArea = new JTextArea();
+	JTextField manufacturerTextField = new JTextField();
+	JTextField ugoNameTextField = new JTextField();
+	JButton ugoIconButton = new JButton();
+	JButton assignEqtButton = new JButton();
+	String undoType;
+	String undoDescription;
+	String undoManufacturer;
+	String undoUgoName;
 	SchemeProtoGroup undo_scheme_proto;
 
 	SchemeProtoElement proto;

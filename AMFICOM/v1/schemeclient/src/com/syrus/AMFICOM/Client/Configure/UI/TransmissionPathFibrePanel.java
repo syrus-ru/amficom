@@ -12,10 +12,11 @@ import oracle.jdeveloper.layout.XYConstraints;
 
 public class TransmissionPathFibrePanel extends GeneralPanel
 {
-	SchemePath path;
-	ObjectResourceTable linksTable = new ObjectResourceTable(PathElementController.getInstance());
+	protected SchemePath path;
 
-	public TransmissionPathFibrePanel()
+	private ObjectResourceTable linksTable = new ObjectResourceTable(PathElementController.getInstance());
+
+	protected TransmissionPathFibrePanel()
 	{
 		super();
 		try
@@ -28,7 +29,7 @@ public class TransmissionPathFibrePanel extends GeneralPanel
 		}
 	}
 
-	public TransmissionPathFibrePanel(SchemePath path)
+	protected TransmissionPathFibrePanel(SchemePath path)
 	{
 		this();
 		setObject(path);

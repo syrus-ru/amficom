@@ -1,9 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.util.*;
 import com.syrus.AMFICOM.scheme.corba.*;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 public class SchemeFactory
@@ -95,8 +92,8 @@ public class SchemeFactory
 			links[i] = proto.links()[i].cloneInstance();
 		se.schemeLinks(links);
 
-		Characteristic[] chars = (Characteristic[]) proto.characteristics().clone();
-		se.characteristics(proto.characteristics());
+//		Characteristic[] chars = (Characteristic[]) proto.characteristics().clone();
+		se.characteristicsImpl(proto.characteristicsImpl());
 
 //		se.schemeCell() = new byte[proto.schemeCell().length];
 //		System.arraycopy(proto.schemecell, 0, schemecell, 0, schemecell.length);

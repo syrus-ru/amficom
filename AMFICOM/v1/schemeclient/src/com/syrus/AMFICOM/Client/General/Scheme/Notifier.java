@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.util.Iterator;
-
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
@@ -26,28 +24,28 @@ public class Notifier
 		}
 
 		if (cells[0] instanceof SchemeElement)
-			dispatcher.notify(new SchemeNavigateEvent((SchemeElement[])cells,
+			dispatcher.notify(new SchemeNavigateEvent(cells,
 					SchemeNavigateEvent.SCHEME_ELEMENT_SELECTED_EVENT, isEditable));
 		if (cells[0] instanceof SchemeProtoElement)
-			dispatcher.notify(new SchemeNavigateEvent((SchemeProtoElement[])cells,
+			dispatcher.notify(new SchemeNavigateEvent(cells,
 					SchemeNavigateEvent.SCHEME_PROTO_ELEMENT_SELECTED_EVENT, isEditable));
 		if (cells[0] instanceof Scheme)
-			dispatcher.notify(new SchemeNavigateEvent((Scheme[])cells,
+			dispatcher.notify(new SchemeNavigateEvent(cells,
 					SchemeNavigateEvent.SCHEME_SELECTED_EVENT, isEditable));
 		if (cells[0] instanceof SchemePath)
-			dispatcher.notify(new SchemeNavigateEvent((SchemePath[])cells,
+			dispatcher.notify(new SchemeNavigateEvent(cells,
 					SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT, isEditable));
 		if (cells[0] instanceof SchemeLink)
-			dispatcher.notify(new SchemeNavigateEvent((SchemeLink[])cells,
+			dispatcher.notify(new SchemeNavigateEvent(cells,
 					SchemeNavigateEvent.SCHEME_LINK_SELECTED_EVENT, isEditable));
 		if (cells[0] instanceof SchemeCableLink)
-			dispatcher.notify(new SchemeNavigateEvent((SchemeCableLink[])cells,
+			dispatcher.notify(new SchemeNavigateEvent(cells,
 					SchemeNavigateEvent.SCHEME_CABLE_LINK_SELECTED_EVENT, isEditable));
 		if (cells[0] instanceof SchemePort)
-			dispatcher.notify(new SchemeNavigateEvent((SchemePort[])cells,
+			dispatcher.notify(new SchemeNavigateEvent(cells,
 					SchemeNavigateEvent.SCHEME_PORT_SELECTED_EVENT, isEditable));
 		if (cells[0] instanceof SchemeCablePort)
-			dispatcher.notify(new SchemeNavigateEvent((SchemeCablePort[])cells,
+			dispatcher.notify(new SchemeNavigateEvent(cells,
 					SchemeNavigateEvent.SCHEME_CABLE_PORT_SELECTED_EVENT, isEditable));
 	}
 

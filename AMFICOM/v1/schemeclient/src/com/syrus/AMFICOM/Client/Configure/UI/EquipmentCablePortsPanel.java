@@ -6,24 +6,24 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.scheme.AbstractSchemePortController;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.*;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class EquipmentCablePortsPanel extends GeneralPanel
 {
-	SchemeElement element;
+	protected SchemeElement element;
 
-	CablePortPane cpgp = new CablePortPane();
+	private CablePortPane cpgp = new CablePortPane();
 	private JPanel mainPanel = new JPanel();
 	private JPanel controlsPanel = new JPanel();
 	private JPanel labelsPanel = new JPanel();
-	JLabel idLabel = new JLabel();
+	private JLabel idLabel = new JLabel();
 	private ObjComboBox cportBox;
 
-	public EquipmentCablePortsPanel()
+	protected EquipmentCablePortsPanel()
 	{
 		super();
 		try
@@ -36,7 +36,7 @@ public class EquipmentCablePortsPanel extends GeneralPanel
 		}
 	}
 
-	public EquipmentCablePortsPanel(SchemeElement element)
+	protected EquipmentCablePortsPanel(SchemeElement element)
 	{
 		this();
 		setObject(element);
@@ -51,8 +51,8 @@ public class EquipmentCablePortsPanel extends GeneralPanel
 	private void jbInit() throws Exception
 	{
 		cportBox = new ObjComboBox(
-				AbstractSchemePortController.getInstance(),
-				AbstractSchemePortController.KEY_NAME);
+				SchemeCablePortController.getInstance(),
+				StorableObjectWrapper.COLUMN_NAME);
 
 		setName(LangModelConfig.getString("label_cableports"));
 		this.setLayout(new BorderLayout());
@@ -102,6 +102,6 @@ public class EquipmentCablePortsPanel extends GeneralPanel
 
 	void portBox_actionPerformed(ActionEvent e)
 	{
-		cpgp.setObject((SchemeCablePort)cportBox.getSelectedItem());
+		cpgp.setObject(cportBox.getSelectedItem());
 	}
 }

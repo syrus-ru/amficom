@@ -6,25 +6,25 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.scheme.AbstractSchemePortController;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.*;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class EquipmentPortsPanel extends GeneralPanel
 {
-	SchemeElement element;
+	protected SchemeElement element;
 
 	private ObjComboBox portBox;
 //	PortGeneralPanel pgp = new PortGeneralPanel();
-	PortPane pgp = new PortPane();
+	private PortPane pgp = new PortPane();
 	private JPanel mainPanel = new JPanel();
 	private JPanel controlsPanel = new JPanel();
 	private JPanel labelsPanel = new JPanel();
-	JLabel idLabel = new JLabel();
+	private JLabel idLabel = new JLabel();
 
-	public EquipmentPortsPanel()
+	protected EquipmentPortsPanel()
 	{
 		super();
 		try
@@ -37,7 +37,7 @@ public class EquipmentPortsPanel extends GeneralPanel
 		}
 	}
 
-	public EquipmentPortsPanel(SchemeElement element)
+	protected EquipmentPortsPanel(SchemeElement element)
 	{
 		this();
 		setObject(element);
@@ -45,8 +45,8 @@ public class EquipmentPortsPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		portBox = new ObjComboBox(AbstractSchemePortController.getInstance(),
-															AbstractSchemePortController.KEY_NAME);
+		portBox = new ObjComboBox(SchemePortController.getInstance(),
+															StorableObjectWrapper.COLUMN_NAME);
 
 		setName(LangModelConfig.getString("label_ports"));
 
@@ -85,7 +85,7 @@ public class EquipmentPortsPanel extends GeneralPanel
 
 	public void setObject(Object or)
 	{
-		element = (SchemeElement)element;
+		element = (SchemeElement)or;
 		portBox.removeAll();
 		portBox.addElements(SchemeUtils.getPorts(element));
 
@@ -102,6 +102,6 @@ public class EquipmentPortsPanel extends GeneralPanel
 
 	void portBox_actionPerformed(ActionEvent e)
 	{
-		pgp.setObject((SchemePort)portBox.getSelectedItem());
+		pgp.setObject(portBox.getSelectedItem());
 	}
 }

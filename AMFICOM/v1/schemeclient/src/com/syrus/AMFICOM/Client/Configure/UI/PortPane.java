@@ -14,19 +14,16 @@ import oracle.jdeveloper.layout.XYConstraints;
 
 public class PortPane extends JPanel implements ObjectResourcePropertiesPane
 {
-	public ApplicationContext aContext;
+	protected SchemePort port;
+	private static ObjectResourcePropertiesPane instance;
 
-	AbstractPortGeneralPanel gPanel = new AbstractPortGeneralPanel();
-	PortCharacteristicsPanel chPanel;
-
-	SchemePort port;
-
-	public JTabbedPane tabbedPane = new JTabbedPane();
-
+	private AbstractPortGeneralPanel gPanel = new AbstractPortGeneralPanel();
+	private PortCharacteristicsPanel chPanel;
+	private JTabbedPane tabbedPane = new JTabbedPane();
 	private JButton saveButton = new JButton();
 	private JPanel buttonsPanel = new JPanel();
 
-	public PortPane()
+	protected PortPane()
 	{
 		super();
 
@@ -40,10 +37,17 @@ public class PortPane extends JPanel implements ObjectResourcePropertiesPane
 		}
 	}
 
-	public PortPane(SchemePort p)
+	protected PortPane(SchemePort p)
 	{
 		this();
 		setObject(p);
+	}
+
+	public static ObjectResourcePropertiesPane getInstance()
+	{
+		if (instance == null)
+			instance = new PortPane();
+		return instance;
 	}
 
 	private void jbInit() throws Exception
@@ -53,7 +57,7 @@ public class PortPane extends JPanel implements ObjectResourcePropertiesPane
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.setTabPlacement(SwingConstants.TOP);
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
@@ -83,7 +87,6 @@ public class PortPane extends JPanel implements ObjectResourcePropertiesPane
 
 	public void setContext(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
 		gPanel.setContext(aContext);
 		chPanel.setContext(aContext);
 	}
@@ -102,17 +105,14 @@ public class PortPane extends JPanel implements ObjectResourcePropertiesPane
 		{
 			try {
 				ConfigurationStorableObjectPool.putStorableObject(port.portImpl());
+				return true;
 			}
 			catch (ApplicationException ex) {
 			}
-			return true;
 		}
-		else
-		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelConfig.getString("err_incorrect_data_input"));
-		}
+		JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelConfig.getString("err_incorrect_data_input"));
 		return false;
 	}
 

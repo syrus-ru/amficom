@@ -1,71 +1,54 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
 public class EquipmentGeneralPanel extends GeneralPanel
 {
-	SchemeElement element;
-
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	protected SchemeElement element;
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
 	private JButton saveButton = new JButton();
-
-	JLabel nameLabel = new JLabel();
-	JTextField nameField = new JTextField();
-
+	private JLabel nameLabel = new JLabel();
+	private JTextField nameField = new JTextField();
 	private JLabel portsNumberLabel = new JLabel();
 	private JTextField portsNumberField = new JTextField();
-
 	private JLabel domainLabel = new JLabel();
 	private JTextField domainField = new JTextField();
-
-	JLabel longitudeLabel = new JLabel();
+	private JLabel longitudeLabel = new JLabel();
 	private JTextField longitudeField = new JTextField();
 	private JLabel latitudeLabel = new JLabel();
 	private JTextField latitudeField = new JTextField();
-
-	JLabel idLabel = new JLabel();
-	JTextField idField = new JTextField();
-
+	private JLabel idLabel = new JLabel();
+	private JTextField idField = new JTextField();
 	private JLabel modifyLabel1 = new JLabel();
 	private JLabel modifyLabel2 = new JLabel();
 	private JTextField modifyField = new JTextField();
-
 	private JLabel cabelPortsNumberLabel1 = new JLabel();
 	private JLabel cabelPortsNumberLabel2 = new JLabel();
 	private JTextField cabelPortsNumberField = new JTextField();
-
-	JLabel typeLabel = new JLabel();
-	ObjComboBox typeBox;
-
+	private JLabel typeLabel = new JLabel();
+	private ObjComboBox typeBox;
 	private JLabel agentLabel = new JLabel();
 	private JTextField agentField = new JTextField();
-
-	private BorderLayout borderLayout1 = new BorderLayout();
-	private BorderLayout borderLayout4 = new BorderLayout();
-	private GridBagLayout gridBagLayout1 = new GridBagLayout();
-
 	private JLabel descLabel = new JLabel();
-	JScrollPane descriptionScrollPane = new JScrollPane();
-	JPanel descriptionPanel = new JPanel();
-	public JTextPane descTextArea = new JTextPane();
+	private JScrollPane descriptionScrollPane = new JScrollPane();
+	private JPanel descriptionPanel = new JPanel();
+	private JTextPane descTextArea = new JTextPane();
 
-	public EquipmentGeneralPanel()
+	protected EquipmentGeneralPanel()
 	{
 		super();
 		try
@@ -78,7 +61,7 @@ public class EquipmentGeneralPanel extends GeneralPanel
 		}
 	}
 
-	public EquipmentGeneralPanel(Equipment equipment)
+	protected EquipmentGeneralPanel(Equipment equipment)
 	{
 		this();
 		setObject(equipment);
@@ -88,7 +71,7 @@ public class EquipmentGeneralPanel extends GeneralPanel
 	{
 		setName(LangModelConfig.getString("menuNetCatEquipmentText"));
 
-		this.setLayout(gridBagLayout1);
+		this.setLayout(new GridBagLayout());
 
 		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -139,7 +122,7 @@ public class EquipmentGeneralPanel extends GeneralPanel
 		descLabel.setText(LangModelConfig.getString("label_description"));
 		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		descriptionPanel.setLayout(borderLayout1);
+		descriptionPanel.setLayout(new BorderLayout());
 		descriptionScrollPane.getViewport().add(descTextArea, null);
 		descriptionPanel.add(descriptionScrollPane, BorderLayout.CENTER);
 

@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
@@ -15,19 +14,16 @@ import oracle.jdeveloper.layout.XYConstraints;
 
 public class CablePortPane extends JPanel implements ObjectResourcePropertiesPane
 {
-	public ApplicationContext aContext;
+	protected SchemeCablePort port;
+	private static ObjectResourcePropertiesPane instance;
 
 	AbstractPortGeneralPanel gPanel = new AbstractPortGeneralPanel();
 	CablePortCharacteristicsPanel chPanel;
+	JTabbedPane tabbedPane = new JTabbedPane();
+	JButton saveButton = new JButton();
+	JPanel buttonsPanel = new JPanel();
 
-	SchemeCablePort port;
-
-	public JTabbedPane tabbedPane = new JTabbedPane();
-
-	private JButton saveButton = new JButton();
-	private JPanel buttonsPanel = new JPanel();
-
-	public CablePortPane()
+	protected CablePortPane()
 	{
 		super();
 
@@ -41,11 +37,19 @@ public class CablePortPane extends JPanel implements ObjectResourcePropertiesPan
 		}
 	}
 
-	public CablePortPane(SchemeCablePort p)
+	protected CablePortPane(SchemeCablePort p)
 	{
 		this();
 		setObject(p);
 	}
+
+	public static ObjectResourcePropertiesPane getInstance()
+	{
+		if (instance == null)
+			instance = new CablePortPane();
+		return instance;
+	}
+
 
 	private void jbInit() throws Exception
 	{
@@ -54,7 +58,7 @@ public class CablePortPane extends JPanel implements ObjectResourcePropertiesPan
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.setTabPlacement(SwingConstants.TOP);
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
@@ -84,7 +88,6 @@ public class CablePortPane extends JPanel implements ObjectResourcePropertiesPan
 
 	public void setContext(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
 		gPanel.setContext(aContext);
 		chPanel.setContext(aContext);
 	}
@@ -103,17 +106,15 @@ public class CablePortPane extends JPanel implements ObjectResourcePropertiesPan
 		{
 			try {
 				ConfigurationStorableObjectPool.putStorableObject(port.portImpl());
+				return true;
 			}
 			catch (ApplicationException ex) {
+				
 			}
-			return true;
 		}
-		else
-		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelConfig.getString("err_incorrect_data_input"));
-		}
+		JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelConfig.getString("err_incorrect_data_input"));
 		return false;
 	}
 
