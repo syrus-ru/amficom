@@ -161,6 +161,7 @@ tracedatareader	hw/tracedatareader
 tcpconnect	hw/tcpconnect
 t4		hw/t4
 r6		hw/r6
+r7		hw/r7
 
 
 tools		tools
