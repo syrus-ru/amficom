@@ -192,7 +192,7 @@ static void improveBySweep(ACC_Y &acc,
 			double mx, my, mxx, mxy, myy;
 			calc_yarr_stat3(acc, i0, i1 - i0, mx, my, mxx, mxy, myy);
 			double vy = mxy - i0 * my;
-			double md2 = mxx - 2 * mx * i0 + i0 * i0;
+			double md2 = mxx - 2 * mx * i0 + (double )i0 * i0;
 			A[k] = -md2 + (mx - i0) * (i1 - i0);
 			B[k] -= md2;
 			D[k] += vy * (i1 - i0);
@@ -203,7 +203,7 @@ static void improveBySweep(ACC_Y &acc,
 			double mx, my, mxx, mxy, myy;
 			calc_yarr_stat3(acc, i1, i2 - i1, mx, my, mxx, mxy, myy);
 			double vy = mxy - i2 * my;
-			double md2 = mxx - 2 * mx * i2 + i2 * i2;
+			double md2 = mxx - 2 * mx * i2 + (double )i2 * i2;
 			//assert(md2 >= 0);
 			C[k] = -md2 + (-mx + i2) * (i2 - i1);
 			B[k] -= md2;
@@ -446,6 +446,7 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 				break;
 			}
 		}
+
 		//prf_b("BreakL_Fit_int: left th_mult");
 		//fprintf(stderr, "BreakL_Fit: final th_mult %g, points %d maxpoints %d\n",
 		//	th_mult, nPts, maxpoints);
