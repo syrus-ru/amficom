@@ -1,5 +1,19 @@
+/*
+* $Id: IntDimension.java,v 1.3 2004/12/20 14:54:11 bob Exp $
+*
+* Copyright © 2004 Syrus Systems.
+* Dept. of Science & Technology.
+* Project: AMFICOM.
+*/
 
 package com.syrus.AMFICOM.map;
+
+
+/**
+ * @version $Revision: 1.3 $, $Date: 2004/12/20 14:54:11 $
+ * @author $Author: bob $
+ * @module map_v1
+ */
 
 public class IntDimension implements java.io.Serializable {
 
