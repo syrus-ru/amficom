@@ -1,0 +1,15 @@
+src/com/ofx/base/SxUtil.java
+src/com/ofx/component/MapViewer.java
+src/com/ofx/dataAdapter/SxMapInfoTranslator.java
+src/com/ofx/dataAdapter/SxRecordScanner.java
+src/com/ofx/geometry/SxGeometry.java
+src/com/ofx/geometry/SxGeometryFactory.java
+src/com/ofx/geometry/SxText.java
+src/com/ofx/geometry/temp_sxtext_class.java
+src/com/ofx/index/rtree/SxSpatialIndexLeafNode.java
+src/com/ofx/mapViewer/SxMapViewer.java
+src/com/ofx/objectmapper/OmMapInfoImport.java
+src/com/ofx/objectmapper/OmMapObjectClasses.java
+src/com/ofx/objectmapper/OmReportPreview.java
+src/com/ofx/repository/SxClass.java
+src/com/ofx/repository/SxSpatialObject.java
