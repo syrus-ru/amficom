@@ -3,7 +3,7 @@
 #include <sys/stat.h>
 #include <string.h>
 #include "com_syrus_AMFICOM_kis_Transceiver.h"
-#include <protocoldefs.h>
+#include <akpdefs.h>
 #include <ByteArray.h>
 #include <Parameter.h>
 #include <MeasurementSegment.h>

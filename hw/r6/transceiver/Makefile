@@ -1,7 +1,7 @@
 OUT=libr6transceiver.so
 CPP=g++#-3.3.1
 CFLAGS=-Wall -W -Wno-unused-parameter
-AKP=../../akp
+AKP=$(HOME)/work/HW/akp
 AKPA=$(AKP)/akp.a
 OBJS=r6transceiver.o
 

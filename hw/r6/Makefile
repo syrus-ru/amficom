@@ -1,8 +1,8 @@
 SRC=./src
-CLASSDIR=./classes
+CLASSES=./classes
 LIB=$(HOME)/work/AMFICOM_v1/lib
 QPLIB=/mnt/e/Java/Nettest/2.0/lib/rtu
-TRANSCEIVER=./transceiver
+TRANSCEIVER=../transceiver
 
 QPCLASSPATH=$(QPLIB)/QuestFiberServer.jar:$(QPLIB)/QuestFiberServerClientInterface.jar:$(QPLIB)/QuestFiberServerRMI.jar:$(QPLIB)/QuestFiberGUI.jar
 APPCLASSPATH=$(LIB)/util.jar
@@ -19,25 +19,26 @@ ARCHFILE=r6.tar.gz
 .PHONY:	setup clean cleanr6 cleanstub arch
 
 $(LIBNAME):	$(LIBSTUBNAME) .r6
-	$(JAR) -cvf ./$@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/Dispatcher.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/Dispatcher\$$Command.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/OperationEvent.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/OperationListener.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/kis/Report.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/kis/Task.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/kis/TaskReceiver.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/kis/TaskReporter.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/kis/Transceiver.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/kis/r6/QueryEvent.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/kis/r6/ReportComposer.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/kis/r6/R6.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/kis/r6/Session.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/kis/r6/TaskDistinguisher.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/kis/r6/WorkRequestSubmitter.class \
-		-C $(CLASSDIR) com/gnnettest/questfiber/gui/events \
-		-C $(CLASSDIR) com/gnnettest/questfiber/rmi \
-		-C $(CLASSDIR) com/gnnettest/questfiber/work
+	$(JAR) -cvf ./$(LIBNAME) \
+		-C $(CLASSES) com/syrus/io/BellcoreStructureComposer.class \
+		-C $(CLASSES) com/syrus/AMFICOM/Dispatcher.class \
+		-C $(CLASSES) com/syrus/AMFICOM/Dispatcher\$$Command.class \
+		-C $(CLASSES) com/syrus/AMFICOM/OperationEvent.class \
+		-C $(CLASSES) com/syrus/AMFICOM/OperationListener.class \
+		-C $(CLASSES) com/syrus/AMFICOM/kis/Report.class \
+		-C $(CLASSES) com/syrus/AMFICOM/kis/Task.class \
+		-C $(CLASSES) com/syrus/AMFICOM/kis/TaskReceiver.class \
+		-C $(CLASSES) com/syrus/AMFICOM/kis/TaskReporter.class \
+		-C $(CLASSES) com/syrus/AMFICOM/kis/Transceiver.class \
+		-C $(CLASSES) com/syrus/AMFICOM/kis/r6/QueryEvent.class \
+		-C $(CLASSES) com/syrus/AMFICOM/kis/r6/ReportComposer.class \
+		-C $(CLASSES) com/syrus/AMFICOM/kis/r6/R6.class \
+		-C $(CLASSES) com/syrus/AMFICOM/kis/r6/Session.class \
+		-C $(CLASSES) com/syrus/AMFICOM/kis/r6/TaskDistinguisher.class \
+		-C $(CLASSES) com/syrus/AMFICOM/kis/r6/WorkRequestSubmitter.class \
+		-C $(CLASSES) com/gnnettest/questfiber/gui/events \
+		-C $(CLASSES) com/gnnettest/questfiber/rmi \
+		-C $(CLASSES) com/gnnettest/questfiber/work
 	$(JAR) -xvf $(LIB)/util.jar \
 		com/syrus/util/ByteArray.class \
 		com/syrus/io/IniFile.class \
@@ -56,39 +57,40 @@ $(LIBNAME):	$(LIBSTUBNAME) .r6
 		com/syrus/io/IntelDataInputStream.class
 	$(JAR) -uvf ./$(LIBNAME) com
 	rm -rf com
+	cp -vf ./$(LIBNAME) $(LIB)/
 
-.r6:	$(CLASSDIR)
-	$(JAVAC) -d $(CLASSDIR) -sourcepath $(SRC) -classpath $(APPCLASSPATH):$(QPCLASSPATH) $(SRC)/com/syrus/AMFICOM/kis/r6/R6.java
-	$(JAVAH) -d $(TRANSCEIVER) -classpath $(CLASSDIR) com.syrus.AMFICOM.kis.Transceiver
+.r6:	$(CLASSES)
+	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) -classpath $(APPCLASSPATH):$(QPCLASSPATH) $(SRC)/com/syrus/AMFICOM/kis/r6/R6.java
+	$(JAVAH) -d $(TRANSCEIVER) -classpath $(CLASSES) com.syrus.AMFICOM.kis.Transceiver
 	touch $@
 
 $(LIBSTUBNAME):	.stub
-	$(JAR) -cvf $@ \
-		-C $(CLASSDIR) com/gnnettest/questfiber/rmi \
-		-C $(CLASSDIR) com/gnnettest/questfiber/work
+	$(JAR) -cvf $(LIBSTUBNAME) \
+		-C $(CLASSES) com/gnnettest/questfiber/rmi \
+		-C $(CLASSES) com/gnnettest/questfiber/work
 
-.stub:	$(CLASSDIR)
-	$(JAVAC) -d $(CLASSDIR) -classpath $(QPCLASSPATH) $(SRC)/com/gnnettest/questfiber/rmi/DomainManagerRMIServant.java
-	$(RMIC) -d $(CLASSDIR) -classpath $(QPCLASSPATH) com.gnnettest.questfiber.rmi.DomainManagerRMIServant
-	$(JAVAC) -d $(CLASSDIR) -sourcepath $(SRC) -classpath $(QPCLASSPATH) $(SRC)/com/gnnettest/questfiber/work/WorkRequestDatabase.java
-	$(JAVAC) -d $(CLASSDIR) -sourcepath $(SRC) -classpath $(QPCLASSPATH) $(SRC)/com/gnnettest/questfiber/work/SystemDefaultDatabase.java
+.stub:	$(CLASSES)
+	$(JAVAC) -d $(CLASSES) -classpath $(QPCLASSPATH) $(SRC)/com/gnnettest/questfiber/rmi/DomainManagerRMIServant.java
+	$(RMIC) -d $(CLASSES) -classpath $(QPCLASSPATH) com.gnnettest.questfiber.rmi.DomainManagerRMIServant
+	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) -classpath $(QPCLASSPATH) $(SRC)/com/gnnettest/questfiber/work/WorkRequestDatabase.java
+	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) -classpath $(QPCLASSPATH) $(SRC)/com/gnnettest/questfiber/work/SystemDefaultDatabase.java
 	touch $@
 
-$(CLASSDIR):
+$(CLASSES):
 	mkdir -p $@
 
 clean:	cleanr6 cleanstub
 
 cleanr6:
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM
+	rm -rf $(CLASSES)/com/syrus/AMFICOM
 	rm -f .r6 $(LIBNAME)
 
 cleanstub:
-	rm -rf $(CLASSDIR)/com/gnnettest/questfiber
+	rm -rf $(CLASSES)/com/gnnettest/questfiber
 	rm -f .stub $(LIBSTUBNAME)
 
-setup:	$(CLASSDIR)
-	$(JAVAC) -d $(CLASSDIR) -classpath $(QPCLASSPATH) $(SRC)/com/syrus/AMFICOM/kis/r6/setup/Setup.java
+setup:
+	$(JAVAC) -d $(CLASSES) -classpath $(QPCLASSPATH) $(SRC)/com/syrus/AMFICOM/kis/r6/setup/Setup.java
 
 arch:
 	tar -czvf $(ARCHFILE) \
