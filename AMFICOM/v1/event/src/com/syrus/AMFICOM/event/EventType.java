@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.1 2004/12/24 18:27:35 arseniy Exp $
+ * $Id: EventType.java,v 1.2 2004/12/24 18:49:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.event;
 
 import java.util.Date;
+import java.util.List;
+import java.util.LinkedList;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -24,12 +26,13 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.event.corba.EventType_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/24 18:27:35 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/24 18:49:03 $
  * @author $Author: arseniy $
  * @module event_v1
  */
 
 public class EventType extends StorableObjectType {
+	private static final long serialVersionUID = -8660055955879452510L;
 
 	private StorableObjectDatabase eventTypeDatabase;
 
@@ -103,6 +106,10 @@ public class EventType extends StorableObjectType {
 		return new EventType_Transferable(super.getHeaderTransferable(),
 										new String(super.codename),
 										(super.description != null) ? (new String(super.description)) : "");
+	}
+
+	public List getDependencies() {		
+		return new LinkedList();
 	}
 
 	protected synchronized void setAttributes(Date created,

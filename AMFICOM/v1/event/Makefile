@@ -16,6 +16,8 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
 
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/event/*.java)
+
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com/syrus/AMFICOM/event
@@ -23,7 +25,7 @@ $(LIBNAME): .mach
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/event/EventSource.java 
+		$(SOURCES)
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -43,7 +45,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/event/*.class)
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleancorba

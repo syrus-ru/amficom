@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabaseContext.java,v 1.1 2004/12/24 18:27:34 arseniy Exp $
+ * $Id: EventDatabaseContext.java,v 1.2 2004/12/24 18:49:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/24 18:27:34 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/24 18:49:03 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -46,7 +46,7 @@ public class EventDatabaseContext {
 			alarmDatabase = alarmDatabase1;
 	}
 
-	public static StorableObjectDatabase getDatabase(short entityCode ) {
+	public static StorableObjectDatabase getDatabase(short entityCode) {
 		switch (entityCode) {
 
 			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
@@ -60,6 +60,9 @@ public class EventDatabaseContext {
 
 			case ObjectEntities.ALARM_ENTITY_CODE:
 				return alarmDatabase;
+
+			default:
+				return null;
 			}
 	}
 
