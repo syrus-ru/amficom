@@ -1,29 +1,26 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.BorderLayout;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
-public class CableLinkPane extends PropertiesPanel
+public abstract class CableLinkPane extends JPanel implements ObjectResourcePropertiesPane
 {
 	public ApplicationContext aContext;
 
-	CableLinkGeneralPanel gPanel = new CableLinkGeneralPanel();
-	CableLinkFibrePanel fPanel = new CableLinkFibrePanel();
-	CableLinkCharacteristicsPanel chPanel = new CableLinkCharacteristicsPanel();
+	protected CableLinkGeneralPanel gPanel;
+	protected CableLinkCharacteristicsPanel chPanel;
+	protected CableLinkFibrePanel fPanel;
 
-	SchemeCableLink link;
+	protected JTabbedPane tabbedPane = new JTabbedPane();
 
-	public JTabbedPane tabbedPane = new JTabbedPane();
-
-	//private JButton saveButton = new JButton();
-	//private JPanel buttonsPanel = new JPanel();
+	protected SchemeCableLink link;
 
 	public CableLinkPane()
 	{
@@ -41,7 +38,7 @@ public class CableLinkPane extends PropertiesPanel
 	public CableLinkPane(SchemeCableLink link)
 	{
 		this();
-		setObjectResource(link);
+		setObject(link);
 	}
 
 	private void jbInit() throws Exception
@@ -51,46 +48,41 @@ public class CableLinkPane extends PropertiesPanel
 
 		tabbedPane.setTabPlacement(JTabbedPane.TOP);
 
+		fPanel = new CableLinkFibrePanel();
+		gPanel = new CableLinkGeneralPanel();
+		chPanel = new CableLinkCharacteristicsPanel();
+
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(fPanel.getName(), fPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
-
-	/*	saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
-		saveButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveButton_actionPerformed(e);
-			}
-		});
-
-		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));*/
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return link;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		link = (SchemeCableLink)or;
 
-		gPanel.setObjectResource(link);
-		fPanel.setObjectResource(link);
-		chPanel.setObjectResource(link);
+		gPanel.setObject(link);
+		fPanel.setObject(link);
+		chPanel.setObject(link);
 	}
 
 	public void setContext(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
 		gPanel.setContext(aContext);
-		fPanel.setContext(aContext);
 		chPanel.setContext(aContext);
+		fPanel.setContext(aContext);
 	}
 
 	public boolean modify()
 	{
 	 if (gPanel.modify() &&
-				fPanel.modify() &&
+			 fPanel.modify() &&
 				chPanel.modify())
 			return true;
 		return false;
@@ -98,26 +90,21 @@ public class CableLinkPane extends PropertiesPanel
 
 	public boolean save()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-		{
-			return false;
-		}
-
 		if(modify())
 		{
-			if (link.cableLink != null)
+			if (link.link() != null)
 			{
-				DataSourceInterface dataSource = aContext.getDataSourceInterface();
-				dataSource.SaveCableLink(link.cableLink.getId());
+				try {
+					ConfigurationStorableObjectPool.putStorableObject(link.linkImpl());
+				}
+				catch (ApplicationException ex) {
+				}
 				return true;
 			}
 		}
-		else
-		{
-			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
-		}
+		JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelConfig.getString("err_incorrect_data_input"));
 		return false;
 	}
 
@@ -126,28 +113,18 @@ public class CableLinkPane extends PropertiesPanel
 		return false;
 	}
 
+	public boolean cancel()
+	{
+		return false;
+	}
+
 	public boolean delete()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-			return false;
-
-		if (link.cableLink != null)
-		{
-			String []s = new String[1];
-			s[0] = link.cableLink.getId();
-			aContext.getDataSourceInterface().RemoveCableLinks(s);
-		}
-		return true;
+		return false;
 	}
 
 	public boolean create()
 	{
 		return false;
 	}
-
-//	void saveButton_actionPerformed(ActionEvent e)
-//	{
-//	}
 }

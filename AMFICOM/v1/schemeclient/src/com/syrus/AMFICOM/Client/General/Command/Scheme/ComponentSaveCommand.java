@@ -7,9 +7,7 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.SaveComponentDialog;
 
 public class ComponentSaveCommand extends VoidCommand
@@ -32,27 +30,22 @@ public class ComponentSaveCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
-			return;
-
 		Object[] cells = ugo_graph.getAll();
 		if (cells != null && cells.length != 0)
 		{
 			DeviceGroup[] groups = GraphActions.findTopLevelGroups(cell_graph, cells);
-			ProtoElement proto = groups[0].getProtoElement();
-			if (proto.equipmentTypeId.equals(""))
+			SchemeProtoElement proto = groups[0].getProtoElement();
+			if (proto.equipmentType() == null)
 			{
 				System.out.println("Error! Equipment_type_id is empty.");
 				return;
 			}
-			proto.serializable_cell = cell_graph.getArchiveableState(cell_graph.getRoots());
+			proto.schemeCellImpl().setData((List)cell_graph.getArchiveableState(cell_graph.getRoots()));
 			//GraphActions.setResizable(ugo_graph, ugo_graph.getAll(), false);
-			proto.serializable_ugo = ugo_graph.getArchiveableState(ugo_graph.getRoots());
-			proto.pack();
+			proto.ugoCellImpl().setData((List)ugo_graph.getArchiveableState(ugo_graph.getRoots()));
 
 			SaveComponentDialog frame = new SaveComponentDialog(aContext);
-			frame.init(proto, aContext.getDataSourceInterface());
+			frame.init(proto);
 		}
 		else
 		{
@@ -73,20 +66,19 @@ public class ComponentSaveCommand extends VoidCommand
 				DeviceGroup[] groups = GraphActions.findTopLevelGroups(cell_graph, cells);
 				if (groups.length == 1)
 				{
-					ProtoElement proto = groups[0].getProtoElement();
-					if (proto.equipmentTypeId.equals(""))
+					SchemeProtoElement proto = groups[0].getProtoElement();
+					if (proto.equipmentType() == null)
 					{
 						System.out.println("Error! Equipment_type_id is empty.");
 						return;
 					}
 
-					proto.serializable_cell = cell_graph.getArchiveableState(cell_graph.getRoots());
+					proto.schemeCellImpl().setData((List)cell_graph.getArchiveableState(cell_graph.getRoots()));
 					//GraphActions.setResizable(ugo_graph, ugo_graph.getAll(), false);
-					proto.serializable_ugo = ugo_graph.getArchiveableState(ugo_graph.getRoots());
-					proto.pack();
+					proto.ugoCellImpl().setData((List)ugo_graph.getArchiveableState(ugo_graph.getRoots()));
 
 					SaveComponentDialog frame = new SaveComponentDialog(aContext);
-					frame.init(proto, aContext.getDataSourceInterface());
+					frame.init(proto);
 
 					//DirectoryToFile.writeAll();
 				}
@@ -108,7 +100,7 @@ public class ComponentSaveCommand extends VoidCommand
 			}
 		}
 	}
-
+/*
 	public static void saveTypes(DataSourceInterface dsi, boolean save_all)
 	{
 		Map port_types = Pool.getMap(PortType.typ);
@@ -191,6 +183,6 @@ public class ComponentSaveCommand extends VoidCommand
 			if (!types.isEmpty())
 				dsi.SaveEquipmentTypes((String[])types.toArray(new String[types.size()]));
 		}
-	}
+	}*/
 }
 

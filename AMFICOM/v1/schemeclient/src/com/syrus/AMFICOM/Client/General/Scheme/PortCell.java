@@ -1,14 +1,14 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
-
 import com.jgraph.pad.EllipseCell;
+import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.SchemePort;
 
 public class PortCell extends EllipseCell
 {
 	private static final long serialVersionUID = 01L;
-	private String scheme_port_id;
+	private Identifier scheme_port_id;
 
 	public PortCell()
 	{
@@ -22,16 +22,21 @@ public class PortCell extends EllipseCell
 
 	public SchemePort getSchemePort()
 	{
-		return (SchemePort)Pool.get(SchemePort.typ, scheme_port_id);
+		try {
+			return (SchemePort)SchemeStorableObjectPool.getStorableObject(scheme_port_id, true);
+		}
+		catch (Exception ex) {
+			return null;
+		}
 	}
 
-	public String getSchemePortId()
+	public Identifier getSchemePortId()
 	{
 		return scheme_port_id;
 	}
 
-	public void setSchemePortId(String id)
+	public void setSchemePortId(Identifier portId)
 	{
-		scheme_port_id = id;
+		scheme_port_id = portId;
 	}
 }

@@ -10,12 +10,10 @@ import javax.swing.event.UndoableEditEvent;
 import com.jgraph.graph.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Resource.Network.Port;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.configuration.*;
 
 public class ElementsPanel extends UgoPanel
 		implements KeyListener
@@ -156,32 +154,32 @@ public class ElementsPanel extends UgoPanel
 			else if (ev.SCHEME_ELEMENT_SELECTED)
 			{
 				SchemeElement element = (SchemeElement)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findSchemeElementById(getGraph(), element.getId()));
+				getGraph().setSelectionCell(SchemeActions.findSchemeElementById(getGraph(), element.id()));
 			}
 			else if (ev.SCHEME_PROTO_ELEMENT_SELECTED)
 			{
-				ProtoElement proto = (ProtoElement)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findProtoElementById(getGraph(), proto.getId()));
+				SchemeProtoElement proto = (SchemeProtoElement)((Object[])ev.getSource())[0];
+				getGraph().setSelectionCell(SchemeActions.findProtoElementById(getGraph(), proto.id()));
 			}
 			else if (ev.SCHEME_PORT_SELECTED)
 			{
 				SchemePort port = (SchemePort)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findSchemePortById(getGraph(), port.getId()));
+				getGraph().setSelectionCell(SchemeActions.findSchemePortById(getGraph(), port.id()));
 			}
 			else if (ev.SCHEME_CABLE_PORT_SELECTED)
 			{
 				SchemeCablePort port = (SchemeCablePort)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findSchemeCablePortById(getGraph(), port.getId()));
+				getGraph().setSelectionCell(SchemeActions.findSchemeCablePortById(getGraph(), port.id()));
 			}
 			else if (ev.SCHEME_LINK_SELECTED)
 			{
 				SchemeLink link = (SchemeLink)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findSchemeLinkById(getGraph(), link.getId()));
+				getGraph().setSelectionCell(SchemeActions.findSchemeLinkById(getGraph(), link.id()));
 			}
 			else if (ev.SCHEME_CABLE_LINK_SELECTED)
 			{
 				SchemeCableLink link = (SchemeCableLink)((Object[])ev.getSource())[0];
-				getGraph().setSelectionCell(SchemeActions.findSchemeCableLinkById(getGraph(), link.getId()));
+				getGraph().setSelectionCell(SchemeActions.findSchemeCableLinkById(getGraph(), link.id()));
 
 		/*		String sp = link.source_port_id;
 				SchemeElement se = ((SchemePanel)this).scheme.getSchemeElementByCablePort(sp);
@@ -203,7 +201,7 @@ public class ElementsPanel extends UgoPanel
 			if (cpe.EDIT_PATH)
 			{
 				if (getGraph().getCurrentPath() != null)
-					editing_path = new SchemePath(getGraph().getCurrentPath());
+					editing_path = getGraph().getCurrentPath().cloneInstance();
 			}
 		}
 		if (ae.getActionCommand().equals(SchemeElementsEvent.type))
@@ -222,23 +220,18 @@ public class ElementsPanel extends UgoPanel
 	{
 		getGraph().setScheme(null);
 		getGraph().setSchemeElement(se);
-		se.unpack();
-		Map clones = getGraph().copyFromArchivedState(se.serializable_cell, new java.awt.Point(0, 0));
+		Map clones = getGraph().copyFromArchivedState(se.schemeCellImpl().getData(), new java.awt.Point(0, 0));
 //		getGraph().setGraphChanged(false);
 		getGraph().selectionNotify();
 		//assignClonedIds(clones);
 	}
 
-	protected void setProtoCell(ProtoElement proto, Point p)
+	protected void setProtoCell(SchemeProtoElement proto, Point p)
 	{
 		if (proto != null)
 		{
-			proto.unpack();
-
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			ProtoElement new_proto = (ProtoElement) proto.clone(dataSource);
-
-			insertCell(new_proto.serializable_cell, false, p);
+			SchemeProtoElement new_proto = proto.cloneInstance();
+			insertCell(new_proto.schemeCellImpl().getData(), false, p);
 		}
 	}
 
@@ -297,226 +290,6 @@ public class ElementsPanel extends UgoPanel
 			if (e.getKeyCode() == KeyEvent.VK_D)
 			{
 				getGraph().is_debug = !getGraph().is_debug;
-			}
-			if (e.getKeyCode() == KeyEvent.VK_ENTER)
-			{
-				Object[] cells = getGraph().getSelectionCells();
-				if (cells.length == 1)
-				{
-					if (cells[0] instanceof CablePortCell)
-					{
-						String id = JOptionPane.showInputDialog("Новый идентификатор кабельного порта:",
-								((CablePortCell)cells[0]).getSchemeCablePortId());
-						if (id != null && !id.equals(""))
-							((CablePortCell)cells[0]).setSchemeCablePortId(id);
-					}
-					if (cells[0] instanceof PortCell)
-					{
-						String id = JOptionPane.showInputDialog("Новый идентификатор порта:",
-								((PortCell)cells[0]).getSchemePortId());
-						if (id != null && !id.equals(""))
-							((PortCell)cells[0]).setSchemePortId(id);
-					}
-					if (cells[0] instanceof DefaultLink)
-					{
-						String id = JOptionPane.showInputDialog("Новый идентификатор линка:",
-								((DefaultLink)cells[0]).getSchemeLinkId());
-						if (id != null && !id.equals(""))
-						{
-							if (this instanceof SchemePanel)
-							{
-								int ret = JOptionPane.showConfirmDialog(null, "Заменить старый линк новым?");
-								if (ret == JOptionPane.YES_OPTION)
-								{
-									Scheme scheme = getGraph().getScheme();
-									for (Iterator it = scheme.links.iterator(); it.hasNext();)
-									{
-										SchemeLink sl = (SchemeLink)it.next();
-										if (sl.getId().equals(((DefaultLink)cells[0]).getSchemeLinkId()))
-										{
-											scheme.links.remove(sl);
-											break;
-										}
-									}
-									boolean contains_new = false;
-									for (Iterator it = scheme.links.iterator(); it.hasNext();)
-									{
-										SchemeLink sl = (SchemeLink)it.next();
-										if (sl.getId().equals(id))
-										{
-											contains_new = true;
-											break;
-										}
-									}
-									if (!contains_new)
-									{
-										SchemeLink sl = (SchemeLink)Pool.get(SchemeLink.typ, id);
-										if (sl == null)
-											JOptionPane.showMessageDialog(null, "Схемный линк не найден " + id);
-										else
-											scheme.links.add(sl);
-									}
-								}
-							}
-							((DefaultLink)cells[0]).setSchemeLinkId(id);
-						}
-						/*id = JOptionPane.showInputDialog("Новый идентификатор пути:",
-								((DefaultLink)cells[0]).getSchemePathId());
-						if (id != null && !id.equals(""))
-							((DefaultLink)cells[0]).setSchemePathId(id);*/
-					}
-					if (cells[0] instanceof DefaultCableLink)
-					{
-						String id = JOptionPane.showInputDialog("Новый идентификатор кабельного линка:",
-								((DefaultCableLink)cells[0]).getSchemeCableLinkId());
-						if (id != null && !id.equals(""))
-						{
-							if (this instanceof SchemePanel)
-							{
-								int ret = JOptionPane.showConfirmDialog(null, "Заменить старый кабельный линк новым?");
-								if (ret == JOptionPane.YES_OPTION)
-								{
-									Scheme scheme = getGraph().getScheme();
-									for (Iterator it = scheme.cablelinks.iterator(); it.hasNext();)
-									{
-										SchemeCableLink sl = (SchemeCableLink)it.next();
-										if (sl.getId().equals(((DefaultCableLink)cells[0]).getSchemeCableLinkId()))
-										{
-											scheme.cablelinks.remove(sl);
-											break;
-										}
-									}
-									boolean contains_new = false;
-									for (Iterator it = scheme.cablelinks.iterator(); it.hasNext();)
-									{
-										SchemeCableLink sl = (SchemeCableLink)it.next();
-										if (sl.getId().equals(id))
-										{
-											contains_new = true;
-											break;
-										}
-									}
-									if (!contains_new)
-									{
-										SchemeCableLink sl = (SchemeCableLink)Pool.get(SchemeCableLink.typ, id);
-										if (sl == null)
-											JOptionPane.showMessageDialog(null, "Схемный кабельный линк не найден " + id);
-										else
-											scheme.cablelinks.add(sl);
-									}
-								}
-							}
-							((DefaultCableLink)cells[0]).setSchemeCableLinkId(id);
-						}
-						/*id = JOptionPane.showInputDialog("Новый идентификатор пути:",
-								((DefaultCableLink)cells[0]).getSchemePathId());
-						if (id != null && !id.equals(""))
-							((DefaultCableLink)cells[0]).setSchemePathId(id);*/
-					}
-					if (cells[0] instanceof DeviceGroup)
-					{
-						String id = JOptionPane.showInputDialog("Новый идентификатор схемного элемента:",
-								((DeviceGroup)cells[0]).getSchemeElementId());
-						if (id != null && !id.equals(""))
-						{
-							if (this instanceof SchemePanel)
-							{
-								int ret = JOptionPane.showConfirmDialog(null, "Заменить старый схемный элемент новым?");
-								if (ret == JOptionPane.YES_OPTION)
-								{
-									Scheme scheme = getGraph().getScheme();
-									for (Iterator it = scheme.elements.iterator(); it.hasNext();)
-									{
-										SchemeElement se = (SchemeElement)it.next();
-										if (se.getId().equals(((DeviceGroup)cells[0]).getSchemeElementId()))
-										{
-											scheme.elements.remove(se);
-											break;
-										}
-									}
-									boolean contains_new = false;
-									for (Iterator it = scheme.elements.iterator(); it.hasNext();)
-									{
-										SchemeElement se = (SchemeElement)it.next();
-										if (se.getId().equals(id))
-										{
-											contains_new = true;
-											break;
-										}
-									}
-									if (!contains_new)
-									{
-										SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, id);
-										if (se == null)
-											JOptionPane.showMessageDialog(null, "Схемный элемент не найден " + id);
-										else
-											scheme.elements.add(se);
-									}
-								}
-							}
-							((DeviceGroup)cells[0]).setSchemeElementId(id);
-						}
-						id = JOptionPane.showInputDialog("Новый идентификатор схемы:",
-								((DeviceGroup)cells[0]).getSchemeId());
-						if (id != null && !id.equals(""))
-							((DeviceGroup)cells[0]).setSchemeId(id);
-					}
-				}
-			}
-			if (e.getKeyCode() == KeyEvent.VK_L)
-			{
-				Object[] cells = getGraph().getSelectionCells();
-				if (cells.length == 1)
-				{
-					if (cells[0] instanceof DeviceGroup)
-					{
-						SchemeElement se = ((DeviceGroup)cells[0]).getSchemeElement();
-						if (se != null)
-						{
-							int ret = JOptionPane.showConfirmDialog(null,
-									"Ввести в картинку идентификаторы из схемного элемента?",
-									"Question",
-									JOptionPane.YES_NO_OPTION);
-							if (ret == JOptionPane.YES_OPTION)
-							{
-								se.unpack();
-								int counter = 0;
-
-								DefaultGraphModel model = new DefaultGraphModel();
-								SchemeGraph virtual_graph = new SchemeGraph(model, aContext);
-								Object[] _cells = virtual_graph.setFromArchivedState(se.serializable_cell);
-								_cells = virtual_graph.getDescendants(_cells);
-
-								java.util.HashSet hs = new java.util.HashSet();
-								//for (Enumeration en = se.links.elements(); en.hasMoreElements();)
-								hs.addAll(se.links);
-
-								for (int i = 0; i < _cells.length; i++)
-								{
-									;
-									if (counter < se.links.size())
-										if (_cells[i] instanceof DefaultLink)
-										{
-											//SchemeLink sl = (SchemeLink)se.links.get(counter);
-											for (Iterator it = hs.iterator(); it.hasNext();)
-											{
-												SchemeLink sl = (SchemeLink)it.next();
-												if (sl.getName().equals(((DefaultLink)_cells[i]).getUserObject()) || !it.hasNext())
-												{
-													((DefaultLink)_cells[i]).setSchemeLinkId(sl.getId());
-													it.remove();
-													break;
-												}
-											}
-											counter++;
-										}
-								}
-								se.serializable_cell = virtual_graph.getArchiveableState(virtual_graph.getRoots());
-								se.pack();
-							}
-						}
-					}
-				}
 			}
 		}
 	}

@@ -4,21 +4,22 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
+import com.syrus.AMFICOM.general.*;
 import oracle.jdeveloper.layout.XYConstraints;
 
-
-public class PortTypePane extends PropertiesPanel
+public class PortTypePane extends JPanel implements ObjectResourcePropertiesPane
 {
 	public ApplicationContext aContext;
 
-	PortTypeGeneralPanel gPanel = new PortTypeGeneralPanel();
-	PortTypeCharacteristicsPanel chPanel = new PortTypeCharacteristicsPanel();
+	PortTypeGeneralPanel gPanel;
+	PortTypeCharacteristicsPanel chPanel;
 
 	PortType portType;
 
@@ -30,6 +31,7 @@ public class PortTypePane extends PropertiesPanel
 	public PortTypePane()
 	{
 		super();
+
 		try
 		{
 			jbInit();
@@ -40,14 +42,17 @@ public class PortTypePane extends PropertiesPanel
 		}
 	}
 
-	public PortTypePane(PortType p)
+	public PortTypePane(PortType pt)
 	{
 		this();
-		setObjectResource(p);
+		setObject(pt);
 	}
 
 	private void jbInit() throws Exception
 	{
+		gPanel = new PortTypeGeneralPanel();
+		chPanel = new PortTypeCharacteristicsPanel();
+
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
@@ -66,17 +71,17 @@ public class PortTypePane extends PropertiesPanel
 		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return portType;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
-		portType = (PortType)or;
+		this.portType = (PortType)or;
 
-		gPanel.setObjectResource(portType);
-		chPanel.setObjectResource(portType);
+		gPanel.setObject(portType);
+		chPanel.setObject(portType);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -88,7 +93,7 @@ public class PortTypePane extends PropertiesPanel
 
 	public boolean modify()
 	{
-		if(		gPanel.modify() &&
+		if (gPanel.modify() &&
 				chPanel.modify())
 			return true;
 		return false;
@@ -96,29 +101,31 @@ public class PortTypePane extends PropertiesPanel
 
 	public boolean save()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-		{
-			return false;
-		}
-
 		if(modify())
 		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			String[] s = new String[1];
-			s[0] = portType.getId();
-			dataSource.SavePortTypes(s);
+			try {
+				ConfigurationStorableObjectPool.putStorableObject(portType);
+				ConfigurationStorableObjectPool.flush(true);
+			}
+			catch (ApplicationException ex) {
+			}
 			return true;
 		}
 		else
 		{
-			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					LangModelConfig.getString("err_incorrect_data_input"));
 		}
 		return false;
 	}
 
 	public boolean open()
+	{
+		return false;
+	}
+
+	public boolean cancel()
 	{
 		return false;
 	}
@@ -133,17 +140,13 @@ public class PortTypePane extends PropertiesPanel
 		String []s = new String[1];
 
 		s[0] = port.id;
-		aContext.getDataSourceInterface().RemovePorts(s);*/
+		aContext.getDataSourceInterface().RemoveCablePorts(s);*/
 
 		return true;
 	}
 
 	public boolean create()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
-			return false;
-
 		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый тип");
 		dialog.setSize(dialog.preferredSize);
 
@@ -155,16 +158,21 @@ public class PortTypePane extends PropertiesPanel
 		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
 		{
 			String name = dialog.getName();
-			PortType new_type = new PortType();
-			new_type.is_modified = true;
-			new_type.name = name;
-			new_type.pClass = "optical";
-			new_type.modified = System.currentTimeMillis();
-			new_type.id = aContext.getDataSourceInterface().GetUId(PortType.typ);
 
-			setObjectResource(new_type);
+			Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+			try {
+				PortType new_type = PortType.createInstance(
+						user_id,
+						"",
+						"",
+						name,
+						PortTypeSort.PORTTYPESORT_OPTICAL);
 
-			Pool.put(PortType.typ, new_type.getId(), new_type);
+				setObject(new_type);
+			}
+			catch (CreateObjectException ex) {
+				ex.printStackTrace();
+			}
 			return true;
 		}
 		return false;

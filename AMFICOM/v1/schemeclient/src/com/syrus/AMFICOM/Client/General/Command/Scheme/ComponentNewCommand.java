@@ -5,7 +5,6 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
 public class ComponentNewCommand extends VoidCommand
 {
@@ -27,10 +26,6 @@ public class ComponentNewCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
-			return;
-
 		if (cell_graph.getAll().length != 0)
 		{
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Создать новый компонент?", "Новый компонент", JOptionPane.YES_NO_OPTION);

@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.util.*;
+import java.util.Arrays;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -9,10 +9,14 @@ import javax.swing.border.EtchedBorder;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeProtoGroup;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemeFactory;
+import com.syrus.AMFICOM.client_.general.ui_.tree.*;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup;
 import oracle.jdeveloper.layout.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.*;
 
 public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationListener
 {
@@ -118,7 +122,7 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 				if (dse.getSelectionNumber() != -1)
 				{
 					SchemeProtoGroup group = (SchemeProtoGroup)dse.getList().get(dse.getSelectionNumber());
-					if (group.getProtoIds().isEmpty())
+					if (group.schemeProtoElements().length == 0)
 						createMapGroupButton.setEnabled(true);
 				}
 				else
@@ -131,8 +135,8 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 
 			delMapGroupButton.setEnabled(false);
 			if (selectedObject instanceof SchemeProtoGroup &&
-					((SchemeProtoGroup)selectedObject).groupIds.isEmpty() &&
-					((SchemeProtoGroup)selectedObject).getProtoIds().isEmpty())
+					((SchemeProtoGroup)selectedObject).schemeProtoGroups().length == 0 &&
+					((SchemeProtoGroup)selectedObject).schemeProtoElements().length == 0)
 				delMapGroupButton.setEnabled(true);
 		}
 	}
@@ -143,19 +147,22 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 		if (ret == null || ret.equals(""))
 			return;
 
-		SchemeProtoGroup new_group = new SchemeProtoGroup();
-		new_group.id = aContext.getDataSourceInterface().GetUId(SchemeProtoGroup.typ);
-		new_group.name = ret;
+		SchemeProtoGroup new_group = SchemeFactory.createSchemeProtoGroup();
+		new_group.name(ret);
 		if (selectedObject instanceof SchemeProtoGroup)
 		{
 			SchemeProtoGroup parent_group = (SchemeProtoGroup)selectedObject;
-			new_group.parentId = parent_group.getId();
-			parent_group.groupIds.add(new_group.getId());
+			new_group.parent(parent_group);
+			Arrays.asList(parent_group.schemeProtoGroups()).add(new_group);
 		}
 
-		Pool.put(SchemeProtoGroup.typ, new_group.getId(), new_group);
+		try {
+			SchemeStorableObjectPool.putStorableObject(new_group);
+		}
+		catch (IllegalObjectEntityException ex) {
+			ex.printStackTrace();
+		}
 		dispatcher.notify(new TreeListSelectionEvent("", TreeListSelectionEvent.REFRESH_EVENT));
-//		aContext.getDataSourceInterface().SaveMapProtoGroups(new String[] {new_group.getId()});
 	}
 
 	void delMapGroupButton_actionPerformed()
@@ -169,56 +176,17 @@ public class SchemeProtoGroupNavigatorPanel extends JPanel implements OperationL
 					JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.YES_OPTION)
 			{
-//				aContext.getDataSourceInterface().RemoveMapProtoGroups(new String[] {group.getId()});
-				Pool.remove(SchemeProtoGroup.typ, group.getId());
-				if (group.parentId != null && !group.parentId.equals(""))
-				{
-					SchemeProtoGroup parent_group = (SchemeProtoGroup)Pool.get(SchemeProtoGroup.typ, group.parentId);
-					parent_group.groupIds.remove(group.getId());
-//					aContext.getDataSourceInterface().SaveMapProtoGroups(new String[] {parent_group.getId()});
+				try {
+					SchemeStorableObjectPool.delete(group.id());
 				}
-			}
-			else
-				return;
-		}
-		else if (selectedObject instanceof SchemeProtoGroup)
-		{
-			SchemeProtoGroup map_proto = (SchemeProtoGroup)selectedObject;
-			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-					"Вы действительно хотите удалить выбранную группу?",
-					"Удаление группы",
-					JOptionPane.YES_NO_OPTION);
-			if (ret == JOptionPane.YES_OPTION)
-			{
-				String id = map_proto.getId();
-//				aContext.getDataSourceInterface().RemoveMapProtoGroups(new String[] {id});
-				Pool.remove(SchemeProtoGroup.typ, id);
-
-				ArrayList groups = new ArrayList();
-				for(Iterator it = Pool.getMap(SchemeProtoGroup.typ).values().iterator(); it.hasNext();)
-				{
-					SchemeProtoGroup group = (SchemeProtoGroup)it.next();
-					if (group.getProtoIds().contains(id));
-					{
-						group.getProtoIds().remove(id);
-						groups.add(group);
-					}
+				catch (ApplicationException ex) {
+					ex.printStackTrace();
 				}
-				if (!groups.isEmpty())
-				{
-					String[] ids = new String[groups.size()];
-					for (int i = 0; i < groups.size(); i++)
-						ids[i] = ((SchemeProtoGroup)groups.get(i)).getId();
-
-//					aContext.getDataSourceInterface().SaveMapProtoGroups(ids);
-					dispatcher.notify(new TreeListSelectionEvent(
-							((SchemeProtoGroup)groups.get(0)).getTyp(),
-							TreeListSelectionEvent.REFRESH_EVENT));
-				}
+				if (group.parent() != null)
+					Arrays.asList(group.parent().schemeProtoGroups()).remove(group);
 			}
 			else
 				return;
 		}
 	}
-
 }

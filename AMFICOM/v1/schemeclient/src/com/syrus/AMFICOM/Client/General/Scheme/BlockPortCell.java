@@ -1,13 +1,14 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
 import com.jgraph.graph.DefaultGraphCell;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class BlockPortCell extends DefaultGraphCell
 {
 	private static final long serialVersionUID = 01L;
-	private String scheme_port_id;
+	private Identifier scheme_port_id;
 	private boolean is_cable_port = false;
 
 	public BlockPortCell()
@@ -28,38 +29,41 @@ public class BlockPortCell extends DefaultGraphCell
 
 	public SchemeCablePort getSchemeCablePort()
 	{
-		return(SchemeCablePort)Pool.get(SchemeCablePort.typ, scheme_port_id);
+		try {
+			return (SchemeCablePort)SchemeStorableObjectPool.getStorableObject(scheme_port_id, true);
+		}
+		catch (Exception ex) {
+			return null;
+		}
 	}
 
 	public SchemePort getSchemePort()
 	{
-		return (SchemePort)Pool.get(SchemePort.typ, scheme_port_id);
+		try {
+			return (SchemePort)SchemeStorableObjectPool.getStorableObject(scheme_port_id, true);
+		}
+		catch (Exception ex) {
+			return null;
+		}
 	}
 
-	public String getSchemePortId()
+	public Identifier getSchemePortId()
 	{
 		return scheme_port_id;
 	}
 
-	public String getSchemeCablePortId()
+	public Identifier getSchemeCablePortId()
 	{
 		return scheme_port_id;
 	}
 
-	public void setSchemePortId(String id)
+	public void setSchemePortId(Identifier portId)
 	{
-		scheme_port_id = id;
+		scheme_port_id = portId;
 	}
 
-	public void setSchemeCablePortId(String id)
+	public void setSchemeCablePortId(Identifier portId)
 	{
-		scheme_port_id = id;
+		scheme_port_id = portId;
 	}
-/*
-	private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException
-	{
-		out.writeObject(scheme_port_id);
-		out.writeBoolean(is_cable_port);
-	}*/
 }
-

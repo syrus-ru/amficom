@@ -3,9 +3,8 @@ package com.syrus.AMFICOM.Client.General.Scheme;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 public class Notifier
 {
@@ -17,7 +16,7 @@ public class Notifier
 
 //	private static final int aports = new ArrayList();
 
-	public static void selectionNotify(Dispatcher dispatcher, ObjectResource[] cells, boolean isEditable)
+	public static void selectionNotify(Dispatcher dispatcher, Object[] cells, boolean isEditable)
 	{
 		if (cells.length == 0)
 		{
@@ -29,8 +28,8 @@ public class Notifier
 		if (cells[0] instanceof SchemeElement)
 			dispatcher.notify(new SchemeNavigateEvent((SchemeElement[])cells,
 					SchemeNavigateEvent.SCHEME_ELEMENT_SELECTED_EVENT, isEditable));
-		if (cells[0] instanceof ProtoElement)
-			dispatcher.notify(new SchemeNavigateEvent((ProtoElement[])cells,
+		if (cells[0] instanceof SchemeProtoElement)
+			dispatcher.notify(new SchemeNavigateEvent((SchemeProtoElement[])cells,
 					SchemeNavigateEvent.SCHEME_PROTO_ELEMENT_SELECTED_EVENT, isEditable));
 		if (cells[0] instanceof Scheme)
 			dispatcher.notify(new SchemeNavigateEvent((Scheme[])cells,
@@ -83,7 +82,7 @@ public class Notifier
 					}
 					else if (!dev.getProtoElementId().equals(""))
 					{
-						selectedObjects = new ProtoElement[1];
+						selectedObjects = new SchemeProtoElement[1];
 						selectedObjects[0] = dev.getProtoElement();
 						selectedType = SchemeNavigateEvent.SCHEME_PROTO_ELEMENT_SELECTED_EVENT;
 					}
@@ -115,13 +114,13 @@ public class Notifier
 					}
 					else if (graph.mode.equals(Constants.PATH_MODE))
 					{
-						for (Iterator it = graph.getScheme().solution.paths.iterator(); it.hasNext();)
+						SchemePath[] paths = graph.getScheme().schemeMonitoringSolution().schemePaths();
+						for (int i = 0; i < paths.length; i++)
 						{
-							SchemePath path = (SchemePath)it.next();
-							if (path.isElementInPath(link.getId()))
+							if (SchemeUtils.isElementInPath(paths[i], link.id()))
 							{
 								selectedObjects = new SchemePath[1];
-								selectedObjects[0] = path;
+								selectedObjects[0] = paths[i];
 								selectedType = SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT;
 							}
 						}
@@ -138,13 +137,13 @@ public class Notifier
 					}
 					else if (graph.mode.equals(Constants.PATH_MODE))
 					{
-						for (Iterator it = graph.getScheme().solution.paths.iterator(); it.hasNext();)
+						SchemePath[] paths = graph.getScheme().schemeMonitoringSolution().schemePaths();
+						for (int i = 0; i < paths.length; i++)
 						{
-							SchemePath path = (SchemePath)it.next();
-							if (path.isElementInPath(link.getId()))
+							if (SchemeUtils.isElementInPath(paths[i], link.id()))
 							{
 								selectedObjects = new SchemePath[1];
-								selectedObjects[0] = path;
+								selectedObjects[0] = paths[i];
 								selectedType = SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT;
 							}
 						}
@@ -250,10 +249,11 @@ public class Notifier
 					return;
 				}
 			}
-			dispatcher.notify(new SchemeNavigateEvent(selectedObjects, selectedType, isEditable));
+			if (selectedObjects != null)
+				dispatcher.notify(new SchemeNavigateEvent(selectedObjects, selectedType, isEditable));
 
-			if (DEBUG)
-				printDebug();
+//			if (DEBUG)
+//				printDebug();
 		}
 		catch (Exception e)
 		{
@@ -261,7 +261,7 @@ public class Notifier
 			e.printStackTrace();
 		}
 	}
-
+/*
 	static void printDebug()
 	{
 		if (selectedType == SchemeNavigateEvent.SCHEME_ELEMENT_SELECTED_EVENT)
@@ -269,11 +269,10 @@ public class Notifier
 			SchemeElement[] o = (SchemeElement[])selectedObjects;
 			for (int i = 0; i < o.length; i++)
 			{
-				System.out.println("SchemeElement: " + o[i].getId());
-				System.out.println("\t proto_id = \"" + o[i].protoElementId + "\"");
-				System.out.println("\t internal_scheme_id = \"" + o[i].getInternalSchemeId() + "\"");
-				System.out.println("\t scheme_id = \"" + o[i].getSchemeId() + "\"");
-				System.out.println("\t equipment = \"" + o[i].equipment + "\"");
+				System.out.println("SchemeElement: " + o[i].id());
+				System.out.println("\t proto_id = \"" + o[i].schemeProtoElement().id() + "\"");
+				System.out.println("\t internal_scheme_id = \"" + o[i].internalScheme().id() + "\"");
+				System.out.println("\t equipment = \"" + o[i].equipment().id + "\"");
 				System.out.print("\t device_id =");
 				for (Iterator it = o[i].devices.iterator(); it.hasNext();)
 					System.out.print(" \"" + ((SchemeDevice)it.next()).getId() + "\"");
@@ -380,5 +379,5 @@ public class Notifier
 				System.out.println("\t cable_port_type_id = \"" + o[i].cablePortTypeId + "\"");
 			}
 		}
-	}
+	}*/
 }

@@ -1,13 +1,14 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
 import com.jgraph.graph.DefaultGraphCell;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCablePort;
+import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.SchemeCablePort;
 
 public class CablePortCell extends DefaultGraphCell
 {
 	private static final long serialVersionUID = 01L;
-	private String scheme_cableport_id;
+	private Identifier scheme_cableport_id;
 
 	public CablePortCell()
 	{
@@ -21,16 +22,20 @@ public class CablePortCell extends DefaultGraphCell
 
 	public SchemeCablePort getSchemeCablePort()
 	{
-		return (SchemeCablePort)Pool.get(SchemeCablePort.typ, scheme_cableport_id);
+		try {
+			return (SchemeCablePort)SchemeStorableObjectPool.getStorableObject(scheme_cableport_id, true);
+		}
+		catch (Exception ex) {
+			return null;
+		}
 	}
 
-	public String getSchemeCablePortId()
+	public Identifier getSchemeCablePortId()
 	{
 		return scheme_cableport_id;
 	}
 
-
-	public void setSchemeCablePortId(String id)
+	public void setSchemeCablePortId(Identifier id)
 	{
 		scheme_cableport_id = id;
 	}

@@ -7,6 +7,10 @@ import java.awt.event.KeyEvent;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class SchemePanelNoEdition extends SchemePanel
 {
@@ -38,7 +42,12 @@ public class SchemePanelNoEdition extends SchemePanel
 		{
 			SchemeElementsEvent see = (SchemeElementsEvent)ae;
 			if (see.CREATE_ALARMED_LINK)
-				startPathAnimator((String)see.obj);
+			{
+				SchemeElement se = (SchemeElement)see.obj;
+				SchemePath path = se.alarmedPath();
+				startPathAnimator(path, se.alarmedPathElement());
+			}
+
 			if (!see.OPEN_PRIMARY_SCHEME)
 				return;
 			if (see.OBJECT_TYPE_UPDATE)
@@ -48,15 +57,20 @@ public class SchemePanelNoEdition extends SchemePanel
 		if (ae.getActionCommand().equals(MapNavigateEvent.MAP_NAVIGATE))
 		{
 			MapNavigateEvent mne = (MapNavigateEvent)ae;
-			if (mne.isDataAlarmMarkerCreated())
+			if (mne.isDataMarkerCreated())
 			{
 				//				System.out.println("DATA_ALARMMARKER_CREATED: " + mne.linkID);
-				startPathAnimator(mne.getLinkId());
+				try {
+					SchemePath path = (SchemePath)SchemeStorableObjectPool.getStorableObject(mne.getSchemePathId(), true);
+					startPathAnimator(path, SchemeUtils.getPathElement(path, mne.getSchemePathElementId()));
+				}
+				catch (ApplicationException ex) {
+				}
 			}
-			if (mne.isDataAlarmMarkerDeleted())
+			if (mne.isDataMarkerDeleted())
 			{
 //				System.out.println("DATA_ALARMMARKER_DELETED: " + mne.linkID);
-				stopPathAnimator(mne.getLinkId());
+				stopPathAnimator(mne.getSchemePathElementId());
 			}
 		}
 		super.operationPerformed(ae);
@@ -85,39 +99,31 @@ public class SchemePanelNoEdition extends SchemePanel
 		graph.setGraphEditable(false);
 	}
 
-	public void startPathAnimator(String link_id)
+	public void startPathAnimator(SchemePath path, PathElement pe)
 	{
-		if (link_id == null || link_id.equals(""))
+		if (pe == null)
 			return;
 
-		System.out.println("link_id =  " + link_id);
 		AlarmedPathAnimator ap;
-
-		if (animators.containsKey(link_id))
-		{
-			ap = (AlarmedPathAnimator)animators.get(link_id);
-			System.out.println("get ap " + ap.hashCode());
-		}
+		if (animators.containsKey(pe.id()))
+			ap = (AlarmedPathAnimator)animators.get(pe.id());
 		else
 		{
-			ap = new AlarmedPathAnimator(aContext, this, link_id);
-			animators.put(link_id, ap);
+			ap = new AlarmedPathAnimator(aContext, this, path, pe);
+			animators.put(pe.id(), ap);
 			ap.mark();
-			System.out.println("create ap " + ap.hashCode());
 		}
-		System.out.println("start ap " + ap.hashCode());
 	}
 
-	public void stopPathAnimator(String link_id)
+	public void stopPathAnimator(Identifier pe_id)
 	{
-		if (link_id != null)
+		if (pe_id != null)
 		{
-			if (animators.containsKey(link_id))
+			if (animators.containsKey(pe_id))
 			{
-				AlarmedPathAnimator ap = (AlarmedPathAnimator)animators.get(link_id);
+				AlarmedPathAnimator ap = (AlarmedPathAnimator)animators.get(pe_id);
 				ap.unmark();
-				animators.remove(link_id);
-				System.out.println("stop ap " + ap.hashCode());
+				animators.remove(pe_id);
 			}
 		}
 		else

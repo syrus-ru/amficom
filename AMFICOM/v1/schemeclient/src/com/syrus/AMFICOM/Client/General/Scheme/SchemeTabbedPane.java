@@ -1,12 +1,14 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
+import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveCommand;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class SchemeTabbedPane extends ElementsTabbedPane
 {
@@ -31,8 +33,12 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 					{
 						public void actionPerformed(ActionEvent ae)
 						{
-							aContext.getDispatcher().notify(new SchemeElementsEvent(
-									this, getPanel().getGraph().getScheme(), SchemeElementsEvent.CLOSE_SCHEME_EVENT));
+							if (getPanel().getGraph().getScheme() != null)
+								aContext.getDispatcher().notify(new SchemeElementsEvent(
+										this, getPanel().getGraph().getScheme(), SchemeElementsEvent.CLOSE_SCHEME_EVENT));
+							else if (getPanel().getGraph().getSchemeElement() != null)
+								aContext.getDispatcher().notify(new SchemeElementsEvent(
+										this, getPanel().getGraph().getSchemeElement(), SchemeElementsEvent.CLOSE_SCHEME_EVENT));
 //							removePanel(getPanel());
 						}
 					});
@@ -61,12 +67,12 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 			return (UgoPanel)tabs.getComponentAt(tabs.getSelectedIndex());
 
 		SchemePanel panel = new SchemePanel(aContext);
-		Scheme scheme = new Scheme();
-		scheme.name = "Новая схема";
+		Scheme scheme = SchemeFactory.createScheme();
+		scheme.name("Новая схема");
 		panel.getGraph().setScheme(scheme);
 
 		addPanel(panel);
-		updateTitle(scheme.getName());
+		updateTitle(scheme.name());
 
 		return panel;
 	}
@@ -157,7 +163,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 				{
 					int ret = JOptionPane.showConfirmDialog(
 							Environment.getActiveWindow(),
-							"Схема " + sch.getName() + " уже открыта. Открыть сохраненную ранее версию?",
+							"Схема " + sch.name() + " уже открыта. Открыть сохраненную ранее версию?",
 							"Подтверждение",
 							JOptionPane.YES_NO_CANCEL_OPTION);
 					if (ret == JOptionPane.YES_OPTION)
@@ -167,7 +173,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 						setGraphChanged(false);
 					}
 				}
-				updateTitle(sch.getName());
+				updateTitle(sch.name());
 				return;
 			}
 		}
@@ -175,7 +181,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 		SchemePanel panel = new SchemePanel(aContext);
 		addPanel(panel);
 		panel.openScheme(sch);
-		updateTitle(sch.getName());
+		updateTitle(sch.name());
 		setGraphChanged(false);
 	}
 
@@ -191,7 +197,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 				{
 					int ret = JOptionPane.showConfirmDialog(
 							Environment.getActiveWindow(),
-							"Элемент " + se.getName() + " уже открыт. Открыть сохраненную ранее версию?",
+							"Элемент " + se.name() + " уже открыт. Открыть сохраненную ранее версию?",
 							"Подтверждение",
 							JOptionPane.YES_NO_CANCEL_OPTION);
 					if (ret == JOptionPane.YES_OPTION)
@@ -207,29 +213,34 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 		SchemePanel panel = new SchemePanel(aContext);
 		addPanel(panel);
 		panel.openSchemeElement(se);
-		updateTitle(se.getName());
+		updateTitle(se.name());
 		setGraphChanged(false);
 	}
 
 	public boolean removeScheme(Scheme sch)
 	{
 		SchemeGraph graph = getPanel().getGraph();
-		if (graph.getScheme() != null && sch != null && sch.getId().equals(graph.getScheme().getId()))
+		if (graph.getScheme() != null && sch != null && sch.equals(graph.getScheme()))
 		{
 			removePanel(getPanel());
 			if (tabs.getTabCount() == 0)
-			{
-//				Scheme scheme = new Scheme();
-//				scheme.name = "Новая схема";
-//				SchemePanel panel = new SchemePanel(aContext);
-//				panel.getGraph().setScheme(scheme);
-//
-//				addPanel(panel);
-//				updateTitle(scheme.getName());
 				setGraphChanged(false);
-			}
 			return true;
 		}
 		return false;
 	}
+
+	public boolean removeSchemeElement(SchemeElement se)
+	{
+		SchemeGraph graph = getPanel().getGraph();
+		if (graph.getSchemeElement() != null && se != null && se.equals(graph.getSchemeElement()))
+		{
+			removePanel(getPanel());
+			if (tabs.getTabCount() == 0)
+				setGraphChanged(false);
+			return true;
+		}
+		return false;
+	}
+
 }

@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Configure.Report;
+/*package com.syrus.AMFICOM.Client.Configure.Report;
 
 import com.syrus.AMFICOM.CORBA.Scheme.SchemeOptimizeInfo_Transferable;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
@@ -9,17 +9,13 @@ import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
-import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.KISType;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-import com.syrus.AMFICOM.Client.Resource.General.Characteristic;
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-import com.syrus.AMFICOM.Client.Resource.Network.Link;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.measurement.*;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -37,7 +33,7 @@ import javax.swing.table.TableColumn;
  * <p>Company: </p>
  * @author unascribed
  * @version 1.0
- */
+ /
 
 
 public class EquipFeatures extends ReportData
@@ -249,3 +245,4 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 		return "";
 	}
 }
+*/

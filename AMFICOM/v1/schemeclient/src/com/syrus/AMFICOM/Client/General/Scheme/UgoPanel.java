@@ -13,10 +13,13 @@ import com.jgraph.graph.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.*;
+
 import oracle.jdeveloper.layout.*;
 
 public class UgoPanel extends JPanel
@@ -203,7 +206,7 @@ public class UgoPanel extends JPanel
 			if (see.UGO_CREATE)
 			{
 				ArrayList v = (ArrayList)see.obj;
-				new CreateUgoAction(getGraph()).create(v, aContext.getDataSourceInterface());
+				new CreateUgoAction(getGraph()).create(v);
 			}
 			if (see.SCHEME_UGO_CREATE)
 			{
@@ -288,14 +291,14 @@ public class UgoPanel extends JPanel
 						for (int j = 0; j < ports.length; j++)
 							if (ports[j].equals(port))
 							{
-								if (port.linkId.equals(""))
+								if (port.abstractSchemeLink() == null)
 									non_connected_ports.add(cells[i]);
 								else
 									connected_ports.add(cells[i]);
 							}
 					}
 				Color color = Color.white;
-				if (((PortType)see.obj).pClass.equals("splice"))
+				if (((PortType)see.obj).getSort().equals(PortTypeSort.PORTTYPESORT_THERMAL))
 					color = Color.black;
 
 				GraphActions.setObjectsBackColor(getGraph(), connected_ports.toArray(new PortCell[connected_ports.size()]), color);
@@ -315,7 +318,7 @@ public class UgoPanel extends JPanel
 					for (int j = 0; j < ports.length; j++)
 						if (ports[j].equals(port))
 						{
-						if (port.cableLinkId.equals(""))
+						if (port.abstractSchemeLink() == null)
 							non_connected_ports.add(cells[i]);
 						else
 							connected_ports.add(cells[i]);
@@ -327,7 +330,7 @@ public class UgoPanel extends JPanel
 
 			if (see.OBJECT_TYPE_UPDATE)
 			{
-				ObjectResource res = (ObjectResource)ae.getSource();
+				/*Object res = ae.getSource();
 
 				Object[] cells = getGraph().getSelectionCells();
 				ArrayList new_cells = new ArrayList(cells.length);
@@ -344,17 +347,17 @@ public class UgoPanel extends JPanel
 				{
 					if (ncells.length != 1)
 						return;
-					EquipmentType new_eqt;
-					if (res instanceof ProtoElement)
+					EquipmentTypeImpl new_eqt;
+					if (res instanceof SchemeProtoElement)
 					{
-						ProtoElement proto = (ProtoElement) res;
-						new_eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipmentTypeId);
+						SchemeProtoElement proto = (SchemeProtoElement)res;
+						new_eqt = proto.equipmentTypeImpl();
 					}
 					else
 						new_eqt = (EquipmentType)res;
 
-					ProtoElement p = ((DeviceGroup)obj).getProtoElement();
-					p.equipmentTypeId = new_eqt.getId();
+					SchemeProtoElement p = ((DeviceGroup)obj).getProtoElement();
+					p.equipmentType() = new_eqt.getId();
 				}
 				if (obj instanceof PortCell)
 				{
@@ -417,7 +420,7 @@ public class UgoPanel extends JPanel
 						for (int i = 0; i < ncells.length; i++)
 							((DefaultCableLink)ncells[i]).getSchemeCableLink().cableLinkTypeId = res.getId();
 					}
-				}
+				}*/
 			}
 		}
 	}
@@ -426,12 +429,7 @@ public class UgoPanel extends JPanel
 	{
 		Scheme scheme = getGraph().getScheme();
 		if (scheme != null)
-		{
-			scheme.serializable_ugo = getGraph().getArchiveableState(getGraph().getRoots());
-			boolean res = scheme.pack();
-			if (!res)
-				return null;
-		}
+			scheme.ugoCellImpl().setData((List)getGraph().getArchiveableState(getGraph().getRoots()));
 		return scheme;
 	}
 
@@ -439,14 +437,11 @@ public class UgoPanel extends JPanel
 	{
 		SchemeElement scheme_element = getGraph().getSchemeElement();
 		if (scheme_element != null)
-		{
-			scheme_element.serializable_cell = getGraph().getArchiveableState(getGraph().getRoots());
-			scheme_element.pack();
-		}
+			scheme_element.schemeCellImpl().setData((List)getGraph().getArchiveableState(getGraph().getRoots()));
 		return scheme_element;
 	}
 
-	protected void setProtoCell (ProtoElement proto, Point p)
+	protected void setProtoCell (SchemeProtoElement proto, Point p)
 	{
 		if (!insert_ugo)
 			return;
@@ -472,7 +467,7 @@ public class UgoPanel extends JPanel
 			showNoSelection();
 	}*/
 
-	public Map insertCell (Serializable serializable_cell, boolean remove_old, Point p)
+	public Map insertCell (List serializable_cell, boolean remove_old, Point p)
 	{
 		if (remove_old)
 			GraphActions.clearGraph(getGraph());
@@ -507,29 +502,29 @@ public class UgoPanel extends JPanel
 			Object cloned_cell = cells[i];
 			if (cloned_cell instanceof DeviceGroup)
 			{
-				String or_id = ((DeviceGroup)cloned_cell).getProtoElementId();
-				String new_id = (String)Pool.get("clonedids", or_id);
+				Identifier or_id = ((DeviceGroup)cloned_cell).getProtoElementId();
+				Identifier new_id = (Identifier)Pool.get("clonedids", or_id.identifierString());
 				if (new_id != null)
 					((DeviceGroup)cloned_cell).setProtoElementId(new_id);
 
 				or_id = ((DeviceGroup)cloned_cell).getProtoElementId();
-				new_id = (String)Pool.get("proto2schemeids", or_id);
+				new_id = (Identifier)Pool.get("proto2schemeids", or_id.identifierString());
 				if (new_id != null)
 					((DeviceGroup)cloned_cell).setSchemeElementId(new_id);
 
 				or_id = ((DeviceGroup)cloned_cell).getSchemeElementId();
-				new_id = (String)Pool.get("clonedids", or_id);
+				new_id = (Identifier)Pool.get("clonedids", or_id.identifierString());
 				if (new_id != null)
 					((DeviceGroup)cloned_cell).setSchemeElementId(new_id);
 
 				or_id = ((DeviceGroup)cloned_cell).getSchemeId();
-				new_id = (String)Pool.get("clonedids", or_id);
+				new_id = (Identifier)Pool.get("clonedids", or_id.identifierString());
 				if (new_id != null)
 					((DeviceGroup)cloned_cell).setSchemeId(new_id);
 			}
 			else if (cloned_cell instanceof DeviceCell)
 			{
-				String c_id = (String)Pool.get("clonedids", ((DeviceCell)cloned_cell).getSchemeDeviceId());
+				Identifier c_id = (Identifier)Pool.get("clonedids", ((DeviceCell)cloned_cell).getSchemeDeviceId().identifierString());
 				if (c_id == null)
 				{
 					//SchemeDevice dev = ((DeviceCell)cells[i]).getSchemeDevice();
@@ -540,22 +535,22 @@ public class UgoPanel extends JPanel
 			}
 			else if (cloned_cell instanceof PortCell)
 			{
-				String id = ((PortCell)cloned_cell).getSchemePortId();
-				String new_id = (String)Pool.get("clonedids", id);
+				Identifier id = ((PortCell)cloned_cell).getSchemePortId();
+				Identifier new_id = (Identifier)Pool.get("clonedids", id.identifierString());
 				if (new_id != null)
 					((PortCell)cloned_cell).setSchemePortId(new_id);
 			}
 			else if (cloned_cell instanceof CablePortCell)
 			{
-				String id = ((CablePortCell)cloned_cell).getSchemeCablePortId();
-				String new_id = (String)Pool.get("clonedids", id);
+				Identifier id = ((CablePortCell)cloned_cell).getSchemeCablePortId();
+				Identifier new_id = (Identifier)Pool.get("clonedids", id.identifierString());
 				if (new_id != null)
 					((CablePortCell)cloned_cell).setSchemeCablePortId(new_id);
 			}
 			else if (cloned_cell instanceof DefaultCableLink)
 			{
-				String id = ((DefaultCableLink)cloned_cell).getSchemeCableLinkId();
-				String new_id = (String)Pool.get("clonedids", id);
+				Identifier id = ((DefaultCableLink)cloned_cell).getSchemeCableLinkId();
+				Identifier new_id = (Identifier)Pool.get("clonedids", id.identifierString());
 				if (new_id != null)
 					((DefaultCableLink)cloned_cell).setSchemeCableLinkId(new_id);
 
@@ -567,8 +562,8 @@ public class UgoPanel extends JPanel
 			}
 			else if (cloned_cell instanceof DefaultLink)
 			{
-				String id = ((DefaultLink)cloned_cell).getSchemeLinkId();
-				String new_id = (String)Pool.get("clonedids", id);
+				Identifier id = ((DefaultLink)cloned_cell).getSchemeLinkId();
+				Identifier new_id = (Identifier)Pool.get("clonedids", id.identifierString());
 				if (new_id != null)
 					((DefaultLink)cloned_cell).setSchemeLinkId(new_id);
 
@@ -581,7 +576,7 @@ public class UgoPanel extends JPanel
 			else if (cloned_cell instanceof BlockPortCell)
 			{
 				BlockPortCell bpc = (BlockPortCell)cloned_cell;
-				String p_id = (String)Pool.get("clonedids", bpc.getSchemePortId());
+				Identifier p_id = (Identifier)Pool.get("clonedids", bpc.getSchemePortId().identifierString());
 				if (bpc.isCablePort())
 				{
 					if (p_id != null)

@@ -1,13 +1,15 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
 import java.util.*;
+import java.util.List;
 
 import java.awt.Color;
 
 import com.jgraph.graph.DefaultEdge;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 
 public class AlarmedPathAnimator// extends Thread implements Runnable
 {
@@ -16,18 +18,16 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 
 	SchemePanel panel;
 	public ApplicationContext aContext;
-	String alarmed_link_id;
 
 	DefaultEdge[] edges;
 	Object[] objects;
 
-	public AlarmedPathAnimator(ApplicationContext aContext,  SchemePanel panel, String alarmed_link_id)
+	public AlarmedPathAnimator(ApplicationContext aContext,  SchemePanel panel, SchemePath path, PathElement alarmedPE)
 	{
 		this.panel = panel;
 		this.aContext = aContext;
-		this.alarmed_link_id = alarmed_link_id;
 
-		Object[] cells = findAlarmedObjects(panel, alarmed_link_id);
+		Object[] cells = findAlarmedObjects(panel, path, alarmedPE);
 		System.out.println("found " + cells.length + " cells to repaint");
 
 		ArrayList _edges = new ArrayList();
@@ -120,110 +120,121 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 		panel.repaint();
 	}
 
-	Object[] findAlarmedObjects(SchemePanel panel, String alarmed_link_id)
+	Object[] findAlarmedObjects(SchemePanel panel, SchemePath path, PathElement alarmedPE)
 	{
+		if (alarmedPE != null)
+			return new Object[0];
+
 		Object[] cells = panel.getGraph().getAll();
-		ArrayList edges_to_paint = new ArrayList();
+		List edges_to_paint = new LinkedList();
 
-		if (!alarmed_link_id.equals(""))
+		if (alarmedPE.type().equals(Type.SCHEME_CABLE_LINK))
 		{
-			;//at first find if link at this scheme
-			for (int i = 0; i < cells.length; i++)
-			{
-				;
-				if (cells[i] instanceof DefaultLink)
-				{
-					SchemeLink sl = ((DefaultLink)cells[i]).getSchemeLink();
-					if (sl.linkId.equals(alarmed_link_id))
-					{
-						edges_to_paint.add(cells[i]);
-						sl.alarmed = true;
-
-						//LinkView lv = (LinkView)panel.getGraph().getGraphLayoutCache().getMapping(cells[i], false);
-						//lv.alarmed = true;
-
-						return edges_to_paint.toArray();
-					}
-				}
-				else if (cells[i] instanceof DefaultCableLink)
-				{
-					SchemeCableLink sl = ((DefaultCableLink)cells[i]).getSchemeCableLink();
-					if (sl.cableLinkId.equals(alarmed_link_id))
-					{
-						edges_to_paint.add(cells[i]);
-						sl.alarmed = true;
-
-						//LinkView lv = (LinkView)panel.getGraph().getGraphLayoutCache().getMapping(cells[i], false);
-						//lv.alarmed = true;
-
-						return edges_to_paint.toArray();
-					}
-				}
-			}
-			//if nothing is found check witch element contains this link
-			for (int i = 0; i < cells.length; i++)
-			{
-				;
-				if (cells[i] instanceof DeviceGroup)
-				{
-					SchemeElement se = ((DeviceGroup)cells[i]).getSchemeElement();
-					if (se.getInternalSchemeId().length() == 0)
-					{
-						for (Iterator it = se.getAllElementsLinks().iterator(); it.hasNext();)
-						{
-							SchemeLink sl = (SchemeLink)it.next();
-							if (sl.linkId.equals(alarmed_link_id))
-							{
-								for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements();)
-									edges_to_paint.add(e.nextElement());
-								se.alarmed = true;
-								se.alarmedLinkId = alarmed_link_id;
-								return edges_to_paint.toArray();
-							}
-						}
-					}
-					else
-					{
-						Scheme scheme = se.getInternalScheme();
-						if (scheme.isSchemeContainsLink(alarmed_link_id) ||
-								scheme.isSchemeContainsCableLink(alarmed_link_id))
-						{
-							for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements();)
-								edges_to_paint.add(e.nextElement());
-							se.alarmed = true;
-							se.alarmedLinkId = alarmed_link_id;
+				for (int i = 0; i < cells.length; i++) {
+					if (cells[i] instanceof DefaultCableLink) {
+						SchemeCableLink sl = ((DefaultCableLink)cells[i]).getSchemeCableLink();
+						if (sl.equals(alarmedPE.abstractSchemeElement())) {
+							edges_to_paint.add(cells[i]);
+							sl.alarmed(true);
 							return edges_to_paint.toArray();
 						}
 					}
 				}
-			}
-
+				for (int i = 0; i < cells.length; i++) {
+					if (cells[i] instanceof DeviceGroup) {
+						SchemeElement se = ((DeviceGroup)cells[i]).getSchemeElement();
+						if (se.internalScheme() != null) {
+							Scheme scheme = se.internalScheme();
+							if (SchemeUtils.isSchemeContainsCableLink(scheme, alarmedPE.abstractSchemeElement().id())) {
+								for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
+									edges_to_paint.add(e.nextElement());
+								se.alarmed(true);
+								se.alarmedPath(path);
+								se.alarmedPathElement(alarmedPE);
+								return edges_to_paint.toArray();
+							}
+						}
+					}
+				}
+		}
+		else if (alarmedPE.type().equals(Type.SCHEME_LINK))
+		{
+				for (int i = 0; i < cells.length; i++) {
+					if (cells[i] instanceof DefaultLink) {
+						SchemeLink sl = ((DefaultLink)cells[i]).getSchemeLink();
+						if (sl.equals(alarmedPE.abstractSchemeElement())) {
+							edges_to_paint.add(cells[i]);
+							sl.alarmed(true);
+							return edges_to_paint.toArray();
+						}
+					}
+				}
+				for (int i = 0; i < cells.length; i++) {
+					if (cells[i] instanceof DeviceGroup) {
+						SchemeElement se = ((DeviceGroup)cells[i]).getSchemeElement();
+						if (se.internalScheme() == null) {
+							if (SchemeUtils.isSchemeElementContainsLink(se, alarmedPE.abstractSchemeElement().id())) {
+									for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
+										edges_to_paint.add(e.nextElement());
+									se.alarmed(true);
+									se.alarmedPath(path);
+									se.alarmedPathElement(alarmedPE);
+									return edges_to_paint.toArray();
+								}
+						}
+						else {
+							Scheme scheme = se.internalScheme();
+							if (SchemeUtils.isSchemeContainsLink(scheme, alarmedPE.abstractSchemeElement().id())) {
+								for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
+									edges_to_paint.add(e.nextElement());
+								se.alarmed(true);
+								se.alarmedPath(path);
+								se.alarmedPathElement(alarmedPE);
+								return edges_to_paint.toArray();
+							}
+						}
+					}
+				}
+		}
+		else if (alarmedPE.type().equals(Type.SCHEME_ELEMENT))
+		{
+				for (int i = 0; i < cells.length; i++) {
+					if (cells[i] instanceof DeviceGroup) {
+						SchemeElement se = ((DeviceGroup)cells[i]).getSchemeElement();
+						if (se.equals(alarmedPE.abstractSchemeElement())) {
+							edges_to_paint.add(cells[i]);
+							se.alarmed(true);
+							return edges_to_paint.toArray();
+						}
+					}
+				}
+				for (int i = 0; i < cells.length; i++) {
+					if (cells[i] instanceof DeviceGroup) {
+						SchemeElement se = ((DeviceGroup)cells[i]).getSchemeElement();
+						if (se.internalScheme() == null) {
+							if (SchemeUtils.isSchemeElementContainsElement(se, (SchemeElement)alarmedPE.abstractSchemeElement())) {
+									for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
+										edges_to_paint.add(e.nextElement());
+									se.alarmed(true);
+									se.alarmedPath(path);
+									se.alarmedPathElement(alarmedPE);
+									return edges_to_paint.toArray();
+								}
+						}
+						else {
+							Scheme scheme = se.internalScheme();
+							if (SchemeUtils.isSchemeContainsElement(scheme, (SchemeElement)alarmedPE.abstractSchemeElement())) {
+								for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
+									edges_to_paint.add(e.nextElement());
+								se.alarmed(true);
+								se.alarmedPath(path);
+								se.alarmedPathElement(alarmedPE);
+								return edges_to_paint.toArray();
+							}
+						}
+					}
+				}
 		}
 		return edges_to_paint.toArray();
 	}
-
-	/*
-	 Object[] findAlarmedObjects(SchemeGraph graph)
- {
-	 Object[] cells = graph.getAll();
-	 ArrayList edges_to_paint = new ArrayList();
-	 for (int i = 0; i < cells.length; i++)
-	 {
-		 String sp_id = "";
-		 if (cells[i] instanceof DefaultLink)
-			 sp_id = ((DefaultLink)cells[i]).scheme_path_id;
-		 else if (cells[i] instanceof DefaultCableLink)
-			 sp_id = ((DefaultCableLink)cells[i]).scheme_path_id;
-
-		 if (!sp_id.equals(""))
-		 {
-			 SchemePath sp = (SchemePath)Pool.get(SchemePath.typ, sp_id);
-			 ElementAttribute ea = (ElementAttribute)sp.attributes.get("alarmed");
-			 if(ea.value.equals("true"))
-				 edges_to_paint.add(cells[i]);
-		 }
-	 }
-		return edges_to_paint.toArray();
-	*/
 }
-

@@ -7,9 +7,10 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.general.*;
 
 public class ElementsListFrame extends JInternalFrame implements OperationListener
 {
@@ -93,10 +94,10 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 				{
 
 					SchemePath path = pathpanel.path;
-					if (!MiscUtil.validName(path.name) ||
-							path.endDeviceId.equals("") ||
-							path.startDeviceId.equals("") ||
-							path.links.isEmpty())
+					if (!MiscUtil.validName(path.name()) ||
+							path.endDevice() == null ||
+							path.startDevice() == null ||
+							path.links().length == 0)
 					{
 						String err = new String();
 						err += "Недостаточно данных для сохранения маршрута.\n";
@@ -107,7 +108,12 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 						return;
 					}
 
-					Pool.put(SchemePath.typ, path.getId(), path);
+					try {
+						SchemeStorableObjectPool.putStorableObject(path);
+					}
+					catch (IllegalObjectEntityException ex) {
+						ex.printStackTrace();
+					}
 
 					mainPathPanel.insertPathToScheme(path);
 					mainPathPanel.getGraph().setGraphChanged(true);
@@ -162,7 +168,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 				if (objs.length > 0)
 				{
 					if (objs[0] instanceof SchemeLink || objs[0] instanceof SchemeCableLink || objs[0] instanceof SchemeElement)
-						pathpanel.element_to_add = (ObjectResource)objs[0];
+						pathpanel.element_to_add = objs[0];
 					else
 						pathpanel.element_to_add = null;
 				}
@@ -171,13 +177,13 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 				{
 					Object[] links = (Object[])ev.getSource();
 					if (links.length == 1)
-						pathpanel.selectLink(((SchemeLink[])links)[0].getId());
+						pathpanel.setSelectedElement(((SchemeLink[])links)[0]);
 				}
 				if (ev.SCHEME_CABLE_LINK_SELECTED)
 				{
 					Object[] links = (Object[])ev.getSource();
 					if (links.length == 1)
-						pathpanel.selectLink(((SchemeCableLink[])links)[0].getId());
+						pathpanel.setSelectedElement(((SchemeCableLink[])links)[0]);
 				}
 				if (ev.SCHEME_PATH_SELECTED)
 				{
@@ -193,20 +199,14 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			if (ev.SCHEME_ELEMENT_SELECTED)
 			{
 				SchemeElement element = (SchemeElement)((Object[])ev.getSource())[0];
-				if (element.getInternalSchemeId().length() != 0)
-				{
-					Scheme sc = element.getInternalScheme();
-					if (sc == null)
-						showNoSelection();
-					else
-						showSchemeCharacteristics(sc, can_be_editable ); //&& ev.isEditable);
-				}
+				if (element.internalScheme() != null)
+					showSchemeCharacteristics(element.internalScheme(), can_be_editable); //&& ev.isEditable);
 				else
 					showSchemeElementCharacteristics(element, can_be_editable ); //&& ev.isEditable);
 			}
 			if (ev.SCHEME_PROTO_ELEMENT_SELECTED)
 			{
-				showProtoCharacteristics((ProtoElement)((Object[])ev.getSource())[0], can_be_editable ); //&& ev.isEditable);
+				showProtoCharacteristics((SchemeProtoElement)((Object[])ev.getSource())[0], can_be_editable ); //&& ev.isEditable);
 			}
 			if (ev.SCHEME_SELECTED)
 			{
@@ -276,9 +276,9 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 						SchemeCableLink l = (SchemeCableLink)ds.get(ev.getSelectionNumber());
 						showCableLinksCharacteristics(new SchemeCableLink[] {l}, false);
 					}
-					else if (ev.getDataClass().equals(ProtoElement.class))
+					else if (ev.getDataClass().equals(SchemeProtoElement.class))
 					{
-						ProtoElement proto = (ProtoElement)ev.getList().get(ev.getSelectionNumber());
+						SchemeProtoElement proto = (SchemeProtoElement)ev.getList().get(ev.getSelectionNumber());
 						showProtoCharacteristics(proto, false);
 					}
 					else if (ev.getDataClass().equals(SchemeProtoGroup.class))
@@ -302,7 +302,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 	{
 		if (dev == null)
 			return;
-		if (dev.ports.size() == 0 || dev.cableports.size() == 0)
+		if (dev.schemePorts().length == 0 || dev.schemeCablePorts().length == 0)
 		{
 			showNoSelection();
 			return;
@@ -311,7 +311,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 		DevicePropsPanel devpanel = new DevicePropsPanel(aContext);
 		devpanel.setEditable(isEditable);
 		this.getContentPane().add(devpanel, BorderLayout.CENTER);
-		devpanel.init(dev, aContext.getDataSourceInterface(), isEditable);
+		devpanel.init(dev, isEditable);
 	}
 
 	void showPathCharacteristics(SchemePath path, boolean isEditable)
@@ -322,7 +322,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 		pathpanel = new PathPropsPanel(aContext);
 		pathpanel.setEditable(isEditable);
 		this.getContentPane().add(pathpanel, BorderLayout.CENTER);
-		pathpanel.init(path, aContext.getDataSourceInterface());
+		pathpanel.init(path);
 		pathpanel.setEditable(false);
 	}
 
@@ -344,13 +344,13 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 		panel.init(ports);
 	}
 
-	void showProtoCharacteristics (ProtoElement proto, boolean isEditable)
+	void showProtoCharacteristics (SchemeProtoElement proto, boolean isEditable)
 	{
 		this.getContentPane().removeAll();
 		ProtoElementPropsPanel panel = new ProtoElementPropsPanel(aContext);
 		panel.setEditable(isEditable);
 		this.getContentPane().add(panel, BorderLayout.CENTER);
-		panel.init(proto, aContext.getDataSourceInterface(), false);
+		panel.init(proto, false);
 	}
 
 	void showSchemeElementCharacteristics(SchemeElement element, boolean isEditable)
@@ -362,7 +362,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 //		else
 			panel.setEditable(isEditable);
 		this.getContentPane().add(panel, BorderLayout.CENTER);
-		panel.init(element, aContext.getDataSourceInterface(), false);
+		panel.init(element, false);
 	}
 
 	void showSchemeCharacteristics(Scheme scheme, boolean isEditable)
@@ -380,7 +380,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 		SchemeProtoGroupPropsPanel panel = new SchemeProtoGroupPropsPanel(aContext);
 		this.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setEditable(isEditable);
-		panel.init(mapproto, aContext.getDataSourceInterface());
+		panel.init(mapproto);
 		panel.setVisible(true);
 	}
 

@@ -4,8 +4,7 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class PathDeleteCommand extends VoidCommand
 {
@@ -30,7 +29,7 @@ public class PathDeleteCommand extends VoidCommand
 				new SchemePath[] {path},
 				CreatePathEvent.DELETE_PATH_EVENT));
 
-		aContext.getDispatcher().notify(new TreeListSelectionEvent(Scheme.typ,
+		aContext.getDispatcher().notify(new TreeListSelectionEvent("",
 			TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT));
 
 

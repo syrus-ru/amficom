@@ -4,15 +4,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.MeasurementPortType;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
 import oracle.jdeveloper.layout.XYConstraints;
 
-public class MeasurementPortTypePane extends PropertiesPanel
+public class MeasurementPortTypePane extends JPanel implements ObjectResourcePropertiesPane
 {
 	public ApplicationContext aContext;
 
@@ -42,7 +43,7 @@ public class MeasurementPortTypePane extends PropertiesPanel
 	public MeasurementPortTypePane(MeasurementPortType p)
 	{
 		this();
-		setObjectResource(p);
+		setObject(p);
 	}
 
 	private void jbInit() throws Exception
@@ -65,17 +66,17 @@ public class MeasurementPortTypePane extends PropertiesPanel
 		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return portType;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		this.portType = (MeasurementPortType)or;
 
-		gPanel.setObjectResource(portType);
-		chPanel.setObjectResource(portType);
+		gPanel.setObject(portType);
+		chPanel.setObject(portType);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -96,23 +97,18 @@ public class MeasurementPortTypePane extends PropertiesPanel
 
 	public boolean save()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogCMediting))
-		{
-			return false;
-		}
-
 		if(portType != null && modify())
 		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			dataSource.SaveAccessPort(portType.getId());
+			try {
+				ConfigurationStorableObjectPool.putStorableObject(portType);
+			}
+			catch (ApplicationException ex) {
+			}
 			return true;
 		}
-		else
-		{
-			new MessageBox("Неправильно введены данные").show();
-		}
+		JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				"Неправильно введены данные");
 		return false;
 	}
 
@@ -121,27 +117,18 @@ public class MeasurementPortTypePane extends PropertiesPanel
 		return false;
 	}
 
+	public boolean cancel()
+	{
+		return false;
+	}
+
 	public boolean delete()
 	{
-/*		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogCMediting))
-			return false;
-
-		String []s = new String[1];
-
-		s[0] = port.id;
-		aContext.getDataSourceInterface().RemoveMeasurementPorts(s);*/
-
 		return true;
 	}
 
 	public boolean create()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
-			return false;
-
 		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый тип");
 		dialog.setSize(dialog.preferredSize);
 
@@ -152,18 +139,22 @@ public class MeasurementPortTypePane extends PropertiesPanel
 
 		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
 		{
+			Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 			String name = dialog.getName();
-			MeasurementPortType new_type = new MeasurementPortType();
-//      new_type.is_modified = true;
-			new_type.name = name;
-			//new_type.link_class = "cable";
-			new_type.modified = System.currentTimeMillis();
-			new_type.id = aContext.getDataSourceInterface().GetUId(MeasurementPortType.typ);
+			try {
+				MeasurementPortType new_type = MeasurementPortType.createInstance(
+						user_id,
+						"",
+						"",
+						name);
 
-			setObjectResource(new_type);
-
-			Pool.put(MeasurementPortType.typ, new_type.getId(), new_type);
-			return true;
+				setObject(new_type);
+				return true;
+			}
+			catch (CreateObjectException ex) {
+				ex.printStackTrace();
+				return false;
+			}
 		}
 		return false;
 	}

@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Configure.Report;
+/*package com.syrus.AMFICOM.Client.Configure.Report;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
@@ -25,7 +25,7 @@ import javax.swing.JComponent;
  * <p>Company: </p>
  * @author not attributable
  * @version 1.0
- */
+ /
 
 public class EquipFeaturesReportModel extends ReportModel
 {
@@ -94,3 +94,4 @@ public class EquipFeaturesReportModel extends ReportModel
 	{
 	};
 }
+*/

@@ -7,8 +7,7 @@ import java.awt.*;
 import javax.swing.JDialog;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class AddToPathFrame extends JDialog
 {
@@ -53,7 +52,7 @@ public class AddToPathFrame extends JDialog
 		add(table, BorderLayout.CENTER);
 	}
 
-	public void init(ObjectResource[] resources)
+	public void init(Object[] resources)
 	{
 		for (int i = 0; i < resources.length; i++)
 		{
@@ -63,7 +62,7 @@ public class AddToPathFrame extends JDialog
 				v.add(resources[i]);
 				tm.addRow(
 						String.valueOf(tm.getRowCount() + 1),
-						new String[] {"текущая", "",  "", ((SchemeLink)resources[i]).getName()}
+						new String[] {"текущая", "",  "", ((SchemeLink)resources[i]).name()}
 						);
 			}
 			if (resources[i] instanceof SchemeCableLink)
@@ -72,8 +71,8 @@ public class AddToPathFrame extends JDialog
 				tm.addRow(
 						String.valueOf(tm.getRowCount() + 1),
 						new String[] {"текущая", "",
-						((SchemeCableLink)resources[i]).getName(),
-						((SchemeCableThread)((SchemeCableLink)resources[i]).cableThreads.iterator().next()).getId()}
+						((SchemeCableLink)resources[i]).name(),
+						(((SchemeCableLink)resources[i]).schemeCableThreads()[0]).name()}
 						);
 			}
 		}

@@ -1,19 +1,24 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.util.*;
+import java.util.List;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.SchemePropsPanel;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 
 public class SchemeSaveAsCommand extends VoidCommand
 {
@@ -40,19 +45,20 @@ public class SchemeSaveAsCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
-			return;
-
 		SchemeGraph graph = schemeTab.getPanel().getGraph();
 		SchemeGraph ugograph = ugoTab.getPanel().getGraph();
 		Scheme scheme = graph.getScheme();
 
-		if (scheme.getId().equals(""))
-		{
-			new SchemeSaveCommand(aContext, schemeTab, ugoTab).execute();
+//		if (scheme.getId().equals(""))
+//		{
+//			new SchemeSaveCommand(aContext, schemeTab, ugoTab).execute();
+//			return;
+//		}
+
+		if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
+			new PathSaveCommand(aContext, schemeTab).execute();
+		if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
 			return;
-		}
 
 		if (graph.getRoots().length == 0)
 		{
@@ -69,7 +75,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 					return;
 			}
 		}
-		else if (scheme.serializable_ugo == null)
+		else if (scheme.ugoCell() == null)
 		{
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Схему нельзя будет включить в другую схему,\nт.к. не создано условное графическое обозначение схемы.\nПродолжить сохранение?", "Предупреждение", JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.NO_OPTION || ret == JOptionPane.CANCEL_OPTION)
@@ -80,7 +86,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 		while (true)
 		{
 			sd = new SaveDialog(aContext, aContext.getDispatcher(), "Сохранение схемы");
-			int ret = sd.init(scheme, scheme.getName()+ " (copy)", false);
+			int ret = sd.init(scheme, scheme.name()+ " (copy)", false);
 			if (ret == 0)
 				return;
 
@@ -89,17 +95,15 @@ public class SchemeSaveAsCommand extends VoidCommand
 			else
 				break;
 		}
-		ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
-		scheme = (Scheme)scheme.clone(aContext.getDataSourceInterface());
+//		ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
+		scheme = scheme.cloneInstance();
 
-		for (Iterator it = scheme.elements.iterator(); it.hasNext();)
+		for (int i = 0; i < scheme.schemeElements().length; i++)
 		{
-			SchemeElement se = (SchemeElement)it.next();
-			if (!se.elementIds.isEmpty())
+			SchemeElement se = scheme.schemeElements()[i];
+			if (se.schemeElements().length != 0)
 			{
-				se.unpack();
-				SchemePanel.copySchemeElementFromArchivedState_virtual(se.serializable_cell);
-				se.pack();
+				SchemePanel.copySchemeElementFromArchivedState_virtual(se.schemeCellImpl().getData());
 			};
 		}
 
@@ -107,59 +111,55 @@ public class SchemeSaveAsCommand extends VoidCommand
 
 		SchemePanel.assignClonedIds(graph.getAll());
 
-		scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
+		scheme.schemeCellImpl().setData((List)graph.getArchiveableState(graph.getRoots()));
 		if (graph.getScheme().equals(ugograph.getScheme()))
 		{
 			SchemePanel.assignClonedIds(ugograph.getAll());
-			scheme.serializable_ugo = ugograph.getArchiveableState(ugograph.getRoots());
+			scheme.ugoCellImpl().setData((List)ugograph.getArchiveableState(ugograph.getRoots()));
 			ugoTab.setGraphChanged(false);
 		}
 		else
-			SchemePanel.copySchemeElementFromArchivedState_virtual(scheme.serializable_ugo);
+			SchemePanel.copySchemeElementFromArchivedState_virtual(scheme.schemeCellImpl().getData());
 
-		boolean res = scheme.pack();
-		if (!res)
-		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка сохранения схемы " +
-																		scheme.getName(), "Ошибка", JOptionPane.OK_OPTION);
-			return;
+//		if (!res)
+//		{
+//			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка сохранения схемы " +
+//																		scheme.getName(), "Ошибка", JOptionPane.OK_OPTION);
+//			return;
+//		}
+
+		scheme.name(sd.name);
+		scheme.description(sd.description);
+		scheme.type(sd.type);
+		try {
+			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+					getAccessIdentifier().domain_id);
+			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					domain_id, true);
+			scheme.domainImpl(domain);
+		}
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
+		try {
+			SchemeStorableObjectPool.putStorableObject(scheme);
+
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					"Схема " + scheme.name() + " успешно сохранена",
+					"Сообщение",
+					JOptionPane.INFORMATION_MESSAGE);
+
+			aContext.getDispatcher().notify(new TreeListSelectionEvent("",
+					TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT));
+		}
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
 		}
 
-		scheme.name = sd.name;
-		scheme.description = sd.description;
-		scheme.schemeType = sd.type;
-		scheme.created = System.currentTimeMillis();
-		scheme.createdBy = dataSource.getSession().getUserId();
-		scheme.modifiedBy = dataSource.getSession().getUserId();
-		scheme.ownerId = dataSource.getSession().getUserId();
-		scheme.domainId = dataSource.getSession().getDomainId();
-		Pool.put(Scheme.typ, scheme.getId(), scheme);
-
-//		schemePanel.scheme = scheme;
-
-
-//		schemePanel.insertCell(scheme.serializable_cell, true);
-//		ugoPanel.insertCell(scheme.serializable_ugo, true);
-
-		dataSource.SaveScheme(scheme.getId());
-
-		schemeTab.setGraphChanged(false);
-
-		JOptionPane.showMessageDialog(
-				Environment.getActiveWindow(),
-				"Схема "+ scheme.getName() + " успешно сохранена",
-				"Сообщение",
-				JOptionPane.INFORMATION_MESSAGE);
-
-//		aContext.getDispatcher().notify(new TreeListSelectionEvent(Scheme.typ,
-//				TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT));
-		aContext.getDispatcher().notify(new TreeListSelectionEvent(Scheme.typ, TreeListSelectionEvent.REFRESH_EVENT));
-
-//		GraphActions.clearGraph(graph);
-
-		scheme.serializable_cell = null;
-		scheme.serializable_ugo = null;
-		scheme.unpack();
+//		scheme.serializable_cell = null;
+//		scheme.serializable_ugo = null;
+//		scheme.unpack();
 
 		aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
 		Pool.removeMap("clonedids");
@@ -176,7 +176,7 @@ class SaveDialog extends JDialog
 
 	public String name = "";
 	public String description = "";
-	public String type = Scheme.NETWORK;
+	public Type type = Type.NETWORK;
 
 	public int retCode = 0;
 
@@ -211,8 +211,22 @@ class SaveDialog extends JDialog
 	{
 		panel = new SchemePropsPanel(aContext, dispatcher, show_ugo);
 		panel.schemeNameTextField.setText(name);
-		panel.schemeDescrTextArea.setText(scheme.description);
-		panel.schemeTypeComboBox.setSelectedItem(LangModelSchematics.getString(scheme.schemeType));
+		panel.schemeDescrTextArea.setText(scheme.description());
+
+		String type;
+		switch (scheme.type().value())
+		{
+			case Type._NETWORK:
+				type = LangModelSchematics.getString("NETWORK");
+				break;
+			case Type._CABLE_SUBNETWORK:
+				type = LangModelSchematics.getString("CABLE_SUBNETWORK");
+				break;
+			default:
+				type = LangModelSchematics.getString("BUILDING");
+		}
+
+		panel.schemeTypeComboBox.setSelectedItem(LangModelSchematics.getString(type));
 	//	panel.init(graph.scheme, aContext.getDataSourceInterface());
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(panel, BorderLayout.CENTER);

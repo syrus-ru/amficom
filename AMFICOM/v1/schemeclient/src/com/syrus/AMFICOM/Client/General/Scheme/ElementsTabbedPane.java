@@ -2,12 +2,11 @@ package com.syrus.AMFICOM.Client.General.Scheme;
 
 import java.util.Map;
 
-import java.awt.*;
+import java.awt.BorderLayout;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class ElementsTabbedPane extends UgoTabbedPane
 {
@@ -32,8 +31,7 @@ public class ElementsTabbedPane extends UgoTabbedPane
 		SchemeGraph graph = getPanel().getGraph();
 		graph.setScheme(null);
 		graph.setSchemeElement(se);
-		se.unpack();
-		Map clones = graph.copyFromArchivedState(se.serializable_cell, new java.awt.Point(0, 0));
+		Map clones = graph.copyFromArchivedState(se.schemeCellImpl().getData(), new java.awt.Point(0, 0));
 		graph.selectionNotify();
 	}
 
@@ -42,8 +40,7 @@ public class ElementsTabbedPane extends UgoTabbedPane
 		SchemeGraph graph = getPanel().getGraph();
 		if (graph.getSchemeElement() != null)
 		{
-			SchemeElement sc = sch.getSchemeElement(graph.getSchemeElement().getId());
-			if (sc != null)
+			if (SchemeUtils.isSchemeContainsElement(sch, graph.getSchemeElement()))
 			{
 				GraphActions.clearGraph(graph);
 				return true;

@@ -9,10 +9,9 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class SchemeElementPropsPanel extends JPanel
 {
@@ -139,7 +138,7 @@ public class SchemeElementPropsPanel extends JPanel
 			{
 				if (element == null)
 					return;
-				element.name = titleTextField.getText();
+				element.name(titleTextField.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -152,7 +151,7 @@ public class SchemeElementPropsPanel extends JPanel
 			{
 				if (element == null)
 					return;
-				element.description = descriptionTextArea.getText();
+				element.description(descriptionTextArea.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -165,8 +164,8 @@ public class SchemeElementPropsPanel extends JPanel
 			{
 				if (element == null)
 					return;
-				element.ugoText = ugoNameTextField.getText();
-				aContext.getDispatcher().notify(new SchemeElementsEvent(element.getId(), element.ugoText, SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
+				element.label(ugoNameTextField.getText());
+				aContext.getDispatcher().notify(new SchemeElementsEvent(element.id(), element.label(), SchemeElementsEvent.UGO_TEXT_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -184,39 +183,38 @@ public class SchemeElementPropsPanel extends JPanel
 		ugoIconButton.setEnabled(b);
 	}
 
-	public void init(SchemeElement element, DataSourceInterface dataSource, boolean show_is_kis)
+	public void init(SchemeElement element, boolean show_is_kis)
 	{
 		this.element = element;
 
 		if (show_is_kis)
 			compPanel.add(cl2Panel, BorderLayout.SOUTH);
 
-		ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, element.protoElementId);
-		if (p != null && p.scheme_proto_group != null)
-			mapProtoTextField.setText(p.scheme_proto_group.getName());
+		SchemeProtoElement p = element.schemeProtoElement();
+		if (p != null && p.parent() != null)
+			mapProtoTextField.setText(p.parent().name());
 		else
 			mapProtoTextField.setText("");
 		mapProtoTextField.setCaretPosition(0);
 
 		mapProtoTextField.setEnabled(false);
 
-		titleTextField.setText(element.getName());
+		titleTextField.setText(element.name());
 		titleTextField.setCaretPosition(0);
-		if (!element.protoElementId.equals(""))
-			nameTextField.setText(((ObjectResource)Pool.get(ProtoElement.typ, element.protoElementId)).getName());
-		else if (element.getInternalSchemeId().length() != 0)
-			nameTextField.setText(element.getInternalScheme().getName());
+		if (element.internalScheme() != null)
+			nameTextField.setText(element.internalScheme().name());
+		nameTextField.setText(element.name());
 		nameTextField.setCaretPosition(0);
 
-		descriptionTextArea.setText(element.description);
-		ugoNameTextField.setText(element.ugoText);
+		descriptionTextArea.setText(element.description());
+		ugoNameTextField.setText(element.label());
 		ugoNameTextField.setCaretPosition(0);
 
 		if (p != null)
 		{
-			EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, p.equipmentTypeId);
+			EquipmentType eqt = p.equipmentTypeImpl();
 			if (eqt != null)
-				manufacturerTextField.setText(eqt.manufacturer);
+				manufacturerTextField.setText(eqt.getManufacturer());
 			else
 				manufacturerTextField.setText("");
 			manufacturerTextField.setCaretPosition(0);
@@ -225,37 +223,19 @@ public class SchemeElementPropsPanel extends JPanel
 			manufacturerTextField.setText("");
 		//manufacturerTextField.setEnabled(false);
 
-		undoType = element.getName();
-		undoDescription = element.description;
-		undoUgoName = element.ugoText;
+		undoType = element.name();
+		undoDescription = element.description();
+		undoUgoName = element.label();
 		updateUI();
-	}
-
-	boolean hasCablePort (ProtoElement proto)
-	{
-		for (Iterator it = proto.devices.iterator(); it.hasNext();)
-		{
-			SchemeDevice dev = (SchemeDevice)it.next();
-			if (!dev.cableports.isEmpty())
-				return true;
-		}
-
-		for (Iterator it = proto.protoelementIds.iterator(); it.hasNext();)
-		{
-			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
-			if (hasCablePort(p))
-				return true;
-		}
-		return false;
 	}
 
 	public void undo()
 	{
 		if (element != null)
 		{
-			element.name = undoType;
-			element.description = undoDescription;
-			element.ugoText = undoUgoName;
+			element.name(undoType);
+			element.description(undoDescription);
+			element.label(undoUgoName);
 		}
 	}
 

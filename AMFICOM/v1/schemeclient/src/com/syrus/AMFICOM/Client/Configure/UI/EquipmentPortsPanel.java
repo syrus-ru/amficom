@@ -6,16 +6,17 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.client_.general.ui_.*;
+import com.syrus.AMFICOM.scheme.AbstractSchemePortController;
+import com.syrus.AMFICOM.scheme.corba.*;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class EquipmentPortsPanel extends GeneralPanel
 {
 	SchemeElement element;
 
-	private ObjectResourceComboBox portBox = new ObjectResourceComboBox(SchemePort.typ, false);
+	private ObjComboBox portBox;
 //	PortGeneralPanel pgp = new PortGeneralPanel();
 	PortPane pgp = new PortPane();
 	private JPanel mainPanel = new JPanel();
@@ -39,11 +40,14 @@ public class EquipmentPortsPanel extends GeneralPanel
 	public EquipmentPortsPanel(SchemeElement element)
 	{
 		this();
-		setObjectResource(element);
+		setObject(element);
 	}
 
 	private void jbInit() throws Exception
 	{
+		portBox = new ObjComboBox(AbstractSchemePortController.getInstance(),
+															AbstractSchemePortController.KEY_NAME);
+
 		setName(LangModelConfig.getString("label_ports"));
 
 		this.setLayout(new BorderLayout());
@@ -74,18 +78,19 @@ public class EquipmentPortsPanel extends GeneralPanel
 		pgp.setContext(aContext);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return element;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		element = (SchemeElement)element;
-		portBox.setContents(element.getPorts().iterator(), false);
+		portBox.removeAll();
+		portBox.addElements(SchemeUtils.getPorts(element));
 
-		SchemePort port = (SchemePort)portBox.getSelectedObjectResource();
-		pgp.setObjectResource(port);
+		SchemePort port = (SchemePort)portBox.getSelectedItem();
+		pgp.setObject(port);
 	}
 
 	public boolean modify()
@@ -97,6 +102,6 @@ public class EquipmentPortsPanel extends GeneralPanel
 
 	void portBox_actionPerformed(ActionEvent e)
 	{
-		pgp.setObjectResource((SchemePort)portBox.getSelectedObjectResource());
+		pgp.setObject((SchemePort)portBox.getSelectedItem());
 	}
 }

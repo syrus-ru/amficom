@@ -1,14 +1,14 @@
 package com.syrus.io;
 
-import java.io.*;
-import java.util.*;
-
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.MeasurementPortType;
-import com.syrus.AMFICOM.Client.Resource.General.Characteristic;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+//import java.io.*;
+//import java.util.*;
+//
+//import com.syrus.AMFICOM.Client.Resource.*;
+//import com.syrus.AMFICOM.Client.Resource.ISMDirectory.MeasurementPortType;
+//import com.syrus.AMFICOM.Client.Resource.General.Characteristic;
+//import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+//import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+//import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class DirectoryToFile
 {

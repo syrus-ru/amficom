@@ -5,7 +5,6 @@ import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.Client.General.Command.ViewNavigatorCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Schematics.UI.ElementsTreeModel;
 
 public class ViewElementsNavigatorCommand extends ViewNavigatorCommand
@@ -51,11 +50,7 @@ public class ViewElementsNavigatorCommand extends ViewNavigatorCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if(dataSource == null)
-			return;
-
-		setParameter("treemodel", new ElementsTreeModel(dataSource));
+		setParameter("treemodel", new ElementsTreeModel(aContext));
 		super.setApplicationContext(aContext);
 		super.execute();
 

@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.List;
 
@@ -11,15 +10,11 @@ import javax.swing.*;
 import com.jgraph.graph.DefaultGraphModel;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class SchemePanel extends ElementsPanel
 {
-//	public HashSet schemes_to_save = new HashSet();
-
 	protected static String[] buttons = new String[]
 	{
 		Constants.marqueeTool,
@@ -29,11 +24,16 @@ public class SchemePanel extends ElementsPanel
 		Constants.lineTool,
 		Constants.textTool,
 		Constants.separator,
+//		Constants.deviceTool,
+		Constants.portOutKey,
+		Constants.portInKey,
 		Constants.linkTool,
 		Constants.cableTool,
 		Constants.separator,
 		Constants.blockPortKey,
-		Constants.createTopLevelSchemeKey,
+		Constants.createTopLevelElementKey,
+		Constants.groupSEKey,
+		Constants.ungroupKey,
 		Constants.separator,
 		Constants.deleteKey,
 		//Constants.undoKey,
@@ -46,9 +46,10 @@ public class SchemePanel extends ElementsPanel
 		Constants.backgroundSize,
 		Constants.separator,
 		Constants.LINK_MODE,
-		Constants.PATH_MODE
+		Constants.PATH_MODE,
+		Constants.separator,
+		Constants.TOP_LEVEL_SCHEME_MODE
 	};
-
 
 	public SchemePanel(ApplicationContext aContext)
 	{
@@ -123,9 +124,9 @@ public class SchemePanel extends ElementsPanel
 				else if (cl.equals(SchemeElement.class))
 				{
 					SchemeElement se = (SchemeElement)ds.get(ev.getSelectionNumber());
-					if (getGraph().getScheme().elements.contains(se))
+					if (Arrays.asList(getGraph().getScheme().schemeElements()).contains(se))
 					{
-						Object cell = SchemeActions.findSchemeElementById(getGraph(), se.getId());
+						Object cell = SchemeActions.findSchemeElementById(getGraph(), se.id());
 						SchemeGraph.skip_notify = true;
 						getGraph().setSelectionCell(cell);
 						SchemeGraph.skip_notify = false;
@@ -134,9 +135,9 @@ public class SchemePanel extends ElementsPanel
 				else if (cl.equals(SchemeLink.class))
 				{
 					SchemeLink l = (SchemeLink)ds.get(ev.getSelectionNumber());
-					if (getGraph().getScheme().links.contains(l))
+					if (Arrays.asList(getGraph().getScheme().schemeLinks()).contains(l))
 					{
-						Object cell = SchemeActions.findSchemeLinkById(getGraph(), l.getId());
+						Object cell = SchemeActions.findSchemeLinkById(getGraph(), l.id());
 						SchemeGraph.skip_notify = true;
 						getGraph().setSelectionCell(cell);
 						SchemeGraph.skip_notify = false;
@@ -145,9 +146,9 @@ public class SchemePanel extends ElementsPanel
 				else if (cl.equals(SchemeCableLink.class))
 				{
 					SchemeCableLink l = (SchemeCableLink)ds.get(ev.getSelectionNumber());
-					if (getGraph().getScheme().cablelinks.contains(l))
+					if (Arrays.asList(getGraph().getScheme().schemeCableLinks()).contains(l))
 					{
-						Object cell = SchemeActions.findSchemeCableLinkById(getGraph(), l.getId());
+						Object cell = SchemeActions.findSchemeCableLinkById(getGraph(), l.id());
 						SchemeGraph.skip_notify = true;
 						getGraph().setSelectionCell(cell);
 						SchemeGraph.skip_notify = false;
@@ -159,7 +160,7 @@ public class SchemePanel extends ElementsPanel
 		super.operationPerformed(ae);
 	}
 
-	void insertSchemeElement (SchemeElement scheme_el, Serializable serializable_cell, Serializable serializable_ugo, Point p)
+	void insertSchemeElement (SchemeElement scheme_el, List serializable_cell, List serializable_ugo, Point p)
 	{
 		if (serializable_ugo != null)
 		{
@@ -167,7 +168,7 @@ public class SchemePanel extends ElementsPanel
 			if ((clones == null || clones.size() == 0) && serializable_cell != null)
 				copySchemeElementFromArchivedState (scheme_el, serializable_cell, p);
 			else if (serializable_cell != null)
-				copySchemeElementFromArchivedState_virtual(scheme_el.serializable_cell);
+				copySchemeElementFromArchivedState_virtual(serializable_cell);
 		}
 		else if (serializable_cell != null)
 			copySchemeElementFromArchivedState (scheme_el, serializable_cell, p);
@@ -180,16 +181,15 @@ public class SchemePanel extends ElementsPanel
 			inner.pack();
 		}
 */
-		scheme_el.pack();
 	}
 
-	public static Map copySchemeElementFromArchivedState_virtual(Serializable serializable)
+	public static Map copySchemeElementFromArchivedState_virtual(List serializable)
 	{
 		DefaultGraphModel model = new DefaultGraphModel();
 		SchemeGraph virtual_graph = new SchemeGraph(model, new ApplicationContext());
 		Map clones = virtual_graph.copyFromArchivedState(serializable, new Point(0, 0));
 		assignClonedIds(clones.values().toArray());
-		serializable = virtual_graph.getArchiveableState(virtual_graph.getRoots());
+		serializable = (List)virtual_graph.getArchiveableState(virtual_graph.getRoots());
 		return clones;
 	}
 
@@ -203,22 +203,19 @@ public class SchemePanel extends ElementsPanel
 			Object[] cells = (Object[]) v.get(0);
 			if (cells.length == 1 && cells[0] instanceof DeviceGroup)
 			{
-				DataSourceInterface dataSource = aContext.getDataSourceInterface();
 				// клонируем схемеэлемент
 				DeviceGroup group = (DeviceGroup)cells[0];
-				ProtoElement proto = (ProtoElement)group.getProtoElement();
+				SchemeProtoElement proto = (SchemeProtoElement)group.getProtoElement();
 				//EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
 
 				//SchemeElement element = new SchemeElement(proto, dataSource);
-				getGraph().getScheme().elements.add(element);
+				Arrays.asList(getGraph().getScheme().schemeElements()).add(element);
 
-				element.serializable_cell = proto.serializable_cell;
-				element.serializable_ugo = proto.serializable_ugo;
-				element.pack();
+				element.schemeCell(proto.schemeCell());
+				element.ugoCell(proto.ugoCell());
 
 				DeviceGroup clone = (DeviceGroup)clones.get(cells[0]);
-				clone.setSchemeElementId(element.getId());
-				Pool.put(SchemeElement.typ, element.getId(), element);
+				clone.setSchemeElementId(element.id());
 
 				assignClonedIds(clones.values().toArray());
 			}
@@ -231,33 +228,29 @@ public class SchemePanel extends ElementsPanel
 	{
 		SchemeGraph graph = getGraph();
 		graph.setScheme(sch); //(Scheme)sch.clone(aContext.getDataSourceInterface());
-		sch.serializable_cell = null;
-		sch.serializable_ugo = null;
-		sch.unpack();
-		Map clones = graph.copyFromArchivedState(sch.serializable_cell, new Point(0, 0));
+//		sch.schemeCell(null);
+//		sch.ugoCell(null);
+//		sch.unpack();
+		Map clones = graph.copyFromArchivedState(sch.schemeCellImpl().getData(), new Point(0, 0));
 //		graph.setGraphChanged(false);
 		graph.selectionNotify();
-		graph.setActualSize(new Dimension(sch.width == 0 ? 840 : sch.width,
-				sch.height == 0 ? 1190 : sch.height));
+		graph.setActualSize(new Dimension(sch.width() == 0 ? 840 : sch.width(),
+				sch.height() == 0 ? 1190 : sch.height()));
 		//assignClonedIds(clones);
 	}
 
-	protected void setProtoCell(ProtoElement proto, Point p)
+	protected void setProtoCell(SchemeProtoElement proto, Point p)
 	{
 		if (proto != null)
 		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			proto.unpack();
+			SchemeElement scheme_el = SchemeFactory.createSchemeElement();
 
-			SchemeElement scheme_el = new SchemeElement(proto, dataSource);
 			if (getGraph().getScheme() != null)
-				scheme_el.setSchemeId(getGraph().getScheme().getId());
+				scheme_el.scheme(getGraph().getScheme());
 			else if (getGraph().getSchemeElement() != null)
-				scheme_el.setSchemeId(getGraph().getSchemeElement().getSchemeId());
+				scheme_el.scheme(getGraph().getSchemeElement().scheme());
 
-			scheme_el.unpack();
-
-			insertSchemeElement(scheme_el, proto.serializable_cell,	proto.serializable_ugo, p);
+			insertSchemeElement(scheme_el, proto.schemeCellImpl().getData(), proto.ugoCellImpl().getData(), p);
 
 			repaint();
 		}
@@ -268,12 +261,7 @@ public class SchemePanel extends ElementsPanel
 		SchemeGraph graph = getGraph();
 		Scheme scheme = graph.getScheme();
 		if (scheme != null)
-		{
-			scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
-			boolean res = scheme.pack();
-			if (!res)
-				return null;
-		}
+			scheme.schemeCellImpl().setData((List)graph.getArchiveableState(graph.getRoots()));
 		return scheme;
 	}
 
@@ -281,41 +269,36 @@ public class SchemePanel extends ElementsPanel
 	protected void setSchemeCell(Scheme sch)
 	{
 		if (sch != null)
-		{
-			sch.unpack();
 			insertScheme(sch);
-		}
 	}
 
 
 	void insertScheme (Scheme sch)
 	{
-		if (sch.serializable_ugo != null && sch.serializable_ugo instanceof List)
+		if (sch.ugoCell() != null)
 		{
-			Map clones = getGraph().copyFromArchivedState(sch.serializable_ugo, new Point(0, 0));
+			Map clones = getGraph().copyFromArchivedState(sch.ugoCellImpl().getData(), new Point(0, 0));
 			//graph.setFromArchivedState(scheme.serializable_ugo);
-			List v = (List) sch.serializable_ugo;
+			List v = sch.ugoCellImpl().getData();
 			Object[] cells = (Object[]) v.get(0);
 
 			if (cells.length == 1 && cells[0] instanceof DeviceGroup)
 			{
-				DataSourceInterface dataSource = aContext.getDataSourceInterface();
-
 				DeviceGroup group = (DeviceGroup)cells[0];
 
-				SchemeElement element = new SchemeElement(dataSource.GetUId(SchemeElement.typ));
-				element.setInternalSchemeId(sch.getId());
-				element.setSchemeId(getGraph().getScheme().getId());
-				element.name = sch.getName();
-				element.description = sch.description;
-				getGraph().getScheme().elements.add(element);
-				element.serializable_cell = sch.serializable_ugo;
-				element.pack();
+				SchemeElement element = SchemeFactory.createSchemeElement();
+				element.internalScheme(sch);
+				element.scheme(getGraph().getScheme());
+				element.name(sch.name());
+				element.description(sch.description());
+				Arrays.asList(getGraph().getScheme().schemeElements()).add(element);
+				element.schemeCell(sch.ugoCell());
 
 				DeviceGroup clone = (DeviceGroup)clones.get(cells[0]);
-				clone.setSchemeElementId(element.getId());
+				clone.setSchemeElementId(element.id());
 				//((DeviceGroup)cells[0]).setSchemeElementId(element.getId());
-				Pool.put(SchemeElement.typ, element.getId(), element);
+
+//				Pool.put(SchemeElement.typ, element.getId(), element);
 
 			//	assignClonedIds(clones);
 			}
@@ -324,7 +307,7 @@ public class SchemePanel extends ElementsPanel
 
 	public void removeAllPathsFromScheme()
 	{
-		getGraph().getScheme().solution.paths.clear();
+		getGraph().getScheme().schemeMonitoringSolution().schemePaths(new SchemePath[0]);
 	}
 
 	public boolean updatePathsAtScheme(Collection paths)
@@ -337,13 +320,14 @@ public class SchemePanel extends ElementsPanel
 
 	public void removePathFromScheme(SchemePath path)
 	{
-		getGraph().getScheme().solution.paths.remove(path);
+		Arrays.asList(getGraph().getScheme().schemeMonitoringSolution().schemePaths()).remove(path);
 	}
 
 	public void insertPathToScheme(SchemePath path)
 	{
-		if (!getGraph().getScheme().solution.paths.contains(path))
-			getGraph().getScheme().solution.paths.add(path);
+		List paths = Arrays.asList(getGraph().getScheme().schemeMonitoringSolution().schemePaths());
+		if (!paths.contains(path))
+			paths.add(path);
 		editing_path = null;
 	}
 
@@ -401,6 +385,11 @@ public class SchemePanel extends ElementsPanel
 			{
 				SchemeGraph.ShemeMarqueeHandler mh = (SchemeGraph.ShemeMarqueeHandler) getGraph().getMarqueeHandler();
 
+				buttons.put(Constants.groupSEKey,
+										createToolButton(mh.gr2, btn_size, null, "создать компонент",
+										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/group.gif")),
+										new GroupSEAction(getGraph()), false));
+
 				buttons.put(Constants.createTopLevelSchemeKey,
 										createToolButton(mh.scheme_ugo, btn_size, null, "УГО схемы",
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/sheme_ugo.gif")),
@@ -419,6 +408,10 @@ public class SchemePanel extends ElementsPanel
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pathmode.gif")),
 										new SetPathModeAction (SchemePanel.this), true));
 
+				buttons.put(Constants.TOP_LEVEL_SCHEME_MODE,
+										createToolButton(mh.topModeButt, btn_size, null, "режим схематичного изображения",
+										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")),
+										new SetTopLevelModeAction(SchemePanel.this), true));
 
 				ButtonGroup group = new ButtonGroup();
 				group.add(mh.linkButt);

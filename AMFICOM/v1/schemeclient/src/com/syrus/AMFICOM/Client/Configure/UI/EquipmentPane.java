@@ -1,16 +1,16 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.BorderLayout;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
-public class EquipmentPane extends PropertiesPanel
+public class EquipmentPane extends JPanel implements ObjectResourcePropertiesPane
 {
 	public ApplicationContext aContext;
 
@@ -40,7 +40,7 @@ public class EquipmentPane extends PropertiesPanel
 	public EquipmentPane(SchemeElement element)
 	{
 		this();
-		setObjectResource(element);
+		setObject(element);
 	}
 
 	private void jbInit() throws Exception
@@ -57,20 +57,20 @@ public class EquipmentPane extends PropertiesPanel
 		tabbedPane.add(chPanel.getName(), chPanel);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return element;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		element = (SchemeElement)or;
 
-		gPanel.setObjectResource(element);
-		gaPanel.setObjectResource(element);
-		pPanel.setObjectResource(element);
-		cpPanel.setObjectResource(element);
-		chPanel.setObjectResource(element);
+		gPanel.setObject(element);
+		gaPanel.setObject(element);
+		pPanel.setObject(element);
+		cpPanel.setObject(element);
+		chPanel.setObject(element);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -96,25 +96,25 @@ public class EquipmentPane extends PropertiesPanel
 
 	public boolean save()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-		{
-			return false;
-		}
-
 		if(modify())
 		{
-			if (element.equipment != null)
+			if (element.equipment() != null)
 			{
-				DataSourceInterface dataSource = aContext.getDataSourceInterface();
-				dataSource.SaveEquipment(element.equipment.getId());
-				return true;
+				try {
+					ConfigurationStorableObjectPool.putStorableObject(element.equipmentImpl());
+					return true;
+				}
+				catch (ApplicationException ex) {
+					ex.printStackTrace();
+				}
+
 			}
 		}
 		else
 		{
-			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					LangModelConfig.getString("err_incorrect_data_input"));
 		}
 		return false;
 	}
@@ -124,13 +124,13 @@ public class EquipmentPane extends PropertiesPanel
 		return false;
 	}
 
+	public boolean cancel()
+	{
+		return false;
+	}
+
 	public boolean delete()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-			return false;
-
 		int i = 0;
 /*
 		if(kis != null)

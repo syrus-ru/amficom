@@ -4,16 +4,18 @@ import java.awt.*;
 
 import com.jgraph.graph.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.general.corba.Identifier;
 
 public class DefaultCableLink extends DefaultEdge
 {
-	private static final long serialVersionUID = 01L;
+	private static final long serialVersionUID = 02L;
+	private Identifier scheme_cablelink_id;
+	private Identifier scheme_path_id;
 
-	protected String scheme_cablelink_id = "";
-	protected String scheme_path_id = "";
 	protected Point[] routed;
-
 	protected transient Object _source, _target;
 	protected transient Object source, target;
 
@@ -47,41 +49,7 @@ public class DefaultCableLink extends DefaultEdge
 	{
 		return new LinkRouting();
 	}
-/*
-	private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException
-	{
-		out.writeObject(scheme_cablelink_id);
-		out.writeObject(scheme_path_id);
-		out.writeObject(routed);
 
-		HashSet set = (HashSet)Pool.get("serialized", "serialized");
-		if (set == null)
-		{
-			set = new HashSet();
-			Pool.put("serialized", "serialized", set);
-		}
-		if (!set.contains(_source))
-		{
-			set.add(_source);
-			out.writeObject(_source);
-		}
-		if (!set.contains(_target))
-		{
-			set.add(_target);
-			out.writeObject(_target);
-		}
-		if (!set.contains(source))
-		{
-			set.add(source);
-			out.writeObject(source);
-		}
-		if (!set.contains(target))
-		{
-			set.add(target);
-			out.writeObject(target);
-		}
-	}
-*/
 	public class LinkRouting implements Edge.Routing
 	{
 		private static final long serialVersionUID = 01L;
@@ -207,32 +175,21 @@ public class DefaultCableLink extends DefaultEdge
 
 	public SchemeCableLink getSchemeCableLink()
 	{
-		return (SchemeCableLink)Pool.get(SchemeCableLink.typ, scheme_cablelink_id);
+		try {
+			return (SchemeCableLink)SchemeStorableObjectPool.getStorableObject(scheme_cablelink_id, true);
+		}
+		catch (Exception ex) {
+			return null;
+		}
 	}
 
-	public String getSchemeCableLinkId()
+	public Identifier getSchemeCableLinkId()
 	{
 		return scheme_cablelink_id;
 	}
 
-	public void setSchemeCableLinkId(String id)
+	public void setSchemeCableLinkId(Identifier id)
 	{
 		scheme_cablelink_id = id;
 	}
-
-//	public SchemePath getSchemePath()
-//	{
-//		return (SchemePath)Pool.get(SchemePath.typ, scheme_path_id);
-//	}
-
-//	public String getSchemePathId()
-//	{
-//		return scheme_path_id;
-//	}
-
-//	public void setSchemePathId(String id)
-//	{
-//		scheme_path_id = id;
-//	}
 }
-

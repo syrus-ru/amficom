@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.General.Command.Scheme;
+/*package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import java.io.*;
 import java.util.*;
@@ -8,11 +8,8 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-import com.syrus.io.DirectoryToFile;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class SchemeFromFileCommand extends VoidCommand
 {
@@ -105,7 +102,7 @@ public class SchemeFromFileCommand extends VoidCommand
 		return ht;
 	}
 
-	ArrayList get_proto_ids (ArrayList ids, ProtoElement proto)
+	ArrayList get_proto_ids (ArrayList ids, SchemeProtoElement proto)
 	{
 		for (Iterator it = proto.protoelementIds.iterator(); it.hasNext();)
 		{
@@ -171,3 +168,4 @@ public class SchemeFromFileCommand extends VoidCommand
 }
 
 
+*/

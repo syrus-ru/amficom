@@ -1,18 +1,17 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
-import javax.swing.event.*;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.scheme.CableThreadController;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class DevicePropsPanel extends JPanel
 {
@@ -49,13 +48,11 @@ public class DevicePropsPanel extends JPanel
 	{
 	}
 
-	public void init(SchemeDevice dev, DataSourceInterface dataSource, boolean show_is_kis)
+	public void init(SchemeDevice dev, boolean show_is_kis)
 	{
 		this.dev = dev;
-		if (!dev.isCrossRouteValid())
-			dev.createDefaultCrossRoute();
 
-		RouteTableModel tmodel = new RouteTableModel(dev.ports, dev.getCrossRoute());
+		RouteTableModel tmodel = new RouteTableModel(dev.schemePorts());
 		table.setModel(tmodel);
 		table.setDefaultEditor(Object.class, new RouteTableEditor(tmodel));
 		table.setDefaultRenderer(Object.class, new RouteTableRenderer(tmodel));
@@ -82,55 +79,69 @@ public class DevicePropsPanel extends JPanel
 				{
 					for (int i = 0; i < getRowCount(); i++)
 					{
-						ObjectResourceComboBox box = (ObjectResourceComboBox)getValueAt(i, 1);
+						ObjComboBox box = (ObjComboBox)getValueAt(i, 1);
 						if (e.getItem().equals(box.getSelectedItem()) &&
 								!e.getSource().equals(box))
 						{
-							box.setSelected(null);
+							box.setSelectedItem("");
 							table.setRowSelectionInterval(i, i);
-							dev.getCrossRoute().remove((SchemePort)getObjectResource(i, 0));
+							SchemePort port = (SchemePort)getObjectResource(i, 0);
+							port.schemeCableThread(null);
 						}
 					}
 					for (int i = 0; i < getRowCount(); i++)
 					{
-						ObjectResourceComboBox box = (ObjectResourceComboBox) getValueAt(i, 1);
+						ObjComboBox box = (ObjComboBox) getValueAt(i, 1);
 						if (e.getItem().equals(box.getSelectedItem()) &&
 								e.getSource().equals(box))
 						{
 							table.setRowSelectionInterval(i, i);
-							dev.getCrossRoute().add((SchemePort)getObjectResource(i, 0), (SchemeCableThread)box.getSelectedItem());
+							SchemePort port = (SchemePort)getObjectResource(i, 0);
+							port.schemeCableThread((SchemeCableThread)box.getSelectedItem());
 						}
 					}
 				}
 			}
 		}
 
-		RouteTableModel(Collection ports, PortThreadMap crossroute)
+		RouteTableModel(SchemePort[] ports)
 		{
-			ObjectResourceSorter sorter = SchemePort.getDefaultSorter();
-			sorter.setDataSet(ports);
-			List sortedPorts = sorter.default_sort();
+			List sortedPorts = Arrays.asList(ports);
+			Set schemeCables = new HashSet();
+			List sortedThreads = new LinkedList();
 
-			sorter.setDataSet(crossroute.getAllThreads());
-			List sortedThreads = sorter.default_sort();
+			for (int i = 0; i < ports.length; i++)
+			{
+				SchemeCableThread thread = ports[i].schemeCableThread();
+				if (thread != null)
+					schemeCables.add(thread.schemeCablelink());
+			}
+			for (Iterator it = schemeCables.iterator(); it.hasNext();)
+			{
+				SchemeCableLink link = (SchemeCableLink)it.next();
+				sortedThreads.addAll(Arrays.asList(link.schemeCableThreads()));
+			}
 
-			Object[][] data = new Object[sortedPorts.size()][2];
-			Iterator it = sortedPorts.iterator();
+			Object[][] data = new Object[ports.length][2];
 
 			MyItemListener itemListener = new MyItemListener();
-			for (int i = 0; i < sortedPorts.size(); i++)
+			for (int i = 0; i < ports.length; i++)
 			{
-				SchemePort p = (SchemePort)it.next();
-				data[i][0] = p;
+				data[i][0] = ports[i];
 
-				SchemeCableThread thread = (SchemeCableThread)crossroute.get(p);
-				ObjectResourceComboBox box = new ObjectResourceComboBox();
+				SchemeCableThread thread = ports[i].schemeCableThread();
+				ObjComboBox box = new ObjComboBox(
+								CableThreadController.getInstance(),
+								CableThreadController.KEY_NAME);
 				box.addItemListener(itemListener);
-
-				box.setFontSize(AComboBox.SMALL_FONT);
+				box.setFontSize(ObjComboBox.SMALL_FONT);
 				data[i][1] = box;
-				box.setContents(sortedThreads, true);
-				box.setSelected(thread);
+				box.addItem("");
+				box.addElements(sortedThreads);
+				if (thread != null)
+					box.setSelectedItem(thread);
+				else
+					box.setSelectedItem("");
 			}
 			super.setDataVector(data, columnNames);
 		}
@@ -145,15 +156,15 @@ public class DevicePropsPanel extends JPanel
 		public Object getValueAt(int row, int col)
 		{
 			if (col == 0)
-				return ((SchemePort)super.getValueAt(row, col)).getName();
+				return ((SchemePort)super.getValueAt(row, col)).name();
 			return super.getValueAt(row, col);
 		}
 
-		public ObjectResource getObjectResource(int row, int col)
+		public Object getObjectResource(int row, int col)
 		{
 			if (col == 0)
-				return (ObjectResource)super.getValueAt(row, col);
-			return ((ObjectResourceComboBox)super.getValueAt(row, col)).getSelectedObjectResource();
+				return super.getValueAt(row, col);
+			return ((ObjComboBox)super.getValueAt(row, col)).getSelectedItem();
 		}
 	}
 

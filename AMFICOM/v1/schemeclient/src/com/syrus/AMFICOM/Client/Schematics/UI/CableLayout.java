@@ -9,10 +9,10 @@ import com.jgraph.graph.GraphConstants;
 import com.jgraph.pad.EllipseCell;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class CableLayout implements OperationListener
 {
@@ -37,18 +37,18 @@ public class CableLayout implements OperationListener
 		panel.getGraph().setGraphEditable(false);
 		panel.getGraph().setAntiAliased(true);
 
-		CableLinkType type = (CableLinkType)Pool.get(CableLinkType.typ, link.cableLinkTypeId);
+//		CableLinkType type = link.cableLinkType();
 		int nModules = 8;
 //		if (type.codename.equals("okst8") ||
 //				type.codename.equals("okst16"))
 //			nModules = 6;
 
-		int tmp = (int)(2 * FIBER_RADIUS * Math.sqrt(Math.round((double)link.cableThreads.size() / (double)nModules + 0.499)));
+		int tmp = (int)(2 * FIBER_RADIUS * Math.sqrt(Math.round((double)link.schemeCableThreads().length / (double)nModules + 0.499)));
 		if (tmp > radius)
 			radius = tmp;
 
 		createModules(nModules);
-		createFibers(nModules, link.cableThreads);
+		createFibers(nModules, Arrays.asList(link.schemeCableThreads()));
 	}
 
 	private void createFibers(int nModules, List fibers)
@@ -149,7 +149,7 @@ public class CableLayout implements OperationListener
 		String name;
 
 		try {
-			int num = ResourceUtil.parseNumber(SchemeCableLink.parseName(thread.getName()));
+			int num = ResourceUtil.parseNumber(SchemeUtils.parseThreadName(thread.name()));
 			name = String.valueOf(num);
 		}
 		catch (Exception ex) {

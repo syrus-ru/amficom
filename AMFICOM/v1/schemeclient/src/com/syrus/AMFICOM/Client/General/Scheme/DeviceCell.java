@@ -1,13 +1,14 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
 import com.jgraph.graph.DefaultGraphCell;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeDevice;
+import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.SchemeDevice;
 
 public class DeviceCell extends DefaultGraphCell
 {
-	private static final long serialVersionUID = 01L;
-	String scheme_device_id;
+	private static final long serialVersionUID = 02L;
+	private Identifier scheme_device_id;
 
 	public DeviceCell()
 	{
@@ -21,24 +22,24 @@ public class DeviceCell extends DefaultGraphCell
 
 	public SchemeDevice getSchemeDevice()
 	{
-		return (SchemeDevice)Pool.get(SchemeDevice.typ, scheme_device_id);
+		try {
+			return (SchemeDevice)SchemeStorableObjectPool.getStorableObject(scheme_device_id, true);
+		}
+		catch (Exception ex) {
+			return null;
+		}
 	}
 
-	public String getSchemeDeviceId()
+	public Identifier getSchemeDeviceId()
 	{
 		return scheme_device_id;
 	}
 
-	public void setSchemeDeviceId(String id)
+	public void setSchemeDeviceId(Identifier id)
 	{
 		scheme_device_id = id;
 	}
-/*
-	private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException
-	{
-		out.writeObject(scheme_device_id);
-	}
-*/
+
 /*
 	public Map changeAttributes(Map change)
 	{

@@ -1,22 +1,23 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement;
 
 public class EquipmentTypeGeneralPanel extends GeneralPanel
 {
 	EquipmentType equipmentType;
+	SchemeProtoElement proto;
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
@@ -71,7 +72,7 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 	public EquipmentTypeGeneralPanel(EquipmentType eqType)
 	{
 		this();
-		setObjectResource(eqType);
+		setObject(eqType);
 	}
 
 	private void jbInit() throws Exception
@@ -156,51 +157,33 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 			this.add(idField, new GridBagConstraints(1, 10, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
-		return equipmentType;
+		return proto;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
-		this.equipmentType = (EquipmentType)or;
-		if(equipmentType != null)
+		proto = (SchemeProtoElement)or;
+		equipmentType = proto.equipmentTypeImpl();
+
+		int portsNumber = SchemeUtils.getPorts(proto).size();
+		int cablePortsNumber = SchemeUtils.getCablePorts(proto).size();
+
+		portsNumberField.setText(Long.toString(portsNumber));
+		cabelPortsNumberField.setText(Long.toString(cablePortsNumber));
+
+		nameField.setText(proto.name());
+		descTextArea.setText(proto.description());
+		if (equipmentType != null)
 		{
-			idField.setText(equipmentType.getId());
-			nameField.setText(equipmentType.getName());
-			this.descTextArea.setText(equipmentType.description);
-
-			this.ModifyField.setText(sdf.format(new Date(equipmentType.modified)));
-
-			int portsNumber = 0;
-			int cablePortsNumber = 0;
-
-			Map protoHash = Pool.getMap(ProtoElement.typ);
-			if  (protoHash == null)
-				return;
-
-			for (Iterator it = protoHash.values().iterator(); it.hasNext();)
-			{
-				ProtoElement curProto = (ProtoElement)it.next();
-				if (curProto.equipmentTypeId.equals(equipmentType.getId()))
-				{
-					portsNumber = curProto.getPorts().size();
-					cablePortsNumber = curProto.getCablePorts().size();
-				}
-				break;
-			}
-
-			portsNumberField.setText(Long.toString(portsNumber));
-			cabelPortsNumberField.setText(Long.toString(cablePortsNumber));
+			idField.setText(equipmentType.getId().getIdentifierString());
+			ModifyField.setText(sdf.format(equipmentType.getModified()));
 		}
 		else
 		{
 			idField.setText("");
-			nameField.setText("");
-			descTextArea.setText("");
 			ModifyField.setText("");
-			portsNumberField.setText("");
-			cabelPortsNumberField.setText("");
 		}
 	}
 
@@ -209,12 +192,17 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 		try
 		{
 			if(MiscUtil.validName(nameField.getText()))
-				 equipmentType.name = nameField.getText();
+			{
+				proto.name(nameField.getText());
+				proto.description(descTextArea.getText());
+				if (equipmentType != null)
+				{
+					equipmentType.setName(nameField.getText());
+					equipmentType.setDescription(descTextArea.getText());
+				}
+			}
 			else
 				return false;
-
-			equipmentType.id = idField.getText();
-			equipmentType.description = this.descTextArea.getText();
 		}
 		catch(Exception ex)
 		{
@@ -225,19 +213,13 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 
 	void saveButton_actionPerformed(ActionEvent e)
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-		{
-			return;
-		}
-
-		if(modify())
-		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			String[] s = new String[1];
-			s[0] = equipmentType.getId();
-			dataSource.SaveEquipmentTypes(s);
+		if (modify()) {
+			try {
+				ConfigurationStorableObjectPool.putStorableObject(equipmentType);
+			}
+			catch (ApplicationException ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 
@@ -256,4 +238,3 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 		return true;
 	}
 }
-

@@ -1,36 +1,50 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
 import java.util.*;
+import java.util.List;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.corba.SchemePort;
 
 public class PortPropsPanel extends JPanel
 {
-	private AComboBox classComboBox = new AComboBox();
-	private JButton addClassButton = new JButton("...");
-	private ObjectResourceComboBox typeComboBox = new ObjectResourceComboBox();
+	private AComboBox sortComboBox = new AComboBox();
+	private ObjComboBox typeComboBox = new ObjComboBox(
+			 PortTypeController.getInstance(),
+			 PortTypeController.KEY_NAME);
+
 	private JButton addTypeButton = new JButton("...");
 	private JTextArea descriptionTextArea = new JTextArea();
 	private JTextField nameText = new JTextField();
 	private JCheckBox isAccessCheckBox = new JCheckBox();
-	private ObjectResourceComboBox accessTypeComboBox = new ObjectResourceComboBox();
+	private ObjComboBox accessTypeComboBox = new ObjComboBox(
+			 MeasurementPortController.getInstance(),
+			 MeasurementPortController.KEY_NAME);
 	private String undoDescription;
 	ApplicationContext aContext;
 	private boolean skip_changes = false;
 
 	SchemePort[] ports;
+	List portTypes;
 	PortType pt;
+
+	private static PortTypeSort[] portTypeSorts = new PortTypeSort[] {
+		PortTypeSort.PORTTYPESORT_OPTICAL,
+		PortTypeSort.PORTTYPESORT_THERMAL,
+		PortTypeSort.PORTTYPESORT_ELECTRICAL
+	};
 
 	public PortPropsPanel(ApplicationContext aContext)
 	{
@@ -102,7 +116,7 @@ public class PortPropsPanel extends JPanel
 		p21.add(descrLabelPanel, BorderLayout.WEST);
 		p22.add(accessLabelPanel, BorderLayout.WEST);
 
-		p11.add(classComboBox, BorderLayout.CENTER);
+		p11.add(sortComboBox, BorderLayout.CENTER);
 		p12.add(typeComboBox, BorderLayout.CENTER);
 		p13.add(nameText, BorderLayout.CENTER);
 		JScrollPane scroll = new JScrollPane(descriptionTextArea);
@@ -110,12 +124,11 @@ public class PortPropsPanel extends JPanel
 		p23.add(accessTypeComboBox, BorderLayout.CENTER);
 		p22.add(p23, BorderLayout.CENTER);
 
-		p11.add(addClassButton, BorderLayout.EAST);
 		p12.add(addTypeButton, BorderLayout.EAST);
 		p23.add(isAccessCheckBox, BorderLayout.WEST);
 
-		typeComboBox.setPreferredSize(classComboBox.getPreferredSize());
-		accessTypeComboBox.setPreferredSize(classComboBox.getPreferredSize());
+		typeComboBox.setPreferredSize(sortComboBox.getPreferredSize());
+		accessTypeComboBox.setPreferredSize(sortComboBox.getPreferredSize());
 
 		p1.add(p11, BorderLayout.CENTER);
 		p1.add(p12, BorderLayout.SOUTH);
@@ -123,15 +136,6 @@ public class PortPropsPanel extends JPanel
 		p2.add(p21, BorderLayout.CENTER);
 		p2.add(p22, BorderLayout.SOUTH);
 
-		addClassButton.setPreferredSize(new Dimension(25, 7));
-		addClassButton.setBorder(BorderFactory.createEtchedBorder());
-		addClassButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed (ActionEvent ev)
-			{
-				addClassButton_actionPerformed();
-			}
-		});
 		addTypeButton.setPreferredSize(new Dimension(25, 7));
 		addTypeButton.setBorder(BorderFactory.createEtchedBorder());
 		addTypeButton.addActionListener(new ActionListener()
@@ -141,12 +145,12 @@ public class PortPropsPanel extends JPanel
 				addTypeButton_actionPerformed();
 			}
 		});
-		classComboBox.addItemListener(new ItemListener()
+		sortComboBox.addItemListener(new ItemListener()
 		{
 			public void itemStateChanged(ItemEvent ie)
 			{
 				if (ie.getStateChange() == ItemEvent.SELECTED)
-					classComboBox_stateChanged();
+					sortComboBox_stateChanged();
 			}
 		});
 
@@ -166,8 +170,8 @@ public class PortPropsPanel extends JPanel
 			{
 				if (ports == null || ports.length != 1)
 					return;
-				ports[0].name = nameText.getText();
-				aContext.getDispatcher().notify(new SchemeElementsEvent(ports[0].getId(), ports[0].name, SchemeElementsEvent.PORT_NAME_UPDATE_EVENT));
+				ports[0].name(nameText.getText());
+				aContext.getDispatcher().notify(new SchemeElementsEvent(ports[0].id(), ports[0].name(), SchemeElementsEvent.PORT_NAME_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -178,9 +182,10 @@ public class PortPropsPanel extends JPanel
 					{ }
 			public void keyReleased(KeyEvent ae)
 			{
-				if (pt == null)
+				if (ports == null || ports.length != 1)
 					return;
-				pt.description = descriptionTextArea.getText();
+				ports[0].name(nameText.getText());
+				ports[0].description(descriptionTextArea.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -189,41 +194,27 @@ public class PortPropsPanel extends JPanel
 		descriptionTextArea.setPreferredSize(new Dimension (300, 80));
 		descriptionTextArea.setLineWrap(true);
 		descriptionTextArea.setAutoscrolls(true);
-	}
 
-	private void setDefaults()
-	{
-		skip_changes = true;
-		classComboBox.removeAllItems();
-		Map hash = new HashMap();
+		try {
+			DomainCondition condition = new DomainCondition(null, ObjectEntities.PORTTYPE_ENTITY_CODE);
+			portTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-		if (Pool.getMap(PortType.typ) != null)
-		{
-			for(Iterator it = Pool.getMap(PortType.typ).values().iterator(); it.hasNext();)
-			{
-				PortType pt = (PortType)it.next();
-				hash.put(pt.pClass, pt.pClass);
+			for (int i = 0; i < portTypeSorts.length; i++) {
+				sortComboBox.addItem(portTypeSorts[i]);
 			}
-			for(Iterator it = hash.values().iterator(); it.hasNext(); )
-				classComboBox.addItem(it.next());
 
-			if (pt != null)
-			{
-				classComboBox.setSelectedItem(pt.pClass);
-			}
+			condition = new DomainCondition(null, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+			List measurementPortTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			accessTypeComboBox.addElements(measurementPortTypes);
 		}
-		skip_changes = false;
-
-		if (Pool.getMap(MeasurementPortType.typ) != null)
-		{
-			accessTypeComboBox.setContents(Pool.getMap(MeasurementPortType.typ).values().iterator(), false);
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
 		}
 	}
 
 	public void setEditable(boolean b)
 	{
-		classComboBox.setEnabled(b);
-		addClassButton.setEnabled(b);
+		sortComboBox.setEnabled(b);
 		addTypeButton.setEnabled(b);
 		typeComboBox.setEnabled(b);
 		isAccessCheckBox.setEnabled(b);
@@ -239,27 +230,27 @@ public class PortPropsPanel extends JPanel
 	public void init(SchemePort[] ports)
 	{
 		this.ports = ports;
-		pt = (PortType)Pool.get(PortType.typ, ports[0].portTypeId);
-		setDefaults();
-		if (pt != null)
-		{
-			classComboBox.setSelectedItem(pt.pClass);
-			typeComboBox.setSelectedItem(pt);
-			descriptionTextArea.setText(pt.description);
-
-			undoDescription = pt.description;
-		}
-		else
-		{
-			typeComboBox_stateChanged();
-		}
 
 		if (ports.length != 0)
 		{
-			boolean b = ports[0].measurementPortTypeId.length() != 0;
+			pt = ports[0].portTypeImpl();
+
+			if (pt != null)
+			{
+				sortComboBox.setSelectedItem(pt.getSort());
+				typeComboBox.setSelectedItem(pt);
+				descriptionTextArea.setText(pt.getDescription());
+				undoDescription = pt.getDescription();
+			}
+			else
+			{
+				typeComboBox_stateChanged();
+			}
+
+			boolean b = ports[0].measurementPortType() != null;
 			for (int i = 0; i < ports.length; i++)
 			{
-				if (ports[i].measurementPortTypeId.length() != 0 != b)
+				if (ports[i].measurementPortType() != null != b)
 				{
 					isAccessCheckBox.setEnabled(false);
 					accessTypeComboBox.setEnabled(false);
@@ -271,7 +262,7 @@ public class PortPropsPanel extends JPanel
 
 			if (ports.length == 1)
 			{
-				nameText.setText(ports[0].getName());
+				nameText.setText(ports[0].name());
 				nameText.setCaretPosition(0);
 			}
 			else
@@ -288,7 +279,7 @@ public class PortPropsPanel extends JPanel
 	public void undo()
 	{
 		if (pt != null)
-			pt.description = undoDescription;
+			pt.setDescription(undoDescription);
 	}
 
 	public PortType getSelectedPortType()
@@ -317,28 +308,25 @@ public class PortPropsPanel extends JPanel
 			for (int i = 0; i < ports.length; i++)
 			{
 				//System.out.println("setting for " + ports[i].getId() + " access true");
-				ports[i].measurementPortTypeId =
-						((MeasurementPortType)accessTypeComboBox.getSelectedItem()).getId();
+				ports[i].measurementPortTypeImpl(
+								((MeasurementPortType)accessTypeComboBox.getSelectedItem()));
 			}
 		}
 	}
 
-	void classComboBox_stateChanged()
+	void sortComboBox_stateChanged()
 	{
-		typeComboBox.removeAllItems();
-		String selected_class = (String)classComboBox.getSelectedItem();
+		typeComboBox.removeAll();
+		PortTypeSort selected_sort = (PortTypeSort)sortComboBox.getSelectedItem();
 
-		if (Pool.getMap(PortType.typ) != null)
+		for(Iterator it = portTypes.iterator(); it.hasNext();)
 		{
-			for(Iterator it = Pool.getMap(PortType.typ).values().iterator(); it.hasNext();)
-			{
-				PortType pt = (PortType)it.next();
-				if (pt.pClass.equals(selected_class))
-					typeComboBox.addItem(pt);
-			}
-			if (pt != null)
-				typeComboBox.setSelectedItem(pt);
+			PortType pt = (PortType)it.next();
+			if (pt.getSort().equals(selected_sort))
+				typeComboBox.addItem(pt);
 		}
+		if (pt != null)
+			typeComboBox.setSelectedItem(pt);
 	}
 
 	void typeComboBox_stateChanged()
@@ -347,38 +335,13 @@ public class PortPropsPanel extends JPanel
 			return;
 		undo();
 
-		PortType cpt = (PortType)typeComboBox.getSelectedItem();
-		pt = cpt;
+		pt = (PortType)typeComboBox.getSelectedItem();
 
 		for (int i = 0; i < ports.length; i++)
-			ports[i].portTypeId = cpt.getId();
-		descriptionTextArea.setText(cpt.description);
+			ports[i].portTypeImpl(pt);
+		descriptionTextArea.setText(pt.getDescription());
 		//aContext.getDispatcher().notify(new OperationEvent(cpt, 1, "elementslistvaluechanged"));
-		aContext.getDispatcher().notify(new SchemeElementsEvent(ports, cpt, SchemeElementsEvent.PORT_TYPE_UPDATE_EVENT));
-	}
-
-	void addClassButton_actionPerformed()
-	{
-		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый класс");
-		dialog.setSize(this.getSize().width, dialog.preferredSize.height);
-		Point loc = this.getLocationOnScreen();
-		dialog.setLocation(loc.x, loc.y + 30);
-		dialog.setVisible(true);
-
-		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
-		{
-			String name = dialog.getName();
-			for (int i = 0; i < classComboBox.getItemCount(); i++)
-			{
-				if (classComboBox.getItemAt(i).equals(name))
-				{
-					classComboBox.setSelectedItem(name);
-					return;
-				}
-			}
-			classComboBox.addItem(name);
-			classComboBox.setSelectedItem(name);
-		}
+		aContext.getDispatcher().notify(new SchemeElementsEvent(ports, pt, SchemeElementsEvent.PORT_TYPE_UPDATE_EVENT));
 	}
 
 	void addTypeButton_actionPerformed()
@@ -400,18 +363,32 @@ public class PortPropsPanel extends JPanel
 					return;
 				}
 			}
-			PortType type = (PortType)Pool.get(PortType.typ, ports[0].portTypeId);
-			PortType new_type = new PortType();
-			new_type.is_modified = true;
-			new_type.name = name;
-			new_type.id = aContext.getDataSourceInterface().GetUId(PortType.typ);
-			new_type.pClass = (String)classComboBox.getSelectedItem();
-			for (int i = 0; i < ports.length; i++)
-				ports[i].portTypeId = new_type.getId();
-			Pool.put(PortType.typ, ports[0].portTypeId, new_type);
+			PortType type = ports[0].portTypeImpl();
+			Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+			PortType new_type = null;
+			try {
+				new_type = PortType.createInstance(
+						user_id,
+						name,
+						"",
+						name,
+						(PortTypeSort)sortComboBox.getSelectedItem());
 
-			typeComboBox.add(new_type);
-			typeComboBox.setSelected(new_type);
+				for (int i = 0; i < ports.length; i++) {
+					ports[i].portTypeImpl(new_type);
+
+				}
+				ConfigurationStorableObjectPool.putStorableObject(new_type);
+
+				typeComboBox.addItem(new_type);
+				typeComboBox.setSelectedItem(new_type);
+			}
+			catch (IllegalObjectEntityException ex) {
+				ex.printStackTrace();
+			}
+			catch (CreateObjectException ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 }

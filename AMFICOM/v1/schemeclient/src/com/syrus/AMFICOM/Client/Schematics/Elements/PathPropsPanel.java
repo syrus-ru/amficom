@@ -6,21 +6,24 @@ import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
 
-import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.PathBuilder;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeModel;
+import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
+import com.syrus.AMFICOM.client_.general.ui_.tree.UniTreePanel;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class PathPropsPanel extends JPanel
 {
-	private ObjectResourceComboBox typeComboBox = new ObjectResourceComboBox();
+	private ObjComboBox typeComboBox = new ObjComboBox(
+			 TransmissionPathTypeController.getInstance(),
+			 TransmissionPathTypeController.KEY_NAME);
 	private JButton addTypeButton = new JButton("...");
 	private JTextField compNameTextField = new JTextField();
 	private JTextField startDevTextField = new JTextField();
@@ -29,18 +32,17 @@ public class PathPropsPanel extends JPanel
 	//JTable table = new JTable();
 
 	private String undoCompName;
-	private String undoEndDevId;
-	private String undoStartDevId;
-	private String undoTypeId;
+	private TransmissionPathType undoTypeId;
 	private List undoPathLinks;
 	private Map undoPeOrder;
 	boolean skip_change = false;
 
 //	public ArrayList elements_to_add = new ArrayList();
-	ObjectResource element_to_add;
-
+	Object element_to_add;
+	List pathTypes;
 	SchemePath path;
 	ApplicationContext aContext;
+	List links;
 
 	UniTreePanel utp;
 	JScrollPane scroll = new JScrollPane();
@@ -105,6 +107,9 @@ public class PathPropsPanel extends JPanel
 		co3Panel.add(endDevTextField, BorderLayout.CENTER);
 		cl1Panel.add(addTypeButton, BorderLayout.EAST);
 
+		startDevTextField.setEnabled(false);
+		endDevTextField.setEnabled(false);
+
 		classPanel.add(cl1Panel, BorderLayout.NORTH);
 		classPanel.add(co1Panel, BorderLayout.CENTER);
 		classPanel.add(co2Panel, BorderLayout.SOUTH);
@@ -117,7 +122,7 @@ public class PathPropsPanel extends JPanel
 		{
 			public void actionPerformed (ActionEvent ev)
 			{
-				this_addEqClassButtonActionPerformed();
+				this_addTypeButtonActionPerformed();
 			}
 		});
 		typeComboBox.addItemListener(new ItemListener()
@@ -133,28 +138,24 @@ public class PathPropsPanel extends JPanel
 					{ }
 			public void keyReleased(KeyEvent ae)
 			{
-				if (path.typeId == null || path == null)
+				if (path == null || path.type() == null)
 					return;
-				path.name = compNameTextField.getText();
+				path.name(compNameTextField.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
 		});
 
-	}
-
-	private void setDefaults()
-	{
-		typeComboBox.removeAllItems();
-		Map hash = new HashMap();
-
-		if (Pool.getMap(TransmissionPathType.typ) != null)
-		{
-			for(Iterator it = Pool.getMap(TransmissionPathType.typ).values().iterator(); it.hasNext();)
-			{
-				TransmissionPathType tpt = (TransmissionPathType)it.next();
-				typeComboBox.add(tpt);
-			}
+		try {
+			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+					getAccessIdentifier().domain_id);
+			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					domain_id, true);
+			DomainCondition condition = new DomainCondition(domain, ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
+			pathTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+		}
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
 		}
 	}
 
@@ -168,34 +169,29 @@ public class PathPropsPanel extends JPanel
 //		table.getTable().setEnabled(b);
 	}
 
-	public void init(SchemePath path, DataSourceInterface dataSource)
+	public void init(SchemePath path)
 	{
 		skip_change = true;
-		setDefaults();
 		this.path = path;
 
-		compNameTextField.setText(path.getName());
+		compNameTextField.setText(path.name());
 		compNameTextField.setCaretPosition(0);
 
-		String end = "";
-		if (!path.endDeviceId.equals(""))
-		{
-			SchemeElement s_el = (SchemeElement)Pool.get(SchemeElement.typ, path.endDeviceId);
-			end = s_el.getName();
-		}
-		endDevTextField.setText(end);
+
+		if (path.endDevice() != null)
+			endDevTextField.setText(path.endDevice().name());
+		else
+			endDevTextField.setText("");
 		endDevTextField.setCaretPosition(0);
 
-		String start = "";
-		if (!path.startDeviceId.equals(""))
-		{
-			SchemeElement s_el = (SchemeElement)Pool.get(SchemeElement.typ, path.startDeviceId);
-			start = s_el.getName();
-		}
-		startDevTextField.setText(start);
+		if (path.startDevice() != null)
+			startDevTextField.setText(path.startDevice().name());
+		else
+			startDevTextField.setText("");
 		startDevTextField.setCaretPosition(0);
 
-		typeComboBox.setSelected(Pool.get(TransmissionPathType.typ, path.typeId));
+		typeComboBox.setSelectedItem(path.typeImpl());
+		links = Arrays.asList(path.links());
 
 		PathTreeModel model = new PathTreeModel(path);
 		utp = new UniTreePanel(aContext.getDispatcher(), aContext, model);
@@ -203,17 +199,15 @@ public class PathPropsPanel extends JPanel
 		utp.getTree().setRootVisible(false);
 		scroll.getViewport().add(utp, BorderLayout.CENTER);
 
-		undoCompName = path.getName();
-		undoEndDevId = path.endDeviceId;
-		undoStartDevId = path.startDeviceId;
-		undoTypeId = path.typeId;
+		undoCompName = path.name();
+		undoTypeId = path.typeImpl();
 
 		undoPathLinks = new ArrayList();
 		undoPeOrder = new HashMap();
-		for (Iterator it = path.links.iterator(); it.hasNext(); )
+		for (int i = 0 ; i < path.links().length; i++)
 		{
-			PathElement pe = (PathElement)it.next();
-			undoPeOrder.put(pe.getObjectId(), new Integer(pe.n));
+			PathElement pe = path.links()[i];
+			undoPeOrder.put(pe.abstractSchemeElement(), new Integer(pe.sequentialNumber()));
 			undoPathLinks.add(pe);
 		}
 		updateUI();
@@ -227,7 +221,7 @@ public class PathPropsPanel extends JPanel
 		if (path == null)
 			return;
 		TransmissionPathType tpt = (TransmissionPathType)typeComboBox.getSelectedItem();
-		path.typeId = tpt.getId();
+		path.typeImpl(tpt);
 	}
 
 	public void removeLink()
@@ -257,22 +251,14 @@ public class PathPropsPanel extends JPanel
 		}*/
 	}
 
-	public void selectLink(String link_id)
+	public void setSelectedElement(Object element)
 	{
-		for (int i = 0; i < path.links.size(); i++)
-		{
-			PathElement pe = (PathElement)path.links.get(i);
-			if (pe.getObjectId().equals(link_id))
-			{
-//				table.setSelected(pe);
-				break;
-			}
-		}
+		element_to_add = element;
 	}
 
 	public void addSelectedElements()
 	{
-		if (path.startDeviceId.length() == 0)
+		if (path.startDevice() == null)
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 																		"Не введено начальное устройство",
@@ -282,11 +268,11 @@ public class PathPropsPanel extends JPanel
 		}
 
 		if (element_to_add instanceof SchemeLink)
-			PathBuilder.addLink(path.links, (SchemeLink)element_to_add);
+			PathBuilder.addLink(links, (SchemeLink)element_to_add);
 		else if (element_to_add instanceof SchemeCableLink)
-			PathBuilder.addCableLink(path.links, (SchemeCableLink)element_to_add);
+			PathBuilder.addCableLink(links, (SchemeCableLink)element_to_add);
 		else if (element_to_add instanceof SchemeElement)
-			PathBuilder.addSchemeElement(path.links, (SchemeElement)element_to_add);
+			PathBuilder.addSchemeElement(links, (SchemeElement)element_to_add);
 
 //		table.setContents(path.links);
 //		table.updateUI();
@@ -300,13 +286,13 @@ public class PathPropsPanel extends JPanel
 		if (element_to_add instanceof SchemeElement)
 		{
 			SchemeElement se = (SchemeElement)element_to_add;
-			path.links.clear();
-			PathElement pe = PathBuilder.addSchemeElement(path.links, se);
+			links.clear();
+			PathElement pe = PathBuilder.addSchemeElement(links, se);
 			if (pe != null)
 			{
-				startDevTextField.setText(se.getName());
+				startDevTextField.setText(se.name());
 				startDevTextField.setCaretPosition(0);
-				path.startDeviceId = se.getId();
+				path.startDevice(se);
 			}
 			updatePathElements();
 			element_to_add = null;
@@ -324,72 +310,32 @@ public class PathPropsPanel extends JPanel
 		if (element_to_add instanceof SchemeElement)
 		{
 			SchemeElement se = (SchemeElement)element_to_add;
-			if (se.getInternalSchemeId().length() != 0)
+			if (se.internalScheme() != null)
 			{
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 						"Конечным устройством не может быть схема", "Ошибка", JOptionPane.OK_OPTION);
 				return;
 			}
-			endDevTextField.setText(se.getName());
+			endDevTextField.setText(se.name());
 			endDevTextField.setCaretPosition(0);
-			path.endDeviceId = se.getId();
+			path.endDevice(se);
 			element_to_add = null;
 		}
 	}
-/*
-	boolean hasAccessPort (SchemeElement se)
-	{
-		for (Iterator it = se.devices.iterator(); it.hasNext();)
-		{
-			SchemeDevice dev = (SchemeDevice)it.next();
-			for (Iterator pit = dev.ports.iterator(); pit.hasNext();)
-			{
-				SchemePort port = (SchemePort)pit.next();
-				if (!port.access_port_type_id.equals(""))
-					return true;
-			}
-		}
-
-		for (Iterator it = se.element_ids.iterator(); it.hasNext();)
-		{
-			SchemeElement inner = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
-			if (hasAccessPort(inner))
-				return true;
-		}
-		return false;
-	}*/
-/*
-	boolean hasCablePort (ProtoElement proto)
-	{
-		for (Iterator it = proto.devices.iterator(); it.hasNext();)
-		{
-			SchemeDevice dev = (SchemeDevice)it.next();
-			if (!dev.cableports.isEmpty())
-				return true;
-		}
-
-		for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
-		{
-			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
-			if (hasCablePort(p))
-				return true;
-		}
-		return false;
-	}*/
 
 	public void undo()
 	{
-		path.typeId = undoTypeId;
-		path.name = undoCompName;
-		path.endDeviceId = undoEndDevId;
-		path.startDeviceId = undoStartDevId;
-		path.links = new ArrayList();
-		for (Iterator it = undoPathLinks.iterator(); it.hasNext(); )
+		path.typeImpl(undoTypeId);
+		path.name(undoCompName);
+
+		PathElement[] pes = new PathElement[undoPathLinks.size()];
+		Iterator it = undoPathLinks.iterator();
+		for (int i = 0; i < pes.length; i++ )
 		{
-			PathElement pe = (PathElement)it.next();
-			pe.n = ((Integer)undoPeOrder.get(pe.getObjectId())).intValue();
-			path.links.add(pe);
+			pes[i] = (PathElement)it.next();
+			pes[i].sequentialNumber(((Integer)undoPeOrder.get(pes[i].abstractSchemeElement())).intValue());
 		}
+		path.links(pes);
 	}
 
 	public String getCompName()
@@ -397,17 +343,17 @@ public class PathPropsPanel extends JPanel
 		return compNameTextField.getText();
 	}
 
-	public String getEndDiviceId()
+	public SchemeElement getEndDivice()
 	{
-		return path.endDeviceId;
+		return path.endDevice();
 	}
 
-	public String getStartDiviceId()
+	public SchemeElement getStartDivice()
 	{
-		return path.startDeviceId;
+		return path.startDevice();
 	}
 
-	void this_addEqClassButtonActionPerformed()
+	void this_addTypeButtonActionPerformed()
 	{
 		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый класс");
 		dialog.setSize(this.getSize().width, dialog.preferredSize.height);
@@ -426,15 +372,24 @@ public class PathPropsPanel extends JPanel
 					return;
 				}
 			}
-			TransmissionPathType type = (TransmissionPathType)Pool.get(TransmissionPathType.typ, path.typeId);
-			TransmissionPathType new_type = new TransmissionPathType();
-			new_type.name = name;
-			new_type.id = aContext.getDataSourceInterface().GetUId(TransmissionPathType.typ);
-			path.typeId = new_type.getId();
-			Pool.put(TransmissionPathType.typ, path.typeId, new_type);
+			Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+					getAccessIdentifier().user_id);
 
-			typeComboBox.add(new_type);
-			typeComboBox.setSelected(new_type);
+			TransmissionPathType new_type = null;
+			try {
+				new_type = TransmissionPathType.createInstance(
+						user_id,
+						name,
+						"",
+						name);
+				pathTypes.add(new_type);
+				typeComboBox.addItem(new_type);
+				typeComboBox.setSelectedItem(new_type);
+			}
+			catch (CreateObjectException ex) {
+				ex.printStackTrace();
+			}
+
 		}
 	}
 }
@@ -442,19 +397,17 @@ public class PathPropsPanel extends JPanel
 class PathTreeModel extends ObjectResourceTreeModel
 {
 	SchemePath path;
-	Scheme topScheme;
 
 	public PathTreeModel(SchemePath path)
 	{
 		this.path = path;
-		topScheme = (Scheme)Pool.get(Scheme.typ, path.getSchemeId());
 	}
 
 	public ObjectResourceTreeNode getRoot()
 	{
 		return new ObjectResourceTreeNode(
 				"root",
-				path.getName(),
+				path.name(),
 				true,
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
 	}
@@ -482,27 +435,25 @@ class PathTreeModel extends ObjectResourceTreeModel
 		if(node.getObject() instanceof String)
 		{
 			String s = (String )node.getObject();
-			return ObjectResource.class;
+			return Object.class;
 		}
-		if(node.getObject() instanceof Scheme)
-			return ObjectResource.class;
 		return null;
 	}
 
 	public List getChildNodes(ObjectResourceTreeNode node)
 	{
 		List vec = new ArrayList();
-		if(node.getObject() instanceof String)
+/*		if(node.getObject() instanceof String)
 		{
 			String s = (String )node.getObject();
 			if(s.equals("root"))
 			{
-				String cur_scheme_id = null;
+				Scheme cur_scheme = null;
 //				List scheme_ids = new ArrayList();
-				for (Iterator it = path.links.iterator(); it.hasNext();)
+				for (int i = 0; i < path.links().length; i++)
 				{
-					PathElement pe = (PathElement)it.next();
-					if (pe.schemeId.equals(path.getSchemeId()))
+					PathElement pe = (PathElement)path.links()[i];
+					if (pe.scheme().equals(path.getSchemeId()))
 					{
 						cur_scheme_id = pe.schemeId;
 						vec.add(new ObjectResourceTreeNode(pe, pe.getName(), true, true));
@@ -528,7 +479,7 @@ class PathTreeModel extends ObjectResourceTreeModel
 				if (pe.schemeId.equals(scheme.getId()))
 					vec.add(new ObjectResourceTreeNode(pe, pe.getName(), true, true));
 			}
-		}
+		}*/
 		return vec;
 	}
 /*

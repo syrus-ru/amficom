@@ -9,44 +9,49 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.*;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.General.*;
-import com.syrus.AMFICOM.Client.Resource.General.CharacteristicType;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.MeasurementPortType;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client_.general.ui_.tree.*;
+import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.general.*;
 import oracle.jdeveloper.layout.*;
 
-public class CharacteristicsPanel extends JPanel
-		implements OperationListener
+public class CharacteristicsPanel extends JPanel implements OperationListener
 {
-	PropsADToolBar toolBar;
-	UniTreePanel utp;
+	public ApplicationContext aContext;
+
+	private PropsADToolBar toolBar;
+	private UniTreePanel utp;
 
 	protected Dispatcher dispatcher = new Dispatcher();
 	protected JTable jTable;
 	protected PropsTableModel tModel;
 
-	boolean can_be_editable = true;
-	boolean editable_property = true;
-	Object[] objs;
-	String selected_item = "";
-	String selected_type = "";
+	protected CharacteristicTypeSort selectedTypeSort;
 
-	private Map char_hash = new HashMap(1);
-	private Map attr_hash = new HashMap(1);
+	private Map characteristics = new HashMap();
+	private Set editableSorts = new HashSet();
+	private Map typeSortsCharacterizedIds = new HashMap();
 
-	ApplicationContext aContext;
+	private class CharacterizedObject
+	{
+		CharacteristicSort sort;
+		Identifier characterizedId;
 
-	public CharacteristicsPanel(boolean can_be_editable)
+		CharacterizedObject(CharacteristicSort sort, Identifier characterizedId)
+		{
+			this.characterizedId = characterizedId;
+			this.sort = sort;
+		}
+	}
+
+	public CharacteristicsPanel()
 	{
 		super();
-		this.can_be_editable = can_be_editable;
 		aContext = new ApplicationContext();
 		aContext.setDispatcher(dispatcher);
 
@@ -61,25 +66,15 @@ public class CharacteristicsPanel extends JPanel
 		this.dispatcher.register(this, TreeDataSelectionEvent.type);
 	}
 
-	public CharacteristicsPanel()
+	public CharacteristicsPanel(List characteristics, Identifier characterizedId)
 	{
-		this(true);
-	}
-
-	public CharacteristicsPanel(ObjectResource or, boolean can_be_editable)
-	{
-		this(can_be_editable);
-		setCharHash(or);
-	}
-
-	public CharacteristicsPanel(ObjectResource or)
-	{
-		this(or, true);
+		this();
+		addCharacteristics(characteristics, characterizedId);
 	}
 
 	public void setContext(ApplicationContext aContext)
 	{
-		this.aContext.setDataSourceInterface(aContext.getDataSourceInterface());
+		this.aContext = aContext;
 	}
 
 	private void jbInit() throws Exception
@@ -100,7 +95,7 @@ public class CharacteristicsPanel extends JPanel
 			{
 				if (e.getValueIsAdjusting())
 					return;
-				toolBar.setCancelButtonEnabled(!jTable.getSelectionModel().isSelectionEmpty() && editable_property);
+				toolBar.setCancelButtonEnabled(!jTable.getSelectionModel().isSelectionEmpty());
 			}
 		});
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(180);
@@ -127,84 +122,47 @@ public class CharacteristicsPanel extends JPanel
 		this.add(scrollPane, BorderLayout.CENTER);
 	}
 
-	public void setCharHash(ObjectResource res)
+	public void clear()
 	{
-		String type = res.getTyp();
-		if (type == null || selected_type == null)
-		{
-			char_hash = new HashMap(1);
-			elementSelected(char_hash);
-			showNoSelection();
-			return;
-	 }
+		this.characteristics.clear();
+		this.editableSorts.clear();
+	}
 
-	 if (type.equals(Equipment.typ))
-		char_hash = ((Equipment)res).characteristics;
-	 else if (type.equals(KIS.typ))
-		char_hash = ((KIS)res).characteristics;
-	 else if (type.equals(Port.typ))
-		char_hash = ((Port)res).characteristics;
-	 else if (type.equals(CablePort.typ))
-		char_hash = ((CablePort)res).characteristics;
-	 else if (type.equals(MeasurementPort.typ))
-		char_hash = ((MeasurementPort)res).characteristics;
-	 else if (type.equals(Link.typ))
-		char_hash = ((Link)res).characteristics;
-	 else if (type.equals(CableLink.typ))
-		char_hash = ((CableLink)res).characteristics;
+	public void addCharacteristics(List characteristics, Identifier characterizedId)
+	{
+		this.characteristics.put(characterizedId, characteristics);
+		elementSelected(selectedTypeSort);
+	}
 
-	 else if (type.equals(EquipmentType.typ))
-		char_hash = ((EquipmentType)res).characteristics;
-	 else if (type.equals(PortType.typ))
-		char_hash = ((PortType)res).characteristics;
-	 else if (type.equals(CablePortType.typ))
-		char_hash = ((CablePortType)res).characteristics;
-	 else if (type.equals(MeasurementPortType.typ))
-		char_hash = ((MeasurementPortType)res).characteristics;
-	 else if (type.equals(LinkType.typ))
-		char_hash = ((LinkType)res).characteristics;
-	 else if (type.equals(CableLinkType.typ))
-		char_hash = ((CableLinkType)res).characteristics;
-
+	public void setTypeSortMapping(CharacteristicTypeSort typeSort, CharacteristicSort sort, Identifier characterizedId, boolean isEditable)
+	{
+		typeSortsCharacterizedIds.put(typeSort, new CharacterizedObject(sort, characterizedId));
+		if (isEditable)
+			editableSorts.add(sort);
 		else
-		{
-			char_hash = new HashMap(1);
-			elementSelected(char_hash);
-			showNoSelection();
-			return;
-		}
-		setPropsEditable(can_be_editable);
-		elementSelected(char_hash);
+			editableSorts.remove(sort);
 	}
 
 	public void operationPerformed(OperationEvent ae)
 	{
 		if (ae.getActionCommand().equals(TreeDataSelectionEvent.type))
 		{
-			if (selected_type == null)
-			{
-				showNoSelection();
-				return;
-			}
 			TreeDataSelectionEvent ev = (TreeDataSelectionEvent) ae;
-			if (ev.getDataClass().equals(String.class))
+			if (ev.getDataClass().equals(CharacteristicTypeSort.class))
 			{
-				selected_type = (String)ev.getSelectedObject();
-				setPropsEditable(editable_property);
+				selectedTypeSort = (CharacteristicTypeSort)ev.getSelectedObject();
+				setPropsEditable(editableSorts.contains(selectedTypeSort));
 			}
 			else
 				showNoSelection();
 
-			if (selected_type.equals("attribute"))
-				elementSelected(attr_hash);
-			else
-				elementSelected(char_hash);
+			elementSelected(selectedTypeSort);
 		}
 	}
 
 	void setPropsEditable(boolean b)
 	{
-		toolBar.setAddButtonEnabled(b && !selected_type.equals(""));
+		toolBar.setAddButtonEnabled(b && selectedTypeSort != null);
 		toolBar.setCancelButtonEnabled(!jTable.getSelectionModel().isSelectionEmpty() && b);
 		if (b)
 			tModel.setEditableColumns(new int[] {1});
@@ -212,49 +170,37 @@ public class CharacteristicsPanel extends JPanel
 			tModel.setEditableColumns(new int[0]);
 	}
 
-	void elementSelected(Map t)
+	void elementSelected(CharacteristicTypeSort selected_type)
 	{
-		tModel.clearTable();
-		if (selected_type == null || t == null)
+		if (selected_type == null)
+		{
+			showNoSelection();
 			return;
+		}
 
-		if (selected_type.equals("attribute"))
-			for (Iterator it = t.values().iterator(); it.hasNext();)
-			{
-				ElementAttribute attr = (ElementAttribute)it.next();
-				ElementAttributeType at = (ElementAttributeType)Pool.get(ElementAttributeType.typ, attr.type_id);
-				tModel.addRow(attr.getName(), new Object[] {attr.value});
+		tModel.clearTable();
+		for (Iterator it = characteristics.values().iterator(); it.hasNext();)
+		{
+			Characteristic ch = (Characteristic)it.next();
+			if (((CharacteristicType)ch.getType()).getSort().equals(selected_type)) {
+				tModel.addRow(ch.getName(), new Object[] {ch.getValue()});
 			}
-		else
-			for (Iterator it = t.values().iterator(); it.hasNext();)
-			{
-				Characteristic chr = (Characteristic)it.next();
-				CharacteristicType ch = (CharacteristicType)Pool.get(CharacteristicType.typ, chr.type_id);
-				if (ch.ch_class.equals(selected_type))
-				{
-					tModel.addRow(ch.getName(), new Object[] {chr.value});
-				}
-			}
+		}
+		setPropsEditable(editableSorts.contains(selectedTypeSort));
 	}
 
 	void showNoSelection()
 	{
 		tModel.clearTable();
-		selected_item = "";
-		char_hash = null;
-		attr_hash = null;
-		editable_property = true;
 		setPropsEditable(false);
 	}
 
 	void tableUpdated(Object value, int row, int col)
 	{
 		String name = (String)tModel.getValueAt(row, 0);
-
-		if (selected_type.equals("attribute"))
-			setAttributeAtHash(attr_hash, name, (String)value);
-		else
-			setCharacteristicAtHash(char_hash, name, (String)value);
+		List chars = getCharacteristics();
+		if (chars != null)
+			setCharacteristic(chars, name, (String)value);
 	}
 
 	class PropsTableModel extends FixedSizeEditableTableModel
@@ -280,13 +226,12 @@ public class CharacteristicsPanel extends JPanel
 		}
 	}
 
-	void removeCharacterisricFromHash(Map table, String name)
+	void removeCharacterisric(List characteristics, String name)
 	{
-		for (Iterator it = table.values().iterator(); it.hasNext(); )
+		for (Iterator it = characteristics.iterator(); it.hasNext(); )
 		{
 			Characteristic ch = (Characteristic)it.next();
-			CharacteristicType t = (CharacteristicType)Pool.get(CharacteristicType.typ, ch.type_id);
-			if (t.getName().equals(name))
+			if (ch.getName().equals(name))
 			{
 				it.remove();
 				break;
@@ -294,47 +239,32 @@ public class CharacteristicsPanel extends JPanel
 		}
 	}
 
-	void removeAttributeFromHash(Map table, String name)
+	void setCharacteristic(List characteristics, String name, String value)
 	{
-		for (Iterator it = table.values().iterator(); it.hasNext(); )
-		{
-			ElementAttribute attr = (ElementAttribute)it.next();
-			ElementAttributeType t = (ElementAttributeType)Pool.get(ElementAttributeType.typ, attr.type_id);
-			if (t.getName().equals(name))
-			{
-				it.remove();
-				break;
-			}
-		}
-	}
-
-	void setCharacteristicAtHash(Map table, String name, String value)
-	{
-		for (Iterator it = table.values().iterator(); it.hasNext(); )
+		for (Iterator it = characteristics.iterator(); it.hasNext(); )
 		{
 			Characteristic ch = (Characteristic)it.next();
-			CharacteristicType cht = (CharacteristicType)Pool.get(CharacteristicType.typ, ch.type_id);
-			if (cht.getName().equals(name))
+			if (ch.getName().equals(name))
 			{
-				ch.value = value;
+				ch.setValue(value);
 				break;
 			}
 		}
 	}
 
-	void setAttributeAtHash(Map table, String name, String value)
+	List getCharacteristics()
 	{
-		for (Iterator it = table.values().iterator(); it.hasNext(); )
-		{
-			ElementAttribute attr = (ElementAttribute)it.next();
-			ElementAttributeType at = (ElementAttributeType)Pool.get(ElementAttributeType.typ, attr.type_id);
-			if (at.getName().equals(name))
-			{
-				attr.value = value;
-				break;
-			}
+		CharacterizedObject obj = (CharacterizedObject)typeSortsCharacterizedIds.get(selectedTypeSort);
+		if (obj == null) {
+			System.err.println("CharacterizedObject not set for CharacteristicTypeSort " +
+												 selectedTypeSort);
+			return null;
 		}
+		Identifier characterizedId = obj.characterizedId;
+		List chars = (List)characteristics.get(characterizedId);
+		return chars;
 	}
+
 
 	class PropsADToolBar extends JPanel
 	{
@@ -405,23 +335,41 @@ public class CharacteristicsPanel extends JPanel
 
 		void addButton_actionPerformed(ActionEvent e)
 		{
-			if (selected_type.equals("attribute"))
+			if (selectedTypeSort == null)
+				return;
+			CharacterizedObject obj = (CharacterizedObject)typeSortsCharacterizedIds.get(selectedTypeSort);
+			if (obj == null)
 			{
+				System.err.println("CharacterizedObject not set for CharacteristicTypeSort " + selectedTypeSort);
+				return;
 			}
-			else
-			{
-				AddPropFrame frame = new AddPropFrame(null, "Unknown parameter!!!", null);
-				if (frame.showDialog(selected_type, tModel.getData()) == AddPropFrame.OK)
-				{
-					CharacteristicType type = frame.getSelectedType();
-					Characteristic ch = new Characteristic();
-					ch.ch_class = type.ch_class;
-					ch.name = type.getName();
-					ch.type_id = type.getId();
-					char_hash.put(ch.type_id, ch);
 
-					int n = tModel.addRow(type.getName(), new String[] {""});
+			AddPropFrame frame = new AddPropFrame(Environment.getActiveWindow(), "", aContext);
+			if (frame.showDialog(selectedTypeSort, tModel.getData()) == AddPropFrame.OK) {
+				CharacteristicType type = frame.getSelectedType();
+				Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+
+				CharacteristicSort sort = obj.sort;
+				Identifier characterizedId = obj.characterizedId;
+				List chars = (List)characteristics.get(characterizedId);
+
+				try {
+					Characteristic ch = Characteristic.createInstance(
+							userId,
+							type,
+							type.getDescription(),
+							"",
+							sort.value(),
+							"",
+							characterizedId,
+							true,
+							true);
+					chars.add(ch);
+					int n = tModel.addRow(ch.getName(), new String[] {""});
 					jTable.setRowSelectionInterval(n, n);
+				}
+				catch (CreateObjectException ex) {
+					ex.printStackTrace();
 				}
 			}
 			jTable.updateUI();
@@ -435,12 +383,13 @@ public class CharacteristicsPanel extends JPanel
 
 			String name = (String)tModel.getValueAt(n, 0);
 
-			if (selected_type.equals("attribute"))
-				removeAttributeFromHash(attr_hash, name);
-			else
-				removeCharacterisricFromHash(char_hash, name);
-			tModel.removeRow(n);
-			jTable.updateUI();
+			List chars = getCharacteristics();
+			if (chars != null)
+			{
+				removeCharacterisric(chars, name);
+				tModel.removeRow(n);
+				jTable.updateUI();
+			}
 		}
 	}
 }
@@ -478,13 +427,7 @@ class PropsTreeModel extends ObjectResourceTreeModel
 
 	public Class getNodeChildClass(ObjectResourceTreeNode node)
 	{
-		if(node.getObject() instanceof String)
-		{
-			String s = (String)node.getObject();
-			if (s.equals("root"))
-				return String.class;
-		}
-		return String.class;
+		return CharacteristicTypeSort.class;
 	}
 
 	public List getChildNodes(ObjectResourceTreeNode node)
@@ -497,11 +440,16 @@ class PropsTreeModel extends ObjectResourceTreeModel
 
 			if(s.equals("root"))
 			{
-				vec.add(new ObjectResourceTreeNode("optical", LangModelConfig.getString("label_opt_chars"), true, true));
-				vec.add(new ObjectResourceTreeNode("electrical", LangModelConfig.getString("label_el_chars"), true, true));
-				vec.add(new ObjectResourceTreeNode("operational", LangModelConfig.getString("label_exp_chars"), true, true));
-				vec.add(new ObjectResourceTreeNode("interface", LangModelConfig.getString("label_interface_chars"), true, true));
-//				vec.add(new ObjectResourceTreeNode("attribute", "Атрибуты отображения", true, true));
+				vec.add(new ObjectResourceTreeNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL,
+						LangModelConfig.getString("label_opt_chars"), true, true));
+				vec.add(new ObjectResourceTreeNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
+						LangModelConfig.getString("label_el_chars"), true, true));
+				vec.add(new ObjectResourceTreeNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
+						LangModelConfig.getString("label_exp_chars"), true, true));
+				vec.add(new ObjectResourceTreeNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
+						LangModelConfig.getString("label_interface_chars"), true, true));
+				vec.add(new ObjectResourceTreeNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+						"Атрибуты отображения", true, true));
 			}
 		}
 		return vec;

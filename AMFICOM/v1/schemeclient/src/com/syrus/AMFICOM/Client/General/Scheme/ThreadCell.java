@@ -1,9 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-
 import com.jgraph.pad.EllipseCell;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableThread;
 
 public class ThreadCell extends EllipseCell
 {

@@ -5,15 +5,23 @@ import java.awt.BorderLayout;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
+import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.general.Identifier;
 
 public class EquipmentCharacteristicsPanel extends GeneralPanel
 {
 	SchemeElement element;
+	Identifier elementId;
 
 	CharacteristicsPanel charPane = new CharacteristicsPanel();
 
+	private static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
+	};
 	public EquipmentCharacteristicsPanel()
 	{
 		super();
@@ -30,7 +38,7 @@ public class EquipmentCharacteristicsPanel extends GeneralPanel
 	public EquipmentCharacteristicsPanel(SchemeElement element)
 	{
 		this();
-		setObjectResource(element);
+		setObject(element);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -47,21 +55,37 @@ public class EquipmentCharacteristicsPanel extends GeneralPanel
 		this.add(charPane, BorderLayout.CENTER);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return element;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		element = (SchemeElement)or;
-		if(element.equipment != null)
-			charPane.setCharHash(element.equipment);
+		elementId = new Identifier(element.id().getTransferable());
+
+		for (int i = 0; i < sorts.length; i++)
+			charPane.setTypeSortMapping(
+					sorts[i],
+					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEELEMENT,
+					elementId,
+					false);
+		charPane.addCharacteristics(element.characteristicsImpl(), elementId);
+
+		if (element.equipment() != null)
+		{
+			charPane.setTypeSortMapping(
+					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+					CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT,
+					element.equipmentImpl().getId(),
+					true);
+			charPane.addCharacteristics(element.equipmentImpl().getCharacteristics(), element.equipmentImpl().getId());
+		}
 	}
 
 	public boolean modify()
 	{
 		return true;
 	}
-
 }

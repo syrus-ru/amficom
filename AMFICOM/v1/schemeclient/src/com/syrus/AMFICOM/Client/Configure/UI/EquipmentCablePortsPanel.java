@@ -6,9 +6,10 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.client_.general.ui_.*;
+import com.syrus.AMFICOM.scheme.AbstractSchemePortController;
+import com.syrus.AMFICOM.scheme.corba.*;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class EquipmentCablePortsPanel extends GeneralPanel
@@ -20,7 +21,7 @@ public class EquipmentCablePortsPanel extends GeneralPanel
 	private JPanel controlsPanel = new JPanel();
 	private JPanel labelsPanel = new JPanel();
 	JLabel idLabel = new JLabel();
-	private ObjectResourceComboBox cportBox = new ObjectResourceComboBox(SchemeCablePort.typ, false);
+	private ObjComboBox cportBox;
 
 	public EquipmentCablePortsPanel()
 	{
@@ -38,7 +39,7 @@ public class EquipmentCablePortsPanel extends GeneralPanel
 	public EquipmentCablePortsPanel(SchemeElement element)
 	{
 		this();
-		setObjectResource(element);
+		setObject(element);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -49,6 +50,10 @@ public class EquipmentCablePortsPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
+		cportBox = new ObjComboBox(
+				AbstractSchemePortController.getInstance(),
+				AbstractSchemePortController.KEY_NAME);
+
 		setName(LangModelConfig.getString("label_cableports"));
 		this.setLayout(new BorderLayout());
 
@@ -74,17 +79,18 @@ public class EquipmentCablePortsPanel extends GeneralPanel
 		cpgp.setBorder(BorderFactory.createLoweredBevelBorder());
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return element;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		element = (SchemeElement)or;
-		cportBox.setContents(element.getCablePorts().iterator(), false);
-		SchemeCablePort cp = (SchemeCablePort)cportBox.getSelectedObjectResource();
-		cpgp.setObjectResource(cp);
+		cportBox.removeAll();
+		cportBox.addElements(SchemeUtils.getCablePorts(element));
+		SchemeCablePort cp = (SchemeCablePort)cportBox.getSelectedItem();
+		cpgp.setObject(cp);
 	}
 
 	public boolean modify()
@@ -96,6 +102,6 @@ public class EquipmentCablePortsPanel extends GeneralPanel
 
 	void portBox_actionPerformed(ActionEvent e)
 	{
-		cpgp.setObjectResource((SchemeCablePort )cportBox.getSelectedObjectResource());
+		cpgp.setObject((SchemeCablePort)cportBox.getSelectedItem());
 	}
 }

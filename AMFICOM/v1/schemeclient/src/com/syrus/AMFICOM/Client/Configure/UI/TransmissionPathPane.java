@@ -1,17 +1,16 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.*;
-
+import java.awt.BorderLayout;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
-public class TransmissionPathPane extends PropertiesPanel
+public class TransmissionPathPane extends JPanel implements ObjectResourcePropertiesPane
 {
 	public ApplicationContext aContext;
 
@@ -38,7 +37,7 @@ public class TransmissionPathPane extends PropertiesPanel
 	public TransmissionPathPane(SchemePath path)
 	{
 		this();
-		setObjectResource(path);
+		setObject(path);
 	}
 
 	private void jbInit() throws Exception
@@ -54,17 +53,17 @@ public class TransmissionPathPane extends PropertiesPanel
 		tabbedPane.setEnabledAt(1, false);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return path;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		path = (SchemePath)or;
 
-		gPanel.setObjectResource(path);
-		fPanel.setObjectResource(path);
+		gPanel.setObject(path);
+		fPanel.setObject(path);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -83,25 +82,21 @@ public class TransmissionPathPane extends PropertiesPanel
 
 	public boolean save()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogCMediting))
-		{
-			return false;
-		}
-
 		if(modify())
 		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			dataSource.SavePath(path.getId());
-			return true;
-//			MonitoredElement me = (MonitoredElement )Pool.get(MonitoredElement.typ, tp.monitored_element_id);
-//			dataSource.savem
+			if (path.path() != null)
+			{
+				try {
+					ConfigurationStorableObjectPool.putStorableObject(path.pathImpl());
+				}
+				catch (ApplicationException ex) {
+				}
+				return true;
+			}
 		}
-		else
-		{
-			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
-		}
+		JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelConfig.getString("err_incorrect_data_input"));
 		return false;
 	}
 
@@ -110,19 +105,14 @@ public class TransmissionPathPane extends PropertiesPanel
 		return false;
 	}
 
+	public boolean cancel()
+	{
+		return false;
+	}
+
 	public boolean delete()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogCMediting))
-			return false;
-
-		String []s = new String[1];
-
-		s[0] = path.id;
-		aContext.getDataSourceInterface().RemovePaths(s);
-
-		return true;
+		return false;
 	}
 
 	public boolean create()

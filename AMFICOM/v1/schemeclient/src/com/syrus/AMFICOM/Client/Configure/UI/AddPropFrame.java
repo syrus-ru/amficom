@@ -9,8 +9,12 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.General.CharacteristicType;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.corba.DataType;
 
 public class AddPropFrame extends JDialog
 {
@@ -18,12 +22,11 @@ public class AddPropFrame extends JDialog
 	public static final int CANCEL = 0;
 
 	protected int res = CANCEL;
-	protected String ch_class;
-	String selected = LangModelConfig.getString("label_new_char");
-	Map h_named = new HashMap();
-	CharacteristicType type = new CharacteristicType();
+	protected CharacteristicTypeSort sort;
+	protected CharacteristicType type;
+	Object selected = LangModelConfig.getString("label_new_char");
 
-	private JComboBox jComboBox1 = new JComboBox();
+	private ObjComboBox comboBox;
 	private JPanel panel = new JPanel();
 	private JPanel buttonPanel = new JPanel();
 	private JTextField nameField = new JTextField();
@@ -51,6 +54,11 @@ public class AddPropFrame extends JDialog
 
 	private void jbInit() throws Exception
 	{
+		comboBox = new ObjComboBox(
+					CharacteristicTypeController.getInstance(),
+					new LinkedList(),
+					CharacteristicTypeController.KEY_NAME);
+
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = new Dimension(350, 170);
 
@@ -118,8 +126,8 @@ public class AddPropFrame extends JDialog
 		buttonPanel.add(okButton);
 		buttonPanel.add(cancelButton);
 
-		jComboBox1.addItem(LangModelConfig.getString("label_new_char"));
-		jComboBox1.addItemListener(new ItemListener()
+		comboBox.addItem(LangModelConfig.getString("label_new_char"));
+		comboBox.addItemListener(new ItemListener()
 		{
 			public void itemStateChanged(ItemEvent e)
 			{
@@ -131,7 +139,7 @@ public class AddPropFrame extends JDialog
 		});
 
 		this.getContentPane().setLayout(new BorderLayout());
-		this.getContentPane().add(jComboBox1, BorderLayout.NORTH);
+		this.getContentPane().add(comboBox, BorderLayout.NORTH);
 		this.getContentPane().add(panel, BorderLayout.CENTER);
 		this.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 	}
@@ -141,11 +149,18 @@ public class AddPropFrame extends JDialog
 		res = OK;
 		if (selected.equals(LangModelConfig.getString("label_new_char")))
 		{
-			type.name = nameField.getText();
-			type.description = descrArea.getText();
-			type.ch_class = ch_class;
-			type.id = String.valueOf(aContext.getDataSourceInterface().GetUId(CharacteristicType.typ));
-			Pool.put(CharacteristicType.typ, type.getId(), type);
+			Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+			try {
+				type = CharacteristicType.createInstance(
+						userId,
+						"",
+						descrArea.getText(),
+						DataType._DATA_TYPE_STRING,
+						sort);
+			}
+			catch (CreateObjectException ex) {
+				ex.printStackTrace();
+			}
 		}
 		else
 		{
@@ -168,46 +183,43 @@ public class AddPropFrame extends JDialog
 
 	void comboBoxItemSelected()
 	{
-		selected = (String)jComboBox1.getSelectedItem();
+		selected = comboBox.getSelectedItem();
 		boolean b = selected.equals(LangModelConfig.getString("label_new_char"));
 		nameField.setEnabled(b);
 		descrArea.setEnabled(b);
 		okButton.setEnabled(!b);
 		if (!b)
 		{
-			nameField.setText(((CharacteristicType)h_named.get(selected)).getName());
-			descrArea.setText(((CharacteristicType)h_named.get(selected)).description);
-			type = (CharacteristicType)h_named.get(selected);
+			type = (CharacteristicType)selected;
+			nameField.setText(type.getDescription());
 		}
 		else
 		{
-			type = new CharacteristicType();
+			type = null;
 			nameField.setText("");
 			descrArea.setText("");
 		}
 	}
 
-	public int showDialog(String ch_class, List chars)
+	public int showDialog(CharacteristicTypeSort sort, List chars)
 	{
-		this.ch_class = ch_class;
-		Map h = Pool.getMap(CharacteristicType.typ);
+		this.sort = sort;
 
-		if (h != null)
-		{
-			Map used = new HashMap(chars.size());
-			for (ListIterator it = chars.listIterator(); it.hasNext();)
-			{
-				List el = (List)it.next();
-				used.put(el.get(0), el);
-			}
-
-			for (Iterator it = h.values().iterator(); it.hasNext();)
+		Identifier domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+		try {
+			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+			DomainCondition condition = new DomainCondition(domain, ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE);
+			List characteristicTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+						 condition, true);
+			for (Iterator it = characteristicTypes.iterator(); it.hasNext();)
 			{
 				CharacteristicType type = (CharacteristicType)it.next();
-				if (type.ch_class.equals(ch_class) && !used.containsKey(type.getName()))
-					jComboBox1.addItem(type.getName());
-				h_named.put(type.getName(), type);
+				if (type.getSort().equals(sort) && !chars.contains(type))
+					comboBox.addItem(type);
 			}
+		}
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
 		}
 		setModal(true);
 		setVisible(true);
@@ -216,7 +228,10 @@ public class AddPropFrame extends JDialog
 
 	public String getSelectedName()
 	{
-		return selected;
+		if (selected instanceof String)
+			return (String)selected;
+		else
+			return ((CharacteristicType)selected).getDescription();
 	}
 
 	public CharacteristicType getSelectedType()

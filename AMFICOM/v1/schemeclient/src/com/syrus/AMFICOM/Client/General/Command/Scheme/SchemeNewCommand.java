@@ -1,14 +1,13 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.awt.Dimension;
-import javax.swing.JOptionPane;
-
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemeFactory;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 public class SchemeNewCommand extends VoidCommand
 {
@@ -31,10 +30,6 @@ public class SchemeNewCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
-			return;
-
 	/*	if (spanel.getGraph().isGraphChanged())
 		{
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Текущая схема не сохранена. Сохранить?", "Новая схема", JOptionPane.YES_NO_CANCEL_OPTION);
@@ -73,17 +68,18 @@ public class SchemeNewCommand extends VoidCommand
 		}
 		*/
 
-		Scheme scheme = new Scheme();
-		scheme.name = "Новая схема";
-		scheme.createdBy = dataSource.getSession().getUserId();
-		scheme.modifiedBy = dataSource.getSession().getUserId();
-		scheme.ownerId = dataSource.getSession().getUserId();
-		scheme.domainId = dataSource.getSession().getDomainId();
-
-//		GraphActions.clearGraph(spanel.getGraph());
-//		GraphActions.clearGraph(upanel.getGraph());
-//		spanel.getGraph().setActualSize(new Dimension(scheme.width, scheme.height));
-//		spanel.getGraph().setGraphChanged(false);
+		Scheme scheme = SchemeFactory.createScheme();
+		scheme.name("Новая схема");
+		try {
+			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+					getAccessIdentifier().domain_id);
+			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					domain_id, true);
+			scheme.domainImpl(domain);
+		}
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
 
 		aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme,
 				SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));

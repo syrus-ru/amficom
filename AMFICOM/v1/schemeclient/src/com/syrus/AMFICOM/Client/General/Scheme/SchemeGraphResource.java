@@ -8,9 +8,8 @@ import com.jgraph.pad.GPGraph.*;
 import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class SchemeGraphResource
 {
@@ -46,28 +45,29 @@ public class SchemeGraphResource
 	{
 		Object[] cells = graph.getAll();
 		ArrayList new_cells = new ArrayList();
-		ArrayList links = new ArrayList(path.links.size());
-		for (Iterator it = path.links.iterator(); it.hasNext(); )
-			links.add(((PathElement)it.next()).getObjectId());
+		PathElement[] pes = path.links();
+		ArrayList links = new ArrayList(pes.length);
+		for (int i = 0; i < pes.length; i++)
+			links.add(pes[i].abstractSchemeElement());
 
 		for (int i = 0; i < cells.length; i++)
 		{
 			if (cells[i] instanceof DefaultCableLink)
 			{
 				DefaultCableLink cable = (DefaultCableLink) cells[i];
-				if (links.contains(cable.getSchemeCableLinkId()))
+				if (links.contains(cable.getSchemeCableLink()))
 					new_cells.add(cable);
 			}
 			else if (cells[i] instanceof DefaultLink)
 			{
 				DefaultLink link = (DefaultLink) cells[i];
-				if (links.contains(link.getSchemeLinkId()))
+				if (links.contains(link.getSchemeLink()))
 					new_cells.add(link);
 			}
 			else if (cells[i] instanceof DeviceGroup)
 			{
 				DeviceGroup group = (DeviceGroup)cells[i];
-				if (links.contains(group.getSchemeElementId()))
+				if (links.contains(group.getSchemeElement()))
 					new_cells.add(group);
 			}
 		}

@@ -1,14 +1,16 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
+import java.util.List;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ISM.MeasurementPort;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.client_.general.ui_.*;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class KISMeasurementPortsPanel extends GeneralPanel
@@ -16,7 +18,8 @@ public class KISMeasurementPortsPanel extends GeneralPanel
 	SchemeElement element;
 
 	JLabel idLabel = new JLabel();
-	private ObjectResourceComboBox portBox = new ObjectResourceComboBox(MeasurementPort.typ, false);
+	private ObjComboBox portBox = new ObjComboBox(MeasurementPortController.getInstance(),
+			MeasurementPortController.KEY_NAME);
 	MeasurementPortGeneralPanel pgp = new MeasurementPortGeneralPanel();
 	private JPanel mainPanel = new JPanel();
 	private JPanel controlsPanel = new JPanel();
@@ -38,7 +41,7 @@ public class KISMeasurementPortsPanel extends GeneralPanel
 	public KISMeasurementPortsPanel(SchemeElement element)
 	{
 		this();
-		setObjectResource(element);
+		setObject(element);
 	}
 
 	private void jbInit() throws Exception
@@ -68,25 +71,30 @@ public class KISMeasurementPortsPanel extends GeneralPanel
 		pgp.setBorder(BorderFactory.createLoweredBevelBorder());
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return element;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		element = (SchemeElement)element;
+		portBox.removeAll();
 
-		if(element.kis != null)
+		if(element.rtu() != null)
 		{
-			portBox.setContents(element.getMeasurementPorts().iterator(), false);
-			MeasurementPort cp = (MeasurementPort)portBox.getSelectedObjectResource();
-			pgp.setObjectResource(cp);
+			try {
+				List portIds = element.rtuImpl().getMeasurementPortIds();
+				List ports = ConfigurationStorableObjectPool.getStorableObjects(portIds, true);
+				portBox.addElements(ports);
+			}
+			catch (ApplicationException ex) {
+			}
 		}
 	}
 
 	void portBox_actionPerformed(ActionEvent e)
 	{
-		pgp.setObjectResource((MeasurementPort )portBox.getSelectedObjectResource());
+		pgp.setObject((MeasurementPort)portBox.getSelectedItem());
 	}
 }

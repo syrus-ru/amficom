@@ -1,17 +1,17 @@
-package com.syrus.AMFICOM.Client.Schematics.Elements;
+/*package com.syrus.AMFICOM.Client.Schematics.Elements;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Schematics.UI.SchemeCableLinkFibrePanel;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.Client.Configure.UI.CableLinkFibrePanel;
 
 public class CableThreadSelectionDialog extends JDialog
 {
 	ApplicationContext aContext;
-	SchemeCableLinkFibrePanel panel;
+	CableLinkFibrePanel panel;
 	SchemeCableThread selected_thread = null;
 
 	public CableThreadSelectionDialog(ApplicationContext aContext)
@@ -67,10 +67,9 @@ public class CableThreadSelectionDialog extends JDialog
 
 	public SchemeCableThread init (SchemeCableLink link)
 	{
-		setTitle("Волокна кабеля " + link.getName());
+		setTitle("Волокна кабеля " + link.name());
 
-		panel = new SchemeCableLinkFibrePanel(link);
-		panel.setEditable(false);
+		panel = new CableLinkFibrePanel(link);
 		getContentPane().add(panel, BorderLayout.CENTER);
 		setVisible(true);
 		return selected_thread;
@@ -79,3 +78,4 @@ public class CableThreadSelectionDialog extends JDialog
 
 }
 
+*/

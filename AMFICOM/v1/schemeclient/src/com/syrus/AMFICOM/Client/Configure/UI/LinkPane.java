@@ -1,30 +1,26 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-import oracle.jdeveloper.layout.XYConstraints;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.scheme.corba.SchemeLink;
 
-public class LinkPane extends PropertiesPanel
+public abstract class LinkPane extends JPanel implements ObjectResourcePropertiesPane
 {
 	public ApplicationContext aContext;
 
-	LinkGeneralPanel gPanel = new LinkGeneralPanel();
-	LinkCharacteristicsPanel chPanel = new LinkCharacteristicsPanel();
+	protected LinkGeneralPanel gPanel;
+	protected LinkCharacteristicsPanel chPanel;
 
-	SchemeLink link;
+	protected JTabbedPane tabbedPane = new JTabbedPane();
 
-	public JTabbedPane tabbedPane = new JTabbedPane();
-
-	private JButton saveButton = new JButton();
-	private JPanel buttonsPanel = new JPanel();
+	protected SchemeLink link;
 
 	public LinkPane()
 	{
@@ -39,10 +35,10 @@ public class LinkPane extends PropertiesPanel
 		}
 	}
 
-	public LinkPane(SchemeLink l)
+	public LinkPane(SchemeLink link)
 	{
 		this();
-		setObjectResource(l);
+		setObject(link);
 	}
 
 	private void jbInit() throws Exception
@@ -52,30 +48,24 @@ public class LinkPane extends PropertiesPanel
 
 		tabbedPane.setTabPlacement(JTabbedPane.TOP);
 
+		gPanel = new LinkGeneralPanel();
+		chPanel = new LinkCharacteristicsPanel();
+
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
-
-		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
-		saveButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveButton_actionPerformed(e);
-			}
-		});
-
-		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return link;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
-		this.link = (SchemeLink )or;
+		link = (SchemeLink)or;
 
-		gPanel.setObjectResource(link);
-		chPanel.setObjectResource(link);
+		gPanel.setObject(link);
+		chPanel.setObject(link);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -87,7 +77,7 @@ public class LinkPane extends PropertiesPanel
 
 	public boolean modify()
 	{
-		if (gPanel.modify() &&
+	 if (gPanel.modify() &&
 				chPanel.modify())
 			return true;
 		return false;
@@ -95,26 +85,21 @@ public class LinkPane extends PropertiesPanel
 
 	public boolean save()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-		{
-			return false;
-		}
-
 		if(modify())
 		{
-			if (link.link != null)
+			if (link.link() != null)
 			{
-				DataSourceInterface dataSource = aContext.getDataSourceInterface();
-				dataSource.SaveLink(link.link.getId());
+				try {
+					ConfigurationStorableObjectPool.putStorableObject(link.linkImpl());
+				}
+				catch (ApplicationException ex) {
+				}
 				return true;
 			}
 		}
-		else
-		{
-			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
-		}
+		JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelConfig.getString("err_incorrect_data_input"));
 		return false;
 	}
 
@@ -123,29 +108,18 @@ public class LinkPane extends PropertiesPanel
 		return false;
 	}
 
+	public boolean cancel()
+	{
+		return false;
+	}
+
 	public boolean delete()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-			return false;
-
-		if (link.link != null)
-		{
-			String []s = new String[1];
-			s[0] = link.link.getId();
-			aContext.getDataSourceInterface().RemoveLinks(s);
-		}
-
-		return true;
+		return false;
 	}
 
 	public boolean create()
 	{
 		return false;
-	}
-
-	void saveButton_actionPerformed(ActionEvent e)
-	{
 	}
 }

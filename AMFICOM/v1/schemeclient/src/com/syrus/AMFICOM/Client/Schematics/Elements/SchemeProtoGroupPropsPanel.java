@@ -1,13 +1,18 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
+import java.io.*;
+import java.util.Date;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.ImagesDialog;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.client_.general.ui_.ImagesDialog;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.scheme.corba.SchemeProtoGroup;
 
 public class SchemeProtoGroupPropsPanel extends JPanel
 {
@@ -15,9 +20,9 @@ public class SchemeProtoGroupPropsPanel extends JPanel
 	private JTextArea groupDescrTextArea = new JTextArea();
 	private JButton imageButton = new JButton();
 	private JCheckBox isKisCheckBox = new JCheckBox();
-	String image_id = "";
+	BitmapImageResource image;
 
-	SchemeProtoGroup scheme_proto = new SchemeProtoGroup();
+	SchemeProtoGroup scheme_proto;
 	ApplicationContext aContext;
 
 	public SchemeProtoGroupPropsPanel(ApplicationContext aContext)
@@ -30,6 +35,24 @@ public class SchemeProtoGroupPropsPanel extends JPanel
 		catch(Exception e)
 		{
 			e.printStackTrace();
+		}
+
+		Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+		Date date = new Date(System.currentTimeMillis());
+
+		try {
+			File f = new File("images/folder.gif");
+			byte[] buf = new byte[(int)f.length()];
+			FileInputStream fis = new FileInputStream(f);
+			fis.read(buf);
+			fis.close();
+			image = BitmapImageResource.createInstance(user_id, "", buf);
+		}
+		catch (CreateObjectException ex) {
+			ex.printStackTrace();
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
 		}
 	}
 
@@ -98,20 +121,20 @@ public class SchemeProtoGroupPropsPanel extends JPanel
 		isKisCheckBox.setEnabled(b);
 	}
 
-	public void init(SchemeProtoGroup scheme_proto, DataSourceInterface dataSource)
+	public void init(SchemeProtoGroup scheme_proto)
 	{
 		this.scheme_proto = scheme_proto;
-		mapProtoNameTextField.setText(scheme_proto.getName());
+		mapProtoNameTextField.setText(scheme_proto.name());
 		mapProtoNameTextField.setCaretPosition(0);
-		groupDescrTextArea.setText(scheme_proto.description);
+		groupDescrTextArea.setText(scheme_proto.description());
 //		isKisCheckBox.setSelected(scheme_proto.is_visual);
 
 		ImageIcon icon;
-		if (scheme_proto.getImageID().equals(""))
+		if (scheme_proto.symbol() == null)
 			icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
 		else
-			icon = new ImageIcon(ImageCatalogue.get(scheme_proto.getImageID()).getImage()
-					.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+			icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(scheme_proto.symbolImpl().
+					getImage()).getScaledInstance(50, 50, Image.SCALE_SMOOTH));
 
 		imageButton.setIcon(icon);
 		updateUI();
@@ -120,7 +143,7 @@ public class SchemeProtoGroupPropsPanel extends JPanel
 	private void imageButton_actionPerformed(ActionEvent e)
 	{
 		ImagesDialog frame = new ImagesDialog(aContext);
-		frame.setImageResource(ImageCatalogue.get(image_id.equals("") ? "pc" : image_id));
+//		frame.setImageResource(image == null ? : image);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = frame.getSize();
@@ -134,10 +157,10 @@ public class SchemeProtoGroupPropsPanel extends JPanel
 
 		if(frame.ret_code == 1)
 		{
-			ImageResource ir = frame.getImageResource();
-			imageButton.setIcon(new ImageIcon(ir.getImage().getScaledInstance(
-					50,	50,	Image.SCALE_SMOOTH)));
-			image_id = ir.getId();
+			BitmapImageResource ir = frame.getImageResource();
+			imageButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(ir.getImage()).
+					getScaledInstance(50, 50, Image.SCALE_SMOOTH)));
+			image = ir;
 		}
 	}
 
@@ -155,9 +178,9 @@ public class SchemeProtoGroupPropsPanel extends JPanel
 			return;
 		}
 
-		scheme_proto.name = mapProtoNameTextField.getText();
-		scheme_proto.description = groupDescrTextArea.getText();
-		scheme_proto.setImageID(image_id);
+		scheme_proto.name(mapProtoNameTextField.getText());
+		scheme_proto.description(groupDescrTextArea.getText());
+		scheme_proto.symbolImpl(image);
 	}
 }
 

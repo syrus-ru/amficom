@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class PathAutoCreateCommand extends VoidCommand
 {
@@ -33,8 +33,8 @@ public class PathAutoCreateCommand extends VoidCommand
 	{
 		Scheme scheme = panel.getGraph().getScheme();
 		SchemePath path = panel.getGraph().getCurrentPath();
-		if (path.startDeviceId.length() == 0 ||
-				path.endDeviceId.length() == 0)
+		if (path.startDevice() == null ||
+				path.endDevice() == null)
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 																		"Не введено начальное и/или конечное устройство",

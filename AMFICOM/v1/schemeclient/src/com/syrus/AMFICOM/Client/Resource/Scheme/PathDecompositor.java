@@ -2,8 +2,11 @@ package com.syrus.AMFICOM.Client.Resource.Scheme;
 
 import java.util.*;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 
 public class PathDecompositor
 {
@@ -21,26 +24,27 @@ public class PathDecompositor
 
 	public void setTotalOpticalLength(double newLength)
 	{
-		if (sp.links.size() == 0)
+		if (sp.links().length == 0)
 			return;
 
 		setOpticalLength(
-				(PathElement)sp.links.get(0),
-				(PathElement)sp.links.get(sp.links.size() - 1),
+				(PathElement)sp.links()[0],
+				(PathElement)sp.links()[sp.links().length - 1],
 				newLength);
 	}
 
 	public void setOpticalLength(PathElement startPE, PathElement endPE, double newLength)
 	{
-		int index = sp.links.indexOf(startPE);
+		List links = Arrays.asList(sp.links());
+		int index = links.indexOf(startPE);
 		if (index == -1)
 			return;
 
 		double oldLength = 0;
-		for (ListIterator it = sp.links.listIterator(index); it.hasNext();)
+		for (ListIterator it = links.listIterator(index); it.hasNext();)
 		{
 			PathElement pe = (PathElement)it.next();
-			oldLength += pe.getOpticalLength();
+			oldLength += SchemeUtils.getOpticalLength(pe);
 			if (pe.equals(endPE))
 				break;
 		}
@@ -50,10 +54,10 @@ public class PathDecompositor
 		double k = newLength / oldLength;
 		if (Math.abs(k - 1) < 0.001)
 			return;
-		for (ListIterator it = sp.links.listIterator(index); it.hasNext();)
+		for (ListIterator it = links.listIterator(index); it.hasNext();)
 		{
 			PathElement pe = (PathElement)it.next();
-			pe.setOpticalLength(pe.getOpticalLength() * k);
+			SchemeUtils.setOpticalLength(pe, SchemeUtils.getOpticalLength(pe) * k);
 			if (pe.equals(endPE))
 				break;
 		}
@@ -61,110 +65,77 @@ public class PathDecompositor
 
 	public PathElement getPathElementByOpticalDistance(double opticalDistance)
 	{
-		if (sp.links.size() == 0)
+		if (sp.links().length == 0)
 			return null;
 
+		List links = Arrays.asList(sp.links());
+
 		double d = 0;
-		for(Iterator it = sp.links.iterator(); it.hasNext();)
+		for(Iterator it = links.iterator(); it.hasNext();)
 		{
 			PathElement pe = (PathElement)it.next();
-			d += pe.getOpticalLength();
+			d += SchemeUtils.getOpticalLength(pe);
 			if(d >= opticalDistance)
 				return pe;
 		}
-		return (PathElement)sp.links.listIterator(sp.links.size()).previous();
+		return (PathElement)links.listIterator(links.size()).previous();
 	}
 
 	public PathElement getPathElementByPhysicalDistance(double physicalDistance)
 	{
-		if (sp.links.size() == 0)
+		if (sp.links().length == 0)
 			return null;
 
+		List links = Arrays.asList(sp.links());
 		double d = 0;
-		for(Iterator it = sp.links.iterator(); it.hasNext();)
+		for(Iterator it = links.iterator(); it.hasNext();)
 		{
 			PathElement pe = (PathElement)it.next();
-			d += pe.getPhysicalLength();
+			d += SchemeUtils.getPhysicalLength(pe);
 			if(d >= physicalDistance)
 				return pe;
 		}
-		return (PathElement)sp.links.listIterator(sp.links.size()).previous();
-	}
-
-	public double getPhysicalDistanceByOptical(double opticalDistance)
-	{
-		double optd = 0;
-		double physd = 0;
-		for (Iterator it = sp.links.iterator(); it.hasNext(); ) {
-			PathElement pe = (PathElement)it.next();
-			optd += pe.getOpticalLength();
-			if (optd >= opticalDistance) {
-				double d = opticalDistance - (optd - pe.getOpticalLength());
-				physd += d / pe.getKu();
-				break;
-			}
-			else
-				physd += pe.getPhysicalLength();
-		}
-		return physd;
-	}
-
-	public double getOpticalDistanceByPhysical(double physicalDistance)
-	{
-		double optd = 0;
-		double physd = 0;
-		for(Iterator it = sp.links.iterator(); it.hasNext();)
-		{
-			PathElement pe = (PathElement)it.next();
-			physd += pe.getPhysicalLength();
-			if(physd >= physicalDistance)
-			{
-				double d = physicalDistance - (physd - pe.getPhysicalLength());
-				optd += d * pe.getKu();
-				break;
-			}
-			else
-				optd += pe.getOpticalLength();
-		}
-		return optd;
+		return (PathElement)links.listIterator(links.size()).previous();
 	}
 
 	public double[] getOpticalDistanceFromStart(PathElement pathElement)
 	{
-		if (sp.links.size() == 0)
+		if (sp.links().length == 0)
 			return null;
 
 		double tmp = 0;
+		List links = Arrays.asList(sp.links());
 
-		for(Iterator it = sp.links.iterator(); it.hasNext();)
+		for(Iterator it = links.iterator(); it.hasNext();)
 		{
 			PathElement pe = (PathElement)it.next();
 			if (pe.equals(pathElement))
 			{
-				double d[] = {tmp, tmp + pe.getOpticalLength()};
+				double d[] = {tmp, tmp + SchemeUtils.getOpticalLength(pe)};
 				return d;
 			}
-			tmp += pe.getOpticalLength();
+			tmp += SchemeUtils.getOpticalLength(pe);
 		}
 		return null;
 	}
 
 	public double[] getPhysicalDistanceFromStart(PathElement pathElement)
 	{
-		if (sp.links.size() == 0)
+		if (sp.links().length == 0)
 			return null;
 
 		double tmp = 0;
+		List links = Arrays.asList(sp.links());
 
-		for(Iterator it = sp.links.iterator(); it.hasNext();)
+		for(Iterator it = links.iterator(); it.hasNext();)
 		{
 			PathElement pe = (PathElement)it.next();
 			if (pe.equals(pathElement))
 			{
-				double d[] = {tmp, tmp + pe.getPhysicalLength()};
+				double d[] = {tmp, tmp + SchemeUtils.getPhysicalLength(pe)};
 				return d;
 			}
-			tmp += pe.getPhysicalLength();
+			tmp += SchemeUtils.getPhysicalLength(pe);
 		}
 		return null;
 	}
@@ -214,7 +185,8 @@ public class PathDecompositor
 */
 	public boolean hasPreviousPathElement(PathElement pe)
 	{
-		int index = sp.links.indexOf(pe);
+		List links = Arrays.asList(sp.links());
+		int index = links.indexOf(pe);
 		if (index > 0)
 			return true;
 		return false;
@@ -222,75 +194,64 @@ public class PathDecompositor
 
 	public PathElement getPreviousPathElement(PathElement pe)
 	{
-		int index = sp.links.indexOf(pe);
+		List links = Arrays.asList(sp.links());
+		int index = links.indexOf(pe);
 		if (index > 0)
-			return (PathElement)sp.links.get(index - 1);
+			return (PathElement)links.get(index - 1);
 		return null;
 	}
 
 	public boolean hasNextPathElement(PathElement pe)
 	{
-		int index = sp.links.indexOf(pe);
-		if (index != -1 && index < sp.links.size() - 2)
+		List links = Arrays.asList(sp.links());
+		int index = links.indexOf(pe);
+		if (index != -1 && index < links.size() - 2)
 			return true;
 		return false;
 	}
 
 	public PathElement getNextPathElement(PathElement pe)
 	{
-		int index = sp.links.indexOf(pe);
-		if (index != -1 && index < sp.links.size() - 2)
-			return (PathElement)sp.links.get(index + 1);
+		List links = Arrays.asList(sp.links());
+		int index = links.indexOf(pe);
+		if (index != -1 && index < links.size() - 2)
+			return (PathElement)links.get(index + 1);
 		return null;
 	}
 
-	public PathElement getPreviousNode(PathElement pe, boolean mustHaveOpticalPort)
+	public PathElement getPreviousNode(PathElement pe)
 	{
-		if (pe.getType() == PathElement.SCHEME_ELEMENT && hasOpticalPort(pe))
+		if (pe.type() == Type.SCHEME_ELEMENT && hasOpticalPort(pe))
 			return pe;
 
-		int index = sp.links.indexOf(pe);
+		List links = Arrays.asList(sp.links());
+		int index = links.indexOf(pe);
 		if (index != -1)
 		{
-			for (ListIterator it = sp.links.listIterator(index); it.hasPrevious();)
+			for (ListIterator it = links.listIterator(index); it.hasPrevious();)
 			{
 				pe = (PathElement)it.previous();
-				if (mustHaveOpticalPort)
-				{
-					if (pe.getType() == PathElement.SCHEME_ELEMENT && hasOpticalPort(pe))
-						return pe;
-				}
-				else
-				{
-					if (pe.getType() == PathElement.SCHEME_ELEMENT)
-						return pe;
-				}
+				if (pe.type() == Type.SCHEME_ELEMENT && hasOpticalPort(pe))
+					return pe;
 			}
 		}
 		return null;
 	}
 
-	public PathElement getNextNode(PathElement pe, boolean mustHaveOpticalPort)
+	public PathElement getNextNode(PathElement pe)
 	{
-		if (pe.getType() == PathElement.SCHEME_ELEMENT && hasOpticalPort(pe))
+		if (pe.type() == Type.SCHEME_ELEMENT && hasOpticalPort(pe))
 			return pe;
 
-		int index = sp.links.indexOf(pe);
+		List links = Arrays.asList(sp.links());
+		int index = links.indexOf(pe);
 		if (index != -1)
 		{
-			for (ListIterator it = sp.links.listIterator(index); it.hasNext();)
+			for (ListIterator it = links.listIterator(index); it.hasNext();)
 			{
 				pe = (PathElement)it.next();
-				if (mustHaveOpticalPort)
-				{
-					if (pe.getType() == PathElement.SCHEME_ELEMENT && hasOpticalPort(pe))
-						return pe;
-				}
-				else
-				{
-					if (pe.getType() == PathElement.SCHEME_ELEMENT)
-						return pe;
-				}
+				if (pe.type() == Type.SCHEME_ELEMENT && hasOpticalPort(pe))
+					return pe;
 			}
 		}
 		return null;
@@ -298,18 +259,18 @@ public class PathDecompositor
 
 	private boolean hasOpticalPort(PathElement pe)
 	{
-		ObjectResource port = pe.getSourcePort();
+		AbstractSchemePort port = pe.startAbstractSchemePort();
 		if (port instanceof SchemePort)
 		{
-			PortType ptype = (PortType) Pool.get(PortType.typ, ((SchemePort)port).portTypeId);
-			if (ptype.pClass.equals("optical"))
+			PortType ptype = ((SchemePort)port).portTypeImpl();
+			if (ptype.getSort().equals(PortTypeSort.PORTTYPESORT_OPTICAL))
 				return true;
 		}
-		port = pe.getTargetPort();
+		port = pe.endAbstractSchemePort();
 		if (port instanceof SchemePort)
 		{
-			PortType ptype = (PortType) Pool.get(PortType.typ, ((SchemePort)port).portTypeId);
-			if (ptype.pClass.equals("optical"))
+			PortType ptype = ((SchemePort)port).portTypeImpl();
+			if (ptype.getSort().equals(PortTypeSort.PORTTYPESORT_OPTICAL))
 				return true;
 		}
 		return false;
@@ -358,4 +319,5 @@ public class PathDecompositor
 		return null;
 	}
 */
+
 }

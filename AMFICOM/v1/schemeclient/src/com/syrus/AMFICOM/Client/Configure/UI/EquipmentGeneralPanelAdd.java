@@ -6,11 +6,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
 public class EquipmentGeneralPanelAdd extends GeneralPanel
 {
@@ -67,7 +67,7 @@ public class EquipmentGeneralPanelAdd extends GeneralPanel
 	public EquipmentGeneralPanelAdd(SchemeElement element)
 	{
 		this();
-		setObjectResource(element);
+		setObject(element);
 	}
 
 	private void jbInit() throws Exception
@@ -157,26 +157,35 @@ public class EquipmentGeneralPanelAdd extends GeneralPanel
 	 this.add(mainPanel,BorderLayout.NORTH);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return element;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		element = (SchemeElement)or;
 
-		if(element.equipment != null)
+		if(element.equipmentType() != null)
 		{
-			hw_serialField.setText(element.equipment.hwSerial);
-			sw_serialField.setText(element.equipment.swSerial);
-			hw_versionField.setText(element.equipment.hwVersion);
-			sw_versionField.setText(element.equipment.swVersion);
-			rnField.setText(element.equipment.inventoryNr);
-			manufacturerField.setText(element.equipment.manufacturer);
-			manufacturerCodeField.setText(element.equipment.manufacturerCode);
-			supplierField.setText(element.equipment.supplier);
-			supplierCodeField.setText(element.equipment.supplierCode);
+			manufacturerField.setText(element.equipmentTypeImpl().getManufacturer());
+			manufacturerCodeField.setText(element.equipmentTypeImpl().getManufacturerCode());
+		}
+		else
+		{
+			manufacturerField.setText("");
+			manufacturerCodeField.setText("");
+		}
+
+		if(element.equipment() != null)
+		{
+			hw_serialField.setText(element.equipmentImpl().getHwSerial());
+			sw_serialField.setText(element.equipmentImpl().getSwSerial());
+			hw_versionField.setText(element.equipmentImpl().getHwVersion());
+			sw_versionField.setText(element.equipmentImpl().getSwVersion());
+			rnField.setText(element.equipmentImpl().getInventoryNumber());
+			supplierField.setText(element.equipmentImpl().getSupplier());
+			supplierCodeField.setText(element.equipmentImpl().getSupplierCode());
 		}
 		else
 		{
@@ -185,8 +194,6 @@ public class EquipmentGeneralPanelAdd extends GeneralPanel
 			hw_versionField.setText("");
 			sw_versionField.setText("");
 			rnField.setText("");
-			manufacturerField.setText("");
-			manufacturerCodeField.setText("");
 			supplierField.setText("");
 			supplierCodeField.setText("");
 		}
@@ -196,17 +203,21 @@ public class EquipmentGeneralPanelAdd extends GeneralPanel
 	{
 		try
 		{
-			if (element.equipment != null)
+			if (element.equipmentType() != null)
 			{
-				element.equipment.hwSerial = hw_serialField.getText();
-				element.equipment.swSerial = sw_serialField.getText();
-				element.equipment.hwVersion = hw_versionField.getText();
-				element.equipment.swVersion = sw_versionField.getText();
-				element.equipment.inventoryNr = rnField.getText();
-				element.equipment.manufacturer = manufacturerField.getText();
-				element.equipment.manufacturerCode = manufacturerCodeField.getText();
-				element.equipment.supplier = supplierField.getText();
-				element.equipment.supplierCode = supplierCodeField.getText();
+				element.equipmentTypeImpl().setManufacturer(manufacturerField.getText());
+				element.equipmentTypeImpl().setManufacturerCode(manufacturerCodeField.getText());
+			}
+
+			if (element.equipment() != null)
+			{
+				element.equipmentImpl().setHwSerial(hw_serialField.getText());
+				element.equipmentImpl().setHwSerial(sw_serialField.getText());
+				element.equipmentImpl().setHwVersion(hw_versionField.getText());
+				element.equipmentImpl().setSwVersion(sw_versionField.getText());
+				element.equipmentImpl().setInventoryNumber(rnField.getText());
+				element.equipmentImpl().setSupplier(supplierField.getText());
+				element.equipmentImpl().setSupplierCode(supplierCodeField.getText());
 			}
 		}
 		catch(Exception ex)
@@ -218,19 +229,16 @@ public class EquipmentGeneralPanelAdd extends GeneralPanel
 
 	void saveButton_actionPerformed(ActionEvent e)
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-		{
-			return;
-		}
-
 		if(modify())
 		{
-			if (element.equipment != null)
+			if (element.equipment() != null)
 			{
-				DataSourceInterface dataSource = aContext.getDataSourceInterface();
-				dataSource.SaveEquipment(element.equipment.getId());
+				try {
+					ConfigurationStorableObjectPool.putStorableObject(element.equipmentImpl());
+				}
+				catch (ApplicationException ex) {
+					ex.printStackTrace();
+				}
 			}
 		}
 	}

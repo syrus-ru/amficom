@@ -6,18 +6,20 @@ import java.util.List;
 import java.awt.*;
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeProtoGroup;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.client_.general.ui_.tree.*;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 {
-	DataSourceInterface dsi;
+	ApplicationContext aContext;
 
-	public SchemeProtoGroupsTreeModel(DataSourceInterface dsi)
+	public SchemeProtoGroupsTreeModel(ApplicationContext aContext)
 	{
-		this.dsi = dsi;
+		this.aContext = aContext;
 	}
 
 	public ObjectResourceTreeNode getRoot()
@@ -49,60 +51,66 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 		if (node.getObject() instanceof SchemeProtoGroup)
 		{
 			SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getObject();
-			if (!parent_group.getProtoIds().isEmpty())
+			if (parent_group.schemeProtoElements().length != 0)
 				return SchemeProtoGroup.class;
 		}
 		else if (node.getObject() instanceof SchemeProtoGroup)
-			return ProtoElement.class;
+			return SchemeProtoElement.class;
 		return SchemeProtoGroup.class;
 	}
 
 	public List getChildNodes(ObjectResourceTreeNode node)
 	{
 		List vec = new ArrayList();
-		Map map_groups = Pool.getMap(SchemeProtoGroup.typ);
+		try {
+			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+					getAccessIdentifier().domain_id);
+			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					domain_id, true);
+			DomainCondition condition = new DomainCondition(domain, ObjectEntities.LINKTYPE_ENTITY_CODE);
+			List groups = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-		if(node.getObject() instanceof String)
-		{
-			String s = (String )node.getObject();
-			ObjectResource os;
+			if (node.getObject()instanceof String) {
+				String s = (String)node.getObject();
 
-			if(s.equals("root"))
-			{
-				if (map_groups != null)
-					for (Iterator it = map_groups.values().iterator(); it.hasNext();)
+			if (s.equals("root")) {
+				for (Iterator it = groups.iterator(); it.hasNext(); )
+				{
+					SchemeProtoGroup group = (SchemeProtoGroup)it.next();
+					if (group.parent() == null)
 					{
-						SchemeProtoGroup map_group = (SchemeProtoGroup)it.next();
-						if (map_group.parentId.length() == 0)
-						{
-							ImageIcon icon;
-							if (map_group.getImageID().equals(""))
-								icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
-							else
-								icon = new ImageIcon(ImageCatalogue.get(map_group.getImageID()).getImage()
-										.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
-							vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true, icon,
-									map_group.groupIds.isEmpty()));
-						}
+						ImageIcon icon;
+						if (group.symbol() == null)
+							icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
+						else
+							icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
+									group.symbolImpl().getImage()).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+						vec.add(new ObjectResourceTreeNode(group, group.name(), true, icon,
+								group.schemeProtoGroups().length == 0));
 					}
+				}
 			}
 		}
 		else if(node.getObject() instanceof SchemeProtoGroup)
 		{
 			SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getObject();
-			Iterator it = parent_group.groupIds.iterator();
-			for (int i = 0; i < parent_group.groupIds.size(); i++)
+			for (int i = 0; i < parent_group.schemeProtoGroups().length; i++)
 			{
-				SchemeProtoGroup map_proto = (SchemeProtoGroup)Pool.get(SchemeProtoGroup.typ, (String)it.next());
+				SchemeProtoGroup group = parent_group.schemeProtoGroups()[i];
 				ImageIcon icon;
-				if (map_proto.getImageID().equals(""))
+				if (group.symbol() == null)
 					icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
 				else
-					icon = new ImageIcon(ImageCatalogue.get(map_proto.getImageID()).getImage()
-							.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
-				vec.add(new ObjectResourceTreeNode(map_proto, map_proto.getName(), true, icon, map_proto.groupIds.isEmpty()));
+					icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
+							group.symbolImpl().getImage()).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+				vec.add(new ObjectResourceTreeNode(group, group.name(), true, icon,
+						group.schemeProtoGroups().length == 0));
 			}
 		}
+	}
+	catch (ApplicationException ex) {
+	}
+
 		return vec;
 	}
 }

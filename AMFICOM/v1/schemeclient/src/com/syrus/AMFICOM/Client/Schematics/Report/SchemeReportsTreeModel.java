@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Schematics.Report;
+/*package com.syrus.AMFICOM.Client.Schematics.Report;
 
 import java.util.*;
 import java.util.List;
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.Client.Resource.Network.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-
+*/
 /**
  * <p>Description: Модель дерева с доступными отчётами</p>
  * <p>Copyright: Copyright (c) 2003</p>
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
  * @author Песковский Пётр
  * @version 1.0
  */
-
+/*
 public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 {
 	public SchemeReportsTreeModel()
@@ -218,7 +218,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 				 new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/new.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 				 ortn.setDragDropEnabled(true);
 				 vec.add(ortn);
-				 registerSearchableNode("", ortn);*/
+				 registerSearchableNode("", ortn);/
 
 			}
 
@@ -259,7 +259,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 				 dSet = filter.filter(dSet);
 				 ObjectResourceSorter sorter = Scheme.getDefaultSorter();
 				 sorter.setDataSet(dSet);
-				 dSet = sorter.default_sort();*/
+				 dSet = sorter.default_sort();/
 
 				for (Iterator it = dSet.values().iterator(); it.hasNext(); )
 				{
@@ -342,7 +342,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 			/*		 else if ((node.getObject()instanceof ObjectsReport)
 			 && (((ObjectsReport)node.getObject()).getReserve() instanceof ))
 			 {
-			 Scheme scheme = (Scheme) node.getObject();*/
+			 Scheme scheme = (Scheme) node.getObject();/
 
 			//Элементы
 			for (Iterator it = scheme.elements.iterator(); it.hasNext(); )
@@ -574,3 +574,4 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 	}
 }
 
+*/

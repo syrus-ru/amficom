@@ -2,21 +2,23 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.CablePort;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCablePort;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.client_.general.ui_.*;
+import com.syrus.AMFICOM.Client.General.*;
 
-public class CablePortGeneralPanel extends GeneralPanel
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.scheme.corba.AbstractSchemePort;
+
+public class AbstractPortGeneralPanel extends GeneralPanel
 {
-	SchemeCablePort port;
-	CablePort cp;
+	AbstractSchemePort port;
 
 	JLabel descLabel = new JLabel();
 	JScrollPane descriptionScrollPane = new JScrollPane();
@@ -29,16 +31,16 @@ public class CablePortGeneralPanel extends GeneralPanel
 	JTextField nameField = new JTextField();
 
 	JLabel typeLabel = new JLabel();
-	ObjectResourceComboBox typeBox = new ObjectResourceComboBox(CablePortType.typ, true);
+	ObjComboBox typeBox;
 
 	private JLabel equipLabel = new JLabel();
-	private ObjectResourceComboBox equipBox = new ObjectResourceComboBox("kisequipment", true);
+	private JTextField equipField = new JTextField();
 
 	private JTextField modifyField = new JTextField();
 	private JLabel modifyLabel2 = new JLabel();
 	private JLabel modifyLabel1 = new JLabel();
 
-	public CablePortGeneralPanel()
+	public AbstractPortGeneralPanel()
 	{
 		super();
 		try
@@ -51,14 +53,23 @@ public class CablePortGeneralPanel extends GeneralPanel
 		}
 	}
 
-	public CablePortGeneralPanel(SchemeCablePort port)
+	public AbstractPortGeneralPanel(AbstractSchemePort port)
 	{
 		this();
-		setObjectResource(port);
+		setObject(port);
 	}
 
 	private void jbInit() throws Exception
 	{
+		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+		Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+				domain_id, true);
+		DomainCondition condition = new DomainCondition(domain, ObjectEntities.PORTTYPE_ENTITY_CODE);
+		typeBox = new ObjComboBox(
+					PortTypeController.getInstance(),
+					ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true),
+					PortTypeController.KEY_NAME);
+
 		this.setLayout(new GridBagLayout());
 
 		descLabel.setText(LangModelConfig.getString("label_description"));
@@ -77,7 +88,7 @@ public class CablePortGeneralPanel extends GeneralPanel
 
 		equipLabel.setText(LangModelConfig.getString("menuNetCatEquipmentText"));
 		equipLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		equipBox.setEnabled(false);
+		equipField.setEnabled(false);
 
 		modifyField.setEnabled(false);
 		modifyLabel1.setText(LangModelConfig.getString("label_modified1"));
@@ -102,7 +113,7 @@ public class CablePortGeneralPanel extends GeneralPanel
 
 		this.add(nameField, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		this.add(typeBox, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.add(equipBox, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(equipField, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		this.add(modifyField,       new GridBagConstraints(1, 4, 1, 2, 0.0, 0.0
 				,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		this.add(descriptionScrollPane,  new GridBagConstraints(1, 6, 1, 1, 1.0, 1.0
@@ -114,29 +125,31 @@ public class CablePortGeneralPanel extends GeneralPanel
 //		this.add(saveButton,    new XYConstraints(200, 213, -1, -1));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return port;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
-		port = (SchemeCablePort)port;
+		port = (AbstractSchemePort)port;
 
-		idField.setText(port.getId());
-		nameField.setText(port.getName());
+		idField.setText(port.id().identifierString());
+		nameField.setText(port.name());
 
-		if(cp != null)
+		typeBox.setSelectedItem(port.portType());
+		descTextArea.setText(port.description());
+
+		if(port.port() != null)
 		{
-			typeBox.setSelected(cp.typeId);
-			descTextArea.setText(cp.description);
-			equipBox.setSelected(cp.equipmentId);
+			Port cp = port.portImpl();
+			equipField.setText(cp.getEquipmentId().getIdentifierString());
 		}
 		else
 		{
-			typeBox.setSelected("");
+			typeBox.setSelectedItem("");
 			descTextArea.setText("");
-			equipBox.setSelected("");
+			equipField.setText("");
 		}
 	}
 
@@ -145,19 +158,12 @@ public class CablePortGeneralPanel extends GeneralPanel
 		try
 		{
 			if(MiscUtil.validName(nameField.getText()))
-			{
-				port.name = nameField.getText();
-				cp.name = nameField.getText();
-			}
+				port.name(nameField.getText());
 			else
 				return false;
 
-			if (cp != null)
-			{
-				cp.typeId = (String)typeBox.getSelected();
-				cp.description = descTextArea.getText();
-				cp.equipmentId = (String)equipBox.getSelected();
-			}
+			port.portTypeImpl((PortType)typeBox.getSelectedItem());
+			port.description(descTextArea.getText());
 		}
 		catch(Exception ex)
 		{
@@ -168,17 +174,13 @@ public class CablePortGeneralPanel extends GeneralPanel
 
 	void saveButton_actionPerformed(ActionEvent e)
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-		{
-			return;
-		}
-
 		if(modify())
 		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			dataSource.SaveCablePort(cp.getId());
+			try {
+				ConfigurationStorableObjectPool.putStorableObject(port.portImpl());
+			}
+			catch (ApplicationException ex) {
+			}
 		}
 	}
 }

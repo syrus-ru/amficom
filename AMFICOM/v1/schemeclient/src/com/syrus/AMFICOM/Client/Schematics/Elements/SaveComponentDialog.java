@@ -1,22 +1,24 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
 import java.util.*;
+import java.util.List;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class SaveComponentDialog extends JDialog
 {
-	ProtoElement proto;
-	DataSourceInterface dataSource;
+	SchemeProtoElement proto;
 
 	ProtoElementPropsPanel componentPanel;
 	ApplicationContext aContext;
@@ -86,12 +88,11 @@ public class SaveComponentDialog extends JDialog
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 	}
 
-	public void init(ProtoElement proto, DataSourceInterface dataSource)
+	public void init(SchemeProtoElement proto)
 	{
 		this.proto = proto;
-		this.dataSource = dataSource;
 
-		componentPanel.init(proto, dataSource, true);
+		componentPanel.init(proto, true);
 		//groupPanel.init(proto, dataSource);
 
 		setVisible(true);
@@ -119,69 +120,39 @@ public class SaveComponentDialog extends JDialog
 
 		//ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
 
-		if (!scheme_proto.getProtoIds().contains(proto.getId()))
-			scheme_proto.getProtoIds().add(proto.getId());
-		proto.scheme_proto_group = scheme_proto;
+		List protos = Arrays.asList(scheme_proto.schemeProtoElements());
+		if (!protos.contains(proto))
+			protos.add(proto);
+		proto.parent(scheme_proto);
 
-		proto.name = componentPanel.getProtoName();
-		EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipmentTypeId);
-		eqt.name = proto.getName();
+		proto.name(componentPanel.getProtoName());
+		EquipmentType eqt = proto.equipmentTypeImpl();
 
-		proto.domainId = aContext.getSessionInterface().getDomainId();
-		String[] proto_ids = (String[])createProtoIdsList(proto).toArray(new String[0]);
+		try {
+			SchemeStorableObjectPool.putStorableObject(proto);
+			ConfigurationStorableObjectPool.putStorableObject(eqt);
+			aContext.getDispatcher().notify(new TreeListSelectionEvent(scheme_proto, TreeListSelectionEvent.REFRESH_EVENT));
+			dispose();
 
-		for (int i = 0; i < proto_ids.length; i++)
-		{
-			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, proto_ids[i]);
-			p.pack();
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					"Элемент "+ proto.name() +" успешно сохранен",
+					"Сообщение",
+							JOptionPane.INFORMATION_MESSAGE);
 		}
-		dataSource.SaveSchemeProtos(proto_ids);
-
-		Pool.put(SchemeProtoGroup.typ, scheme_proto.getId(), scheme_proto);
-		dataSource.SaveMapProtoGroups(new String[] {scheme_proto.getId()});
-
-		String[] eqtype_ids = (String[])createEqTypesList(proto).toArray(new String[0]);
-		dataSource.SaveEquipmentTypes(eqtype_ids);
-
-		Map l_ids = createLinkIdsList(proto);
-		if (!l_ids.isEmpty())
-		{
-			String[] link_ids = new String[l_ids.size()];
-			int i = 0;
-			for (Iterator it = l_ids.keySet().iterator(); it.hasNext();)
-				link_ids[i++] = (String)it.next();
-			dataSource.SaveLinkTypes(link_ids);
+		catch (IllegalObjectEntityException ex) {
+			ex.printStackTrace();
 		}
-
-		Map p_ids = createPortIdsList(proto);
-		if (!p_ids.isEmpty())
-		{
-			String[] port_ids = new String[p_ids.size()];
-			int i = 0;
-			for (Iterator it = p_ids.keySet().iterator(); it.hasNext();)
-				port_ids[i++] = (String)it.next();
-			dataSource.SavePortTypes(port_ids);
-		}
-
-		aContext.getDispatcher().notify(new TreeListSelectionEvent(scheme_proto.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
-		dispose();
-
-		JOptionPane.showMessageDialog(
-				Environment.getActiveWindow(),
-				"Элемент "+ proto.getName() +" успешно сохранен",
-				"Сообщение",
-						JOptionPane.INFORMATION_MESSAGE);
 	}
 
-	ArrayList createProtoIdsList(ProtoElement proto)
+	/*ArrayList createProtoIdsList(SchemeProtoElement proto)
 	{
 		ArrayList proto_ids = new ArrayList();
-		for (Iterator it = proto.protoelementIds.iterator(); it.hasNext();)
-		{
-			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
-			proto_ids.addAll(createProtoIdsList(p));
-		}
-		proto_ids.add(proto.getId());
+		SchemeProtoElement[] p = proto.protoElements();
+		for (int i = 0; i < p.length; i++)
+			proto_ids.addAll(createProtoIdsList(p[i]));
+
+		proto_ids.add(proto.id());
 		return proto_ids;
 	}
 
@@ -251,5 +222,5 @@ public class SaveComponentDialog extends JDialog
 			}
 		}
 		return p_ids;
-	}
+	}*/
 }

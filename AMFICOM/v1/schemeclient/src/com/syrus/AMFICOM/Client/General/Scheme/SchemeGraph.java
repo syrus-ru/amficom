@@ -10,12 +10,15 @@ import javax.swing.*;
 
 import com.jgraph.graph.*;
 import com.jgraph.pad.*;
+import com.jgraph.graph.Port;
 import com.jgraph.pad.GPGraph.*;
 import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 public class SchemeGraph extends GPGraph
 {
@@ -23,7 +26,16 @@ public class SchemeGraph extends GPGraph
 	public Dimension actualSize = Constants.A4;
 	Dispatcher dispatcher;
 	ApplicationContext aContext;
+	/**
+	 * trigger between path selection modes
+	 */
 	public String mode = Constants.LINK_MODE;
+	/**
+	 * trigger between path creation modes
+	 */
+
+	private boolean topLevelSchemeMode = false;
+
 	public static int path_creation_mode = Constants.NORMAL;
 
 	protected boolean show_grid_at_actual_size = false;
@@ -105,7 +117,138 @@ public class SchemeGraph extends GPGraph
 		return getGraphResource().getCurrentPath();
 	}
 
+	public void setTopLevelSchemeMode(boolean b)
+	{
+		topLevelSchemeMode = b;
 
+		Scheme scheme = getScheme();
+		if (scheme == null)
+			return;
+
+		if (b)
+			generateTopLevelScheme();
+	}
+
+	public boolean isTopLevelSchemeMode()
+	{
+		return topLevelSchemeMode;
+	}
+
+	void generateTopLevelScheme()
+	{
+		Map oldToNewMap = new HashMap();
+		Map map2 = new HashMap();
+		Object[] cells = getRoots();
+
+		for (int i = 0; i < cells.length; i++)
+		{
+			if (cells[i] instanceof DeviceGroup)
+			{
+				DeviceGroup group = (DeviceGroup)cells[i];
+				if (!isCableGroup(group))
+				{
+					DeviceGroup newGroup = createGroup(group);
+					if (newGroup != null)
+						oldToNewMap.put(group, newGroup);
+				}
+			}
+		}
+		for (int i = 0; i < cells.length; i++)
+		{
+			if (cells[i] instanceof DefaultCableLink)
+			{
+				DefaultCableLink link = (DefaultCableLink)cells[i];
+				DeviceGroup start = null;
+				DeviceGroup end = null;
+				if (link.getSource() instanceof DefaultPort &&
+						((DefaultPort)link.getSource()).getParent().getParent() instanceof DeviceGroup)
+					start = (DeviceGroup)((DefaultPort)link.getSource()).getParent().getParent();
+				if (link.getTarget() instanceof DefaultPort &&
+						((DefaultPort)link.getTarget()).getParent().getParent() instanceof DeviceGroup)
+					end = (DeviceGroup)((DefaultPort)link.getTarget()).getParent().getParent();
+
+				boolean b1 = !isCableGroup(start);
+				boolean b2 = !isCableGroup(end);
+				if (b1 && b2)
+				{
+					DeviceGroup newStart = (DeviceGroup)oldToNewMap.get(start);
+					DeviceGroup newEnd = (DeviceGroup)oldToNewMap.get(end);
+					GraphActions.CreateTopLevelCableLinkAction(this,
+							(Port)newStart.getFirstChild(),
+							(Port)newEnd.getFirstChild(),
+							getCellBounds(newStart).getLocation(),
+							getCellBounds(newEnd).getLocation());
+				}
+				else if (b1)
+				{
+					DeviceGroup newStart = (DeviceGroup)oldToNewMap.get(start);
+					DeviceGroup newEnd = (DeviceGroup)map2.get(end);
+					if (newEnd == null)
+						map2.put(start, newStart);
+					else
+						GraphActions.CreateTopLevelCableLinkAction(this,
+							(Port)newStart.getFirstChild(),
+							(Port)newEnd.getFirstChild(),
+							getCellBounds(newStart).getLocation(),
+							getCellBounds(newEnd).getLocation());
+				}
+				else if (b2)
+				{
+					DeviceGroup newEnd = (DeviceGroup)oldToNewMap.get(end);
+					DeviceGroup newStart = (DeviceGroup)map2.get(start);
+					if (newStart == null)
+						map2.put(end, newEnd);
+					else
+						GraphActions.CreateTopLevelCableLinkAction(this,
+							(Port)newStart.getFirstChild(),
+							(Port)newEnd.getFirstChild(),
+							getCellBounds(newStart).getLocation(),
+							getCellBounds(newEnd).getLocation());
+				}
+			}
+		}
+		getModel().remove(getDescendants(cells));
+	}
+
+	boolean isCableGroup(DeviceGroup group)
+	{
+		if (group.getScheme() == null)
+			return false;
+		if (group.getScheme().type().equals(Type.CABLE_SUBNETWORK))
+			return true;
+		return false;
+	}
+
+	DeviceGroup createGroup(DeviceGroup group)
+	{
+		DeviceGroup newGroup = null;
+		Rectangle r = null;
+		for (Iterator it = group.getChildren().iterator(); it.hasNext(); )
+		{
+			Object child = it.next();
+			if (child instanceof DeviceCell)
+			{
+				DeviceCell dev = (DeviceCell) child;
+				Rectangle cr = getCellBounds(dev);
+				r = toScreen(new Rectangle(cr.getLocation(),
+																	 new Dimension(4 * getGridSize(), 6 * getGridSize())));
+				break;
+			}
+		}
+
+		if (r != null)
+		{
+			newGroup = GraphActions.CreateTopLevelElementAction(this,
+					group.getUserObject(),
+					r,
+					false,
+					Color.BLACK);
+			newGroup.setSchemeElementId(group.getSchemeElementId());
+			newGroup.setSchemeId(group.getSchemeId());
+			newGroup.setProtoElementId(group.getProtoElementId());
+		}
+		return newGroup;
+	}
 
 	public void setGraphChanged(boolean b)
 	{
@@ -516,6 +659,7 @@ public class SchemeGraph extends GPGraph
 		public transient JToggleButton p2 = new JToggleButton();
 		public transient JToggleButton s_cell = new JToggleButton();
 		public transient JButton gr = new JButton();
+		public transient JButton gr2 = new JButton();
 		public transient JButton ugr = new JButton();
 		public transient JButton undo = new JButton();
 		public transient JButton redo = new JButton();
@@ -531,8 +675,9 @@ public class SchemeGraph extends GPGraph
 		public transient JButton bSize = new JButton();
 		public transient JToggleButton pathButt = new JToggleButton();
 		public transient JToggleButton linkButt = new JToggleButton();
+		public transient JButton topModeButt = new JButton();
 
-		transient ProtoElement settingProto = null;
+		transient SchemeProtoElement settingProto = null;
 		private transient boolean isEditable = true;
 //		private transient boolean sendEvents = true;
 
@@ -559,6 +704,7 @@ public class SchemeGraph extends GPGraph
 			del.setEnabled(cells.length != 0 && !GraphActions.hasGroupedParent(cells[0]));
 			ugr.setEnabled(false);
 			gr.setEnabled(false);
+			gr2.setEnabled(false);
 			addlib.setEnabled(false);
 			p1.setEnabled(false);
 			p2.setEnabled(false);
@@ -593,7 +739,10 @@ public class SchemeGraph extends GPGraph
 						p1.setEnabled(true);
 						p2.setEnabled(true);
 						if (device.getChildCount() > 1)
+						{
 							gr.setEnabled(true);
+							gr2.setEnabled(true);
+						}
 					}
 				}
 				if (groups == 1)
@@ -604,7 +753,10 @@ public class SchemeGraph extends GPGraph
 				if (groups > 0 )
 					ugr.setEnabled(true);
 				if (groups > 1)
+				{
 					gr.setEnabled(true);
+					gr2.setEnabled(true);
+				}
 			}
 		}
 
@@ -706,34 +858,34 @@ public class SchemeGraph extends GPGraph
 								fromScreen(new Point(current)));
 
 						boolean inserted = false;
-						getScheme().cablelinks.add(link);
-						if (!getScheme().schemeType.equals(Scheme.CABLESUBNETWORK))
+						Arrays.asList(getScheme().schemeCableLinks()).add(link);
+						if (!getScheme().type().equals(Type.CABLE_SUBNETWORK))
 						{
-							if (link.sourcePortId.length() != 0)
+							if (link.sourceSchemeCablePort() != null)
 							{
-								SchemeElement se = getScheme().getTopLevelElement(
-										getScheme().getSchemeElementByCablePort(link.sourcePortId));
-								if (se.getInternalSchemeId().length() != 0)
+								SchemeElement se = SchemeUtils.getSchemeElementByDevice(
+										getScheme(), link.sourceSchemeCablePort().schemeDevice());
+								if (se.internalScheme() != null)
 								{
-									Scheme source_scheme = se.getInternalScheme();
-									if (source_scheme.schemeType.equals(Scheme.CABLESUBNETWORK))
+									Scheme source_scheme = se.internalScheme();
+									if (source_scheme.type().equals(Type.CABLE_SUBNETWORK))
 									{
-										link.setSchemeId(source_scheme.getId());
+										link.scheme(source_scheme);
 //										source_scheme.cablelinks.add(link);
 										inserted = true;
 									}
 								}
 							}
-							if (!inserted && link.targetPortId.length() != 0)
+							if (!inserted && link.targetSchemeCablePort() != null)
 							{
-								SchemeElement se = getScheme().getTopLevelElement(
-										getScheme().getSchemeElementByCablePort(link.targetPortId));
-								if (se.getInternalSchemeId().length() != 0)
+								SchemeElement se = SchemeUtils.getSchemeElementByDevice(
+										getScheme(), link.targetSchemeCablePort().schemeDevice());
+								if (se.internalScheme() != null)
 								{
-									Scheme target_scheme = se.getInternalScheme();
-									if (target_scheme.schemeType.equals(Scheme.CABLESUBNETWORK))
+									Scheme target_scheme = se.internalScheme();
+									if (target_scheme.type().equals(Type.CABLE_SUBNETWORK))
 									{
-										link.setSchemeId(target_scheme.getId());
+										link.scheme(target_scheme);
 //										target_scheme.cablelinks.add(link);
 										inserted = true;
 									}
@@ -742,7 +894,7 @@ public class SchemeGraph extends GPGraph
 						}
 						if (!inserted)
 						{
-							link.setSchemeId(getScheme().getId());
+							link.scheme(getScheme());
 //							getScheme().cablelinks.add(link);
 						}
 
@@ -762,13 +914,13 @@ public class SchemeGraph extends GPGraph
 
 						if (getScheme() != null)
 						{
-							getScheme().links.add(link);
-							link.setSchemeId(getScheme().getId());
+							Arrays.asList(getScheme().schemeLinks()).add(link);
+							link.scheme(getScheme());
 						}
 						else if (getSchemeElement() != null)
 						{
-							getSchemeElement().links.add(link);
-							link.setSchemeId(getSchemeElement().getSchemeId());
+							Arrays.asList(getSchemeElement().schemeLinks()).add(link);
+							link.scheme(getSchemeElement().scheme());
 						}
 
 						event.consume();

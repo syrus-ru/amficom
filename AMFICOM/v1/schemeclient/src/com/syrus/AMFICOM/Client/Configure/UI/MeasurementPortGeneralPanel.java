@@ -1,21 +1,25 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
+import java.util.List;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.MeasurementPortType;
-import com.syrus.AMFICOM.Client.Resource.Network.Port;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.client_.general.ui_.*;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.DomainCondition;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 
 public class MeasurementPortGeneralPanel extends GeneralPanel
 {
-	MeasurementPort ap;
+	MeasurementPort port;
+	MonitoredElement me;
 
 	JPanel mainPanel = new JPanel();
 	public JButton saveButton = new JButton();
@@ -25,13 +29,13 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 	public JTextField localField = new JTextField();
 
 	public JLabel kisLabel = new JLabel();
-	public ObjectResourceComboBox KISBox = new ObjectResourceComboBox(KIS.typ, true);
+	public JTextField KISField = new JTextField();
 
 	public JLabel portLabel = new JLabel();
-	public ObjectResourceComboBox portBox = new ObjectResourceComboBox(Port.typ, true);
+	public JTextField portField = new JTextField();
 
 	public JLabel typeLabel = new JLabel();
-	public ObjectResourceComboBox typeBox = new ObjectResourceComboBox(MeasurementPortType.typ, true);
+	public ObjComboBox typeBox;
 
 	public JLabel nameLabel = new JLabel();
 	public JTextField nameField = new JTextField();
@@ -55,11 +59,22 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 	public MeasurementPortGeneralPanel(MeasurementPort ap)
 	{
 		this();
-		setObjectResource(ap);
+		setObject(ap);
 	}
 
 	private void jbInit() throws Exception
 	{
+		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+		Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+				domain_id, true);
+		DomainCondition condition = new DomainCondition(domain, ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
+
+		typeBox = new ObjComboBox(
+				MeasurementPortTypeController.getInstance(),
+				ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true),
+				MeasurementPortTypeController.KEY_NAME);
+
+
 		this.setLayout(new BorderLayout());
 
 		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
@@ -87,8 +102,8 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 
 		idField.setEnabled(false);
 		typeBox.setEnabled(false);
-		portBox.setEnabled(false);
-		KISBox.setEnabled(false);
+		portField.setEnabled(false);
+		KISField.setEnabled(false);
 
 		mainPanel.setLayout(new GridBagLayout());
 
@@ -107,8 +122,8 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 
 		mainPanel.add(nameField, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		mainPanel.add(typeBox, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		mainPanel.add(KISBox, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		mainPanel.add(portBox, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		mainPanel.add(KISField, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		mainPanel.add(portField, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 
 		mainPanel.add(localField,       new GridBagConstraints(1, 4, 1, 2, 0.0, 0.0
 			,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
@@ -120,34 +135,51 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 //		this.add(saveButton,      new XYConstraints(200, 210, -1, -1));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
-		return ap;
+		return port;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
-		this.ap = (MeasurementPort)or;
+		this.port = (MeasurementPort)or;
 
-		if(ap != null)
+		if(port != null)
 		{
-//			System.out.println("set prop pane to " + ap.name);
+			try {
+				Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+						getAccessIdentifier().domain_id);
+				Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+						domain_id, true);
 
-			typeBox.setSelected(ap.typeId);
-			idField.setText(ap.getId());
-			nameField.setText(ap.getName());
-			portBox.setSelected(ap.portId);
-			KISBox.setSelected(ap.kisId);
-			localField.setText(ap.localId);
+				LinkedIdsCondition condition = LinkedIdsCondition.getInstance();
+				condition.setDomain(domain);
+				condition.setIdentifier(port.getId());
+				condition.setEntityCode(ObjectEntities.ME_ENTITY_CODE);
+
+				List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if (list.size() > 0) {
+					me = (MonitoredElement)list.get(0);
+				}
+			}
+			catch (ApplicationException ex) {
+			}
+
+			typeBox.setSelectedItem(port.getType());
+			idField.setText(port.getId().getIdentifierString());
+			nameField.setText(port.getName());
+			portField.setText(port.getPortId().getIdentifierString());
+			KISField.setText(port.getKISId().getIdentifierString());
+			localField.setText(me.getLocalAddress());
 		}
 		else
 		{
 			nameField.setText("");
 			idField.setText("");
 			localField.setText("");
-			portBox.setSelected("");
-			KISBox.setSelected("");
-			typeBox.setSelected("");
+			portField.setText("");
+			KISField.setText("");
+			typeBox.setSelectedItem("");
 //			imageLabel.setIcon(new ImageIcon());
 		}
 	}
@@ -157,15 +189,11 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 		try
 		{
 			if(MiscUtil.validName(nameField.getText()))
-				ap.name = nameField.getText();
+				port.setName(nameField.getText());
 			else
 				return false;
-			ap.id = idField.getText();
-			ap.portId = (String )portBox.getSelected();
-			ap.typeId = (String )typeBox.getSelected();
-			ap.kisId = (String )KISBox.getSelected();
-//			ap.name = nameField.getText();
-			ap.localId = localField.getText();
+			port.setType((MeasurementPortType)typeBox.getSelectedItem());
+			me.setLocalAddress(localField.getText());
 		}
 		catch(Exception ex)
 		{
@@ -176,18 +204,7 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 
 	void saveButton_actionPerformed(ActionEvent e)
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogCMediting))
-		{
-			return;
-		}
-
-		if(modify())
-		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			dataSource.SaveAccessPort(ap.getId());
-		}
+		save();
 	}
 
 }

@@ -6,7 +6,7 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
 
 public class ChooseMapGroupDialog extends JDialog implements OperationListener
@@ -55,7 +55,7 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 
 		getContentPane().setLayout(new BorderLayout());
 
-		SchemeProtoGroupsTreeModel model = new SchemeProtoGroupsTreeModel(aContext.getDataSourceInterface());
+		SchemeProtoGroupsTreeModel model = new SchemeProtoGroupsTreeModel(aContext);
 		SchemeProtoGroupNavigatorPanel north_panel = new SchemeProtoGroupNavigatorPanel(aContext, dispatcher, model);
 		north_panel.setBorder(BorderFactory.createTitledBorder("Список"));
 		this.getContentPane().add(north_panel, BorderLayout.CENTER);
@@ -147,13 +147,13 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 				if (dse.getSelectionNumber() != -1)
 				{
 					SchemeProtoGroup map_proto = (SchemeProtoGroup)dse.getList().get(dse.getSelectionNumber());
-					gpp.init(map_proto, aContext.getDataSourceInterface());
+					gpp.init(map_proto);
 				}
 			}
 
 			if (selectedObject instanceof SchemeProtoGroup &&
-					((SchemeProtoGroup)selectedObject).groupIds.isEmpty() &&
-					((SchemeProtoGroup)selectedObject).getProtoIds().isEmpty())
+					((SchemeProtoGroup)selectedObject).schemeProtoGroups().length == 0 &&
+					((SchemeProtoGroup)selectedObject).schemeProtoElements().length == 0)
 				;
 		}
 	}
@@ -164,7 +164,7 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 		if (selectedObject instanceof SchemeProtoGroup)
 		{
 			SchemeProtoGroup group = (SchemeProtoGroup)selectedObject;
-			if (group.groupIds.isEmpty())
+			if (group.schemeProtoGroups().length == 0)
 			{
 				retCode = OK;
 				dispose();
@@ -178,7 +178,7 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 		{
 			SchemeProtoGroup group = gpp.getSchemeProtoGroup();
 //			aContext.getDataSourceInterface().SaveMapProtoGroups(new String[] {group.getId()});
-			dispatcher.notify(new TreeListSelectionEvent(group.getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
+			dispatcher.notify(new TreeListSelectionEvent("", TreeListSelectionEvent.REFRESH_EVENT));
 		}
 	}
 

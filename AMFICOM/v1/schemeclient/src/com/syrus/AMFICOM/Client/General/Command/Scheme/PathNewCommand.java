@@ -1,11 +1,17 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 public class PathNewCommand extends VoidCommand
 {
@@ -26,17 +32,28 @@ public class PathNewCommand extends VoidCommand
 	public void execute()
 	{
 		SchemeGraph graph = pane.getPanel().getGraph();
-		SchemePath path = new SchemePath(aContext.getDataSourceInterface().GetUId(SchemePath.typ));
-		path.setSchemeId(graph.getScheme().getId());
+		if (graph.getScheme() == null)
+			return;
+		SchemePath path = SchemeFactory.createPath();
+		path.scheme(graph.getScheme());
 		graph.setCurrentPath(path);
 
-		ElementAttribute ea = new ElementAttribute(aContext.getDataSourceInterface().GetUId(ElementAttribute.typ), "", "false", "alarmed");
-		graph.getCurrentPath().attributes.put(ea.type_id, ea);
+		Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+																				getAccessIdentifier().user_id);
+		CharacteristicType type = MiscUtil.getCharacteristicType(
+				user_id, "alarmed", CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+				DataType.DATA_TYPE_STRING);
 
-//		graph.removeSelectionCells();
-		aContext.getDispatcher().notify(new CreatePathEvent(pane.getPanel(), null, CreatePathEvent.CREATE_PATH_EVENT));
-	}
+		try {
+			Characteristic ea = Characteristic.createInstance(user_id, type, "Сигнал тревоги", "",
+					CharacteristicSort._CHARACTERISTIC_SORT_SCHEMEPATH, "false",
+					new Identifier(path.id().getTransferable()), true, true);
+			path.characteristicsImpl().add(ea);
+		}
+		catch (CreateObjectException ex) {
+			ex.printStackTrace();
+		}
+		aContext.getDispatcher().notify(new CreatePathEvent(pane.getPanel(), null,
+				CreatePathEvent.CREATE_PATH_EVENT));
 }
-
-
-
+}

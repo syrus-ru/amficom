@@ -8,7 +8,7 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 public class SchemeViewerFrame extends JInternalFrame implements OperationListener
 {

@@ -1,23 +1,28 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
 import java.util.*;
+import java.util.List;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.corba.SchemeLink;
 
 public class LinkPropsPanel extends JPanel
 {
-	private AComboBox classComboBox = new AComboBox();
-	private JButton addClassButton = new JButton("...");
-	private ObjectResourceComboBox typeComboBox = new ObjectResourceComboBox();
+	private AComboBox sortComboBox = new AComboBox();
+	private ObjComboBox typeComboBox = new ObjComboBox(
+			 LinkTypeController.getInstance(),
+			 LinkTypeController.KEY_NAME);
 	private JButton addTypeButton = new JButton("...");
 	private JTextField nameText = new JTextField();
 	private JTextArea descriptionTextArea = new JTextArea();
@@ -30,7 +35,14 @@ public class LinkPropsPanel extends JPanel
 	private boolean skip_changes = false;
 
 	SchemeLink[] links;
+	List linkTypes;
 	LinkType lt;
+
+	private static LinkTypeSort[] linkTypeSorts = new LinkTypeSort[] {
+		LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER,
+		LinkTypeSort.LINKTYPESORT_ETHERNET,
+		LinkTypeSort.LINKTYPESORT_GSM
+	};
 
 	public LinkPropsPanel(ApplicationContext aContext)
 	{
@@ -105,7 +117,7 @@ public class LinkPropsPanel extends JPanel
 		p221.add(manLabelPanel, BorderLayout.WEST);
 		p222.add(lengthLabelPanel, BorderLayout.WEST);
 
-		p11.add(classComboBox, BorderLayout.CENTER);
+		p11.add(sortComboBox, BorderLayout.CENTER);
 		p12.add(typeComboBox, BorderLayout.CENTER);
 		p13.add(nameText, BorderLayout.CENTER);
 		JScrollPane scroll = new JScrollPane(descriptionTextArea);
@@ -113,10 +125,9 @@ public class LinkPropsPanel extends JPanel
 		p221.add(manufacturerTextField, BorderLayout.CENTER);
 		p222.add(lenPanel, BorderLayout.CENTER);
 
-		p11.add(addClassButton, BorderLayout.EAST);
 		p12.add(addTypeButton, BorderLayout.EAST);
 
-		typeComboBox.setPreferredSize(classComboBox.getPreferredSize());
+		typeComboBox.setPreferredSize(sortComboBox.getPreferredSize());
 
 		p1.add(p11, BorderLayout.NORTH);
 		p1.add(p12, BorderLayout.CENTER);
@@ -126,15 +137,6 @@ public class LinkPropsPanel extends JPanel
 		p22.add(p221, BorderLayout.CENTER);
 		p22.add(p222, BorderLayout.SOUTH);
 
-		addClassButton.setPreferredSize(new Dimension(25, 7));
-		addClassButton.setBorder(BorderFactory.createEtchedBorder());
-		addClassButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed (ActionEvent ev)
-			{
-				addClassButton_actionPerformed();
-			}
-		});
 		addTypeButton.setPreferredSize(new Dimension(25, 7));
 		addTypeButton.setBorder(BorderFactory.createEtchedBorder());
 		addTypeButton.addActionListener(new ActionListener()
@@ -144,12 +146,12 @@ public class LinkPropsPanel extends JPanel
 				addTypeButton_actionPerformed();
 			}
 		});
-		classComboBox.addItemListener(new ItemListener()
+		sortComboBox.addItemListener(new ItemListener()
 		{
 			public void itemStateChanged(ItemEvent ie)
 			{
 				if (ie.getStateChange() == ItemEvent.SELECTED)
-					classComboBox_stateChanged();
+					sortComboBox_stateChanged();
 			}
 		});
 
@@ -169,8 +171,8 @@ public class LinkPropsPanel extends JPanel
 			{
 				if (links == null || links.length != 1)
 					return;
-				links[0].name = nameText.getText();
-				aContext.getDispatcher().notify(new SchemeElementsEvent(links[0].getId(), links[0].name, SchemeElementsEvent.LINK_NAME_UPDATE_EVENT));
+				links[0].name(nameText.getText());
+				aContext.getDispatcher().notify(new SchemeElementsEvent(links[0].id(), links[0].name(), SchemeElementsEvent.LINK_NAME_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -183,7 +185,7 @@ public class LinkPropsPanel extends JPanel
 			{
 				if (lt == null)
 					return;
-				lt.description = descriptionTextArea.getText();
+				lt.setDescription(descriptionTextArea.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -196,7 +198,7 @@ public class LinkPropsPanel extends JPanel
 			{
 				if (lt == null)
 					return;
-				lt.manufacturer = manufacturerTextField.getText();
+				lt.setManufacturer(manufacturerTextField.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -212,7 +214,7 @@ public class LinkPropsPanel extends JPanel
 				try
 				{
 					double d = Double.parseDouble(optLen.getText());
-					links[0].opticalLength = d;
+					links[0].opticalLength(d);
 					optLen.setForeground(nameText.getForeground());
 				}
 				catch (NumberFormatException e)
@@ -234,7 +236,7 @@ public class LinkPropsPanel extends JPanel
 				try
 				{
 					double d = Double.parseDouble(strLen.getText());
-					links[0].physicalLength = d;
+					links[0].physicalLength(d);
 					strLen.setForeground(nameText.getForeground());
 				}
 				catch (NumberFormatException e)
@@ -249,36 +251,23 @@ public class LinkPropsPanel extends JPanel
 		descriptionTextArea.setPreferredSize(new Dimension (300, 80));
 		descriptionTextArea.setLineWrap(true);
 		descriptionTextArea.setAutoscrolls(true);
-	}
 
-	private void setDefaults()
-	{
-		skip_changes = true;
-		classComboBox.removeAllItems();
-		Map hash = new HashMap();
+		try {
+			DomainCondition condition = new DomainCondition(null, ObjectEntities.LINKTYPE_ENTITY_CODE);
+			linkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-		if (Pool.getMap(LinkType.typ) != null)
-		{
-			for(Iterator it = Pool.getMap(LinkType.typ).values().iterator(); it.hasNext();)
-			{
-				LinkType pt = (LinkType)it.next();
-				hash.put(pt.linkClass, pt.linkClass);
-			}
-			for(Iterator it = hash.values().iterator(); it.hasNext(); )
-				classComboBox.addItem(it.next());
-
-			if (lt != null)
-			{
-				classComboBox.setSelectedItem(lt.linkClass);
+			for (int i = 0; i < linkTypeSorts.length; i++) {
+				sortComboBox.addItem(linkTypeSorts[i]);
 			}
 		}
-		skip_changes = false;
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public void setEditable(boolean b)
 	{
-		classComboBox.setEnabled(b);
-		addClassButton.setEnabled(b);
+		sortComboBox.setEnabled(b);
 		addTypeButton.setEnabled(b);
 		typeComboBox.setEnabled(b);
 		if (links != null && links.length != 1)
@@ -304,26 +293,31 @@ public class LinkPropsPanel extends JPanel
 	public void init(SchemeLink[] links)
 	{
 		this.links = links;
-		lt = (LinkType)Pool.get(LinkType.typ, links[0].linkTypeId);
-		setDefaults();
+		if (links.length > 0)
+			lt = links[0].linkTypeImpl();
+		else
+		{
+			setEditable(false);
+			return;
+		}
 		if (lt != null)
 		{
-			classComboBox.setSelectedItem(lt.linkClass);
-			typeComboBox.setSelected(lt);
-			descriptionTextArea.setText(lt.description);
+			sortComboBox.setSelectedItem(lt.getSort());
+			typeComboBox.setSelectedItem(lt);
+			descriptionTextArea.setText(lt.getDescription());
 
-			undoManufacturer = lt.manufacturer;
-			undoDescr = lt.description;
+			undoManufacturer = lt.getManufacturer();
+			undoDescr = lt.getDescription();
 		}
 		else
 			typeComboBox_stateChanged();
 
 		if (links.length == 1)
 		{
-			nameText.setText(links[0].getName());
+			nameText.setText(links[0].name());
 			nameText.setCaretPosition(0);
-			optLen.setText(String.valueOf(links[0].opticalLength));
-			strLen.setText(String.valueOf(links[0].physicalLength));
+			optLen.setText(String.valueOf(links[0].opticalLength()));
+			strLen.setText(String.valueOf(links[0].physicalLength()));
 		}
 		else
 		{
@@ -342,8 +336,8 @@ public class LinkPropsPanel extends JPanel
 	{
 		if (lt != null)
 		{
-			lt.description = undoDescr;
-			lt.manufacturer = undoManufacturer;
+			lt.setDescription(undoDescr);
+			lt.setManufacturer(undoManufacturer);
 		}
 	}
 
@@ -352,23 +346,19 @@ public class LinkPropsPanel extends JPanel
 		return (LinkType)typeComboBox.getSelectedItem();
 	}
 
-	void classComboBox_stateChanged()
+	void sortComboBox_stateChanged()
 	{
-		typeComboBox.setContents(new Hashtable(), false);
-		String selected_class = (String)classComboBox.getSelectedItem();
+		typeComboBox.removeAll();
+		LinkTypeSort sort = (LinkTypeSort)sortComboBox.getSelectedItem();
 
-		if (Pool.getMap(LinkType.typ) != null)
+		for (Iterator it = linkTypes.iterator(); it.hasNext();)
 		{
-			for(Iterator it = Pool.getMap(LinkType.typ).values().iterator(); it.hasNext();)
-			{
-				LinkType lt = (LinkType)it.next();
-				if (lt.linkClass.equals(selected_class))
-					typeComboBox.add(lt);
-			}
-			if (lt != null)
-				typeComboBox.setSelected(lt);
+			LinkType type = (LinkType)it.next();
+			if (type.getSort().equals(sort))
+				typeComboBox.addItem(type);
 		}
-		typeComboBox_stateChanged();
+		if (lt != null)
+			typeComboBox.setSelectedItem(lt);
 	}
 
 	void typeComboBox_stateChanged()
@@ -381,37 +371,13 @@ public class LinkPropsPanel extends JPanel
 		LinkType lt = (LinkType)typeComboBox.getSelectedItem();
 		this.lt = lt;
 		for (int i = 0; i < links.length; i++)
-			links[i].linkTypeId = lt.getId();
+			links[i].linkTypeImpl(lt);
 
-		descriptionTextArea.setText(lt.description);
-		manufacturerTextField.setText(lt.manufacturer);
+		descriptionTextArea.setText(lt.getDescription());
+		manufacturerTextField.setText(lt.getManufacturer());
 		manufacturerTextField.setCaretPosition(0);
 	//	aContext.getDispatcher().notify(new OperationEvent(lt, 1, "elementslistvaluechanged"));
 		//aContext.getDispatcher().notify(new SchemeElementsEvent(links, lt, SchemeElementsEvent.LINK_TYPE_UPDATE_EVENT));
-	}
-
-	void addClassButton_actionPerformed()
-	{
-		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый класс");
-		dialog.setSize(this.getSize().width, dialog.preferredSize.height);
-		Point loc = this.getLocationOnScreen();
-		dialog.setLocation(loc.x, loc.y + 30);
-		dialog.setVisible(true);
-
-		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
-		{
-			String name = dialog.getName();
-			for (int i = 0; i < classComboBox.getItemCount(); i++)
-			{
-				if (classComboBox.getItemAt(i).equals(name))
-				{
-					classComboBox.setSelectedItem(name);
-					return;
-				}
-			}
-			classComboBox.addItem(name);
-			classComboBox.setSelectedItem(name);
-		}
 	}
 
 	void addTypeButton_actionPerformed()
@@ -433,18 +399,33 @@ public class LinkPropsPanel extends JPanel
 					return;
 				}
 			}
-			LinkType type = (LinkType)Pool.get(LinkType.typ, links[0].linkTypeId);
-			LinkType new_type = new LinkType();
-			new_type.is_modified = true;
-			new_type.name = name;
-			new_type.id = aContext.getDataSourceInterface().GetUId(LinkType.typ);
-			new_type.linkClass = (String)classComboBox.getSelectedItem();
-			for (int i = 0; i < links.length; i++)
-				links[i].linkTypeId = new_type.getId();
-			Pool.put(LinkType.typ, links[0].linkTypeId, new_type);
 
-			typeComboBox.add(new_type);
-			typeComboBox.setSelected(new_type);
+			Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+					getAccessIdentifier().user_id);
+
+			try {
+				LinkType new_type = LinkType.createInstance(
+						user_id,
+						name,
+						"",
+						name,
+						(LinkTypeSort)sortComboBox.getSelectedItem(),
+						"",
+						"",
+						null);
+
+				ConfigurationStorableObjectPool.putStorableObject(new_type);
+
+				linkTypes.add(new_type);
+				typeComboBox.addItem(new_type);
+				typeComboBox.setSelectedItem(new_type);
+			}
+			catch (IllegalObjectEntityException ex) {
+				ex.printStackTrace();
+			}
+			catch (CreateObjectException ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 }

@@ -1,22 +1,21 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.ApplicationException;
 
-public class CablePortTypeGeneralPanel extends GeneralPanel
+public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 {
-	CablePortType portType;
+	AbstractLinkType linkType;
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
@@ -26,11 +25,13 @@ public class CablePortTypeGeneralPanel extends GeneralPanel
 	JLabel nameLabel = new JLabel();
 	JTextField nameField = new JTextField();
 
-	private JLabel interfaceLabel = new JLabel();
-	private JTextField interfaceField = new JTextField();
+	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-	private JLabel classLabel = new JLabel();
-	private JTextField classField = new JTextField();
+	private JLabel manufacturerLabel = new JLabel();
+	private JTextField manufacturerField = new JTextField();
+
+	private JLabel manufacturerCodeLabel = new JLabel();
+	private JTextField manufacturerCodeField = new JTextField();
 
 	private JLabel modifyLabel2 = new JLabel();
 	private JLabel modifyLabel1 = new JLabel();
@@ -43,7 +44,9 @@ public class CablePortTypeGeneralPanel extends GeneralPanel
 
 	private JButton saveButton = new JButton();
 
-	public CablePortTypeGeneralPanel()
+	private BorderLayout borderLayout1 = new BorderLayout();
+
+	public AbstractLinkTypeGeneralPanel()
 	{
 		super();
 		try
@@ -56,10 +59,10 @@ public class CablePortTypeGeneralPanel extends GeneralPanel
 		}
 	}
 
-	public CablePortTypeGeneralPanel(CablePortType portType)
+	public AbstractLinkTypeGeneralPanel(LinkType linkType)
 	{
 		this();
-		setObjectResource(portType);
+		setObject(linkType);
 	}
 
 	private void jbInit() throws Exception
@@ -68,28 +71,22 @@ public class CablePortTypeGeneralPanel extends GeneralPanel
 
 		idLabel.setText(LangModelConfig.getString("label_id"));
 		idLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		idField.setEnabled(false);
-
 		nameLabel.setText(LangModelConfig.getString("label_name"));
 		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
+
 		descLabel.setText(LangModelConfig.getString("label_description"));
 		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-
-		interfaceLabel.setText(LangModelConfig.getString("port_interface_id"));
-		interfaceLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-	 // interfaceField.setEnabled(false);
-
-		classLabel.setText(LangModelConfig.getString("port_class"));
-		classLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-	 // classField.setEnabled(false);
-
+		manufacturerCodeLabel.setText(LangModelConfig.getString("label_manCode"));
+		manufacturerCodeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		manufacturerLabel.setText(LangModelConfig.getString("label_manufacter"));
+		manufacturerLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		ModifyField.setEnabled(false);
 		modifyLabel1.setText(LangModelConfig.getString("label_modified1"));
 		modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 		modifyLabel2.setText(LangModelConfig.getString("label_modified2"));
 		modifyLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-
+		idField.setEnabled(false);
 		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -97,15 +94,15 @@ public class CablePortTypeGeneralPanel extends GeneralPanel
 			}
 		});
 
-		this.setLayout(new GridBagLayout());
-
-		descriptionPanel.setLayout(new BorderLayout());
+		descriptionPanel.setLayout(borderLayout1);
 		descriptionScrollPane.getViewport().add(descTextArea, null);
 		descriptionPanel.add(descriptionScrollPane, BorderLayout.CENTER);
 
+		this.setLayout(gridBagLayout1);
+
 		this.add(nameLabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-		this.add(interfaceLabel, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-		this.add(classLabel, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(manufacturerLabel, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(manufacturerCodeLabel, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 		this.add(modifyLabel1,      new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0
 						,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 2, 0), 0, 0));
 		this.add(modifyLabel2,           new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0
@@ -117,43 +114,43 @@ public class CablePortTypeGeneralPanel extends GeneralPanel
 			this.add(idLabel, new GridBagConstraints(0, 7, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
 		this.add(nameField, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.add(interfaceField, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.add(classField, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(manufacturerField, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(manufacturerCodeField, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		this.add(ModifyField,       new GridBagConstraints(1, 4, 1, 2, 0.0, 0.0
 						,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		this.add(descriptionPanel,  new GridBagConstraints(1, 6, 1, 1, 1.0, 1.0
-						,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
 	if(Environment.isDebugMode())
 			this.add(idField, new GridBagConstraints(1, 7, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
-		return portType;
+		return linkType;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
-		this.portType = (CablePortType)or;
+		this.linkType = (AbstractLinkType)or;
 
-		if(portType != null)
+		if(linkType != null)
 		{
-			idField.setText(portType.getId());
-			nameField.setText(portType.getName());
-			this.descTextArea.setText(portType.description);
-			this.interfaceField.setText(portType.interfaceId);
-			this.classField.setText(portType.pClass);
+			idField.setText(linkType.getId().getIdentifierString());
+			nameField.setText(linkType.getName());
+			this.descTextArea.setText(linkType.getDescription());
+			this.manufacturerField.setText(linkType.getManufacturer());
+			this.manufacturerCodeField.setText(linkType.getManufacturerCode());
 
-			this.ModifyField.setText(sdf.format(new Date(portType.modified)));
+			this.ModifyField.setText(sdf.format(linkType.getModified()));
 		}
 		else
 		{
 			idField.setText("");
 			nameField.setText("");
 			this.descTextArea.setText("");
-			this.interfaceField.setText("");
-			this.classField.setText("");
+			this.manufacturerField.setText("");
+			this.manufacturerCodeField.setText("");
 
 			this.ModifyField.setText("");
 		}
@@ -164,14 +161,13 @@ public class CablePortTypeGeneralPanel extends GeneralPanel
 		try
 		{
 			if(MiscUtil.validName(nameField.getText()))
-				 portType.name = nameField.getText();
+				 linkType.setName(nameField.getText());
 			else
 				return false;
 
-			portType.id = idField.getText();
-			portType.description = this.descTextArea.getText();
-			portType.interfaceId = this.interfaceField.getText();
-			portType.pClass = this.classField.getText();
+			linkType.setDescription(this.descTextArea.getText());
+			linkType.setManufacturer(this.manufacturerField.getText());
+			linkType.setManufacturerCode(this.manufacturerCodeField.getText());
 		}
 		catch(Exception ex)
 		{
@@ -182,34 +178,18 @@ public class CablePortTypeGeneralPanel extends GeneralPanel
 
 	void saveButton_actionPerformed(ActionEvent e)
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-		{
-			return;
-		}
-
 		if(modify())
 		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			String[] s = new String[1];
-			s[0] = portType.getId();
-			dataSource.SaveCableLinkTypes(s);
+			try {
+				ConfigurationStorableObjectPool.putStorableObject(linkType);
+			}
+			catch (ApplicationException ex) {
+			}
 		}
 	}
 
 	public boolean delete()
 	{
-/*		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-			return false;
-
-		String []s = new String[1];
-
-		s[0] = linkType.id;
-		aContext.getDataSourceInterface().RemoveLinks(s);*/
-
 		return true;
 	}
 }

@@ -4,14 +4,20 @@ import java.awt.BorderLayout;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
+import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.corba.*;
 
 public class EquipmentTypeCharacteristicsPanel extends GeneralPanel
 {
-	EquipmentType equipmentType;
+	EquipmentType type;
 	CharacteristicsPanel charPane = new CharacteristicsPanel();
+	private static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
+	};
 
 	public EquipmentTypeCharacteristicsPanel()
 	{
@@ -29,7 +35,7 @@ public class EquipmentTypeCharacteristicsPanel extends GeneralPanel
 	public EquipmentTypeCharacteristicsPanel(EquipmentType eq)
 	{
 		this();
-		setObjectResource(eq);
+		setObject(eq);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -46,17 +52,23 @@ public class EquipmentTypeCharacteristicsPanel extends GeneralPanel
 		this.add(charPane, BorderLayout.CENTER);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
-		return equipmentType;
+		return type;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
-		this.equipmentType = (EquipmentType) or;
+		this.type = (EquipmentType) or;
 
-		if(equipmentType != null)
-			charPane.setCharHash(equipmentType);
+		for (int i = 0; i < sorts.length; i++)
+			charPane.setTypeSortMapping(
+					sorts[i],
+					CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE,
+					type.getId(),
+					false);
+		charPane.addCharacteristics(type.getCharacteristics(), type.getId());
+
 	}
 
 	public boolean modify()

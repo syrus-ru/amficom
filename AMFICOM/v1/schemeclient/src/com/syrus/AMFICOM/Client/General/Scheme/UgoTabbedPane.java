@@ -7,8 +7,7 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class UgoTabbedPane extends JPanel implements OperationListener
 {
@@ -50,14 +49,14 @@ public class UgoTabbedPane extends JPanel implements OperationListener
 			if (panel.getGraph().getScheme() != null)
 				res = JOptionPane.showConfirmDialog(
 						Environment.getActiveWindow(),
-						"Схема \"" + panel.getGraph().getScheme().getName() +
+						"Схема \"" + panel.getGraph().getScheme().name() +
 						"\" была изменена. Вы действительно хотите закрыть схему?",
 						"Подтверждение",
 						JOptionPane.YES_NO_OPTION);
 			else if (panel.getGraph().getSchemeElement() != null)
 				res = JOptionPane.showConfirmDialog(
 						Environment.getActiveWindow(),
-						"Элемент \"" + panel.getGraph().getSchemeElement().getName() +
+						"Элемент \"" + panel.getGraph().getSchemeElement().name() +
 						"\" был изменен. Вы действительно хотите закрыть схему?",
 						"Подтверждение",
 						JOptionPane.YES_NO_OPTION);
@@ -104,9 +103,9 @@ public class UgoTabbedPane extends JPanel implements OperationListener
 				{
 					graph.skip_notify = true;
 					Object obj = see.obj;
-					if (obj instanceof ProtoElement)
+					if (obj instanceof SchemeProtoElement)
 					{
-						ProtoElement proto = (ProtoElement) obj;
+						SchemeProtoElement proto = (SchemeProtoElement) obj;
 						getPanel().setProtoCell(proto, null);
 					}
 					graph.skip_notify = false;
@@ -136,6 +135,13 @@ public class UgoTabbedPane extends JPanel implements OperationListener
 					removeScheme(scheme);
 //					graph.setGraphChanged(false);
 				}
+				if (obj instanceof SchemeElement)
+				{
+					SchemeElement se = (SchemeElement)obj;
+					removeSchemeElement(se);
+//					graph.setGraphChanged(false);
+				}
+
 				graph.skip_notify = false;
 			}
 		}
@@ -146,16 +152,15 @@ public class UgoTabbedPane extends JPanel implements OperationListener
 		SchemeGraph graph = getPanel().getGraph();
 		graph.setScheme(sch);
 		GraphActions.clearGraph(graph);
-		sch.unpack();
 
-		Map clones = graph.copyFromArchivedState(sch.serializable_ugo, new java.awt.Point(0, 0));
+		Map clones = graph.copyFromArchivedState(sch.ugoCellImpl().getData(), new java.awt.Point(0, 0));
 		graph.selectionNotify();
 	}
 
 	public boolean removeScheme(Scheme sch)
 	{
 		SchemeGraph graph = getPanel().getGraph();
-		if (graph.getScheme() != null && sch.getId().equals(graph.getScheme().getId()))
+		if (sch.equals(graph.getScheme()))
 		{
 			GraphActions.clearGraph(graph);
 			graph.setGraphChanged(false);
@@ -163,5 +168,18 @@ public class UgoTabbedPane extends JPanel implements OperationListener
 		}
 		return false;
 	}
+
+	public boolean removeSchemeElement(SchemeElement se)
+	{
+		SchemeGraph graph = getPanel().getGraph();
+		if (se.equals(graph.getSchemeElement()))
+		{
+			GraphActions.clearGraph(graph);
+			graph.setGraphChanged(false);
+			return true;
+		}
+		return false;
+	}
+
 
 }

@@ -10,13 +10,12 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
 
 public class EquipmentGeneralPanel extends GeneralPanel
 {
@@ -33,7 +32,7 @@ public class EquipmentGeneralPanel extends GeneralPanel
 	private JTextField portsNumberField = new JTextField();
 
 	private JLabel domainLabel = new JLabel();
-	private ObjectResourceComboBox domainBox = new ObjectResourceComboBox(Domain.typ, true);
+	private JTextField domainField = new JTextField();
 
 	JLabel longitudeLabel = new JLabel();
 	private JTextField longitudeField = new JTextField();
@@ -52,7 +51,7 @@ public class EquipmentGeneralPanel extends GeneralPanel
 	private JTextField cabelPortsNumberField = new JTextField();
 
 	JLabel typeLabel = new JLabel();
-	ObjectResourceComboBox typeBox = new ObjectResourceComboBox(EquipmentType.typ, true);
+	ObjComboBox typeBox;
 
 	private JLabel agentLabel = new JLabel();
 	private JTextField agentField = new JTextField();
@@ -82,7 +81,7 @@ public class EquipmentGeneralPanel extends GeneralPanel
 	public EquipmentGeneralPanel(Equipment equipment)
 	{
 		this();
-		setObjectResource(equipment);
+		setObject(equipment);
 	}
 
 	private void jbInit() throws Exception
@@ -112,7 +111,7 @@ public class EquipmentGeneralPanel extends GeneralPanel
 
 		domainLabel.setText(LangModelConfig.getString("equip_domen"));
 		domainLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		domainBox.setEnabled(false);
+		domainField.setEnabled(false);
 
 		modifyLabel1.setText(LangModelConfig.getString("label_modified1"));
 		modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
@@ -169,7 +168,7 @@ public class EquipmentGeneralPanel extends GeneralPanel
 		this.add(typeBox, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		this.add(longitudeField, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		this.add(latitudeField, new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.add(domainBox, new GridBagConstraints(1, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(domainField, new GridBagConstraints(1, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		this.add(modifyField,       new GridBagConstraints(1, 6, 1, 2, 0.0, 0.0
 				,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		this.add(portsNumberField, new GridBagConstraints(1, 8, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
@@ -184,58 +183,48 @@ public class EquipmentGeneralPanel extends GeneralPanel
 //		this.add(saveButton, new XYConstraints(200, 380, -1, -1));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return element;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		this.element = (SchemeElement)or;
 
-		idField.setText(element.getId());
-		nameField.setText(element.getName());
-		descTextArea.setText(element.description);
+		idField.setText(element.id().identifierString());
+		nameField.setText(element.name());
+		descTextArea.setText(element.description());
 
-		typeBox.setSelected(element.getEquipmentTypeId());
-		portsNumberField.setText(Long.toString(element.getPorts().size()));
-		cabelPortsNumberField.setText(Long.toString(element.getCablePorts().size()));
+		typeBox.setSelectedItem(element.equipmentTypeImpl());
+		portsNumberField.setText(Long.toString(SchemeUtils.getPorts(element).size()));
+		cabelPortsNumberField.setText(Long.toString(SchemeUtils.getCablePorts(element).size()));
 
-		if(element.equipment != null)
+		if(element.equipment() != null)
 		{
-			double d1 = 0.0;
-			try {
-				d1 = Double.parseDouble(element.equipment.longitude);
-			}
-			catch(Exception ex) {
-			}
+			double d1 = element.equipmentImpl().getLongitude();
 			d1 = MiscUtil.fourdigits(d1);
 			longitudeField.setText(String.valueOf(d1));
 
-			double d2 = 0.0;
-			try {
-				d2 = Double.parseDouble(element.equipment.latitude);
-			}
-			catch(Exception ex) {
-			}
+			double d2 = element.equipmentImpl().getLatitude();
 			d2 = MiscUtil.fourdigits(d1);
 			latitudeField.setText(String.valueOf(d2));
 
-			domainBox.setSelected(element.equipment.domainId);
-			modifyField.setText(sdf.format(new Date(element.equipment.modified)));
+			domainField.setText(element.equipmentImpl().getDomainId().getIdentifierString());
+			modifyField.setText(sdf.format(element.equipmentImpl().getModified()));
 		}
 		else
 		{
 			longitudeField.setText("");
 			latitudeField.setText("");
-			domainBox.setSelected("");
+			domainField.setText("");
 			modifyField.setText("");
 		}
 
-		if(element.kis != null)
+		if(element.rtu() != null)
 		{
 			agentField.setEnabled(true);
-			agentField.setText(element.kis.mcmId);
+			agentField.setText(element.rtuImpl().getMCMId().getIdentifierString());
 			agentField.setVisible(true);
 			agentLabel.setVisible(true);
 		}
@@ -252,36 +241,26 @@ public class EquipmentGeneralPanel extends GeneralPanel
 	{
 		try
 		{
-			if (element.equipment != null)
+			if (element.equipment() != null)
 			{
-				double d1 = Double.parseDouble(this.longitudeField.getText());
+				float d1 = Float.parseFloat(this.longitudeField.getText());
 				d1 = MiscUtil.fourdigits(d1);
-				double d2 = Double.parseDouble(this.latitudeField.getText());
+				float d2 = Float.parseFloat(this.latitudeField.getText());
 				d2 = MiscUtil.fourdigits(d2);
-				element.equipment.longitude = String.valueOf(d1);
-				element.equipment.latitude = String.valueOf(d2);
+				element.equipmentImpl().setLongitude(d1);
+				element.equipmentImpl().setLatitude(d2);
 			}
 
 			if(MiscUtil.validName(nameField.getText()))
-				element.name = nameField.getText();
+				element.name(nameField.getText());
 			else
 				return false;
 
-			element.description = descTextArea.getText();
-			element.setEquipmentTypeId((String)typeBox.getSelected());
-			if (element.equipment != null)
+			element.description(descTextArea.getText());
+			element.equipmentTypeImpl((EquipmentType)typeBox.getSelectedItem());
+			if (element.rtu() != null)
 			{
-				element.equipment.name = nameField.getText();
-				element.equipment.description = element.description;
-				element.equipment.typeId = (String)typeBox.getSelected();
-				element.equipment.domainId = (String)domainBox.getSelected();
-			}
-			if (element.kis != null)
-			{
-				element.kis.name = nameField.getText();
-				element.kis.description = element.description;
-				element.kis.mcmId = agentField.getText();
-
+//				element.rtuImpl().setMcmId(new Identifier(agentField.getText()));
 			}
 		}
 		catch(Exception ex)
@@ -293,19 +272,15 @@ public class EquipmentGeneralPanel extends GeneralPanel
 
 	void saveButton_actionPerformed(ActionEvent e)
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-		{
-			return;
-		}
-
 		if(modify())
 		{
-			if (element.equipment != null)
+			if (element.equipment() != null)
 			{
-				DataSourceInterface dataSource = aContext.getDataSourceInterface();
-				dataSource.SaveEquipment(element.equipment.getId());
+				try {
+					ConfigurationStorableObjectPool.putStorableObject(element.equipmentImpl());
+				}
+				catch (ApplicationException ex) {
+				}
 			}
 		}
 	}

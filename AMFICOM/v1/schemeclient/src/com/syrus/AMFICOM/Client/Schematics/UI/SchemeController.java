@@ -1,28 +1,15 @@
-/*
- * TestResourceController.java
- * Created on 20.08.2004 10:38:55
- * 
- */
-
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.Resource.Object.User;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-
 import java.text.SimpleDateFormat;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
 
-public final class SchemeController implements ObjectResourceController 
+public final class SchemeController implements ObjectResourceController
 {
 	public static final String KEY_NAME = "Name";
 	public static final String KEY_DOMAIN = "Domain";
@@ -34,30 +21,30 @@ public final class SchemeController implements ObjectResourceController
 
 	private List keys;
 
-	  static SimpleDateFormat sdf =
+		static SimpleDateFormat sdf =
 		new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
-	private SchemeController() 
+	private SchemeController()
 	{
 		// empty private constructor
-		String[] keysArray = new String[] { 
-				KEY_NAME, 
-				KEY_DOMAIN, 
-				KEY_USER, 
-				KEY_CREATED, 
+		String[] keysArray = new String[] {
+				KEY_NAME,
+				KEY_DOMAIN,
+				KEY_USER,
+				KEY_CREATED,
 				KEY_MODIFIED };
-	
+
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static SchemeController getInstance() 
+	public static SchemeController getInstance()
 	{
 		if (instance == null)
 			instance = new SchemeController();
 		return instance;
 	}
-	
-	public List getKeys() 
+
+	public List getKeys()
 	{
 		return this.keys;
 	}
@@ -71,30 +58,28 @@ public final class SchemeController implements ObjectResourceController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		Scheme sc = (Scheme )object;
-		if (key.equals(KEY_NAME))
-		{
-			result = sc.getName();
+		Scheme sc = (Scheme)object;
+		if (key.equals(KEY_NAME)) {
+			result = sc.name();
 		}
-		else
-		if (key.equals(KEY_DOMAIN))
-		{
-			result = Pool.getName(Domain.typ, sc.getDomainId());
+		else if (key.equals(KEY_DOMAIN)) {
+			result = sc.domainImpl().getName();
 		}
-		else
-		if (key.equals(KEY_USER))
-		{
-			result = Pool.getName(User.typ, sc.createdBy);
+		else if (key.equals(KEY_USER)) {
+			try {
+				User user = (User)ConfigurationStorableObjectPool.getStorableObject(
+						new Identifier(sc.creatorId().getTransferable()), true);
+				result = user.getName();
+			}
+			catch (Exception ex) {
+				result = "";
+			}
 		}
-		else
-		if (key.equals(KEY_CREATED))
-		{
-			result = sdf.format(new Date(sc.created));
+		else if (key.equals(KEY_CREATED)) {
+			result = sdf.format(new Date(sc.created()));
 		}
-		else
-		if (key.equals(KEY_MODIFIED))
-		{
-			result = sdf.format(new Date(sc.getModified()));
+		else if (key.equals(KEY_MODIFIED)) {
+			result = sdf.format(new Date(sc.modified()));
 		}
 		return result;
 	}
@@ -108,22 +93,22 @@ public final class SchemeController implements ObjectResourceController
 	{
 	}
 
-	public String getKey(final int index) 
+	public String getKey(final int index)
 	{
 		return (String )this.keys.get(index);
 	}
 
-	public Object getPropertyValue(final String key) 
+	public Object getPropertyValue(final String key)
 	{
 		Object result = "";
 		return result;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) 
+	public void setPropertyValue(String key, Object objectKey, Object objectValue)
 	{
 	}
 
-	public Class getPropertyClass(String key) 
+	public Class getPropertyClass(String key)
 	{
 		Class clazz = String.class;
 		return clazz;

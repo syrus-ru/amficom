@@ -1,13 +1,19 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import java.util.List;
+
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 public class SchemeCopyCommand extends VoidCommand
 {
@@ -29,10 +35,6 @@ public class SchemeCopyCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
-			return;
-
 		SchemeGraph graph = schemePanel.getGraph();
 		SchemeGraph ugo_graph = ugoPanel.getGraph();
 
@@ -48,7 +50,7 @@ public class SchemeCopyCommand extends VoidCommand
 		{
 
 			sd = new SaveDialog(aContext, aContext.getDispatcher(), "Сохранение схемы");
-			int ret = sd.init(scheme, scheme.getName(), false);
+			int ret = sd.init(scheme, scheme.name(), false);
 
 			if (ret == 0)
 				return;
@@ -59,39 +61,46 @@ public class SchemeCopyCommand extends VoidCommand
 				break;
 		}
 
-		scheme = (Scheme)scheme.clone(aContext.getDataSourceInterface());
-		scheme.serializable_ugo = ugo_graph.getArchiveableState(ugo_graph.getRoots());
-		scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
+		scheme = scheme.cloneInstance();
+		scheme.ugoCellImpl().setData((List)ugo_graph.getArchiveableState(ugo_graph.getRoots()));
+		scheme.schemeCellImpl().setData((List)graph.getArchiveableState(graph.getRoots()));
 
-		scheme.name = sd.name;
-		scheme.description = sd.description;
-		scheme.created = System.currentTimeMillis();
-		scheme.createdBy = dataSource.getSession().getUserId();
-		scheme.modifiedBy = dataSource.getSession().getUserId();
-		scheme.ownerId = dataSource.getSession().getUserId();
-		scheme.domainId = dataSource.getSession().getDomainId();
-
-		Pool.put(Scheme.typ, scheme.getId(), scheme);
-
-		boolean res = scheme.pack();
-
-		if (!res)
-		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка сохранения схемы " +
-																		scheme.getName(), "Ошибка", JOptionPane.OK_OPTION);
-			return;
+		scheme.name(sd.name);
+		scheme.description(sd.description);
+//		scheme.created = System.currentTimeMillis();
+		try {
+			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+					getAccessIdentifier().domain_id);
+			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					domain_id, true);
+			scheme.domainImpl(domain);
+		}
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
 		}
 
-		dataSource.SaveScheme(scheme.getId());
+//		if (!res)
+//		{
+//			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка сохранения схемы " +
+//																		scheme.getName(), "Ошибка", JOptionPane.OK_OPTION);
+//			return;
+//		}
 
-		JOptionPane.showMessageDialog(
-				Environment.getActiveWindow(),
-				"Схема "+ scheme.getName() + " успешно сохранена",
-				"Сообщение",
-				JOptionPane.INFORMATION_MESSAGE);
+		try {
+			SchemeStorableObjectPool.putStorableObject(scheme);
 
-		aContext.getDispatcher().notify(new TreeListSelectionEvent(Scheme.typ,
-				TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT));
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					"Схема " + scheme.name() + " успешно сохранена",
+					"Сообщение",
+					JOptionPane.INFORMATION_MESSAGE);
+
+			aContext.getDispatcher().notify(new TreeListSelectionEvent("",
+					TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT));
+		}
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
 
 		Pool.removeMap("clonedids");
 	}

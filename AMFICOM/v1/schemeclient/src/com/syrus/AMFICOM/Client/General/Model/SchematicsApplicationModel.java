@@ -65,12 +65,12 @@ public class SchematicsApplicationModel extends ApplicationModel
 
 	public DataSourceInterface getDataSource(SessionInterface si)
 	{
-		String connection = Environment.getConnectionType();
-		if(connection.equals("RISD"))
-			return new RISDMapDataSource(si);
-		else
-		if(connection.equals("Empty"))
-			return new EmptyConfigDataSource(si);
+//		String connection = Environment.getConnectionType();
+//		if(connection.equals("RISD"))
+//			return new RISDMapDataSource(si);
+//		else
+//		if(connection.equals("Empty"))
+//			return new EmptyConfigDataSource(si);
 		return null;
 	}
 }

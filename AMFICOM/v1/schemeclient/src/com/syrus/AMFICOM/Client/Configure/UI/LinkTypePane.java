@@ -4,19 +4,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
+import com.syrus.AMFICOM.general.*;
 import oracle.jdeveloper.layout.XYConstraints;
 
-public class LinkTypePane extends PropertiesPanel
+public class LinkTypePane extends JPanel implements ObjectResourcePropertiesPane
 {
 	public ApplicationContext aContext;
 
-	LinkTypeGeneralPanel gPanel = new LinkTypeGeneralPanel();
+	AbstractLinkTypeGeneralPanel gPanel = new AbstractLinkTypeGeneralPanel();
 	LinkTypeCharacteristicsPanel chPanel = new LinkTypeCharacteristicsPanel();
 
 	LinkType linkType;
@@ -39,10 +41,10 @@ public class LinkTypePane extends PropertiesPanel
 		}
 	}
 
-	public LinkTypePane(LinkType lT)
+	public LinkTypePane(LinkType l)
 	{
 		this();
-		setObjectResource(lT);
+		setObject(l);
 	}
 
 	private void jbInit() throws Exception
@@ -65,17 +67,17 @@ public class LinkTypePane extends PropertiesPanel
 		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return linkType;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
-		this.linkType = (LinkType) or;
+		this.linkType = (LinkType)or;
 
-		gPanel.setObjectResource(linkType);
-		chPanel.setObjectResource(linkType);
+		gPanel.setObject(linkType);
+		chPanel.setObject(linkType);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -95,23 +97,20 @@ public class LinkTypePane extends PropertiesPanel
 
 	public boolean save()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-		{
-			return false;
-		}
-
 		if(modify())
 		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			dataSource.SaveLinkTypes(new String[] {linkType.getId()});
+			try {
+				ConfigurationStorableObjectPool.putStorableObject(linkType);
+				ConfigurationStorableObjectPool.flush(true);
 				return true;
+			}
+			catch (ApplicationException ex) {
+				ex.printStackTrace();
+			}
 		}
-		else
-		{
-			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
-		}
+		JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelConfig.getString("err_incorrect_data_input"));
 		return false;
 	}
 
@@ -120,27 +119,18 @@ public class LinkTypePane extends PropertiesPanel
 		return false;
 	}
 
+	public boolean cancel()
+	{
+		return false;
+	}
+
 	public boolean delete()
 	{
-/*		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-			return false;
-
-		String []s = new String[1];
-
-		s[0] = linkType.id;
-		aContext.getDataSourceInterface().RemoveLinkTypes(s);*/
-
-		return true;
+		return false;
 	}
 
 	public boolean create()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
-			return false;
-
 		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый тип");
 		dialog.setSize(dialog.preferredSize);
 
@@ -152,17 +142,24 @@ public class LinkTypePane extends PropertiesPanel
 		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
 		{
 			String name = dialog.getName();
-			LinkType new_type = new LinkType();
-			new_type.is_modified = true;
-			new_type.name = name;
-			new_type.linkClass = "fibre";
-			new_type.modified = System.currentTimeMillis();
-			new_type.id = aContext.getDataSourceInterface().GetUId(LinkType.typ);
+			Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+			try {
+				LinkType new_type = LinkType.createInstance(
+						user_id,
+						"",
+						"",
+						name,
+						LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER,
+						"",
+						"",
+						null);
 
-			setObjectResource(new_type);
-
-			Pool.put(LinkType.typ, new_type.getId(), new_type);
-			return true;
+				setObject(new_type);
+				return true;
+			}
+			catch (CreateObjectException ex) {
+				ex.printStackTrace();
+			}
 		}
 		return false;
 	}

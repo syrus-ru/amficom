@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,15 +8,15 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
+import com.syrus.AMFICOM.configuration.TransmissionPathType;
 
 public class TransmissionPathTypeGeneralPanel extends GeneralPanel
 {
 	TransmissionPathType tpt;
 
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
 	public JLabel idLabel = new JLabel();
 	public JTextField idField = new JTextField();
@@ -53,7 +52,7 @@ public class TransmissionPathTypeGeneralPanel extends GeneralPanel
 	public TransmissionPathTypeGeneralPanel(TransmissionPathType apt)
 	{
 	 this();
-	 setObjectResource(apt);
+	 setObject(apt);
 	}
 
 	private void jbInit() throws Exception
@@ -111,65 +110,48 @@ public class TransmissionPathTypeGeneralPanel extends GeneralPanel
 
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
-	 return tpt;
+		return tpt;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
-	 this.tpt = (TransmissionPathType)or;
+		this.tpt = (TransmissionPathType)or;
 
-	 if(tpt != null)
-	 {
-		idField.setText(tpt.getId());
-		nameField.setText(tpt.getName());
+		if (tpt != null) {
+			idField.setText(tpt.getId().getIdentifierString());
+			nameField.setText(tpt.getName());
 
-		this.descTextArea.setText(tpt.description);
-		this.modifyField.setText(sdf.format(new Date(tpt.modified)));
-	 }
-	 else
-	 {
-		idField.setText("");
-		nameField.setText("");
+			this.descTextArea.setText(tpt.getDescription());
+			this.modifyField.setText(sdf.format(tpt.getModified()));
+		}
+		else {
+			idField.setText("");
+			nameField.setText("");
 
-		this.descTextArea.setText("");
-		this.modifyField.setText("");
-	 }
+			this.descTextArea.setText("");
+			this.modifyField.setText("");
+		}
 	}
 
 	public boolean modify()
 	{
-	 try
-	 {
-		if(MiscUtil.validName(nameField.getText()))
-			tpt.name = nameField.getText();
-		else
-			return false;
+		try {
+			if (MiscUtil.validName(nameField.getText()))
+				tpt.setName(nameField.getText());
+			else
+				return false;
 
-		tpt.id = idField.getText();
-		tpt.description = this.descTextArea.getText();
-	 }
-	 catch(Exception ex)
-	 {
-		return false;
-	 }
-	 return true;
+			tpt.setDescription(this.descTextArea.getText());
+		}
+		catch (Exception ex) {
+			return false;
+		}
+		return true;
 	}
 
 	void saveButton_actionPerformed(ActionEvent e)
 	{
-/*		if(!Checker.checkCommandByUserId(
-			aContext.getSessionInterface().getUserId(),
-			Checker.catalogCMediting))
-	 {
-		return;
-	 }
-
-	 if(modify())
-	 {
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		dataSource.SaveAccessPort(ap.getId());
-	 }*/
 	}
 }

@@ -1,14 +1,20 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import java.util.List;
+
 import javax.swing.JOptionPane;
 
 import com.jgraph.graph.DefaultGraphModel;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class SchemeSaveCommand extends VoidCommand
 {
@@ -35,10 +41,6 @@ public class SchemeSaveCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
-			return;
-
 		SchemeGraph graph = schemeTab.getPanel().getGraph();
 		SchemeGraph ugograph = ugoTab.getPanel().getGraph();
 		Scheme scheme = graph.getScheme();
@@ -59,12 +61,12 @@ public class SchemeSaveCommand extends VoidCommand
 				Scheme s = p[i].getGraph().getScheme();
 				if (s != null)
 				{
-					if (s.getSchemeElement(se.getId()) != null)
+					if (SchemeUtils.isSchemeContainsElement(s, se))
 					{
 						schemeTab.setGraphChanged(p[i].getGraph(), true);
 						JOptionPane.showMessageDialog(
 								Environment.getActiveWindow(),
-								"Элемент " + se.getName() + " успешно сохранен в схеме " + s.getName(),
+								"Элемент " + se.name() + " успешно сохранен в схеме " + s.name(),
 								"Сообщение",
 								JOptionPane.INFORMATION_MESSAGE);
 						break;
@@ -75,6 +77,11 @@ public class SchemeSaveCommand extends VoidCommand
 			return;
 		}
 
+		if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
+			new PathSaveCommand(aContext, schemeTab).execute();
+		if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
+			return;
+
 		if (graph.getScheme().equals(ugograph.getScheme()))
 		{
 			if (ugograph.getRoots().length == 0)
@@ -84,7 +91,7 @@ public class SchemeSaveCommand extends VoidCommand
 					return;
 			}
 		}
-		else if (scheme.serializable_ugo == null)
+		else if (scheme.ugoCell() == null)
 		{
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Схему нельзя будет включить в другую схему,\nт.к. не создано условное графическое обозначение схемы.\nПродолжить сохранение?", "Предупреждение", JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.NO_OPTION || ret == JOptionPane.CANCEL_OPTION)
@@ -99,7 +106,7 @@ public class SchemeSaveCommand extends VoidCommand
 		{
 			sd = new SaveDialog(aContext, aContext.getDispatcher(), "Сохранение схемы");
 			int ret = //sd.init(schemePanel.scheme.getName(), schemePanel.scheme.description, false);
-					sd.init(scheme, scheme.getName(), false);
+					sd.init(scheme, scheme.name(), false);
 			if (ret == 0)
 				return;
 
@@ -108,57 +115,58 @@ public class SchemeSaveCommand extends VoidCommand
 			else
 				break;
 		}
-		ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
+//		ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
 
-		scheme.name = sd.name;
-		scheme.description = sd.description;
-		scheme.schemeType = sd.type;
-		if (scheme.getId().equals(""))
-			scheme.id = dataSource.GetUId(Scheme.typ);
+		scheme.name(sd.name);
+		scheme.description(sd.description);
+		scheme.type(sd.type);
+//		scheme.created = System.currentTimeMillis();
+		try {
+			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+					getAccessIdentifier().domain_id);
+			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					domain_id, true);
+			scheme.domainImpl(domain);
+		}
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
 
-		scheme.created = System.currentTimeMillis();
-		scheme.createdBy = dataSource.getSession().getUserId();
-		scheme.modifiedBy = dataSource.getSession().getUserId();
-		scheme.ownerId = dataSource.getSession().getUserId();
-		scheme.domainId = dataSource.getSession().getDomainId();
-
-		Pool.put(Scheme.typ, scheme.getId(), scheme);
-		//}
-
-		scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
+		scheme.schemeCellImpl().setData((List)graph.getArchiveableState(graph.getRoots()));
 		if (graph.getScheme().equals(ugograph.getScheme()))
 		{
-			scheme.serializable_ugo = ugograph.getArchiveableState(ugograph.getRoots());
+			scheme.ugoCellImpl().setData((List)ugograph.getArchiveableState(ugograph.getRoots()));
 			ugoTab.setGraphChanged(false);
 		}
-		else if (scheme.serializable_ugo == null)
-			scheme.serializable_ugo = new SchemeGraph(new DefaultGraphModel(), new ApplicationContext()).getArchiveableState();
-
-		boolean res = scheme.pack();
-
-		if (!res)
+		else
+//		if (scheme.ugoCell() == null)
 		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка сохранения схемы " +
-																		scheme.getName(), "Ошибка", JOptionPane.OK_OPTION);
-			return;
+			scheme.ugoCellImpl().setData((List)new SchemeGraph(new DefaultGraphModel(), new ApplicationContext()).getArchiveableState());
 		}
 
+//		if (!res)
+//		{
+//			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка сохранения схемы " +
+//																		scheme.getName(), "Ошибка", JOptionPane.OK_OPTION);
+//			return;
+//		}
 
-		dataSource.SaveScheme(scheme.getId());
-		schemeTab.setGraphChanged(false);
 
-		aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
+		try {
+			SchemeStorableObjectPool.putStorableObject(scheme);
 
-		JOptionPane.showMessageDialog(
-						Environment.getActiveWindow(),
-						"Схема "+ scheme.getName() +" успешно сохранена",
-						"Сообщение",
-						JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					"Схема " + scheme.name() + " успешно сохранена",
+					"Сообщение",
+					JOptionPane.INFORMATION_MESSAGE);
 
-//		aContext.getDispatcher().notify(new TreeListSelectionEvent(Scheme.typ,
-//				TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT));
-
-		aContext.getDispatcher().notify(new TreeListSelectionEvent(Scheme.typ, TreeListSelectionEvent.REFRESH_EVENT));
+			aContext.getDispatcher().notify(new TreeListSelectionEvent("",
+					TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT));
+		}
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
 
 		ret_code = OK;
 	}

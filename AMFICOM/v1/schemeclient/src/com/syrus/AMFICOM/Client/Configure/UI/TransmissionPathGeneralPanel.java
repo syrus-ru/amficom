@@ -1,40 +1,21 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.JTextField;
-
-import java.util.*;
 import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.General.UI.MessageBox;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-
+import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-
-import java.awt.Dimension;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.BorderLayout;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 public class TransmissionPathGeneralPanel extends GeneralPanel
 {
@@ -46,7 +27,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
 	JLabel equipLabel = new JLabel();
-	ObjectResourceComboBox equipBox = new ObjectResourceComboBox(KIS.typ, true);
+	JTextField equipField = new JTextField();
 
 	JLabel idLabel = new JLabel();
 	JTextField idField = new JTextField();
@@ -58,7 +39,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 	JLabel nameLabel = new JLabel();
 	JTextField nameField = new JTextField();
 
-	private ObjectResourceComboBox portBox = new ObjectResourceComboBox(MeasurementPort.typ, true);
+	private JTextField portField = new JTextField();
 	private JLabel portLabel = new JLabel();
 
 	private JTextField modifyField = new JTextField();
@@ -71,6 +52,8 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 	public JTextPane descTextArea = new JTextPane();
 	private BorderLayout borderLayout1 = new BorderLayout();
 
+	Domain domain;
+
 	public TransmissionPathGeneralPanel()
 	{
 		super();
@@ -82,12 +65,22 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 		{
 			e.printStackTrace();
 		}
+
+		try {
+			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+					getAccessIdentifier().domain_id);
+			domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					domain_id, true);
+		}
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public TransmissionPathGeneralPanel(TransmissionPath tp)
 	{
 		this();
-		setObjectResource(tp);
+		setObject(tp);
 	}
 
 	private void jbInit() throws Exception
@@ -118,8 +111,8 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 		descriptionPanel.setLayout(borderLayout1);
 
 		idField.setEnabled(false);
-		equipBox.setEnabled(false);
-		portBox.setEnabled(false);
+		equipField.setEnabled(false);
+		portField.setEnabled(false);
 
 		descriptionPanel.setLayout(borderLayout1);
 		descriptionScrollPane.getViewport().add(descTextArea, null);
@@ -143,8 +136,8 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 			this.add(idLabel, new GridBagConstraints(0, 9, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
 		this.add(nameField, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.add(equipBox, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.add(portBox, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(equipField, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(portField, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		this.add(localAdressField,       new GridBagConstraints(1, 4, 1, 2, 0.0, 0.0
 				,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		this.add(modifyField,       new GridBagConstraints(1, 6, 1, 2, 0.0, 0.0
@@ -162,68 +155,67 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 //		localAdressField.setEnabled(false);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return path;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		path = (SchemePath)or;
 
-		idField.setText(path.getId());
-		nameField.setText(path.getName());
-		equipBox.setSelected(path.startDeviceId);
+		idField.setText(path.id().identifierString());
+		nameField.setText(path.name());
+		equipField.setText(path.startDevice().name());
 
-		if(path.path != null)
+		if(path.path() != null)
 		{
-			Map melements = Pool.getMap(MonitoredElement.typ);
-			for (Iterator it = melements.values().iterator(); it.hasNext(); )
-			{
-				MonitoredElement me = (MonitoredElement) it.next();
-				if (me.elementType.equals("path") && me.elementId.equals(path.path.getId()))
-				{
-					this.me = me;
-					break;
-				}
+			StorableObjectCondition condition = new DomainCondition(domain, ObjectEntities.ME_ENTITY_CODE);
+				try {
+					List mes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					for (Iterator it = mes.iterator(); it.hasNext(); ) {
+						MonitoredElement me = (MonitoredElement)it.next();
+						if (me.getMonitoredDomainMemberIds().contains(path.pathImpl().getId())) {
+							this.me = me;
+							break;
+						}
+					}
 			}
-			descTextArea.setText(path.path.description);
-			modifyField.setText(sdf.format(new Date(path.path.modified)));
+			catch (ApplicationException ex) {
+				ex.printStackTrace();
+			}
+			descTextArea.setText(path.pathImpl().getDescription());
+			modifyField.setText(sdf.format(path.pathImpl().getModified()));
 		}
 		else
 			modifyField.setText("");
 
-		if (me != null)
-		{
-			portBox.setSelected(me.measurementPortId);
-			localAdressField.setText(me.localAddress);
+		if (me != null) {
+			portField.setText(me.getMeasurementPortId().getIdentifierString());
+			localAdressField.setText(me.getLocalAddress());
 		}
-		else
-		{
-			portBox.setSelected("");
+		else {
+			portField.setText("");
 			localAdressField.setText("");
 		}
-	}
+}
 
 	public boolean modify()
 	{
 		try
 		{
 			if(MiscUtil.validName(nameField.getText()))
-				path.name = nameField.getText();
+				path.name(nameField.getText());
 			else
 				return false;
 
-			if (path.path != null)
+			if (path.path() != null)
 			{
-				path.path.name = nameField.getText();
-				path.path.description = descTextArea.getText();
-				path.startDeviceId = (String)equipBox.getSelected();
+				path.pathImpl().setDescription(descTextArea.getText());
 			}
 			if (me != null)
 			{
-				me.measurementPortId = (String)portBox.getSelected();
-				me.localAddress = localAdressField.getText();
+				me.setLocalAddress(localAdressField.getText());
 			}
 		}
 		catch(Exception ex)
@@ -235,44 +227,27 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 
 	public boolean save()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogCMediting))
-		{
-			return false;
-		}
-
 		if(modify())
 		{
-			if (path.path != null)
+			if (path.path() != null)
 			{
-				DataSourceInterface dataSource = aContext.getDataSourceInterface();
-				dataSource.SavePath(path.path.getId());
+				try {
+					ConfigurationStorableObjectPool.putStorableObject(path.pathImpl());
+				}
+				catch (ApplicationException ex) {
+				}
 				return true;
 			}
 		}
-		else
-		{
-			new MessageBox("Неправильно введены данные").show();
-		}
+		JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				"Неправильно введены данные");
 		return false;
 	}
 
 	public boolean delete()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogCMediting))
-			return false;
-
-		if (path.path != null)
-		{
-			String []s = new String[1];
-			s[0] = path.path.getId();
-			aContext.getDataSourceInterface().RemovePaths(s);
-		}
-
-		return true;
+		return false;
 	}
 
 	void saveButton_actionPerformed(ActionEvent e)

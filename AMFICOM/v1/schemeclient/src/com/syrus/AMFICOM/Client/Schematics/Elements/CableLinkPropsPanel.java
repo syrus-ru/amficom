@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
 import java.util.*;
+import java.util.List;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -8,16 +9,24 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
+import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.client_.general.ui_.*;
+import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.general.*;
 
 public class CableLinkPropsPanel extends JPanel
 {
-	private AComboBox classComboBox = new AComboBox();
-	private JButton addClassButton = new JButton("...");
-	private ObjectResourceComboBox typeComboBox = new ObjectResourceComboBox();
+	private AComboBox sortComboBox = new AComboBox();
+
+	private ObjComboBox typeComboBox = new ObjComboBox(
+			 LinkTypeController.getInstance(),
+			 LinkTypeController.KEY_NAME);
 	private JButton addTypeButton = new JButton("...");
 	private JTextArea descriptionTextArea = new JTextArea();
 	private JTextField manufacturerTextField = new JTextField();
@@ -32,7 +41,14 @@ public class CableLinkPropsPanel extends JPanel
 	private boolean smooth_length = false;
 
 	SchemeCableLink[] links;
+	List cablelinkTypes;
 	CableLinkType lt;
+
+	private static LinkTypeSort[] linkTypeSorts = new LinkTypeSort[] {
+		LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER,
+		LinkTypeSort.LINKTYPESORT_ETHERNET,
+		LinkTypeSort.LINKTYPESORT_GSM
+	};
 
 	public CableLinkPropsPanel(ApplicationContext aContext)
 	{
@@ -107,7 +123,7 @@ public class CableLinkPropsPanel extends JPanel
 		p221.add(manLabelPanel, BorderLayout.WEST);
 		p222.add(lengthLabelPanel, BorderLayout.WEST);
 
-		p11.add(classComboBox, BorderLayout.CENTER);
+		p11.add(sortComboBox, BorderLayout.CENTER);
 		p12.add(typeComboBox, BorderLayout.CENTER);
 		p13.add(nameText, BorderLayout.CENTER);
 		JScrollPane scroll = new JScrollPane(descriptionTextArea);
@@ -115,10 +131,9 @@ public class CableLinkPropsPanel extends JPanel
 		p221.add(manufacturerTextField, BorderLayout.CENTER);
 		p222.add(lenPanel, BorderLayout.CENTER);
 
-		p11.add(addClassButton, BorderLayout.EAST);
 		p12.add(addTypeButton, BorderLayout.EAST);
 
-		typeComboBox.setPreferredSize(classComboBox.getPreferredSize());
+		typeComboBox.setPreferredSize(sortComboBox.getPreferredSize());
 
 		p1.add(p11, BorderLayout.NORTH);
 		p1.add(p12, BorderLayout.CENTER);
@@ -128,15 +143,6 @@ public class CableLinkPropsPanel extends JPanel
 		p22.add(p221, BorderLayout.CENTER);
 		p22.add(p222, BorderLayout.SOUTH);
 
-		addClassButton.setPreferredSize(new Dimension(25, 7));
-		addClassButton.setBorder(BorderFactory.createEtchedBorder());
-		addClassButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed (ActionEvent ev)
-			{
-				addClassButton_actionPerformed();
-			}
-		});
 		addTypeButton.setPreferredSize(new Dimension(25, 7));
 		addTypeButton.setBorder(BorderFactory.createEtchedBorder());
 		addTypeButton.addActionListener(new ActionListener()
@@ -146,12 +152,12 @@ public class CableLinkPropsPanel extends JPanel
 				addTypeButton_actionPerformed();
 			}
 		});
-		classComboBox.addItemListener(new ItemListener()
+		sortComboBox.addItemListener(new ItemListener()
 		{
 			public void itemStateChanged(ItemEvent ie)
 			{
 				if (ie.getStateChange() == ItemEvent.SELECTED)
-					classComboBox_stateChanged();
+					sortComboBox_stateChanged();
 			}
 		});
 
@@ -171,7 +177,7 @@ public class CableLinkPropsPanel extends JPanel
 			{
 				if (lt == null)
 					return;
-				lt.description = descriptionTextArea.getText();
+				lt.setDescription(descriptionTextArea.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -184,7 +190,7 @@ public class CableLinkPropsPanel extends JPanel
 			{
 				if (lt == null)
 					return;
-				lt.manufacturer = manufacturerTextField.getText();
+				lt.setManufacturer(manufacturerTextField.getText());
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -197,8 +203,8 @@ public class CableLinkPropsPanel extends JPanel
 			{
 				if (links == null || links.length != 1)
 					return;
-				links[0].setName(nameText.getText());
-				aContext.getDispatcher().notify(new SchemeElementsEvent(links[0].getId(), links[0].getName(), SchemeElementsEvent.CABLE_LINK_NAME_UPDATE_EVENT));
+				links[0].name(nameText.getText());
+				aContext.getDispatcher().notify(new SchemeElementsEvent(links[0].id(), links[0].name(), SchemeElementsEvent.CABLE_LINK_NAME_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}
@@ -214,11 +220,11 @@ public class CableLinkPropsPanel extends JPanel
 				try
 				{
 					double d = Double.parseDouble(optLen.getText());
-					links[0].opticalLength = d;
+					links[0].opticalLength(d);
 					optLen.setForeground(nameText.getForeground());
 					if (smooth_length)
 					{
-						links[0].physicalLength = d;
+						links[0].physicalLength(d);
 						strLen.setText(optLen.getText());
 						strLen.setForeground(nameText.getForeground());
 					}
@@ -242,11 +248,11 @@ public class CableLinkPropsPanel extends JPanel
 				try
 				{
 					double d = Double.parseDouble(strLen.getText());
-					links[0].physicalLength = d;
+					links[0].physicalLength(d);
 					strLen.setForeground(nameText.getForeground());
 					if (smooth_length)
 					{
-						links[0].opticalLength = d;
+						links[0].opticalLength(d);
 						optLen.setText(strLen.getText());
 						optLen.setForeground(nameText.getForeground());
 					}
@@ -263,34 +269,23 @@ public class CableLinkPropsPanel extends JPanel
 		descriptionTextArea.setPreferredSize(new Dimension (300, 80));
 		descriptionTextArea.setLineWrap(true);
 		descriptionTextArea.setAutoscrolls(true);
-	}
 
-	private void setDefaults()
-	{
-		skip_changes = true;
-		classComboBox.removeAllItems();
-		Map hash = new HashMap();
+		try {
+			DomainCondition condition = new DomainCondition(null, ObjectEntities.CABLE_LINKTYPE_ENTITY_CODE);
+			cablelinkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-		if (Pool.getMap(CableLinkType.typ) != null)
-		{
-			for(Iterator it = Pool.getMap(CableLinkType.typ).values().iterator(); it.hasNext();)
-			{
-				CableLinkType pt = (CableLinkType)it.next();
-				hash.put(pt.linkClass, pt.linkClass);
+			for (int i = 0; i < linkTypeSorts.length; i++) {
+				sortComboBox.addItem(linkTypeSorts[i]);
 			}
-			for(Iterator it = hash.values().iterator(); it.hasNext(); )
-				classComboBox.addItem(it.next());
-
-			if (lt != null)
-				classComboBox.setSelectedItem(lt.linkClass);
 		}
-		skip_changes = false;
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public void setEditable(boolean b)
 	{
-		classComboBox.setEnabled(b);
-		addClassButton.setEnabled(b);
+		sortComboBox.setEnabled(b);
 		addTypeButton.setEnabled(b);
 		typeComboBox.setEnabled(b);
 		typeComboBox.setEnabled(b);
@@ -313,29 +308,29 @@ public class CableLinkPropsPanel extends JPanel
 	public void init(SchemeCableLink[] links)
 	{
 		this.links = links;
-		lt = (CableLinkType)Pool.get(CableLinkType.typ, links[0].cableLinkTypeId);
-		setDefaults();
+		lt = links[0].cableLinkTypeImpl();
+
 		if (lt != null)
 		{
-			classComboBox.setSelectedItem(lt.linkClass);
-			typeComboBox.setSelected(lt);
-			descriptionTextArea.setText(lt.description);
+			sortComboBox.setSelectedItem(lt.getSort());
+			typeComboBox.setSelectedItem(lt);
+			descriptionTextArea.setText(lt.getDescription());
 
-			undoManufacturer = lt.manufacturer;
-			undoDescr = lt.description;
+			undoManufacturer = lt.getManufacturer();
+			undoDescr = lt.getDescription();
 		}
 		else
 			typeComboBox_stateChanged();
 
 		if (links.length == 1)
 		{
-			if (links[0].opticalLength == 0 || links[0].physicalLength == 0)
+			if (links[0].opticalLength() == 0 || links[0].physicalLength() == 0)
 				smooth_length = true;
 
-			nameText.setText(links[0].getName());
+			nameText.setText(links[0].name());
 			nameText.setCaretPosition(0);
-			optLen.setText(String.valueOf(links[0].opticalLength));
-			strLen.setText(String.valueOf(links[0].physicalLength));
+			optLen.setText(String.valueOf(links[0].opticalLength()));
+			strLen.setText(String.valueOf(links[0].physicalLength()));
 		}
 		else
 		{
@@ -354,8 +349,8 @@ public class CableLinkPropsPanel extends JPanel
 	{
 		if (lt != null)
 		{
-			lt.description = undoDescr;
-			lt.manufacturer = undoManufacturer;
+			lt.setDescription(undoDescr);
+			lt.setManufacturer(undoManufacturer);
 		}
 	}
 
@@ -364,22 +359,20 @@ public class CableLinkPropsPanel extends JPanel
 		return (CableLinkType)typeComboBox.getSelectedItem();
 	}
 
-	void classComboBox_stateChanged()
+	void sortComboBox_stateChanged()
 	{
-		typeComboBox.setContents(new Hashtable(), false);
-		String selected_class = (String)classComboBox.getSelectedItem();
+		typeComboBox.removeAll();
+		LinkTypeSort sort = (LinkTypeSort)sortComboBox.getSelectedItem();
 
-		if (Pool.getMap(CableLinkType.typ) != null)
+		for (Iterator it = cablelinkTypes.iterator(); it.hasNext();)
 		{
-			for(Iterator it = Pool.getMap(CableLinkType.typ).values().iterator(); it.hasNext();)
-			{
-				CableLinkType clt = (CableLinkType)it.next();
-				if (clt.linkClass.equals(selected_class))
-					typeComboBox.add(clt);
-			}
-			if (lt != null)
-				typeComboBox.setSelected(lt);
+			CableLinkType type = (CableLinkType)it.next();
+			if (type.getSort().equals(sort))
+				typeComboBox.addItem(type);
 		}
+		if (lt != null)
+			typeComboBox.setSelectedItem(lt);
+
 		typeComboBox_stateChanged();
 	}
 
@@ -390,88 +383,68 @@ public class CableLinkPropsPanel extends JPanel
 		undo();
 		if (typeComboBox.getItemCount() == 0)
 			return;
-		CableLinkType clt = (CableLinkType)typeComboBox.getSelectedItem();
-		lt = clt;
-		for (int i = 0; i < links.length; i++)
+
+		int old_num = lt.getCableThreadTypes().size();
+		lt = (CableLinkType)typeComboBox.getSelectedItem();
+		int num = lt.getCableThreadTypes().size();
+
+		CableThreadType ctt = (CableThreadType)lt.getCableThreadTypes().get(0);
+		String codename = ctt.getCodename();
+		Identifier user_id = new Identifier(((RISDSessionInfo)aContext.
+							getSessionInterface()).getAccessIdentifier().user_id);
+
+		if (num > old_num)
 		{
-			links[i].cableLinkTypeId = clt.getId();
-			links[i].cableThreads = new ArrayList(clt.cableThreads.size());
-			for (Iterator it = clt.cableThreads.iterator(); it.hasNext();)
+			for (int i = 0; i < links.length; i++)
 			{
-				CableTypeThread ctt = (CableTypeThread)it.next();
-				SchemeCableThread scheme_cable_thread = new SchemeCableThread(aContext.getDataSourceInterface().GetUId(SchemeCableThread.typ));
-				scheme_cable_thread.linkTypeId = ctt.linkTypeId;
-				scheme_cable_thread.name = ctt.getName();
-				links[i].cableThreads.add(scheme_cable_thread);
+				links[i].cableLinkTypeImpl(lt);
+				Iterator it = lt.getCableThreadTypes().iterator();
+				for (int j = 0; j < old_num; j++)
+					links[i].schemeCableThreads()[j].cableThreadTypeImpl((CableThreadType)it.next());
+				for (int j = old_num; j < num; j++) {
+					SchemeCableThread newct = SchemeFactory.createSchemeCableThread();
+					CableThreadType type = (CableThreadType)it.next();
+					newct.cableThreadTypeImpl(type);
+					newct.name(String.valueOf(j));
+					newct.schemeCablelink(links[0]);
+				}
 			}
-			ObjectResourceSorter sorter = SchemeCableLink.getSorter();
-			sorter.setDataSet(links[i].cableThreads);
-			links[i].cableThreads = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
 		}
-		descriptionTextArea.setText(clt.description);
-		manufacturerTextField.setText(clt.manufacturer);
+		else
+		{
+			for (int i = 0; i < links.length; i++)
+			{
+				links[i].cableLinkTypeImpl(lt);
+				Iterator it = lt.getCableThreadTypes().iterator();
+				for (int j = 0; j < num; j++)
+					links[i].schemeCableThreads()[j].cableThreadTypeImpl((CableThreadType)it.next());
+
+					List toDelete = new LinkedList();
+					List threads = Arrays.asList(links[i].schemeCableThreads());
+					for (int j = old_num-1; j >= num; j--)
+					{
+						SchemeCableThread thread = (SchemeCableThread)threads.get(j);
+						threads.remove(thread);
+						//CableTypeThread ctt = (CableTypeThread)clt.cable_threads.get(i);
+						toDelete.add(thread.id());
+					}
+					try {
+						SchemeStorableObjectPool.delete(toDelete);
+					}
+					catch (ApplicationException ex) {
+						ex.printStackTrace();
+					}
+			}
+		}
+		descriptionTextArea.setText(lt.getDescription());
+		manufacturerTextField.setText(lt.getManufacturer());
 		manufacturerTextField.setCaretPosition(0);
 		descriptionTextArea.setCaretPosition(0);
 		//aContext.getDispatcher().notify(new OperationEvent(clt, 1, "elementslistvaluechanged"));
 	 // aContext.getDispatcher().notify(new SchemeElementsEvent(links, clt, SchemeElementsEvent.OBJECT_TYPE_UPDATE_EVENT));
 	}
 
-	void addClassButton_actionPerformed()
-	{
-		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый класс");
-		dialog.setSize(this.getSize().width, dialog.preferredSize.height);
-		Point loc = this.getLocationOnScreen();
-		dialog.setLocation(loc.x, loc.y + 30);
-		dialog.setVisible(true);
-
-		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
-		{
-			String name = dialog.getName();
-			for (int i = 0; i < classComboBox.getItemCount(); i++)
-			{
-				if (classComboBox.getItemAt(i).equals(name))
-				{
-					classComboBox.setSelectedItem(name);
-					return;
-				}
-			}
-			classComboBox.addItem(name);
-			classComboBox.setSelectedItem(name);
-		}
-	}
-
 	void addTypeButton_actionPerformed()
 	{
-		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый тип");
-		dialog.setSize(this.getSize().width, dialog.preferredSize.height);
-		Point loc = this.getLocationOnScreen();
-		dialog.setLocation(loc.x, loc.y + 30);
-		dialog.setVisible(true);
-
-		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
-		{
-			String name = dialog.getName();
-			for (int i = 0; i < typeComboBox.getItemCount(); i++)
-			{
-				if (typeComboBox.getItemAt(i).equals(name))
-				{
-					typeComboBox.setSelectedItem(name);
-					return;
-				}
-			}
-			CableLinkType type = (CableLinkType)Pool.get(CableLinkType.typ, links[0].cableLinkTypeId);
-			CableLinkType new_type = new CableLinkType();
-			new_type.setChanged(true);
-			new_type.name = name;
-			new_type.id = aContext.getDataSourceInterface().GetUId(CableLinkType.typ);
-			new_type.linkClass = (String)classComboBox.getSelectedItem();
-
-			for (int i = 0; i < links.length; i++)
-				links[i].cableLinkTypeId = new_type.getId();
-			Pool.put(CableLinkType.typ, links[0].cableLinkTypeId, new_type);
-
-			typeComboBox.add(new_type);
-			typeComboBox.setSelected(new_type);
-		}
 	}
 }

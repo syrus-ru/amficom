@@ -4,24 +4,22 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.Port;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.scheme.corba.SchemePort;
 import oracle.jdeveloper.layout.XYConstraints;
 
-public class PortPane extends PropertiesPanel
+public class PortPane extends JPanel implements ObjectResourcePropertiesPane
 {
 	public ApplicationContext aContext;
 
-	PortGeneralPanel gPanel = new PortGeneralPanel();
-	PortCharacteristicsPanel chPanel = new PortCharacteristicsPanel();
+	AbstractPortGeneralPanel gPanel = new AbstractPortGeneralPanel();
+	PortCharacteristicsPanel chPanel;
 
-	SchemePort sport;
-	Port port;
+	SchemePort port;
 
 	public JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -31,6 +29,7 @@ public class PortPane extends PropertiesPanel
 	public PortPane()
 	{
 		super();
+
 		try
 		{
 			jbInit();
@@ -44,11 +43,13 @@ public class PortPane extends PropertiesPanel
 	public PortPane(SchemePort p)
 	{
 		this();
-		setObjectResource(p);
+		setObject(p);
 	}
 
 	private void jbInit() throws Exception
 	{
+		chPanel = new PortCharacteristicsPanel();
+
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
 
@@ -67,17 +68,17 @@ public class PortPane extends PropertiesPanel
 		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
-		return sport;
+		return port;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
-		this.sport = (SchemePort)or;
+		port = (SchemePort)or;
 
-		gPanel.setObjectResource(sport);
-		chPanel.setObjectResource(sport);
+		gPanel.setObject(port);
+		chPanel.setObject(port);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -89,7 +90,7 @@ public class PortPane extends PropertiesPanel
 
 	public boolean modify()
 	{
-		if (gPanel.modify() &&
+		if(	gPanel.modify() &&
 				chPanel.modify())
 			return true;
 		return false;
@@ -97,22 +98,20 @@ public class PortPane extends PropertiesPanel
 
 	public boolean save()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-		{
-			return false;
-		}
-
 		if(modify())
 		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			dataSource.SavePort(port.getId());
+			try {
+				ConfigurationStorableObjectPool.putStorableObject(port.portImpl());
+			}
+			catch (ApplicationException ex) {
+			}
 			return true;
 		}
 		else
 		{
-			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					LangModelConfig.getString("err_incorrect_data_input"));
 		}
 		return false;
 	}
@@ -124,17 +123,7 @@ public class PortPane extends PropertiesPanel
 
 	public boolean delete()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-			return false;
-
-		String []s = new String[1];
-
-		s[0] = port.id;
-		aContext.getDataSourceInterface().RemovePorts(s);
-
-		return true;
+		return false;
 	}
 
 	public boolean create()
@@ -142,7 +131,14 @@ public class PortPane extends PropertiesPanel
 		return false;
 	}
 
+	public boolean cancel()
+	{
+		return false;
+	}
+
+
 	void saveButton_actionPerformed(ActionEvent e)
 	{
 	}
+
 }

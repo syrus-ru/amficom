@@ -4,21 +4,18 @@ import java.awt.*;
 
 import com.jgraph.graph.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeLink;
+import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.general.corba.Identifier;
 
 public class DefaultLink extends DefaultEdge
 {
-	private static final long serialVersionUID = 01L;
-	protected String scheme_link_id = "";
-	protected String scheme_path_id = "";
+	private static final long serialVersionUID = 02L;
+	private Identifier scheme_link_id;
+	private Identifier scheme_path_id;
 	protected Point[] routed;
 	protected transient Object _source, _target;
 	protected transient Object source, target;
-
-//	private transient boolean first_time = true;
-
-//	private transient EdgeView _edge;
-//	private transient Object object;
 
 	LinkRouting routing = new LinkRouting();
 
@@ -48,40 +45,7 @@ public class DefaultLink extends DefaultEdge
 	{
 		return routing;
 	}
-/*
-	private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException
-	{
-		out.writeObject(scheme_link_id);
-		out.writeObject(scheme_path_id);
-		out.writeObject(routed);
-		HashSet set = (HashSet)Pool.get("serialized", "serialized");
-		if (set == null)
-		{
-			set = new HashSet();
-			Pool.put("serialized", "serialized", set);
-		}
-		if (!set.contains(_source))
-		{
-			set.add(_source);
-			out.writeObject(_source);
-		}
-		if (!set.contains(_target))
-		{
-			set.add(_target);
-			out.writeObject(_target);
-		}
-		if (!set.contains(source))
-		{
-			set.add(source);
-			out.writeObject(source);
-		}
-		if (!set.contains(target))
-		{
-			set.add(target);
-			out.writeObject(target);
-		}
-	}
-*/
+
 	public class LinkRouting implements DefaultEdge.Routing
 	{
 		private static final long serialVersionUID = 01L;
@@ -228,32 +192,21 @@ public class DefaultLink extends DefaultEdge
 
 	public SchemeLink getSchemeLink()
 	{
-		return (SchemeLink)Pool.get(SchemeLink.typ, scheme_link_id);
+		try {
+			return (SchemeLink)SchemeStorableObjectPool.getStorableObject(scheme_link_id, true);
+		}
+		catch (Exception ex) {
+			return null;
+		}
 	}
 
-	public String getSchemeLinkId()
+	public Identifier getSchemeLinkId()
 	{
 		return scheme_link_id;
 	}
 
-	public void setSchemeLinkId(String id)
+	public void setSchemeLinkId(Identifier id)
 	{
 		scheme_link_id = id;
 	}
-
-//	public SchemePath getSchemePath()
-//	{
-//		return (SchemePath)Pool.get(SchemePath.typ, scheme_path_id);
-//	}
-
-//	public String getSchemePathId()
-//	{
-//		return scheme_path_id;
-//	}
-
-//	public void setSchemePathId(String id)
-//	{
-//		scheme_path_id = id;
-//	}
 }
-

@@ -7,20 +7,21 @@ import java.awt.*;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeProtoGroup;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.client_.general.ui_.tree.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.general.*;
 
 public class ElementsTreeModel extends ObjectResourceTreeModel
 {
-	DataSourceInterface dsi;
+	ApplicationContext aContext;
 
-	public ElementsTreeModel(DataSourceInterface dsi)
+	public ElementsTreeModel(ApplicationContext aContext)
 	{
-		this.dsi = dsi;
+		this.aContext = aContext;
 	}
 
 	public ObjectResourceTreeNode getRoot()
@@ -49,19 +50,9 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 
 	public ObjectResourceCatalogActionModel getNodeActionModel(ObjectResourceTreeNode node)
 	{
-		if(node.getObject() instanceof String)
-		{
-			String s = (String )node.getObject();
-/*			if(s.equals(KISType.typ) ||
-				 s.equals(EquipmentType.typ))
-				return new ObjectResourceCatalogActionModel(
-				ObjectResourceCatalogActionModel.PANEL,
-				ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
-				ObjectResourceCatalogActionModel.SAVE_BUTTON,
-				ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
-				ObjectResourceCatalogActionModel.PROPS_BUTTON,
-				ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
-			else */
+//		if(node.getObject() instanceof String)
+//		{
+	/*		String s = (String )node.getObject();
 			if(s.equals(LinkType.typ) ||
 							s.equals(CableLinkType.typ) ||
 							s.equals(PortType.typ) ||
@@ -75,7 +66,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
 				ObjectResourceCatalogActionModel.PROPS_BUTTON,
 				ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
-		}
+		}*/
 		return new ObjectResourceCatalogActionModel(
 				ObjectResourceCatalogActionModel.NO_PANEL,
 				ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
@@ -90,36 +81,30 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 		if(node.getObject() instanceof String)
 		{
 			String s = (String )node.getObject();
-			if(s.equals(SchemeProtoGroup.typ))
+			if(s.equals("SchemeProtoGroup"))
 				return SchemeProtoGroup.class;
-			if(s.equals(SchemeProtoGroup.typ))
-				return SchemeProtoGroup.class;
-//			if(s.equals(EquipmentType.typ))
-//				return EquipmentType.class;
-			if(s.equals(LinkType.typ))
+			if(s.equals("LinkType"))
 				return LinkType.class;
-			if(s.equals(CableLinkType.typ))
+			if(s.equals("CableLinkType"))
 				return CableLinkType.class;
-			if(s.equals(PortType.typ))
+			if(s.equals("PortType"))
 				return PortType.class;
-			if(s.equals(CablePortType.typ))
-				return CablePortType.class;
 //			if(s.equals(KISType.typ))
 //				return KISType.class;
-			if(s.equals(TransmissionPathType.typ))
+			if(s.equals("TransmissionPathType"))
 				return TransmissionPathType.class;
-			if(s.equals(MeasurementPortType.typ))
+			if(s.equals("MeasurementPortType"))
 				return MeasurementPortType.class;
 		}
 		else if (node.getObject() instanceof SchemeProtoGroup)
 		{
-			if (!((SchemeProtoGroup)node.getObject()).groupIds.isEmpty())
+			if (((SchemeProtoGroup)node.getObject()).schemeProtoGroups().length != 0)
 				return SchemeProtoGroup.class;
 			else
-				return ProtoElement.class;
+				return SchemeProtoElement.class;
 		}
 		else if (node.getObject() instanceof SchemeProtoGroup)
-			return ProtoElement.class;
+			return SchemeProtoElement.class;
 		return null;
 	}
 
@@ -129,12 +114,11 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 		if(node.getObject() instanceof String)
 		{
 			String s = (String )node.getObject();
-			ObjectResource os;
 			if(s.equals("root"))
 			{
 				vec.add(new ObjectResourceTreeNode("configure", LangModelConfig.getString("label_configuration"), true,
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
-				vec.add(new ObjectResourceTreeNode (SchemeProtoGroup.typ, "Компоненты сети", true,
+				vec.add(new ObjectResourceTreeNode ("SchemeProtoGroup", "Компоненты сети", true,
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 			}
 			else if(s.equals("configure"))
@@ -147,195 +131,124 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			else if(s.equals("netdirectory"))
 			{
 //				vec.add(new ObjectResourceTreeNode(EquipmentType.typ, LangModelConfig.getString("menuNetDirEquipmentText"), true));
-				vec.add(new ObjectResourceTreeNode(LinkType.typ, LangModelConfig.getString("menuNetDirLinkText"), true));
-				vec.add(new ObjectResourceTreeNode(CableLinkType.typ, LangModelConfig.getString("menuNetDirCableText"), true));
-				vec.add(new ObjectResourceTreeNode(PortType.typ, LangModelConfig.getString("menuNetDirPortText"), true));
-				vec.add(new ObjectResourceTreeNode(CablePortType.typ, LangModelConfig.getString("menuNetDirCablePortText"), true));
+				vec.add(new ObjectResourceTreeNode("LinkType", LangModelConfig.getString("menuNetDirLinkText"), true));
+				vec.add(new ObjectResourceTreeNode("CableLinkType", LangModelConfig.getString("menuNetDirCableText"), true));
+				vec.add(new ObjectResourceTreeNode("PortType", LangModelConfig.getString("menuNetDirPortText"), true));
+//				vec.add(new ObjectResourceTreeNode("CablePortType", LangModelConfig.getString("menuNetDirCablePortText"), true));
 			}
 			else if(s.equals("jdirectory"))
 			{
 //				vec.add(new ObjectResourceTreeNode(KISType.typ, LangModelConfig.getString("menuJDirKISText"), true));
-				vec.add(new ObjectResourceTreeNode(MeasurementPortType.typ, LangModelConfig.getString("menuJDirAccessPointText"), true));
-				vec.add(new ObjectResourceTreeNode(TransmissionPathType.typ, LangModelConfig.getString("menuJDirPathText"), true));
+				vec.add(new ObjectResourceTreeNode("MeasurementPortType", LangModelConfig.getString("menuJDirAccessPointText"), true));
+				vec.add(new ObjectResourceTreeNode("TransmissionPathType", LangModelConfig.getString("menuJDirPathText"), true));
 			}
-/*			else if(s.equals(EquipmentType.typ))
+			else if(s.equals("LinkType"))
 			{
-				if (Pool.getMap(EquipmentType.typ) != null)
-				{
-					DataSet dSet = new DataSet(Pool.getMap(EquipmentType.typ));
+				try {
+					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+							getAccessIdentifier().domain_id);
+					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+							domain_id, true);
+					DomainCondition condition = new DomainCondition(domain,
+							ObjectEntities.LINKTYPE_ENTITY_CODE);
+					List linkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-					dSet = filter.filter(dSet);
-					ObjectResourceSorter sorter = EquipmentType.getDefaultSorter();
-					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
-
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
-					{
-						EquipmentType eq = (EquipmentType)enum.nextElement();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(eq, eq.getName(), true, true);
+					for (Iterator it = linkTypes.iterator(); it.hasNext(); ) {
+						LinkType type = (LinkType)it.next();
+						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
 						vec.add(n);
 					}
 				}
-			}*/
-			else if(s.equals(LinkType.typ))
-			{
-				if (Pool.getMap(LinkType.typ) != null)
-				{
-					Map dSet = Pool.getMap(LinkType.typ);
-
-//					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-//					dSet = filter.filter(dSet);
-					ObjectResourceSorter sorter = LinkType.getDefaultSorter();
-					sorter.setDataSet(dSet);
-
-					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
-					{
-						LinkType l = (LinkType)it.next();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(l, l.getName(), true, true);
-						vec.add(n);
-					}
+				catch (ApplicationException ex) {
+					ex.printStackTrace();
 				}
 			}
-			else if(s.equals(CableLinkType.typ))
+			else if(s.equals("CableLinkType"))
 			{
-				if (Pool.getMap(CableLinkType.typ) != null)
-				{
-					Map dSet = Pool.getMap(CableLinkType.typ);
+			}
+			else if(s.equals("PortType"))
+			{
+				try {
+					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+							getAccessIdentifier().domain_id);
+					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+							domain_id, true);
+					DomainCondition condition = new DomainCondition(domain,
+							ObjectEntities.PORTTYPE_ENTITY_CODE);
+					List portTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-//					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-//					dSet = filter.filter(dSet);
-					ObjectResourceSorter sorter = CableLinkType.getDefaultSorter();
-					sorter.setDataSet(dSet);
-
-					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
-					{
-						CableLinkType l = (CableLinkType)it.next();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(l, l.getName(), true, true);
+					for (Iterator it = portTypes.iterator(); it.hasNext(); ) {
+						PortType type = (PortType)it.next();
+						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
 						vec.add(n);
 					}
+				}
+				catch (ApplicationException ex) {
+					ex.printStackTrace();
 				}
 			}
-			else if(s.equals(PortType.typ))
+			else if(s.equals("TransmissionPathType"))
 			{
-				if (Pool.getMap(PortType.typ) != null)
-				{
-					Map dSet = Pool.getMap(PortType.typ);
+				try {
+					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+							getAccessIdentifier().domain_id);
+					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+							domain_id, true);
+					DomainCondition condition = new DomainCondition(domain,
+							ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
+					List pathTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-//					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-//					dSet = filter.filter(dSet);
-					ObjectResourceSorter sorter = PortType.getDefaultSorter();
-					sorter.setDataSet(dSet);
-
-					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
-					{
-						PortType pt = (PortType)it.next();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(pt, pt.getName(), true, true);
+					for (Iterator it = pathTypes.iterator(); it.hasNext(); ) {
+						TransmissionPathType type = (TransmissionPathType)it.next();
+						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
 						vec.add(n);
 					}
+				}
+				catch (ApplicationException ex) {
+					ex.printStackTrace();
 				}
 			}
-			else if(s.equals(CablePortType.typ))
+			else if(s.equals("MeasurementPortType"))
 			{
-				if (Pool.getMap(CablePortType.typ) != null)
-				{
-					Map dSet = Pool.getMap(CablePortType.typ);
+				try {
+					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+							getAccessIdentifier().domain_id);
+					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+							domain_id, true);
+					DomainCondition condition = new DomainCondition(domain,
+							ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
+					List pathTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-//					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-//					dSet = filter.filter(dSet);
-					ObjectResourceSorter sorter = CablePortType.getDefaultSorter();
-					sorter.setDataSet(dSet);
-
-					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
-					{
-						CablePortType cpT = (CablePortType)it.next();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(cpT, cpT.getName(), true, true);
+					for (Iterator it = pathTypes.iterator(); it.hasNext(); ) {
+						MeasurementPortType type = (MeasurementPortType)it.next();
+						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
 						vec.add(n);
 					}
+				}
+				catch (ApplicationException ex) {
+					ex.printStackTrace();
 				}
 			}
-	/*		else if(s.equals(KISType.typ))
+			else if (s.equals("SchemeProtoGroup"))
 			{
-				if (Pool.getMap(EquipmentType.typ) != null)
-				{
-					DataSet dSet = new DataSet(Pool.getMap(EquipmentType.typ));
+				try {
+					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+							getAccessIdentifier().domain_id);
+					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+							domain_id, true);
+					DomainCondition condition = new DomainCondition(domain,
+							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
+					List groups = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-					dSet = filter.filter(dSet);
-					ObjectResourceSorter sorter = KISType.getDefaultSorter();
-					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
-
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
-					{
-						EquipmentType k = (EquipmentType)enum.nextElement();
-						if (!k.eq_class.equals("tester"))
-							continue;
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(k, k.getName(), true, true);
+					for (Iterator it = groups.iterator(); it.hasNext(); ) {
+						SchemeProtoGroup group = (SchemeProtoGroup)it.next();
+						ObjectResourceTreeNode n = new ObjectResourceTreeNode(group, group.name(), true, true);
 						vec.add(n);
 					}
 				}
-			}*/
-			else if(s.equals(TransmissionPathType.typ))
-			{
-				if (Pool.getMap(TransmissionPathType.typ) != null)
-				{
-					Map dSet = Pool.getMap(TransmissionPathType.typ);
-
-//					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-//					dSet = filter.filter(dSet);
-					ObjectResourceSorter sorter = TransmissionPathType.getDefaultSorter();
-					sorter.setDataSet(dSet);
-
-					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
-					{
-						TransmissionPathType tp = (TransmissionPathType)it.next();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(tp, tp.getName(), true, true);
-						vec.add(n);
-					}
+				catch (ApplicationException ex) {
+					ex.printStackTrace();
 				}
-			}
-			else if(s.equals(MeasurementPortType.typ))
-			{
-				if (Pool.getMap(MeasurementPortType.typ) != null)
-				{
-					Map dSet = Pool.getMap(MeasurementPortType.typ);
-
-//					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-//					dSet = filter.filter(dSet);
-					ObjectResourceSorter sorter = MeasurementPortType.getDefaultSorter();
-					sorter.setDataSet(dSet);
-
-					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
-					{
-						MeasurementPortType apt = (MeasurementPortType)it.next();
-						ObjectResourceTreeNode n = new ObjectResourceTreeNode(apt, apt.getName(), true, true);
-						vec.add(n);
-					}
-				}
-			}
-
-			else if (s.equals(SchemeProtoGroup.typ))
-			{
-				Map map_groups = Pool.getMap(SchemeProtoGroup.typ);
-				if (map_groups != null)
-					for (Iterator it = map_groups.values().iterator(); it.hasNext();)
-					{
-						SchemeProtoGroup map_group = (SchemeProtoGroup)it.next();
-						if (map_group.parentId.equals(""))
-						{
-							ImageIcon icon;
-							if (map_group.getImageID().equals(""))
-								icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
-							else
-								icon = new ImageIcon(ImageCatalogue.get(map_group.getImageID()).getImage()
-										.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
-							vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true, icon,
-									map_group.groupIds.isEmpty() && map_group.getProtoIds().isEmpty()));
-						}
-					}
 			}
 		}
 		else
@@ -343,27 +256,27 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			if(node.getObject() instanceof SchemeProtoGroup)
 			{
 				SchemeProtoGroup parent_group = (SchemeProtoGroup)node.getObject();
-				Iterator it = parent_group.groupIds.iterator();
-				for (int i = 0; i < parent_group.groupIds.size(); i++)
+				for (int i = 0; i < parent_group.schemeProtoGroups().length; i++)
 				{
-					SchemeProtoGroup map_group = (SchemeProtoGroup)Pool.get(SchemeProtoGroup.typ, (String)it.next());
+					SchemeProtoGroup map_group = parent_group.schemeProtoGroups()[i];
 					ImageIcon icon;
-					if (map_group.getImageID().equals(""))
+					if (map_group.symbol() == null)
 						icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
 					else
-						icon = new ImageIcon(ImageCatalogue.get(map_group.getImageID()).getImage()
-								.getScaledInstance(16, 16, Image.SCALE_SMOOTH));
-					vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true, icon,
-							map_group.groupIds.isEmpty() && map_group.getProtoIds().isEmpty()));
+						icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
+								map_group.symbolImpl().getImage()).
+																 getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+
+					vec.add(new ObjectResourceTreeNode(map_group, map_group.name(), true, icon,
+							map_group.schemeProtoGroups().length == 0 && map_group.schemeProtoElements().length == 0));
 				}
 				if (vec.isEmpty())
 				{
-					it = parent_group.getProtoIds().iterator();
-					for (int i = 0; i < parent_group.getProtoIds().size(); i++)
+					for (int i = 0; i < parent_group.schemeProtoElements().length; i++)
 					{
-						ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
-						proto.scheme_proto_group = parent_group;
-						vec.add(new ObjectResourceTreeNode(proto, proto.getName().length() == 0 ? "Без названия" : proto.getName(), true, true));
+						SchemeProtoElement proto = parent_group.schemeProtoElements()[i];
+//						proto.scheme_proto_group = parent_group;
+						vec.add(new ObjectResourceTreeNode(proto, proto.name().length() == 0 ? "Без названия" : proto.name(), true, true));
 					}
 				}
 			}

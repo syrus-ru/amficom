@@ -1,17 +1,15 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.util.Iterator;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ISM.MeasurementPort;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.client_.general.ui_.*;
+import com.syrus.AMFICOM.scheme.AbstractSchemePortController;
+import com.syrus.AMFICOM.scheme.corba.*;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class KISPortsPanel extends GeneralPanel
@@ -19,7 +17,9 @@ public class KISPortsPanel extends GeneralPanel
 	SchemeElement element;
 
 	JLabel idLabel = new JLabel();
-	private ObjectResourceComboBox portBox = new ObjectResourceComboBox(SchemePort.typ, false);
+	private ObjComboBox portBox = new ObjComboBox(
+			 AbstractSchemePortController.getInstance(),
+			 AbstractSchemePortController.KEY_NAME);
 	private JPanel topPanel = new JPanel();
 	private JPanel mainPanel = new JPanel();
 	private JPanel controlsPanel = new JPanel();
@@ -50,7 +50,7 @@ public class KISPortsPanel extends GeneralPanel
 	public KISPortsPanel(SchemeElement element)
 	{
 		this();
-		setObjectResource(element);
+		setObject(element);
 	}
 
 	private void jbInit() throws Exception
@@ -106,38 +106,17 @@ public class KISPortsPanel extends GeneralPanel
 		apgp.setContext(aContext);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return element;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		element = (SchemeElement)or;
 
-		portBox.setContents(element.getPorts().iterator(), false);
-		SchemePort prt = (SchemePort)portBox.getSelectedObjectResource();
-		pgp.setObjectResource(prt);
-		accessPortCheckBox.setSelected(false);
-		apgp.setObjectResource(null);
-		set_AP_Selected(false);
-
-		if(element.kis != null)
-		{
-			for(Iterator it = element.getMeasurementPorts().iterator(); it.hasNext();)
-			{
-				MeasurementPort ap = (MeasurementPort)it.next();
-				if (ap != null && prt != null)
-				{
-					if(ap.portId.equals(prt.getId()))
-					{
-						set_AP_Selected(true);
-						accessPortCheckBox.setSelected(true);
-						apgp.setObjectResource(ap);
-					}
-				}
-			}
-		}
+		portBox.removeAll();
+		portBox.addElements(SchemeUtils.getPorts(element));
 	}
 
 	public boolean modify()
@@ -154,25 +133,20 @@ public class KISPortsPanel extends GeneralPanel
 
 	void portBox_actionPerformed(ActionEvent e)
 	{
-		SchemePort prt = (SchemePort)portBox.getSelectedObjectResource();
-		pgp.setObjectResource(prt);
+		SchemePort prt = (SchemePort)portBox.getSelectedItem();
+		pgp.setObject(prt);
 
-		accessPortCheckBox.setSelected(false);
-		apgp.setObjectResource(null);
-		set_AP_Selected(false);
-
-		for(Iterator it = element.getMeasurementPorts().iterator(); it.hasNext();)
+		if (prt.measurementPort() != null)
 		{
-			MeasurementPort ap = (MeasurementPort)it.next();
-			if (ap != null && prt != null)
-			{
-				if(ap.portId.equals(prt.getId()))
-				{
-					set_AP_Selected(true);
-					accessPortCheckBox.setSelected(true);
-					apgp.setObjectResource(ap);
-				}
-			}
+			set_AP_Selected(true);
+			accessPortCheckBox.setSelected(true);
+			apgp.setObject(prt);
+		}
+		else
+		{
+			accessPortCheckBox.setSelected(false);
+			apgp.setObject(null);
+			set_AP_Selected(false);
 		}
 	}
 

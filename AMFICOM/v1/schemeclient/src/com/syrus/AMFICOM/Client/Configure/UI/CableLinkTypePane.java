@@ -4,21 +4,23 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
+import com.syrus.AMFICOM.general.*;
 import oracle.jdeveloper.layout.XYConstraints;
 
-public class CableLinkTypePane extends PropertiesPanel
+public class CableLinkTypePane extends JPanel implements ObjectResourcePropertiesPane
 {
 	public ApplicationContext aContext;
 
-	CableLinkTypeGeneralPanel gPanel = new CableLinkTypeGeneralPanel();
+	AbstractLinkTypeGeneralPanel gPanel = new AbstractLinkTypeGeneralPanel();
 	CableLinkTypeFibrePanel fPanel = new CableLinkTypeFibrePanel();
-	CableLinkTypeCharacteristicsPanel chPanel = new CableLinkTypeCharacteristicsPanel();
+	LinkTypeCharacteristicsPanel chPanel = new LinkTypeCharacteristicsPanel();
 
 	CableLinkType linkType;
 
@@ -40,10 +42,10 @@ public class CableLinkTypePane extends PropertiesPanel
 		}
 	}
 
-	public CableLinkTypePane(CableLinkType l)
+	public CableLinkTypePane(LinkType l)
 	{
 		this();
-		setObjectResource(l);
+		setObject(l);
 	}
 
 	private void jbInit() throws Exception
@@ -67,18 +69,18 @@ public class CableLinkTypePane extends PropertiesPanel
 		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return linkType;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		this.linkType = (CableLinkType)or;
 
-		gPanel.setObjectResource(linkType);
-		fPanel.setObjectResource(linkType);
-		chPanel.setObjectResource(linkType);
+		gPanel.setObject(linkType);
+		fPanel.setObject(linkType);
+		chPanel.setObject(linkType);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -100,25 +102,19 @@ public class CableLinkTypePane extends PropertiesPanel
 
 	public boolean save()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-		{
-			return false;
-		}
-
 		if(modify())
 		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			String[] ltId = new String[1];
-			ltId[0] = linkType.getId();
-			dataSource.SaveCableLinkTypes(ltId);
-			return true;
+			try {
+				ConfigurationStorableObjectPool.putStorableObject(linkType);
+				return true;
+			}
+			catch (ApplicationException ex) {
+				ex.printStackTrace();
+			}
 		}
-		else
-		{
-			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
-		}
+		JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelConfig.getString("err_incorrect_data_input"));
 		return false;
 	}
 
@@ -127,25 +123,18 @@ public class CableLinkTypePane extends PropertiesPanel
 		return false;
 	}
 
+	public boolean cancel()
+	{
+		return false;
+	}
+
 	public boolean delete()
 	{
-	/*	if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-			return false;
-
-		aContext.getDataSourceInterface().RemoveCableLinks(new String[] {linkType.getId()});
-		Pool.remove(CableLinkType.typ, linkType.getId());
-*/
-		return true;
+		return false;
 	}
 
 	public boolean create()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
-			return false;
-
 		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый тип");
 		dialog.setSize(dialog.preferredSize);
 
@@ -157,17 +146,24 @@ public class CableLinkTypePane extends PropertiesPanel
 		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
 		{
 			String name = dialog.getName();
-			CableLinkType new_type = new CableLinkType();
-			new_type.setChanged(true);
-			new_type.name = name;
-			new_type.linkClass = "cable";
-			new_type.modified = System.currentTimeMillis();
-			new_type.id = aContext.getDataSourceInterface().GetUId(CableLinkType.typ);
+			Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+			try {
+				CableLinkType new_type = CableLinkType.createInstance(
+						user_id,
+						"",
+						"",
+						name,
+						LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER,
+						"",
+						"",
+						null);
 
-			setObjectResource(new_type);
-
-			Pool.put(CableLinkType.typ, new_type.getId(), new_type);
-			return true;
+				setObject(new_type);
+				return true;
+			}
+			catch (CreateObjectException ex) {
+				ex.printStackTrace();
+			}
 		}
 		return false;
 	}

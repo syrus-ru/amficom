@@ -6,13 +6,13 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.MeasurementPort;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.ApplicationException;
 import oracle.jdeveloper.layout.XYConstraints;
 
-public class MeasurementPortPane extends PropertiesPanel
+public class MeasurementPortPane extends JPanel implements ObjectResourcePropertiesPane
 {
 	public ApplicationContext aContext;
 
@@ -42,7 +42,7 @@ public class MeasurementPortPane extends PropertiesPanel
 	public MeasurementPortPane(MeasurementPort p)
 	{
 		this();
-		setObjectResource(p);
+		setObject(p);
 	}
 
 	private void jbInit() throws Exception
@@ -65,17 +65,17 @@ public class MeasurementPortPane extends PropertiesPanel
 		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return port;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		this.port = (MeasurementPort )or;
 
-		gPanel.setObjectResource(port);
-		chPanel.setObjectResource(port);
+		gPanel.setObject(port);
+		chPanel.setObject(port);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -95,23 +95,19 @@ public class MeasurementPortPane extends PropertiesPanel
 
 	public boolean save()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogCMediting))
-		{
-			return false;
-		}
-
 		if(modify())
 		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			dataSource.SaveAccessPort(port.getId());
-			return true;
+			try {
+				ConfigurationStorableObjectPool.putStorableObject(port);
+				return true;
+			}
+			catch (ApplicationException ex) {
+				ex.printStackTrace();
+			}
 		}
-		else
-		{
-			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
-		}
+		JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelConfig.getString("err_incorrect_data_input"));
 		return false;
 	}
 
@@ -122,16 +118,6 @@ public class MeasurementPortPane extends PropertiesPanel
 
 	public boolean delete()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogCMediting))
-			return false;
-
-		String []s = new String[1];
-
-		s[0] = port.id;
-		aContext.getDataSourceInterface().RemoveAccessPorts(s);
-
 		return true;
 	}
 
@@ -140,20 +126,14 @@ public class MeasurementPortPane extends PropertiesPanel
 		return false;
 	}
 
+	public boolean cancel()
+	{
+		return false;
+	}
+
 	void saveButton_actionPerformed(ActionEvent e)
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogCMediting))
-		{
-			return;
-		}
-
-		if(modify())
-		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			dataSource.SaveAccessPort(port.getId());
-		}
+		save();
 	}
 
 }

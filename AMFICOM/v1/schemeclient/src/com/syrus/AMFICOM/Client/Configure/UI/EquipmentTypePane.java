@@ -1,23 +1,23 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.BorderLayout;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement;
 
-public class EquipmentTypePane extends PropertiesPanel
+public class EquipmentTypePane extends JPanel implements ObjectResourcePropertiesPane
 {
 	public ApplicationContext aContext;
 
 	EquipmentTypeGeneralPanel gPanel = new EquipmentTypeGeneralPanel();
 	EquipmentTypeCharacteristicsPanel chPanel = new EquipmentTypeCharacteristicsPanel();
 
+	SchemeProtoElement proto;
 	EquipmentType eq;
 
 	public JTabbedPane tabbedPane = new JTabbedPane();
@@ -35,10 +35,10 @@ public class EquipmentTypePane extends PropertiesPanel
 		}
 	}
 
-	public EquipmentTypePane(ProtoElement pe)
+	public EquipmentTypePane(SchemeProtoElement pe)
 	{
 		this();
-		setObjectResource(pe);
+		setObject(pe);
 	}
 
 	private void jbInit() throws Exception
@@ -52,20 +52,18 @@ public class EquipmentTypePane extends PropertiesPanel
 		tabbedPane.add(chPanel.getName(), chPanel);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
-		return eq;
+		return proto;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
-		if (or instanceof EquipmentType)
-			this.eq = (EquipmentType)or;
-		else if (or instanceof ProtoElement)
-			this.eq = (EquipmentType)Pool.get(EquipmentType.typ, ((ProtoElement)or).equipmentTypeId);
+		proto = (SchemeProtoElement)or;
+		eq = proto.equipmentTypeImpl();
 
-		gPanel.setObjectResource(eq);
-		chPanel.setObjectResource(eq);
+		gPanel.setObject(proto);
+		chPanel.setObject(proto);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -85,29 +83,28 @@ public class EquipmentTypePane extends PropertiesPanel
 
 	public boolean save()
 	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-		{
-			return false;
-		}
-
 		if(modify())
 		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		String[] s = new String[1];
-		s[0] = eq.getId();
-			dataSource.SaveEquipmentTypes(s);
-			return true;
+			try {
+				ConfigurationStorableObjectPool.putStorableObject(eq);
+				return true;
+			}
+			catch (ApplicationException ex) {
+				ex.printStackTrace();
+			}
 		}
-		else
-		{
-			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
-		}
+		JOptionPane.showMessageDialog(
+				Environment.getActiveWindow(),
+				LangModelConfig.getString("err_incorrect_data_input"));
 		return false;
 	}
 
 	public boolean open()
+	{
+		return false;
+	}
+
+	public boolean cancel()
 	{
 		return false;
 	}

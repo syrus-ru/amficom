@@ -4,19 +4,28 @@ import java.awt.BorderLayout;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
+import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.corba.*;
+
 
 public class PortTypeCharacteristicsPanel extends GeneralPanel
 {
-	PortType portType;
+	PortType type;
 
-	CharacteristicsPanel charPane = new CharacteristicsPanel();
+	CharacteristicsPanel charPane;
+
+	private static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
+	};
 
 	public PortTypeCharacteristicsPanel()
 	{
 		super();
+
 		try
 		{
 			jbInit();
@@ -27,10 +36,10 @@ public class PortTypeCharacteristicsPanel extends GeneralPanel
 		}
 	}
 
-	public PortTypeCharacteristicsPanel(PortType p)
+	public PortTypeCharacteristicsPanel(PortType type)
 	{
 		this();
-		setObjectResource(p);
+		setObject(type);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -41,23 +50,28 @@ public class PortTypeCharacteristicsPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
+		charPane = new CharacteristicsPanel();
 		setName(LangModelConfig.getString("label_chars"));
-
 		this.setLayout(new BorderLayout());
 		this.add(charPane, BorderLayout.CENTER);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
-		return portType;
+		return type;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
-		portType = (PortType)or;
+		this.type = (PortType)or;
 
-		if(portType != null)
-			charPane.setCharHash(portType);
+		for (int i = 0; i < sorts.length; i++)
+			charPane.setTypeSortMapping(
+					sorts[i],
+					CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE,
+					type.getId(),
+					false);
+		charPane.addCharacteristics(type.getCharacteristics(), type.getId());
 	}
 
 	public boolean modify()

@@ -1,22 +1,32 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.BorderLayout;
+import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
+import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
+import com.syrus.AMFICOM.scheme.corba.SchemeLink;
+import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.general.*;
 
 public class LinkCharacteristicsPanel extends GeneralPanel
 {
 	SchemeLink link;
+	Identifier linkId;
 
-	CharacteristicsPanel charPane = new CharacteristicsPanel();
+	CharacteristicsPanel charPane;
+	private static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
+			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL
+	};
 
 	public LinkCharacteristicsPanel()
 	{
 		super();
+
 		try
 		{
 			jbInit();
@@ -30,7 +40,7 @@ public class LinkCharacteristicsPanel extends GeneralPanel
 	public LinkCharacteristicsPanel(SchemeLink l)
 	{
 		this();
-		setObjectResource(l);
+		setObject(l);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -41,23 +51,39 @@ public class LinkCharacteristicsPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
+		charPane = new CharacteristicsPanel();
 		setName(LangModelConfig.getString("label_chars"));
-
 		this.setLayout(new BorderLayout());
 		this.add(charPane, BorderLayout.CENTER);
 	}
 
-	public ObjectResource getObjectResource()
+	public Object getObject()
 	{
 		return link;
 	}
 
-	public void setObjectResource(ObjectResource or)
+	public void setObject(Object or)
 	{
 		link = (SchemeLink)or;
+		linkId = new Identifier(link.id().getTransferable());
 
-		if(link.link != null)
-			charPane.setCharHash(link.link);
+		for (int i = 0; i < sorts.length; i++)
+			charPane.setTypeSortMapping(
+					sorts[i],
+					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMELINK,
+					linkId,
+					false);
+		charPane.addCharacteristics(link.characteristicsImpl(), linkId);
+
+		if (link.link() != null)
+		{
+			charPane.setTypeSortMapping(
+					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+					CharacteristicSort.CHARACTERISTIC_SORT_LINK,
+					link.linkImpl().getId(),
+					true);
+			charPane.addCharacteristics(link.linkImpl().getCharacteristics(), link.linkImpl().getId());
+		}
 	}
 
 	public boolean modify()
