@@ -91,8 +91,8 @@ module corba {
 	};
 
 	abstract interface IdentifierGeneratorServer {
-		Identifier_Transferable getGeneratedIdentifier(in wstring entity) raises (AMFICOMRemoteException);
-		IdentifierSeq_Transferable getGeneratedIdentifierRange(in wstring entity, in long size) raises (AMFICOMRemoteException);
+		Identifier_Transferable getGeneratedIdentifier(in unsigned short entity) raises (AMFICOMRemoteException);
+		IdentifierSeq_Transferable getGeneratedIdentifierRange(in unsigned short entity, in unsigned long size) raises (AMFICOMRemoteException);
 	};
 
 };

@@ -267,6 +267,21 @@ module corba {
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable mcm_ids;
 	};
 
+	struct Domain_Transferable {
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+	  long long created;
+	  long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+
+		wstring name;
+		wstring description;
+		
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
+	};
+
 	enum UserSort {
 		USER_SORT_REGULAR,
 		USER_SORT_SERVER,
