@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.60 2004/12/10 13:48:24 max Exp $
+ * $Id: StorableObjectDatabase.java,v 1.61 2004/12/10 16:06:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2004/12/10 13:48:24 $
- * @author $Author: max $
+ * @version $Revision: 1.61 $, $Date: 2004/12/10 16:06:49 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -81,6 +81,10 @@ public abstract class StorableObjectDatabase {
     
     public static final int MODE_INSERT = -10;
     public static final int MODE_UPDATE = -11;
+    
+    protected static final int SIZE_CODENAME_COLUMN 	= 32;
+    protected static final int SIZE_NAME_COLUMN			= 64;
+    protected static final int SIZE_DESCRIPTION_COLUMN 	= 256;
     
 
 	//protected static Connection	connection;
@@ -218,7 +222,7 @@ public abstract class StorableObjectDatabase {
 	
 	public abstract void insert(List storableObjects) throws IllegalDataException, CreateObjectException;
 
-	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException, UpdateObjectException;
+	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
 
 	public abstract List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException;
 
