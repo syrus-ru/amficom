@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.21 2004/10/17 14:34:11 bob Exp $
+ * $Id: ParameterType.java,v 1.22 2004/10/21 10:34:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,13 +18,13 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ParameterTypeSort;
 import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/10/17 14:34:11 $
+ * @version $Revision: 1.22 $, $Date: 2004/10/21 10:34:35 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -102,7 +102,7 @@ public class ParameterType extends StorableObjectType {
 														 codename,
 														 description,
 														 name,
-														 ParameterTypeSort._PARAMETERTYPE_DATA);
+														 DataType._DATA_TYPE_DATA);
 	}
 	
 	/**
@@ -120,7 +120,7 @@ public class ParameterType extends StorableObjectType {
 												 String codename,
 												 String description,
 												 String name,
-												 ParameterTypeSort sort) {
+												 DataType sort) {
 		return new ParameterType(id,
 						 creatorId,
 						 codename,
@@ -157,7 +157,7 @@ public class ParameterType extends StorableObjectType {
 																					new String(super.codename),
 																					(super.description != null) ? (new String(super.description)) : "",
 																					new String(this.name),
-																					ParameterTypeSort.from_int(this.sort));
+																					DataType.from_int(this.sort));
 	}
 	
 
@@ -165,8 +165,8 @@ public class ParameterType extends StorableObjectType {
 		return this.name;
 	}
 	
-	public ParameterTypeSort getSort(){
-		return ParameterTypeSort.from_int(this.sort);
+	public DataType getSort(){
+		return DataType.from_int(this.sort);
 	}
 	
 	protected synchronized void setAttributes(Date created,

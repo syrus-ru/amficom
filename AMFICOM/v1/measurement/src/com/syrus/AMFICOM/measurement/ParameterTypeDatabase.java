@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.31 2004/10/21 05:33:10 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.32 2004/10/21 10:34:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.sql.PreparedStatement;
@@ -26,12 +25,12 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.measurement.corba.ParameterTypeSort;
+import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/10/21 05:33:10 $
+ * @version $Revision: 1.32 $, $Date: 2004/10/21 10:34:35 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -115,7 +114,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
 		ParameterType parameterType = (storableObject == null) ? 
-					new ParameterType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, ParameterTypeSort._PARAMETERTYPE_DATA) : 
+					new ParameterType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, DataType._DATA_TYPE_DATA) : 
 					fromStorableObject(storableObject);
 		/**
 		 * @todo when change DB Identifier model ,change getString() to getLong()
