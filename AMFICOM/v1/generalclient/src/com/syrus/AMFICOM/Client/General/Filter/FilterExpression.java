@@ -1,13 +1,23 @@
+/*
+ * $Id: FilterExpression.java,v 1.10 2004/09/27 10:42:21 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.Filter;
 
-import java.util.List;
-import java.util.ArrayList;
-
-import java.io.IOException;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
-
 import com.syrus.AMFICOM.filter.*;
+import java.io.IOException;
+import java.util.*;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2004/09/27 10:42:21 $
+ * @module generalclient_v1
+ */
 public class FilterExpression extends StubResource implements FilterExpressionInterface
 {
 	static public final String typ = "filterexpression";
@@ -90,11 +100,6 @@ public class FilterExpression extends StubResource implements FilterExpressionIn
 	public String getColumnName()
 	{
 		return fe.getColumnName();
-	}
-
-	public String getPropertyPaneClassName()
-	{
-		return "";
 	}
 
 	public Object clone()

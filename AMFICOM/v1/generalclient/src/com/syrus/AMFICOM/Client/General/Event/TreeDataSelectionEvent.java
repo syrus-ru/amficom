@@ -1,17 +1,30 @@
-package com.syrus.AMFICOM.Client.General.Event;
+/*
+ * $Id: TreeDataSelectionEvent.java,v 1.7 2004/09/27 10:44:52 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
 
-import java.util.Collection;
+package com.syrus.AMFICOM.Client.General.Event;
 
 import java.util.List;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2004/09/27 10:44:52 $
+ * @module generalclient_v1
+ */
 public class TreeDataSelectionEvent extends OperationEvent
 {
 	private Class dataClass;
+
 	private int selected;
 	
 	private List list;
 
 	private Object param = null;
+
 	private Object selectedObject = null;
 
 	public static final String type = "treedataselectionevent";
@@ -24,17 +37,17 @@ public class TreeDataSelectionEvent extends OperationEvent
 		this.selected = selected;
 		this.selectedObject = selectedObject;
 	}
-	
+
 	public void setParam(Object param)
 	{
 		this.param = param;
 	}
-	
+
 	public Object getParam()
 	{
 		return this.param;
 	}
-	
+
 	public List getList()
 	{
 		return this.list;
@@ -49,10 +62,12 @@ public class TreeDataSelectionEvent extends OperationEvent
 	{
 		return this.selected;
 	}
+
 	/**
 	 * @return Returns the selectedObject.
 	 */
-	public Object getSelectedObject() {
+	public Object getSelectedObject()
+	{
 		return this.selectedObject;
 	}
 }
