@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.19 2004/08/10 19:05:19 arseniy Exp $
+ * $Id: Measurement.java,v 1.20 2004/08/14 19:40:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/10 19:05:19 $
+ * @version $Revision: 1.20 $, $Date: 2004/08/14 19:40:41 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -154,7 +154,7 @@ public class Measurement extends Action {
 		return this.testId;
 	}
 
-	public synchronized void setStatus(MeasurementStatus status, Identifier modifierId) throws UpdateObjectException {
+	public synchronized void updateStatus(MeasurementStatus status, Identifier modifierId) throws UpdateObjectException {
 		this.status = status.value();
 		super.modified = new Date(System.currentTimeMillis());
 		super.modifierId = (Identifier)modifierId.clone();
