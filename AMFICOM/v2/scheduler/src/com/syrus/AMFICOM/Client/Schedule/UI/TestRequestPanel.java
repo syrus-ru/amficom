@@ -202,7 +202,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 	}
 
 	public TestRequest getParameters() {
-		System.out.println(getClass().getName() + " getParameters()"); //$NON-NLS-1$
+		//System.out.println(getClass().getName() + " getParameters()"); //$NON-NLS-1$
 		DataSourceInterface dsi = this.aContext.getDataSourceInterface();
 		// if test request have saved tests , create new testRequest for new
 		// test
@@ -211,14 +211,14 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		if (this.testRequest == null)
 			needNewReq = true;
 		else {
-			System.out.println("current TestRequest:" + this.testRequest.getId()); //$NON-NLS-1$
+		//	System.out.println("current TestRequest:" + this.testRequest.getId()); //$NON-NLS-1$
 			java.util.List list = this.testRequest.getTestIds();
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				String testId = (String) it.next();
 				Test test = (Test) Pool.get(Test.TYPE, testId);
-				System.out.println("testId:" + testId); //$NON-NLS-1$
+	//			System.out.println("testId:" + testId); //$NON-NLS-1$
 				if ((!test.isChanged()) && (testId.length() > 0)) {
-					System.out.println("saved test exists,"); //$NON-NLS-1$
+	//				System.out.println("saved test exists,"); //$NON-NLS-1$
 					needNewReq = true;
 					break;
 				}
@@ -240,12 +240,12 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		}
 
 		if (needNewReq) {
-			System.out.println("new TestRequest required");
+		//	System.out.println("new TestRequest required");
 			this.testRequest = new TestRequest(dsi.GetUId(TestRequest.TYPE));
-			System.out.println("set treqId:" + this.testRequest.getId());
+		//	System.out.println("set treqId:" + this.testRequest.getId());
 			this.testRequest.setName(LangModelSchedule.getString("Test created at") + " "
 					+ UIStorage.SDF.format(new Date(System.currentTimeMillis())));
-			System.out.println("set name:" + this.testRequest.getName());
+			//System.out.println("set name:" + this.testRequest.getName());
 			this.testRequest.setUserId(this.aContext.getSessionInterface().getUserId());
 			//testRequest = newTestRequest;
 			this.testRequest.setChanged(true);

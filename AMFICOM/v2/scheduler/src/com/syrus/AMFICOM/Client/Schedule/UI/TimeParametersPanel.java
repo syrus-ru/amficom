@@ -115,7 +115,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 	}
 
 	public void setTestRequest(TestRequest treq) {
-		System.out.println("set Test Request" + treq.getId());
+		//System.out.println("set Test Request" + treq.getId());
 		//		this.treq = treq;
 	}
 

@@ -9,6 +9,10 @@ import java.awt.*;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+//import javax.swing.event.TableModelEvent;
+//import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
 
 import com.syrus.AMFICOM.CORBA.Constant.AlarmTypeConstants;
@@ -44,16 +48,21 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 				Color color = table.getBackground();
 				TestTableModel model = (TestTableModel) table.getModel();
 
-				ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();
+				ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();				
 				if (testAlarms.length != 0) {
+					//System.out.println("testAlarms.length:"+testAlarms.length);
 					for (int i = 0; i < testAlarms.length; i++) {
-						Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[i].alarm_id);
+						Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[i].alarm_id);						
+						//System.out.println("alarm:"+alarm.type_id);
 						if (alarm != null) {
-							System.out.println("alarm.type_id:" + alarm.type_id);
+							//System.out.println("alarm.type_id:" + alarm.type_id);
 							if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
+								//System.out.println("ID_RTU_TEST_ALARM");
 								color = Color.RED;
-							} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING))
+							} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING)){
+								//System.out.println("ID_RTU_TEST_WARNING");
 								color = Color.YELLOW;
+							}
 						}
 					}
 				}
@@ -377,7 +386,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 				for (Iterator it = tests.iterator(); it.hasNext();) {
 					Test test = (Test) it.next();
 					if (model.getObjectResourceIndex(test) < 0) {
-						System.out.println("add test:"+test.getId());
+						//System.out.println("add test:" + test.getId());
 						TestTableRow row = new TestTableRow(test);
 						model.addRow(row);
 					}
@@ -391,17 +400,20 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 	private JPanel getPanel() {
 		if (this.panel == null) {
 			this.panel = new JPanel(new BorderLayout());
-
 			TestTableModel tableModel = new TestTableModel();
 			this.listTable = new ObjectResourceTable(tableModel);
-			this.listTable.addMouseListener(new MouseAdapter() {
+			ListSelectionModel rowSM = this.listTable.getSelectionModel();
+			rowSM.addListSelectionListener(new ListSelectionListener() {
 
-				public void mouseClicked(MouseEvent evt) {
-					final JTable table = ((JTable) evt.getSource());
-					if (SwingUtilities.isLeftMouseButton(evt)) {
-						int rowIndex = table.getSelectedRow();
-						TestTableModel model = (TestTableModel) table.getModel();
-						TestTableRow line = (TestTableRow) model.getRow(rowIndex);
+				public void valueChanged(ListSelectionEvent e) {
+					if (e.getValueIsAdjusting())
+						return;
+
+					ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+					if (!lsm.isSelectionEmpty()) {
+						int selectedRow = lsm.getMinSelectionIndex();
+						TestTableModel model = (TestTableModel) TableFrame.this.listTable.getModel();
+						TestTableRow line = (TestTableRow) model.getRow(selectedRow);
 						if (model != null) {
 							//System.out.println("test:" + line.getTest());
 							Test test = (Test) line.getObjectResource();
@@ -410,8 +422,38 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 									.notify(new TestUpdateEvent(this, test, TestUpdateEvent.TEST_SELECTED_EVENT));
 							//System.out.println("send test:"+test.getId());
 							//TableFrame.this.skipTestUpdate = false;
+
 						}
-					} else if (SwingUtilities.isRightMouseButton(evt)) {
+					}
+				}
+
+			});
+
+			this.listTable.addMouseListener(new MouseAdapter() {
+
+				public void mousePressed(MouseEvent e) {
+					mouseClicked(e);
+				}
+
+				public void mouseClicked(MouseEvent evt) {
+					final JTable table = ((JTable) evt.getSource());
+					//					if (SwingUtilities.isLeftMouseButton(evt)) {
+					//						int rowIndex = table.getSelectedRow();
+					//						TestTableModel model = (TestTableModel) table.getModel();
+					//						TestTableRow line = (TestTableRow)
+					// model.getRow(rowIndex);
+					//						if (model != null) {
+					//							//System.out.println("test:" + line.getTest());
+					//							Test test = (Test) line.getObjectResource();
+					//							//TableFrame.this.skipTestUpdate = true;
+					//							TableFrame.this.dispatcher
+					//									.notify(new TestUpdateEvent(this, test,
+					// TestUpdateEvent.TEST_SELECTED_EVENT));
+					//							//System.out.println("send test:"+test.getId());
+					//							//TableFrame.this.skipTestUpdate = false;
+					//						}
+					//					} else
+					if (SwingUtilities.isRightMouseButton(evt)) {
 						final int[] rowIndices = table.getSelectedRows();
 						if ((rowIndices != null) && (rowIndices.length > 0)) {
 							final TestTableModel model = (TestTableModel) table.getModel();
@@ -470,64 +512,10 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 				}
 			}
 			JTableHeader header = this.listTable.getTableHeader();
-			//			header.addMouseListener(new MouseAdapter() {
-			//
-			//				public void mouseClicked(MouseEvent evt) {
-			//					JTableHeader header = (JTableHeader) evt.getSource();
-			//					JTable table = header.getTable();
-			//					TableColumnModel colModel = table.getColumnModel();
-			//
-			//					// The index of the column whose header was clicked
-			//					int columnIndex = colModel.getColumnIndexAtX(evt.getX());
-			//					int mColIndex = table.convertColumnIndexToModel(columnIndex);
-			//					TestTableModel model = (TestTableModel) table.getModel();
-			//					String s;
-			//					if (model.getSortOrder(mColIndex))
-			//						s = " v "; //$NON-NLS-1$
-			//					else
-			//						s = " ^ "; //$NON-NLS-1$
-			//					table.getColumnModel().getColumn(columnIndex)
-			//							.setHeaderValue(s + model.getColumnName(mColIndex) + s);
-			//
-			//					for (int i = 0; i < model.getColumnCount(); i++) {
-			//						if (i != mColIndex)
-			//							table.getColumnModel().getColumn(table.convertColumnIndexToView(i))
-			//									.setHeaderValue(model.getColumnName(i));
-			//					}
-			//
-			//					// Force the header to resize and repaint itself
-			//					header.resizeAndRepaint();
-			//					model.sortRows(mColIndex);
-			//
-			//					// Return if not clicked on any column header
-			//					if (columnIndex == -1) { return; }
-			//
-			//					// Determine if mouse was clicked between column heads
-			//					Rectangle headerRect =
-			// table.getTableHeader().getHeaderRect(columnIndex);
-			//					if (columnIndex == 0) {
-			//						headerRect.width -= 3; // Hard-coded constant
-			//					} else {
-			//						headerRect.grow(-3, 0); // Hard-coded constant
-			//					}
-			//					if (!headerRect.contains(evt.getX(), evt.getY())) {
-			//						// Mouse was clicked between column heads
-			//						// vColIndex is the column head closest to the click
-			//
-			//						// vLeftColIndex is the column head to the left of the
-			//						// click
-			//						int vLeftColIndex = columnIndex;
-			//						if (evt.getX() < headerRect.x) {
-			//							vLeftColIndex--;
-			//						}
-			//					}
-			//				}
-			//			});
 
 			this.panel.add(header, BorderLayout.NORTH);
 			this.panel.add(new JScrollPane(this.listTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 											ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
-			//panel.add(listPane, BorderLayout.CENTER);
 
 		}
 		return this.panel;

@@ -101,7 +101,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	public static final String		PARAMETER_RESOLUTION		= PARAMETER_PREFIX + RESOLUTION;	//$NON-NLS-1$
 	public static final String		PARAMETER_WAVELENGHT		= "ref_wvlen";						//$NON-NLS-1$
 
-	private static final boolean	DEBUG						= true;
+	private static final boolean	DEBUG						= false;
 
 	ListNumberComparator			comparator					= new ListNumberComparator();
 	AComboBox						maxDistanceComboBox			= new AComboBox();
@@ -130,10 +130,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	}
 
 	public ReflectometryTestPanel(ApplicationContext aContext, AccessPort port) {
-		this.aContext = aContext;
-		initModule(aContext.getDispatcher());
-		init();
-		setPort(port);
+		this(aContext, port, null);
 	}
 
 	public ReflectometryTestPanel(ApplicationContext aContext, AccessPort port, Test test) {
@@ -263,7 +260,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				String distanceStr = distance.toString();
 				if ((distanceStr == null) || (distanceStr.length() == 0))
 					throw new IllegalArgumentException(LangModelSchedule.getString("distance_is_not_set"));
-				System.out.println("distanceStr:" + distanceStr);
+				//System.out.println("distanceStr:" + distanceStr);
 				apt = (ActionParameterType) testType.getSortedArguments().get(PARAMETER_MAX_DISTANCE);
 				byteArray = new ByteArray(Double.parseDouble(distanceStr));
 				Parameter maxDistanceParam = new Parameter(dsi.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
@@ -273,7 +270,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				ioe.printStackTrace();
 			} catch (IllegalArgumentException e) {
 				String message = e.getMessage();
-				System.out.println(message);
+				//System.out.println(message);
+				Environment.log(Environment.LOG_LEVEL_WARNING, message );
 				JOptionPane.showMessageDialog(this, message, LangModelSchedule.getString("Error"),
 												JOptionPane.OK_OPTION);
 				tas = null;
@@ -288,9 +286,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			if (tue.testSelected) {
-				setTest(tue.test);
-			}
+			//if (tue.testSelected) {
+			setTest(tue.test);
+			//}
 		}
 	}
 
@@ -395,36 +393,36 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	}
 
 	public void setTest(Test test) {
-//		System.out.println("test:"+(test==null?" 'null' ":test.getId()));
-//		System.out.println("this.test:"+(this.test==null?" 'null' ":this.test.getId()));
-		if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
-//			System.out.println("RefPanel - select test");
-			this.test = test;
-			TestArgumentSet tas = test.getTestArgumentSet();
-			if (tas == null)
-				tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
-			if (tas != null) {
-				setTestArgumentSet(tas);
-			} else {
-				TestSetup testSetup = null;
-				if ((test.getTestSetupId() != null) || (test.getTestSetupId().length() > 0))
-					testSetup = (TestSetup) Pool.get(TestSetup.typ, test.getTestSetupId());
-				if (testSetup == null)
-					testSetup = test.getTestSetup();
-				if (testSetup == null) {
-					if (test.getTestArgumentSetId() != null)
-						tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
-					if (tas == null) {
-						this.aContext.getDataSourceInterface().LoadTestArgumentSets(
-																					new String[] { test
-																							.getTestArgumentSetId()});
-						tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
-					}
-				} else
-					setTestSetup(testSetup);
+		//System.out.println("test:" + (test == null ? " 'null' " : test.getId()));
+		//System.out.println("this.test:" + (this.test == null ? " 'null' " : this.test.getId()));
+		if (test != null) {
+			/**
+			 * FIXME fix set the same test
+			 */
+			//if ((this.test == null) || (!this.test.getId().equals(test.getId()))) 
+			{
+			//	System.out.println("RefPanel - select test");
+				this.test = test;
+				TestArgumentSet tas = test.getTestArgumentSet();
+				if (tas == null)
+					tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
+				if (tas != null) {
+					setTestArgumentSet(tas);
+				} else {
+					TestSetup testSetup = null;
+					if ((test.getTestSetupId() != null) || (test.getTestSetupId().length() > 0))
+						testSetup = (TestSetup) Pool.get(TestSetup.typ, test.getTestSetupId());
+					if (testSetup == null)
+						testSetup = test.getTestSetup();
+					if (testSetup == null) {
+						if (test.getTestArgumentSetId() != null)
+							tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
+					} else
+						setTestSetup(testSetup);
 
-			}
-		} //else System.out.println("RefPanel - not select test");
+				}
+			} //else System.out.println("RefPanel - not select test");
+		}
 
 	}
 
@@ -486,13 +484,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	}
 
 	public void setTestSetup(TestSetup testSetup) {
-		DataSourceInterface dsi = this.aContext.getDataSourceInterface();
+		//DataSourceInterface dsi = this.aContext.getDataSourceInterface();
 
 		TestArgumentSet tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, testSetup.getTestArgumentSetId());
-		if (tas == null) {
-			dsi.LoadTestArgumentSets(new String[] { testSetup.getTestArgumentSetId()});
-			tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, testSetup.getTestArgumentSetId());
-		}
+//		if (tas == null) {
+//			dsi.LoadTestArgumentSets(new String[] { testSetup.getTestArgumentSetId()});
+//			tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, testSetup.getTestArgumentSetId());
+//		}
 		/**
 		 * @todo get Analysis , Evaluation from TestSetup
 		 */

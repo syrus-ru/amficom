@@ -11,10 +11,9 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
-public class TestRequestFrame extends JInternalFrame implements
-		OperationListener {
+public class TestRequestFrame extends JInternalFrame implements OperationListener {
 
-		//private ApplicationContext aContext;
+	//private ApplicationContext aContext;
 	private Dispatcher			dispatcher;
 	private Test				receivedTest;
 	private TestRequestPanel	panel;
@@ -27,8 +26,8 @@ public class TestRequestFrame extends JInternalFrame implements
 		setClosable(true);
 		setIconifiable(true);
 
-		panel = new TestRequestPanel(aContext);
-		this.getContentPane().add(panel, BorderLayout.CENTER);
+		this.panel = new TestRequestPanel(aContext);
+		this.getContentPane().add(this.panel, BorderLayout.CENTER);
 		this.dispatcher = aContext.getDispatcher();
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 
@@ -36,8 +35,7 @@ public class TestRequestFrame extends JInternalFrame implements
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:"
-				+ commandName, getClass().getName());
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		//		int id = ae.getID();
 		//		Object obj = ae.getSource();
 
@@ -46,16 +44,15 @@ public class TestRequestFrame extends JInternalFrame implements
 			this.receivedTest = tue.test;
 
 			if (tue.testSelected) {
-				
-				TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE,
-						this.receivedTest.getRequestId());
+
+				TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE, this.receivedTest.getRequestId());
 				if (treq == null)
-					System.out
-							.println("TestRequestFrame.operationPerformed() treq not found id " //$NON-NLS-1$
-									+ this.receivedTest.getRequestId());
+					Environment.log(Environment.LOG_LEVEL_WARNING,
+									"TestRequestFrame.operationPerformed() treq not found id " //$NON-NLS-1$
+											+ this.receivedTest.getRequestId());
 				else {
-					System.out.println(this.getClass().getName()
-							+ " > treq.id: " + treq.getId()); //$NON-NLS-1$
+					//					System.out.println(this.getClass().getName()
+					//							+ " > treq.id: " + treq.getId()); //$NON-NLS-1$
 					this.panel.setTestRequest(treq);
 					this.panel.setTest(this.receivedTest);
 				}

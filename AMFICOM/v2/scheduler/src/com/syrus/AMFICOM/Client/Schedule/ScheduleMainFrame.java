@@ -259,7 +259,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE)) {
 			boolean value = ((Boolean) obj).booleanValue();
-			Environment.log(Environment.LOG_LEVEL_INFO, "progressBar:" + value);
+			//Environment.log(Environment.LOG_LEVEL_INFO, "progressBar:" + value);
 			this.statusBar.setProgressBarEnable(value);
 		}
 		if (commandName.equals(StatusMessageEvent.STATUS_MESSAGE)) {

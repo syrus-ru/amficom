@@ -190,21 +190,21 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	public void addTest(Test test) {
 //		if (!this.skipTestUpdate) {
 			if (test.isChanged()) {
-				System.out.println("test is changed");
+				//System.out.println("test is changed");
 				if (this.unsavedTests == null) {
 					this.unsavedTests = new HashMap();
 					this.timer = new javax.swing.Timer(TIME_OUT, this);
 					this.timer.start();
-					System.out.println("timer created");
+					//System.out.println("timer created");
 				}
 				if (this.unsavedTests.containsValue(test)) {
-					System.out.println("unsavedTests.contains(test)"); //$NON-NLS-1$
+					//System.out.println("unsavedTests.contains(test)"); //$NON-NLS-1$
 				} else {
-					System.out.println("unsavedTests.put(" + test.getId() + ", test);");
+					//System.out.println("unsavedTests.put(" + test.getId() + ", test);");
 					this.unsavedTests.put(test.getId(), test);
 				}
 			} else {
-				System.out.println("test is NOT changed");
+				//System.out.println("test is NOT changed");
 				this.tests.put(test.getId(), test);
 			}
 			if (this.allTests == null)
@@ -222,11 +222,11 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				this.flash = !this.flash;
 				for (Iterator it = this.unsavedTests.keySet().iterator(); it.hasNext();) {
 					Test test = (Test) this.unsavedTests.get(it.next());
-					System.out.println("testID:" + test.getId());
-					System.out.println("test:" + (this.test == null ? " is null" : test.getId()));
+					//System.out.println("testID:" + test.getId());
+					//System.out.println("test:" + (this.test == null ? " is null" : test.getId()));
 					g.setColor(this.flash ? (((this.test == null) || (!this.test.getId().equals(test.getId())))
 							? COLOR_SCHEDULED : COLOR_SCHEDULED_SELECTED) : COLOR_UNRECOGNIZED);
-					System.out.println(g.getColor());
+					//System.out.println(g.getColor());
 					drawTestRect(g, test);
 				}
 			}
@@ -287,7 +287,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 			Test test = tue.test;
 			if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
 				this.test = test;
-				System.out.println("set test :"+test.getId());
+				//System.out.println("set test :"+test.getId());
 				this.repaint();
 			}
 		}

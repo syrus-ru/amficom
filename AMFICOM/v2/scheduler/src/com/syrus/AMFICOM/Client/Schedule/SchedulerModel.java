@@ -17,6 +17,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.CORBA.General.TestReturnType;
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
+import com.syrus.AMFICOM.CORBA.Survey.ElementaryTestAlarm;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
@@ -37,6 +38,7 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.RISDSurveyDataSource;
 import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
+import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
 import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
 import com.syrus.AMFICOM.Client.Resource.Result.Analysis;
@@ -330,8 +332,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				this.tests.clear();
 			if (this.unsavedTests != null)
 				this.unsavedTests.clear();
-		} else if (commandName.equals(COMMAND_REMOVE_TEST)){
-			Test test = (Test)ae.getSource();
+		} else if (commandName.equals(COMMAND_REMOVE_TEST)) {
+			Test test = (Test) ae.getSource();
 			if (this.tests != null)
 				this.tests.remove(test);
 			if (this.unsavedTests != null)
@@ -364,7 +366,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	}
 
 	public void updateTests(long startTime, long endTime) {
-		//Environment.log(Environment.LOG_LEVEL_INFO, "updateTests", getClass().getName()); //$NON-NLS-1$
+		//Environment.log(Environment.LOG_LEVEL_INFO, "updateTests",
+		// getClass().getName()); //$NON-NLS-1$
 		//		this.setCursor(UIStorage.WAIT_CURSOR);
 		this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
 				.getString("Updating_tests_from_BD"))); //$NON-NLS-1$
@@ -379,7 +382,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		//выбираем необходимые тесты из пула
 		Hashtable hash = new Hashtable();
 		for (int i = 0; i < ids.length; i++) {
-			Environment.log(Environment.LOG_LEVEL_INFO, "get test#" + ids[i]); //$NON-NLS-1$
+			//Environment.log(Environment.LOG_LEVEL_INFO, "get test#" + ids[i]); //$NON-NLS-1$
 			Test test = (Test) Pool.get(Test.TYPE, ids[i]);
 			if (test.getAnalysisId().length() > 0) //$NON-NLS-1$
 				dsi.GetAnalysis(test.getAnalysisId());
@@ -416,7 +419,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				java.util.List testIds = treq.getTestIds();
 				for (Iterator it2 = testIds.iterator(); it2.hasNext();) {
 					String testId = (String) it2.next();
-					Environment.log(Environment.LOG_LEVEL_INFO, "test_id:" + testId); //$NON-NLS-1$
+					//Environment.log(Environment.LOG_LEVEL_INFO, "test_id:" + testId); //$NON-NLS-1$
 					if (testSet.get(testId) == null)
 						loadTests.add(testId);
 				}
@@ -434,7 +437,52 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			Test test = (Test) en.nextElement();
 			this.tests.add(test);
 		}
-		
+
+		{
+			List alarmsIds = null;
+			//List testSetupIds = null;
+			List testArgumentSetIds = null;
+			for (Iterator it = this.tests.iterator(); it.hasNext();) {
+				Test test = (Test) it.next();
+
+				TestSetup testSetup = (TestSetup) Pool.get(TestSetup.typ, test.getTestSetupId());
+				if (testSetup == null) {
+					//if (testSetupIds==null)
+					//	testSetupIds=new ArrayList();
+					//testSetupIds.add(test.getTestSetupId());
+					dsi.loadTestSetup(test.getTestSetupId());
+				}
+
+				TestArgumentSet testArgumentSet = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test
+						.getTestArgumentSetId());
+				if (testArgumentSet == null) {
+					if (testArgumentSetIds == null)
+						testArgumentSetIds = new ArrayList();
+					testArgumentSetIds.add(test.getTestArgumentSetId());
+				}
+
+				ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();
+				if (testAlarms.length != 0) {
+					//System.out.println("testAlarms.length:"+testAlarms.length);
+					for (int i = 0; i < testAlarms.length; i++) {
+						Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[i].alarm_id);
+						if (alarm == null) {
+							if (alarmsIds == null)
+								alarmsIds = new ArrayList();
+							alarmsIds.add(testAlarms[i].alarm_id);
+						}
+
+					}
+				}
+			}
+
+			dsi.GetAlarms((String[]) alarmsIds.toArray(new String[alarmsIds.size()]));
+			dsi.LoadTestArgumentSets((String[]) testArgumentSetIds.toArray(new String[testArgumentSetIds.size()]));
+			//dsi.loadTestSetup((String[]) testArgumentSetIds.toArray(new
+			// String[testArgumentSetIds.size()]));
+			//dsi.LoadT
+		}
+
 		this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
 				.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
 		this.dispatcher.notify(new OperationEvent(this.tests, 0, COMMAND_NAME_ALL_TESTS));
@@ -562,13 +610,13 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		if (test == null) {
 			test = new Test(dsi.GetUId(Test.TYPE)); //$NON-NLS-1$
 			test.setStatus(TestStatus.TEST_STATUS_SCHEDULED);
-			Pool.put(Test.TYPE, test.getId(), test);			
+			Pool.put(Test.TYPE, test.getId(), test);
 			TestRequest testRequest = (TestRequest) this.receiveData.get(TestRequest.TYPE);
 			testRequest.addTest(test);
 			test.setRequestId(testRequest.getId());
 		}
-		
-		System.out.println("createTest():"+test.getId());
+
+		System.out.println("createTest():" + test.getId());
 
 		TestType testType = (TestType) this.receiveTreeElements.get(TestType.typ);
 		KIS kis = (KIS) this.receiveTreeElements.get(KIS.typ);
@@ -635,7 +683,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 		}
 
-//		test.setChanged(true);
+		//		test.setChanged(true);
 
 		test.setName(ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(test.getStartTime())));
 		//testRequest.setName(test.getName());

@@ -259,12 +259,12 @@ public class PlanPanel extends JPanel implements OperationListener {
 					found = this.testLines.containsKey(test.getMonitoredElementId());
 					if (found) {
 						TestLine testLine = (TestLine) this.testLines.get(test.getMonitoredElementId());
-						System.out.println("testLine found");
-						System.out.println("testLine.getTest(test.getId()):" + testLine.getTest(test.getId()));
+						//System.out.println("testLine found");
+						//System.out.println("testLine.getTest(test.getId()):" + testLine.getTest(test.getId()));
 						found = testLine.getTest(test.getId()) != null;
 					}
 
-					System.out.println("found:" + found);
+					//System.out.println("found:" + found);
 
 					if (!found) {
 						Environment.log(Environment.LOG_LEVEL_INFO, "new test catched"); //$NON-NLS-1$
@@ -324,7 +324,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	public void setScale(int n) {
 		if (n < 0 || n >= SCALES.length) {
-			System.err.println("Unsupported scale: " //$NON-NLS-1$
+			Environment.log(Environment.LOG_LEVEL_WARNING, "Unsupported scale: " //$NON-NLS-1$
 					+ n + ". Use setScale(n);" //$NON-NLS-1$
 					+ " where n determine one of PlanPanel.getSupportedScales() element"); //$NON-NLS-1$
 			return;

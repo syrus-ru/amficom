@@ -393,11 +393,11 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			
 			
 			if (testsetup != null) {
-				System.out.println("testsetup:" + testsetup.getId());
+				//System.out.println("testsetup:" + testsetup.getId());
 				this.testSetups.setSelected(testsetup);
 				this.patternRadioButton.doClick();
 
-				System.out.println("getAnalysisId:" + this.test.getAnalysisId());
+				//System.out.println("getAnalysisId:" + this.test.getAnalysisId());
 
 				if (this.test.getEvalution() != null) {
 					//System.out.println("test.evalution isn't null");
@@ -416,7 +416,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 				}
 
 			} else {
-				System.out.println("testsetup is null");
+				//System.out.println("testsetup is null");
 				this.paramsRadioButton.doClick();
 			}
 		}

@@ -30,7 +30,7 @@ public class TestParametersFrame extends JInternalFrame implements
 		setIconifiable(true);
 
 		this.panel = new TestParametersPanel(aContext);
-		this.getContentPane().add(panel, BorderLayout.CENTER);
+		this.getContentPane().add(this.panel, BorderLayout.CENTER);
 		initModule(aContext.getDispatcher());
 	}
 
@@ -44,9 +44,9 @@ public class TestParametersFrame extends JInternalFrame implements
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
-		System.out.println(getClass().getName() + "\tcommandName:"
-				+ commandName);
-		System.out.println("obj:" + obj.getClass().getName() + "\t" + obj);
+//		System.out.println(getClass().getName() + "\tcommandName:"
+//				+ commandName);
+//		System.out.println("obj:" + obj.getClass().getName() + "\t" + obj);
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			Test test = tue.test;
@@ -81,8 +81,8 @@ public class TestParametersFrame extends JInternalFrame implements
 					.equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
 				if (!this.panel
 						.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
-					dispatcher.notify(new OperationEvent(
-							new ReflectometryTestPanel(aContext, port), 0,
+					this.dispatcher.notify(new OperationEvent(
+							new ReflectometryTestPanel(this.aContext, port), 0,
 							SchedulerModel.COMMAND_ADD_PARAM_PANEL));
 				}
 			}
