@@ -35,16 +35,6 @@ public class TemporalPattern_Database extends StorableObject_Database {
 
 	private void retrieveTemporalPattern(TemporalPattern temporalPattern) throws Exception {
 		String tp_id_str = temporalPattern.getId().toString();
-		StringBuffer sql = new StringBuffer("SELECT ");
-		sql.append(DatabaseDate.toQuerySubString(COLUMN_CREATED) + ", ");
-		sql.append(DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + ", ");
-		sql.append(COLUMN_CREATOR_ID + ", ");
-		sql.append(COLUMN_MODIFIER_ID + ", ");
-		sql.append(COLUMN_DESCRIPTION + ", ");
-		sql.append(COLUMN_VALUE);
-		sql.append(" FROM " + ObjectEntities.TEMPORALPATTERN_ENTITY);
-		sql.append(" WHERE " + COLUMN_ID + " = " + tp_id_str);
-/*
 		String sql = "SELECT "
 			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + ", " 
 			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + ", "
@@ -53,7 +43,7 @@ public class TemporalPattern_Database extends StorableObject_Database {
 			+ COLUMN_DESCRIPTION + ", "
 			+ COLUMN_VALUE
 			+ " FROM " + ObjectEntities.TEMPORALPATTERN_ENTITY
-			+ " WHERE " + COLUMN_ID + " = " + tp_id_str;*/
+			+ " WHERE " + COLUMN_ID + " = " + tp_id_str;
 	}
 
 	
