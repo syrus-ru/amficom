@@ -1,11 +1,10 @@
 #!/bin/bash
 
-PROJECT=$HOME/work/agent
-LIB=$HOME/work/lib
-TRANSCEIVER=$PROJECT/transceiver
-DADARA=$PROJECT/dadara:$ROOTSYS/lib
+LIB=../lib
+TRANSCEIVER=./transceiver
+DADARA=./dadara:$ROOTSYS/lib
 ORBCLASSPATH=$ORACLE_HOME/lib/aurora_client.jar:$ORACLE_HOME/lib/vbjorb.jar:$ORACLE_HOME/lib/vbjapp.jar
-APPCLASSPATH=$LIB/agent.jar:$LIB/kisserver.jar:$LIB/ServerInterface_General.jar:$LIB/io.jar:$LIB/util.jar
+APPCLASSPATH=$LIB/agent.jar:$LIB/kisserver.jar:$LIB/corba.jar:$LIB/io.jar:$LIB/util.jar
 JAVA=java
 
 $JAVA -Djava.library.path=$TRANSCEIVER:$DADARA -classpath $APPCLASSPATH:$ORBCLASSPATH com.syrus.AMFICOM.agent.Agent

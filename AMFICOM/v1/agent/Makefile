@@ -6,7 +6,7 @@ ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 TRANSCEIVERDIR=./transceiver
 DADARADIR=./dadara
 
-APPCLASSPATH=$(LIBDIR)/kisserver.jar:$(LIBDIR)/ServerInterface_General.jar:$(LIBDIR)/util.jar:$(LIBDIR)/dadara.jar
+APPCLASSPATH=$(LIBDIR)/kisserver.jar:$(LIBDIR)/corba.jar:$(LIBDIR)/util.jar:$(LIBDIR)/dadara.jar
 
 #JAVAC=javac
 #JAVACFLAGS = source 1.3
@@ -24,7 +24,7 @@ $(call checkenve,IDL2JAVA)
 $(LIBNAME):	agent
 	$(JAR) -cf $@ -C $(CLASSDIR) com/
 
-agent:
+agent:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(AURORACLASSPATH):$(VBJCLASSPATH) \
 			$(SRCDIR)/com/syrus/AMFICOM/agent/Agent.java \
@@ -40,7 +40,10 @@ agent:
 			$(SRCDIR)/com/syrus/AMFICOM/RISDConnection.java
 	$(JAVAH) -classpath $(CLASSDIR) -d $(TRANSCEIVERDIR) com.syrus.AMFICOM.agent.Transceiver
 	$(JAVAH) -classpath $(CLASSDIR) -d $(DADARADIR) com.syrus.AMFICOM.agent.DadaraAnalysisManager
-	touch agent
+	touch $@
+
+$(CLASSDIR):
+	mkdir -p $@
 
 .PHONY:	clean
 clean:
