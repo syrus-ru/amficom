@@ -11,8 +11,8 @@ public class TempTypeTree extends FilterTree
 	ApplicationContext aContext;
 	FilterTreeNode root = new FilterTreeNode(LangModelSchedule.getString("Root"), "ROOT");
 	FilterTreeNode a1 = new FilterTreeNode(LangModelSchedule.getString("Onetime"), "ONETIME");
-	FilterTreeNode a2 = new FilterTreeNode(LangModelSchedule.getString("TimeTable"), "TIMETABLE");
-	FilterTreeNode a3 = new FilterTreeNode(LangModelSchedule.getString("Period"), "PERIODICAL");
+	FilterTreeNode a2 = new FilterTreeNode(LangModelSchedule.getString("Continual"), "CONTINUAL");
+	FilterTreeNode a3 = new FilterTreeNode(LangModelSchedule.getString("Periodical"), "PERIODICAL");
 
 	public TempTypeTree()
 	{

@@ -1,41 +1,34 @@
 package com.syrus.AMFICOM.Client.Schedule.Filter;
 
 import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.*;
-import com.syrus.AMFICOM.CORBA.General.TestTemporalType;
-import com.syrus.AMFICOM.CORBA.General.TestStatus;
-import com.syrus.AMFICOM.Client.General.Model.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.filter.FilterExpressionInterface;
 
 public class TestFilter extends ObjectResourceFilter
 {
-//	ApplicationContext aContext;
-
-	public TestFilter()//ApplicationContext aContext)
-	{
-//		this.aContext = aContext;
-	}
+	private Vector filterColumns;
 
 	public Vector getFilterColumns()
 	{
-		Vector vec = new Vector();
-		vec.add("kis");
-		vec.add("mone");
-		vec.add("test_type");
-		vec.add("temp_type");
-		vec.add("status");
-		vec.add("time");
-		vec.add("alarm");
+		if (this.filterColumns==null){
+			this.filterColumns = new Vector();
+			this.filterColumns.add("kis");
+			this.filterColumns.add("mone");
+			this.filterColumns.add("test_type");
+			this.filterColumns.add("temp_type");
+			this.filterColumns.add("status");
+			this.filterColumns.add("time");
+			this.filterColumns.add("alarm");
+		}
 
-		return vec;
+		return this.filterColumns;
 	}
 
 	public String getFilterColumnName(String col_id)
@@ -43,19 +36,19 @@ public class TestFilter extends ObjectResourceFilter
 		if(col_id == null)
 			return "";
 		if(col_id.equals("kis"))
-			return LangModelSchedule.getString("ORKIS");
+			return LangModelSchedule.getString("RTU");
 		if(col_id.equals("mone"))
-			return LangModelSchedule.getString("ORPath1");
+			return LangModelSchedule.getString("TestObject");
 		if(col_id.equals("test_type"))
-			return LangModelSchedule.getString("ORTestType");
+			return LangModelSchedule.getString("TestType");
 		if(col_id.equals("temp_type"))
-			return LangModelSchedule.getString("labelTimeTestType");
+			return LangModelSchedule.getString("TemporalType");
 		if(col_id.equals("status"))
-			return LangModelSchedule.getString("labelStatus");
+			return LangModelSchedule.getString("Status");
 		if(col_id.equals("time"))
-			return LangModelSchedule.getString("labelTtimeTest");
+			return LangModelSchedule.getString("Test_time");
 		if(col_id.equals("alarm"))
-			return LangModelSchedule.getString("labelAlarm");
+			return LangModelSchedule.getString("Alarm");
 		return "";
 	}
 

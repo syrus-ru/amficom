@@ -2,49 +2,40 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/administrate.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/alerting.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/analysis.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/aurora_client_orbdep.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/aurora_client_orbindep.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/configure.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/corba_portable_client.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/corba_portable.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/dadara.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/histoAnalysis.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/io.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/jfreechartK.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/jgraphpad.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/kunststoff.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/layout.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/localize.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/mail.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/main.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/map.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/model.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/ofx.spatialfx.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/optimize.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/prefs.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/prognosis.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/reportBuilder.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/report.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/scheme.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/ServerInterface_Admin.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/ServerInterface_Alarm.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/ServerInterface_ISM.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/ServerInterface_Map.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/ServerInterface_Network.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/ServerInterface_Report.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/ServerInterface_Scheme.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/ServerInterface_Survey.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/ServerObjectInterface.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/serverprocess.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/vbjapp.jar"/>
-	<classpathentry kind="lib" path="/home/bob/src/amficom/libs/vbjorb.jar"/>
-	<classpathentry kind="src" path="/general_v1"/>
 	<classpathentry kind="src" path="/filter_v1"/>
 	<classpathentry kind="src" path="/generalclient_v1"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/util.jar"/>
 	<classpathentry kind="src" path="/idl_v1"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/administrate.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/analysis.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/configureclient.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/corba.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/corbaportable-common.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/dadara.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/filter.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/kisserver.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/main.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/map.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/model.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/optimize.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/optimizereport.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/prognosis.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/reportBuilder.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/schedule.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/scheme.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/syruspatch.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/util.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/utilclient.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/activation.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/aurora_client_orbdep.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/aurora_client_orbindep.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/jfreechartK.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/jgraphpad.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/junit.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/kunststoff.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/layout.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/mail.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/ofx.spatialfx.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/vbjapp.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/vbjorb.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -37,8 +37,8 @@ public class KISTree extends FilterTree
 				AccessPort ap = (AccessPort )enu.nextElement();
 				FilterTreeNode portnode = new FilterTreeNode(ap.getName(), ap.getId());
 				kisnode.add(portnode);
-				FilterTreeNode vol_ = new FilterTreeNode(LangModelSchedule.getString("ORMones"), "mone");
-				FilterTreeNode tt_ = new FilterTreeNode(LangModelSchedule.getString("ORTestTypes"), "testtypes");
+				FilterTreeNode vol_ = new FilterTreeNode(LangModelSchedule.getString("TestTypes"), "mone");
+				FilterTreeNode tt_ = new FilterTreeNode(LangModelSchedule.getString("TestTypes"), "testtypes");
 				portnode.add(vol_);
 				portnode.add(tt_);
 				DataSet daSet = new DataSet(Pool.getHash(MonitoredElement.typ));
