@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.12 2005/03/18 17:29:41 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.13 2005/03/21 16:18:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/03/18 17:29:41 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/21 16:18:00 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -286,6 +286,10 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 
 	public static void serializePool() {
 		instance.serializePoolImpl();
+	}
+
+	public static void truncateObjectPool(final short entityCode) {
+		instance.truncateObjectPoolImpl(entityCode);
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.12 2005/03/18 17:31:27 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.13 2005/03/21 16:17:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/03/18 17:31:27 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/21 16:17:40 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -247,6 +247,10 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 
 	public static void serializePool() {
 		instance.serializePoolImpl();
+	}
+
+	public static void truncateObjectPool(final short entityCode) {
+		instance.truncateObjectPoolImpl(entityCode);
 	}
 
 }

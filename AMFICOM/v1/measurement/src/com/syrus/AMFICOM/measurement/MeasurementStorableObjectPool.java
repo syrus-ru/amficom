@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.71 2005/03/18 17:28:06 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.72 2005/03/21 16:18:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/03/18 17:28:06 $
+ * @version $Revision: 1.72 $, $Date: 2005/03/21 16:18:35 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -415,4 +415,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.serializePoolImpl();
 	}
 
+	public static void truncateObjectPool(final short entityCode) {
+		instance.truncateObjectPoolImpl(entityCode);
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.11 2005/02/24 15:00:07 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.12 2005/03/21 16:18:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/24 15:00:07 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/21 16:18:47 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -281,6 +281,10 @@ public class EventStorableObjectPool extends StorableObjectPool {
 
 	public static void serializePool() {
 		instance.serializePoolImpl();
+	}
+
+	public static void truncateObjectPool(final short entityCode) {
+		instance.truncateObjectPoolImpl(entityCode);
 	}
 
 }

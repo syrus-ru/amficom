@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.69 2005/03/18 17:29:13 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.70 2005/03/21 16:18:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/03/18 17:29:13 $
+ * @version $Revision: 1.70 $, $Date: 2005/03/21 16:18:18 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -459,6 +459,10 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 	public static void serializePool() {
 		instance.serializePoolImpl();
+	}
+
+	public static void truncateObjectPool(final short entityCode) {
+		instance.truncateObjectPoolImpl(entityCode);
 	}
 
 }
