@@ -4,6 +4,8 @@ import javax.swing.*;
 
 public class TimeSpinner extends JSpinner
 {
+	
+	private static final long	serialVersionUID	= 3690198763000051254L;
 	protected TimeSpinnerEditor editor;
 	protected static String pattern = "HH:mm";
 
@@ -12,7 +14,7 @@ public class TimeSpinner extends JSpinner
 		super(new SpinnerDateModel());
 	}
 	
-	static public String getPattern()
+	public static String getPattern()
 	{
 		return pattern;
 	}

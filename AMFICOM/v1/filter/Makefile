@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.5 2005/02/28 15:00:44 bass Exp $
+# $Id: Makefile,v 1.6 2005/04/01 08:37:09 max Exp $
 #
 # vim:set ft=make:
 #
@@ -11,6 +11,9 @@ LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 JAVACFLAGS = -source 1.3
 SUNJAVACFLAGS = -target 1.2
 JIKESFLAGS = -target 1.2
+LIBDIR = ../lib
+
+APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar:$(LIBDIR)/filterclient.jar
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
@@ -22,8 +25,9 @@ export: $(LIBNAME)
 all: .all
 
 .all: .idl .sqlj
-	$(JAVAC) \
-		$(JAVACFLAGS) \
+	echo $(APPCLASSPATH)
+	$(JAVAC) $(JAVACFLAGS) \
+		 -classpath $(APPCLASSPATH) \
 	 	$(shell find $(SRCDIR) -name '*.java')
 	touch $@
 

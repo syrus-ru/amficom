@@ -1,5 +1,5 @@
 /*
- * $Id: Filter.java,v 1.5 2005/03/31 09:07:52 max Exp $
+ * $Id: Filter.java,v 1.6 2005/04/01 08:37:09 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,11 +21,20 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/31 09:07:52 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 08:37:09 $
  * @author $Author: max $
  * @module misc
  */
 public class Filter {
+	
+	public static final String	WRONG_NUMBER_MESSAGE	= "you have intered wrong number type in field ";
+	public static final String	WRONG_STRING_MESSAGE	= "please, fill the field ";
+	public static final String	WRONG_LIST_MESSAGE		= "Select, from list ";
+	public static final String	EQUALS_AND_FROM_SIMULTENIOUSLY	= "Fill \"Equals\" or \"From\"";
+	public static final String	EQUALS_AND_TO_SIMULTENIOUSLY	= "Fill \"Equals\" or \"To\"";
+	public static final String	NO_CONDITIONS_CREATED	= "You have to create condition(s) first";
+	public static final String	WRONG_DATE_MESSAGE	= "Please, set the date";
+
 	
 	private Map	keyNameCondition = new HashMap();
 	private Collection filterViews;

@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.7 2005/03/28 15:11:18 bob Exp $
+ * $Id: ItemTreeModel.java,v 1.8 2005/04/01 08:37:09 max Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.SwingUtilities;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -24,8 +23,8 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/28 15:11:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 08:37:09 $
+ * @author $Author: max $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -386,7 +385,6 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 		 * in an element that isn't rooted at root.
 		 */
 		if (aNode == null) {
-			if (depth == 0) return null;
 			retNodes = new Item[depth];
 		} else {
 			depth++;

@@ -1,5 +1,5 @@
 /*
- * $Id: FilterGUI.java,v 1.4 2005/03/31 09:09:57 max Exp $
+ * $Id: FilterGUI.java,v 1.5 2005/04/01 08:37:09 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -29,7 +28,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/31 09:09:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/01 08:37:09 $
  * @author $Author: max $
  * @module misc
  */

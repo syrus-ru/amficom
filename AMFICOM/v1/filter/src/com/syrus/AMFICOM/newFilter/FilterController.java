@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.2 2005/03/31 09:09:34 max Exp $
+ * $Id: FilterController.java,v 1.3 2005/04/01 08:37:09 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.Com
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/31 09:09:34 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/01 08:37:09 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -136,7 +136,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 					equalsInt = Integer.parseInt(equals);
 				} catch (NumberFormatException e) {
 					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
-					this.view.showErrorMessage(FilterView.WRONG_NUMBER_MESSAGE);
+					this.view.showErrorMessage(Filter.WRONG_NUMBER_MESSAGE);
 					return;
 				}
 				this.model.addCondition(keyName, new TypicalCondition(equalsInt, equalsInt, OperationSort.OPERATION_EQUALS, this.model.getEntityCode(), key));
@@ -149,14 +149,14 @@ public class FilterController implements ActionListener, PopupMenuListener {
 					fromInt = Integer.parseInt(numberCondition.getFrom());
 				} catch (NumberFormatException e) {
 					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
-					this.view.showErrorMessage(FilterView.WRONG_NUMBER_MESSAGE);
+					this.view.showErrorMessage(Filter.WRONG_NUMBER_MESSAGE);
 					return;
 				}
 				try {
 					toInt = Integer.parseInt(numberCondition.getTo());
 				} catch (NumberFormatException e) {
 					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
-					this.view.showErrorMessage(FilterView.WRONG_NUMBER_MESSAGE);
+					this.view.showErrorMessage(Filter.WRONG_NUMBER_MESSAGE);
 					return;
 				}
 				this.model.addCondition(keyName, new TypicalCondition(fromInt, toInt, OperationSort.OPERATION_IN_RANGE, this.model.getEntityCode(), key));
@@ -168,7 +168,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 					fromInt = Integer.parseInt(numberCondition.getFrom());
 				} catch (NumberFormatException e) {
 					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
-					this.view.showErrorMessage(FilterView.WRONG_NUMBER_MESSAGE);
+					this.view.showErrorMessage(Filter.WRONG_NUMBER_MESSAGE);
 					return;
 				}
 				if (includeBounds)
@@ -184,7 +184,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 					toInt = Integer.parseInt(numberCondition.getTo());
 				} catch (NumberFormatException e) {
 					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
-					this.view.showErrorMessage(FilterView.WRONG_NUMBER_MESSAGE);
+					this.view.showErrorMessage(Filter.WRONG_NUMBER_MESSAGE);
 					return;
 				}
 				if (includeBounds)
@@ -195,11 +195,11 @@ public class FilterController implements ActionListener, PopupMenuListener {
 				return;
 			}			
 			if (!equals.equals("") && !to.equals("")) {
-				this.view.showErrorMessage(FilterView.EQUALS_AND_TO_SIMULTENIOUSLY);
+				this.view.showErrorMessage(Filter.EQUALS_AND_TO_SIMULTENIOUSLY);
 				return;
 			}
 			if (!equals.equals("") && !from.equals("")) {
-				this.view.showErrorMessage(FilterView.EQUALS_AND_FROM_SIMULTENIOUSLY);
+				this.view.showErrorMessage(Filter.EQUALS_AND_FROM_SIMULTENIOUSLY);
 				return;
 			}			
 		case ConditionWrapper.FLOAT:
@@ -210,7 +210,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			StringCondition stringCondition = (StringCondition) tempCondition;
 			String conditionString = stringCondition.getString();
 			if(conditionString == null || conditionString.equals("")) {
-				this.view.showErrorMessage(FilterView.WRONG_STRING_MESSAGE);
+				this.view.showErrorMessage(Filter.WRONG_STRING_MESSAGE);
 				return;
 			}
 			this.model.addCondition(keyName, new TypicalCondition(conditionString, OperationSort.OPERATION_EQUALS, this.model.getEntityCode(), key));
@@ -220,7 +220,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			Collection conditions = new LinkedList();
 			int[] linkedIndex2 = listCondition2.getLinkedIndex();
 			if(linkedIndex2.length == 0) {
-				this.view.showErrorMessage(FilterView.WRONG_LIST_MESSAGE);
+				this.view.showErrorMessage(Filter.WRONG_LIST_MESSAGE);
 				return;
 			}
 			for (int i = 0; i < linkedIndex2.length; i++) {
@@ -243,7 +243,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 			Collection linkedObjects = new LinkedList(); 
 			int[] linkedIndex = listCondition.getLinkedIndex();
 			if(linkedIndex.length == 0) {
-				this.view.showErrorMessage(FilterView.WRONG_LIST_MESSAGE);
+				this.view.showErrorMessage(Filter.WRONG_LIST_MESSAGE);
 				return;
 			}
 			for (int i = 0; i < linkedIndex.length; i++) {
@@ -280,7 +280,7 @@ public class FilterController implements ActionListener, PopupMenuListener {
 	
 	public void createLogicalScheme() {
 		if (noConditionsCreated()) {
-			this.view.showErrorMessage(FilterView.NO_CONDITIONS_CREATED);
+			this.view.showErrorMessage(Filter.NO_CONDITIONS_CREATED);
 			return;
 		}
 		this.view.createLogicalSchemeView(this.model.getLogicalScheme(), this.model);	

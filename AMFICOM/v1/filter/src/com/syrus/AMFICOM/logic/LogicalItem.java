@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalItem.java,v 1.9 2005/03/25 10:29:31 max Exp $
+ * $Id: LogicalItem.java,v 1.10 2005/04/01 08:37:09 max Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,20 +13,19 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/25 10:29:31 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 08:37:09 $
  * @author $Author: max $
  * @module filter_v1
  */
 public class LogicalItem extends AbstractItem {
 
-	
-	public final static String	AND				= "AND";
+	public static final String	AND				= "AND";
 
-	public final static String	CONDITION		= "Condition";
+	public static final String	CONDITION		= "Condition";
 
-	public final static String	OR				= "OR";
+	public static final String	OR				= "OR";
 
-	public final static String	ROOT			= "Result";
+	public static final String	ROOT			= "Result";
 
 	private static int			andCount		= 0;
 
@@ -43,6 +42,8 @@ public class LogicalItem extends AbstractItem {
 	private String				type;
 	
 	private StorableObjectCondition	condition;
+
+	
 
 	public LogicalItem(String sort) {
 		if (sort.equals(OR)) {
@@ -100,12 +101,12 @@ public class LogicalItem extends AbstractItem {
 		for (Iterator iter = currentParentItem.getChildren().iterator(); iter
 				.hasNext();) {
 			LogicalItem item = (LogicalItem) iter.next();
-			String type = item.getType();
-			if (type.equals(OR) || type.equals(AND)) {
+			String itemType = item.getType();
+			if (itemType.equals(OR) || itemType.equals(AND)) {
 				LogicalItem newItem = new LogicalItem(item.getType());
 				newParentItem.addChild(newItem);
 				childClone(item, newItem);
-			} else if (type.equals(CONDITION)) {
+			} else if (itemType.equals(CONDITION)) {
 				LogicalItem newItem = new LogicalItem(item.getName(), item.getCondition());
 				newParentItem.addChild(newItem);
 			} else {
