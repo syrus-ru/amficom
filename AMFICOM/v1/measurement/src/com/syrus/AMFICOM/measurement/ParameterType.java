@@ -1,17 +1,17 @@
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 
-public class ParameterType extends StorableObject {
-	private String codename;
+public class ParameterType extends StorableObjectType {
 	private String name;
-	private String description;
 
 	private StorableObject_Database parameterTypeDatabase;
 
@@ -66,24 +66,25 @@ public class ParameterType extends StorableObject {
 																					new String(this.name),
 																					new String(this.description));
 	}
-
-	public String getCodename() {
-		return this.codename;
-	}
+	
 
 	public String getName() {
 		return this.name;
 	}
-
-	public String getDescription() {
-		return this.description;
-	}
-
-	protected void setAttributes(String codename,
-															 String name,
-															 String description) {
-		this.codename = codename;													 
+	
+	protected synchronized void setAttributes(Date created,
+											  Date modified,
+											  Identifier creator_id,
+											  Identifier modifier_id,
+											  String codename,
+											  String description,
+											  String name) {
+		super.setAttributes(created,
+							modified,
+							creator_id,
+							modifier_id,
+							codename,
+							description);
 		this.name = name;
-		this.description = description;
 	}
 }
