@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.General.Report;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JOptionPane;
@@ -151,9 +152,9 @@ public class ReportTemplateImplementationPanel extends JPanel
 	{
 		int maxY = 0;
 
-		for (int i = 0; i < this.objects.size(); i++)
+		for (ListIterator it = this.objects.listIterator(); it.hasNext();)
 		{
-			RenderingObject curObject = (RenderingObject)this.objects.get(i);
+			RenderingObject curObject = (RenderingObject)it.next();
 
 			int valueToConsider = (int) (curObject.rendererPanel.getY() +
 												  curObject.rendererPanel.getPreferredSize().
@@ -162,16 +163,16 @@ public class ReportTemplateImplementationPanel extends JPanel
 				maxY = valueToConsider;
 		}
 
-		for (int i = 0; i < this.labels.size(); i++)
+		for (ListIterator it = this.labels.listIterator(); it.hasNext();)
 		{
-			FirmedTextPane curLabel = (FirmedTextPane)this.labels.get(i);
+			FirmedTextPane curLabel = (FirmedTextPane)it.next();
 			if (curLabel.getY() + curLabel.getHeight() > maxY)
 				maxY = curLabel.getY() + curLabel.getHeight();
 		}
 
-		for (int i = 0; i < this.images.size(); i++)
+		for (ListIterator it = this.images.listIterator(); it.hasNext();)
 		{
-			ImagePanel curImage = (ImagePanel)this.images.get(i);
+			ImagePanel curImage = (ImagePanel)it.next();
 			if (curImage.getY() + curImage.getHeight() > maxY)
 				maxY = curImage.getY() + curImage.getHeight();
 		}
@@ -280,9 +281,9 @@ public class ReportTemplateImplementationPanel extends JPanel
 			{}
 		}
 
-		for (int i = 0; i < objects.size(); i++)
+		for (ListIterator it = this.objects.listIterator(); it.hasNext();)
 		{
-			RenderingObject renderer = (RenderingObject) objects.get(i);
+			RenderingObject renderer = (RenderingObject) it.next();
 
 //filter не передаётся - null стоит
 			TitledPanel reportPanel =
@@ -325,9 +326,9 @@ public class ReportTemplateImplementationPanel extends JPanel
 			renderer.rendererPanel = reportPanel;
 		}
 
-		for (int i = 0; i < labels.size(); i++)
+		for (ListIterator it = this.labels.listIterator(); it.hasNext();)
 		{
-			FirmedTextPane tp = (FirmedTextPane) labels.get(i);
+			FirmedTextPane tp = (FirmedTextPane) it.next();
 			this.add(tp, new XYConstraints(
 				tp.getX(),
 				tp.getY(),
@@ -339,9 +340,9 @@ public class ReportTemplateImplementationPanel extends JPanel
 		if (images == null)
 			images = new ArrayList();
 
-		for (int i = 0; i < images.size(); i++)
+		for (ListIterator it = this.images.listIterator(); it.hasNext();)
 		{
-			ImagePanel ip = (ImagePanel) images.get(i);
+			ImagePanel ip = (ImagePanel) it.next();
 			this.add(ip, new XYConstraints(
 				ip.getX(),
 				ip.getY(),
@@ -709,9 +710,9 @@ public class ReportTemplateImplementationPanel extends JPanel
 		int elemCount = 0;
 
 		// Непривязанные к объектам надписи
-		for (int i = 0; i < this.labels.size(); i++)
+		for (ListIterator it = this.labels.listIterator(); it.hasNext();)    
 		{
-			FirmedTextPane curPane = (FirmedTextPane)this.labels.get(i);
+			FirmedTextPane curPane = (FirmedTextPane)it.next();
 			if ((curPane.horizFirmer != null) ||
 				 (curPane.vertFirmer != null))
 				continue;
@@ -725,9 +726,9 @@ public class ReportTemplateImplementationPanel extends JPanel
 			elemCount += 2;
 		}
 
-		for (int i = 0; i < this.images.size(); i++)
+		for (ListIterator it = this.images.listIterator(); it.hasNext();)
 		{
-			ImagePanel curImage = (ImagePanel)this.images.get(i);
+			ImagePanel curImage = (ImagePanel)it.next();
 
 			xs.add(new Integer(curImage.getX()));
 			ys.add(new Integer(curImage.getY()));
@@ -738,9 +739,9 @@ public class ReportTemplateImplementationPanel extends JPanel
 			elemCount += 2;
 		}
 
-		for (int i = 0; i < this.objects.size(); i++)
+		for (ListIterator it = this.objects.listIterator(); it.hasNext();)
 		{
-			RenderingObject curRO = (RenderingObject)this.objects.get(i);
+			RenderingObject curRO = (RenderingObject)it.next();
 
 			Rectangle r = null;
 			r = curRO.getObjectWithLabelsBounds(this.labels);
@@ -837,15 +838,16 @@ public class ReportTemplateImplementationPanel extends JPanel
 
 	private int getRenderingObjectClasterAt(int x, int y, RenderingObject curRO)
 	{
-		for (int i = 0; i < objects.size(); i++)
+    int index = 0;
+		for (ListIterator it = this.objects.listIterator(); it.hasNext(); index++)  
 		{
-			RenderingObject iRO = (RenderingObject) objects.get(i);
+			RenderingObject iRO = (RenderingObject) it.next();
 			if (iRO.hasPoint(x, y, this.labels))
 			{
-				if (this.objectsPrinted[i]
+				if (this.objectsPrinted[index]
 					 || ((iRO != null)
 						  && iRO.equals(curRO)))
-					return i;
+					return index;
 				else
 					return -2;
 			}
@@ -1042,12 +1044,12 @@ public class ReportTemplateImplementationPanel extends JPanel
 														 getHeight()));
 		renderer.revalidate();
 
-		for (int i = 0; i < labels.size(); i++)
+		for (ListIterator lIt = this.labels.listIterator(); lIt.hasNext();)
 		{
-			FirmedTextPane curLabel = (FirmedTextPane) labels.get(i);
-			for (int j = 0; j < objects.size(); j++)
+			FirmedTextPane curLabel = (FirmedTextPane) lIt.next();
+			for (ListIterator oIt = this.objects.listIterator(); oIt.hasNext();)
 			{
-				RenderingObject curRO = (RenderingObject) objects.get(j);
+				RenderingObject curRO = (RenderingObject) oIt.next();
 
 				if ((curRO.rendererPanel != null) &&
 					 curRO.rendererPanel.equals(renderer))
@@ -1377,9 +1379,9 @@ public class ReportTemplateImplementationPanel extends JPanel
 		elemCount++;
 
 		// Непривязанные к объектам надписи
-		for (int i = 0; i < this.labels.size(); i++)
+		for (ListIterator it = this.labels.listIterator(); it.hasNext();)    
 		{
-			FirmedTextPane curPane = (FirmedTextPane)this.labels.get(i);
+			FirmedTextPane curPane = (FirmedTextPane)it.next();
 
 			xs.add(new Integer(curPane.getX()));
 			ys.add(new Integer(curPane.getY()));
@@ -1390,9 +1392,9 @@ public class ReportTemplateImplementationPanel extends JPanel
 			elemCount += 2;
 		}
 
-		for (int i = 0; i < this.images.size(); i++)
+		for (ListIterator it = this.images.listIterator(); it.hasNext();)
 		{
-			ImagePanel curImage = (ImagePanel)this.images.get(i);
+			ImagePanel curImage = (ImagePanel)it.next();
 
 			xs.add(new Integer(curImage.getX()));
 			ys.add(new Integer(curImage.getY()));
@@ -1403,9 +1405,9 @@ public class ReportTemplateImplementationPanel extends JPanel
 			elemCount += 2;
 		}
 
-		for (int i = 0; i < this.objects.size(); i++)
+		for (ListIterator it = this.objects.listIterator(); it.hasNext();)
 		{
-			RenderingObject curRO = (RenderingObject)this.objects.get(i);
+			RenderingObject curRO = (RenderingObject)it.next();
 
 			xs.add(new Integer(curRO.rendererPanel.getX()));
 			ys.add(new Integer(curRO.rendererPanel.getY()));
@@ -1451,11 +1453,12 @@ public class ReportTemplateImplementationPanel extends JPanel
 	 */
 	private int getLabelAtReport(int x, int y)
 	{
-		for (int i = 0; i < labels.size(); i++)
+    int index = 0;
+		for (ListIterator it = this.labels.listIterator(); it.hasNext(); index++)
 		{
-			FirmedTextPane curLabel = (FirmedTextPane) labels.get(i);
+			FirmedTextPane curLabel = (FirmedTextPane) it.next();
 			if (curLabel.hasPoint(x, y))
-				return i;
+				return index;
 		}
 		return -1;
 	}
@@ -1466,11 +1469,12 @@ public class ReportTemplateImplementationPanel extends JPanel
 	 */
 	private int getRenderingObjectAtReport(int x, int y)
 	{
-		for (int i = 0; i < objects.size(); i++)
+    int index = 0;
+		for (ListIterator it = this.objects.listIterator(); it.hasNext(); index++)
 		{
-			RenderingObject curRO = (RenderingObject) objects.get(i);
+			RenderingObject curRO = (RenderingObject) it.next();
 			if (curRO.hasPoint(x, y, null))
-				return i;
+				return index;
 		}
 		return -1;
 	}
@@ -1700,9 +1704,9 @@ public class ReportTemplateImplementationPanel extends JPanel
 		File f = new File(s);
 		try
 		{
-			for (int i = 0; i < labels.size(); i++)
+  		for (ListIterator it = this.labels.listIterator(); it.hasNext();)
 			{
-				FirmedTextPane ftp = (FirmedTextPane) labels.get(i);
+				FirmedTextPane ftp = (FirmedTextPane) it.next();
 				ftp.setSize(ftp.getWidth() + (int) ftp.getFont().getMaxCharBounds(
 					new FontRenderContext(null, true, true)).getWidth(),
 								ftp.getHeight());
@@ -1711,9 +1715,9 @@ public class ReportTemplateImplementationPanel extends JPanel
 			if (this.saveToHTML(f.getAbsolutePath(), true) != 0)
 				return;
 
-			for (int i = 0; i < labels.size(); i++)
+  		for (ListIterator it = this.labels.listIterator(); it.hasNext();)
 			{
-				FirmedTextPane ftp = (FirmedTextPane) labels.get(i);
+				FirmedTextPane ftp = (FirmedTextPane) it.next();
 				ftp.setSize(ftp.getWidth() - (int) ftp.getFont().getMaxCharBounds(
 					new FontRenderContext(null, true, true)).getWidth(),
 								ftp.getHeight());
