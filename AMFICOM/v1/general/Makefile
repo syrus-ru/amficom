@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.17 2004/10/20 15:04:17 bob Exp $
+# $Id: Makefile,v 1.18 2004/11/15 13:19:09 bob Exp $
 #
 # vim:set ft=make:
 #
@@ -31,7 +31,6 @@ $(LIBNAME): .mach
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
 		$(wildcard $(SRCDIR)/com/syrus/io/*.java) \
-		$(wildcard $(SRCDIR)/com/syrus/util/*.java)
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -67,7 +66,6 @@ arch:
 		Makefile \
 		$(IDLDIR)/general.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/general/*.java \
-		$(SRCDIR)/com/syrus/AMFICOM/util/*.java \
 		$(SRCDIR)/com/syrus/AMFICOM/io/*.java	
 
 lib: $(LIBNAME)
