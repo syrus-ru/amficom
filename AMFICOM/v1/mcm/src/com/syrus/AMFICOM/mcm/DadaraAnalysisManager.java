@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.16 2004/10/20 08:43:47 bass Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.17 2004/11/01 15:46:25 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/10/20 08:43:47 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2004/11/01 15:46:25 $
+ * @author $Author: max $
  * @module mcm_v1
  */
 
@@ -120,10 +120,8 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 		if (rawData == null) 
 			throw new AnalysisException("Cannot get parameter of codename: '" + CODENAME_REFLECTOGRAMMA + "'  from map");
 		BellcoreStructure bs = (new BellcoreReader()).getData(rawData);
-		double[] reflectogramma = new double[bs.dataPts.TNDP];
-    for (int i = 0; i < bs.dataPts.TPS[0]; i++)
-      reflectogramma[i] = (double)(65535 - bs.dataPts.DSF[0][i])/1000d;
-		double dx = (double)(bs.fxdParams.AR - bs.fxdParams.AO)*3d*1000d / ((double)bs.dataPts.TNDP * (double)bs.fxdParams.GI);
+		double[] reflectogramma = bs.getTraceData();
+		double dx = bs.getResolution();
 //----------------
 try {
 	FileOutputStream fos;
@@ -166,7 +164,7 @@ catch (IOException ioe) {
 		int reflSize = ReflectogramMath.getReflectiveEventSize(reflectogramma, 0.5);
 		int nReflSize = ReflectogramMath.getNonReflectiveEventSize(reflectogramma,
 																															 1000,
-																															 ((double)bs.fxdParams.GI) / 100000d,
+																															 bs.getIOR(),
 																															 dx);
 		if (nReflSize > 3 * reflSize / 5)
 			nReflSize = 3 * reflSize / 5;
@@ -290,9 +288,7 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 			if (rawData == null) 
 				throw new EvaluationException("Cannot get parameter of codename: '" + CODENAME_REFLECTOGRAMMA + "'  from map");
 			BellcoreStructure bs = (new BellcoreReader()).getData(rawData);
-			double[] reflectogramma = new double[bs.dataPts.TNDP];
-			for (int i = 0; i < bs.dataPts.TPS[0]; i++)
-				reflectogramma[i] = (double)(65535 - bs.dataPts.DSF[0][i])/1000d;
+			double[] reflectogramma = bs.getTraceData();
 			reflComparer = new ReflectogramComparer(reflectogramma,
 																							etalon,
 																							ts,
