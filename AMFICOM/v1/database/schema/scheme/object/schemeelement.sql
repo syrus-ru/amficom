@@ -1,4 +1,4 @@
--- $Id: schemeelement.sql,v 1.4 2005/02/10 11:09:26 max Exp $
+-- $Id: schemeelement.sql,v 1.5 2005/02/21 08:30:18 bass Exp $
 
 CREATE TABLE "SchemeElement" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -64,6 +64,8 @@ CREATE TABLE "SchemeElement" (
 		OR (parent_scheme_id IS NOT NULL
 		AND parent_scheme_element_id IS NULL))
 );
+
+COMMENT ON TABLE "SchemeElement" IS '$Id: schemeelement.sql,v 1.5 2005/02/21 08:30:18 bass Exp $';
 
 ALTER TABLE "Scheme" ADD (
 	CONSTRAINT scheme_prnt_scheme_element_fk FOREIGN KEY(parent_scheme_element_id)

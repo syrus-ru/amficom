@@ -1,4 +1,24 @@
--- $Id: DROP.sql,v 1.5 2005/02/18 16:45:56 bass Exp $
+-- $Id: DROP.sql,v 1.6 2005/02/21 08:30:18 bass Exp $
+
+-- 15. PathElement
+PROMPT 15. Dropping table "PathElement"...;
+DROP TABLE "PathElement";
+DROP SEQUENCE "PathElement_Seq";
+
+-- 14. SchemePath
+PROMPT 14. Dropping table "SchemePath"...;
+DROP TABLE "SchemePath";
+DROP SEQUENCE "SchemePath_Seq";
+
+-- 13. CableChannelingItem
+PROMPT 13. Dropping table "CableChannelingItem"...;
+DROP TABLE "CableChannelingItem";
+DROP SEQUENCE "CableChannelingItem_Seq";
+
+-- 12. SchemeCableThread
+PROMPT 12. Dropping table "SchemeCableThread"...;
+DROP TABLE "SchemeCableThread";
+DROP SEQUENCE "SchemeCableThread_Seq";
 
 -- 11. SchemeCableLink
 PROMPT 11. Dropping table "SchemeCableLink"...;

@@ -1,4 +1,4 @@
--- $Id: schemeprotogroup.sql,v 1.3 2005/02/10 11:09:26 max Exp $
+-- $Id: schemeprotogroup.sql,v 1.4 2005/02/21 08:30:18 bass Exp $
 
 CREATE TABLE "SchemeProtoGroup" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -27,5 +27,7 @@ CREATE TABLE "SchemeProtoGroup" (
 	CONSTRAINT schemeprotogroup_prnt_spg_fk FOREIGN KEY(parent_scheme_proto_group_id)
 		REFERENCES "SchemeProtoGroup"(id) ON DELETE CASCADE
 );
+
+COMMENT ON TABLE "SchemeProtoGroup" IS '$Id: schemeprotogroup.sql,v 1.4 2005/02/21 08:30:18 bass Exp $';
 
 CREATE SEQUENCE "SchemeProtoGroup_Seq" ORDER;

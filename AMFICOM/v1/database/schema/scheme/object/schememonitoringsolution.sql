@@ -1,4 +1,4 @@
--- $Id: schememonitoringsolution.sql,v 1.2 2005/02/18 16:45:56 bass Exp $
+-- $Id: schememonitoringsolution.sql,v 1.3 2005/02/21 08:30:18 bass Exp $
 
 CREATE TABLE "SchemeMonitoringSolution" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -26,6 +26,7 @@ CREATE TABLE "SchemeMonitoringSolution" (
 		REFERENCES "SchemeOptimizeInfo"(id) ON DELETE CASCADE
 );
 
+COMMENT ON TABLE "SchemeMonitoringSolution" IS '$Id: schememonitoringsolution.sql,v 1.3 2005/02/21 08:30:18 bass Exp $';
 COMMENT ON COLUMN "SchemeMonitoringSolution".price_usd IS 'Cost of this solution in US dollars.';
 
 ALTER TABLE "Scheme" ADD (

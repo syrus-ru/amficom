@@ -1,4 +1,4 @@
--- $Id: schemeoptimizeinfo.sql,v 1.2 2005/02/10 11:09:26 max Exp $
+-- $Id: schemeoptimizeinfo.sql,v 1.3 2005/02/21 08:30:18 bass Exp $
 
 CREATE TABLE "SchemeOptimizeInfo" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -37,6 +37,8 @@ CREATE TABLE "SchemeOptimizeInfo" (
 		REFERENCES "Scheme"(id) ON DELETE CASCADE
 );
 
+COMMENT ON TABLE "SchemeOptimizeInfo" IS '$Id: schemeoptimizeinfo.sql,v 1.3 2005/02/21 08:30:18 bass Exp $';
+
 CREATE SEQUENCE "SchemeOptimizeInfo_Seq" ORDER;
 
 
@@ -61,6 +63,7 @@ CREATE TABLE "SchemeOptimizeInfoRtu" (
 		REFERENCES "SchemeOptimizeInfo"(id) ON DELETE CASCADE
 );
 
+COMMENT ON TABLE "SchemeOptimizeInfoRtu" IS '$Id: schemeoptimizeinfo.sql,v 1.3 2005/02/21 08:30:18 bass Exp $';
 COMMENT ON COLUMN "SchemeOptimizeInfoRtu".price_usd IS 'RTU price in US dollars.';
 COMMENT ON COLUMN "SchemeOptimizeInfoRtu".range_db IS 'RTU range in decibels, from 0.00 to 128.00 db.';
 
@@ -88,6 +91,7 @@ CREATE TABLE "SchemeOptimizeInfoSwitch" (
 		REFERENCES "SchemeOptimizeInfo"(id) ON DELETE CASCADE
 );
 
+COMMENT ON TABLE "SchemeOptimizeInfoSwitch" IS '$Id: schemeoptimizeinfo.sql,v 1.3 2005/02/21 08:30:18 bass Exp $';
 COMMENT ON COLUMN "SchemeOptimizeInfoSwitch".price_usd IS 'Optical switch price in US dollars.';
 COMMENT ON COLUMN "SchemeOptimizeInfoSwitch".no_of_ports IS 'Number of ports in this optical switch. Up to 256.';
 

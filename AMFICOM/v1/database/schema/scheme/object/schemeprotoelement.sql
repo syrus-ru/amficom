@@ -1,4 +1,4 @@
--- $Id: schemeprotoelement.sql,v 1.4 2005/02/10 11:09:26 max Exp $
+-- $Id: schemeprotoelement.sql,v 1.5 2005/02/21 08:30:18 bass Exp $
 
 CREATE TABLE "SchemeProtoElement" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -49,5 +49,7 @@ CREATE TABLE "SchemeProtoElement" (
 		OR (parent_scheme_proto_group_id iS NOT NULL
 		AND parent_scheme_proto_element_id iS NULL))
 );
+
+COMMENT ON TABLE "SchemeProtoElement" IS '$Id: schemeprotoelement.sql,v 1.5 2005/02/21 08:30:18 bass Exp $';
 
 CREATE SEQUENCE "SchemeProtoElement_Seq" ORDER;

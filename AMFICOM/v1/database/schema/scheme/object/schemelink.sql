@@ -1,4 +1,4 @@
--- $Id: schemelink.sql,v 1.1 2005/02/18 16:45:56 bass Exp $
+-- $Id: schemelink.sql,v 1.2 2005/02/21 08:30:18 bass Exp $
 
 CREATE TABLE "SchemeLink" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -29,5 +29,7 @@ CREATE TABLE "SchemeLink" (
 	CONSTRAINT schmlnk_lnk_fk FOREIGN KEY(link_id)
 		REFERENCES Link(id) ON DELETE CASCADE
 );
+
+COMMENT ON TABLE "SchemeLink" IS '$Id: schemelink.sql,v 1.2 2005/02/21 08:30:18 bass Exp $';
 
 CREATE SEQUENCE "SchemeLink_Seq" ORDER;

@@ -1,4 +1,4 @@
--- $Id: schemeport.sql,v 1.2 2005/02/18 16:45:56 bass Exp $
+-- $Id: schemeport.sql,v 1.3 2005/02/21 08:30:18 bass Exp $
 
 CREATE TABLE "SchemePort" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -52,5 +52,7 @@ CREATE TABLE "SchemePort" (
 		OR (measurement_port_type_id IS NOT NULL
 		AND measurement_port_id IS NULL))
 );
+
+COMMENT ON TABLE "SchemePort" IS '$Id: schemeport.sql,v 1.3 2005/02/21 08:30:18 bass Exp $';
 
 CREATE SEQUENCE "SchemePort_Seq" ORDER;
