@@ -50,6 +50,7 @@ AMFICOM_v1	&idl_v1\
 		&generalclient_v1\
 		&admin_v1\
 		&config_v1\
+		&configclient_v1\
 		&main_v1\
 		&map_v1\
 		&survey_v1\
