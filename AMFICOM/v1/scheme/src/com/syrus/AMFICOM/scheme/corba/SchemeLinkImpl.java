@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableLinkImpl.java,v 1.2 2004/11/24 10:03:58 bass Exp $
+ * $Id: SchemeLinkImpl.java,v 1.1 2004/11/24 10:03:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,22 +8,23 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
+import com.syrus.AMFICOM.CORBA.Map.MapSiteElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.corba.Identifier;
 import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/11/24 10:03:58 $
+ * @version $Revision: 1.1 $, $Date: 2004/11/24 10:03:58 $
  * @module schemecommon_v1
  */
-final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
+final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
-
-	SchemeCableLinkImpl() {
+	
+	SchemeLinkImpl() {
 	}
-
-	SchemeCableLinkImpl(final Identifier id) {
+	
+	SchemeLinkImpl(final Identifier id) {
 		this.thisId = id;
 	}
 
@@ -31,7 +32,8 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void abstractLinkType(AbstractLinkType_Transferable abstractLinkType) {
+	public void abstractLinkType(
+			AbstractLinkType_Transferable newAbstractLinkType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -39,19 +41,7 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void alarmed(boolean alarmed) {
-		throw new UnsupportedOperationException();
-	}
-
-	public CableChannelingItem[] cableChannelingItems() {
-		throw new UnsupportedOperationException();
-	}
-
-	public LinkType_Transferable cableLinkType() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void cableLinkType(LinkType_Transferable cableLinkType) {
+	public void alarmed(boolean newAlarmed) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -60,13 +50,13 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 	}
 
 	public void characteristics(
-			Characteristic_Transferable[] characteristics) {
+			Characteristic_Transferable[] newCharacteristics) {
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeCableLink cloneInstance() {
+	public SchemeLink cloneInstance() {
 		try {
-			return (SchemeCableLink) this.clone();
+			return (SchemeLink) this.clone();
 		} catch (CloneNotSupportedException cnse) {
 			ERROR_HANDLER.error(cnse);
 			return null;
@@ -81,7 +71,7 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String description) {
+	public void description(String newDescription) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -93,6 +83,14 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
+	public LinkType_Transferable linkType() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void linkType(LinkType_Transferable newLinkType) {
+		throw new UnsupportedOperationException();
+	}
+
 	public long modified() {
 		throw new UnsupportedOperationException();
 	}
@@ -101,7 +99,7 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String name) {
+	public void name(String newName) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -109,7 +107,7 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void opticalLength(double opticalLength) {
+	public void opticalLength(double newOpticalLength) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -117,7 +115,7 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void physicalLength(double physicalLength) {
+	public void physicalLength(double newPhysicalLength) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -125,11 +123,11 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void scheme(Scheme scheme) {
+	public void scheme(Scheme newScheme) {
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeCableThread[] schemeCableThreads() {
+	public MapSiteElement_Transferable site() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -137,7 +135,7 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeCablePort sourceSchemeCablePort() {
+	public SchemePort sourceSchemePort() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -145,7 +143,7 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeCablePort targetSchemeCablePort() {
+	public SchemePort targetSchemePort() {
 		throw new UnsupportedOperationException();
 	}
 

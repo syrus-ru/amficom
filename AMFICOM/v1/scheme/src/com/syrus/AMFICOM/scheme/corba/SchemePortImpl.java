@@ -1,5 +1,5 @@
 /*
- * $Id: CableChannelingItemImpl.java,v 1.2 2004/11/24 10:03:58 bass Exp $
+ * $Id: SchemePortImpl.java,v 1.1 2004/11/24 10:03:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,31 +8,41 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
-import com.syrus.AMFICOM.CORBA.Map.*;
+import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
 import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/11/24 10:03:58 $
+ * @version $Revision: 1.1 $, $Date: 2004/11/24 10:03:58 $
  * @module schemecommon_v1
  */
-final class CableChannelingItemImpl extends CableChannelingItem implements Cloneable {
+final class SchemePortImpl extends SchemePort implements Cloneable {
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
 
-	/**
-	 * @todo Check whether constructor is invoked during deserialization.
-	 */
-	CableChannelingItemImpl() {
+	SchemePortImpl() {
 	}
 
-	CableChannelingItemImpl(final Identifier id) {
+	SchemePortImpl(final Identifier id) {
 		this.thisId = id;
 	}
 
-	public CableChannelingItem cloneInstance() {
+	public AbstractSchemeLink abstractSchemeLink() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Characteristic_Transferable[] characteristics() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void characteristics(Characteristic_Transferable[] newCharacteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	public SchemePort cloneInstance() {
 		try {
-			return (CableChannelingItem) this.clone();
+			return (SchemePort) this.clone();
 		} catch (CloneNotSupportedException cnse) {
 			ERROR_HANDLER.error(cnse);
 			return null;
@@ -47,19 +57,23 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String description) {
+	public void description(String newDescription) {
 		throw new UnsupportedOperationException();
 	}
 
-	public MapSiteElement_Transferable endSite() {
-		throw new UnsupportedOperationException();
-	}
-
-	public double endSpare() {
+	public DirectionType directionType() {
 		throw new UnsupportedOperationException();
 	}
 
 	public Identifier id() {
+		throw new UnsupportedOperationException();
+	}
+
+	public MeasurementPort_Transferable measurementPort() {
+		throw new UnsupportedOperationException();
+	}
+
+	public MeasurementPortType_Transferable measurementPortType() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -71,31 +85,27 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String name) {
+	public void name(String newName) {
 		throw new UnsupportedOperationException();
 	}
 
-	public MapPhysicalLinkElement_Transferable physicalLink() {
+	public Port_Transferable port() {
 		throw new UnsupportedOperationException();
 	}
 
-	public int placeY() {
+	public PortType_Transferable portType() {
 		throw new UnsupportedOperationException();
 	}
 
-	public int rowX() {
+	public SchemeCableThread schemeCableThread() {
 		throw new UnsupportedOperationException();
 	}
 
-	public int sequentialNumber() {
+	public SchemeDevice schemeDevice() {
 		throw new UnsupportedOperationException();
 	}
 
-	public MapSiteElement_Transferable startSite() {
-		throw new UnsupportedOperationException();
-	}
-
-	public double startSpare() {
+	public SchemeLink schemeLink() {
 		throw new UnsupportedOperationException();
 	}
 

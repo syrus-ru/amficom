@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementImpl.java,v 1.2 2004/11/23 15:42:37 bass Exp $
+ * $Id: PathElementImpl.java,v 1.3 2004/11/24 10:03:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -15,7 +15,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/11/23 15:42:37 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/24 10:03:58 $
  * @module schemecommon_v1
  */
 final class PathElementImpl extends PathElement implements Cloneable {
@@ -26,7 +26,7 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	PathElementImpl() {
 	}
 
-	PathElementImpl(Identifier id) {
+	PathElementImpl(final Identifier id) {
 		this.thisId = id;
 	}
 

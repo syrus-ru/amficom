@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableLinkImpl.java,v 1.2 2004/11/24 10:03:58 bass Exp $
+ * $Id: SchemeOptimizeInfoImpl.java,v 1.1 2004/11/24 10:03:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,65 +8,28 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
-import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoPackage.OptimizationMode;
 import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/11/24 10:03:58 $
+ * @version $Revision: 1.1 $, $Date: 2004/11/24 10:03:58 $
  * @module schemecommon_v1
  */
-final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
+final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneable {
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
 
-	SchemeCableLinkImpl() {
+	SchemeOptimizeInfoImpl() {
 	}
-
-	SchemeCableLinkImpl(final Identifier id) {
+	
+	SchemeOptimizeInfoImpl(final Identifier id) {
 		this.thisId = id;
 	}
 
-	public AbstractLinkType_Transferable abstractLinkType() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void abstractLinkType(AbstractLinkType_Transferable abstractLinkType) {
-		throw new UnsupportedOperationException();
-	}
-
-	public boolean alarmed() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void alarmed(boolean alarmed) {
-		throw new UnsupportedOperationException();
-	}
-
-	public CableChannelingItem[] cableChannelingItems() {
-		throw new UnsupportedOperationException();
-	}
-
-	public LinkType_Transferable cableLinkType() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void cableLinkType(LinkType_Transferable cableLinkType) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Characteristic_Transferable[] characteristics() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void characteristics(
-			Characteristic_Transferable[] characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeCableLink cloneInstance() {
+	public SchemeOptimizeInfo cloneInstance() {
 		try {
-			return (SchemeCableLink) this.clone();
+			return (SchemeOptimizeInfo) this.clone();
 		} catch (CloneNotSupportedException cnse) {
 			ERROR_HANDLER.error(cnse);
 			return null;
@@ -81,7 +44,7 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void description(String description) {
+	public void description(String newDescription) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -89,7 +52,11 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public Link_Transferable link() {
+	public double iterations() {
+		throw new UnsupportedOperationException();
+	}
+
+	public double lenMargin() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -97,27 +64,55 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
+	public double mutationDegree() {
+		throw new UnsupportedOperationException();
+	}
+
+	public double mutationRate() {
+		throw new UnsupportedOperationException();
+	}
+
 	public String name() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void name(String name) {
+	public void name(String newName) {
 		throw new UnsupportedOperationException();
 	}
 
-	public double opticalLength() {
+	public double nodesCutProb() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void opticalLength(double opticalLength) {
+	public double nodesSpliceProb() {
 		throw new UnsupportedOperationException();
 	}
 
-	public double physicalLength() {
+	public OptimizationMode optimizationMode() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void physicalLength(double physicalLength) {
+	public double price() {
+		throw new UnsupportedOperationException();
+	}
+
+	public String[] reflNames() {
+		throw new UnsupportedOperationException();
+	}
+
+	public double[] reflPrices() {
+		throw new UnsupportedOperationException();
+	}
+
+	public double[] reflRanges() {
+		throw new UnsupportedOperationException();
+	}
+
+	public double rtuCreateProb() {
+		throw new UnsupportedOperationException();
+	}
+
+	public double rtuDeleteProb() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -125,31 +120,31 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void scheme(Scheme scheme) {
+	public SchemeMonitoringSolution schemeMonitoringSolution() {
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeCableThread[] schemeCableThreads() {
+	public double survivorRate() {
 		throw new UnsupportedOperationException();
 	}
 
-	public AbstractSchemePort sourceAbstractSchemePort() {
+	public String[] switchNames() {
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeCablePort sourceSchemeCablePort() {
+	public double[] switchNports() {
 		throw new UnsupportedOperationException();
 	}
 
-	public AbstractSchemePort targetAbstractSchemePort() {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemeCablePort targetSchemeCablePort() {
+	public double[] switchPrices() {
 		throw new UnsupportedOperationException();
 	}
 
 	public long version() {
+		throw new UnsupportedOperationException();
+	}
+
+	public double wavelength() {
 		throw new UnsupportedOperationException();
 	}
 
