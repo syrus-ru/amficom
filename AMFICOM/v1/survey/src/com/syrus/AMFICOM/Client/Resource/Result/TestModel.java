@@ -30,13 +30,13 @@ public class TestModel extends ObjectResourceModel {
 			if (colId.equals(ConstStorage.COLUMN_NAME_STATUS)) {
 				switch (test.status.value()) {
 					case TestStatus._TEST_STATUS_PROCESSING:
-						s = LangModelSurvey.getString("Running");
+						s = LangModelSurvey.getString("labelDoing");
 						break;
 					case TestStatus._TEST_STATUS_COMPLETED:
-						s = LangModelSurvey.getString("Done");
+						s = LangModelSurvey.getString("labelDone");
 						break;
 					case TestStatus._TEST_STATUS_SCHEDULED:
-						s = LangModelSurvey.getString("ReadyToRun");
+						s = LangModelSurvey.getString("labelReadyToDo");
 						break;
 				}
 			} else if (colId.equals(ConstStorage.COLUMN_NAME_LOCAL_ID)) {
@@ -71,21 +71,26 @@ public class TestModel extends ObjectResourceModel {
 			else if (colId.equals(ConstStorage.COLUMN_NAME_TEMPORAL_TYPE)) {
 				switch (test.temporal_type.value()) {
 					case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-						s = LangModelSurvey.getString("Onetime");
+						s = LangModelSurvey.getString("labelOnetime");
 						break;
 					case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-						s = LangModelSurvey.getString("Periodical");
+						s = LangModelSurvey.getString("labelPeriod");
 						break;
 					case TestTemporalType._TEST_TEMPORAL_TYPE_TIMETABLE:
-						s = LangModelSurvey.getString("ByTimeTable");
+						s = LangModelSurvey.getString("labelTimeTable");
 						break;
 				}
 			} else if (colId.equals(ConstStorage.COLUMN_NAME_TEST_TYPE_ID))
 				s = Pool.getName(TestType.typ, test.test_type_id);
 			else if (colId.equals(ConstStorage.COLUMN_NAME_REQUEST_ID))
 					s = Pool.getName(TestRequest.typ, test.request_id);
+			else if (colId.equals(ConstStorage.COLUMN_NAME_DOMAIN_ID)){
+				KIS kis = (KIS)Pool.get(KIS.typ, test.kis_id);
+				if (kis!=null)
+					s = kis.getDomainId();
+			}
 		} catch (Exception e) {
-//			System.out.println("error gettin field value - Test");
+			System.out.println("error gettin field value - Test");
 			s = "";
 		}
 		return s;
@@ -116,4 +121,3 @@ public class TestModel extends ObjectResourceModel {
 		return getColumnRenderer(colId);
 	}	
 }
-
