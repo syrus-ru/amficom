@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.59 2005/03/11 10:17:12 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.60 2005/03/30 15:28:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/03/11 10:17:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.60 $, $Date: 2005/03/30 15:28:17 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -308,52 +308,48 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		Collection mdmIds = monitoredElement.getMonitoredDomainMemberIds();
 		Identifier meId = monitoredElement.getId();
 		int meSort = monitoredElement.getSort().value();
-
-		String sql;
-		{
-			StringBuffer buffer = new StringBuffer(SQL_INSERT_INTO);
-			switch (meSort) {
-				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
-					buffer.append(ObjectEntities.EQUIPMENTMELINK_ENTITY);
-					break;
-				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
-					buffer.append(ObjectEntities.TRANSPATHMELINK_ENTITY);
-					break;
-				default:
-					String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | ERROR: Unknown sort of monitoredelement: "
-							+ meSort;
-					throw new CreateObjectException(mesg);
-			}
-			buffer.append(OPEN_BRACKET);
-			switch (meSort) {
-				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
-					buffer.append(MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID);
-					break;
-				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
-					buffer.append(MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
-					break;
-				default:
-					String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | ERROR: Unknown sort of monitoredelement: "
-							+ meSort;
-					throw new CreateObjectException(mesg);
-			}
-			buffer.append(COMMA);
-			buffer.append(MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
-			buffer.append(CLOSE_BRACKET);
-			buffer.append(SQL_VALUES);
-			buffer.append(OPEN_BRACKET);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(CLOSE_BRACKET);
-			sql = buffer.toString();
+		
+		StringBuffer buffer = new StringBuffer(SQL_INSERT_INTO);
+		switch (meSort) {
+			case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
+				buffer.append(ObjectEntities.EQUIPMENTMELINK_ENTITY);
+				break;
+			case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
+				buffer.append(ObjectEntities.TRANSPATHMELINK_ENTITY);
+				break;
+			default:
+				String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | ERROR: Unknown sort of monitoredelement: "
+						+ meSort;
+				throw new CreateObjectException(mesg);
 		}
+		buffer.append(OPEN_BRACKET);
+		switch (meSort) {
+			case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
+				buffer.append(MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID);
+				break;
+			case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
+				buffer.append(MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
+				break;
+			default:
+				String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | ERROR: Unknown sort of monitoredelement: "
+						+ meSort;
+				throw new CreateObjectException(mesg);
+		}
+		buffer.append(COMMA);
+		buffer.append(MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
+		buffer.append(CLOSE_BRACKET);
+		buffer.append(SQL_VALUES);
+		buffer.append(OPEN_BRACKET);
+		buffer.append(QUESTION);
+		buffer.append(COMMA);
+		buffer.append(QUESTION);
+		buffer.append(CLOSE_BRACKET);
 
 		PreparedStatement preparedStatement = null;
 		Identifier mdmId = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
-			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement = connection.prepareStatement(buffer.toString());
 			for (Iterator it = mdmIds.iterator(); it.hasNext();) {
 				mdmId = (Identifier) it.next();
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, mdmId);

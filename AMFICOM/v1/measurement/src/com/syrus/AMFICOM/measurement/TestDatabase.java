@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.83 2005/03/25 12:13:28 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.84 2005/03/30 15:28:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/03/25 12:13:28 $
+ * @version $Revision: 1.84 $, $Date: 2005/03/30 15:28:32 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -475,20 +475,19 @@ public class TestDatabase extends StorableObjectDatabase {
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
-		
-		if (storableObjects.size() == 1){
-			Test test = (Test)storableObjects.iterator().next();
-			insertEntity(test);
-			insertMeasurementSetupTestLinks(test);
-			return;
-		}
-		
+
+//		if (storableObjects.size() == 1) {
+//			Test test = (Test) storableObjects.iterator().next();
+//			this.insertEntity(test);
+//			this.insertMeasurementSetupTestLinks(test);
+//			return;
+//		}
+
 		this.insertEntities(storableObjects);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			Test test = (Test) it.next();
-			insertMeasurementSetupTestLinks(test);
+			this.insertMeasurementSetupTestLinks(test);
 		}
-		
 	}
 	
 	private void insertMeasurementSetupTestLinks(Test test) throws CreateObjectException {
