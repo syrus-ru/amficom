@@ -1,5 +1,5 @@
 /*
- * $Id: NewIdentifierPool.java,v 1.5 2004/08/10 19:04:51 arseniy Exp $
+ * $Id: NewIdentifierPool.java,v 1.6 2004/08/22 18:33:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,10 +15,12 @@ import java.util.ArrayList;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.ErrorCode;
+import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/10 19:04:51 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/22 18:33:52 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -72,14 +74,19 @@ public class NewIdentifierPool {
 	private static void updateIdentifierPool(Short eCode, int size) throws IllegalObjectEntityException, AMFICOMRemoteException {
 		List entityIdPool = (List)entityIdentifierPools.get(eCode);
 		if (entityIdPool != null) {
-			if (size <= 1) {
-				Identifier identifier = new Identifier(igServer.getGeneratedIdentifier(eCode.shortValue()));
-				entityIdPool.add(identifier);
+			try {
+				if (size <= 1) {
+					Identifier identifier = new Identifier(igServer.getGeneratedIdentifier(eCode.shortValue()));
+					entityIdPool.add(identifier);
+				}
+				else {
+					Identifier_Transferable[] idst = igServer.getGeneratedIdentifierRange(eCode.shortValue(), (size < MAX_ENTITY_POOL_SIZE)?size:MAX_ENTITY_POOL_SIZE);
+					for (int i = 0; i < idst.length; i++)
+						entityIdPool.add(new Identifier(idst[i]));
+				}
 			}
-			else {
-				Identifier_Transferable[] idst = igServer.getGeneratedIdentifierRange(eCode.shortValue(), (size < MAX_ENTITY_POOL_SIZE)?size:MAX_ENTITY_POOL_SIZE);
-				for (int i = 0; i < idst.length; i++)
-					entityIdPool.add(new Identifier(idst[i]));
+			catch (org.omg.CORBA.SystemException se) {
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_NO_CONNECT, CompletionStatus.COMPLETED_NO, "System exception -- " + se.getMessage());
 			}
 		}
 		else
@@ -94,6 +101,10 @@ public class NewIdentifierPool {
 		}
 		else
 			throw new IllegalObjectEntityException("Identifier pool for entity '" + ObjectEntities.codeToString(entityCode) + "' not found", IllegalObjectEntityException.NULL_ENTITY_CODE);
+	}
+
+	public static void setIdentifierGeneratorServer(IdentifierGeneratorServer igServer1) {
+		igServer = igServer1;
 	}
 	
 	private static void createEntityIdentifierPool(short entityCode) {
