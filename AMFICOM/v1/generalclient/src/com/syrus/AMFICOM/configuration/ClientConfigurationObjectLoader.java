@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.23 2005/04/04 13:50:53 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.24 2005/04/04 14:06:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/04/04 13:50:53 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/04 14:06:00 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -559,7 +559,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			transferables = this.server.transmitCableThreadButIdsCondition(identifierTransferables, getAccessIdentifierTransferable(),
+			transferables = this.server.transmitCableThreadsButIdsCondition(identifierTransferables, getAccessIdentifierTransferable(),
 				StorableObjectConditionBuilder.getConditionTransferable(condition));
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
