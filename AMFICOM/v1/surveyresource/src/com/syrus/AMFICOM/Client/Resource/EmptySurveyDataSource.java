@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Resource;
 
 import com.syrus.AMFICOM.CORBA.Survey.*;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.Test.TestType;
 
 public class EmptySurveyDataSource
 		extends EmptyDataSource
@@ -74,8 +73,8 @@ public class EmptySurveyDataSource
 
 	public void GetAlarms()
 	{
-/*	
-	    Alarm alarm;
+/*
+			Alarm alarm;
 
 		alarm = new Alarm();
 		alarm.id = "id1";
@@ -95,7 +94,7 @@ public class EmptySurveyDataSource
 
 		Pool.put("alarm", alarm.getId(), alarm);
 //		Pool.putName("alarm", alarm.getId(), alarm.getName());
-		
+
 		alarm = new Alarm();
 		alarm.id = "id2";
 		alarm.generated = System.currentTimeMillis();
@@ -114,7 +113,7 @@ public class EmptySurveyDataSource
 
 		Pool.put("alarm", alarm.getId(), alarm);
 //		Pool.putName("alarm", alarm.getId(), alarm.getName());
-		
+
 		alarm = new Alarm();
 		alarm.id = "id3";
 		alarm.generated = System.currentTimeMillis();
@@ -133,7 +132,7 @@ public class EmptySurveyDataSource
 
 		Pool.put("alarm", alarm.getId(), alarm);
 //		Pool.putName("alarm", alarm.getId(), alarm.getName());
-*/		
+*/
 	}
 
 	public void SetAlarm(String alarm_id)
@@ -148,90 +147,88 @@ public class EmptySurveyDataSource
 
 	public void LoadTestTypes()
 	{
-		TestType testtype;
-		TestType_Transferable testtypet;
-
-		testtypet = new TestType_Transferable(
-				"ttype1", 
-				"Рефлектометрические измерения", 
-				"", 
-				System.currentTimeMillis(),
-				new ActionParameterType_Transferable[0], 
-				new ActionParameterType_Transferable[0],
-				new String[0],
-				new String[0]);
-		testtype = new TestType(testtypet);
-
-		Pool.put("testtype", testtype.getId(), testtype);
-//		Pool.putName("testtype", testtype.getId(), testtype.getName());
-
-		testtypet = new TestType_Transferable(
-				"ttype2", 
-				"Другие измерения", 
-				"", 
-				System.currentTimeMillis(),
-				new ActionParameterType_Transferable[0], 
-				new ActionParameterType_Transferable[0],
-				new String[0],
-				new String[0]);
-		testtype = new TestType(testtypet);
-
-		Pool.put("testtype", testtype.getId(), testtype);
-//		Pool.putName("testtype", testtype.getId(), testtype.getName());
+//		TestType testtype;
+//		TestType_Transferable testtypet;
+//
+//		testtypet = new TestType_Transferable(
+//				"ttype1",
+//				"Рефлектометрические измерения",
+//				"",
+//				System.currentTimeMillis(),
+//				new ActionParameterType_Transferable[0],
+//				new ActionParameterType_Transferable[0],
+//				new String[0],
+//				new String[0]);
+//		testtype = new TestType(testtypet);
+//
+//		Pool.put("testtype", testtype.getId(), testtype);
+//
+//		testtypet = new TestType_Transferable(
+//				"ttype2",
+//				"Другие измерения",
+//				"",
+//				System.currentTimeMillis(),
+//				new ActionParameterType_Transferable[0],
+//				new ActionParameterType_Transferable[0],
+//				new String[0],
+//				new String[0]);
+//		testtype = new TestType(testtypet);
+//
+//		Pool.put("testtype", testtype.getId(), testtype);
 /*
-		MapPathElement_Transferable mpet = 
+		MapPathElement_Transferable mpet =
 				new MapPathElement_Transferable(
-    "path1",
-    "path1",
-    "path1",
+		"path1",
+		"path1",
+		"path1",
 	"type",
-    "description",
-    "user9",
-    "map_id",
-    "ism_map_id",
-    "startNode_id",
-    "endNode_id",
-    new ElementAttribute_Transferable[0],
-    "font_id",
-    "metric",
-    true,
-    1,
-    1,
-    "style",
-    "selected_style",
-    1,
-    1,
-    "alarmed_style",
-    true,
-    true,
-    "path_id",
+		"description",
+		"user9",
+		"map_id",
+		"ism_map_id",
+		"startNode_id",
+		"endNode_id",
+		new ElementAttribute_Transferable[0],
+		"font_id",
+		"metric",
+		true,
+		1,
+		1,
+		"style",
+		"selected_style",
+		1,
+		1,
+		"alarmed_style",
+		true,
+		true,
+		"path_id",
 	false,
-    new String[0]);
+		new String[0]);
 		MapTransmissionPathElement mpe = new MapTransmissionPathElement(mpet);
-		
+
 		Pool.put("mappathelement", mpe.getId(), mpe);
 //		Pool.putName("mappathelement", mpe.getId(), mpe.getName());
 
 		MapKISElement_Transferable mket = new MapKISElement_Transferable(
-    "kis1",
-    "kisname",
-    "type_id",
-    "description",
-    "user9",
-    "0",
-    "0",
-    "map_id",
-    "ism_map_id",
-    "symbol_id",
-    "KIS_id",
-    "KIS_type_id",
-    "codename",
-    false,
-    "scheme_kis_element_id",
-    new ElementAttribute_Transferable[0],
-    new String[0]);
+		"kis1",
+		"kisname",
+		"type_id",
+		"description",
+		"user9",
+		"0",
+		"0",
+		"map_id",
+		"ism_map_id",
+		"symbol_id",
+		"KIS_id",
+		"KIS_type_id",
+		"codename",
+		false,
+		"scheme_kis_element_id",
+		new ElementAttribute_Transferable[0],
+		new String[0]);
 //		MapKISNodeElement mke = new MapKISNodeElement(mket);
-		
+
 //		Pool.put("mapkiselement", mke.getId(), mke);
 //		Pool.putName("mapkiselement", mke.getId(), mke.getName());
 */

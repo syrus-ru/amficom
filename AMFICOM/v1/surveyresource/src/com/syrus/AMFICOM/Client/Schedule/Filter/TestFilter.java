@@ -1,12 +1,11 @@
-package com.syrus.AMFICOM.Client.Schedule.Filter;
+/*package com.syrus.AMFICOM.Client.Schedule.Filter;
 
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Resource.Test.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.configuration.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.filter.FilterExpressionInterface;
@@ -135,30 +134,30 @@ public class TestFilter extends ObjectResourceFilter {
 		if (type.equals(ObjectResourceModel.COLUMN_TYPE_NUMERIC)) {
 			if (expId.equals(ObjectResourceModel.COLUMN_TYPE_TIME)) {
 				if (((String) vec.get(1)).equals("=")) {
-					if (test.getStartTime() == Long.parseLong((String) vec.get(2))) {
+					if (test.getStartTime().getTime() == Long.parseLong((String) vec.get(2))) {
 						result = true;
 					}
 				} else if (((String) vec.get(1)).equals(">")) {
-					if (test.getStartTime() > Long.parseLong((String) vec.get(2))) {
+					if (test.getStartTime().getTime() > Long.parseLong((String) vec.get(2))) {
 						result = true;
 					}
 				} else if (((String) vec.get(1)).equals("<")) {
-					if (test.getStartTime() < Long.parseLong((String) vec.get(2))) {
+					if (test.getStartTime().getTime() < Long.parseLong((String) vec.get(2))) {
 						result = true;
 					}
 				}
 			}
 		} else if (type.equals(ObjectResourceModel.COLUMN_TYPE_TIME)) {
 			if (expId.equals(ObjectResourceModel.COLUMN_TYPE_TIME)) {
-				if (test.getStartTime() > Long.parseLong((String) vec.get(1))
-						&& test.getStartTime() < Long.parseLong((String) vec.get(2))) {
+				if (test.getStartTime().getTime() > Long.parseLong((String) vec.get(1))
+						&& test.getStartTime().getTime() < Long.parseLong((String) vec.get(2))) {
 					result = true;
 				}
 			}
 		} else if (type.equals(ObjectResourceModel.COLUMN_TYPE_RANGE)) {
 			if (expId.equals(ObjectResourceModel.COLUMN_TYPE_TIME)) {
-				if (test.getStartTime() > Long.parseLong((String) vec.get(1))
-						&& test.getStartTime() < Long.parseLong((String) vec.get(2))) {
+				if (test.getStartTime().getTime() > Long.parseLong((String) vec.get(1))
+						&& test.getStartTime().getTime() < Long.parseLong((String) vec.get(2))) {
 					result = true;
 				}
 			}
@@ -167,7 +166,8 @@ public class TestFilter extends ObjectResourceFilter {
 			if (expId.equals(COLUMN_KIS)) {
 				String name = Pool.getName(KIS.typ, test.getKisId());
 				result = SearchSubstring(name, substring);
-			} else if (exp.getId().equals(COLUMN_ME)) {
+			}
+			else if (exp.getId().equals(COLUMN_ME)) {
 				MonitoredElement me;
 				for (Enumeration e = Pool.getHash(MonitoredElement.typ).elements(); e.hasMoreElements();) {
 					me = (MonitoredElement) e.nextElement();
@@ -344,3 +344,4 @@ public class TestFilter extends ObjectResourceFilter {
 	}
 }
 
+*/

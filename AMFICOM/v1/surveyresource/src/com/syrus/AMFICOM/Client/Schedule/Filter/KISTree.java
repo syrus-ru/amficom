@@ -1,14 +1,17 @@
 package com.syrus.AMFICOM.Client.Schedule.Filter;
 
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Filter.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Test.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
 import java.util.*;
-import javax.swing.*;
+
+import javax.swing.JTree;
+
+import com.syrus.AMFICOM.Client.General.Filter.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.DomainCondition;
+import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 
 public class KISTree extends FilterTree
 {
@@ -17,55 +20,62 @@ public class KISTree extends FilterTree
 
 	public void setTree(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
-		DataSourceInterface dsi = aContext.getDataSourceInterface();
-		ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-		//DataSet dSet = new DataSet(Pool.getHash(KIS.typ));
-		Map dSet = Pool.getHash(KIS.typ);
-		filter.filtrate(dSet);
-		//for(Enumeration en = dSet.elements(); en.hasMoreElements();)
-		for(Iterator it=dSet.keySet().iterator();it.hasNext();)
-		{
-			//KIS kis = (KIS )en.nextElement();
-			KIS kis = (KIS)dSet.get(it.next());
-			FilterTreeNode kisnode = new FilterTreeNode(kis.getName(), kis.getId());
-			root.add(kisnode);
-			for(Iterator iter = kis.access_ports.iterator(); iter.hasNext();)
-			{
-				AccessPort ap = (AccessPort )iter.next();
-				FilterTreeNode portnode = new FilterTreeNode(ap.getName(), ap.getId());
-				kisnode.add(portnode);
-				FilterTreeNode vol_ = new FilterTreeNode(LangModelSchedule.getString("TestTypes"), "mone");
-				FilterTreeNode tt_ = new FilterTreeNode(LangModelSchedule.getString("TestTypes"), "testtypes");
-				portnode.add(vol_);
-				portnode.add(tt_);
-				List daSet = Pool.getList(MonitoredElement.typ);
-				daSet = filter.filter(daSet);
-				for(Iterator it2 = daSet.iterator(); it2.hasNext();)
-				{
-					MonitoredElement me = (MonitoredElement )it2.next();
-					if(me.access_port_id.equals(ap.getId()))
+		try {
+			Identifier domainId = new Identifier(aContext.getSessionInterface().getDomainId());
+			Domain domain = (Domain)ConfigurationStorableObjectPool.
+					getStorableObject(domainId, true);
+			StorableObjectCondition condition = new DomainCondition(domain,
+					ObjectEntities.KIS_ENTITY_CODE);
+			List kiss = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+					condition, true);
+
+			for (Iterator it = kiss.iterator(); it.hasNext(); ) {
+				KIS kis = (KIS)it.next();
+				FilterTreeNode kisnode = new FilterTreeNode(kis.getName(),
+						kis.getId().getIdentifierString());
+				root.add(kisnode);
+
+				List mes = kis.retrieveMonitoredElements();
+
+				for (Iterator it2 = mes.iterator(); it2.hasNext(); ) {
+					MonitoredElement me = (MonitoredElement)it.next();
+					MeasurementPort port = (MeasurementPort)MeasurementStorableObjectPool.getStorableObject(
+									 me.getMeasurementPortId(), true);
+
+					FilterTreeNode portnode = new FilterTreeNode(port.getName(),
+							port.getId().getIdentifierString());
+					kisnode.add(portnode);
+
+					FilterTreeNode vol_ = new FilterTreeNode(LangModelSchedule.getString("TestTypes"), "mone");
+					FilterTreeNode tt_ = new FilterTreeNode(LangModelSchedule.getString("TestTypes"), "testtypes");
+					portnode.add(vol_);
+					portnode.add(tt_);
+
+					FilterTreeNode pathnode = new FilterTreeNode(me.getName(), me.getId().getIdentifierString());
+					vol_.add(pathnode);
+
+					MeasurementPortType pType = (MeasurementPortType)port.getType();
+					LinkedIdsCondition mCondition = LinkedIdsCondition.getInstance();
+					mCondition.setIdentifier(pType.getId());
+					mCondition.setEntityCode(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+					List measurementTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+							mCondition, true);
+
+					for (Iterator it3 = measurementTypes.iterator(); it.hasNext();)
 					{
-						FilterTreeNode pathnode = new FilterTreeNode(me.getName(), me.getId());
-						vol_.add(pathnode);
-					}
-				}
-				AccessPortType apt = (AccessPortType )Pool.get("accessporttype", ap.type_id);
-				
-				for(Enumeration enum = Pool.getHash("testtype").elements(); enum.hasMoreElements();)
-				{
-					TestType tt = (TestType )enum.nextElement();
-					if(apt.test_type_ids.contains(tt.getId()))
-					{
-						FilterTreeNode ttnode = new FilterTreeNode(tt.getName(), tt.getId());
+						MeasurementType type = (MeasurementType)it.next();
+						FilterTreeNode ttnode = new FilterTreeNode(type.getDescription(),
+								type.getId().getIdentifierString());
 						tt_.add(ttnode);
 					}
 				}
 			}
-
+			TreeModelClone myModel = new TreeModelClone(root);
+			tree = new JTree(myModel);
 		}
-		TreeModelClone myModel = new TreeModelClone(root);
-		tree = new JTree(myModel);
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
 	}
 }
 

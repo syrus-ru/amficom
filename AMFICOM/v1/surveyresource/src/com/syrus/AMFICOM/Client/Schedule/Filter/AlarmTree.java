@@ -1,9 +1,10 @@
 package com.syrus.AMFICOM.Client.Schedule.Filter;
 
+import javax.swing.JTree;
+
 import com.syrus.AMFICOM.Client.General.Filter.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import javax.swing.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
 public class AlarmTree extends FilterTree
 {

@@ -1,12 +1,16 @@
 package com.syrus.AMFICOM.Client.Schedule.Filter;
 
-import com.syrus.AMFICOM.Client.General.Filter.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Test.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
 import java.util.*;
-import javax.swing.*;
+
+import javax.swing.JTree;
+
+import com.syrus.AMFICOM.Client.General.Filter.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.DomainCondition;
 
 public class TestTypeTree extends FilterTree
 {
@@ -15,15 +19,25 @@ public class TestTypeTree extends FilterTree
 
 	public void setTree(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
-		Hashtable ht = Pool.getHash(TestType.typ);
-		for(Enumeration en = ht.elements(); en.hasMoreElements();)
-		{
-			TestType tt = (TestType )en.nextElement();
-			root.add(new FilterTreeNode(tt.getName(), tt.getId()));
+		try {
+			Identifier domainId = new Identifier(aContext.getSessionInterface().getDomainId());
+			Domain domain = (Domain)ConfigurationStorableObjectPool.
+					getStorableObject(domainId, true);
+			StorableObjectCondition condition = new DomainCondition(domain,
+					ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+			List measurementTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+					condition, true);
+
+			for (Iterator it = measurementTypes.iterator(); it.hasNext(); ) {
+				MeasurementType mt = (MeasurementType)it.next();
+				root.add(new FilterTreeNode(mt.getDescription(), mt.getId().getIdentifierString()));
+			}
+			TreeModelClone myModel = new TreeModelClone(root);
+			tree = new JTree(myModel);
 		}
-		TreeModelClone myModel = new TreeModelClone(root);
-		tree = new JTree(myModel);
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
 	}
 }
 

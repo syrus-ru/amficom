@@ -24,18 +24,6 @@ public class RISDSurveyDataSource
 		super(si);
 	}
 
-	/**
-	 * @deprecated
-	 */
-	public void GetMessages()
-	{
-		if(si == null)
-			return;
-		if(!si.isOpened())
-			return;
-
-	}
-
 	public void GetAlarmTypes()
 	{
 		if(si == null)
@@ -72,11 +60,11 @@ public class RISDSurveyDataSource
 		count = ats.length;
 		if(count != 0)
 			System.out.println("...Done! " + count + " alarm type(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			at = new AlarmType(ats[i]);
 			Pool.put(AlarmType.typ, at.getId(), at);
-	    }
+			}
 
 	}
 
@@ -265,7 +253,7 @@ public class RISDSurveyDataSource
 
 				try
 				{
-				  ByteArrayInputStream bis = new ByteArrayInputStream(logic_scheme);
+					ByteArrayInputStream bis = new ByteArrayInputStream(logic_scheme);
 				 ObjectInputStream in = new ObjectInputStream(bis);
 				 ls.readObject(in);
 				}

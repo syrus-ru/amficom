@@ -1,12 +1,14 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm.Filter;
 
-import com.syrus.AMFICOM.Client.General.Filter.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import java.util.*;
-import javax.swing.*;
+
+import javax.swing.JTree;
+
+import com.syrus.AMFICOM.Client.General.Filter.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Alarm.AlarmType;
 
 public class AlarmTypeTree extends FilterTree
 {
@@ -16,7 +18,7 @@ public class AlarmTypeTree extends FilterTree
 	{
 		// empty constructor
 	}
-	
+
 	public void setTree(ApplicationContext aContext)
 	{
 		Hashtable ht = Pool.getHash(AlarmType.typ);

@@ -1,11 +1,20 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm;
-import java.awt.Color;
+
+import java.util.*;
+import java.util.List;
+
+import java.awt.*;
+
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
 
-public class AlarmDescriptorEvent extends StubResource
-{
+public class AlarmDescriptorEvent extends StubResource {
+
 	public static final int INFO = 0;
 	public static final int DIAGNOSTICS = 1;
 	public static final int WARNING = 2;
@@ -16,106 +25,113 @@ public class AlarmDescriptorEvent extends StubResource
 	protected String id;
 	protected String title;
 	protected String text;
-	protected String meId = "";
+	protected Identifier meId;
 	protected int severity = 0;
 
-	TransmissionPathDecompositor tpd = null;
-	
-	public AlarmDescriptorEvent(String me_id, String title, String text)
-	{
+	PathDecompositor decompositor = null;
+
+	public AlarmDescriptorEvent(Identifier meId, String title, String text) {
 		this.id = "ade" + String.valueOf(System.currentTimeMillis());
 		this.title = title;
 		this.text = text;
-		this.setME(me_id);
+
+		setME(meId);
 	}
 
-	public String getId()
-	{
-		return this.id;
+	public String getId() {
+		return id;
 	}
 
-	public String getName()
-	{
-		return this.title;
+	public String getName() {
+		return title;
 	}
 
-	public int getSeverity()
-	{
-		return this.severity;
+	public int getSeverity() {
+		return severity;
 	}
 
-	public Color getColor()
-	{
-		switch(this.severity)
-		{
+	public Color getColor() {
+		switch (severity) {
 			case INFO:
-				return Color.white;
+				return Color.WHITE;
 			case DIAGNOSTICS:
-				return Color.lightGray;
+				return Color.LIGHT_GRAY;
 			case WARNING:
-				return Color.orange;
+				return Color.ORANGE;
 			case ALARM:
-				return Color.red;
+				return Color.RED;
 			case ERROR:
-				return Color.cyan;
+				return Color.CYAN;
 			case CRITICAL:
-				return Color.pink;
+				return Color.PINK;
 		}
-		return Color.white;
+		return Color.WHITE;
 	}
 
-	public Color getTextColor()
-	{
-		switch(this.severity)
-		{
+	public Color getTextColor() {
+		switch (severity) {
 			case INFO:
-				return Color.black;
+				return Color.BLACK;
 			case DIAGNOSTICS:
-				return Color.black;
+				return Color.BLACK;
 			case WARNING:
-				return Color.black;
+				return Color.BLACK;
 			case ALARM:
-				return Color.white;
+				return Color.WHITE;
 			case ERROR:
-				return Color.black;
+				return Color.BLACK;
 			case CRITICAL:
-				return Color.white;
+				return Color.WHITE;
 		}
-		return Color.black;
+		return Color.BLACK;
 	}
 
-	public void showAlarmMessage(int x, int y)
-	{
+	public void showAlarmMessage(int x, int y) {
 		MessageBox mb = new MessageBox(this.text, x, y);
 		mb.setVisible(true);
 	}
 
-
-	public void showAlarmMessage()
-	{
+	public void showAlarmMessage() {
 		MessageBox mb = new MessageBox(this.text);
 		mb.setVisible(true);
 	}
 
-	void setME(String meId)
-	{
-		this.meId = meId;
-		MonitoredElement me = (MonitoredElement )Pool.get(MonitoredElement.typ, meId);
-		if(!me.element_type.equals("path"))
-			return;
-		TransmissionPath tp = (TransmissionPath )Pool.get(TransmissionPath.typ, me.element_id);
-		if(tp == null)
-			return;
-		this.tpd = new TransmissionPathDecompositor(tp);
+	void setME(Identifier meId) {
+		try {
+			this.meId = meId;
+			MonitoredElement me = (MonitoredElement) MeasurementStorableObjectPool.
+					getStorableObject(meId, true);
+			if (!me.getSort().equals(MonitoredElementSort.
+															 MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
+				return;
+			}
+
+			List ids = me.getMonitoredDomainMemberIds();
+			if (ids.size() == 0) {
+				return;
+			}
+
+			TransmissionPath tp = (TransmissionPath) MeasurementStorableObjectPool.
+					getStorableObject((Identifier)ids.get(0), true);
+			Map paths = Pool.getMap(SchemePath.typ);
+			for (Iterator it = paths.values().iterator(); it.hasNext(); ) {
+				SchemePath path = (SchemePath) it.next();
+				if (path.path.equals(tp)) {
+					decompositor = new PathDecompositor(path);
+					break;
+				}
+			}
+		}
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
 	}
 
-	public TransmissionPathDecompositor getPathDecompositor()
-	{
-		return this.tpd;
+	public PathDecompositor getPathDecompositor() {
+		return decompositor;
 	}
-	
+
 	public String getText() {
-		return this.text;
+		return text;
 	}
 }
-

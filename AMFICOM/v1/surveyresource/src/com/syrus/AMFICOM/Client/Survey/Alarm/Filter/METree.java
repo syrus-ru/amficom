@@ -1,45 +1,50 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm.Filter;
 
-import com.syrus.AMFICOM.Client.General.Filter.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import java.util.*;
-import javax.swing.*;
 
-public class METree extends FilterTree
+import javax.swing.JTree;
+
+import com.syrus.AMFICOM.Client.General.Filter.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.DomainCondition;
+
+public class METree	extends FilterTree
 {
 	FilterTreeNode root = new FilterTreeNode(LangModel.getString("labelRoot"), "root");
 
 	public void setTree(ApplicationContext aContext)
 	{
-		Hashtable ht = Pool.getHash(KIS.typ);
-		if(ht != null)
-		for(Enumeration en = ht.elements(); en.hasMoreElements();)
-		{
-			KIS kis = (KIS )en.nextElement();
-			FilterTreeNode kisnode = new FilterTreeNode(kis.getName(), kis.getId());
-			root.add(kisnode);
+		try {
+			Identifier domainId = new Identifier(aContext.getSessionInterface().getDomainId());
+			Domain domain = (Domain)ConfigurationStorableObjectPool.
+					getStorableObject(domainId, true);
+			StorableObjectCondition condition = new DomainCondition(domain,
+					ObjectEntities.KIS_ENTITY_CODE);
+			List kiss = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+					condition, true);
 
-			for(Iterator iter = kis.access_ports.iterator(); iter.hasNext();)
-			{
-				AccessPort ap = (AccessPort )iter.next();
+			for (Iterator it = kiss.iterator(); it.hasNext(); ) {
+				KIS kis = (KIS)it.next();
+				FilterTreeNode kisnode = new FilterTreeNode(kis.getName(),
+						kis.getId().getIdentifierString());
+				root.add(kisnode);
 
-				Hashtable ht2 = Pool.getHash(MonitoredElement.typ);
-				if(ht2 != null)
-				for(Enumeration en2 = ht2.elements(); en2.hasMoreElements();)
-				{
-					MonitoredElement me = (MonitoredElement )en2.nextElement();
-					if(me.access_port_id.equals(ap.getId()))
-					{
-						kisnode.add(new FilterTreeNode(me.getName(), me.getId()));
-					}
+				List mes = kis.retrieveMonitoredElements();
+
+				for (Iterator it2 = mes.iterator(); it2.hasNext(); ) {
+					MonitoredElement me = (MonitoredElement)it.next();
+					kisnode.add(new FilterTreeNode(me.getName(),
+							me.getId().getIdentifierString()));
 				}
 			}
+			TreeModelClone myModel = new TreeModelClone(root);
+			tree = new JTree(myModel);
 		}
-		TreeModelClone myModel = new TreeModelClone(root);
-		tree = new JTree(myModel);
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
 	}
 }
-

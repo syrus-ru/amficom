@@ -1,23 +1,15 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm.Filter;
 
-import com.syrus.AMFICOM.Client.General.Filter.*;
+import java.util.*;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
-
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
-import com.syrus.AMFICOM.Client.Resource.Alarm.EventSource;
-
-import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
 import com.syrus.AMFICOM.CORBA.General.AlarmStatus;
-
+import com.syrus.AMFICOM.Client.General.Filter.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Alarm.*;
+import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.filter.FilterExpressionInterface;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Enumeration;
+import com.syrus.AMFICOM.general.*;
 
 public class AlarmFilter extends ObjectResourceFilter
 {
@@ -189,15 +181,12 @@ public class AlarmFilter extends ObjectResourceFilter
 			}
 			else if (expr.getId().equals("Monitored_element"))
 			{
-				MonitoredElement me;
-				for(Enumeration e = Pool.getHash(MonitoredElement.typ).elements();
-					e.hasMoreElements();)
-				{
-					me = (MonitoredElement )e.nextElement();
-					if(me.getId().equals(a.getMonitoredElementId()))
-					{
-						result = SearchSubstring(me.getName(), substring);
-					}
+				try {
+					MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(
+							a.getMonitoredElementId(), true);
+					result = SearchSubstring(me.getName(), substring);
+				}
+				catch (ApplicationException ex) {
 				}
 			}
 		}

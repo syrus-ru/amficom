@@ -1,8 +1,9 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm.Sorter;
 
+import java.util.List;
+
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Alarm.*;
-import java.util.*;
+import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 
 public class AlarmSorter extends ObjectResourceSorter {
 

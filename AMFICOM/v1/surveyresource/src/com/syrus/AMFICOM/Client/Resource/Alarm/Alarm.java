@@ -1,24 +1,16 @@
 package com.syrus.AMFICOM.Client.Resource.Alarm;
 
+import java.io.*;
+import java.util.Date;
+
 import com.syrus.AMFICOM.CORBA.Alarm.Alarm_Transferable;
 import com.syrus.AMFICOM.CORBA.General.AlarmStatus;
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.Evaluation;
-import com.syrus.AMFICOM.Client.Resource.Result.Result;
-import com.syrus.AMFICOM.Client.Resource.Result.Test;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
-import com.syrus.AMFICOM.Client.Resource.StubResource;
-
-import java.io.*;
-
-import java.util.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 public class Alarm extends StubResource implements Serializable
 {
@@ -45,65 +37,14 @@ public class Alarm extends StubResource implements Serializable
 	Alarm_Transferable transferable;
 	public String type_id;
 
-	//	Message_Transferable message;
-
 	public Alarm()
 	{
-//		super(typ);
 	}
 
 	public Alarm(Alarm_Transferable transferable)
 	{
-//		super(typ);
 		this.transferable = transferable;
 		setLocalFromTransferable();
-	}
-
-	public static Alarm getAlarmByTestResult(String resultId)
-	{
-		Result res = (Result )Pool.get(Result.TYPE, resultId);
-		if(res == null)
-			return null;
-		Test test = (Test )Pool.get(Test.TYPE, res.getActionId());
-		if(test == null)
-			return null;
-		int res_index;
-		for(res_index = 0; res_index < test.getResultIds().length; res_index++)
-			if(test.getResultIds()[res_index].equals(resultId))
-				break;
-		if(res_index == test.getResultIds().length)
-			return null;
-
-		Hashtable ht = Pool.getHash(Alarm.typ);
-		if(ht == null)
-			return null;
-
-		for(Iterator it=ht.keySet().iterator();it.hasNext();)
-		{
-			Alarm a = (Alarm )ht.get(it.next());
-			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, a.event_id);
-			if(event == null)
-				continue;
-			Result rrr = (Result )Pool.get(Result.TYPE, event.descriptor);
-			if(rrr == null)
-				continue;
-			Evaluation eval = (Evaluation )Pool.get(Evaluation.TYPE, rrr
-					.getActionId());
-			if(eval == null)
-				continue;
-			if(test.getEvaluationId().equals(rrr.getActionId()))
-			{
-				if(eval.getResultIds().length > res_index)
-					if(eval.getResultIds()[res_index].equals(event.descriptor))
-						return a;
-			}
-		}
-		return null;
-	}
-
-	public static ObjectResourceDisplayModel getDefaultDisplayModel()
-	{
-		return new com.syrus.AMFICOM.Client.Survey.Alarm.UI.AlarmDisplayModel();
 	}
 
 	public static ObjectResourceSorter getDefaultSorter()
@@ -116,9 +57,9 @@ public class Alarm extends StubResource implements Serializable
 		return new com.syrus.AMFICOM.Client.Survey.Alarm.Filter.AlarmFilter();
 	}
 
-	public static PropertiesPanel getPropertyPane()
+	public static String getPropertyPaneClassName()
 	{
-		return new GeneralPanel();
+		return "com.syrus.AMFICOM.General.UI.GeneralPanel";
 	}
 
 	public static ObjectResourceSorter getSorter()
@@ -126,81 +67,28 @@ public class Alarm extends StubResource implements Serializable
 		return new com.syrus.AMFICOM.Client.Survey.Alarm.Sorter.AlarmSorter();
 	}
 
-	public ObjectResource getDescriptor()
-	{
-		try
-		{
-			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, this.event_id);
-			if(event.type_id.equals(EVALUATION_ALARM_EVENT))
-			{
-				Evaluation ev = (Evaluation )Pool.get(Evaluation.TYPE,
-						event.descriptor);
-				return ev;
-			}
-			else if(event.type_id.equals(TEST_ALARM_EVENT)
-					  || event.type_id.equals(TEST_WARNING_EVENT))
-				{
-					Test t = (Test )Pool.get(Test.TYPE, event.descriptor);
-					return t;
-				}
-
-			return null;
-		} catch(Exception ex)
-		{
-			ex.printStackTrace();
-			return null;
-		}
-	}
-
 	public String getDomainId()
 	{
 		return ConstStorage.SYS_DOMAIN;
 	}
 
-	public ObjectResource getElementaryTest()
-	{
-		try
-		{
-			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, event_id);
-			if(event.type_id.equals(EVALUATION_ALARM_EVENT))
-			{
-				/*
-				 * Evaluation ev = (Evaluation )Pool.get("evaluation",
-				 * event.descriptor); Result result = (Result
-				 * )Pool.get("result", ev.result_id);
-				 * if(!result.result_type.equals("test")) return null; Test t =
-				 * (Test )Pool.get("test", result.test_id); return t;
-				 */
-				return null;
-			}
-			else if(event.type_id.equals(TEST_ALARM_EVENT)
-					  || event.type_id.equals(TEST_WARNING_EVENT))
-				{
-					Test t = (Test )Pool.get(Test.TYPE, event.descriptor);
-					return t;
-				}
-
-			return null;
-		} catch(Exception ex)
-		{
-			ex.printStackTrace();
-			return null;
-		}
-
-	}
-
 	public Evaluation getEvaluation()
 	{
-		SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, event_id);
-		Result rrr = (Result )Pool.get(Result.TYPE, event.descriptor);
-		Evaluation eval = (Evaluation )Pool
-				.get(Evaluation.TYPE, rrr.getActionId());
-		return eval;
+		try {
+			Result res = (Result)MeasurementStorableObjectPool.getStorableObject(
+					new Identifier(getEvent().descriptor), true);
+			 if (res.getSort().equals(ResultSort.RESULT_SORT_EVALUATION))
+				return (Evaluation)res.getAction();
+		}
+		catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
+		return null;
 	}
 
 	public SystemEvent getEvent()
 	{
-		return (SystemEvent )Pool.get(SystemEvent.typ, event_id);
+		return (SystemEvent)Pool.get(SystemEvent.typ, event_id);
 	}
 
 	public String getId()
@@ -208,58 +96,17 @@ public class Alarm extends StubResource implements Serializable
 		return id;
 	}
 
-	public ObjectResourceModel getModel()
-	{
-		return new AlarmModel(this);
-	}
-
 	public long getModified()
 	{
 		return modified;
 	}
 
-	public String getMonitoredElementId()
+	public Identifier getMonitoredElementId()
 	{
-		try
-		{
-			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, event_id);
-			if(event.type_id.equals(EVALUATION_ALARM_EVENT))
-			{
-				return "";
-			}
-			else if(event.type_id.equals(TEST_ALARM_EVENT)
-					  || event.type_id.equals(TEST_WARNING_EVENT))
-				{
-					Result res = (Result )Pool
-							.get(Result.TYPE, event.descriptor);
-					if(res == null)
-						return "";
-					if(res.getResultType().equals(Test.TYPE))
-					{
-						Test test = (Test )Pool
-								.get(Test.TYPE, res.getActionId());
-						if(test == null)
-							return "";
-						return test.getMonitoredElementId();
-					}
-					if(res.getResultType().equals(Evaluation.TYPE))
-					{
-						Evaluation evaluation = (Evaluation )Pool.get(
-								Evaluation.TYPE, res.getActionId());
-						if(evaluation == null)
-							return "";
-						return evaluation.getMonitoredElementId();
-					}
-					return "";
-				}
-
-			return "";
-		} catch(Exception ex)
-		{
-			ex.printStackTrace();
-			return "";
-		}
-
+		Result res = getResult();
+		if (res != null)
+			return res.getAction().getMonitoredElementId();
+		return null;
 	}
 
 	public String getName()
@@ -270,91 +117,28 @@ public class Alarm extends StubResource implements Serializable
 				+ " [" + s + "]";
 	}
 
-	public ObjectResource getResult()
+	public Result getResult()
 	{
-		try
-		{
-			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, event_id);
-			if(event.type_id.equals(EVALUATION_ALARM_EVENT))
-			{
-				for(Enumeration enum = Pool.getHash(Result.TYPE).elements(); enum
-						.hasMoreElements();)
-				{
-					Result r = (Result )enum.nextElement();
-					if(r.getResultType().equals("evaluation")
-							&& r.getId().equals(event.descriptor))
-						return r;
-				}
-				return null;
-			}
-			else if(event.type_id.equals(TEST_ALARM_EVENT)
-					  || event.type_id.equals(TEST_WARNING_EVENT))
-				{
-					for(Enumeration enum = Pool.getHash(Result.TYPE).elements(); enum
-							.hasMoreElements();)
-					{
-						Result r = (Result )enum.nextElement();
-						if(r.getResultType().equals("evaluation")
-								&& r.getId().equals(event.descriptor))
-							return r;
-					}
-					return null;
-				}
-
-			return null;
-		} catch(Exception ex)
-		{
-			ex.printStackTrace();
+		try {
+			return (Result)MeasurementStorableObjectPool.getStorableObject(
+					new Identifier(getEvent().descriptor), true);
+		}
+		catch (ApplicationException ex) {
 			return null;
 		}
-
 	}
 
 	public String getSourceId()
 	{
-		try
-		{
-			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, event_id);
-			if(event != null)
+		try {
+			SystemEvent event = getEvent();
+			if (event != null)
 				return event.source_id;
-		} catch(Exception ex)
-		{
-			return null;
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
 		}
 		return null;
-	}
-
-	public ObjectResource getTest()
-	{
-		try
-		{
-			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, event_id);
-			if(event.type_id.equals(EVALUATION_ALARM_EVENT))
-			{
-				//				Evaluation ev = (Evaluation) Pool.get("evaluation",
-				//						event.descriptor);
-				//
-				//				 Result result = (Result )Pool.get("result", ev.result_id);
-				//				  if(!result.result_type.equals("test")) return null; Test t =
-				// (Test
-				//				  )Pool.get("test", result.test_id); return t;
-				//
-				return null;
-			}
-			else if(event.type_id.equals(TEST_ALARM_EVENT)
-					  || event.type_id.equals(TEST_WARNING_EVENT))
-				{
-					Test t = (Test )Pool.get(Test.TYPE, event.descriptor);
-					return t;
-				}
-
-			return null;
-		} catch(Exception ex)
-		{
-			ex.printStackTrace();
-			return null;
-		}
-
 	}
 
 	public Object getTransferable()
@@ -401,7 +185,6 @@ public class Alarm extends StubResource implements Serializable
 
 	public void updateLocalFromTransferable()
 	{
-		// nothing to do
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
@@ -445,9 +228,9 @@ public class Alarm extends StubResource implements Serializable
 class AlarmTimeSorter extends ObjectResourceSorter
 {
 
-	String[][] sorted_columns = new String[][]
-	{
-	{ "time", "long"}};
+	String[][] sorted_columns = new String[][] {
+			{"time", "long"}
+	};
 
 	public long getLong(ObjectResource or, String column)
 	{
