@@ -1,25 +1,15 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.awt.datatransfer.*;
+import java.io.*;
+import java.util.*;
 
-import javax.swing.JOptionPane;
-
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MyDataFlavor;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.Client.Configure.UI.TransmissionPathPane;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapTransmissionPathProtoElement;
-
-import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.PathElement_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemePath_Transferable;
 
 public class SchemePath extends ObjectResource
 		implements Transferable, Serializable
@@ -135,6 +125,21 @@ public class SchemePath extends ObjectResource
 	public String getTyp()
 	{
 		return typ;
+	}
+
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new StubDisplayModel(new String[] { "name" }, new String[] { LangModelSchematics.getString("name") });
+	}
+
+	public static PropertiesPanel getPropertyPane()
+	{
+		return new TransmissionPathPane();
+	}
+
+	public ObjectResourceModel getModel()
+	{
+		return new SchemePathModel(this);
 	}
 
 	public double getPhysicalLength()
@@ -373,5 +378,24 @@ public class SchemePath extends ObjectResource
 	{
 		return (flavor.getHumanPresentableName().equals("SchemeElementLabel"));
 	}
-
 }
+
+class SchemePathModel extends ObjectResourceModel
+{
+	private SchemePath sp;
+	public SchemePathModel(SchemePath sp)
+	{
+		super(sp);
+		this.sp = sp;
+	}
+
+	public String getColumnValue(String col_id)
+	{
+		if(col_id.equals("id"))
+			return sp.getId();
+		if(col_id.equals("name"))
+			return sp.getName();
+		return "";
+	}
+}
+

@@ -1,26 +1,15 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.awt.datatransfer.*;
+import java.io.*;
+import java.util.*;
 
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MyDataFlavor;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-
-import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeCableLink_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeCableThread_Transferable;
 
 public class SchemeCableLink extends ObjectResource
 		implements Transferable, Serializable
@@ -80,7 +69,7 @@ public class SchemeCableLink extends ObjectResource
 
 	public static ObjectResourceDisplayModel getDefaultDisplayModel()
 	{
-		return new StubDisplayModel(new String[] { "name" }, new String[] { "name" });
+		return new StubDisplayModel(new String[] { "name" }, new String[] { LangModelSchematics.getString("name") });
 	}
 
 	public static PropertiesPanel getPropertyPane()

@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.zip.*;
 
 import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
@@ -187,7 +188,7 @@ public class SchemeElement extends ObjectResource
 
 	public static ObjectResourceDisplayModel getDefaultDisplayModel()
 	{
-		return new StubDisplayModel(new String[] { "name" }, new String[] { "name" });
+		return new StubDisplayModel(new String[] { "name" }, new String[] { LangModelSchematics.getString("name") });
 	}
 
 	public static PropertiesPanel getPropertyPane()

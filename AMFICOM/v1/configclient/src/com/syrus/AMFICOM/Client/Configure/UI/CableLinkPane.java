@@ -1,24 +1,17 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
+import java.awt.*;
+import java.awt.event.*;
 
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.JButton;
+import javax.swing.*;
 
-import oracle.jdeveloper.layout.XYConstraints;
-
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.General.UI.MessageBox;
-import com.syrus.AMFICOM.Client.General.Checker;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
+import com.syrus.AMFICOM.Client.General.*;
+import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import oracle.jdeveloper.layout.*;
 
 public class CableLinkPane extends PropertiesPanel
 {
@@ -32,8 +25,8 @@ public class CableLinkPane extends PropertiesPanel
 
 	public JTabbedPane tabbedPane = new JTabbedPane();
 
-	private JButton saveButton = new JButton();
-	private JPanel buttonsPanel = new JPanel();
+	//private JButton saveButton = new JButton();
+	//private JPanel buttonsPanel = new JPanel();
 
 	public CableLinkPane()
 	{
@@ -65,14 +58,14 @@ public class CableLinkPane extends PropertiesPanel
 		tabbedPane.add(fPanel.getName(), fPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
 
-		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
+	/*	saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
 		saveButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveButton_actionPerformed(e);
 			}
 		});
 
-		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));
+		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));*/
 	}
 
 	public ObjectResource getObjectResource()
@@ -154,7 +147,7 @@ public class CableLinkPane extends PropertiesPanel
 		return false;
 	}
 
-	void saveButton_actionPerformed(ActionEvent e)
-	{
-	}
+//	void saveButton_actionPerformed(ActionEvent e)
+//	{
+//	}
 }
