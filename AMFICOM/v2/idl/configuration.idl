@@ -11,31 +11,24 @@ module corba {
 
 	struct MonitoredElement_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+	  long long created;
+	  long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable kis_id;
 		wstring local_address;
 	};
 
 	struct KIS_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+	  long long created;
+	  long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable mcm_id;
 		wstring name;
 		wstring description;
 		//...
-	};
-
-	struct MCM_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable server_id;
-		wstring hostname;
-		wstring name;
-		wstring description;
-	};
-
-	struct Server_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-		wstring hostname;
-		wstring name;
-		wstring description;
 	};
 
 };

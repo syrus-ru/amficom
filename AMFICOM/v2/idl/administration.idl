@@ -11,28 +11,28 @@ module corba {
 
 	struct ObjectPermissionAttributes_Transferable {
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+		long long created;
+		long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 	  wstring rwx;
 	  com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable group_ids;
 	  com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable category_ids;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable owner_id;
 	  wstring name;
 	  wstring codename;
-	  long long created;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable created_by;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modified_by;
 	  wstring whyRejected;
 	};
 
 	struct Domain_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+		long long created;
+		long long modified;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		wstring name;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable owner_id;
 		wstring description;
-		long long created;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable created_by;
-		long long modified;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable modified_by;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable domain_ids;
 		ObjectPermissionAttributes_Transferable permissions;
@@ -42,10 +42,13 @@ module corba {
 
 	struct OperatorCategory_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+		long long created;
+		long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		wstring name;
 		wstring codename;
 		wstring description;
-		long long modified;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable user_ids;
 	};
 
@@ -53,14 +56,14 @@ module corba {
 
 	struct OperatorGroup_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+		long long created;
+		long long modified;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		wstring name;
 		wstring codename;
 		wstring description;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable owner_id;
-		long long created;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable created_by;
-		long long modified;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable modified_by;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable user_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable exec_ids;
 	};
@@ -69,13 +72,13 @@ module corba {
 
 	struct OperatorProfile_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+		long long created;
+		long long modified;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		wstring name;
 		wstring codename;
 		wstring description;
-		long long created;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable created_by;
-		long long modified;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable modified_by;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable user_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable owner_id;
 		wstring login;
@@ -120,6 +123,10 @@ module corba {
 
 	struct User_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+		long long created;
+		long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		wstring login;
 		wstring type;
 		long long last_login;
@@ -133,6 +140,10 @@ module corba {
 
 	struct CommandPermissionAttributes_Transferable	{
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+	  long long created;
+	  long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 	  wstring rwx;
 /*
 	  boolean userR;
@@ -150,10 +161,6 @@ module corba {
 	  wstring owner_id;
 	  wstring name;
 	  wstring codename;
-	  long long created;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable created_by;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modified_by;
 	  wstring whyRejected;
 	};
 
@@ -161,13 +168,15 @@ module corba {
 
 	struct Server_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+		long long created;
+		long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		wstring name;
 		wstring description;
 		wstring location;
 		wstring contact;
 		wstring hostname;
-		long long created;
-		long long modified;
 		long sessions;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable mcm_ids; 
 	};
@@ -176,14 +185,16 @@ module corba {
 
 	struct MCM_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+		long long created;
+		long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable server_id;
 		wstring name;
 		wstring description;
 		wstring location;
 		wstring contact;
 		wstring hostname;
-		long long created;
-		long long modified;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable kis_ids;
 	};
 
@@ -191,14 +202,16 @@ module corba {
 
 	struct Client_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+	  long long created;
+	  long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		wstring name;
 		wstring version;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable licence_id;
 		wstring location;
 		wstring contact;
 		wstring hostname;
-		long long created;
-		long long modified;
 	};
 
 	typedef sequence <Client_Transferable> ClientSeq_Transferable;
