@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.2 2004/12/23 16:57:59 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.3 2004/12/30 16:25:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
+import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.io.IniFile;
 
@@ -52,7 +53,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/23 16:57:59 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/30 16:25:57 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -441,7 +442,14 @@ public final class MapPropertiesManager
 			try
 			{
 				AbstractImageResource ir = (AbstractImageResource )ResourceStorableObjectPool.getStorableObject(imageId, true);
-				img = new ImageIcon(ir.getImage()).getImage();
+				if(ir instanceof FileImageResource)
+				{
+					img = Toolkit.getDefaultToolkit().createImage(((FileImageResource )ir).getFileName());
+				}
+				else
+				{
+					img = new ImageIcon(ir.getImage()).getImage();
+				}
 				originalImages.put(imageId, img);
 				MapPropertiesManager.loadImage(img);
 			}
