@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.8 2005/02/11 18:42:17 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.9 2005/02/14 13:12:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,14 +41,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/11 18:42:17 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/14 13:12:18 $
  * @author $Author: arseniy $
  * @module event_v1
  */
 
 public class EventTypeDatabase extends StorableObjectDatabase {
-
-	public static final String LINK_COLUMN_EVENT_TYPE_ID = "event_type_id";
 
 	private static String columns;
 	private static String updateMultiplySQLValues;
@@ -70,6 +68,20 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
+	}
+
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+			throws IllegalDataException, UpdateObjectException {
+		EventType eventType = this.fromStorableObject(storableObject);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		try {
+			DatabaseString.setString(preparedStatement, ++i, eventType.getCodename(), SIZE_CODENAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, eventType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		}
+		catch (SQLException sqle) {
+			throw new UpdateObjectException(this.getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
+		}
+		return i;
 	}
 
 	protected String getUpdateMultiplySQLValues(int mode) {
@@ -101,6 +113,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		EventType eventType = storableObject == null ? 
 				new EventType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 											null,
+											0L,
 											null,
 											null,
 											null) :
@@ -109,6 +122,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 								   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 								   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 								   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+								   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 								   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 								   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return eventType;
@@ -120,7 +134,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		String sql = SQL_SELECT
 			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID
 			+ SQL_FROM + ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
-			+ SQL_WHERE + LINK_COLUMN_EVENT_TYPE_ID + EQUALS + eventTypeIdStr;
+			+ SQL_WHERE + EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID + EQUALS + eventTypeIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -168,11 +182,11 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-				+ LINK_COLUMN_EVENT_TYPE_ID
+				+ EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID
 				+ SQL_FROM + ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
 				+ SQL_WHERE);
 		try {
-			sql.append(this.idsEnumerationString(eventTypes, LINK_COLUMN_EVENT_TYPE_ID, true));
+			sql.append(this.idsEnumerationString(eventTypes, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID, true));
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e);
@@ -192,7 +206,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			List parameterTypes;
 			while (resultSet.next()) {
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
-				eventTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_EVENT_TYPE_ID);
+				eventTypeId = DatabaseIdentifier.getIdentifier(resultSet, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID);
 
 				parameterTypes = (List)parameterTypesMap.get(eventTypeId);
 				if (parameterTypes == null) {
@@ -265,7 +279,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		try {
 			String sql = SQL_INSERT_INTO
 			+ ObjectEntities.EVENTTYPPARTYPLINK_ENTITY + OPEN_BRACKET
-			+ LINK_COLUMN_EVENT_TYPE_ID + COMMA
+			+ EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID + COMMA
 			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 			+ QUESTION + COMMA
@@ -280,7 +294,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 	}
 
 	private void updatePrepareStatementValues(PreparedStatement preparedStatement, EventType eventType) throws SQLException {
-		List parTyps = eventType.getParameterTypes();
+		Collection parTyps = eventType.getParameterTypes();
 		Identifier eventTypeId = eventType.getId();
 		Identifier parameterTypeId = null;
 
@@ -357,7 +371,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
-					+ SQL_WHERE + LINK_COLUMN_EVENT_TYPE_ID + EQUALS + id);
+					+ SQL_WHERE + EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID + EQUALS + id);
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.EVENTTYPE_ENTITY 
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + id);
@@ -386,7 +400,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		StringBuffer sql1 = new StringBuffer(SQL_DELETE_FROM
 				+ ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
 				+ SQL_WHERE);
-		sql1.append(this.idsEnumerationString(objects, LINK_COLUMN_EVENT_TYPE_ID, true));
+		sql1.append(this.idsEnumerationString(objects, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID, true));
 		StringBuffer sql2 = new StringBuffer(SQL_DELETE_FROM
 				+ ObjectEntities.EVENTTYPE_ENTITY
 				+ SQL_WHERE);
@@ -424,37 +438,6 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	/**
-	 * @deprecated use {@link StorableObjectDatabase.retrieveByCondion} and {@link TypicalCondition}
-	 * @param codename
-	 * @return
-	 * @throws ObjectNotFoundException
-	 * @throws RetrieveObjectException
-	 */
-	public EventType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
-		Collection collection = null;
-		try {
-			collection = this.retrieveByIds(null, StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
-		}
-		catch (IllegalDataException ide) {				
-			throw new RetrieveObjectException(ide);
-		}
-
-		if ((collection == null) || (collection.isEmpty()))
-			throw new ObjectNotFoundException("No event  type with codename: '" + codename + "'");
-
-		return (EventType) collection.iterator().next();
-	}
-
-	public Collection retrieveAll() throws RetrieveObjectException {
-		try {
-			return this.retrieveByIds(null, null);
-		}
-		catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide);
-		}
-	}
-
 	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		Collection collection = null; 
 		if ((ids == null) || (ids.isEmpty()))
@@ -467,17 +450,4 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		return collection;		
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
-		EventType eventType = this.fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseString.setString(preparedStatement, ++i, eventType.getCodename(), SIZE_CODENAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, eventType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException(this.getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
-		return i;
-	}
 }
