@@ -183,18 +183,62 @@ public static final String predict  = "PREDICT";
 
 
 /**/
- public boolean checkObject(String objectTyp, String objectId, String operationType)
- {
-   return checkObject(objectTyp, objectId, operationType, this.user);
- }
+	public boolean checkObject(
+			String objectTyp, 
+			String objectId, 
+			String operationType)
+	{
+		return checkObject(
+				objectTyp, 
+				objectId, 
+				operationType, 
+				true);
+	}
+	
+	public boolean checkObject(
+			String objectTyp, 
+			String objectId, 
+			String operationType,
+			boolean showMessage)
+	{
+		return checkObject(
+				objectTyp, 
+				objectId, 
+				operationType, 
+				this.user,
+				showMessage);
+	}
 
- /**/
- public static boolean checkObject(String userId, String objectTyp,
-                                   String objectId, String operationType)
- {
-   User user = (User)Pool.get(User.typ, userId);
-   return checkObject(objectTyp, objectId, operationType, user);
- }
+	public static boolean checkObject(
+			String userId, 
+			String objectTyp,
+			String objectId, 
+			String operationType,
+			boolean showMessage)
+	{
+		User user = (User )Pool.get(User.typ, userId);
+		return checkObject(
+				objectTyp, 
+				objectId, 
+				operationType, 
+				user, 
+				showMessage);
+	}
+
+	/**/
+	public static boolean checkObject(
+			String userId, 
+			String objectTyp,
+			String objectId, 
+			String operationType)
+	{
+		return checkObject(
+				userId, 
+				objectTyp,
+				objectId, 
+				operationType,
+				true);
+	}
 
  /**/
 
@@ -275,65 +319,87 @@ public static final String predict  = "PREDICT";
  }
 */
 
-
- private static boolean checkObject(String typ, String id,
-                                    String operationType, User user)
- {
-   if(user == null)
-   {
-     String error = "Права пользователя не установлены.";
-     JOptionPane.showMessageDialog(null, error, "Ошибка", JOptionPane.OK_OPTION);
-     return false;
-   }
-   if(user.login.equals("sys"))
-     return true;
-
-   ObjectPermissionAttributes opa = null;
-   if(typ.equals(Domain.typ))
-   {
-     opa = ((Domain)Pool.get(typ, id)).opa;
-   }
-   if(opa == null)
-   {
-     return true;
-   }
+	private static boolean checkObject(
+			String typ, 
+			String id,
+            String operationType, 
+			User user)
+	{
+		return checkObject(
+			typ, 
+			id,
+            operationType, 
+			user,
+			true);
+	}
 
 
-   if(opa.owner_id.equals(user.id))
-   {
-       if(opa.userR && operationType.equals(read))
-         return true;
-       if(opa.userW && operationType.equals(write))
-         return true;
-       if(opa.userX && operationType.equals(execute))
-         return true;
-   }
-   else
-     if(hasEqualElements(opa.group_ids, user.group_ids))
-     {
-         if(opa.groupR && operationType.equals(read))
-           return true;
-         if(opa.groupW && operationType.equals(write))
-           return true;
-         if(opa.groupX && operationType.equals(execute))
-           return true;
-     }
-     else
-     {
-         if(opa.otherR && operationType.equals(read))
-           return true;
-         if(opa.otherW && operationType.equals(write))
-           return true;
-         if(opa.otherX && operationType.equals(execute))
-           return true;
-     }
+	private static boolean checkObject(
+			String typ, 
+			String id,
+            String operationType, 
+			User user,
+			boolean showMessage)
+	{
+		if(user == null)
+		{
+			if(showMessage)
+			{
+				String error = "Права пользователя не установлены.";
+				JOptionPane.showMessageDialog(null, error, "Ошибка", JOptionPane.OK_OPTION);
+			}
+			return false;
+		}
+		if(user.login.equals("sys"))
+			return true;
 
-     String error = opa.whyRejected;
-     JOptionPane.showMessageDialog(null, error, "Ошибка", JOptionPane.OK_OPTION);
+		ObjectPermissionAttributes opa = null;
+		if(typ.equals(Domain.typ))
+		{
+			opa = ((Domain)Pool.get(typ, id)).opa;
+		}
+		if(opa == null)
+		{
+			return true;
+		}
 
-     return false;
- }
+		if(opa.owner_id.equals(user.id))
+		{
+			if(opa.userR && operationType.equals(read))
+				return true;
+			if(opa.userW && operationType.equals(write))
+				return true;
+			if(opa.userX && operationType.equals(execute))
+				return true;
+		}
+		else
+		if(hasEqualElements(opa.group_ids, user.group_ids))
+		{
+			if(opa.groupR && operationType.equals(read))
+				return true;
+			if(opa.groupW && operationType.equals(write))
+				return true;
+			if(opa.groupX && operationType.equals(execute))
+				return true;
+		}
+		else
+		{
+			if(opa.otherR && operationType.equals(read))
+				return true;
+			if(opa.otherW && operationType.equals(write))
+				return true;
+			if(opa.otherX && operationType.equals(execute))
+				return true;
+		}
 
+		if(showMessage)
+		{
+			String error = opa.whyRejected;
+			JOptionPane.showMessageDialog(null, error, "Ошибка", JOptionPane.OK_OPTION);
+		}
+
+		return false;
+	}
 
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
