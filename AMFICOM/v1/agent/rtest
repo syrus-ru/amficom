@@ -1,3 +1,0 @@
-#!/bin/bash
-
-java -classpath ./classes:../lib/io.jar:../lib/dadara.jar -Djava.library.path=./dadara com.syrus.AMFICOM.analysis.dadara.test.TestDadara
