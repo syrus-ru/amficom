@@ -101,7 +101,7 @@ cleanmach:
 cleanhead:
 	$(RM) -f \
 		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_Transceiver.h \
-		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_TCPServer.h \		
+		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_TCPServer.h \
 		$(DADARA_DIR)/com_syrus_AMFICOM_mcm_DadaraAnalysisManager.h \
 		.head
 	
