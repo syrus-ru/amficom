@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.37 2005/01/17 13:16:26 stas Exp $
+ * $Id: TransmissionPath.java,v 1.38 2005/01/17 14:10:22 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -32,7 +34,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.37 $, $Date: 2005/01/17 13:16:26 $
+ * @version $Revision: 1.38 $, $Date: 2005/01/17 14:10:22 $
  * @author $Author: stas $
  * @module config_v1
  */
@@ -51,7 +53,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	public static final String COLUMN_START_PORT_ID = "startPortId";
 	public static final String COLUMN_FINISH_PORT_ID = "finishPortId";
 	public static final String COLUMN_CHARACTERISTICS = "characteristics";
-	private static Object[][] exportColumns = null;
+	private static Map exportColumns = null;
 
 	private TransmissionPathType type;
 	private List characteristics;
@@ -286,29 +288,23 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		super.currentVersion = super.getNextVersion();
 	}
 
-	public Object[][] exportColumns() {
+	public Map exportColumns() {
 		if (exportColumns == null) {
-			exportColumns = new Object[7][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-			exportColumns[3][0] = COLUMN_TRANSMISSION_PATH_TYPE;
-			exportColumns[4][0] = COLUMN_START_PORT_ID;
-			exportColumns[5][0] = COLUMN_FINISH_PORT_ID;
-			exportColumns[6][0] = COLUMN_CHARACTERISTICS;
+			exportColumns = new HashMap(7);
 		}
-		exportColumns[0][1] = getId();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-		exportColumns[3][1] = getType().getId();
-		exportColumns[4][1] = getStartPortId();
-		exportColumns[5][1] = getFinishPortId();
+		exportColumns.put(COLUMN_ID, getId());
+		exportColumns.put(COLUMN_NAME, getName());
+		exportColumns.put(COLUMN_DESCRIPTION, getDescription());
+		exportColumns.put(COLUMN_TRANSMISSION_PATH_TYPE, getType().getId());
+		exportColumns.put(COLUMN_START_PORT_ID, getStartPortId());
+		exportColumns.put(COLUMN_FINISH_PORT_ID, getFinishPortId());
+
 		List characteristics = new ArrayList(getCharacteristics().size());
 		for (Iterator it = getCharacteristics().iterator(); it.hasNext(); ) {
 			Characteristic ch = (Characteristic)it.next();
 			characteristics.add(ch.exportColumns());
 		}
-		exportColumns[6][1] = characteristics;
+		exportColumns.put(COLUMN_CHARACTERISTICS, characteristics);
 
 		return exportColumns;
 	}

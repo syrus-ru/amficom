@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.5 2005/01/17 11:49:37 stas Exp $
+ * $Id: CableThread.java,v 1.6 2005/01/17 14:10:22 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.syrus.AMFICOM.configuration.corba.CableThread_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -28,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/01/17 11:49:37 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/17 14:10:22 $
  * @author $Author: stas $
  * @module config_v1
  */
@@ -40,7 +42,7 @@ public class CableThread extends DomainMember implements TypedObject {
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_CABLE_THREAD_TYPE = "type";
-	private static Object[][] exportColumns = null;
+	private static Map exportColumns = null;
 
 	private String name;
 		private String description;
@@ -172,19 +174,15 @@ public class CableThread extends DomainMember implements TypedObject {
 				return Collections.singletonList(this.type);
 		}
 
-			public Object[][] exportColumns() {
-				if (exportColumns == null) {
-					exportColumns = new Object[4][2];
-					exportColumns[0][0] = COLUMN_ID;
-					exportColumns[1][0] = COLUMN_NAME;
-					exportColumns[2][0] = COLUMN_DESCRIPTION;
-					exportColumns[3][0] = COLUMN_CABLE_THREAD_TYPE;
-				}
-				exportColumns[0][1] = getId();
-				exportColumns[1][1] = getName();
-				exportColumns[2][1] = getDescription();
-				exportColumns[3][1] = getType().getId();
+		public Map exportColumns() {
+			if (exportColumns == null) {
+				exportColumns = new HashMap(4);
+			}
+			exportColumns.put(COLUMN_ID, getId());
+			exportColumns.put(COLUMN_NAME, getName());
+			exportColumns.put(COLUMN_DESCRIPTION, getDescription());
+			exportColumns.put(COLUMN_CABLE_THREAD_TYPE, getType().getId());
 
-				return exportColumns;
+			return exportColumns;
 		}
-}
+	}
