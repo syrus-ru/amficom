@@ -1,0 +1,129 @@
+MODULE_NAME = measurement_v1
+
+LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
+ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
+
+IDLDIR=../idl_v1/idl
+
+APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+
+HOST=mongol
+SERVICE_NAME=mongol
+
+JAVACFLAGS = -source 1.3
+SUNJAVACFLAGS = -target 1.2
+JIKESFLAGS = -target 1.2
+
+JPUB = $(ORACLE_HOME)/bin/jpub
+JPUB_FLAGS = \
+	-J-classpath $(JDBCCLASSPATH):$(SQLJCLASSPATH) \
+	-user=amficom/amficom \
+	-url=jdbc:oracle:thin:@$(HOST):1521:$(SERVICE_NAME) \
+	-omit_schema_names \
+	-package=com.syrus.AMFICOM.measurement.ora \
+	-dir=$(SRCDIR) \
+	-usertypes=oracle \
+	-methods=all
+
+
+include ../tools/Makefile.inc
+$(call checkenve,JAVA_HOME)
+$(call checkenve,ORACLE_HOME)
+
+$(LIBNAME): .mach
+	$(JAR) -cf $@ \
+		-C $(CLASSDIR) com/syrus/AMFICOM/event -C $(CLASSDIR) com/syrus/AMFICOM/map -C $(CLASSDIR) com/syrus/AMFICOM/resource
+
+.mach:	.corba $(CLASSDIR)
+	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/LangModelMeasurement.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/DatabaseMeasurementObjectLoader.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementObjectLoader.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementStorableObjectPool.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementDatabaseContext.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterTypeCodenames.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterTypeDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ActionType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementTypeDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/AnalysisType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/AnalysisTypeDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/EvaluationType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/EvaluationTypeDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/SetParameter.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Set.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/SetDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Result.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ResultDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Modeling.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ModelingDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetup.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetupDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Action.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Measurement.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Analysis.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/AnalysisDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Evaluation.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/EvaluationDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalPattern.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalPatternDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Test.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/TestDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalCondition.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/LinkedIdsCondition.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/DomainCondition.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/StringFieldCondition.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ResultCondition.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ResultSortCondition.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetupCondition.java 
+
+	touch $@
+
+.corba:	$(CLASSDIR)
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/general-vt.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/configuration-vt.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/li\'lmapletty.idl
+	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
+		-classpath $(APPCLASSPATH) \
+		-sourcepath $(SRCDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/map/corba/*.java 
+	touch $@
+
+$(CLASSDIR):
+	mkdir -p $@
+
+.PHONY:	clean
+clean:	cleanmach cleancorba
+	rm -f $(LIBNAME)
+
+.PHONY:	cleanmach
+cleanmach:
+	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/map/*.class
+	rm -f .mach
+
+.PHONY:	cleancorba
+cleancorba:
+	rm -rf $(SRCDIR)/com/syrus/AMFICOM/map/corba
+	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/map/corba
+	rm -rf $(SRCDIR)/com/syrus/AMFICOM/event/corba
+	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/event/corba
+	rm -f .corba
+
+#### Archive ####
+.PHONY:	arch
+arch:
+	tar -czvf $(ARCHFILE) \
+		Makefile \
+		$(IDLDIR)/li\'lmapletty.idl \
+		$(SRCDIR)/com/syrus/AMFICOM/map/*.java
+		
+.PHONY: pmd
+pmd:
+	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/map text $(PMD_RULES) 
+
+#### Compile and install jar to libdir
+lib: $(LIBNAME)
+	$(CP) $(LIBNAME) $(LIBDIR)	
