@@ -1,1 +1,2 @@
 @@equipmenttype
+@@mcmtype

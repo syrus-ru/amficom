@@ -1,15 +1,19 @@
-CREATE TABLE Mcm (
+CREATE TABLE MCM (
  id VARCHAR2(32),
  created DATE NOT NULL,
  modified DATE NOT NULL,
  creator_id VARCHAR2(32) NOT NULL,
  modifier_id VARCHAR2(32) NOT NULL,
 --
- server_id VARCHAR2(32) NOT NULL,
+ domain_id VARCHAR2(32),
+--
+ type_id VARCHAR2(32),
+--
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
+ user_id VARCHAR2(32) NOT NULL,
+ server_id VARCHAR2(32) NOT NULL,
  location VARCHAR2(256),
- contact VARCHAR2(64),
  hostname VARCHAR2(32) NOT NULL,
 --
  CONSTRAINT mcm_pk PRIMARY KEY (id),
@@ -18,6 +22,14 @@ CREATE TABLE Mcm (
  CONSTRAINT mcm_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES Users (id) ON DELETE CASCADE,
 --
+ CONSTRAINT mcm_domain_fk FOREIGN KEY (domain_id)
+  REFERENCES Domain (id) ON DELETE CASCADE,
+--
+ CONSTRAINT mcm_mcmtype_fk FOREIGN KEY (type_id)
+  REFERENCES MCMType (id) ON DELETE CASCADE,
+--
+ CONSTRAINT mcm_user_fk FOREIGN KEY (user_id)
+  REFERENCES Users (id) ON DELETE CASCADE,
  CONSTRAINT mcm_server_fk FOREIGN KEY (server_id)
   REFERENCES Server (id) ON DELETE CASCADE
 );

@@ -1,2 +1,4 @@
+@@server
+@@mcm
 @@equipment
 @@monitoredelement

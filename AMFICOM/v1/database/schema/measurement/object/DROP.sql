@@ -6,7 +6,7 @@ DROP TABLE Measurement;
 DROP TABLE MeasurementSetupTestLink;
 DROP TABLE Test;
 DROP TABLE TemporalPattern;
-DROP TYPE CronStrings;
+DROP TYPE CronStringArray;
 DROP TABLE MeasurementSetupMELink;
 DROP TABLE MeasurementSetup;
 DROP TABLE SetParameter;
