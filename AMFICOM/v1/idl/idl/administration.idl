@@ -1,5 +1,5 @@
 /*
- * $Id: administration.idl,v 1.4 2005/03/05 21:16:25 arseniy Exp $
+ * $Id: administration.idl,v 1.5 2005/03/24 12:03:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -84,12 +84,6 @@ module corba {
 	};
 	
 	typedef sequence <MCM_Transferable> MCMSeq_Transferable;
-
-///////////////////////////// Conditions ///////////////////////////
-	struct DomainCondition_Transferable {
-		short	entity_code;
-		general::corba::Identifier_Transferable domain_id;
-	};
 
 };
 };
