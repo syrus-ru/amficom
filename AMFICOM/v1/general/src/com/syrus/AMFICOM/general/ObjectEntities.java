@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.35 2004/12/09 11:51:49 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.36 2004/12/09 16:41:29 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/12/09 11:51:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2004/12/09 16:41:29 $
+ * @author $Author: max $
  * @module general_v1
  */
 public final class ObjectEntities {
@@ -54,6 +54,7 @@ public final class ObjectEntities {
 	public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort";
 	public static final String ME_ENTITY = "MonitoredElement";
 	public static final String LINK_ENTITY = "Link";
+    public static final String CABLE_THREAD_ENTITY = "CableThread";
 
 	/*	Measurement	*/
 	public static final String SET_ENTITY = "Sett";
@@ -140,6 +141,7 @@ public final class ObjectEntities {
 	public static final short MEASUREMENTPORT_ENTITY_CODE = 0x010B;
 	public static final short ME_ENTITY_CODE = 0x010C;
 	public static final short LINK_ENTITY_CODE = 0x010D;
+    public static final short CABLE_THREAD_ENTITY_CODE = 0x010E;    
 
 	public static final short CHARACTERISTICTYPE_ENTITY_CODE = 0x0141;
 	public static final short EQUIPMENTTYPE_ENTITY_CODE = 0x0142;
@@ -273,7 +275,7 @@ public final class ObjectEntities {
 		else if (entity.equals(MEASUREMENTPORT_ENTITY)) return MEASUREMENTPORT_ENTITY_CODE;
 		else if (entity.equals(ME_ENTITY)) return ME_ENTITY_CODE;
 		else if (entity.equals(LINK_ENTITY)) return LINK_ENTITY_CODE;
-
+		else if (entity.equals(CABLE_THREAD_ENTITY)) return CABLE_THREAD_ENTITY_CODE;
 		else if (entity.equals(SET_ENTITY)) return SET_ENTITY_CODE;
 		else if (entity.equals(SETPARAMETER_ENTITY)) return SETPARAMETER_ENTITY_CODE;
 		else if (entity.equals(MS_ENTITY)) return MS_ENTITY_CODE;
@@ -379,7 +381,8 @@ public final class ObjectEntities {
 				return ME_ENTITY;
 			case LINK_ENTITY_CODE:
 				return LINK_ENTITY;
-
+            case CABLE_THREAD_ENTITY_CODE:
+                return CABLE_THREAD_ENTITY;
 			case SET_ENTITY_CODE:
 				return SET_ENTITY;
 			case SETPARAMETER_ENTITY_CODE:
