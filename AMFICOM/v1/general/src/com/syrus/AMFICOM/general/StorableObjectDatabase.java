@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.135 2005/04/02 17:11:15 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.136 2005/04/05 08:57:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.135 $, $Date: 2005/04/02 17:11:15 $
+ * @version $Revision: 1.136 $, $Date: 2005/04/05 08:57:47 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -232,9 +232,8 @@ public abstract class StorableObjectDatabase {
 	 * @throws RetrieveObjectException
 	 * @throws SQLException
 	 */
-	protected abstract StorableObject updateEntityFromResultSet(StorableObject storableObject,
-																ResultSet resultSet) throws IllegalDataException,
-			RetrieveObjectException, SQLException;
+	protected abstract StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+			throws IllegalDataException, RetrieveObjectException, SQLException;
 
 	// ////////////////////refresh /////////////////////////
 
@@ -253,8 +252,11 @@ public abstract class StorableObjectDatabase {
 		Identifier id;
 		Map storableObjectsMap = new HashMap();
 
-		StringBuffer stringBuffer = new StringBuffer(SQL_SELECT + StorableObjectWrapper.COLUMN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_VERSION + SQL_FROM + this.getEnityName() + SQL_WHERE + "1=0");
+		StringBuffer stringBuffer = new StringBuffer(SQL_SELECT
+				+ StorableObjectWrapper.COLUMN_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_VERSION
+				+ SQL_FROM + this.getEnityName()
+				+ SQL_WHERE + "1=0");
 		Set refreshObjectIds = new HashSet();
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			storableObject = (StorableObject) it.next();
@@ -265,7 +267,8 @@ public abstract class StorableObjectDatabase {
 			while (lockedObjectIds.contains(id) && System.currentTimeMillis() < deadtime) {
 				try {
 					Thread.sleep(LOCK_TIME_WAIT);
-				} catch (InterruptedException ie) {
+				}
+				catch (InterruptedException ie) {
 					Log.errorException(ie);
 				}
 			}
@@ -391,8 +394,7 @@ public abstract class StorableObjectDatabase {
 		return this.retrieveByCondition(this.getConditionQuery(condition));
 	}
 
-	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException,
-			IllegalDataException {
+	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		Set storableObjects = new HashSet();
 
 		String sql = this.retrieveQuery(conditionQuery);
