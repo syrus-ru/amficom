@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.7 2004/07/27 06:31:57 bob Exp $
+ * $Id: Environment.java,v 1.8 2004/07/28 10:26:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,51 +11,96 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
 import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
-//import com.sun.java.swing.plaf.gtk.GTKLookAndFeel;
+
 import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.io.IniFile;
-import java.awt.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import javax.swing.*;
-import javax.swing.plaf.metal.*;
 
-import java.util.logging.*;
+import com.syrus.AMFICOM.Client.General.ConnectionInterface;
+import com.syrus.AMFICOM.Client.General.EmptyConnectionInfo;
+import com.syrus.AMFICOM.Client.General.EmptySessionInfo;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.RISDConnectionInfo;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.General.SessionInterface;
+import com.syrus.AMFICOM.Client.General.Singleton;
+import com.syrus.AMFICOM.Client.General.UI.AMFICOMMetalTheme;
+import com.syrus.AMFICOM.Client.General.UI.ModuleCodeDialog;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.EmptyDataSource;
+import com.syrus.AMFICOM.Client.Resource.RISDDataSource;
+import com.syrus.io.IniFile;
+
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.Window;
+
+import java.io.IOException;
+
+import java.util.ArrayList;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.XMLFormatter;
+
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.LookAndFeel;
+import javax.swing.UIManager;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.metal.MetalTheme;
 
 /**
  * Класс $RCSfile: Environment.java,v $ используется для хранения общей для приложения информации
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/07/27 06:31:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2004/07/28 10:26:24 $
+ * @author $Author: krupenn $
  * @see
  */
 public class Environment extends Singleton
 {
-	static private ArrayList windows = new ArrayList();
-	static public Dispatcher the_dispatcher = new Dispatcher();
+	public static Dispatcher the_dispatcher = new Dispatcher();
 
-	static private IniFile iniFile;
-	static private String iniFileName = "Application.properties";
+	private static ArrayList windows = new ArrayList();
 
-	static private String connection = "RISD";
-	static private String checkRun = "no";
+	private static IniFile iniFile;
+	private static String iniFileName = "Application.properties";
 
-	static private boolean initiated = false;
+	private static JFrame activeWindow = null;
 
-	static private JFrame activeWindow = null;
+	/** Connection */
+	private static final String FIELD_CONNECTION = "connection";
 
-	static private boolean beep = false;
+	private static final String CONNECTION_RISD = "RISD";
+	private static final String CONNECTION_EMPTY = "Empty";
+	private static final String CONNECTION_JDBC = "JDBC";
+
+	private static String connection = CONNECTION_RISD;
+
+	/** Run */
+	private static final String FIELD_RUN = "connection";
+
+	private static final String RUN_INSTALLED = "installed";
+	private static final String RUN_NO = "no";
+	private static final String RUN_YES = "yes";
+
+	private static String checkRun = RUN_NO;
+
+	/** Beep */
+	private static final String FIELD_BEEP = "neep";
 
 	private static final String BEEP_DA = "da";
 	private static final String BEEP_NET = "net";
+
+	private static boolean beep = false;
+
+	/** Look and feel */
+	private static final String FIELD_LOOK_AND_FEEL = "lookandfeel";
 
 	private static final String LOOK_AND_FEEL_GTK = "GTK";
 	private static final String LOOK_AND_FEEL_KUNSTSTOFF = "Kunststoff";
@@ -69,18 +114,28 @@ public class Environment extends Singleton
 
 	private static String lookAndFeel;
 
-	private static String domain_id = "sysdomain";
+	/** Domain */
+	private static final String FIELD_DOMAIN = "domain";
+
+	private static String domainId = "";
+
+	/** Debug mode */
+	private static final String FIELD_DEBUG = "gubed";
 
 	private static boolean debugMode = false;
 
-	private static Handler handler;
-	private static Formatter formatter;
-	private static Level logLevel;
+	/** Log handler */
+	private static final String FIELD_LOG_HANDLER = "loghandler";
 
 	private static final String LOG_HANDLER_FILE = "file";
 	private static final String LOG_HANDLER_MEMORY = "memory";
 	private static final String LOG_HANDLER_SOCKET = "socket";
 	private static final String LOG_HANDLER_CONSOLE = "console";
+
+	private static Handler handler;
+
+	/** Log level */
+	private static final String FIELD_LOG_LEVEL = "loglevel";
 
 	private static final String LOG_LEVEL_ID_OFF = "off";
 	private static final String LOG_LEVEL_ID_SEVERE = "severe";
@@ -92,9 +147,17 @@ public class Environment extends Singleton
 	private static final String LOG_LEVEL_ID_FINEST = "finest";
 	private static final String LOG_LEVEL_ID_ALL = "all";
 
+	private static Level logLevel;
+
+	/** Log formatter */
+	private static final String FIELD_LOG_FORMATTER = "logformatter";
+
 	private static final String LOG_FORMATTER_XML = "xml";
 	private static final String LOG_FORMATTER_SIMPLE = "simple";
 
+	private static Formatter formatter;
+
+	/** Log file */
 	private static String logFileName;
 
 	public static final Level LOG_LEVEL_SEVERE = Level.SEVERE;
@@ -112,26 +175,28 @@ public class Environment extends Singleton
 		{
 			iniFile = new IniFile(iniFileName);
 			System.out.println("read ini file " + iniFileName);
-			connection = iniFile.getValue("connection");
-			checkRun = iniFile.getValue("run");
-			lookAndFeel = iniFile.getValue("lookAndFeel");
-			domain_id = iniFile.getValue("domain");
-			if(domain_id == null || domain_id.length() == 0)
-				domain_id = "sysdomain";
+			connection = iniFile.getValue(FIELD_CONNECTION);
+			checkRun = iniFile.getValue(FIELD_RUN);
+			lookAndFeel = iniFile.getValue(FIELD_LOOK_AND_FEEL);
+			domainId = iniFile.getValue(FIELD_DOMAIN);
+			if(domainId == null || domainId.length() == 0)
+			{
+				domainId = "";
+			}
 
-			String d_val = iniFile.getValue("gubed");
+			String d_val = iniFile.getValue(FIELD_DEBUG);
 			debugMode = (d_val != null);
 
-			String b_val = iniFile.getValue("beep");
+			String b_val = iniFile.getValue(FIELD_BEEP);
 			beep = (b_val == null) ? false : b_val.equals(BEEP_DA);
 			
 			System.out.println("read connection = " + connection);
 			if(connection == null)
 				SetDefaults();
 
-			String lf_val = iniFile.getValue("logformatter");
-			String ll_val = iniFile.getValue("loglevel");
-			String lh_val = iniFile.getValue("loghandler");
+			String lf_val = iniFile.getValue(FIELD_LOG_FORMATTER);
+			String ll_val = iniFile.getValue(FIELD_LOG_LEVEL);
+			String lh_val = iniFile.getValue(FIELD_LOG_HANDLER);
 			initLog(lh_val, ll_val, lf_val);
 		}
 		catch(IOException e)
@@ -143,7 +208,7 @@ public class Environment extends Singleton
 	
 	public static String getDomainId()
 	{
-		return domain_id;
+		return domainId;
 	}
 
 	private static void initLog(String lh, String ll, String lf)
@@ -292,8 +357,8 @@ public class Environment extends Singleton
 
 	static public void SetDefaults()
 	{
-		connection = "Empty";
-		checkRun = "yes";
+		connection = CONNECTION_EMPTY;
+		checkRun = RUN_YES;
 		lookAndFeel = LOOK_AND_FEEL_WINDOWS;
 	}
 
@@ -307,13 +372,11 @@ public class Environment extends Singleton
 		return beep;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public static void initialize()
 	{
-		if(!initiated)
-		{
-//			SystemLogWriter.initialize();
-			initiated = true;
-		}
 	}
 
 	static
@@ -390,7 +453,7 @@ public class Environment extends Singleton
 	static public ConnectionInterface getDefaultConnectionInterface()
 	{
 		System.out.println("	connection = " + connection);
-		if(connection.equals("JDBC"))
+		if(connection.equals(CONNECTION_JDBC))
 		{
 			try
 			{
@@ -401,7 +464,7 @@ public class Environment extends Singleton
 //				Constructor cons = cl.getConstructor(new Class[] {});
 				ConnectionInterface ci = (ConnectionInterface )cl.newInstance();
 //				ConnectionInterface ci = (ConnectionInterface )(cons.newInstance(new Object[] {}));
-				connection = "RISD";
+				connection = CONNECTION_RISD;
 				return ci;
 			}
 			catch (Exception ex)
@@ -411,10 +474,10 @@ public class Environment extends Singleton
 			}
 		}
 		else
-		if(connection.equals("RISD"))
+		if(connection.equals(CONNECTION_RISD))
 			return new RISDConnectionInfo();
 		else
-		if(connection.equals("Empty"))
+		if(connection.equals(CONNECTION_EMPTY))
 			return new EmptyConnectionInfo();
 		else
 			return new EmptyConnectionInfo();
@@ -471,9 +534,9 @@ public class Environment extends Singleton
 	{
 		try 
 		{
-			domain_id = SessionInterface.getActiveSession().getDomainId();
-			if (domain_id != null)
-				iniFile.setValue("domain", domain_id);
+			domainId = SessionInterface.getActiveSession().getDomainId();
+			if (domainId != null)
+				iniFile.setValue(FIELD_DOMAIN, domainId);
 			iniFile.saveKeys();
 		} 
 		catch (Exception ex) 
@@ -546,9 +609,9 @@ public class Environment extends Singleton
 	{
 		if (checkRun == null)
 			return false;
-		if (checkRun.equals("no"))
+		if (checkRun.equals(RUN_NO))
 			return true;
-		if (checkRun.equals("installed"))
+		if (checkRun.equals(RUN_INSTALLED))
 		{
 			if (code[module_index].length() == 0)
 				return true;
