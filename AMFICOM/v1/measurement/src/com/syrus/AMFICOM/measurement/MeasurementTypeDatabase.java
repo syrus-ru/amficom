@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.80 2005/03/10 15:20:56 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.81 2005/03/10 19:35:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/03/10 15:20:56 $
+ * @version $Revision: 1.81 $, $Date: 2005/03/10 19:35:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -133,7 +133,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementTypeDatabase.retrieveParameterType | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("MeasurementTypeDatabase.retrieveParameterTypes | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			String parameterMode;
 			Identifier parameterTypeId;
@@ -233,7 +233,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 						outParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					}
 					else
-						Log.errorMessage("MeasurementTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId '" + parameterTypeId + "' of measurement type '" + measurementTypeId + "'");
+						Log.errorMessage("MeasurementTypeDatabase.retrieveParameterTypesByOneQuery | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId '" + parameterTypeId + "' of measurement type '" + measurementTypeId + "'");
 
 			}
 
