@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.4 2005/03/31 17:27:34 saa Exp $
+ * $Id: Heap.java,v 1.5 2005/03/31 17:33:52 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame;
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
@@ -32,7 +31,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/03/31 17:27:34 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/31 17:33:52 $
  * @module
  */
 public class Heap
@@ -51,7 +50,9 @@ public class Heap
 	private static Map bsBellCoreMap;				// "bellcoremap", "current": GUI-level BS hash; do not confuse with bsHash
 	private static Double minTraceLevel;			// "min_trace_level", PRIMARY_TRACE_KEY
 	private static HashMap dialogHash = new HashMap();	// "dialog", "*"
-	
+
+	private static String currentlySelectedTrace = ""; // XXX: initialize to avoid crushes
+
 	public static ReflectogrammLoadDialog getRLDialogByKey(String key)
 	{
 		return (ReflectogrammLoadDialog) dialogHash.get(key);
@@ -348,4 +349,5 @@ public class Heap
 	{
 		notifyEtalonMTMCUpdated();
 	}
+
 }

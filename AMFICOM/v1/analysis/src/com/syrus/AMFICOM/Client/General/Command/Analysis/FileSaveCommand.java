@@ -84,13 +84,10 @@ public class FileSaveCommand extends VoidCommand
 				BellcoreWriter bw = new BellcoreWriter();
 				fos.write(bw.write(bs));
 
-				if (chooser.getSelectedFile().getAbsolutePath().equals(bs.title))
-					dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SAVE_EVENT));
-				else
+				if (!chooser.getSelectedFile().getAbsolutePath().equals(bs.title))
 				{
 					bs.title = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
-					dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
-																RefChangeEvent.SAVE_EVENT + RefChangeEvent.SELECT_EVENT));
+					dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT));
 				}
 
 				try
