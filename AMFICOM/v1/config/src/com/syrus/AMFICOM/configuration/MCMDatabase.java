@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.18 2004/09/09 11:00:09 max Exp $
+ * $Id: MCMDatabase.java,v 1.19 2004/09/09 13:12:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/09/09 11:00:09 $
- * @author $Author: max $
+ * @version $Revision: 1.19 $, $Date: 2004/09/09 13:12:27 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -120,12 +120,13 @@ public class MCMDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		MCM mcm = this.fromStorableObject(storableObject);
-		super.retrieveEntity(mcm);
+		this.retrieveEntity(mcm);
 		this.retrieveKISIds(mcm);
 		mcm.setCharacteristics(characteristicDatabase.retrieveCharacteristics(mcm.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MCM));
 	}
 	
-	protected String retrievQeuery(String condition){
+	
+	protected String retrieveQuery(String condition){
 		return super.retrieveQuery(condition) + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_TYPE_ID + COMMA
