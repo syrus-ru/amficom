@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.34 2004/09/16 07:57:11 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.35 2004/09/20 14:15:19 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,11 +30,12 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/09/16 07:57:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.35 $, $Date: 2004/09/20 14:15:19 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -207,7 +209,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+        try {
 			statement = connection.createStatement();
 			Log.debugMessage("EquipmentDatabase.retrieveEquipmentPortIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
@@ -221,8 +224,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		catch (SQLException sqle) {
 			String mesg = "EquipmentDatabase.retrieveEquipmentPortIds | Cannot retrieve port ids for equipment " + eqIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -233,7 +235,9 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
+			} finally {
+                DatabaseConnection.closeConnection(connection);
+            }
 		}
 		equipment.setPortIds(portIds);
 	}
@@ -249,7 +253,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+        try {
 			statement = connection.createStatement();
 			Log.debugMessage("EquipmentDatabase.retrieveEquipmentMEIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
@@ -275,7 +280,9 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
+			} finally {
+                DatabaseConnection.closeConnection(connection);
+            }
 		}
 		equipment.setMonitoredElementIds(meIds);
 	}
@@ -290,31 +297,10 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Equipment equipment = this.fromStorableObject(storableObject);
-		
-		try {
-			super.insertEntity(equipment);
-			this.insertEquipmentMELinks(equipment);
-			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);			
-			characteristicDatabase.insert(equipment.getCharacteristics());			
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
-		
+		super.insertEntity(equipment);
+		this.insertEquipmentMELinks(equipment);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);			
+		characteristicDatabase.insert(equipment.getCharacteristics());		
 	}
 	
 	public void insert(List storableObjects) throws IllegalDataException,
@@ -349,7 +335,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		 * @todo when change DB Identifier model ,change String to long
 		 */
 		String meIdCode = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+        try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (Iterator iterator = meIds.iterator(); iterator.hasNext();) {
 				/**
@@ -382,7 +369,9 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
+			} finally {
+                DatabaseConnection.closeConnection(connection);
+            }
 		}
 	}
 
@@ -424,7 +413,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			+ SQL_WHERE + COLUMN_ID + EQUALS + eqIdStr;
 
 		Statement statement = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+        try {
 			statement = connection.createStatement();
 			Log.debugMessage("EquipmentDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
@@ -442,7 +432,9 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
+			} finally {
+                DatabaseConnection.closeConnection(connection);
+            }
 		}
 	}
 	

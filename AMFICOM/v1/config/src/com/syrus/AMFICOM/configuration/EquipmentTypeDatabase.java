@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.11 2004/09/16 07:57:11 bob Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.12 2004/09/20 14:15:19 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,11 +9,11 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.List;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -26,11 +26,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/09/16 07:57:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2004/09/20 14:15:19 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -151,26 +152,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		EquipmentType equipmentType = this.fromStorableObject(storableObject);
-		try {
-			super.insertEntity(equipmentType);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		super.insertEntity(equipmentType);		
 	}
 
 	public void insert(List storableObjects) throws IllegalDataException,
@@ -219,7 +201,8 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	public void delete(EquipmentType equipmentType) {
 		String eqIdStr = equipmentType.getId().toSQLString();
 		Statement statement = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+        try {
 			statement = connection.createStatement();
 			String sql = SQL_DELETE_FROM
 						+ ObjectEntities.EQUIPMENTTYPE_ENTITY
@@ -241,7 +224,9 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 			}
 			catch(SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
+			} finally {
+                DatabaseConnection.closeConnection(connection);
+            }
 		}
 	}
 	

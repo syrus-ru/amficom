@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.18 2004/09/16 07:57:11 bob Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.19 2004/09/20 14:15:19 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -28,8 +27,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/09/16 07:57:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2004/09/20 14:15:19 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -180,26 +179,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
-		try {
-			super.insertEntity(characteristicType);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		super.insertEntity(characteristicType);		
 	}
 	
 	public void insert(List storableObjects) throws IllegalDataException,

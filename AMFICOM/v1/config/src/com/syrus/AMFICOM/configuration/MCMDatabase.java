@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.20 2004/09/16 07:57:11 bob Exp $
+ * $Id: MCMDatabase.java,v 1.21 2004/09/20 14:15:19 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,14 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
+
 import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -28,11 +29,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/09/16 07:57:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2004/09/20 14:15:19 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -190,7 +192,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 			+ SQL_WHERE + KISDatabase.COLUMN_MCM_ID + EQUALS + mcmIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+        try {
 			statement = connection.createStatement();
 			Log.debugMessage("MCMDatabase.retrieveKISIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
@@ -212,7 +215,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
+			} finally {
+                DatabaseConnection.closeConnection(connection);
+            }
 		}
 		mcm.setKISIds(kisIds);
 	}
@@ -228,26 +233,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		MCM mcm = this.fromStorableObject(storableObject);
-		try {
-			super.insertEntity(mcm);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		super.insertEntity(mcm);		
 	}
 	
 	public void insert(List storableObjects) throws IllegalDataException,

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.15 2004/09/16 07:57:11 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.16 2004/09/20 14:15:19 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,12 +27,13 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/09/16 07:57:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2004/09/20 14:15:19 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -219,24 +221,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, 
 			CreateObjectException {
 		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
-		try {
-			super.insertEntity(measurementPort);			
-		} catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			} catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		} catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
-		
+		super.insertEntity(measurementPort);		
 	}
 	
 	public void insert(List storableObjects) throws IllegalDataException,
@@ -285,7 +270,8 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 	public void delete(MeasurementPort measurementPort) {
 		String mpIdStr = measurementPort.getId().toSQLString();
 		Statement statement = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+        try {
 			statement = connection.createStatement();
 			String sql = SQL_DELETE_FROM
 						+ ObjectEntities.MEASUREMENTPORT_ENTITY
@@ -307,7 +293,9 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 			}
 			catch(SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
+			} finally {
+                DatabaseConnection.closeConnection(connection);
+            }
 		}
 	}
 }

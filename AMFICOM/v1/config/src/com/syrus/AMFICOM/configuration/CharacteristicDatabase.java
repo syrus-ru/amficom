@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.27 2004/09/16 07:57:11 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.28 2004/09/20 14:15:19 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,12 +10,14 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -31,8 +33,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/09/16 07:57:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2004/09/20 14:15:19 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -385,26 +387,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Characteristic characteristic = this.fromStorableObject(storableObject);
-		try {
-			super.insertEntity(characteristic);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		super.insertEntity(characteristic);		
 	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj)
@@ -472,7 +455,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		}
 		Statement statement = null;
 		ResultSet resultSet = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+        try {
 			statement = connection.createStatement();
 			Log.debugMessage("CharacteristicDatabase.retrieveCharacteristics | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
@@ -495,12 +479,11 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally {
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
-		
-		
 		return characteristics;
-
 	}
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {

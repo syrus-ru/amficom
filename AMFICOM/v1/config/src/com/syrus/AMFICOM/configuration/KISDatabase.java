@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.23 2004/09/16 07:57:11 bob Exp $
+ * $Id: KISDatabase.java,v 1.24 2004/09/20 14:15:19 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,11 +28,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/09/16 07:57:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2004/09/20 14:15:19 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -170,7 +172,8 @@ public class KISDatabase extends StorableObjectDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+        try {
 			statement = connection.createStatement();
 			Log.debugMessage("KISDatabase.retrieveKISMeasurementPortIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
@@ -193,7 +196,9 @@ public class KISDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
+			} finally {
+                DatabaseConnection.closeConnection(connection);
+            }
 		}
 		kis.setMeasurementPortIds(measurementPortIds);
 	}
@@ -224,7 +229,8 @@ public class KISDatabase extends StorableObjectDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+        try {
 			statement = connection.createStatement();
 			Log.debugMessage("KISDatabase.retrieveMonitoredElements | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
@@ -252,33 +258,16 @@ public class KISDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
+			} finally {
+                DatabaseConnection.closeConnection(connection);
+            }
 		}
 		return monitoredElements;
 	}
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		KIS kis = this.fromStorableObject(storableObject);
-		try {
-			super.insertEntity(kis);
-		}
-		catch (CreateObjectException e) {
-			try {
-				connection.rollback();
-			}
-			catch (SQLException sqle) {
-				Log.errorMessage("Exception in rolling back");
-				Log.errorException(sqle);
-			}
-			throw e;
-		}
-		try {
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			Log.errorMessage("Exception in commiting");
-			Log.errorException(sqle);
-		}
+		super.insertEntity(kis);		
 	}
 	
 	public void insert(List storableObjects) throws IllegalDataException,
@@ -317,7 +306,8 @@ public class KISDatabase extends StorableObjectDatabase {
 	public void delete(KIS kis) {
 		String kisIdStr = kis.getId().toSQLString();
 		Statement statement = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+        try {
 			statement = connection.createStatement();
 			String sql = SQL_DELETE_FROM
 				+ ObjectEntities.KIS_ENTITY
@@ -337,7 +327,9 @@ public class KISDatabase extends StorableObjectDatabase {
 			}
 			catch(SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
+			} finally {
+                DatabaseConnection.closeConnection(connection);
+            }
 		}
 	}
 	
