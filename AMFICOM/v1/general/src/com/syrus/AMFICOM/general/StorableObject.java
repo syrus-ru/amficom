@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.15 2004/11/29 10:24:29 bass Exp $
+ * $Id: StorableObject.java,v 1.16 2004/12/03 19:13:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/11/29 10:24:29 $
+ * @version $Revision: 1.16 $, $Date: 2004/12/03 19:13:35 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -27,9 +27,9 @@ public abstract class StorableObject implements
 		Serializable {
 	private static final long serialVersionUID = -1720579921164397193L;
 
-	private static final String[] TRUNCATABLE_IDS = {
-		"IDL:com/syrus/AMFICOM/general/StorableObject:1.0"
-	};
+//	private static final String[] TRUNCATABLE_IDS = {
+//		"IDL:com/syrus/AMFICOM/general/StorableObject:1.0"
+//	};
 
 	protected Date created;
 	protected Identifier creatorId;
@@ -62,12 +62,12 @@ public abstract class StorableObject implements
 		this.currentVersion = this.version;
 	}
 
-	/**
-	 * @see org.omg.CORBA.portable.ValueBase#_truncatable_ids()
-	 */
-	public String[] _truncatable_ids() {
-		return TRUNCATABLE_IDS;
-	}
+//	/**
+//	 * @see org.omg.CORBA.portable.ValueBase#_truncatable_ids()
+//	 */
+//	public String[] _truncatable_ids() {
+//		return TRUNCATABLE_IDS;
+//	}
 
 	/**
 	 * @see java.util.JavaUtilIStorableObject#getCreated()
