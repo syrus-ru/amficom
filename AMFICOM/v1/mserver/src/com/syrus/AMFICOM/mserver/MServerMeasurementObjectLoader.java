@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.9 2004/10/15 08:24:06 bass Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.10 2004/10/15 09:58:58 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,12 @@
  */
 
 package com.syrus.AMFICOM.mserver;
+
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -49,15 +55,15 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestDatabase;
+import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
+
 import com.syrus.util.Log;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/10/15 08:24:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2004/10/15 09:58:58 $
+ * @author $Author: max $
  * @module mserver_v1
  */
 
@@ -651,13 +657,12 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
 			throw new UnsupportedOperationException("method isn't complete");
 		}
 
-		public List loadMeasurementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        public List loadMeasurementsButIds(StorableObjectCondition condition,
+                List ids) throws DatabaseException, CommunicationException {
             MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
-            Identifier_Transferable[] id_Transfearables;
             List list;
-            List list2;
             List ids2 = new ArrayList(ids);
-            LinkedIdsCondition_Transferable condition_Transferable;
+            Measurement_Transferable[] measurement_Transferables;
                                     
             try {
                 if( condition instanceof LinkedIdsCondition)
@@ -667,14 +672,14 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
                 for (Iterator it = list.iterator(); it.hasNext();) {
                     ids2.add( ((Analysis)it.next()).getId() );
                 }
+                Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids2.size()]; 
                 int i = 0;
                 for (Iterator it = ids2.iterator(); it.hasNext(); i++) {
-                    id_Transfearables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
+                    identifier_Transferables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
                 }
                 com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
-                condition_Transferable = (LinkedIdsCondition_Transferable)((LinkedIdsCondition) condition).getTransferable();                     
-                list2 = mcmRef.transmitMeasurementsButIds(condition_Transferable, id_Transfearables);
-                list.add(list2);
+                measurement_Transferables = mcmRef.transmitMeasurementsButIds( (LinkedIdsCondition_Transferable)((LinkedIdsCondition) condition).getTransferable() , identifier_Transferables);
+                list.add(measurement_Transferables);
                 return list;
                 
             } catch (org.omg.CORBA.SystemException se) {
@@ -682,19 +687,21 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
                 MeasurementServer.activateMCMReferenceWithId(mcmId);
                 throw new CommunicationException("System exception -- " + se.getMessage(), se);
             } catch (IllegalDataException e) {
-                Log.errorMessage("MServerMeasumentObjectLoader.loadAnalyses | Illegal Storable Object: " + e.getMessage());
-                throw new DatabaseException("MServerMeasumentObjectLoader.loadAnalyses | Illegal Storable Object: " + e.getMessage());
+                Log.errorMessage("MServerMeasumentObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + e.getMessage());
+                throw new DatabaseException("MServerMeasumentObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + e.getMessage());
+            } catch (AMFICOMRemoteException ae) {
+                Log.errorMessage("MServerMeasumentObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + ae.getMessage());
+                throw new DatabaseException("MServerMeasumentObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + ae.getMessage());
             }
 		}
 
 		public List loadAnalysesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
             
             AnalysisDatabase database = (AnalysisDatabase)MeasurementDatabaseContext.getAnalysisDatabase();
-            Identifier_Transferable[] id_Transfearables;
             List list;
-            List list2;
             List ids2 = new ArrayList(ids);
-            LinkedIdsCondition_Transferable condition_Transferable;
+            Analysis_Transferable[] analyses_Transferables;
+            
                                     
             try {
                 if( condition instanceof LinkedIdsCondition)
@@ -704,14 +711,15 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
                 for (Iterator it = list.iterator(); it.hasNext();) {
                     ids2.add( ((Analysis)it.next()).getId() );
                 }
+                Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids2.size()];
                 int i = 0;
                 for (Iterator it = ids2.iterator(); it.hasNext(); i++) {
-                    id_Transfearables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
+                    identifier_Transferables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
                 }
                 com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
-                condition_Transferable = (LinkedIdsCondition_Transferable)((LinkedIdsCondition) condition).getTransferable();                     
-                list2 = mcmRef.transmitAnalysesButIds(condition_Transferable, id_Transfearables);
-                list.add(list2);
+                               
+                analyses_Transferables = mcmRef.transmitAnalysesButIds((LinkedIdsCondition_Transferable)((LinkedIdsCondition) condition).getTransferable(), identifier_Transferables);
+                list.add(analyses_Transferables);
                 return list;
                 
             } catch (org.omg.CORBA.SystemException se) {
@@ -719,20 +727,21 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
                 MeasurementServer.activateMCMReferenceWithId(mcmId);
                 throw new CommunicationException("System exception -- " + se.getMessage(), se);
             } catch (IllegalDataException e) {
-                Log.errorMessage("MServerMeasumentObjectLoader.loadAnalyses | Illegal Storable Object: " + e.getMessage());
-                throw new DatabaseException("MServerMeasumentObjectLoader.loadAnalyses | Illegal Storable Object: " + e.getMessage());
+                Log.errorMessage("MServerMeasumentObjectLoader.loadAnalysesButIds | Illegal Storable Object: " + e.getMessage());
+                throw new DatabaseException("MServerMeasumentObjectLoader.loadAnalysesButIds | Illegal Storable Object: " + e.getMessage());
+            } catch (AMFICOMRemoteException ae) {
+                Log.errorMessage("MServerMeasumentObjectLoader.loadAnalysesButIds | Illegal Storable Object: " + ae.getMessage());
+                throw new DatabaseException("MServerMeasumentObjectLoader.loadAnalysesButIds | Illegal Storable Object: " + ae.getMessage());
             }
             
 		}
 
 		public List loadEvaluationsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
             EvaluationDatabase database = (EvaluationDatabase)MeasurementDatabaseContext.getEvaluationDatabase();
-            Identifier_Transferable[] id_Transfearables;
             List list;
-            List list2;
             List ids2 = new ArrayList(ids);
-            LinkedIdsCondition_Transferable condition_Transferable;
-                                    
+            Evaluation_Transferable[] evaluation_Transferables;
+            
             try {
                 if( condition instanceof LinkedIdsCondition)
                     list = database.retrieveButIdsByDomain(ids2, ( (LinkedIdsCondition)condition ).getDomain());
@@ -741,22 +750,26 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
                 for (Iterator it = list.iterator(); it.hasNext();) {
                     ids2.add( ((Analysis)it.next()).getId() );
                 }
+                Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids2.size()];
                 int i = 0;
                 for (Iterator it = ids2.iterator(); it.hasNext(); i++) {
-                    id_Transfearables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
+                    identifier_Transferables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
                 }
                 com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
-                condition_Transferable = (LinkedIdsCondition_Transferable)((LinkedIdsCondition) condition).getTransferable();                     
-                list2 = mcmRef.transmitEvaluationButIds(condition_Transferable, id_Transfearables);
-                list.add(list2);
+                                     
+                evaluation_Transferables = mcmRef.transmitEvaluationsButIds((LinkedIdsCondition_Transferable)((LinkedIdsCondition) condition).getTransferable(), identifier_Transferables);
+                list.add(evaluation_Transferables);
                 return list;               
             } catch (org.omg.CORBA.SystemException se) {
                 Log.errorException(se);
                 MeasurementServer.activateMCMReferenceWithId(mcmId);
                 throw new CommunicationException("System exception -- " + se.getMessage(), se);
             } catch (IllegalDataException e) {
-                Log.errorMessage("MServerMeasumentObjectLoader.loadAnalyses | Illegal Storable Object: " + e.getMessage());
-                throw new DatabaseException("MServerMeasumentObjectLoader.loadAnalyses | Illegal Storable Object: " + e.getMessage());
+                Log.errorMessage("MServerMeasumentObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + e.getMessage());
+                throw new DatabaseException("MServerMeasumentObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + e.getMessage());
+            } catch (AMFICOMRemoteException ae) {
+                Log.errorMessage("MServerMeasumentObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + ae.getMessage());
+                throw new DatabaseException("MServerMeasumentObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + ae.getMessage());
             }
 		}
 
