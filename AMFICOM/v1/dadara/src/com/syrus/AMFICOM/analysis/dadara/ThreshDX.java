@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.5 2005/03/14 10:10:54 saa Exp $
+ * $Id: ThreshDX.java,v 1.6 2005/03/14 12:19:38 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/03/14 10:10:54 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/14 12:19:38 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -56,11 +56,14 @@ public class ThreshDX extends Thresh
 	{
 		return dX[key];
 	}
+	private void correctDX(int key)
+	{
+		if (dX[key] * goodSign(key) < 0)
+			dX[key] = 0;
+	}
 	protected void setDX(int key, double val)
 	{
 		dX[key] = (int )val;
-		if (dX[key] * goodSign(key) < 0)
-			dX[key] = 0;
 		int compareSign = goodSign(key) * (IS_KEY_HARD[key] ? 1 : -1);
 		if (dX[key] * compareSign < dX[LIMIT_KEY[key]] * compareSign)
 			dX[key] = dX[LIMIT_KEY[key]];
@@ -71,5 +74,15 @@ public class ThreshDX extends Thresh
 		int compareSign = goodSign(key) * (IS_KEY_HARD[key] ? 1 : -1);
 		if (dX[key] * compareSign < dX[FORCEMOVE_KEY[key]] * compareSign)
 			dX[FORCEMOVE_KEY[key]] = dX[key];
+	}
+
+	public void changeAllBy(int delta)
+	{
+		for (int k = 0; k < 4; k++)
+		{
+			dX[k] += (IS_KEY_UPPER[k] ? delta : -delta) * (IS_KEY_HARD[k] ? 2 : 1);
+			correctDX(k);
+		}
+		
 	}
 }

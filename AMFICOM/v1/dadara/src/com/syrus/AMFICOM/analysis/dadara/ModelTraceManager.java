@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.19 2005/03/14 10:10:54 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.20 2005/03/14 12:19:38 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.19 $, $Date: 2005/03/14 10:10:54 $
+ * @version $Revision: 1.20 $, $Date: 2005/03/14 12:19:38 $
  * @module
  */
 public class ModelTraceManager
@@ -253,7 +253,7 @@ public class ModelTraceManager
 		}
 		public double getValue(int key)
 		{
-			if (type == TYPE_DXF || type == TYPE_DXT)
+			if (th instanceof ThreshDX)
 				return ((ThreshDX )th).getDX(key);
 			else
 				return ((ThreshDY )th).getDY(key);
@@ -274,6 +274,30 @@ public class ModelTraceManager
 				((ThreshDY )th).setDY(key, value);
 			th.arrangeLimits(key);
 			invalidateThMTCache(); // сбрасываем кэш всех кривых
+		}
+		/**
+		 * increase thresholds;
+		 * for dx uses +1, for dy uses the default value
+		 */
+		public void increaseValues()
+		{
+			if (th instanceof ThreshDX)
+				((ThreshDX)th).changeAllBy(1);
+			else
+				((ThreshDY)th).changeAllBy(0.1);
+			invalidateThMTCache();
+		}
+		/**
+		 * increase thresholds;
+		 * for dx uses -1, for dy uses the default value
+		 */
+		public void decreaseValues()
+		{
+			if (th instanceof ThreshDX)
+				((ThreshDX)th).changeAllBy(-1);
+			else
+				((ThreshDY)th).changeAllBy(-0.1);
+			invalidateThMTCache();
 		}
 	}
 

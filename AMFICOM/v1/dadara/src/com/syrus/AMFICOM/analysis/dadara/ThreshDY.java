@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.6 2005/03/14 10:15:43 saa Exp $
+ * $Id: ThreshDY.java,v 1.7 2005/03/14 12:19:38 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/03/14 10:15:43 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/14 12:19:38 $
  * @module
  */
 public class ThreshDY extends Thresh
@@ -53,13 +53,17 @@ public class ThreshDY extends Thresh
 	{
 		return typeL;
 	}
+	private void correctAndSnap(int key)
+	{
+		if (values[key] * (IS_KEY_UPPER[key] ? 1 : -1) < 0)
+			values[key] = 0;
+		if (VALUE_FRACTION > 0)
+			values[key] = Math.rint(values[key] * VALUE_FRACTION) / VALUE_FRACTION;
+	}
 	protected void setDY(int key, double val)
 	{
-		if (VALUE_FRACTION > 0)
-			val = Math.rint(val * VALUE_FRACTION) / VALUE_FRACTION;
-		if (val * (IS_KEY_UPPER[key] ? 1 : -1) < 0)
-			val = 0;
 		values[key] = val;
+		correctAndSnap(key);
 		int compareSign = IS_KEY_HARD[key] ^ IS_KEY_UPPER[key] ? -1 : 1;
 		if (values[key] * compareSign < values[LIMIT_KEY[key]] * compareSign)
 			values[key] = values[LIMIT_KEY[key]];
@@ -69,5 +73,14 @@ public class ThreshDY extends Thresh
 		int compareSign = IS_KEY_HARD[key] ^ IS_KEY_UPPER[key] ? -1 : 1;
 		if (values[key] * compareSign < values[FORCEMOVE_KEY[key]] * compareSign)
 			values[FORCEMOVE_KEY[key]] = values[key];
+	}
+
+	public void changeAllBy(double delta)
+	{
+		for (int k = 0; k < 4; k++)
+		{
+			values[k] += (IS_KEY_UPPER[k] ? delta : -delta) * (IS_KEY_HARD[k] ? 2 : 1);
+			correctAndSnap(k);
+		}
 	}
 }
