@@ -1,0 +1,11 @@
+classes
+*.jar
+*.jpr
+*.trc
+*.swp
+*.tar
+*.gz
+con
+corba
+log
+misc
