@@ -19,5 +19,6 @@ sqlj.properties
 .sqlj
 .project
 .classpath
+.settings
 .nbintdb
 Makefile.inc
