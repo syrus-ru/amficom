@@ -3,12 +3,13 @@ src\com\syrus\AMFICOM\Client\General\Command\Survey\MapCloseCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Survey\OpenAlarmsCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Survey\OpenAnalysisCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Survey\OpenExtendedAnalysisCommand.java
+src\com\syrus\AMFICOM\Client\General\Command\Survey\OpenMapEditorCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Survey\OpenModelingCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Survey\OpenNormsCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Survey\OpenPrognosisCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Survey\OpenResultsCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Survey\OpenSchedulerCommand.java
-src\com\syrus\AMFICOM\Client\General\Command\Survey\OpenTestsCommand.java
+src\com\syrus\AMFICOM\Client\General\Command\Survey\OpenSchemeEditorCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Survey\SurveyNewMapViewCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Survey\SurveySchemeOpenCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Survey\SurveyViewAllCommand.java
@@ -16,16 +17,9 @@ src\com\syrus\AMFICOM\Client\General\Command\Survey\SurveyViewAllSchemeCommand.j
 src\com\syrus\AMFICOM\Client\General\Command\Survey\SurveyViewMapSetupCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Survey\TestRequestCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\Survey\ViewSurveyNavigatorCommand.java
-src\com\syrus\AMFICOM\Client\General\Model\AlarmApplicationModel.java
-src\com\syrus\AMFICOM\Client\General\Model\AlarmApplicationModelFactory.java
-src\com\syrus\AMFICOM\Client\General\Model\DefaultAlarmApplicationModelFactory.java
-src\com\syrus\AMFICOM\Client\General\Model\DefaultResultApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\DefaultSurveyApplicationModelFactory.java
-src\com\syrus\AMFICOM\Client\General\Model\ResultApplicationModel.java
-src\com\syrus\AMFICOM\Client\General\Model\ResultApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\SurveyApplicationModel.java
 src\com\syrus\AMFICOM\Client\General\Model\SurveyApplicationModelFactory.java
-src\com\syrus\AMFICOM\Client\Survey\ArchiveTreeModel.java
 src\com\syrus\AMFICOM\Client\Survey\Survey.java
 src\com\syrus\AMFICOM\Client\Survey\SurveyCatalogFrame.java
 src\com\syrus\AMFICOM\Client\Survey\SurveyMDIMain.java
@@ -45,4 +39,3 @@ src\com\syrus\AMFICOM\Client\Survey\Result\ResourceButton.java
 src\com\syrus\AMFICOM\Client\Survey\Result\ResultFrame.java
 src\com\syrus\AMFICOM\Client\Survey\UI\ReloadAttributes.java
 src\com\syrus\AMFICOM\Client\Survey\UI\SchemeAlarmUpdater.java
-src\com\syrus\AMFICOM\Client\Test\ObserverTreeModel.java

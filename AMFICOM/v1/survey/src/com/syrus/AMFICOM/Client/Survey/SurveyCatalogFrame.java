@@ -1,16 +1,15 @@
 package com.syrus.AMFICOM.Client.Survey;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogFrame;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.measurement.Result;
 
 public class SurveyCatalogFrame extends ObjectResourceCatalogFrame
 	implements OperationListener
@@ -33,56 +32,50 @@ public class SurveyCatalogFrame extends ObjectResourceCatalogFrame
 			oe.getActionCommand().equals("treeselectionevent") )
 		{
 			Object obj = oe.getSource();
-			if(obj instanceof Analysis)
-			{
-				Analysis a = (Analysis )obj;
-				Pool.put("activecontext", "useractionselected", "analysis_selected");
-				Pool.put("activecontext", "selected_id", a.getId());
-				System.out.println("Analysis " + a.getId());
+			if (obj instanceof Result) {
+				Result r = (Result)obj;
+				Pool.put("activecontext", "useractionselected", "result_selected");
+				Pool.put("activecontext", "selected_id", r.getId());
 			}
-			else
+/*
 			if(obj instanceof Modeling)
 			{
-				Modeling m = (Modeling )obj;
+				Modeling m = (Modeling)obj;
 				Pool.put("activecontext", "useractionselected", "modeling_selected");
 				Pool.put("activecontext", "selected_id", m.getId());
-				System.out.println("Modeling " + m.getId());
+//				System.out.println("Modeling " + m.getId());
 			}
-			else
-			if(obj instanceof Evaluation)
-			{
-				Evaluation ev = (Evaluation )obj;
-				Pool.put("activecontext", "useractionselected", "evaluation_selected");
-				Pool.put("activecontext", "selected_id", ev.getId());
-				System.out.println("Evaluation " + ev.getId());
-			}
-			else
-			if(obj instanceof Test)
+			else if(obj instanceof Test)
 			{
 				Test t = (Test )obj;
 				Pool.put("activecontext", "useractionselected", "test_selected");
 				Pool.put("activecontext", "selected_id", t.getId());
-				System.out.println("Test " + t.getId());
+//				System.out.println("Test " + t.getId());
 			}
-			else
-			if(obj instanceof Result)
+			else if(obj instanceof Measurement)
 			{
-				Result r = (Result )obj;
-				Pool.put("activecontext", "useractionselected", "result_selected");
-				Pool.put("activecontext", "selected_id", r.getId());
-				System.out.println("Result " + r.getId());
+				Measurement m = (Measurement)obj;
+				Pool.put("activecontext", "useractionselected", "measurement_selected");
+				Pool.put("activecontext", "selected_id", m.getId());
+//				System.out.println("Result " + r.getId());
 			}
-			else
+			else if (obj instanceof MeasurementSetup)
 			{
-//				super.valueChanged(e);
+				MeasurementSetup ms = (MeasurementSetup)obj;
+				Pool.put("activecontext", "useractionselected", "measurementsetup_selected");
+				Pool.put("activecontext", "selected_id", ms.getId());
+			}
+			else if(obj instanceof MonitoredElement)
+			{
+				MonitoredElement me = (MonitoredElement)obj;
+				Pool.put("activecontext", "useractionselected", "monitoredelement_selected");
+				Pool.put("activecontext", "selected_id", me.getId());
+			}*/
+			else
 				return;
-			}
 
 			if(dispatcher != null)
-			{
 				dispatcher.notify(new OperationEvent(this, 0, "activecontextevent"));
-				System.out.println("notify " + dispatcher);
-			}
 		}
 		else
 		if(oe.getActionCommand().equals(TreeDataSelectionEvent.type))

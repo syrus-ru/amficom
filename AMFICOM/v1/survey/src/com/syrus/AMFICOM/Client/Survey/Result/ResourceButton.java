@@ -1,10 +1,11 @@
 package com.syrus.AMFICOM.Client.Survey.Result;
 
-import javax.swing.*;
-import java.awt.event.*;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
 
 public class ResourceButton extends JButton implements ActionListener 
 {

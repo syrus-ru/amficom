@@ -30,12 +30,12 @@ public class SurveyViewAllCommand extends VoidCommand
 
 	public void execute()
 	{
-		SurveyNewMapViewCommand mapView = new SurveyNewMapViewCommand(dispatcher, desktop, aContext, new MapSurveyNetApplicationModelFactory());
+		SurveyNewMapViewCommand mapView = new SurveyNewMapViewCommand(desktop, aContext);
 		mapView.execute();
-		if (mapView.opened)
+		if (mapView.getResult() == Command.RESULT_OK)
 		{
-			new OpenAlarmsCommand(dispatcher, desktop, aContext, new DefaultAlarmApplicationModelFactory()).execute();
-			new OpenResultsCommand(dispatcher, desktop, aContext, new DefaultResultApplicationModelFactory()).execute();
+			new OpenAlarmsCommand(dispatcher, desktop, aContext).execute();
+			new OpenResultsCommand(dispatcher, desktop, aContext).execute();
 		}
 	}
 }

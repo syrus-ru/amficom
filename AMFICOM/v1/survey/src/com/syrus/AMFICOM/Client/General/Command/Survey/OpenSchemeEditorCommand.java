@@ -4,17 +4,25 @@ import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Schedule.Schedule;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
+import com.syrus.AMFICOM.Client.General.Model.DefaultSchematicsApplicationModelFactory;
+import com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeEditor;
 
-public class OpenSchedulerCommand extends VoidCommand
+public class OpenSchemeEditorCommand extends VoidCommand 
 {
 	private Dispatcher dispatcher;
 	ApplicationContext aContext;
+	ApplicationModelFactory factory;
 
-	public OpenSchedulerCommand(Dispatcher dispatcher, ApplicationContext aContext)
+	public OpenSchemeEditorCommand()
+	{
+	}
+
+	public OpenSchemeEditorCommand(Dispatcher dispatcher, ApplicationContext aContext, ApplicationModelFactory factory)
 	{
 		this.dispatcher = dispatcher;
 		this.aContext = aContext;
+		this.factory = factory;
 	}
 
 	public void setParameter(String field, Object value)
@@ -36,19 +44,17 @@ public class OpenSchedulerCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public Object clone()
-	{
-		return new OpenSchedulerCommand(dispatcher, aContext);
-	}
-
 	public void execute()
 	{
 		if(!Checker.checkCommandByUserId(
 				aContext.getSessionInterface().getUserId(),
-				Checker.openTestPlannerWindow))
+				Checker.schemeEditing))
+		{
 			return;
+		}
 
-		new Schedule();
+        System.out.println("Starting Scheme Editor window");
+
+		new SchemeEditor(new DefaultSchematicsApplicationModelFactory());
 	}
 }
-

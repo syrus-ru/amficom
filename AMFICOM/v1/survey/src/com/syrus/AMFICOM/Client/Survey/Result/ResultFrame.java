@@ -11,16 +11,34 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.GeneralTableModel;
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
-import com.syrus.AMFICOM.Client.Resource.Alarm.SystemEvent;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
 import com.syrus.AMFICOM.Client.Survey.SurveyMDIMain;
-import com.syrus.AMFICOM.analysis.dadara.*;
-import com.syrus.io.*;
+import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.measurement.Analysis;
+import com.syrus.AMFICOM.measurement.Evaluation;
+import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.Modeling;
+import com.syrus.AMFICOM.measurement.ParameterType;
+import com.syrus.AMFICOM.measurement.ParameterTypeCodenames;
+import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.ResultSortCondition;
+import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.corba.ParameterTypeSort;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.io.BellcoreReader;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.io.ByteArrayCollector;
 import com.syrus.util.ByteArray;
 
 import java.awt.BorderLayout;
@@ -28,11 +46,17 @@ import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JInternalFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -40,22 +64,14 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 {
 	ApplicationContext aContext;
 	Dispatcher internal_dispatcher;
-	DataSourceInterface dataSource;
-	Result result;
+	Identifier userId;
 
 	String user_action;
-	String id;
 
 	String received_user_action;
 	String received_id;
 
-	String title = "Результат ";
-
-	Alarm displayed_alarm;
-	Test displayed_test;
-	Evaluation displayed_evaluation;
-	Analysis displayed_analysis;
-	Modeling displayed_modeling;
+	String title;
 
 	GeneralTableModel tModelPar;
 	GeneralTableModel tModelRes;
@@ -72,7 +88,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 	JTable resultTable;
 
 	MapMarkersLayeredPanel tracePanel;
-	MapMarkersPanel map_markers_panel;	
+	MapMarkersPanel map_markers_panel;
 
 	public ResultFrame(ApplicationContext aContext)
 	{
@@ -92,9 +108,9 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 
 		this.tracePanel = new MapMarkersLayeredPanel(this.internal_dispatcher);
 		getActiveContext();
-    
-    aContext.getDispatcher().notify (
-      new OperationEvent (this,0,SurveyMDIMain.resultFrameDisplayed));
+
+		aContext.getDispatcher().notify (
+			new OperationEvent (this,0,SurveyMDIMain.resultFrameDisplayed));
 	}
 
 	public ResultFrame()
@@ -105,7 +121,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 	public void setContext(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-		this.dataSource = aContext.getDataSourceInterface();
+		userId = new Identifier(aContext.getSessionInterface().getUserId());
 	}
 
 	public ApplicationContext getContext()
@@ -126,232 +142,24 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		this.internal_dispatcher.register(this, TreeDataSelectionEvent.type);
 	}
 
-	public Result addOnResult1;
-	public Result addOnResult2;
-
-	public void showActiveResult()
+	public void showActiveResult(Identifier id)
 	{
-		try
-		{
+		try {
+			this.title = null;
 
-		Result r;
-		String res_id = "";
-		this.addOnResult1 = null;
-		this.addOnResult2 = null;
-
-		this.displayed_test = null;
-		this.displayed_evaluation = null;
-		this.displayed_analysis = null;
-		this.displayed_modeling = null;
-		this.title = null;
-
-		if (this.user_action.equals("alarm_selected"))
-		{
-			Alarm alarm = (Alarm )Pool.get(Alarm.typ, this.id);
-			this.title = "Результат: " + alarm.getName();
-			SystemEvent event = (SystemEvent )Pool.get("event", alarm.event_id);
-
-			this.displayed_alarm = alarm;
-			this.user_action = "result_selected";
-			this.id = event.descriptor;
-		}
-		if (this.user_action.equals("test_selected"))
-		{
-//			res_id = dataSource.GetTestResult(id);
-			res_id = new SurveyDataSourceImage(this.dataSource).GetTestResult(this.id);
-			Result re = (Result )Pool.get(Result.TYPE, res_id);
-			this.displayed_test = (Test )Pool.get(Test.TYPE, this.id);
-			this.title = "Результат: " + re.getName();
-		} else 
-		if (this.user_action.equals("path_selected"))
-		{
-//			res_id = dataSource.GetLastResult(id);
-			res_id = new SurveyDataSourceImage(this.dataSource).GetLastResult(this.id);
-			Result re = (Result )Pool.get(Result.TYPE, res_id);
-			this.displayed_test = (Test )Pool.get(Test.TYPE, re.getActionId());
-			this.title = "Результат: " + re.getName();
-		} else
-		if (this.user_action.equals("analysis_selected"))
-		{
-//			res_id = dataSource.GetAnalysisResult(id);
-			res_id = new SurveyDataSourceImage(this.dataSource).GetAnalysisResult(this.id);
-			Result re = (Result )Pool.get(Result.TYPE, res_id);
-			this.displayed_analysis = (Analysis )Pool.get(Analysis.TYPE, this.id);
-			this.title = "Результат: " + re.getName();
-		} else
-		if (this.user_action.equals("modeling_selected"))
-		{
-//			res_id = dataSource.GetModelingResult(id);
-			res_id = new SurveyDataSourceImage(this.dataSource).GetModelingResult(this.id);
-			this.displayed_modeling = (Modeling )Pool.get(Modeling.TYPE, this.id);
-			this.title = "Результат: " + this.displayed_modeling.getName();
-		} else
-		if (this.user_action.equals("evaluation_selected"))
-		{
-//			res_id = dataSource.GetEvaluationResult(id);
-			res_id = new SurveyDataSourceImage(this.dataSource).GetEvaluationResult(this.id);
-			Result re = (Result )Pool.get(Result.TYPE, res_id);
-			this.displayed_evaluation = (Evaluation )Pool.get(Evaluation.TYPE, this.id);
-			this.title = "Результат: " + re.getName();
-		} else 
-		if (this.user_action.equals("result_selected"))
-		{
-//			new SurveyDataSourceImage(dataSource).GetResult(id);
-			res_id = this.id;
-
-			Result rrr = (Result )Pool.get(Result.TYPE, res_id);
-			String resultType = rrr.getResultType();
-			String resultActionId = rrr.getActionId();			
-			if(resultType.equals(Test.TYPE))
-			{
-				new SurveyDataSourceImage(this.dataSource).GetTests(new String[] {resultActionId} );
-				Test test = (Test )Pool.get(Test.TYPE, resultActionId);
-				this.displayed_test = test;
-				if(this.title == null)
-					this.title = "Результат: " + rrr.getName();
-
-				Analysis anal = null;
-				if(test.getAnalysisId() != null && test.getAnalysisId().length()>0)
-				{
-					new SurveyDataSourceImage(this.dataSource).GetAnalysis(test.getAnalysisId());
-					anal = (Analysis )Pool.get(Analysis.TYPE, test.getAnalysisId());
-					if(anal != null)
-					{
-						this.displayed_analysis = anal;
-//						dataSource.GetAnalysisResult(anal.getId());
-//						new SurveyDataSourceImage(dataSource).GetAnalysisResult(anal.getId());
-					}
-				}
-
-				Evaluation eval = null;
-				if(test.getEvaluationId() != null && test.getEvaluationId().length()>0)
-				{
-					new SurveyDataSourceImage(this.dataSource).GetEvaluation(test.getEvaluationId());
-					eval = (Evaluation )Pool.get(Evaluation.TYPE, test.getEvaluationId());
-					if(eval != null)
-					{
-						this.displayed_evaluation = eval;
-//						dataSource.GetEvaluationResult(eval.getId());
-//						new SurveyDataSourceImage(dataSource).GetEvaluationResult(eval.getId());
-					}
-				}
-				
-				String[] resultId = test.getResultIds();
-				for(int i = 0; i < resultId.length; i++)
-					if(resultId[i].equals(this.id)) {
-						
-						if(anal != null){
-							String[] resultIds = anal.getResultIds();
-							if(resultIds.length > i) {
-								String ri = resultIds[i];
-								new SurveyDataSourceImage(this.dataSource).GetResult(ri);
-								this.addOnResult1 = (Result )Pool.get(Result.TYPE, ri);
-								}
-						}
-
-						if(eval != null){
-							String[] evalResultIds = eval.getResultIds();
-							if(evalResultIds.length > i){
-								String ri = evalResultIds[i];
-								new SurveyDataSourceImage(this.dataSource).GetResult(ri);
-								this.addOnResult2 = (Result )Pool.get(Result.TYPE, ri);
-							}
-						}
-					}
+			if (this.user_action.equals("result_selected")) {
+				Result result = (Result)MeasurementStorableObjectPool.getStorableObject(id, true);
+				showResult(result);
 			}
-			else
-			if(resultType.equals(Analysis.TYPE)){
-				new SurveyDataSourceImage(this.dataSource).GetAnalysis(resultActionId);
-				Analysis anal = (Analysis )Pool.get(Analysis.TYPE, resultActionId);
-				this.displayed_analysis = anal;
-				if(this.title == null)
-					this.title = "Результат: " + rrr.getName();
-
-				Test test = (Test )Pool.get(Test.TYPE, new SurveyDataSourceImage(this.dataSource).GetTestForAnalysis(anal.getId()));
-				if(test != null){
-					String[] resultIds = anal.getResultIds();
-					for(int i = 0; i < resultIds.length; i++)
-						if(resultIds[i].equals(this.id))
-						{
-							this.displayed_test = test;
-							if(test.getResultIds().length - 1 < i)
-								return;
-							String ri = test.getResultIds()[i];
-//							dataSource.GetTestResult(test.getId());
-//							new SurveyDataSourceImage(dataSource).GetTestResult(test.getId());
-							new SurveyDataSourceImage(this.dataSource).GetResult(ri);
-							this.addOnResult1 = rrr;
-							res_id = ri;
-//							addOnResult1 = (Result )Pool.get("result", ri);
-						}
-				}
-			}
-			else
-			if(resultType.equals(Evaluation.TYPE))
-			{
-				new SurveyDataSourceImage(dataSource).GetEvaluation(resultActionId);
-				Evaluation eval = (Evaluation )Pool.get(Evaluation.TYPE, resultActionId);
-				this.displayed_evaluation = eval;
-				if(title == null)
-					this.title = "Результат: " + rrr.getName();
-
-				Test test = (Test )Pool.get(Test.TYPE, new SurveyDataSourceImage(dataSource).GetTestForEvaluation(eval.getId()));
-				if(test != null){
-					String[] resultIds = eval.getResultIds();
-					for(int i = 0; i < resultIds.length; i++)
-						if(resultIds[i].equals(id))
-						{
-							displayed_test = test;
-							if(test.getResultIds().length - 1 < i)
-								return;
-							String ri = test.getResultIds()[i];
-							new SurveyDataSourceImage(dataSource).GetResult(ri);
-							addOnResult1 = rrr;
-							res_id = ri;
-
-							Analysis anal = null;
-							if(test.getAnalysisId() != null && test.getAnalysisId().length()>0)
-							{
-								new SurveyDataSourceImage(dataSource).GetAnalysis(test.getAnalysisId());
-								anal = (Analysis )Pool.get(Analysis.TYPE, test.getAnalysisId());
-								if(anal != null){
-									String[] analysisResultIds = anal.getResultIds();
-									if(analysisResultIds.length > i)
-									{
-										displayed_analysis = anal;
-										String ri2 = analysisResultIds[i];
-										new SurveyDataSourceImage(dataSource).GetResult(ri2);
-										addOnResult2 = (Result )Pool.get(Result.typ, ri2);
-									}
-								}
-							}
-							break;
-						}
-				}
-			}
-			rrr.updateLocalFromTransferable();
 		}
-		r = (Result)Pool.get("result", res_id);
-		r.updateLocalFromTransferable();
-		showResult(r);
-
-		}
-		catch (Exception ex)
-		{
+		catch (Exception ex) {
 			System.out.println("Could not show result - " + ex.getMessage());
 			System.out.println("(user_action = " + user_action + ", id = " + id + ")");
-//			ex.printStackTrace();
 			showResult(null);
 		}
-		if(title == null)
+		if (title == null)
 			title = "Результаты ";
 		setTitle(title);
-	}
-
-	public void setResult(Result result)
-	{
-		this.result = result;
-		showResult(result);
 	}
 
 	void showResult(Result result)
@@ -362,243 +170,126 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 
 		if (result == null)
 			return;
-		
-		List arguments = null;
 
-		String meId = null;
-		String mapPathId = null;
+		Result addOnResult1 = null;
+		Result addOnResult2 = null;
 
-	try
-	{
-		String resultType = result.getResultType();
-		String actionId = result.getActionId();
-		if (resultType.equals(Analysis.TYPE))
-		{
-			Analysis a = (Analysis)Pool.get(Analysis.TYPE, actionId);
-			arguments = a.getArgumentList();
-			meId = a.getMonitoredElementId();
-		}
-		else
-		if (resultType.equals(Modeling.TYPE))
-		{
-			Modeling m = (Modeling )Pool.get(Modeling.TYPE, actionId);
-			arguments = m.getArgumentList();
-			mapPathId = m.getSchemePathId();
-		}
-		else
-		if (resultType.equals(Evaluation.TYPE))
-		{
-			Evaluation e = (Evaluation )Pool.get(Evaluation.TYPE, actionId);
-			arguments = e.getArgumentList();
-			meId = e.getMonitoredElementId();
-/*
-			Result re = (Result )Pool.get("result", e.result_id);
-			if (re.result_type.equals("test"))
-			{
-				Test t = (Test )Pool.get("test", re.test_id);
-				monitored_element_id = t.monitored_element_id;
+		Set argumentSet = null;
+
+		Identifier meId = null;
+		String schemePathId = null;
+
+		try {
+			if (result.getSort().equals(ResultSort.RESULT_SORT_MODELING)) {
+				Modeling modeling = (Modeling)result.getAction();
+				argumentSet = modeling.getArgumentSet();
+				schemePathId = modeling.getSchemePathId();
 			}
-*/
-		}
-		else
-		if (resultType.equals(Test.TYPE))
-		{
-			Test t = (Test )Pool.get(Test.TYPE, actionId);
-			dataSource.LoadTestArgumentSets(new String[] {t.getTestArgumentSetId()});
-			TestArgumentSet tas = (TestArgumentSet )Pool.get(TestArgumentSet.TYPE, t.getTestArgumentSetId());
-			tas.updateTestArgumentSet(t.getTestTypeId());
-			arguments = tas.getArgumentList();
-			meId = t.getMonitoredElementId();
-		}
-		
-	}
-	catch(Exception e){
-			
-	}
+			else if (result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+				Measurement m = (Measurement)result.getAction();
+				MeasurementSetup ms = m.getSetup();
+				argumentSet = ms.getParameterSet();
+				meId = m.getMonitoredElementId();
 
+				Vector vect = new Vector();
+				vect.add("Шаблон исследования");
+				vect.add(ms.getDescription());
+				this.tModelPar.insertRow(vect);
 
-	
-		proccessParameters(result.getParameterList(), meId , mapPathId);
-		if(this.addOnResult1 != null){
-			this.addOnResult1.updateLocalFromTransferable();			
-			proccessParameters(this.addOnResult1.getParameterList(), meId , mapPathId);
-		}
+				ResultSortCondition condition = new ResultSortCondition(m, ResultSort.RESULT_SORT_ANALYSIS);
+				List resIds = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if (resIds.size() != 0)
+					addOnResult1 = (Result)MeasurementStorableObjectPool.getStorableObject(
+							(Identifier)resIds.get(0), true);
 
-		if(this.addOnResult2 != null){
-			this.addOnResult2.updateLocalFromTransferable();			
-			proccessParameters(this.addOnResult2.getParameterList(), meId , mapPathId);
-		}
+				condition = new ResultSortCondition(m, ResultSort.RESULT_SORT_EVALUATION);
+				resIds = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if (resIds.size() != 0)
+					addOnResult2 = (Result)MeasurementStorableObjectPool.getStorableObject(
+							(Identifier)resIds.get(0), true);
 
-
-		if (arguments!=null){
-			for(Iterator it=arguments.iterator();it.hasNext();){
-				Parameter arg = (Parameter)it.next();
-		//				if (arg.code_name.equals("reflectogramm"))
-				String codename = "";
-				String name = "";
-				ActionParameterType apt = arg.getApt();
-				GlobalParameterType gpt = arg.getGpt();
-				String data_type = gpt.getValueType();
-				byte[] value = arg.getValue();			
-				if(apt != null)
-				{
-					codename = apt.getCodename();
-					name = apt.getName();
-				}
-				else
-				if(gpt != null)
-				{
-					codename = gpt.getCodename();
-					name = gpt.getName();
-				}
-	
-				if (codename.equals("reflectogramm"))
-				{
-					BellcoreStructure bs = new BellcoreReader().getData(value);
-					jbInitReflectogram(bs, this.displayed_test, meId, mapPathId);
-				}
-				else
-				{
-					Object val = new String("");// = arg.value.toString();
-					try
-					{
-						if(data_type.equals("string"))
-						{
-							val = String.valueOf(new ByteArray(value).toString());
-						}
-						else if(data_type.equals("integer"))
-						{
-							val = String.valueOf(new ByteArray(value).toInt());
-						}
-						else if(data_type.equals("long"))
-						{
-							val = String.valueOf(new ByteArray(value).toLong());
-						}
-						else if(data_type.equals("double"))
-						{
-							val = String.valueOf(new ByteArray(value).toDouble());
-						}
-						else if(data_type.equals("tracechangescoordinatesarray"))
-						{
-							val = String.valueOf(new ByteArray(value).toString());
-						}
-					}
-					catch(Exception ex)
-					{
-						ex.printStackTrace();
-					}
-					Vector vect = new Vector();
-					vect.add(name);
-					vect.add(val);
-					this.tModelPar.insertRow(vect);
-				}
+				AnalysisUtil.load_Etalon(ms);
+				AnalysisUtil.load_CriteriaSet(ms);
+				AnalysisUtil.load_Thresholds(userId, ms);
 			}
 		}
-
-		if(this.displayed_test != null)
-		{
-			Vector vect = new Vector();
-			vect.add("Шаблон исследования");
-			vect.add(Pool.getName(TestSetup.TYPE, this.displayed_test.getTestSetupId()));
-			this.tModelPar.insertRow(vect);
+		catch (Exception e) {
 		}
 
+		proccessParameters(result.getParameters(), argumentSet.getParameters(), meId , schemePathId);
+		if(addOnResult1 != null)
+			proccessParameters(addOnResult1.getParameters(), argumentSet.getParameters(), meId , schemePathId);
 
+		if(addOnResult2 != null)
+			proccessParameters(addOnResult2.getParameters(), argumentSet.getParameters(), meId , schemePathId);
+
+		SetParameter[] parameters = argumentSet.getParameters();
+		for (int i = 0; i < parameters.length; i++) {
+			SetParameter arg = (SetParameter)parameters[i];
+			ParameterType ptype = (ParameterType)parameters[i].getType();
+			String codename = ptype.getCodename();
+			String name = ptype.getName();
+			byte[] value = arg.getValue();
+
+			if (codename.equals("reflectogramm")) {
+				BellcoreStructure bs = new BellcoreReader().getData(value);
+				jbInitReflectogram(bs, parameters, meId, schemePathId);
+			}
+			else {
+				Object val = parseSimpleData(ptype.getSort(), value);
+
+				Vector vect = new Vector();
+				vect.add(name);
+				vect.add(val);
+				tModelRes.insertRow(vect);
+			}
+		}
 		this.paramTable.updateUI();
 		this.resultTable.updateUI();
 	}
-	
-	private void proccessParameters(List parameterList, String meId, String mapPathId){
-		for(Iterator it=parameterList.iterator();it.hasNext();){
-			Parameter param = (Parameter )it.next();
+
+	private void proccessParameters(SetParameter[] parameters, SetParameter[] arguments, Identifier meId, String schemePathId) {
+		for(int i = 0; i < parameters.length; i++) {
+			SetParameter param = (SetParameter)parameters[i];
+			ParameterType ptype = (ParameterType)param.getType();
+
 			String codename = "";
 			String name = "";
-			ActionParameterType apt = param.getApt();
-			GlobalParameterType gpt = param.getGpt();
-			String data_type = gpt.getValueType();
-			byte[] value = param.getValue();			
-			if(apt != null)
-			{
-				codename = apt.getCodename();
-				name = apt.getName();
-			}
-			else
-			if(gpt != null)
-			{
-				codename = gpt.getCodename();
-				name = gpt.getName();
-			}
+			byte[] value = param.getValue();
+			codename = ptype.getCodename();
+			name = ptype.getName();
 
-			if (codename.equals("traceevents"))
+			if (codename.equals(ParameterTypeCodenames.TRACE_EVENTS))
 			{
 				ByteArrayCollector bac = new ByteArrayCollector();
 				byte[][] bevents =  bac.decode(value);
 				TraceEvent[] events = new TraceEvent[bevents.length];
-				for (int i = 0; i < bevents.length; i++)
-					events[i] = new TraceEvent(bevents[i]);
-				//param.value;
+				for (int j = 0; j < bevents.length; j++)
+					events[j] = new TraceEvent(bevents[j]);
 				RefAnalysis analysis = new RefAnalysis();
 				analysis.events = events;
 				Pool.put("refanalysis", "primarytrace", analysis);
 			}
-			if (codename.equals("dadara_alarm_array"))
+			if (codename.equals(ParameterTypeCodenames.DADARA_ALARMS))
 			{
 				ReflectogramAlarm[] alarms = ReflectogramAlarm.fromByteArray(value);
 				if (map_markers_panel != null)
 					map_markers_panel.updateAlarms(alarms);
 			}
-			if (codename.equals("dadara_event_array"))
+			else if (codename.equals(ParameterTypeCodenames.DADARA_EVENTS))
 			{
 				ReflectogramEvent[] ep = ReflectogramEvent.fromByteArray(value);
-				jbInitReflectogram(ep, displayed_test, meId, mapPathId);
+				jbInitReflectogram(ep, arguments, meId, schemePathId);
 			}
-			else
-			if (codename.equals("concavities"))
-			{}
-			else
-	//			if (param.code_name.equals("reflectogramm"))
-			if (codename.equals("reflectogramm"))
+			else if (codename.equals("reflectogramm"))
 			{
 				BellcoreStructure bs = new BellcoreReader().getData(value);
-				jbInitReflectogram(bs, displayed_test, meId, mapPathId);
+				jbInitReflectogram(bs, arguments, meId, schemePathId);
 			}
 			else
 			{
-				Object val = new String("");//param.value.toString();
-				try
-				{
-					if(data_type.equals("string"))
-					{
-						val = String.valueOf(new ByteArray(value).toUTFString());
-					}
-					else
-					if(data_type.equals("integer"))
-					{
-						val = String.valueOf(new ByteArray(value).toInt());
-					}
-					else if(data_type.equals("long"))
-					{
-						val = String.valueOf(new ByteArray(value).toLong());
-					}
-					else
-					if(data_type.equals("double"))
-					{
-						val = String.valueOf(new ByteArray(value).toDouble());
-					}
-					else
-					if(data_type.equals("traceeventarray"))
-					{
-						val = String.valueOf(new ByteArray(value).toUTFString());
-					}
-					else
-					if(data_type.equals("characterizationidentity"))
-					{
-						val = new ResourceButton(dataSource);
-					}
-				}
-				catch(Exception ex)
-				{
-				}
+				Object val = parseSimpleData(ptype.getSort(), value);
+
 				Vector vect = new Vector();
 				vect.add(name);
 				vect.add(val);
@@ -607,13 +298,27 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		}
 	}
 
-	private void jbInitReflectogram(ReflectogramEvent[] ep, Test test, String monitored_element_id, String map_path_id)
+	private Object parseSimpleData(DataType sort, byte[] value)
 	{
-		if (ep == null || test == null)
-			return;
+		Object val = null;
+		try {
+			if (sort.equals(DataType.DATA_TYPE_STRING))
+				val = String.valueOf(new ByteArray(value).toUTFString());
+			else if (sort.equals(DataType.DATA_TYPE_INTEGER))
+				val = String.valueOf(new ByteArray(value).toInt());
+			else if (sort.equals(DataType.DATA_TYPE_LONG))
+				val = String.valueOf(new ByteArray(value).toLong());
+			else if (sort.equals(DataType.DATA_TYPE_DOUBLE))
+				val = String.valueOf(new ByteArray(value).toDouble());
+		}
+		catch (Exception ex) {
+		}
+		return val;
+	}
 
-		TestArgumentSet metas = (TestArgumentSet)Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
-		if (metas == null)
+	private void jbInitReflectogram(ReflectogramEvent[] ep, SetParameter[] args, Identifier monitored_element_id, String scheme_path_id)
+	{
+		if (ep == null)
 			return;
 
 		int len = 0;
@@ -621,19 +326,15 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 
 		try
 		{
-			for (Iterator it = metas.getArgumentList().iterator(); it.hasNext();)
+			for (int i = 0; i < args.length; i++)
 			{
-				Parameter p = (Parameter)it.next();
-				String codename = p.getCodename();
-				byte[] value = p.getValue();
-				if (codename.equals("ref_res"))
-				{
+				ParameterType ptype = (ParameterType)args[i].getType();
+				String codename = ptype.getCodename();
+				byte[] value = args[i].getValue();
+				if (codename.equals(ParameterTypeCodenames.TRACE_RESOLUTION))
 					delta_x = new ByteArray(value).toDouble();
-				} else 
-				if (codename.equals("ref_trclen"))
-				{
+				else if (codename.equals(ParameterTypeCodenames.TRACE_LENGTH))
 					len = (int)new ByteArray(value).toDouble();
-				}
 			}
 			if (delta_x == 0 || len == 0)
 				return;
@@ -646,16 +347,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 				for (int j = ep[i].begin; j <= ep[i].end && j < n; j++)
 					y[j] = ep[i].refAmpl(j)[0];
 			}
-//			y = com.syrus.AMFICOM.Client.Analysis.MathRef.correctReflectogramm(y);
 			y = com.syrus.AMFICOM.analysis.dadara.MathRef.correctReflectogramm(y);
-
-			if (test != null)
-			{
-				this.dataSource.loadTestSetup(test.getTestSetupId());
-				TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, test.getTestSetupId());
-				AnalysisUtil.load_Etalon(dataSource, ts);
-				AnalysisUtil.load_Thresholds(dataSource, ts);
-			}
 
 			if (map_markers_panel == null)
 			{
@@ -666,9 +358,9 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 
 				//p.draw_modeled = false;
 				if (monitored_element_id != null)
-					map_markers_panel.setMonitoredElementId (monitored_element_id);
-				if (map_path_id != null)
-					map_markers_panel.setMapPathId(map_path_id);
+					map_markers_panel.setMonitoredElementId(monitored_element_id);
+				if (scheme_path_id != null)
+					map_markers_panel.setSchemePathId(scheme_path_id);
 				map_markers_panel.setColorModel("primarytrace");
 				tracePanel.addGraphPanel(map_markers_panel);
 				tracePanel.updEvents("primarytrace");
@@ -693,7 +385,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		}
 	}
 
-	private void jbInitReflectogram(BellcoreStructure bs, Test test, String monitored_element_id, String map_path_id)
+	private void jbInitReflectogram(BellcoreStructure bs, SetParameter[] args, Identifier monitored_element_id, String scheme_path_id)
 	{
 		int n = bs.dataPts.TNDP;
 		double delta_x = (double)(bs.fxdParams.AR - bs.fxdParams.AO) * 3d /
@@ -704,13 +396,6 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 			y[i] = (double)(65535 - bs.dataPts.DSF[0][i])/1000d;
 //		y = com.syrus.AMFICOM.Client.Analysis.MathRef.correctReflectogramm(y);
 		y = com.syrus.AMFICOM.analysis.dadara.MathRef.correctReflectogramm(y);
-		if (test != null)
-		{
-			dataSource.loadTestSetup(test.getTestSetupId());
-			TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, test.getTestSetupId());
-			AnalysisUtil.load_Etalon(dataSource, ts);
-			AnalysisUtil.load_Thresholds(dataSource, ts);
-		}
 
 		if (map_markers_panel == null)
 		{
@@ -719,9 +404,9 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 			map_markers_panel.paint_all_thresholds = true;
 
 			if (monitored_element_id != null)
-				map_markers_panel.setMonitoredElementId (monitored_element_id);
-			if (map_path_id != null)
-				map_markers_panel.setMapPathId(map_path_id);
+				map_markers_panel.setMonitoredElementId(monitored_element_id);
+			if (scheme_path_id != null)
+				map_markers_panel.setSchemePathId(scheme_path_id);
 			map_markers_panel.setColorModel("primarytrace");
 			tracePanel.addGraphPanel(map_markers_panel);
 			tracePanel.updEvents("primarytrace");
@@ -848,7 +533,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 			return false;
 
 		received_user_action = user_action = u_a;
-		received_id = id = i;
+		received_id = i;
 		return true;
 	}
 
@@ -858,7 +543,10 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		{
 //			System.out.println(" event " + ae);
 			if(getActiveContext())
-				showActiveResult();
+			{
+				Identifier id = (Identifier)Pool.get("activecontext", "selected_id");
+				showActiveResult(id);
+			}
 		}
 		if(ae.getActionCommand().equals(TreeDataSelectionEvent.type))
 		{
@@ -890,7 +578,10 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 						Pool.remove("activecontext", "useractionselected");
 
 					if(getActiveContext())
-						showActiveResult();
+					{
+						Identifier id = (Identifier)Pool.get("activecontext", "selected_id");
+						showActiveResult(id);
+					}
 				}
 			}
 		}
@@ -914,11 +605,11 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		if (tracePanel != null)
 			tracePanel.resize();
 	}
-  
-  public MapMarkersPanel getReflectPicture()
-  {
-    return map_markers_panel;
-  }
+
+	public MapMarkersPanel getReflectPicture()
+	{
+		return map_markers_panel;
+	}
 }
 
 class ValueTableRenderer extends DefaultTableCellRenderer

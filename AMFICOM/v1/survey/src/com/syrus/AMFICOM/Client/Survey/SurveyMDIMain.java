@@ -1,41 +1,82 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Survey;
 
-import com.syrus.AMFICOM.Client.Map.*;
 import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Command.Config.*;
+import com.syrus.AMFICOM.Client.General.Command.CloseAllInternalCommand;
+import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
+import com.syrus.AMFICOM.Client.General.Command.HelpAboutCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Session.*;
-import com.syrus.AMFICOM.Client.General.Command.Survey.*;
-import com.syrus.AMFICOM.Client.General.Command.Window.*;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.CreateSurveyReportCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.MapCloseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.OpenAlarmsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.OpenAnalysisCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.OpenExtendedAnalysisCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.OpenMapEditorCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.OpenNormsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.OpenPrognosisCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.OpenResultsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.OpenSchedulerCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.OpenSchemeEditorCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyNewMapViewCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyViewAllCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyViewAllSchemeCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.SurveyViewMapSetupCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.ViewSurveyNavigatorCommand;
 import com.syrus.AMFICOM.Client.General.ConnectionInterface;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.AlarmReceivedEvent;
+import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
+import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanelNoEdition;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.DefaultMapEditorApplicationModelFactory;
+import com.syrus.AMFICOM.Client.General.Model.DefaultPredictionApplicationModelFactory;
+import com.syrus.AMFICOM.Client.General.Model.DefaultSchematicsApplicationModelFactory;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.Module;
+import com.syrus.AMFICOM.Client.General.Model.ReflectometryAnalyseApplicationModelFactory;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemeTabbedPane;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
+import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
-import com.syrus.AMFICOM.Client.Resource.ConfigDataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
+import com.syrus.AMFICOM.Client.Resource.Object.Domain;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
-import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
 import com.syrus.AMFICOM.Client.Schematics.Elements.ElementsListFrame;
 import com.syrus.AMFICOM.Client.Schematics.Elements.PropsFrame;
 import com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeViewerFrame;
 import com.syrus.AMFICOM.Client.Survey.Alarm.AlarmFrame;
 import com.syrus.AMFICOM.Client.Survey.Alarm.AlarmPopupFrame;
 import com.syrus.AMFICOM.Client.Survey.Result.ResultFrame;
-import com.syrus.AMFICOM.Client.Survey.UI.ReloadAttributes;
 import com.syrus.io.IniFile;
 
-import java.awt.*;
+import java.awt.AWTEvent;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 
@@ -47,34 +88,32 @@ import javax.swing.BorderFactory;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.WindowConstants;
+//import com.syrus.AMFICOM.Client.Survey.UI.ReloadAttributes;
 
-public class SurveyMDIMain extends JFrame implements OperationListener {
+public class SurveyMDIMain extends JFrame 
+	implements OperationListener, Module
+{
 
-	private Dispatcher			internal_dispatcher	= new Dispatcher();
+	private Dispatcher			internalDispatcher	= new Dispatcher();
 	public ApplicationContext	aContext			= new ApplicationContext();
 
-	public String				domain_id;
-  
-  public static final String alarmFrameDisplayed = "alarmFrameDisplayed";
-  public static final String alarmPopupFrameDisplayed =
-    "alarmPopupFrameDisplayed";  
-  public static final String resultFrameDisplayed = "resultFrameDisplayed";  
+	public String				domainId;
 
-	//	public AlarmChecker alarmChecker = null;
+	public static final String alarmFrameDisplayed = "alarmFrameDisplayed";
+	public static final String alarmPopupFrameDisplayed =
+		"alarmPopupFrameDisplayed";
+	public static final String resultFrameDisplayed = "resultFrameDisplayed";
 
 	static IniFile				iniFile;
 	static String				iniFileName			= "Survey.properties";
 
 	static SimpleDateFormat		sdf					= new java.text.SimpleDateFormat(
 															"dd.MM.yyyy HH:mm:ss");
-
-	//	public ConnectionInterface ci;
-	//	public SessionInterface si;
-	//	public DataSourceInterface dataSource;
 
 	JPanel						mainPanel			= new JPanel();
 	JScrollPane					scrollPane			= new JScrollPane();
@@ -85,52 +124,63 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 	SurveyMenuBar				menuBar				= new SurveyMenuBar();
 	SurveyToolBar				toolBar				= new SurveyToolBar();
 
-	ReloadAttributes			myalarmTread		= null;
+//	ReloadAttributes			myalarmTread		= null;
 
-  private CreateSurveyReportCommand csrCommand = null;
-  public AlarmFrame alarmsFrame = null;
-  public AlarmPopupFrame alarmPopupFrame = null;
-  public ResultFrame resultFrame = null;//рефлектограмма
-  public SchemeViewerFrame schemeViewerFrame = null;//рефлектограмма  
-  
+	private CreateSurveyReportCommand csrCommand = null;
+	public AlarmFrame alarmsFrame = null;
+	public AlarmPopupFrame alarmPopupFrame = null;
+	public ResultFrame resultFrame = null;//рефлектограмма
+	public SchemeViewerFrame schemeViewerFrame = null;//рефлектограмма
+
 	//	SchemeAlarmUpdater schemeAlarmUpdater = null;
+	
+	SchemeTabbedPane schemePane = null;
+	SchemeViewerFrame schemeFrame = null;
+	ElementsListFrame elementsListFrame = null;
+	PropsFrame propsFrame = null;
 
-	public SurveyMDIMain(ApplicationContext aContext) {
+	public SurveyMDIMain(ApplicationContext aContext) 
+	{
 		super();
-		try {
+		try 
+		{
 			jbInit();
-		} catch (Exception e) {
+		} 
+		catch (Exception e) 
+		{
 			e.printStackTrace();
 		}
 		Environment.addWindow(this);
+
+		aContext.setDispatcher(internalDispatcher);
 		setContext(aContext);
 	}
 
-	public SurveyMDIMain() {
+	public SurveyMDIMain() 
+	{
 		this(new ApplicationContext());
 	}
 
-	private void jbInit() throws Exception {
+	private void jbInit()
+	{
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 		setContentPane(mainPanel);
 
+		//Center the window
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = new Dimension(screenSize.width,
 				screenSize.height - 24);
 		setSize(frameSize);
 		setLocation(0, 0);
 
-		//		setSize(new Dimension(960, 650));
 		this.setTitle(LangModelSurvey.getString("Observing_AMFICOM"));
-		this
-				.addComponentListener(new SurveyMDIMain_this_componentAdapter(
-						this));
-		this.addWindowListener(new java.awt.event.WindowAdapter() {
-
-			public void windowClosing(WindowEvent e) {
-				this_windowClosing(e);
-			}
-		});
+		this.addComponentListener(new ComponentAdapter()
+			{
+				public void componentShown(ComponentEvent e)
+				{
+					thisComponentShown(e);
+				}
+			});
 
 		/*
 		 * //Center the window Dimension screenSize =
@@ -139,21 +189,19 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		 * setSize(frameSize); setLocation(0, 0);
 		 */
 		mainPanel.setLayout(new BorderLayout());//new FlowLayout());
-		//		mainPanel.setBackground(Color.lightGray);
 		desktopPane.setLayout(null);
-		//		desktopPane.setBackground(Color.darkGray);
 		desktopPane.setBackground(SystemColor.control.darker().darker());
 
 		statusBarPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		statusBarPanel.setLayout(new BorderLayout());
 		statusBarPanel.add(statusBar, BorderLayout.CENTER);
 
-		statusBar.add("status");
-		statusBar.add("server");
-		statusBar.add("session");
-		statusBar.add("user");
-		statusBar.add("domain");
-		statusBar.add("time");
+		statusBar.add(StatusBarModel.FIELD_STATUS);
+		statusBar.add(StatusBarModel.FIELD_SERVER);
+		statusBar.add(StatusBarModel.FIELD_SESSION);
+		statusBar.add(StatusBarModel.FIELD_USER);
+		statusBar.add(StatusBarModel.FIELD_DOMAIN);
+		statusBar.add(StatusBarModel.FIELD_TIME);
 
 		viewport.setView(desktopPane);
 		scrollPane.setViewport(viewport);
@@ -167,46 +215,51 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 	}
 
 	void setDefaultModel(ApplicationModel aModel) {
-		aModel.setAllItemsEnabled(false);
 		aModel.setEnabled("menuSession", true);
 		aModel.setEnabled("menuSessionNew", true);
 		aModel.setEnabled("menuSessionConnection", true);
 		aModel.setEnabled("menuExit", true);
+		aModel.setEnabled("menuStart", true);
+		aModel.setEnabled("menuView", true);
+		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuHelp", true);
 		aModel.setEnabled("menuHelpAbout", true);
-		aModel.setEnabled("menuView", true);
-		aModel.setEnabled("menuEvaluate", true);
-		aModel.setEnabled("menuVisualize", true);
-		aModel.setEnabled("menuReport", true);
-		aModel.setEnabled("menuWindow", true);
-
-		aModel.setVisible("menuEvaluateRequest", false);
-		aModel.setVisible("menuEvaluateTrackRequest", false);
-		aModel.setVisible("menuEvaluateTrackTask", false);
-		aModel.setVisible("menuMaintain", false);
 
 	}
 
-	public void init_module() {
+	public JDesktopPane getDesktop()
+	{
+		return desktopPane;
+	}
+
+	public void finalizeModule()
+	{
+		setContext(null);
+		Environment.getDispatcher().unregister(this, ContextChangeEvent.type);
+		statusBar.removeDispatcher(Environment.getDispatcher());
+	}
+
+	public void initModule() 
+	{
 		ApplicationModel aModel = aContext.getApplicationModel();
 
 		statusBar.distribute();
-		statusBar.setWidth("status", 250);
-		statusBar.setWidth("server", 250);
-		statusBar.setWidth("session", 200);
-		statusBar.setWidth("user", 100);
-		statusBar.setWidth("domain", 150);
-		statusBar.setWidth("time", 50);
+		statusBar.setWidth(StatusBarModel.FIELD_STATUS, 250);
+		statusBar.setWidth(StatusBarModel.FIELD_SERVER, 250);
+		statusBar.setWidth(StatusBarModel.FIELD_SESSION, 200);
+		statusBar.setWidth(StatusBarModel.FIELD_USER, 100);
+		statusBar.setWidth(StatusBarModel.FIELD_DOMAIN, 150);
+		statusBar.setWidth(StatusBarModel.FIELD_TIME, 50);
 
-		statusBar.setText("status", LangModel.getString("statusReady"));
-		statusBar.setText("server", LangModel.getString("statusNoConnection"));
-		statusBar.setText("session", LangModel.getString("statusNoSession"));
-		statusBar.setText("user", LangModel.getString("statusNoUser"));
-		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
-		statusBar.setText("time", " ");
+		statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+		statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusNoConnection"));
+		statusBar.setText(StatusBarModel.FIELD_SESSION, LangModel.getString("statusNoSession"));
+		statusBar.setText(StatusBarModel.FIELD_USER, LangModel.getString("statusNoUser"));
+		statusBar.setText(StatusBarModel.FIELD_DOMAIN, LangModel.getString("statusNoDomain"));
+		statusBar.setText(StatusBarModel.FIELD_TIME, " ");
 		statusBar.organize();
-		statusBar.addDispatcher(Environment.the_dispatcher);
-		statusBar.addDispatcher(internal_dispatcher);
+		statusBar.addDispatcher(Environment.getDispatcher());
+		statusBar.addDispatcher(internalDispatcher);
 
 		// load values from properties file
 		try {
@@ -219,132 +272,132 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 			//			SetDefaults();
 		}
 
-		aContext.setDispatcher(internal_dispatcher);
-		/*
-		 * internal_dispatcher.register(this, "contextchange");
-		 * Environment.the_dispatcher.register(this, "contextchange");
-		 *
-		 * internal_dispatcher.register(this, "mapframeshownevent");
-		 * internal_dispatcher.register(this, "mapjframeshownevent");
-		 * internal_dispatcher.register(this, "mapcloseevent");
-		 * internal_dispatcher.register(this, SchemeElementsEvent.type);
-		 * internal_dispatcher.register(this, "addschemeelementevent");
-		 * internal_dispatcher.register(this, "addschemeevent");
-		 * Environment.the_dispatcher.register(this, "mapaddschemeevent");
-		 * Environment.the_dispatcher.register(this,
-		 * "mapaddschemeelementevent");
-		 */
-		aModel.setCommand("menuSessionNew", new SessionOpenCommand(
-				Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(
-				Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(
-				aContext));
+		Environment.getDispatcher().register(this, ContextChangeEvent.type);
+
+		setDefaultModel(aModel);
+
+		aModel.setCommand("menuSessionNew", 
+				new SessionOpenCommand(
+					Environment.getDispatcher(), 
+					aContext));
+		aModel.setCommand("menuSessionClose", 
+				new SessionCloseCommand(
+					Environment.getDispatcher(), 
+					aContext));
+		aModel.setCommand("menuSessionOptions", 
+				new SessionOptionsCommand(aContext));
 		aModel.setCommand("menuSessionConnection",
-				new SessionConnectionCommand(Environment.the_dispatcher,
-						aContext));
+				new SessionConnectionCommand(
+					Environment.getDispatcher(),
+					aContext));
 		aModel.setCommand("menuSessionChangePassword",
-				new SessionChangePasswordCommand(Environment.the_dispatcher,
-						aContext));
-		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(
-				Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuExit", new ExitCommand(this));
+				new SessionChangePasswordCommand(
+					Environment.getDispatcher(),
+					aContext));
+		aModel.setCommand("menuSessionDomain", 
+				new SessionDomainCommand(
+					Environment.getDispatcher(), 
+					aContext));
+		aModel.setCommand("menuExit", 
+				new ExitCommand(this));
 
-		aModel.setCommand("menuEvaluateArchive",
-				new ViewSurveyNavigatorCommand(internal_dispatcher,
-						desktopPane, "Навигатор объектов", aContext));
+		aModel.setCommand("menuStartScheduler", 
+				new OpenSchedulerCommand(
+					Environment.getDispatcher(), 
+					aContext));
+		aModel.setCommand("menuStartAnalize", 
+				new OpenAnalysisCommand(
+					Environment.getDispatcher(), 
+					aContext,
+					new ReflectometryAnalyseApplicationModelFactory()));
+		aModel.setCommand("menuStartAnalizeExt",
+				new OpenExtendedAnalysisCommand(
+					Environment.getDispatcher(),
+					aContext,
+					new ReflectometryAnalyseApplicationModelFactory()));
+		aModel.setCommand("menuStartEvaluation", 
+				new OpenNormsCommand(
+					Environment.getDispatcher(), 
+					aContext,
+					new ReflectometryAnalyseApplicationModelFactory()));
+		aModel.setCommand("menuStartPrognosis", 
+				new OpenPrognosisCommand(
+					Environment.getDispatcher(), 
+					aContext,
+					new DefaultPredictionApplicationModelFactory()));
 
-		aModel.setCommand("menuEvaluateScheduler", new OpenSchedulerCommand(
-				Environment.the_dispatcher, aContext));
-		//		aModel.setCommand("menuEvaluateRequest", new
-		// TestRequestCommand(aContext));
-
-		aModel.setCommand("menuEvaluateTrackRequest", new OpenTestsCommand(
-				internal_dispatcher, desktopPane, aContext, "testrequest"));
-		aModel.setCommand("menuEvaluateTrackTask", new OpenTestsCommand(
-				internal_dispatcher, desktopPane, aContext, "test"));
-
-		aModel.setCommand("menuEvaluateResult", new OpenResultsCommand(
-				internal_dispatcher, desktopPane, aContext,
-				new DefaultResultApplicationModelFactory()));
-		aModel.setCommand("menuEvaluateAnalize", new OpenAnalysisCommand(
-				Environment.the_dispatcher, aContext,
-				new ReflectometryAnalyseApplicationModelFactory()));
-		aModel.setCommand("menuEvaluateAnalizeExt",
-				new OpenExtendedAnalysisCommand(Environment.the_dispatcher,
-						aContext,
-						new ReflectometryAnalyseApplicationModelFactory()));
-		aModel.setCommand("menuEvaluateNorms", new OpenNormsCommand(
-				Environment.the_dispatcher, aContext,
-				new ReflectometryAnalyseApplicationModelFactory()));
-		aModel.setCommand("menuEvaluateModeling", new OpenModelingCommand(
-				Environment.the_dispatcher, aContext,
-				new DefaultModelApplicationModelFactory()));
-		aModel.setCommand("menuEvaluatePrognosis", new OpenPrognosisCommand(
-				Environment.the_dispatcher, aContext,
-				new DefaultPredictionApplicationModelFactory()));
-		aModel.setCommand("menuEvaluateViewAll", new SurveyViewAllCommand(
-				internal_dispatcher, desktopPane, aContext));
-
-		aModel.setCommand("menuVisualizeNet", new SurveyViewAllSchemeCommand(
-				internal_dispatcher, desktopPane, aContext));
-		aModel.setCommand("menuVisualizeNetGIS", new SurveyViewAllCommand(
-				internal_dispatcher, desktopPane, aContext));
-		aModel.setCommand("menuVisualizeMapEdit", new OpenMapEditorCommand(
-				Environment.the_dispatcher, aContext, null));
-		aModel.setCommand("menuVisualizeMapClose", new MapCloseCommand(
-				internal_dispatcher, aContext));
-		//new SurveyNewMapViewCommand(internal_dispatcher, desktopPane,
+		aModel.setCommand("menuViewMapOpen", 
+				new SurveyNewMapViewCommand(
+					desktopPane,
+					aContext));
+//				new SurveyViewAllCommand(
+//					internalDispatcher, 
+//					desktopPane, 
+//					aContext));
+		aModel.setCommand("menuViewMapEditor", 
+				new OpenMapEditorCommand(
+					Environment.getDispatcher(), 
+					aContext, 
+					new DefaultMapEditorApplicationModelFactory()));
+		aModel.setCommand("menuViewMapClose", 
+				new MapCloseCommand(
+					internalDispatcher, 
+					aContext));
+		aModel.setCommand("menuViewMapSetup", 
+				new SurveyViewMapSetupCommand(
+					desktopPane, 
+					aContext));
+		//new SurveyNewMapViewCommand(internalDispatcher, desktopPane,
 		// aContext, new MapSurveyNetApplicationModelFactory()));
-		aModel.setCommand("menuVisualizeSchemeEdit",
-				new OpenSchemeEditorCommand(internal_dispatcher, aContext,
-						new SchematicsApplicationModelFactory()));
-		aModel.setCommand("menuVisualizeSchemeClose", new SchemeCloseCommand(
-				aContext, null));
-		aModel.setCommand("menuViewAll", new SurveyViewAllCommand(
-				internal_dispatcher, desktopPane, aContext));
-		aModel.setCommand("menuViewMapSetup", new SurveyViewMapSetupCommand(
-				desktopPane, aContext));
+		aModel.setCommand("menuViewSchemeOpen", 
+				new SurveyViewAllSchemeCommand(
+					internalDispatcher, 
+					desktopPane, 
+					aContext));
+		aModel.setCommand("menuViewSchemeEditor",
+				new OpenSchemeEditorCommand(
+					internalDispatcher, 
+					aContext,
+					new DefaultSchematicsApplicationModelFactory()));
+		aModel.setCommand("menuViewSchemeClose", 
+				new SchemeCloseCommand(
+					aContext, 
+					null));
+		aModel.setCommand("menuViewMeasurements",
+				new ViewSurveyNavigatorCommand(
+					internalDispatcher,
+					desktopPane, 
+					"Навигатор объектов", 
+					aContext));
+		aModel.setCommand("menuViewResults", 
+				new OpenResultsCommand(
+					internalDispatcher, 
+					desktopPane, 
+					aContext));
+		aModel.setCommand("menuViewAlarms", 
+				new OpenAlarmsCommand(
+					internalDispatcher, 
+					desktopPane, 
+					aContext));
+		aModel.setCommand("menuViewAll", 
+				new SurveyViewAllCommand(
+					internalDispatcher, 
+					desktopPane, 
+					aContext));
 
-		aModel.setCommand("menuMaintainAlarm", new OpenAlarmsCommand(
-				internal_dispatcher, desktopPane, aContext,
-				new DefaultAlarmApplicationModelFactory()));
-
-		aModel.setCommand("menuWindow", new WindowCloseCommand(desktopPane));
-		aModel.setCommand("menuWindowClose",
-				new WindowCloseCommand(desktopPane));
-		aModel.setCommand("menuWindowCloseAll", new WindowCloseAllCommand(
-				desktopPane));
-		aModel.setCommand("menuWindowTileHorizontal",
-				new WindowTileHorizontalCommand(desktopPane));
-		aModel.setCommand("menuWindowTileVertical",
-				new WindowTileVerticalCommand(desktopPane));
-		aModel.setCommand("menuWindowCascade", new WindowCascadeCommand(
-				desktopPane));
-		aModel.setCommand("menuWindowArrange", new WindowArrangeCommand(
-				desktopPane));
-		aModel.setCommand("menuWindowArrangeIcons",
-				new WindowArrangeIconsCommand(desktopPane));
-		aModel.setCommand("menuWindowMinimizeAll",
-				new WindowMinimizeAllCommand(desktopPane));
-		aModel.setCommand("menuWindowRestoreAll", new WindowRestoreAllCommand(
-				desktopPane));
-		aModel.setCommand("menuWindowList", new WindowListCommand(desktopPane));
-
-    csrCommand = new CreateSurveyReportCommand(aContext);
-    csrCommand.setParameter(this);
-		aModel.setCommand("menuTemplateReport", csrCommand);    
+		csrCommand = new CreateSurveyReportCommand(aContext);
+		csrCommand.setParameter(this);
+		aModel.setCommand("menuTemplateReport", csrCommand);
 
 		aModel.add("menuHelpAbout", new HelpAboutCommand(this));
 
-		setDefaultModel(aModel);
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 
 		if (ConnectionInterface.getActiveConnection() != null) {
 			aContext.setConnectionInterface(ConnectionInterface
 					.getActiveConnection());
 			if (aContext.getConnectionInterface().isConnected())
-					internal_dispatcher.notify(new ContextChangeEvent(aContext
+					internalDispatcher.notify(new ContextChangeEvent(aContext
 							.getConnectionInterface(),
 							ContextChangeEvent.CONNECTION_OPENED_EVENT));
 		} else {
@@ -352,7 +405,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 					.getDefaultConnectionInterface());
 			ConnectionInterface.setActiveConnection(aContext
 					.getConnectionInterface());
-			//			new CheckConnectionCommand(internal_dispatcher,
+			//			new CheckConnectionCommand(internalDispatcher,
 			// aContext).execute();
 		}
 		if (SessionInterface.getActiveSession() != null) {
@@ -360,7 +413,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 			aContext.setConnectionInterface(aContext.getSessionInterface()
 					.getConnectionInterface());
 			if (aContext.getSessionInterface().isOpened())
-					internal_dispatcher.notify(new ContextChangeEvent(aContext
+					internalDispatcher.notify(new ContextChangeEvent(aContext
 							.getSessionInterface(),
 							ContextChangeEvent.SESSION_OPENED_EVENT));
 		} else {
@@ -372,71 +425,128 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 
 	}
 
-	public void setContext(ApplicationContext aContext) {
+	public void setContext(ApplicationContext aContext) 
+	{
 		if (this.aContext != null)
-				if (this.aContext.getDispatcher() != null) {
-					internal_dispatcher.unregister(this, "contextchange");
-					Environment.the_dispatcher
-							.unregister(this, "contextchange");
+			if (this.aContext.getDispatcher() != null) 
+			{
+				this.aContext.getDispatcher().unregister(this, ContextChangeEvent.type);
+				Environment.getDispatcher().unregister(this, ContextChangeEvent.type);
+				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_FRAME_SHOWN);
+				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_CLOSED);
+				this.aContext.getDispatcher().unregister(this, SchemeElementsEvent.type);
 
-					internal_dispatcher.unregister(this, "mapframeshownevent");
-					internal_dispatcher.unregister(this, "mapjframeshownevent");
-					internal_dispatcher.unregister(this, "mapcloseevent");
-					internal_dispatcher.unregister(this,
-							SchemeElementsEvent.type);
-					internal_dispatcher.unregister(this,
-							"addschemeelementevent");
-					internal_dispatcher.unregister(this, "addschemeevent");
-					Environment.the_dispatcher.unregister(this,
-							"mapaddschemeevent");
-					Environment.the_dispatcher.unregister(this,
-							"mapaddschemeelementevent");
-				}
-		this.aContext = aContext;
-		internal_dispatcher.register(this, "contextchange");
-		Environment.the_dispatcher.register(this, "contextchange");
+				this.aContext.getDispatcher().unregister(this, "addschemeelementevent");
+				this.aContext.getDispatcher().unregister(this, "addschemeevent");
+				this.aContext.getDispatcher().unregister(this, "mapaddschemeevent");
+				this.aContext.getDispatcher().unregister(this, "mapaddschemeelementevent");
 
-		internal_dispatcher.register(this, "mapframeshownevent");
-		internal_dispatcher.register(this, "mapjframeshownevent");
-		internal_dispatcher.register(this, "mapcloseevent");
-		internal_dispatcher.register(this, SchemeElementsEvent.type);
-		internal_dispatcher.register(this, "addschemeelementevent");
-		internal_dispatcher.register(this, "addschemeevent");
-    
-		internal_dispatcher.register(this, SurveyMDIMain.alarmFrameDisplayed);
-		internal_dispatcher.register(this, SurveyMDIMain.alarmPopupFrameDisplayed);
-		internal_dispatcher.register(this, SurveyMDIMain.resultFrameDisplayed);
-		internal_dispatcher.register(this, SchemeViewerFrame.schemeFrameDisplayed);    
-    
-		Environment.the_dispatcher.register(this, "mapaddschemeevent");
-		Environment.the_dispatcher.register(this, "mapaddschemeelementevent");
-    
-		if (aContext.getApplicationModel() == null)
+				this.aContext.getDispatcher().unregister(this, SurveyMDIMain.alarmFrameDisplayed);
+				this.aContext.getDispatcher().unregister(this, SurveyMDIMain.alarmPopupFrameDisplayed);
+				this.aContext.getDispatcher().unregister(this, SurveyMDIMain.resultFrameDisplayed);
+				this.aContext.getDispatcher().unregister(this, SchemeViewerFrame.schemeFrameDisplayed);
+
+				statusBar.removeDispatcher(this.aContext.getDispatcher());
+			}
+
+		if(aContext != null)
+		{
+			this.aContext = aContext;
+
+			if(schemePane == null)
+			{
+				schemePane = new SchemeTabbedPane(aContext);
+				schemeFrame = new SchemeViewerFrame(aContext, schemePane);
+				schemeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				desktopPane.add(schemeFrame);
+
+				elementsListFrame = new ElementsListFrame(aContext, false);
+				desktopPane.add(elementsListFrame);
+				elementsListFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+
+				propsFrame = new PropsFrame(aContext, false);
+				desktopPane.add(propsFrame);
+				propsFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+			}
+
+			if(aContext.getApplicationModel() == null)
 				aContext.setApplicationModel(new ApplicationModel());
-		setModel(aContext.getApplicationModel());
+			setModel(aContext.getApplicationModel());
+
+			this.aContext.getDispatcher().register(this, ContextChangeEvent.type);
+			Environment.getDispatcher().register(this, ContextChangeEvent.type);
+			this.aContext.getDispatcher().register(this, MapEvent.MAP_FRAME_SHOWN);
+			this.aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_CLOSED);
+			this.aContext.getDispatcher().register(this, SchemeElementsEvent.type);
+
+			this.aContext.getDispatcher().register(this, "addschemeelementevent");
+			this.aContext.getDispatcher().register(this, "addschemeevent");
+			this.aContext.getDispatcher().register(this, "mapaddschemeevent");
+			this.aContext.getDispatcher().register(this, "mapaddschemeelementevent");
+
+			this.aContext.getDispatcher().register(this, SurveyMDIMain.alarmFrameDisplayed);
+			this.aContext.getDispatcher().register(this, SurveyMDIMain.alarmPopupFrameDisplayed);
+			this.aContext.getDispatcher().register(this, SurveyMDIMain.resultFrameDisplayed);
+			this.aContext.getDispatcher().register(this, SchemeViewerFrame.schemeFrameDisplayed);
+
+			statusBar.addDispatcher(this.aContext.getDispatcher());
+		}
 	}
 
 	public ApplicationContext getContext() {
 		return aContext;
 	}
 
-	public void setModel(ApplicationModel aModel) {
-		//		aModel = a;
-		toolBar.setModel(aModel);
-		menuBar.setModel(aModel);
+	public void setModel(ApplicationModel aModel) 
+	{
 		aModel.addListener(toolBar);
 		aModel.addListener(menuBar);
+		toolBar.setModel(aModel);
+		menuBar.setModel(aModel);
 
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 	}
 
 	public ApplicationModel getModel() {
 		return aContext.getApplicationModel();
 	}
 
-	public void operationPerformed(OperationEvent ae) {
-		if (ae.getActionCommand().equals("mapframeshownevent"))
-    {
+	protected void showSchemeFrames()
+	{
+		if(!schemeFrame.isVisible())
+		{
+			Dimension dim = desktopPane.getSize();
+			schemeFrame.setLocation(
+					dim.width / 5,
+					dim.height / 4);
+			schemeFrame.setSize(
+					dim.width * 4 / 5,
+					dim.height * 3 / 4);
+			schemeFrame.setVisible(true);
+	
+			elementsListFrame.setSize(
+					dim.width / 5, 
+					2 * dim.height / 8);
+			elementsListFrame.setLocation(
+					0, 
+					dim.height / 4);
+			elementsListFrame.setVisible(true);
+
+			propsFrame.setSize(
+					dim.width / 5, 
+					4 * dim.height / 8);
+			propsFrame.setLocation(
+					0, 
+					dim.height / 2);
+			propsFrame.setVisible(true);
+		}
+		schemeFrame.toFront();
+	}
+
+	public void operationPerformed(OperationEvent ae) 
+	{
+		if (ae.getActionCommand().equals(MapEvent.MAP_FRAME_SHOWN))
+		{
 			JInternalFrame frame = (JInternalFrame) ae.getSource();
 
 			Dimension dim = desktopPane.getSize();
@@ -445,53 +555,57 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 			frame.setSize(dim.width * 4 / 5, dim.height * 3 / 4);
 
 			ApplicationModel aModel = aContext.getApplicationModel();
-			aModel.setEnabled("menuVisualizeMapEdit", true);
-			aModel.setEnabled("menuVisualizeMapClose", true);
-			aModel.fireModelChanged("");
-
-			//			if (aModel.isEnabled("mapActionReload"))
+			if(aModel != null)
 			{
-				System.out.println("starting attribute reload thread");
-				myalarmTread = new ReloadAttributes((MapMainFrame) frame);//Запускаем
-																		  // thread
-				myalarmTread.start();
+				aModel.setEnabled("menuViewMapEditor", true);
+				aModel.setEnabled("menuViewMapClose", true);
+				aModel.fireModelChanged();
 			}
 
-		}
-    else if (ae.getActionCommand().equals("mapjframeshownevent"))
-    {
-			JInternalFrame frame = (JInternalFrame) ae.getSource();
+//				System.out.println("starting attribute reload thread");
+//				myalarmTread = new ReloadAttributes((MapFrame) frame);//Запускаем
+//																			// thread
+//				myalarmTread.start();
 
-			Dimension dim = desktopPane.getPreferredSize();
-
-			frame.setLocation(dim.width / 5, dim.height / 4);
-			frame.setSize(dim.width * 3 / 5, dim.height * 3 / 4);
 		}
-    else if (ae.getActionCommand().equals("mapcloseevent"))
-    {
+		else if (ae.getActionCommand().equals(SchemeElementsEvent.type))
+		{
+			SchemeElementsEvent see = (SchemeElementsEvent )ae;
+			if(see.getID() == SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT)
+			{
+				Scheme scheme = (Scheme) see.obj;
+				scheme.unpack();
+				
+				schemePane.openScheme(scheme);
+				
+				showSchemeFrames();
+			}
+		}
+		else if (ae.getActionCommand().equals(MapEvent.MAP_VIEW_CLOSED))
+		{
 			for (int i = 0; i < desktopPane.getComponents().length; i++) {
 				Component comp = desktopPane.getComponent(i);
-				if (comp instanceof MapMainFrame) {
-					((MapMainFrame) comp).setVisible(false);
-					((MapMainFrame) comp).setMapContext(null);
-					((MapMainFrame) comp).setContext(null);
+				if (comp instanceof MapFrame) {
+					((MapFrame) comp).setVisible(false);
+					((MapFrame) comp).setMapView(null);
+					((MapFrame) comp).setContext(null);
 				} else if (comp instanceof MapPropertyFrame)
 					((MapPropertyFrame) comp).setVisible(false);
 				else if (comp instanceof MapElementsFrame)
 						((MapElementsFrame) comp).setVisible(false);
 			}
 			ApplicationModel aModel = aContext.getApplicationModel();
-			aModel.setEnabled("menuVisualizeMapEdit", false);
-			aModel.setEnabled("menuVisualizeMapClose", false);
-			aModel.fireModelChanged("");
+			aModel.setEnabled("menuViewMapEditor", false);
+			aModel.setEnabled("menuViewMapClose", false);
+			aModel.fireModelChanged();
 
-			if (myalarmTread != null) myalarmTread.stop_running();
-			myalarmTread = null;
+//			if (myalarmTread != null) myalarmTread.stop_running();
+//			myalarmTread = null;
 		}
-    else if (ae.getActionCommand().equals(SchemeElementsEvent.type)) {
+		else if (ae.getActionCommand().equals(SchemeElementsEvent.type)) {
 			SchemeElementsEvent sev = (SchemeElementsEvent) ae;
 			if (sev.OPEN_PRIMARY_SCHEME)
-      {
+			{
 				/*
 				 * if (schemeAlarmUpdater == null) { for(int i = 0; i <
 				 * desktopPane.getComponents().length; i++) { Component comp =
@@ -506,12 +620,12 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 				 * schemeAlarmUpdater.start();
 				 */
 				ApplicationModel aModel = aContext.getApplicationModel();
-				aModel.setEnabled("menuVisualizeSchemeEdit", true);
-				aModel.setEnabled("menuVisualizeSchemeClose", true);
+				aModel.setEnabled("menuViewSchemeEditor", true);
+				aModel.setEnabled("menuViewSchemeClose", true);
 				aModel.fireModelChanged("");
 			}
 			if (sev.CLOSE_SCHEME)
-      {
+			{
 				for (int i = 0; i < desktopPane.getComponents().length; i++) {
 					Component comp = desktopPane.getComponent(i);
 					if (comp instanceof SchemeViewerFrame) {
@@ -525,146 +639,93 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 				//				schemeAlarmUpdater.flag = false;
 
 				ApplicationModel aModel = aContext.getApplicationModel();
-				aModel.setEnabled("menuVisualizeSchemeEdit", false);
-				aModel.setEnabled("menuVisualizeSchemeClose", false);
+				aModel.setEnabled("menuViewSchemeEditor", false);
+				aModel.setEnabled("menuViewSchemeClose", false);
 				aModel.fireModelChanged("");
 			}
 		}
-    else if (ae.getActionCommand().equals("mapaddschemeevent"))
-    {
-			MapMainFrame fr = (MapMainFrame) Pool.get("environment",
-					"mapmainframe");
+		else if (ae.getActionCommand().equals("mapaddschemeevent"))
+		{
+			MapFrame fr = MapFrame.getMapMainFrame();
+
 			if (fr != null)
-					if (fr.getParent() != null)
-							if (fr.getParent().equals(desktopPane)) {
-								Dimension dim = desktopPane.getSize();
-
-								String scheme_id = (String) ae.getSource();
-								Scheme scheme = (Scheme) Pool.get(Scheme.typ,
-										scheme_id);
-								scheme.unpack();
-
-								SchemePanelNoEdition panel = new SchemePanelNoEdition(
-										aContext);
-								panel.ignore_loading = true;
-								//ElementsEditorFrame frame = new
-								// ElementsEditorFrame(aContext, panel);
-								SchemeViewerFrame frame = new SchemeViewerFrame(
-										aContext, panel);
-								frame
-										.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-								frame.setTitle(scheme.getName());
-								desktopPane.add(frame);
-
-								frame
-										.setLocation(dim.width / 5,
-												dim.height / 4);
-								frame.setSize(dim.width * 4 / 5,
-										dim.height * 3 / 4);
-								frame.setVisible(true);
-								frame.toFront();
-
-								panel.openScheme(scheme);
-							}
+				if (fr.getParent() != null)
+					if (fr.getParent().equals(desktopPane)) {
+						String scheme_id = (String) ae.getSource();
+						Scheme scheme = (Scheme) Pool.get(
+								Scheme.typ,
+								scheme_id);
+						scheme.unpack();
+						
+						schemePane.openScheme(scheme);
+						
+						showSchemeFrames();
+					}
 		}
-    else if (ae.getActionCommand().equals("mapaddschemeelementevent"))
-    {
-			MapMainFrame fr = (MapMainFrame) Pool.get("environment",
-					"mapmainframe");
+		else if (ae.getActionCommand().equals("mapaddschemeelementevent"))
+		{
+			MapFrame fr = MapFrame.getMapMainFrame();
+
 			if (fr != null)
-					if (fr.getParent() != null)
-							if (fr.getParent().equals(desktopPane)) {
-								String se_id = (String) ae.getSource();
-								SchemeElement se = (SchemeElement) Pool.get(
-										SchemeElement.typ, se_id);
-								se.unpack();
+				if (fr.getParent() != null)
+					if (fr.getParent().equals(desktopPane)) 
+					{
+						String se_id = (String) ae.getSource();
+						SchemeElement se = (SchemeElement) Pool.get(
+								SchemeElement.typ, 
+								se_id);
+						se.unpack();
 
-								SchemePanelNoEdition panel = new SchemePanelNoEdition(
-										aContext);
-								panel.setGraphSize(new Dimension());
-								SchemeViewerFrame frame = new SchemeViewerFrame(
-										aContext, panel);
-								frame
-										.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-								frame.setTitle(se.getName());
-								desktopPane.add(frame);
-
-								Dimension dim = desktopPane.getSize();
-
-								frame
-										.setLocation(dim.width / 5,
-												dim.height / 4);
-								frame.setSize(dim.width * 4 / 5,
-										dim.height * 3 / 4);
-								frame.setVisible(true);
-								frame.toFront();
-								panel.openSchemeElement(se);
-							}
+						schemePane.openSchemeElement(se);
+						
+						showSchemeFrames();
+					}
 		}
-    else if (ae.getActionCommand().equals("addschemeevent"))
-    {
-			Dimension dim = desktopPane.getSize();
-
+		else if (ae.getActionCommand().equals("addschemeevent"))
+		{
 			String scheme_id = (String) ae.getSource();
-			Scheme scheme = (Scheme) Pool.get(Scheme.typ, scheme_id);
+			Scheme scheme = (Scheme) Pool.get(
+					Scheme.typ,
+					scheme_id);
 			scheme.unpack();
-
-			SchemePanelNoEdition panel = new SchemePanelNoEdition(aContext);
-			panel.ignore_loading = true;
-			//ElementsEditorFrame frame = new ElementsEditorFrame(aContext,
-			// panel);
-			SchemeViewerFrame frame = new SchemeViewerFrame(aContext, panel);
-			frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			frame.setTitle(scheme.getName());
-			desktopPane.add(frame);
-
-			frame.setLocation(dim.width / 5, dim.height / 4);
-			frame.setSize(dim.width * 4 / 5, dim.height * 3 / 4);
-			frame.setVisible(true);
-			frame.toFront();
-
-			panel.openScheme(scheme);
+			
+			schemePane.openScheme(scheme);
+			
+			showSchemeFrames();
 		}
-    else if (ae.getActionCommand().equals("addschemeelementevent"))
-    {
+		else if (ae.getActionCommand().equals("addschemeelementevent"))
+		{
 			String se_id = (String) ae.getSource();
-			SchemeElement se = (SchemeElement) Pool.get(SchemeElement.typ,
+			SchemeElement se = (SchemeElement) Pool.get(
+					SchemeElement.typ, 
 					se_id);
 			se.unpack();
 
-			SchemePanelNoEdition panel = new SchemePanelNoEdition(aContext);
-			panel.setGraphSize(new Dimension());
-			SchemeViewerFrame frame = new SchemeViewerFrame(aContext, panel);
-			frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			frame.setTitle(se.getName());
-			desktopPane.add(frame);
-
-			Dimension dim = desktopPane.getSize();
-
-			frame.setLocation(dim.width / 5, dim.height / 4);
-			frame.setSize(dim.width * 4 / 5, dim.height * 3 / 4);
-			frame.setVisible(true);
-			frame.toFront();
-			panel.openSchemeElement(se);
+			schemePane.openSchemeElement(se);
+			
+			showSchemeFrames();
 		}
-    else if (ae.getActionCommand().equals("contextchange"))
-    {
+		else if(ae.getActionCommand().equals(ContextChangeEvent.type))
+		{
 			ContextChangeEvent cce = (ContextChangeEvent) ae;
 			System.out.println("perform context change \""
 					+ Long.toHexString(cce.change_type) + "\" at "
 					+ this.getTitle());
 			//			ApplicationModel aModel = aContext.getApplicationModel();
 			if (cce.SESSION_OPENED)
-      {
+			{
 				SessionInterface ssi = (SessionInterface) cce.getSource();
 				if (aContext.getSessionInterface().equals(ssi))
-        {
+				{
 					if (!Checker.checkCommandByUserId(aContext
 							.getSessionInterface().getUserId(),
 							Checker.enterObservingModul))
-          {
-						new SessionCloseCommand(Environment.the_dispatcher,
-								aContext).execute();
+					{
+						JOptionPane.showMessageDialog(
+								null, 
+								LangModel.getString("NotEnoughRights"), 
+								LangModel.getString("Error"), 
+								JOptionPane.OK_OPTION);
 						return;
 					}
 					aContext.setDataSourceInterface(aContext
@@ -674,80 +735,82 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 				}
 			}
 			if (cce.SESSION_CLOSED)
-      {
+			{
 				SessionInterface ssi = (SessionInterface) cce.getSource();
 				if (aContext.getSessionInterface().equals(ssi))
-        {
+				{
 					aContext.setDataSourceInterface(null);
 
 					setSessionClosed();
 				}
 			}
 			if (cce.SESSION_CHANGING)
-      {
-				statusBar.setText("status", LangModel
+			{
+				statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel
 						.getString("statusSettingSession"));
 			}
 			if (cce.SESSION_CHANGED)
-      {
+			{
 				// nothing
 			}
 			if (cce.CONNECTION_OPENED)
-      {
+			{
 				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
 				if (aContext.getConnectionInterface().equals(cci))
-        {
+				{
 					setConnectionOpened();
 				}
 			}
 			if (cce.CONNECTION_CLOSED)
-      {
+			{
 				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
 				if (aContext.getConnectionInterface().equals(cci))
-        {
+				{
 					setConnectionClosed();
 
 				}
 			}
 			if (cce.CONNECTION_FAILED)
-      {
+			{
 				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
 				if (aContext.getConnectionInterface().equals(cci))
-        {
+				{
 					setConnectionFailed();
 				}
 			}
 			if (cce.CONNECTION_CHANGING)
-      {
-				statusBar.setText("status", LangModel
+			{
+				statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel
 						.getString("statusConnecting"));
 			}
 			if (cce.CONNECTION_CHANGED){
 				// nothing ???
 			}
 			if (cce.DOMAIN_SELECTED)
-      {
-				domain_id = (String) cce.getSource();
-				statusBar.setText("domain", Pool.getName("domain", domain_id));
+			{
+				domainId = (String) cce.getSource();
+				statusBar.setText(
+					StatusBarModel.FIELD_DOMAIN, 
+					((ObjectResource )Pool.get(Domain.typ, domainId)).getName());
 				setDomainSelected();
 			}
 		}
-    else if (ae.getActionCommand().equals(SurveyMDIMain.alarmFrameDisplayed))
-    {
-      alarmsFrame = (AlarmFrame)ae.getSource();
-    }
-    else if (ae.getActionCommand().equals(SurveyMDIMain.alarmPopupFrameDisplayed))
-    {
-      alarmPopupFrame = (AlarmPopupFrame)ae.getSource();
-    }
-    else if (ae.getActionCommand().equals(SurveyMDIMain.resultFrameDisplayed))
-    {
-      resultFrame = (ResultFrame)ae.getSource();
-    }
-    else if (ae.getActionCommand().equals(SchemeViewerFrame.schemeFrameDisplayed))
-    {
-      schemeViewerFrame = (SchemeViewerFrame)ae.getSource();
-    }
+		else if (ae.getActionCommand().equals(SurveyMDIMain.alarmFrameDisplayed))
+		{
+			alarmsFrame = (AlarmFrame)ae.getSource();
+		}
+		else if (ae.getActionCommand().equals(SurveyMDIMain.alarmPopupFrameDisplayed))
+		{
+			alarmPopupFrame = (AlarmPopupFrame)ae.getSource();
+		}
+		else if (ae.getActionCommand().equals(SurveyMDIMain.resultFrameDisplayed))
+		{
+			resultFrame = (ResultFrame)ae.getSource();
+		}
+		else if (ae.getActionCommand().equals(SchemeViewerFrame.schemeFrameDisplayed))
+		{
+			schemeViewerFrame = (SchemeViewerFrame)ae.getSource();
+		}
 	}
 
 	public void setConnectionOpened() {
@@ -758,10 +821,10 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		aModel.setEnabled("menuSessionConnection", true);
 		aModel.setEnabled("menuSessionChangePassword", false);
 
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 
-		statusBar.setText("status", LangModel.getString("statusReady"));
-		statusBar.setText("server", aContext.getConnectionInterface()
+		statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+		statusBar.setText(StatusBarModel.FIELD_SERVER, aContext.getConnectionInterface()
 				.getServiceURL());
 	}
 
@@ -772,11 +835,12 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		aModel.setEnabled("menuSessionClose", false);
 		aModel.setEnabled("menuSessionOptions", false);
 		aModel.setEnabled("menuSessionChangePassword", false);
+		aModel.setEnabled("menuSessionDomain", false);
 
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 
-		statusBar.setText("status", LangModel.getString("statusDisconnected"));
-		statusBar.setText("server", LangModel.getString("statusNoConnection"));
+		statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusDisconnected"));
+		statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusNoConnection"));
 	}
 
 	public void setConnectionFailed() {
@@ -786,44 +850,43 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		aModel.setEnabled("menuSessionClose", false);
 		aModel.setEnabled("menuSessionOptions", false);
 		aModel.setEnabled("menuSessionChangePassword", false);
+		aModel.setEnabled("menuSessionDomain", false);
 
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 
-		statusBar.setText("status", LangModel.getString("statusError"));
-		statusBar.setText("server", LangModel.getString("statusConnectionError"));
+		statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusError"));
+		statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusConnectionError"));
 	}
 
 	public void setSessionOpened() {
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.setEnabled("menuSessionNew",false);
+		aModel.setEnabled("menuSessionNew", false);
 		aModel.setEnabled("menuSessionClose", true);
 		aModel.setEnabled("menuSessionOptions", true);
 		aModel.setEnabled("menuSessionChangePassword", true);
 		aModel.setEnabled("menuSessionDomain", true);
-		aModel.setEnabled("menuReport", true);    
-		aModel.fireModelChanged("");
+		aModel.setEnabled("menuReport", true);
+		aModel.fireModelChanged();
 
-		statusBar.setText("status", LangModel.getString("statusReady"));
-		statusBar.setText("session", sdf.format(new Date(aContext
+		statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+		statusBar.setText(StatusBarModel.FIELD_SESSION, sdf.format(new Date(aContext
 				.getSessionInterface().getLogonTime())));
-		statusBar.setText("user", aContext.getSessionInterface().getUser());
+		statusBar.setText(StatusBarModel.FIELD_USER, aContext.getSessionInterface().getUser());
 
-		aContext.getDispatcher().notify(
-				new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Инициализация данных..."));
-		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
-		new SurveyDataSourceImage(dataSource).LoadTestTypes();
-		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
-		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
-		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
+		aContext.getDispatcher().notify(new StatusMessageEvent(
+				StatusMessageEvent.STATUS_MESSAGE, 
+				LangModel.getString("Initiating")));
 		dataSource.GetAlarmTypes();
-		aContext.getDispatcher().notify(
-				new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Данные загружены"));
+		aContext.getDispatcher().notify(new StatusMessageEvent(
+				StatusMessageEvent.STATUS_MESSAGE,
+				LangModel.getString("DataLoaded")));
 
-		domain_id = aContext.getSessionInterface().getDomainId();
-		if (domain_id != null && !domain_id.equals("")) {
-			statusBar.setText("domain", Pool.getName("domain", domain_id));
+		domainId = aContext.getSessionInterface().getDomainId();
+		if (domainId != null && domainId.length() != 0) 
+		{
+			statusBar.setText(StatusBarModel.FIELD_DOMAIN, Pool.getName(Domain.typ, domainId));
 			setDomainSelected();
 		}
 	}
@@ -837,48 +900,44 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 
 		new CloseAllInternalCommand(desktopPane).execute();
 
-		aContext.getDispatcher().notify(
-				new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Инициализация данных..."));
-		new SchemeDataSourceImage(dataSource).LoadNetDirectory();
-		new SchemeDataSourceImage(dataSource).LoadISMDirectory();
-		new ConfigDataSourceImage(dataSource).LoadNet();
-		new ConfigDataSourceImage(dataSource).LoadISM();
+		aContext.getDispatcher().notify(new StatusMessageEvent(
+				StatusMessageEvent.STATUS_MESSAGE, 
+				LangModel.getString("Initiating")));
+
 		new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
 		new SchemeDataSourceImage(dataSource).LoadSchemeProto();
 		new SchemeDataSourceImage(dataSource).LoadSchemes();
-		new MapDataSourceImage(dataSource).LoadProtoElements();
-		new MapDataSourceImage(dataSource).LoadMaps();
-		aContext.getDispatcher().notify(
-				new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Данные загружены"));
+
+		aContext.getDispatcher().notify(new StatusMessageEvent(
+				StatusMessageEvent.STATUS_MESSAGE,
+				LangModel.getString("DataLoaded")));
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 
-		aModel.setEnabled("menuEvaluateScheduler", true);
-		aModel.setEnabled("menuEvaluateAnalize", true);
-		aModel.setEnabled("menuEvaluateAnalizeExt", true);
-		aModel.setEnabled("menuEvaluateNorms", true);
-		aModel.setEnabled("menuEvaluateModeling", true);
-		aModel.setEnabled("menuEvaluatePrognosis", true);
+		aModel.setEnabled("menuStartScheduler", true);
+		aModel.setEnabled("menuStartAnalize", true);
+		aModel.setEnabled("menuStartAnalizeExt", true);
+		aModel.setEnabled("menuStartEvaluation", true);
+		aModel.setEnabled("menuStartPrognosis", true);
 
-		aModel.setEnabled("menuEvaluateArchive", true);
-		aModel.setEnabled("menuEvaluateResult", true);
-		aModel.setEnabled("menuMaintainAlarm", true);
-		aModel.setEnabled("menuReport", true);    
+		aModel.setEnabled("menuViewMapOpen", true);
+		aModel.setEnabled("menuViewMapSetup", true);
+		aModel.setEnabled("menuViewSchemeOpen", true);
+		aModel.setEnabled("menuViewMeasurements", true);
+		aModel.setEnabled("menuViewResults", true);
+		aModel.setEnabled("menuViewAlarms", true);
 
-		aModel.setEnabled("menuVisualizeNetGIS", true);
-		aModel.setEnabled("menuVisualizeNet", true);
 		aModel.setEnabled("menuViewAll", true);
 
-		aModel.setEnabled("menuViewMapSetup", true);
+		aModel.setEnabled("menuReport", true);
 
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 
 		// update alarms list
 		Pool.removeHash(Alarm.typ);
-		//		new SurveyDataSourceImage(dataSource).GetAlarms();
 		aContext.getDispatcher().notify(new AlarmReceivedEvent(this));
 
-		//		alarmChecker = new AlarmChecker(internal_dispatcher, aContext, this,
+		//		alarmChecker = new AlarmChecker(internalDispatcher, aContext, this,
 		// desktopPane);
 		//		alarmChecker.start();
 	}
@@ -894,67 +953,36 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 
 		new CloseAllInternalCommand(desktopPane).execute();
 
-		statusBar.setText("status", LangModel.getString("statusReady"));
-		statusBar.setText("session", LangModel.getString("statusNoSession"));
-		statusBar.setText("user", LangModel.getString("statusNoUser"));
-		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
+		statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+		statusBar.setText(StatusBarModel.FIELD_SESSION, LangModel.getString("statusNoSession"));
+		statusBar.setText(StatusBarModel.FIELD_USER, LangModel.getString("statusNoUser"));
+		statusBar.setText(StatusBarModel.FIELD_DOMAIN, LangModel.getString("statusNoDomain"));
 	}
 
 	public Dispatcher getInternalDispatcher() {
-		return internal_dispatcher;
+		return internalDispatcher;
 	}
 
-	void this_componentShown(ComponentEvent e) {
-		init_module();
-		//		desktopPane.setPreferredSize(desktopPane.getSize());
-	}
-
-	void this_windowClosing(WindowEvent e) {
-		internal_dispatcher
-				.notify(new OperationEvent(this, 0, "mapcloseevent"));
-		internal_dispatcher.unregister(this, "contextchange");
-		Environment.the_dispatcher.unregister(this, "contextchange");
-		aContext.getApplicationModel().getCommand("menuExit").execute();
+	void thisComponentShown(ComponentEvent e)
+	{
+		initModule();
+		desktopPane.setPreferredSize(desktopPane.getSize());
 	}
 
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_ACTIVATED) {
 			Environment.setActiveWindow(this);
-			//			ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-			//			SessionInterface.setActiveSession(aContext.getSessionInterface());
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			internal_dispatcher.notify(new OperationEvent(this, 0,
-					"mapcloseevent"));
-			internal_dispatcher.unregister(this, "contextchange");
-			Environment.the_dispatcher.unregister(this, "contextchange");
-			aContext.getApplicationModel().getCommand("menuExit").execute();
+			internalDispatcher.notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
+
+			Command closeCommand = aContext.getApplicationModel().getCommand("menuExit");
+			this.setContext(null);
+			closeCommand.execute();
 			return;
 		}
 		super.processWindowEvent(e);
 	}
 
-	public void dispose() {
-		internal_dispatcher
-				.notify(new OperationEvent(this, 0, "mapcloseevent"));
-		internal_dispatcher.unregister(this, "contextchange");
-		Environment.the_dispatcher.unregister(this, "contextchange");
-
-		super.dispose();
-	}
-}
-
-class SurveyMDIMain_this_componentAdapter extends
-		java.awt.event.ComponentAdapter {
-
-	SurveyMDIMain	adaptee;
-
-	SurveyMDIMain_this_componentAdapter(SurveyMDIMain adaptee) {
-		this.adaptee = adaptee;
-	}
-
-	public void componentShown(ComponentEvent e) {
-		adaptee.this_componentShown(e);
-	}
 }
 

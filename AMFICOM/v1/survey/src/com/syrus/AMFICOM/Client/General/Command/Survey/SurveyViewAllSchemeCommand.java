@@ -28,12 +28,10 @@ public class SurveyViewAllSchemeCommand extends VoidCommand
 	{
 		SurveySchemeOpenCommand schemeView = new SurveySchemeOpenCommand(desktop, aContext);
 		schemeView.execute();
-		if (schemeView.opened)
+		if (schemeView.getResult() == Command.RESULT_OK)
 		{
-			new OpenAlarmsCommand(dispatcher, desktop, aContext, new DefaultAlarmApplicationModelFactory()).execute();
-			new OpenResultsCommand(dispatcher, desktop, aContext, new DefaultResultApplicationModelFactory()).execute();
- //     Scheme sc = (Scheme )Pool.get(Scheme.typ, schemeView.scheme_id);
-//      dispatcher.notify(new OperationEvent(sc, 0, "schemeopenevent"));
+			new OpenAlarmsCommand(dispatcher, desktop, aContext).execute();
+			new OpenResultsCommand(dispatcher, desktop, aContext).execute();
 		}
 	}
 }

@@ -46,16 +46,16 @@ public class CreateSurveyReportCommand extends VoidCommand
 
 //    Для отчёта по списку сигналов тревоги передаём
 //    TableModel таблицы AlarmFrame        
-    if (mainFrame.alarmsFrame != null)
-      report.addRecord(
-        orModel.getLangForField(ObserveReportModel.alarms_list),
-        mainFrame.alarmsFrame.getTableModel());
+//    if (mainFrame.alarmsFrame != null)
+//      report.addRecord(
+//        orModel.getLangForField(ObserveReportModel.alarms_list),
+//        mainFrame.alarmsFrame.getTableModel());
 
     //Для отчёта по схеме передаём id схемы
-    if (mainFrame.schemeViewerFrame != null)
-        report.addRecord(
-          orModel.getLangForField(ObserveReportModel.alarm_scheme),
-          mainFrame.schemeViewerFrame.panel.scheme.getId());
+//    if (mainFrame.schemeViewerFrame != null)
+//        report.addRecord(
+//          orModel.getLangForField(ObserveReportModel.alarm_scheme),
+//          mainFrame.schemeViewerFrame.panel.scheme.getId());
 
     if (mainFrame.alarmPopupFrame != null)
         report.addRecord(

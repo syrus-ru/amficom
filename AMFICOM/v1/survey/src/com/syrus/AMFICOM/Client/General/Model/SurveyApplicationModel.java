@@ -9,75 +9,37 @@ public class SurveyApplicationModel extends ApplicationModel
 	{
 		super();
 
-		add("mapActionViewProperties");
-		add("mapActionEditProperties");
-
 		add("menuSession");
 		add("menuSessionNew");
 		add("menuSessionClose");
+		add("menuSessionChangePassword");
 		add("menuSessionOptions");
 		add("menuSessionConnection");
-		add("menuSessionChangePassword");
 		add("menuSessionDomain");
-		add("menuSessionSave");
-		add("menuSessionUndo");
 		add("menuExit");
 
+		add("menuStart");
+		add("menuStartScheduler");
+		add("menuStartAnalize");
+		add("menuStartAnalizeExt");
+		add("menuStartEvaluation");
+		add("menuStartPrognosis");
+
 		add("menuView");
-		add("menuViewNavigator");
-		add("menuViewMessages");
-		add("menuViewToolbar");
-		add("menuViewRefresh");
-		add("menuViewCatalogue");
-		add("menuViewAll");
-
-		add("menuEvaluate");
-		add("menuEvaluateRequest");
-		add("menuEvaluateScheduler");
-		add("menuEvaluateArchive");
-		add("menuEvaluateTrack");
-		add("menuEvaluateTrackRequest");
-		add("menuEvaluateTrackTask");
-		add("menuEvaluateResult");
-		add("menuEvaluateAnalize");
-		add("menuEvaluateAnalizeExt");
-		add("menuEvaluateNorms");
-		add("menuEvaluateModeling");
-		add("menuEvaluatePrognosis");
-		add("menuEvaluateViewAll");
-
-		add("menuVisualize");
-		add("menuVisualizeNet");
-		add("menuVisualizeNetGIS");
-		add("menuVisualizeISM");
-		add("menuVisualizeISMGIS");
-		add("menuVisualizeMapEdit");
-		add("menuVisualizeMapClose");
-		add("menuVisualizeSchemeEdit");
-		add("menuVisualizeSchemeClose");
-
+		add("menuViewMapOpen");
+		add("menuViewMapEditor");
+		add("menuViewMapClose");
+		add("menuViewSchemeOpen");
+		add("menuViewSchemeEditor");
+		add("menuViewSchemeClose");
+		add("menuViewMeasurements");
+		add("menuViewResults");
+		add("menuViewAlarms");
 		add("menuViewMapSetup");
-
-		add("menuMaintain");
-		add("menuMaintainAlarm");
-		add("menuMaintainAlert");
-		add("menuMaintainCall");
-		add("menuMaintainEvent");
+		add("menuViewAll");
 
 		add("menuReport");
 		add("menuTemplateReport");
-
-		add("menuWindow");
-		add("menuWindowClose");
-		add("menuWindowCloseAll");
-		add("menuWindowTileHorizontal");
-		add("menuWindowTileVertical");
-		add("menuWindowCascade");
-		add("menuWindowArrange");
-		add("menuWindowArrangeIcons");
-		add("menuWindowMinimizeAll");
-		add("menuWindowRestoreAll");
-		add("menuWindowList");
 
 		add("menuHelp");
 		add("menuHelpContents");
@@ -89,17 +51,28 @@ public class SurveyApplicationModel extends ApplicationModel
 		add("menuHelpSupport");
 		add("menuHelpLicense");
 		add("menuHelpAbout");
+
 	}
 
-	public DataSourceInterface getDataSource(SessionInterface si)
+	private static DataSourceInterface dataSource = null;
+	
+	public DataSourceInterface getDataSource(final SessionInterface session) 
 	{
 		String connection = Environment.getConnectionType();
-		if(connection.equals("RISD"))
-			return new RISDSurveyDataSource(si);
-		else
-		if(connection.equals("Empty"))
-			return new EmptySurveyDataSource(si);
-		return null;
+        if ((this.session == null) || (!this.session.equals(session)))
+			synchronized (this) 
+			{
+					if ((this.session == null) || (!this.session.equals(session))) 
+					{
+						this.session = session;
+						if(connection.equalsIgnoreCase(Environment.CONNECTION_RISD))
+							this.dataSource = new RISDSurveyDataSource(this.session);
+						else
+						if(connection.equalsIgnoreCase(Environment.CONNECTION_EMPTY))
+							this.dataSource = new EmptySurveyDataSource(this.session);
+					}
+			}
+        return this.dataSource;
 	}
 }
 

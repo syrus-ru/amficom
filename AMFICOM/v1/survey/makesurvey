@@ -11,15 +11,12 @@ JAR=jar
 
 TARGET=$(LIB)\survey.jar
 TARGET_RUN=$(LIB)\run\surveyrun.jar
-TARGET_RES=$(LIB)\surveyresource.jar
 TARGET_CLASS_LIST=src_survey.txt
 TARGET_SRC=$(LIBSRC)\surveysource.jar
 
 SERVERCP=$(LIB)\corba.jar
-CLIENTCP=$(LIB)\util.jar;$(LIB)\generalclient.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\map.jar;$(LIB)\model.jar;$(LIB)\survey.jar;$(LIB)\analysis.jar;$(LIB)\schedule.jar;$(LIB)\scheme.jar;$(LIB)\prognosis.jar;$(LIB)\dadara.jar;$(LIB)\corbaportable-common.jar;$(LIB)\surveyresource.jar;$(LIB)\filter.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\generalclient.jar;$(LIB)\general.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\configuration.jar;$(LIB)\map.jar;$(LIB)\mapview.jar;$(LIB)\measurement.jar;$(LIB)\model.jar;$(LIB)\survey.jar;$(LIB)\analysis.jar;$(LIB)\schedule.jar;$(LIB)\scheme.jar;$(LIB)\prognosis.jar;$(LIB)\dadara.jar;$(LIB)\corbaportable.jar;$(LIB)\surveyresource.jar;$(LIB)\filter.jar
 
-ORBCP=$(EXTLIB)\aurora.zip;$(EXTLIB)\aurora_client_orbindep.jar;$(EXTLIB)\aurora_client_orbdep.jar
-VBJCP=$(ORACLE_HOME)\lib\vbjorb.jar;$(ORACLE_HOME)\lib\vbjapp.jar
 LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
 SPATIALCP=$(EXTLIB)\ofx.spatialfx.jar
 REPORTCP=$(EXTLIB)\jfreechartK.jar
@@ -37,7 +34,7 @@ jar:
 
 impl:
 	$(JAVAC) -d $(CLASSES) \
-		-classpath $(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP);$(REPORTCP);$(JGRAPHCP);$(VBJCP):$(ORBCP) \
+		-classpath $(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP);$(REPORTCP);$(JGRAPHCP) \
 		-sourcepath $(SRC) \
 		@$(TARGET_CLASS_LIST)
 

@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Survey.UI;
+/*package com.syrus.AMFICOM.Client.Survey.UI;
 
 import com.ofx.geometry.SxDoublePoint;
 
@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.CORBA.General.AlarmStatus;
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Resource.Alarm.EventSource;
 import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
+import com.syrus.AMFICOM.Client.Resource.MapView.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapEquipmentNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapTransmissionPathElement;
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.Client.Map.MapMainFrame;
 import java.util.Iterator;
 
 ///Thread для перезагрузки аттрибутов элементов карты
-public class ReloadAttributes 
+public class ReloadAttributes
 		extends Thread
 		implements Runnable
 {
@@ -49,7 +49,7 @@ public class ReloadAttributes
 	{
 		is_running = false;
 	}
-	
+
 	public void run()
 	{
 		while (is_running)
@@ -92,7 +92,7 @@ public class ReloadAttributes
 		}
 
 	}
-*/
+/
 	public void updateAttributes()
 	{
 	try
@@ -117,7 +117,7 @@ public class ReloadAttributes
 		{
 			EventSource esrc = (EventSource )enum1.nextElement();
 			esrc_ht.put(esrc.id, esrc.object_source_id);
-            
+
 		}
 
 		vec = mc.getTransmissionPath();
@@ -199,14 +199,14 @@ public class ReloadAttributes
 				}
 			}
 		}
-*/			
+/
 	}
 	catch(Exception ex)
 	{
 		System.out.println("attributes not updated: " + ex.getMessage());
 //			ex.printStackTrace();
 	}
-		
+
 	}
 /*
 	public void updateAttributes1()
@@ -215,7 +215,7 @@ public class ReloadAttributes
 		int count;
 		int i;
 		MapContext mc = lnl().getMapContext();
-			
+
 		vec = mc.getNodes();
 		count = vec.size();
 		for(i = 0; i < count; i++)
@@ -250,5 +250,6 @@ public class ReloadAttributes
 			path.updateAttributes();
 		}
 	}
-*/
+/
 }
+*/

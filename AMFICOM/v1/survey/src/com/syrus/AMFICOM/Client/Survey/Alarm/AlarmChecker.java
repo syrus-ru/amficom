@@ -1,23 +1,12 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm;
 
-import java.util.*;
-import java.awt.*;
-import java.text.*;
-
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Alarm.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.analysis.dadara.*;
 
 /**
  * @deprecated
  */
 public class AlarmChecker extends Thread
 {
+/*
 	private Dispatcher dispatcher;
 	private DataSourceInterface dataSource;
 	public ApplicationContext aContext = new ApplicationContext();
@@ -103,7 +92,7 @@ public class AlarmChecker extends Thread
 							{
 								AlarmPopupFrame f = new AlarmPopupFrame(
 										"Отклонение в " +
-											Pool.getName(MonitoredElement.typ, alarm.getMonitoredElementId()) + 
+											((ObjectResource )Pool.get(MonitoredElement.typ, alarm.getMonitoredElementId().getIdentifierString())).getName() + 
 											" возникло " + 
 											sdf.format(new Date(ad.getAlarmTime())),
 										alarm,
@@ -130,5 +119,6 @@ public class AlarmChecker extends Thread
 			}
 		}
 	}
+*/
 }
 

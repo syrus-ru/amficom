@@ -1,20 +1,18 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewCloseCommand;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 public class MapCloseCommand extends VoidCommand
 {
 	Dispatcher dispatcher;
 	ApplicationContext aContext;
-
-	public MapCloseCommand()
-	{
-		// nothing
-	}
 
 	public MapCloseCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
@@ -41,15 +39,12 @@ public class MapCloseCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public Object clone()
-	{
-		return new MapCloseCommand(dispatcher, aContext);
-	}
-
 	public void execute()
 	{
-	//	parent.mapContext = null;
-		dispatcher.notify(new OperationEvent(this, 0, "mapcloseevent"));
+		MapFrame mapFrame = MapFrame.getMapMainFrame();
+		new MapViewCloseCommand(mapFrame).execute();
+		dispatcher.notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
+		setResult(Command.RESULT_OK);
 	}
 
 }

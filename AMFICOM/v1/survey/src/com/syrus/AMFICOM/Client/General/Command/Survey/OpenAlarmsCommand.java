@@ -15,7 +15,6 @@ public class OpenAlarmsCommand extends VoidCommand
 	private Dispatcher dispatcher;
 	ApplicationContext aContext;
 	JDesktopPane desktop;
-	ApplicationModelFactory factory;
 
 	public AlarmFrame frame;
 
@@ -24,12 +23,11 @@ public class OpenAlarmsCommand extends VoidCommand
 		// nothing
 	}
 
-	public OpenAlarmsCommand(Dispatcher dispatcher, JDesktopPane desktop, ApplicationContext aContext, ApplicationModelFactory factory)
+	public OpenAlarmsCommand(Dispatcher dispatcher, JDesktopPane desktop, ApplicationContext aContext)
 	{
 		this.dispatcher = dispatcher;
 		this.desktop = desktop;
 		this.aContext = aContext;
-		this.factory = factory;
 	}
 
 	public void setParameter(String field, Object value)
@@ -51,11 +49,6 @@ public class OpenAlarmsCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public Object clone()
-	{
-		return new OpenAlarmsCommand(dispatcher, desktop, aContext, factory);
-	}
-
 	public void execute()
 	{
 		if(!Checker.checkCommandByUserId(
@@ -64,13 +57,6 @@ public class OpenAlarmsCommand extends VoidCommand
 		{
 			return;
 		}
-
-		ApplicationContext aC = new ApplicationContext();
-		aC.setApplicationModel(factory.create());
-		aC.setConnectionInterface(aContext.getConnectionInterface());
-		aC.setSessionInterface(aContext.getSessionInterface());
-		aC.setDataSourceInterface(aC.getApplicationModel().getDataSource(aContext.getSessionInterface()));
-		aC.setDispatcher(dispatcher);
 
 //		DataSourceInterface dataSource = aC.getDataSourceInterface();
 //		if(dataSource == null)
@@ -93,7 +79,7 @@ public class OpenAlarmsCommand extends VoidCommand
 		}
 		if (frame == null)
 		{
-			frame = new AlarmFrame(aC);
+			frame = new AlarmFrame(aContext);
 			desktop.add(frame);
       
       dispatcher.notify(

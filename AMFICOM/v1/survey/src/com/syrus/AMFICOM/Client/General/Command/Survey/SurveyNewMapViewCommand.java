@@ -1,31 +1,20 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
-import java.awt.*;
-import javax.swing.*;
+import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorOpenViewCommand;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Map.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Command.Config.*;
-import com.syrus.AMFICOM.Client.General.Command.Map.*;
+import java.awt.Dimension;
 
-public class SurveyNewMapViewCommand extends MapViewOpenCommand
+import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
+
+public class SurveyNewMapViewCommand extends MapEditorOpenViewCommand
 {
-	public SurveyNewMapViewCommand()
+	public SurveyNewMapViewCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
-		// nothing
-	}
-
-	public SurveyNewMapViewCommand(Dispatcher dispatcher, JDesktopPane desktop, ApplicationContext aContext, ApplicationModelFactory factory)
-	{
-		super(dispatcher, desktop, aContext, factory);
-	}
-
-	public Object clone()
-	{
-		return new SurveyNewMapViewCommand(dispatcher, desktop, aContext, factory);
+		super(desktop, aContext);
 	}
 
 	public void execute()
@@ -34,33 +23,34 @@ public class SurveyNewMapViewCommand extends MapViewOpenCommand
 		{
 			super.execute();
 
-			if (opened)
+			if (super.getResult() == Command.RESULT_OK)
 			{
-				MapMainFrame frame = (MapMainFrame )Pool.get("environment", "mapmainframe");
+				MapFrame frame = super.getMapFrame();
 				frame.getModel().getCommand("mapModeViewNodes").execute();
 				frame.getModel().getCommand("mapModePath").execute();
-			
-				Dimension dim = desktop.getSize();
 
-				ViewMapPropertiesCommand c1 = new ViewMapPropertiesCommand(desktop, aContext);
-				c1.execute();
-				c1.frame.setLocation(0, dim.height * 2 / 8);
-				c1.frame.setSize(dim.width / 5, dim.height * 3 / 8);
+				Dimension dim = super.desktop.getSize();
 
-				c1.frame.setObjectResource((ObjectResource )Pool.get(MapContext.typ, mc_id));
+				super.getPropertiesFrame().setLocation(
+						0, 
+						dim.height * 2 / 8);
+				super.getPropertiesFrame().setSize(
+						dim.width / 5, 
+						dim.height * 3 / 8);
 
-				ViewMapElementsCommand c2 = new ViewMapElementsCommand(desktop, aContext);
-				c2.execute();
-				c2.frame.setLocation(0, dim.height * 5 / 8);
-				c2.frame.setSize(dim.width * 1 / 5, dim.height * 3 / 8);
-
-				c2.frame.setMapContext((MapContext )Pool.get(MapContext.typ, mc_id));
+				super.getElementsFrame().setLocation(
+						0, 
+						dim.height * 5 / 8);
+				super.getElementsFrame().setSize(
+						dim.width * 1 / 5, 
+						dim.height * 3 / 8);
 			}
 		}
 		catch (RuntimeException ex)
 		{
 			ex.printStackTrace();
-			JOptionPane.showMessageDialog(desktop, "Не могу найти файл лицензии ofx.properties", "Ошибка", JOptionPane.OK_OPTION);
+			setResult(Command.RESULT_NO);
+//			JOptionPane.showMessageDialog(desktop, "Не могу найти файл лицензии ofx.properties", "Ошибка", JOptionPane.OK_OPTION);
 		}
 	}
 }

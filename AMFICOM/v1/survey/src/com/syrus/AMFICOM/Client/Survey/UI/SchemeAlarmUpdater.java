@@ -63,6 +63,7 @@ public class SchemeAlarmUpdater extends Thread  implements Runnable
 					/**
 					 * @todo remove comment when SchemePath moves to new TransmissionPath
 					 */
+					 /*
 //					if(sp.path != null)
 					{
 						Hashtable ht = Pool.getHash(Alarm.typ);
@@ -80,6 +81,7 @@ public class SchemeAlarmUpdater extends Thread  implements Runnable
 										ch.setValue("true");
 							}
 					}
+					*/
 				}
 				else
 				{
