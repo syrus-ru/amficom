@@ -1,5 +1,5 @@
 /**
- * $Id: OfxConnection.java,v 1.3 2004/11/11 10:42:10 krupenn Exp $
+ * $Id: OfxConnection.java,v 1.4 2004/12/01 10:55:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import java.util.Vector;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/11/11 10:42:10 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/01 10:55:32 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -43,7 +43,7 @@ public class OfxConnection extends MapConnection
 				Environment.LOG_LEVEL_FINER, 
 				"constructor call", 
 				getClass().getName(), 
-				"SpatialConnection()");
+				"OfxConnection()");
 	}
 	
 	public OfxConnection( String dataBasePath, String dataBaseView)
@@ -52,7 +52,7 @@ public class OfxConnection extends MapConnection
 				Environment.LOG_LEVEL_FINER, 
 				"constructor call", 
 				getClass().getName(), 
-				"SpatialConnection(" + dataBasePath + ", " + dataBaseView + ")");
+				"OfxConnection(" + dataBasePath + ", " + dataBaseView + ")");
 		
 		this.setPath(dataBasePath);
 		this.setView(dataBaseView);

@@ -89,6 +89,6 @@ public final class MeasurementPathPopupMenu extends MapPopupMenu
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 	}
 }

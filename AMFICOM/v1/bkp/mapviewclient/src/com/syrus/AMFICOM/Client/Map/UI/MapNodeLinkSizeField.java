@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkSizeField.java,v 1.2 2004/09/15 08:21:49 krupenn Exp $
+ * $Id: MapNodeLinkSizeField.java,v 1.3 2004/12/01 10:55:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import javax.swing.JTextField;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/15 08:21:49 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/01 10:55:32 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -118,7 +118,7 @@ public final class MapNodeLinkSizeField extends JTextField
 
 					if(adaptee.lnl != null)
 					{
-						adaptee.lnl.repaint();
+						adaptee.lnl.repaint(false);
 					}
 				}
 				catch(Exception ex)

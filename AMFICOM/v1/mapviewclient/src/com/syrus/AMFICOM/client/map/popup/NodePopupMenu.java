@@ -74,7 +74,7 @@ public final class NodePopupMenu extends MapPopupMenu
 //		getLogicalNetLayer().getCommandList().add(command);
 //		getLogicalNetLayer().getCommandList().execute();
 
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 	}
 	
 	private void placeSite()
@@ -84,7 +84,7 @@ public final class NodePopupMenu extends MapPopupMenu
 		{
 			super.insertSiteInPlaceOfANode(node, proto);
 			
-			getLogicalNetLayer().repaint();
+			getLogicalNetLayer().repaint(false);
 		}
 	}
 }

@@ -142,7 +142,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 	}
 
 	private void insertSite()
@@ -157,7 +157,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 				super.insertSiteInPlaceOfANode(node, proto);
 			}
 
-			getLogicalNetLayer().repaint();
+			getLogicalNetLayer().repaint(false);
 		}
 	}
 
@@ -221,7 +221,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		{
 			super.addLinksToCollector(collector, selection.getElements());
 
-			getLogicalNetLayer().repaint();
+			getLogicalNetLayer().repaint(false);
 
 			getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 		}
@@ -234,7 +234,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		{
 			super.addLinksToCollector(collector, selection.getElements());
 			
-			getLogicalNetLayer().repaint();
+			getLogicalNetLayer().repaint(false);
 
 			getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 		}
@@ -252,7 +252,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 			}
 		}
 		
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 
 		getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
@@ -270,7 +270,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 			}
 		}
 
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 
 		getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}

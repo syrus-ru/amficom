@@ -157,7 +157,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 	{
 		super.removeMapElement(link);
 
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 	}
 
 	private void addMark()
@@ -167,7 +167,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 	}
 
 	private void newCollector()
@@ -177,7 +177,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 		{
 			super.addLinkToCollector(collector, link);
 
-			getLogicalNetLayer().repaint();
+			getLogicalNetLayer().repaint(false);
 
 			getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 		}
@@ -190,7 +190,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 		{
 			super.addLinkToCollector(collector, link);
 			
-			getLogicalNetLayer().repaint();
+			getLogicalNetLayer().repaint(false);
 
 			getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 		}
@@ -203,7 +203,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 		{
 			super.removeLinkFromCollector(collector, link);
 			
-			getLogicalNetLayer().repaint();
+			getLogicalNetLayer().repaint(false);
 
 			getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 		}
@@ -221,7 +221,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 			super.removeLinksFromCollector(collector, list);
 			super.removeCollector(collector);
 
-			getLogicalNetLayer().repaint();
+			getLogicalNetLayer().repaint(false);
 
 			getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 		}

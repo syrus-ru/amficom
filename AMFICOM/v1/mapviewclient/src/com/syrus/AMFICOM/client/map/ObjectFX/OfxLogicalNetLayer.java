@@ -1,5 +1,5 @@
 /**
- * $Id: OfxLogicalNetLayer.java,v 1.5 2004/11/11 18:09:29 krupenn Exp $
+ * $Id: OfxLogicalNetLayer.java,v 1.6 2004/12/01 10:55:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import java.util.Vector;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/11/11 18:09:29 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/01 10:55:32 $
  * @module Ьфз_м2
  * @author $Author: krupenn $
  * @see
@@ -190,7 +190,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	/**
 	 * Перерисовать содержимое компонента с картой
 	 */
-	public void repaint()
+	public void repaint(boolean fullRepaint)
 	{
 		spatialLayer.postDirtyEvent();
 		spatialLayer.postPaintEvent();
@@ -208,6 +208,11 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 				"setCursor(" + cursor.toString() + ")");
 		
 		spatialViewer.getMapCanvas().setCursor(cursor);
+	}
+
+	public Cursor getCursor()
+	{
+		return spatialViewer.getMapCanvas().getCursor();
 	}
 
 	/**

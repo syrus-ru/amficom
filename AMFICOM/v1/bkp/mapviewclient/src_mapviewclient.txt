@@ -111,6 +111,7 @@ src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorMainFrame.java
 src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorMenuBar.java
 src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorRun.java
 src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorToolBar.java
+src\com\syrus\AMFICOM\Client\Map\Mapinfo\LogicalLayerMapTool.java
 src\com\syrus\AMFICOM\Client\Map\Mapinfo\MapInfoConnection.java
 src\com\syrus\AMFICOM\Client\Map\Mapinfo\MapInfoLogicalNetLayer.java
 src\com\syrus\AMFICOM\Client\Map\Mapinfo\MapInfoNetMapViewer.java
@@ -165,7 +166,10 @@ src\com\syrus\AMFICOM\Client\Map\Props\ObjectResourceLabel.java
 src\com\syrus\AMFICOM\Client\Map\Props\SiteBindingRenderer.java
 src\com\syrus\AMFICOM\Client\Map\Props\SiteCrossingPanel.java
 src\com\syrus\AMFICOM\Client\Map\Props\TunnelLayout.java
+src\com\syrus\AMFICOM\Client\Map\Report\CableLayoutReport.java
 src\com\syrus\AMFICOM\Client\Map\Report\MapReportModel.java
+src\com\syrus\AMFICOM\Client\Map\Report\MarkerInfoReport.java
+src\com\syrus\AMFICOM\Client\Map\Report\TunnelCableListReport.java
 src\com\syrus\AMFICOM\Client\Map\Setup\AMFICOMSearchPanel.java
 src\com\syrus\AMFICOM\Client\Map\Setup\ControlsFrame.java
 src\com\syrus\AMFICOM\Client\Map\Setup\LayersPanel.java

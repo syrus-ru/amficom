@@ -28,19 +28,20 @@ JAR=jar
 #COMPILER=$(JIKES) $(JIKESFLAGS)
 COMPILER=$(JAVAC)
 
-TARGET=$(LIB)\mapview.jar
-TARGET_CLASS_LIST=src_map_view.txt
-TARGET_SRC=$(LIBSRC)\mapviewsource.jar
+TARGET=$(LIB)\mapviewclient.jar
+TARGET_CLASS_LIST=src_mapviewclient.txt
+TARGET_SRC=$(LIBSRC)\mapviewclientsource.jar
 
 SERVERCP=$(LIB)\corbaportable.jar;$(LIB)\corba.jar
-CLIENTCP=$(LIB)\util.jar;$(LIB)\filter.jar;$(LIB)\configuration.jar;$(LIB)\general.jar;$(LIB)\generalclient.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\map.jar;$(LIB)\scheme.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\filter.jar;$(LIB)\configuration.jar;$(LIB)\general.jar;$(LIB)\generalclient.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\mapclient.jar;$(LIB)\scheme.jar
 
 LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
 SPATIALCP=$(EXTLIB)\ofx.spatialfx.jar
 REPORTCP=$(EXTLIB)\jfreechartK.jar
 JGRAPHCP=$(EXTLIB)\jgraphpad.jar
+MAPINFOCP=$(EXTLIB)\mxj.jar;$(EXTLIB)\miutil.jar;$(EXTLIB)\mxjclient.jar;$(EXTLIB)\mxjbeans.jar;$(EXTLIB)\micsys.jar
 
-CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(REPORTCP);$(JGRAPHCP);$(SPATIALCP)
+CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(REPORTCP);$(JGRAPHCP);$(SPATIALCP);$(MAPINFOCP)
 
 .PHONY:	$(TARGET)
 

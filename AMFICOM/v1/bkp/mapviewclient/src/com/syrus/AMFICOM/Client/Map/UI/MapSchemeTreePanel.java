@@ -340,7 +340,7 @@ public final class MapSchemeTreePanel extends JPanel
 					mapFrame.getContext().getDispatcher().notify(new MapEvent(
 							mapFrame.getMapView(),
 							MapEvent.MAP_VIEW_CHANGED));
-					mapFrame.getMapViewer().getLogicalNetLayer().repaint();
+					mapFrame.getMapViewer().getLogicalNetLayer().repaint(false);
 				}
 			}
 			aContext.getDispatcher().notify(new StatusMessageEvent(
@@ -366,7 +366,7 @@ public final class MapSchemeTreePanel extends JPanel
 			mapFrame.getContext().getDispatcher().notify(new MapEvent(
 					mapFrame.getMapView(),
 					MapEvent.MAP_VIEW_CHANGED));
-			mapFrame.getMapViewer().getLogicalNetLayer().repaint();
+			mapFrame.getMapViewer().getLogicalNetLayer().repaint(false);
 		}
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,

@@ -77,6 +77,6 @@ public final class SitePopupMenu extends MapPopupMenu
 //		getLogicalNetLayer().getCommandList().add(command);
 //		getLogicalNetLayer().getCommandList().execute();
 
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.13 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.14 2004/12/01 10:55:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.14 $, $Date: 2004/12/01 10:55:32 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -93,6 +93,8 @@ public final class MapMouseListener implements MouseListener
 		MapState mapState = logicalNetLayer.getMapState();
 		
 		mapState.setMouseMode(MapState.MOUSE_PRESSED);//Установить режим
+
+//		System.out.println("Pressed at (" + me.getPoint().x + ", " + me.getPoint().y + ")");
 
 		if ( logicalNetLayer.getMapView() != null)
 		{
@@ -229,7 +231,7 @@ public final class MapMouseListener implements MouseListener
 					break;
 			}//switch (mapState.getOperationMode()
 		}
-		logicalNetLayer.repaint();
+		logicalNetLayer.repaint(false);
 		mapState.setMouseMode(MapState.MOUSE_NONE);
 	}
 
@@ -248,6 +250,8 @@ public final class MapMouseListener implements MouseListener
 		if(this.sizeEditBox != null)
 			if(this.sizeEditBox.isVisible())
 				return;
+
+//		System.out.println("Released at (" + me.getPoint().x + ", " + me.getPoint().y + ")");
 
 		mapState.setMouseMode(MapState.MOUSE_RELEASED);
 		if ( logicalNetLayer.getMapView() != null)
@@ -277,6 +281,7 @@ public final class MapMouseListener implements MouseListener
 							LangModelMap.getString("MeasureDistance"),
 							JOptionPane.PLAIN_MESSAGE);
 
+					logicalNetLayer.repaint(false);
 					break;
 				case MapState.ZOOM_TO_POINT :
 					Point2D.Double pp = logicalNetLayer.convertScreenToMap(me.getPoint());
@@ -292,7 +297,6 @@ public final class MapMouseListener implements MouseListener
 
 					logicalNetLayer.getMapView().setScale(logicalNetLayer.getScale());
 					logicalNetLayer.getMapView().setCenter(logicalNetLayer.getCenter());
-
 					break;
 				case MapState.ZOOM_TO_RECT:
 					logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -366,6 +370,7 @@ public final class MapMouseListener implements MouseListener
 						logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.SELECTION_CHANGED));
 					}
 //					mapState.setActionMode(MapState.NULL_ACTION_MODE);
+					logicalNetLayer.repaint(false);
 					break;
 				default:
 					try
@@ -386,7 +391,6 @@ public final class MapMouseListener implements MouseListener
 			//Убираем флаг
 			logicalNetLayer.setMenuShown(false);
 		}
-		logicalNetLayer.repaint();
 		mapState.setMouseMode(MapState.MOUSE_NONE);//Для мыши
 	}
 }

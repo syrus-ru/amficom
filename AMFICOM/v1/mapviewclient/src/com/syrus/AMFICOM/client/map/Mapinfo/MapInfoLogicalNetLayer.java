@@ -1,6 +1,15 @@
 package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
+import com.mapinfo.beans.tools.MapTool;
+import com.mapinfo.beans.vmapj.VisualMapJ;
+import com.mapinfo.unit.LinearUnit;
+import com.mapinfo.util.DoublePoint;
+import com.mapinfo.util.DoubleRect;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
 
 import java.awt.Cursor;
@@ -14,9 +23,23 @@ import java.util.List;
 
 public class MapInfoLogicalNetLayer extends LogicalNetLayer 
 {
-	public MapInfoLogicalNetLayer()
+	protected VisualMapJ visualMapJ = null;
+	
+	MapTool logicalLayerMapTool = null;
+	
+	public static final double ZOOM_FACTOR = 2D;
+
+	public MapInfoLogicalNetLayer(NetMapViewer viewer)
 	{
 		super();
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"constructor call", 
+				getClass().getName(), 
+				"SpatialLogicalNetLayer(" + viewer + ")");
+
+		logicalLayerMapTool = new LogicalLayerMapTool(this);
+		setMapViewer(viewer);
 	}
 
 	/**
@@ -24,7 +47,17 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public Point convertMapToScreen(Point2D.Double point)
 	{
-		throw new UnsupportedOperationException();
+		try
+		{
+			DoublePoint mapdp = new DoublePoint(point.x, point.y);
+			DoublePoint screendp = visualMapJ.getMapJ().transformNumericToScreen(mapdp);
+			return new Point((int )screendp.x, (int )screendp.y);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**
@@ -32,12 +65,26 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public Point2D.Double convertScreenToMap(Point point)
 	{
-		throw new UnsupportedOperationException();
+		try
+		{
+			DoublePoint screendp = new DoublePoint(point.x, point.y);
+			DoublePoint mapdp = visualMapJ.getMapJ().transformScreenToNumeric(screendp);
+			return new Point2D.Double(mapdp.x, mapdp.y);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public double convertScreenToMap(double screenDistance)
 	{
-		throw new UnsupportedOperationException();
+		Point2D.Double p1 = convertScreenToMap(new Point(0, 0));
+		Point2D.Double p2 = convertScreenToMap(new Point((int )screenDistance, 0));
+		double d = distance(p1, p2);
+
+		return d;
 	}
 	
 	public double convertMapToScreen(double topologicalDistance)
@@ -50,7 +97,13 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 			Point2D.Double endPoint, 
 			double dist)
 	{
-		throw new UnsupportedOperationException();
+		Point2D.Double point = new Point2D.Double(startPoint.x, startPoint.y);
+		double len = distance(
+				startPoint, 
+				endPoint);
+		point.x += (endPoint.x - startPoint.x) / len * dist;
+		point.y += (endPoint.y - startPoint.y) / len * dist;
+		return point;
 	}
 
 	/**
@@ -58,7 +111,17 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public double distance(Point2D.Double from, Point2D.Double to)
 	{
-		throw new UnsupportedOperationException();
+		try
+		{
+			return visualMapJ.getMapJ().sphericalDistance(
+				new DoublePoint(from.x, from.y),
+				new DoublePoint(to.x, to.y));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return 0.0D;
 	}
 
 	/**
@@ -66,7 +129,17 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void setCenter(Point2D.Double center)
 	{
-		throw new UnsupportedOperationException();
+		System.out.println("Set center (" + center.x + ", " +center.y + ")");
+		try
+		{
+			visualMapJ.setOffsets(0, 0);
+			visualMapJ.getMapJ().setCenter(new DoublePoint(center.x, center.y));
+			repaint(true);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -74,12 +147,34 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public Point2D.Double getCenter()
 	{
-		throw new UnsupportedOperationException();
+		Point2D.Double center;
+		try 
+		{
+			center = new Point2D.Double(
+				visualMapJ.getMapJ().getCenter().x,
+				visualMapJ.getMapJ().getCenter().y);
+		} 
+		catch (Exception ex) 
+		{
+			center = null;
+			ex.printStackTrace();
+		} 
+		
+		return center;
 	}
 
 	public Rectangle2D.Double getVisibleBounds()
 	{
-		throw new UnsupportedOperationException();
+		try 
+		{
+			DoubleRect rect = visualMapJ.getMapJ().getBounds();
+			return new Rectangle2D.Double(rect.xmin, rect.ymin, rect.width(), rect.height());
+		} 
+		catch (Exception ex) 
+		{
+			ex.printStackTrace();
+		} 
+		return null;
 	}
 
 	/**
@@ -87,15 +182,14 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void release()
 	{
-		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * Перерисовать содержимое компонента с картой
 	 */
-	public void repaint()
+	public void repaint(boolean fullRepaint)
 	{
-		throw new UnsupportedOperationException();
+		visualMapJ.repaint(fullRepaint);
 	}
 	
 	/**
@@ -103,15 +197,30 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void setCursor(Cursor cursor)
 	{
-		throw new UnsupportedOperationException();
+		System.out.println("Set cursor " + cursor.getName());
+		visualMapJ.setCursor(cursor);
 	}
+
+	public Cursor getCursor()
+	{
+		return visualMapJ.getCursor();
+	}
+
 
 	/**
 	 * Получить текущий масштаб вида карты
 	 */
 	public double getScale()
 	{
-		throw new UnsupportedOperationException();
+		try
+		{
+			return visualMapJ.getMapJ().getZoom();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return 0.0D;
 	}
 
 	/**
@@ -119,7 +228,23 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void setScale(double scale)
 	{
-		throw new UnsupportedOperationException();
+		System.out.println("Set scale " + scale);
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setScale(" + scale + ")");
+		try
+		{
+			if(scale != 0.0D)
+				visualMapJ.getMapJ().setZoom(scale);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		updateZoom();
+		repaint(true);
 	}
 
 	/**
@@ -127,7 +252,23 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void scaleTo(double scaleСoef)
 	{
-		throw new UnsupportedOperationException();
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"scaleTo(" + scaleСoef + ")");
+		
+		try
+		{
+			visualMapJ.getMapJ().setZoom(getScale() * scaleСoef);
+			System.out.println("Set scale " + getScale() * scaleСoef);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		updateZoom();
+		repaint(true);
 	}
 
 	/**
@@ -135,7 +276,13 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void zoomIn()
 	{
-		throw new UnsupportedOperationException();
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"zoomIn()");
+		
+		scaleTo(1.0D / ZOOM_FACTOR);
 	}
 
 	/**
@@ -143,7 +290,13 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void zoomOut()
 	{
-		throw new UnsupportedOperationException();
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"zoomIn()");
+		
+		scaleTo(ZOOM_FACTOR);
 	}
 	
 	/**
@@ -152,12 +305,45 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void zoomToBox(Point2D.Double from, Point2D.Double to)
 	{
-		throw new UnsupportedOperationException();
+		System.out.println("Zoom to box (" + from.x + ", " + from.y + ") - (" + to.x + ", " + to.y + ")");
+		try
+		{
+			visualMapJ.getMapJ().setBounds(new DoubleRect(
+					from.x, 
+					from.y,
+					to.x, 
+					to.y));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		updateZoom();
+		repaint(true);
+	}
+
+	public void updateZoom()
+	{
+		super.updateZoom();
+
+		if(aContext == null)
+			return;
+		Dispatcher disp = aContext.getDispatcher();
+		if(disp == null)
+			return;
+		Double p = new Double(getScale());
+		disp.notify(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
 	}
 
 	public void handDragged(MouseEvent me)
 	{
-		throw new UnsupportedOperationException();
+		visualMapJ.interruptRenderer();
+		visualMapJ.setOffsets(
+				me.getX() - startPoint.x, 
+				me.getY() - startPoint.y);
+		repaint(false);
+//		spatialViewer.getMapCanvas().repaint();
+//		repaint();
 	}
 
 	public List findSpatialObjects(String searchText)
@@ -170,4 +356,19 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		throw new UnsupportedOperationException();
 	}
 
+	public void setMapViewer(NetMapViewer mapViewer)
+	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setMapViewer(" + mapViewer + ")");
+		
+		super.setMapViewer(mapViewer);
+		
+		MapInfoNetMapViewer snmv = (MapInfoNetMapViewer)mapViewer;
+		this.visualMapJ = snmv.visualMapJ;
+		System.out.println("Units " + this.visualMapJ.getMapJ().getDistanceUnits().toString());
+		this.visualMapJ.getMapJ().setDistanceUnits(LinearUnit.meter);
+	}
 }

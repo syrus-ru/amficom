@@ -42,10 +42,10 @@ JAVADOC=javadoc \
 #COMPILER=$(JIKES) $(JIKESFLAGS)
 COMPILER=$(JAVAC)
 
-TARGET=$(LIB)\map.jar
-TARGET_CLASS_LIST=src_map.txt
-TARGET_SRC=$(LIBSRC)\mapsource.jar
-TARGET_JAVADOC=$(LIBDOC)\mapdoc.jar
+TARGET=$(LIB)\mapclient.jar
+TARGET_CLASS_LIST=src_mapclient.txt
+TARGET_SRC=$(LIBSRC)\mapclientsource.jar
+TARGET_JAVADOC=$(LIBDOC)\mapclientdoc.jar
 
 SERVERCP=$(LIB)\corba.jar
 CLIENTCP=$(LIB)\util.jar;$(LIB)\generalclient.jar;$(LIB)\general.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\corbaportable.jar;$(LIB)\filter.jar

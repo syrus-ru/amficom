@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.4 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.5 2004/12/01 10:55:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/01 10:55:32 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -161,7 +161,7 @@ public final class MapSelectionElementStrategy implements  MapStrategy
 					logicalNetLayer.getCommandList().execute();
 					command = null;
 				}//if (actionMode == MapState.MOVE_ACTION_MODE)
-//				mapState.setActionMode(MapState.NULL_ACTION_MODE);
+				mapState.setActionMode(MapState.NULL_ACTION_MODE);
 			}//if(mouseMode == MapState.MOUSE_RELEASED)
 		}//if(SwingUtilities.isLeftMouseButton(me))
 	}

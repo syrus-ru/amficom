@@ -1,1 +1,1 @@
-nmake /f makemapview %1
+nmake /f makemapviewclient %1

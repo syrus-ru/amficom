@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.9 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.10 2004/12/01 10:55:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import java.awt.event.KeyEvent;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/01 10:55:32 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -273,7 +273,7 @@ public final class MapToolBar extends JToolBar
 					mod.setModal(true);
 					mod.setVisible(true);
 					if(mod.getReturnCode() == MapOptionsDialog.RET_OK)
-						getLogicalNetLayer().repaint();
+						getLogicalNetLayer().repaint(false);
 				}
 			}); 
 		optionsButton.setToolTipText(LangModelMap.getString("Options"));

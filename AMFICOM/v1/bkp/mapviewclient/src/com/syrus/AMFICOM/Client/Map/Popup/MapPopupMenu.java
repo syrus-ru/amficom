@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.16 2004/11/19 14:41:23 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.17 2004/12/01 10:55:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -60,7 +60,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2004/11/19 14:41:23 $
+ * @version $Revision: 1.17 $, $Date: 2004/12/01 10:55:32 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -373,7 +373,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		getLogicalNetLayer().getCommandList().add(command2);
 		getLogicalNetLayer().getCommandList().execute();
 		
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 	}
 
 	protected void generatePathCabling(MapCablePathElement path, MapNodeProtoElement proto)
@@ -384,7 +384,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 	}
 	
 	protected void convertUnboundLinkToPhysicalLink(MapUnboundLinkElement unbound)
@@ -395,6 +395,6 @@ public abstract class MapPopupMenu extends JPopupMenu
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 	}
 }

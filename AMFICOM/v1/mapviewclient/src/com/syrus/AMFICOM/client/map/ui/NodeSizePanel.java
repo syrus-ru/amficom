@@ -1,5 +1,5 @@
 /**
- * $Id: NodeSizePanel.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: NodeSizePanel.java,v 1.5 2004/12/01 10:55:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import oracle.jdeveloper.layout.XYLayout;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/01 10:55:32 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -113,7 +113,7 @@ public final class NodeSizePanel extends JPanel
 		if(lnl == null)
 			return;
 		lnl.setDefaultScale(lnl.getDefaultScale() * COEF);
-		lnl.repaint();
+		lnl.repaint(false);
 	}
 
 	private void reduce()
@@ -121,7 +121,7 @@ public final class NodeSizePanel extends JPanel
 		if(lnl == null)
 			return;
 		lnl.setDefaultScale(lnl.getDefaultScale() / COEF);
-		lnl.repaint();
+		lnl.repaint(false);
 	}
 
 	public void setEnabled(boolean bool)

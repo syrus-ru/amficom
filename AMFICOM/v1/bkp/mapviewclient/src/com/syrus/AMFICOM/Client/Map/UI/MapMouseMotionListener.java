@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.7 2004/11/25 13:00:50 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.8 2004/12/01 10:55:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import java.awt.event.MouseMotionListener;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.7 $, $Date: 2004/11/25 13:00:50 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/01 10:55:32 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -44,6 +44,9 @@ public final class MapMouseMotionListener implements MouseMotionListener
 
 	public void mouseDragged(MouseEvent me)
 	{
+
+//		System.out.println("Dragged to (" + me.getPoint().x + ", " + me.getPoint().y + ")");
+
 		logicalNetLayer.setCurrentPoint(me.getPoint());
 		MapState mapState = logicalNetLayer.getMapState();
 		
@@ -57,7 +60,7 @@ public final class MapMouseMotionListener implements MouseMotionListener
 			switch (mapState.getOperationMode())
 			{
 				case MapState.MEASURE_DISTANCE:
-					logicalNetLayer.repaint();
+					logicalNetLayer.repaint(false);
 					break;
 				case MapState.MOVE_HAND:
 					//Если перемещают карту лапкой
@@ -66,7 +69,7 @@ public final class MapMouseMotionListener implements MouseMotionListener
 				case MapState.MOVE_TO_CENTER:
 					break;
 				case MapState.ZOOM_TO_RECT:
-					logicalNetLayer.repaint();
+					logicalNetLayer.repaint(false);
 					break;
 				case MapState.NODELINK_SIZE_EDIT:
 					break;
@@ -84,7 +87,7 @@ public final class MapMouseMotionListener implements MouseMotionListener
 					logicalNetLayer.sendMapEvent(new MapNavigateEvent(
 								mapElement, 
 								MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-					logicalNetLayer.repaint();
+					logicalNetLayer.repaint(false);
 					break;
 				default:
 					try

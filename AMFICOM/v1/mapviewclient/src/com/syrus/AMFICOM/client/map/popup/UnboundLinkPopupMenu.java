@@ -78,7 +78,7 @@ public class UnboundLinkPopupMenu extends MapPopupMenu
 			logicalNetLayer.getCommandList().add(command);
 			logicalNetLayer.getCommandList().execute();
 
-			getLogicalNetLayer().repaint();
+			getLogicalNetLayer().repaint(false);
 		}
 	}
 

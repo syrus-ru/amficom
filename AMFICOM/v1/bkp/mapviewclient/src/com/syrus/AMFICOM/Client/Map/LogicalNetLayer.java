@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.23 2004/11/19 14:41:23 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.24 2004/12/01 10:55:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -83,7 +83,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.23 $, $Date: 2004/11/19 14:41:23 $
+ * @version $Revision: 1.24 $, $Date: 2004/12/01 10:55:31 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -234,12 +234,14 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * Перерисовать содержимое компонента с картой
 	 */
-	public abstract void repaint();
+	public abstract void repaint(boolean fullRepaint);
 	
 	/**
 	 * Устанавить курсор мыши на компоненте отображения карты
 	 */
 	public abstract void setCursor(Cursor cursor);
+
+	public abstract Cursor getCursor();
 
 	/**
 	 * Получить текущий масштаб вида карты
@@ -403,7 +405,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		commandList.flush();
 
-		repaint();
+		repaint(true);
 	}
 
 	/**
@@ -833,7 +835,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					this.sendMapEvent(new MapEvent(getCurrentMapElement(), MapEvent.MAP_ELEMENT_SELECTED));
 //				}
 			}
-			repaint();
+			repaint(false);
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_ELEMENT_CHANGED))
@@ -857,7 +859,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				getMapView().scanPaths((Scheme )Pool.get(Scheme.typ, ((MapCablePathElement )me).getSchemeCableLink().getSchemeId()));
 			}
 
-			repaint();
+			repaint(false);
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
@@ -1032,7 +1034,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				}
 			}
 
-			repaint();
+			repaint(false);
 		}
 		else
 		if(ae.getActionCommand().equals(TreeDataSelectionEvent.type))
@@ -1048,7 +1050,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				{
 					MapElement me = (MapElement )data.get(n);
 					me.setSelected(true);
-					repaint();
+					repaint(false);
 				} 
 				catch (Exception ex) 
 				{
@@ -1062,7 +1064,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 				MapElement me = (MapElement )ae.getSource();
 				me.setSelected(true);
-				repaint();
+				repaint(false);
 			} 
 		}
 		else
@@ -1141,7 +1143,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					}
 				}
 	
-				repaint();
+				repaint(false);
 			}
 		}
 	}
@@ -1528,7 +1530,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		command.setLogicalNetLayer(this);
 		getCommandList().add(command);
 		getCommandList().execute();
-		repaint();
+		repaint(false);
 	}
 
 	/**
@@ -1537,7 +1539,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	public void undo()
 	{
 		commandList.undo();
-		repaint();
+		repaint(false);
 		sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 	
@@ -1547,7 +1549,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	public void redo()
 	{
 		commandList.redo();
-		repaint();
+		repaint(false);
 		sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 	

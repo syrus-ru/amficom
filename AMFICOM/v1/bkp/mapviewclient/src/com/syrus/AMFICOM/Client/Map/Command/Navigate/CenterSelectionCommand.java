@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.4 2004/10/19 10:41:03 krupenn Exp $
+ * $Id: CenterSelectionCommand.java,v 1.5 2004/12/01 10:55:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 10:41:03 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/01 10:55:32 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -141,6 +141,6 @@ public class CenterSelectionCommand extends VoidCommand
 		
 		logicalNetLayer.setCenter(point);
 
-		logicalNetLayer.repaint();
+		logicalNetLayer.repaint(true);
 	}
 }

@@ -57,6 +57,6 @@ public final class MarkPopupMenu extends MapPopupMenu
 	{
 		super.removeMapElement(mark);
 
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 	}
 }

@@ -84,7 +84,7 @@ public class UnboundPopupMenu extends MapPopupMenu
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 	}
 
 	private void bind()
@@ -97,7 +97,7 @@ public class UnboundPopupMenu extends MapPopupMenu
 			logicalNetLayer.getCommandList().add(command);
 			logicalNetLayer.getCommandList().execute();
 
-			getLogicalNetLayer().repaint();
+			getLogicalNetLayer().repaint(false);
 		}
 	}
 

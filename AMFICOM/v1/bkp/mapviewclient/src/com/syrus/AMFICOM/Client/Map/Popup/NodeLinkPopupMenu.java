@@ -57,6 +57,6 @@ public final class NodeLinkPopupMenu extends MapPopupMenu
 	{
 		super.removeMapElement(link);
 
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 	}
 }

@@ -111,7 +111,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 	{
 		super.removeMapElement(path);
 
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 	}
 
 	private void bind()
@@ -150,7 +150,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 		if(proto != null)
 		{
 			super.generatePathCabling(path, proto);
-			getLogicalNetLayer().repaint();
+			getLogicalNetLayer().repaint(false);
 		}
 	}
 	

@@ -60,6 +60,6 @@ public final class MarkerPopupMenu extends MapPopupMenu
 		
 		marker.notifyMarkerDeleted();
 
-		getLogicalNetLayer().repaint();
+		getLogicalNetLayer().repaint(false);
 	}
 }

@@ -1,20 +1,104 @@
 package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
+import com.mapinfo.beans.vmapj.VisualMapJ;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnection;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 
+import com.syrus.AMFICOM.Client.Map.UI.MapDropTargetListener;
+import com.syrus.AMFICOM.Client.Map.UI.MapKeyAdapter;
+import com.syrus.AMFICOM.Client.Map.UI.MapScrollPane;
+import com.syrus.AMFICOM.Client.Map.UI.MapToolTippedPanel;
 import java.awt.Component;
 
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetListener;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JComponent;
+import javax.swing.ToolTipManager;
 
 public class MapInfoNetMapViewer extends NetMapViewer
 {
-	public MapInfoNetMapViewer()
+	protected MapInfoLogicalNetLayer lnl = null;
+	
+	protected MapToolTippedPanel mttp = null;
+	protected ToolTipManager ttm = null;
+	
+	protected DropTarget dropTarget = null;
+	
+	protected DropTargetListener dtl = null;
+
+	protected static MapInfoNetMapViewer mapViewer = null;
+	protected static boolean dbset = false;
+
+	protected VisualMapJ visualMapJ = null;
+	protected MapScrollPane scrollPane = null;
+
+	public void init()
 	{
-		super();
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"init()");
+		
+		super.init();
+		
+		if(lnl != null)
+		{
+			visualMapJ.removeMouseListener(mttp.ls);
+			visualMapJ.removeMouseMotionListener(mttp.ls);
+//			dropTarget.setActive(false);
+			dropTarget.removeDropTargetListener(dtl);
+			ttm.unregisterComponent(mttp);
+		}
+		try
+		{
+			lnl = new MapInfoLogicalNetLayer(this);
+
+//			lnl.getMapState().setActionMode(MapState.DRAW_ACTION_MODE);
+
+			dtl = new MapDropTargetListener(lnl);
+			dropTarget = visualMapJ.getDropTarget();
+			if(dropTarget == null)
+			{
+				dropTarget = new DropTarget(visualMapJ, dtl);
+				visualMapJ.setDropTarget(dropTarget);
+			}
+			else
+				dropTarget.addDropTargetListener(dtl);
+			dropTarget.setActive(true);
+
+			mttp = new MapToolTippedPanel(this);
+			visualMapJ.addMouseListener(mttp.ls);
+			visualMapJ.addMouseMotionListener(mttp.ls);
+
+			ttm = ToolTipManager.sharedInstance();
+			ttm.registerComponent(mttp);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void saveConfig()
+	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"saveConfig()");
+		
+		MapPropertiesManager.setCenter(lnl.getCenter());
+		MapPropertiesManager.setZoom(lnl.getScale());
+		MapPropertiesManager.saveIniFile();
 	}
 
 	/**
@@ -23,7 +107,19 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 */
 	public void setMap(String dataBasePath, String dataBaseView)
 	{
-		throw new UnsupportedOperationException();
+		try
+		{
+			visualMapJ.getMapJ().loadGeoset(
+					dataBasePath + dataBaseView, 
+					dataBasePath, 
+					null);
+			visualMapJ.add(lnl.logicalLayerMapTool);
+			lnl.logicalLayerMapTool.setSelected(true);
+	}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -31,7 +127,13 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 */
 	public void closeMap()
 	{
-		throw new UnsupportedOperationException();
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"closeMap()");
+		
+//		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -39,7 +141,20 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 */
 	public void setConnection(MapConnection conn)
 	{
-		throw new UnsupportedOperationException();
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setConnection(" + conn + ")");
+		
+		this.mapConnection = conn;
+		
+		if(conn == null)
+		{
+			closeMap();
+		}
+		else
+			setMap(conn.getPath(), conn.getView());
 	}
 	
 	/**
@@ -47,7 +162,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 */
 	public MapConnection getConnection()
 	{
-		throw new UnsupportedOperationException();
+		return this.mapConnection;
 	}
 	
 	/**
@@ -55,22 +170,26 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 */
 	public JComponent getVisualComponent()
 	{
-		throw new UnsupportedOperationException();
+		if(visualMapJ == null)
+			visualMapJ = new VisualMapJ();
+		if(scrollPane == null)
+			scrollPane = new MapScrollPane(this);
+		return scrollPane;
 	}
 
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		throw new UnsupportedOperationException();
+		return this.lnl;
 	}
 
 	public JComponent getJComponent()
 	{
-		throw new UnsupportedOperationException();
+		return null;
 	}
 	
 	public Component getComponent()
 	{
-		throw new UnsupportedOperationException();
+		return visualMapJ;
 	}
 	
 	public List getAvailableViews()
@@ -80,12 +199,17 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	
 	public void setView(String dataBaseView)
 	{
-		throw new UnsupportedOperationException();
+		if (!getConnection().getView().equals(dataBaseView)) 
+		{
+			setMap(getConnection().getPath(), dataBaseView);
+		}
 	}
 
 	public List getLayers()
 	{
-		throw new UnsupportedOperationException();
+		List returnList = new LinkedList();
+
+		return returnList;
 	}
 	
 }

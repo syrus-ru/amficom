@@ -1,5 +1,5 @@
 /**
- * $Id: MapModeCommand.java,v 1.5 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: MapModeCommand.java,v 1.6 2004/12/01 10:55:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/01 10:55:32 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -82,7 +82,7 @@ public class MapModeCommand extends VoidCommand
 				aModel.fireModelChanged();
 	
 				logicalNetLayer.getMapState().setShowMode(mode);
-				logicalNetLayer.repaint();
+				logicalNetLayer.repaint(false);
 			}
 		}
 	}

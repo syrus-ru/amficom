@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.5 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.6 2004/12/01 10:55:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import javax.swing.JOptionPane;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/01 10:55:32 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -102,7 +102,7 @@ public final class MapDropTargetListener implements DropTargetListener
 
 				dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 				dtde.getDropTargetContext().dropComplete(true);
-				logicalNetLayer.repaint();
+				logicalNetLayer.repaint(false);
 
 				logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 			}
