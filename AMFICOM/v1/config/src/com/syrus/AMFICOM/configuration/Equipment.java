@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.59 2005/01/26 13:25:34 bob Exp $
+ * $Id: Equipment.java,v 1.60 2005/01/26 15:09:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/01/26 13:25:34 $
+ * @version $Revision: 1.60 $, $Date: 2005/01/26 15:09:21 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -42,32 +42,6 @@ import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 public class Equipment extends MonitoredDomainMember implements Characterized, TypedObject {
 
 	private static final long serialVersionUID = -6115401698444070841L;
-
-	protected static final int		UPDATE_ATTACH_ME	= 1;
-	protected static final int		UPDATE_DETACH_ME	= 2;
-
-	public static final String COLUMN_TYPE_ID = "type_id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_IMAGE_ID = "image_id";
-	public static final String COLUMN_LATITUDE = "latitude";
-	public static final String COLUMN_LONGITUDE = "longitude";
-	public static final String COLUMN_SUPPLIER = "supplier";
-	public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
-	public static final String COLUMN_HW_SERIAL = "hw_serial";
-	public static final String COLUMN_HW_VERSION = "hw_version";
-	public static final String COLUMN_SW_SERIAL = "sw_serial";
-	public static final String COLUMN_SW_VERSION = "sw_version";
-	public static final String COLUMN_INVENTORY_NUMBER = "inventory_number";
-	public static final String COLUMN_PORT_IDS = "portIds";
-
-	private static final int SIZE_SUPPLIER_COLUMN = 128;
-	private static final int SIZE_SUPPLIER_CODE_COLUMN = 128;
-	private static final int SIZE_HW_SERIAL_COLUMN = 64;
-	private static final int SIZE_HW_VERSION_COLUMN = 64;
-	private static final int SIZE_SW_SERIAL_COLUMN = 64;
-	private static final int SIZE_SW_VERSION_COLUMN = 64;
-	private static final int SIZE_INVENTOY_NUMBER_COLUMN = 64;
 
 	private EquipmentType          type;
 	private String                 name;

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.29 2005/01/20 15:31:09 arseniy Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.30 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,21 +34,15 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/01/20 15:31:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/01/26 15:09:22 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
 public class EquipmentTypeDatabase extends StorableObjectDatabase {
-	public static final String COLUMN_CODENAME = "codename";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_NAME = "name";
-	//   manufacturer VARCHAR2(64),
 	private static final int SIZE_MANUFACTURER_COLUMN = 64; 
-	public static final String COLUMN_MANUFACTURER  = "manufacturer";
-	// manufacturer_code VARCHAR2(64),
+
 	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
-	public static final String COLUMN_MANUFACTURER_CODE     = "manufacturer_code";
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
@@ -74,11 +68,11 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_CODENAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_MANUFACTURER + COMMA
-				+ COLUMN_MANUFACTURER_CODE;
+				+ EquipmentTypeWrapper.COLUMN_CODENAME + COMMA
+				+ EquipmentTypeWrapper.COLUMN_DESCRIPTION + COMMA
+				+ EquipmentTypeWrapper.COLUMN_NAME + COMMA
+				+ EquipmentTypeWrapper.COLUMN_MANUFACTURER + COMMA
+				+ EquipmentTypeWrapper.COLUMN_MANUFACTURER_CODE;
 		}
 		return columns;
 	}
@@ -143,11 +137,11 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER)),
-											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER_CODE)));
+											DatabaseString.fromQuerySubString(resultSet.getString(EquipmentTypeWrapper.COLUMN_CODENAME)),
+											DatabaseString.fromQuerySubString(resultSet.getString(EquipmentTypeWrapper.COLUMN_DESCRIPTION)),
+											DatabaseString.fromQuerySubString(resultSet.getString(EquipmentTypeWrapper.COLUMN_NAME)),
+											DatabaseString.fromQuerySubString(resultSet.getString(EquipmentTypeWrapper.COLUMN_MANUFACTURER)),
+											DatabaseString.fromQuerySubString(resultSet.getString(EquipmentTypeWrapper.COLUMN_MANUFACTURER_CODE)));
 
 		return equipmentType;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.5 2005/01/14 18:07:07 arseniy Exp $
+ * $Id: CableThreadDatabase.java,v 1.6 2005/01/26 15:09:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,20 +30,13 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/01/14 18:07:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/01/26 15:09:21 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class CableThreadDatabase extends StorableObjectDatabase  {
     
-	//  table :: CableThread
-    public static final String COLUMN_TYPE_ID       = "type_id";
-	//   name VARCHAR2(64) NOT NULL,
-    public static final String COLUMN_NAME          = "name";
-    //  description VARCHAR2(256),
-    public static final String COLUMN_DESCRIPTION   = "description";
-    
-    private static String columns;
+	private static String columns;
     private static String updateMultiplySQLValues;
     
     private CableThread fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -60,9 +53,9 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
         if (columns == null){
             columns = super.getColumns(mode) + COMMA
                 + DomainMember.COLUMN_DOMAIN_ID + COMMA
-                + COLUMN_TYPE_ID + COMMA
-                + COLUMN_NAME + COMMA
-                + COLUMN_DESCRIPTION;
+                + CableThreadWrapper.COLUMN_TYPE_ID + COMMA
+                + CableThreadWrapper.COLUMN_NAME + COMMA
+                + CableThreadWrapper.COLUMN_DESCRIPTION;
         }
         return columns;
     }
@@ -116,11 +109,11 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
             cableThread = new CableThread(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null,
                                        null, null);            
         }
-        String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
-        String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));        
+        String name = DatabaseString.fromQuerySubString(resultSet.getString(CableThreadWrapper.COLUMN_NAME));
+        String description = DatabaseString.fromQuerySubString(resultSet.getString(CableThreadWrapper.COLUMN_DESCRIPTION));        
         CableThreadType cableThreadType;
         try {
-            cableThreadType = (CableThreadType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
+            cableThreadType = (CableThreadType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, CableThreadWrapper.COLUMN_TYPE_ID), true);
         }
         catch (ApplicationException ae) {
             throw new RetrieveObjectException(ae);

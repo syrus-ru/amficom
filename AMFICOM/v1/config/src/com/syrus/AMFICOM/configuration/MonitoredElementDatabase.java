@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.35 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.36 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,18 +42,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/01/14 18:07:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/01/26 15:09:22 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
 public class MonitoredElementDatabase extends StorableObjectDatabase {
-	public static final String COLUMN_MEASUREMENT_PORT_ID = "measurement_port_id";
-	// sort NUMBER(2) NOT NULL,
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_SORT = "sort";
-	public static final String COLUMN_LOCAL_ADDRESS = "local_address";
-
 	public static final String LINK_COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
 	public static final String LINK_COLUMN_EQUIPMENT_ID = "equipment_id";
 	public static final String LINK_COLUMN_TRANSMISSION_PATH_ID = "transmission_path_id";
@@ -79,10 +73,10 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_MEASUREMENT_PORT_ID + COMMA
-				+ COLUMN_SORT + COMMA
-				+ COLUMN_LOCAL_ADDRESS;
+				+ MonitoredElementWrapper.COLUMN_NAME + COMMA
+				+ MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + COMMA
+				+ MonitoredElementWrapper.COLUMN_SORT + COMMA
+				+ MonitoredElementWrapper.COLUMN_LOCAL_ADDRESS;
 		}
 		return columns;
 	}
@@ -156,10 +150,10 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 											 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 											 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 											 DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
-											 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-											 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_PORT_ID),
-											 resultSet.getInt(COLUMN_SORT),
-											 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LOCAL_ADDRESS)));
+											 DatabaseString.fromQuerySubString(resultSet.getString(MonitoredElementWrapper.COLUMN_NAME)),
+											 DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID),
+											 resultSet.getInt(MonitoredElementWrapper.COLUMN_SORT),
+											 DatabaseString.fromQuerySubString(resultSet.getString(MonitoredElementWrapper.COLUMN_LOCAL_ADDRESS)));
 		return monitoredElement;
 	}
 

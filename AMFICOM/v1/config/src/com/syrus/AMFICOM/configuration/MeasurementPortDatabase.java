@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.31 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.32 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,23 +40,12 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/01/14 18:07:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/01/26 15:09:22 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
 	// table :: MeasurementPort
-
-	// type_id VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_TYPE_ID       = "type_id";
-	// name VARCHAR2(64) NOT NULL,
-	public static final String COLUMN_NAME  = "name";
-	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION   = "description";
-	// kis_id VARCHAR2(32),
-	public static final String COLUMN_KIS_ID        = "kis_id";
-	// port_id VARCHAR2(32),
-	public static final String COLUMN_PORT_ID       = "port_id";
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
@@ -70,11 +59,11 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_TYPE_ID + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_KIS_ID + COMMA
-				+ COLUMN_PORT_ID;
+				+ MeasurementPortWrapper.COLUMN_TYPE_ID + COMMA
+				+ MeasurementPortWrapper.COLUMN_NAME + COMMA
+				+ MeasurementPortWrapper.COLUMN_DESCRIPTION + COMMA
+				+ MeasurementPortWrapper.COLUMN_KIS_ID + COMMA
+				+ MeasurementPortWrapper.COLUMN_PORT_ID;
 		}
 		return columns; 
 	}
@@ -176,16 +165,16 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		}
 		MeasurementPortType measurementPortType;
 		try {
-			Identifier measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID);
+			Identifier measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementPortWrapper.COLUMN_TYPE_ID);
 			measurementPortType = (measurementPortTypeId != null) ? (MeasurementPortType)ConfigurationStorableObjectPool.getStorableObject(measurementPortTypeId, true) : null;
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 
-		String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
+		String name = DatabaseString.fromQuerySubString(resultSet.getString(MeasurementPortWrapper.COLUMN_NAME));
 
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(MeasurementPortWrapper.COLUMN_DESCRIPTION));
 		measurementPort.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),								  
 											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
@@ -193,8 +182,8 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 											measurementPortType,
 											(name != null) ? name : "",
 											(description != null) ? description : "",
-											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_KIS_ID),
-											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PORT_ID));
+											DatabaseIdentifier.getIdentifier(resultSet, MeasurementPortWrapper.COLUMN_KIS_ID),
+											DatabaseIdentifier.getIdentifier(resultSet, MeasurementPortWrapper.COLUMN_PORT_ID));
 		return measurementPort;
 	}
 
@@ -276,7 +265,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 		List list = null;
 
-		String condition = COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET
+		String condition = MeasurementPortWrapper.COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET
 			+ SQL_SELECT + COLUMN_ID
 			+ SQL_FROM + ObjectEntities.KIS_ENTITY
 			+ SQL_WHERE + DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeDatabase.java,v 1.16 2005/01/20 15:31:09 arseniy Exp $
+ * $Id: TransmissionPathTypeDatabase.java,v 1.17 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,16 +33,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/01/20 15:31:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/01/26 15:09:22 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
 public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
-	public static final String COLUMN_CODENAME = "codename";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_NAME = "name";
-
 	private static String columns;
 	private static String updateMultiplySQLValues;
 
@@ -66,9 +62,9 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns  = super.getColumns(mode) + COMMA
-				+ COLUMN_CODENAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_NAME;                
+				+ TransmissionPathTypeWrapper.COLUMN_CODENAME + COMMA
+				+ TransmissionPathTypeWrapper.COLUMN_DESCRIPTION + COMMA
+				+ TransmissionPathTypeWrapper.COLUMN_NAME;                
 		}
 		return columns;
 	}
@@ -121,9 +117,9 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
 																DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 																DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 																DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-																DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-																DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-																DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)));
+																DatabaseString.fromQuerySubString(resultSet.getString(TransmissionPathTypeWrapper.COLUMN_CODENAME)),
+																DatabaseString.fromQuerySubString(resultSet.getString(TransmissionPathTypeWrapper.COLUMN_DESCRIPTION)),
+																DatabaseString.fromQuerySubString(resultSet.getString(TransmissionPathTypeWrapper.COLUMN_NAME)));
 
 		return transmissionPathType;
 	}

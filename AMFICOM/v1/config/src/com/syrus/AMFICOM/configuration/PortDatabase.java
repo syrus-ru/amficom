@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.37 2005/01/20 15:31:09 arseniy Exp $
+ * $Id: PortDatabase.java,v 1.38 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,21 +39,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/01/20 15:31:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.38 $, $Date: 2005/01/26 15:09:22 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class PortDatabase extends StorableObjectDatabase {
 	// table :: Port
-
-	// type_id VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_TYPE_ID       = "type_id";
-	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION   = "description";
-	// equipment_id VARCHAR2(32),
-	public static final String COLUMN_EQUIPMENT_ID  = "equipment_id";
-	// sort NUMBER(2) NOT NULL,
-	public static final String COLUMN_SORT  = "sort";
 
 	private static String columns;
 	private static String updateMultiplySQLValues;
@@ -71,10 +62,10 @@ public class PortDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {		
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_TYPE_ID + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_EQUIPMENT_ID + COMMA
-				+ COLUMN_SORT;		
+				+ PortWrapper.COLUMN_TYPE_ID + COMMA
+				+ PortWrapper.COLUMN_DESCRIPTION + COMMA
+				+ PortWrapper.COLUMN_EQUIPMENT_ID + COMMA
+				+ PortWrapper.COLUMN_SORT;		
 		}
 		return columns;
 	}
@@ -122,22 +113,22 @@ public class PortDatabase extends StorableObjectDatabase {
 				this.fromStorableObject(storableObject);
 		PortType portType;
 		try {			
-			Identifier portTypeId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID);
+			Identifier portTypeId = DatabaseIdentifier.getIdentifier(resultSet, PortWrapper.COLUMN_TYPE_ID);
 			portType = (portTypeId != null) ? (PortType)ConfigurationStorableObjectPool.getStorableObject(portTypeId, true) : null;
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(PortWrapper.COLUMN_DESCRIPTION));
 		port.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 							DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),								  
 							DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 							DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),						  
 							portType,								  
 							(description != null) ? description : "",
-							DatabaseIdentifier.getIdentifier(resultSet, COLUMN_EQUIPMENT_ID),
-							resultSet.getInt(COLUMN_SORT));
+							DatabaseIdentifier.getIdentifier(resultSet, PortWrapper.COLUMN_EQUIPMENT_ID),
+							resultSet.getInt(PortWrapper.COLUMN_SORT));
 		return port;
 	}
 
@@ -256,7 +247,7 @@ public class PortDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 		List list = null;
 
-		String condition = COLUMN_EQUIPMENT_ID + SQL_IN
+		String condition = PortWrapper.COLUMN_EQUIPMENT_ID + SQL_IN
 			+ OPEN_BRACKET
 				+ SQL_SELECT + COLUMN_ID
 				+ SQL_FROM + ObjectEntities.EQUIPMENT_ENTITY

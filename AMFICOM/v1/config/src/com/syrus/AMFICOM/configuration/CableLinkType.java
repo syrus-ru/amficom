@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.12 2005/01/26 13:25:34 bob Exp $
+ * $Id: CableLinkType.java,v 1.13 2005/01/26 15:09:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,26 +32,13 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/01/26 13:25:34 $
+ * @version $Revision: 1.13 $, $Date: 2005/01/26 15:09:21 $
  * @author $Author: bob $
  * @module config_v1
  */
 public class CableLinkType extends AbstractLinkType implements Characterized {
 
 	private static final long   serialVersionUID    = 3257007652839372857L;
-
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_SORT = "sort";
-	public static final String COLUMN_MANUFACTURER = "manufacturer";
-	public static final String COLUMN_MANUFACTURER_CODE = "manufacturer_code";
-	public static final String COLUMN_IMAGE_ID = "image_id";
-
-	private static final String LINK_COLUMN_CABLE_LINK_TYPE_ID = "cable_link_type_id";
-	private static final String LINK_COLUMN_CABLE_THREAD_TYPE_ID = "cable_thread_type_id";
-	private static final String CABLE_LINK_TYPE_LINK = "Cablethreadtypelink";
-
-	private static final int SIZE_MANUFACTURER_COLUMN = 64; 
-	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
 
 	private String name;
 	private int sort;

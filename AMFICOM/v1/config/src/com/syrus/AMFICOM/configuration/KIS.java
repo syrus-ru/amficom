@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.54 2005/01/26 13:25:34 bob Exp $
+ * $Id: KIS.java,v 1.55 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/01/26 13:25:34 $
+ * @version $Revision: 1.55 $, $Date: 2005/01/26 15:09:22 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -44,16 +44,6 @@ public class KIS extends DomainMember implements Characterized {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3257281422661466166L;
-
-	public static final String COLUMN_EQUIPMENT_ID = "equipment_id";
-	public static final String COLUMN_MCM_ID = "mcm_id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_HOSTNAME = "hostname";
-	public static final String COLUMN_TCP_PORT = "tcp_port";
-	public static final String COLUMN_MEASUREMENT_PORT_IDS = "measurementPortIds";
-
-	protected static final int RETRIEVE_MONITORED_ELEMENTS = 1;
 
 	private Identifier equipmentId;
 	private Identifier mcmId;
@@ -246,7 +236,7 @@ public class KIS extends DomainMember implements Characterized {
 
 	public List retrieveMonitoredElements() throws RetrieveObjectException, ObjectNotFoundException {
 		try {
-			return (List)this.kisDatabase.retrieveObject(this, RETRIEVE_MONITORED_ELEMENTS, null);
+			return (List)this.kisDatabase.retrieveObject(this, KISDatabase.RETRIEVE_MONITORED_ELEMENTS, null);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);

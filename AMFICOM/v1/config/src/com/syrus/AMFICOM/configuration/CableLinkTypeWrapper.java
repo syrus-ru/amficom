@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeWrapper.java,v 1.1 2005/01/26 13:18:49 bob Exp $
+ * $Id: CableLinkTypeWrapper.java,v 1.2 2005/01/26 15:09:21 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,17 +24,26 @@ import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/26 13:18:49 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:21 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 public final class CableLinkTypeWrapper implements Wrapper {
 
+	// codename VARCHAR2(32) NOT NULL,
+	public static final String			COLUMN_CODENAME				= "codename";
+	// description VARCHAR2(256),
+	public static final String			COLUMN_DESCRIPTION			= "description";
 	public static final String			COLUMN_NAME					= "name";
+	// sort NUMBER(2,0),
 	public static final String			COLUMN_SORT					= "sort";
+	// manufacturer VARCHAR2(64),
 	public static final String			COLUMN_MANUFACTURER			= "manufacturer";
+	// manufacturer_code VARCHAR2(64),
 	public static final String			COLUMN_MANUFACTURER_CODE	= "manufacturer_code";
+	// image_id VARCHAR2(32),
 	public static final String			COLUMN_IMAGE_ID				= "image_id";
+
 	public static final String			COLUMN_CHARACTERISTICS		= "characteristics";
 	public static final String			COLUMN_CABLE_THREAD_TYPES	= "cable_thread_type_id";
 
@@ -95,9 +104,9 @@ public final class CableLinkTypeWrapper implements Wrapper {
 				return type.getManufacturerCode();
 			if (key.equals(COLUMN_IMAGE_ID))
 				return type.getImageId().getIdentifierString();
-			if (key.equals(COLUMN_CABLE_THREAD_TYPES)) 				
+			if (key.equals(COLUMN_CABLE_THREAD_TYPES))
 				return type.getCableThreadTypes();
-			if (key.equals(COLUMN_CHARACTERISTICS)) 				
+			if (key.equals(COLUMN_CHARACTERISTICS))
 				return type.getCharacteristics();
 		}
 		return null;

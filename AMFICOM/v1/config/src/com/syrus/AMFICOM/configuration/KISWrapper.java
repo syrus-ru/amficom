@@ -1,5 +1,5 @@
 /*
- * $Id: KISWrapper.java,v 1.1 2005/01/26 13:18:49 bob Exp $
+ * $Id: KISWrapper.java,v 1.2 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,34 +18,42 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/26 13:18:49 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:22 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 public final class KISWrapper implements Wrapper {
 
-	public static final String	COLUMN_NAME					= "name";
-	public static final String	COLUMN_EQUIPMENT_ID			= "equipment_id";
-	public static final String	COLUMN_MCM_ID				= "mcm_id";
-	public static final String	COLUMN_HOSTNAME				= "hostname";
-	public static final String	COLUMN_TCP_PORT				= "tcp_port";
+	// table :: kis
+	// description VARCHAR2(256),
+	public static final String COLUMN_DESCRIPTION   = "description";
+	// name VARCHAR2(64) NOT NULL,
+	public static final String COLUMN_NAME  		= "name";
+	// hostname VARCHAR2(64),
+	public static final String COLUMN_HOSTNAME  	= "hostname";
+	// tcp_port NUMBER(5,0),
+	public static final String COLUMN_TCP_PORT  		= "tcp_port";
+	// equipment_id Identifier NOT NULL
+	public static final String COLUMN_EQUIPMENT_ID 	= "equipment_id";
+	// mcm_id Identifier NOT NULL
+	public static final String COLUMN_MCM_ID 		= "mcm_id";
+	
 	public static final String	COLUMN_MEASUREMENT_PORT_IDS	= "measurementPortIds";
 	public static final String	COLUMN_CHARACTERISTICS		= "characteristics";
 
 	private static KISWrapper	instance;
 
 	private List				keys;
-
+	
 	private KISWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
 				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, StorableObjectType.COLUMN_DESCRIPTION, COLUMN_NAME,
+				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_DESCRIPTION, COLUMN_NAME,
 				COLUMN_EQUIPMENT_ID, COLUMN_MCM_ID, COLUMN_HOSTNAME, COLUMN_TCP_PORT, COLUMN_MEASUREMENT_PORT_IDS,
 				COLUMN_CHARACTERISTICS};
 
@@ -80,7 +88,7 @@ public final class KISWrapper implements Wrapper {
 				return kis.getModified().toString();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
 				return kis.getModifierId().getIdentifierString();
-			if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			if (key.equals(COLUMN_DESCRIPTION))
 				return kis.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return kis.getName();
@@ -109,7 +117,7 @@ public final class KISWrapper implements Wrapper {
 			KIS kis = (KIS) object;
 			if (key.equals(COLUMN_NAME))
 				kis.setName((String) value);
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			else if (key.equals(COLUMN_DESCRIPTION))
 				kis.setDescription((String) value);
 			else if (key.equals(COLUMN_EQUIPMENT_ID))
 				kis.setEquipmentId(new Identifier((String) value));

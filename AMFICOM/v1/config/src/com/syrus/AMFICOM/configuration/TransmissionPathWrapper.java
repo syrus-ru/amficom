@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathWrapper.java,v 1.1 2005/01/26 13:18:49 bob Exp $
+ * $Id: TransmissionPathWrapper.java,v 1.2 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,33 +18,42 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/26 13:18:49 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:22 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 public final class TransmissionPathWrapper implements Wrapper {
 
-	public static final String				COLUMN_NAME				= "name";
-	public static final String				COLUMN_TYPE_ID			= "type_id";
-	public static final String				COLUMN_START_PORT_ID	= "start_port_id";
-	public static final String				COLUMN_FINISH_PORT_ID	= "finish_port_id";
-	public static final String				COLUMN_CHARACTERISTICS	= "characteristics";
-
 	private static TransmissionPathWrapper	instance;
 
 	private List							keys;
+
+	// table :: TransmissionPath
+	// description VARCHAR2(256),
+	public static final String				COLUMN_DESCRIPTION		= "description";
+
+	// name VARCHAR2(64) NOT NULL,
+	public static final String				COLUMN_NAME				= "name";
+
+	// start_port_id VARCHAR2(32),
+	public static final String				COLUMN_START_PORT_ID	= "start_port_id";
+
+	// finish_port_id VARCHAR2(32),
+	public static final String				COLUMN_FINISH_PORT_ID	= "finish_port_id";
+
+	public static final String				COLUMN_TYPE_ID			= "type_id";
+
+	public static final String				COLUMN_CHARACTERISTICS	= "characteristics";
 
 	private TransmissionPathWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
 				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, StorableObjectType.COLUMN_DESCRIPTION, COLUMN_NAME,
-				COLUMN_CHARACTERISTICS};
+				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -77,7 +86,7 @@ public final class TransmissionPathWrapper implements Wrapper {
 				return path.getModified().toString();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
 				return path.getModifierId().getIdentifierString();
-			if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			if (key.equals(COLUMN_DESCRIPTION))
 				return path.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return path.getName();
@@ -102,7 +111,7 @@ public final class TransmissionPathWrapper implements Wrapper {
 			TransmissionPath path = (TransmissionPath) object;
 			if (key.equals(COLUMN_NAME))
 				path.setName((String) value);
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			else if (key.equals(COLUMN_DESCRIPTION))
 				path.setDescription((String) value);
 			else if (key.equals(COLUMN_TYPE_ID)) {
 				try {

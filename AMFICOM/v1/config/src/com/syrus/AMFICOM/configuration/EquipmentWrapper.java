@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.1 2005/01/26 13:18:49 bob Exp $
+ * $Id: EquipmentWrapper.java,v 1.2 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,29 +18,44 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/26 13:18:49 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:22 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 public final class EquipmentWrapper implements Wrapper {
 
+	// table :: Equipment
+	// description VARCHAR2(256),
+	public static final String		COLUMN_DESCRIPTION		= "description";
+	// image_id Identifier,
+	public static final String		COLUMN_IMAGE_ID			= "image_id";
+	// name VARCHAR2(64) NOT NULL,
 	public static final String		COLUMN_NAME				= "name";
+	// type_id Identifier NOT NULL,
 	public static final String		COLUMN_TYPE_ID			= "type_id";
-	public static final String		COLUMN_IMAGE_ID			= "imageId";
-	public static final String		COLUMN_LONGITUDE		= "longitude";
-	public static final String		COLUMN_LATITUDE			= "latitude";
+	// supplier VARCHAR2(128)
 	public static final String		COLUMN_SUPPLIER			= "supplier";
-	public static final String		COLUMN_SUPPLIER_CODE	= "supplierCode";
-	public static final String		COLUMN_HW_SERIAL		= "hwSerial";
-	public static final String		COLUMN_HW_VERSION		= "hwVersion";
-	public static final String		COLUMN_SW_SERIAL		= "swSerial";
-	public static final String		COLUMN_SW_VERSION		= "swVersion";
-	public static final String		COLUMN_INVENTORY_NUMBER	= "inventoryNumber";
+	// supplier_code VARCHAR2(128)
+	public static final String		COLUMN_SUPPLIER_CODE	= "supplier_code";
+	// latitude NUMBER
+	public static final String		COLUMN_LATITUDE			= "latitude";
+	// longitude NUMBER
+	public static final String		COLUMN_LONGITUDE		= "longitude";
+	// hwSerial VARCHAR2(64)
+	public static final String		COLUMN_HW_SERIAL		= "hw_serial";
+	// hwVersion VARCHAR2(64)
+	public static final String		COLUMN_HW_VERSION		= "hw_version";
+	// swSerial VARCHAR2(64)
+	public static final String		COLUMN_SW_SERIAL		= "sw_serial";
+	// swVersion VARCHAR2(64)
+	public static final String		COLUMN_SW_VERSION		= "sw_version";
+	// inventory_number VARCHAR2(64)
+	public static final String		COLUMN_INVENTORY_NUMBER	= "inventory_number";
+
 	public static final String		COLUMN_PORT_IDS			= "portIds";
 	public static final String		COLUMN_CHARACTERISTICS	= "characteristics";
 
@@ -52,10 +67,10 @@ public final class EquipmentWrapper implements Wrapper {
 		// empty private constructor
 		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
 				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, StorableObjectType.COLUMN_DESCRIPTION, COLUMN_NAME,
-				COLUMN_TYPE_ID, COLUMN_IMAGE_ID, COLUMN_LONGITUDE, COLUMN_LATITUDE, COLUMN_SUPPLIER,
-				COLUMN_SUPPLIER_CODE, COLUMN_HW_SERIAL, COLUMN_HW_VERSION, COLUMN_SW_SERIAL, COLUMN_SW_VERSION,
-				COLUMN_INVENTORY_NUMBER, COLUMN_PORT_IDS, COLUMN_CHARACTERISTICS};
+				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID,
+				COLUMN_IMAGE_ID, COLUMN_LONGITUDE, COLUMN_LATITUDE, COLUMN_SUPPLIER, COLUMN_SUPPLIER_CODE,
+				COLUMN_HW_SERIAL, COLUMN_HW_VERSION, COLUMN_SW_SERIAL, COLUMN_SW_VERSION, COLUMN_INVENTORY_NUMBER,
+				COLUMN_PORT_IDS, COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -88,7 +103,7 @@ public final class EquipmentWrapper implements Wrapper {
 				return equipment.getModified().toString();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
 				return equipment.getModifierId().getIdentifierString();
-			if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			if (key.equals(COLUMN_DESCRIPTION))
 				return equipment.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return equipment.getName();
@@ -114,9 +129,9 @@ public final class EquipmentWrapper implements Wrapper {
 				return equipment.getSwVersion();
 			if (key.equals(COLUMN_INVENTORY_NUMBER))
 				return equipment.getInventoryNumber();
-			if (key.equals(COLUMN_PORT_IDS)) 				
+			if (key.equals(COLUMN_PORT_IDS))
 				return equipment.getCharacteristics();
-			if (key.equals(COLUMN_CHARACTERISTICS)) 				
+			if (key.equals(COLUMN_CHARACTERISTICS))
 				return equipment.getCharacteristics();
 		}
 		return null;
@@ -131,7 +146,7 @@ public final class EquipmentWrapper implements Wrapper {
 			Equipment equipment = (Equipment) object;
 			if (key.equals(COLUMN_NAME))
 				equipment.setName((String) value);
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			else if (key.equals(COLUMN_DESCRIPTION))
 				equipment.setDescription((String) value);
 			else if (key.equals(COLUMN_TYPE_ID)) {
 				try {
@@ -162,7 +177,7 @@ public final class EquipmentWrapper implements Wrapper {
 				equipment.setInventoryNumber((String) value);
 			else if (key.equals(COLUMN_PORT_IDS)) {
 				List portIds = new ArrayList(((List) value).size());
-				for (Iterator it = ((List) value).iterator(); it.hasNext();) 
+				for (Iterator it = ((List) value).iterator(); it.hasNext();)
 					portIds.add(new Identifier((String) it.next()));
 				equipment.setPortIds0(portIds);
 			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
@@ -171,7 +186,8 @@ public final class EquipmentWrapper implements Wrapper {
 				for (Iterator it = charIdStr.iterator(); it.hasNext();)
 					characteristicIds.add(new Identifier((String) it.next()));
 				try {
-					equipment.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+					equipment
+							.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 				} catch (ApplicationException e) {
 					Log.errorMessage("EquipmentWrapper.setValue | key '" + key + "' caught " + e.getMessage());
 				}

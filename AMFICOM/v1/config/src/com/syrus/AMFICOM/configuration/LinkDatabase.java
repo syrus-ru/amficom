@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.20 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: LinkDatabase.java,v 1.21 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,34 +36,19 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/01/14 18:07:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/01/26 15:09:22 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
 public class LinkDatabase extends StorableObjectDatabase {
-	// table :: Link
-	public static final String COLUMN_TYPE_ID       = "type_id";
-	// sort NUMBER(2,0),
-	public static final String COLUMN_SORT  = "sort";
-	// name VARCHAR2(64) NOT NULL,
-	public static final String COLUMN_NAME  = "name";
-	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION   = "description";
-	// inventory_no VARCHAR2(64),
 	private static final int SIZE_INVENTORY_NO_COLUMN  = 64;
-	public static final String COLUMN_INVENTORY_NO  = "inventory_no";
-	// supplier VARCHAR2(64),
+
 	private static final int SIZE_SUPPLIER_COLUMN  = 128;
-	public static final String COLUMN_SUPPLIER      = "supplier";
-	// supplier_code VARCHAR2(64),
+
 	private static final int SIZE_SUPPLIER_CODE_COLUMN  = 64;
-	public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
-	// color NUMBER(38),
-	public static final String COLUMN_COLOR = "color";
-	// mark VARCHAR(32),
+
 	private static final int SIZE_MARK_COLUMN  = 32;
-	public static final String COLUMN_MARK  = "mark";
 
 	private static String columns;
 	private static String updateMultiplySQLValues;
@@ -82,15 +67,15 @@ public class LinkDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ COLUMN_TYPE_ID + COMMA
-				+ COLUMN_SORT + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_INVENTORY_NO + COMMA
-				+ COLUMN_SUPPLIER + COMMA
-				+ COLUMN_SUPPLIER_CODE + COMMA
-				+ COLUMN_COLOR + COMMA
-				+ COLUMN_MARK;
+				+ LinkWrapper.COLUMN_TYPE_ID + COMMA
+				+ LinkWrapper.COLUMN_SORT + COMMA
+				+ LinkWrapper.COLUMN_NAME + COMMA
+				+ LinkWrapper.COLUMN_DESCRIPTION + COMMA
+				+ LinkWrapper.COLUMN_INVENTORY_NO + COMMA
+				+ LinkWrapper.COLUMN_SUPPLIER + COMMA
+				+ LinkWrapper.COLUMN_SUPPLIER_CODE + COMMA
+				+ LinkWrapper.COLUMN_COLOR + COMMA
+				+ LinkWrapper.COLUMN_MARK;
 		}
 		return columns;
 	}
@@ -174,14 +159,14 @@ public class LinkDatabase extends StorableObjectDatabase {
 										0,
 										null);			
 		}
-		String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
-		String inventoryNo = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_INVENTORY_NO));
-		String supplier = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SUPPLIER));
-		String supplierCode = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SUPPLIER_CODE));
+		String name = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_NAME));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_DESCRIPTION));
+		String inventoryNo = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_INVENTORY_NO));
+		String supplier = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_SUPPLIER));
+		String supplierCode = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_SUPPLIER_CODE));
 		AbstractLinkType linkType;
 		try {
-			linkType = (AbstractLinkType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
+			linkType = (AbstractLinkType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LinkWrapper.COLUMN_TYPE_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -197,9 +182,9 @@ public class LinkDatabase extends StorableObjectDatabase {
 								(inventoryNo != null) ? inventoryNo : "",
 								(supplier != null) ? supplier : "",
 								(supplierCode != null) ? supplierCode : "",
-								resultSet.getInt(COLUMN_SORT),
-								resultSet.getInt(COLUMN_COLOR),
-								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MARK)));
+								resultSet.getInt(LinkWrapper.COLUMN_SORT),
+								resultSet.getInt(LinkWrapper.COLUMN_COLOR),
+								DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_MARK)));
 
 
 		return link;

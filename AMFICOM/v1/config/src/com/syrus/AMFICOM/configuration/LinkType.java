@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.27 2005/01/26 13:25:34 bob Exp $
+ * $Id: LinkType.java,v 1.28 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/01/26 13:25:34 $
+ * @version $Revision: 1.28 $, $Date: 2005/01/26 15:09:22 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -44,15 +44,6 @@ public class LinkType extends AbstractLinkType implements Characterized {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3257007652839372857L;
-
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_SORT = "sort";
-	public static final String COLUMN_MANUFACTURER = "manufacturer";
-	public static final String COLUMN_MANUFACTURER_CODE = "manufacturer_code";
-	public static final String COLUMN_IMAGE_ID = "image_id";
-
-	private static final int SIZE_MANUFACTURER_COLUMN = 64;
-	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
 
 	private String name;
 	private int sort;

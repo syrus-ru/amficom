@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.37 2005/01/14 18:07:09 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.38 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,23 +45,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/01/14 18:07:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.38 $, $Date: 2005/01/26 15:09:22 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
 public class TransmissionPathDatabase extends StorableObjectDatabase {
-	// table :: TransmissionPath
-	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION   = "description";
-	// name VARCHAR2(64) NOT NULL,
-	public static final String COLUMN_NAME  = "name";
-	// start_port_id VARCHAR2(32),
-	public static final String COLUMN_START_PORT_ID = "start_port_id";
-	// finish_port_id VARCHAR2(32),
-	public static final String COLUMN_FINISH_PORT_ID        = "finish_port_id";
-
-	public static final String COLUMN_TYPE_ID       = "type_id";
 	// table :: TransmissionPathMELink
 	// monitored_element_id Identifier,
 	public static final String LINK_COLUMN_MONITORED_ELEMENT_ID  = "monitored_element_id";
@@ -72,6 +61,9 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 
 	private static String columns;
 	private static String updateMultiplySQLValues;
+	
+	protected static final int		UPDATE_ATTACH_ME	= 1;
+	protected static final int		UPDATE_DETACH_ME	= 2;
 
 	private TransmissionPath fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TransmissionPath)
@@ -87,11 +79,11 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ COLUMN_TYPE_ID + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_START_PORT_ID + COMMA
-				+ COLUMN_FINISH_PORT_ID;		
+				+ TransmissionPathWrapper.COLUMN_TYPE_ID + COMMA
+				+ TransmissionPathWrapper.COLUMN_NAME + COMMA
+				+ TransmissionPathWrapper.COLUMN_DESCRIPTION + COMMA
+				+ TransmissionPathWrapper.COLUMN_START_PORT_ID + COMMA
+				+ TransmissionPathWrapper.COLUMN_FINISH_PORT_ID;		
 		}
 		return columns;
 	}
@@ -162,12 +154,12 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 								null,
 								null) :
 				this.fromStorableObject(storableObject);
-		String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
+		String name = DatabaseString.fromQuerySubString(resultSet.getString(TransmissionPathWrapper.COLUMN_NAME));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(TransmissionPathWrapper.COLUMN_DESCRIPTION));
 
 		TransmissionPathType type;
 		try {
-			type = (TransmissionPathType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
+			type = (TransmissionPathType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, TransmissionPathWrapper.COLUMN_TYPE_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -180,8 +172,8 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 												(name != null) ? name : "",
 												(description != null) ? description : "",
 												type,
-												DatabaseIdentifier.getIdentifier(resultSet, COLUMN_START_PORT_ID),
-												DatabaseIdentifier.getIdentifier(resultSet, COLUMN_FINISH_PORT_ID));
+												DatabaseIdentifier.getIdentifier(resultSet, TransmissionPathWrapper.COLUMN_START_PORT_ID),
+												DatabaseIdentifier.getIdentifier(resultSet, TransmissionPathWrapper.COLUMN_FINISH_PORT_ID));
 		return transmissionPath;
 	}
 

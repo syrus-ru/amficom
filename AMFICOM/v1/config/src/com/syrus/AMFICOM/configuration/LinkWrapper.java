@@ -1,5 +1,5 @@
 /*
- * $Id: LinkWrapper.java,v 1.1 2005/01/26 13:18:49 bob Exp $
+ * $Id: LinkWrapper.java,v 1.2 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,35 +19,55 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/26 13:18:49 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:22 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 public final class LinkWrapper implements Wrapper {
+	// table :: Link
+	public static final String COLUMN_TYPE_ID       = "type_id";
 
-	public static final String	COLUMN_NAME				= "name";
-	public static final String	COLUMN_TYPE_ID			= "type_id";
-	public static final String	COLUMN_SORT				= "sort";
-	public static final String	COLUMN_SUPPLIER			= "supplier";
-	public static final String	COLUMN_SUPPLIER_CODE	= "supplier_code";
-	public static final String	COLUMN_COLOR			= "color";
-	public static final String	COLUMN_MARK				= "mark";
+	// sort NUMBER(2,0),
+	public static final String COLUMN_SORT  = "sort";
+
+	// name VARCHAR2(64) NOT NULL,
+	public static final String COLUMN_NAME  = "name";
+
+	// description VARCHAR2(256),
+	public static final String COLUMN_DESCRIPTION   = "description";
+
+	// inventory_no VARCHAR2(64),
+	public static final String COLUMN_INVENTORY_NO  = "inventory_no";
+
+	// supplier VARCHAR2(64),
+	public static final String COLUMN_SUPPLIER      = "supplier";
+
+	// supplier_code VARCHAR2(64),
+	public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
+
+	// color NUMBER(38),
+	public static final String COLUMN_COLOR = "color";
+
+	// mark VARCHAR(32),
+	public static final String COLUMN_MARK  = "mark";
+	
+	
 	public static final String	COLUMN_CHARACTERISTICS	= "characteristics";
 
 	private static LinkWrapper	instance;
 
 	private List				keys;
 
+
 	private LinkWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
 				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, StorableObjectType.COLUMN_DESCRIPTION, COLUMN_NAME,
+				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_DESCRIPTION, COLUMN_NAME,
 				COLUMN_TYPE_ID, COLUMN_SORT, COLUMN_SUPPLIER, COLUMN_SUPPLIER_CODE, COLUMN_COLOR,
 				COLUMN_CHARACTERISTICS};
 
@@ -82,7 +102,7 @@ public final class LinkWrapper implements Wrapper {
 				return link.getModified().toString();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
 				return link.getModifierId().getIdentifierString();
-			if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			if (key.equals(COLUMN_DESCRIPTION))
 				return link.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return link.getName();
@@ -113,7 +133,7 @@ public final class LinkWrapper implements Wrapper {
 			Link link = (Link) object;
 			if (key.equals(COLUMN_NAME))
 				link.setName((String) value);
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			else if (key.equals(COLUMN_DESCRIPTION))
 				link.setDescription((String) value);
 			else if (key.equals(COLUMN_TYPE_ID)) {
 				try {

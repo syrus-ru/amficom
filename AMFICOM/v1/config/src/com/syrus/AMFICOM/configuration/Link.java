@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.30 2005/01/26 13:25:34 bob Exp $
+ * $Id: Link.java,v 1.31 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,28 +35,16 @@ import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/01/26 13:25:34 $
+ * @version $Revision: 1.31 $, $Date: 2005/01/26 15:09:22 $
  * @author $Author: bob $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterized, TypedObject {
-	private static final long serialVersionUID = -4235048398372768515L;
 
-	public static final String COLUMN_TYPE_ID = "type_id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_INVENTORY_NO = "inventory_no";
-	public static final String COLUMN_SUPPLIER = "supplier";
-	public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
-	public static final String COLUMN_SORT = "sort";
-	public static final String COLUMN_MARK  = "mark";
-	public static final String COLUMN_COLOR = "color";
-
-	private static final int SIZE_INVENTORY_NO_COLUMN = 64;
-	private static final int SIZE_SUPPLIER_COLUMN = 128;
-	private static final int SIZE_SUPPLIER_CODE_COLUMN = 64;
-	private static final int SIZE_MARK_COLUMN = 32;
-
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3257283626012783672L;
 	private AbstractLinkType type;
 	private String name;
 	private String description;

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.9 2005/01/26 13:25:34 bob Exp $
+ * $Id: CableThread.java,v 1.10 2005/01/26 15:09:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,17 +28,13 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/01/26 13:25:34 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/26 15:09:21 $
  * @author $Author: bob $
  * @module config_v1
  */
 public class CableThread extends DomainMember implements TypedObject {
 
 	private static final long	serialVersionUID	= 3258415027823063600L;
-
-	public static final String COLUMN_TYPE_ID = "type_id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
 
 	private String name;
 	private String description;

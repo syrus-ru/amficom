@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.15 2005/01/20 15:31:09 arseniy Exp $
+ * $Id: LinkTypeDatabase.java,v 1.16 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,27 +32,15 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/01/20 15:31:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/01/26 15:09:22 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
 public class LinkTypeDatabase extends StorableObjectDatabase {
-	// codename VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_CODENAME = "codename";
-	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_NAME = "name";
-	// sort NUMBER(2,0),
-	public static final String COLUMN_SORT = "sort";
-	// manufacturer VARCHAR2(64),
 	private static final int SIZE_MANUFACTURER_COLUMN = 64;
-	public static final String COLUMN_MANUFACTURER = "manufacturer";
-	// manufacturer_code VARCHAR2(64),
+
 	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
-	public static final String COLUMN_MANUFACTURER_CODE = "manufacturer_code";
-	// image_id VARCHAR2(32),
-	public static final String COLUMN_IMAGE_ID = "image_id";
 
 	private static String columns;
 	private static String updateMultiplySQLValues;
@@ -78,13 +66,13 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_CODENAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_SORT + COMMA
-				+ COLUMN_MANUFACTURER + COMMA
-				+ COLUMN_MANUFACTURER_CODE + COMMA
-				+ COLUMN_IMAGE_ID;
+				+ LinkTypeWrapper.COLUMN_CODENAME + COMMA
+				+ LinkTypeWrapper.COLUMN_DESCRIPTION + COMMA
+				+ LinkTypeWrapper.COLUMN_NAME + COMMA
+				+ LinkTypeWrapper.COLUMN_SORT + COMMA
+				+ LinkTypeWrapper.COLUMN_MANUFACTURER + COMMA
+				+ LinkTypeWrapper.COLUMN_MANUFACTURER_CODE + COMMA
+				+ LinkTypeWrapper.COLUMN_IMAGE_ID;
 		}
 		return columns;
 	}
@@ -156,13 +144,13 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),									
 									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-									resultSet.getInt(COLUMN_SORT),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER)),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER_CODE)),									
-									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_IMAGE_ID));
+									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_CODENAME)),
+									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_DESCRIPTION)),
+									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_NAME)),
+									resultSet.getInt(LinkTypeWrapper.COLUMN_SORT),
+									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_MANUFACTURER)),
+									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_MANUFACTURER_CODE)),									
+									DatabaseIdentifier.getIdentifier(resultSet, LinkTypeWrapper.COLUMN_IMAGE_ID));
 
 		return linkType;
 	}

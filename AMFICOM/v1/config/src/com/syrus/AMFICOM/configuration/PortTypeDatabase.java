@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.29 2005/01/20 15:31:09 arseniy Exp $
+ * $Id: PortTypeDatabase.java,v 1.30 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,17 +34,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/01/20 15:31:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/01/26 15:09:22 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
 public class PortTypeDatabase extends StorableObjectDatabase {
-	public static final String COLUMN_CODENAME = "codename";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_SORT = "sort";
-
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private static String columns;
@@ -63,10 +58,10 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {		
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_CODENAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_NAME + COMMA
-                + COLUMN_SORT;
+				+ PortTypeWrapper.COLUMN_CODENAME + COMMA
+				+ PortTypeWrapper.COLUMN_DESCRIPTION + COMMA
+				+ PortTypeWrapper.COLUMN_NAME + COMMA
+                + PortTypeWrapper.COLUMN_SORT;
 		}
 		return columns;
 	}	
@@ -113,10 +108,10 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 								DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-								resultSet.getInt(COLUMN_SORT));
+								DatabaseString.fromQuerySubString(resultSet.getString(PortTypeWrapper.COLUMN_CODENAME)),
+								DatabaseString.fromQuerySubString(resultSet.getString(PortTypeWrapper.COLUMN_DESCRIPTION)),
+								DatabaseString.fromQuerySubString(resultSet.getString(PortTypeWrapper.COLUMN_NAME)),
+								resultSet.getInt(PortTypeWrapper.COLUMN_SORT));
 		return portType;
 	}	
 

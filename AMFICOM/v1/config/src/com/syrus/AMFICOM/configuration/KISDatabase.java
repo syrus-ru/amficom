@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.51 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.52 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,27 +45,15 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/01/14 18:07:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/01/26 15:09:22 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
 public class KISDatabase extends StorableObjectDatabase {
-	// table :: kis
-	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION   = "description";
-	// name VARCHAR2(64) NOT NULL,
-	public static final String COLUMN_NAME  		= "name";
-	// hostname VARCHAR2(64),
-	public static final String COLUMN_HOSTNAME  	= "hostname";
-	// tcp_port NUMBER(5,0),
-	public static final String COLUMN_TCP_PORT  		= "tcp_port";
-	// equipment_id Identifier NOT NULL
-	public static final String COLUMN_EQUIPMENT_ID 	= "equipment_id";
-	// mcm_id Identifier NOT NULL
-	public static final String COLUMN_MCM_ID 		= "mcm_id";
-
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
+
+	protected static final int RETRIEVE_MONITORED_ELEMENTS = 1;
 
 	private static final int SIZE_HOSTNAME_COLUMN = 256;
 	private static String columns;
@@ -85,12 +73,12 @@ public class KISDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_HOSTNAME + COMMA
-				+ COLUMN_TCP_PORT + COMMA
-				+ COLUMN_EQUIPMENT_ID + COMMA
-				+ COLUMN_MCM_ID;
+				+ KISWrapper.COLUMN_NAME + COMMA
+				+ KISWrapper.COLUMN_DESCRIPTION + COMMA
+				+ KISWrapper.COLUMN_HOSTNAME + COMMA
+				+ KISWrapper.COLUMN_TCP_PORT + COMMA
+				+ KISWrapper.COLUMN_EQUIPMENT_ID + COMMA
+				+ KISWrapper.COLUMN_MCM_ID;
 		}
 		return columns;
 	}
@@ -173,12 +161,12 @@ public class KISDatabase extends StorableObjectDatabase {
 											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 											DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
-											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-											resultSet.getString(COLUMN_HOSTNAME),
-											resultSet.getShort(COLUMN_TCP_PORT),
-											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_EQUIPMENT_ID),
-											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MCM_ID));
+											DatabaseString.fromQuerySubString(resultSet.getString(KISWrapper.COLUMN_NAME)),
+											DatabaseString.fromQuerySubString(resultSet.getString(KISWrapper.COLUMN_DESCRIPTION)),
+											resultSet.getString(KISWrapper.COLUMN_HOSTNAME),
+											resultSet.getShort(KISWrapper.COLUMN_TCP_PORT),
+											DatabaseIdentifier.getIdentifier(resultSet, KISWrapper.COLUMN_EQUIPMENT_ID),
+											DatabaseIdentifier.getIdentifier(resultSet, KISWrapper.COLUMN_MCM_ID));
 		
 		return kis;
 	}
@@ -190,7 +178,7 @@ public class KISDatabase extends StorableObjectDatabase {
 		String sql = SQL_SELECT
 			+ COLUMN_ID
 			+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
-			+ SQL_WHERE + MeasurementPortDatabase.COLUMN_KIS_ID + EQUALS + kisIdStr;
+			+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID + EQUALS + kisIdStr;
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -229,7 +217,7 @@ public class KISDatabase extends StorableObjectDatabase {
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		KIS kis = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
-			case KIS.RETRIEVE_MONITORED_ELEMENTS:
+			case RETRIEVE_MONITORED_ELEMENTS:
 				return this.retrieveMonitoredElements(kis);
 			default:
 				return null;
@@ -242,9 +230,9 @@ public class KISDatabase extends StorableObjectDatabase {
 
     StringBuffer sql = new StringBuffer(SQL_SELECT
 			+ COLUMN_ID + COMMA
-			+ MeasurementPortDatabase.COLUMN_KIS_ID
+			+ MeasurementPortWrapper.COLUMN_KIS_ID
 			+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
-			+ SQL_WHERE + MeasurementPortDatabase.COLUMN_KIS_ID
+			+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID
 			+ SQL_IN + OPEN_BRACKET);
     int i = 1;
 		for (Iterator it = kiss.iterator(); it.hasNext();i++) {
@@ -256,7 +244,7 @@ public class KISDatabase extends StorableObjectDatabase {
 				else {
 					sql.append(CLOSE_BRACKET);
 					sql.append(SQL_OR);
-					sql.append(MeasurementPortDatabase.COLUMN_KIS_ID);
+					sql.append(MeasurementPortWrapper.COLUMN_KIS_ID);
 					sql.append(SQL_IN);
 					sql.append(OPEN_BRACKET);
 				}                   
@@ -274,7 +262,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			Map mpIdMap = new HashMap();
 			while (resultSet.next()) {
 				KIS kis = null;
-				Identifier kisId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementPortDatabase.COLUMN_KIS_ID);
+				Identifier kisId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementPortWrapper.COLUMN_KIS_ID);
 				for (Iterator it = kiss.iterator(); it.hasNext();) {
 					KIS kisToCompare = (KIS) it.next();
 					if (kisToCompare.getId().equals(kisId)) {
@@ -332,11 +320,11 @@ public class KISDatabase extends StorableObjectDatabase {
 		String sql = SQL_SELECT
 			+ COLUMN_ID
 			+ SQL_FROM + ObjectEntities.ME_ENTITY
-			+ SQL_WHERE + MonitoredElementDatabase.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
+			+ SQL_WHERE + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
 				+ SQL_SELECT
 				+ COLUMN_ID
 				+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
-				+ SQL_WHERE + MeasurementPortDatabase.COLUMN_KIS_ID + EQUALS + kisIdStr
+				+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID + EQUALS + kisIdStr
 			+ CLOSE_BRACKET;
 
 		Statement statement = null;
@@ -383,9 +371,9 @@ public class KISDatabase extends StorableObjectDatabase {
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT
 			+ COLUMN_ID + COMMA
-			+ MeasurementPortDatabase.COLUMN_KIS_ID
+			+ MeasurementPortWrapper.COLUMN_KIS_ID
 			+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
-			+ SQL_WHERE + MeasurementPortDatabase.COLUMN_KIS_ID
+			+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID
 			+ SQL_IN + OPEN_BRACKET);
 		int i = 1;
 		for (Iterator it = kiss.iterator(); it.hasNext();i++) {
@@ -397,7 +385,7 @@ public class KISDatabase extends StorableObjectDatabase {
 				else {
 					sql.append(CLOSE_BRACKET);
 					sql.append(SQL_OR);
-					sql.append(MeasurementPortDatabase.COLUMN_KIS_ID);
+					sql.append(MeasurementPortWrapper.COLUMN_KIS_ID);
 					sql.append(SQL_IN);
 					sql.append(OPEN_BRACKET);
 				}
@@ -415,7 +403,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			Map mpIdMap = new HashMap();
 			while (resultSet.next()) {
 				KIS kis = null;
-				Identifier kisId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementPortDatabase.COLUMN_KIS_ID);
+				Identifier kisId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementPortWrapper.COLUMN_KIS_ID);
 				for (Iterator it = kiss.iterator(); it.hasNext();) {
 					KIS kisToCompare = (KIS) it.next();
 					if (kisToCompare.getId().equals(kisId)) {

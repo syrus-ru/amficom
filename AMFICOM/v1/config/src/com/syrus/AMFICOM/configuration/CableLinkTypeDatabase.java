@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.6 2005/01/14 18:07:07 arseniy Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.7 2005/01/26 15:09:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,26 +38,14 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/01/14 18:07:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/01/26 15:09:21 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class CableLinkTypeDatabase extends StorableObjectDatabase {
-	// codename VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_CODENAME      = "codename";
-	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION   = "description";
-	public static final String COLUMN_NAME = "name";
-	// sort NUMBER(2,0),
-	public static final String COLUMN_SORT  = "sort";
-	// manufacturer VARCHAR2(64),
 	private static final int SIZE_MANUFACTURER_COLUMN = 64; 
-	public static final String COLUMN_MANUFACTURER  = "manufacturer";
-	// manufacturer_code VARCHAR2(64),
+
 	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
-	public static final String COLUMN_MANUFACTURER_CODE     = "manufacturer_code";
-	// image_id VARCHAR2(32),
-	public static final String COLUMN_IMAGE_ID      = "image_id";
 
 	private static final String LINK_COLUMN_CABLE_LINK_TYPE_ID = "cable_link_type_id";
 	private static final String LINK_COLUMN_CABLE_THREAD_TYPE_ID = "cable_thread_type_id";
@@ -87,13 +75,13 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_CODENAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_SORT + COMMA
-				+ COLUMN_MANUFACTURER + COMMA
-				+ COLUMN_MANUFACTURER_CODE + COMMA
-				+ COLUMN_IMAGE_ID;
+				+ CableLinkTypeWrapper.COLUMN_CODENAME + COMMA
+				+ CableLinkTypeWrapper.COLUMN_DESCRIPTION + COMMA
+				+ CableLinkTypeWrapper.COLUMN_NAME + COMMA
+				+ CableLinkTypeWrapper.COLUMN_SORT + COMMA
+				+ CableLinkTypeWrapper.COLUMN_MANUFACTURER + COMMA
+				+ CableLinkTypeWrapper.COLUMN_MANUFACTURER_CODE + COMMA
+				+ CableLinkTypeWrapper.COLUMN_IMAGE_ID;
 		}
 		return columns;
 	}
@@ -205,13 +193,13 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 																	DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),                                    
 																	DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 																	DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-																	DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-																	DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-																	DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-																	resultSet.getInt(COLUMN_SORT),
-																	DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER)),
-																	DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER_CODE)),                                   
-																	DatabaseIdentifier.getIdentifier(resultSet, COLUMN_IMAGE_ID));
+																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_CODENAME)),
+																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_DESCRIPTION)),
+																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_NAME)),
+																	resultSet.getInt(CableLinkTypeWrapper.COLUMN_SORT),
+																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_MANUFACTURER)),
+																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_MANUFACTURER_CODE)),                                   
+																	DatabaseIdentifier.getIdentifier(resultSet, CableLinkTypeWrapper.COLUMN_IMAGE_ID));
 
 			return cableLinkType;
 	}

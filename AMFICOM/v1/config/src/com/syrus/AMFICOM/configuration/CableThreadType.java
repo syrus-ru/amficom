@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.18 2005/01/26 13:25:34 bob Exp $
+ * $Id: CableThreadType.java,v 1.19 2005/01/26 15:09:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/01/26 13:25:34 $
+ * @version $Revision: 1.19 $, $Date: 2005/01/26 15:09:21 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -38,10 +38,6 @@ public class CableThreadType extends StorableObjectType {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long  serialVersionUID	= 3689355429075628086L;
-
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_COLOR = "color";
-	public static final String COLUMN_LINK_TYPE_ID = "link_type_id";
 
 	private String name;
 	private int color;

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeWrapper.java,v 1.1 2005/01/26 13:18:49 bob Exp $
+ * $Id: MeasurementPortTypeWrapper.java,v 1.2 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,30 +18,36 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/26 13:18:49 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:22 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 public final class MeasurementPortTypeWrapper implements Wrapper {
 
-	public static final String					COLUMN_NAME				= "name";
+
+	public static final String COLUMN_CODENAME				= "codename";
+
+	public static final String COLUMN_DESCRIPTION			= "description";
+
+	public static final String COLUMN_NAME = "name";
+	
 	public static final String					COLUMN_CHARACTERISTICS	= "characteristics";
 
 	private static MeasurementPortTypeWrapper	instance;
 
 	private List								keys;
 
+
 	private MeasurementPortTypeWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
 				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, StorableObjectType.COLUMN_CODENAME,
-				StorableObjectType.COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_CHARACTERISTICS};
+				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_CODENAME,
+				COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -74,9 +80,9 @@ public final class MeasurementPortTypeWrapper implements Wrapper {
 				return type.getModified().toString();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
 				return type.getModifierId().getIdentifierString();
-			if (key.equals(StorableObjectType.COLUMN_CODENAME))
+			if (key.equals(COLUMN_CODENAME))
 				return type.getCodename();
-			if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			if (key.equals(COLUMN_DESCRIPTION))
 				return type.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return type.getName();
@@ -95,9 +101,9 @@ public final class MeasurementPortTypeWrapper implements Wrapper {
 			MeasurementPortType type = (MeasurementPortType) object;
 			if (key.equals(COLUMN_NAME))
 				type.setName((String) value);
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			else if (key.equals(COLUMN_DESCRIPTION))
 				type.setDescription((String) value);
-			else if (key.equals(StorableObjectType.COLUMN_CODENAME))
+			else if (key.equals(COLUMN_CODENAME))
 				type.setCodename((String) value);
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				List charIdStr = (List) value;

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.24 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.25 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,16 +34,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/01/14 18:07:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/01/26 15:09:22 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
 public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
-	public static final String COLUMN_CODENAME				= "codename";
-	public static final String COLUMN_DESCRIPTION			= "description";
-	public static final String COLUMN_NAME = "name";
-
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private static String columns;
@@ -62,9 +58,9 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_CODENAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_NAME;
+				+ MeasurementPortTypeWrapper.COLUMN_CODENAME + COMMA
+				+ MeasurementPortTypeWrapper.COLUMN_DESCRIPTION + COMMA
+				+ MeasurementPortTypeWrapper.COLUMN_NAME;
 		}
 		return columns;
 	}
@@ -127,9 +123,9 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 														DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 														DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 														DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-														DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-														DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-														DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)));
+														DatabaseString.fromQuerySubString(resultSet.getString(MeasurementPortTypeWrapper.COLUMN_CODENAME)),
+														DatabaseString.fromQuerySubString(resultSet.getString(MeasurementPortTypeWrapper.COLUMN_DESCRIPTION)),
+														DatabaseString.fromQuerySubString(resultSet.getString(MeasurementPortTypeWrapper.COLUMN_NAME)));
 		return measurementPortType;
 	}
 

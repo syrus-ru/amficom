@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadWrapper.java,v 1.1 2005/01/26 13:18:49 bob Exp $
+ * $Id: CableThreadWrapper.java,v 1.2 2005/01/26 15:09:21 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,34 +14,37 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.Wrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/26 13:18:49 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:21 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public final class CableThreadWrapper implements Wrapper {
 
-	public static final String			COLUMN_NAME		= "name";
-	public static final String			COLUMN_TYPE_ID	= "type_id";
-
 	private static CableThreadWrapper	instance;
 
 	private List						keys;
+
+	// table :: CableThread
+	public static final String			COLUMN_TYPE_ID		= "type_id";
+
+	// name VARCHAR2(64) NOT NULL,
+	public static final String			COLUMN_NAME			= "name";
+
+	// description VARCHAR2(256),
+	public static final String			COLUMN_DESCRIPTION	= "description";
 
 	private CableThreadWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
 				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, StorableObjectType.COLUMN_DESCRIPTION, COLUMN_NAME,
-				COLUMN_TYPE_ID};
+				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -74,7 +77,7 @@ public final class CableThreadWrapper implements Wrapper {
 				return thread.getModified().toString();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
 				return thread.getModifierId().getIdentifierString();
-			if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			if (key.equals(COLUMN_DESCRIPTION))
 				return thread.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return thread.getName();
@@ -93,7 +96,7 @@ public final class CableThreadWrapper implements Wrapper {
 			CableThread thread = (CableThread) object;
 			if (key.equals(COLUMN_NAME))
 				thread.setName((String) value);
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			else if (key.equals(COLUMN_DESCRIPTION))
 				thread.setDescription((String) value);
 			else if (key.equals(COLUMN_TYPE_ID)) {
 				try {

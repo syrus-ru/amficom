@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.34 2005/01/25 12:13:08 bob Exp $
+ * $Id: PortType.java,v 1.35 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,16 +35,13 @@ import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/01/25 12:13:08 $
+ * @version $Revision: 1.35 $, $Date: 2005/01/26 15:09:22 $
  * @author $Author: bob $
  * @module config_v1
  */
 
 public class PortType extends StorableObjectType implements Characterized {
 	private static final long serialVersionUID = -115251480084275101L;
-
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_SORT = "sort";
 
 	private String name;
 	private List characteristics;

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.57 2005/01/14 18:07:07 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.58 2005/01/26 15:09:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,46 +46,26 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/01/14 18:07:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.58 $, $Date: 2005/01/26 15:09:21 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
 public class EquipmentDatabase extends StorableObjectDatabase {
-	// table :: Equipment
-	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION   = "description";
-	// image_id Identifier,
-	public static final String COLUMN_IMAGE_ID      = "image_id";
-	// name VARCHAR2(64) NOT NULL,
-	public static final String COLUMN_NAME  = "name";
-	// type_id Identifier NOT NULL,
-	public static final String COLUMN_TYPE_ID       = "type_id";
-	// supplier VARCHAR2(128)
 	private static final int SIZE_SUPPLIER_COLUMN   = 128;
-	public static final String COLUMN_SUPPLIER      = "supplier";
-	// supplier_code VARCHAR2(128)
+
 	private static final int SIZE_SUPPLIER_CODE_COLUMN = 128;
-	public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
-	// latitude NUMBER
-	public static final String COLUMN_LATITUDE      = "latitude";
-	// longitude NUMBER
-	public static final String COLUMN_LONGITUDE     = "longitude";
-	// hwSerial VARCHAR2(64)
+
 	private static final int SIZE_HW_SERIAL_COLUMN  = 64;
-	public static final String COLUMN_HW_SERIAL     = "hw_serial";
-	// hwVersion VARCHAR2(64)
+
 	private static final int SIZE_HW_VERSION_COLUMN = 64;
-	public static final String COLUMN_HW_VERSION    = "hw_version";
-	// swSerial VARCHAR2(64)
+
 	private static final int SIZE_SW_SERIAL_COLUMN  = 64;
-	public static final String COLUMN_SW_SERIAL     = "sw_serial";
-	// swVersion VARCHAR2(64)
+
 	private static final int SIZE_SW_VERSION_COLUMN = 64;
-	public static final String COLUMN_SW_VERSION    = "sw_version";
-	// inventory_number VARCHAR2(64)
+
 	private static final int SIZE_INVENTOY_NUMBER_COLUMN = 64;
-	public static final String COLUMN_INVENTORY_NUMBER = "inventory_number"; 
+
 
 	// table :: EquipmentMELink
 	// equipment_id Identifier,
@@ -112,19 +92,19 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ COLUMN_TYPE_ID + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_IMAGE_ID + COMMA
-				+ COLUMN_SUPPLIER + COMMA
-				+ COLUMN_SUPPLIER_CODE + COMMA
-				+ COLUMN_LATITUDE + COMMA
-				+ COLUMN_LONGITUDE + COMMA
-				+ COLUMN_HW_SERIAL + COMMA
-				+ COLUMN_HW_VERSION + COMMA
-				+ COLUMN_SW_SERIAL + COMMA
-				+ COLUMN_SW_VERSION + COMMA
-				+ COLUMN_INVENTORY_NUMBER;
+				+ EquipmentWrapper.COLUMN_TYPE_ID + COMMA
+				+ EquipmentWrapper.COLUMN_NAME + COMMA
+				+ EquipmentWrapper.COLUMN_DESCRIPTION + COMMA
+				+ EquipmentWrapper.COLUMN_IMAGE_ID + COMMA
+				+ EquipmentWrapper.COLUMN_SUPPLIER + COMMA
+				+ EquipmentWrapper.COLUMN_SUPPLIER_CODE + COMMA
+				+ EquipmentWrapper.COLUMN_LATITUDE + COMMA
+				+ EquipmentWrapper.COLUMN_LONGITUDE + COMMA
+				+ EquipmentWrapper.COLUMN_HW_SERIAL + COMMA
+				+ EquipmentWrapper.COLUMN_HW_VERSION + COMMA
+				+ EquipmentWrapper.COLUMN_SW_SERIAL + COMMA
+				+ EquipmentWrapper.COLUMN_SW_VERSION + COMMA
+				+ EquipmentWrapper.COLUMN_INVENTORY_NUMBER;
 		}
 		return columns;
 	}
@@ -221,11 +201,11 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 													null,
 													null);			
 		}
-		String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
+		String name = DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_NAME));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_DESCRIPTION));
 		EquipmentType equipmentType;
 		try {
-			equipmentType = (EquipmentType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
+			equipmentType = (EquipmentType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, EquipmentWrapper.COLUMN_TYPE_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -238,16 +218,16 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 									equipmentType,
 									(name != null) ? name : "",
 									(description != null) ? description : "",
-									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_IMAGE_ID),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SUPPLIER)),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SUPPLIER_CODE)),
-									resultSet.getFloat(COLUMN_LONGITUDE),
-									resultSet.getFloat(COLUMN_LATITUDE),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_HW_VERSION)),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_HW_SERIAL)),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SW_VERSION)),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SW_SERIAL)),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_INVENTORY_NUMBER)));
+									DatabaseIdentifier.getIdentifier(resultSet, EquipmentWrapper.COLUMN_IMAGE_ID),
+									DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_SUPPLIER)),
+									DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_SUPPLIER_CODE)),
+									resultSet.getFloat(EquipmentWrapper.COLUMN_LONGITUDE),
+									resultSet.getFloat(EquipmentWrapper.COLUMN_LATITUDE),
+									DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_HW_VERSION)),
+									DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_HW_SERIAL)),
+									DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_SW_VERSION)),
+									DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_SW_SERIAL)),
+									DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_INVENTORY_NUMBER)));
 
 		return equipment;
 	}
@@ -268,7 +248,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		String sql = SQL_SELECT
 			+ COLUMN_ID
 			+ SQL_FROM + ObjectEntities.PORT_ENTITY
-			+ SQL_WHERE + PortDatabase.COLUMN_EQUIPMENT_ID + EQUALS + eqIdStr;
+			+ SQL_WHERE + PortWrapper.COLUMN_EQUIPMENT_ID + EQUALS + eqIdStr;
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -310,9 +290,9 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT
 															+ COLUMN_ID + COMMA
-															+ PortDatabase.COLUMN_EQUIPMENT_ID
+															+ PortWrapper.COLUMN_EQUIPMENT_ID
 															+ SQL_FROM + ObjectEntities.PORT_ENTITY
-															+ SQL_WHERE + PortDatabase.COLUMN_EQUIPMENT_ID
+															+ SQL_WHERE + PortWrapper.COLUMN_EQUIPMENT_ID
 															+ SQL_IN + OPEN_BRACKET);
 		int i = 1;
 		for (Iterator it = equipments.iterator(); it.hasNext();i++) {
@@ -324,7 +304,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 				else {
 					sql.append(CLOSE_BRACKET);
 					sql.append(SQL_OR);
-					sql.append(PortDatabase.COLUMN_EQUIPMENT_ID);
+					sql.append(PortWrapper.COLUMN_EQUIPMENT_ID);
 					sql.append(SQL_IN);
 					sql.append(OPEN_BRACKET);
 				}                   
@@ -342,7 +322,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			Map epIdMap = new HashMap();
 			while (resultSet.next()) {
 				Equipment equipment = null;
-				Identifier equipmentId = DatabaseIdentifier.getIdentifier(resultSet, PortDatabase.COLUMN_EQUIPMENT_ID);
+				Identifier equipmentId = DatabaseIdentifier.getIdentifier(resultSet, PortWrapper.COLUMN_EQUIPMENT_ID);
 				for (Iterator it = equipments.iterator(); it.hasNext();) {
 					Equipment equipmentToCompare = (Equipment) it.next();
 					if (equipmentToCompare.getId().equals(equipmentId)){

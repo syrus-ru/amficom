@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.42 2005/01/26 13:25:34 bob Exp $
+ * $Id: TransmissionPath.java,v 1.43 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.42 $, $Date: 2005/01/26 13:25:34 $
+ * @version $Revision: 1.43 $, $Date: 2005/01/26 15:09:22 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -40,15 +40,6 @@ import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 public class TransmissionPath extends MonitoredDomainMember implements Characterized, TypedObject {
 
 	private static final long serialVersionUID = 8129503678304843903L;
-
-	protected static final int		UPDATE_ATTACH_ME	= 1;
-	protected static final int		UPDATE_DETACH_ME	= 2;
-
-	public static final String COLUMN_TYPE_ID = "type_id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_START_PORT_ID = "start_port_id";
-	public static final String COLUMN_FINISH_PORT_ID= "finish_port_id";
 
 	private TransmissionPathType type;
 	private String name;

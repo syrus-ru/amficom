@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementWrapper.java,v 1.1 2005/01/26 13:18:49 bob Exp $
+ * $Id: MonitoredElementWrapper.java,v 1.2 2005/01/26 15:09:22 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,16 +19,18 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/26 13:18:49 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:22 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 public final class MonitoredElementWrapper implements Wrapper {
+	public static final String COLUMN_MEASUREMENT_PORT_ID = "measurement_port_id";
+	// sort NUMBER(2) NOT NULL,
+	public static final String COLUMN_NAME = "name";
 
-	public static final String				COLUMN_NAME					= "name";
-	public static final String				COLUMN_MEASUREMENT_PORT_ID	= "measurement_port_id";
-	public static final String				COLUMN_SORT					= "sort";
-	public static final String				COLUMN_LOCAL_ADDRESS		= "local_address";
+	public static final String COLUMN_SORT = "sort";
+
+	public static final String COLUMN_LOCAL_ADDRESS = "local_address";
 
 	private static MonitoredElementWrapper	instance;
 
