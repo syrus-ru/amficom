@@ -1,0 +1,13 @@
+@@sett
+@@setmelink
+@@setparameter
+@@measurementsetup
+@@measurementsetupmelink
+@@temporaltemplate
+@@test
+@@measurementsetuptestlink
+@@measurement
+@@analysis
+@@evaluation
+@@result
+@@resultparameter
