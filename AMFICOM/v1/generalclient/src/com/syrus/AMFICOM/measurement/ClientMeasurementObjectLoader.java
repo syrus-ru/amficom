@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.7 2004/12/23 12:52:33 bass Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.8 2004/12/24 13:02:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -49,8 +50,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/23 12:52:33 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2004/12/24 13:02:44 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 
@@ -563,9 +564,9 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
                 transferables = this.server
                         .transmitMeasurementsButIds(identifierTransferables,
                                                     accessIdentifierTransferable);
-                if (storableObjectCondition != null && ( !(storableObjectCondition instanceof DomainCondition) || !(storableObjectCondition instanceof DomainCondition)) ) {
+                if (storableObjectCondition != null && !(storableObjectCondition instanceof DomainCondition) ) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementsButIds | " +
-                            "Class '" + storableObjectCondition.getClass().getName() + "' is not instanse of DomainCondition or ");
+                            "Class '" + storableObjectCondition.getClass().getName() + "' is not instanse of LinkedIdsCondition ");
                 }
                 
             }
