@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.69 2005/01/20 13:34:04 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.70 2005/01/21 10:38:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/01/20 13:34:04 $
+ * @version $Revision: 1.70 $, $Date: 2005/01/21 10:38:27 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -132,11 +132,11 @@ public abstract class StorableObjectDatabase {
 			}
 		}
 	}
-	
+
 	public void delete(StorableObject storableObject)  throws IllegalDataException {
 		this.delete(storableObject.getId());
 	}
-	
+
 	public void delete(List ids) throws IllegalDataException {
 		if ( (ids == null) || (ids.isEmpty()))
 			return;
@@ -160,10 +160,11 @@ public abstract class StorableObjectDatabase {
 													object.getClass().getName() 
 													+ " isn't Identifier or Identified");
 				buffer.append(DatabaseIdentifier.toSQLString(identifier));
-			} else {
+			}
+			else {
 				buffer.append(SQL_IN);
 				buffer.append(OPEN_BRACKET);
-					
+
 				int i = 1;
 				for (Iterator it = ids.iterator(); it.hasNext();i++) {						
 					Object object = it.next();
@@ -189,7 +190,7 @@ public abstract class StorableObjectDatabase {
 					}
 				}
 				buffer.append(CLOSE_BRACKET);
-				}
+			}
 			buffer.append(CLOSE_BRACKET);			
 
 			sql = buffer.toString();
@@ -213,14 +214,14 @@ public abstract class StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
-			finally{
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
 
 	public abstract void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException;
-	
+
 	public abstract void insert(List storableObjects) throws IllegalDataException, CreateObjectException;
 
 	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
@@ -232,7 +233,7 @@ public abstract class StorableObjectDatabase {
 
 	public abstract void update(StorableObject storableObject, int updateKind, Object arg)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException;
-	
+
 	public abstract void update(List storableObjects, int updateKind, Object arg)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException;
 
@@ -240,16 +241,16 @@ public abstract class StorableObjectDatabase {
 
 	protected String getColumns(int mode) {
 		if (columns == null) {
-            String s = new String();
-            switch (mode) {
-            case MODE_INSERT:
-                 s = COLUMN_ID + COMMA;
-                break;
-            case MODE_UPDATE:
-                break;
-            default:
-                Log.errorMessage("StorableObjectDatabase.getColumns | Unknown mode: " + mode);
-            }
+			String s = new String();
+			switch (mode) {
+				case MODE_INSERT:
+					s = COLUMN_ID + COMMA;
+					break;
+				case MODE_UPDATE:
+					break;
+				default:
+					Log.errorMessage("StorableObjectDatabase.getColumns | Unknown mode: " + mode);
+			}
 			columns = s
 				+ COLUMN_CREATED + COMMA
 				+ COLUMN_MODIFIED + COMMA
@@ -261,16 +262,16 @@ public abstract class StorableObjectDatabase {
 
 	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null) {
-            String s = new String();
-            switch(mode) {
-            case MODE_INSERT:
-                 s = QUESTION + COMMA;
-                break;
-            case MODE_UPDATE:
-                break;
-            default:
-                Log.errorMessage("StorableObjectDatabase.getUpdateMultiplySQLValues | Unknown mode " + mode);
-            }
+			String s = new String();
+			switch(mode) {
+				case MODE_INSERT:
+					s = QUESTION + COMMA;
+					break;
+				case MODE_UPDATE:
+					break;
+				default:
+					Log.errorMessage("StorableObjectDatabase.getUpdateMultiplySQLValues | Unknown mode " + mode);
+			}
 			updateMultiplySQLValues = s
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -343,7 +344,7 @@ public abstract class StorableObjectDatabase {
 		}
 
 		List idsList = new LinkedList();
-		for(Iterator it=storableObjects.iterator();it.hasNext();) {
+		for(Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject)it.next();
 			Identifier localId = storableObject.getId();
 			if (idsList.contains(localId))
@@ -461,22 +462,23 @@ public abstract class StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		int i=0;
-        try {			
-            switch(mode) {
-            case MODE_INSERT:
-            	DatabaseIdentifier.setIdentifier(preparedStatement, ++i , storableObject.getId());
-                break;
-            case MODE_UPDATE:
-                break;
-            default:
-                throw new IllegalDataException("StorableObjectDatabase.setEntityForPreparedStatement | Unknown mode " + mode);
-            }
+		int i = 0;
+		try {		
+			switch(mode) {
+				case MODE_INSERT:
+					DatabaseIdentifier.setIdentifier(preparedStatement, ++i , storableObject.getId());
+					break;
+				case MODE_UPDATE:
+					break;
+				default:
+					throw new IllegalDataException("StorableObjectDatabase.setEntityForPreparedStatement | Unknown mode " + mode);
+			}
 			preparedStatement.setTimestamp(++i, new Timestamp(storableObject.getCreated().getTime()));
 			preparedStatement.setTimestamp(++i, new Timestamp(storableObject.getModified().getTime()));
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i , storableObject.getCreatorId());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i , storableObject.getModifierId());
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
 		return i;
@@ -498,7 +500,7 @@ public abstract class StorableObjectDatabase {
 			Log.debugMessage(getEnityName() + "Database.checkAndUpdateEntity | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			try {
-				if (resultSet.next()){
+				if (resultSet.next()) {
 					updateEntityFromResultSet(storableObject, resultSet);
 					
 					boolean update = force;
@@ -506,47 +508,54 @@ public abstract class StorableObjectDatabase {
 						update =	((storableObject.getModifierId().equals(localStorableObject.getModifierId()))&&
 						(Math.abs(storableObject.getModified().getTime()-localStorableObject.getModified().getTime())<1000));
 					
-					if (update){
+					if (update) {
 						localStorableObject.setAttributes(localStorableObject.getCreated(), new Date(System.currentTimeMillis()), 
 														  localStorableObject.getCreatorId(), localStorableObject.getModifierId());
 						updateEntity(localStorableObject);
-					} else{
+					}
+					else {
 						String msg = getEnityName() + "Database.checkAndUpdateEntity | " + getEnityName() + " conflict version ";
 						throw new VersionCollisionException(msg);
 					}
-					
+
 				}
 				else {
 					try {
 						insert(localStorableObject);
-					} catch (IllegalDataException ide) {
+					}
+					catch (IllegalDataException ide) {
 						String mesg = getEnityName() + "Database.checkAndUpdateEntity | Cannot update "
 								+ getEnityName() + " '" + atIdStr + "' -- "
 								+ ide.getMessage();
 						throw new UpdateObjectException(mesg, ide);
-					} catch (CreateObjectException coe) {
+					}
+					catch (CreateObjectException coe) {
 						String mesg = getEnityName() + "Database.checkAndUpdateEntity | Cannot update "
 								+ getEnityName() + " '" + atIdStr + "' -- "
 								+ coe.getMessage();
 						throw new UpdateObjectException(mesg, coe);
 					}
 				}
-			} catch (RetrieveObjectException roe) {
+			}
+			catch (RetrieveObjectException roe) {
 				String mesg = getEnityName() + "Database.checkAndUpdateEntity | Cannot update "
 						+ getEnityName() + " '" + atIdStr + "' -- " + roe.getMessage();
 				throw new UpdateObjectException(mesg, roe);
 			}
-		} catch (SQLException sqle) {			
+		}
+		catch (SQLException sqle) {			
 			String mesg = getEnityName() + "Database.checkAndUpdateEntity | Cannot update " + getEnityName() + " '"
 					+ atIdStr + "' -- " + sqle.getMessage();
 			try {
 				connection.rollback();
-			} catch (SQLException sqle2) {
+			}
+			catch (SQLException sqle2) {
 				Log.errorMessage("Exception in rolling back");
 				Log.errorException(sqle2);
 			}
 			throw new UpdateObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {				
 				if (statement != null)
 					statement.close();
@@ -554,9 +563,11 @@ public abstract class StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;				
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -1001,11 +1012,11 @@ public abstract class StorableObjectDatabase {
 			StringBuffer buffer = new StringBuffer(SQL_UPDATE);
 			buffer.append(this.getEnityName());
 			buffer.append(SQL_SET);
-			for(int i=0;i<cols.length;i++){
+			for(int i = 0; i < cols.length; i++) {
 				buffer.append(cols[i]);
 				buffer.append(EQUALS);
 				buffer.append(values[i]);
-				if (i<cols.length-1)
+				if (i < cols.length - 1)
 					buffer.append(COMMA);
 			}
 			buffer.append(SQL_WHERE);
