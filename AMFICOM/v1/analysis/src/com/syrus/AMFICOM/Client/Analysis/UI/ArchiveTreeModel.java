@@ -5,12 +5,15 @@ import java.util.*;
 import java.util.List;
 
 import java.awt.*;
+
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.scheme.*;
@@ -280,8 +283,8 @@ condition.setDomain(domain);
 		{
 			MeasurementSetup setup = (MeasurementSetup)node.getObject();
 			LinkedIdsCondition condition = new LinkedIdsCondition(setup.getId(), ObjectEntities.TEST_ENTITY_CODE);
-			condition.setEntityCode(ObjectEntities.TEST_ENTITY_CODE);
 			try {
+				condition.setEntityCode(ObjectEntities.TEST_ENTITY_CODE);
 				Collection tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				for (Iterator it = tests.iterator(); it.hasNext(); ) {
 					Test test = (Test)it.next();
@@ -343,7 +346,17 @@ condition.setDomain(domain);
 			ObjectResourceTreeNode parent = (ObjectResourceTreeNode)node.getParent();
 			if (parent.getObject().equals("dates"))
 			{
-				StorableObjectCondition condition = new TemporalCondition(domain, startDate, endDate);
+				TypicalCondition condition1 = new TypicalCondition(startDate, endDate, OperationSort.OPERATION_IN_RANGE, ObjectEntities.TEST_ENTITY_CODE,
+					TestWrapper.COLUMN_END_TIME);
+				TypicalCondition condition2 = new TypicalCondition(startDate, endDate, OperationSort.OPERATION_IN_RANGE, ObjectEntities.TEST_ENTITY_CODE,
+					TestWrapper.COLUMN_START_TIME);
+				StorableObjectCondition condition;
+				try {
+					condition = new CompoundCondition(condition1, CompoundConditionSort.AND, condition2);
+				} catch (CreateObjectException e) {
+					// it's cannot be occur
+					throw new UnsupportedOperationException();
+				}
 				try {
 					Collection tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 					for (Iterator it = tests.iterator(); it.hasNext(); ) {
