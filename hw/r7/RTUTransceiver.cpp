@@ -6,6 +6,7 @@
 #include <list>
 
 
+
 const char* RTUTransceiver::PARAMETER_NAME_WAVELENGTH = "ref_wvlen";
 const char* RTUTransceiver::PARAMETER_NAME_TRACE_LENGTH = "ref_trclen";
 const char* RTUTransceiver::PARAMETER_NAME_RESOLUTION = "ref_res";
