@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.36 2004/10/19 09:37:12 bob Exp $
+ * $Id: MeasurementControlModule.java,v 1.37 2004/10/27 09:53:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/10/19 09:37:12 $
+ * @version $Revision: 1.37 $, $Date: 2004/10/27 09:53:13 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -94,6 +94,9 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	/*	object reference to Measurement Server	*/
 	protected static MServer mServerRef;
+	
+	/* TCPServer */
+	protected static TCPServer tcpServer;
 
 	private long forwardProcessing;
 	private boolean running;
@@ -147,11 +150,11 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		/*	Initialize pool of Identifiers*/
 		NewIdentifierPool.init(mServerRef);
 
-		/*	Create and start transceiver for every KIS*/
-		activateKISTransceivers();
-
 		/*	Create map of test processors*/
 		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
+
+		/*	Create and start transceiver for every KIS*/
+		activateKISTransceivers();
 
 		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
 		prepareTestList();
@@ -200,13 +203,12 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		
 		try {
 			hostName = InetAddress.getLocalHost().getHostAddress();			
-			TCPServer tcpServer = new TCPServer(hostName,port);
-			new Thread(tcpServer).start();			
-		}catch (UnknownHostException e) {
+			tcpServer = new TCPServer(hostName,port);
+			tcpServer.start();			
+		} catch (UnknownHostException e) {
 			Log.errorMessage("Failed get local host ip ");
 			Log.errorException(e);
-		} 
-		catch (UnknownServiceException e) {
+		} catch (UnknownServiceException e) {
 			Log.errorMessage("Failed creating TCPServer at service " + hostName + ':' + port);
 			Log.errorException(e);
 		}
@@ -290,7 +292,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 		catch (Exception e) {
 			Log.errorException(e);
-		}
+		}		
 	}
 
 	private static void prepareResultList() {

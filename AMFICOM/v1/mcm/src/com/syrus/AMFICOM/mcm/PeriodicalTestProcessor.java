@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.20 2004/10/14 10:46:25 bob Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.21 2004/10/27 09:53:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/10/14 10:46:25 $
+ * @version $Revision: 1.21 $, $Date: 2004/10/27 09:53:13 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -141,7 +141,10 @@ public class PeriodicalTestProcessor extends TestProcessor {
 			}	//if (! super.lastMeasurementAcquisition)
 
 			super.processMeasurementResult();
-			Log.debugMessage("numberOfReceivedMResults: " + super.numberOfReceivedMResults + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements + ", lastMeasurementAcquisition: " + super.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
+			Log.debugMessage('\'' + super.test.getId().getIdentifierString() 
+							 + "' numberOfReceivedMResults: " + super.numberOfReceivedMResults 
+							 + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements 
+							 + ", lastMeasurementAcquisition: " + super.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
 			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && super.lastMeasurementAcquisition)
 				super.complete();
 

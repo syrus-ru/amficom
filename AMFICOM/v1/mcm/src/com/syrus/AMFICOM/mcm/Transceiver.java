@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.27 2004/10/25 14:56:20 bob Exp $
+ * $Id: Transceiver.java,v 1.28 2004/10/27 09:53:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/10/25 14:56:20 $
+ * @version $Revision: 1.28 $, $Date: 2004/10/27 09:53:13 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -48,7 +48,7 @@ public class Transceiver extends SleepButWorkThread {
 	/**
 	 * mcmtransceiver socket
 	 */ 	 
-	private int socket = -1;
+	private int socket = -1;	
 	 
 	private boolean running;
 	
@@ -58,12 +58,15 @@ public class Transceiver extends SleepButWorkThread {
 	private KISReport kisReport;//MCMTransciver library writes result into this variable
 	/*	Variables for method processFall()	*/
 	private Measurement measurementToRemove;
+	
+	private boolean readyToGo;
   
 	public Transceiver(Identifier kisId) {
 		super(ApplicationProperties.getInt("KISTickTime", KIS_TICK_TIME) * 1000, ApplicationProperties.getInt("KISMaxFalls", KIS_MAX_FALLS));
 
 		this.kisId = kisId;
 		this.running = true;		
+		this.readyToGo = false;
 		this.measurementQueue = Collections.synchronizedList(new ArrayList());
 		this.testProcessors = Collections.synchronizedMap(new Hashtable());
 		this.kisReport = null;
@@ -145,7 +148,8 @@ public class Transceiver extends SleepButWorkThread {
 		      
 		      	
 		      if (this.kisReport == null) {
-		      	this.kisReport = this.receive(this.socket);
+		      	if (this.readyToGo)
+		      		this.kisReport = this.receive(this.socket);
 		      }	else {					        
 					measurementId = this.kisReport.getMeasurementId();
 					Log.debugMessage("Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
@@ -189,7 +193,6 @@ public class Transceiver extends SleepButWorkThread {
 						}	//if (testProcessor != null)
 						else {
 							Log.errorMessage("Cannot find test processor for measurement '" + measurementId + "'; throwing away it's report");
-							this.throwAwayKISReport();
 						}
 					}	//if (measurement != null)
 					else {
@@ -293,14 +296,17 @@ public class Transceiver extends SleepButWorkThread {
 
 	//private native boolean transmit(Measurement measurement);
  
-	public native boolean transmit(int serverSocket,
+	private native boolean transmit(int serverSocket,
                                   String measurementId,
 																	String measurementTypeCodename,
 																	String rtuCardIndex,
 																	String[] parameterTypeCodenames,
 																	byte[][] parameterValues);
 
-	public native KISReport receive(int serverSocket);
+	private native KISReport receive(int serverSocket);
   
-  
+	protected void setReadyToGo(boolean readyToGo){
+		Log.debugMessage("Transceiver.setReadyToGo | set " + readyToGo, Log.DEBUGLEVEL05);
+		this.readyToGo = readyToGo;
+	}
 }

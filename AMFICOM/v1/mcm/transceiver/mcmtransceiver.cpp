@@ -153,7 +153,7 @@ JNIEXPORT jobject JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_receive(
 //		fprintf(stdout, "(native - agent - receive) #0.1\n");
 //		fflush(stdout);
 		int receiveCode = readNBytesFromTCP(serv_socket, buftoread, length, 0);
-		fprintf(stdout, "(native - agent - receive) #0.2 (rc = %d)\n", receiveCode);
+		fprintf(stdout, "(native - agent - receive) Receive %d bytes\n", receiveCode);
 		fflush(stdout);
 		if (receiveCode != length) {
 			fprintf(stdout,

@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.26 2004/10/19 09:37:12 bob Exp $
+ * $Id: TestProcessor.java,v 1.27 2004/10/27 09:53:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/10/19 09:37:12 $
+ * @version $Revision: 1.27 $, $Date: 2004/10/27 09:53:13 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -83,6 +83,8 @@ public abstract class TestProcessor extends SleepButWorkThread {
 						Log.errorMessage("Unappropriate status " + this.test.getStatus().value() + " of test '" + this.test.getId() + "'");
 						this.abort();
 				}
+				
+				this.transceiver.setReadyToGo(true);
 			}
 		}
 		catch (ApplicationException ae) {
