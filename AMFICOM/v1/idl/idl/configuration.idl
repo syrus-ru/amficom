@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.67 2004/12/14 16:59:00 max Exp $
+ * $Id: configuration.idl,v 1.68 2004/12/15 12:07:20 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -339,8 +339,8 @@ module corba {
 		wstring supplier;
 		wstring supplierCode;
 		
-		double longitude;
-		double latitude;
+		float longitude;
+		float latitude;
 		
 		wstring hwSerial;
 	    wstring hwVersion;
