@@ -238,7 +238,6 @@ public class ResizableLayeredPanel extends JPanel
 class ToolBarPanel extends JToolBar
 {
 	protected ResizableLayeredPanel panel;
-	protected static final Dimension btn_size = new Dimension(24, 24);
 	protected int position = 0;
 
 	protected static final String separator = "separator";

@@ -39,7 +39,6 @@ import com.syrus.io.BellcoreStructure;
 public class ThresholdsSelectionFrame extends ATableFrame
 	implements OperationListener
 {
-	public static final Dimension BUTTON_SIZE = new Dimension(24, 24);
 	protected Dispatcher dispatcher;
 	private JTable jTable;
 
@@ -109,9 +108,9 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			JButton[] buttons = new JButton[] { jButton1, jButton3, jButtonInc, jButtonDec };
 			for (int i = 0; i < buttons.length; i++)
 			{
-				buttons[i].setMaximumSize(BUTTON_SIZE);
-				buttons[i].setMinimumSize(BUTTON_SIZE);
-				buttons[i].setPreferredSize(BUTTON_SIZE);
+				buttons[i].setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+				buttons[i].setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+				buttons[i].setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 			}
 		}
 

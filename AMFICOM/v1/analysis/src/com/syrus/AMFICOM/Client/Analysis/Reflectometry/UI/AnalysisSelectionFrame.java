@@ -1,30 +1,54 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultCellEditor;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.MinuitAnalyseCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.Client.General.UI.ATable;
+import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
-import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
-import oracle.jdeveloper.layout.*;
 
 public class AnalysisSelectionFrame extends ATableFrame
 																		implements OperationListener
 {
-	public static final Dimension btn_size = new Dimension(24, 24);
 	private Dispatcher dispatcher;
 	private ParamTableModel tModelMinuit;
 	private ATable jTable;
@@ -79,7 +103,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 				{
 					BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 					if (bs.measurementId == null)
-						setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблона нет)");
+						setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (" + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
 					else
 					{
 //						try
@@ -87,8 +111,9 @@ public class AnalysisSelectionFrame extends ATableFrame
 //							Measurement m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
 //												 new Identifier(bs.measurementId), true);
 							MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
-							setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблон: " +
-									(ms == null ? "(нет)" : ms.getDescription()) + ")");
+							setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " ("
+								+ (ms == null ? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) : 
+									LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ':' + ms.getDescription()) + ')');
 //						}
 //						catch(ApplicationException ex)
 //						{
@@ -109,7 +134,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 
 				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 				if (bs.measurementId == null)
-					setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблона нет)");
+					setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (" + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
 				else
 				{
 //					try
@@ -119,8 +144,9 @@ public class AnalysisSelectionFrame extends ATableFrame
 
 //						MeasurementSetup ms = m.getSetup();
 						MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
-						setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблон: " +
-									 (ms == null ? "нет" : ms.getDescription()) + ")");
+						setTitle(LangModelAnalyse.getString("analysisSelectionTitle")  + " ("
+							+ (ms == null ? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) : 
+								LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ':' + ms.getDescription()) + ')');
 
 						if (ms.getCriteriaSet() != null)
 						{
@@ -226,9 +252,9 @@ public class AnalysisSelectionFrame extends ATableFrame
 		jTable.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(tModelMinuit));
 		jTable.setDefaultEditor(Object.class, new ModelParamsTableEditor(tModelMinuit));
 
-		jButton1.setMaximumSize(btn_size);
-		jButton1.setMinimumSize(btn_size);
-		jButton1.setPreferredSize(btn_size);
+		jButton1.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		jButton1.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		jButton1.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		jButton1.setToolTipText(LangModelAnalyse.getString("analysisStart"));
 		jButton1.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS));
 		jButton1.addActionListener(new ActionListener()
@@ -239,9 +265,9 @@ public class AnalysisSelectionFrame extends ATableFrame
 			}
 		});
 
-		jButton2.setMaximumSize(btn_size);
-		jButton2.setMinimumSize(btn_size);
-		jButton2.setPreferredSize(btn_size);
+		jButton2.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		jButton2.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		jButton2.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		jButton2.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
 		jButton2.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS));
 		jButton2.addActionListener(new ActionListener()
@@ -253,9 +279,9 @@ public class AnalysisSelectionFrame extends ATableFrame
 		});
 
 
-		jButton3.setMaximumSize(btn_size);
-		jButton3.setMinimumSize(btn_size);
-		jButton3.setPreferredSize(btn_size);
+		jButton3.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		jButton3.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		jButton3.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		jButton3.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
 		jButton3.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS));
 		jButton3.addActionListener(new ActionListener()
@@ -270,10 +296,11 @@ public class AnalysisSelectionFrame extends ATableFrame
 
 //		jToolBar1.setBorderPainted(true);
 		jToolBar1.setFloatable(false);
-		jToolBar1.setLayout(new XYLayout());
-		jToolBar1.add(jButton1, new XYConstraints(0, 0, -1, -1));
-		jToolBar1.add(jButton2, new XYConstraints(btn_size.width*2, 0, -1, -1));
-		jToolBar1.add(jButton3, new XYConstraints(btn_size.width*3, 0, -1, -1));
+		jToolBar1.setLayout(new BoxLayout(this.jToolBar1, BoxLayout.X_AXIS));
+		jToolBar1.add(jButton1);
+		jToolBar1.add(Box.createRigidArea(UIManager.getDimension(ResourceKeys.SIZE_BUTTON)));
+		jToolBar1.add(jButton2);
+		jToolBar1.add(jButton3);
 
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
 		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));

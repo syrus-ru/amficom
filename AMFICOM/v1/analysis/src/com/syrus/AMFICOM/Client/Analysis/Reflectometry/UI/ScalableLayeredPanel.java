@@ -14,6 +14,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 public class ScalableLayeredPanel extends ResizableLayeredPanel
 {
@@ -311,7 +312,7 @@ class ScalableToolBar extends ToolBarPanel
 				EX,
 				createToolButton(
 				exButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("encreasex"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_ENLARGE_X),
@@ -327,7 +328,7 @@ class ScalableToolBar extends ToolBarPanel
 				EY,
 				createToolButton(
 				eyButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("encreasey"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_ENLARGE_Y),
@@ -343,7 +344,7 @@ class ScalableToolBar extends ToolBarPanel
 				DX,
 				createToolButton(
 				dxButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("decreasex"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_REDUCE_X),
@@ -359,7 +360,7 @@ class ScalableToolBar extends ToolBarPanel
 				DY,
 				createToolButton(
 				dyButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("decreasey"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_REDUCE_Y),
@@ -375,7 +376,7 @@ class ScalableToolBar extends ToolBarPanel
 				FIX,
 				createToolButton(
 				fitButton,
-				btn_size,
+				UIManager.getDimension(ResourceKeys.SIZE_BUTTON),
 				null,
 				LangModelAnalyse.getString("fittoscreen"),
 				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_FIT),

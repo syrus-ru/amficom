@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -29,11 +30,6 @@ import com.syrus.io.BellcoreStructure;
 public class PrimaryParametersFrame extends ATableFrame
 																		implements OperationListener
 {
-	private static StringBuffer km = new StringBuffer(" ").append(LangModelAnalyse.getString("km"));
-	private static StringBuffer mt = new StringBuffer(" ").append(LangModelAnalyse.getString("mt"));
-	private static StringBuffer nm = new StringBuffer(" ").append(LangModelAnalyse.getString("nm"));
-	private static StringBuffer db = new StringBuffer(" ").append(LangModelAnalyse.getString("dB"));
-	private static StringBuffer ns = new StringBuffer(" ").append(LangModelAnalyse.getString("ns"));
 
 	private Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel;
@@ -180,15 +176,15 @@ public class PrimaryParametersFrame extends ATableFrame
 
 		tModel.updateColumn(new Object[] {
 			bs.getOpticalModuleId(),
-			new StringBuffer().append(bs.getWavelength()).append(nm).toString(),
-			new StringBuffer().append(bs.getPulsewidth()).append(ns).toString(),
+			bs.getWavelength() + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NM),
+			bs.getPulsewidth() + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NS),
 			String.valueOf(bs.getIOR()),
 			String.valueOf(bs.getAverages()),
-			new StringBuffer().append(Math.round(res)).append(mt).toString(),
-			new StringBuffer().append(Math.round(range)).append(km).toString(),
+			Math.round(res) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT),
+			Math.round(range) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM),
 			date.substring(0, 9),
 			date.substring(9),
-			new StringBuffer().append(bs.getBackscatter()).append(db).toString(),
+			bs.getBackscatter() + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
 		}, 1);
 		jTable.updateUI();
 	}
