@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.8 2005/03/24 11:46:24 arseniy Exp $
+ * $Id: StorableObjectCondition.java,v 1.9 2005/03/24 12:14:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ import java.util.Collection;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/24 11:46:24 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/24 12:14:10 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -28,7 +28,7 @@ public interface StorableObjectCondition extends TransferableObject {
 	 * @throws ApplicationException
 	 * @see StorableObjectPool#getStorableObjectsByConditionButIdsImpl(Collection, StorableObjectCondition, boolean)
 	 */
-	boolean isNeedMore(Collection objects) throws ApplicationException;
+	boolean isNeedMore(Collection objects);
 
 	Short getEntityCode();
 	

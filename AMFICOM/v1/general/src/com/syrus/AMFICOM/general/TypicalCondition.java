@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.15 2005/03/24 11:42:05 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.16 2005/03/24 12:14:10 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -119,7 +119,7 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.15 $, $Date: 2005/03/24 11:42:05 $
+ * @version $Revision: 1.16 $, $Date: 2005/03/24 12:14:10 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -871,10 +871,9 @@ public class TypicalCondition implements StorableObjectCondition {
 
 	/**
 	 * @param collection
-	 * @throws ApplicationException
 	 * @see StorableObjectCondition#isNeedMore(Collection)
 	 */
-	public boolean isNeedMore(Collection collection) throws ApplicationException {
+	public boolean isNeedMore(Collection collection) {
 		return this.delegate.isNeedMore(collection);
 	}
 

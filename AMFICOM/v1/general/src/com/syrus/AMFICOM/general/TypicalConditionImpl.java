@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.6 2005/03/24 11:43:39 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.7 2005/03/24 12:14:10 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.TypicalSort;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/24 11:43:39 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/24 12:14:10 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -91,7 +91,7 @@ class TypicalConditionImpl extends TypicalCondition {
 		
 	}
 
-	public boolean isNeedMore(Collection collection) throws ApplicationException {
+	public boolean isNeedMore(Collection collection) {
 		boolean more = true;
 
 		if (this.type == TypicalSort._TYPE_STRING && this.operation == OperationSort._OPERATION_EQUALS)

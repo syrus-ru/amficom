@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.20 2005/03/24 10:55:35 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.21 2005/03/24 12:14:10 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.util.Log;
  * </ul>
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/03/24 10:55:35 $
+ * @version $Revision: 1.21 $, $Date: 2005/03/24 12:14:10 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -333,7 +333,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 * occur.
 	 * 
 	 * @param object
-	 * @throws ApplicationException
+	 * @throws IllegalObjectEntityException
 	 * @see StorableObjectCondition#isConditionTrue(Object)
 	 */
 	public boolean isConditionTrue(final Object object) throws IllegalObjectEntityException {
@@ -342,10 +342,9 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 	/**
 	 * @param list
-	 * @throws ApplicationException
 	 * @see StorableObjectCondition#isNeedMore(Collection)
 	 */
-	public boolean isNeedMore(final Collection list) throws ApplicationException {
+	public boolean isNeedMore(final Collection list) {
 		return this.delegate.isNeedMore(list);
 	}
 

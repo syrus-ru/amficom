@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.16 2005/03/24 11:45:11 arseniy Exp $
+ * $Id: CompoundCondition.java,v 1.17 2005/03/24 12:14:10 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.corba.JavaSoftORBUtil;
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  * 
- * @version $Revision: 1.16 $, $Date: 2005/03/24 11:45:11 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/24 12:14:10 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -117,7 +117,7 @@ public class CompoundCondition implements StorableObjectCondition {
 		return result;
 	}
 
-	public boolean isNeedMore(Collection collection) throws ApplicationException {
+	public boolean isNeedMore(Collection collection) {
 		boolean firstItem = true;
 		boolean result = false;
 

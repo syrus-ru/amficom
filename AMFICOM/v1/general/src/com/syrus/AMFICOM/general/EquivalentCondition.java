@@ -1,5 +1,5 @@
 /*
-* $Id: EquivalentCondition.java,v 1.3 2005/03/24 11:45:45 arseniy Exp $
+* $Id: EquivalentCondition.java,v 1.4 2005/03/24 12:14:10 arseniy Exp $
 *
 * Copyright ø 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.EquivalentCondition_Transferable;
 /**
  * Equivalent (identical, allways true) condition
  * written with especial cynicism
- * @version $Revision: 1.3 $, $Date: 2005/03/24 11:45:45 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/24 12:14:10 $
  * @author ÷÷œ‘ $Author: arseniy $
  * @module general_v1
  */
@@ -40,7 +40,7 @@ public class EquivalentCondition implements StorableObjectCondition {
 		return true;
 	}
 
-	public boolean isNeedMore(Collection collection) throws ApplicationException {
+	public boolean isNeedMore(Collection collection) {
 		return true;
 	}
 	
