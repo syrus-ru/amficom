@@ -978,6 +978,7 @@ module corba {
 						in general::corba::LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
+/*
 		measurement::corba::ResultSeq_Transferable transmitResultsButIdsResultCondition(
 						in general::corba::IdentifierSeq_Transferable ids,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier,
@@ -988,6 +989,12 @@ module corba {
 						in general::corba::IdentifierSeq_Transferable ids,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier,
 						in measurement::corba::ResultSortCondition_Transferable resultSortCondition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+*/
+		measurement::corba::ResultSeq_Transferable transmitResultsButIdsActionCondition(
+						in general::corba::IdentifierSeq_Transferable ids,
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+						in measurement::corba::ActionCondition_Transferable actionCondition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
 		measurement::corba::SetSeq_Transferable transmitSets(
