@@ -112,6 +112,8 @@ importmif_v1	AMFICOM/v1/importmif
 #M	agent_v1	Agent
 agent_v1	AMFICOM/v1/agent
 
+database_v1	AMFICOM/v1/database
+
 akp		hw/akp
 trc		hw/trc
 t4		hw/t4
