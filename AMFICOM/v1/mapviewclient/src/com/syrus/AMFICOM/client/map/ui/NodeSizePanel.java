@@ -1,5 +1,5 @@
 /**
- * $Id: NodeSizePanel.java,v 1.5 2004/12/01 10:55:32 krupenn Exp $
+ * $Id: NodeSizePanel.java,v 1.6 2005/02/10 11:48:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,9 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -23,22 +20,19 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import oracle.jdeveloper.layout.XYLayout;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
 /**
  * Панель, на которой располагаются две кнопки увеличения и уменьшения
  * коэффициента масштабирования изображений элементов карты
- * 
- * 
- * 
- * @version $Revision: 1.5 $, $Date: 2004/12/01 10:55:32 $
- * @module
+ * @version $Revision: 1.6 $, $Date: 2005/02/10 11:48:40 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public final class NodeSizePanel extends JPanel 
 {
-	private LogicalNetLayer lnl;
+	private LogicalNetLayer logicalNetLayer;
 	private JButton leftButton = new JButton();
 	private JButton rightButton = new JButton();
 
@@ -54,7 +48,7 @@ public final class NodeSizePanel extends JPanel
 	
 	public void setLogicalNetLayer(LogicalNetLayer lnl)
 	{
-		this.lnl = lnl;
+		this.logicalNetLayer = lnl;
 	}
 
 	public NodeSizePanel()
@@ -75,12 +69,12 @@ public final class NodeSizePanel extends JPanel
 		this.setLayout(new BorderLayout());
 
 	    ImageIcon icon1 = new ImageIcon("images/farther.gif");
-		leftButton.setIcon(icon1);
-		leftButton.setPreferredSize(buttonSize);
-		leftButton.setMaximumSize(buttonSize);
-		leftButton.setMinimumSize(buttonSize);
-//		leftButton.setText("<<");
-		leftButton.addActionListener(new ActionListener()
+		this.leftButton.setIcon(icon1);
+		this.leftButton.setPreferredSize(buttonSize);
+		this.leftButton.setMaximumSize(buttonSize);
+		this.leftButton.setMinimumSize(buttonSize);
+//		this.leftButton.setText("<<");
+		this.leftButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -88,12 +82,12 @@ public final class NodeSizePanel extends JPanel
 				}
 			});
 	    ImageIcon icon2 = new ImageIcon("images/closer.gif");
-		rightButton.setIcon(icon2);
-		rightButton.setPreferredSize(buttonSize);
-		rightButton.setMaximumSize(buttonSize);
-		rightButton.setMinimumSize(buttonSize);
-//		rightButton.setText(">>");
-		rightButton.addActionListener(new ActionListener()
+		this.rightButton.setIcon(icon2);
+		this.rightButton.setPreferredSize(buttonSize);
+		this.rightButton.setMaximumSize(buttonSize);
+		this.rightButton.setMinimumSize(buttonSize);
+//		this.rightButton.setText(">>");
+		this.rightButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -101,33 +95,33 @@ public final class NodeSizePanel extends JPanel
 				}
 			});
 			
-	    leftButton.setToolTipText(LangModelMap.getString("ReduceIcon"));
-	    rightButton.setToolTipText(LangModelMap.getString("EnlargeIcon"));
+	    this.leftButton.setToolTipText(LangModelMap.getString("ReduceIcon"));
+	    this.rightButton.setToolTipText(LangModelMap.getString("EnlargeIcon"));
 		
-		this.add(leftButton, BorderLayout.WEST);
-		this.add(rightButton, BorderLayout.EAST);
+		this.add(this.leftButton, BorderLayout.WEST);
+		this.add(this.rightButton, BorderLayout.EAST);
 	}
 
-	private void enlarge()
+	void enlarge()
 	{
-		if(lnl == null)
+		if(this.logicalNetLayer == null)
 			return;
-		lnl.setDefaultScale(lnl.getDefaultScale() * COEF);
-		lnl.repaint(false);
+		this.logicalNetLayer.setDefaultScale(this.logicalNetLayer.getDefaultScale() * COEF);
+		this.logicalNetLayer.repaint(false);
 	}
 
-	private void reduce()
+	void reduce()
 	{
-		if(lnl == null)
+		if(this.logicalNetLayer == null)
 			return;
-		lnl.setDefaultScale(lnl.getDefaultScale() / COEF);
-		lnl.repaint(false);
+		this.logicalNetLayer.setDefaultScale(this.logicalNetLayer.getDefaultScale() / COEF);
+		this.logicalNetLayer.repaint(false);
 	}
 
 	public void setEnabled(boolean bool)
 	{
-		leftButton.setEnabled(bool);
-		rightButton.setEnabled(bool);
+		this.leftButton.setEnabled(bool);
+		this.rightButton.setEnabled(bool);
 	}
 
 

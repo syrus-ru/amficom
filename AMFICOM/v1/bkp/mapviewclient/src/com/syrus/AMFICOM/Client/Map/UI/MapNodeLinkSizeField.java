@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkSizeField.java,v 1.5 2005/01/21 16:19:58 krupenn Exp $
+ * $Id: MapNodeLinkSizeField.java,v 1.6 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,25 +30,24 @@ import javax.swing.JTextField;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/01/21 16:19:58 $
- * @module
+ * @version $Revision: 1.6 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public final class MapNodeLinkSizeField extends JTextField 
 {
-	LogicalNetLayer lnl;
-	NodeLink nodelink;
+	LogicalNetLayer logicalNetLayer;
+	NodeLink nodeLink;
 	AbstractNode node;
 	
 	public MapNodeLinkSizeField(
-			LogicalNetLayer lnl,
-			NodeLink nodelink,
+			LogicalNetLayer logicalNetLayer,
+			NodeLink nodeLink,
 			AbstractNode node)
 	{
 		super();
-		this.lnl = lnl;
-		this.nodelink = nodelink;
+		this.logicalNetLayer = logicalNetLayer;
+		this.nodeLink = nodeLink;
 		this.node = node;
 		jbInit();
 		grabFocus();
@@ -72,15 +71,15 @@ public final class MapNodeLinkSizeField extends JTextField
 		}
 
 		public void focusGained(FocusEvent e)
-		{
+		{//empty
 		}
 		
 		public void focusLost(FocusEvent e)
 		{
-			adaptee.setVisible(false);
-			if(adaptee.getParent() != null)
-				adaptee.getParent().remove(adaptee);
-			adaptee.removeFocusListener(this);
+			this.adaptee.setVisible(false);
+			if(this.adaptee.getParent() != null)
+				this.adaptee.getParent().remove(this.adaptee);
+			this.adaptee.removeFocusListener(this);
 		}
 	}
 	
@@ -99,26 +98,26 @@ public final class MapNodeLinkSizeField extends JTextField
 
 			if (code == KeyEvent.VK_ESCAPE)
 			{
-				adaptee.setVisible(false);
-				if(adaptee.getParent() != null)
-					adaptee.getParent().remove(adaptee);
-				adaptee.removeKeyListener(this);
+				this.adaptee.setVisible(false);
+				if(this.adaptee.getParent() != null)
+					this.adaptee.getParent().remove(this.adaptee);
+				this.adaptee.removeKeyListener(this);
 			}
 
 			if (code == KeyEvent.VK_ENTER)
 			{
 				try
 				{
-					double dist = Double.parseDouble(adaptee.getText());
-					adaptee.lnl.setNodeLinkSizeFrom(adaptee.nodelink, adaptee.node, dist);
-					adaptee.setVisible(false);
-					if(adaptee.getParent() != null)
-						adaptee.getParent().remove(adaptee);
-					adaptee.removeKeyListener(this);
+					double dist = Double.parseDouble(this.adaptee.getText());
+					this.adaptee.logicalNetLayer.setNodeLinkSizeFrom(this.adaptee.nodeLink, this.adaptee.node, dist);
+					this.adaptee.setVisible(false);
+					if(this.adaptee.getParent() != null)
+						this.adaptee.getParent().remove(this.adaptee);
+					this.adaptee.removeKeyListener(this);
 
-					if(adaptee.lnl != null)
+					if(this.adaptee.logicalNetLayer != null)
 					{
-						adaptee.lnl.repaint(false);
+						this.adaptee.logicalNetLayer.repaint(false);
 					}
 				}
 				catch(Exception ex)
@@ -127,8 +126,8 @@ public final class MapNodeLinkSizeField extends JTextField
 				}
 			}
 		}
-		public void keyReleased(KeyEvent e) {}
-		public void keyTyped(KeyEvent e) {}
+		public void keyReleased(KeyEvent e) {/*empty*/}
+		public void keyTyped(KeyEvent e) {/*empty*/}
 	}
 	
 }

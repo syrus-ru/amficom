@@ -1,21 +1,19 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.PhysicalLinkType;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
 
 public final class SimpleMapElementController implements ObjectResourceController 
 {
@@ -149,7 +147,7 @@ public final class SimpleMapElementController implements ObjectResourceControlle
 	}
 
 	public void setValue(Object object, final String key, final Object value)
-	{
+	{//empty
 	}
 
 	public String getKey(final int index) 
@@ -164,7 +162,7 @@ public final class SimpleMapElementController implements ObjectResourceControlle
 	}
 
 	public void setPropertyValue(String key, Object objectKey, Object objectValue) 
-	{
+	{//empty
 	}
 
 	public Class getPropertyClass(String key) 

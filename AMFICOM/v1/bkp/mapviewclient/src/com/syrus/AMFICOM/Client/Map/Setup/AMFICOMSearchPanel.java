@@ -1,29 +1,12 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.8 2005/02/01 11:34:56 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.9 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
 */
 
 package com.syrus.AMFICOM.Client.Map.Setup;
-
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.Command.Navigate.CenterSelectionCommand;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
-import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -34,7 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,14 +28,23 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.JTableHeader;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.Command.Navigate.CenterSelectionCommand;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.mapview.MapView;
+
 /**
  * Панель поиска элементов карты АМФИКОМ
- * 
- * 
- * 
- * @version $Revision: 1.8 $, $Date: 2005/02/01 11:34:56 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
  public class AMFICOMSearchPanel extends JPanel
 {
@@ -87,7 +78,7 @@ import javax.swing.table.JTableHeader;
 	 */
 	private boolean searching = false;
 	
-	private MapFrame mmf;
+	private MapFrame mapFrame;
 	private MapView mapView = null;
 	
 	JButton centerButton = new JButton();
@@ -97,9 +88,9 @@ import javax.swing.table.JTableHeader;
 	 */
 	public AMFICOMSearchPanel()
 	{
-		controller = SimpleMapElementController.getInstance();
-		model = new ObjectResourceTableModel(controller);
-		table = new ObjectResourceTable(model);
+		this.controller = SimpleMapElementController.getInstance();
+		this.model = new ObjectResourceTableModel(this.controller);
+		this.table = new ObjectResourceTable(this.model);
 
 		try
 		{
@@ -111,19 +102,13 @@ import javax.swing.table.JTableHeader;
 		}
 	}
 
-	/**
-	 * Метод jbInit
-	 * 
-	 * 
-	 * @exception Exception
-	 */
 	private void jbInit()
 	{
-		this.setLayout(gridBagLayout1);
+		this.setLayout(this.gridBagLayout1);
 		this.setSize(new Dimension(370, 629));
 
-		searchButton.setText(LangModelMap.getString("Search"));
-		searchButton.addActionListener(new ActionListener()
+		this.searchButton.setText(LangModelMap.getString("Search"));
+		this.searchButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -131,8 +116,8 @@ import javax.swing.table.JTableHeader;
 				}
 			});
 
-		centerButton.setText(LangModelMap.getString("DoCenter"));
-		centerButton.addActionListener(new ActionListener()
+		this.centerButton.setText(LangModelMap.getString("DoCenter"));
+		this.centerButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -140,32 +125,32 @@ import javax.swing.table.JTableHeader;
 				}
 			});
 
-		searchField.addKeyListener(new KeyListener()
+		this.searchField.addKeyListener(new KeyListener()
 			{
 				public void keyPressed(KeyEvent e)
 				{
 					if(e.getKeyCode() == KeyEvent.VK_ENTER)
 						doSearch();
 				}
-				public void keyReleased(KeyEvent e) {}
-				public void keyTyped(KeyEvent e) {}
+				public void keyReleased(KeyEvent e) {/*empty*/}
+				public void keyTyped(KeyEvent e) {/*empty*/}
 			});
 
-		JTableHeader jth = table.getTableHeader();
-		scrollPane.getViewport().add(jth);
-		scrollPane.getViewport().add(table);
+		JTableHeader jth = this.table.getTableHeader();
+		this.scrollPane.getViewport().add(jth);
+		this.scrollPane.getViewport().add(this.table);
 
-		scrollPane.setWheelScrollingEnabled(true);
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		table.setBackground(SystemColor.window);
+		this.scrollPane.setWheelScrollingEnabled(true);
+		this.scrollPane.getViewport().setBackground(SystemColor.window);
+		this.table.setBackground(SystemColor.window);
 		
-		this.add(searchField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(searchButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(this.searchField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(this.searchButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 //		this.add(jth, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(scrollPane, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(centerButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(this.scrollPane, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(this.centerButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
-		table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		this.table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	}
 
 	public void setMapView(MapView mv)
@@ -175,41 +160,41 @@ import javax.swing.table.JTableHeader;
 			this.mapView = mv;
 	}
 
-	public void setMapFrame(MapFrame mmf)
+	public void setMapFrame(MapFrame mapFrame)
 	{
-		this.mmf = mmf;
-		if(mmf == null)
+		this.mapFrame = mapFrame;
+		if(mapFrame == null)
 		{
-			table.removeAll();
-			mapView = null;
-//			map = null;
+			this.table.removeAll();
+			this.mapView = null;
+//			this.map = null;
 		}
 		else
-			mapView = mmf.getMapView();
-//			map = mmf.getMap();
+			this.mapView = this.mapFrame.getMapView();
+//			this.map = mmf.getMap();
 	}
 	
 	public MapFrame getMapFrame() 
 	{
-		return mmf;
+		return this.mapFrame;
 	}
 
 	/**
 	 * запуск операции поиска по нажатию на кнопку. задача поиска запускается
 	 * отдельным thread'ом
 	 */
-	private void doSearch()
+	void doSearch()
 	{
-		if(searching)
+		if(this.searching)
 			return;
-		if(mmf == null)
+		if(this.mapFrame == null)
 			return;
 			
-		searchText = searchField.getText();
-		if(searchText.length() == 0)
+		this.searchText = this.searchField.getText();
+		if(this.searchText.length() == 0)
 			return;
-		searching = true;
-		table.removeAll();
+		this.searching = true;
+		this.table.removeAll();
 		
 		Thread t = new Thread(new Runnable() 
 		{
@@ -227,10 +212,10 @@ import javax.swing.table.JTableHeader;
 	 */	
 	public void search()
 	{
-		searchButton.setEnabled(false);
+		this.searchButton.setEnabled(false);
 		List vec = new LinkedList();
 		
-		Map map = mapView.getMap();
+		Map map = this.mapView.getMap();
 //		MapElementController controller;
 //		LogicalNetLayer lnl = this.getMapFrame().getMapViewer().getLogicalNetLayer();
 		try
@@ -242,14 +227,14 @@ import javax.swing.table.JTableHeader;
 
 //				controller = lnl.getMapViewController().getController(me);
 				
-				if(me.getName().indexOf(searchText) != -1)
+				if(me.getName().indexOf(this.searchText) != -1)
 					vec.add(me);
 			}
 			
 			for(it = map.getPhysicalLinks().listIterator(); it.hasNext();)
 			{
 				MapElement me = (MapElement )it.next();
-				if(me.getName().indexOf(searchText) != -1)
+				if(me.getName().indexOf(this.searchText) != -1)
 					vec.add(me);
 			}
 /*			
@@ -274,29 +259,29 @@ import javax.swing.table.JTableHeader;
 			ex.printStackTrace();
 		}
 
-		model.setContents(vec);
+		this.model.setContents(vec);
 
-		searchButton.setEnabled(true);
-		searching = false;
+		this.searchButton.setEnabled(true);
+		this.searching = false;
 	}
 
 	/**
 	 * центрирование на карте выделенных в таблице объектов
 	 */
-	private void doCenter()
+	void doCenter()
 	{
-		mmf.getMapViewer().getLogicalNetLayer().getMapView().deselectAll();
+		this.mapFrame.getMapViewer().getLogicalNetLayer().getMapView().deselectAll();
 
-		int[] selection = table.getSelectedRows();
+		int[] selection = this.table.getSelectedRows();
 		for (int i = 0; i < selection.length; i++)
 		{
-			MapElement mapE = (MapElement)model.getObject(selection[(i)]);
+			MapElement mapE = (MapElement)this.model.getObject(selection[(i)]);
 			mapE.setSelected(true);
 		}
 
-		Command com = new CenterSelectionCommand(mmf.getMapViewer().getLogicalNetLayer());
-		com.setParameter("applicationModel", mmf.getContext().getApplicationModel());
-		com.setParameter("logicalNetLayer", mmf.getMapViewer().getLogicalNetLayer());
+		Command com = new CenterSelectionCommand(this.mapFrame.getMapViewer().getLogicalNetLayer());
+		com.setParameter("applicationModel", this.mapFrame.getContext().getApplicationModel());
+		com.setParameter("logicalNetLayer", this.mapFrame.getMapViewer().getLogicalNetLayer());
 		com.execute();
 		
 	}

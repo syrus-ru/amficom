@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.13 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.14 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,21 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
-import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.UnboundNode;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -34,19 +19,31 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
-import java.awt.geom.Point2D;
 
 import javax.swing.JOptionPane;
+
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
+import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.UnboundNode;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
 /**
  * Обработчик событий drag/drop в окне карты 
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2005/02/01 11:34:56 $
- * @module
+ * @version $Revision: 1.14 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public final class MapDropTargetListener implements DropTargetListener
 {
@@ -64,7 +61,7 @@ public final class MapDropTargetListener implements DropTargetListener
 
 		Point point = dtde.getLocation();
 
-		if ( logicalNetLayer.getMapView() != null)
+		if ( this.logicalNetLayer.getMapView() != null)
 		{
 			DataFlavor[] df = dtde.getCurrentDataFlavors();
 			Transferable transferable = dtde.getTransferable();
@@ -79,7 +76,7 @@ public final class MapDropTargetListener implements DropTargetListener
 				else
 				if (df[0].getHumanPresentableName().equals("SchemeElementLabel"))
 				{
-					or = (Object )transferable.getTransferData(df[0]);
+					or = transferable.getTransferData(df[0]);
 
 					if(or instanceof SchemeElement)
 					{
@@ -102,9 +99,9 @@ public final class MapDropTargetListener implements DropTargetListener
 
 				dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 				dtde.getDropTargetContext().dropComplete(true);
-				logicalNetLayer.repaint(false);
+				this.logicalNetLayer.repaint(false);
 
-				logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+				this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 			}
 			catch(Exception e)
 			{
@@ -114,29 +111,29 @@ public final class MapDropTargetListener implements DropTargetListener
 
 	}
 
-	protected void mapElementDropped(SiteNodeType mpe, Point point)
+	protected void mapElementDropped(SiteNodeType nodeType, Point point)
 	{
-		CreateSiteCommandAtomic cmd = new CreateSiteCommandAtomic(mpe, point);
-		cmd.setLogicalNetLayer(logicalNetLayer);
-		logicalNetLayer.getCommandList().add(cmd);
-		logicalNetLayer.getCommandList().execute();
+		CreateSiteCommandAtomic cmd = new CreateSiteCommandAtomic(nodeType, point);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
+		this.logicalNetLayer.getCommandList().add(cmd);
+		this.logicalNetLayer.getCommandList().execute();
 	}
 
-	protected void schemeElementDropped(SchemeElement se, Point point)
+	protected void schemeElementDropped(SchemeElement schemeElement, Point point)
 	{
-		SiteNode site = logicalNetLayer.getMapView().findElement(se);
+		SiteNode site = this.logicalNetLayer.getMapView().findElement(schemeElement);
 		if(site != null)
 		{
 			if(site instanceof UnboundNode)
 			{
-				logicalNetLayer.deselectAll();
+				this.logicalNetLayer.deselectAll();
 				site.setSelected(true);
-				Point pt = logicalNetLayer.convertMapToScreen(site.getLocation());
+				Point pt = this.logicalNetLayer.convertMapToScreen(site.getLocation());
 				MoveSelectionCommandBundle cmd = new MoveSelectionCommandBundle(pt);
-				cmd.setLogicalNetLayer(logicalNetLayer);
+				cmd.setLogicalNetLayer(this.logicalNetLayer);
 				cmd.setParameter(MoveSelectionCommandBundle.END_POINT, point);
-				logicalNetLayer.getCommandList().add(cmd);
-				logicalNetLayer.getCommandList().execute();
+				this.logicalNetLayer.getCommandList().add(cmd);
+				this.logicalNetLayer.getCommandList().execute();
 			}
 			else
 			{
@@ -145,24 +142,24 @@ public final class MapDropTargetListener implements DropTargetListener
 		}
 		else
 		{
-			PlaceSchemeElementCommand cmd = new PlaceSchemeElementCommand(se, point);
-			cmd.setLogicalNetLayer(logicalNetLayer);
-			logicalNetLayer.getCommandList().add(cmd);
-			logicalNetLayer.getCommandList().execute();
+			PlaceSchemeElementCommand cmd = new PlaceSchemeElementCommand(schemeElement, point);
+			cmd.setLogicalNetLayer(this.logicalNetLayer);
+			this.logicalNetLayer.getCommandList().add(cmd);
+			this.logicalNetLayer.getCommandList().execute();
 		}
 	}
 
-	protected void schemeCableLinkDropped(SchemeCableLink scl, Point point)
+	protected void schemeCableLinkDropped(SchemeCableLink schemeCableLink, Point point)
 	{
-		CablePath cp = logicalNetLayer.getMapView().findCablePath(scl);
+		CablePath cp = this.logicalNetLayer.getMapView().findCablePath(schemeCableLink);
 		if(cp != null)
 		{
 			cp.setSelected(true);
 		}
 		else
 		{
-			SiteNode startNode = logicalNetLayer.getMapView().getStartNode(scl);
-			SiteNode endNode = logicalNetLayer.getMapView().getEndNode(scl);
+			SiteNode startNode = this.logicalNetLayer.getMapView().getStartNode(schemeCableLink);
+			SiteNode endNode = this.logicalNetLayer.getMapView().getEndNode(schemeCableLink);
 	
 			if(startNode == null || endNode == null)
 			{
@@ -174,10 +171,10 @@ public final class MapDropTargetListener implements DropTargetListener
 				return;
 			}
 
-			PlaceSchemeCableLinkCommand cmd = new PlaceSchemeCableLinkCommand(scl);
-			cmd.setLogicalNetLayer(logicalNetLayer);
-			logicalNetLayer.getCommandList().add(cmd);
-			logicalNetLayer.getCommandList().execute();
+			PlaceSchemeCableLinkCommand cmd = new PlaceSchemeCableLinkCommand(schemeCableLink);
+			cmd.setLogicalNetLayer(this.logicalNetLayer);
+			this.logicalNetLayer.getCommandList().add(cmd);
+			this.logicalNetLayer.getCommandList().execute();
 		}
 	}
 /*					
@@ -190,19 +187,19 @@ public final class MapDropTargetListener implements DropTargetListener
 */
 
 	public void dragEnter(DropTargetDragEvent dtde)
-	{
+	{//empty
 	}
 
 	public void dragExit(DropTargetEvent dte)
-	{
+	{//empty
 	}
 
 	public void dragOver(DropTargetDragEvent dtde)
-	{
+	{//empty
 	}
 
 	public void dropActionChanged(DropTargetDragEvent dtde)
-	{
+	{//empty
 	}
 
 }

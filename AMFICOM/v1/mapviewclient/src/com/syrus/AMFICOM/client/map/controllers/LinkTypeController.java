@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.8 2005/02/07 16:09:25 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.9 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,16 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Stroke;
+import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
@@ -19,32 +29,23 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StringFieldCondition;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
-import com.syrus.AMFICOM.general.corba.StringFieldSort;
+import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Stroke;
-import java.awt.geom.Rectangle2D;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/07 16:09:25 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/10 11:48:39 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController
@@ -547,10 +548,11 @@ public final class LinkTypeController extends AbstractLinkController
 			Identifier userId,
 			String codename)
 	{
-		StorableObjectCondition pTypeCondition = new StringFieldCondition(
-			codename,
-			ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
-			StringFieldSort.STRINGSORT_BASE);
+		StorableObjectCondition pTypeCondition = new TypicalCondition(
+				codename, 
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
+				StorableObjectWrapper.COLUMN_CODENAME);
 
 		try
 		{
@@ -608,10 +610,8 @@ public final class LinkTypeController extends AbstractLinkController
 		// make sure PhysicalLinkType.COLLECTOR is created
 		LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.COLLECTOR);
 
-		StorableObjectCondition pTypeCondition = new StringFieldCondition(
-			"",
-			ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE,
-			StringFieldSort.STRINGSORT_BASE);
+		StorableObjectCondition pTypeCondition = new EquivalentCondition(
+				ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
 
 		List list = null;
 		try

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.21 2005/02/01 13:29:57 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.22 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,14 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
+import java.awt.Cursor;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
@@ -19,45 +27,27 @@ import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.MapState;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
 import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenu;
 import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenuManager;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategyManager;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-
-import java.awt.Cursor;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.Point2D;
-
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * Обработчик мыши в окне карты. При обработке смотрится состояние
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * 
- * 
- * 
- * @version $Revision: 1.21 $, $Date: 2005/02/01 13:29:57 $
- * @module
+ * @version $Revision: 1.22 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public final class MapMouseListener implements MouseListener
 {
@@ -76,15 +66,15 @@ public final class MapMouseListener implements MouseListener
 			&& SwingUtilities.isLeftMouseButton(me))
 		{
 			// show properties on double click
-			if ( logicalNetLayer.getMapView() != null)
+			if ( this.logicalNetLayer.getMapView() != null)
 			{
-				MapElement mapElement = logicalNetLayer.getCurrentMapElement();
+				MapElement mapElement = this.logicalNetLayer.getCurrentMapElement();
 				if(mapElement != null)
 				{
 						MapPopupMenu contextMenu = MapPopupMenuManager.getPopupMenu(mapElement);
 						if(contextMenu != null)
 						{
-							contextMenu.setLogicalNetLayer(logicalNetLayer);
+							contextMenu.setLogicalNetLayer(this.logicalNetLayer);
 							contextMenu.showProperties(mapElement);
 						}
 				}
@@ -94,16 +84,16 @@ public final class MapMouseListener implements MouseListener
 
 	public void mousePressed(MouseEvent me)
 	{
-		MapState mapState = logicalNetLayer.getMapState();
+		MapState mapState = this.logicalNetLayer.getMapState();
 		
 		mapState.setMouseMode(MapState.MOUSE_PRESSED);//Установить режим
 
 //		System.out.println("Pressed at (" + me.getPoint().x + ", " + me.getPoint().y + ")");
 
-		if ( logicalNetLayer.getMapView() != null)
+		if ( this.logicalNetLayer.getMapView() != null)
 		{
-			logicalNetLayer.setStartPoint(me.getPoint());//Установить начальную точку
-			logicalNetLayer.setEndPoint(me.getPoint());//Установить конечную точку
+			this.logicalNetLayer.setStartPoint(me.getPoint());//Установить начальную точку
+			this.logicalNetLayer.setEndPoint(me.getPoint());//Установить конечную точку
 			switch ( mapState.getOperationMode())
 			{
 				case MapState.MOVE_HAND://Флаг для меремещения карты лапкой
@@ -116,33 +106,33 @@ public final class MapMouseListener implements MouseListener
 					// fall throuth
 				case MapState.MOVE_TO_CENTER:
 					//Берём фокус
-					logicalNetLayer.getMapViewer().getVisualComponent().grabFocus();
+					this.logicalNetLayer.getMapViewer().getVisualComponent().grabFocus();
 					break;
 				case MapState.MOVE_FIXDIST:
-					logicalNetLayer.deselectAll();
-					logicalNetLayer.getFixedNode().setSelected(true);
-					MapElement mel = logicalNetLayer.getMapElementAtPoint(me.getPoint());
-					if(logicalNetLayer.getFixedNodeList().contains(mel))
+					this.logicalNetLayer.deselectAll();
+					this.logicalNetLayer.getFixedNode().setSelected(true);
+					MapElement mel = this.logicalNetLayer.getMapElementAtPoint(me.getPoint());
+					if(this.logicalNetLayer.getFixedNodeList().contains(mel))
 					{
 						mel.setSelected(true);
-						logicalNetLayer.setCurrentMapElement(mel);
+						this.logicalNetLayer.setCurrentMapElement(mel);
 					}
 					else
 					{
-						logicalNetLayer.setCurrentMapElement(
+						this.logicalNetLayer.setCurrentMapElement(
 							com.syrus.AMFICOM.mapview.VoidElement.getInstance(
-								logicalNetLayer.getMapView() ) );
+								this.logicalNetLayer.getMapView() ) );
 					}
 					break;
 				case MapState.NODELINK_SIZE_EDIT:
 					// fall throuth
 				case MapState.NO_OPERATION:
-					if(logicalNetLayer.getCurrentMapElement() != null)
-						if(logicalNetLayer.getCurrentMapElement() instanceof AbstractNode)
+					if(this.logicalNetLayer.getCurrentMapElement() != null)
+						if(this.logicalNetLayer.getCurrentMapElement() instanceof AbstractNode)
 							if(mapState.getShowMode() == MapState.SHOW_NODE_LINK)
 						{
-							AbstractNode node = (AbstractNode)logicalNetLayer.getCurrentMapElement();
-							NodeLink nodelink = logicalNetLayer.getEditedNodeLink(me.getPoint());
+							AbstractNode node = (AbstractNode)this.logicalNetLayer.getCurrentMapElement();
+							NodeLink nodelink = this.logicalNetLayer.getEditedNodeLink(me.getPoint());
 							if(nodelink != null)
 								if(nodelink.getStartNode().equals(node)
 									|| nodelink.getEndNode().equals(node))
@@ -150,18 +140,18 @@ public final class MapMouseListener implements MouseListener
 								if(this.sizeEditBox != null)
 									if(this.sizeEditBox.isVisible())
 										return;
-								sizeEditBox = new MapNodeLinkSizeField(logicalNetLayer, nodelink, node);
-								NodeLinkController nlc = (NodeLinkController)logicalNetLayer.getMapViewController().getController(nodelink);
+								this.sizeEditBox = new MapNodeLinkSizeField(this.logicalNetLayer, nodelink, node);
+								NodeLinkController nlc = (NodeLinkController)this.logicalNetLayer.getMapViewController().getController(nodelink);
 								Rectangle rect = nlc.getLabelBox(nodelink);
-								sizeEditBox.setBounds(rect.x, rect.y, rect.width + 3, rect.height + 3);
-								sizeEditBox.setText(MapPropertiesManager.getDistanceFormat().format(nodelink.getLengthLt()));
-								sizeEditBox.setSelectionStart(0);
-								sizeEditBox.setSelectionEnd(sizeEditBox.getText().length());
-								sizeEditBox.selectAll();
-								logicalNetLayer.getMapViewer().getVisualComponent().add(sizeEditBox);
-								sizeEditBox.setVisible(true);
-								sizeEditBox.setEditable(true);
-								sizeEditBox.grabFocus();
+								this.sizeEditBox.setBounds(rect.x, rect.y, rect.width + 3, rect.height + 3);
+								this.sizeEditBox.setText(MapPropertiesManager.getDistanceFormat().format(nodelink.getLengthLt()));
+								this.sizeEditBox.setSelectionStart(0);
+								this.sizeEditBox.setSelectionEnd(this.sizeEditBox.getText().length());
+								this.sizeEditBox.selectAll();
+								this.logicalNetLayer.getMapViewer().getVisualComponent().add(this.sizeEditBox);
+								this.sizeEditBox.setVisible(true);
+								this.sizeEditBox.setEditable(true);
+								this.sizeEditBox.grabFocus();
 								
 								mapState.setMouseMode(MapState.MOUSE_NONE);
 								mapState.setOperationMode(MapState.NODELINK_SIZE_EDIT);
@@ -171,11 +161,11 @@ public final class MapMouseListener implements MouseListener
 						}
 
 					//Берём фокус
-					logicalNetLayer.getMapViewer().getVisualComponent().grabFocus();
+					this.logicalNetLayer.getMapViewer().getVisualComponent().grabFocus();
 
-					MapElement mapElement = logicalNetLayer.getMapElementAtPoint(me.getPoint());
-					MapElement curElement = logicalNetLayer.getCurrentMapElement();
-					MapElementController mec = logicalNetLayer.getMapViewController().getController(curElement);
+					MapElement mapElement = this.logicalNetLayer.getMapElementAtPoint(me.getPoint());
+					MapElement curElement = this.logicalNetLayer.getCurrentMapElement();
+					MapElementController mec = this.logicalNetLayer.getMapViewController().getController(curElement);
 					if(curElement instanceof Selection)
 					{
 						mapElement = curElement;
@@ -188,7 +178,7 @@ public final class MapMouseListener implements MouseListener
 					}
 					else
 					{
-						logicalNetLayer.setCurrentMapElement(mapElement);
+						this.logicalNetLayer.setCurrentMapElement(mapElement);
 					}
 
 					if (SwingUtilities.isLeftMouseButton(me))
@@ -196,13 +186,13 @@ public final class MapMouseListener implements MouseListener
 						MapStrategy strategy = MapStrategyManager.getStrategy(mapElement);
 						if(strategy != null)
 						{
-							strategy.setLogicalNetLayer(logicalNetLayer);
+							strategy.setLogicalNetLayer(this.logicalNetLayer);
 							strategy.doContextChanges(me);
 						}
 	
-						mapElement = logicalNetLayer.getCurrentMapElement();
+						mapElement = this.logicalNetLayer.getCurrentMapElement();
 
-						logicalNetLayer.sendMapEvent(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+						this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 					}
 					else
 					if (SwingUtilities.isRightMouseButton(me))
@@ -212,15 +202,14 @@ public final class MapMouseListener implements MouseListener
 						contextMenu = MapPopupMenuManager.getPopupMenu(mapElement);
 						if(contextMenu != null)
 						{
-							contextMenu.setLogicalNetLayer(logicalNetLayer);
+							contextMenu.setLogicalNetLayer(this.logicalNetLayer);
 							contextMenu.setElement(mapElement);
 							contextMenu.setPoint(me.getPoint());
-							JPopupMenu popup = (JPopupMenu )contextMenu;
-							popup.show(
-								logicalNetLayer.getMapViewer().getVisualComponent(), 
+							contextMenu.show(
+								this.logicalNetLayer.getMapViewer().getVisualComponent(), 
 								me.getPoint().x, 
 								me.getPoint().y);
-							logicalNetLayer.setMenuShown(true);
+							this.logicalNetLayer.setMenuShown(true);
 						}
 					}
 					break;
@@ -237,21 +226,21 @@ public final class MapMouseListener implements MouseListener
 					break;
 			}//switch (mapState.getOperationMode()
 		}
-		logicalNetLayer.repaint(false);
+		this.logicalNetLayer.repaint(false);
 		mapState.setMouseMode(MapState.MOUSE_NONE);
 	}
 
 	public void mouseEntered(MouseEvent me)
-	{
+	{//empty
 	}
 
 	public void mouseExited(MouseEvent me)
-	{
+	{//empty
 	}
 
 	public void mouseReleased(MouseEvent me)
 	{
-		MapState mapState = logicalNetLayer.getMapState();
+		MapState mapState = this.logicalNetLayer.getMapState();
 
 		if(this.sizeEditBox != null)
 			if(this.sizeEditBox.isVisible())
@@ -260,24 +249,24 @@ public final class MapMouseListener implements MouseListener
 //		System.out.println("Released at (" + me.getPoint().x + ", " + me.getPoint().y + ")");
 
 		mapState.setMouseMode(MapState.MOUSE_RELEASED);
-		if ( logicalNetLayer.getMapView() != null)
+		if ( this.logicalNetLayer.getMapView() != null)
 		{
 			//Обрабатывает события на панели инстрементов
 			switch (mapState.getOperationMode())
 			{
 				case MapState.MEASURE_DISTANCE :
 
-					DoublePoint sp = logicalNetLayer.convertScreenToMap(logicalNetLayer.getStartPoint());
-					DoublePoint ep = logicalNetLayer.convertScreenToMap(me.getPoint());
+					DoublePoint sp = this.logicalNetLayer.convertScreenToMap(this.logicalNetLayer.getStartPoint());
+					DoublePoint ep = this.logicalNetLayer.convertScreenToMap(me.getPoint());
 
-					double distance = logicalNetLayer.distance(sp, ep);
+					double distance = this.logicalNetLayer.distance(sp, ep);
 
-					logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					this.logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
-					logicalNetLayer.getContext().getApplicationModel().setSelected(
+					this.logicalNetLayer.getContext().getApplicationModel().setSelected(
 							MapApplicationModel.OPERATION_MEASURE_DISTANCE, 
 							false);
-					logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
+					this.logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
@@ -288,75 +277,75 @@ public final class MapMouseListener implements MouseListener
 							LangModelMap.getString("MeasureDistance"),
 							JOptionPane.PLAIN_MESSAGE);
 
-					logicalNetLayer.repaint(false);
+					this.logicalNetLayer.repaint(false);
 					break;
 				case MapState.ZOOM_TO_POINT :
-					DoublePoint pp = logicalNetLayer.convertScreenToMap(me.getPoint());
+					DoublePoint pp = this.logicalNetLayer.convertScreenToMap(me.getPoint());
 
-					logicalNetLayer.setCenter(pp);
-					logicalNetLayer.zoomIn();
-					logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					this.logicalNetLayer.setCenter(pp);
+					this.logicalNetLayer.zoomIn();
+					this.logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
-					logicalNetLayer.getContext().getApplicationModel().setSelected(
+					this.logicalNetLayer.getContext().getApplicationModel().setSelected(
 							MapApplicationModel.OPERATION_ZOOM_TO_POINT, 
 							false);
-					logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
+					this.logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 
-					logicalNetLayer.getMapView().setScale(logicalNetLayer.getScale());
-					logicalNetLayer.getMapView().setCenter(logicalNetLayer.getCenter());
-					logicalNetLayer.repaint(true);
+					this.logicalNetLayer.getMapView().setScale(this.logicalNetLayer.getScale());
+					this.logicalNetLayer.getMapView().setCenter(this.logicalNetLayer.getCenter());
+					this.logicalNetLayer.repaint(true);
 					break;
 				case MapState.ZOOM_TO_RECT:
-					logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					this.logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 					
-					logicalNetLayer.getContext().getApplicationModel().setSelected(
+					this.logicalNetLayer.getContext().getApplicationModel().setSelected(
 							MapApplicationModel.OPERATION_ZOOM_BOX, 
 							false);
-					logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
+					this.logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 
-					if (!logicalNetLayer.getStartPoint().equals(logicalNetLayer.getEndPoint()))
+					if (!this.logicalNetLayer.getStartPoint().equals(this.logicalNetLayer.getEndPoint()))
 					{
-						logicalNetLayer.zoomToBox(
-								logicalNetLayer.convertScreenToMap(logicalNetLayer.getStartPoint()),
-								logicalNetLayer.convertScreenToMap(logicalNetLayer.getEndPoint()));
+						this.logicalNetLayer.zoomToBox(
+								this.logicalNetLayer.convertScreenToMap(this.logicalNetLayer.getStartPoint()),
+								this.logicalNetLayer.convertScreenToMap(this.logicalNetLayer.getEndPoint()));
 
-						logicalNetLayer.getMapView().setScale(
-							logicalNetLayer.getScale());
-						logicalNetLayer.getMapView().setCenter(
-							logicalNetLayer.getCenter());
-						logicalNetLayer.repaint(true);
+						this.logicalNetLayer.getMapView().setScale(
+							this.logicalNetLayer.getScale());
+						this.logicalNetLayer.getMapView().setCenter(
+							this.logicalNetLayer.getCenter());
+						this.logicalNetLayer.repaint(true);
 					}
 					break;
 				case MapState.MOVE_TO_CENTER:
-					logicalNetLayer.setCenter(
-						logicalNetLayer.convertScreenToMap(me.getPoint()));
+					this.logicalNetLayer.setCenter(
+						this.logicalNetLayer.convertScreenToMap(me.getPoint()));
 					
-					logicalNetLayer.getContext().getApplicationModel().setSelected(
+					this.logicalNetLayer.getContext().getApplicationModel().setSelected(
 							MapApplicationModel.OPERATION_MOVE_TO_CENTER, 
 							false);
-					logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
+					this.logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 
-					logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					this.logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
-					logicalNetLayer.getMapView().setCenter(
-							logicalNetLayer.getCenter());
-					logicalNetLayer.repaint(true);
+					this.logicalNetLayer.getMapView().setCenter(
+							this.logicalNetLayer.getCenter());
+					this.logicalNetLayer.repaint(true);
 					break;
 				case MapState.MOVE_HAND:
-					DoublePoint center = logicalNetLayer.getCenter();
+					DoublePoint center = this.logicalNetLayer.getCenter();
 
-					DoublePoint p1 = logicalNetLayer.convertScreenToMap(logicalNetLayer.getStartPoint());
-					DoublePoint p2 = logicalNetLayer.convertScreenToMap(me.getPoint());
+					DoublePoint p1 = this.logicalNetLayer.convertScreenToMap(this.logicalNetLayer.getStartPoint());
+					DoublePoint p2 = this.logicalNetLayer.convertScreenToMap(me.getPoint());
 					double dx = p1.getX() - p2.getX();
 					double dy = p1.getY() - p2.getY();
 
 					center.setLocation(center.getX() + dx, center.getY() + dy);
 
-					logicalNetLayer.setCenter(center);
+					this.logicalNetLayer.setCenter(center);
 
-					logicalNetLayer.getMapView().setCenter(
-							logicalNetLayer.getCenter());
-					logicalNetLayer.repaint(true);
+					this.logicalNetLayer.getMapView().setCenter(
+							this.logicalNetLayer.getCenter());
+					this.logicalNetLayer.repaint(true);
 					break;
 				case MapState.MOVE_FIXDIST:
 					// fall through
@@ -364,23 +353,23 @@ public final class MapMouseListener implements MouseListener
 					// fall throuth
 				case MapState.NO_OPERATION:
 
-					if(!logicalNetLayer.isMenuShown())
+					if(!this.logicalNetLayer.isMenuShown())
 					{
 						// Контекстное меню показывать не надо и передаём управление 
 						// стратегии текущего объекта
-						MapElement mapElement = logicalNetLayer.getCurrentMapElement();
+						MapElement mapElement = this.logicalNetLayer.getCurrentMapElement();
 		
 						MapStrategy strategy = MapStrategyManager.getStrategy(mapElement);
 						if(strategy != null)
 						{
-							strategy.setLogicalNetLayer(logicalNetLayer);
+							strategy.setLogicalNetLayer(this.logicalNetLayer);
 							strategy.doContextChanges(me);
 						}
 		
-						logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.SELECTION_CHANGED));
+						this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.SELECTION_CHANGED));
 					}
 //					mapState.setActionMode(MapState.NULL_ACTION_MODE);
-					logicalNetLayer.repaint(false);
+					this.logicalNetLayer.repaint(false);
 					break;
 				default:
 					try
@@ -399,7 +388,7 @@ public final class MapMouseListener implements MouseListener
 				mapState.setOperationMode(MapState.NO_OPERATION);
 
 			//Убираем флаг
-			logicalNetLayer.setMenuShown(false);
+			this.logicalNetLayer.setMenuShown(false);
 		}
 		mapState.setMouseMode(MapState.MOUSE_NONE);//Для мыши
 	}

@@ -1,12 +1,10 @@
 /**
- * $Id: MapPenBarPanel.java,v 1.5 2005/01/21 16:19:58 krupenn Exp $
+ * $Id: MapPenBarPanel.java,v 1.6 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.UI;
@@ -28,13 +26,9 @@ import javax.swing.JPanel;
 
 /**
  *  На этой панельке располагаются элементы которые будут наноситься на карту
- * 
- * 
- * 
- * @version $Revision: 1.5 $, $Date: 2005/01/21 16:19:58 $
- * @module
+ * @version $Revision: 1.6 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public final class MapPenBarPanel extends JPanel 
 {
@@ -69,35 +63,35 @@ public final class MapPenBarPanel extends JPanel
 		setPreferredSize(new Dimension(150, 27));
 		setMinimumSize(new Dimension(150, 27));
 		setMaximumSize(new Dimension(150, 27));
-		penComboBox.addActionListener(new ActionListener()
+		this.penComboBox.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					penSelected(e);
 				}
 			});
-		this.add(penComboBox, BorderLayout.CENTER);
+		this.add(this.penComboBox, BorderLayout.CENTER);
 	}
 
 	public void setContext(ApplicationContext aContext)
-	{
+	{//empty
 	}
 	
 	public void setProtoElements()
 	{
-		if(logicalNetLayer == null)
+		if(this.logicalNetLayer == null)
 			return;
-		List els = LinkTypeController.getPens(logicalNetLayer.getContext());
-		penComboBox.setContents(els, false);
-		penComboBox.setSelected(logicalNetLayer.getPen());
+		List els = LinkTypeController.getPens(this.logicalNetLayer.getContext());
+		this.penComboBox.setContents(els, false);
+		this.penComboBox.setSelected(this.logicalNetLayer.getPen());
 	}
 
-	private void penSelected(ActionEvent e)
+	void penSelected(ActionEvent e)
 	{
-		if(logicalNetLayer == null)
+		if(this.logicalNetLayer == null)
 			return;
-		PhysicalLinkType mpe = (PhysicalLinkType)penComboBox.getSelectedObjectResource();
-		logicalNetLayer.setPen(mpe);
+		PhysicalLinkType mpe = (PhysicalLinkType)this.penComboBox.getSelectedObjectResource();
+		this.logicalNetLayer.setPen(mpe);
 	}
 }
 

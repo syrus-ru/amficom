@@ -1,5 +1,5 @@
 /**
- * $Id: MotionDescriptor.java,v 1.2 2005/01/21 16:19:58 krupenn Exp $
+ * $Id: MotionDescriptor.java,v 1.3 2005/02/10 11:48:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,10 +36,9 @@ import java.awt.Point;
  *  A - угол медлу векторами (startPoint, endPoint) и  (thisPoint, mousePoint)
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/01/21 16:19:58 $
- * @module
+ * @version $Revision: 1.3 $, $Date: 2005/02/10 11:48:40 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public class MotionDescriptor 
 {
@@ -71,7 +70,7 @@ public class MotionDescriptor
 	 * длина фрагмента в экранных координатах
 	 */
 	public double nodeLinkLength;
-
+/*
 	private MotionDescriptor(
 			double cb, 
 			double sb, 
@@ -87,7 +86,7 @@ public class MotionDescriptor
 		lengthFromStartNode = lf;
 		nodeLinkLength = nl;
 	}
-
+*/
 	public MotionDescriptor(
 		Point startPoint,
 		Point endPoint,
@@ -95,34 +94,34 @@ public class MotionDescriptor
 		Point mousePoint)
 	{
 
-		nodeLinkLength = Math.sqrt( 
+		this.nodeLinkLength = Math.sqrt( 
 			(endPoint.x - startPoint.x) * (endPoint.x - startPoint.x) +
 			(endPoint.y - startPoint.y) * (endPoint.y - startPoint.y) );
 
-		sinB = (endPoint.y - startPoint.y) / nodeLinkLength;
+		this.sinB = (endPoint.y - startPoint.y) / this.nodeLinkLength;
 
-		cosB = (endPoint.x - startPoint.x) / nodeLinkLength;
+		this.cosB = (endPoint.x - startPoint.x) / this.nodeLinkLength;
 
-		lengthFromStartNode = Math.sqrt( 
+		this.lengthFromStartNode = Math.sqrt( 
 			(thisPoint.x - startPoint.x) * (thisPoint.x - startPoint.x) +
 			(thisPoint.y - startPoint.y) * (thisPoint.y - startPoint.y) );
 			
-		lengthThisToMousePoint = Math.sqrt( 
+		this.lengthThisToMousePoint = Math.sqrt( 
 			(mousePoint.x - thisPoint.x) * (mousePoint.x - thisPoint.x) +
 			(mousePoint.y - thisPoint.y) * (mousePoint.y - thisPoint.y) );
 
-		cosA = (lengthThisToMousePoint == 0 ) ? 0.0 :
+		this.cosA = (this.lengthThisToMousePoint == 0 ) ? 0.0 :
 			(	(endPoint.x - startPoint.x) * (mousePoint.x - thisPoint.x) + 
 				(endPoint.y - startPoint.y) * (mousePoint.y - thisPoint.y) ) /
-			( nodeLinkLength * lengthThisToMousePoint );
+			( this.nodeLinkLength * this.lengthThisToMousePoint );
 
 		// скалярное произведение векторов фрагмента и lengthFromStartNode
 		double scalar = (endPoint.x - startPoint.x) * (thisPoint.x - startPoint.x) +
 			(endPoint.y - startPoint.y) * (thisPoint.y - startPoint.y);
 
 		if(scalar < 0)
-			lengthFromStartNode = -lengthFromStartNode;
+			this.lengthFromStartNode = -this.lengthFromStartNode;
 
-		lengthFromStartNode = lengthFromStartNode + cosA * lengthThisToMousePoint;
+		this.lengthFromStartNode = this.lengthFromStartNode + this.cosA * this.lengthThisToMousePoint;
 	}
 }

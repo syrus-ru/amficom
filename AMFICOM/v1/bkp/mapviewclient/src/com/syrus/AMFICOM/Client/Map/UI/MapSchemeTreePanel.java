@@ -1,40 +1,12 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
-import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewAddSchemeCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewRemoveSchemeCommand;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainCondition;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.*;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.Enumeration;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -43,6 +15,23 @@ import javax.swing.JScrollPane;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
+
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
+import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewAddSchemeCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewRemoveSchemeCommand;
+import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 public final class MapSchemeTreePanel extends JPanel 
 		implements OperationListener, TreeSelectionListener
@@ -94,34 +83,34 @@ public final class MapSchemeTreePanel extends JPanel
 
 	private void jbInit()
 	{
-		this.setLayout(borderLayout1);
+		this.setLayout(this.borderLayout1);
 
-		bindButtonsPanel.setLayout(borderLayout2);
-		placeButton.setText(LangModelMap.getString("Place"));
-		placeButton.addActionListener(new ActionListener()
+		this.bindButtonsPanel.setLayout(this.borderLayout2);
+		this.placeButton.setText(LangModelMap.getString("Place"));
+		this.placeButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					placeSelection();
 				}
 			});
-		placeAllButton.setText(LangModelMap.getString("PlaceAll"));
-		placeAllButton.addActionListener(new ActionListener()
+		this.placeAllButton.setText(LangModelMap.getString("PlaceAll"));
+		this.placeAllButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					placeAll();
 				}
 			});
-		bindButtonsPanel.add(placeButton, BorderLayout.WEST);
-		bindButtonsPanel.add(placeAllButton, BorderLayout.EAST);
+		this.bindButtonsPanel.add(this.placeButton, BorderLayout.WEST);
+		this.bindButtonsPanel.add(this.placeAllButton, BorderLayout.EAST);
 
-		menuSchemeAddToView.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addtoview.gif").
+		this.menuSchemeAddToView.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addtoview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
-		menuSchemeAddToView.setMaximumSize(BUTTON_DIMENSION);
-		menuSchemeAddToView.setPreferredSize(BUTTON_DIMENSION);
-		menuSchemeAddToView.setToolTipText(LangModelMap.getString("menuMapViewAddScheme"));
-		menuSchemeAddToView.addActionListener(new ActionListener()
+		this.menuSchemeAddToView.setMaximumSize(BUTTON_DIMENSION);
+		this.menuSchemeAddToView.setPreferredSize(BUTTON_DIMENSION);
+		this.menuSchemeAddToView.setToolTipText(LangModelMap.getString("menuMapViewAddScheme"));
+		this.menuSchemeAddToView.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -129,12 +118,12 @@ public final class MapSchemeTreePanel extends JPanel
 				}
 			});
 
-		menuSchemeRemoveFromView.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefromview.gif").
+		this.menuSchemeRemoveFromView.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefromview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
-		menuSchemeRemoveFromView.setMaximumSize(BUTTON_DIMENSION);
-		menuSchemeRemoveFromView.setPreferredSize(BUTTON_DIMENSION);
-		menuSchemeRemoveFromView.setToolTipText(LangModelMap.getString("menuMapViewRemoveScheme"));
-		menuSchemeRemoveFromView.addActionListener(new ActionListener()
+		this.menuSchemeRemoveFromView.setMaximumSize(BUTTON_DIMENSION);
+		this.menuSchemeRemoveFromView.setPreferredSize(BUTTON_DIMENSION);
+		this.menuSchemeRemoveFromView.setToolTipText(LangModelMap.getString("menuMapViewRemoveScheme"));
+		this.menuSchemeRemoveFromView.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -142,16 +131,16 @@ public final class MapSchemeTreePanel extends JPanel
 				}
 			});
 
-		schemeButtonsPanel.add(menuSchemeAddToView);
-		schemeButtonsPanel.add(menuSchemeRemoveFromView);
+		this.schemeButtonsPanel.add(this.menuSchemeAddToView);
+		this.schemeButtonsPanel.add(this.menuSchemeRemoveFromView);
 
 
-		scroll.setWheelScrollingEnabled(true);
-		scroll.setAutoscrolls(true);
+		this.scroll.setWheelScrollingEnabled(true);
+		this.scroll.setAutoscrolls(true);
 
-		this.add(scroll, BorderLayout.CENTER);
-		this.add(bindButtonsPanel, BorderLayout.SOUTH);
-		this.add(schemeButtonsPanel, BorderLayout.NORTH);
+		this.add(this.scroll, BorderLayout.CENTER);
+		this.add(this.bindButtonsPanel, BorderLayout.SOUTH);
+		this.add(this.schemeButtonsPanel, BorderLayout.NORTH);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -185,21 +174,21 @@ public final class MapSchemeTreePanel extends JPanel
 	public void operationPerformed(OperationEvent oe )
 	{
 		if(	oe.getActionCommand().equals(MapEvent.MAP_VIEW_CLOSED))
-			if(performProcessing)
+			if(this.performProcessing)
 			{
 				updateTree(null);
 			}
 		if(	oe.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
-			if(performProcessing)
+			if(this.performProcessing)
 			{
 				MapView mv = (MapView)oe.getSource();
-				if(model == null || model.mv == null || !model.mv.equals(mv))
+				if(this.model == null || this.model.mapView == null || !this.model.mapView.equals(mv))
 				{
 					updateTree(mv);
 				}
 			}
 		if(	oe.getActionCommand().equals(MapEvent.MAP_VIEW_CHANGED))
-			if(performProcessing)
+			if(this.performProcessing)
 			{
 				MapView mv = (MapView )oe.getSource();
 				updateTree(mv);
@@ -216,37 +205,37 @@ public final class MapSchemeTreePanel extends JPanel
 	
 	public void setPanel(UniTreePanel utp)
 	{
-		if(treePanel != null)
+		if(this.treePanel != null)
 		{
-			scroll.getViewport().remove(treePanel);
-			treePanel.getTree().removeTreeSelectionListener(this);
+			this.scroll.getViewport().remove(this.treePanel);
+			this.treePanel.getTree().removeTreeSelectionListener(this);
 		}
-		treePanel = utp;
-		if(treePanel != null)
+		this.treePanel = utp;
+		if(this.treePanel != null)
 		{
-			scroll.getViewport().add(treePanel);
-			treePanel.getTree().addTreeSelectionListener(this);
+			this.scroll.getViewport().add(this.treePanel);
+			this.treePanel.getTree().addTreeSelectionListener(this);
 		}
 	}
 
 	protected void initTree()
 	{
-		model = new MapSchemeTreeModel(null);
-		setPanel(new UniTreePanel(aContext.getDispatcher(), aContext, model));
+		this.model = new MapSchemeTreeModel(null);
+		setPanel(new UniTreePanel(this.aContext.getDispatcher(), this.aContext, this.model));
 	}
 
 	public void updateTree(MapView mv)
 	{
-		mapView = mv;
-		model.setMapView(mv);
-		treePanel.setModel(model);
+		this.mapView = mv;
+		this.model.setMapView(mv);
+		this.treePanel.setModel(this.model);
 
 		this.menuSchemeRemoveFromView.setEnabled(false);
 	}
 
-	private void placeSelection()
+	void placeSelection()
 	{
-		TreePath tp = treePanel.getTree().getSelectionPath();
+		TreePath tp = this.treePanel.getTree().getSelectionPath();
 		if(tp == null)
 			return;
 		ObjectResourceTreeNode ortn = (ObjectResourceTreeNode )tp.getLastPathComponent();
@@ -254,22 +243,22 @@ public final class MapSchemeTreePanel extends JPanel
 			return;
 		if(!ortn.isDragDropEnabled())
 			return;
-		Dispatcher disp = aContext.getDispatcher();
+		Dispatcher disp = this.aContext.getDispatcher();
 		if(disp == null)
 			return;
 		disp.notify(new MapEvent(ortn.getObject(), MapEvent.PLACE_ELEMENT));
 	}
 
-	private void placeAll()
+	void placeAll()
 	{
 		ObjectResourceTreeNode ortn;
 
-		Dispatcher disp = aContext.getDispatcher();
+		Dispatcher disp = this.aContext.getDispatcher();
 		if(disp == null)
 			return;
 
 		// Elements
-		ortn = (ObjectResourceTreeNode )treePanel.getTree().getSelectionPath().getLastPathComponent();
+		ortn = (ObjectResourceTreeNode )this.treePanel.getTree().getSelectionPath().getLastPathComponent();
 		sendPlaceEvent(ortn);
 	}
 	
@@ -278,8 +267,8 @@ public final class MapSchemeTreePanel extends JPanel
 		ObjectResourceTreeNode node = null;
 		
 		if(ortn.isDragDropEnabled())
-			if(aContext.getDispatcher() != null)
-				aContext.getDispatcher().notify(
+			if(this.aContext.getDispatcher() != null)
+				this.aContext.getDispatcher().notify(
 					new MapEvent(ortn.getObject(), MapEvent.PLACE_ELEMENT));
 		else
 		{
@@ -291,13 +280,13 @@ public final class MapSchemeTreePanel extends JPanel
 		}
 	}
 
-	private void addToView()
+	void addToView()
 	{
-		if(mapView == null)
+		if(this.mapView == null)
 			return;
 		
 		MapViewAddSchemeCommand command = (MapViewAddSchemeCommand )
-			aContext.getApplicationModel().getCommand("menuMapViewAddScheme");
+			this.aContext.getApplicationModel().getCommand("menuMapViewAddScheme");
 		command.execute();
 /*
 		aContext.getDispatcher().notify(new StatusMessageEvent(
@@ -363,10 +352,10 @@ public final class MapSchemeTreePanel extends JPanel
 */
 	}
 	
-	private void removeFromView()
+	void removeFromView()
 	{
 		MapViewRemoveSchemeCommand command = (MapViewRemoveSchemeCommand )
-			aContext.getApplicationModel().getCommand("menuMapViewRemoveScheme");
+			this.aContext.getApplicationModel().getCommand("menuMapViewRemoveScheme");
 		command.execute();
 /*
 		ObjectResourceTreeNode node = (ObjectResourceTreeNode )
@@ -418,10 +407,10 @@ public final class MapSchemeTreePanel extends JPanel
 		}
 		if(sel != null)
 		{
-			Dispatcher disp = aContext.getDispatcher();
+			Dispatcher disp = this.aContext.getDispatcher();
 			if(disp != null)
 			{
-				if(mapView != null)
+				if(this.mapView != null)
 				{
 //					getLogicalNetLayer().getMapViewController().deselectAll();
 					disp.notify(new MapEvent(this, MapEvent.DESELECT_ALL));

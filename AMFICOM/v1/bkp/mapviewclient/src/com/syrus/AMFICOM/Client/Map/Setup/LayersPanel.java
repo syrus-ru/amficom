@@ -1,5 +1,5 @@
 /*
- * Ќазвание: $Id: LayersPanel.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
+ * Ќазвание: $Id: LayersPanel.java,v 1.3 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -37,12 +37,9 @@ import javax.swing.JSeparator;
 
 /**
  * панель управлени€ отображением слоев
- * 
- * 
- * 
- * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public class LayersPanel extends JPanel
 {
@@ -61,7 +58,7 @@ public class LayersPanel extends JPanel
 	/**
 	 * окно карты
 	 */
-	private MapFrame mmf;
+	private MapFrame mapFrame;
 	
 	/**
 	 * список слоев
@@ -71,7 +68,7 @@ public class LayersPanel extends JPanel
 	/**
 	 * обработчик изменени€ видимости сло€
 	 */
-	private ActionListener al = new ActionListener()
+	private ActionListener actionListener = new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -96,20 +93,14 @@ public class LayersPanel extends JPanel
 		}
 	}
 
-	/**
-	 * ћетод jbInit
-	 * 
-	 * 
-	 * @exception Exception
-	 */
 	private void jbInit()
 	{
 		this.setLayout(new BorderLayout());
 
 		this.setSize(new Dimension(370, 629));
 
-		titlePanel.setLayout(gridBagLayout1);
-		layersPanel.setLayout(gridBagLayout1);
+		this.titlePanel.setLayout(this.gridBagLayout1);
+		this.layersPanel.setLayout(this.gridBagLayout1);
 
 		GridBagConstraints gridbagconstraints = new GridBagConstraints();
 
@@ -122,7 +113,7 @@ public class LayersPanel extends JPanel
 		gridbagconstraints.gridwidth = 1;
 		gridbagconstraints.gridheight = 1;
 		gridbagconstraints.fill = 0;
-		titlePanel.add(jlabel, gridbagconstraints);
+		this.titlePanel.add(jlabel, gridbagconstraints);
 
 		Component box = Box.createHorizontalBox();
 		box.setSize(32, 1);
@@ -133,7 +124,7 @@ public class LayersPanel extends JPanel
 		gridbagconstraints.gridwidth = 1;
 		gridbagconstraints.gridheight = 1;
 		gridbagconstraints.fill = 0;
-		titlePanel.add(box, gridbagconstraints);
+		this.titlePanel.add(box, gridbagconstraints);
 
 		JLabel jlabel2 = new JLabel(LangModelMap.getString("Layers"));
 		gridbagconstraints.gridx = 2;
@@ -143,7 +134,7 @@ public class LayersPanel extends JPanel
 		gridbagconstraints.gridwidth = 1;
 		gridbagconstraints.gridheight = 1;
 		gridbagconstraints.fill = 2;
-		titlePanel.add(jlabel2, gridbagconstraints);
+		this.titlePanel.add(jlabel2, gridbagconstraints);
 
 		Component strut = Box.createHorizontalStrut(5);
 		gridbagconstraints.gridx = 0;
@@ -153,7 +144,7 @@ public class LayersPanel extends JPanel
 		gridbagconstraints.gridwidth = 3;
 		gridbagconstraints.gridheight = 1;
 		gridbagconstraints.fill = 0;
-		titlePanel.add(strut, gridbagconstraints);
+		this.titlePanel.add(strut, gridbagconstraints);
 
 		JSeparator jseparator = new JSeparator();
 		gridbagconstraints.gridx = 0;
@@ -163,19 +154,19 @@ public class LayersPanel extends JPanel
 		gridbagconstraints.gridwidth = 3;
 		gridbagconstraints.gridheight = 1;
 		gridbagconstraints.fill = 2;
-		titlePanel.add(jseparator, gridbagconstraints);
+		this.titlePanel.add(jseparator, gridbagconstraints);
 
-		this.add(titlePanel, BorderLayout.NORTH);
-		this.add(new JScrollPane(layersPanel), BorderLayout.CENTER);
+		this.add(this.titlePanel, BorderLayout.NORTH);
+		this.add(new JScrollPane(this.layersPanel), BorderLayout.CENTER);
 	}
 
 	/**
 	 * установка окна карты -> перерисовка или обнуление списка слоев
 	 */
-	public void setMapFrame(MapFrame mmf)
+	public void setMapFrame(MapFrame mapFrame)
 	{
-		this.mmf = mmf;
-		if(mmf != null)
+		this.mapFrame = mapFrame;
+		if(mapFrame != null)
 		{
 			updateList();
 		}
@@ -190,8 +181,8 @@ public class LayersPanel extends JPanel
 	 */
 	public void clearList()
 	{
-		tableData.clear();
-		layersPanel.removeAll();
+		this.tableData.clear();
+		this.layersPanel.removeAll();
 	}
 	
 	/**
@@ -199,12 +190,12 @@ public class LayersPanel extends JPanel
 	 */
 	public void updateList()
 	{
-		tableData.clear();
+		this.tableData.clear();
 		
-		for(Iterator it = mmf.getMapViewer().getLayers().iterator(); it.hasNext();)
+		for(Iterator it = this.mapFrame.getMapViewer().getLayers().iterator(); it.hasNext();)
 		{
 			SpatialLayer sl = (SpatialLayer )it.next();
-			tableData.add(sl);
+			this.tableData.add(sl);
 		}
 		
 		layoutLayerRows();
@@ -216,7 +207,7 @@ public class LayersPanel extends JPanel
 	 */
 	public void layoutLayerRows()
 	{
-		layersPanel.removeAll();
+		this.layersPanel.removeAll();
 
 		GridBagConstraints gridbagconstraints = new GridBagConstraints();
 		Component imageLabel;
@@ -224,7 +215,7 @@ public class LayersPanel extends JPanel
 
 		int i = 0;
 		
-		for(Iterator it = tableData.iterator(); it.hasNext();)
+		for(Iterator it = this.tableData.iterator(); it.hasNext();)
 		{
 			sl = (SpatialLayer )it.next();
 		
@@ -232,9 +223,9 @@ public class LayersPanel extends JPanel
 
 			LayerVisibilityCheckBox jcheckbox = new LayerVisibilityCheckBox(sl);
 			jcheckbox.setSelected(sl.isVisible());
-			jcheckbox.addActionListener(al);
+			jcheckbox.addActionListener(this.actionListener);
 
-			jcheckbox.setBackground(layersPanel.getBackground());
+			jcheckbox.setBackground(this.layersPanel.getBackground());
 			jcheckbox.setAlignmentY(0.5F);
 			jcheckbox.setAlignmentX(0.8F);
 			gridbagconstraints.gridx = 0;
@@ -244,11 +235,11 @@ public class LayersPanel extends JPanel
 			gridbagconstraints.gridwidth = 1;
 			gridbagconstraints.gridheight = 1;
 			gridbagconstraints.fill = 0;
-			layersPanel.add(jcheckbox, gridbagconstraints);
+			this.layersPanel.add(jcheckbox, gridbagconstraints);
 
 			if(imageLabel != null)
 			{
-				imageLabel.setBackground(layersPanel.getBackground());
+				imageLabel.setBackground(this.layersPanel.getBackground());
 				gridbagconstraints.gridx = 1;
 				gridbagconstraints.gridy = i;
 				gridbagconstraints.weightx = 0.0D;
@@ -256,7 +247,7 @@ public class LayersPanel extends JPanel
 				gridbagconstraints.gridwidth = 1;
 				gridbagconstraints.gridheight = 1;
 				gridbagconstraints.fill = 0;
-				layersPanel.add(imageLabel, gridbagconstraints);
+				this.layersPanel.add(imageLabel, gridbagconstraints);
 			}
 
 			JLabel nameLabel = new JLabel(" " + sl.getName());
@@ -267,7 +258,7 @@ public class LayersPanel extends JPanel
 			gridbagconstraints.gridwidth = 1;
 			gridbagconstraints.gridheight = 1;
 			gridbagconstraints.fill = 2;
-			layersPanel.add(nameLabel, gridbagconstraints);
+			this.layersPanel.add(nameLabel, gridbagconstraints);
 			i++;
 		}
 		
@@ -276,7 +267,7 @@ public class LayersPanel extends JPanel
 	
 	public MapFrame getMapFrame() 
 	{
-		return mmf;
+		return this.mapFrame;
 	}
 
 	/**

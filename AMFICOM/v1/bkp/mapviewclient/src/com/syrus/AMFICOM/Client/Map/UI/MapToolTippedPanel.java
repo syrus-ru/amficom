@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolTippedPanel.java,v 1.4 2004/12/24 15:42:13 krupenn Exp $
+ * $Id: MapToolTippedPanel.java,v 1.5 2005/02/10 11:48:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,10 +10,6 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Map.NetMapViewer;
-import com.syrus.AMFICOM.map.MapElement;
-
 import java.awt.Container;
 import java.awt.GraphicsConfiguration;
 import java.awt.Point;
@@ -23,8 +19,10 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
+
+import com.syrus.AMFICOM.Client.Map.MapState;
+import com.syrus.AMFICOM.Client.Map.NetMapViewer;
+import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Класс используется для отображения всплывающих подсказок. Для этого
@@ -33,60 +31,56 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
  * NetMapViewer (прозрачно передавать сообщения мыши родительскому объекту 
  * NetMapViewer). Объект класса MapToolTippedPanel прозрачен и не видим для
  * пользователя
- * 
- * 
- * 
- * @version $Revision: 1.4 $, $Date: 2004/12/24 15:42:13 $
- * @module map_v2
+ * @version $Revision: 1.5 $, $Date: 2005/02/10 11:48:40 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public class MapToolTippedPanel extends JComponent
 {
 	NetMapViewer parent;
 	JComponent component;
-	public MapToolTippedPanelListener ls;
+	public MapToolTippedPanelListener toolTippedPanelListener;
 
 	public MapToolTippedPanel(NetMapViewer parent)
 	{
 		super();
 		this.parent = parent;
 		this.component = parent.getVisualComponent();
-		ls = new MapToolTippedPanelListener(this);
+		this.toolTippedPanelListener = new MapToolTippedPanelListener(this);
 	}
 
 	public int getWidth()
 	{
-		return component.getWidth();
+		return this.component.getWidth();
 	}
 
 	public int getHeight()
 	{
-		return component.getHeight();
+		return this.component.getHeight();
 	}
 	public boolean isShowing()
 	{
-		return component.isShowing();
+		return this.component.isShowing();
 	}
 
 	public Point getLocationOnScreen()
 	{
-		return component.getLocationOnScreen();
+		return this.component.getLocationOnScreen();
 	}
 
 	public GraphicsConfiguration getGraphicsConfiguration()
 	{
-		return component.getGraphicsConfiguration();
+		return this.component.getGraphicsConfiguration();
 	}
 
 	public Container getTopLevelAncestor()
 	{
-		return component.getParent();
+		return this.component.getParent();
 	}
 
 	public Container getParent()
 	{
-		return component.getParent();
+		return this.component.getParent();
 	}
 
     public JToolTip createToolTip() 
@@ -94,7 +88,7 @@ public class MapToolTippedPanel extends JComponent
 //		System.out.println("create tooltip");
 //        JToolTip tip = new MapToolTip(parent.getLogicalNetLayer());
         JToolTip tip = new MapToolTip();
-        tip.setComponent(component);
+        tip.setComponent(this.component);
 //		System.out.println("tooltip created!");
         return tip;
     }
@@ -102,9 +96,9 @@ public class MapToolTippedPanel extends JComponent
 	public String getToolTipText()
 	{
 //		System.out.println("create tooltip");
-		if(parent.getLogicalNetLayer() == null)
+		if(this.parent.getLogicalNetLayer() == null)
 			return "";
-		MapState mapState = parent.getLogicalNetLayer().getMapState();
+		MapState mapState = this.parent.getLogicalNetLayer().getMapState();
 		if(mapState.getOperationMode() != MapState.NO_OPERATION)
 			return "";
 		if(mapState.getMouseMode() != MapState.MOUSE_NONE)
@@ -113,10 +107,10 @@ public class MapToolTippedPanel extends JComponent
 			return "";
 		try 
 		{
-			MapElement me = parent.getLogicalNetLayer().getMapElementAtPoint(
-					parent.getLogicalNetLayer().getCurrentPoint());
+			MapElement me = this.parent.getLogicalNetLayer().getMapElementAtPoint(
+					this.parent.getLogicalNetLayer().getCurrentPoint());
 //			System.out.println("tooltip created! " + me.getToolTipText());
-			return parent.getLogicalNetLayer().getMapViewController().getController(me).getToolTipText(me);
+			return this.parent.getLogicalNetLayer().getMapViewController().getController(me).getToolTipText(me);
 		} 
 		catch (Exception ex) 
 		{
@@ -131,10 +125,9 @@ public class MapToolTippedPanel extends JComponent
  * возникающих событий мыши родительскому объекту
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/24 15:42:13 $
- * @module map_v2
+ * @version $Revision: 1.5 $, $Date: 2005/02/10 11:48:40 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 class MapToolTippedPanelListener implements MouseListener, MouseMotionListener
 {
@@ -147,9 +140,9 @@ class MapToolTippedPanelListener implements MouseListener, MouseMotionListener
 
 	public void mouseClicked(MouseEvent e)
 	{
-		parent.dispatchEvent(
+		this.parent.dispatchEvent(
 			new MouseEvent(
-				parent, 
+				this.parent, 
 				e.getID(), 
 				e.getWhen(), 
 				e.getModifiers(), 
@@ -161,9 +154,9 @@ class MapToolTippedPanelListener implements MouseListener, MouseMotionListener
 
 	public void mousePressed(MouseEvent e)
 	{
-		parent.dispatchEvent(
+		this.parent.dispatchEvent(
 			new MouseEvent(
-				parent, 
+				this.parent, 
 				e.getID(), 
 				e.getWhen(), 
 				e.getModifiers(), 
@@ -175,9 +168,9 @@ class MapToolTippedPanelListener implements MouseListener, MouseMotionListener
 
 	public void mouseReleased(MouseEvent e)
 	{
-		parent.dispatchEvent(
+		this.parent.dispatchEvent(
 			new MouseEvent(
-				parent, 
+				this.parent, 
 				e.getID(), 
 				e.getWhen(), 
 				e.getModifiers(), 
@@ -189,9 +182,9 @@ class MapToolTippedPanelListener implements MouseListener, MouseMotionListener
 
 	public void mouseEntered(MouseEvent e)
 	{
-		parent.dispatchEvent(
+		this.parent.dispatchEvent(
 			new MouseEvent(
-				parent, 
+				this.parent, 
 				e.getID(), 
 				e.getWhen(), 
 				e.getModifiers(), 
@@ -203,9 +196,9 @@ class MapToolTippedPanelListener implements MouseListener, MouseMotionListener
 
 	public void mouseExited(MouseEvent e)
 	{
-		parent.dispatchEvent(
+		this.parent.dispatchEvent(
 			new MouseEvent(
-				parent, 
+				this.parent, 
 				e.getID(), 
 				e.getWhen(), 
 				e.getModifiers(), 
@@ -217,9 +210,9 @@ class MapToolTippedPanelListener implements MouseListener, MouseMotionListener
 
 	public void mouseDragged(MouseEvent e)
 	{
-		parent.dispatchEvent(
+		this.parent.dispatchEvent(
 			new MouseEvent(
-				parent, 
+				this.parent, 
 				e.getID(), 
 				e.getWhen(), 
 				e.getModifiers(), 
@@ -231,9 +224,9 @@ class MapToolTippedPanelListener implements MouseListener, MouseMotionListener
 
 	public void mouseMoved(MouseEvent e)
 	{
-		parent.dispatchEvent(
+		this.parent.dispatchEvent(
 			new MouseEvent(
-				parent, 
+				this.parent, 
 				e.getID(), 
 				e.getWhen(), 
 				e.getModifiers(), 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.9 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.10 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,10 +28,9 @@ import java.awt.event.MouseMotionListener;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/22 16:38:42 $
- * @module
+ * @version $Revision: 1.10 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public final class MapMouseMotionListener implements MouseMotionListener
 {
@@ -47,47 +46,47 @@ public final class MapMouseMotionListener implements MouseMotionListener
 
 //		System.out.println("Dragged to (" + me.getPoint().x + ", " + me.getPoint().y + ")");
 
-		logicalNetLayer.setCurrentPoint(me.getPoint());
-		MapState mapState = logicalNetLayer.getMapState();
+		this.logicalNetLayer.setCurrentPoint(me.getPoint());
+		MapState mapState = this.logicalNetLayer.getMapState();
 		
 		mapState.setMouseMode(MapState.MOUSE_DRAGGED);
-		if ( logicalNetLayer.getMapView() != null)
+		if ( this.logicalNetLayer.getMapView() != null)
 		{
-			logicalNetLayer.setEndPoint(me.getPoint());
-			logicalNetLayer.showLatLong(me.getPoint());
+			this.logicalNetLayer.setEndPoint(me.getPoint());
+			this.logicalNetLayer.showLatLong(me.getPoint());
 
 			//Обрабатывает события на панели инстрементов
 			switch (mapState.getOperationMode())
 			{
 				case MapState.MEASURE_DISTANCE:
-					logicalNetLayer.repaint(false);
+					this.logicalNetLayer.repaint(false);
 					break;
 				case MapState.MOVE_HAND:
 					//Если перемещают карту лапкой
-					logicalNetLayer.handDragged(me);
+					this.logicalNetLayer.handDragged(me);
 					break;
 				case MapState.MOVE_TO_CENTER:
 					break;
 				case MapState.ZOOM_TO_RECT:
-					logicalNetLayer.repaint(false);
+					this.logicalNetLayer.repaint(false);
 					break;
 				case MapState.NODELINK_SIZE_EDIT:
 					break;
 				case MapState.MOVE_FIXDIST:
 					// fall through
 				case MapState.NO_OPERATION:
-					MapElement mapElement = logicalNetLayer.getCurrentMapElement();
+					MapElement mapElement = this.logicalNetLayer.getCurrentMapElement();
 					MapStrategy strategy = MapStrategyManager.getStrategy(mapElement);
 					if(strategy != null)
 					{
-						strategy.setLogicalNetLayer(logicalNetLayer);
+						strategy.setLogicalNetLayer(this.logicalNetLayer);
 						strategy.doContextChanges(me);
 					}
 	
-					logicalNetLayer.sendMapEvent(new MapNavigateEvent(
+					this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
 								mapElement, 
 								MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-					logicalNetLayer.repaint(false);
+					this.logicalNetLayer.repaint(false);
 					break;
 				default:
 					try
@@ -107,12 +106,12 @@ public final class MapMouseMotionListener implements MouseMotionListener
 
 	public void mouseMoved(MouseEvent me)
 	{
-		logicalNetLayer.setCurrentPoint(me.getPoint());
+		this.logicalNetLayer.setCurrentPoint(me.getPoint());
 		
-		MapState mapState = logicalNetLayer.getMapState();
+		MapState mapState = this.logicalNetLayer.getMapState();
 
 		mapState.setMouseMode( MapState.MOUSE_MOVED);
-		logicalNetLayer.showLatLong( me.getPoint());//Выводим значения широты и долготы
+		this.logicalNetLayer.showLatLong( me.getPoint());//Выводим значения широты и долготы
 		mapState.setMouseMode( MapState.MOUSE_NONE);
 	}
 }

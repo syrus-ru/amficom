@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolTip.java,v 1.1 2004/09/13 12:33:43 krupenn Exp $
+ * $Id: MapToolTip.java,v 1.2 2005/02/10 11:48:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,26 +19,17 @@ import javax.swing.JToolTip;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:43 $
- * @module map_v2
+ * @version $Revision: 1.2 $, $Date: 2005/02/10 11:48:40 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public class MapToolTip extends JToolTip 
 {
-//	LogicalNetLayer lnl;
-	MultiRowToolTipUI bttui = new MultiRowToolTipUI();
+	MultiRowToolTipUI toolTipUI = new MultiRowToolTipUI();
 	
 	public MapToolTip()
 	{
 		super();
-		setUI(bttui);
+		setUI(this.toolTipUI);
 	}
-
-//	public MapToolTip(LogicalNetLayer lnl)
-//	{
-//		super();
-//		this.lnl = lnl;
-//		setUI(bttui);
-//	}
 }

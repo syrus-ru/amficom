@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.14 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.15 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,36 +11,10 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.Mark;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.Marker;
-import com.syrus.AMFICOM.mapview.MeasurementPath;
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,15 +28,32 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.mapview.MapView;
+
 /**
  * Данный класс изображает панель на которой находится ComboBox со списком
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2005/02/01 11:34:56 $
- * @module map_v2
+ * @version $Revision: 1.15 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public final class MapElementsPanel extends JPanel
 {
@@ -126,19 +117,19 @@ public final class MapElementsPanel extends JPanel
   
 	void jbInit()
 	{
-		typeComboBox.addItem(ELEMENTS_SITE);
-		typeComboBox.addItem(ELEMENTS_WELL);
-		typeComboBox.addItem(ELEMENTS_PIQUET);
-		typeComboBox.addItem(ELEMENTS_LINK);
-		typeComboBox.addItem(ELEMENTS_COLLECTOR);
-		typeComboBox.addItem(ELEMENTS_CABLE);
-//		typeComboBox.addItem(SchemeElement.typ);
-		typeComboBox.addItem(ELEMENTS_NODE);
-		typeComboBox.addItem(ELEMENTS_MARK);
-		typeComboBox.addItem(ELEMENTS_PATH);
-		typeComboBox.addItem(ELEMENTS_MARKER);
+		this.typeComboBox.addItem(ELEMENTS_SITE);
+		this.typeComboBox.addItem(ELEMENTS_WELL);
+		this.typeComboBox.addItem(ELEMENTS_PIQUET);
+		this.typeComboBox.addItem(ELEMENTS_LINK);
+		this.typeComboBox.addItem(ELEMENTS_COLLECTOR);
+		this.typeComboBox.addItem(ELEMENTS_CABLE);
+//		this.typeComboBox.addItem(SchemeElement.typ);
+		this.typeComboBox.addItem(ELEMENTS_NODE);
+		this.typeComboBox.addItem(ELEMENTS_MARK);
+		this.typeComboBox.addItem(ELEMENTS_PATH);
+		this.typeComboBox.addItem(ELEMENTS_MARKER);
 
-		typeComboBox.addActionListener(new java.awt.event.ActionListener()
+		this.typeComboBox.addActionListener(new java.awt.event.ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
@@ -146,25 +137,25 @@ public final class MapElementsPanel extends JPanel
 			}
 		});
 
-		typeComboBox.setRenderer(new MapElementsPanel.MapElementPanelRenderer());
+		this.typeComboBox.setRenderer(new MapElementsPanel.MapElementPanelRenderer());
 
-		controller = SimpleMapElementController.getInstance();
-		model = new ObjectResourceTableModel(controller);
-		table = new ObjectResourceTable(model);
+		this.controller = SimpleMapElementController.getInstance();
+		this.model = new ObjectResourceTableModel(this.controller);
+		this.table = new ObjectResourceTable(this.model);
 
-		scrollPane.getViewport().add(table);
+		this.scrollPane.getViewport().add(this.table);
 
-		scrollPane.setWheelScrollingEnabled(true);
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		table.setBackground(SystemColor.window);
+		this.scrollPane.setWheelScrollingEnabled(true);
+		this.scrollPane.getViewport().setBackground(SystemColor.window);
+		this.table.setBackground(SystemColor.window);
 
 		setEnabled(false);
-		this.setLayout(borderLayout2);
+		this.setLayout(this.borderLayout2);
 
-		table.getSelectionModel().setSelectionMode(
+		this.table.getSelectionModel().setSelectionMode(
 				ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-		table.getSelectionModel().addListSelectionListener
+		this.table.getSelectionModel().addListSelectionListener
 		(
 			new ListSelectionListener()
 			{
@@ -175,10 +166,10 @@ public final class MapElementsPanel extends JPanel
 			}
 		);
 
-		jPanel1.setLayout(borderLayout1);
-		jPanel1.add(typeComboBox,  BorderLayout.CENTER);
-		this.add(scrollPane, BorderLayout.CENTER);
-		this.add(jPanel1, BorderLayout.NORTH);
+		this.jPanel1.setLayout(this.borderLayout1);
+		this.jPanel1.add(this.typeComboBox,  BorderLayout.CENTER);
+		this.add(this.scrollPane, BorderLayout.CENTER);
+		this.add(this.jPanel1, BorderLayout.NORTH);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -210,8 +201,8 @@ public final class MapElementsPanel extends JPanel
 		this.logicalNetLayer = logicalNetLayer;
 		if(logicalNetLayer != null)
 		{
-			mapView = logicalNetLayer.getMapView();
-			map = mapView.getMap();
+			this.mapView = logicalNetLayer.getMapView();
+			this.map = this.mapView.getMap();
 		}
 		setEnabled(logicalNetLayer != null);
 		updateTable();
@@ -221,35 +212,35 @@ public final class MapElementsPanel extends JPanel
 	{
 		try
 		{
-			Dispatcher disp = null;
-			if(aContext != null)
-				disp = aContext.getDispatcher();
+			Dispatcher dispatcher = null;
+			if(this.aContext != null)
+				dispatcher = this.aContext.getDispatcher();
 
 			//Если поле выбрано мышью
-			if (mouseSelect
-				&& doNotify
-				&& disp != null)
+			if (this.mouseSelect
+				&& this.doNotify
+				&& dispatcher != null)
 			{
 
-				for(Iterator it = model.getContents().iterator(); it.hasNext();)
+				for(Iterator it = this.model.getContents().iterator(); it.hasNext();)
 				{
-					MapElement mapE = (MapElement)it.next();
-					performProcessing = false;
-					disp.notify(new MapNavigateEvent(mapE, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));
-					performProcessing = true;
+					MapElement mapElement = (MapElement)it.next();
+					this.performProcessing = false;
+					dispatcher.notify(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));
+					this.performProcessing = true;
 				}
 
-				for (int i = 0; i < table.getSelectedRows().length; i++)
+				for (int i = 0; i < this.table.getSelectedRows().length; i++)
 				{
-					MapElement mapE = (MapElement)model.getObject(table.getSelectedRows()[(i)]);
+					MapElement mapElement = (MapElement)this.model.getObject(this.table.getSelectedRows()[(i)]);
 
-					performProcessing = false;
-					disp.notify(new MapNavigateEvent(mapE, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-					logicalNetLayer.notifySchemeEvent(mapE);
-					performProcessing = true;
+					this.performProcessing = false;
+					dispatcher.notify(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+					this.logicalNetLayer.notifySchemeEvent(mapElement);
+					this.performProcessing = true;
 				}
 
-				disp.notify(new MapEvent(this, MapNavigateEvent.MAP_CHANGED));
+				dispatcher.notify(new MapEvent(this, MapEvent.MAP_CHANGED));
 			}
 		}
 		catch(Exception e)
@@ -261,17 +252,16 @@ public final class MapElementsPanel extends JPanel
 	public void updateTable()
 	{
 		//Оновить таблицу
-		mouseSelect = false;
+		this.mouseSelect = false;
 		//Здесь очищаем выбранные элементы у табли
-		table.clearSelection();
+		this.table.clearSelection();
 
-		String selection = (String )typeComboBox.getSelectedItem();
+		String selection = (String )this.typeComboBox.getSelectedItem();
 		List dataSet = new LinkedList();
 
-		if(map != null && logicalNetLayer != null)
+		if(this.map != null && this.logicalNetLayer != null)
 		{
-			Identifier creatorId = new Identifier(
-				aContext.getSessionInterface().getAccessIdentifier().user_id);
+			Identifier creatorId = this.logicalNetLayer.getUserId();
 
 			SiteNodeType well = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.WELL);
 			SiteNodeType piquet = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.PIQUET);
@@ -279,7 +269,7 @@ public final class MapElementsPanel extends JPanel
 
 			if(selection.equals(ELEMENTS_SITE))
 			{
-				for(Iterator it = map.getSiteNodes().iterator(); it.hasNext();)
+				for(Iterator it = this.map.getSiteNodes().iterator(); it.hasNext();)
 				{
 					SiteNode site = (SiteNode)it.next();
 					if(		!site.getType().equals(well)
@@ -290,7 +280,7 @@ public final class MapElementsPanel extends JPanel
 			else
 			if(selection.equals(ELEMENTS_WELL))
 			{
-				for(Iterator it = map.getSiteNodes().iterator(); it.hasNext();)
+				for(Iterator it = this.map.getSiteNodes().iterator(); it.hasNext();)
 				{
 					SiteNode site = (SiteNode)it.next();
 					if(site.getType().equals(well))
@@ -300,7 +290,7 @@ public final class MapElementsPanel extends JPanel
 			else
 			if(selection.equals(ELEMENTS_PIQUET))
 			{
-				for(Iterator it = map.getSiteNodes().iterator(); it.hasNext();)
+				for(Iterator it = this.map.getSiteNodes().iterator(); it.hasNext();)
 				{
 					SiteNode site = (SiteNode)it.next();
 					if(site.getType().equals(piquet))
@@ -309,25 +299,25 @@ public final class MapElementsPanel extends JPanel
 			}
 			else
 			if(selection.equals(ELEMENTS_LINK))
-				dataSet = map.getPhysicalLinks();
+				dataSet = this.map.getPhysicalLinks();
 			else
 			if(selection.equals(ELEMENTS_PATH))
-				dataSet = logicalNetLayer.getMapView().getMeasurementPaths();
+				dataSet = this.logicalNetLayer.getMapView().getMeasurementPaths();
 			else
 			if(selection.equals(ELEMENTS_NODE))
-				dataSet = map.getTopologicalNodes();
+				dataSet = this.map.getTopologicalNodes();
 			else
 			if(selection.equals(ELEMENTS_MARK))
-				dataSet = map.getMarks();
+				dataSet = this.map.getMarks();
 			else
 			if(selection.equals(ELEMENTS_MARKER))
-				dataSet = logicalNetLayer.getMapView().getMarkers();
+				dataSet = this.logicalNetLayer.getMapView().getMarkers();
 			else
 			if(selection.equals(ELEMENTS_COLLECTOR))
-				dataSet = map.getCollectors();
+				dataSet = this.map.getCollectors();
 			else
 			if(selection.equals(ELEMENTS_CABLE))
-				dataSet = logicalNetLayer.getMapView().getCablePaths();
+				dataSet = this.logicalNetLayer.getMapView().getCablePaths();
 //			else
 //			if(selection.equals(SchemeElement.typ))
 //			{
@@ -340,9 +330,9 @@ public final class MapElementsPanel extends JPanel
 //			}
 		}
 
-		model.setContents(dataSet);
+		this.model.setContents(dataSet);
 
-		mouseSelect = true;
+		this.mouseSelect = true;
 
 		setSelectedObjects();
 	}
@@ -352,20 +342,20 @@ public final class MapElementsPanel extends JPanel
 		try
 		{
 			//Оновить таблицу
-			mouseSelect = false;
+			this.mouseSelect = false;
 			//Здесь очищаем выбранные элементы у табли
-			table.clearSelection();
+			this.table.clearSelection();
 	
-			List dataSet = model.getContents();
+			List dataSet = this.model.getContents();
 			int i = 0;
 			for(Iterator it = dataSet.iterator(); it.hasNext();)
 			{
 				MapElement me = (MapElement)it.next();
 				if(me.isSelected())
-					table.getSelectionModel().addSelectionInterval(i, i);
+					this.table.getSelectionModel().addSelectionInterval(i, i);
 				i++;
 			}
-			mouseSelect = true;
+			this.mouseSelect = true;
 		}
 		catch(Exception e)
 		{
@@ -375,12 +365,12 @@ public final class MapElementsPanel extends JPanel
 
 	public void setEnabled( boolean b)
 	{
-		typeComboBox.setEnabled(b);
-		table.setEnabled(b);
+		this.typeComboBox.setEnabled(b);
+		this.table.setEnabled(b);
 
 		if (!b)
 		{
-			model.clear();
+			this.model.clear();
 		}
 	}
 

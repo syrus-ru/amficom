@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.15 2005/01/21 16:19:58 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.16 2005/02/10 11:48:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,6 +9,24 @@
 */
 package com.syrus.AMFICOM.Client.Map.UI;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
@@ -16,40 +34,14 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.map.DoublePoint;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import java.awt.geom.Point2D;
-import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-
-import oracle.jdeveloper.layout.XYLayout;
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
 
 /**
  * Панель инструментов окна карты
- * 
- * 
- * 
- * @version $Revision: 1.15 $, $Date: 2005/01/21 16:19:58 $
- * @module map_v2
+ * @version $Revision: 1.16 $, $Date: 2005/02/10 11:48:40 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public final class MapToolBar extends JToolBar 
 		implements ApplicationModelListener//, OperationListener
@@ -78,11 +70,11 @@ public final class MapToolBar extends JToolBar
 	private LogicalNetLayer logicalNetLayer;
 
 	private JLabel latitudeLabel = new JLabel();
-	private JTextField latitudeTextField = new JTextField();
+	JTextField latitudeTextField = new JTextField();
 	private JLabel longitudeLabel = new JLabel();
-	private JTextField longitudeField = new JTextField();
+	JTextField longitudeField = new JTextField();
 	private JLabel scaleLabel = new JLabel();
-	private JTextField scaleField = new JTextField();
+	JTextField scaleField = new JTextField();
 
 	private JButton optionsButton = new JButton();
 
@@ -91,14 +83,14 @@ public final class MapToolBar extends JToolBar
 	private static Dimension buttonSize = new Dimension(24, 24);
 	private static Dimension fieldSize = new Dimension(60, 24);
 
-	public NodeSizePanel sp;
+	public NodeSizePanel nodeSizePanel;
 	
-	private MapPenBarPanel penp;
+//	private MapPenBarPanel penp;
 
-	public MapToolBar(LogicalNetLayer lnl)
+	public MapToolBar(LogicalNetLayer logicalNetLayer)
 	{
 		this();
-		setLogicalNetLayer(lnl);
+		setLogicalNetLayer(logicalNetLayer);
 	}
 	
 	public MapToolBar()
@@ -117,7 +109,7 @@ public final class MapToolBar extends JToolBar
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
 	{
 		this.logicalNetLayer = logicalNetLayer;
-		sp.setLogicalNetLayer(logicalNetLayer);
+		this.nodeSizePanel.setLogicalNetLayer(logicalNetLayer);
 //		penp.setLogicalNetLayer(logicalNetLayer);
 	}
 
@@ -125,8 +117,8 @@ public final class MapToolBar extends JToolBar
 	{
 		try
 		{
-			latitudeTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(latitude));
-			longitudeField.setText(MapPropertiesManager.getCoordinatesFormat().format(longitude));
+			this.latitudeTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(latitude));
+			this.longitudeField.setText(MapPropertiesManager.getCoordinatesFormat().format(longitude));
 		}
 		catch(Exception e)
 		{
@@ -138,7 +130,7 @@ public final class MapToolBar extends JToolBar
 	{
 		try
 		{
-			scaleField.setText(MapPropertiesManager.getScaleFormat().format(scale));
+			this.scaleField.setText(MapPropertiesManager.getScaleFormat().format(scale));
 		}
 		catch(Exception e)
 		{
@@ -151,122 +143,122 @@ public final class MapToolBar extends JToolBar
 		MapToolBarActionAdapter actionAdapter =
 				new MapToolBarActionAdapter(this);
 
-		zoomInButton.setIcon(new ImageIcon("images/zoom_in.gif"));
-		zoomInButton.addActionListener(actionAdapter);
-		zoomInButton.setToolTipText(LangModelMap.getString("ZoomIn"));
-		zoomInButton.setPreferredSize(buttonSize);
-		zoomInButton.setMaximumSize(buttonSize);
-		zoomInButton.setMinimumSize(buttonSize);
-		zoomInButton.setName(MapApplicationModel.OPERATION_ZOOM_IN);
+		this.zoomInButton.setIcon(new ImageIcon("images/zoom_in.gif"));
+		this.zoomInButton.addActionListener(actionAdapter);
+		this.zoomInButton.setToolTipText(LangModelMap.getString("ZoomIn"));
+		this.zoomInButton.setPreferredSize(buttonSize);
+		this.zoomInButton.setMaximumSize(buttonSize);
+		this.zoomInButton.setMinimumSize(buttonSize);
+		this.zoomInButton.setName(MapApplicationModel.OPERATION_ZOOM_IN);
 	
-		zoomOutButton.setIcon(new ImageIcon("images/zoom_out.gif"));
-		zoomOutButton.addActionListener(actionAdapter);
-		zoomOutButton.setToolTipText(LangModelMap.getString("ZoomOut"));
-		zoomOutButton.setPreferredSize(buttonSize);
-		zoomOutButton.setMaximumSize(buttonSize);
-		zoomOutButton.setMinimumSize(buttonSize);
-		zoomOutButton.setName(MapApplicationModel.OPERATION_ZOOM_OUT);
+		this.zoomOutButton.setIcon(new ImageIcon("images/zoom_out.gif"));
+		this.zoomOutButton.addActionListener(actionAdapter);
+		this.zoomOutButton.setToolTipText(LangModelMap.getString("ZoomOut"));
+		this.zoomOutButton.setPreferredSize(buttonSize);
+		this.zoomOutButton.setMaximumSize(buttonSize);
+		this.zoomOutButton.setMinimumSize(buttonSize);
+		this.zoomOutButton.setName(MapApplicationModel.OPERATION_ZOOM_OUT);
 
-		zoomToPointButton.setIcon(new ImageIcon("images/zoom_to_point.gif"));
-		zoomToPointButton.addActionListener(actionAdapter);
-		zoomToPointButton.setToolTipText(LangModelMap.getString("ZoomToPoint"));
-		zoomToPointButton.setPreferredSize(buttonSize);
-		zoomToPointButton.setMaximumSize(buttonSize);
-		zoomToPointButton.setMinimumSize(buttonSize);
-		zoomToPointButton.setName(MapApplicationModel.OPERATION_ZOOM_TO_POINT);
+		this.zoomToPointButton.setIcon(new ImageIcon("images/zoom_to_point.gif"));
+		this.zoomToPointButton.addActionListener(actionAdapter);
+		this.zoomToPointButton.setToolTipText(LangModelMap.getString("ZoomToPoint"));
+		this.zoomToPointButton.setPreferredSize(buttonSize);
+		this.zoomToPointButton.setMaximumSize(buttonSize);
+		this.zoomToPointButton.setMinimumSize(buttonSize);
+		this.zoomToPointButton.setName(MapApplicationModel.OPERATION_ZOOM_TO_POINT);
 
-		zoomToRectButton.setIcon(new ImageIcon("images/zoom_area.gif"));
-		zoomToRectButton.addActionListener(actionAdapter);
-		zoomToRectButton.setToolTipText(LangModelMap.getString("ZoomBox"));
-		zoomToRectButton.setPreferredSize(buttonSize);
-		zoomToRectButton.setMaximumSize(buttonSize);
-		zoomToRectButton.setMinimumSize(buttonSize);
-		zoomToRectButton.setName(MapApplicationModel.OPERATION_ZOOM_BOX);
+		this.zoomToRectButton.setIcon(new ImageIcon("images/zoom_area.gif"));
+		this.zoomToRectButton.addActionListener(actionAdapter);
+		this.zoomToRectButton.setToolTipText(LangModelMap.getString("ZoomBox"));
+		this.zoomToRectButton.setPreferredSize(buttonSize);
+		this.zoomToRectButton.setMaximumSize(buttonSize);
+		this.zoomToRectButton.setMinimumSize(buttonSize);
+		this.zoomToRectButton.setName(MapApplicationModel.OPERATION_ZOOM_BOX);
 
-		moveToCenterButton.setIcon(new ImageIcon("images/map_centr.gif"));
-		moveToCenterButton.addActionListener(actionAdapter);
-		moveToCenterButton.setToolTipText(LangModelMap.getString("MoveToCenter"));
-		moveToCenterButton.setPreferredSize(buttonSize);
-		moveToCenterButton.setMaximumSize(buttonSize);
-		moveToCenterButton.setMinimumSize(buttonSize);
-		moveToCenterButton.setName(MapApplicationModel.OPERATION_MOVE_TO_CENTER);
+		this.moveToCenterButton.setIcon(new ImageIcon("images/map_centr.gif"));
+		this.moveToCenterButton.addActionListener(actionAdapter);
+		this.moveToCenterButton.setToolTipText(LangModelMap.getString("MoveToCenter"));
+		this.moveToCenterButton.setPreferredSize(buttonSize);
+		this.moveToCenterButton.setMaximumSize(buttonSize);
+		this.moveToCenterButton.setMinimumSize(buttonSize);
+		this.moveToCenterButton.setName(MapApplicationModel.OPERATION_MOVE_TO_CENTER);
 
-		moveHandButton.setIcon(new ImageIcon("images/hand.gif"));
-		moveHandButton.addActionListener(actionAdapter);
-		moveHandButton.setToolTipText(LangModelMap.getString("HandPan"));
-		moveHandButton.setPreferredSize(buttonSize);
-		moveHandButton.setMaximumSize(buttonSize);
-		moveHandButton.setMinimumSize(buttonSize);
-		moveHandButton.setName(MapApplicationModel.OPERATION_HAND_PAN);
+		this.moveHandButton.setIcon(new ImageIcon("images/hand.gif"));
+		this.moveHandButton.addActionListener(actionAdapter);
+		this.moveHandButton.setToolTipText(LangModelMap.getString("HandPan"));
+		this.moveHandButton.setPreferredSize(buttonSize);
+		this.moveHandButton.setMaximumSize(buttonSize);
+		this.moveHandButton.setMinimumSize(buttonSize);
+		this.moveHandButton.setName(MapApplicationModel.OPERATION_HAND_PAN);
 
-		measureDistanceButton.setIcon(new ImageIcon("images/distance.gif"));
-		measureDistanceButton.addActionListener(actionAdapter);
-		measureDistanceButton.setToolTipText(LangModelMap.getString("MeasureDistance"));
-		measureDistanceButton.setPreferredSize(buttonSize);
-		measureDistanceButton.setMaximumSize(buttonSize);
-		measureDistanceButton.setMinimumSize(buttonSize);
-		measureDistanceButton.setName(MapApplicationModel.OPERATION_MEASURE_DISTANCE);
+		this.measureDistanceButton.setIcon(new ImageIcon("images/distance.gif"));
+		this.measureDistanceButton.addActionListener(actionAdapter);
+		this.measureDistanceButton.setToolTipText(LangModelMap.getString("MeasureDistance"));
+		this.measureDistanceButton.setPreferredSize(buttonSize);
+		this.measureDistanceButton.setMaximumSize(buttonSize);
+		this.measureDistanceButton.setMinimumSize(buttonSize);
+		this.measureDistanceButton.setName(MapApplicationModel.OPERATION_MEASURE_DISTANCE);
 
-		moveFixedButton.setIcon(new ImageIcon("images/movefixed.gif"));
-		moveFixedButton.addActionListener(actionAdapter);
-		moveFixedButton.setToolTipText(LangModelMap.getString("MoveFixed"));
-		moveFixedButton.setPreferredSize(buttonSize);
-		moveFixedButton.setMaximumSize(buttonSize);
-		moveFixedButton.setMinimumSize(buttonSize);
-		moveFixedButton.setName(MapApplicationModel.OPERATION_MOVE_FIXED);
+		this.moveFixedButton.setIcon(new ImageIcon("images/movefixed.gif"));
+		this.moveFixedButton.addActionListener(actionAdapter);
+		this.moveFixedButton.setToolTipText(LangModelMap.getString("MoveFixed"));
+		this.moveFixedButton.setPreferredSize(buttonSize);
+		this.moveFixedButton.setMaximumSize(buttonSize);
+		this.moveFixedButton.setMinimumSize(buttonSize);
+		this.moveFixedButton.setName(MapApplicationModel.OPERATION_MOVE_FIXED);
 
-		showNodesButton.setIcon(new ImageIcon("images/nodes_visible.gif"));
-		showNodesButton.addActionListener(actionAdapter);
-		showNodesButton.setToolTipText(LangModelMap.getString("ViewNodes"));
-		showNodesButton.setPreferredSize(buttonSize);
-		showNodesButton.setMaximumSize(buttonSize);
-		showNodesButton.setMinimumSize(buttonSize);
-		showNodesButton.setName(MapApplicationModel.MODE_NODES);
+		this.showNodesButton.setIcon(new ImageIcon("images/nodes_visible.gif"));
+		this.showNodesButton.addActionListener(actionAdapter);
+		this.showNodesButton.setToolTipText(LangModelMap.getString("ViewNodes"));
+		this.showNodesButton.setPreferredSize(buttonSize);
+		this.showNodesButton.setMaximumSize(buttonSize);
+		this.showNodesButton.setMinimumSize(buttonSize);
+		this.showNodesButton.setName(MapApplicationModel.MODE_NODES);
 
-		showNodeLinkToggleButton.setIcon(new ImageIcon("images/nodelinkmode.gif"));
-		showNodeLinkToggleButton.addActionListener(actionAdapter);
-		showNodeLinkToggleButton.setToolTipText(LangModelMap.getString("NodeLinkMode"));
-		showNodeLinkToggleButton.setPreferredSize(buttonSize);
-		showNodeLinkToggleButton.setMaximumSize(buttonSize);
-		showNodeLinkToggleButton.setMinimumSize(buttonSize);
-		showNodeLinkToggleButton.setName(MapApplicationModel.MODE_NODE_LINK);
+		this.showNodeLinkToggleButton.setIcon(new ImageIcon("images/nodelinkmode.gif"));
+		this.showNodeLinkToggleButton.addActionListener(actionAdapter);
+		this.showNodeLinkToggleButton.setToolTipText(LangModelMap.getString("NodeLinkMode"));
+		this.showNodeLinkToggleButton.setPreferredSize(buttonSize);
+		this.showNodeLinkToggleButton.setMaximumSize(buttonSize);
+		this.showNodeLinkToggleButton.setMinimumSize(buttonSize);
+		this.showNodeLinkToggleButton.setName(MapApplicationModel.MODE_NODE_LINK);
 
-		showPhysicalToggleButton.setIcon(new ImageIcon("images/linkmode.gif"));
-		showPhysicalToggleButton.addActionListener(actionAdapter);
-		showPhysicalToggleButton.setToolTipText(LangModelMap.getString("LinkMode"));
-		showPhysicalToggleButton.setPreferredSize(buttonSize);
-		showPhysicalToggleButton.setMaximumSize(buttonSize);
-		showPhysicalToggleButton.setMinimumSize(buttonSize);
-		showPhysicalToggleButton.setName(MapApplicationModel.MODE_LINK);
+		this.showPhysicalToggleButton.setIcon(new ImageIcon("images/linkmode.gif"));
+		this.showPhysicalToggleButton.addActionListener(actionAdapter);
+		this.showPhysicalToggleButton.setToolTipText(LangModelMap.getString("LinkMode"));
+		this.showPhysicalToggleButton.setPreferredSize(buttonSize);
+		this.showPhysicalToggleButton.setMaximumSize(buttonSize);
+		this.showPhysicalToggleButton.setMinimumSize(buttonSize);
+		this.showPhysicalToggleButton.setName(MapApplicationModel.MODE_LINK);
 
-//		showPhysicalToggleButton.setSelected(true);// режим по умолчанию
+//		this.showPhysicalToggleButton.setSelected(true);// режим по умолчанию
 
-		showCablePathToggleButton.setIcon(new ImageIcon("images/pathmode.gif"));
-		showCablePathToggleButton.addActionListener(actionAdapter);
-		showCablePathToggleButton.setToolTipText(LangModelMap.getString("CableMode"));
-		showCablePathToggleButton.setPreferredSize(buttonSize);
-		showCablePathToggleButton.setMaximumSize(buttonSize);
-		showCablePathToggleButton.setMinimumSize(buttonSize);
-		showCablePathToggleButton.setName(MapApplicationModel.MODE_CABLE_PATH);
+		this.showCablePathToggleButton.setIcon(new ImageIcon("images/pathmode.gif"));
+		this.showCablePathToggleButton.addActionListener(actionAdapter);
+		this.showCablePathToggleButton.setToolTipText(LangModelMap.getString("CableMode"));
+		this.showCablePathToggleButton.setPreferredSize(buttonSize);
+		this.showCablePathToggleButton.setMaximumSize(buttonSize);
+		this.showCablePathToggleButton.setMinimumSize(buttonSize);
+		this.showCablePathToggleButton.setName(MapApplicationModel.MODE_CABLE_PATH);
 
-		showTransPathToggleButton.setIcon(new ImageIcon("images/pathmode.gif"));
-		showTransPathToggleButton.addActionListener(actionAdapter);
-		showTransPathToggleButton.setToolTipText(LangModelMap.getString("PathMode"));
-		showTransPathToggleButton.setPreferredSize(buttonSize);
-		showTransPathToggleButton.setMaximumSize(buttonSize);
-		showTransPathToggleButton.setMinimumSize(buttonSize);
-		showTransPathToggleButton.setName(MapApplicationModel.MODE_PATH);
+		this.showTransPathToggleButton.setIcon(new ImageIcon("images/pathmode.gif"));
+		this.showTransPathToggleButton.addActionListener(actionAdapter);
+		this.showTransPathToggleButton.setToolTipText(LangModelMap.getString("PathMode"));
+		this.showTransPathToggleButton.setPreferredSize(buttonSize);
+		this.showTransPathToggleButton.setMaximumSize(buttonSize);
+		this.showTransPathToggleButton.setMinimumSize(buttonSize);
+		this.showTransPathToggleButton.setName(MapApplicationModel.MODE_PATH);
 
-		centerObjectButton.setIcon(new ImageIcon("images/fit.gif"));
-		centerObjectButton.addActionListener(actionAdapter);
-		centerObjectButton.setToolTipText(LangModelMap.getString("CenterSelection"));
-		centerObjectButton.setPreferredSize(buttonSize);
-		centerObjectButton.setMaximumSize(buttonSize);
-		centerObjectButton.setMinimumSize(buttonSize);
-		centerObjectButton.setName(MapApplicationModel.OPERATION_CENTER_SELECTION);
+		this.centerObjectButton.setIcon(new ImageIcon("images/fit.gif"));
+		this.centerObjectButton.addActionListener(actionAdapter);
+		this.centerObjectButton.setToolTipText(LangModelMap.getString("CenterSelection"));
+		this.centerObjectButton.setPreferredSize(buttonSize);
+		this.centerObjectButton.setMaximumSize(buttonSize);
+		this.centerObjectButton.setMinimumSize(buttonSize);
+		this.centerObjectButton.setName(MapApplicationModel.OPERATION_CENTER_SELECTION);
 
-		optionsButton.setIcon(new ImageIcon("images/options.gif"));
-		optionsButton.addActionListener(new ActionListener()
+		this.optionsButton.setIcon(new ImageIcon("images/options.gif"));
+		this.optionsButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -277,18 +269,18 @@ public final class MapToolBar extends JToolBar
 						getLogicalNetLayer().repaint(false);
 				}
 			}); 
-		optionsButton.setToolTipText(LangModelMap.getString("Options"));
-		optionsButton.setPreferredSize(buttonSize);
-		optionsButton.setMaximumSize(buttonSize);
-		optionsButton.setMinimumSize(buttonSize);
-		optionsButton.setName("mapViewOptions");
+		this.optionsButton.setToolTipText(LangModelMap.getString("Options"));
+		this.optionsButton.setPreferredSize(buttonSize);
+		this.optionsButton.setMaximumSize(buttonSize);
+		this.optionsButton.setMinimumSize(buttonSize);
+		this.optionsButton.setName("mapViewOptions");
 
-		shotButton.setToolTipText("Снимок");
-		shotButton.setText("Снимок");
-		shotButton.setPreferredSize(buttonSize);
-		shotButton.setMaximumSize(buttonSize);
-		shotButton.setMinimumSize(buttonSize);
-		shotButton.addActionListener(new ActionListener()
+		this.shotButton.setToolTipText("Снимок");
+		this.shotButton.setText("Снимок");
+		this.shotButton.setPreferredSize(buttonSize);
+		this.shotButton.setMaximumSize(buttonSize);
+		this.shotButton.setMinimumSize(buttonSize);
+		this.shotButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -308,24 +300,24 @@ public final class MapToolBar extends JToolBar
 			});
 	
 		
-		latitudeLabel.setText(LangModelMap.getString("Latitude"));
-		latitudeTextField.setText("0.0000");
-		latitudeTextField.setPreferredSize(fieldSize);
-		latitudeTextField.setMaximumSize(fieldSize);
-		latitudeTextField.setMinimumSize(fieldSize);
-		longitudeLabel.setText(LangModelMap.getString("Longitude"));
-		longitudeField.setText("0.0000");
-		longitudeField.setPreferredSize(fieldSize);
-		longitudeField.setMaximumSize(fieldSize);
-		longitudeField.setMinimumSize(fieldSize);
+		this.latitudeLabel.setText(LangModelMap.getString("Latitude"));
+		this.latitudeTextField.setText("0.0000");
+		this.latitudeTextField.setPreferredSize(fieldSize);
+		this.latitudeTextField.setMaximumSize(fieldSize);
+		this.latitudeTextField.setMinimumSize(fieldSize);
+		this.longitudeLabel.setText(LangModelMap.getString("Longitude"));
+		this.longitudeField.setText("0.0000");
+		this.longitudeField.setPreferredSize(fieldSize);
+		this.longitudeField.setMaximumSize(fieldSize);
+		this.longitudeField.setMinimumSize(fieldSize);
 
-		scaleLabel.setText(LangModelMap.getString("Scale"));
-		scaleField.setText("0.0");
-		scaleField.setPreferredSize(fieldSize);
-		scaleField.setMaximumSize(fieldSize);
-		scaleField.setMinimumSize(fieldSize);
+		this.scaleLabel.setText(LangModelMap.getString("Scale"));
+		this.scaleField.setText("0.0");
+		this.scaleField.setPreferredSize(fieldSize);
+		this.scaleField.setMaximumSize(fieldSize);
+		this.scaleField.setMinimumSize(fieldSize);
 
-		scaleField.addKeyListener(new KeyListener()
+		this.scaleField.addKeyListener(new KeyListener()
 			{
 				public void keyPressed(KeyEvent e) 
 				{
@@ -333,7 +325,7 @@ public final class MapToolBar extends JToolBar
 					{
 						try
 						{
-							double scale = Double.parseDouble(scaleField.getText());
+							double scale = Double.parseDouble(MapToolBar.this.scaleField.getText());
 							if(scale > 0)
 							{
 								getLogicalNetLayer().setScale(scale);
@@ -346,8 +338,8 @@ public final class MapToolBar extends JToolBar
 						}
 					}
 				}
-				public void keyReleased(KeyEvent e) {}
-				public void keyTyped(KeyEvent e) {}
+				public void keyReleased(KeyEvent e) {/*empty*/}
+				public void keyTyped(KeyEvent e) {/*empty*/}
 			});
 
 		KeyListener longlatKeyListener = new KeyListener()
@@ -358,8 +350,8 @@ public final class MapToolBar extends JToolBar
 					{
 						try
 						{
-							double lon = Double.parseDouble(longitudeField.getText());
-							double lat = Double.parseDouble(latitudeTextField.getText());
+							double lon = Double.parseDouble(MapToolBar.this.longitudeField.getText());
+							double lat = Double.parseDouble(MapToolBar.this.latitudeTextField.getText());
 							getLogicalNetLayer().setCenter(
 								new DoublePoint(lat, lon));
 							getLogicalNetLayer().repaint(true);
@@ -370,193 +362,193 @@ public final class MapToolBar extends JToolBar
 						}
 					}
 				}
-				public void keyReleased(KeyEvent e) {}
-				public void keyTyped(KeyEvent e) {}
+				public void keyReleased(KeyEvent e) {/*empty*/}
+				public void keyTyped(KeyEvent e) {/*empty*/}
 			};
-		latitudeTextField.addKeyListener(longlatKeyListener);
-		longitudeField.addKeyListener(longlatKeyListener);
+		this.latitudeTextField.addKeyListener(longlatKeyListener);
+		this.longitudeField.addKeyListener(longlatKeyListener);
 
-		sp = new NodeSizePanel(logicalNetLayer);
-		penp = new MapPenBarPanel(logicalNetLayer);
+		this.nodeSizePanel = new NodeSizePanel(this.logicalNetLayer);
+//		this.penp = new MapPenBarPanel(this.logicalNetLayer);
 
 		this.setBorder(BorderFactory.createEtchedBorder());
 
-		this.add(zoomInButton);
-		this.add(zoomOutButton);
-		this.add(zoomToPointButton);
-		this.add(zoomToRectButton);
+		this.add(this.zoomInButton);
+		this.add(this.zoomOutButton);
+		this.add(this.zoomToPointButton);
+		this.add(this.zoomToRectButton);
 		this.addSeparator();
-		this.add(moveToCenterButton);
-		this.add(moveHandButton);
-		this.add(centerObjectButton);
+		this.add(this.moveToCenterButton);
+		this.add(this.moveHandButton);
+		this.add(this.centerObjectButton);
 		this.addSeparator();
-		this.add(measureDistanceButton);
-		this.add(moveFixedButton);
+		this.add(this.measureDistanceButton);
+		this.add(this.moveFixedButton);
 		this.addSeparator();
-		this.add(showNodesButton);
+		this.add(this.showNodesButton);
 		this.addSeparator();
-		this.add(showNodeLinkToggleButton);
-		this.add(showPhysicalToggleButton);
-		this.add(showCablePathToggleButton);
-		this.add(showTransPathToggleButton);
+		this.add(this.showNodeLinkToggleButton);
+		this.add(this.showPhysicalToggleButton);
+		this.add(this.showCablePathToggleButton);
+		this.add(this.showTransPathToggleButton);
 		this.addSeparator();
-		this.add(latitudeLabel);
-		this.add(latitudeTextField);
-		this.add(longitudeLabel);
-		this.add(longitudeField);
+		this.add(this.latitudeLabel);
+		this.add(this.latitudeTextField);
+		this.add(this.longitudeLabel);
+		this.add(this.longitudeField);
 		this.addSeparator();
-		this.add(scaleLabel);
-		this.add(scaleField);
+		this.add(this.scaleLabel);
+		this.add(this.scaleField);
 		this.addSeparator();
-		this.add(sp);
+		this.add(this.nodeSizePanel);
 		this.addSeparator();
-		this.add(optionsButton);
+		this.add(this.optionsButton);
 		this.addSeparator();
-		this.add(shotButton);
-//		this.add(penp);
+		this.add(this.shotButton);
+//		this.add(this.penp);
 	}
 
 //Включить выключить панель
 	public void setEnableDisablePanel(boolean b)
 	{
-		aModel.setEnabled(MapApplicationModel.OPERATION_CENTER_SELECTION, b);
-		aModel.setEnabled(MapApplicationModel.MODE_NODE_LINK, b);
-		aModel.setEnabled(MapApplicationModel.MODE_LINK, b);
-		aModel.setEnabled(MapApplicationModel.MODE_CABLE_PATH, b);
-		aModel.setEnabled(MapApplicationModel.MODE_PATH, b);
-		aModel.setEnabled(MapApplicationModel.OPERATION_ZOOM_IN, b);
-		aModel.setEnabled(MapApplicationModel.OPERATION_ZOOM_OUT, b);
-		aModel.setEnabled(MapApplicationModel.OPERATION_ZOOM_TO_POINT, b);
-		aModel.setEnabled(MapApplicationModel.OPERATION_ZOOM_BOX, b);
-		aModel.setEnabled(MapApplicationModel.OPERATION_MOVE_TO_CENTER, b);
-		aModel.setEnabled(MapApplicationModel.OPERATION_MOVE_FIXED, b);
-		aModel.setEnabled(MapApplicationModel.MODE_NODES, b);
-		aModel.setEnabled(MapApplicationModel.OPERATION_HAND_PAN, b);
-		aModel.setEnabled(MapApplicationModel.OPERATION_MEASURE_DISTANCE, b);
+		this.aModel.setEnabled(MapApplicationModel.OPERATION_CENTER_SELECTION, b);
+		this.aModel.setEnabled(MapApplicationModel.MODE_NODE_LINK, b);
+		this.aModel.setEnabled(MapApplicationModel.MODE_LINK, b);
+		this.aModel.setEnabled(MapApplicationModel.MODE_CABLE_PATH, b);
+		this.aModel.setEnabled(MapApplicationModel.MODE_PATH, b);
+		this.aModel.setEnabled(MapApplicationModel.OPERATION_ZOOM_IN, b);
+		this.aModel.setEnabled(MapApplicationModel.OPERATION_ZOOM_OUT, b);
+		this.aModel.setEnabled(MapApplicationModel.OPERATION_ZOOM_TO_POINT, b);
+		this.aModel.setEnabled(MapApplicationModel.OPERATION_ZOOM_BOX, b);
+		this.aModel.setEnabled(MapApplicationModel.OPERATION_MOVE_TO_CENTER, b);
+		this.aModel.setEnabled(MapApplicationModel.OPERATION_MOVE_FIXED, b);
+		this.aModel.setEnabled(MapApplicationModel.MODE_NODES, b);
+		this.aModel.setEnabled(MapApplicationModel.OPERATION_HAND_PAN, b);
+		this.aModel.setEnabled(MapApplicationModel.OPERATION_MEASURE_DISTANCE, b);
 
-		aModel.fireModelChanged();
+		this.aModel.fireModelChanged();
 
-		sp.setEnabled(b);
+		this.nodeSizePanel.setEnabled(b);
 	}
 
 	public void setModel(ApplicationModel a)
 	{
-		aModel = a;
+		this.aModel = a;
 
-		aModel.getCommand(MapApplicationModel.OPERATION_CENTER_SELECTION).setParameter("applicationModel", aModel);
-		aModel.getCommand(MapApplicationModel.MODE_NODE_LINK).setParameter("applicationModel", aModel);
-		aModel.getCommand(MapApplicationModel.MODE_LINK).setParameter("applicationModel", aModel);
-		aModel.getCommand(MapApplicationModel.MODE_CABLE_PATH).setParameter("applicationModel", aModel);
-		aModel.getCommand(MapApplicationModel.MODE_PATH).setParameter("applicationModel", aModel);
-		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_IN).setParameter("applicationModel", aModel);
-		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_OUT).setParameter("applicationModel", aModel);
-		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_TO_POINT).setParameter("applicationModel", aModel);
-		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_BOX).setParameter("applicationModel", aModel);
-		aModel.getCommand(MapApplicationModel.OPERATION_MOVE_TO_CENTER).setParameter("applicationModel", aModel);
-		aModel.getCommand(MapApplicationModel.MODE_NODES).setParameter("applicationModel", aModel);
-		aModel.getCommand(MapApplicationModel.OPERATION_HAND_PAN).setParameter("applicationModel", aModel);
-		aModel.getCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE).setParameter("applicationModel", aModel);
-		aModel.getCommand(MapApplicationModel.OPERATION_MOVE_FIXED).setParameter("applicationModel", aModel);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_CENTER_SELECTION).setParameter("applicationModel", this.aModel);
+		this.aModel.getCommand(MapApplicationModel.MODE_NODE_LINK).setParameter("applicationModel", this.aModel);
+		this.aModel.getCommand(MapApplicationModel.MODE_LINK).setParameter("applicationModel", this.aModel);
+		this.aModel.getCommand(MapApplicationModel.MODE_CABLE_PATH).setParameter("applicationModel", this.aModel);
+		this.aModel.getCommand(MapApplicationModel.MODE_PATH).setParameter("applicationModel", this.aModel);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_IN).setParameter("applicationModel", this.aModel);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_OUT).setParameter("applicationModel", this.aModel);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_TO_POINT).setParameter("applicationModel", this.aModel);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_BOX).setParameter("applicationModel", this.aModel);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_MOVE_TO_CENTER).setParameter("applicationModel", this.aModel);
+		this.aModel.getCommand(MapApplicationModel.MODE_NODES).setParameter("applicationModel", this.aModel);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_HAND_PAN).setParameter("applicationModel", this.aModel);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE).setParameter("applicationModel", this.aModel);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_MOVE_FIXED).setParameter("applicationModel", this.aModel);
 
-		aModel.getCommand(MapApplicationModel.OPERATION_CENTER_SELECTION).setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand(MapApplicationModel.MODE_NODE_LINK).setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand(MapApplicationModel.MODE_LINK).setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand(MapApplicationModel.MODE_CABLE_PATH).setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand(MapApplicationModel.MODE_PATH).setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_IN).setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_OUT).setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_TO_POINT).setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_BOX).setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand(MapApplicationModel.OPERATION_MOVE_TO_CENTER).setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand(MapApplicationModel.MODE_NODES).setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand(MapApplicationModel.OPERATION_HAND_PAN).setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE).setParameter("logicalNetLayer", logicalNetLayer);
-		aModel.getCommand(MapApplicationModel.OPERATION_MOVE_FIXED).setParameter("logicalNetLayer", logicalNetLayer);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_CENTER_SELECTION).setParameter("logicalNetLayer", this.logicalNetLayer);
+		this.aModel.getCommand(MapApplicationModel.MODE_NODE_LINK).setParameter("logicalNetLayer", this.logicalNetLayer);
+		this.aModel.getCommand(MapApplicationModel.MODE_LINK).setParameter("logicalNetLayer", this.logicalNetLayer);
+		this.aModel.getCommand(MapApplicationModel.MODE_CABLE_PATH).setParameter("logicalNetLayer", this.logicalNetLayer);
+		this.aModel.getCommand(MapApplicationModel.MODE_PATH).setParameter("logicalNetLayer", this.logicalNetLayer);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_IN).setParameter("logicalNetLayer", this.logicalNetLayer);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_OUT).setParameter("logicalNetLayer", this.logicalNetLayer);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_TO_POINT).setParameter("logicalNetLayer", this.logicalNetLayer);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_ZOOM_BOX).setParameter("logicalNetLayer", this.logicalNetLayer);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_MOVE_TO_CENTER).setParameter("logicalNetLayer", this.logicalNetLayer);
+		this.aModel.getCommand(MapApplicationModel.MODE_NODES).setParameter("logicalNetLayer", this.logicalNetLayer);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_HAND_PAN).setParameter("logicalNetLayer", this.logicalNetLayer);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE).setParameter("logicalNetLayer", this.logicalNetLayer);
+		this.aModel.getCommand(MapApplicationModel.OPERATION_MOVE_FIXED).setParameter("logicalNetLayer", this.logicalNetLayer);
 
-		Command command = aModel.getCommand(MapApplicationModel.MODE_NODES);
-		command.setParameter("button", showNodesButton);
+		Command command = this.aModel.getCommand(MapApplicationModel.MODE_NODES);
+		command.setParameter("button", this.showNodesButton);
 
-		aModel.setSelected(MapApplicationModel.MODE_LINK, true);
-		aModel.setSelected(MapApplicationModel.MODE_NODES, true);
-		aModel.fireModelChanged();
+		this.aModel.setSelected(MapApplicationModel.MODE_LINK, true);
+		this.aModel.setSelected(MapApplicationModel.MODE_NODES, true);
+		this.aModel.fireModelChanged();
 	}
 
 	public ApplicationModel getModel()
 	{
-		return aModel;
+		return this.aModel;
 	}
 
 	public void modelChanged(String e[])
 	{
-		zoomInButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_ZOOM_IN));
-		zoomInButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_ZOOM_IN));
+		this.zoomInButton.setVisible(this.aModel.isVisible(MapApplicationModel.OPERATION_ZOOM_IN));
+		this.zoomInButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.OPERATION_ZOOM_IN));
 
-		zoomOutButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_ZOOM_OUT));
-		zoomOutButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_ZOOM_OUT));
+		this.zoomOutButton.setVisible(this.aModel.isVisible(MapApplicationModel.OPERATION_ZOOM_OUT));
+		this.zoomOutButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.OPERATION_ZOOM_OUT));
 
-		centerObjectButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_CENTER_SELECTION));
-		centerObjectButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_CENTER_SELECTION));
+		this.centerObjectButton.setVisible(this.aModel.isVisible(MapApplicationModel.OPERATION_CENTER_SELECTION));
+		this.centerObjectButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.OPERATION_CENTER_SELECTION));
 
-		zoomToPointButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_ZOOM_TO_POINT));
-		zoomToPointButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_ZOOM_TO_POINT));
-		zoomToPointButton.setSelected(aModel.isSelected(MapApplicationModel.OPERATION_ZOOM_TO_POINT));
+		this.zoomToPointButton.setVisible(this.aModel.isVisible(MapApplicationModel.OPERATION_ZOOM_TO_POINT));
+		this.zoomToPointButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.OPERATION_ZOOM_TO_POINT));
+		this.zoomToPointButton.setSelected(this.aModel.isSelected(MapApplicationModel.OPERATION_ZOOM_TO_POINT));
 
-		zoomToRectButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_ZOOM_BOX));
-		zoomToRectButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_ZOOM_BOX));
-		zoomToRectButton.setSelected(aModel.isSelected(MapApplicationModel.OPERATION_ZOOM_BOX));
+		this.zoomToRectButton.setVisible(this.aModel.isVisible(MapApplicationModel.OPERATION_ZOOM_BOX));
+		this.zoomToRectButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.OPERATION_ZOOM_BOX));
+		this.zoomToRectButton.setSelected(this.aModel.isSelected(MapApplicationModel.OPERATION_ZOOM_BOX));
 
-		moveToCenterButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_MOVE_TO_CENTER));
-		moveToCenterButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_MOVE_TO_CENTER));
-		moveToCenterButton.setSelected(aModel.isSelected(MapApplicationModel.OPERATION_MOVE_TO_CENTER));
+		this.moveToCenterButton.setVisible(this.aModel.isVisible(MapApplicationModel.OPERATION_MOVE_TO_CENTER));
+		this.moveToCenterButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.OPERATION_MOVE_TO_CENTER));
+		this.moveToCenterButton.setSelected(this.aModel.isSelected(MapApplicationModel.OPERATION_MOVE_TO_CENTER));
 
-		moveHandButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_HAND_PAN));
-		moveHandButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_HAND_PAN));
-		moveHandButton.setSelected(aModel.isSelected(MapApplicationModel.OPERATION_HAND_PAN));
+		this.moveHandButton.setVisible(this.aModel.isVisible(MapApplicationModel.OPERATION_HAND_PAN));
+		this.moveHandButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.OPERATION_HAND_PAN));
+		this.moveHandButton.setSelected(this.aModel.isSelected(MapApplicationModel.OPERATION_HAND_PAN));
 
-		measureDistanceButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_MEASURE_DISTANCE));
-		measureDistanceButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_MEASURE_DISTANCE));
-		measureDistanceButton.setSelected(aModel.isSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE));
+		this.measureDistanceButton.setVisible(this.aModel.isVisible(MapApplicationModel.OPERATION_MEASURE_DISTANCE));
+		this.measureDistanceButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.OPERATION_MEASURE_DISTANCE));
+		this.measureDistanceButton.setSelected(this.aModel.isSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE));
 
-		moveFixedButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_MOVE_FIXED));
-		moveFixedButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_MOVE_FIXED));
-		moveFixedButton.setSelected(aModel.isSelected(MapApplicationModel.OPERATION_MOVE_FIXED));
+		this.moveFixedButton.setVisible(this.aModel.isVisible(MapApplicationModel.OPERATION_MOVE_FIXED));
+		this.moveFixedButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.OPERATION_MOVE_FIXED));
+		this.moveFixedButton.setSelected(this.aModel.isSelected(MapApplicationModel.OPERATION_MOVE_FIXED));
 
-		showNodesButton.setVisible(aModel.isVisible(MapApplicationModel.MODE_NODES));
-		showNodesButton.setEnabled(aModel.isEnabled(MapApplicationModel.MODE_NODES));
-		showNodesButton.setSelected(aModel.isSelected(MapApplicationModel.MODE_NODES));
+		this.showNodesButton.setVisible(this.aModel.isVisible(MapApplicationModel.MODE_NODES));
+		this.showNodesButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.MODE_NODES));
+		this.showNodesButton.setSelected(this.aModel.isSelected(MapApplicationModel.MODE_NODES));
 
-		showNodeLinkToggleButton.setVisible(aModel.isVisible(MapApplicationModel.MODE_NODE_LINK));
-		showNodeLinkToggleButton.setEnabled(aModel.isEnabled(MapApplicationModel.MODE_NODE_LINK));
-		showNodeLinkToggleButton.setSelected(aModel.isSelected(MapApplicationModel.MODE_NODE_LINK));
+		this.showNodeLinkToggleButton.setVisible(this.aModel.isVisible(MapApplicationModel.MODE_NODE_LINK));
+		this.showNodeLinkToggleButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.MODE_NODE_LINK));
+		this.showNodeLinkToggleButton.setSelected(this.aModel.isSelected(MapApplicationModel.MODE_NODE_LINK));
 
-		showPhysicalToggleButton.setVisible(aModel.isVisible(MapApplicationModel.MODE_LINK));
-		showPhysicalToggleButton.setEnabled(aModel.isEnabled(MapApplicationModel.MODE_LINK));
-		showPhysicalToggleButton.setSelected(aModel.isSelected(MapApplicationModel.MODE_LINK));
+		this.showPhysicalToggleButton.setVisible(this.aModel.isVisible(MapApplicationModel.MODE_LINK));
+		this.showPhysicalToggleButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.MODE_LINK));
+		this.showPhysicalToggleButton.setSelected(this.aModel.isSelected(MapApplicationModel.MODE_LINK));
 
-		showCablePathToggleButton.setVisible(aModel.isVisible(MapApplicationModel.MODE_CABLE_PATH));
-		showCablePathToggleButton.setEnabled(aModel.isEnabled(MapApplicationModel.MODE_CABLE_PATH));
-		showCablePathToggleButton.setSelected(aModel.isSelected(MapApplicationModel.MODE_CABLE_PATH));
+		this.showCablePathToggleButton.setVisible(this.aModel.isVisible(MapApplicationModel.MODE_CABLE_PATH));
+		this.showCablePathToggleButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.MODE_CABLE_PATH));
+		this.showCablePathToggleButton.setSelected(this.aModel.isSelected(MapApplicationModel.MODE_CABLE_PATH));
 
-		showTransPathToggleButton.setVisible(aModel.isVisible(MapApplicationModel.MODE_PATH));
-		showTransPathToggleButton.setEnabled(aModel.isEnabled(MapApplicationModel.MODE_PATH));
-		showTransPathToggleButton.setSelected(aModel.isSelected(MapApplicationModel.MODE_PATH));
+		this.showTransPathToggleButton.setVisible(this.aModel.isVisible(MapApplicationModel.MODE_PATH));
+		this.showTransPathToggleButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.MODE_PATH));
+		this.showTransPathToggleButton.setSelected(this.aModel.isSelected(MapApplicationModel.MODE_PATH));
 	}
 
 	public void buttonPressed(ActionEvent e)
 	{
-		if(aModel == null)
+		if(this.aModel == null)
 			return;
 		AbstractButton jb = (AbstractButton )e.getSource();
 		String s = jb.getName();
-		Command command = aModel.getCommand(s);
-		command.setParameter("applicationModel", aModel);
+		Command command = this.aModel.getCommand(s);
+		command.setParameter("applicationModel", this.aModel);
 		command.setParameter("logicalNetLayer", getLogicalNetLayer());
 		command.execute();
 	}
 	
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		return logicalNetLayer;
+		return this.logicalNetLayer;
 	}
 
 	private class MapToolBarActionAdapter implements java.awt.event.ActionListener
@@ -570,7 +562,7 @@ public final class MapToolBar extends JToolBar
 	
 		public void actionPerformed(ActionEvent e)
 		{
-			adaptee.buttonPressed(e);
+			this.adaptee.buttonPressed(e);
 		}
 	}
 }

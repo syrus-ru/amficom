@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.23 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: MapFrame.java,v 1.24 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,6 +9,20 @@
 */
 
 package com.syrus.AMFICOM.Client.Map.UI;
+
+import java.awt.BorderLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ComponentEvent;
+import java.util.Iterator;
+
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import javax.swing.event.InternalFrameEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.CatalogNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
@@ -26,6 +40,11 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Module;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnection;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Map.MapState;
+import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.CenterSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.HandPanCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.MapModeCommand;
@@ -37,11 +56,6 @@ import com.syrus.AMFICOM.Client.Map.Command.Navigate.ZoomBoxCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.ZoomInCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.ZoomOutCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.ZoomToPointCommand;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnection;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -50,24 +64,10 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
-
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
-import java.awt.BorderLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.event.ComponentEvent;
-import java.awt.geom.Point2D;
-
-import java.util.Iterator;
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JInternalFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.event.InternalFrameEvent;
 /**
  * Класс $RCSfile: MapFrame.java,v $ используется для управления отображеним топологический схемы.
  * Основой является объект типа MapView. Отображение осуществляется объектом 
@@ -79,10 +79,9 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.23 $, $Date: 2005/01/30 15:38:18 $
- * @module map_v2
+ * @version $Revision: 1.24 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public class MapFrame extends JInternalFrame 
 		implements OperationListener, Module
@@ -134,10 +133,10 @@ public class MapFrame extends JInternalFrame
 		mapConnection.setURL(MapPropertiesManager.getDataBaseURL());
 		mapConnection.connect();
 
-		mapViewer = NetMapViewer.create(MapPropertiesManager.getNetMapViewerClassName());
+		this.mapViewer = NetMapViewer.create(MapPropertiesManager.getNetMapViewerClassName());
 
-		mapViewer.init();
-		mapViewer.setConnection(mapConnection);
+		this.mapViewer.init();
+		this.mapViewer.setConnection(mapConnection);
 
 		try
 		{
@@ -150,14 +149,7 @@ public class MapFrame extends JInternalFrame
 
 		initModule();
 
-		mapToolBar.setLogicalNetLayer(mapViewer.getLogicalNetLayer());
-	}
-	
-	private static MapFrame getMapMainFrame()
-	{
-		if(singleton == null)
-			singleton = new MapFrame();
-		return singleton;
+		this.mapToolBar.setLogicalNetLayer(this.mapViewer.getLogicalNetLayer());
 	}
 	
 	/**
@@ -165,7 +157,7 @@ public class MapFrame extends JInternalFrame
 	 */
 	public NetMapViewer getMapViewer()
 	{
-		return mapViewer;
+		return this.mapViewer;
 	}
 
 	private void jbInit()
@@ -190,11 +182,11 @@ public class MapFrame extends JInternalFrame
 	
 		// обозреватель карты сам по себе не является компонентом, а содержит 
 		// компонент в себе
-		mapVisualComponent = mapViewer.getVisualComponent();
+		mapVisualComponent = this.mapViewer.getVisualComponent();
 
-		mapToolBar = new MapToolBar();
+		this.mapToolBar = new MapToolBar();
 		toolBarPanel.setLayout(new BorderLayout());
-		toolBarPanel.add(mapToolBar, BorderLayout.WEST);
+		toolBarPanel.add(this.mapToolBar, BorderLayout.WEST);
 
 		mapPanel.setLayout(new BorderLayout());
 		mapPanel.add(mapVisualComponent, BorderLayout.CENTER);
@@ -211,8 +203,8 @@ public class MapFrame extends JInternalFrame
 	 */
 	public void saveConfig()
 	{
-		if(mapViewer != null)
-			mapViewer.saveConfig();
+		if(this.mapViewer != null)
+			this.mapViewer.saveConfig();
 	}
 
 	public void finalizeModule()
@@ -227,7 +219,7 @@ public class MapFrame extends JInternalFrame
 	public void initModule()
 	{
 		Environment.getDispatcher().register(this, ContextChangeEvent.type);
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 	}
 
 	public void setCommands(ApplicationModel aModel)
@@ -302,14 +294,14 @@ public class MapFrame extends JInternalFrame
 	 */
 	public ApplicationContext getContext()
 	{
-		return aContext;
+		return this.aContext;
 	}
 
 	public void setModel(ApplicationModel aModel)
 	{
 		setCommands(aModel);
-		aModel.addListener(mapToolBar);
-		mapToolBar.setModel(aModel);
+		aModel.addListener(this.mapToolBar);
+		this.mapToolBar.setModel(aModel);
 	    aModel.fireModelChanged();
 	}
 
@@ -318,7 +310,7 @@ public class MapFrame extends JInternalFrame
 	 */
 	public ApplicationModel getModel()
 	{
-		return aContext.getApplicationModel();
+		return this.aContext.getApplicationModel();
 	}
 
 	/**
@@ -326,7 +318,7 @@ public class MapFrame extends JInternalFrame
 	 */
 	public Dispatcher getInternalDispatcher()
 	{
-		return internalDispatcher;
+		return this.internalDispatcher;
 	}
 
 	/**
@@ -339,14 +331,14 @@ public class MapFrame extends JInternalFrame
 			ContextChangeEvent cce = (ContextChangeEvent )ae;
 			if(cce.DOMAIN_SELECTED)
 			{
-				Identifier di = new Identifier(aContext.getSessionInterface().getAccessIdentifier().domain_id);
+				Identifier di = new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().domain_id);
 				if(getMapView() == null)
 					return;
 				Identifier di2 = getMapView().getDomainId();
 				if(!di.equals(di2))
 				{
 //					setMapView(null);
-					aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
+					this.aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
 				}
 			}
 		}
@@ -354,23 +346,23 @@ public class MapFrame extends JInternalFrame
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CENTER_CHANGED))
 		{
 			DoublePoint p = (DoublePoint )ae.getSource();
-			mapToolBar.showLatLong(p.getX(), p.getY());
+			this.mapToolBar.showLatLong(p.getX(), p.getY());
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SCALE_CHANGED))
 		{
 			Double p = (Double )ae.getSource();
-			mapToolBar.showScale(p.doubleValue());
+			this.mapToolBar.showScale(p.doubleValue());
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
 		{
-			mapToolBar.setEnableDisablePanel(true);
+			this.mapToolBar.setEnableDisablePanel(true);
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_DESELECTED))
 		{
-			mapToolBar.setEnableDisablePanel(false);
+			this.mapToolBar.setEnableDisablePanel(false);
 		}
 		else
 		{
@@ -569,29 +561,29 @@ public class MapFrame extends JInternalFrame
 //		this.grabFocus();
 		getMapViewer().getVisualComponent().grabFocus();
 
-		if(aContext.getDispatcher() != null)
+		if(this.aContext.getDispatcher() != null)
 			if(getMapView() != null)
 			{
-				aContext.getDispatcher().notify(
+				this.aContext.getDispatcher().notify(
 					new MapEvent(getMapView(), MapEvent.MAP_VIEW_SELECTED));
-				aContext.getDispatcher().notify(
+				this.aContext.getDispatcher().notify(
 					new MapEvent(getMapView().getMap(), MapEvent.MAP_SELECTED));
 			}
 	}
 
 	void thisInternalFrameClosed(InternalFrameEvent e)
 	{
-		if(aContext.getDispatcher() != null)
-			aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
+		if(this.aContext.getDispatcher() != null)
+			this.aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
 		closeMap();
 	}
 
 	void thisInternalFrameDeactivated(InternalFrameEvent e)
 	{
-		if(aContext.getDispatcher() != null)
+		if(this.aContext.getDispatcher() != null)
 		{
-			aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_VIEW_DESELECTED));
-			aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_DESELECTED));
+			this.aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_VIEW_DESELECTED));
+			this.aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_DESELECTED));
 		}
 	}
 
@@ -602,13 +594,13 @@ public class MapFrame extends JInternalFrame
 	}
 
 	void thisComponentShown(ComponentEvent e)
-	{
+	{//empty
 	}
 
 	void thisComponentHidden(ComponentEvent e)
 	{
-		if(aContext.getDispatcher() != null)
-			aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
+		if(this.aContext.getDispatcher() != null)
+			this.aContext.getDispatcher().notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
 		closeMap();
 	}
 
@@ -637,12 +629,12 @@ public class MapFrame extends JInternalFrame
 	
 		public void componentShown(ComponentEvent e)
 		{
-			adaptee.thisComponentShown(e);
+			this.adaptee.thisComponentShown(e);
 		}
 	
 		public void componentHidden(ComponentEvent e)
 		{
-			adaptee.thisComponentHidden(e);
+			this.adaptee.thisComponentHidden(e);
 		}
 	}
 	
@@ -656,19 +648,19 @@ public class MapFrame extends JInternalFrame
 		}
 		public void internalFrameActivated(InternalFrameEvent e)
 		{
-			adaptee.thisInternalFrameActivated(e);
+			this.adaptee.thisInternalFrameActivated(e);
 		}
 		public void internalFrameClosed(InternalFrameEvent e)
 		{
-			adaptee.thisInternalFrameClosed(e);
+			this.adaptee.thisInternalFrameClosed(e);
 		}
 		public void internalFrameDeactivated(InternalFrameEvent e)
 		{
-			adaptee.thisInternalFrameDeactivated(e);
+			this.adaptee.thisInternalFrameDeactivated(e);
 		}
 		public void internalFrameOpened(InternalFrameEvent e)
 		{
-			adaptee.thisInternalFrameOpened(e);
+			this.adaptee.thisInternalFrameOpened(e);
 		}
 	}
 	

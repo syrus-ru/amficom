@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.5 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,12 +29,9 @@ import javax.swing.JPanel;
 
 /**
  * панель выбора вида карты
- * 
- * 
- * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public class MapChooserPanel extends JPanel
 {
@@ -50,7 +47,7 @@ public class MapChooserPanel extends JPanel
 	/**
 	 * окно карты
 	 */
-	private MapFrame mmf;
+	private MapFrame mapFrame;
 	
 	/**
 	 * По умолчанию
@@ -68,26 +65,20 @@ public class MapChooserPanel extends JPanel
 
 	}
 
-	/**
-	 * Метод jbInit
-	 * 
-	 * 
-	 * @exception Exception
-	 */
 	private void jbInit()
 	{
-		this.setLayout(gridBagLayout1);
+		this.setLayout(this.gridBagLayout1);
 		this.setSize(new Dimension(370, 629));
-		selectButton.setText(LangModel.getString("Ok"));
-		selectButton.addActionListener(new ActionListener()
+		this.selectButton.setText(LangModel.getString("Ok"));
+		this.selectButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					mapSelected();
 				}
 			});
-		this.add(combo, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(selectButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(this.combo, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(this.selectButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 		this.add(Box.createVerticalGlue(), com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, new Insets(5, 5, 5, 5), 0, 0));
 	}
 
@@ -95,9 +86,9 @@ public class MapChooserPanel extends JPanel
 	 * обработка выбора нового вида карты
 	 * смена вида осуществляется в отдельном thread'е
 	 */
-	private void mapSelected()
+	void mapSelected()
 	{
-		if(mmf == null)
+		if(this.mapFrame == null)
 			return;
 		
 		Thread t = new Thread(new Runnable() 
@@ -115,41 +106,41 @@ public class MapChooserPanel extends JPanel
 	 */
 	public synchronized void refreshMapList() 
 	{
-		combo.removeAllItems();
-		if(mmf == null)
+		this.combo.removeAllItems();
+		if(this.mapFrame == null)
 			return;
 
-		for(Iterator it = mmf.getMapViewer().getAvailableViews().iterator(); it.hasNext();)
+		for(Iterator it = this.mapFrame.getMapViewer().getAvailableViews().iterator(); it.hasNext();)
 		{
-			combo.addItem(it.next());
+			this.combo.addItem(it.next());
 		}
-		String currentMap = mmf.getMapViewer().getConnection().getView();
+		String currentMap = this.mapFrame.getMapViewer().getConnection().getView();
 		if (null == currentMap) 
 		{
-			if(combo.getModel().getSize() != 0)
+			if(this.combo.getModel().getSize() != 0)
 			{
-				combo.setSelectedIndex(0);
+				this.combo.setSelectedIndex(0);
 				changeMap();
 			}
 		}
 		else
-			combo.setSelectedItem(currentMap);
+			this.combo.setSelectedItem(currentMap);
 	}
 	
 	public void setMapFrame(MapFrame mmf) 
 	{
-		this.mmf = mmf;
+		this.mapFrame = mmf;
 		refreshMapList();
 	}
 
 	public MapFrame getMapFrame() 
 	{
-		return mmf;
+		return this.mapFrame;
 	}
 
-	private void changeMap() 
+	void changeMap() 
 	{
-		String name = (String )combo.getSelectedItem();
-		mmf.getMapViewer().setView(name);
+		String name = (String )this.combo.getSelectedItem();
+		this.mapFrame.getMapViewer().setView(name);
 	}
 }

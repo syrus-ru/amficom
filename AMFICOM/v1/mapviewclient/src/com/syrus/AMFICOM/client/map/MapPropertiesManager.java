@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.7 2005/02/07 16:09:25 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.8 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -56,7 +56,7 @@ import javax.swing.ImageIcon;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/07 16:09:25 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/10 11:48:39 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -405,7 +405,7 @@ public final class MapPropertiesManager
 
 	/** объекты, необходимые для отрисовки пиктограмм. */
 
-    private static Component component = new Component() {};
+    private static Component component = new Component() {/*empty*/};
     private static MediaTracker tracker = new MediaTracker(component);
     private static int mediaTrackerID = 0;
 

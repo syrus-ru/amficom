@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.5 2005/02/07 16:09:25 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.6 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,10 +29,10 @@ import javax.swing.JComponent;
  * Для того, чтобы получить компонент, содержащий в себе отображение 
  * картографии, следует вызвать метод {@link #getComponent()}
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/07 16:09:25 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/10 11:48:39 $
  * @module mapviewclient_v1
- * @see {@link com.syrus.AMFICOM.Client.Map.ObjectFX.SpatialNetMapViewer} 
- * @see {@link com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer}
+ * @see com.syrus.AMFICOM.Client.Map.ObjectFX.OfxNetMapViewer 
+ * @see com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer
  */
 public abstract class NetMapViewer 
 {
@@ -92,8 +92,8 @@ public abstract class NetMapViewer
 	 * других специфических действий по отображению топографической информации
 	 * следует переопределить этот метод
 	 * 
-	 * @see SpatialNetMapViewer.init() 
-	 * @see MapInfoNetMapViewer.init()
+	 * @see com.syrus.AMFICOM.Client.Map.ObjectFX.OfxNetMapViewer#init() 
+	 * @see com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer#init()
 	 */	
 	public void init()
 	{
@@ -105,7 +105,7 @@ public abstract class NetMapViewer
 	 * следующей сессии.
 	 */
 	public void saveConfig()
-	{
+	{//empty
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /**
- * $Id: MapKeyAdapter.java,v 1.3 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: MapKeyAdapter.java,v 1.4 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -21,21 +21,17 @@ import java.awt.event.KeyEvent;
  * обработчик событий клавиатуры в окне карты. »спользуетс€ дл€ изменени€ 
  * режима обработки действий (SHIFT, ALT, CTRL) и дл€ удалени€ выбранных 
  * элементов (DEL)
- * 
- * 
- * 
- * @version $Revision: 1.3 $, $Date: 2004/11/16 17:31:17 $
- * @module
+ * @version $Revision: 1.4 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public final class MapKeyAdapter extends KeyAdapter 
 {
-	LogicalNetLayer lnl;
+	LogicalNetLayer logicalNetLayer;
 
 	public MapKeyAdapter(LogicalNetLayer adaptee)
 	{
-		this.lnl = adaptee;
+		this.logicalNetLayer = adaptee;
 	}
 
 	public void keyPressed(KeyEvent ke)
@@ -44,7 +40,7 @@ public final class MapKeyAdapter extends KeyAdapter
 
 		if (ke.isAltDown())
 		{
-			lnl.getMapState().setActionMode(MapState.ALT_LINK_ACTION_MODE);
+			this.logicalNetLayer.getMapState().setActionMode(MapState.ALT_LINK_ACTION_MODE);
 		}
 
 //		if (ke.isShiftDown() && ke.isControlDown())
@@ -55,34 +51,34 @@ public final class MapKeyAdapter extends KeyAdapter
 //		{
 			if (ke.isShiftDown())
 			{
-				lnl.getMapState().setActionMode(MapState.SELECT_ACTION_MODE);
+				this.logicalNetLayer.getMapState().setActionMode(MapState.SELECT_ACTION_MODE);
 			}
 			if(ke.isControlDown())
 			{
-				lnl.getMapState().setActionMode(MapState.MOVE_ACTION_MODE);
+				this.logicalNetLayer.getMapState().setActionMode(MapState.MOVE_ACTION_MODE);
 			}
 //		}
 
 		if (code == KeyEvent.VK_DELETE)
 		{
-			lnl.delete();
+			this.logicalNetLayer.delete();
 		}
 		if(ke.isControlDown() && code == KeyEvent.VK_Z)
 		{
-			lnl.undo();
+			this.logicalNetLayer.undo();
 		}
 		if(ke.isControlDown() && code == KeyEvent.VK_Y)
 		{
-			lnl.redo();
+			this.logicalNetLayer.redo();
 		}
 	}
 
 	public void keyReleased(KeyEvent ke)
 	{
-		lnl.getMapState().setActionMode(MapState.NULL_ACTION_MODE);
+		this.logicalNetLayer.getMapState().setActionMode(MapState.NULL_ACTION_MODE);
 	}
 
 	public void keyTyped(KeyEvent ke)
-	{
+	{//empty
 	}
 }

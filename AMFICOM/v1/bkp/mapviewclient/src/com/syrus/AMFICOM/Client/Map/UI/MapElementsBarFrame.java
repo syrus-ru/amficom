@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarFrame.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapElementsBarFrame.java,v 1.5 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,28 +11,26 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+
 /**
  * Внутреннее окно, содержит панель элементов, перетаскиваемых на карту 
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
- * @module
+ * @version $Revision: 1.5 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public class MapElementsBarFrame extends JInternalFrame implements OperationListener
 {
@@ -55,7 +53,7 @@ public class MapElementsBarFrame extends JInternalFrame implements OperationList
 	{
 		this();
 		setContext(aContext);
-		panel.setEnableDisablePanel(true);
+		this.panel.setEnableDisablePanel(true);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -63,15 +61,17 @@ public class MapElementsBarFrame extends JInternalFrame implements OperationList
 		if(this.aContext != null)
 			if(this.aContext.getDispatcher() != null)
 			{
-				Dispatcher disp = this.aContext.getDispatcher();
+//				Dispatcher disp = this.aContext.getDispatcher();
+				// unregister event listener
 			}
 		this.aContext = aContext;
-		panel.setContext(aContext);
+		this.panel.setContext(aContext);
 		if(aContext == null)
 			return;
-		Dispatcher disp = aContext.getDispatcher();
-		if(disp == null)
-			return;
+//		Dispatcher disp = aContext.getDispatcher();
+//		if(disp == null)
+//			return;
+		// register event listener
 	}
 
 	private void jbInit()
@@ -86,14 +86,14 @@ public class MapElementsBarFrame extends JInternalFrame implements OperationList
 		this.setTitle(LangModelMap.getString("elementsBarTitle"));
 
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(panel, BorderLayout.CENTER);
+		getContentPane().add(this.panel, BorderLayout.CENTER);
 	}
 	
 	public void operationPerformed(OperationEvent oe)
 	{
 		if(oe.getActionCommand().equals(MapEvent.MAP_VIEW_DESELECTED))
-			panel.setEnableDisablePanel(false);
+			this.panel.setEnableDisablePanel(false);
 		if(oe.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
-			panel.setEnableDisablePanel(true);
+			this.panel.setEnableDisablePanel(true);
 	}
 }

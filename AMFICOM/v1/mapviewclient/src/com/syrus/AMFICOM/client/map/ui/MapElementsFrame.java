@@ -1,12 +1,10 @@
 /**
- * $Id: MapElementsFrame.java,v 1.9 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: MapElementsFrame.java,v 1.10 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.Client.Map.UI;
@@ -27,14 +25,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 
 /**
- * Окно со списком элементов 
- * 
- * 
- * 
- * @version $Revision: 1.9 $, $Date: 2005/01/30 15:38:18 $
- * @module
+ * Окно со списком элементов. 
+ * @version $Revision: 1.10 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public class MapElementsFrame extends JInternalFrame 
 	implements OperationListener
@@ -73,7 +67,7 @@ public class MapElementsFrame extends JInternalFrame
 				disp.unregister(this, MapEvent.MAP_FRAME_SHOWN);
 			}
 		this.aContext = aContext;
-		panel.setContext(aContext);
+		this.panel.setContext(aContext);
 		if(aContext == null)
 			return;
 		Dispatcher disp = aContext.getDispatcher();
@@ -98,41 +92,37 @@ public class MapElementsFrame extends JInternalFrame
 		this.setTitle(LangModelMap.getString("Elements"));
 
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(panel, BorderLayout.CENTER);
+		getContentPane().add(this.panel, BorderLayout.CENTER);
 	}
 
 	public void setMap(Map mc)
 	{
-		panel.setMap(mc);
+		this.panel.setMap(mc);
 	}
 	public void operationPerformed(OperationEvent ae)
 	{
 
-		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CLOSED))
-			if(panel.performProcessing)
-				setMap(null);
-		if(	ae.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
-			if(panel.performProcessing)
-				setMap(((MapView)ae.getSource()).getMap());
-		if(	ae.getActionCommand().equals(MapEvent.MAP_CHANGED))
-			if(panel.performProcessing)
-			{
-				panel.doNotify = false;
-				panel.updateTable();
-				panel.doNotify = true;
-			}
-		if(	ae.getActionCommand().equals(MapEvent.SELECTION_CHANGED))
-			if(panel.performProcessing)
-			{
-				panel.doNotify = false;
-				panel.setSelectedObjects();
-				panel.doNotify = true;
-			}
+		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CLOSED) && this.panel.performProcessing)
+			setMap(null);
+		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED) && this.panel.performProcessing)
+			setMap(((MapView)ae.getSource()).getMap());
+		if(ae.getActionCommand().equals(MapEvent.MAP_CHANGED) && this.panel.performProcessing)
+		{
+			this.panel.doNotify = false;
+			this.panel.updateTable();
+			this.panel.doNotify = true;
+		}
+		if(ae.getActionCommand().equals(MapEvent.SELECTION_CHANGED) && this.panel.performProcessing)
+		{
+			this.panel.doNotify = false;
+			this.panel.setSelectedObjects();
+			this.panel.doNotify = true;
+		}
 		if(	ae.getActionCommand().equals(MapEvent.MAP_FRAME_SHOWN))
 		{
 			MapFrame mapFrame = (MapFrame)ae.getSource();
 			
-			panel.setLogicalNetLayer(mapFrame.getMapViewer().getLogicalNetLayer());
+			this.panel.setLogicalNetLayer(mapFrame.getMapViewer().getLogicalNetLayer());
 		}
 
 	}

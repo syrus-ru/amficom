@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.7 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.8 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,36 +11,38 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StringFieldCondition;
-import com.syrus.AMFICOM.general.corba.StringFieldSort;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.resource.FileImageResource;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
-
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.resource.FileImageResource;
+import com.syrus.AMFICOM.resource.ImageResourceWrapper;
+import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
+import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
+
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/10 11:48:39 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController
@@ -154,10 +156,11 @@ public class NodeTypeController extends AbstractNodeController
 	{
 		try 
 		{
-			StringFieldCondition condition = new StringFieldCondition(
+			StorableObjectCondition condition = new TypicalCondition(
 				String.valueOf(ImageResourceSort._FILE),
+				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
-				StringFieldSort.STRINGSORT_INTEGER);
+				ImageResourceWrapper.COLUMN_SORT);
 			List bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
 //			List bitMaps = Collections.EMPTY_LIST;
 
@@ -205,10 +208,11 @@ public class NodeTypeController extends AbstractNodeController
 			Identifier userId,
 			String codename)
 	{
-		StorableObjectCondition pTypeCondition = new StringFieldCondition(
-			codename,
-			ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
-			StringFieldSort.STRINGSORT_BASE);
+		StorableObjectCondition pTypeCondition = new TypicalCondition(
+				codename, 
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
+				StorableObjectWrapper.COLUMN_CODENAME);
 
 		try
 		{
@@ -272,10 +276,7 @@ public class NodeTypeController extends AbstractNodeController
 		// make sure SiteNodeType.CABLE_INLET is created
 		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET);
 
-		StorableObjectCondition pTypeCondition = new StringFieldCondition(
-			"",
-			ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
-			StringFieldSort.STRINGSORT_BASE);
+		StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE);
 
 		try
 		{

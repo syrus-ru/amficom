@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementLabel.java,v 1.7 2005/01/21 16:19:58 krupenn Exp $
+ * $Id: MapElementLabel.java,v 1.8 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,10 +44,9 @@ import javax.swing.border.EtchedBorder;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2005/01/21 16:19:58 $
- * @module
+ * @version $Revision: 1.8 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public class MapElementLabel extends JLabel
 		implements
@@ -86,20 +85,20 @@ public class MapElementLabel extends JLabel
 		
 		updateIcon();
 	
-		dragSource = new DragSource();
-		dragSource.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
+		this.dragSource = new DragSource();
+		this.dragSource.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
 	
-		this.setBorder(normalBorder);
+		this.setBorder(this.normalBorder);
 		this.setHorizontalAlignment(SwingConstants.CENTER);
 		this.setHorizontalTextPosition(SwingConstants.CENTER);
 		this.addMouseListener(this);
-		this.setEnabled(enable);
+		this.setEnabled(this.enable);
 	}
 
 	public void updateIcon()
 	{
 		ImageIcon icon = new ImageIcon(
-				MapPropertiesManager.getImage(proto.getImageId()).getScaledInstance(
+				MapPropertiesManager.getImage(this.proto.getImageId()).getScaledInstance(
 				ELEMENT_DIMENSION, 
 				ELEMENT_DIMENSION, 
 				Image.SCALE_SMOOTH));
@@ -109,29 +108,29 @@ public class MapElementLabel extends JLabel
 	}
 
 	public void dragDropEnd(DragSourceDropEvent dsde)
-	{
+	{//empty
 	}
 
 	public void dragEnter(DragSourceDragEvent dsde)
-	{
+	{//empty
 	}
 
 	public void dragExit(DragSourceEvent dse)
-	{
+	{//empty
 	}
 
 	public void dragOver(DragSourceDragEvent dsde)
-	{
+	{//empty
 	}
 
 	public void dropActionChanged(DragSourceDragEvent dsde)
-	{
+	{//empty
 	}
 
 	public void dragGestureRecognized( DragGestureEvent event)
 	{
-		if (enable)
-			dragSource.startDrag (event, DragSource.DefaultMoveDrop, this, this);
+		if (this.enable)
+			this.dragSource.startDrag (event, DragSource.DefaultMoveDrop, this, this);
 	}
 
 	public void mouseClicked(MouseEvent e)
@@ -140,31 +139,31 @@ public class MapElementLabel extends JLabel
 		{
 			ProtoPopupMenu menu = ProtoPopupMenu.getInstance();
 			menu.setElementLabel(this);
-			menu.setElement(proto);
+			menu.setElement(this.proto);
 			menu.show(this, e.getPoint().x, e.getPoint().y);
 		}
 	}
 
 	public void mouseEntered(MouseEvent e)
 	{
-		this.setBorder(selectedBorder);
+		this.setBorder(this.selectedBorder);
 //		Point p = this.getLocation();
 //		this.setLocation(p.x - 1, p.y - 1);
 	}
 
 	public void mouseExited(MouseEvent e)
 	{
-		this.setBorder(normalBorder);
+		this.setBorder(this.normalBorder);
 //		Point p = this.getLocation();
 //		this.setLocation(p.x + 1, p.y + 1);
 	}
 
 	public void mousePressed(MouseEvent e)
-	{
+	{//empty
 	}
 
 	public void mouseReleased(MouseEvent e)
-	{
+	{//empty
 	}
 
 	public Object getTransferData(DataFlavor flavor)
@@ -172,7 +171,7 @@ public class MapElementLabel extends JLabel
 		if (flavor.getHumanPresentableName().equals(DATA_FLAVOUR))
 		{
 //			System.out.println("The type is " + sElement.getType());
-			return proto;
+			return this.proto;
 		}
 		return null;
 	}
@@ -196,12 +195,12 @@ public class MapElementLabel extends JLabel
 
 	public void setEnabled(boolean b)
 	{
-		enable = b;
+		this.enable = b;
 		super.setEnabled(b);
 	}
 
 	public boolean getEnabled()
 	{
-		return enable;
+		return this.enable;
 	}
 }

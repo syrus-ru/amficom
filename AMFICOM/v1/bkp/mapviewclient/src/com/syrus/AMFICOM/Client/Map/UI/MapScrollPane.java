@@ -1,5 +1,5 @@
 /**
- * $Id: MapScrollPane.java,v 1.5 2005/01/12 15:32:34 krupenn Exp $
+ * $Id: MapScrollPane.java,v 1.6 2005/02/10 11:48:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,10 +22,9 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/01/12 15:32:34 $
- * @module map_v2
+ * @version $Revision: 1.6 $, $Date: 2005/02/10 11:48:40 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public final class MapScrollPane extends JPanel
 {
@@ -68,11 +67,11 @@ public final class MapScrollPane extends JPanel
 	private void jbInit()
 	{
 		this.setLayout(new BorderLayout());
-		if(viewer.getComponent() != null)
-			this.add(viewer.getComponent());
+		if(this.viewer.getComponent() != null)
+			this.add(this.viewer.getComponent());
 		else
-		if(viewer.getJComponent() != null)
-			this.add(viewer.getJComponent());
+		if(this.viewer.getJComponent() != null)
+			this.add(this.viewer.getJComponent());
 	}
 
 }

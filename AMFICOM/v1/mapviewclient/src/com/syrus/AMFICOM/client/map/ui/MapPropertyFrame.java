@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertyFrame.java,v 1.12 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: MapPropertyFrame.java,v 1.13 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,23 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Map.Props.MapElementPropertiesController;
-import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
-import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
-import com.syrus.AMFICOM.client_.general.ui_.ObjPropertyTable;
-import com.syrus.AMFICOM.client_.general.ui_.ObjPropertyTableModel;
-
 import java.awt.BorderLayout;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
@@ -38,15 +21,27 @@ import javax.swing.JScrollPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.Props.MapElementPropertiesController;
+import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
+import com.syrus.AMFICOM.client_.general.ui_.ObjPropertyTable;
+import com.syrus.AMFICOM.client_.general.ui_.ObjPropertyTableModel;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.mapview.MapView;
+
 /**
  *  Окно отображения свойств элемента карты
- * 
- * 
- * 
- * @version $Revision: 1.12 $, $Date: 2005/01/30 15:38:18 $
- * @module
+ * @version $Revision: 1.13 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
 public final class MapPropertyFrame extends JInternalFrame
 		implements OperationListener, TableModelListener
@@ -57,7 +52,7 @@ public final class MapPropertyFrame extends JInternalFrame
 	ObjPropertyTableModel model = null;
 	ObjectResourcePropertiesController controller = null;
 	
-	Object or;
+	Object object;
 
 	JScrollPane scrollPane = new JScrollPane();
 
@@ -91,13 +86,13 @@ public final class MapPropertyFrame extends JInternalFrame
 
 		getContentPane().setLayout(new BorderLayout());
 
-		scrollPane.getViewport().add(table);
+		this.scrollPane.getViewport().add(this.table);
 
-		scrollPane.setWheelScrollingEnabled(true);
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		table.setBackground(SystemColor.window);
+		this.scrollPane.setWheelScrollingEnabled(true);
+		this.scrollPane.getViewport().setBackground(SystemColor.window);
+		this.table.setBackground(SystemColor.window);
 
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
+		getContentPane().add(this.scrollPane, BorderLayout.CENTER);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -119,19 +114,19 @@ public final class MapPropertyFrame extends JInternalFrame
 
 	public void initialize()
 	{
-		controller = new MapElementPropertiesController();
-		model = new ObjPropertyTableModel(controller, null);
-		table = new ObjPropertyTable(model);
-		model.addTableModelListener(this);
+		this.controller = new MapElementPropertiesController();
+		this.model = new ObjPropertyTableModel(this.controller, null);
+		this.table = new ObjPropertyTable(this.model);
+		this.model.addTableModelListener(this);
 	}
 
-	public void setObject(Object or)
+	public void setObject(Object object)
 	{
-		this.or = or;
-		controller = MapPropsManager.getPropertiesController((MapElement )or);
-		model.setObject(or);
-		model.setController(controller);
-		table.updateUI();
+		this.object = object;
+		this.controller = MapPropsManager.getPropertiesController((MapElement )this.object);
+		this.model.setObject(this.object);
+		this.model.setController(this.controller);
+		this.table.updateUI();
 	}
 
 	public void operationPerformed(OperationEvent oe )
@@ -141,28 +136,28 @@ public final class MapPropertyFrame extends JInternalFrame
 			MapNavigateEvent mne = (MapNavigateEvent )oe;
 			if(mne.isMapElementSelected())
 			{
-				Object me = mne.getSource();
-				doNotify = false;
-				setObject(me);
-				doNotify = true;
+				Object selectedElement = mne.getSource();
+				this.doNotify = false;
+				setObject(selectedElement);
+				this.doNotify = true;
 			}
 		}
 	}
 
 	public void tableChanged(TableModelEvent e)
 	{
-		if(doNotify)
+		if(this.doNotify)
 		{
-			Dispatcher disp = aContext.getDispatcher();
-			if(disp != null)
+			Dispatcher dispatcher = this.aContext.getDispatcher();
+			if(dispatcher != null)
 			{
-				if(or instanceof Map)
-					disp.notify(new MapEvent(or, MapEvent.MAP_CHANGED));
+				if(this.object instanceof Map)
+					dispatcher.notify(new MapEvent(this.object, MapEvent.MAP_CHANGED));
 				else
-				if(or instanceof MapView)
-					disp.notify(new MapEvent(or, MapEvent.MAP_VIEW_CHANGED));
+				if(this.object instanceof MapView)
+					dispatcher.notify(new MapEvent(this.object, MapEvent.MAP_VIEW_CHANGED));
 				else
-					disp.notify(new MapEvent(or, MapEvent.MAP_ELEMENT_CHANGED));
+					dispatcher.notify(new MapEvent(this.object, MapEvent.MAP_ELEMENT_CHANGED));
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.4 2005/01/21 16:19:57 krupenn Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.5 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,12 +37,9 @@ import javax.swing.ListSelectionModel;
 
 /**
  * панель поиска географических объектов
- * 
- * 
- * 
- * @version $Revision: 1.4 $, $Date: 2005/01/21 16:19:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/10 11:48:39 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
  public class SpatialSearchPanel extends JPanel
 {
@@ -61,18 +58,18 @@ import javax.swing.ListSelectionModel;
 	String searchText = "";
 	private boolean searching = false;
 	
-	private MapFrame mmf;
+	private MapFrame mapFrame;
 
-	public void setMapFrame(MapFrame mmf)
+	public void setMapFrame(MapFrame mapFrame)
 	{
-		this.mmf = mmf;
-		if(mmf == null)
-			foundList.removeAll();
+		this.mapFrame = mapFrame;
+		if(mapFrame == null)
+			this.foundList.removeAll();
 	}
 	
 	public MapFrame getMapFrame() 
 	{
-		return mmf;
+		return this.mapFrame;
 	}
 
 	/**
@@ -91,28 +88,22 @@ import javax.swing.ListSelectionModel;
 
 	}
 
-	/**
-	 * Метод jbInit
-	 * 
-	 * 
-	 * @exception Exception
-	 */
 	private void jbInit()
 	{
-		this.setLayout(gridBagLayout1);
+		this.setLayout(this.gridBagLayout1);
 		this.setSize(new Dimension(370, 629));
-		searchButton.setText(LangModelMap.getString("Search"));
-		searchButton.addActionListener(new ActionListener()
+		this.searchButton.setText(LangModelMap.getString("Search"));
+		this.searchButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					doSearch();
 				}
 			});
-		jScrollPane.getViewport().add(foundList);
-		jScrollPane.setAutoscrolls(true);
-		centerButton.setText(LangModelMap.getString("DoCenter"));
-		centerButton.addActionListener(new ActionListener()
+		this.jScrollPane.getViewport().add(this.foundList);
+		this.jScrollPane.setAutoscrolls(true);
+		this.centerButton.setText(LangModelMap.getString("DoCenter"));
+		this.centerButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -120,42 +111,42 @@ import javax.swing.ListSelectionModel;
 				}
 			});
 
-		searchField.addKeyListener(new KeyListener()
+		this.searchField.addKeyListener(new KeyListener()
 			{
 				public void keyPressed(KeyEvent e)
 				{
 					if(e.getKeyCode() == KeyEvent.VK_ENTER)
 						doSearch();
 				}
-				public void keyReleased(KeyEvent e) {}
-				public void keyTyped(KeyEvent e) {}
+				public void keyReleased(KeyEvent e) {/*empty*/}
+				public void keyTyped(KeyEvent e) {/*empty*/}
 			});
 
-		this.add(searchField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(searchButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(jScrollPane, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
-		this.add(centerButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(this.searchField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(this.searchButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(this.jScrollPane, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 5, 5), 0, 0));
+		this.add(this.centerButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
-		foundList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		foundList.setCellRenderer(new SpatialSearchPanel.SpatialObjectRenderer());
+		this.foundList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.foundList.setCellRenderer(new SpatialSearchPanel.SpatialObjectRenderer());
 	}
 
 	/**
 	 * обработка нажатия на кнопку поиска. сам поиск запускается в отдельном
 	 * thread'е
 	 */
-	private void doSearch()
+	void doSearch()
 	{
-		if(searching)
+		if(this.searching)
 			return;
-		if(mmf == null)
+		if(this.mapFrame == null)
 			return;
 			
-		searchText = searchField.getText();
-		if(searchText.length() == 0)
+		this.searchText = this.searchField.getText();
+		if(this.searchText.length() == 0)
 			return;
-		searching = true;
-		foundList.removeAll();
+		this.searching = true;
+		this.foundList.removeAll();
 		
 		Thread t = new Thread(new Runnable() 
 		{
@@ -173,23 +164,23 @@ import javax.swing.ListSelectionModel;
 	 */
 	public void search()
 	{
-		searchButton.setEnabled(false);
-		List found = mmf.getMapViewer().getLogicalNetLayer().findSpatialObjects(searchText);
+		this.searchButton.setEnabled(false);
+		List found = this.mapFrame.getMapViewer().getLogicalNetLayer().findSpatialObjects(this.searchText);
 
-		foundList.setListData(found.toArray());
+		this.foundList.setListData(found.toArray());
 
-		searchButton.setEnabled(true);
-		searching = false;
+		this.searchButton.setEnabled(true);
+		this.searching = false;
 	}
 
 	/**
 	 * обработка нажатия кнопки Центрировать. вид карты центрируется по 
 	 * среднему геометрическому центров выделенных в списке объектов
 	 */
-	private void doCenter()
+	void doCenter()
 	{
-		SpatialObject so = (SpatialObject )foundList.getSelectedValue();
-		mmf.getMapViewer().getLogicalNetLayer().centerSpatialObject(so);
+		SpatialObject so = (SpatialObject )this.foundList.getSelectedValue();
+		this.mapFrame.getMapViewer().getLogicalNetLayer().centerSpatialObject(so);
 	}
 	
 	/**

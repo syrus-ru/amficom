@@ -1,11 +1,9 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.7 2005/01/30 15:38:18 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.8 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
 */
 
 package com.syrus.AMFICOM.Client.Map.Setup;
@@ -30,16 +28,13 @@ import javax.swing.JTabbedPane;
 
 /**
  * Окно операций на карте - содержит панель с 4 закладками
- * 1. Выбор вида
- * 2. Поиск элементов АМФИКОМ
- * 3. Поиск географических объектов
- * 4. Управление отображением слоев
- * 
- * 
- * 
- * @version $Revision: 1.7 $
+ * <li> Выбор вида
+ * <li> Поиск элементов АМФИКОМ
+ * <lI> Поиск географических объектов
+ * <li> Управление отображением слоев
+ * @version $Revision: 1.8 $
  * @author $Author: krupenn $
- * @see
+ * @module mapviewclient_v1
  */
  public class ControlsFrame extends JInternalFrame 
 		implements OperationListener
@@ -49,22 +44,22 @@ import javax.swing.JTabbedPane;
 	/**
 	 * панель выбора вида
 	 */
-	MapChooserPanel mcp = new MapChooserPanel();
+	MapChooserPanel mapChooserPanel = new MapChooserPanel();
 	
 	/**
 	 * панель поиска географических объектов
 	 */
-	SpatialSearchPanel sp = new SpatialSearchPanel();
+	SpatialSearchPanel mapSearchPanel = new SpatialSearchPanel();
 	
 	/**
 	 * панель поиска элементов АМФИКОМ
 	 */
-	AMFICOMSearchPanel asp = new AMFICOMSearchPanel();
+	AMFICOMSearchPanel searchPanel = new AMFICOMSearchPanel();
 	
 	/**
 	 * панель управления отображением слоев
 	 */
-	LayersPanel olp = new LayersPanel();
+	LayersPanel layersPanel = new LayersPanel();
 	
 	/**
 	 * панель закладок
@@ -136,9 +131,9 @@ import javax.swing.JTabbedPane;
 	public void operationPerformed(OperationEvent ae)
 	{
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
-			asp.setMapView((MapView)ae.getSource());
+			this.searchPanel.setMapView((MapView)ae.getSource());
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_DESELECTED))
-			asp.setMapView(null);
+			this.searchPanel.setMapView(null);
 		if(	ae.getActionCommand().equals(MapEvent.MAP_FRAME_SHOWN))
 		{
 			try 
@@ -152,12 +147,12 @@ import javax.swing.JTabbedPane;
 		}
 	}
 
-	public void setMapFrame(MapFrame mmf)
+	public void setMapFrame(MapFrame mapFrame)
 	{
-		mcp.setMapFrame(mmf);
-		asp.setMapFrame(mmf);
-		sp.setMapFrame(mmf);
-		olp.setMapFrame(mmf);
+		this.mapChooserPanel.setMapFrame(mapFrame);
+		this.searchPanel.setMapFrame(mapFrame);
+		this.mapSearchPanel.setMapFrame(mapFrame);
+		this.layersPanel.setMapFrame(mapFrame);
 	}
 	
 	private void jbInit()
@@ -170,30 +165,30 @@ import javax.swing.JTabbedPane;
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 
 		this.setTitle(LangModelMap.getString("menuViewSetup"));
-		this.getContentPane().setLayout(borderLayout1);
+		this.getContentPane().setLayout(this.borderLayout1);
 		this.setSize(new Dimension(370, 629));
 		
-		tabbedPane.addTab(
+		this.tabbedPane.addTab(
 				"", 
 				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_prop.gif")
 					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
-				mcp);
-		tabbedPane.addTab(
+					this.mapChooserPanel);
+		this.tabbedPane.addTab(
 				"", 
 				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/search.gif")
 					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
-				asp);
-		tabbedPane.addTab(
+					this.searchPanel);
+		this.tabbedPane.addTab(
 				"", 
 				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_search.gif")
 					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
-				sp);
-		tabbedPane.addTab(
+					this.mapSearchPanel);
+		this.tabbedPane.addTab(
 				"", 
 				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_layers.gif")
 					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
-				olp);
+					this.layersPanel);
 		
-		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		this.getContentPane().add(this.tabbedPane, BorderLayout.CENTER);
 	}
 }

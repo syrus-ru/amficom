@@ -1,5 +1,5 @@
 /**
- * $Id: CollectorController.java,v 1.2 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: CollectorController.java,v 1.3 2005/02/10 11:48:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import java.util.Iterator;
 /**
  * Контроллер коллектора.
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/10 11:48:39 $
  * @module mapviewclient_v1
  */
 public final class CollectorController extends AbstractLinkController
@@ -137,10 +137,10 @@ public final class CollectorController extends AbstractLinkController
 	 */
 	public boolean isMouseOnElement(MapElement mapElement, Point currentMousePoint)
 	{
-		if(! (mapElement instanceof Collector))
-			return false;
-
-		Collector collector = (Collector )mapElement;
+//		if(! (mapElement instanceof Collector))
+//			return false;
+//
+//		Collector collector = (Collector )mapElement;
 		
 		return false;
 	}

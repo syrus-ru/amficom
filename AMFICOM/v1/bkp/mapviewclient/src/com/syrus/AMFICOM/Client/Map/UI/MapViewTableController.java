@@ -6,24 +6,18 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.Resource.Object.User;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.mapview.MapView;
 
 public final class MapViewTableController implements ObjectResourceController 
 {
@@ -130,7 +124,7 @@ public final class MapViewTableController implements ObjectResourceController
 	}
 
 	public void setValue(Object object, final String key, final Object value)
-	{
+	{//empty
 	}
 
 	public String getKey(final int index) 
@@ -145,7 +139,7 @@ public final class MapViewTableController implements ObjectResourceController
 	}
 
 	public void setPropertyValue(String key, Object objectKey, Object objectValue) 
-	{
+	{//empty
 	}
 
 	public Class getPropertyClass(String key) 
