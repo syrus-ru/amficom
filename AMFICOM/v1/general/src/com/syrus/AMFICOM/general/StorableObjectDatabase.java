@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.55 2004/11/22 13:49:12 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.56 2004/11/23 12:19:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2004/11/22 13:49:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.56 $, $Date: 2004/11/23 12:19:32 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -524,36 +524,35 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 	
-	protected void checkAndUpdateEntities(List localStorableObjects, boolean force) throws IllegalDataException, 
-				UpdateObjectException, VersionCollisionException{
-		
+	protected void checkAndUpdateEntities(List localStorableObjects, boolean force) throws IllegalDataException, UpdateObjectException, VersionCollisionException {
+
 		List idsList = new LinkedList();
-		for(Iterator it=localStorableObjects.iterator();it.hasNext();){
+		for(Iterator it=localStorableObjects.iterator();it.hasNext();) {
 			StorableObject storableObject = (StorableObject)it.next();
 			Identifier localId = storableObject.getId();
 			if (idsList.contains(localId))
 				throw new UpdateObjectException(getEnityName()+"Database.checkAndUpdateEntities | Input collection contains entity with the same id " + localId.getIdentifierString());
 			idsList.add(storableObject.getId());
 		}
-		
-		
+
 		List storableObjects = null;
-		try{
+		try {
 			storableObjects = retrieveByIds(idsList, null);
-		}catch(RetrieveObjectException roe){
+		}
+		catch(RetrieveObjectException roe){
 			throw new UpdateObjectException(getEnityName()+"Database.checkAndUpdateEntities | Error during retrieving by ids -- " + roe.getMessage(), roe);
 		}
-		
+
 		List insertList = null;
 		List updateList = null;		
 		StringBuffer versionCollisions = null;
-		
-		for(Iterator localIter=localStorableObjects.iterator();localIter.hasNext();){
+
+		for (Iterator localIter=localStorableObjects.iterator();localIter.hasNext();) {
 			StorableObject localStorableObject = (StorableObject)localIter.next();
 			Identifier localId = localStorableObject.getId();
 			StorableObject storableObject = null;
-			
-			for(Iterator it=storableObjects.iterator();it.hasNext();){
+
+			for(Iterator it=storableObjects.iterator();it.hasNext();) {
 				StorableObject stObj = (StorableObject)it.next();
 				if (stObj.getId().equals(localId)){
 					storableObject = stObj;
@@ -562,31 +561,35 @@ public abstract class StorableObjectDatabase {
 					break;
 				}
 			}
-			
-			if (storableObject == null){
+
+			if (storableObject == null) {
 				if (insertList == null)
 					insertList = new LinkedList();
 				insertList.add(localStorableObject);
-			} else{
+			}
+			else {
 				boolean update = force;
 				if (!update)
 					update = ((storableObject.getModifierId().equals(localStorableObject.getModifierId()))&&
 					(Math.abs(storableObject.getModified().getTime()-localStorableObject.getModified().getTime())<1000));
 				
-				if (update){
-					localStorableObject.setAttributes(localStorableObject.getCreated(), new Date(System.currentTimeMillis()), 
-													  localStorableObject.getCreatorId(), localStorableObject.getModifierId());
+				if (update) {
+					localStorableObject.setAttributes(localStorableObject.getCreated(),
+																	new Date(System.currentTimeMillis()),
+																	localStorableObject.getCreatorId(),
+																	localStorableObject.getModifierId());
 					if (updateList == null)
 						updateList = new LinkedList();
 					updateList.add(localStorableObject);
-				} else{
-					if (versionCollisions == null){
+				}
+				else {
+					if (versionCollisions == null) {
 						versionCollisions = new StringBuffer();
 						versionCollisions.append(getEnityName() + "Database.checkAndUpdateEntity | conflict version for '");
 						versionCollisions.append(storableObject.getId().getIdentifierString());
 						versionCollisions.append('\'');
 					}
-					else{ 
+					else { 
 						versionCollisions.append(", '");
 						versionCollisions.append(storableObject.getId().getIdentifierString());	
 						versionCollisions.append('\'');
@@ -594,20 +597,21 @@ public abstract class StorableObjectDatabase {
 				}
 
 			}
-				
+
 		}
-		
+
 		if (insertList!=null)
-			try{		
-			insertEntities(insertList);
-			}catch(CreateObjectException coe){
+			try{
+				insertEntities(insertList);
+			}
+			catch(CreateObjectException coe) {
 				String msg = getEnityName() + "Database.checkAndUpdateEntity | Error during insering new entities -- " + coe.getMessage();
 				throw new UpdateObjectException(msg, coe);
 			}
-		
+
 		if (updateList!=null)
 			updateEntities(updateList);
-		
+
 		if (versionCollisions != null && versionCollisions.length() > 0)
 			throw new VersionCollisionException(versionCollisions.toString());		
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.26 2004/11/19 11:31:39 bob Exp $
+ * $Id: ObjectEntities.java,v 1.27 2004/11/23 12:19:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/11/19 11:31:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2004/11/23 12:19:32 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -31,8 +31,8 @@ public abstract class ObjectEntities {
 	public static final String ANATYPPARTYPLINK_ENTITY = "AnaTypParTypLink";
 	public static final String EVALUATIONTYPE_ENTITY = "EvaluationType";
 	public static final String EVATYPPARTYPLINK_ENTITY = "EvaTypParTypLink";
-    public static final String KISTYPE_ENTITY = "KISType";
-    public static final String TRANSPATHTYPE_ENTITY = "TransmissionPathType";
+	public static final String KISTYPE_ENTITY = "KISType";
+	public static final String TRANSPATHTYPE_ENTITY = "TransmissionPathType";
 
 	/*	Administration	*/
 
@@ -44,12 +44,12 @@ public abstract class ObjectEntities {
 	public static final String SERVER_ENTITY = "Server";
 	public static final String MCM_ENTITY = "MCM";
 	public static final String EQUIPMENT_ENTITY = "Equipment";
-    public static final String EQUIPMENTMELINK_ENTITY = "EquipmentMELink";
+	public static final String EQUIPMENTMELINK_ENTITY = "EquipmentMELink";
 	public static final String PORT_ENTITY = "Port";
 	public static final String TRANSPATH_ENTITY = "TransmissionPath";
 	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink";	
 	public static final String KIS_ENTITY = "KIS";
-    public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort";
+	public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort";
 	public static final String ME_ENTITY = "MonitoredElement";
 	public static final String LINK_ENTITY = "Link";
 
@@ -83,9 +83,9 @@ public abstract class ObjectEntities {
 	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0007;
 	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0008;	
 	public static final short LINKTYPE_ENTITY_CODE = 0x0009;
-    public static final short KISTYPE_ENTITY_CODE = 0x000A;
-    public static final short TRANSPATHTYPE_ENTITY_CODE = 0x000B;
-    public static final short CABLETHREADTYPE_ENTITY_CODE = 0x000C;
+	public static final short KISTYPE_ENTITY_CODE = 0x000A;
+	public static final short TRANSPATHTYPE_ENTITY_CODE = 0x000B;
+	public static final short CABLETHREADTYPE_ENTITY_CODE = 0x000C;
 
 	/*	Administration 129 -- 256	*/
 
