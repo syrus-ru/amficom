@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.45 2004/12/24 12:52:00 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.46 2004/12/27 16:00:05 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2004/12/24 12:52:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.46 $, $Date: 2004/12/27 16:00:05 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -495,6 +495,10 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
+	}
+	
+	public void delete (List storableObjects) {
+		//TODO implement this method
 	}
 
 	public AnalysisType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
