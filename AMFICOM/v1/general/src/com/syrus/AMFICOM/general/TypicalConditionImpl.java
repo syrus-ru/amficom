@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.2 2005/02/08 11:24:16 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.3 2005/02/08 11:46:37 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/08 11:24:16 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 11:46:37 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -105,6 +105,8 @@ class TypicalConditionImpl extends TypicalCondition {
 			wrapper = ParameterTypeWrapper.getInstance();
 		} else if (object instanceof CharacteristicType) {
 			wrapper = CharacteristicTypeWrapper.getInstance();
+		} else if (object instanceof Characteristic) {
+			wrapper = CharacteristicWrapper.getInstance();
 		}
 		if (wrapper != null)
 			result = super.parseCondition(wrapper.getValue(object, this.key));
