@@ -36,5 +36,4 @@ public class IllegalDataException extends Exception {
 	public IllegalDataException(Throwable cause) {
 		super(cause);
 	}
-
 }

@@ -39,13 +39,13 @@ public abstract class StorableObjectDatabase {
 		connection = DatabaseConnection.getConnection();
 	}
 
-	public abstract void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException;
+	public abstract void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException;
 
 	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
 
 	public abstract Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
 
-	public abstract void update(StorableObject storableObject, int update_kind, Object arg) throws CreateObjectException , IllegalDataException;
+	public abstract void update(StorableObject storableObject, int update_kind, Object arg) throws IllegalDataException, CreateObjectException;
 }
 
