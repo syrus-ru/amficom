@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.94 2005/03/30 11:43:11 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.95 2005/04/01 17:39:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,10 +9,10 @@
 package com.syrus.AMFICOM.cmserver;
 
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/03/30 11:43:11 $
+ * @version $Revision: 1.95 $, $Date: 2005/04/01 17:39:21 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -214,11 +214,11 @@ public class CMServerImpl extends CMMeasurementTransmit {
 		Log.debugMessage("CMServerImpl.deleteList | Trying to delete " + id_Transferables.length
 				+ " objects on request of user '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = Identifier.fromTransferables(id_Transferables);
-		List generalList = new ArrayList(id_Transferables.length);
-		List administrationList = new ArrayList(id_Transferables.length);
-		List configurationList = new ArrayList(id_Transferables.length);
-		List measurementList = new ArrayList(id_Transferables.length);
+		Set ids = Identifier.fromTransferables(id_Transferables);
+		Set generalList = new HashSet(id_Transferables.length);
+		Set administrationList = new HashSet(id_Transferables.length);
+		Set configurationList = new HashSet(id_Transferables.length);
+		Set measurementList = new HashSet(id_Transferables.length);
 		Identifier id;
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			id = (Identifier) it.next();
