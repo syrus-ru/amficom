@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.45 2004/11/22 13:49:24 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.46 2004/11/25 15:00:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2004/11/22 13:49:24 $
+ * @version $Revision: 1.46 $, $Date: 2004/11/25 15:00:58 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -282,7 +282,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
             }
             
         } catch (SQLException sqle) {
-            String mesg = "TestDatabase.retrieveMeasurementSetupTestLinksByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+            String mesg = "EquipmentDatabase.retrieveEquipmentPortIdsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
             throw new RetrieveObjectException(mesg, sqle);
         } finally {
             try {

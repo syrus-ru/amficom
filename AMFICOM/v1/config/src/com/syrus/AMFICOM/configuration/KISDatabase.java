@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.41 2004/11/25 10:44:55 max Exp $
+ * $Id: KISDatabase.java,v 1.42 2004/11/25 15:00:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/11/25 10:44:55 $
- * @author $Author: max $
+ * @version $Revision: 1.42 $, $Date: 2004/11/25 15:00:58 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -298,7 +298,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveMeasurementSetupTestLinksByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+			String mesg = "KISDatabase.retrieveKISMeasurementPortIdsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
