@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.29 2005/01/17 11:43:47 bob Exp $
+ * $Id: ClientMeasurementServer.java,v 1.30 2005/01/28 13:48:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.omg.CORBA.SystemException;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Server;
@@ -27,42 +29,30 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/01/17 11:43:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2005/01/28 13:48:06 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public class ClientMeasurementServer extends SleepButWorkThread {
 
-	public static final String	APPLICATION_NAME			= "cmserver";
+	public static final String APPLICATION_NAME = "cmserver";
+	public static final String KEY_DB_HOST_NAME = "DBHostName";
+	public static final String KEY_DB_SID = "DBSID";
+	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
+	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
+	public static final String KEY_TICK_TIME = "TickTime";
+	public static final String KEY_MAX_FALLS = "MaxFalls";
+	public static final String KEY_MSERVER_ID = "MServerID";
+	public static final String MSERVER_ID = "Server_1";
+	public static final String DB_SID = "amficom";
+	public static final int DB_CONNECTION_TIMEOUT = 120;
+	public static final String DB_LOGIN_NAME = "amficom";
+	public static final int TICK_TIME = 5;
 
-	public static final String	KEY_DB_HOST_NAME			= "DBHostName";
-
-	public static final String	KEY_DB_SID					= "DBSID";
-
-	public static final String	KEY_DB_CONNECTION_TIMEOUT	= "DBConnectionTimeout";
-
-	public static final String	KEY_DB_LOGIN_NAME			= "DBLoginName";
-
-	public static final String	KEY_TICK_TIME				= "TickTime";
-
-	public static final String	KEY_MAX_FALLS				= "MaxFalls";
-
-	public static final String	KEY_MSERVER_ID				= "MServerID";
-
-	public static final String	MSERVER_ID					= "Server_1";
-
-	public static final String	DB_SID						= "amficom";
-
-	public static final int		DB_CONNECTION_TIMEOUT		= 120;
-
-	public static final String	DB_LOGIN_NAME				= "amficom";
-
-	public static final int		TICK_TIME					= 5;
-
-//	protected static MServer	mServerRef;
+// protected static MServer mServerRef;
 
 	/* CORBA server */
-	private static CORBAServer	corbaServer;
+	private static CORBAServer corbaServer;
 	
 	/*	References to MCMs*/
 	protected static Map mcmRefs;	/*	Map <Identifier mcmId, com.syrus.AMFICOM.mcm.corba.MCM mcmRef>*/
@@ -131,8 +121,9 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 			Log.errorException(ce);
 			System.exit(-1);
 		}
-		catch (Exception e) {
+		catch (SystemException e) {
 			Log.errorException(e);
+			System.exit(-1);
 		}
 	}
 	

@@ -7,9 +7,9 @@ ORACLECLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14_g.jar:$ORACLE_HOME/jdbc/lib/orai18
 APPCLASSPATH=$LIB/mserver_interface.jar:\
 $LIB/mcm_interface.jar:\
 $LIB/cmserver.jar:\
-$LIB/cmserver_interface.jar:\
 $LIB/measurement.jar:\
 $LIB/configuration.jar:\
+$LIB/administration.jar:\
 $LIB/general.jar:\
 $LIB/event.jar:\
 $LIB/util.jar
