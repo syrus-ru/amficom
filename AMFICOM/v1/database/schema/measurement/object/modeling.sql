@@ -7,8 +7,7 @@ CREATE TABLE Modeling (
 --
  name VARCHAR(256),
 --
- domain_id VARCHAR2(32),
---
+ monitored_element_id VARCHAR2(32),
  measurement_type_id VARCHAR2(32) NOT NULL,
  argument_set_id VARCHAR2(32) NOT NULL,
 --

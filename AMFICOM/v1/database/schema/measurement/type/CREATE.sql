@@ -6,3 +6,4 @@
 @@anatyppartyplink
 @@evatyppartyplink
 @@mnttypanatypevatyp
+@@mnttypmeasporttyplink

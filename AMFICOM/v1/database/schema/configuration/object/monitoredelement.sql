@@ -7,10 +7,12 @@ CREATE TABLE MonitoredElement (
 --
  domain_id VARCHAR2(32),
 --
+ name  VARCHAR2(64),
+--
  measurement_port_id VARCHAR2(32) NOT NULL,
 --
  sort NUMBER(2) NOT NULL,
- local_address VARCHAR2(64) NOT NULL,
+ local_address VARCHAR2(64) NOT NULL, 
 --
  CONSTRAINT me_pk PRIMARY KEY (id),
  CONSTRAINT me_meport_fk FOREIGN KEY (measurement_port_id)
