@@ -23,6 +23,10 @@ public class MonitoredElement_Database extends StorableObject_Database {
 
 	public void retrieve(StorableObject storableObject) throws Exception {
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
+		this.retrieveMonitoredElement(monitoredElement);
+	}
+
+	private void retrieveMonitoredElement(MonitoredElement monitoredElement) throws Exception {
 		String me_id_str = monitoredElement.getId().toString();
 		String sql = "SELECT "
 			+ DatabaseDate.toQuerySubString("created") + ", "
@@ -76,6 +80,29 @@ public class MonitoredElement_Database extends StorableObject_Database {
 
 	public void insert(StorableObject storableObject) throws Exception {
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
+		try {
+			this.insertMonitoredElement(monitoredElement);
+		}
+		catch (Exception e) {
+			try {
+				connection.rollback();
+			}
+			catch (SQLException sqle) {
+				Log.errorMessage("Exception in rolling back");
+				Log.errorException(sqle);
+			}
+			throw e;
+		}
+		try {
+			connection.commit();
+		}
+		catch (SQLException sqle) {
+			Log.errorMessage("Exception in commiting");
+			Log.errorException(sqle);
+		}
+	}
+
+	private void insertMonitoredElement(MonitoredElement monitoredElement) throws Exception {
 		String me_id_str = monitoredElement.getId().toString();
 		String sql = "INSERT INTO " + ObjectEntities.ME_ENTITY
 			+ " (id, created, modified, creator_id, modifier_id, kis_id, local_address)"
@@ -93,7 +120,6 @@ public class MonitoredElement_Database extends StorableObject_Database {
 			statement = connection.createStatement();
 			Log.debugMessage("MonitoredElement_Database.insert | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-			connection.commit();
 		}
 		catch (SQLException sqle) {
 			String mesg = "MonitoredElement_Database.insert | Cannot insert monitored element " + me_id_str;
