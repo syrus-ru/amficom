@@ -41,9 +41,9 @@ import java.util.Hashtable;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 
-public class ImageCatalogue extends Object
+public final class ImageCatalogue extends Object
 {
-	static Hashtable hash = new Hashtable();
+	private static Hashtable hash = new Hashtable();
 
 	static
 	{
@@ -73,11 +73,11 @@ public class ImageCatalogue extends Object
 
 	}
 
-	protected ImageCatalogue()
+	private ImageCatalogue()
 	{
 	}
 	
-	protected ImageCatalogue(
+	private ImageCatalogue(
 			String id,
 			ImageResource[] loaded_images)
 	{
@@ -85,7 +85,7 @@ public class ImageCatalogue extends Object
 //		transferable.loaded_images = loaded_images;
 	}
 
-	static public ImageResource get(String name)
+	public static ImageResource get(String name)
 	{
 		ImageResource ir = null;
 		try
@@ -101,7 +101,7 @@ public class ImageCatalogue extends Object
 		return ir;
 	}
 
-	static private ImageResource load(String name)
+	private static ImageResource load(String name)
 	{
 		ImageResource ir = null;
 		DataSourceInterface dsi = Environment.getDefaultDataSourceInterface(SessionInterface.getActiveSession());
@@ -129,12 +129,12 @@ public class ImageCatalogue extends Object
 		return ir;
 	}
 
-	static public void add(String name, ImageResource ir)
+	public static void add(String name, ImageResource ir)
 	{
 		hash.put(name, ir);
 	}
 
-	static public void remove(String name)
+	public static void remove(String name)
 	{
 		ImageResource ir = null;
 		try
@@ -150,18 +150,18 @@ public class ImageCatalogue extends Object
 		hash.remove(name);
 	}
 
-	static public Enumeration getAll()
+	public static Enumeration getAll()
 	{
 		return hash.elements();
 	}
 
-	static public void removeAll()
+	public static void removeAll()
 	{
 		hash.clear();
 	}
 
 
-	public Hashtable getHash()
+	public static Hashtable getHash()
 	{
 		return hash;
 	}

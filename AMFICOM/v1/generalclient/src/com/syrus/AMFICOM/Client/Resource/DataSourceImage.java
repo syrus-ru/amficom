@@ -721,7 +721,7 @@ public class DataSourceImage
 	{
 		ResourceDescriptor_Transferable[] desc = GetDescriptors(ImageResource.typ);
 		ImageCatalogue.removeAll();
-		load(ImageResource.typ, ImageCatalogue.hash);
+		load(ImageResource.typ, ImageCatalogue.getHash());
 		Vector ids = filter(ImageResource.typ, desc, true);
 		if(	ids.size() > 0)
 		{
@@ -729,7 +729,7 @@ public class DataSourceImage
 			ids.copyInto(imids);
 			di.LoadImages(imids);
 			if(ids.size() > 0)
-				save(ImageResource.typ, ImageCatalogue.hash);
+				save(ImageResource.typ, ImageCatalogue.getHash());
 		}
 	}
 
@@ -753,7 +753,7 @@ public class DataSourceImage
 			l.copyInto(imids);
 			di.LoadImages(imids);
 			if(l.size() > 0)
-				save(ImageResource.typ, ImageCatalogue.hash);
+				save(ImageResource.typ, ImageCatalogue.getHash());
 		}
 	}
 }
