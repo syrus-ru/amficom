@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.43 2004/12/10 12:13:50 bob Exp $
+ * $Id: KIS.java,v 1.44 2004/12/21 16:17:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/12/10 12:13:50 $
+ * @version $Revision: 1.44 $, $Date: 2004/12/21 16:17:22 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -231,7 +231,12 @@ public class KIS extends DomainMember implements Characterized {
 	public Identifier getMCMId() {
 		return this.mcmId;
 	}
-
+	
+	public void setMCMId(Identifier mcmId) {
+		this.mcmId = mcmId;
+		super.currentVersion = super.getNextVersion();
+	}
+	
 	public List getMeasurementPortIds() {
 		return this.measurementPortIds;
 	}
