@@ -97,6 +97,26 @@ module corba {
 			raises (general::corba::AMFICOMRemoteException);
 
 /////////////////////////////////////////// Configuration Recieve ////////////////////////////////////////////
+		void receiveCableThread(in configuration::corba::CableThread_Transferable cableThread_Transferable,
+						in boolean force, 	
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+
+		void receiveCableThreads(in configuration::corba::CableThreadSeq_Transferable cableThreads_Transferable,
+						in boolean force, 	
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+			
+		void receiveCableLinkType(in configuration::corba::CableLinkType_Transferable cableLinkType_Transferable,
+						in boolean force, 	
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+
+		void receiveCableLinkTypes(in configuration::corba::CableLinkTypeSeq_Transferable cableLinkTypes_Transferable,
+						in boolean force, 	
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+			
 		void receiveCableThreadType(in configuration::corba::CableThreadType_Transferable cableThreadType_Transferable,
 						in boolean force, 	
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
@@ -509,6 +529,16 @@ module corba {
 
 ///////////////////////////////////////// Configuration Transmit ///////////////////////////////////////////////
 
+		configuration::corba::CableLinkType_Transferable transmitCableLinkType(
+						in general::corba::Identifier_Transferable id_Transferable,
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+
+		configuration::corba::CableThread_Transferable transmitCableThread(
+						in general::corba::Identifier_Transferable id_Transferable,
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+			
 		configuration::corba::CableThreadType_Transferable transmitCableThreadType(
 						in general::corba::Identifier_Transferable id_Transferable,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
@@ -576,7 +606,16 @@ module corba {
 
 
 					// Transmit Sequences		
+		configuration::corba::CableLinkTypeSeq_Transferable	transmitCableLinkTypes(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
 
+		configuration::corba::CableThreadSeq_Transferable transmitCableThreads(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+			
 		configuration::corba::CableThreadTypeSeq transmitCableThreadTypes(
 						in general::corba::IdentifierSeq_Transferable ids_Transferable,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
@@ -584,6 +623,18 @@ module corba {
 
 		configuration::corba::CableThreadTypeSeq transmitCableThreadTypesButIds(
 						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+			
+		configuration::corba::CableThreadSeq_Transferable transmitCableThreadButIdsCondition(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable,
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+			
+		configuration::corba::CableLinkTypeSeq_Transferable transmitCableLinkTypesButIdsCondition(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
