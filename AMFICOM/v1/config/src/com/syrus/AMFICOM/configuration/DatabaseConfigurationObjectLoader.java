@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.15 2004/10/29 10:14:50 max Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.16 2004/11/17 09:42:48 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,18 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -21,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/10/29 10:14:50 $
+ * @version $Revision: 1.16 $, $Date: 2004/11/17 09:42:48 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -1209,6 +1215,83 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMonitoredElements | VersionCollisionException: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMonitoredElements | VersionCollisionException: " + e.getMessage());
 		}
+	}
+
+	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
+		List soIds = new ArrayList();
+        short entityCode = 0;
+        for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+			StorableObject so = (StorableObject) it.next();
+            soIds.add(so.getId());		
+		}
+        for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+			StorableObject so = (StorableObject) it.next();            
+			so.getId().getMajor();
+		}
+        List loadedSo = null;
+        try {
+            switch (entityCode) {
+                case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
+                    loadedSo = loadCharacteristicTypes(soIds);
+                    break;
+                case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
+                    loadedSo = loadEquipmentTypes(soIds);
+                    break;
+                case ObjectEntities.KISTYPE_ENTITY_CODE:
+                    loadedSo = loadKISTypes(soIds);
+                    break;
+                case ObjectEntities.PORTTYPE_ENTITY_CODE:
+                    loadedSo = loadPortTypes(soIds);
+                    break;
+                case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+                    loadedSo = loadMeasurementPortTypes(soIds);
+                    break;
+                case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
+                    loadedSo = loadCharacteristics(soIds);
+                    break;
+                //          case ObjectEntities.PERMATTR_ENTITY_CODE:
+                //              storableObject =
+                // loadPermissionAttributes(soIds);
+                //              break;
+                case ObjectEntities.USER_ENTITY_CODE:
+                    loadedSo = loadUsers(soIds);
+                    break;
+                case ObjectEntities.DOMAIN_ENTITY_CODE:
+                    loadedSo = loadDomains(soIds);
+                    break;
+                case ObjectEntities.SERVER_ENTITY_CODE:
+                    loadedSo = loadServers(soIds);
+                    break;
+                case ObjectEntities.MCM_ENTITY_CODE:
+                    loadedSo = loadMCMs(soIds);
+                    break;
+                case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+                    loadedSo = loadEquipments(soIds);
+                    break;
+                case ObjectEntities.PORT_ENTITY_CODE:
+                    loadedSo = loadPorts(soIds);
+                    break;
+                case ObjectEntities.TRANSPATH_ENTITY_CODE:
+                    loadedSo = loadTransmissionPaths(soIds);
+                    break;
+                case ObjectEntities.KIS_ENTITY_CODE:
+                    loadedSo = loadKISs(soIds);
+                    break;
+                case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+                    loadedSo = loadMeasurementPorts(soIds);
+                    break;
+                case ObjectEntities.ME_ENTITY_CODE:
+                    loadedSo = loadMonitoredElements(soIds);
+                    break;
+                default:
+                    Log.errorMessage("DatabaseConfigurationObjectLoader.refresh | Unknown entity: "
+                            + entityCode);                
+            }
+            return (Set)loadedSo;
+        } catch (DatabaseException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.refresh | DatabaseException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.refresh | DatabaseException: " + e.getMessage());
+        }
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.31 2004/11/17 08:22:37 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.32 2004/11/17 09:42:48 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,11 +13,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Hashtable;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -29,13 +31,14 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.io.LRUMapSaver;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/11/17 08:22:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.32 $, $Date: 2004/11/17 09:42:48 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -167,10 +170,10 @@ public class ConfigurationStorableObjectPool {
             }
         } catch (CommunicationException e) {
             Log.errorException(e);
-            Log.errorMessage("MeasurementStorableObjectPool.addObjectPool | Error: " + e.getMessage());
+            Log.errorMessage("ConfigurationStorableObjectPool.addObjectPool | Error: " + e.getMessage());
         } catch (DatabaseException e) {
             Log.errorException(e);
-            Log.errorMessage("MeasurementStorableObjectPool.addObjectPool | Error: " + e.getMessage());
+            Log.errorMessage("ConfigurationStorableObjectPool.addObjectPool | Error: " + e.getMessage());
         } catch (SecurityException e) {
 			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
 					+ " SecurityException " + e.getMessage());
@@ -192,6 +195,42 @@ public class ConfigurationStorableObjectPool {
 		}
 
 	}
+    
+    public static void refresh() throws DatabaseException, CommunicationException {        
+        try {         
+            Log.debugMessage("ConfigurationStorableObjectPool.refresh | trying to refresh Pool...", Log.DEBUGLEVEL03);
+            Set storableObjects = new HashSet();
+            Set returnedStorableObjectsIds = new HashSet();
+            Set entityCodes = objectPoolMap.keySet();
+            
+            for (Iterator it = entityCodes.iterator(); it.hasNext();) {
+    			Short entityCode = (Short) it.next();
+                LRUMap lruMap = (LRUMap) objectPoolMap.get(entityCode);
+    			
+                for (Iterator it2 = lruMap.iterator(); it2.hasNext();) {
+    				storableObjects.add(it2.next());                
+    			}
+                if (storableObjects == null || storableObjects.isEmpty()) {
+                	Log.debugMessage("ConfigurationStorableObjectPool.refresh | LruMap has no elements",Log.DEBUGLEVEL08);
+                    continue;
+                }
+                returnedStorableObjectsIds = cObjectLoader.refresh(storableObjects);
+                
+                for (Iterator it3 = lruMap.keyIterator(); it3.hasNext();) {
+    				Identifier id = (Identifier) it3.next();
+                    if (returnedStorableObjectsIds.contains(id)) {
+                    	lruMap.remove(id);
+                    }                				
+    			}           
+    		}
+        } catch (DatabaseException e) {
+            Log.errorMessage("ConfigurationStorableObjectPool.refresh | DatabaseException: " + e.getMessage());
+            throw new DatabaseException("ConfigurationStorableObjectPool.refresh", e);
+        } catch (CommunicationException e) {
+            Log.errorMessage("ConfigurationStorableObjectPool.refresh | CommunicationException: " + e.getMessage());
+            throw new CommunicationException("ConfigurationStorableObjectPool.refresh", e);
+        }
+    }
 
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader)
 			throws DatabaseException, CommunicationException {

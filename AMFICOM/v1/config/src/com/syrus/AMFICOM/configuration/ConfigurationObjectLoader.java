@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.17 2004/11/16 11:00:35 arseniy Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.18 2004/11/17 09:42:48 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -17,8 +18,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/11/16 11:00:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2004/11/17 09:42:48 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -227,5 +228,7 @@ public interface ConfigurationObjectLoader {
 	void saveMeasurementPorts(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveMonitoredElements(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+
+	Set refresh(Set storableObjects) throws CommunicationException, DatabaseException;
 
 }
