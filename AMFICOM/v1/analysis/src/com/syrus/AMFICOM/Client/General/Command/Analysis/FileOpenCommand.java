@@ -62,7 +62,7 @@ public class FileOpenCommand extends VoidCommand
 			{
 				System.out.println("Application context and/or user are not defined");
 				return;
-		}
+			}
 		}
 
 		Properties properties = new Properties();
@@ -75,8 +75,9 @@ public class FileOpenCommand extends VoidCommand
 		catch (IOException ex)
 		{
 		}
-
-		JFileChooser chooser = new JFileChooser(lastDir);
+		//System.err.println("FileOpenCommand: execute: #3; lastDir = '" + lastDir + "'"); // FIXME: remove
+		JFileChooser chooser = new JFileChooser(lastDir); // XXX: почему-то тут иногда тормозит
+		//System.err.println("FileOpenCommand: execute: #3.1"); // FIXME: remove
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("sor", "Bellcore GR-196-CORE "));
 		chooser.addChoosableFileFilter(new ChoosableFileFilter(new String[] {"dat", "ref", "trc"}, "NetTest / Laser Precision "));
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("tfw", "Acterna / Wavetek "));
