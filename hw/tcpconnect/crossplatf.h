@@ -1,5 +1,5 @@
-#ifndef CROSSPLATF_H
-#define CROSSPLATF_H
+#ifndef TCPCONNECT_CROSSPLATF_H
+#define TCPCONNECT_CROSSPLATF_H
 
 
 
@@ -38,4 +38,4 @@ void show_error(const char* mesg);
 
 void sleep_sec(const unsigned int n_sec);
 
-#endif
+#endif //TCPCONNECT_CROSSPLATF_H
