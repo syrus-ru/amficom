@@ -24,6 +24,7 @@ public class TransmissionPath extends StubResource implements Serializable
 	public String id = "";
 	public String name = "";
 	public String domainId = "";
+	public String description = "";
 
 	public long modified;
 
@@ -56,6 +57,7 @@ public class TransmissionPath extends StubResource implements Serializable
 		name = transferable.name;
 		domainId = transferable.domainId;
 		modified = transferable.modified;
+		description = transferable.description;
 
 		for(int i = 0; i < transferable.characteristics.length; i++)
 			characteristics.put(transferable.characteristics[i].type_id, new Characteristic(transferable.characteristics[i]));
@@ -66,6 +68,7 @@ public class TransmissionPath extends StubResource implements Serializable
 		transferable.id = id;
 		transferable.name = name;
 		transferable.domainId = domainId;
+		transferable.description = description;
 
 		transferable.modified = modified;
 
@@ -219,6 +222,7 @@ public class TransmissionPath extends StubResource implements Serializable
 		out.writeObject(id);
 		out.writeObject(name);
 		out.writeObject(domainId);
+		out.writeObject(description);
 		out.writeLong(modified);
 		out.writeObject(characteristics);
 	}
@@ -229,6 +233,7 @@ public class TransmissionPath extends StubResource implements Serializable
 		id = (String )in.readObject();
 		name = (String )in.readObject();
 		domainId = (String )in.readObject();
+		description = (String )in.readObject();
 		modified = in.readLong();
 		characteristics = (Map )in.readObject();
 

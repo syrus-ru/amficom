@@ -39,6 +39,8 @@ public class Equipment extends StubResource implements Serializable
 	public String manufacturerCode = "";
 	public String supplier = "";
 	public String supplierCode = "";
+	public String constructor = "";
+	public String constructorCode = "";
 
 	public String eqClass = "";
 //	public boolean is_kis;
@@ -132,6 +134,8 @@ public class Equipment extends StubResource implements Serializable
 		manufacturerCode = transferable.manufacturerCode;
 		supplier = transferable.supplier;
 		supplierCode = transferable.supplierCode;
+		constructor = transferable.constructor;
+		constructorCode = transferable.constructorCode;
 
 		eqClass = transferable.eqClass;
 		domainId = transferable.domainId;
@@ -160,6 +164,8 @@ public class Equipment extends StubResource implements Serializable
 		transferable.manufacturerCode = manufacturerCode;
 		transferable.supplier = supplier;
 		transferable.supplierCode = supplierCode;
+		transferable.constructor = constructor;
+		transferable.constructorCode = constructorCode;
 
 		transferable.eqClass = eqClass;
 		transferable.domainId = domainId;
