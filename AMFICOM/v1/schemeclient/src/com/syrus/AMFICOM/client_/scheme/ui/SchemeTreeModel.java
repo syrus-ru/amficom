@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.11 2005/03/25 13:30:24 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.12 2005/03/28 11:43:16 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/03/25 13:30:24 $
+ * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2005/03/28 11:43:16 $
  * @module schemeclient_v1
  */
 
@@ -23,19 +23,17 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Schematics.UI.SchemeController;
-import com.syrus.AMFICOM.client_.general.ui_.tree.*;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.PopulateChildrenFactory;
+import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedNode;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.OperationSort;
-import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.logic.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 
-public class SchemeTreeModel implements PopulateChildrenFactory {
+public class SchemeTreeModel implements ChildrenFactory {
 	ApplicationContext aContext;
 
 	private static SchemeKind[] schemeTypes = new SchemeKind[] { SchemeKind.NETWORK, SchemeKind.BUILDING,
@@ -46,21 +44,21 @@ public class SchemeTreeModel implements PopulateChildrenFactory {
 	}
 
 
-	public Icon getNodeIcon(SONode node) {
-		if (node.getUserObject() instanceof String) {
-			String s = (String) node.getUserObject();
+	public Icon getNodeIcon(Item node) {
+		if (node.getObject() instanceof String) {
+			String s = (String) node.getObject();
 			if (s.equals(Constants.SCHEME))
 				return Constants.SCHEME_ICON;
 			return Constants.CATALOG_ICON;
 		}
-		if (node.getUserObject() instanceof SchemeKind)
+		if (node.getObject() instanceof SchemeKind)
 			return Constants.CATALOG_ICON;
 		return null;
 	}
 
-	public String getNodeName(SONode node) {
-		if (node.getUserObject() instanceof String) {
-			String s = (String) node.getUserObject();
+	public String getNodeName(Item node) {
+		if (node.getObject() instanceof String) {
+			String s = (String) node.getObject();
 			if (s.equals(Constants.ROOT))
 				return Constants.TEXT_ROOT;
 			if (s.equals(Constants.CONFIGURATION))
@@ -92,8 +90,8 @@ public class SchemeTreeModel implements PopulateChildrenFactory {
 			if (s.equals(SchemeKind.CABLE_SUBNETWORK))
 				return Constants.TEXT_SCHEME_TYPE_CABLE;
 		}
-		if (node.getUserObject() instanceof SchemeKind) {
-			SchemeKind type = (SchemeKind)node.getUserObject();
+		if (node.getObject() instanceof SchemeKind) {
+			SchemeKind type = (SchemeKind)node.getObject();
 			switch (type.value()) {
 			case SchemeKind._NETWORK:
 				return Constants.TEXT_SCHEME_TYPE_NETWORK;
@@ -105,39 +103,39 @@ public class SchemeTreeModel implements PopulateChildrenFactory {
 				throw new UnsupportedOperationException("Unknown scheme type");
 			}
 		}
-		if (node.getUserObject() instanceof LinkType)
-			return ((LinkType) node.getUserObject()).getName();
-		if (node.getUserObject() instanceof CableLinkType)
-			return ((CableLinkType) node.getUserObject()).getName();
-		if (node.getUserObject() instanceof PortType)
-			return ((PortType) node.getUserObject()).getName();
-		if (node.getUserObject() instanceof MeasurementPortType)
-			return ((MeasurementPortType) node.getUserObject()).getName();
-		if (node.getUserObject() instanceof MeasurementType)
-			return ((MeasurementType) node.getUserObject()).getDescription();
+		if (node.getObject() instanceof LinkType)
+			return ((LinkType) node.getObject()).getName();
+		if (node.getObject() instanceof CableLinkType)
+			return ((CableLinkType) node.getObject()).getName();
+		if (node.getObject() instanceof PortType)
+			return ((PortType) node.getObject()).getName();
+		if (node.getObject() instanceof MeasurementPortType)
+			return ((MeasurementPortType) node.getObject()).getName();
+		if (node.getObject() instanceof MeasurementType)
+			return ((MeasurementType) node.getObject()).getDescription();
 
-		if (node.getUserObject() instanceof SchemeProtoGroup)
-			return ((SchemeProtoGroup)node.getUserObject()).getName();
-		if (node.getUserObject() instanceof Scheme)
-			return ((Scheme)node.getUserObject()).getName();
-		if (node.getUserObject() instanceof SchemeElement)
-			return ((SchemeElement)node.getUserObject()).getName();
-		if (node.getUserObject() instanceof SchemeLink)
-			return ((SchemeLink)node.getUserObject()).getName();
-		if (node.getUserObject() instanceof SchemeCableLink)
-			return ((SchemeCableLink)node.getUserObject()).getName();
-		if (node.getUserObject() instanceof SchemePath)
-			return ((SchemePath)node.getUserObject()).getName();
-		if (node.getUserObject() instanceof SchemePort)
-			return ((SchemePort)node.getUserObject()).getName();
-		if (node.getUserObject() instanceof SchemeCablePort)
-			return ((SchemeCablePort)node.getUserObject()).getName();
+		if (node.getObject() instanceof SchemeProtoGroup)
+			return ((SchemeProtoGroup)node.getObject()).getName();
+		if (node.getObject() instanceof Scheme)
+			return ((Scheme)node.getObject()).getName();
+		if (node.getObject() instanceof SchemeElement)
+			return ((SchemeElement)node.getObject()).getName();
+		if (node.getObject() instanceof SchemeLink)
+			return ((SchemeLink)node.getObject()).getName();
+		if (node.getObject() instanceof SchemeCableLink)
+			return ((SchemeCableLink)node.getObject()).getName();
+		if (node.getObject() instanceof SchemePath)
+			return ((SchemePath)node.getObject()).getName();
+		if (node.getObject() instanceof SchemePort)
+			return ((SchemePort)node.getObject()).getName();
+		if (node.getObject() instanceof SchemeCablePort)
+			return ((SchemeCablePort)node.getObject()).getName();
 		throw new UnsupportedOperationException("Unknown object");
 	}
 
-	public ObjectResourceController getNodeController(SONode node) {
-		if (node.getUserObject() instanceof String) {
-			String s = (String) node.getUserObject();
+	public ObjectResourceController getNodeController(Item node) {
+		if (node.getObject() instanceof String) {
+			String s = (String) node.getObject();
 			if (s.equals(Constants.SCHEME))
 				return SchemeController.getInstance();
 			if (s.equals(Constants.SCHEME_ELEMENT))
@@ -170,23 +168,23 @@ public class SchemeTreeModel implements PopulateChildrenFactory {
 				return null;
 			return null;
 		}
-		if (node.getUserObject() instanceof SchemeKind)
+		if (node.getObject() instanceof SchemeKind)
 			return SchemeController.getInstance();
-		if (node.getUserObject() instanceof LinkType)
+		if (node.getObject() instanceof LinkType)
 			return LinkTypeController.getInstance();
-		if (node.getUserObject() instanceof CableLinkType)
+		if (node.getObject() instanceof CableLinkType)
 			return CableLinkTypeController.getInstance();
-		if (node.getUserObject() instanceof PortType)
+		if (node.getObject() instanceof PortType)
 			return PortTypeController.getInstance();
-		if (node.getUserObject() instanceof TransmissionPathType)
+		if (node.getObject() instanceof TransmissionPathType)
 			return TransmissionPathTypeController.getInstance();
-		if (node.getUserObject() instanceof MeasurementPortType)
+		if (node.getObject() instanceof MeasurementPortType)
 			return MeasurementPortTypeController.getInstance();
-		if (node.getUserObject() instanceof MeasurementType)
+		if (node.getObject() instanceof MeasurementType)
 			return MeasurementTypeController.getInstance();
 
-		if (node.getUserObject() instanceof SchemeProtoGroup) {
-			if (!((SchemeProtoGroup) node.getUserObject()).getSchemeProtoGroups().isEmpty())
+		if (node.getObject() instanceof SchemeProtoGroup) {
+			if (!((SchemeProtoGroup) node.getObject()).getSchemeProtoGroups().isEmpty())
 				return null;
 			/**
 			 * @todo write SchemeProtoGroupController return
@@ -199,9 +197,9 @@ public class SchemeTreeModel implements PopulateChildrenFactory {
 			 *       SchemeProtoElementController.getInstance();
 			 */
 		}
-		if (node.getUserObject() instanceof Scheme)
+		if (node.getObject() instanceof Scheme)
 			return SchemeController.getInstance();
-		if (node.getUserObject() instanceof SchemeElement)
+		if (node.getObject() instanceof SchemeElement)
 			return SchemeElementController.getInstance();
 		throw new UnsupportedOperationException("Unknown object");
 	}
@@ -213,31 +211,31 @@ public class SchemeTreeModel implements PopulateChildrenFactory {
 			String s = (String) node.getObject();
 			if (s.equals(Constants.ROOT)) {
 				if (!contents.contains(Constants.CONFIGURATION))
-					node.addChild(new IconedNode(this, Constants.CONFIGURATION));
+					node.addChild(new IconedNode(this, Constants.CONFIGURATION, Constants.TEXT_CONFIGURATION, Constants.CATALOG_ICON));
 				if (!contents.contains(Constants.SCHEME_TYPE))
-					node.addChild(new IconedNode(this, Constants.SCHEME_TYPE));
+					node.addChild(new IconedNode(this, Constants.SCHEME_TYPE, Constants.TEXT_SCHEME_TYPE, Constants.CATALOG_ICON));
 				if (!contents.contains(Constants.SCHEME_PROTO_GROUP))
-					node.addChild(new IconedNode(this, Constants.SCHEME_PROTO_GROUP));
+					node.addChild(new IconedNode(this, Constants.SCHEME_PROTO_GROUP, Constants.TEXT_SCHEME_PROTO_GROUP, Constants.CATALOG_ICON));
 			} 
 			else if (s.equals(Constants.CONFIGURATION)) {
 				if (!contents.contains(Constants.NETWORK_DIRECTORY))
-					node.addChild(new IconedNode(this, Constants.NETWORK_DIRECTORY));
+					node.addChild(new IconedNode(this, Constants.NETWORK_DIRECTORY, Constants.TEXT_NETWORK_DIRECTORY, Constants.CATALOG_ICON));
 				if (!contents.contains(Constants.MONITORING_DIRECTORY))
-					node.addChild(new IconedNode(this, Constants.MONITORING_DIRECTORY));
+					node.addChild(new IconedNode(this, Constants.MONITORING_DIRECTORY, Constants.TEXT_MONITORING_DIRECTORY, Constants.CATALOG_ICON));
 			} 
 			else if (s.equals(Constants.NETWORK_DIRECTORY)) {
 				if (!contents.contains(Constants.LINK_TYPE))
-					node.addChild(new IconedNode(this, Constants.LINK_TYPE));
+					node.addChild(new IconedNode(this, Constants.LINK_TYPE, Constants.TEXT_LINK_TYPE, Constants.CATALOG_ICON));
 				if (!contents.contains(Constants.CABLE_LINK_TYPE))
-					node.addChild(new IconedNode(this, Constants.CABLE_LINK_TYPE));
+					node.addChild(new IconedNode(this, Constants.CABLE_LINK_TYPE, Constants.TEXT_CABLE_LINK_TYPE, Constants.CATALOG_ICON));
 				if (!contents.contains(Constants.PORT_TYPE))
-					node.addChild(new IconedNode(this, Constants.PORT_TYPE));
+					node.addChild(new IconedNode(this, Constants.PORT_TYPE, Constants.TEXT_PORT_TYPE, Constants.CATALOG_ICON));
 			} 
 			else if (s.equals(Constants.MONITORING_DIRECTORY)) {
 				if (!contents.contains(Constants.MEASUREMENT_TYPE))
-					node.addChild(new IconedNode(this, Constants.MEASUREMENT_TYPE));
+					node.addChild(new IconedNode(this, Constants.MEASUREMENT_TYPE, Constants.TEXT_MEASUREMENT_TYPE, Constants.CATALOG_ICON));
 				if (!contents.contains(Constants.MEASUREMENTPORT_TYPE))
-					node.addChild(new IconedNode(this, Constants.MEASUREMENTPORT_TYPE));
+					node.addChild(new IconedNode(this, Constants.MEASUREMENTPORT_TYPE, Constants.TEXT_MEASUREMENTPORT_TYPE, Constants.CATALOG_ICON));
 				// vec.add(new IconedNode(this, "TransmissionPathType",
 				// LangModelConfig.getString("menuJDirPathText"), true));
 			} 
@@ -363,7 +361,7 @@ public class SchemeTreeModel implements PopulateChildrenFactory {
 				}
 			} 
 			else if (s.equals(Constants.SCHEME)) {
-				Scheme parent = (Scheme) ((SONode) node.getParent()).getUserObject();
+				Scheme parent = (Scheme) ((Item) node.getParent()).getObject();
 				List ds = new LinkedList();
 				for (int i = 0; i < parent.getSchemeElementsAsArray().length; i++) {
 					SchemeElement el = parent.getSchemeElementsAsArray()[i];
@@ -379,7 +377,7 @@ public class SchemeTreeModel implements PopulateChildrenFactory {
 				}
 			} 
 			else if (s.equals(Constants.SCHEME_ELEMENT)) {
-				Object parent = ((SONode) node.getParent()).getUserObject();
+				Object parent = ((Item) node.getParent()).getObject();
 				List ds = new LinkedList();
 				if (parent instanceof Scheme) {
 					Scheme scheme = (Scheme) parent;
@@ -408,7 +406,7 @@ public class SchemeTreeModel implements PopulateChildrenFactory {
 				}
 			} 
 			else if (s.equals(Constants.SCHEME_LINK)) {
-				Object parent = ((SONode) node.getParent()).getUserObject();
+				Object parent = ((Item) node.getParent()).getObject();
 				if (parent instanceof Scheme) {
 					Scheme scheme = (Scheme) parent;
 					for (int i = 0; i < scheme.getSchemeLinksAsArray().length; i++) {
@@ -427,7 +425,7 @@ public class SchemeTreeModel implements PopulateChildrenFactory {
 				}
 			} 
 			else if (s.equals(Constants.SCHEME_CABLELINK)) {
-				Scheme parent = (Scheme) ((SONode) node.getParent()).getUserObject();
+				Scheme parent = (Scheme) ((Item) node.getParent()).getObject();
 				for (int i = 0; i < parent.getSchemeCableLinksAsArray().length; i++) {
 					SchemeCableLink link = parent.getSchemeCableLinksAsArray()[i];
 					if (!contents.contains(link))
@@ -435,7 +433,7 @@ public class SchemeTreeModel implements PopulateChildrenFactory {
 				}
 			} 
 			else if (s.equals(Constants.SCHEME_PATH)) {
-				Scheme parent = (Scheme) ((SONode) node.getParent()).getUserObject();
+				Scheme parent = (Scheme) ((Item) node.getParent()).getObject();
 				for (int i = 0; i < parent.getCurrentSchemeMonitoringSolution().getSchemePathsAsArray().length; i++) {
 					SchemePath path = parent.getCurrentSchemeMonitoringSolution().getSchemePathsAsArray()[i];
 					if (!contents.contains(path))
