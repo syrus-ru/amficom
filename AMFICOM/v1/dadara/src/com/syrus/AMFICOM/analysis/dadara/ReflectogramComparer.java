@@ -20,7 +20,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/02/11 14:05:07 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/21 15:19:57 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -640,14 +640,14 @@ public class ReflectogramComparer
 				etalon);
 			for (int j = number + 1; j < etalon.length; j++)
 			{
-				if (etalon[j].getEventType() == ReflectogramEvent.CONNECTOR)
+				if (etalon[j].getEventType() == ReflectogramEvent.REFLECTIVE)
 				{
 					ra.rightReflectoEventCoord = etalon[j].getBegin();
 				}
 			}
 			for (int j = number - 1; j >= 0; j--)
 			{
-				if (etalon[j].getEventType() == ReflectogramEvent.CONNECTOR)
+				if (etalon[j].getEventType() == ReflectogramEvent.REFLECTIVE)
 				{
 					ra.leftReflectoEventCoord = etalon[j].getBegin();
 				}
@@ -707,14 +707,14 @@ public class ReflectogramComparer
 				etalon);
 			for (int j = number + 1; j < etalon.length; j++)
 			{
-				if (etalon[j].getEventType() == ReflectogramEvent.CONNECTOR)
+				if (etalon[j].getEventType() == ReflectogramEvent.REFLECTIVE)
 				{
 					ra.rightReflectoEventCoord = etalon[j].getBegin();
 				}
 			}
 			for (int j = number - 1; j >= 0; j--)
 			{
-				if (etalon[j].getEventType() == ReflectogramEvent.CONNECTOR)
+				if (etalon[j].getEventType() == ReflectogramEvent.REFLECTIVE)
 				{
 					ra.leftReflectoEventCoord = etalon[j].getBegin();
 				}
@@ -794,7 +794,7 @@ public class ReflectogramComparer
 			{
 				ReflectogramEvent ev = ReflectogramMath.getEvent(begin, reData);
 				if (ev != null
-						&& (ev.getEventType() == ReflectogramEvent.CONNECTOR || ev.getEventType() == ReflectogramEvent.WELD))
+						&& (ev.getEventType() == ReflectogramEvent.REFLECTIVE || ev.getEventType() == ReflectogramEvent.WELD))
 					begin = ev.getBegin();
 
 				hard_Alarms.add(new ReflectogramAlarm(begin,
@@ -828,7 +828,7 @@ public class ReflectogramComparer
 			{
 				ReflectogramEvent ev = ReflectogramMath.getEvent(begin, reData);
 				if (ev != null
-						&& (ev.getEventType() == ReflectogramEvent.CONNECTOR || ev.getEventType() == ReflectogramEvent.WELD))
+						&& (ev.getEventType() == ReflectogramEvent.REFLECTIVE || ev.getEventType() == ReflectogramEvent.WELD))
 					begin = ev.getBegin();
 
 				soft_Alarms.add(new ReflectogramAlarm(begin,
@@ -842,7 +842,7 @@ public class ReflectogramComparer
 
 	private void initializeMinimalEventSize()
 	{
-		if (etalon[0].getEventType() == ReflectogramEvent.CONNECTOR)
+		if (etalon[0].getEventType() == ReflectogramEvent.REFLECTIVE)
 		{
 			minimalEventSize = (int )(etalon[0].getWidth0() / 2);
 		} else
@@ -995,7 +995,7 @@ public class ReflectogramComparer
 			ReflectogramEvent et = ReflectogramMath.getEvent(coord, etalon);
 			if (et != null && et.getEventType() == type) // Event is the same!;
 			{
-				if (type == ReflectogramEvent.CONNECTOR)
+				if (type == ReflectogramEvent.REFLECTIVE)
 				{
 					if (i > 0
 							&& i < data.length - 1
@@ -1038,7 +1038,7 @@ public class ReflectogramComparer
 
 			if (et != null && et.getEventType() == type) // Event is the same!;
 			{
-				if (type == ReflectogramEvent.CONNECTOR)
+				if (type == ReflectogramEvent.REFLECTIVE)
 				{
 					if (i > 0
 							&& Math.abs(data[i].getAsympY0() - et.getAsympY0()) > changeThreshold

@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEventImpl.java,v 1.1 2005/01/27 08:41:14 saa Exp $
+ * $Id: SimpleReflectogramEventImpl.java,v 1.2 2005/02/21 15:19:57 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/01/27 08:41:14 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/21 15:19:57 $
  * @module
  */
 public class SimpleReflectogramEventImpl implements SimpleReflectogramEvent
@@ -22,7 +22,7 @@ public class SimpleReflectogramEventImpl implements SimpleReflectogramEvent
 	{
 		this.begin = begin;
 		this.end = end;
-		this.eventType = eventType;
+		this.eventType = eventType; // FIXME: надо отличать типы LOSS и GAIN !
 	}
 
 	public int getBegin()

@@ -22,7 +22,7 @@ public class ReflectogramAlarm {
 	public int leftReflectoEventCoord = 0;
 	public int rightReflectoEventCoord = 0;
 
-	private int eventType = 0; // 0 -linear; 3 -weld; 4 -connector.
+	private int eventType = 0;
 
 	public ReflectogramAlarm(int alarmPointCoord, int level)	{
 		this.alarmPointCoord = alarmPointCoord;

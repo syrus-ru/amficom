@@ -51,10 +51,12 @@ public class RefAnalysis
 			case SimpleReflectogramEvent.LINEAR:
 				type = TraceEvent.LINEAR;
 				break;
-			case SimpleReflectogramEvent.CONNECTOR:
+			case SimpleReflectogramEvent.REFLECTIVE:
 				type = TraceEvent.CONNECTOR;
 				break;
-			case SimpleReflectogramEvent.SPLICE:
+			case SimpleReflectogramEvent.LOSS:
+				// fall through
+			case SimpleReflectogramEvent.GAIN:
 				type = TraceEvent.WELD;
 				break;
 			default:

@@ -380,10 +380,12 @@ public class DetailedEventsFrame extends JInternalFrame
 		String dataT;
 		switch(dataType)
 		{
-		case SimpleReflectogramEvent.CONNECTOR:
+		case SimpleReflectogramEvent.REFLECTIVE:
 		    dataT = LangModelAnalyse.getString("eventType4");
 			break;
-		case SimpleReflectogramEvent.SPLICE:
+		case SimpleReflectogramEvent.GAIN:
+			// fall through
+		case SimpleReflectogramEvent.LOSS:
 		    dataT = LangModelAnalyse.getString("eventType3");
 			break;
 		case SimpleReflectogramEvent.LINEAR:
@@ -396,10 +398,12 @@ public class DetailedEventsFrame extends JInternalFrame
 		String etalonT;
 		switch(etalonType)
 		{
-		case SimpleReflectogramEvent.CONNECTOR:
+		case SimpleReflectogramEvent.REFLECTIVE:
 		    etalonT = LangModelAnalyse.getString("eventType4");
 			break;
-		case SimpleReflectogramEvent.SPLICE:
+		case SimpleReflectogramEvent.GAIN:
+			// fall through
+		case SimpleReflectogramEvent.LOSS:
 		    etalonT = LangModelAnalyse.getString("eventType3");
 			break;
 		case SimpleReflectogramEvent.LINEAR:

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.7 2005/02/21 13:39:33 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.8 2005/02/21 15:19:57 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/02/21 13:39:33 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/21 15:19:57 $
  * @module
  */
 public class ModelTraceManager
@@ -73,13 +73,14 @@ public class ModelTraceManager
 				last.xMax = evEnd;
 				last.eventId1 = i;
 				break;
-			case SimpleReflectogramEvent.SPLICE:
+			case SimpleReflectogramEvent.GAIN: // fall through
+			case SimpleReflectogramEvent.LOSS:
 				last.xMax = evBegin;
 				last.eventId1 = i;
 				thresholds.add(new ThreshDX(i, evBegin, evEnd, false, 1)); // FIXME: isRise = ?
 				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
 				break;
-			case SimpleReflectogramEvent.CONNECTOR:
+			case SimpleReflectogramEvent.REFLECTIVE:
 				int[] pos = CoreAnalysisManager.getConnectorMinMaxMin(mf, evBegin, evEnd);
 				evBegin = pos[0];
 				int evCenter = pos[1];
@@ -90,7 +91,7 @@ public class ModelTraceManager
 				thresholds.add(new ThreshDY(i, true, evCenter, evCenter));
 				thresholds.add(new ThreshDX(i, evCenter, evEnd, false, 1));
 				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
-				System.err.println("CONNECTOR: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd);
+				System.err.println("REFLECTIVE: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd);
 				break;
 			}
 		}
@@ -314,7 +315,11 @@ public class ModelTraceManager
 			Thresh th = ((Thresh )tlist.get(i));
 			if (th instanceof ThreshDX)
 			{
-				ret.add(new ThreshEditor(ThreshEditor.TYPE_DXF, th)); // @todo: выбирать TYPE_DXF либо TYPE_DXT
+				ret.add(new ThreshEditor(
+					((ThreshDX )th).isRise
+						? ThreshEditor.TYPE_DXF
+						: ThreshEditor.TYPE_DXF,
+					th));
 			}
 			if (th instanceof ThreshDY)
 			{

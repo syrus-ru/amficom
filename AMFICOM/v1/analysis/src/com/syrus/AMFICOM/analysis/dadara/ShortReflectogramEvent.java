@@ -30,13 +30,15 @@ public class ShortReflectogramEvent
 		this.begin = re.getBegin();
 		this.end   = re.getEnd();
 		this.type = (short)re.getEventType();
-		 if(re.getEventType() == SimpleReflectogramEvent.CONNECTOR)
+		 if(re.getEventType() == SimpleReflectogramEvent.REFLECTIVE)
 		 {
 			 this.a1 = (float)re.getAsympY0();
 			 this.aLet = (float)re.getALet();
 			 this.attenuation = (float)(re.getAsympY0() - re.getAsympY1());
 		 }
-		 else if(re.getEventType() == SimpleReflectogramEvent.SPLICE)
+		 else if(
+		 		re.getEventType() == SimpleReflectogramEvent.GAIN
+		 		||re.getEventType() == SimpleReflectogramEvent.LOSS)
 		 {
 			 this.a1 = (float)re.getAsympY0();
 			 this.aLet = 0f;

@@ -1,7 +1,7 @@
 /**
  * ReflectogramEvent.java
  * 
- * @version $Revision: 1.6 $, $Date: 2005/01/25 14:16:50 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/21 15:19:57 $
  * @author $Author: saa $
  * @module general_v1
  */
@@ -34,8 +34,8 @@ public class ReflectogramEvent
     // event types
 	public static final int RESERVED_VALUE = -1; // заведомо не использующееся значение
 	public static final int LINEAR = SimpleReflectogramEvent.LINEAR;
-	public static final int WELD = SimpleReflectogramEvent.SPLICE;
-	public static final int CONNECTOR = SimpleReflectogramEvent.CONNECTOR;
+	public static final int WELD = SimpleReflectogramEvent.LOSS; // FIXME: надо отличать типы LOSS и GAIN !
+	public static final int CONNECTOR = SimpleReflectogramEvent.REFLECTIVE;
 	public static final int SINGULARITY = SimpleReflectogramEvent.NOTIDENTIFIED;
 
 	// store flags for int vars

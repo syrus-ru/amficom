@@ -242,38 +242,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		}
 	}
 
-	void jComboBox1_itemStateChanged(ItemEvent e)
-	{
-		if (mtm == null || selected_there || current_ev == -1)
-			return;
-
-		if (e.getStateChange() == ItemEvent.SELECTED)
-		{
-			String type = (String)e.getItem();
-			int newType = SimpleReflectogramEvent.RESERVED;
-			
-			double[] y = bs == null ? null : bs.getTraceData(); // reflectogram
-			if (type.equals(LangModelAnalyse.getString("thresholdsConnector")))
-			    newType = SimpleReflectogramEvent.CONNECTOR;
-			else if (type.equals(LangModelAnalyse.getString("thresholdsWeld")))
-			    newType = SimpleReflectogramEvent.SPLICE;
-			else if (type.equals(LangModelAnalyse.getString("thresholdsLinear")))
-			    newType = SimpleReflectogramEvent.LINEAR;
-			
-			System.out.println("TSF: change threshold type: newType="+newType+"; y="+y);
-			
-			if (newType != SimpleReflectogramEvent.RESERVED)
-			{
-			    // change thresold type
-				mtm.changeThresholdType(current_ev, newType, y);
-				// redraw thresholds
-				updThresholds();
-				// notify others (is there any listener for this event??)
-				dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-			}
-		}
-	}
-
 	void updThresholds()
 	{
 		if (mtm == null)
@@ -331,21 +299,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 		tModel.updateData(pData);
 		jTable.setModel(tModel);
-
-//				jTable.setModel(tModelConnector);
-//				jTable.getColumnModel().getColumn(0).setPreferredWidth(150);
-//				jTable.getColumnModel().getColumn(1).setPreferredWidth(65);
-//				jTable.getColumnModel().getColumn(2).setPreferredWidth(50);
-//				jTable.getColumnModel().getColumn(3).setPreferredWidth(50);
-//				jTable.getColumnModel().getColumn(4).setPreferredWidth(50);
-//				jTable.updateUI();
-
-//				jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
-//				jTable.updateUI();
-
-//				jTable.setModel(tModelLinear);
-//				jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
-//				jTable.updateUI();
 	}
 
 	class EventTableModel extends FixedSizeEditableTableModel {

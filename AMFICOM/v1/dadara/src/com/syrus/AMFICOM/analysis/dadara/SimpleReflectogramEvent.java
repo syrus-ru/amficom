@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEvent.java,v 1.3 2005/02/08 11:46:28 saa Exp $
+ * $Id: SimpleReflectogramEvent.java,v 1.4 2005/02/21 15:19:57 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/02/08 11:46:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/21 15:19:57 $
  * @module dadara
  * 
  * Обеспечивает базовую информацию о рефлектометрическом событии -
@@ -24,9 +24,10 @@ public interface SimpleReflectogramEvent
 {
 	static final int RESERVED = 0;
 	static final int LINEAR = 1;
-	static final int SPLICE = 2;
-	static final int CONNECTOR = 3;
+	static final int REFLECTIVE = 3;
 	static final int NOTIDENTIFIED = 4;
+	static final int LOSS = 5;
+	static final int GAIN = 6;
 	int getBegin();
 	int getEnd();
 	int getEventType();

@@ -179,7 +179,7 @@ public class Threshold {
 	 {
 	 return ep.thresholdAmplitude(x, this, key);
 	 / *
-	 if(ep.getType() == ReflectogramEvent.CONNECTOR)
+	 if(ep.getType() == ReflectogramEvent.REFLECTIVE)
 	 return ep.connectorThresholdF(x, dL[key], dA[key], dX[key], dC[key]);
 	 else if(ep.getType() == ReflectogramEvent.LINEAR)
 	 return ep.linearThresholdF(x, dA[key]);
