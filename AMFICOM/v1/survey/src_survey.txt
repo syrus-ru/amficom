@@ -97,7 +97,8 @@ src/com/syrus/AMFICOM/Client/Survey/Result/UI/ModelingDisplayModel.java
 src/com/syrus/AMFICOM/Client/Survey/Result/UI/ResultDisplayModel.java                                
 src/com/syrus/AMFICOM/Client/Survey/Result/UI/ResultSetDisplayModel.java                                      
 src/com/syrus/AMFICOM/Client/Survey/Result/UI/TestDisplayModel.java                                  
-src/com/syrus/AMFICOM/Client/Survey/Result/UI/TestRequestDisplayModel.java                           
+src/com/syrus/AMFICOM/Client/Survey/Result/UI/TestRequestDisplayModel.java
+src/com/syrus/AMFICOM/Client/Survey/Report/AlarmReportModel.java
 src/com/syrus/AMFICOM/Client/Survey/Survey.java                                                      
 src/com/syrus/AMFICOM/Client/Survey/SurveyCatalogFrame.java                                          
 src/com/syrus/AMFICOM/Client/Survey/SurveyMDIMain.java                                               

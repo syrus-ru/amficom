@@ -24,11 +24,22 @@ public class AlarmFilter extends ObjectResourceFilter
 	public Vector getFilterColumns()
 	{
 		Vector vec = new Vector();
-		vec.add("source");
+		vec.add("alarm_Source");
+		vec.add("alarm_Monitoredelement");
+		vec.add("alarm_Type");
+		vec.add("alarm_Status");
+		vec.add("alarm_Time");
+
+		vec.add("alarm_Assigned");
+		vec.add("alarm_Fixed_when");
+		vec.add("alarm_Assigned_to");
+		vec.add("alarm_Fixed_by");
+
+/*		vec.add("source");
 		vec.add("time");
 		vec.add("type");
 		vec.add("status");
-		vec.add("monitoredelement");
+		vec.add("monitoredelement");*/
 
 		return vec;
 	}
@@ -37,7 +48,9 @@ public class AlarmFilter extends ObjectResourceFilter
 	{
 		if(col_id == null)
 			return "";
-		if(col_id.equals("source"))
+
+		return LangModelSurvey.String(col_id);
+/*		if(col_id.equals("source"))
 			return LangModelSurvey.String("labelsource");
 		if(col_id.equals("type"))
 			return LangModelSurvey.String("labelAlarmType");
@@ -47,23 +60,33 @@ public class AlarmFilter extends ObjectResourceFilter
 			return LangModelSurvey.String("labelalarmtime");
 		if(col_id.equals("monitoredelement"))
 			return LangModelSurvey.String("labelmonitoredelement");
-		return "";
+		return "";*/
 	}
 
 	public String[] getColumnFilterTypes(String col_id)
 	{
 		if(col_id == null)
 			return new String[] {};
-		if(col_id.equals("source"))
+		if(col_id.equals("alarm_Source"))
 			return new String[] {"string", "list"};
-		if(col_id.equals("type"))
+		if(col_id.equals("alarm_Type"))
 			return new String[] {"list"};
-		if(col_id.equals("status"))
+		if(col_id.equals("alarm_Status"))
 			return new String[] {"list"};
-		if(col_id.equals("time"))
+		if(col_id.equals("alarm_Time"))
 			return new String[] {"time"};
-		if(col_id.equals("monitoredelement"))
+		if(col_id.equals("alarm_Monitoredelement"))
 			return new String[] {"string", "list"};
+
+		if(col_id.equals("alarm_Assigned"))
+			return new String[] {"time"};
+		if(col_id.equals("alarm_Fixed_when"))
+			return new String[] {"time"};
+		if(col_id.equals("alarm_Assigned_to"))
+			return new String[] {"string", "list"};
+		if(col_id.equals("alarm_Fixed_by"))
+			return new String[] {"string", "list"};
+
 		return new String[] {};
 	}
 
@@ -80,13 +103,13 @@ public class AlarmFilter extends ObjectResourceFilter
 			if(type.equals("range"))
 				return new GeneralRangeFilterPanel();
 			if(type.equals("list"))
-			{	if(col_id.equals("source"))
+			{	if(col_id.equals("alarm_Source"))
 					return new GeneralTreeFilterPanel(new AlarmSourceTree());
-				if(col_id.equals("monitoredelement"))
+				if(col_id.equals("alarm_Monitoredelement"))
 					return new GeneralTreeFilterPanel(new METree());
-				if(col_id.equals("type"))
+				if(col_id.equals("alarm_Type"))
 					return new GeneralTreeFilterPanel(new AlarmTypeTree());
-				if(col_id.equals("status"))
+				if(col_id.equals("alarm_Status"))
 					return new GeneralTreeFilterPanel(new AlarmStatusTree());
 			}
 		return null;
@@ -140,12 +163,12 @@ public class AlarmFilter extends ObjectResourceFilter
 		else if (type.equals("string"))
 		{
 			String substring = (String)vec.elementAt(1);
-			if (expr.getId().equals("source"))
+			if (expr.getId().equals("alarm_Source"))
 			{
-				String name = Pool.getName("eventsource", a.getSourceId());
+				String name = Pool.getName(EventSource.typ, a.getSourceId());
 				result = SearchSubstring(name, substring);
 			}
-			else if (expr.getId().equals("monitoredelement"))
+			else if (expr.getId().equals("alarm_Monitoredelement"))
 			{
 				MonitoredElement me;
 				for(Enumeration e = Pool.getHash(MonitoredElement.typ).elements();
@@ -162,7 +185,7 @@ public class AlarmFilter extends ObjectResourceFilter
 		else if (type.equals("list"))
 		{
 			TreeModelClone tree = (TreeModelClone)vec.elementAt(1);
-			if (expr.getId().equals("monitoredelement"))
+			if (expr.getId().equals("alarm_Monitoredelement"))
 			{
 				FilterTreeNode mmtn = (FilterTreeNode )tree.getRoot();
 				if (mmtn.state == 2)
@@ -185,7 +208,7 @@ public class AlarmFilter extends ObjectResourceFilter
 					}
 				}
 			}
-			if (expr.getId().equals("source"))
+			if (expr.getId().equals("alarm_Source"))
 			{
 				FilterTreeNode mmtn = (FilterTreeNode )tree.getRoot();
 				if (mmtn.state == 2)
@@ -202,7 +225,7 @@ public class AlarmFilter extends ObjectResourceFilter
 					}
 				}
 			}
-			if (expr.getId().equals("type"))
+			if (expr.getId().equals("alarm_Type"))
 			{
 				FilterTreeNode mmtn = (FilterTreeNode )tree.getRoot();
 				if (mmtn.state == 2)
@@ -219,7 +242,7 @@ public class AlarmFilter extends ObjectResourceFilter
 					}
 				}
 			}
-			if (expr.getId().equals("status"))
+			if (expr.getId().equals("alarm_Status"))
 			{
 				FilterTreeNode mmtn = (FilterTreeNode )tree.getRoot();
 				if (mmtn.state == 2)
