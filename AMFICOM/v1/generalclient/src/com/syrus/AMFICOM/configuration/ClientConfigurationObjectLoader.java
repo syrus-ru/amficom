@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.12 2005/01/20 08:11:59 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.13 2005/01/24 11:51:21 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,21 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.MCM;
-import com.syrus.AMFICOM.administration.Server;
-import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.administration.corba.DomainCondition_Transferable;
-import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
-import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
-import com.syrus.AMFICOM.administration.corba.Server_Transferable;
-import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkTypeSort;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkType_Transferable;
@@ -56,14 +42,18 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
-import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
 import com.syrus.AMFICOM.measurement.DomainCondition;
-import com.syrus.AMFICOM.measurement.StringFieldCondition;
 import com.syrus.util.Log;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 /**
- * @version $Revision: 1.12 $, $Date: 2005/01/20 08:11:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/01/24 11:51:21 $
+ * @author $Author: krupenn $
  * @module generalclient_v1
  */
 
