@@ -1,5 +1,5 @@
 /*
- * $Id: alarm.idl,v 1.5 2004/12/23 11:13:01 bass Exp $
+ * $Id: alarm.idl,v 1.6 2005/02/04 08:59:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,20 @@
 module com {
 module syrus {
 module AMFICOM {
+
+module event {
+module corba {
+
+	enum AlarmStatus {
+		ALARM_STATUS_GENERATED,
+		ALARM_STATUS_ASSIGNED,
+		ALARM_STATUS_FIXED,
+		ALARM_STATUS_DELETED
+	};
+
+};
+};
+
 module CORBA {
 module Alarm {
 	struct Message_Transferable
