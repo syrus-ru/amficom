@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.9 2005/02/14 13:12:18 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.10 2005/02/18 18:14:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/14 13:12:18 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/18 18:14:44 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -356,14 +356,10 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(StorableObject storableObject) throws IllegalDataException {
-		EventType eventType = this.fromStorableObject(storableObject);
-		this.delete(eventType.getId());
-	}
-
 	public void delete(Identifier id) throws IllegalDataException {
 		if (id.getMajor() != ObjectEntities.EVENTTYPE_ENTITY_CODE)
-			throw new IllegalDataException("EventTypeDatabase.delete | Cannot delete object of code " + id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
+			throw new IllegalDataException("EventTypeDatabase.delete | Cannot delete object of code "
+					+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
