@@ -85,6 +85,7 @@ src/com/syrus/AMFICOM/Client/General/UI/MultiRowToolTipUI.java
 src/com/syrus/AMFICOM/Client/General/UI/ObjectResourceCatalogActionModel.java
 src/com/syrus/AMFICOM/Client/General/UI/ObjectResourceCatalogFrame.java
 src/com/syrus/AMFICOM/Client/General/UI/ObjectResourceCatalogPanel.java
+src/com/syrus/AMFICOM/Client/General/UI/ObjectResourceChooserDialog.java
 src/com/syrus/AMFICOM/Client/General/UI/ObjectResourceComboBox.java
 src/com/syrus/AMFICOM/Client/General/UI/ObjectResourceDisplayModel.java
 src/com/syrus/AMFICOM/Client/General/UI/ObjectResourceElementLabel.java
