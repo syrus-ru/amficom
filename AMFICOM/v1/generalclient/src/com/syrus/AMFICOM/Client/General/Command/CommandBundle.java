@@ -38,7 +38,7 @@ package com.syrus.AMFICOM.Client.General.Command;
 import java.util.Enumeration;
 import java.util.Vector;
 
-public class CommandBundle implements Command
+public class CommandBundle extends VoidCommand implements Command
 {
 	protected Vector commands;			// список команд
 
@@ -83,11 +83,6 @@ public class CommandBundle implements Command
 			Command command = (Command )commands.get(i);
 			command.execute();
 		}
-	}
-
-	public int getResult()
-	{
-		return RESULT_OK;
 	}
 
 	public void undo()					// обратно выполнить - все команды 

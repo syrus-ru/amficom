@@ -35,150 +35,232 @@
 
 package com.syrus.AMFICOM.Client.General.Command;
 
+import java.util.LinkedList;
 import java.util.Vector;
 
-public class CommandList extends Object
+public class CommandList extends VoidCommand implements Command
 {
-	protected Vector commands;	// список команд
+	/** список команд */
+	protected Command top = null;
+	
+	/**
+	 * последней выполненной команды в списке + 1
+	 * (или индекс первой готовой к выполнению команды)
+	 */
+	protected Command current = null;
 
-	private int maxlength = 10;	// максимальное количество команд в списке
-
-	private int curindex = 0;	// индекс последней выполненной команды в списке
-								// + 1 (или индекс первой готовой к выполнению
-								// команды)
+	/** максимальное количество команд в списке */
+	private int maxlength = 10;
 
 	public CommandList()
 	{
 	}
 
-	// создание
-	public CommandList(Vector commands)
+	/**
+	 * выполнить следующие c команд в списке
+	 */
+	public void proceed(int c)
 	{
-		this.commands = (Vector )commands.clone();
-	}
-
-	public void proceed(int c)	// выполнить следующие c команд в списке
-	{
-		int count = getCount();
-		if(c + curindex < count)	// если надо выполнить команд больше, чем
-									// есть в списке, то выполнить все
-			count = c + curindex;	// в противном случае выполнять только C
-		for(; curindex < count; curindex++)
+		for(int i = 0; i < c; i++)
 		{
-			Command command = (Command )commands.get(curindex);
-			command.execute();
+			Command com = getPrevious(current);
+			if( com != null)
+			{
+				current = com;
+				current.execute();
+			}
+			else
+			{
+				return;
+			}
 		}
 	}
 
-	public void proceed_undo(int c)	// выполнить обратоно C команд
+	/**
+	 * выполнить обратоно C команд
+	 */
+	public void proceed_undo(int c)
 	{
-		int index = 0;
-		if(c < curindex + 1)			// если выполнить undo для количества
-										// команд большего, чем есть, то
-										// выполнить undo для всех, в противном
-			index = curindex + 1 - c;	// случае только для c команд
-		for(; curindex >= index; curindex--)
+		for(int i = 0; i < c; i++)
 		{
-			Command command = (Command )commands.get(curindex);
-			command.undo();
+			if(current == null)
+				return;
+			current.undo();
+			current = current.getNext();
 		}
 	}
 
 	public void proceed_redo(int c)	// повторно выполнить c команд
 	{
-		int count = getCount();
-		if(c + curindex < count)	// если надо выполнить команд больше, чем
-									// есть в списке, то выполнить все
-			count = c + curindex;	// в противном случае выполнять только C
-		for(; curindex < count; curindex++)
+		for(int i = 0; i < c; i++)
 		{
-			Command command = (Command )commands.get(curindex);
-			command.redo();
+			Command com = getPrevious(current);
+			if( com != null)
+			{
+				current = com;
+				current.redo();
+			}
+			else
+			{
+				return;
+			}
+		}
+	}
+	
+	public Command getPrevious(Command c)
+	{
+		Command com;
+		
+		if(c == null)
+			return getBottom(); //bottom of list
+
+		if(c == top)
+			return null;// has no previous
+
+		for(com = top; com != null; com = com.getNext())
+			if(com.getNext() == c)
+				return com;
+
+		return null;// not on list
+	}
+
+	/**
+	 * добавить команду в конец списка
+	 */
+	public void add(Command command)
+	{
+		if(command == null)
+			return;
+		command.setNext(top);
+		top = command;
+	}
+
+	/**
+	 * удалить весь список
+	 */
+	public void flush()
+	{
+		top = null;
+		current = null;
+	}
+
+	/**
+	 * удалить c команд в конце списка
+	 */
+	public void removeTop(int c)
+	{
+		for(int i = 0; i < c; i++)
+		{
+			if(top != null)
+			{
+				top.commit_undo();
+				top = top.getNext();
+			}
+			else
+				return;
 		}
 	}
 
-	public void add(Command command)// добавить команду в конец списка
+	/**
+	 * удалить c команд в начале списка
+	 */
+	public void removeBottom(int c)
 	{
-		commands.add(command);
-	}
+		Command com;
+		LinkedList commands = new LinkedList();
+		
+		for(com = top; com != null; com = com.getNext())
+			commands.add(com);
 
-	public void flush()				// удалить весь список
-	{
-		commands.clear();
-		curindex = 0;
-	}
-
-	public void removeTop(int c)	// удалить c команд в конце списка
-	{
-		int i;
-		int index = 0;
-		if(c < getCount())
-			index = getCount() - c;
-		for(i = getCount() - 1; i >= index; i--)
+		if(c >= commands.size())
 		{
-			Command command = (Command )commands.get(i);
-			if(i > curindex - 1)		// если у команды был выполнен undo,
-										// то есть она находится за curindex
-										// в списке, то подтвердить undo
-				command.commit_undo();	//
-			commands.remove(i);
+			flush();
+			return;
 		}
-		if(curindex > getCount() - 1)	// поправить индекс текущей команды
-			curindex = getCount() - 1;	// если он выехал за границы
-	}
+		if(c < 0)
+			return;
+			
+		com = (Command )commands.get(commands.size() - c - 1);
 
-	public void removeBottom(int c)	// удалить c команд в начале списка
-	{
-		int i;
-		int count = getCount();
-		if(c < count)
-			count = c;
-		for(i = 0; i < count; i++)
+		for(Command c2 = com; c2 != null; c2 = c2.getNext())
 		{
-			Command command = (Command )commands.get(0);
-			if(i < curindex)			// если команда уже была выполнена,
-										// то есть она находится перед curindex
-										// в списке, то подтвердить выполнение
-				command.commit_execute();	//
-			commands.remove(0);
+			c2.commit_execute();
 		}
-		curindex -= count;
-		if(curindex < 0)			// поправить индекс текущей команды
-			curindex = 0;			// если он выехал за границы
+		
+		com.setNext(null);// Отметить как конец списка
 	}
-
-	public void step()				// выполнить одну следующую команду
+	
+	/**
+	 * выполнить одну следующую команду
+	 */
+	public void execute()
 	{
-		if(curindex == getCount())	// если в конце списка то выполнять нечего
+		if(current == top)
 			return;
-		Command command = (Command )commands.get(curindex++);
-									// выполнить команду и переместить указатель
-									// списка выполненных команд
-		command.execute();
+
+		// выполнить команду и переместить указатель
+		// списка выполненных команд
+		current = getPrevious(current);
+		if(current != null)
+			current.execute();
 	}
 
-	public void redo()				// выполнить одну следующую команду
+	/**
+	 * выполнить одну следующую команду
+	 */
+	public void redo()
 	{
-		if(curindex == getCount())	// если в конце списка то выполнять нечего
+		if(current == top)
 			return;
-		Command command = (Command )commands.get(curindex++);
-									// выполнить команду и переместить указатель
-									// списка выполненных команд
-		command.redo();
+
+		// выполнить команду и переместить указатель
+		// списка выполненных команд
+		current = getPrevious(current);
+		current.redo();
 	}
 
-	public void undo()				// обратно выполнить одну команду
+	/**
+	 * обратно выполнить одну команду
+	 */
+	public void undo()
 	{
-		if(curindex == 0)			// если в начале списка то выполнять нечего
-			return;
-		Command command = (Command )commands.get(curindex--);
-									// выполнить undo команды и переместить
-									// указатель списка выполненных команд
-		command.undo();
-	}
+		if(current == null)
+			return;// если в начале списка то выполнять нечего
 
-	public int getCount()			// получить количество команд в списке
+		// выполнить undo команды и переместить
+		// указатель списка выполненных команд
+		current.undo();
+		current = current.getNext();
+	}
+	
+	/**
+	 * 
+	 */
+	 public Command getBottom()
+	 {
+		Command com;
+		
+		if(top == null)
+			return null;
+		LinkedList commands = new LinkedList();
+		
+		for(com = top; com.getNext() != null; com = com.getNext())
+			;
+		return com;
+	 }
+
+	/**
+	 * получить количество команд в списке
+	 */
+	public int getCount()
 	{
-		return commands.size();
+		Command c;
+		int count = 0;
+		for(c = top; c != null; )
+		{
+			count++;
+			c = c.getNext();
+		}
+		return count;
 	}
 }

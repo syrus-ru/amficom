@@ -66,4 +66,7 @@ public interface Command extends Cloneable
 									// установить значение параметра field
 
 	public int getResult();
+
+	public Command getNext();
+	public void setNext(Command next);
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: VoidCommand.java,v 1.4 2004/08/11 07:10:04 krupenn Exp $
+ * $Id: VoidCommand.java,v 1.5 2004/08/12 13:09:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/08/11 07:10:04 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/12 13:09:14 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -29,6 +29,18 @@ public class VoidCommand implements Command
 
 	/** поле источника команды */
 	private Object source;
+
+	Command next = null;
+	
+	public Command getNext()
+	{
+		return next;
+	}
+
+	public void setNext(Command next)
+	{
+		this.next = next;
+	}
 
 	/** у пустой команды по умолчанию нет источника */ 
 	public VoidCommand()
@@ -82,7 +94,8 @@ public class VoidCommand implements Command
 	// пустая команда не выполняет никаких действий
 	public void redo()
 	{
-		System.out.println("Void command redo for " + source.toString() + " - ignored");
+		System.out.println("Void command redo for " + source.toString() + " - defaults to \'EXECUTE\'");
+		execute();
 	}
 
 	// пустая команда не выполняет никаких действий
