@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -488,6 +489,13 @@ public class GraphActions
 		GraphConstants.setOffset(map, p);
 		GraphConstants.setConnectable(map, false);
 		viewMap.put(port, map);
+		return port;
+	}
+
+	static DefaultPort removePort (SchemeGraph graph, DefaultGraphCell cell, DefaultPort port, Map viewMap)
+	{
+		cell.remove(port);
+		viewMap.remove(port);
 		return port;
 	}
 
@@ -970,7 +978,9 @@ public class GraphActions
 		{
 			final String se_id = se.getId();
 
-			if (!se.element_ids.isEmpty())
+			Vector v = (Vector)se.serializable_ugo;
+			if (!se.element_ids.isEmpty() ||
+					(v.size() != 0 && ((Object[])v.get(0)).length != 0))
 			{
 				JMenuItem menu1 = new JMenuItem(new AbstractAction()
 				{

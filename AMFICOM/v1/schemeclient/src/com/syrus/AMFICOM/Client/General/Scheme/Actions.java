@@ -166,7 +166,61 @@ class DeleteAction extends AbstractAction
 					new_cells.add(cells[i]);
 				}
 				else if (!GraphActions.hasGroupedParent(cells[i]))
+				{
+					if (cells[i] instanceof PortCell)
+					{
+						for (Enumeration en = ((PortCell)cells[i]).children(); en.hasMoreElements();)
+						{
+							Port p = (Port)en.nextElement();
+							for (Iterator it = p.edges(); it.hasNext();)
+							{
+								DefaultEdge edge = (DefaultEdge)it.next();
+								new_cells.add(edge);
+								DefaultPort source = (DefaultPort)edge.getSource();
+								DefaultGraphCell cell = (DefaultGraphCell)source.getParent();
+								if (cell != null)
+								{
+									GraphActions.disconnectEdge(graph, edge, source, true);
+									GraphActions.removePort(graph, cell, source, cell.getAttributes());
+								}
+								DefaultPort target = (DefaultPort)edge.getSource();
+								cell = (DefaultGraphCell)target.getParent();
+								if (cell != null)
+								{
+									GraphActions.disconnectEdge(graph, edge, target, false);
+									GraphActions.removePort(graph, cell, source, cell.getAttributes());
+								}
+							}
+						}
+					}
+					if (cells[i] instanceof CablePortCell)
+					{
+						for (Enumeration en = ((CablePortCell)cells[i]).children(); en.hasMoreElements();)
+						{
+							Port p = (Port)en.nextElement();
+							for (Iterator it = p.edges(); it.hasNext();)
+							{
+								DefaultEdge edge = (DefaultEdge)it.next();
+								new_cells.add(edge);
+								DefaultPort source = (DefaultPort)edge.getSource();
+								DefaultGraphCell cell = (DefaultGraphCell)source.getParent();
+								if (cell != null)
+								{
+									GraphActions.disconnectEdge(graph, edge, source, true);
+									GraphActions.removePort(graph, cell, source, cell.getAttributes());
+								}
+								DefaultPort target = (DefaultPort)edge.getSource();
+								cell = (DefaultGraphCell)target.getParent();
+								if (cell != null)
+								{
+									GraphActions.disconnectEdge(graph, edge, target, false);
+									GraphActions.removePort(graph, cell, source, cell.getAttributes());
+								}
+							}
+						}
+					}
 					new_cells.add(cells[i]);
+				}
 			}
 			cells = DefaultGraphModel.getDescendants(graph.getModel(),
 					new_cells.toArray(new Object[new_cells.size()])).toArray();
@@ -212,36 +266,40 @@ class GroupAction extends AbstractAction
 							DefaultPort dev_port = (DefaultPort)enum.nextElement();
 							if (GraphConstants.getOffset(dev_port.getAttributes()) != null)
 							{
-								DefaultEdge edge = (DefaultEdge)dev_port.edges().next();
-								new_cells.add(edge);
-								Object ell = DefaultGraphModel.getTargetVertex(graph.getModel(), edge);
-								if (ell instanceof PortCell)
+								if (dev_port.edges().hasNext())
 								{
-									if (((PortCell)ell).getSchemePort().port_type_id.equals(""))
+									DefaultEdge edge = (DefaultEdge)dev_port.edges().next();
+									new_cells.add(edge);
+									Object ell = DefaultGraphModel.getTargetVertex(graph.getModel(), edge);
+									if (ell instanceof PortCell)
 									{
-										JOptionPane.showMessageDialog(
-												Environment.getActiveWindow(),
-												"Не установлен тип порта",
-												"Ошибка",
-												JOptionPane.OK_OPTION);
-										System.out.println("Error! Port type not set.");
-										return;
+										if (((PortCell)ell).getSchemePort().port_type_id.equals(""))
+										{
+											JOptionPane.showMessageDialog(
+													Environment.getActiveWindow(),
+													"Не установлен тип порта",
+													"Ошибка",
+													JOptionPane.OK_OPTION);
+											System.out.println("Error! Port type not set.");
+											return;
+										}
+										new_cells.add(ell);
 									}
-								new_cells.add(ell);
-								}
-								else if (ell instanceof CablePortCell)
-								{
-									if (((CablePortCell)ell).getSchemeCablePort().cable_port_type_id.equals(""))
+
+									else if (ell instanceof CablePortCell)
 									{
-										JOptionPane.showMessageDialog(
-												Environment.getActiveWindow(),
-												"Не установлен тип кабельного порта",
-												"Ошибка",
-												JOptionPane.OK_OPTION);
-										System.out.println("Error! Cableport type not set.");
-										return;
+										if (((CablePortCell)ell).getSchemeCablePort().cable_port_type_id.equals(""))
+										{
+											JOptionPane.showMessageDialog(
+													Environment.getActiveWindow(),
+													"Не установлен тип кабельного порта",
+													"Ошибка",
+													JOptionPane.OK_OPTION);
+											System.out.println("Error! Cableport type not set.");
+											return;
+										}
+										new_cells.add(ell);
 									}
-									new_cells.add(ell);
 								}
 							}
 						}

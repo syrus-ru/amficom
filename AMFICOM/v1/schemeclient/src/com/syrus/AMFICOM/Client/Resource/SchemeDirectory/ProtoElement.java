@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.zip.*;
 
 import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.Client.Configure.UI.EquipmentTypePane;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
@@ -85,6 +86,11 @@ public class ProtoElement extends ObjectResource implements Serializable
 	public static ObjectResourceDisplayModel getDefaultDisplayModel()
 	{
 		return new StubDisplayModel(new String[] { "name" }, new String[] { "name" });
+	}
+
+	public static PropertiesPanel getPropertyPane()
+	{
+		return new EquipmentTypePane();
 	}
 
 	public void setLocalFromTransferable()
