@@ -1,3 +1,11 @@
+/*
+ * $Id: DomainCondition.java,v 1.4 2004/10/01 10:24:50 bob Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Iterator;
@@ -13,8 +21,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/01 09:54:17 $
- * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2004/10/01 10:24:50 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class DomainCondition implements StorableObjectCondition {

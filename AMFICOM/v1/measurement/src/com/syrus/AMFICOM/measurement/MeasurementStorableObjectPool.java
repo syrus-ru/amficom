@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.26 2004/10/01 08:21:41 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.27 2004/10/01 10:24:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/10/01 08:21:41 $
+ * @version $Revision: 1.27 $, $Date: 2004/10/01 10:24:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -474,7 +474,7 @@ public class MeasurementStorableObjectPool {
 				loadedList = mObjectLoader.loadTemporalPatternsButIds(ids);
 				break;
 			default:
-				Log.errorMessage("MeasurementStorableObjectPool.getStorableObjectsByCondition | Unknown entity: "
+				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObjectsButIds | Unknown entity: "
 						+ ObjectEntities.codeToString(entityCode));
 				loadedList = null;
 		}		
