@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.Schematics.Scheme;
 
-import com.syrus.AMFICOM.Client.Survey.SurveyMDIMain;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.beans.PropertyVetoException;
@@ -37,10 +36,6 @@ public class SchemeViewerFrame extends JInternalFrame implements OperationListen
 		}
 
 		init_module();
-    
-    aContext.getDispatcher().notify (
-      new OperationEvent (this,0,SurveyMDIMain.schemeFrameDisplayed));
-    
 	}
 
 	public void init_module()
