@@ -9,5 +9,7 @@
 	<classpathentry kind="var" path="ORACLE_HOME/jdbc/lib/orai18n.jar"/>
 	<classpathentry kind="src" path="/event_v1"/>
 	<classpathentry kind="src" path="/admin_v1"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
