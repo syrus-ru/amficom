@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.10 2005/03/01 14:12:56 bass Exp $
+* $Id: MapView.java,v 1.11 2005/03/01 15:35:41 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,15 @@
 
 package com.syrus.AMFICOM.mapview;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -17,7 +26,6 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.IdentifierDefaultFactory;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -37,14 +45,6 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Класс используется для хранения объектов, отображаемых на 
  * топологической схеме. Объекты включают в себя:
@@ -52,19 +52,18 @@ import java.util.List;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/03/01 14:12:56 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2005/03/01 15:35:41 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
-public class MapView extends StorableObject {
+public class MapView extends DomainMember {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3256722862181200184L;
 
-	private Identifier domainId;
 	private String name;
 	private String description;
 
@@ -102,9 +101,7 @@ public class MapView extends StorableObject {
 	}
 
 	public MapView(MapView_Transferable mvt) throws CreateObjectException {
-		super(mvt.header);
-		
-		this.domainId = new Identifier(mvt.domain_id);		
+		super(mvt.header, new Identifier(mvt.domain_id));
 
 		this.name = mvt.name;
 		this.description = mvt.description;
@@ -150,8 +147,8 @@ public class MapView extends StorableObject {
 			new Date(System.currentTimeMillis()),
 			creatorId,
 			creatorId,
-			version);
-		this.domainId = domainId;
+			version,
+			domainId);
 		this.name = name;
 		this.description = description;
 		this.longitude = longitude;
@@ -200,7 +197,7 @@ public class MapView extends StorableObject {
 
 	public List getDependencies() {
 		List dependencies = new LinkedList();
-		dependencies.add(this.domainId);
+		dependencies.add(this.getDomainId());
 		dependencies.add(this.map);
 		dependencies.addAll(this.schemes);		
 		return dependencies;
@@ -213,7 +210,7 @@ public class MapView extends StorableObject {
 			schemeIdsTransferable[i++] = (((Scheme) iterator.next()).getId()).getTransferable();		
 
 		return new MapView_Transferable(super.getHeaderTransferable(),
-				(Identifier_Transferable)this.domainId.getTransferable(),
+				(Identifier_Transferable)this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
 				this.longitude,
@@ -273,23 +270,6 @@ public class MapView extends StorableObject {
 	}
 	
 	/**
-	 * Получить идентификатор домена.
-	 * @return идентификатор домена
-	 */
-	public Identifier getDomainId() {
-		return this.domainId;
-	}
-	
-	/**
-	 * Установить идентификатор домена.
-	 * @param domainId новый идентификатор домена
-	 */
-	public void setDomainId(Identifier domainId) {
-		this.domainId = domainId;
-		super.changed = true;
-	}
-	
-	/**
 	 * Получить название вида.
 	 * @return название
 	 */
@@ -323,8 +303,8 @@ public class MapView extends StorableObject {
 					modified,
 					creatorId,
 					modifierId,
-					version);
-			this.domainId = domainId;
+					version,
+					domainId);
 			this.name = name;
 			this.description = description;
 			this.longitude = longitude;
