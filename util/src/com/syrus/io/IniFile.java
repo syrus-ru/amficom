@@ -55,13 +55,14 @@ public class IniFile {
 	}
 
 	public boolean saveKeys() {
+		boolean result = false;
 		try {
 			this.properties.store(new FileOutputStream(this.file), null);
+			result = true;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return false;
 		}
-		return true;
+		return result;
 	}
 
 	public void setValue(String key,
