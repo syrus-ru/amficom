@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.Client.Resource.*;
 
 public class StarterFrame extends JFrame implements OperationListener
 {
-	private Dispatcher internal_dispatcher = new Dispatcher();
+	private Dispatcher internalDispatcher = new Dispatcher();
 	public ApplicationContext aContext = new ApplicationContext();
 
 	static IniFile iniFile;
@@ -76,15 +76,15 @@ public class StarterFrame extends JFrame implements OperationListener
 	public StarterToolBar toolBar = new StarterToolBar();
 	public JScrollPane starterScrollPane = new JScrollPane();
 
-	public int norm_width;
-	public int norm_height;
-	public Dimension norm_dim;
-	public Dimension kurz_dim;
-	public Insets norm_insets;
-	public Insets kurz_insets;
-	public Rectangle norm_bounds;
-	public Point norm_loc;
-	public Point kurz_loc;
+	public int normWidth;
+	public int normHeight;
+	public Dimension normDim;
+	public Dimension kurzDim;
+	public Insets normInsets;
+	public Insets kurzInsets;
+	public Rectangle normBounds;
+	public Point normLoc;
+	public Point kurzLoc;
 
 	public StarterFrame(ApplicationContext aContext)
 	{
@@ -146,7 +146,7 @@ public class StarterFrame extends JFrame implements OperationListener
 	{
 	}
 
-	public void init_module()
+	public void initModule()
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
 	
@@ -169,8 +169,8 @@ public class StarterFrame extends JFrame implements OperationListener
 		statusBar.setText("user", LangModelMain.getString("statusNoUser"));
 		statusBar.setText("time", " ");
 		statusBar.organize();
-		statusBar.setDispatcher(Environment.the_dispatcher);
-		statusBar.setDispatcher(internal_dispatcher);
+		statusBar.setDispatcher(Environment.getDispatcher());
+		statusBar.setDispatcher(internalDispatcher);
 
 		// load values from properties file
 		try
@@ -185,34 +185,34 @@ public class StarterFrame extends JFrame implements OperationListener
 			SetDefaults();
 		}
 
-		aContext.setDispatcher(internal_dispatcher);
-		internal_dispatcher.register(this, "contextchange");
-		Environment.the_dispatcher.register(this, "contextchange");
+		aContext.setDispatcher(internalDispatcher);
+		internalDispatcher.register(this, "contextchange");
+		Environment.getDispatcher().register(this, "contextchange");
 
-		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
-		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
-		aModel.setCommand("menuViewPanel", new ViewPanelCommand(internal_dispatcher));
+		aModel.setCommand("menuViewPanel", new ViewPanelCommand(internalDispatcher));
 
-		aModel.setCommand("menuToolsAdmin", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Administrate.Administrate", LangModelMain.getString("menuToolsAdmin")));
-		aModel.setCommand("menuToolsConfig", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Configure.Configure", LangModelMain.getString("menuToolsConfig")));
-		aModel.setCommand("menuToolsComponents", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Schematics.Elements.ElementsEditor", LangModelMain.getString("menuToolsComponents")));
-		aModel.setCommand("menuToolsScheme", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeEditor", LangModelMain.getString("menuToolsScheme")));
-		aModel.setCommand("menuToolsMap", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Map.Editor.MapEditor", LangModelMain.getString("menuToolsMap")));
-		aModel.setCommand("menuToolsTrace", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Optimize.Optimize", LangModelMain.getString("menuToolsTrace")));
-		aModel.setCommand("menuToolsSchedule", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Schedule.Schedule", LangModelMain.getString("menuToolsSchedule")));
-		aModel.setCommand("menuToolsSurvey", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Survey.Survey", LangModelMain.getString("menuToolsSurvey")));
-		aModel.setCommand("menuToolsModel", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Model.Model", LangModelMain.getString("menuToolsModel")));
-		aModel.setCommand("menuToolsMonitor", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Analysis.Reflectometry.Analyse", LangModelMain.getString("menuToolsMonitor")));
-		aModel.setCommand("menuToolsAnalyse", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Analysis.Reflectometry.AnalyseExt", LangModelMain.getString("menuToolsAnalyse")));
-		aModel.setCommand("menuToolsNorms", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Analysis.Reflectometry.Evaluation", LangModelMain.getString("menuToolsNorms")));
-		aModel.setCommand("menuToolsPrognosis", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Prediction.Prediction", LangModelMain.getString("menuToolsPrognosis")));
-		aModel.setCommand("menuToolsMaintain", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Maintenance.Maintenance", LangModelMain.getString("menuToolsMaintain")));
-		aModel.setCommand("menuToolsReportBuilder", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.ReportBuilder.ReportMain", LangModelMain.getString("menuToolsReportBuilder")));
+		aModel.setCommand("menuToolsAdmin", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.Administrate.Administrate", LangModelMain.getString("menuToolsAdmin")));
+		aModel.setCommand("menuToolsConfig", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.Configure.Configure", LangModelMain.getString("menuToolsConfig")));
+		aModel.setCommand("menuToolsComponents", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.Schematics.Elements.ElementsEditor", LangModelMain.getString("menuToolsComponents")));
+		aModel.setCommand("menuToolsScheme", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeEditor", LangModelMain.getString("menuToolsScheme")));
+		aModel.setCommand("menuToolsMap", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.Map.Editor.MapEditor", LangModelMain.getString("menuToolsMap")));
+		aModel.setCommand("menuToolsTrace", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.Optimize.Optimize", LangModelMain.getString("menuToolsTrace")));
+		aModel.setCommand("menuToolsSchedule", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.Schedule.Schedule", LangModelMain.getString("menuToolsSchedule")));
+		aModel.setCommand("menuToolsSurvey", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.Survey.Survey", LangModelMain.getString("menuToolsSurvey")));
+		aModel.setCommand("menuToolsModel", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.Model.Model", LangModelMain.getString("menuToolsModel")));
+		aModel.setCommand("menuToolsMonitor", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.Analysis.Reflectometry.Analyse", LangModelMain.getString("menuToolsMonitor")));
+		aModel.setCommand("menuToolsAnalyse", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.Analysis.Reflectometry.AnalyseExt", LangModelMain.getString("menuToolsAnalyse")));
+		aModel.setCommand("menuToolsNorms", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.Analysis.Reflectometry.Evaluation", LangModelMain.getString("menuToolsNorms")));
+		aModel.setCommand("menuToolsPrognosis", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.Prediction.Prediction", LangModelMain.getString("menuToolsPrognosis")));
+		aModel.setCommand("menuToolsMaintain", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.Maintenance.Maintenance", LangModelMain.getString("menuToolsMaintain")));
+		aModel.setCommand("menuToolsReportBuilder", new ToolStartCommand(internalDispatcher, "com.syrus.AMFICOM.Client.ReportBuilder.ReportMain", LangModelMain.getString("menuToolsReportBuilder")));
 
 		aModel.setCommand("menuHelpAbout", new HelpAboutCommand(this));
 
@@ -272,7 +272,7 @@ public class StarterFrame extends JFrame implements OperationListener
 		{
 			aContext.setConnectionInterface(ConnectionInterface.getActiveConnection());
 			if(aContext.getConnectionInterface().isConnected())
-				internal_dispatcher.notify(new ContextChangeEvent(
+				internalDispatcher.notify(new ContextChangeEvent(
 						aContext.getConnectionInterface(),
 						ContextChangeEvent.CONNECTION_OPENED_EVENT));
 		}
@@ -280,14 +280,14 @@ public class StarterFrame extends JFrame implements OperationListener
 		{
 			aContext.setConnectionInterface(Environment.getDefaultConnectionInterface());
 			ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-//			new CheckConnectionCommand(internal_dispatcher, aContext).execute();
+//			new CheckConnectionCommand(internalDispatcher, aContext).execute();
 		}
 		if(SessionInterface.getActiveSession() != null)
 		{
 			aContext.setSessionInterface(SessionInterface.getActiveSession());
 			aContext.setConnectionInterface(aContext.getSessionInterface().getConnectionInterface());
 			if(aContext.getSessionInterface().isOpened())
-				internal_dispatcher.notify(new ContextChangeEvent(
+				internalDispatcher.notify(new ContextChangeEvent(
 						aContext.getSessionInterface(),
 						ContextChangeEvent.SESSION_OPENED_EVENT));
 		}
@@ -425,12 +425,12 @@ public class StarterFrame extends JFrame implements OperationListener
 			{
 				if(! aModel.isSelected("menuViewPanel"))
 				{
-					norm_width = starterPanel.getWidth();
-					norm_height = starterPanel.getHeight();
-					norm_dim = this.getSize();
-					norm_loc = this.getLocationOnScreen();
-					if(kurz_loc == null)
-						kurz_loc = new Point(norm_loc);
+					normWidth = starterPanel.getWidth();
+					normHeight = starterPanel.getHeight();
+					normDim = this.getSize();
+					normLoc = this.getLocationOnScreen();
+					if(kurzLoc == null)
+						kurzLoc = new Point(normLoc);
 					aModel.setSelected("menuViewPanel", true);
 					aModel.fireModelChanged("");
 					this.getContentPane().add(toolBar, BorderLayout.NORTH);
@@ -441,12 +441,12 @@ public class StarterFrame extends JFrame implements OperationListener
 					setJMenuBar(null);
 					setResizable(false);
 					pack();
-					this.setLocation(kurz_loc);
+					this.setLocation(kurzLoc);
 				}
 				else
 				if(aModel.isSelected("menuViewPanel"))
 				{
-					kurz_loc = this.getLocationOnScreen();
+					kurzLoc = this.getLocationOnScreen();
 					this.getContentPane().setLayout(borderLayout1);
 					aModel.setSelected("menuViewPanel", false);
 					aModel.fireModelChanged("");
@@ -455,11 +455,11 @@ public class StarterFrame extends JFrame implements OperationListener
 					this.getContentPane().add(starterScrollPane, BorderLayout.CENTER);
 					this.getContentPane().add(statusBar, BorderLayout.SOUTH);
 					setJMenuBar(menuBar);
-					this.setSize(norm_dim);
-					starterPanel.setSize(norm_width, norm_height);
+					this.setSize(normDim);
+					starterPanel.setSize(normWidth, normHeight);
 					setResizable(true);
 					pack();
-					this.setLocation(norm_loc);
+					this.setLocation(normLoc);
 				}
 			}
 			if(cce.PASSWORD_CHANGING)
@@ -559,18 +559,18 @@ public class StarterFrame extends JFrame implements OperationListener
 
 	public Dispatcher getInternalDispatcher()
 	{
-		return internal_dispatcher;
+		return internalDispatcher;
 	}
 
 	void this_componentShown(ComponentEvent e)
 	{
-		init_module();
+		initModule();
 	}
 
 	void this_windowClosing(WindowEvent e)
 	{
-		internal_dispatcher.unregister(this, "contextchange");
-		Environment.the_dispatcher.unregister(this, "contextchange");
+		internalDispatcher.unregister(this, "contextchange");
+		Environment.getDispatcher().unregister(this, "contextchange");
 		aContext.getApplicationModel().getCommand("menuExit").execute();
 	}
 
@@ -584,8 +584,8 @@ public class StarterFrame extends JFrame implements OperationListener
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) 
 		{
-			internal_dispatcher.unregister(this, "contextchange");
-			Environment.the_dispatcher.unregister(this, "contextchange");
+			internalDispatcher.unregister(this, "contextchange");
+			Environment.getDispatcher().unregister(this, "contextchange");
 			aContext.getApplicationModel().getCommand("menuExit").execute();
 			return;
 		}

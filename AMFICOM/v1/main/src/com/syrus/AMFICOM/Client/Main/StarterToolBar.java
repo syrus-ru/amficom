@@ -68,8 +68,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 	JButton buttonHelp = new JButton();
 
-	public final static int img_siz = 16;
-	public final static int btn_siz = 24;
+	public final static int imgSize = 16;
+	public final static int btnSize = 24;
 
 	public StarterToolBar()
 	{
@@ -89,12 +89,12 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		StarterToolBar_this_actionAdapter actionAdapter =
 				new StarterToolBar_this_actionAdapter(this);
 
-		Dimension buttonSize = new Dimension(btn_siz, btn_siz);
+		Dimension buttonSize = new Dimension(btnSize, btnSize);
 
 		buttonSessionOpen = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/open_session.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonSessionOpen.setText("");
 		buttonSessionOpen.setMaximumSize(buttonSize);
@@ -105,8 +105,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonSessionClose = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/close_session.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonSessionClose.setText("");
 		buttonSessionClose.setMaximumSize(buttonSize);
@@ -117,8 +117,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonViewPanel = new JToggleButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/view_panel.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonViewPanel.setText("");
 		buttonViewPanel.setMaximumSize(buttonSize);
@@ -129,8 +129,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonAdmin = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/administrate_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonAdmin.setText("");
 		buttonAdmin.setMaximumSize(buttonSize);
@@ -141,8 +141,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonConfig = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/config_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonConfig.setText("");
 		buttonConfig.setMaximumSize(buttonSize);
@@ -153,8 +153,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonComponents = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/components_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonComponents.setText("");
 		buttonComponents.setMaximumSize(buttonSize);
@@ -165,8 +165,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonScheme = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/schematics_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonScheme.setText("");
 		buttonScheme.setMaximumSize(buttonSize);
@@ -177,8 +177,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonMap = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonMap.setText("");
 		buttonMap.setMaximumSize(buttonSize);
@@ -189,8 +189,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonTrace = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/design_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonTrace.setText("");
 		buttonTrace.setMaximumSize(buttonSize);
@@ -201,8 +201,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonSchedule = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/scheduling_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonSchedule.setText("");
 		buttonSchedule.setMaximumSize(buttonSize);
@@ -213,8 +213,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonSurvey = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/observe_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonSurvey.setText("");
 		buttonSurvey.setMaximumSize(buttonSize);
@@ -225,8 +225,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonModel = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/model_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonModel.setText("");
 		buttonModel.setMaximumSize(buttonSize);
@@ -237,8 +237,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonMonitor = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/analyse_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonMonitor.setText("");
 		buttonMonitor.setMaximumSize(buttonSize);
@@ -249,8 +249,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonAnalyse = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/survey_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonAnalyse.setText("");
 		buttonAnalyse.setMaximumSize(buttonSize);
@@ -261,8 +261,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonNorms = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/evaluation_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonNorms.setText("");
 		buttonNorms.setMaximumSize(buttonSize);
@@ -273,8 +273,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonMaintain = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/maintenance_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonMaintain.setText("");
 		buttonMaintain.setMaximumSize(buttonSize);
@@ -285,8 +285,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonPrognosis = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/prognosis_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonPrognosis.setText("");
 		buttonPrognosis.setMaximumSize(buttonSize);
@@ -297,8 +297,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonReportBuilder = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/report_mini.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonReportBuilder.setText("");
 		buttonReportBuilder.setMaximumSize(buttonSize);
@@ -309,8 +309,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 
 		buttonHelp = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/help.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		buttonHelp.setText("");
 		buttonHelp.setMaximumSize(buttonSize);
@@ -419,14 +419,14 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonHelp.setEnabled(aModel.isEnabled("menuHelpAbout"));
 	}
 
-	public void this_actionPerformed(ActionEvent e)
+	public void buttonPressed(ActionEvent e)
 	{
 		if(aModel == null)
 			return;
 		AbstractButton jb = (AbstractButton )e.getSource();
 		String s = jb.getName();
 		Command command = aModel.getCommand(s);
-		command = (Command )command.clone();
+//		command = (Command )command.clone();
 		command.execute();
 	}
 }
@@ -442,7 +442,7 @@ class StarterToolBar_this_actionAdapter implements java.awt.event.ActionListener
 
 	public void actionPerformed(ActionEvent e)
 	{
-		adaptee.this_actionPerformed(e);
+		adaptee.buttonPressed(e);
 	}
 }
 

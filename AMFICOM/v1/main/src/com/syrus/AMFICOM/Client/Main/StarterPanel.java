@@ -116,9 +116,9 @@ public class StarterPanel
 
 	private void jbInit() throws Exception
 	{
-		int img_siz = 48;
-		int btn_siz = 52;
-		Dimension buttonSize = new Dimension(btn_siz, btn_siz);
+		int imgSize = 48;
+		int btnSize = 52;
+		Dimension buttonSize = new Dimension(btnSize, btnSize);
 		
 		this.setLayout(xYLayout1);
 
@@ -126,8 +126,8 @@ public class StarterPanel
 		this.setMinimumSize(new Dimension(510, 300));
 		labelAdmin.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/administrate.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelAdmin.setText("");
 		labelAdmin.setMaximumSize(buttonSize);
@@ -139,8 +139,8 @@ public class StarterPanel
 
 		labelConfig.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/configure.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelConfig.setText("");
 		labelConfig.setMaximumSize(buttonSize);
@@ -152,8 +152,8 @@ public class StarterPanel
 
 		labelComponents.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/components.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelComponents.setText("");
 		labelComponents.setMaximumSize(buttonSize);
@@ -165,8 +165,8 @@ public class StarterPanel
 
 		labelScheme.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/schematics.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelScheme.setText("");
 		labelScheme.setMaximumSize(buttonSize);
@@ -178,8 +178,8 @@ public class StarterPanel
 
 		labelMap.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/map.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelMap.setText("");
 		labelMap.setMaximumSize(buttonSize);
@@ -191,8 +191,8 @@ public class StarterPanel
 
 		labelTrace.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/design.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelTrace.setText("");
 		labelTrace.setMaximumSize(buttonSize);
@@ -204,8 +204,8 @@ public class StarterPanel
 
 		labelSchedule.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/scheduling.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelSchedule.setText("");
 		labelSchedule.setMaximumSize(buttonSize);
@@ -217,8 +217,8 @@ public class StarterPanel
 
 		labelSurvey.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/observe.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelSurvey.setText("");
 		labelSurvey.setMaximumSize(buttonSize);
@@ -230,8 +230,8 @@ public class StarterPanel
 
 		labelModel.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/model.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelModel.setText("");
 		labelModel.setMaximumSize(buttonSize);
@@ -243,8 +243,8 @@ public class StarterPanel
 
 		labelMonitor.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/analyse.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelMonitor.setText("");
 		labelMonitor.setMaximumSize(buttonSize);
@@ -256,8 +256,8 @@ public class StarterPanel
 
 		labelAnalyse.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/survey.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelAnalyse.setText("");
 		labelAnalyse.setMaximumSize(buttonSize);
@@ -269,8 +269,8 @@ public class StarterPanel
 
 		labelNorms.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/evaluate.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelNorms.setText("");
 		labelNorms.setMaximumSize(buttonSize);
@@ -282,8 +282,8 @@ public class StarterPanel
 
 		labelMaintain.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/maintenance.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelMaintain.setText("");
 		labelMaintain.setMaximumSize(buttonSize);
@@ -295,8 +295,8 @@ public class StarterPanel
 
 		labelPrognosis.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/prognosis.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelPrognosis.setText("");
 		labelPrognosis.setMaximumSize(buttonSize);
@@ -308,8 +308,8 @@ public class StarterPanel
 
 		labelReportBuilder.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/report.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelReportBuilder.setText("");
 		labelReportBuilder.setMaximumSize(buttonSize);
@@ -378,7 +378,7 @@ public class StarterPanel
 		JLabel jl = (JLabel )e.getSource();
 		String s = jl.getName();
 		Command command = aModel.getCommand(s);
-		command = (Command )command.clone();
+//		command = (Command )command.clone();
 		command.execute();
 	}
 

@@ -413,14 +413,14 @@ public class StarterMenuBar extends JMenuBar implements ApplicationModelListener
 		menuHelpAbout.setEnabled(aModel.isEnabled("menuHelpAbout"));
 	}
 
-	public void this_actionPerformed(ActionEvent e)
+	public void menuSelected(ActionEvent e)
 	{
 		if(aModel == null)
 			return;
 		AbstractButton jb = (AbstractButton )e.getSource();
 		String s = jb.getName();
 		Command command = aModel.getCommand(s);
-		command = (Command )command.clone();
+//		command = (Command )command.clone();
 		command.execute();
 	}
 }
@@ -436,7 +436,7 @@ class StarterMenuBar_this_actionAdapter implements java.awt.event.ActionListener
 
 	public void actionPerformed(ActionEvent e)
 	{
-		adaptee.this_actionPerformed(e);
+		adaptee.menuSelected(e);
 	}
 }
 
