@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.9 2005/03/24 15:59:12 saa Exp $
+ * $Id: Thresh.java,v 1.10 2005/03/30 12:49:26 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/03/24 15:59:12 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/30 12:49:26 $
  * @module
  */
 
@@ -32,7 +32,7 @@ public abstract class Thresh
 
 	protected int eventId0;
 	protected int eventId1;
-	protected int xMin; // внутри xMin..xMax р/г смещается равномерно, а вне - согласно dA/dL 
+	protected int xMin; // границы доминирования данного порога. При DY - внутри xMin..xMax р/г смещается равномерно, а вне - согласно dA/dL 
 	protected int xMax;
 
 	protected Thresh()
