@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.69 2005/04/02 17:10:43 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.70 2005/04/05 16:09:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/04/02 17:10:43 $
+ * @version $Revision: 1.70 $, $Date: 2005/04/05 16:09:18 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -206,7 +206,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
-			System.exit(-1);
 		}
 
 		/*	Create map of test processors*/
