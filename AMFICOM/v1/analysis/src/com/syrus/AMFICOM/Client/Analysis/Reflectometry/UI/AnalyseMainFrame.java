@@ -291,7 +291,7 @@ public class AnalyseMainFrame extends JFrame
 		aModel.setEnabled("menuHelp", true);
 		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
-		
+
 		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG); // XXX: saa: security bypass
 
 		aModel.setVisible("menuAnalyseSaveCriteria", false);
@@ -633,7 +633,7 @@ public class AnalyseMainFrame extends JFrame
 
 	public void setDomainSelected()
 	{
-		new SchemeDataSourceImage(aContext.getDataSource()).LoadSchemes();
+//		new SchemeDataSourceImage(aContext.getDataSource()).LoadSchemes();
 //		new ConfigDataSourceImage(aContext.getDataSource()).LoadNet();
 //		new ConfigDataSourceImage(aContext.getDataSource()).LoadISM();
 
