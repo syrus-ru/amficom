@@ -613,8 +613,8 @@ public static final String predict  = "PREDICT";
       ListIterator bLIt = b.listIterator(index);
       for(;bLIt.hasNext();)
       {
-        String as = aLIt.next();
-        String bs = bLIt.next();
+        Object as = aLIt.next();
+        Object bs = bLIt.next();
         if(as.equals(bs))
           return true;
       }
@@ -632,8 +632,8 @@ public static final String predict  = "PREDICT";
       ListIterator bLIt = b.listIterator(index);
       for(;bLIt.hasNext();)
       {
-        String as = aLIt.next();
-        String bs = bLIt.next();
+        Object as = aLIt.next();
+        Object bs = bLIt.next();
         if(as.equals(s) && bs.equals(s))
           return true;
       }
