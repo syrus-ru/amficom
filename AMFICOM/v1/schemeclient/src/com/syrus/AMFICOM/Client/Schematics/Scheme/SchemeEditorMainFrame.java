@@ -134,7 +134,7 @@ public class SchemeEditorMainFrame extends JFrame
 		};
 		ugoFrame.setTitle(LangModelSchematics.getString("elementsUGOTitle"));
 		desktopPane.add(ugoFrame);
-		graphs.add(upanel);
+		//graphs.add(upanel);
 
 		scheme_graph = epanel.getGraph();
 
