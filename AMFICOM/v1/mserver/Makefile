@@ -14,27 +14,6 @@ APPCLASSPATH = $(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
-$(call checkenve,IDL2JAVA)
-
-
-IDL2JAVA=$(JAVA_HOME)/bin/idlj
-IDL2JAVAFLAGS = \
-	-fall \
-	-i $(IDLDIR) \
-	-i $(INCIDLDIR) \
-	-td $(SRCDIR) \
-	-v
-
-#JAVAC = $(JAVA_HOME)/bin/javac
-#JAVACFLAGS = \
-	-O \
-	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
-	-d $(CLASSDIR) \
-	-deprecation \
-	-encoding $(ENCODING) \
-	-extdirs $(JAVA_HOME)/jre/lib/ext \
-	-g
-
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
@@ -62,8 +41,7 @@ $(LIBNAME_INTERFACE):	.corba
 	touch $@
 
 .corba:	$(CLASSDIR)
-	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
-		$(IDLDIR)/mserver.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/mserver.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
