@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.12 2004/09/30 11:06:43 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.13 2004/09/30 13:52:59 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/09/30 11:06:43 $
+ * @version $Revision: 1.13 $, $Date: 2004/09/30 13:52:59 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -517,7 +517,19 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     }
 
      public void saveAnalysisType(AnalysisType analysisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+                  
+         AnalysisType_Transferable transferables = (AnalysisType_Transferable)analysisType.getTransferable();                        
+         
+         try {
+             this.server.receiveAnalysisType(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientMeasurementObjectLoader.saveAnalysisType | receiveAnalysisTypes";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
     }
 
      public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{

@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.15 2004/09/30 09:07:21 max Exp $
+ * $Id: CMServerTestCase.java,v 1.16 2004/09/30 13:52:59 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,6 +36,8 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
@@ -61,7 +63,7 @@ import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/09/30 09:07:21 $
+ * @version $Revision: 1.16 $, $Date: 2004/09/30 13:52:59 $
  * @author $Author: max $
  * @module module
  */
@@ -161,27 +163,27 @@ public class CMServerTestCase extends TestCase {
         // empty;
 	}
 
-	public void testRecieveAnalyses() throws AMFICOMRemoteException, CreateObjectException {
+	public void testRecieveAnalyses() throws AMFICOMRemoteException, CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
         
         //      Checking recieveAnalysiss and transmitAnalysiss methods
         
         Analysis[]              Analysiss =              new Analysis[3];
         Analysis_Transferable[] Analysis_Transferables = new Analysis_Transferable[Analysiss.length];
         Identifier_Transferable[]   identifier_Transferables =   new Identifier_Transferable[Analysiss.length];                      
-        Set emptySet = new ArrayList();
+        Set emptySet = new Set(new Identifier("AnalysysTest"));
         for (int i = 0; i < Analysiss.length; i++) {
             Identifier id = IdentifierPool.generateId(ObjectEntities.ANALYSIS_ENTITY_CODE);
-            Analysiss[i] = Analysis.createInstance(id, userId, new AnalysisType(new Identifier("Analyses test")) , new Identifier("Analyses test"), new Set());            
+            Analysiss[i] = Analysis.createInstance(id, userId, new AnalysisType(new Identifier("Analyses test")) , new Identifier("Analyses test"), emptySet);            
             Analysis_Transferables[i] = (Analysis_Transferable)Analysiss[i].getTransferable();
             identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
-            System.out.println("the object has been created with codename " + "Test"+ id);
+            System.out.println("the object has been created with id " + id);
         }
         
-        server.receiveAnalysiss(Analysis_Transferables, false, accessIdentifier_Transferable);
-        Analysis_Transferable[] Analysis_Transferables2 = server.transmitAnalysiss(identifier_Transferables, accessIdentifier_Transferable);
+        server.receiveAnalyses(Analysis_Transferables, false, accessIdentifier_Transferable);
+        Analysis_Transferable[] Analysis_Transferables2 = server.transmitAnalyses(identifier_Transferables, accessIdentifier_Transferable);
         for (int i = 0; i < Analysis_Transferables2.length; i++) {
             Identifier id = new Identifier(Analysis_Transferables2[i].id);
-            System.out.println("the object has been recieved with codename " + (new Analysis(Analysis_Transferables2[i]).getCodename()));            
+            System.out.println("the object has been recieved with id " + id );            
         }
         
     }
