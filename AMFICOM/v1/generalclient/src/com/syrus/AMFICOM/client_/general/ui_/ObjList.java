@@ -1,5 +1,5 @@
 /*
- * $Id: ObjList.java,v 1.3 2004/10/07 06:07:45 bob Exp $
+ * $Id: ObjList.java,v 1.4 2004/11/03 08:48:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.client_.general.ui_;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JList;
@@ -16,7 +17,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2004/10/07 06:07:45 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/03 08:48:21 $
  * @module generalclient_v1
  */
 public class ObjList extends JList {
@@ -35,9 +36,18 @@ public class ObjList extends JList {
 		this(new ObjListModel(controller, objects, key));
 	}
 	
+	public ObjList(ObjectResourceController controller, String key) {
+		this(new ObjListModel(controller, new LinkedList(), key));
+	}
+	
 	public void setSelectedValue(Object anObject, boolean shouldScroll) {
 		Object fieldByObject = this.model.getFieldByObject(anObject);
 		super.setSelectedValue(fieldByObject, shouldScroll);
+	}	
+	
+	public Object getSelectedValue() {
+		Object selectedValue = this.model.getObjectByField(super.getSelectedValue());
+		return selectedValue;
 	}
 	
 }

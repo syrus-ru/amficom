@@ -12,7 +12,7 @@ import javax.swing.MutableComboBoxModel;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/03 07:23:50 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/03 08:48:21 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -102,6 +102,18 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 		}
 		
 		return obj;
+	}
+	
+	public Object getObjectByField(Object field){
+		Object object = null;
+		for (Iterator it = this.objects.iterator(); it.hasNext();) {
+			Object element = it.next();
+			if (field.equals(getFieldByObject(element))){
+				object = element;
+				break;
+			}
+		}
+		return object;
 	}
 
 	/**
