@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.52 2004/12/06 13:21:08 bob Exp $
+ * $Id: TemporalPattern.java,v 1.53 2004/12/07 10:59:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2004/12/06 13:21:08 $
- * @author $Author: bob $
+ * @version $Revision: 1.53 $, $Date: 2004/12/07 10:59:48 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -864,10 +864,8 @@ public class TemporalPattern extends StorableObject {
 	/**
 	 * create new instance for client
 	 * 
-	 * @param id
 	 * @param description
 	 * @param cronString
-	 * @return
 	 */
 	public static TemporalPattern createInstance(Identifier creatorId,
 							String description,
@@ -954,10 +952,10 @@ public class TemporalPattern extends StorableObject {
 	 * get times in ms that describes by temporal patterns and between start
 	 * and end
 	 * 
-	 * @param Date
-	 *                start
-	 * @param Date
-	 *                end
+	 * @param start
+	 *                Date
+	 * @param end
+	 *                Date
 	 * @return List of java.util.Data
 	 */
 	public List getTimes(Date start, Date end) {
@@ -968,10 +966,10 @@ public class TemporalPattern extends StorableObject {
 	 * get times in ms that describes by temporal patterns and between start
 	 * and end
 	 * 
-	 * @param long
-	 *                start
-	 * @param long
-	 *                end
+	 * @param start
+	 *                long
+	 * @param end
+	 *                long
 	 * @return List of java.util.Data
 	 */
 	public List getTimes(long start, long end) {

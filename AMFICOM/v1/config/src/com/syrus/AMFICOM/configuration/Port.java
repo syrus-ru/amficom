@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.21 2004/12/06 12:54:20 bob Exp $
+ * $Id: Port.java,v 1.22 2004/12/07 10:58:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/12/06 12:54:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2004/12/07 10:58:36 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 public class Port extends StorableObject implements Characterized, TypedObject {
@@ -113,7 +113,6 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 	 * @param description
 	 * @param equipmentId
 	 * @param sort
-	 * @return
 	 */
 	public static Port createInstance(Identifier creatorId,
 									  PortType type,

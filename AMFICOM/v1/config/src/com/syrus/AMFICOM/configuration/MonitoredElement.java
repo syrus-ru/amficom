@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.28 2004/12/06 12:54:20 bob Exp $
+ * $Id: MonitoredElement.java,v 1.29 2004/12/07 10:58:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/12/06 12:54:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2004/12/07 10:58:36 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 
@@ -102,7 +102,6 @@ public class MonitoredElement extends DomainMember {
 	 * @param measurementPortId
 	 * @param sort
 	 * @param localAddress
-	 * @return
 	 */
 	public static MonitoredElement createInstance(Identifier creatorId,
 												  Identifier domainId,

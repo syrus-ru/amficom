@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.28 2004/12/06 13:21:08 bob Exp $
+ * $Id: ParameterType.java,v 1.29 2004/12/07 10:59:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/12/06 13:21:08 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2004/12/07 10:59:48 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -88,12 +88,10 @@ public class ParameterType extends StorableObjectType {
 		
 	/**
 	 * create new instance for client
-	 * @param id
 	 * @param creatorId
 	 * @param codename
 	 * @param description
 	 * @param name
-	 * @return
 	 */
 	public static ParameterType createInstance(Identifier creatorId,
 											   String codename,
@@ -112,13 +110,11 @@ public class ParameterType extends StorableObjectType {
 	
 	/**
 	 * create new instance for client
-	 * @param id
 	 * @param creatorId
 	 * @param codename
 	 * @param description
 	 * @param name
-	 * @param sort {@link ParameterTypeSort}
-	 * @return
+	 * @param sort {@link DataType}
 	 */
 	public static ParameterType createInstance(Identifier creatorId,
 											   String codename,

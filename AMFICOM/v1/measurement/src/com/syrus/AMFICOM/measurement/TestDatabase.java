@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.51 2004/12/06 10:59:15 bob Exp $
+ * $Id: TestDatabase.java,v 1.52 2004/12/07 10:59:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2004/12/06 10:59:15 $
- * @author $Author: bob $
+ * @version $Revision: 1.52 $, $Date: 2004/12/07 10:59:48 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -457,8 +457,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
-			else
-				throw new ObjectNotFoundException("No last measurement for test: " + testIdStr);
+			throw new ObjectNotFoundException("No last measurement for test: " + testIdStr);
 		}
 		catch (SQLException sqle) {
 			String mesg = "TestDatabase.retrieveLastMeasurement | Cannot retrieve last measurement for test '" + testIdStr + "' -- " + sqle.getMessage();
@@ -496,8 +495,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				return new Integer(resultSet.getInt("count"));
-			else
-				throw new ObjectNotFoundException("No number of measurements for test '" + testIdStr + "'");
+			throw new ObjectNotFoundException("No number of measurements for test '" + testIdStr + "'");
 		}
 		catch (SQLException sqle) {
 			String mesg = "TestDatabase.retrieveNumberOfMeasurements | Cannot retrieve number of measurements for test '" + testIdStr + "' -- " + sqle.getMessage();
@@ -542,8 +540,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				return new Integer(resultSet.getInt("count"));
-			else
-				throw new ObjectNotFoundException("No number of results for test '" + testIdStr + "' of result sort " + resultSort.value());
+			throw new ObjectNotFoundException("No number of results for test '" + testIdStr + "' of result sort " + resultSort.value());
 		}
 		catch (SQLException sqle) {
 			String mesg = "TestDatabase.retrieveNumberOfMeasurements | Cannot retrieve number of results for test '" + testIdStr + "' of result sort " + resultSort.value() + " -- " + sqle.getMessage();

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.17 2004/11/03 17:16:11 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.18 2004/12/07 10:59:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/11/03 17:16:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2004/12/07 10:59:48 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedIdsCondition {
@@ -64,22 +64,22 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 	 * @return <code>true</code>
 	 *         <ul>
 	 * 
-	 * <li>if {@link entityCode}is {@link AnalysisType}for all analysesType
+	 * <li>if {@link #entityCode}is {@link AnalysisType}for all analysesType
 	 * for criteria ParameterTypes identifier in linkedIds;</li>
 	 * 
-	 * <li>if {@link entityCode}is {@link EvaluationType}for all analysesType
+	 * <li>if {@link #entityCode}is {@link EvaluationType}for all analysesType
 	 * for threshold ParameterTypes identifier in linkedIds;</li>
 	 * 
-	 * <li>if {@link entityCode}is {@link Measurement}for all measurements
+	 * <li>if {@link #entityCode}is {@link Measurement}for all measurements
 	 * for Test identifier in linkedIds;</li>
 	 * 
-	 * <li>if {@link entityCode}is {@link Result}for all results for
+	 * <li>if {@link #entityCode}is {@link Result}for all results for
 	 * Measurement identifier in linkedIds;</li>
 	 * 
-	 * <li>if {@link entityCode}is {@link MeasurementType}for all
+	 * <li>if {@link #entityCode}is {@link MeasurementType}for all
 	 * measurementTypes MeasurementPortType identifier in linkedIds;</li>
 	 * 
-	 * <li>if {@link entityCode}is {@link MeasurementSetup}for all
+	 * <li>if {@link #entityCode}is {@link MeasurementSetup}for all
 	 * measurement setups for MonitoredElement identifier in linkedIds;</li>
 	 * 
 	 * </ul>

@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.67 2004/12/06 13:21:08 bob Exp $
+ * $Id: Test.java,v 1.68 2004/12/07 10:59:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2004/12/06 13:21:08 $
- * @author $Author: bob $
+ * @version $Revision: 1.68 $, $Date: 2004/12/07 10:59:48 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -156,20 +156,18 @@ public class Test extends StorableObject {
 	
 	/**
 	 * create new instance for client
-	 * @param id
 	 * @param creatorId
 	 * @param startTime
 	 * @param endTime
-	 * @param temporalPatternId
+	 * @param temporalPattern
 	 * @param temporalType
-	 * @param measurementTypeId
-	 * @param analysisTypeId
-	 * @param evaluationTypeId
+	 * @param measurementType
+	 * @param analysisType
+	 * @param evaluationType
 	 * @param monitoredElement
 	 * @param returnType
 	 * @param description
 	 * @param measurementSetupIds
-	 * @return
 	 */
 
 	public static Test createInstance(Identifier creatorId,
@@ -379,7 +377,7 @@ public class Test extends StorableObject {
 	}
 
 	/**
-	 * @param analysisTypeId The analysisTypeId to set.
+	 * @param analysisType The analysisTypeId to set.
 	 */
 	public void setAnalysisType(AnalysisType analysisType) {
 		this.currentVersion = super.getNextVersion();
@@ -393,7 +391,7 @@ public class Test extends StorableObject {
 		this.description = description;
 	}
 	/**
-	 * @param evaluationTypeId The evaluationTypeId to set.
+	 * @param evaluationType The evaluationTypeId to set.
 	 */
 	public void setEvaluationTypeId(EvaluationType evaluationType) {
 		this.currentVersion = super.getNextVersion();
@@ -407,7 +405,7 @@ public class Test extends StorableObject {
 //		this.measurementSetupIds = measurementSetupIds;
 //	}
 	/**
-	 * @param measurementTypeId The measurementTypeId to set.
+	 * @param measurementType The measurementTypeId to set.
 	 */
 	public void setMeasurementType(MeasurementType measurementType) {
 		this.currentVersion = super.getNextVersion();
@@ -455,7 +453,7 @@ public class Test extends StorableObject {
 		}
 	}
 	/**
-	 * @param temporalPatternId The temporalPatternId to set.
+	 * @param temporalPattern The temporalPatternId to set.
 	 */
 	public void setTemporalPattern(TemporalPattern temporalPattern) {
 		this.currentVersion = super.getNextVersion();

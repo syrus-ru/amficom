@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.37 2004/12/06 13:21:03 bob Exp $
+ * $Id: AnalysisType.java,v 1.38 2004/12/07 10:59:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/12/06 13:21:03 $
- * @author $Author: bob $
+ * @version $Revision: 1.38 $, $Date: 2004/12/07 10:59:48 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -144,7 +144,6 @@ public class AnalysisType extends ActionType {
 	
 	/**
 	 * create new instance for client 
-	 * @param id
 	 * @param creatorId
 	 * @param codename
 	 * @param description
@@ -152,7 +151,6 @@ public class AnalysisType extends ActionType {
 	 * @param criteriaParameterTypes
 	 * @param etalonParameterTypes
 	 * @param outParameterTypes
-	 * @return
 	 */
 	public static AnalysisType createInstance(Identifier creatorId,
 											  String codename,

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.36 2004/12/07 10:13:01 bob Exp $
+ * $Id: MeasurementType.java,v 1.37 2004/12/07 10:59:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/12/07 10:13:01 $
- * @author $Author: bob $
+ * @version $Revision: 1.37 $, $Date: 2004/12/07 10:59:48 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -128,13 +128,11 @@ public class MeasurementType extends ActionType {
 	
 	/**
 	 * create new instance for client
-	 * @param id
 	 * @param creatorId
 	 * @param codename
 	 * @param description
 	 * @param inParameterTypes
 	 * @param outParameterTypes
-	 * @return
 	 */
 	public static MeasurementType createInstance(Identifier creatorId,
 												 String codename,
@@ -255,8 +253,8 @@ public class MeasurementType extends ActionType {
 	/**
 	 * client setter for outParameterTypes
 	 * 
-	 * @param inParameterTypes
-	 *            The inParameterTypes to set.
+	 * @param outParameterTypes
+	 *            The outParameterTypes to set.
 	 */
 	public void setOutParameterTypes(List outParameterTypes) {
 		this.setOutParameterTypes0(outParameterTypes);

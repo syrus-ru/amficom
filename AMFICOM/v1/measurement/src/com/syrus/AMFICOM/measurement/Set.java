@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.33 2004/12/07 09:49:40 bob Exp $
+ * $Id: Set.java,v 1.34 2004/12/07 10:59:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/12/07 09:49:40 $
- * @author $Author: bob $
+ * @version $Revision: 1.34 $, $Date: 2004/12/07 10:59:48 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -116,13 +116,11 @@ public class Set extends StorableObject {
 	
 	/**
 	 * create new instance for client
-	 * @param id
 	 * @param creatorId
 	 * @param sort
 	 * @param description
 	 * @param parameters
 	 * @param monitoredElementIds
-	 * @return
 	 */
 	public static Set createInstance(Identifier creatorId,
 									 SetSort sort,

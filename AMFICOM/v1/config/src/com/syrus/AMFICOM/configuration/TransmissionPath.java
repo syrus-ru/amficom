@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.26 2004/12/06 12:54:20 bob Exp $
+ * $Id: TransmissionPath.java,v 1.27 2004/12/07 10:58:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.26 $, $Date: 2004/12/06 12:54:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2004/12/07 10:58:36 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 
@@ -96,7 +96,6 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	 * @param description
 	 * @param startPortId
 	 * @param finishPortId
-	 * @return
 	 */
 	public static TransmissionPath createInstance(Identifier creatorId,
 												  Identifier domainId,
@@ -213,7 +212,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	}
 	
 	/**
-	 * @param characteristicIds The characteristicIds to set.
+	 * @param characteristics The characteristicIds to set.
 	 */
 	public void setCharacteristics(List characteristics) {
 		this.characteristics.clear();

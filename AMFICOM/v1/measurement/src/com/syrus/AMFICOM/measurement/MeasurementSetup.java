@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.36 2004/12/06 13:21:04 bob Exp $
+ * $Id: MeasurementSetup.java,v 1.37 2004/12/07 10:59:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/12/06 13:21:04 $
- * @author $Author: bob $
+ * @version $Revision: 1.37 $, $Date: 2004/12/07 10:59:48 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -130,7 +130,6 @@ public class MeasurementSetup extends StorableObject {
 	
 	/**
 	 * create new instance for client
-	 * @param id
 	 * @param creatorId
 	 * @param parameterSet
 	 * @param criteriaSet
@@ -139,7 +138,6 @@ public class MeasurementSetup extends StorableObject {
 	 * @param description
 	 * @param measurementDuration
 	 * @param monitoredElementIds
-	 * @return
 	 */
 	public static MeasurementSetup createInstance(Identifier creatorId,
 												  Set parameterSet,

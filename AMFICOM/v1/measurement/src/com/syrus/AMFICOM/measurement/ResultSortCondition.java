@@ -1,5 +1,5 @@
 /*
- * $Id: ResultSortCondition.java,v 1.4 2004/10/21 08:01:35 bob Exp $
+ * $Id: ResultSortCondition.java,v 1.5 2004/12/07 10:59:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.ResultSortCondition_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/10/21 08:01:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2004/12/07 10:59:48 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public class ResultSortCondition implements StorableObjectCondition {
@@ -67,7 +67,7 @@ public class ResultSortCondition implements StorableObjectCondition {
 	}
 
 	/**
-	 * @return <code>true</code> if {@link entityCode}is {@link Result}and
+	 * @return <code>true</code> if {@link #entityCode}is {@link Result}and
 	 *         ResultSort is equals given
 	 */
 	public boolean isConditionTrue(Object object) throws ApplicationException {

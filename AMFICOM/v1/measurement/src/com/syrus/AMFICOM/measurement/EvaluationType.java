@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.33 2004/12/06 13:21:03 bob Exp $
+ * $Id: EvaluationType.java,v 1.34 2004/12/07 10:59:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/12/06 13:21:03 $
- * @author $Author: bob $
+ * @version $Revision: 1.34 $, $Date: 2004/12/07 10:59:48 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -142,7 +142,6 @@ public class EvaluationType extends ActionType {
 	
 	/**
 	 * create new instance for client
-	 * @param id
 	 * @param creatorId
 	 * @param codename
 	 * @param description
@@ -150,7 +149,6 @@ public class EvaluationType extends ActionType {
 	 * @param thresholdParameterTypes
 	 * @param etalonParameterTypes
 	 * @param outParameterTypes
-	 * @return
 	 */
 	public static EvaluationType createInstance(Identifier creatorId,
 												String codename,
