@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 import com.syrus.AMFICOM.Client.Survey.Result.UI.TestDisplayModel;
+import com.syrus.AMFICOM.general.Identifier;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -16,9 +17,9 @@ import java.util.*;
 
 public class Test extends ObjectResource implements Serializable {
 
-	private static final long					serialVersionUID		= 01L;
+	public transient static final String		TYPE					= "test";
 
-	public transient static final String		typ						= "test";
+	private static final long					serialVersionUID		= 01L;
 	private transient Analysis					analysis;
 	private String								analysisId				= "";
 	private long								deleted					= 0;
@@ -51,18 +52,18 @@ public class Test extends ObjectResource implements Serializable {
 	 * @deprecated moved to TimeStamp_dep
 	 */
 	private transient TestTemporalType			temporal_type;
+
+	private TemporalPattern						temporalPattern;
+	private transient TestArgumentSet			testArgumentSet;
 	private String								testArgumentSetId		= "";
+	private transient TestSetup					testSetup;
 	private String								testSetupId				= "";
 	private String								testTypeId				= "";
-	private transient TestArgumentSet			testArgumentSet;
-	private transient TestSetup					testSetup;
 
 	/**
 	 * @deprecated moved to TimeStamp_dep
 	 */
 	private transient TestTimeStamps			time_stamps;
-
-	private TemporalPattern						temporalPattern;
 
 	private transient ClientTest_Transferable	transferable;
 	private String								userId					= "";
@@ -101,20 +102,28 @@ public class Test extends ObjectResource implements Serializable {
 	 * @return Returns the analysis.
 	 */
 	public Analysis getAnalysis() {
-		return analysis;
+		return this.analysis;
 	}
 
 	/**
 	 * @return Returns the analysisId.
 	 */
 	public String getAnalysisId() {
-		return analysisId;
+		return this.analysisId;
 	}
+
+	/**
+	 * @deprecated
+	 */
 
 	public Class getChildClass(String key) {
 		if (key.equals("elementaryresult")) return Result.class;
 		return ObjectResource.class;
 	}
+
+	/**
+	 * @deprecated
+	 */
 
 	public Enumeration getChildren(String key) {
 		Vector vec = new Vector();
@@ -125,6 +134,9 @@ public class Test extends ObjectResource implements Serializable {
 		return vec.elements();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Enumeration getChildTypes() {
 		Vector vec = new Vector();
 		vec.add("elementaryresult");
@@ -135,14 +147,14 @@ public class Test extends ObjectResource implements Serializable {
 	 * @return Returns the deleted.
 	 */
 	public long getDeleted() {
-		return deleted;
+		return this.deleted;
 	}
 
 	/**
 	 * @return Returns the description.
 	 */
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	public String getDomainId() {
@@ -153,39 +165,39 @@ public class Test extends ObjectResource implements Serializable {
 	 * @return Returns the duration.
 	 */
 	public long getDuration() {
-		return duration;
+		return this.duration;
 	}
 
 	/**
 	 * @return Returns the elementaryTestAlarms.
 	 */
 	public ElementaryTestAlarm[] getElementaryTestAlarms() {
-		return elementaryTestAlarms;
+		return this.elementaryTestAlarms;
 	}
 
 	/**
 	 * @return Returns the evaluationId.
 	 */
 	public String getEvaluationId() {
-		return evaluationId;
+		return this.evaluationId;
 	}
 
 	/**
 	 * @return Returns the evalution.
 	 */
 	public Evaluation getEvalution() {
-		return evalution;
+		return this.evalution;
 	}
 
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
 	/**
 	 * @return Returns the kisId.
 	 */
 	public String getKisId() {
-		return kisId;
+		return this.kisId;
 	}
 
 	public ObjectResourceModel getModel() {
@@ -193,117 +205,124 @@ public class Test extends ObjectResource implements Serializable {
 	}
 
 	public long getModified() {
-		return modified;
+		return this.modified;
 	}
 
 	/**
 	 * @return Returns the monitoredElementId.
 	 */
 	public String getMonitoredElementId() {
-		return monitoredElementId;
+		return this.monitoredElementId;
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	/**
 	 * @return Returns the requestId.
 	 */
 	public String getRequestId() {
-		return requestId;
+		return this.requestId;
 	}
 
 	/**
 	 * @return Returns the requestId.
 	 */
 	public String[] getResultIds() {
-		return resultIds;
+		return this.resultIds;
 	}
 
 	/**
 	 * @return Returns the returnType.
 	 */
 	public TestReturnType getReturnType() {
-		return returnType;
+		return this.returnType;
 	}
 
 	/**
 	 * @return Returns the startTime.
 	 */
 	public long getStartTime() {
-		return start_time;
+		return this.start_time;
 	}
 
 	/**
 	 * @return Returns the status.
 	 */
 	public TestStatus getStatus() {
-		return status;
+		return this.status;
+	}
+
+	/**
+	 * @return Returns the temporalPattern.
+	 */
+	public TemporalPattern getTemporalPattern() {
+		return this.temporalPattern;
 	}
 
 	/**
 	 * @return Returns the temporalType.
 	 */
 	public TestTemporalType getTemporalType() {
-		return temporal_type;
+		return this.temporal_type;
 	}
 
 	/**
 	 * @return Returns the testArgumentSet.
 	 */
 	public TestArgumentSet getTestArgumentSet() {
-		return testArgumentSet;
+		return this.testArgumentSet;
 	}
 
 	/**
 	 * @return Returns the testAargumentSetId.
 	 */
 	public String getTestArgumentSetId() {
-		return testArgumentSetId;
+		return this.testArgumentSetId;
 	}
 
 	/**
 	 * @return Returns the testSetup.
 	 */
 	public TestSetup getTestSetup() {
-		return testSetup;
+		return this.testSetup;
 	}
 
 	/**
 	 * @return Returns the testSetupId.
 	 */
 	public String getTestSetupId() {
-		return testSetupId;
+		return this.testSetupId;
 	}
 
 	/**
 	 * @return Returns the testTypeId.
 	 */
 	public String getTestTypeId() {
-		return testTypeId;
+		return this.testTypeId;
 	}
 
 	/**
 	 * @return Returns the timeStamps.
 	 */
 	public TestTimeStamps getTimeStamps() {
-		return time_stamps;
+		return this.time_stamps;
 	}
 
 	public Object getTransferable() {
-		return transferable;
+		return this.transferable;
 	}
 
 	public String getTyp() {
-		return typ;
+		return TYPE;
 	}
 
 	/**
 	 * @return Returns the userId.
 	 */
 	public String getUserId() {
-		return userId;
+		return this.userId;
 	}
 
 	public Test myclone() {
@@ -323,7 +342,7 @@ public class Test extends ObjectResource implements Serializable {
 		new_test.status = this.status;
 		new_test.time_stamps = this.time_stamps;
 		//		new_test.arguments = this.arguments;
-		new_test.testArgumentSetId = testArgumentSetId;
+		new_test.testArgumentSetId = this.testArgumentSetId;
 		new_test.elementaryTestAlarms = this.elementaryTestAlarms;
 		new_test.resultIds = this.resultIds;
 		new_test.description = this.description;
@@ -427,28 +446,28 @@ public class Test extends ObjectResource implements Serializable {
 	}
 
 	public void setLocalFromTransferable() {
-		this.id = transferable.id;
-		this.analysisId = transferable.analysis_id;
-		this.evaluationId = transferable.evaluation_id;
-		this.testTypeId = transferable.test_type_id;
-		this.returnType = transferable.return_type;
-		this.start_time = transferable.start_time;
-		this.deleted = transferable.deleted;
-		this.kisId = transferable.kis_id;
-		this.name = transferable.name;
-		this.modified = transferable.modified;
-		this.requestId = transferable.request_id;
-		this.monitoredElementId = transferable.monitored_element_id;
-		this.temporal_type = transferable.temporal_type;
-		this.time_stamps = transferable.time_stamps;
-		this.status = transferable.status;
+		this.id = this.transferable.id;
+		this.analysisId = this.transferable.analysis_id;
+		this.evaluationId = this.transferable.evaluation_id;
+		this.testTypeId = this.transferable.test_type_id;
+		this.returnType = this.transferable.return_type;
+		this.start_time = this.transferable.start_time;
+		this.deleted = this.transferable.deleted;
+		this.kisId = this.transferable.kis_id;
+		this.name = this.transferable.name;
+		this.modified = this.transferable.modified;
+		this.requestId = this.transferable.request_id;
+		this.monitoredElementId = this.transferable.monitored_element_id;
+		this.temporal_type = this.transferable.temporal_type;
+		this.time_stamps = this.transferable.time_stamps;
+		this.status = this.transferable.status;
 
-		resultIds = transferable.result_ids;
-		this.elementaryTestAlarms = transferable.elementary_test_alarms;
+		this.resultIds = this.transferable.result_ids;
+		this.elementaryTestAlarms = this.transferable.elementary_test_alarms;
 
-		this.testArgumentSetId = transferable.test_argument_set_id;
-		this.testSetupId = transferable.test_setup_id;
-		this.duration = transferable.duration;
+		this.testArgumentSetId = this.transferable.test_argument_set_id;
+		this.testSetupId = this.transferable.test_setup_id;
+		this.duration = this.transferable.duration;
 		this.changed = false;
 		//System.out.println("testID:" + id + " setLocalFromTransferable()");
 		//		arguments = new Vector();
@@ -530,6 +549,14 @@ public class Test extends ObjectResource implements Serializable {
 	}
 
 	/**
+	 * @param temporalPattern
+	 *            The temporalPattern to set.
+	 */
+	public void setTemporalPattern(TemporalPattern temporalPattern) {
+		this.temporalPattern = temporalPattern;
+	}
+
+	/**
 	 * @param temporalType
 	 *            The temporalType to set.
 	 */
@@ -603,37 +630,39 @@ public class Test extends ObjectResource implements Serializable {
 
 	public void setTransferableFromLocal() {
 		//System.out.println("setTransferableFromLocal");
-		transferable.id = this.id;
-		transferable.analysis_id = this.analysisId;
-		transferable.evaluation_id = this.evaluationId;
-		transferable.test_type_id = this.testTypeId;
-		transferable.start_time = this.start_time;
-		transferable.deleted = 0;
-		transferable.return_type = this.returnType;
-		transferable.kis_id = this.kisId;
-		transferable.name = this.name;
-		transferable.modified = this.modified;
-		transferable.request_id = this.requestId;
-		transferable.monitored_element_id = this.monitoredElementId;
-		transferable.temporal_type = this.temporal_type;
-		transferable.status = TestStatus.TEST_STATUS_SCHEDULED;
-		transferable.time_stamps = this.time_stamps;
+		this.transferable.id = this.id;
+		this.transferable.analysis_id = this.analysisId;
+		this.transferable.evaluation_id = this.evaluationId;
+		this.transferable.test_type_id = this.testTypeId;
+		this.transferable.start_time = this.start_time;
+		this.transferable.deleted = 0;
+		this.transferable.return_type = this.returnType;
+		this.transferable.kis_id = this.kisId;
+		this.transferable.name = this.name;
+		this.transferable.modified = this.modified;
+		this.transferable.request_id = this.requestId;
+		this.transferable.monitored_element_id = this.monitoredElementId;
+		this.transferable.temporal_type = this.temporal_type;
+		this.transferable.status = TestStatus.TEST_STATUS_SCHEDULED;
+		this.transferable.time_stamps = this.time_stamps;
 		//		transferable.arguments = new
 		// ClientParameter_Transferable[this.arguments.size()];
-		if ((testArgumentSetId == null) || testArgumentSetId.length() == 0) {
-			if ((testSetup == null) && (testSetupId != null)
-					&& (testSetupId.length() > 0))
-					testSetup = (TestSetup) Pool
-							.get(TestSetup.typ, testSetupId);
-			if (testSetup != null)
-					testArgumentSetId = testSetup.getTestArgumentSetId();
+		if ((this.testArgumentSetId == null)
+				|| this.testArgumentSetId.length() == 0) {
+			if ((this.testSetup == null) && (this.testSetupId != null)
+					&& (this.testSetupId.length() > 0))
+					this.testSetup = (TestSetup) Pool.get(TestSetup.typ,
+							this.testSetupId);
+			if (this.testSetup != null)
+					this.testArgumentSetId = this.testSetup
+							.getTestArgumentSetId();
 		}
-		transferable.test_argument_set_id = testArgumentSetId;
+		this.transferable.test_argument_set_id = this.testArgumentSetId;
 
-		transferable.elementary_test_alarms = new ElementaryTestAlarm[0];
-		transferable.result_ids = new String[0];
-		transferable.test_setup_id = this.testSetupId;
-		transferable.duration = this.duration;
+		this.transferable.elementary_test_alarms = new ElementaryTestAlarm[0];
+		this.transferable.result_ids = new String[0];
+		this.transferable.test_setup_id = this.testSetupId;
+		this.transferable.duration = this.duration;
 		this.changed = false;
 		/*
 		 * for (int i=0; i <transferable.arguments.length; i++) { Parameter
@@ -654,9 +683,15 @@ public class Test extends ObjectResource implements Serializable {
 
 	public void updateLocalFromTransferable() {
 		this.analysis = (Analysis) Pool.get(Analysis.typ, this.analysisId);
-		this.evalution = (Evaluation) Pool.get(Evaluation.typ, this.evaluationId);
+		this.evalution = (Evaluation) Pool.get(Evaluation.typ,
+				this.evaluationId);
 
-		if (this.temporalPattern == null) this.temporalPattern = new TemporalPattern();
+		/**
+		 * @todo fix new Identifier
+		 */
+		if (this.temporalPattern == null)
+				this.temporalPattern = new TemporalPattern(new Identifier(
+						TemporalPattern.TYPE));
 		this.temporalPattern.setStartPeriod(this.start_time);
 		this.temporalPattern.setEndPeriod(this.start_time + this.duration);
 
@@ -667,34 +702,38 @@ public class Test extends ObjectResource implements Serializable {
 
 			if (this.temporal_type
 					.equals(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME)) {
-				this.temporalPattern.setType(TemporalPattern.TIMESTAMPTYPE_ONETIME);
+				this.temporalPattern
+						.setType(TemporalPattern.TIMESTAMPTYPE_ONETIME);
 			} else if (this.temporal_type
 					.equals(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL)) {
-				this.temporalPattern.setType(TemporalPattern.TIMESTAMPTYPE_PERIODIC);
-				
-//				long start = this.start_time;
-//				long end = this.time_stamps.ptpars().end_time;
-//				long interval = this.time_stamps.ptpars().dt;
-//				long min = interval / (60 * 1000);
-//				long hour = interval / (60 * 60 * 1000);
-//				if ((min > 0) && (min < 60)) {
-//					timeStamp.setPeriodStart(start);
-//					timeStamp.setPeriodEnd(end);
-//					timeStamp.setPeriod(Calendar.MINUTE, (int) min);
-//					timeStamp.addTestDate(Calendar.MINUTE, 0);
-//					timeStamp.addTestTime(0, 0, 0);
-//				}
-//				if ((hour > 0) && (hour < 24)) {
-//					timeStamp.setPeriodStart(start);
-//					timeStamp.setPeriodEnd(end);
-//					timeStamp.setPeriod(Calendar.HOUR, (int) hour);
-//					timeStamp.addTestDate(Calendar.HOUR, 0);
-//					timeStamp.addTestTime(0, 0, 0);
-//				}
+				this.temporalPattern
+						.setType(TemporalPattern.TIMESTAMPTYPE_PERIODIC);
+
+				//				long start = this.start_time;
+				//				long end = this.time_stamps.ptpars().end_time;
+				//				long interval = this.time_stamps.ptpars().dt;
+				//				long min = interval / (60 * 1000);
+				//				long hour = interval / (60 * 60 * 1000);
+				//				if ((min > 0) && (min < 60)) {
+				//					timeStamp.setPeriodStart(start);
+				//					timeStamp.setPeriodEnd(end);
+				//					timeStamp.setPeriod(Calendar.MINUTE, (int) min);
+				//					timeStamp.addTestDate(Calendar.MINUTE, 0);
+				//					timeStamp.addTestTime(0, 0, 0);
+				//				}
+				//				if ((hour > 0) && (hour < 24)) {
+				//					timeStamp.setPeriodStart(start);
+				//					timeStamp.setPeriodEnd(end);
+				//					timeStamp.setPeriod(Calendar.HOUR, (int) hour);
+				//					timeStamp.addTestDate(Calendar.HOUR, 0);
+				//					timeStamp.addTestTime(0, 0, 0);
+				//				}
 
 			} else if (this.temporal_type
 					.equals(TestTemporalType.TEST_TEMPORAL_TYPE_TIMETABLE)) {
-
+				/**
+				 * @todo is there will be TIMETABLE ???
+				 */
 			}
 
 		}
@@ -703,122 +742,110 @@ public class Test extends ObjectResource implements Serializable {
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
-		id = (String) in.readObject();
-		testTypeId = (String) in.readObject();
+		this.id = (String) in.readObject();
+		this.testTypeId = (String) in.readObject();
 		int ttt = in.readInt();
-		temporal_type = TestTemporalType.from_int(ttt);
+		this.temporal_type = TestTemporalType.from_int(ttt);
 		//		temporal_type = (TestTemporalType )in.readObject();
 		int trt = in.readInt();
-		returnType = TestReturnType.from_int(trt);
+		this.returnType = TestReturnType.from_int(trt);
 		//		returnType = (TestReturnType )in.readObject();
-		start_time = in.readLong();
+		this.start_time = in.readLong();
 
 		//		time_stamps = (TestTimeStamps )in.readObject();
-		time_stamps = new TestTimeStamps();
-		if (temporal_type.value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL) {
+		this.time_stamps = new TestTimeStamps();
+		if (this.temporal_type.value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL) {
 			PeriodicalTestParameters ptp = new PeriodicalTestParameters();
 			ptp.dt = in.readLong();
 			ptp.end_time = in.readLong();
-			time_stamps.ptpars(ptp);
+			this.time_stamps.ptpars(ptp);
 		}
-		if (temporal_type.value() == TestTemporalType._TEST_TEMPORAL_TYPE_TIMETABLE) {
+		if (this.temporal_type.value() == TestTemporalType._TEST_TEMPORAL_TYPE_TIMETABLE) {
 			long[] l = (long[]) in.readObject();
-			time_stamps.ti(l);
+			this.time_stamps.ti(l);
 		}
 
-		kisId = (String) in.readObject();
-		name = (String) in.readObject();
-		analysisId = (String) in.readObject();
-		evaluationId = (String) in.readObject();
-		modified = in.readLong();
-		requestId = (String) in.readObject();
-		userId = (String) in.readObject();
-		deleted = in.readLong();
-		description = (String) in.readObject();
-		duration = in.readLong();
-		testSetupId = (String) in.readObject();
-		monitoredElementId = (String) in.readObject();
+		this.kisId = (String) in.readObject();
+		this.name = (String) in.readObject();
+		this.analysisId = (String) in.readObject();
+		this.evaluationId = (String) in.readObject();
+		this.modified = in.readLong();
+		this.requestId = (String) in.readObject();
+		this.userId = (String) in.readObject();
+		this.deleted = in.readLong();
+		this.description = (String) in.readObject();
+		this.duration = in.readLong();
+		this.testSetupId = (String) in.readObject();
+		this.monitoredElementId = (String) in.readObject();
 		int ts = in.readInt();
-		status = TestStatus.from_int(ts);
+		this.status = TestStatus.from_int(ts);
 		//		status = (TestStatus )in.readObject();
 		Object obj = in.readObject();
-		resultIds = (String[]) obj;
+		this.resultIds = (String[]) obj;
 		//		Object obj2 = in.readObject();
 
 		//		elementaryTestAlarms = (ElementaryTestAlarm[] )obj2;
 		int len = in.readInt();
-		elementaryTestAlarms = new ElementaryTestAlarm[len];
+		this.elementaryTestAlarms = new ElementaryTestAlarm[len];
 		for (int i = 0; i < len; i++) {
-			elementaryTestAlarms[i] = new ElementaryTestAlarm();
-			elementaryTestAlarms[i].elementary_start_time = in.readLong();
-			elementaryTestAlarms[i].alarm_id = (String) in.readObject();
-			elementaryTestAlarms[i].alarm_name = (String) in.readObject();
+			this.elementaryTestAlarms[i] = new ElementaryTestAlarm();
+			this.elementaryTestAlarms[i].elementary_start_time = in.readLong();
+			this.elementaryTestAlarms[i].alarm_id = (String) in.readObject();
+			this.elementaryTestAlarms[i].alarm_name = (String) in.readObject();
 		}
 
-		testArgumentSetId = (String) in.readObject();
+		this.testArgumentSetId = (String) in.readObject();
 
-		transferable = new ClientTest_Transferable();
+		this.transferable = new ClientTest_Transferable();
 		updateLocalFromTransferable();
 		this.changed = false;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		out.writeObject(id);
-		out.writeObject(testTypeId);
+		out.writeObject(this.id);
+		out.writeObject(this.testTypeId);
 
-		out.writeInt(temporal_type.value());
+		out.writeInt(this.temporal_type.value());
 
-		out.writeInt(returnType.value());
+		out.writeInt(this.returnType.value());
 
-		out.writeLong(start_time);
+		out.writeLong(this.start_time);
 		//		out.writeObject(time_stamps);
 
-		if (temporal_type.value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL) {
-			PeriodicalTestParameters ptp = time_stamps.ptpars();
+		if (this.temporal_type.value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL) {
+			PeriodicalTestParameters ptp = this.time_stamps.ptpars();
 			out.writeLong(ptp.dt);
 			out.writeLong(ptp.end_time);
 		}
-		if (temporal_type.value() == TestTemporalType._TEST_TEMPORAL_TYPE_TIMETABLE)
-				out.writeObject(time_stamps.ti());
+		if (this.temporal_type.value() == TestTemporalType._TEST_TEMPORAL_TYPE_TIMETABLE)
+				out.writeObject(this.time_stamps.ti());
 
-		out.writeObject(kisId);
-		out.writeObject(name);
-		out.writeObject(analysisId);
-		out.writeObject(evaluationId);
-		out.writeLong(modified);
-		out.writeObject(requestId);
-		out.writeObject(userId);
-		out.writeLong(deleted);
-		out.writeObject(description);
-		out.writeLong(duration);
-		out.writeObject(testSetupId);
-		out.writeObject(monitoredElementId);
-		out.writeInt(status.value());
-		Object obj = resultIds;
+		out.writeObject(this.kisId);
+		out.writeObject(this.name);
+		out.writeObject(this.analysisId);
+		out.writeObject(this.evaluationId);
+		out.writeLong(this.modified);
+		out.writeObject(this.requestId);
+		out.writeObject(this.userId);
+		out.writeLong(this.deleted);
+		out.writeObject(this.description);
+		out.writeLong(this.duration);
+		out.writeObject(this.testSetupId);
+		out.writeObject(this.monitoredElementId);
+		out.writeInt(this.status.value());
+		Object obj = this.resultIds;
 		out.writeObject(obj);
 
 		//		Object obj2 = elementaryTestAlarms;
 		//		out.writeObject(obj2);
-		out.writeInt(elementaryTestAlarms.length);
-		for (int i = 0; i < elementaryTestAlarms.length; i++) {
-			out.writeLong(elementaryTestAlarms[i].elementary_start_time);
-			out.writeObject(elementaryTestAlarms[i].alarm_id);
-			out.writeObject(elementaryTestAlarms[i].alarm_name);
+		out.writeInt(this.elementaryTestAlarms.length);
+		for (int i = 0; i < this.elementaryTestAlarms.length; i++) {
+			out.writeLong(this.elementaryTestAlarms[i].elementary_start_time);
+			out.writeObject(this.elementaryTestAlarms[i].alarm_id);
+			out.writeObject(this.elementaryTestAlarms[i].alarm_name);
 		}
 
-		out.writeObject(testArgumentSetId);
-	}
-	/**
-	 * @return Returns the temporalPattern.
-	 */
-	public TemporalPattern getTemporalPattern() {
-		return temporalPattern;
-	}
-	/**
-	 * @param temporalPattern The temporalPattern to set.
-	 */
-	public void setTemporalPattern(TemporalPattern temporalPattern) {
-		this.temporalPattern = temporalPattern;
+		out.writeObject(this.testArgumentSetId);
 	}
 }
 
@@ -832,7 +859,7 @@ class TestTimeSorter extends ObjectResourceSorter {
 	}
 
 	public String[][] getSortedColumns() {
-		return sorted_columns;
+		return this.sorted_columns;
 	}
 
 	public String getString(ObjectResource or, String column) {
