@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.15 2004/08/17 07:13:35 bass Exp $
+ * $Id: general.idl,v 1.16 2004/08/17 11:07:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -66,9 +66,7 @@ module corba {
 		wstring message;
 	};
 
-#if 0
-	abstract
-#endif
+//	abstract
 	interface IdentifierGeneratorServer {
 		Identifier_Transferable getGeneratedIdentifier(in unsigned short entity) raises (AMFICOMRemoteException);
 		IdentifierSeq_Transferable getGeneratedIdentifierRange(in unsigned short entity, in unsigned long size) raises (AMFICOMRemoteException);
