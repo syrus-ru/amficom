@@ -161,7 +161,7 @@ public class CableLinkTypeGeneralPanel extends GeneralPanel
 	{
 		try
 		{
-			if(MyUtil.validName(nameField.getText()))
+			if(MiscUtil.validName(nameField.getText()))
 				 linkType.name = nameField.getText();
 			else
 				return false;

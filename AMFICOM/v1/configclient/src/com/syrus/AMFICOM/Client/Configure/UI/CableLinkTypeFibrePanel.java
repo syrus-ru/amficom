@@ -222,9 +222,8 @@ public class CableLinkTypeFibrePanel extends GeneralPanel
 
 		if(clt != null)
 		{
-			DataSet ds = new DataSet(clt.cable_threads.iterator());
 			ObjectResourceSorter sorter = CableTypeThread.getDefaultSorter();
-			sorter.setDataSet(ds);
+			sorter.setDataSet(clt.cable_threads);
 			LinksList.setContents(sorter.default_sort());
 		}
 	}

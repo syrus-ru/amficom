@@ -52,7 +52,7 @@ public class ImportCatalogCommand extends VoidCommand
 				Equipment or = (Equipment )enum.nextElement();
 				System.out.println("Saving " + or.getName() + " (" + or.getId() + ")...");
 				if(disp != null)
-					disp.notify(new StatusMessageEvent("Saving " + or.getName() + " (" + or.getId() + ")..."));
+					disp.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Saving " + or.getName() + " (" + or.getId() + ")..."));
 				dataSource.SaveEquipment(or.getId());
 			}
 
@@ -63,7 +63,7 @@ public class ImportCatalogCommand extends VoidCommand
 				KIS or = (KIS )enum.nextElement();
 				System.out.println("Saving " + or.getName() + " (" + or.getId() + ")...");
 				if(disp != null)
-					disp.notify(new StatusMessageEvent("Saving " + or.getName() + " (" + or.getId() + ")..."));
+					disp.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Saving " + or.getName() + " (" + or.getId() + ")..."));
 				dataSource.SaveKIS(or.getId());
 			}
 
@@ -74,7 +74,7 @@ public class ImportCatalogCommand extends VoidCommand
 				Link or = (Link )enum.nextElement();
 				System.out.println("Saving " + or.getName() + " (" + or.getId() + ")...");
 				if(disp != null)
-					disp.notify(new StatusMessageEvent("Saving " + or.getName() + " (" + or.getId() + ")..."));
+					disp.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Saving " + or.getName() + " (" + or.getId() + ")..."));
 				dataSource.SaveLink(or.getId());
 			}
 
@@ -85,7 +85,7 @@ public class ImportCatalogCommand extends VoidCommand
 				CableLink or = (CableLink )enum.nextElement();
 				System.out.println("Saving " + or.getName() + " (" + or.getId() + ")...");
 				if(disp != null)
-					disp.notify(new StatusMessageEvent("Saving " + or.getName() + " (" + or.getId() + ")..."));
+					disp.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Saving " + or.getName() + " (" + or.getId() + ")..."));
 				dataSource.SaveCableLink(or.getId());
 			}
 
@@ -96,12 +96,12 @@ public class ImportCatalogCommand extends VoidCommand
 				TransmissionPath or = (TransmissionPath )enum.nextElement();
 				System.out.println("Saving " + or.getName() + " (" + or.getId() + ")...");
 				if(disp != null)
-					disp.notify(new StatusMessageEvent("Saving " + or.getName() + " (" + or.getId() + ")..."));
+					disp.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Saving " + or.getName() + " (" + or.getId() + ")..."));
 				dataSource.SavePath(or.getId());
 			}
 
 		if(disp != null)
-			disp.notify(new StatusMessageEvent("Finished!"));
+			disp.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Done!"));
 
 	}
 

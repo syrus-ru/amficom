@@ -15,7 +15,6 @@ import javax.swing.event.ListSelectionEvent;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
 
 import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
 import com.syrus.AMFICOM.Client.Resource.Network.CableLinkThread;
@@ -152,10 +151,9 @@ public class CableLinkFibrePanel extends GeneralPanel
 
 		if(cl != null)
 		{
-			DataSet ds = new DataSet(cl.threads.iterator());
 			ObjectResourceSorter sorter = CableLinkThread.getDefaultSorter();
-			sorter.setDataSet(ds);
-			this.LinksList.setContents(sorter.default_sort());
+			sorter.setDataSet(cl.threads);
+			LinksList.setContents(sorter.default_sort());
 		}
 	}
 

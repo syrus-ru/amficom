@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
@@ -136,7 +136,7 @@ public class SaveComponentDialog extends JDialog
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Не задана группа компонентов.", "Ошибка", JOptionPane.OK_OPTION);
 			return;
 		}
-		if (!MyUtil.validName(componentPanel.getProtoName()))
+		if (!MiscUtil.validName(componentPanel.getProtoName()))
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Некорректное название компонента.", "Ошибка", JOptionPane.OK_OPTION);
 			return;

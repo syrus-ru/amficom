@@ -4,7 +4,6 @@ import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTablePane;
 import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
 import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
 import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
 import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
@@ -13,6 +12,7 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import java.awt.Dimension;
 
 import java.text.SimpleDateFormat;
+import java.util.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -80,7 +80,7 @@ public class TransmissionPathFibrePanel extends GeneralPanel
 				new StubDisplayModel(
 					new String[] {"thread", "cable"},
 					new String[] {"Волокно", "Кабель"}),
-				new DataSet());
+				new ArrayList());
 	}
 
 	public ObjectResource getObjectResource()
@@ -93,13 +93,9 @@ public class TransmissionPathFibrePanel extends GeneralPanel
 		this.tp = (TransmissionPath )or;
 
 		if(tp != null)
-		{
-			LinksTable.setContents(new DataSet(tp.links.iterator()));
-		}
+			LinksTable.setContents(tp.links);
 		else
-		{
-			LinksTable.setContents(new DataSet());
-		}
+			LinksTable.setContents(new ArrayList());
 	}
 
 	public boolean modify()

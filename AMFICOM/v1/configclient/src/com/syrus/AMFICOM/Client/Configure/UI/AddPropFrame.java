@@ -212,14 +212,15 @@ public class AddPropFrame extends JDialog
 		this.ch_class = ch_class;
 		h = Pool.getHash(CharacteristicType.typ);
 
-		Hashtable used = new Hashtable(chars.size());
-		for (int i = 0; i < chars.size(); i++)
-		{
-			Vector el = (Vector)chars.get(i);
-			used.put(el.get(0), el);
-		}
 		if (h != null)
 		{
+			Hashtable used = new Hashtable(chars.size());
+			for (int i = 0; i < chars.size(); i++)
+			{
+				Vector el = (Vector)chars.get(i);
+				used.put(el.get(0), el);
+			}
+
 			for (Enumeration enum = h.elements(); enum.hasMoreElements();)
 			{
 				CharacteristicType type = (CharacteristicType)enum.nextElement();

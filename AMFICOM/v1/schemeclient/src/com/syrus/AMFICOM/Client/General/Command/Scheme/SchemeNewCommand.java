@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
 import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
 import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 
 public class SchemeNewCommand extends VoidCommand
@@ -77,7 +77,7 @@ public class SchemeNewCommand extends VoidCommand
 			if (ret == 0)
 				return;
 
-			if (!MyUtil.validName(sd.name))
+			if (!MiscUtil.validName(sd.name))
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Некорректное название схемы.", "Ошибка", JOptionPane.OK_OPTION);
 			else
 				break;

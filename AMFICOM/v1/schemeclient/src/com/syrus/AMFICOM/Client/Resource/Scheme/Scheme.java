@@ -69,7 +69,7 @@ public class Scheme extends StubResource implements Serializable
 	public Collection links = new ArrayList();
 	public Collection paths = new ArrayList();
 
-	public String path_conditions_id = "";
+//	public String path_conditions_id = "";
 
 	public long created = 0;
 	public long modified = 0;

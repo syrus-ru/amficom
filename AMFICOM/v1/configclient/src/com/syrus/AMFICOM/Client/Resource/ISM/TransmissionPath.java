@@ -63,7 +63,7 @@ public class TransmissionPath extends StubResource implements Serializable
 
 	public long modified;
 
-	public Collection links = new ArrayList();
+	public List links = new ArrayList();
 
 	public Map characteristics = new HashMap();
 
@@ -109,7 +109,7 @@ public class TransmissionPath extends StubResource implements Serializable
 
 		modified = transferable.modified;
 
-//		MyUtil.addToVector(link_ids, transferable.link_ids);
+//		MiscUtil.addToVector(link_ids, transferable.link_ids);
 
 		for(int i = 0; i < transferable.links.length; i++)
 			links.add( new TransmissionPathElement(transferable.links[i]));
@@ -312,7 +312,7 @@ public class TransmissionPath extends StubResource implements Serializable
 		monitored_element_id = (String )in.readObject();
 		domain_id = (String )in.readObject();
 		modified = in.readLong();
-		links = (Collection )in.readObject();
+		links = (List )in.readObject();
 		characteristics = (Map )in.readObject();
 
 		transferable = new TransmissionPath_Transferable();

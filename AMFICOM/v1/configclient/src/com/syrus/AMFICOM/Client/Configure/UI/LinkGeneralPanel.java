@@ -7,7 +7,7 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.Network.Link;
 import com.syrus.AMFICOM.Client.Resource.Network.Port;
 import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
@@ -327,7 +327,7 @@ public class LinkGeneralPanel extends GeneralPanel
 			return false;
 		}
 
-		if(MyUtil.validName(nameField.getText()))
+		if(MiscUtil.validName(nameField.getText()))
 			cl.name = nameField.getText();
 		else
 			return false;

@@ -7,7 +7,6 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.Resource.ConfigDataSourceImage;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
 import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
@@ -277,7 +276,7 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 				{
 					if (Pool.getHash(Domain.typ) != null)
 					{
-						DataSet dSet = new DataSet(Pool.getHash(Domain.typ));
+						Map dSet = Pool.getHash(Domain.typ);
 
 						ObjectResourceSorter sorter = Domain.getDefaultSorter();
 						sorter.setDataSet(dSet);
@@ -298,7 +297,7 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 				{
 					Domain d = (Domain )parent.getObject();
 
-					DataSet dSet = new DataSet(d.domains);
+					Map dSet = d.domains;
 
 					ObjectResourceSorter sorter = Domain.getDefaultSorter();
 					sorter.setDataSet(dSet);
@@ -419,7 +418,7 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();
 				Equipment eq = (Equipment )parent.getObject();
 
-				DataSet dSet = new DataSet(eq.ports.iterator());
+				Collection dSet = eq.ports;
 
 				ObjectResourceSorter sorter = Port.getDefaultSorter();
 				sorter.setDataSet(dSet);
@@ -437,7 +436,7 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();
 				Equipment eq = (Equipment )parent.getObject();
 
-				DataSet dSet = new DataSet(eq.cports.iterator());
+				Collection dSet = eq.cports;
 
 				ObjectResourceSorter sorter = CablePort.getDefaultSorter();
 				sorter.setDataSet(dSet);
@@ -666,7 +665,7 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 					Domain d = (Domain )node.getObject();
 					d.updateLocalFromTransferable();
 
-					DataSet dSet = new DataSet(d.domains);
+					Map dSet = d.domains;
 
 					ObjectResourceSorter sorter = Domain.getDefaultSorter();
 					sorter.setDataSet(dSet);

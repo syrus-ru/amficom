@@ -76,7 +76,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 			if (ret == 0)
 				return;
 
-			if (!MyUtil.validName(sd.name))
+			if (!MiscUtil.validName(sd.name))
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Некорректное название схемы.", "Ошибка", JOptionPane.OK_OPTION);
 			else
 				break;

@@ -188,7 +188,7 @@ public class CharacteristicsPanel extends JPanel
 			TreeDataSelectionEvent ev = (TreeDataSelectionEvent) ae;
 			if (ev.getDataClass().equals(String.class))
 			{
-				selected_type = (String)ev.selectedObject;
+				selected_type = (String)ev.getSelectedObject();
 				setPropsEditable(editable_property);
 			}
 			else

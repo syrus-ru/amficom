@@ -122,7 +122,7 @@ public class KIS extends Equipment
 	public void setLocalFromTransferable()
 	{
 		super.setLocalFromTransferable();
-		MyUtil.addToVector(access_port_ids, transferable.s_port_ids);
+		MiscUtil.addToVector(access_port_ids, transferable.s_port_ids);
 	}
 
 	public void setTransferableFromLocal()

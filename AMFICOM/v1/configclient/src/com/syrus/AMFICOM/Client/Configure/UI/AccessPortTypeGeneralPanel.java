@@ -19,7 +19,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
@@ -182,7 +182,7 @@ public class AccessPortTypeGeneralPanel extends GeneralPanel
 	{
 	 try
 	 {
-		if(MyUtil.validName(nameField.getText()))
+		if(MiscUtil.validName(nameField.getText()))
 			apt.name = nameField.getText();
 		else
 			return false;

@@ -201,11 +201,11 @@ public class KISGeneralPanel extends GeneralPanel
 
 		double d1 = 0.0;
 		try { d1 = Double.parseDouble(equipment.longitude); } catch(Exception ex) { }
-		d1 = MyUtil.fourdigits(d1);
+		d1 = MiscUtil.fourdigits(d1);
 		this.longitudeField.setText(String.valueOf(d1));
 		double d2 = 0.0;
 		try { d2 = Double.parseDouble(equipment.latitude); } catch(Exception ex) { }
-		d2 = MyUtil.fourdigits(d1);
+		d2 = MiscUtil.fourdigits(d1);
 		this.latitudeField.setText(String.valueOf(d2));
 
 //			this.longitudeField.setText(equipment.longitude);
@@ -250,9 +250,9 @@ public class KISGeneralPanel extends GeneralPanel
 		try
 		{
 			double d1 = Double.parseDouble(this.longitudeField.getText());
-			d1 = MyUtil.fourdigits(d1);
+			d1 = MiscUtil.fourdigits(d1);
 			double d2 = Double.parseDouble(this.latitudeField.getText());
-			d2 = MyUtil.fourdigits(d2);
+			d2 = MiscUtil.fourdigits(d2);
 			equipment.longitude = String.valueOf(d1);
 			equipment.latitude = String.valueOf(d2);
 		}
@@ -262,7 +262,7 @@ public class KISGeneralPanel extends GeneralPanel
 			return false;
 		}
 
-		if(MyUtil.validName(nameField.getText()))
+		if(MiscUtil.validName(nameField.getText()))
 			equipment.name = nameField.getText();
 		else
 			return false;

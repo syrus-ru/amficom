@@ -41,22 +41,17 @@
 package com.syrus.AMFICOM.Client.Resource;
 
 import java.util.*;
-import java.util.zip.*;
-import java.io.*;
 
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptor_Transferable;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
 
 public class ConfigDataSourceImage extends DataSourceImage
 {
 	protected ConfigDataSourceImage()
 	{
 	}
-	
+
 	public ConfigDataSourceImage(DataSourceInterface di)
 	{
 		super(di);
@@ -93,12 +88,12 @@ public class ConfigDataSourceImage extends DataSourceImage
 		Vector ids5 = filter(CableLink.typ, desc5, true);
 //		Vector ids6 = filter(TestPort.typ, desc6, true);
 		Vector ids6 = new Vector();
-		
-		if(	
-//		ids1.size() > 0 || 
-			ids2.size() > 0 || 
-			ids3.size() > 0 || 
-//			ids4.size() > 0 || 
+
+		if(
+//		ids1.size() > 0 ||
+			ids2.size() > 0 ||
+			ids3.size() > 0 ||
+//			ids4.size() > 0 ||
 			ids5.size() > 0)
 //			|| ids6.size() > 0)
 
@@ -167,6 +162,6 @@ public class ConfigDataSourceImage extends DataSourceImage
 			}
 		}
 	}
-	
+
 }
 

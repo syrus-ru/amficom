@@ -213,9 +213,9 @@ public class Equipment extends StubResource implements Serializable
 
 		modified = transferable.modified;
 
-		MyUtil.addToCollection(port_ids, transferable.port_ids);
-		MyUtil.addToCollection(cport_ids, transferable.cport_ids);
-		MyUtil.addToCollection(s_port_ids, transferable.s_port_ids);
+		MiscUtil.addToCollection(port_ids, transferable.port_ids);
+		MiscUtil.addToCollection(cport_ids, transferable.cport_ids);
+		MiscUtil.addToCollection(s_port_ids, transferable.s_port_ids);
 
 //		for(int i = 0; i < transferable.characteristics.length; i++)
 //			characteristics.put(transferable.characteristics[i].id, new Characteristic(transferable.characteristics[i]));

@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
 import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 
@@ -33,7 +33,7 @@ public class PathSaveCommand extends VoidCommand
 	public void execute()
 	{
 		SchemePath path = panel.getGraph().currentPath;
-		if (!MyUtil.validName(path.name) ||
+		if (!MiscUtil.validName(path.name) ||
 				path.end_device_id.equals("") ||
 				path.start_device_id.equals("") ||
 				path.links.isEmpty())

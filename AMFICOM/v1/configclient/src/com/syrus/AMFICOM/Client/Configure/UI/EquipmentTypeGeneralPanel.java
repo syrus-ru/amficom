@@ -217,7 +217,7 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 	{
 		try
 		{
-			if(MyUtil.validName(nameField.getText()))
+			if(MiscUtil.validName(nameField.getText()))
 				 equipmentType.name = nameField.getText();
 			else
 				return false;
