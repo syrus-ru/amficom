@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include <stdio.h>
+#include "crossplatf.h"
 #include "ResultSegment.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -30,7 +31,7 @@ ResultSegment::~ResultSegment() {
 	unsigned int i;
 	for (i = 0; i < this->parnumber; i++)
 		delete this->parameters[i];
-	delete[] this->parameters;	//added 15.08.2003
+	delete[] this->parameters;
 }
 
 ByteArray* ResultSegment::getMeasurementId () const {
@@ -71,7 +72,8 @@ void ResultSegment::createSegment() {
 	mile += i;
 
 	//parameters
-	segment1 = (char*)&this->parnumber;
+	uint32_t nparnumber = htonl(this->parnumber);
+	segment1 = (char*) &nparnumber;
 	for (i = 0; i < INTSIZE; i++)
 		this->data[i + mile] = segment1[i];
 	mile += i;
@@ -87,55 +89,34 @@ void ResultSegment::createSegment() {
 }
 
 void ResultSegment::parseSegment() {
-	unsigned int i, mile = 1, len;
-	char* buffer;
+	char* p = this->data + 1;
 
 	//measurement_id
-	len = *(unsigned int*)(this->data + mile);
-	mile += INTSIZE;
-
-	buffer = new char[len + 1];
-	for (i = 0; i < len; i++)
-		buffer[i] = this->data[i + mile];
-	buffer[len] = 0;
-	this->measurement_id = new ByteArray(len, buffer);
-	mile += i;
+	this->measurement_id = new ByteArray(p);
+	p += INTSIZE + this->measurement_id->getLength();
 
 	//parameters
-	this->parnumber = *(unsigned int*)(this->data + mile);
-	mile += INTSIZE;
+	this->parnumber = ntohl(*(uint32_t*) p);
+	p += INTSIZE;
 
 	this->parameters = new Parameter*[this->parnumber];
 	unsigned int parcount = 0;
-	while (mile < this->length) {
-
+	while (p < this->data + this->length) {
 		//name
-		len = *(unsigned int*)(this->data + mile);
-		mile += INTSIZE;
-
-		buffer = new char[len + 1];
-		for (i = 0; i < len; i++)
-			buffer[i] = this->data[i + mile];
-		buffer[len] = 0;
-		ByteArray* par_name = new ByteArray(len, buffer);
-		mile += i;
+		ByteArray* par_name = new ByteArray(p);
+		p += INTSIZE + par_name->getLength();
 
 		//value
-		len = *(unsigned int*)(this->data + mile);
-		mile += INTSIZE;
-
-		buffer = new char[len];
-		for (i = 0; i < len; i++)
-			buffer[i] = this->data[i + mile];
-		ByteArray* par_value = new ByteArray(len, buffer);
-		mile += i;
+		ByteArray* par_value = new ByteArray(p);
+		p += INTSIZE + par_value->getLength();
 
 		//parameter
 		this->parameters[parcount] = new Parameter(par_name, par_value);
-		parcount ++;
+		parcount++;
 	}
 	if (parcount != this->parnumber) {
 		printf("ERROR: real number of result parameters %u does not match to nominal %u\n", parcount, this->parnumber);
 		this->parnumber = parcount;
 	}
 }
+

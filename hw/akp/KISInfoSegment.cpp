@@ -54,19 +54,12 @@ void KISInfoSegment::createSegment() {
 }
 
 void KISInfoSegment::parseSegment() {
-	unsigned int i, mile = 1, len;
-	char* buffer;
+	char* p = this->data + 1;
 
 	//kis_id
-	len = *(unsigned int*)(this->data + mile);
-	mile += INTSIZE;
-
-	buffer = new char[len + 1];
-	for (i = 0; i < len; i++)
-		buffer[i] = this->data[i + mile];
-	buffer[len] = 0;
-	this->kis_id = new ByteArray(len, buffer);
-	mile += i;
+	this->kis_id = new ByteArray(p);
+	p += INTSIZE + this->kis_id->getLength();
 
 	//...?
 }
+
