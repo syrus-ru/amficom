@@ -1,5 +1,5 @@
 /*
- * $Id: SOCheckboxRenderer.java,v 1.1 2005/03/17 14:44:00 stas Exp $
+ * $Id: SOCheckboxRenderer.java,v 1.2 2005/03/21 09:49:19 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,18 +16,24 @@ import javax.swing.tree.TreeCellRenderer;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/17 14:44:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/21 09:49:19 $
  * @module generalclient_v1
  */
 
 public class SOCheckboxRenderer extends JCheckBox implements TreeCellRenderer {
+	private static final long serialVersionUID = 3258125877622683441L;
+	/**
+	 * @todo fill following fields from UIDefaults 
+	 */
 	public static int preferredHeight = 18;
 	public static Color selectedBackground = Color.BLUE;
 	public static Color selectedForeground = Color.WHITE;
+	
 	private boolean selected = false; 
 	private static SOCheckboxRenderer instance;
 	
 	private SOCheckboxRenderer() {
+		// empty
 	}
 	
 	public static SOCheckboxRenderer getInstance() {
@@ -50,7 +56,7 @@ public class SOCheckboxRenderer extends JCheckBox implements TreeCellRenderer {
 		
 		if (!selected) {
 			setForeground(node.getColor());
-			setBackground(Color.WHITE);
+			setBackground(tree.getBackground());
 		}
 		else {
 			setForeground(selectedForeground);

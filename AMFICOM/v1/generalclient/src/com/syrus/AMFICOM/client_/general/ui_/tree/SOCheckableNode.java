@@ -1,5 +1,5 @@
 /*
- * $Id: SOCheckableNode.java,v 1.2 2005/03/17 14:44:00 stas Exp $
+ * $Id: SOCheckableNode.java,v 1.3 2005/03/21 09:49:19 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import javax.swing.tree.TreeCellRenderer;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 14:44:00 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/21 09:49:19 $
  * @module generalclient_v1
  */
 
-public class SOCheckableNode extends SOMutableNode {
+public class SOCheckableNode extends SONode {
 	private static final long serialVersionUID = 3690756185380697907L;
 	private boolean isChecked;
 	private static SOCheckboxRenderer renderer = SOCheckboxRenderer.getInstance();

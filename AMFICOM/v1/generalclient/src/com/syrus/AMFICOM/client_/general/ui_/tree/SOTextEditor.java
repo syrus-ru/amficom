@@ -1,5 +1,5 @@
 /*
- * $Id: SOTextEditor.java,v 1.1 2005/03/17 14:44:00 stas Exp $
+ * $Id: SOTextEditor.java,v 1.2 2005/03/21 09:49:19 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,11 @@
 
 package com.syrus.AMFICOM.client_.general.ui_.tree;
 
-import java.util.EventObject;
-
 import javax.swing.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/17 14:44:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/21 09:49:19 $
  * @module generalclient_v1
  */
 

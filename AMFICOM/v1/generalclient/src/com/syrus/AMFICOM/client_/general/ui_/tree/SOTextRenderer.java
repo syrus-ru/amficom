@@ -1,5 +1,5 @@
 /*
- * $Id: SOTextRenderer.java,v 1.1 2005/03/17 14:44:00 stas Exp $
+ * $Id: SOTextRenderer.java,v 1.2 2005/03/21 09:49:19 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,14 +17,19 @@ import javax.swing.tree.TreeCellRenderer;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/17 14:44:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/21 09:49:19 $
  * @module generalclient_v1
  */
 
 public class SOTextRenderer extends JLabel implements TreeCellRenderer {
 	private static final long serialVersionUID = 3689072858814887473L;
+	
+	/**
+	 * @todo fill following fields from UIDefaults 
+	 */
 	public static Color selectedBackground = Color.BLUE;
 	public static Color selectedForeground = Color.WHITE;
+	
 	private boolean selected = false; 
 	private static SOTextRenderer instance;
 	
@@ -47,9 +52,11 @@ public class SOTextRenderer extends JLabel implements TreeCellRenderer {
 
 		if (!selected) {
 			setForeground(node.getColor());
+			setBackground(tree.getBackground());
 		}
 		else {
 			setForeground(selectedForeground);
+			setBackground(selectedBackground);
 		}
 		return this;
 	}
