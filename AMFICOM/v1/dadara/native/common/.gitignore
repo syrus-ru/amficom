@@ -20,3 +20,6 @@
 .cdtproject
 .project
 logs
+com_syrus_AMFICOM_analysis_CoreAnalysisManager.h
+com_syrus_AMFICOM_analysis_dadara_ModelFunction.h
+com_syrus_AMFICOM_analysis_dadara_ReflectogramEvent.h
