@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.2 2004/06/21 07:04:35 bass Exp $
+# $Id: Makefile.inc,v 1.3 2004/07/02 10:41:16 bob Exp $
 #
 # vim:set ft=make:
 #
@@ -109,3 +109,23 @@ JAR = $(JAVA_HOME)/bin/jar
 endif
 
 JAVA = $(JAVA_HOME)/bin/java
+
+PMD_JAR=$(shell find $(PMD_HOME) -name pmd-*.jar)
+PMD_JARS=$(shell find $(PMD_HOME) -name '*\.[jz][ai][pr]' -printf '%p:')
+
+PMD_RULES=rulesets/unusedcode.xml\
+	  rulesets/imports.xml\
+	  rulesets/basic.xml\
+	  rulesets/braces.xml\
+	  rulesets/clone.xml\
+	  rulesets/codesize.xml\
+	  rulesets/controlversial.xml\
+	  rulesets/coupling.xml\
+	  rulesets/design.xml\
+	  rulesets/favorites.xml\
+	  rulesets/junit.xml\
+	  rulesets/naming.xml\
+	  rulesets/newrules.xml\
+	  rulesets/scratchpad.xml\
+	  rulesets/strictexception.xml\
+	  rulesets/strings.xml
