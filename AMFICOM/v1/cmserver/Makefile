@@ -9,7 +9,7 @@ IDLDIR=../idl_v1/idl
 HOST=mongol
 SERVICE_NAME=mongol
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/servermisc.jar
+APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/servermisc.jar
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
