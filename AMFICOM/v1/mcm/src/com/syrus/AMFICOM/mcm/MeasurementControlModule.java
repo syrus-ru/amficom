@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.63 2005/03/15 16:22:47 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.64 2005/03/22 16:13:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,11 +11,13 @@ package com.syrus.AMFICOM.mcm;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
@@ -30,11 +32,11 @@ import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.OperationSort;
@@ -54,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/03/15 16:22:47 $
+ * @version $Revision: 1.64 $, $Date: 2005/03/22 16:13:41 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -242,6 +244,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		try {
 			tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(cc, true);
 			Log.debugMessage("Found " + tests.size() + " tests of status SCHEDULED", Log.DEBUGLEVEL07);
+			sortTestsByStartTime(tests);
 			testList.addAll(tests);
 		}
 		catch (ApplicationException ae) {
@@ -423,34 +426,59 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			testProcessor.start();
 		}
 	}
-	
-	protected static void addTest(Test test) {
-		Date startTime = test.getStartTime();
-    Log.debugMessage("Adding to testList test '" + test.getId() + "' with start time = " + startTime.toString(), Log.DEBUGLEVEL07);
-    if (testList.isEmpty())
-      testList.add(test);
-    else {
-			if (startTime.after(((Test)testList.get(testList.size() - 1)).getStartTime()))
-				testList.add(test);
-			else {
-				synchronized (testList) {
-					Test test1;
-					for (Iterator it = testList.iterator(); it.hasNext();) {
-						test1 = (Test)it.next();
-						if (startTime.before(test1.getStartTime())) {
-							testList.add(testList.indexOf(test1), test);
-							break;
-						}
-					}
-				}
+
+	private static class TestStartTimeComparator implements Comparator {
+
+		public int compare(Object o1, Object o2) {
+			if (o1 instanceof Test && o2 instanceof Test) {
+				return ((Test) o1).getStartTime().compareTo(((Test) o2).getStartTime());
 			}
-    }
+			throw new IllegalArgumentException("Objects must be of type Test. 1: " + o1.getClass().getName()
+					+ ", 2: " + o2.getClass().getName());
+		}
+	}
+
+	private static void sortTestsByStartTime(Collection tests) {
+		List testsL;
+		if (tests instanceof List)
+			testsL = (List) tests;
+		else
+			testsL = new LinkedList(tests);
+		Collections.sort(testsL, new TestStartTimeComparator());
+	}
+
+	protected static void addTests(List newTests) {
+		sortTestsByStartTime(newTests);
+
+		ListIterator testIt = testList.listIterator();
+		ListIterator newTestIt = newTests.listIterator();
+		Test test = testIt.hasNext() ? (Test) testIt.next() : null;
+		Test newTest = newTestIt.hasNext() ? (Test) newTestIt.next() : null;
+		while (newTest != null) {
+			while (test != null && test.getStartTime().before(newTest.getStartTime()))
+				test = testIt.hasNext() ? (Test) testIt.next() : null;
+
+			if (test != null)
+				testIt.previous();
+			testIt.add(newTest);
+
+			newTest.setStatus(TestStatus.TEST_STATUS_SCHEDULED);
+			try {
+				MeasurementStorableObjectPool.putStorableObject(newTest);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				// Never
+				Log.errorException(ioee);
+			}
+
+			newTest = newTestIt.hasNext() ? (Test) newTestIt.next() : null;
+		}
 
 		try {
-			test.updateStatus(TestStatus.TEST_STATUS_SCHEDULED, iAm.getUserId());
+			MeasurementStorableObjectPool.flush(true);
 		}
-		catch (UpdateObjectException uoe) {
-			Log.errorException(uoe);
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
 		}
 	}
 
@@ -459,11 +487,13 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		if (testList.contains(test)) {
 			Log.debugMessage("Test '" + id + "' found in testList -- removing and aborting ", Log.DEBUGLEVEL07);
 			testList.remove(test);
+			test.setStatus(TestStatus.TEST_STATUS_ABORTED);
 			try {
-				test.updateStatus(TestStatus.TEST_STATUS_ABORTED, iAm.getUserId());
+				MeasurementStorableObjectPool.putStorableObject(test);
+				MeasurementStorableObjectPool.flush(true);
 			}
-			catch (UpdateObjectException uoe) {
-				Log.errorException(uoe);
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
 			}
 		}
 		else {
