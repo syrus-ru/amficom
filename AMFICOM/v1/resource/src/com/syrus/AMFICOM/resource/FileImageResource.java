@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.3 2004/12/15 10:31:59 bass Exp $
+ * $Id: FileImageResource.java,v 1.4 2004/12/15 12:02:44 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.Date;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/12/15 10:31:59 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/15 12:02:44 $
  * @module resource_v1
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -48,19 +48,17 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 		this.fileName = fileName;
 	}
 
-	public static FileImageResource createInstance(final Date created,
-			final Date modified,
-			final Identifier creatorId,
-			final Identifier modifierId,
+	public static FileImageResource createInstance(final Identifier creatorId,
 			final String fileName) throws CreateObjectException {
 		try {
+			final Date created = new Date();
 			return new FileImageResource(
 				IdentifierPool.getGeneratedIdentifier(
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
 				created,
-				modified,
+				created,
 				creatorId,
-				modifierId,
+				creatorId,
 				fileName);
 		} catch (IllegalObjectEntityException ioee) {
 			throw new CreateObjectException("FileImageResource.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$

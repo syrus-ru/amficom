@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.2 2004/12/15 10:31:59 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.3 2004/12/15 12:02:44 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.util.zip.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/12/15 10:31:59 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/15 12:02:44 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -60,18 +60,16 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 * be set explicitly via {@link #setData(List)} or
 	 * {@link #setData0(List)}.
 	 */
-	public static SchemeImageResource createInstance(final Date created,
-			final Date modified,
-			final Identifier creatorId,
-			final Identifier modifierId) throws CreateObjectException {
+	public static SchemeImageResource createInstance(final Identifier creatorId) throws CreateObjectException {
 		try {
+			final Date created = new Date();
 			return new SchemeImageResource(
 				IdentifierPool.getGeneratedIdentifier(
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE),
 				created,
-				modified,
+				created,
 				creatorId,
-				modifierId);
+				creatorId);
 		} catch (IllegalObjectEntityException ioee) {
 			throw new CreateObjectException("SchemeImageResource.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
 		}
