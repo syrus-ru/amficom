@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.29 2005/02/18 08:51:34 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.30 2005/02/18 15:19:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/02/18 08:51:34 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2005/02/18 15:19:28 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -43,12 +44,13 @@ public abstract class StorableObjectPool {
 	
 	private short 	selfGroupCode;
 	
-	private Map 	flushedGroup;
+	private List savingObjects;	//List <Map <Short entityKey, Collection <StorableObject> levelEntitySavingObjects > >
+	private HashSet savingObjectIds; //HashSet <Identifier>
 	
 	private Collection deletedIds;
 
-	public StorableObjectPool() {
-		// empty
+	public StorableObjectPool(short selfGroupCode) {
+		this.selfGroupCode = selfGroupCode;
 	}
 
 	public StorableObjectPool(final Class cacheMapClass) {
@@ -407,32 +409,66 @@ public abstract class StorableObjectPool {
 			this.deletedIds.clear();
 		}
 
-		/*	All objects in pool */
-		HashSet savedObjects = new HashSet();
+		/* save changed objects with dependencies */
+		if (this.savingObjectIds != null)
+			this.savingObjectIds.clear();
+		else
+			this.savingObjectIds = new HashSet();
+		if (this.savingObjects != null)
+			this.savingObjects.clear();
+		else
+			this.savingObjects = new LinkedList();
+
+		/*	Prepare savingObjectsMap from all objects in pool */
 		for (final Iterator entityCodeIterator = this.objectPoolMap.keySet().iterator(); entityCodeIterator.hasNext();) {
 			final Short entityCode = (Short) entityCodeIterator.next();
 			LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 			if (objectPool != null) {
 				for (Iterator poolIterator = objectPool.iterator(); poolIterator.hasNext();)
-					this.saveWithDependencies((StorableObject) poolIterator.next(), savedObjects, force);
+					this.saveWithDependencies((StorableObject) poolIterator.next()/*, force*/, 0);
 			}
 			else
 				Log.errorMessage("StorableObjectPool.flushImpl | Cannot find object pool for entity code: '"
 						+ ObjectEntities.codeToString(entityCode) + "'");
 		}
 
+		/*	Save objects in order from savingObjectsMap */
+		int dependencyLevel;
+		Short entityKey;
+		Map levelSavingObjectsMap;
+		Collection levelEntitySavingObjects;
+		for (ListIterator levelIt = this.savingObjects.listIterator(this.savingObjects.size()); levelIt.hasPrevious();) {
+			dependencyLevel = levelIt.previousIndex();
+			levelSavingObjectsMap = (Map) levelIt.previous();
+
+			if (levelSavingObjectsMap != null) {
+				for (Iterator entityIt = levelSavingObjectsMap.keySet().iterator(); entityIt.hasNext();) {
+					entityKey = (Short) entityIt.next();
+					levelEntitySavingObjects = (Collection) levelSavingObjectsMap.get(entityKey);
+
+					if (levelEntitySavingObjects != null) {
+						this.saveStorableObjects(entityKey.shortValue(), levelEntitySavingObjects, force);
+					}
+					else
+						Log.errorMessage("Cannot find levelEntitySavingObjects for entity code " + entityKey + ", dependency level " + dependencyLevel);
+				}
+			}
+			else
+				Log.errorMessage("Cannot find levelSavingMap for dependency level " + dependencyLevel);
+
+		}
 	}
 
-	private void saveWithDependencies(StorableObject storableObject, HashSet savedObjects, boolean force)
+	private void saveWithDependencies(StorableObject storableObject/*, boolean force*/, int dependencyLevel)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException,
 				IllegalDataException {
 		Identifier id = storableObject.getId();
-		if (savedObjects.contains(id))
+		if (this.savingObjectIds.contains(id))
 			return;
 
-		savedObjects.add(id);
+		this.savingObjectIds.add(id);
 
 		Collection dependencies = storableObject.getDependencies();
 		StorableObject dependencyObject = null;
@@ -449,11 +485,25 @@ public abstract class StorableObjectPool {
 					throw new IllegalDataException("dependency for object '" + id + "' neither Identifier nor StorableObject");
 
 			if (dependencyObject != null)
-				this.saveWithDependencies(dependencyObject, savedObjects, force);
+				this.saveWithDependencies(dependencyObject/*, force*/, dependencyLevel + 1);
 		}
 
-		if (storableObject.isChanged())
-			this.saveStorableObjects(id.getMajor(), Collections.singleton(storableObject), force);
+		if (storableObject.isChanged()) {
+			Map levelSavingObjectsMap = (Map) this.savingObjects.get(dependencyLevel);
+			if (levelSavingObjectsMap == null) {
+				levelSavingObjectsMap = new HashMap();
+				this.savingObjects.add(dependencyLevel, levelSavingObjectsMap);
+			}
+			Short entityKey = new Short(storableObject.getId().getMajor());
+			Collection levelEntitySavingObjects = (Collection) levelSavingObjectsMap.get(entityKey);
+			if (levelEntitySavingObjects == null) {
+				levelEntitySavingObjects = new HashSet();
+				levelSavingObjectsMap.put(entityKey, levelEntitySavingObjects);
+			}
+			levelEntitySavingObjects.add(storableObject);
+
+//			this.saveStorableObjects(id.getMajor(), Collections.singleton(storableObject), force);
+		}
 	}
 
 	private StorableObject getStorableObjectExt(Identifier id) throws DatabaseException, CommunicationException {
@@ -461,10 +511,10 @@ public abstract class StorableObjectPool {
 		if (groupCode == this.selfGroupCode)
 			return this.getStorableObjectImpl(id, false);
 
-		return this.getStorableObjectOfGroup(id, false, groupCode);
+		return getStorableObjectOfGroup(id, false, groupCode);
 	}
 
-	private StorableObject getStorableObjectOfGroup(Identifier id, boolean useLoader, short groupCode) throws DatabaseException, CommunicationException {
+	protected static StorableObject getStorableObjectOfGroup(Identifier id, boolean useLoader, short groupCode) throws DatabaseException, CommunicationException {
 		final String groupName = ObjectGroupEntities.codeToString(groupCode).replaceAll("Group$", "");
 		String className = "com.syrus.AMFICOM." 
 			+ groupName.toLowerCase() + "." 
