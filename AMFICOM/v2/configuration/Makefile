@@ -34,11 +34,13 @@ mach:	corba
 	$(JAVAC) $(JIKES_OPTIONS) $(JAVAC_OPTIONS) -classpath $(CLASSES):$(APPCLASSPATH) \
 		$(SRC)/com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
 		$(SRC)/com/syrus/AMFICOM/configuration/DomainMember.java \
+		$(SRC)/com/syrus/AMFICOM/configuration/CharacteristicType.java \
+		$(SRC)/com/syrus/AMFICOM/configuration/CharacteristicType_Database.java \
 		$(SRC)/com/syrus/AMFICOM/configuration/Characteristic.java \
-		$(SRC)/com/syrus/AMFICOM/configuration/Characteristic_Database.java \
+		$(SRC)/com/syrus/AMFICOM/configuration/Characteristic_Database.java #\
 		$(SRC)/com/syrus/AMFICOM/configuration/KIS.java \
 		$(SRC)/com/syrus/AMFICOM/configuration/KIS_Database.java \ 
-		$(SRC)/com/syrus/AMFICOM/configuration/MonitoredElement.java \
+#		$(SRC)/com/syrus/AMFICOM/configuration/MonitoredElement.java \
 		$(SRC)/com/syrus/AMFICOM/configuration/MonitoredElement_Database.java
 	touch mach
 

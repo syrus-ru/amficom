@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.ObjectEntities;
+//import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 public class Characteristic_Database extends StorableObject_Database  {
 
@@ -32,10 +33,11 @@ public class Characteristic_Database extends StorableObject_Database  {
 			+ "creator_id, "
 			+ "modifier_id, "
 			+ "type_id, "
+//			+ "sort, "
 			+ "name, "
 			+ "description,"
 			+ "value"
-			+ " FROM " + ObjectEntities.ME_ENTITY
+			+ " FROM " + ObjectEntities.CHARACTERISTIC_ENTITY
 			+ " WHERE id = " + c_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -49,6 +51,7 @@ public class Characteristic_Database extends StorableObject_Database  {
 																		 new Identifier(resultSet.getLong("creator_id")),
 																		 new Identifier(resultSet.getLong("modifier_id")),
 																		 new Identifier(resultSet.getLong("type_id")),
+//																		 resultSet.getInt("sort"),
 																		 resultSet.getString("name"),
 																		 resultSet.getString("description"),
 																		 resultSet.getString("value"));
@@ -104,7 +107,8 @@ public class Characteristic_Database extends StorableObject_Database  {
 
 	private void insertCharacteristic(Characteristic characteristic) throws Exception {
 		String c_id_str = characteristic.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.ME_ENTITY
+		String sql = "INSERT INTO " + ObjectEntities.CHARACTERISTIC_ENTITY
+//			+ " (id, created, modified, creator_id, modifier_id, type_id, sort, name, description, value)"
 			+ " (id, created, modified, creator_id, modifier_id, type_id, name, description, value)"
 			+ " VALUES ("
 			+ c_id_str + ", "
@@ -112,7 +116,8 @@ public class Characteristic_Database extends StorableObject_Database  {
 			+ DatabaseDate.toUpdateSubString(characteristic.getModified()) + ", "
 			+ characteristic.getCreatorId().toString() + ", "
 			+ characteristic.getModifierId().toString() + ", "
-			+ characteristic.getTypeId().toString() + ", '"
+			+ characteristic.getTypeId().toString() + ", "
+//			+ Integer.toString(characteristic.getSort().value()) + ", '"
 			+ characteristic.getName() + "', '"
 			+ characteristic.getDescription() + "', '"
 			+ characteristic.getValue()

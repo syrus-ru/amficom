@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.general;
 
 public class ObjectEntities {
 	/*	Object Types	*/
+	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteristicType";
 	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
 	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";
 	public static final String MNTTYPPARTYPLINK_ENTITY = "MntTypParTypLink";
@@ -41,10 +42,11 @@ public class ObjectEntities {
 	public static final short UNKNOWN_ENTITY_CODE = 0x0000;
 
 	/*	Object Types 1 -- 128	*/
-	public static final short PARAMETERTYPE_ENTITY_CODE = 0x0001;
-	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0002;
-	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0003;
-	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0004;
+	public static final short CHARACTERISTICTYPE_ENTITY_CODE = 0x0001;
+	public static final short PARAMETERTYPE_ENTITY_CODE = 0x0002;
+	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0003;
+	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0004;
+	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0005;
 
 	/*	Administration 129 -- 256	*/
 	public static final short PERMATTR_ENTITY_CODE = 0x0081;
