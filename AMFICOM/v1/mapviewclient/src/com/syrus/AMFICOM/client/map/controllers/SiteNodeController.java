@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeController.java,v 1.2 2005/01/14 15:03:13 krupenn Exp $
+ * $Id: SiteNodeController.java,v 1.3 2005/02/03 16:24:01 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,45 +13,49 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNode;
 
-import com.syrus.AMFICOM.map.SiteNodeType;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 
 /**
- * элемент карты - узел 
- * 
- * 
- * 
- * @version $Revision: 1.2 $, $Date: 2005/01/14 15:03:13 $
- * @module
+ *  онтроллер сетевого узла.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.3 $, $Date: 2005/02/03 16:24:01 $
+ * @module mapviewclient_v1
  */
 public class SiteNodeController extends AbstractNodeController
 {
-	private static SiteNodeController instance = null;
-	
 	private static final String PROPERTY_PANE_CLASS_NAME = 
 			"com.syrus.AMFICOM.Client.Map.Props.MapSitePane";
 
+	/**
+	 * Instance
+	 */
+	private static SiteNodeController instance = null;
+	
+	/**
+	 * ѕолучить им€ класса панели, описывающей свойства кабельного пути.
+	 * @return им€ класса
+	 */
 	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
 	}
+
+	/**
+	 * Private constructor.
+	 */
 	protected SiteNodeController()
-	{
+	{// empty
 	}
 	
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapElementController getInstance()
 	{
 		if(instance == null)
@@ -59,11 +63,14 @@ public class SiteNodeController extends AbstractNodeController
 		return instance;
 	}
 
-	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
+	/**
+	 * {@inheritDoc}
+	 */
+	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		if(!(me instanceof SiteNode))
+		if(!(mapElement instanceof SiteNode))
 			return;
-		SiteNode site = (SiteNode)me;
+		SiteNode site = (SiteNode)mapElement;
 
 		if(!isElementVisible(site, visibleBounds))
 			return;

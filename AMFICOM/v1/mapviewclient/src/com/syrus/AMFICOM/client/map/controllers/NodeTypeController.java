@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.6 2005/01/14 15:03:13 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.7 2005/02/03 16:24:01 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,87 +13,46 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNodeType;
-
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
+
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 
+import java.util.Collections;
 import java.util.HashMap;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.*;
+import java.util.List;
 
 /**
- * элемент карты - узел 
- * 
- * 
- * 
- * @version $Revision: 1.6 $, $Date: 2005/01/14 15:03:13 $
- * @module
+ * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.7 $, $Date: 2005/02/03 16:24:01 $
+ * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController
 {
-	private static NodeTypeController instance = null;
-	
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
-	protected NodeTypeController()
-	{
-	}
-	
-	public static MapElementController getInstance()
-	{
-		if(instance == null)
-			instance = new NodeTypeController();
-		return instance;
-	}
-
-	public boolean isSelectionVisible(MapElement me)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
-	{
-		throw new UnsupportedOperationException();
-	}
-
 	/**
-	 * точка находитс€ на фрагменте, если она находитс€ в рамках линий выделени€
+	 * Instance.
 	 */
-	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
-	{
-		throw new UnsupportedOperationException();
-	}
+	private static NodeTypeController instance = null;
 
+	/** ’эш-таблица имен пиктограмм дл€ предустановленных типов узлов. */
 	private static java.util.Map imageFileNames = new HashMap();
 	
 	static
@@ -106,11 +65,88 @@ public class NodeTypeController extends AbstractNodeController
 		imageFileNames.put(SiteNodeType.CABLE_INLET, "images/cableinlet.gif");
 	}
 
+	/**
+	 * ѕолучить им€ класса панели, описывающей свойства кабельного пути.
+	 * @return им€ класса
+	 */
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
+	
+	/**
+	 * Private constructor.
+	 */
+	protected NodeTypeController()
+	{// empty
+	}
+	
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
+	public static MapElementController getInstance()
+	{
+		if(instance == null)
+			instance = new NodeTypeController();
+		return instance;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * Suppress since SiteNodeType is not really a Map Element
+	 */
+	public boolean isSelectionVisible(MapElement me)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * Suppress since SiteNodeType is not really a Map Element
+	 */
+	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * Suppress since SiteNodeType is not really a Map Element
+	 */
+	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * Suppress since SiteNodeType is not really a Map Element
+	 */
+	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * ѕолучить им€ пиктограммы по кодовому имени дл€ предустановленного типа 
+	 * сетевого узла.
+	 * @param codename кодовое им€
+	 * @return им€ пиктограммы
+	 */
 	public static String getImageFileName(String codename)
 	{
 		return (String )imageFileNames.get(codename);
 	}
 
+	/**
+	 * ѕолучить пиктограмму по кодовому имени дл€ предустановленного типа 
+	 * сетевого узла. ≈сли пиктограмма не существует, она создаетс€.
+	 * @param userId пользователь
+	 * @param codename кодовое им€
+	 * @param filename файл пиктограммы
+	 * @return »дентификатор пиктограммы ({@link com.syrus.AMFICOM.resource.AbstractImageResource})
+	 */
 	public static Identifier getImageId(
 			Identifier userId,
 			String codename, 
@@ -158,6 +194,13 @@ public class NodeTypeController extends AbstractNodeController
 		}
 	}
 
+	/**
+	 * ѕолучить тип сетевого узла по кодовому имени. ¬ случае, если такого 
+	 * типа нет, создаетс€ новый.
+	 * @param userId пользователь
+	 * @param codename кодовое им€
+	 * @return тип сетевого узла
+	 */
 	public static SiteNodeType getSiteNodeType(
 			Identifier userId,
 			String codename)
@@ -206,22 +249,28 @@ public class NodeTypeController extends AbstractNodeController
 		}
 	}
 
-	static List topologicalProtos = new LinkedList();
-
+	/**
+	 * ѕолучить список всех типов сетевых узлов.
+	 * @param aContext контекст приложени€
+	 * @return список типов сетевых узлов &lt;{@link SiteNodeType}&gt;
+	 */
 	public static List getTopologicalProtos(ApplicationContext aContext)
 	{
-		SiteNodeType mnpe = null;
+		List topologicalProtos = Collections.EMPTY_LIST;
 
-		topologicalProtos.clear();
-		
 		Identifier creatorId = new Identifier(
 			aContext.getSessionInterface().getAccessIdentifier().user_id);
 
-		mnpe = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.ATS);
-		mnpe = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.BUILDING);
-		mnpe = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.PIQUET);
-		mnpe = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.WELL);
-		mnpe = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET);
+		// make sure SiteNodeType.ATS is created
+		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.ATS);
+		// make sure SiteNodeType.BUILDING is created
+		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.BUILDING);
+		// make sure SiteNodeType.PIQUET is created
+		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.PIQUET);
+		// make sure SiteNodeType.WELL is created
+		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.WELL);
+		// make sure SiteNodeType.CABLE_INLET is created
+		NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET);
 
 		StorableObjectCondition pTypeCondition = new StringFieldCondition(
 			"",
@@ -230,14 +279,16 @@ public class NodeTypeController extends AbstractNodeController
 
 		try
 		{
-			List list2 =
+			topologicalProtos =
 				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 
-			for(Iterator it = list2.iterator(); it.hasNext();)
+			topologicalProtos.remove(getDefaultUnboundProto(creatorId));
+
+			for(Iterator it = topologicalProtos.iterator(); it.hasNext();)
 			{
-				mnpe = (SiteNodeType )it.next();
-				if(mnpe.isTopological())
-					topologicalProtos.add(mnpe);
+				SiteNodeType mnpe = (SiteNodeType )it.next();
+				if(!mnpe.isTopological())
+					it.remove();
 			}
 		}
 		catch(Exception e)
@@ -245,10 +296,14 @@ public class NodeTypeController extends AbstractNodeController
 			e.printStackTrace();
 		}
 		
-		topologicalProtos.remove(getDefaultUnboundProto(creatorId));
 		return topologicalProtos;
 	}
 
+	/**
+	 * ѕолучить тип неприв€занного сетевого узла ({@link SiteNodeType#UNBOUND}).
+	 * @param creatorId пользователь
+	 * @return тип сетевого узла
+	 */
 	public static SiteNodeType getDefaultUnboundProto(Identifier creatorId)
 	{
 		return NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.UNBOUND);

@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.5 2005/02/02 09:05:10 krupenn Exp $
+ * $Id: MarkController.java,v 1.6 2005/02/03 16:24:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,38 +33,45 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 /**
- * элемент карты - узел 
- * 
- * 
- * 
- * @version $Revision: 1.5 $, $Date: 2005/02/02 09:05:10 $
- * @module
+ * Контроллер метки.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.6 $, $Date: 2005/02/03 16:24:01 $
+ * @module mapviewclient_v1
  */
 public final class MarkController extends AbstractNodeController
 {
+	/** Имя пиктограммы. */
 	public static final String IMAGE_NAME = "mark";
+	/** Пиктограмма. */
 	public static final String IMAGE_PATH = "images/mark.gif";
 
-//	static
-//	{
-//		MapPropertiesManager.setOriginalImage(IMAGE_NAME, new ImageIcon(IMAGE_PATH).getImage());
-//	}
-
+	/**
+	 * Instance.
+	 */
 	private static MarkController instance = null;
 
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
+	/**
+	 * Получить имя класса панели, описывающей свойства кабельного пути.
+	 * @return имя класса
+	 */
 	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 
+	/**
+	 * Private constructor.
+	 */
 	private MarkController()
-	{
+	{// empty
 	}
 	
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapElementController getInstance()
 	{
 		if(instance == null)
@@ -72,27 +79,38 @@ public final class MarkController extends AbstractNodeController
 		return instance;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Image getImage(AbstractNode node)
 	{
 		Identifier creatorId = getLogicalNetLayer().getUserId();
 
-		Identifier imageId = NodeTypeController.getImageId(creatorId, IMAGE_NAME, IMAGE_PATH);
+		Identifier imageId = NodeTypeController.getImageId(
+			creatorId, 
+			MarkController.IMAGE_NAME, 
+			MarkController.IMAGE_PATH);
 		if(MapPropertiesManager.getImage(imageId) == null)
-			MapPropertiesManager.setOriginalImage(imageId, new ImageIcon(IMAGE_PATH).getImage());
+			MapPropertiesManager.setOriginalImage(
+				imageId, 
+				new ImageIcon(MarkController.IMAGE_PATH).getImage());
 		node.setImageId(imageId);
 		return super.getImage(node);
 	}
 
-	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
+	/**
+	 * {@inheritDoc}
+	 */
+	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		if(!(me instanceof Mark))
+		if(!(mapElement instanceof Mark))
 			return;
-		Mark mark = (Mark )me;
+		Mark mark = (Mark )mapElement;
 
 		if(!isElementVisible(mark, visibleBounds))
 			return;
 		
-		super.paint(me, g, visibleBounds);
+		super.paint(mapElement, g, visibleBounds);
 
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 
@@ -129,6 +147,11 @@ public final class MarkController extends AbstractNodeController
 				p.y - 2 );
 	}
 
+	/**
+	 * Пересчитать расстояние от начального узла фрагмента, на котором
+	 * находится метка, до метки.
+	 * @param mark метка
+	 */
 	public void updateSizeInDoubleLt(Mark mark)
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
@@ -150,7 +173,9 @@ public final class MarkController extends AbstractNodeController
 	}
 
 	/**
-	 * Передвинуть в точку на заданной расстоянии от начала
+	 * Передвинуть в точку на заданном расстоянии от начала линии.
+	 * @param mark метка
+	 * @param topologicalDistance топологическая дистанция
 	 */
 	public void moveToFromStartLt(Mark mark, double topologicalDistance)
 	{
@@ -193,8 +218,10 @@ public final class MarkController extends AbstractNodeController
 	}
 
 	/**
-	 * adjust marker position accurding to topological distance relative
-	 * to current node link (which comprises startNode and endNode)
+	 * Adjust marker position accurding to topological distance relative
+	 * to current node link (which comprises startNode and endNode).
+	 * @param mark метка
+	 * @param screenDistance экранное расстояние
 	 */
 	public void adjustPosition(Mark mark, double screenDistance)
 	{

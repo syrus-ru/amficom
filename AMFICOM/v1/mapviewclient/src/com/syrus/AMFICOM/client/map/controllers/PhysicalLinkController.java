@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.5 2005/02/02 08:58:10 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.6 2005/02/03 16:24:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,36 +33,43 @@ import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 
 import java.util.Iterator;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.Client.Map.Controllers.AbstractLinkController;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
 
 /**
- * линейный элемента карты 
- * 
- * 
- * 
- * @version $Revision: 1.5 $, $Date: 2005/02/02 08:58:10 $
- * @module
+ * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.6 $, $Date: 2005/02/03 16:24:01 $
+ * @module mapviewclient_v1
  */
 public class PhysicalLinkController extends AbstractLinkController
 {
-	private static PhysicalLinkController instance = null;
-	
 	private static final String PROPERTY_PANE_CLASS_NAME = 
 			"com.syrus.AMFICOM.Client.Map.Props.MapLinkPane";
 
+	/**
+	 * Instance
+	 */
+	private static PhysicalLinkController instance = null;
+
+	/**
+	 * Получить имя класса панели, описывающей свойства кабельного пути.
+	 * @return имя класса
+	 */
 	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 
+	/**
+	 * Private constructor.
+	 */
 	protected PhysicalLinkController()
-	{
+	{// empty
 	}
 	
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapElementController getInstance()
 	{
 		if(instance == null)
@@ -70,12 +77,15 @@ public class PhysicalLinkController extends AbstractLinkController
 		return instance;
 	}
 
-	public String getToolTipText(MapElement me)
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getToolTipText(MapElement mapElement)
 	{
-		if(! (me instanceof PhysicalLink))
+		if(! (mapElement instanceof PhysicalLink))
 			return null;
 
-		PhysicalLink link = (PhysicalLink )me;
+		PhysicalLink link = (PhysicalLink )mapElement;
 		
 		String s1 = link.getName();
 		String s2 = "";
@@ -113,29 +123,36 @@ public class PhysicalLinkController extends AbstractLinkController
 		return s1 + s2 + s3;
 	}
 
-	public boolean isSelectionVisible(MapElement me)
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isSelectionVisible(MapElement mapElement)
 	{
-		if(! (me instanceof PhysicalLink))
+		if(! (mapElement instanceof PhysicalLink))
 			return false;
 
-		PhysicalLink link = (PhysicalLink )me;
+		PhysicalLink link = (PhysicalLink )mapElement;
 
 		return link.isSelected() 
 			|| link.isSelectionVisible();
 	}
 
-	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isElementVisible(MapElement mapElement, Rectangle2D.Double visibleBounds)
 	{
-		if(! (me instanceof PhysicalLink))
+		if(! (mapElement instanceof PhysicalLink))
 			return false;
 
-		PhysicalLink link = (PhysicalLink )me;
+		PhysicalLink link = (PhysicalLink )mapElement;
 		
 		boolean vis = false;
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{
 			NodeLink nodelink = (NodeLink )it.next();
-			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer().getMapViewController().getController(nodelink);
+			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer()
+				.getMapViewController().getController(nodelink);
 			if(nlc.isElementVisible(nodelink, visibleBounds))
 			{
 				vis = true;
@@ -145,12 +162,15 @@ public class PhysicalLinkController extends AbstractLinkController
 		return vis;
 	}
 
-	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
+	/**
+	 * {@inheritDoc}
+	 */
+	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		if(! (me instanceof PhysicalLink))
+		if(! (mapElement instanceof PhysicalLink))
 			return;
 
-		PhysicalLink link = (PhysicalLink )me;
+		PhysicalLink link = (PhysicalLink )mapElement;
 		
 		if(!isElementVisible(link, visibleBounds))
 			return;
@@ -168,6 +188,15 @@ public class PhysicalLinkController extends AbstractLinkController
 		paint(link, g, visibleBounds, str, color, false);
 	}
 
+	/**
+	 * Отрисовать линию с заданным стилем и цветом.
+	 * @param link линия
+	 * @param g графический контекст
+	 * @param visibleBounds видимая область
+	 * @param stroke стиль линии
+	 * @param color цвет линии
+	 * @param selectionVisible рисовать рамку выделения
+	 */
 	public void paint(
 			PhysicalLink link,
 			Graphics g, 
@@ -191,7 +220,8 @@ public class PhysicalLinkController extends AbstractLinkController
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{
 			NodeLink nodelink = (NodeLink )it.next();
-			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer().getMapViewController().getController(nodelink);
+			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer()
+				.getMapViewController().getController(nodelink);
 			nlc.paint(nodelink, g, visibleBounds, stroke, color);
 			
 			if(showName)
@@ -233,30 +263,21 @@ public class PhysicalLinkController extends AbstractLinkController
 		}
 	}
 
-	public void updateLengthLt(PhysicalLink link)
-	{
-		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
-		{
-			NodeLink nodeLink = (NodeLink )it.next();
-			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer().getMapViewController().getController(nodeLink);
-			nlc.updateLengthLt(nodeLink);
-		}
-	}
-
 	/**
-	 * точка находится на фрагменте, если она находится в рамках линий выделения
+	 * {@inheritDoc}
 	 */
-	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
+	public boolean isMouseOnElement(MapElement mapElement, Point currentMousePoint)
 	{
-		if(! (me instanceof PhysicalLink))
+		if(! (mapElement instanceof PhysicalLink))
 			return false;
 
-		PhysicalLink link = (PhysicalLink )me;
+		PhysicalLink link = (PhysicalLink )mapElement;
 		
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{
 			NodeLink nl = (NodeLink )it.next();
-			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer().getMapViewController().getController(nl);
+			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer()
+				.getMapViewController().getController(nl);
 			if(nlc.isMouseOnElement(nl, currentMousePoint))
 				return true;
 		}
@@ -264,128 +285,144 @@ public class PhysicalLinkController extends AbstractLinkController
 	}
 
 	/**
-	 * Получить толщину линии
+	 * Пересчитать топологическую длину линии, складывающуюся из фрагментов,
+	 * из которых состоит линия.
+	 * @param link линия
 	 */
-	public int getLineSize (MapElement link)
+	public void updateLengthLt(PhysicalLink link)
 	{
-		if(! (link instanceof PhysicalLink))
+		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
+		{
+			NodeLink nodeLink = (NodeLink )it.next();
+			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer()
+				.getMapViewController().getController(nodeLink);
+			nlc.updateLengthLt(nodeLink);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getLineSize (MapElement mapElement)
+	{
+		if(! (mapElement instanceof PhysicalLink))
 			return MapPropertiesManager.getThickness();
 
-		PhysicalLink plink = (PhysicalLink )link;
+		PhysicalLink plink = (PhysicalLink )mapElement;
 
-		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_THICKNESS);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+			getLogicalNetLayer().getUserId(), 
+			AbstractLinkController.ATTRIBUTE_THICKNESS);
+		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea != null)
 			return Integer.parseInt(ea.getValue());
-		else
-		{
-			LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-			return ltc.getLineSize((PhysicalLinkType )plink.getType());
-		}
+
+		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
+		return ltc.getLineSize((PhysicalLinkType )plink.getType());
 	}
 
 	/**
-	 * Получить вид линии
+	 * {@inheritDoc}
 	 */
-	public String getStyle (MapElement link)
+	public String getStyle (MapElement mapElement)
 	{
-		if(! (link instanceof PhysicalLink))
+		if(! (mapElement instanceof PhysicalLink))
 			return MapPropertiesManager.getStyle();
 
-		PhysicalLink plink = (PhysicalLink )link;
+		PhysicalLink plink = (PhysicalLink )mapElement;
 
-		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_STYLE);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+			getLogicalNetLayer().getUserId(), 
+			AbstractLinkController.ATTRIBUTE_STYLE);
+		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea != null)
 			return ea.getValue();
-		else
-		{
-			LinkTypeController ltc = (LinkTypeController)com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getInstance();
-			return ltc.getStyle((PhysicalLinkType )plink.getType());
-		}
+
+		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
+		return ltc.getStyle((PhysicalLinkType )plink.getType());
 	}
 
 	/**
-	 * Получить стиль линии
+	 * {@inheritDoc}
 	 */
-	public Stroke getStroke (MapElement link)
+	public Stroke getStroke (MapElement mapElement)
 	{
-		if(! (link instanceof PhysicalLink))
+		if(! (mapElement instanceof PhysicalLink))
 			return MapPropertiesManager.getStroke();
 
-		PhysicalLink plink = (PhysicalLink )link;
+		PhysicalLink plink = (PhysicalLink )mapElement;
 
-		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_STYLE);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+			getLogicalNetLayer().getUserId(), 
+			AbstractLinkController.ATTRIBUTE_STYLE);
+		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea != null)
 			return LineComboBox.getStrokeByType(ea.getValue());
-		else
-		{
-			LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-			return ltc.getStroke((PhysicalLinkType )plink.getType());
-		}
+
+		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
+		return ltc.getStroke((PhysicalLinkType )plink.getType());
 	}
 
 	/**
-	 * Получить цвет
+	 * {@inheritDoc}
 	 */
-	public Color getColor(MapElement link)
+	public Color getColor(MapElement mapElement)
 	{
-		if(! (link instanceof PhysicalLink))
+		if(! (mapElement instanceof PhysicalLink))
 			return MapPropertiesManager.getColor();
 
-		PhysicalLink plink = (PhysicalLink )link;
+		PhysicalLink plink = (PhysicalLink )mapElement;
 
-		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_COLOR);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+			getLogicalNetLayer().getUserId(), 
+			AbstractLinkController.ATTRIBUTE_COLOR);
+		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea != null)
 			return new Color(Integer.parseInt(ea.getValue()));
-		else
-		{
-			LinkTypeController ltc = (LinkTypeController)com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getInstance();
-			return ltc.getColor((PhysicalLinkType )plink.getType());
-		}
+
+		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
+		return ltc.getColor((PhysicalLinkType )plink.getType());
 	}
 
 	/**
-	 * получить цвет при наличии сигнала тревоги
+	 * {@inheritDoc}
 	 */
-	public Color getAlarmedColor(MapElement link)
+	public Color getAlarmedColor(MapElement mapElement)
 	{
-		if(! (link instanceof PhysicalLink))
+		if(! (mapElement instanceof PhysicalLink))
 			return MapPropertiesManager.getAlarmedColor();
 
-		PhysicalLink plink = (PhysicalLink )link;
+		PhysicalLink plink = (PhysicalLink )mapElement;
 
-		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_COLOR);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+			getLogicalNetLayer().getUserId(), 
+			AbstractLinkController.ATTRIBUTE_COLOR);
+		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea != null)
 			return new Color(Integer.parseInt(ea.getValue()));
-		else
-		{
-			LinkTypeController ltc = (LinkTypeController)com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getInstance();
-			return ltc.getAlarmedColor((PhysicalLinkType )plink.getType());
-		}
+
+		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
+		return ltc.getAlarmedColor((PhysicalLinkType )plink.getType());
 	}
 
 	/**
-	 * получить толщину линии при наличи сигнала тревоги
+	 * {@inheritDoc}
 	 */
-	public int getAlarmedLineSize (MapElement link)
+	public int getAlarmedLineSize (MapElement mapElement)
 	{
-		if(! (link instanceof PhysicalLink))
+		if(! (mapElement instanceof PhysicalLink))
 			return MapPropertiesManager.getAlarmedThickness();
 
-		PhysicalLink plink = (PhysicalLink )link;
+		PhysicalLink plink = (PhysicalLink )mapElement;
 
-		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_ALARMED_THICKNESS);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+			getLogicalNetLayer().getUserId(), 
+			AbstractLinkController.ATTRIBUTE_ALARMED_THICKNESS);
+		Characteristic ea = getCharacteristic(mapElement, cType);
 		if(ea != null)
 			return Integer.parseInt(ea.getValue());
-		else
-		{
-			LinkTypeController ltc = (LinkTypeController)com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getInstance();
-			return ltc.getAlarmedLineSize((PhysicalLinkType )plink.getType());
-		}
+
+		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
+		return ltc.getAlarmedLineSize((PhysicalLinkType )plink.getType());
 	}
 }

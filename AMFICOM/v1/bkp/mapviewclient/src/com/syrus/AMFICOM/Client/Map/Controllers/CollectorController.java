@@ -1,5 +1,5 @@
 /**
- * $Id: CollectorController.java,v 1.1 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: CollectorController.java,v 1.2 2005/02/03 16:24:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,9 +12,9 @@
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
 import com.syrus.AMFICOM.map.Collector;
-
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -23,26 +23,31 @@ import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 
 import java.util.Iterator;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
 
 /**
- * линейный элемента карты 
- * 
- * 
- * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:12 $
- * @module
+ * Контроллер коллектора.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.2 $, $Date: 2005/02/03 16:24:01 $
+ * @module mapviewclient_v1
  */
 public final class CollectorController extends AbstractLinkController
 {
+	/**
+	 * Instance.
+	 */
 	private static CollectorController instance = null;
 	
+	/**
+	 * Private constructor.
+	 */
 	private CollectorController()
-	{
+	{// empty
 	}
 	
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapElementController getInstance()
 	{
 		if(instance == null)
@@ -50,27 +55,36 @@ public final class CollectorController extends AbstractLinkController
 		return instance;
 	}
 
-	public String getToolTipText(MapElement me)
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getToolTipText(MapElement mapElement)
 	{
-		if(! (me instanceof Collector))
+		if(! (mapElement instanceof Collector))
 			return null;
 
-		Collector collector = (Collector )me;
+		Collector collector = (Collector )mapElement;
 		
 		return collector.getName();
 	}
 
-	public boolean isSelectionVisible(MapElement me)
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isSelectionVisible(MapElement mapElement)
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isElementVisible(MapElement mapElement, Rectangle2D.Double visibleBounds)
 	{
-		if(! (me instanceof Collector))
+		if(! (mapElement instanceof Collector))
 			return false;
 
-		Collector collector = (Collector )me;
+		Collector collector = (Collector )mapElement;
 
 		
 		boolean vis = false;
@@ -87,12 +101,15 @@ public final class CollectorController extends AbstractLinkController
 		return vis;
 	}
 
-	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
+	/**
+	 * {@inheritDoc}
+	 */
+	public void paint(MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		if(! (me instanceof Collector))
+		if(! (mapElement instanceof Collector))
 			return;
 
-		Collector collector = (Collector )me;
+		Collector collector = (Collector )mapElement;
 		
 		if(!isElementVisible(collector, visibleBounds))
 			return;
@@ -116,14 +133,14 @@ public final class CollectorController extends AbstractLinkController
 	}
 
 	/**
-	 * точка находится на фрагменте, если она находится в рамках линий выделения
+	 * {@inheritDoc}
 	 */
-	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
+	public boolean isMouseOnElement(MapElement mapElement, Point currentMousePoint)
 	{
-		if(! (me instanceof Collector))
+		if(! (mapElement instanceof Collector))
 			return false;
 
-		Collector collector = (Collector )me;
+		Collector collector = (Collector )mapElement;
 		
 		return false;
 	}

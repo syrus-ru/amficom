@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.3 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.4 2005/02/03 16:24:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,39 +32,57 @@ import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 
 import java.util.HashMap;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
-import com.syrus.AMFICOM.Client.Map.Controllers.AbstractLinkController;
 
 /**
- * линейный элемента карты 
- * 
- * 
- * 
- * @version $Revision: 1.3 $, $Date: 2005/01/30 15:38:18 $
- * @module
+ * Контроллер фрагмента линии.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.4 $, $Date: 2005/02/03 16:24:01 $
+ * @module mapviewclient_v1
  */
 public final class NodeLinkController extends AbstractLinkController
 {
-	/** границы объекта, отображающего длину фрагмента */
+	/** Границы объекта, отображающего длину фрагмента. */
 	protected java.util.Map labelBoxContainer = new HashMap();
 
+	/** 
+	 * Регион для дельта-окрестности фрагмента для проверки вхождения
+	 * точки в дельта-окрестноасть.
+	 */
 	private static Polygon searchPolygon = new Polygon(new int[6], new int[6], 6);
 
+	/**
+	 * Синус (<code>slope[0]</code>) и косинус (<code>slope[1]</code>) 
+	 * угла наклона фрагмента линии в экранных координатах.
+	 */
+	protected double[] slope = new double[2];
+	
+	/**
+	 * Instance.
+	 */
 	private static NodeLinkController instance = null;
 	
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
+	/**
+	 * Получить имя класса панели, описывающей свойства кабельного пути.
+	 * @return имя класса
+	 */
 	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
+	/**
+	 * Private constructor.
+	 */
 	private NodeLinkController()
-	{
+	{// empty
 	}
 	
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapElementController getInstance()
 	{
 		if(instance == null)
@@ -72,12 +90,15 @@ public final class NodeLinkController extends AbstractLinkController
 		return instance;
 	}
 
-	public String getToolTipText(MapElement me)
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getToolTipText(MapElement mapElement)
 	{
-		if(! (me instanceof NodeLink))
+		if(! (mapElement instanceof NodeLink))
 			return null;
 
-		NodeLink link = (NodeLink )me;
+		NodeLink link = (NodeLink )mapElement;
 		
 		String s1 = link.getName();
 		String s2 = "";
@@ -115,12 +136,15 @@ public final class NodeLinkController extends AbstractLinkController
 		return s1 + s2 + s3;
 	}
 
-	public boolean isSelectionVisible(MapElement me)
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isSelectionVisible(MapElement mapElement)
 	{
-		if(! (me instanceof NodeLink))
+		if(! (mapElement instanceof NodeLink))
 			return false;
 
-		NodeLink nodeLink = (NodeLink )me;
+		NodeLink nodeLink = (NodeLink )mapElement;
 
 		PhysicalLinkController plc = (PhysicalLinkController)getLogicalNetLayer().getMapViewController().getController(nodeLink.getPhysicalLink());
 
@@ -128,12 +152,15 @@ public final class NodeLinkController extends AbstractLinkController
 			|| plc.isSelectionVisible(nodeLink.getPhysicalLink());
 	}
 
-	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isElementVisible(MapElement mapElement, Rectangle2D.Double visibleBounds)
 	{
-		if(! (me instanceof NodeLink))
+		if(! (mapElement instanceof NodeLink))
 			return false;
 
-		NodeLink nodeLink = (NodeLink )me;
+		NodeLink nodeLink = (NodeLink )mapElement;
 		
 		return visibleBounds.intersectsLine(
 			nodeLink.getStartNode().getLocation().getX(),
@@ -143,25 +170,14 @@ public final class NodeLinkController extends AbstractLinkController
 	}
 
 	/**
-	 * получить границы элемента
+	 * {@inheritDoc}
 	 */
-	public Rectangle getLabelBox(NodeLink nodeLink)
+	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		Rectangle rect = (Rectangle )labelBoxContainer.get(nodeLink);
-		if(rect == null)
-		{
-			rect = new Rectangle();
-			labelBoxContainer.put(nodeLink, rect);
-		}
-		return rect;
-	}
-
-	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
-	{
-		if(! (me instanceof NodeLink))
+		if(! (mapElement instanceof NodeLink))
 			return;
 
-		NodeLink nodeLink = (NodeLink )me;
+		NodeLink nodeLink = (NodeLink )mapElement;
 		
 		if(!isElementVisible(nodeLink, visibleBounds))
 			return;
@@ -234,6 +250,15 @@ public final class NodeLinkController extends AbstractLinkController
 		}
 	}
 
+	/**
+	 * Отрисовать фрагмент линии с заданным стилем и цветом.
+	 * и цветом линии
+	 * @param nodeLink фрагмент линии
+	 * @param g графический контекст
+	 * @param visibleBounds видимая область
+	 * @param stroke стиль линии
+	 * @param color цвет линии
+	 */
 	public void paint(
 			NodeLink nodeLink,
 			Graphics g, 
@@ -328,14 +353,16 @@ public final class NodeLinkController extends AbstractLinkController
 	}
 
 	/**
-	 * точка находится на фрагменте, если она находится в рамках линий выделения
+	 * {@inheritDoc}
+	 * <br>Точка находится на фрагменте, если она находится в рамках линий 
+	 * выделения.
 	 */
-	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
+	public boolean isMouseOnElement(MapElement mapElement, Point currentMousePoint)
 	{
-		if(! (me instanceof NodeLink))
+		if(! (mapElement instanceof NodeLink))
 			return false;
 
-		NodeLink nodeLink = (NodeLink )me;
+		NodeLink nodeLink = (NodeLink )mapElement;
 		
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 
@@ -380,6 +407,29 @@ public final class NodeLinkController extends AbstractLinkController
 		return false;
 	}
 
+	/**
+	 * Получить границы элемента, отображающего длину фрагмента.
+	 * @param nodeLink фрагмент линии
+	 * @return границы
+	 */
+	public Rectangle getLabelBox(NodeLink nodeLink)
+	{
+		Rectangle rect = (Rectangle )this.labelBoxContainer.get(nodeLink);
+		if(rect == null)
+		{
+			rect = new Rectangle();
+			this.labelBoxContainer.put(nodeLink, rect);
+		}
+		return rect;
+	}
+
+	/**
+	 * Возвращает флаг, указывающий, что точка currentMousePoint находится 
+	 * в границах элемента, отображающего длину фрагмента.
+	 * @param nodeLink фрагмент линии
+	 * @param currentMousePoint экранная точка
+	 * @return значение флага
+	 */
 	public boolean isMouseOnThisObjectsLabel(
 			NodeLink nodeLink, 
 			Point currentMousePoint)
@@ -388,7 +438,8 @@ public final class NodeLinkController extends AbstractLinkController
 	}
 	
 	/**
-	 * обновить топологическую длину линии по координатам концевых узлов
+	 * Обновить топологическую длину линии по координатам концевых узлов.
+	 * @param nodeLink фрагмент лниии
 	 */	
 	public void updateLengthLt(NodeLink nodeLink)
 	{
@@ -401,7 +452,12 @@ public final class NodeLinkController extends AbstractLinkController
 	}
 
 	/**
-	 * установить дистанцию от противоположного узла
+	 * Установить длину фрагмента линии от заданного узла <code>node</code>. 
+	 * Координаты противоположного узла корректируются в соответствии с новой 
+	 * длиной, координаты узла <code>node</code> не меняются.
+	 * @param nodeLink фрагмент лниии
+	 * @param node узел
+	 * @param dist топологическое расстояние
 	 */
 	public void setSizeFrom(NodeLink nodeLink, AbstractNode node, double dist)
 	{
@@ -424,6 +480,11 @@ public final class NodeLinkController extends AbstractLinkController
 		updateLengthLt(nodeLink);
 	}
 
+	/**
+	 * Получить длину фрагмента линии в экранных координатах.
+	 * @param nodeLink фрагмент линии
+	 * @return длина
+	 */
 	public double getScreenLength(NodeLink nodeLink)
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
@@ -436,8 +497,13 @@ public final class NodeLinkController extends AbstractLinkController
 				(end.y - start.y) * (end.y - start.y) );
 	}
 
-	protected double[] slope = new double[2];
-	
+	/**
+	 * Получить синус ({@link #slope}<code>[0]</code>) и косинус 
+	 * ({@link #slope}<code>[1]</code>) 
+	 * угла наклона фрагмента линии в экранных координатах.
+	 * @param nodeLink фрагмент линии
+	 * @return массив из 2 элементов ({@link #slope})
+	 */
 	public double[] calcScreenSlope(NodeLink nodeLink)
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
@@ -453,10 +519,10 @@ public final class NodeLinkController extends AbstractLinkController
 
 		double cosB = (end.x - start.x) / nodeLinkLength;
 		
-		slope[0] = sinB;
-		slope[1] = cosB;
+		this.slope[0] = sinB;
+		this.slope[1] = cosB;
 		
-		return slope;
+		return this.slope;
 	}
 	
 }

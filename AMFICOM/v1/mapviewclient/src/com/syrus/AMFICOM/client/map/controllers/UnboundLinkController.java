@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLinkController.java,v 1.2 2005/01/31 12:19:18 krupenn Exp $
+ * $Id: UnboundLinkController.java,v 1.3 2005/02/03 16:24:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,19 +21,32 @@ import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 
 /**
- * Элемент непривязанной линии (участка непривязанного кабеля). 
+ * Контроллер элемента непривязанной линии (участка непривязанного кабеля). 
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/01/31 12:19:18 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/03 16:24:01 $
  * @module mapviewclient_v1
  */
 public final class UnboundLinkController extends PhysicalLinkController
 {
+	private static final String PROPERTY_PANE_CLASS_NAME = 
+			"";
+
+	/**
+	 * Instace.
+	 */
 	private static UnboundLinkController instance = null;
 	
+	/**
+	 * Private constructor.
+	 */
 	private UnboundLinkController()
-	{
+	{// empty
 	}
 	
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapElementController getInstance()
 	{
 		if(instance == null)
@@ -41,9 +54,10 @@ public final class UnboundLinkController extends PhysicalLinkController
 		return instance;
 	}
 
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"";
-
+	/**
+	 * Получить имя класса панели, описывающей свойства кабельного пути.
+	 * @return имя класса
+	 */
 	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;

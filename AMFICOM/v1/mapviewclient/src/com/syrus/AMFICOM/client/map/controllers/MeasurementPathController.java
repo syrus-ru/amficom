@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.5 2005/02/01 14:35:56 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.6 2005/02/03 16:24:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,16 +17,15 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.PathElement;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
@@ -46,17 +45,27 @@ import java.util.Iterator;
 /**
  * Контроллер топологическиго пути.
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/01 14:35:56 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/03 16:24:01 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController
 {
+	/**
+	 * Instance.
+	 */
 	private static MeasurementPathController instance = null;
 	
+	/**
+	 * Private constructor.
+	 */
 	private MeasurementPathController()
-	{
+	{// empty
 	}
 	
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapElementController getInstance()
 	{
 		if(instance == null)
@@ -66,6 +75,10 @@ public final class MeasurementPathController extends AbstractLinkController
 
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
+	/**
+	 * Получить имя класса панели, описывающей свойства кабельного пути.
+	 * @return имя класса
+	 */
 	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
@@ -74,12 +87,12 @@ public final class MeasurementPathController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isSelectionVisible(MapElement me)
+	public boolean isSelectionVisible(MapElement mapElement)
 	{
-		if(! (me instanceof MeasurementPath))
+		if(! (mapElement instanceof MeasurementPath))
 			return false;
 
-		MeasurementPath mpath = (MeasurementPath)me;
+		MeasurementPath mpath = (MeasurementPath)mapElement;
 
 		return mpath.isSelected();
 	}
@@ -87,12 +100,12 @@ public final class MeasurementPathController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
+	public boolean isElementVisible(MapElement mapElement, Rectangle2D.Double visibleBounds)
 	{
-		if(! (me instanceof MeasurementPath))
+		if(! (mapElement instanceof MeasurementPath))
 			return false;
 
-		MeasurementPath mpath = (MeasurementPath)me;
+		MeasurementPath mpath = (MeasurementPath)mapElement;
 
 		boolean vis = false;
 		for(Iterator it = mpath.getSortedCablePaths().iterator(); it.hasNext();)
@@ -111,12 +124,12 @@ public final class MeasurementPathController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getToolTipText(MapElement me)
+	public String getToolTipText(MapElement mapElement)
 	{
-		if(! (me instanceof MeasurementPath))
+		if(! (mapElement instanceof MeasurementPath))
 			return null;
 
-		MeasurementPath mpath = (MeasurementPath)me;
+		MeasurementPath mpath = (MeasurementPath)mapElement;
 		
 		String s1 = mpath.getName();
 		String s2 = "";
@@ -157,12 +170,12 @@ public final class MeasurementPathController extends AbstractLinkController
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
+	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		if(! (me instanceof MeasurementPath))
+		if(! (mapElement instanceof MeasurementPath))
 			return;
 
-		MeasurementPath mpath = (MeasurementPath)me;
+		MeasurementPath mpath = (MeasurementPath)mapElement;
 		
 		if(!isElementVisible(mpath, visibleBounds))
 			return;
@@ -182,7 +195,6 @@ public final class MeasurementPathController extends AbstractLinkController
 
 	/**
 	 * Отрисовать путь с заданным стилем и цветом.
-	 * и цветом линии
 	 * @param mpath путь
 	 * @param g графический контекст
 	 * @param visibleBounds видимая область
@@ -208,12 +220,12 @@ public final class MeasurementPathController extends AbstractLinkController
 	 * <br>Точка находится на пути, если она находится на любом кабеле,
 	 * котораый входит в путь.
 	 */
-	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
+	public boolean isMouseOnElement(MapElement mapElement, Point currentMousePoint)
 	{
-		if(! (me instanceof MeasurementPath))
+		if(! (mapElement instanceof MeasurementPath))
 			return false;
 
-		MeasurementPath mpath = (MeasurementPath)me;
+		MeasurementPath mpath = (MeasurementPath)mapElement;
 
 		for(Iterator it = mpath.getSortedCablePaths().iterator(); it.hasNext();)
 		{
@@ -270,6 +282,13 @@ public final class MeasurementPathController extends AbstractLinkController
 		return me;
 	}
 
+	/**
+	 * Получить идентификатор исследуемого объекта, которому соответствует
+	 * измерительный путь.
+	 * @param path путь
+	 * @return идентификатор или <code>null</code>, если исследуемый объект 
+	 * не найден
+	 */
 	public Identifier getMonitoredElementId(MeasurementPath path)
 	{
 		Identifier meid = null;
@@ -279,6 +298,13 @@ public final class MeasurementPathController extends AbstractLinkController
 		return meid;
 	}
 
+	/**
+	 * Получить исследуемый объект, которому соответствует
+	 * измерительный путь.
+	 * @param path путь
+	 * @return исследуемый объект или <code>null</code>, если исследуемый объект 
+	 * не найден
+	 */
 	public MonitoredElement getMonitoredElement(MeasurementPath path)
 	{
 		MonitoredElement me = null;

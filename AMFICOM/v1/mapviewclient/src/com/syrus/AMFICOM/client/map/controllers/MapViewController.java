@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.8 2005/02/01 14:38:42 krupenn Exp $
+ * $Id: MapViewController.java,v 1.9 2005/02/03 16:24:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,6 @@
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemePathCommand;
@@ -20,10 +19,6 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemePathCommand;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.Marker;
-import com.syrus.AMFICOM.mapview.MeasurementPath;
-import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -33,14 +28,14 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
@@ -54,16 +49,13 @@ import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import com.syrus.AMFICOM.mapview.UnboundLink;
 
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * 
+ * &lt;{@link }&gt;
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/01 14:38:42 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/03 16:24:01 $
  * @module mapviewclient_v1
  */
 public final class MapViewController
@@ -78,7 +70,7 @@ public final class MapViewController
 	protected LogicalNetLayer logicalNetLayer = null;
 
 	/** Хранимый объект. */
-	private com.syrus.AMFICOM.mapview.MapView mapView;
+	private MapView mapView;
 
 	/**
 	 * Приветный конструктор. Использовать 
@@ -138,7 +130,7 @@ public final class MapViewController
 	{
 		MapElementController controller = (MapElementController)ctlMap.get(me.getClass());
 		if(controller != null)
-			controller.setLogicalNetLayer(logicalNetLayer);
+			controller.setLogicalNetLayer(this.logicalNetLayer);
 		return controller;
 	}
 
@@ -216,12 +208,12 @@ public final class MapViewController
 	{
 		this.mapView = mapView;
 
-		mapView.setLongitude(logicalNetLayer.getCenter().getX());
-		mapView.setLatitude(logicalNetLayer.getCenter().getY());
+		this.mapView.setLongitude(this.logicalNetLayer.getCenter().getX());
+		this.mapView.setLatitude(this.logicalNetLayer.getCenter().getY());
 
-		mapView.setScale(logicalNetLayer.getScale());
+		this.mapView.setScale(this.logicalNetLayer.getScale());
 
-		mapView.revert();
+		this.mapView.revert();
 	}
 	
 	/**
@@ -230,7 +222,7 @@ public final class MapViewController
 	 */
 	public void setMap(Map map)
 	{
-		mapView.setMap(map);
+		this.mapView.setMap(map);
 		scanSchemes();
 	}
 
@@ -240,7 +232,7 @@ public final class MapViewController
 	 */
 	public com.syrus.AMFICOM.mapview.MapView getMapView()
 	{
-		return mapView;
+		return this.mapView;
 	}
 
 	/**
@@ -308,7 +300,7 @@ public final class MapViewController
 				ConfigurationStorableObjectPool.getStorableObject(tpId, true);
 			if(tp != null)
 			{
-				for(Iterator it = mapView.getMeasurementPaths().iterator(); it.hasNext();)
+				for(Iterator it = this.mapView.getMeasurementPaths().iterator(); it.hasNext();)
 				{
 					MeasurementPath mp = (MeasurementPath)it.next();
 					if(mp.getSchemePath().pathImpl().equals(tp))
@@ -328,7 +320,7 @@ public final class MapViewController
 	 */
 	public void scanSchemes()
 	{
-		for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
+		for(Iterator it = this.mapView.getSchemes().iterator(); it.hasNext();)
 		{
 			scanElements((Scheme )it.next());
 		}
@@ -341,7 +333,7 @@ public final class MapViewController
 	 */
 	public void addScheme(Scheme sch)
 	{
-		mapView.addScheme(sch);
+		this.mapView.addScheme(sch);
 		scanElements(sch);
 	}
 
@@ -351,7 +343,7 @@ public final class MapViewController
 	 */
 	public void removeScheme(Scheme sch)
 	{
-		mapView.removeScheme(sch);
+		this.mapView.removeScheme(sch);
 		removePaths(sch);
 		removeCables(sch);
 		removeElements(sch);
@@ -365,9 +357,9 @@ public final class MapViewController
 	 */
 	public void removeSchemes()
 	{
-		while(mapView.getSchemes().size() != 0)
+		while(this.mapView.getSchemes().size() != 0)
 		{
-			Scheme sch = (Scheme )mapView.getSchemes().get(0);
+			Scheme sch = (Scheme )this.mapView.getSchemes().get(0);
 			removeScheme(sch);
 		}
 	}
@@ -379,7 +371,7 @@ public final class MapViewController
 	 */
 	public void scanElement(SchemeElement schemeElement)
 	{
-		SiteNode node = mapView.findElement(schemeElement);
+		SiteNode node = this.mapView.findElement(schemeElement);
 		if(node == null)
 		{
 			Equipment equipment = schemeElement.equipmentImpl();
@@ -418,9 +410,9 @@ public final class MapViewController
 	 */
 	public void scanCable(SchemeCableLink schemeCableLink)
 	{
-		SiteNode cableStartNode = mapView.getStartNode(schemeCableLink);
-		SiteNode cableEndNode = mapView.getEndNode(schemeCableLink);
-		CablePath cp = mapView.findCablePath(schemeCableLink);
+		SiteNode cableStartNode = this.mapView.getStartNode(schemeCableLink);
+		SiteNode cableEndNode = this.mapView.getEndNode(schemeCableLink);
+		CablePath cp = this.mapView.findCablePath(schemeCableLink);
 		if(cp == null)
 		{
 			if(cableStartNode != null && cableEndNode != null)
@@ -461,9 +453,9 @@ public final class MapViewController
 	 */
 	public void scanPath(SchemePath schemePath)
 	{
-		SiteNode pathStartNode = mapView.getStartNode(schemePath);
-		SiteNode pathEndNode = mapView.getEndNode(schemePath);
-		MeasurementPath mp = mapView.findMeasurementPath(schemePath);
+		SiteNode pathStartNode = this.mapView.getStartNode(schemePath);
+		SiteNode pathEndNode = this.mapView.getEndNode(schemePath);
+		MeasurementPath mp = this.mapView.findMeasurementPath(schemePath);
 		if(mp == null)
 		{
 			if(pathStartNode != null && pathEndNode != null)
@@ -507,7 +499,7 @@ public final class MapViewController
 		for(Iterator it = schemePaths.iterator(); it.hasNext();)
 		{
 			SchemePath path = (SchemePath )it.next();
-			MeasurementPath mp = mapView.findMeasurementPath(path);
+			MeasurementPath mp = this.mapView.findMeasurementPath(path);
 			if(mp != null)
 			{
 				unplaceElement(mp);
@@ -525,7 +517,7 @@ public final class MapViewController
 		for(Iterator it = schemeCables.iterator(); it.hasNext();)
 		{
 			SchemeCableLink scl = (SchemeCableLink )it.next();
-			CablePath cp = mapView.findCablePath(scl);
+			CablePath cp = this.mapView.findCablePath(scl);
 			if(cp != null)
 			{
 				unplaceElement(cp);
@@ -543,13 +535,13 @@ public final class MapViewController
 		for(Iterator it = schemeElements.iterator(); it.hasNext();)
 		{
 			SchemeElement se = (SchemeElement )it.next();
-			SiteNode site = mapView.findElement(se);
+			SiteNode site = this.mapView.findElement(se);
 			if(site != null)
 			{
 				if(site instanceof UnboundNode)
 				{
 					RemoveNodeCommandAtomic cmd = new RemoveNodeCommandAtomic(site);
-					cmd.setLogicalNetLayer(logicalNetLayer);
+					cmd.setLogicalNetLayer(this.logicalNetLayer);
 					cmd.execute();
 				}
 			}
@@ -564,7 +556,7 @@ public final class MapViewController
 	public void placeElement(SchemeElement se, DoublePoint point)
 	{
 		PlaceSchemeElementCommand cmd = new PlaceSchemeElementCommand(se, point);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 	}
 
@@ -577,7 +569,7 @@ public final class MapViewController
 	public void unplaceElement(SiteNode node, SchemeElement se)
 	{
 		UnPlaceSchemeElementCommand cmd = new UnPlaceSchemeElementCommand(node, se);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 	}
 
@@ -588,7 +580,7 @@ public final class MapViewController
 	public void placeElement(SchemeCableLink scl)
 	{
 		PlaceSchemeCableLinkCommand cmd = new PlaceSchemeCableLinkCommand(scl);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 	}
 	
@@ -600,7 +592,7 @@ public final class MapViewController
 	public void unplaceElement(CablePath cp)
 	{
 		UnPlaceSchemeCableLinkCommand cmd = new UnPlaceSchemeCableLinkCommand(cp);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 	}
 
@@ -612,7 +604,7 @@ public final class MapViewController
 	public void placeElement(SchemePath sp)
 	{
 		PlaceSchemePathCommand cmd = new PlaceSchemePathCommand(sp);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 	}
 
@@ -623,7 +615,7 @@ public final class MapViewController
 	public void unplaceElement(MeasurementPath mp)
 	{
 		UnPlaceSchemePathCommand cmd = new UnPlaceSchemePathCommand(mp);
-		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.2 2005/02/02 15:17:52 krupenn Exp $
+ * $Id: AbstractNodeController.java,v 1.3 2005/02/03 16:24:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.HashMap;
 /**
  * Контроллер узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/02/02 15:17:52 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/03 16:24:01 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractNodeController implements MapElementController
@@ -43,10 +43,6 @@ public abstract class AbstractNodeController implements MapElementController
 	public static final Rectangle MIN_BOUNDS = new Rectangle(6, 6);
 	/** Максимальный размер элемента. */
 	public static final Rectangle MAX_BOUNDS = new Rectangle(40, 40);
-	/** Коэффициент масштабирования пиктограммы по умолчанию. */
-	public static final double DEFAULT_SCALE_COEFFICIENT = 1.0;
-	/** Пиктограмма по умолчанию. */	
-	public static final String DEFAULT_IMAGE = "images/pc.gif";
 
 	/**
 	 * Логический слой.
@@ -81,7 +77,7 @@ public abstract class AbstractNodeController implements MapElementController
 	 */
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		return logcalNetLayer;
+		return this.logcalNetLayer;
 	}
 
 	/**
@@ -90,7 +86,7 @@ public abstract class AbstractNodeController implements MapElementController
 	 */
 	public Rectangle getDefaultBounds()
 	{
-		return DEFAULT_BOUNDS;
+		return AbstractNodeController.DEFAULT_BOUNDS;
 	}
 	
 	/**
@@ -99,7 +95,7 @@ public abstract class AbstractNodeController implements MapElementController
 	 */
 	public Rectangle getMinBounds()
 	{
-		return MIN_BOUNDS;
+		return AbstractNodeController.MIN_BOUNDS;
 	}
 	
 	/**
@@ -108,7 +104,7 @@ public abstract class AbstractNodeController implements MapElementController
 	 */
 	public Rectangle getMaxBounds()
 	{
-		return MAX_BOUNDS;
+		return AbstractNodeController.MAX_BOUNDS;
 	}
 
 	/**
@@ -127,8 +123,8 @@ public abstract class AbstractNodeController implements MapElementController
 		double scaleCoefficient = getLogicalNetLayer().getDefaultScale() 
 				/ getLogicalNetLayer().getCurrentScale();
 
-		int w = (int )((double )getDefaultBounds().width * scaleCoefficient);
-		int h = (int )((double )getDefaultBounds().height * scaleCoefficient);
+		int w = (int )(getDefaultBounds().getWidth() * scaleCoefficient);
+		int h = (int )(getDefaultBounds().getHeight() * scaleCoefficient);
 		
 		if (w >= this.getMaxBounds().width || h >= this.getMaxBounds().height )
 		{
@@ -197,13 +193,13 @@ public abstract class AbstractNodeController implements MapElementController
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
+	public boolean isElementVisible(MapElement mapElement, Rectangle2D.Double visibleBounds)
 	{
-		if(!(me instanceof AbstractNode))
+		if(!(mapElement instanceof AbstractNode))
 		{
 			return false;
 		}
-		AbstractNode node = (AbstractNode)me;
+		AbstractNode node = (AbstractNode)mapElement;
 		anchorContainer.setLocation(node.getLocation().getX(), node.getLocation().getY());
 		return visibleBounds.contains(anchorContainer);
 	}
@@ -211,13 +207,13 @@ public abstract class AbstractNodeController implements MapElementController
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
+	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		if(!(me instanceof AbstractNode))
+		if(!(mapElement instanceof AbstractNode))
 		{
 			return;
 		}
-		AbstractNode node = (AbstractNode)me;
+		AbstractNode node = (AbstractNode )mapElement;
 
 		if(!isElementVisible(node, visibleBounds))
 		{
@@ -277,14 +273,14 @@ public abstract class AbstractNodeController implements MapElementController
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
+	public boolean isMouseOnElement(MapElement mapElement, Point currentMousePoint)
 	{
-		if(!(me instanceof AbstractNode))
+		if(!(mapElement instanceof AbstractNode))
 		{
 			return false;
 		}
 
-		AbstractNode node = (AbstractNode)me;
+		AbstractNode node = (AbstractNode )mapElement;
 
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 		
@@ -307,14 +303,14 @@ public abstract class AbstractNodeController implements MapElementController
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getToolTipText(MapElement me)
+	public String getToolTipText(MapElement mapElement)
 	{
-		if(!(me instanceof AbstractNode))
+		if(!(mapElement instanceof AbstractNode))
 		{
 			return null;
 		}
 
-		AbstractNode node = (AbstractNode )me;
+		AbstractNode node = (AbstractNode )mapElement;
 
 		String s1 = node.getName();
 

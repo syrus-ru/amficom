@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.4 2005/02/01 11:34:56 krupenn Exp $
+ * $Id: CableController.java,v 1.5 2005/02/03 16:24:01 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -42,11 +42,14 @@ import java.util.Iterator;
  *  онтроллер кабел€.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/01 11:34:56 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 16:24:01 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController
 {
+	/**
+	 * Instance.
+	 */
 	private static CableController instance = null;
 
 	/**
@@ -57,15 +60,26 @@ public final class CableController extends AbstractLinkController
 	private static final String PROPERTY_PANE_CLASS_NAME = 
 			"com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane";
 
+	/**
+	 * ѕолучить им€ класса панели, описывающей свойства кабельного пути.
+	 * @return им€ класса
+	 */
 	public static String getPropertyPaneClassName()
 	{
-		return PROPERTY_PANE_CLASS_NAME;
+		return CableController.PROPERTY_PANE_CLASS_NAME;
 	}
 	
+	/**
+	 * Private constructor.
+	 */
 	private CableController()
-	{
+	{// empty
 	}
 	
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapElementController getInstance()
 	{
 		if(instance == null)
@@ -292,8 +306,8 @@ public final class CableController extends AbstractLinkController
 				distance += getLogicalNetLayer().distance(dpoint, node.getLocation());
 				break;
 			}
-			else
-				distance += mnle.getLengthLt();
+
+			distance += mnle.getLengthLt();
 
 			if(mnle.getStartNode().equals(node))
 				node = mnle.getEndNode();
