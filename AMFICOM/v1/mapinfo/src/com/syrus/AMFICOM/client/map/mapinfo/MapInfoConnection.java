@@ -8,6 +8,7 @@ import com.mapinfo.mapj.MapJ;
 import com.mapinfo.unit.LinearUnit;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapConnection;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 
 public class MapInfoConnection extends MapConnection
@@ -29,21 +30,7 @@ public class MapInfoConnection extends MapConnection
 				"MapInfoConnection()");
 	}
 
-	public MapInfoConnection(String dataBasePath, String dataBaseView)
-	{
-		Environment
-				.log(
-						Environment.LOG_LEVEL_FINER,
-						"constructor call",
-						getClass().getName(),
-						"MapInfoConnection(" + dataBasePath + ", "
-								+ dataBaseView + ")");
-
-		this.setPath(dataBasePath);
-		this.setView(dataBaseView);
-	}
-
-	public boolean connect()
+	public boolean connect() throws MapConnectionException
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
 				.getName(), "connect()");
@@ -64,7 +51,7 @@ public class MapInfoConnection extends MapConnection
 		{
 			System.out.println("MapImagePanel - Can't load geoset: "
 					+ mapDefinitionFile);
-			e.printStackTrace();
+			throw new MapConnectionException(e);
 		}
 
 		System.out.println("Units " + this.localMapJ.getDistanceUnits().toString());
@@ -73,7 +60,7 @@ public class MapInfoConnection extends MapConnection
 		return true;
 	}
 
-	public boolean release()
+	public boolean release() throws MapConnectionException
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
 				.getName(), "release()");
