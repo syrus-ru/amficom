@@ -29,19 +29,15 @@ JAR=jar
 COMPILER=$(JAVAC)
 
 TARGET=$(LIB)\spatialfximpl.jar
-TARGET_CLASS_LIST=src_spatialfx.txt
 TARGET_SRC=$(LIBSRC)\spatialfxsource.jar
 
 SERVERCP=$(LIB)\corbaportable.jar;$(LIB)\corba.jar
-CLIENTCP=$(LIB)\util.jar;$(LIB)\filter.jar;$(LIB)\configuration.jar;$(LIB)\general.jar;$(LIB)\generalclient.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\mapclient.jar;$(LIB)\mapviewclient.jar;$(LIB)\scheme.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\filter.jar;$(LIB)\configuration.jar;$(LIB)\general.jar;$(LIB)\generalclient.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\map.jar;$(LIB)\mapview.jar;$(LIB)\mapclient.jar;$(LIB)\mapviewclient.jar;$(LIB)\scheme.jar
 
 LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
 SPATIALCP=$(EXTLIB)\ofx.spatialfx.jar
-REPORTCP=$(EXTLIB)\jfreechartK.jar
-JGRAPHCP=$(EXTLIB)\jgraphpad.jar
-MAPINFOCP=$(EXTLIB)\mxj.jar;$(EXTLIB)\miutil.jar;$(EXTLIB)\mxjclient.jar;$(EXTLIB)\mxjbeans.jar;$(EXTLIB)\micsys.jar
 
-CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(REPORTCP);$(JGRAPHCP);$(SPATIALCP);$(MAPINFOCP)
+CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP)
 
 .PHONY:	$(TARGET)
 
@@ -55,7 +51,7 @@ impl:
 	$(COMPILER) -d $(CLASSES) \
 		-classpath $(CLASSPATH) \
 		-sourcepath $(SRC) \
-		@$(TARGET_CLASS_LIST)
+		$(SRC)\com\syrus\AMFICOM\Client\Map\ObjectFX\*.java
 
 clean:
 	rm -rf $(CLASSES)\com

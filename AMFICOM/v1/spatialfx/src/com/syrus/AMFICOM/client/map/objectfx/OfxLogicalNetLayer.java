@@ -1,5 +1,5 @@
 /**
- * $Id: OfxLogicalNetLayer.java,v 1.3 2004/12/08 16:19:43 krupenn Exp $
+ * $Id: OfxLogicalNetLayer.java,v 1.4 2004/12/30 12:56:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
 
-import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
+import com.syrus.AMFICOM.map.DoublePoint;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -48,7 +48,7 @@ import java.util.Vector;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/08 16:19:43 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/30 12:56:24 $
  * @module Ьфз_м2
  * @author $Author: krupenn $
  * @see
@@ -83,7 +83,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public Point convertMapToScreen(DoublePoint point)
 	{
-		SxDoublePoint sdp = new SxDoublePoint(point.x, point.y);
+		SxDoublePoint sdp = new SxDoublePoint(point.getX(), point.getY());
 		return spatialLayer.convertLongLatToScreen(sdp);
 	}
 	
@@ -93,7 +93,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	public DoublePoint convertScreenToMap(Point point)
 	{
 		SxDoublePoint sdp = spatialLayer.convertScreenToLongLat(point);
-		return new DoublePoint(sdp.x, sdp.y);
+		return new DoublePoint(sdp.getX(), sdp.getY());
 	}
 
 	public double convertScreenToMap(double screenDistance)
@@ -118,13 +118,14 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 			DoublePoint endPoint, 
 			double dist)
 	{
-		DoublePoint point = new DoublePoint(startPoint.x, startPoint.y);
+		double x = startPoint.getX();
+		double y = startPoint.getY();
 		double len = distance(
 				startPoint, 
 				endPoint);
-		point.x += (endPoint.x - startPoint.x) / len * dist;
-		point.y += (endPoint.y - startPoint.y) / len * dist;
-		return point;
+		x += (endPoint.getX() - startPoint.getX()) / len * dist;
+		y += (endPoint.getY() - startPoint.getY()) / len * dist;
+		return new DoublePoint(x, y);
 	}
 	
 	/**
@@ -134,7 +135,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public double distance(DoublePoint from, DoublePoint to)
 	{
-		return spatialViewer.distance(from.x, from.y, to.x, to.y);
+		return spatialViewer.distance(from.getX(), from.getY(), to.getX(), to.getY());
 	}
 
 	/**
@@ -146,9 +147,9 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 				Environment.LOG_LEVEL_FINER, 
 				"method call", 
 				getClass().getName(), 
-				"setCenter(" + center.x + ", " + center.y + ")");
+				"setCenter(" + center.getX() + ", " + center.getY() + ")");
 
-		spatialViewer.setCenter(center.x, center.y);
+		spatialViewer.setCenter(center.getX(), center.getY());
 	}
 
 	/**
@@ -167,8 +168,8 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		SxRectangle sxRect = spatialViewer.getMapCanvas().getGroundRect();
 		sxRect = spatialViewer.convertDBToLatLong(sxRect);
 		Rectangle2D.Double rect = new Rectangle2D.Double(
-			sxRect.getBottomLeft().x,
-			sxRect.getBottomLeft().y,
+			sxRect.getBottomLeft().getX(),
+			sxRect.getBottomLeft().getY(),
 			sxRect.getWidth(),
 			sxRect.getHeight());
 		return rect;
@@ -290,7 +291,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void zoomToBox(DoublePoint from, DoublePoint to)
 	{
-		spatialViewer.zoomToRect(from.x, from.y, to.x, to.y);
+		spatialViewer.zoomToRect(from.getX(), from.getY(), to.getX(), to.getY());
 		updateZoom();
 	}
 
@@ -310,8 +311,8 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	public void handDragged(MouseEvent me)
 	{
 		java.awt.Point point = new Point(
-				me.getX() - startPoint.x, 
-				me.getY() - startPoint.y);
+				me.getX() - (int )startPoint.getX(), 
+				me.getY() - (int )startPoint.getY());
 		spatialViewer.getMapCanvas().setBufferOffset(point);
 		spatialViewer.getMapCanvas().repaint();
 	}
@@ -419,10 +420,10 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		{
 			OfxSpatialObject oso = (OfxSpatialObject)so;
 			SxDoublePoint center = oso.getSxSpatialObject().geometry.getCenter();
-			System.out.print("Center " + center.x + ", " + center.y);
+			System.out.print("Center " + center.getX() + ", " + center.getY());
 			center = spatialViewer.convertLatLongToMap(center);
-			System.out.println(" --> " + center.x + ", " + center.y);
-			spatialViewer.setCenter(center.x, center.y);
+			System.out.println(" --> " + center.getX() + ", " + center.getY());
+			spatialViewer.setCenter(center.getX(), center.getY());
 		} 
 		catch (Exception ex) 
 		{
