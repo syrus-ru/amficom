@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.5 2005/01/17 10:54:59 bob Exp $
+ * $Id: NodeLinkDatabase.java,v 1.6 2005/01/25 13:37:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,22 +32,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/01/17 10:54:59 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/25 13:37:08 $
  * @author $Author: bob $
  * @module map_v1
  */
 public class NodeLinkDatabase extends StorableObjectDatabase {
-	//	 name VARCHAR2(128),
-    public static final String COLUMN_NAME  = "name";
-    // physical_link_id VARCHAR2(32),
-    public static final String COLUMN_PHYSICAL_LINK_ID      = "physical_link_id";
-    // start_node_id VARCHAR2(32),
-    public static final String COLUMN_START_NODE_ID = "start_node_id";
-    // end_node_id VARCHAR2(32), 
-    public static final String COLUMN_END_NODE_ID   = "end_node_id";
-    // length NUMBER(12,6),
-    public static final String COLUMN_LENGTH        = "length";
-    
 	private static String columns;
 	
 	private static String updateMultiplySQLValues;
@@ -71,11 +60,11 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_PHYSICAL_LINK_ID + COMMA
-				+ COLUMN_START_NODE_ID + COMMA
-				+ COLUMN_END_NODE_ID + COMMA 
-				+ COLUMN_LENGTH;
+				+ NodeLinkWrapper.COLUMN_NAME + COMMA
+				+ NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID + COMMA
+				+ NodeLinkWrapper.COLUMN_START_NODE_ID + COMMA
+				+ NodeLinkWrapper.COLUMN_END_NODE_ID + COMMA 
+				+ NodeLinkWrapper.COLUMN_LENGTH;
 		}
 		return columns;
 	}	
@@ -132,9 +121,9 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 		AbstractNode endNode;
 		
 		try{
-			physicalLink = (PhysicalLink)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PHYSICAL_LINK_ID), true);
-			startNode = (AbstractNode)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_START_NODE_ID), true); 
-			endNode = (AbstractNode)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_END_NODE_ID), true);
+			physicalLink = (PhysicalLink)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
+			startNode = (AbstractNode)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_START_NODE_ID), true); 
+			endNode = (AbstractNode)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, NodeLinkWrapper.COLUMN_END_NODE_ID), true);
 		} catch (ApplicationException ae) {
 			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
@@ -147,11 +136,11 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(NodeLinkWrapper.COLUMN_NAME)),
 							   physicalLink,
 							   startNode,
 							   endNode,
-							   resultSet.getDouble(COLUMN_LENGTH));		
+							   resultSet.getDouble(NodeLinkWrapper.COLUMN_LENGTH));		
 		return nodeLink;
 	}
 

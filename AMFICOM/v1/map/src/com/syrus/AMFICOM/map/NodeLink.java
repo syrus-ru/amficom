@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLink.java,v 1.18 2005/01/24 16:48:55 krupenn Exp $
+ * $Id: NodeLink.java,v 1.19 2005/01/25 13:37:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/01/24 16:48:55 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2005/01/25 13:37:08 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements Characterized, MapElement {
@@ -251,8 +251,12 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		return this.endNode;
 	}
 	
-	public void setEndNode(AbstractNode endNode) {
+	protected void setEndNode0(AbstractNode endNode) {
 		this.endNode = endNode;
+	}
+	
+	public void setEndNode(AbstractNode endNode) {
+		this.setEndNode0(endNode);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -260,8 +264,12 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		return this.length;
 	}
 	
-	public void setLength(double length) {
+	protected void setLength0(double length) {
 		this.length = length;
+	}
+	
+	public void setLength(double length) {
+		this.setLength0(length);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -269,8 +277,12 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		return this.name;
 	}
 	
-	public void setName(String name) {
+	protected void setName0(String name) {
 		this.name = name;
+	}
+	
+	public void setName(String name) {
+		this.setName0(name);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -278,12 +290,16 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		return this.physicalLink;
 	}
 	
-	public void setPhysicalLink(PhysicalLink physicalLink) {
+	protected void setPhysicalLink0(PhysicalLink physicalLink) {
 		this.physicalLink = physicalLink;
 		if(getStartNode() instanceof TopologicalNode)
 			((TopologicalNode )getStartNode()).setPhysicalLink(physicalLink);
 		if(getEndNode() instanceof TopologicalNode)
 			((TopologicalNode )getEndNode()).setPhysicalLink(physicalLink);
+	}
+	
+	public void setPhysicalLink(PhysicalLink physicalLink) {
+		this.setPhysicalLink0(physicalLink);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -291,8 +307,12 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		return this.startNode;
 	}
 	
-	public void setStartNode(AbstractNode startNode) {
+	protected void setStartNode0(AbstractNode startNode) {
 		this.startNode = startNode;
+	}
+	
+	public void setStartNode(AbstractNode startNode) {
+		this.setStartNode0(startNode);
 		super.currentVersion = super.getNextVersion();
 	}
 	
