@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.29 2004/11/23 15:18:19 bob Exp $
+ * $Id: ObjectEntities.java,v 1.30 2004/11/25 10:36:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,11 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/11/23 15:18:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2004/11/25 10:36:23 $
+ * @author $Author: bass $
  * @module general_v1
  */
-
-public class ObjectEntities {
+public final class ObjectEntities {
 	/*	Object Types	*/
 	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteristicType";
 	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType";
@@ -69,10 +68,33 @@ public class ObjectEntities {
 	public static final String TEMPORALPATTERN_ENTITY = "TemporalPattern";
 	public static final String MODELING_ENTITY = "Modeling";
 
+	/*        Scheme        */
+	public static final String CABLE_CHANNELING_ITEM_ENTITY = "CableChannelingItem";
+	public static final String PATH_ELEMENT_ENTITY = "PathElement";
+	public static final String SCHEME_ENTITY = "Scheme";
+	public static final String SCHEME_CABLE_LINK_ENTITY = "SchemeCableLink";
+	public static final String SCHEME_CABLE_PORT_ENTITY = "SchemeCablePort";
+	public static final String SCHEME_CABLE_THREAD_ENTITY = "SchemeCableThread";
+	public static final String SCHEME_DEVICE_ENTITY = "SchemeDevice";
+	public static final String SCHEME_ELEMENT_ENTITY = "SchemeElement";
+	public static final String SCHEME_LINK_ENTITY = "SchemeLink";
+	public static final String SCHEME_MONITORING_SOLUTION_ENTITY = "SchemeMonitoringSolution";
+	public static final String SCHEME_OPTIMIZE_INFO_ENTITY = "SchemeOptimizeInfo";
+	public static final String SCHEME_PATH_ENTITY = "SchemePath";
+	public static final String SCHEME_PORT_ENTITY = "SchemePort";
+	public static final String SCHEME_PROTO_ELEMENT_ENTITY = "SchemeProtoElement";
+	public static final String SCHEME_PROTO_GROUP_ENTITY = "SchemeProtoGroup";
+
+	/*        Updike        */
+	/**
+	 * Шняга: {@value}.
+	 */
+	public static final String UPDIKE_ENTITY = "8========================D";
+
 
 	public static final short UNKNOWN_ENTITY_CODE = 0x0000;
 
-	/*	Object Types 1 -- 128	*/
+	/*	Object Types 1 -- 128           */
 	public static final short CHARACTERISTICTYPE_ENTITY_CODE = 0x0001;
 	public static final short EQUIPMENTTYPE_ENTITY_CODE = 0x0002;
 	public static final short PORTTYPE_ENTITY_CODE = 0x0003;
@@ -89,7 +111,7 @@ public class ObjectEntities {
 
 	/*	Administration 129 -- 256	*/
 
-	/*	Configuration	257 -- 384*/
+	/*	Configuration 257 -- 384        */
 	public static final short CHARACTERISTIC_ENTITY_CODE = 0x0101;
 	public static final short PERMATTR_ENTITY_CODE = 0x0102;
 	public static final short USER_ENTITY_CODE = 0x0103;
@@ -104,7 +126,7 @@ public class ObjectEntities {
 	public static final short ME_ENTITY_CODE = 0x010C;
 	public static final short LINK_ENTITY_CODE = 0x010D;
 
-	/*	Measurement 385 -- 512	*/
+	/*	Measurement 385 -- 512          */
 	public static final short SET_ENTITY_CODE = 0x0181;
 	public static final short SETPARAMETER_ENTITY_CODE = 0x0182;
 	public static final short MS_ENTITY_CODE = 0x0183;
@@ -117,10 +139,38 @@ public class ObjectEntities {
 	public static final short TEMPORALPATTERN_ENTITY_CODE = 0x018A;
 	public static final short MODELING_ENTITY_CODE = 0x018B;
 
+	/*	Scheme 513 -- 640               */
+	public static final short SCHEME_MIN_ENTITY_CODE = 0x0201;
+
+	public static final short CABLE_CHANNELING_ITEM_ENTITY_CODE = SCHEME_MIN_ENTITY_CODE;
+	public static final short PATH_ELEMENT_ENTITY_CODE = 0x0202;
+	public static final short SCHEME_ENTITY_CODE = 0x0203;
+	public static final short SCHEME_CABLE_LINK_ENTITY_CODE = 0x0204;
+	public static final short SCHEME_CABLE_PORT_ENTITY_CODE = 0x0205;
+	public static final short SCHEME_CABLE_THREAD_ENTITY_CODE = 0x0206;
+	public static final short SCHEME_DEVICE_ENTITY_CODE = 0x0207;
+	public static final short SCHEME_ELEMENT_ENTITY_CODE = 0x0208;
+	public static final short SCHEME_LINK_ENTITY_CODE = 0x0209;
+	public static final short SCHEME_MONITORING_SOLUTION_ENTITY_CODE = 0x020A;
+	public static final short SCHEME_OPTIMIZE_INFO_ENTITY_CODE = 0x020B;
+	public static final short SCHEME_PATH_ENTITY_CODE = 0x020C;
+	public static final short SCHEME_PORT_ENTITY_CODE = 0x020D;
+	public static final short SCHEME_PROTO_ELEMENT_ENTITY_CODE = 0x020E;
+	public static final short SCHEME_PROTO_GROUP_ENTITY_CODE = 0x020F;
+
+	public static final short SCHEME_MAX_ENTITY_CODE = 0x0280;
+
+	/*      Map 641 -- 768                    */
+	public static final short MAP_MIN_ENTITY_CODE = 0x0281;
+	public static final short MAP_MAX_ENTITY_CODE = 0x0300;
+	
+	/*      Updike 32767                      */
+	public static final short UPDIKE_ENTITY_CODE = Short.MAX_VALUE;
+
 	private ObjectEntities() {
 	}
 
-	public static short stringToCode(String entity) {
+	public static short stringToCode(final String entity) {
 		/**
 		 * TODO recast using Trove Collections
 		 */
@@ -145,10 +195,10 @@ public class ObjectEntities {
 		else if (entity.equals(EQUIPMENT_ENTITY)) return EQUIPMENT_ENTITY_CODE;
 		else if (entity.equals(PORT_ENTITY)) return PORT_ENTITY_CODE;
 		else if (entity.equals(TRANSPATH_ENTITY)) return TRANSPATH_ENTITY_CODE;
-        else if (entity.equals(TRANSPATHTYPE_ENTITY)) return TRANSPATHTYPE_ENTITY_CODE;
+		else if (entity.equals(TRANSPATHTYPE_ENTITY)) return TRANSPATHTYPE_ENTITY_CODE;
 		else if (entity.equals(KIS_ENTITY)) return KIS_ENTITY_CODE;
 		//else if (entity.equals(KISTYPE_ENTITY)) return KISTYPE_ENTITY_CODE;
-        else if (entity.equals(MEASUREMENTPORT_ENTITY)) return MEASUREMENTPORT_ENTITY_CODE;
+		else if (entity.equals(MEASUREMENTPORT_ENTITY)) return MEASUREMENTPORT_ENTITY_CODE;
 		else if (entity.equals(ME_ENTITY)) return ME_ENTITY_CODE;
 		else if (entity.equals(LINK_ENTITY)) return LINK_ENTITY_CODE;
 
@@ -164,10 +214,44 @@ public class ObjectEntities {
 		else if (entity.equals(TEMPORALPATTERN_ENTITY)) return TEMPORALPATTERN_ENTITY_CODE;
 		else if (entity.equals(MODELING_ENTITY)) return MODELING_ENTITY_CODE;
 
+		else if (entity.equals(CABLE_CHANNELING_ITEM_ENTITY))
+			return CABLE_CHANNELING_ITEM_ENTITY_CODE;
+		else if (entity.equals(PATH_ELEMENT_ENTITY))
+			return PATH_ELEMENT_ENTITY_CODE;
+		else if (entity.equals(SCHEME_ENTITY))
+			return SCHEME_ENTITY_CODE;
+		else if (entity.equals(SCHEME_CABLE_LINK_ENTITY))
+			return SCHEME_CABLE_LINK_ENTITY_CODE;
+		else if (entity.equals(SCHEME_CABLE_PORT_ENTITY))
+			return SCHEME_CABLE_PORT_ENTITY_CODE;
+		else if (entity.equals(SCHEME_CABLE_THREAD_ENTITY))
+			return SCHEME_CABLE_THREAD_ENTITY_CODE;
+		else if (entity.equals(SCHEME_DEVICE_ENTITY))
+			return SCHEME_DEVICE_ENTITY_CODE;
+		else if (entity.equals(SCHEME_ELEMENT_ENTITY))
+			return SCHEME_ELEMENT_ENTITY_CODE;
+		else if (entity.equals(SCHEME_LINK_ENTITY))
+			return SCHEME_LINK_ENTITY_CODE;
+		else if (entity.equals(SCHEME_MONITORING_SOLUTION_ENTITY))
+			return SCHEME_MONITORING_SOLUTION_ENTITY_CODE;
+		else if (entity.equals(SCHEME_OPTIMIZE_INFO_ENTITY))
+			return SCHEME_OPTIMIZE_INFO_ENTITY_CODE;
+		else if (entity.equals(SCHEME_PATH_ENTITY))
+			return SCHEME_PATH_ENTITY_CODE;
+		else if (entity.equals(SCHEME_PORT_ENTITY))
+			return SCHEME_PORT_ENTITY_CODE;
+		else if (entity.equals(SCHEME_PROTO_ELEMENT_ENTITY))
+			return SCHEME_PROTO_ELEMENT_ENTITY_CODE;
+		else if (entity.equals(SCHEME_PROTO_GROUP_ENTITY))
+			return SCHEME_PROTO_GROUP_ENTITY_CODE;
+
+		else if (entity.equals(UPDIKE_ENTITY))
+			return UPDIKE_ENTITY_CODE;
+
 		else return UNKNOWN_ENTITY_CODE;
 	}
 
-	public static String codeToString(short code) {
+	public static String codeToString(final short code) {
 		/**
 		 * TODO recast using Trove Collections
 		 */
@@ -212,12 +296,12 @@ public class ObjectEntities {
 				return PORT_ENTITY;
 			case TRANSPATH_ENTITY_CODE:
 				return TRANSPATH_ENTITY;
-            case TRANSPATHTYPE_ENTITY_CODE:
-                return TRANSPATHTYPE_ENTITY;
+			case TRANSPATHTYPE_ENTITY_CODE:
+            			return TRANSPATHTYPE_ENTITY;
 			case KIS_ENTITY_CODE:
 				return KIS_ENTITY;
-//            case KISTYPE_ENTITY_CODE:
-//                return KISTYPE_ENTITY;
+//			case KISTYPE_ENTITY_CODE:
+//				return KISTYPE_ENTITY;
 			case MEASUREMENTPORT_ENTITY_CODE:
 				return MEASUREMENTPORT_ENTITY;
 			case ME_ENTITY_CODE:
@@ -248,9 +332,41 @@ public class ObjectEntities {
 			case MODELING_ENTITY_CODE:
 				return MODELING_ENTITY;
 
-			case UNKNOWN_ENTITY_CODE:
-				return null;
+			case CABLE_CHANNELING_ITEM_ENTITY_CODE:
+				return CABLE_CHANNELING_ITEM_ENTITY;
+			case PATH_ELEMENT_ENTITY_CODE:
+				return PATH_ELEMENT_ENTITY;
+			case SCHEME_ENTITY_CODE:
+				return SCHEME_ENTITY;
+			case SCHEME_CABLE_LINK_ENTITY_CODE:
+				return SCHEME_CABLE_LINK_ENTITY;
+			case SCHEME_CABLE_PORT_ENTITY_CODE:
+				return SCHEME_CABLE_PORT_ENTITY;
+			case SCHEME_CABLE_THREAD_ENTITY_CODE:
+				return SCHEME_CABLE_THREAD_ENTITY;
+			case SCHEME_DEVICE_ENTITY_CODE:
+				return SCHEME_DEVICE_ENTITY;
+			case SCHEME_ELEMENT_ENTITY_CODE:
+				return SCHEME_ELEMENT_ENTITY;
+			case SCHEME_LINK_ENTITY_CODE:
+				return SCHEME_LINK_ENTITY;
+			case SCHEME_MONITORING_SOLUTION_ENTITY_CODE:
+				return SCHEME_MONITORING_SOLUTION_ENTITY;
+			case SCHEME_OPTIMIZE_INFO_ENTITY_CODE:
+				return SCHEME_OPTIMIZE_INFO_ENTITY;
+			case SCHEME_PATH_ENTITY_CODE:
+				return SCHEME_PATH_ENTITY;
+			case SCHEME_PORT_ENTITY_CODE:
+				return SCHEME_PORT_ENTITY;
+			case SCHEME_PROTO_ELEMENT_ENTITY_CODE:
+				return SCHEME_PROTO_ELEMENT_ENTITY;
+			case SCHEME_PROTO_GROUP_ENTITY_CODE:
+				return SCHEME_PROTO_GROUP_ENTITY;
 
+			case UPDIKE_ENTITY_CODE:
+				return UPDIKE_ENTITY;
+
+			case UNKNOWN_ENTITY_CODE:
 			default:
 				return null;
 		}
