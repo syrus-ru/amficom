@@ -11,7 +11,7 @@ VBJCLASSPATH=$(ORACLE_HOME)\lib\vbjorb.jar;$(ORACLE_HOME)\lib\vbjapp.jar;$(ORACL
 SQLJCLASSPATH=$(ORACLE_HOME)\sqlj\lib\runtime12.jar;$(ORACLE_HOME)\sqlj\lib\translator.jar
 JDBCCLASSPATH=$(ORACLE_HOME)\jdbc\lib\classes12.jar
 
-PROJECTCLASSPATH=$(LIB)\server\kisserver.jar;$(LIB)\server\utilserver.jar;$(LIB)\util.jar;$(LIB)\io.jar;$(LIB)\corba_portable.jar;$(LIB)\filter.jar;$(LIB)\server\serveradd.jar
+PROJECTCLASSPATH=$(LIB)\server\kisserver.jar;$(LIB)\server\utilserver.jar;$(LIB)\util.jar;$(LIB)\corbaportable.jar;$(LIB)\filter.jar;$(LIB)\server\serveradd.jar
 
 SERVERHOSTNAME=research
 CONNECTSTRING=shaitan
