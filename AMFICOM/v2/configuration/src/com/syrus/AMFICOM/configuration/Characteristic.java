@@ -16,6 +16,7 @@ public class Characteristic extends StorableObject {
 	private String description;
 	private int sort;
 	private String value;
+	private Identifier characterized_id;
 
 	private StorableObject_Database characteristicDatabase;
 
@@ -42,6 +43,7 @@ public class Characteristic extends StorableObject {
 		this.description = new String(ct.description);
 		this.sort = ct.sort.value();
 		this.value = new String(ct.value);
+		this.characterized_id = new Identifier(ct.characterized_id);
 
 		this.characteristicDatabase = ConfigurationDatabaseContext.characteristicDatabase;
 		try {
@@ -62,7 +64,8 @@ public class Characteristic extends StorableObject {
 																					 new String(this.name),
 																					 new String(this.description),
 																					 CharacteristicSort.from_int(this.sort),
-																					 new String(this.value));
+																					 new String(this.value),
+																					 (Identifier_Transferable)this.characterized_id.getTransferable());
 	}
 
 	public Identifier getTypeId() {
@@ -85,6 +88,10 @@ public class Characteristic extends StorableObject {
 		return this.value;
 	}
 
+	public Identifier getCharacterizedId() {
+		return this.characterized_id;
+	}
+
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
 																						Identifier creator_id,
@@ -93,7 +100,8 @@ public class Characteristic extends StorableObject {
 																						String name,
 																						String description,
 																						int sort,
-																						String value) {
+																						String value,
+																						Identifier characterized_id) {
 		super.setAttributes(created,
 												modified,
 												creator_id,
@@ -103,5 +111,6 @@ public class Characteristic extends StorableObject {
 		this.description = description;
 		this.sort = sort;
 		this.value = value;
+		this.characterized_id = characterized_id;
 	}
 }

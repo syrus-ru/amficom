@@ -37,7 +37,10 @@ mach:	corba
 		$(SRC)/com/syrus/AMFICOM/configuration/CharacteristicType.java \
 		$(SRC)/com/syrus/AMFICOM/configuration/CharacteristicType_Database.java \
 		$(SRC)/com/syrus/AMFICOM/configuration/Characteristic.java \
-		$(SRC)/com/syrus/AMFICOM/configuration/Characteristic_Database.java #\
+		$(SRC)/com/syrus/AMFICOM/configuration/Characteristic_Database.java \
+		$(SRC)/com/syrus/AMFICOM/configuration/Characterized.java \
+		$(SRC)/com/syrus/AMFICOM/configuration/Port.java \
+		$(SRC)/com/syrus/AMFICOM/configuration/Port_Database.java #\
 		$(SRC)/com/syrus/AMFICOM/configuration/KIS.java \
 		$(SRC)/com/syrus/AMFICOM/configuration/KIS_Database.java \ 
 #		$(SRC)/com/syrus/AMFICOM/configuration/MonitoredElement.java \

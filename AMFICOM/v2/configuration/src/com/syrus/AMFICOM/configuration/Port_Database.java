@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.configuration;
 
+import java.util.ArrayList;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +10,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 public class Port_Database extends StorableObject_Database {
 
@@ -22,7 +24,6 @@ public class Port_Database extends StorableObject_Database {
 	public void retrieve(StorableObject storableObject) throws Exception {
 		Port port = this.fromStorableObject(storableObject);
 		this.retrievePort(port);
-		this.retrievePortCharacteristics(port);
 	}
 
 	private void retrievePort(Port port) throws Exception {
@@ -57,7 +58,7 @@ public class Port_Database extends StorableObject_Database {
 				throw new Exception("No such port: " + port_id_str);
 		}
 		catch (SQLException sqle) {
-			String mesg = "Port_Database.retrieve | Cannot retrieve port " + port_id_str;
+			String mesg = "Port_Database.retrievePort | Cannot retrieve port " + port_id_str;
 			throw new Exception(mesg, sqle);
 		}
 		finally {
@@ -78,7 +79,34 @@ public class Port_Database extends StorableObject_Database {
 		String sql = "SELECT "
 			+ "id"
 			+ " FROM " + ObjectEntities.CHARACTERISTIC_ENTITY
-			+ " WHERE port_id = " + port_id_str;
+			+ " WHERE port_id = " + port_id_str
+				+ " AND sort = " + Integer.toString(CharacteristicSort._CHARACTERISTIC_SORT_PORT);
+		ArrayList characteristics = new ArrayList();
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("Port_Database.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next())
+				characteristics.add(new Characteristic(new Identifier(resultSet.getLong("id"))));
+		}
+		catch (SQLException sqle) {
+			String mesg = "Port_Database.retrievePortCharacteristics | Cannot retrieve characteristics  for port " + port_id_str;
+			throw new Exception(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {}
+		}
+		port.setCharacteristics(characteristics);
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
@@ -93,7 +121,6 @@ public class Port_Database extends StorableObject_Database {
 		Port port = this.fromStorableObject(storableObject);
 		try {
 			this.insertPort(port);
-			this.insertPortCharacteristics(port);
 		}
 		catch (Exception e) {
 			try {
@@ -147,10 +174,6 @@ public class Port_Database extends StorableObject_Database {
 			}
 			catch (SQLException sqle1) {}
 		}
-	}
-
-	private void insertPortCharacteristics(Port port) throws Exception {
-		String port_id_str = port.getId().toString();
 	}
 
 	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
