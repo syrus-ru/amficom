@@ -64,8 +64,7 @@ InitialAnalysis::InitialAnalysis(
 	// либо пользователь IA не указал его размер,
 	// считаем шум сами
 	if (externalNoise == 0 || lengthTillZero <= 0)
-	{
-		prf_b("IA: noise");
+	{	prf_b("IA: noise");
 		// вычисляем уровень шума
 		{ const int sz = lastNonZeroPoint;
 		  const int width = wlet_width;
@@ -73,10 +72,10 @@ InitialAnalysis::InitialAnalysis(
 		}
 	}
 	else
-	{
-		int i;
+	{	int i;
 		for (i = 0; i < lastNonZeroPoint; i++)
-			noise[i] = externalNoise[i];
+		{	noise[i] = externalNoise[i];
+        }
 	}
 
 	prf_b("IA: analyse");
@@ -144,21 +143,39 @@ void InitialAnalysis::findEventsBySplashes(ArrList& splashes)
             //&& ( sp1.f_extr>mc+noise[sp1.x_extr] && -sp2.f_extr>mc+noise[sp2.x_extr] ) // если из двух сосоедних всплесков хотя бы один превышает порог коннектора, то это коннектор
           )
         {   EventParams *ep = new EventParams;
-            ep->type = EventParams::REFLECTIVE;
-            ep->begin = sp1.begin_nonoise;
-            ep->end = sp2.end_nonoise;
-            events->add(ep);
-            i++;
+            SetConnectorParamsBySplashes((EventParams&)*ep, sp1, sp2 );
+		    events->add(ep);
+            i++;// потому что коннектор состоит из двух всплесков
         }
         else if( fabs(sp1.f_extr) > mw+noise[sp1.x_extr] )
         {	EventParams *ep = new EventParams;
-			if(sp1.f_extr>0) 	{ ep->type = EventParams::GAIN;}
-	        else 				{ ep->type = EventParams::LOSS;}
-            ep->begin = sp1.begin_nonoise-1;
-            ep->end = sp1.end_nonoise+1;
+			SetSpliceParamsBySplash( (EventParams&)*ep, sp1 );
             events->add(ep);
         }
     }
+}
+// -------------------------------------------------------------------------------------------------
+// к этому мменту мы предполагаем, что свёртка f_wlet сделана для вейвлета шириной wlet_width и не менялась 
+void InitialAnalysis::SetSpliceParamsBySplash( EventParams& ep, Splash& sp)
+{   if(sp.f_extr>0) 	{ ep.type = EventParams::GAIN;}
+    else 				{ ep.type = EventParams::LOSS;}
+    ep.begin = sp.begin_nonoise-1;
+    ep.end = sp.end_nonoise+1;
+    // ищем площадь
+    int l = max(sp.begin_nonoise, sp.begin - wlet_width);
+    int r = min(sp.end_nonoise, sp.end + wlet_width);
+	double alpha = 1./wlet_width;// пока так, потом посчитаем иначе  
+    double sum=0;
+    for(int i=l; i<=r; i++)
+    {	sum += f_wlet[i];
+    }
+    ep.gain = alpha*sum;
+}
+// -------------------------------------------------------------------------------------------------
+void InitialAnalysis::SetConnectorParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
+{  ep.type = EventParams::REFLECTIVE;
+   ep.begin = sp1.begin_nonoise;
+   ep.end = sp2.end_nonoise;  
 }
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
@@ -202,7 +219,9 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
        	break;
         }
         int end=j;
-        if(begin <= end)// begin>end только если образ так и не пересёк ни разу верхний порог
+        if(begin<0){ begin = 0;}
+        if(end>lastNonZeroPoint){ end = lastNonZeroPoint;}
+        if(begin < end)// begin>end только если образ так и не пересёк ни разу верхний порог
         {	Splash* splash = new Splash(begin, end, begin_nonoise, end_nonoise, sign, f_extr, i_extr, area);
         	splashes.add(splash);
         }
@@ -275,7 +294,7 @@ void InitialAnalysis::performTransformationOnly(double* f, int begin, int end, d
 	{	tmp = 0;
 		int jL = i-freq;
 		int jMin = max(i-freq, 0);
-		int jMax = min(i+freq+1, end);
+		int jMax = min(i+freq+1, lastNonZeroPoint);
 		int jR = i+freq+1;
 		int j;
 		for (j = jL;   j < jMin; j++)	tmp += f[jMin]   * wLetData[j-i+freq];
@@ -420,7 +439,7 @@ return;
 		// ищем пересечение слева, пытаясь сдвинуть границу влево ( то есть пока i+width<=left_cross )
         for(i=w_l; i<w_r && i+width*angle_factor<=left_cross; i++)
         {	if(fabs(f_wlet[i])>=minimalWeld+noise[i]*noise_factor+df_left)
-        	{	w_l=i-1;
+        	{	w_l=i-1;//w_l=i;
 	            if(w_l+width*angle_factor<left_cross){ left_cross = (int )(w_l+width*angle_factor);}
         break;
             }
@@ -428,7 +447,7 @@ return;
    		// ищем пересечение справа
         for(int j=w_r; j>w_l && j-width*angle_factor>=right_cross; j--) // j-width>=right_cross - условие минимума в повёрнутой на 45 СК
         {	if(fabs(f_wlet[j])>=minimalWeld+noise[j]*noise_factor+df_right)
-        	{	w_r=j+1;
+        	{	w_r=j+1;//w_r=j;
 	            if(w_r-width*angle_factor>right_cross)
                 { right_cross = (int )(w_r-width*angle_factor);}
         break;
@@ -447,7 +466,7 @@ return;
 #endif
     }
 	//prf_b("correctSpliceCoords: scales done");
-	if( w_l < w_r )
+	if( w_l < w_r  )
     {   double old_left = ev.begin;
         double old_right = ev.end;
 		// можем только сужать события

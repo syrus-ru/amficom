@@ -35,6 +35,10 @@ public:
 	int type;
 	int begin;
 	int end;
+    // SPLICE params
+    double gain; // потеря или приобретение ( зависит от знака ) в значении ф-ции на событии
+    double gain_thr; // площадь от границ под порогом чувствительности 
+    // CONNECTOR params
 };
 
 

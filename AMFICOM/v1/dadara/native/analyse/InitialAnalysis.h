@@ -9,6 +9,7 @@
 //#include "EPList2.h"
 #include "../Common/ArrList.h"
 
+class Splash;
 //---------------------------------------------------------------------------------------------------------------
 class InitialAnalysis
 {
@@ -60,7 +61,7 @@ private:
 	double minimalConnector;
 	double minimalEndingSplash;
 
-    int wlet_width; // ширина вейвлета
+    int wlet_width; // базовая ширина вейвлета
     int reflectiveSize;// максимальная ширина коннектора
 
 	int lastNonZeroPoint;
@@ -88,6 +89,8 @@ private:
 	// анализ
     void findAllWletSplashes(double* f_wlet, ArrList& splashes);
     void findEventsBySplashes(ArrList&  splashes);
+	void SetSpliceParamsBySplash( EventParams& ep, Splash& sp1);
+    void SetConnectorParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
     void deleteAllEventsAfterLastConnector();
     void addLinearPartsBetweenEvents();
     void correctAllConnectorsFronts(double *arr);
@@ -96,7 +99,7 @@ private:
     void excludeShortLinesBetweenConnectors(double* data, int evSizeC);
 	void verifyResults();
 
-//Wavelet constants;
+// Wavelet constants;
 private:
     double wn;// норма вейвлета (НОРМА специфическая ! См реализацию ! )
 };
