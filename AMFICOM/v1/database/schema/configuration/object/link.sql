@@ -10,12 +10,12 @@ CREATE TABLE Equipment (
  type_id VARCHAR2(32) NOT NULL,
  sort NUMBER(2,0),
 --
- name VARCHAR2(64) NOT NULL,
+ name VARCHAR2(128) NOT NULL,
  description VARCHAR2(256),
 --
  inventory_no VARCHAR2(64),
- supplier VARCHAR2(64),
- supplier_code VARCHAR2(64),
+ supplier VARCHAR2(128),
+ supplier_code VARCHAR2(32),
  link_id VARCHAR2(32),
  color VARCHAR(32),
  mark VARCHAR(32),

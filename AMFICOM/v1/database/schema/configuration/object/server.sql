@@ -9,7 +9,7 @@ CREATE TABLE Server (
 --
  type_id VARCHAR2(32),
 --
- name VARCHAR2(64) NOT NULL,
+ name VARCHAR2(128) NOT NULL,
  description VARCHAR2(256),
  user_id VARCHAR2(32) NOT NULL,
 --

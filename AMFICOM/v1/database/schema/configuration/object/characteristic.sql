@@ -7,7 +7,7 @@ CREATE TABLE Characteristic (
 --
  type_id VARCHAR2(32) NOT NULL,
 --
- name VARCHAR2(64) NOT NULL,
+ name VARCHAR2(128) NOT NULL,
  description VARCHAR2(256),
  value VARCHAR2(256),
  is_editable NUMBER(1) NOT NULL,

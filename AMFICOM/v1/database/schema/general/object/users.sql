@@ -1,4 +1,4 @@
--- $Id: users.sql,v 1.6 2004/10/13 15:59:11 bass Exp $
+-- $Id: users.sql,v 1.7 2004/12/28 13:45:09 arseniy Exp $
 
 CREATE TABLE mcm.users(
  id VARCHAR2(32),
@@ -9,7 +9,7 @@ CREATE TABLE mcm.users(
 --
  login VARCHAR2(32) NOT NULL,
  sort NUMBER(2, 0) NOT NULL,
- name VARCHAR2(64) NOT NULL,
+ name VARCHAR2(128) NOT NULL,
  description VARCHAR2(256),
 --
  CONSTRAINT users_pk PRIMARY KEY (id),

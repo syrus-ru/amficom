@@ -8,11 +8,11 @@ CREATE TABLE LinkType (
  codename VARCHAR2(32) NOT NULL,
  description VARCHAR2(256),
 --
- name VARCHAR2(64),
+ name VARCHAR2(128),
 --
  sort NUMBER(2,0),
- manufacturer VARCHAR2(64),
- manufacturer_code VARCHAR2(64),
+ manufacturer VARCHAR2(128),
+ manufacturer_code VARCHAR2(32),
  image_id VARCHAR2(32),
 --
  CONSTRAINT lkptype_pk PRIMARY KEY (id),

@@ -1,4 +1,4 @@
--- $Id: domain.sql,v 1.2 2004/10/13 16:11:23 bass Exp $
+-- $Id: domain.sql,v 1.3 2004/12/28 13:45:09 arseniy Exp $
 
 CREATE TABLE mcm.domain (
  id VARCHAR2(32),
@@ -10,7 +10,7 @@ CREATE TABLE mcm.domain (
 --
  domain_id VARCHAR2(32),
 --
- name VARCHAR2(64) NOT NULL,
+ name VARCHAR2(128) NOT NULL,
  description VARCHAR2(256),
  owner_id VARCHAR2(32),
 --

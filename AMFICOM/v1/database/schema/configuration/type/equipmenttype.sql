@@ -8,7 +8,7 @@ CREATE TABLE EquipmentType (
  codename VARCHAR2(32) NOT NULL,
  description VARCHAR2(256),
 --
- name VARCHAR2(64),
+ name VARCHAR2(128),
 --
  CONSTRAINT eqptype_pk PRIMARY KEY (id),
  CONSTRAINT eqptype_creator_fk FOREIGN KEY (creator_id)

@@ -8,7 +8,7 @@ CREATE TABLE TnsmissionPathType (
  codename VARCHAR2(32) NOT NULL,
  description VARCHAR2(256),
  --
- name VARCHAR2(64),
+ name VARCHAR2(128),
  --
  CONSTRAINT kistype_pk PRIMARY KEY (id),
  CONSTRAINT kistype_creator_fk FOREIGN KEY (creator_id)

@@ -8,7 +8,7 @@ CREATE TABLE Modeling (
  type_id VARCHAR2(32) NOT NULL,
  monitored_element_id VARCHAR2(32) NOT NULL,
 --
- name VARCHAR(256),
+ name VARCHAR(128),
 --
  argument_set_id VARCHAR2(32) NOT NULL,
 --

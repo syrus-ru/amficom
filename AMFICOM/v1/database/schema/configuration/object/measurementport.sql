@@ -7,7 +7,7 @@ CREATE TABLE MeasurementPort (
 --
  type_id VARCHAR2(32) NOT NULL,
 --
- name VARCHAR2(64) NOT NULL,
+ name VARCHAR2(128) NOT NULL,
  description VARCHAR2(256),
 -- 
  kis_id VARCHAR2(32),

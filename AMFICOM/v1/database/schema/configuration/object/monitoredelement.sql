@@ -7,7 +7,7 @@ CREATE TABLE MonitoredElement (
 --
  domain_id VARCHAR2(32),
 --
- name  VARCHAR2(64),
+ name  VARCHAR2(128),
 --
  measurement_port_id VARCHAR2(32) NOT NULL,
 --
