@@ -1,5 +1,5 @@
 /*
-* $Id: CompoundCondition.java,v 1.3 2005/01/21 08:26:30 bob Exp $
+* $Id: CompoundCondition.java,v 1.4 2005/01/21 10:30:47 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.omg.CORBA.Any;
@@ -17,19 +18,20 @@ import com.syrus.AMFICOM.general.corba.CompoundCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/21 08:26:30 $
+ * 
+ * Compound condition such as (A & B), (A | B) , (A ^ B)
+ * where A and B is conditions (they can be also compound condition too)
+ *  
+ * @version $Revision: 1.4 $, $Date: 2005/01/21 10:30:47 $
  * @author $Author: bob $
  * @module general_v1
  */
 public class CompoundCondition implements StorableObjectCondition {
 
-	public static final int OPERATION_AND 	= 0;
-	public static final int OPERATION_OR	= 1;
-	public static final int OPERATION_XOR	= 2;
-	
 	private static final ORB ORB_INSTANCE =  JavaSoftORBUtil.getInstance().getORB();
 
 	private StorableObjectCondition firstCondition;
@@ -39,29 +41,57 @@ public class CompoundCondition implements StorableObjectCondition {
 	private Short entityCode;
 	
 	public CompoundCondition(StorableObjectCondition firstCondition, 
-	                         int operation, 
-	                         StorableObjectCondition secondCondition) throws IllegalDataException {
-		if (firstCondition == null || operation < OPERATION_AND 
-				|| operation > OPERATION_XOR || secondCondition == null)
-			throw new IllegalDataException("Illegal input parameters");
-		
+	                         CompoundConditionSort operation, 
+	                         StorableObjectCondition secondCondition) {
 		this.firstCondition = firstCondition;
-		this.operation = operation;
+		this.operation = operation.value();
 		this.secondCondition = secondCondition;
+	}
+	
+	
+	public CompoundCondition(CompoundCondition_Transferable transferable) throws IllegalDataException {
+		this.operation = transferable.sort.value();
+		Any[] anies = transferable.innerConditions;
+		if (anies.length == 2) {
+			Serializable serializable1 = anies[0].extract_Value();
+			Serializable serializable2 = anies[1].extract_Value();
+			if (serializable1 instanceof StringFieldCondition_Transferable) {
+				StringFieldCondition_Transferable stringFieldCondition_Transferable = (StringFieldCondition_Transferable) serializable1;
+				this.firstCondition = new StringFieldCondition(stringFieldCondition_Transferable);
+			} else if (serializable1 instanceof LinkedIdsCondition_Transferable) {
+				LinkedIdsCondition_Transferable linkedIdsCondition_Transferable = (LinkedIdsCondition_Transferable) serializable1;
+				this.firstCondition = new LinkedIdsCondition(linkedIdsCondition_Transferable);				
+			} else if (serializable1 instanceof CompoundCondition_Transferable) {
+				CompoundCondition_Transferable compoundCondition_Transferable = (CompoundCondition_Transferable) serializable1;
+				this.firstCondition = new CompoundCondition(compoundCondition_Transferable);
+			}
+			
+			if (serializable2 instanceof StringFieldCondition_Transferable) {
+				StringFieldCondition_Transferable stringFieldCondition_Transferable = (StringFieldCondition_Transferable) serializable2;
+				this.secondCondition = new StringFieldCondition(stringFieldCondition_Transferable);
+			} else if (serializable2 instanceof LinkedIdsCondition_Transferable) {
+				LinkedIdsCondition_Transferable linkedIdsCondition_Transferable = (LinkedIdsCondition_Transferable) serializable2;
+				this.secondCondition = new LinkedIdsCondition(linkedIdsCondition_Transferable);				
+			} else if (serializable2 instanceof CompoundCondition_Transferable) {
+				CompoundCondition_Transferable compoundCondition_Transferable = (CompoundCondition_Transferable) serializable2;
+				this.secondCondition = new CompoundCondition(compoundCondition_Transferable);
+			}
+		} else 
+			throw new IllegalDataException("Illegal contition count " + anies.length);
 	}
 	
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean result = false;
 		boolean firstResult = this.firstCondition.isConditionTrue(object);
 		switch (this.operation) {
-			case OPERATION_AND:
+			case CompoundConditionSort._AND:
 				result = firstResult && this.secondCondition.isConditionTrue(object);
 				break;
-			case OPERATION_OR:
+			case CompoundConditionSort._OR:
 				result = firstResult || this.secondCondition.isConditionTrue(object);
 				break;
 				
-			case OPERATION_XOR:
+			case CompoundConditionSort._XOR:
 				boolean secondResult = this.secondCondition.isConditionTrue(object);
 				result = (!(firstResult && secondResult)) && (firstResult && secondResult); 
 				break;
@@ -74,14 +104,14 @@ public class CompoundCondition implements StorableObjectCondition {
 		boolean result = false;
 		boolean firstResult = this.firstCondition.isNeedMore(list);
 		switch (this.operation) {
-			case OPERATION_AND:
+			case CompoundConditionSort._AND:
 				result = firstResult && this.secondCondition.isNeedMore(list);
 				break;
-			case OPERATION_OR:
+			case CompoundConditionSort._OR:
 				result = firstResult || this.secondCondition.isNeedMore(list);
 				break;
 				
-			case OPERATION_XOR:
+			case CompoundConditionSort._XOR:
 				boolean secondResult = this.secondCondition.isNeedMore(list);
 				result = (!(firstResult && secondResult)) && (firstResult && secondResult); 
 				break;
