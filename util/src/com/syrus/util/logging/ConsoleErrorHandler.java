@@ -1,5 +1,5 @@
 /*
- * $Id: ConsoleErrorHandler.java,v 1.1 2004/09/25 18:02:37 bass Exp $
+ * $Id: ConsoleErrorHandler.java,v 1.2 2004/11/22 12:55:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/09/25 18:02:37 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/22 12:55:40 $
  * @module util
  */
 public final class ConsoleErrorHandler extends ErrorHandler {
@@ -30,8 +30,14 @@ public final class ConsoleErrorHandler extends ErrorHandler {
 		return instance;
 	}
 
+	public void error(Exception e) {
+		System.err.println("ERROR: Caught a " + fqnToShortName(e.getClass()) + " (stack trace follows):");
+		System.err.println("\tReason: " + e.getLocalizedMessage());
+		e.printStackTrace();
+	}
+
 	public void error(final SQLException sqle) {
-		System.err.println("ERROR: Caught an SQLException chain (stack traces follow):");
+		System.err.println("ERROR: Caught a " + fqnToShortName(sqle.getClass()) + " chain (stack traces follow):");
 		for (SQLException chainElement = sqle; chainElement != null; chainElement = chainElement.getNextException()) {
 			System.err.println("\tReason: " + chainElement.getLocalizedMessage());
 			System.err.println("\tSQLState: " + chainElement.getSQLState());
