@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.10 2005/04/01 21:54:56 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.11 2005/04/05 10:44:05 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -27,7 +26,6 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
@@ -40,7 +38,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/01 21:54:56 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/05 10:44:05 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -169,34 +167,18 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 
 	public Set loadParameterTypes(Set ids) throws RetrieveObjectException {
 		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
-		Set objects;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			String mesg = "Cannot load objects from database: " + ide.getMessage();
-			throw new RetrieveObjectException(mesg, ide);
-		}
-
-		Identifier id;
-		Set loadIds = new HashSet(ids);
-		for (Iterator it = objects.iterator(); it.hasNext();) {
-			id = ((StorableObject) it.next()).getId();
-			loadIds.remove(id);
-		}
-
-		if (loadIds.isEmpty())
-			return objects;
-
+		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = null;
 		try {
-			loadIdsT = Identifier.createTransferables(loadIds);
+			loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		}
 		catch (IllegalDataException ide) {
 			// Never
 			Log.errorException(ide);
 		}
+		if (loadIdsT.length == 0)
+			return objects;
+
 		Set loadedObjects = new HashSet();
 
 		try {
@@ -231,34 +213,18 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 
 	public Set loadCharacteristicTypes(Set ids) throws RetrieveObjectException {
 		CharacteristicTypeDatabase database = GeneralDatabaseContext.getCharacteristicTypeDatabase();
-		Set objects;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			String mesg = "Cannot load objects from database: " + ide.getMessage();
-			throw new RetrieveObjectException(mesg, ide);
-		}
-
-		Identifier id;
-		Set loadIds = new HashSet(ids);
-		for (Iterator it = objects.iterator(); it.hasNext();) {
-			id = ((StorableObject) it.next()).getId();
-			loadIds.remove(id);
-		}
-
-		if (loadIds.isEmpty())
-			return objects;
-
+		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = null;
 		try {
-			loadIdsT = Identifier.createTransferables(loadIds);
+			loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		}
 		catch (IllegalDataException ide) {
 			// Never
 			Log.errorException(ide);
 		}
+		if (loadIdsT.length == 0)
+			return objects;
+
 		Set loadedObjects = new HashSet();
 
 		try {
@@ -293,34 +259,18 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 
 	public Set loadCharacteristics(Set ids) throws RetrieveObjectException {
 		CharacteristicDatabase database = GeneralDatabaseContext.getCharacteristicDatabase();
-		Set objects;
-		try {
-			objects = database.retrieveByIdsByCondition(ids, null);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			String mesg = "Cannot load objects from database: " + ide.getMessage();
-			throw new RetrieveObjectException(mesg, ide);
-		}
-
-		Identifier id;
-		Set loadIds = new HashSet(ids);
-		for (Iterator it = objects.iterator(); it.hasNext();) {
-			id = ((StorableObject) it.next()).getId();
-			loadIds.remove(id);
-		}
-
-		if (loadIds.isEmpty())
-			return objects;
-
+		Set objects = super.retrieveFromDatabase(database, ids);
 		Identifier_Transferable[] loadIdsT = null;
 		try {
-			loadIdsT = Identifier.createTransferables(loadIds);
+			loadIdsT = super.createLoadIdsTransferable(ids, objects);
 		}
 		catch (IllegalDataException ide) {
 			// Never
 			Log.errorException(ide);
 		}
+		if (loadIdsT.length == 0)
+			return objects;
+
 		Set loadedObjects = new HashSet();
 
 		try {
