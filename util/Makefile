@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.13 2004/07/14 18:10:55 arseniy Exp $
+# $Id: Makefile,v 1.14 2004/08/05 11:35:18 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -11,6 +11,7 @@ LIBNAME = util.jar
 CLIENT_EXCLUDED_CLASSES = \
 	com.syrus.util.ServerLogger \
 	com.syrus.util.database.ByteArrayDatabase \
+	com.syrus.util.database.JdbcBlobManager \
 	com.syrus.util.database.Server \
 	com.syrus.util.database.ServerProperties
 

@@ -1,6 +1,8 @@
 classes
 docs
 lib
+*.deploy
+*.jar
 *.jpr
 *.properties
 Makefile.inc

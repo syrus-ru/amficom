@@ -20,4 +20,6 @@ sqlj.properties
 .all
 .idl
 .sqlj
+.classpath
+.project
 Makefile.inc
