@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Schematics.General.*;
+import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 

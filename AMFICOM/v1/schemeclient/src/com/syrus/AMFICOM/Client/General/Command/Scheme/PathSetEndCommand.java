@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Schematics.General.SchemeGraph;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
 
 public class PathSetEndCommand extends VoidCommand
 {

@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Schematics.General.SchemePanel;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 

@@ -3,8 +3,8 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Schematics.General.GraphActions;
-import com.syrus.AMFICOM.Client.Schematics.General.SchemeGraph;
+import com.syrus.AMFICOM.Client.General.Scheme.GraphActions;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 public class SchemeCloseCommand extends VoidCommand
