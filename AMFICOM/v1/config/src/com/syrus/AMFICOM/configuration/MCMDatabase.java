@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.16 2004/09/08 16:34:37 max Exp $
+ * $Id: MCMDatabase.java,v 1.17 2004/09/09 07:00:38 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/09/08 16:34:37 $
+ * @version $Revision: 1.17 $, $Date: 2004/09/09 07:00:38 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -64,7 +64,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-    		this.updateColumns = super.getUpdateColumns() 
+    		this.updateColumns = super.getUpdateColumns() + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
@@ -76,7 +76,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
     	if (this.updateMultiplySQLValues == null){
-    		this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() 
+    		this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -89,7 +89,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		MCM mcm = fromStorableObject(storableObject);
-		String sql = super.getUpdateSingleSQLValues(storableObject)
+		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ mcm.getDomainId().toSQLString() + COMMA
 			+ APOSTOPHE + mcm.getName() + APOSTOPHE + COMMA
 			+ APOSTOPHE + mcm.getDescription() + APOSTOPHE + COMMA
@@ -105,7 +105,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		String mcmIdStr = mcm.getId().getCode();
 		try {
 			super.setEntityForPreparedStatement(storableObject, preparedStatement);
-			preparedStatement.setString( 6, mcmIdStr);
+			preparedStatement.setString( 6, mcm.getDomainId().toString());
 			preparedStatement.setString( 7, mcm.getName());
 			preparedStatement.setString( 8, mcm.getDescription());
 			preparedStatement.setString( 9, mcm.getUserId().toString());
@@ -126,7 +126,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String retrievQeuery(String condition){
-		return super.retrieveQuery(condition)
+		return super.retrieveQuery(condition) + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_TYPE_ID + COMMA
 			+ COLUMN_NAME + COMMA
@@ -228,7 +228,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		MCM mcm = this.fromStorableObject(storableObject);
 		try {
-			this.insertEntity(mcm);
+			super.insertEntity(mcm);
 		}
 		catch (CreateObjectException e) {
 			try {
