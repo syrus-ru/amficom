@@ -12,8 +12,8 @@ PASSWORD=amficom
 DBHOSTNAME=mongol
 CONNECTSTRING=mongol
 
-LIBNAME=configure.jar
-ARCHFILE=configure.tar.gz
+LIBNAME=configuration.jar
+ARCHFILE=configuration.tar.gz
 
 SRC_SUFFIXES = \
 	.java \
