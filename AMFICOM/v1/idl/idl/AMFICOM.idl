@@ -1,18 +1,22 @@
-#ifndef _amficom_idl_
-#define _amficom_idl_
+/*
+ * $Id: AMFICOM.idl,v 1.10 2004/10/19 13:57:54 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-#include "general.idl"
-#include "admin.idl"
-#include "map.idl"
-#include "alarm.idl"
-#include "scheme.idl"
-#include "network.idl"
+#ifndef AMFICOM_IDL
+#define AMFICOM_IDL
+
 #include "ISM.idl"
-#include "resource.idl"
-#include "survey.idl"
-#include "report.idl"
+#include "admin.idl"
 #include "client.idl"
-#include "streams.idl"
+#include "map.idl"
+#include "network.idl"
+#include "report.idl"
+#include "scheme.idl"
+#include "survey.idl"
 
 module com
 {
@@ -23,7 +27,7 @@ module AMFICOM
 module CORBA
 {
 
-interface AMFICOM
+interface AMFICOM: ::com::syrus::AMFICOM::general::corba::NameResolver
 {
 	void registerAlarmReceiver(
 			in Admin::AccessIdentity_Transferable accessIdentity,
@@ -34,22 +38,16 @@ interface AMFICOM
 			in Admin::AccessIdentity_Transferable accessIdentity)
 		raises (General::AMFICOMRemoteException);
 
-#if 0
-		oneway void asyncPing(in Client client, in long long clientTimeMillis);
-
-		oneway void asyncPingCallback(in long long serverTimeMillis, in long long clientTimeMillis);
-#endif
-
 	void syncPing(out long long serverTimeMillis)
 		raises (General::AMFICOMRemoteException);
 
-/**
+/*
  * Session management
  */
 
 	long Logon(
 			in wstring username,
-			in General::octetSeq password,
+			in ::CORBA::OctetSeq password,
 			in wstring category,
 			out Admin::AccessIdentity_Transferable accessIdentity)
 		raises (General::AMFICOMRemoteException);
@@ -60,16 +58,16 @@ interface AMFICOM
 
 	long GetLoggedUserIds(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			out General::wstringSeq userids)
+			out ::CORBA::WStringSeq userids)
 		raises (General::AMFICOMRemoteException);
 
 	long ChangePassword(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::octetSeq oldpassword,
-			in General::octetSeq newpassword)
+			in ::CORBA::OctetSeq oldpassword,
+			in ::CORBA::OctetSeq newpassword)
 		raises (General::AMFICOMRemoteException);
 
-/**
+/*
  * General functions
  */
 
@@ -95,13 +93,13 @@ interface AMFICOM
 	long GetResourceDescriptorsByIds(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring type,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Resource::ResourceDescriptorSeq_Transferable desc)
 		raises (General::AMFICOMRemoteException);
 
 	long GetResultDescriptorsByIds(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Resource::ResourceDescriptorSeq_Transferable desc)
 		raises (General::AMFICOMRemoteException);
 
@@ -113,7 +111,7 @@ interface AMFICOM
 
 	long GetImages(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Resource::ImageResourceSeq_Transferable imgs)
 		raises (General::AMFICOMRemoteException);
 
@@ -134,9 +132,9 @@ interface AMFICOM
 
 	long GetStatedObjects(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq catagory_ids,
-			in General::wstringSeq group_ids,
-			in General::wstringSeq profile_ids,
+			in ::CORBA::WStringSeq catagory_ids,
+			in ::CORBA::WStringSeq group_ids,
+			in ::CORBA::WStringSeq profile_ids,
 			out Admin::OperatorCategorySeq_Transferable categoryseq,
 			out Admin::OperatorGroupSeq_Transferable groupseq,
 			out Admin::OperatorProfileSeq_Transferable profileseq)
@@ -167,12 +165,12 @@ interface AMFICOM
 
 	long RemoveObjects(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq domainseq,
-			in General::wstringSeq categoryseq,
-			in General::wstringSeq groupseq,
-			in General::wstringSeq profileseq,
-			in General::wstringSeq execseq,
-			in General::wstringSeq userseq)
+			in ::CORBA::WStringSeq domainseq,
+			in ::CORBA::WStringSeq categoryseq,
+			in ::CORBA::WStringSeq groupseq,
+			in ::CORBA::WStringSeq profileseq,
+			in ::CORBA::WStringSeq execseq,
+			in ::CORBA::WStringSeq userseq)
 		raises (General::AMFICOMRemoteException);
 
 	long GetAdminObjects(
@@ -184,9 +182,9 @@ interface AMFICOM
 
 	long GetStatedAdminObjects(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq server_ids,
-			in General::wstringSeq client_ids,
-			in General::wstringSeq agent_ids,
+			in ::CORBA::WStringSeq server_ids,
+			in ::CORBA::WStringSeq client_ids,
+			in ::CORBA::WStringSeq agent_ids,
 			out Admin::ServerSeq_Transferable serverseq,
 			out Admin::ClientSeq_Transferable clientseq,
 			out Admin::AgentSeq_Transferable agentseq)
@@ -201,9 +199,9 @@ interface AMFICOM
 
 	long RemoveAdminObjects(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq serverseq,
-			in General::wstringSeq clientseq,
-			in General::wstringSeq agentseq)
+			in ::CORBA::WStringSeq serverseq,
+			in ::CORBA::WStringSeq clientseq,
+			in ::CORBA::WStringSeq agentseq)
 		raises (General::AMFICOMRemoteException);
 
 /**
@@ -317,7 +315,7 @@ interface AMFICOM
 
 	long LoadStatedAttributeTypes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out General::ElementAttributeTypeSeq_Transferable attrseq)
 		raises (General::AMFICOMRemoteException);
 
@@ -327,7 +325,7 @@ interface AMFICOM
  
 	long GetStatedSchemeProtoGroups(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq group_ids,
+			in ::CORBA::WStringSeq group_ids,
 			out Scheme::SchemeProtoGroupSeq_Transferable groupseq,
 			out Resource::ImageResourceSeq_Transferable imageseq)
 		raises (General::AMFICOMRemoteException);
@@ -340,12 +338,12 @@ interface AMFICOM
 
 	long RemoveSchemeProtoGroups(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq group_ids)
+			in ::CORBA::WStringSeq group_ids)
 		raises (General::AMFICOMRemoteException);
 
 	long GetStatedSchemeProtoElements(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Resource::ImageResourceSeq_Transferable imageseq,
 			out Scheme::SchemeProtoElementSeq_Transferable elementseq)
 		raises (General::AMFICOMRemoteException);
@@ -358,7 +356,7 @@ interface AMFICOM
 
 	long RemoveSchemeProtoElements(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq element_ids)
+			in ::CORBA::WStringSeq element_ids)
 		raises (General::AMFICOMRemoteException);
 
 /**
@@ -367,7 +365,7 @@ interface AMFICOM
 
 	long GetStatedSchemes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Resource::ImageResourceSeq_Transferable imageseq,
 			out Scheme::SchemeSeq_Transferable schemeseq)
 		raises (General::AMFICOMRemoteException);
@@ -380,10 +378,10 @@ interface AMFICOM
 
 	long RemoveSchemes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq scheme_ids,
-			in General::wstringSeq scheme_path_ids,
-			in General::wstringSeq scheme_link_ids,
-			in General::wstringSeq scheme_element_ids)
+			in ::CORBA::WStringSeq scheme_ids,
+			in ::CORBA::WStringSeq scheme_path_ids,
+			in ::CORBA::WStringSeq scheme_link_ids,
+			in ::CORBA::WStringSeq scheme_element_ids)
 		raises (General::AMFICOMRemoteException);
 
 /**
@@ -391,11 +389,11 @@ interface AMFICOM
  */
 	long LoadStatedNet(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq p_ids,
-			in General::wstringSeq cp_ids,
-			in General::wstringSeq eq_ids,
-			in General::wstringSeq l_ids,
-			in General::wstringSeq cl_ids,
+			in ::CORBA::WStringSeq p_ids,
+			in ::CORBA::WStringSeq cp_ids,
+			in ::CORBA::WStringSeq eq_ids,
+			in ::CORBA::WStringSeq l_ids,
+			in ::CORBA::WStringSeq cl_ids,
 			out Network::PortSeq_Transferable ports,
 			out Network::CablePortSeq_Transferable cports,
 			out Network::EquipmentSeq_Transferable equipments,
@@ -405,11 +403,11 @@ interface AMFICOM
 
 	long RemoveNet(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq p_ids,
-			in General::wstringSeq cp_ids,
-			in General::wstringSeq eq_ids,
-			in General::wstringSeq l_ids,
-			in General::wstringSeq cl_ids)
+			in ::CORBA::WStringSeq p_ids,
+			in ::CORBA::WStringSeq cp_ids,
+			in ::CORBA::WStringSeq eq_ids,
+			in ::CORBA::WStringSeq l_ids,
+			in ::CORBA::WStringSeq cl_ids)
 		raises (General::AMFICOMRemoteException);
 
 	long SaveNet(
@@ -423,10 +421,10 @@ interface AMFICOM
 
 	long LoadStatedISM(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq me_ids,
-			in General::wstringSeq tp_ids,
-			in General::wstringSeq mp_ids,
-			in General::wstringSeq kis_ids,
+			in ::CORBA::WStringSeq me_ids,
+			in ::CORBA::WStringSeq tp_ids,
+			in ::CORBA::WStringSeq mp_ids,
+			in ::CORBA::WStringSeq kis_ids,
 			out ISM::MonitoredElementSeq_Transferable mes,
 			out ISM::TransmissionPathSeq_Transferable paths,
 			out ISM::MeasurementPortSeq_Transferable mports,
@@ -435,10 +433,10 @@ interface AMFICOM
 
 	long RemoveISM(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq me_ids,
-			in General::wstringSeq tp_ids,
-			in General::wstringSeq mp_ids,
-			in General::wstringSeq kis_ids)
+			in ::CORBA::WStringSeq me_ids,
+			in ::CORBA::WStringSeq tp_ids,
+			in ::CORBA::WStringSeq mp_ids,
+			in ::CORBA::WStringSeq kis_ids)
 		raises (General::AMFICOMRemoteException);
 
 	long SaveISM(
@@ -455,17 +453,17 @@ interface AMFICOM
 
 	long LoadStatedCharacteristicTypes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq cht_ids,
+			in ::CORBA::WStringSeq cht_ids,
 			out General::CharacteristicTypeSeq_Transferable characteristictypes)
 		raises (General::AMFICOMRemoteException);
 
 	long LoadStatedNetDirectory(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq pt_ids,
-			in General::wstringSeq eqt_ids,
-			in General::wstringSeq lt_ids,
-			in General::wstringSeq cpt_ids,
-			in General::wstringSeq clt_ids,
+			in ::CORBA::WStringSeq pt_ids,
+			in ::CORBA::WStringSeq eqt_ids,
+			in ::CORBA::WStringSeq lt_ids,
+			in ::CORBA::WStringSeq cpt_ids,
+			in ::CORBA::WStringSeq clt_ids,
 			out NetworkDirectory::PortTypeSeq_Transferable porttypes,
 			out NetworkDirectory::EquipmentTypeSeq_Transferable equipmenttypes,
 			out NetworkDirectory::LinkTypeSeq_Transferable linktypes,
@@ -475,33 +473,33 @@ interface AMFICOM
 
 	long LoadStatedISMDirectory(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq kis_ids,
-			in General::wstringSeq mport_ids,
-			in General::wstringSeq path_ids,
+			in ::CORBA::WStringSeq kis_ids,
+			in ::CORBA::WStringSeq measurementPortTypeIds,
+			in ::CORBA::WStringSeq path_ids,
 			out ISMDirectory::KISTypeSeq_Transferable kistypes,
-			out ISMDirectory::MeasurementPortTypeSeq_Transferable mporttypes,
+			out ISMDirectory::MeasurementPortTypeSeq_Transferable measurementPortTypes,
 			out ISMDirectory::TransmissionPathTypeSeq_Transferable pathtypes)
 		raises (General::AMFICOMRemoteException);
 
 	long RemoveCharacteristicTypes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq cht_ids)
+			in ::CORBA::WStringSeq cht_ids)
 		raises (General::AMFICOMRemoteException);
 
 	long RemoveNetDirectory(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq pt_ids,
-			in General::wstringSeq cpt_ids,
-			in General::wstringSeq eqt_ids,
-			in General::wstringSeq lt_ids,
-			in General::wstringSeq clt_ids)
+			in ::CORBA::WStringSeq pt_ids,
+			in ::CORBA::WStringSeq cpt_ids,
+			in ::CORBA::WStringSeq eqt_ids,
+			in ::CORBA::WStringSeq lt_ids,
+			in ::CORBA::WStringSeq clt_ids)
 		raises (General::AMFICOMRemoteException);
 
 	long RemoveISMDirectory(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq kst_ids,
-			in General::wstringSeq mpt_ids,
-			in General::wstringSeq tpt_ids)
+			in ::CORBA::WStringSeq kst_ids,
+			in ::CORBA::WStringSeq measurementPortTypeIds,
+			in ::CORBA::WStringSeq tpt_ids)
 		raises (General::AMFICOMRemoteException);
 
 	long SaveCharacteristicTypes(
@@ -543,7 +541,7 @@ interface AMFICOM
 
 	long GetStatedAlarms(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Alarm::AlarmSeq_Transferable alarmseq,
 			out Alarm::EventSourceSeq_Transferable eventsourceseq,
 			out Alarm::EventSeq_Transferable eventseq)
@@ -551,7 +549,7 @@ interface AMFICOM
 
 	long GetStatedAlarmsFiltered(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
             in Resource::Filter_Transferable filter,
 			out Alarm::AlarmSeq_Transferable alarmseq,
 			out Alarm::EventSourceSeq_Transferable eventsourceseq,
@@ -585,9 +583,6 @@ interface AMFICOM
 			out Resource::ResourceDescriptorSeq_Transferable desc)
 		raises (General::AMFICOMRemoteException);
 
-	/**
-	 * @deprecated
-	 */
 	long LoadMaintenanceData(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			out Alarm::EventSourceTypeSeq_Transferable est,
@@ -595,18 +590,12 @@ interface AMFICOM
 			out Alarm::AlertingMessageUserSeq_Transferable amu)
 		raises (General::AMFICOMRemoteException);
 
-	/**
-	 * @deprecated
-	 */
 	long SaveMaintenanceData(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in Alarm::AlertingMessageSeq_Transferable am,
 			in Alarm::AlertingMessageUserSeq_Transferable amu)
 		raises (General::AMFICOMRemoteException);
 
-	/**
-	 * @deprecated
-	 */
 	long RemoveMaintenanceData(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring amu_id)
@@ -628,7 +617,7 @@ interface AMFICOM
 
 	long GetStatedTests(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Survey::ClientTestSeq_Transferable testseq)
 		raises (General::AMFICOMRemoteException);
 
@@ -652,7 +641,7 @@ interface AMFICOM
 
 	long LoadStatedAnalysis(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Survey::ClientAnalysisSeq_Transferable as)
 		raises (General::AMFICOMRemoteException);
 
@@ -669,7 +658,7 @@ interface AMFICOM
 
 	long LoadStatedModelings(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Survey::ClientModelingSeq_Transferable ms)
 		raises (General::AMFICOMRemoteException);
 
@@ -686,7 +675,7 @@ interface AMFICOM
 
 	long LoadStatedEvaluations(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Survey::ClientEvaluationSeq_Transferable es)
 		raises (General::AMFICOMRemoteException);
 
@@ -720,7 +709,7 @@ interface AMFICOM
 
 	long RemoveTests(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq testids)
+			in ::CORBA::WStringSeq testids)
 		raises (General::AMFICOMRemoteException);
 
 	long UpdateTests(
@@ -822,7 +811,7 @@ interface AMFICOM
 
 	long GetStatedResults(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Survey::ClientResultSeq_Transferable resultseq)
 		raises (General::AMFICOMRemoteException);
 
@@ -851,7 +840,7 @@ interface AMFICOM
 
 	long GetStatedResultSets(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Survey::ResultSetSeq_Transferable resultset)
 		raises (General::AMFICOMRemoteException);
 
@@ -879,7 +868,7 @@ interface AMFICOM
 
 	long LoadStatedGlobalParameterTypes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Survey::GlobalParameterTypeSeq_Transferable params)
 		raises (General::AMFICOMRemoteException);
 
@@ -890,7 +879,7 @@ interface AMFICOM
 
 	long LoadStatedTestTypes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Survey::TestTypeSeq_Transferable ttypeseq)
 		raises (General::AMFICOMRemoteException);
 
@@ -901,7 +890,7 @@ interface AMFICOM
 
 	long LoadStatedAnalysisTypes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Survey::AnalysisTypeSeq_Transferable atypes)
 		raises (General::AMFICOMRemoteException);
 
@@ -912,7 +901,7 @@ interface AMFICOM
 
 	long LoadStatedEvaluationTypes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Survey::EvaluationTypeSeq_Transferable etypes)
 		raises (General::AMFICOMRemoteException);
 
@@ -923,7 +912,7 @@ interface AMFICOM
 
 	long LoadStatedModelingTypes(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Survey::ModelingTypeSeq_Transferable mtypeseq)
 		raises (General::AMFICOMRemoteException);
 
@@ -934,7 +923,7 @@ interface AMFICOM
 
 	long LoadStatedCriteriaSets(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Survey::ClientCriteriaSetSeq_Transferable css)
 		raises (General::AMFICOMRemoteException);
 
@@ -945,7 +934,7 @@ interface AMFICOM
 
 	long LoadStatedThresholdSets(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Survey::ClientThresholdSetSeq_Transferable tss)
 		raises (General::AMFICOMRemoteException);
 
@@ -1087,12 +1076,12 @@ interface AMFICOM
 			in wstring test_type_id)
 		raises (General::AMFICOMRemoteException);
 
-	General::wstringSeq getTestSetupIdsByME(
+	::CORBA::WStringSeq getTestSetupIdsByME(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring monitored_element_id)
 		raises (General::AMFICOMRemoteException);
 
-	General::wstringSeq getTestSetupIdsByTestType(
+	::CORBA::WStringSeq getTestSetupIdsByTestType(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in wstring test_type_id)
 		raises (General::AMFICOMRemoteException);
@@ -1226,13 +1215,13 @@ interface AMFICOM
 
 	void getStatedReportTemplates(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq ids,
+			in ::CORBA::WStringSeq ids,
 			out Report::ReportTemplateSeq_Transferable reportTemplates)
 		raises (General::AMFICOMRemoteException);
 
 	void removeReportTemplates(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq reportTemplate_ids)
+			in ::CORBA::WStringSeq reportTemplate_ids)
 		raises (General::AMFICOMRemoteException);
 
 /**
@@ -1250,7 +1239,7 @@ interface AMFICOM
 
 	void removeSchemeOptimizeInfo(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq soi_ids)
+			in ::CORBA::WStringSeq soi_ids)
 		raises (General::AMFICOMRemoteException);
 
 /**
@@ -1268,7 +1257,7 @@ interface AMFICOM
 
 	void removeSchemeMonitoringSolutions(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::wstringSeq sol_ids)
+			in ::CORBA::WStringSeq sol_ids)
 		raises (General::AMFICOMRemoteException);
 
 //////////////////////////////////////////////////////////////////////////////
