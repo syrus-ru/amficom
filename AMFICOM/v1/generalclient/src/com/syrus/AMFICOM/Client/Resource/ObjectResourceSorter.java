@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceSorter.java,v 1.7 2004/08/19 07:12:36 bob Exp $
+ * $Id: ObjectResourceSorter.java,v 1.8 2004/08/19 08:20:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,27 +10,11 @@ package com.syrus.AMFICOM.Client.Resource;
 import java.util.*;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/19 07:12:36 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/19 08:20:48 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
 public abstract class ObjectResourceSorter {
-
-	public static final String	COLUMN_ALARM_TYPE_NAME	= "alarm_type_name";
-	public static final String	COLUMN_GENERATED		= "generated";
-	public static final String	COLUMN_KIS_ID			= "kis_id";
-	public static final String	COLUMN_LOCAL_ID			= "local_id";
-	public static final String	COLUMN_ME_ID			= "monitored_element_id";
-	public static final String	COLUMN_PORT_ID			= "port_id";
-	public static final String	COLUMN_SOURCE_NAME		= "source_name";
-	public static final String	COLUMN_START_TIME		= "start_time";
-	public static final String	COLUMN_STATUS			= "status";
-	public static final String	COLUMN_TEMPORAL_TYPE	= "temporal_type";
-	public static final String	COLUMN_TEST_TYPE_ID		= "test_type_id";
-
-	public static final String	COLUMN_TYPE_LONG		= "long";
-	public static final String	COLUMN_TYPE_STRING		= "string";
-	public static final String	COLUMN_TYPE_TIME		= "time";
 
 	public static final int		SORT_ASCENDING			= 0;
 	public static final int		SORT_DESCENDING			= 1;
