@@ -1,60 +1,19 @@
 package com.syrus.AMFICOM.Client.Schematics.Report;
 
-import java.awt.Toolkit;
-import java.awt.Color;
-import java.awt.Image;
+import java.awt.*;
+import java.util.*;
 
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Enumeration;
 import javax.swing.ImageIcon;
-import javax.swing.tree.TreeNode;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceDomainFilter;
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
-
-import com.syrus.AMFICOM.Client.Resource.DataSet;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
-import com.syrus.AMFICOM.Client.Resource.ImageResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-import com.syrus.AMFICOM.Client.Resource.Network.Link;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-
-import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
-import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
-import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
-
-import com.syrus.AMFICOM.Client.General.Report.ObjectResourceReportModel;
-//import com.syrus.AMFICOM.Client.Survey.Report.AlarmReportModel;
 import com.syrus.AMFICOM.Client.Configure.Report.EquipFeaturesReportModel;
-import com.syrus.AMFICOM.Client.Schematics.Report.SchemeReportModel;
-
-import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
-import com.syrus.AMFICOM.Client.Prediction.Report.PredictionReportModel;
-import com.syrus.AMFICOM.Client.Model.Report.ModelingReportModel;
+import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Report.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 /**
  * <p>Description: Модель дерева с доступными отчётами</p>
