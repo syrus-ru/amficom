@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.60 2004/10/27 14:28:15 bob Exp $
+ * $Id: Test.java,v 1.61 2004/11/04 08:51:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2004/10/27 14:28:15 $
+ * @version $Revision: 1.61 $, $Date: 2004/11/04 08:51:52 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -569,6 +569,21 @@ public class Test extends StorableObject {
 		return equals;
 	}
 
+	
+	protected List getDependencies() {
+		List dependencies = new LinkedList();
+		if (this.timeStamps.temporalPattern != null)
+			dependencies.add(this.timeStamps.temporalPattern.getId());
+		dependencies.addAll(this.measurementSetupIds);
+		dependencies.add(this.measurementType.getId());
+		if (this.analysisType != null)
+			dependencies.add(this.analysisType.getId());
+		if (this.evaluationType != null)
+			dependencies.add(this.evaluationType.getId());
+		dependencies.add(this.monitoredElement.getId());
+		return dependencies;
+	}
+
 	public class TestTimeStamps {
 		Date endTime;
 		Date startTime;
@@ -710,5 +725,4 @@ public class Test extends StorableObject {
 			this.discriminator = temporalType.value();
 		}
 	}
-
 }

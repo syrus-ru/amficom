@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.26 2004/10/06 15:45:15 max Exp $
+ * $Id: EvaluationType.java,v 1.27 2004/11/04 08:51:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/10/06 15:45:15 $
- * @author $Author: max $
+ * @version $Revision: 1.27 $, $Date: 2004/11/04 08:51:52 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -291,5 +292,31 @@ public class EvaluationType extends ActionType {
 	public void setOutParameterTypes(List outParameterTypes) {
 		super.currentVersion = super.getNextVersion();
 		this.outParameterTypes = outParameterTypes;
+	}
+	
+	
+	protected List getDependencies() {
+		List dependencies = new LinkedList();
+		if (this.inParameterTypes != null)
+			for (Iterator it = this.inParameterTypes.iterator(); it.hasNext();) {
+				ParameterType inParamType = (ParameterType) it.next();
+				dependencies.add(inParamType.getId());			
+			}
+		if (this.thresholdParameterTypes != null)
+			for (Iterator it = this.thresholdParameterTypes.iterator(); it.hasNext();) {
+				ParameterType thresholdParamType = (ParameterType) it.next();
+				dependencies.add(thresholdParamType.getId());			
+			}
+		if (this.etalonParameterTypes != null)
+			for (Iterator it = this.etalonParameterTypes.iterator(); it.hasNext();) {
+				ParameterType etalonParamType = (ParameterType) it.next();
+				dependencies.add(etalonParamType.getId());			
+			}
+		if (this.outParameterTypes != null)
+			for (Iterator it = this.outParameterTypes.iterator(); it.hasNext();) {
+				ParameterType outParamType = (ParameterType) it.next();
+				dependencies.add(outParamType.getId());			
+			}
+		return dependencies;
 	}
 }

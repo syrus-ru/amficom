@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.15 2004/10/22 13:54:26 bob Exp $
+ * $Id: CharacteristicType.java,v 1.16 2004/11/04 08:51:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,10 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -22,7 +25,7 @@ import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/10/22 13:54:26 $
+ * @version $Revision: 1.16 $, $Date: 2004/11/04 08:51:00 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -154,5 +157,9 @@ public class CharacteristicType extends StorableObjectType {
 												description);
 		this.dataType = dataType;
 		this.sort = sort;
+	}
+	
+	protected List getDependencies() {
+		return Collections.EMPTY_LIST;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.22 2004/10/21 10:34:35 bob Exp $
+ * $Id: ParameterType.java,v 1.23 2004/11/04 08:51:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,10 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectType;
@@ -24,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/10/21 10:34:35 $
+ * @version $Revision: 1.23 $, $Date: 2004/11/04 08:51:52 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -246,5 +249,9 @@ public class ParameterType extends StorableObjectType {
 					 + ID_SORT + this.sort;
 					 
 		return str;
+	}
+	
+	protected List getDependencies() {
+		return Collections.EMPTY_LIST;
 	}
 }

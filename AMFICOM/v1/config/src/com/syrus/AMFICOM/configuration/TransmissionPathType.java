@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.1 2004/10/27 07:01:36 max Exp $
+ * $Id: TransmissionPathType.java,v 1.2 2004/11/04 08:51:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,7 +7,9 @@
  */
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -20,8 +22,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/27 07:01:36 $
- * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2004/11/04 08:51:05 $
+ * @author $Author: bob $
  * @module module_name
  */
 
@@ -136,4 +138,8 @@ public class TransmissionPathType extends StorableObjectType {
                 description);
         this.name = name;
     }
+
+	protected List getDependencies() {		
+		return Collections.EMPTY_LIST;
+	}
 }

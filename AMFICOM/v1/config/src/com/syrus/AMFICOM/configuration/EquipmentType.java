@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.11 2004/10/26 14:31:43 bob Exp $
+ * $Id: EquipmentType.java,v 1.12 2004/11/04 08:51:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,10 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -20,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/10/26 14:31:43 $
+ * @version $Revision: 1.12 $, $Date: 2004/11/04 08:51:05 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -141,5 +144,9 @@ public class EquipmentType extends StorableObjectType {
 	public void setName(String name){
 		this.currentVersion = super.getNextVersion();
 		this.name = name;
+	}
+	
+	protected List getDependencies() {		
+		return Collections.EMPTY_LIST;
 	}
 }

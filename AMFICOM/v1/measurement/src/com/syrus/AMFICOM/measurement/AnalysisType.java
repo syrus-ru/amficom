@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.30 2004/10/13 07:52:39 bass Exp $
+ * $Id: AnalysisType.java,v 1.31 2004/11/04 08:51:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/10/13 07:52:39 $
- * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2004/11/04 08:51:52 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -292,5 +293,30 @@ public class AnalysisType extends ActionType {
 	public void setOutParameterTypeIds(List outParameterTypes) {
 		super.currentVersion = super.getNextVersion();
 		this.outParameterTypes = outParameterTypes;
+	}
+	
+	protected List getDependencies() {
+		List dependencies = new LinkedList();
+		if (this.inParameterTypes != null)
+			for (Iterator it = this.inParameterTypes.iterator(); it.hasNext();) {
+				ParameterType inParamType = (ParameterType) it.next();
+				dependencies.add(inParamType.getId());			
+			}
+		if (this.criteriaParameterTypes != null)
+			for (Iterator it = this.criteriaParameterTypes.iterator(); it.hasNext();) {
+				ParameterType criteriaParamType = (ParameterType) it.next();
+				dependencies.add(criteriaParamType.getId());			
+			}
+		if (this.etalonParameterTypes != null)
+			for (Iterator it = this.etalonParameterTypes.iterator(); it.hasNext();) {
+				ParameterType etalonParamType = (ParameterType) it.next();
+				dependencies.add(etalonParamType.getId());			
+			}
+		if (this.outParameterTypes != null)
+			for (Iterator it = this.outParameterTypes.iterator(); it.hasNext();) {
+				ParameterType outParamType = (ParameterType) it.next();
+				dependencies.add(outParamType.getId());			
+			}
+		return dependencies;
 	}
 }

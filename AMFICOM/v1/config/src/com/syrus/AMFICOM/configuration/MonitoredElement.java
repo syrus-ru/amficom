@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.20 2004/10/07 14:10:07 bob Exp $
+ * $Id: MonitoredElement.java,v 1.21 2004/11/04 08:51:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,7 +24,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/10/07 14:10:07 $
+ * @version $Revision: 1.21 $, $Date: 2004/11/04 08:51:05 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -198,5 +199,12 @@ public class MonitoredElement extends DomainMember {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	protected List getDependencies() {
+		List dependencies = new LinkedList();
+		dependencies.addAll(this.monitoredDomainMemberIds);
+		dependencies.add(this.measurementPortId);
+		return dependencies;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.17 2004/10/27 09:52:08 max Exp $
+ * $Id: TransmissionPath.java,v 1.18 2004/11/04 08:51:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,8 +25,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.17 $, $Date: 2004/10/27 09:52:08 $
- * @author $Author: max $
+ * @version $Revision: 1.18 $, $Date: 2004/11/04 08:51:05 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -232,5 +233,16 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
         this.type = type;
 		this.startPortId = startPortId;
 		this.finishPortId = finishPortId;
+	}
+	
+	protected List getDependencies() {
+		List dependencies = new LinkedList();
+		dependencies.add(this.startPortId);
+		dependencies.add(this.finishPortId);
+		for (Iterator it = this.characteristics.iterator(); it.hasNext();) {
+			Characteristic characteristic = (Characteristic) it.next();
+			dependencies.add(characteristic.getId());			
+		}
+		return dependencies;
 	}
 }

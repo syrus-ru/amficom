@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.22 2004/11/02 12:42:43 bob Exp $
+ * $Id: KIS.java,v 1.23 2004/11/04 08:51:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/11/02 12:42:43 $
+ * @version $Revision: 1.23 $, $Date: 2004/11/04 08:51:05 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -228,5 +229,14 @@ public class KIS extends DomainMember implements TypedObject {
 
 	protected synchronized void setMeasurementPortIds(List measurementPortIds) {
 		this.measurementPortIds = measurementPortIds;
+	}
+	
+	protected List getDependencies() {
+		List dependencies = new LinkedList();
+		dependencies.add(this.type.getId());
+		dependencies.add(this.equipmentId);
+		dependencies.add(this.mcmId);
+		dependencies.addAll(this.measurementPortIds);		
+		return dependencies;
 	}
 }

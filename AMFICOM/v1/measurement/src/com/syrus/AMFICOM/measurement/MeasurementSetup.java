@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.29 2004/10/06 15:45:16 max Exp $
+ * $Id: MeasurementSetup.java,v 1.30 2004/11/04 08:51:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/10/06 15:45:16 $
- * @author $Author: max $
+ * @version $Revision: 1.30 $, $Date: 2004/11/04 08:51:52 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -368,5 +369,19 @@ public class MeasurementSetup extends StorableObject {
 	public void setThresholdSet(Set thresholdSet) {
 		this.currentVersion = super.getNextVersion();
 		this.thresholdSet = thresholdSet;
+	}
+	
+	protected List getDependencies() {
+		List dependencies = new LinkedList();
+		if (this.parameterSet != null)
+			dependencies.add(this.parameterSet.getId());
+		if (this.criteriaSet != null)
+			dependencies.add(this.criteriaSet.getId());
+		if (this.thresholdSet != null)
+			dependencies.add(this.thresholdSet.getId());
+		if (this.etalon != null)
+			dependencies.add(this.etalon.getId());
+		dependencies.addAll(this.monitoredElementIds);
+		return dependencies;
 	}
 }

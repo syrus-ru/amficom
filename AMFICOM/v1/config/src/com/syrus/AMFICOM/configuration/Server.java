@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.15 2004/10/12 05:23:41 max Exp $
+ * $Id: Server.java,v 1.16 2004/11/04 08:51:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import com.syrus.AMFICOM.general.Identifier;
@@ -23,8 +24,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/10/12 05:23:41 $
- * @author $Author: max $
+ * @version $Revision: 1.16 $, $Date: 2004/11/04 08:51:05 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -184,5 +185,15 @@ public class Server extends DomainMember implements Characterized {
 		this.name = name;
 		this.description = description;
 		this.userId = userId;
+	}
+	
+	protected List getDependencies() {
+		List dependencies = new LinkedList();
+		dependencies.add(this.userId);
+		for (Iterator it = this.characteristics.iterator(); it.hasNext();) {
+			Characteristic characteristic = (Characteristic) it.next();
+			dependencies.add(characteristic.getId());			
+		}
+		return dependencies;
 	}
 }

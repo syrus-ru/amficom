@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.28 2004/10/20 15:08:31 bob Exp $
+ * $Id: MeasurementType.java,v 1.29 2004/11/04 08:51:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/10/20 15:08:31 $
+ * @version $Revision: 1.29 $, $Date: 2004/11/04 08:51:52 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -240,5 +241,25 @@ public class MeasurementType extends ActionType {
 	
 	public void setMeasurementPortTypes(List measurementPortTypes) {
 		this.measurementPortTypes = measurementPortTypes;
+	}
+	
+	protected List getDependencies() {
+		List dependencies = new LinkedList();
+		if (this.inParameterTypes != null)
+			for (Iterator it = this.inParameterTypes.iterator(); it.hasNext();) {
+				ParameterType inParamType = (ParameterType) it.next();
+				dependencies.add(inParamType.getId());			
+			}
+		if (this.outParameterTypes != null)
+			for (Iterator it = this.outParameterTypes.iterator(); it.hasNext();) {
+				ParameterType outParamType = (ParameterType) it.next();
+				dependencies.add(outParamType.getId());			
+			}	
+		if (this.measurementPortTypes != null)
+			for (Iterator it = this.measurementPortTypes.iterator(); it.hasNext();) {
+				MeasurementPortType measurementPortType = (MeasurementPortType) it.next();
+				dependencies.add(measurementPortType.getId());			
+			}
+		return dependencies;
 	}
 }

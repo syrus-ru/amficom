@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.12 2004/10/05 08:06:40 bob Exp $
+ * $Id: Port.java,v 1.13 2004/11/04 08:51:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.PortSort;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/10/05 08:06:40 $
+ * @version $Revision: 1.13 $, $Date: 2004/11/04 08:51:05 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -206,5 +207,15 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 		this.equipmentId = equipmentId;
 		this.sort = sort;
 	}
-
+	
+	protected List getDependencies() {
+		List dependencies = new LinkedList();
+		dependencies.add(this.type.getId());
+		dependencies.add(this.equipmentId);
+		for (Iterator it = this.characteristics.iterator(); it.hasNext();) {
+			Characteristic characteristic = (Characteristic) it.next();
+			dependencies.add(characteristic.getId());			
+		}
+		return dependencies;
+	}
 }

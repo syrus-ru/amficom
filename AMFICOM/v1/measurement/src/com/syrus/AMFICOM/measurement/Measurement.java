@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.29 2004/10/12 08:00:54 bob Exp $
+ * $Id: Measurement.java,v 1.30 2004/11/04 08:51:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,9 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -26,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/10/12 08:00:54 $
+ * @version $Revision: 1.30 $, $Date: 2004/11/04 08:51:52 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -139,7 +142,7 @@ public class Measurement extends Action {
 																				(Identifier_Transferable)super.type.getId().getTransferable(),																				
 																				(Identifier_Transferable)super.monitoredElementId.getTransferable(),
 																				new String(super.type.getCodename()),
-																				name,
+																				this.name,
 																				(Identifier_Transferable)this.setup.getId().getTransferable(),
 																				this.startTime.getTime(),
 																				this.duration,
@@ -276,5 +279,12 @@ public class Measurement extends Action {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	protected List getDependencies() {
+		List dependencies = new LinkedList();
+		dependencies.add(this.testId);
+		dependencies.add(this.setup.getId());
+		return dependencies;
 	}
 }

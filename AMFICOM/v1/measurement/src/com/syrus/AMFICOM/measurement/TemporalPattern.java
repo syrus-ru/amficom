@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.46 2004/11/03 12:04:53 bob Exp $
+ * $Id: TemporalPattern.java,v 1.47 2004/11/04 08:51:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2004/11/03 12:04:53 $
+ * @version $Revision: 1.47 $, $Date: 2004/11/04 08:51:52 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -1091,5 +1091,9 @@ public class TemporalPattern extends StorableObject {
 			}
 		}
 		return buffer.toString();
+	}
+	
+	protected List getDependencies() {		
+		return Collections.EMPTY_LIST;
 	}
 }

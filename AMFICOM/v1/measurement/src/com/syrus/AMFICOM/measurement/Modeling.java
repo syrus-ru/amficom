@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.9 2004/10/18 11:42:12 bob Exp $
+ * $Id: Modeling.java,v 1.10 2004/11/04 08:51:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -26,7 +28,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/10/18 11:42:12 $
+ * @version $Revision: 1.10 $, $Date: 2004/11/04 08:51:52 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -279,5 +281,13 @@ public class Modeling extends Action {
 	
 	public ModelingSort getSort() {
 		return ModelingSort.from_int(this.sort);
+	}	
+	
+	protected List getDependencies() {
+		List dependencies = new LinkedList();
+		if (this.argumentSet != null)
+			dependencies.add(this.argumentSet.getId());
+		dependencies.add(this.measurementType.getId());
+		return dependencies;
 	}
 }

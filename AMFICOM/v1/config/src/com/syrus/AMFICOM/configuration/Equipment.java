@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.28 2004/09/01 15:08:01 bob Exp $
+ * $Id: Equipment.java,v 1.29 2004/11/04 08:51:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/09/01 15:08:01 $
+ * @version $Revision: 1.29 $, $Date: 2004/11/04 08:51:04 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -249,5 +250,16 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 
 	protected synchronized void setPortIds(List portIds) {
 		this.portIds = portIds;
+	}
+	
+	protected List getDependencies() {
+		List dependencies = new LinkedList();
+		dependencies.add(this.monitoredElementIds);
+		dependencies.add(this.portIds);
+		for (Iterator it = this.characteristics.iterator(); it.hasNext();) {
+			Characteristic characteristic = (Characteristic) it.next();
+			dependencies.add(characteristic.getId());			
+		}
+		return dependencies;
 	}
 }

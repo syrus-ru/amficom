@@ -1,5 +1,5 @@
 /*
- * $Id: KISType.java,v 1.3 2004/11/02 12:24:40 bob Exp $
+ * $Id: KISType.java,v 1.4 2004/11/04 08:51:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,7 +7,9 @@
  */
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.KISType_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -20,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/02 12:24:40 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/04 08:51:05 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -134,5 +136,9 @@ public class KISType extends StorableObjectType {
 	public void setName(String name){
 		this.currentVersion = super.getNextVersion();
 		this.name = name;
+	}
+	
+	protected List getDependencies() {		
+		return Collections.EMPTY_LIST;
 	}
 }
