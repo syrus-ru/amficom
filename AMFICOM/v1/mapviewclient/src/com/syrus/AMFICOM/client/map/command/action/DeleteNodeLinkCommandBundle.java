@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.16 2005/02/28 16:20:55 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.17 2005/03/01 15:37:03 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * фрагментов линий, линий, узлов  (и путей).  оманда
  * состоит из последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/02/28 16:20:55 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/01 15:37:03 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
@@ -123,7 +123,7 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 			// создать вторую физическую линию
 			PhysicalLink newPhysicalLink = super.createPhysicalLink(
 					physicalLink.getStartNode(),
-					null);
+					physicalLink.getStartNode());
 
 			// переносим фрагменты в новую линию пока не наткнемс€ на
 			// один из концевых узлов удаленного фрагмента
@@ -133,6 +133,8 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 					false,
 					leftNode,
 					rightNode);
+
+			newPhysicalLink.setEndNode(foundNode);
 
 			// если наткнулись на разрыв линии св€зи, то обновить
 			// концевые узлы и закончить
