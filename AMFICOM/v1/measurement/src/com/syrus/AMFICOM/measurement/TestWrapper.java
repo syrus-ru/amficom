@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.5 2005/03/10 21:07:27 arseniy Exp $
+ * $Id: TestWrapper.java,v 1.6 2005/03/30 08:05:59 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/10 21:07:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/03/30 08:05:59 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class TestWrapper implements StorableObjectWrapper {
@@ -76,8 +76,10 @@ public class TestWrapper implements StorableObjectWrapper {
 				return new Integer(test.getTemporalType().value());
 			if (key.equals(COLUMN_START_TIME))
 				return test.getStartTime();
-			if (key.equals(COLUMN_END_TIME))
-				return test.getEndTime();
+			if (key.equals(COLUMN_END_TIME)) {
+				 Date endTime = test.getEndTime();
+				 return endTime == null ? test.getStartTime() : endTime;
+			}
 			if (key.equals(COLUMN_TEMPORAL_PATTERN_ID))
 				return test.getTemporalPatternId();
 			if (key.equals(COLUMN_MEASUREMENT_TYPE_ID))
