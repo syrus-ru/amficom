@@ -8,6 +8,8 @@ CREATE TABLE TransmissionPath (
 --
  domain_id VARCHAR2(32),
 --
+ type_id VARCHAR2(32) NOT NULL,
+--
  name VARCHAR2(128) NOT NULL,
  description VARCHAR2(256),
 --
@@ -22,6 +24,9 @@ CREATE TABLE TransmissionPath (
 --
  CONSTRAINT tpath_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE,
+--
+ CONSTRAINT tpath_tpathtype_fk FOREIGN KEY (type_id)
+  REFERENCES TransmissionPathType (id) ON DELETE CASCADE,
 --
  CONSTRAINT tpath_start_port_fk FOREIGN KEY (start_port_id)
   REFERENCES Port (id) ON DELETE CASCADE,
