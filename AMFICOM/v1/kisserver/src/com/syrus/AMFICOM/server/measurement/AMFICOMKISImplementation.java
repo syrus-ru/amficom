@@ -1,19 +1,15 @@
 package com.syrus.AMFICOM.server.measurement;
 
-import java.util.Hashtable;
-import java.util.LinkedList;
 import java.sql.SQLException;
 import sqlj.runtime.ref.DefaultContext;
 import com.syrus.AMFICOM.CORBA._AMFICOMKISImplBase;
 import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
-import com.syrus.AMFICOM.CORBA.KIS.AgentIdentity_TransferableHolder;
 import com.syrus.AMFICOM.CORBA.KIS.AgentIdentity_Transferable;
 import com.syrus.AMFICOM.CORBA.KIS.Test_Transferable;
 import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
 import com.syrus.AMFICOM.CORBA.General.AlarmLevel;
-import com.syrus.AMFICOM.server.measurement.Test;
 import com.syrus.AMFICOM.server.event.Event;
 import com.syrus.AMFICOM.server.event.EventSource;
 /*import com.syrus.util.database.Server;*/
@@ -21,9 +17,6 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 public class AMFICOMKISImplementation extends _AMFICOMKISImplBase {
-
-  public AMFICOMKISImplementation() {
-	}
 
 	static {/*
 		Server.init("amficomkis");*/
@@ -179,10 +172,10 @@ public class AMFICOMKISImplementation extends _AMFICOMKISImplBase {
 						throw new Exception("AMFICOMKIS | ERROR: Unknown alarm level: " + rest.alarmLevel.value());
 				}
 				
-				Event event = new Event(result.getId(),
-																"On KIS",
-																EventSource.getIdByObjectId(test.getKISId()),
-																event_type);
+				new Event(result.getId(),
+					"On KIS",
+					EventSource.getIdByObjectId(test.getKISId()),
+					event_type);
 			}
 			catch (Exception e) {
 				String mesg = "AMFICOMKIS.reportResult | ERROR: Cannot generate warnig/alarm event: " + e.getMessage();

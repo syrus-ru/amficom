@@ -19,9 +19,6 @@ public abstract class Action {
 	String domain_id;
 	String user_id;
 
-	public Action() {
-	}
-
 	public String getId() {
     return this.id;
   }

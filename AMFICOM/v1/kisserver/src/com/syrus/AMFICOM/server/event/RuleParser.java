@@ -18,8 +18,8 @@ public class RuleParser {
 
 	private void parseRule() {
 		int start = 0;
-    int end;
-    String temp;
+		int end;
+//		String temp;
 
 		this.action = this.nextWord(logic, 0);
 		start += action.length();
@@ -84,7 +84,6 @@ public class RuleParser {
 	private String[] parseParameters (String str)	{
 		Vector params = new Vector();
 		int d = '\"';
-		int d2 = ' ';
 		int st = 0;
 		int end = -1;
 		int tmp;
