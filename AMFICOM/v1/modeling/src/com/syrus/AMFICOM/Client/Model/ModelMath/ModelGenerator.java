@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.Model.ModelMath;
 
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicType;
 import java.util.*;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -47,7 +49,7 @@ public class ModelGenerator
 		double formFactor,
 		double delta_x)
 	{
-
+/*
 		reflectoElements = createModelingEvents();
 		if (reflectoElements == null)
 			return null;
@@ -134,6 +136,8 @@ public class ModelGenerator
 			events.add(re);
 		}
 		return (ReflectogramEvent[])events.toArray(new ReflectogramEvent[events.size()]);
+*/
+		return null;
 	}
 
 	protected void correctModelingEvents()

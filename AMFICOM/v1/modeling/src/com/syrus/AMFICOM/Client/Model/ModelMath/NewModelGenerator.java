@@ -23,7 +23,7 @@ public class NewModelGenerator
 	//private double addNoiseAfterConnector = 1.2;
 
 	ModelingEvent []rmip;
-	EventParams2 [] eventParams;
+//	EventParams2 [] eventParams;
 	//ReflectogramEvent[] eventParams;
 	int eventSize;
 	double delta_x;
@@ -49,9 +49,9 @@ public class NewModelGenerator
 		this.maxLength = maxLength;
 		this.addNoise = Math.abs(addNoise);
 		this.formFactor = formFactor;
-		performModeling();
+//		performModeling();
 	}
-
+/*
 	void performModeling()
 	{
 		correctRMIP();
@@ -272,12 +272,12 @@ public class NewModelGenerator
 			}
 		}
 	}
-
+*/
 	public double []getModelArray()
 	{
 		return modelArray;
 	}
-
+/*
 	void buildEventParams()
 	{
 		eventParams = new EventParams2[rmip.length];
@@ -533,9 +533,9 @@ public class NewModelGenerator
 
 		return ret;
 	}
-
+*/
 }
-
+/*
 class EventParams2 extends ReflectogramEvent
 {
 	public boolean emptyEvent = false;
@@ -585,3 +585,4 @@ class EventParams2 extends ReflectogramEvent
 				return ret;
 	}
 }
+*/
