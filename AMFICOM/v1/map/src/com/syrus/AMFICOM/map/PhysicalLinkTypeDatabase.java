@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeDatabase.java,v 1.5 2005/01/17 10:54:59 bob Exp $
+ * $Id: PhysicalLinkTypeDatabase.java,v 1.6 2005/01/25 14:58:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,23 +31,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/01/17 10:54:59 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/25 14:58:41 $
  * @author $Author: bob $
  * @module map_v1
  */
 public class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
-	//	 codename VARCHAR2(32) NOT NULL,
-    public static final String COLUMN_CODENAME      = "codename";
-    // name VARCHAR2(128),
-    public static final String COLUMN_NAME  = "name";
-    // description VARCHAR2(256),
-    public static final String COLUMN_DESCRIPTION   = "description";
-    // dimension_x NUMBER(12),
-    public static final String COLUMN_DIMENSION_X   = "dimension_x";
-    // dimension_y NUMBER(12),
-    public static final String COLUMN_DIMENSION_Y   = "dimension_y";
-
-    
 	private static String columns;
 	
 	private static String updateMultiplySQLValues;
@@ -71,11 +59,11 @@ public class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_CODENAME + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_DIMENSION_X + COMMA
-				+ COLUMN_DIMENSION_Y;
+				+ PhysicalLinkTypeWrapper.COLUMN_CODENAME + COMMA
+				+ PhysicalLinkTypeWrapper.COLUMN_NAME + COMMA
+				+ PhysicalLinkTypeWrapper.COLUMN_DESCRIPTION + COMMA
+				+ PhysicalLinkTypeWrapper.COLUMN_DIMENSION_X + COMMA
+				+ PhysicalLinkTypeWrapper.COLUMN_DIMENSION_Y;
 		}
 		return columns;
 	}	
@@ -131,11 +119,11 @@ public class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-							   resultSet.getInt(COLUMN_DIMENSION_X),
-							   resultSet.getInt(COLUMN_DIMENSION_Y));		
+							   DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkTypeWrapper.COLUMN_CODENAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkTypeWrapper.COLUMN_NAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkTypeWrapper.COLUMN_DESCRIPTION)),
+							   resultSet.getInt(PhysicalLinkTypeWrapper.COLUMN_DIMENSION_X),
+							   resultSet.getInt(PhysicalLinkTypeWrapper.COLUMN_DIMENSION_Y));		
 		return physicalLinkType;
 	}
 

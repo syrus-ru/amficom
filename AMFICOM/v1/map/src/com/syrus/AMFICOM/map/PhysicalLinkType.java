@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkType.java,v 1.14 2005/01/20 14:44:30 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.15 2005/01/25 14:58:41 bob Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Ó¡’ﬁŒœ-‘≈»Œ…ﬁ≈”À…  √≈Œ‘“.
@@ -34,8 +34,8 @@ import java.util.List;
 
 /**
  * ‚ÌÛÚÂÌÌˇˇ ÔÓ‚Ó‰Í‡
- * @version $Revision: 1.14 $, $Date: 2005/01/20 14:44:30 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.15 $, $Date: 2005/01/25 14:58:41 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterized {
@@ -169,14 +169,6 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 		return Collections.unmodifiableList(this.characteristics);
 	}
 
-	public String getDescription() {
-		return this.description;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
 	public Object getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
@@ -203,13 +195,29 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 		super.currentVersion = super.getNextVersion();
 	}
 
-	public void setDescription(final String description) {
+	public String getDescription() {
+		return this.description;
+	}
+	
+	protected void setDescription0(String description) {
 		this.description = description;
+	}
+	
+	public void setDescription(String description) {
+		this.setDescription0(description);
 		super.currentVersion = super.getNextVersion();
 	}
 
-	public void setName(final String name) {
+	public String getName() {
+		return this.name;
+	}
+	
+	protected void setName0(String name) {
 		this.name = name;
+	}
+	
+	public void setName(String name) {
+		this.setName0(name);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -231,11 +239,15 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 			this.bindingDimension = new IntDimension(width, height);
 			this.name = name;
 		}
-
-	public void setBindingDimension(IntDimension bindingDimension){
+	
+	protected void setBindingDimension0(IntDimension bindingDimension){
 		this.bindingDimension = new IntDimension(
 				bindingDimension.getWidth(), 
 				bindingDimension.getHeight());
+	}
+	
+	public void setBindingDimension(IntDimension bindingDimension){
+		this.setBindingDimension0(bindingDimension);
 		super.currentVersion = super.getNextVersion();
 	}
 
@@ -244,4 +256,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 		return new IntDimension(this.bindingDimension);
 	}
 
+	protected void setCodename0(String codename){
+		super.setCodename0(codename);
+	}
 }
