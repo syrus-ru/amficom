@@ -27,13 +27,13 @@ public abstract class ObjectResourceFilter implements Filter
 
 	public ObjectResourceFilter()
 	{
-		id = "filter" + System.currentTimeMillis();
+		this.id = "filter" + System.currentTimeMillis();
 		this.logicScheme = new LogicScheme(this);
 	}
 
 	public ObjectResourceFilter(LogicScheme ls)
 	{
-		id = "filter" + System.currentTimeMillis();
+		this.id = "filter" + System.currentTimeMillis();
 		this.logicScheme = ls;
 	}
 
@@ -125,4 +125,87 @@ public abstract class ObjectResourceFilter implements Filter
 		}
 		return ds;
 	}
+
+	/**
+	 * Filtrate input Collection
+	 * @param col source Collection, which will be filtrate
+	 */
+	public void filtrate(Collection col){		
+		for(Iterator it=col.iterator();it.hasNext();){
+			ObjectResource or = (ObjectResource)it.next();
+			if (this.logicScheme.passesAllConstraints(or) == false){
+				col.remove(or);
+				it=col.iterator();
+			}
+		}		
+	}
+	
+	/**
+	 * filtrate input Collection to output Collection
+	 * @param input
+	 * @param output
+	 */
+	public void filtrate(final Collection input, Collection output){
+		output.clear();
+		for(Iterator it=input.iterator();it.hasNext();){
+			ObjectResource or = (ObjectResource)it.next();
+			if (this.logicScheme.passesAllConstraints(or) == false){
+				output.add(or);
+			}
+		}	
+	}
+	
+	/**
+	 * Return new Collection of filtered elements of Collection
+	 * @param col
+	 * @return
+	 */
+	public Collection filter(final Collection col){
+		List resultList = new ArrayList();
+		this.filtrate(col, resultList);
+		return resultList;
+	}
+	
+
+	/**
+	 * Filtrate input Map
+	 * @param map source Map, which will be filtrate
+	 */
+	public void filtrate(Map map){		
+		for(Iterator it=map.keySet().iterator();it.hasNext();){
+			ObjectResource or = (ObjectResource)map.get(it.next());
+			if (this.logicScheme.passesAllConstraints(or) == false){
+				map.remove(or);
+				it=map.keySet().iterator();
+			}
+		}
+	}
+	
+	/**
+	 * filtrate input Map to output Map
+	 * @param input
+	 * @param output
+	 */
+	public void filtrate(final Map input, Map output){
+		output.clear();		
+		for(Iterator it=input.keySet().iterator();it.hasNext();){
+			Object key = it.next();
+			ObjectResource or = (ObjectResource)input.get(key);
+			if (this.logicScheme.passesAllConstraints(or) == false){
+				output.put(key,or);
+			}
+		}
+	}
+	
+	/**
+	 * Return new Map of filtered elements of Map
+	 * @param map
+	 * @return
+	 */
+	public Map filter(final Map map){
+		Map resultMap = new HashMap();
+		this.filtrate(map, resultMap);
+		return resultMap;
+	}
+
 }

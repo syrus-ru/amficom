@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Event;
 
+import java.util.Collection;
+
 import com.syrus.AMFICOM.Client.Resource.DataSet;
 
 public class TreeDataSelectionEvent extends OperationEvent
@@ -7,12 +9,23 @@ public class TreeDataSelectionEvent extends OperationEvent
 	DataSet dataSet;
 	Class dataClass;
 	int selected;
+	
+	Collection collection;
 
 	public Object param = null;
 	public Object selectedObject = null;
 
 	public static final String type = "treedataselectionevent";
 
+	/**
+	 * @deprecated use  TreeDataSelectionEvent(Object source, Collection collection, Class dataClass, int selected, Object selectedObject)
+	 * DataSet usage is deprecated
+	 * @param source
+	 * @param dataSet
+	 * @param dataClass
+	 * @param selected
+	 * @param selectedObject
+	 */
 	public TreeDataSelectionEvent(Object source, DataSet dataSet, Class dataClass, int selected, Object selectedObject)
 	{
 		super(source, 0, type);
@@ -21,19 +34,36 @@ public class TreeDataSelectionEvent extends OperationEvent
 		this.selected = selected;
 		this.selectedObject = selectedObject;
 	}
+	
+	public TreeDataSelectionEvent(Object source, Collection collection, Class dataClass, int selected, Object selectedObject)
+	{
+		super(source, 0, type);
+		this.collection = collection;
+		this.dataClass = dataClass;
+		this.selected = selected;
+		this.selectedObject = selectedObject;
+	}
 
+	/**
+	 * @deprecated DataSet usage is deprecated, use Collection
+	 * @return
+	 */
 	public DataSet getDataSet()
 	{
-		return dataSet;
+		return this.dataSet;
+	}
+	
+	public Collection getCollection(){
+		return this.collection;
 	}
 
 	public Class getDataClass()
 	{
-		return dataClass;
+		return this.dataClass;
 	}
 
 	public int getSelectionNumber()
 	{
-		return selected;
+		return this.selected;
 	}
 }
