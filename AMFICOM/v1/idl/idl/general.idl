@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.47 2005/01/19 20:38:48 arseniy Exp $
+ * $Id: general.idl,v 1.48 2005/01/20 07:03:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -219,6 +219,29 @@ module corba {
 		IdentifierSeq_Transferable linked_ids;		
 	};
 
+	struct CompoundCondition_Transferable {
+		enum CompoundConditionSort {
+			AND,
+			OR,
+			XOR} sort;
+		/**
+		 * <code>innerConditions</code> must be an array containing 2
+		 * instances of {@link StorableObjectCondition_Transferable}.
+		 */
+		sequence<any, 2> innerConditions;
+	};
+
+	union StorableObjectCondition_Transferable switch(enum StorableObjectConditionSort {
+			STRING_FIELD,
+			LINKED_IDS,
+			COMPOUND}) {
+		case STRING_FIELD:
+			StringFieldCondition_Transferable stringFieldCondition;
+		case LINKED_IDS:
+			LinkedIdsCondition_Transferable linkedIdsCondition;
+		case COMPOUND:
+			CompoundCondition_Transferable compoundCondition;
+	};
 };
 };
 };
