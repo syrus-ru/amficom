@@ -6,20 +6,15 @@
 
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-
-import java.awt.geom.Point2D;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.PhysicalLink;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.TopologicalNode;
 
 public final class MapPhysicalNodePropertiesController 
 		extends MapElementPropertiesController 

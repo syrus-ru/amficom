@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.17 2005/02/02 08:57:27 krupenn Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.18 2005/02/07 16:09:26 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -28,7 +28,7 @@ import java.awt.Point;
 /**
  * —тратеги€ управлени€ метки на физической линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/02/02 08:57:27 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/07 16:09:26 $
  * @module mapviewclient_v1
  */
 public final class MapMarkElementStrategy extends MapStrategy 
@@ -52,7 +52,7 @@ public final class MapMarkElementStrategy extends MapStrategy
 	 * Private constructor.
 	 */
 	private MapMarkElementStrategy()
-	{
+	{//empty
 	}
 
 	/**
@@ -81,24 +81,24 @@ public final class MapMarkElementStrategy extends MapStrategy
 
 		if ((actionMode == MapState.SELECT_ACTION_MODE))
 		{
-			MapElement mel = logicalNetLayer.getCurrentMapElement();
+			MapElement mel = super.logicalNetLayer.getCurrentMapElement();
 			if (mel instanceof Selection)
 			{
 				Selection sel = (Selection)mel;
-				sel.add(mark);
+				sel.add(this.mark);
 			}
 			else
 			{
-				Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
-				sel.addAll(logicalNetLayer.getSelectedElements());
-				logicalNetLayer.setCurrentMapElement(sel);
+				Selection sel = new Selection(super.logicalNetLayer.getMapView().getMap());
+				sel.addAll(super.logicalNetLayer.getSelectedElements());
+				super.logicalNetLayer.setCurrentMapElement(sel);
 			}
 		}//MapState.SELECT_ACTION_MODE
 		if ((actionMode != MapState.SELECT_ACTION_MODE) && (actionMode != MapState.MOVE_ACTION_MODE))
 		{
-			logicalNetLayer.deselectAll();
+			super.logicalNetLayer.deselectAll();
 		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
-		mark.setSelected(true);
+		this.mark.setSelected(true);
 	}
 
 	/**
@@ -108,16 +108,16 @@ public final class MapMarkElementStrategy extends MapStrategy
 	{
 		int actionMode = mapState.getActionMode();
 
-		MapCoordinatesConverter converter = logicalNetLayer;
+		MapCoordinatesConverter converter = super.logicalNetLayer;
 
-		if (command == null)
-			command = new MoveMarkCommand(mark);
-		if (aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
+		if (this.command == null)
+			this.command = new MoveMarkCommand(this.mark);
+		if (super.aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 		{
-			NodeLink nodeLink = mark.getNodeLink();
-			AbstractNode sn = mark.getStartNode();
+			NodeLink nodeLink = this.mark.getNodeLink();
+			AbstractNode sn = this.mark.getStartNode();
 			AbstractNode en = nodeLink.getOtherNode(sn);
-			Point anchorPoint = converter.convertMapToScreen(mark.getLocation());
+			Point anchorPoint = converter.convertMapToScreen(this.mark.getLocation());
 			Point start = converter.convertMapToScreen(sn.getLocation());
 			Point end = converter.convertMapToScreen(en.getLocation());
 			double lengthFromStartNode;
@@ -125,15 +125,15 @@ public final class MapMarkElementStrategy extends MapStrategy
 			lengthFromStartNode = md.lengthFromStartNode;
 			while (lengthFromStartNode > md.nodeLinkLength)
 			{
-				nodeLink = mark.getPhysicalLink().nextNodeLink(nodeLink);
+				nodeLink = this.mark.getPhysicalLink().nextNodeLink(nodeLink);
 				if (nodeLink == null)
 					lengthFromStartNode = md.nodeLinkLength;
 				else
 				{
 					sn = en;
 					en = nodeLink.getOtherNode(sn);
-					mark.setNodeLink(nodeLink);
-					mark.setStartNode(sn);
+					this.mark.setNodeLink(nodeLink);
+					this.mark.setStartNode(sn);
 					start = converter.convertMapToScreen(sn.getLocation());
 					end = converter.convertMapToScreen(en.getLocation());
 					md = new MotionDescriptor(start, end, anchorPoint, point);
@@ -147,15 +147,15 @@ public final class MapMarkElementStrategy extends MapStrategy
 			}
 			while (lengthFromStartNode < 0)
 			{
-				nodeLink = mark.getPhysicalLink().previousNodeLink(mark.getNodeLink());
+				nodeLink = this.mark.getPhysicalLink().previousNodeLink(this.mark.getNodeLink());
 				if (nodeLink == null)
 					lengthFromStartNode = 0;
 				else
 				{
 					en = sn;
 					sn = nodeLink.getOtherNode(en);
-					mark.setNodeLink(nodeLink);
-					mark.setStartNode(sn);
+					this.mark.setNodeLink(nodeLink);
+					this.mark.setStartNode(sn);
 					start = converter.convertMapToScreen(sn.getLocation());
 					end = converter.convertMapToScreen(en.getLocation());
 					md = new MotionDescriptor(start, end, anchorPoint, point);
@@ -167,8 +167,8 @@ public final class MapMarkElementStrategy extends MapStrategy
 					}
 				}
 			}
-			MarkController mc = (MarkController)logicalNetLayer.getMapViewController().getController(mark);
-			mc.adjustPosition(mark, lengthFromStartNode);
+			MarkController mc = (MarkController)super.logicalNetLayer.getMapViewController().getController(this.mark);
+			mc.adjustPosition(this.mark, lengthFromStartNode);
 		}
 	}
 
@@ -181,10 +181,10 @@ public final class MapMarkElementStrategy extends MapStrategy
 
 		if (actionMode == MapState.MOVE_ACTION_MODE)
 		{
-			logicalNetLayer.getCommandList().add(command);
-			logicalNetLayer.getCommandList().execute();
-			//set command to null since it is to be reused
-			command = null;
+			super.logicalNetLayer.getCommandList().add(this.command);
+			super.logicalNetLayer.getCommandList().execute();
+			//set this.command to null since it is to be reused
+			this.command = null;
 		}//MapState.MOVE_ACTION_MODE
 	}
 

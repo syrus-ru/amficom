@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.17 2005/02/02 08:57:28 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.18 2005/02/07 16:09:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/02/02 08:57:28 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/07 16:09:27 $
  * @module mapviewclient_v1
  */
 public final class MapVoidElementStrategy extends MapStrategy 
@@ -53,7 +53,7 @@ public final class MapVoidElementStrategy extends MapStrategy
 	 * Private constructor.
 	 */
 	private MapVoidElementStrategy()
-	{
+	{//empty
 	}
 
 	/**
@@ -83,7 +83,7 @@ public final class MapVoidElementStrategy extends MapStrategy
 
 		if (actionMode == MapState.NULL_ACTION_MODE)
 		{
-			logicalNetLayer.deselectAll();
+			super.logicalNetLayer.deselectAll();
 		}//MapState.NULL_ACTION_MODE
 	}
 
@@ -113,8 +113,8 @@ public final class MapVoidElementStrategy extends MapStrategy
 		if (actionMode == MapState.SELECT_MARKER_ACTION_MODE &&
 			operationMode == MapState.NO_OPERATION)
 		{
-			int startX = logicalNetLayer.getStartPoint().x;
-			int startY = logicalNetLayer.getStartPoint().y;
+			int startX = super.logicalNetLayer.getStartPoint().x;
+			int startY = super.logicalNetLayer.getStartPoint().y;
 			int endX = point.x;
 			int endY = point.y;
 			Rectangle selectionRect = new Rectangle(
@@ -134,7 +134,7 @@ public final class MapVoidElementStrategy extends MapStrategy
 	 */
 	protected  void selectElementsInRect(Rectangle selectionRect)
 	{
-		Map map = logicalNetLayer.getMapView().getMap();
+		Map map = super.logicalNetLayer.getMapView().getMap();
 		//Здесь просто проверяется что элемент содержится в прямоугольной области
 		Iterator e = map.getNodes().iterator();
 		
@@ -143,7 +143,7 @@ public final class MapVoidElementStrategy extends MapStrategy
 		{
 			AbstractNode node = (AbstractNode)e.next();
 			{
-				Point p = logicalNetLayer.convertMapToScreen(node.getLocation());
+				Point p = super.logicalNetLayer.convertMapToScreen(node.getLocation());
 	
 				if (selectionRect.contains(p))
 				{
@@ -158,7 +158,7 @@ public final class MapVoidElementStrategy extends MapStrategy
 
 		e = map.getNodeLinks().iterator();
 
-		if(logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_NODE_LINK)
+		if(super.logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_NODE_LINK)
 		{
 			//Пробегаем и смотрим вхотит ли в область nodeLink
 			while (e.hasNext() )
@@ -166,10 +166,10 @@ public final class MapVoidElementStrategy extends MapStrategy
 				NodeLink nodeLink = (NodeLink)e.next();
 				if (
 					selectionRect.contains(
-						logicalNetLayer.convertMapToScreen(
+						super.logicalNetLayer.convertMapToScreen(
 							nodeLink.getStartNode().getLocation())) 
 					&& selectionRect.contains(
-						logicalNetLayer.convertMapToScreen(
+						super.logicalNetLayer.convertMapToScreen(
 							nodeLink.getEndNode().getLocation())))
 				{
 					nodeLink.setSelected(true);
@@ -181,7 +181,7 @@ public final class MapVoidElementStrategy extends MapStrategy
 			}
 		}
 		else
-		if(logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK)
+		if(super.logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK)
 		{
 			for(Iterator it = map.getPhysicalLinks().iterator(); it.hasNext();)
 			{
@@ -192,10 +192,10 @@ public final class MapVoidElementStrategy extends MapStrategy
 					NodeLink nodeLink = (NodeLink)it2.next();
 					if (! (
 						selectionRect.contains(
-							logicalNetLayer.convertMapToScreen(
+							super.logicalNetLayer.convertMapToScreen(
 								nodeLink.getStartNode().getLocation())) 
 						&& selectionRect.contains(
-							logicalNetLayer.convertMapToScreen(
+							super.logicalNetLayer.convertMapToScreen(
 								nodeLink.getEndNode().getLocation()))))
 					{ 
 						select = false;
@@ -205,18 +205,18 @@ public final class MapVoidElementStrategy extends MapStrategy
 			}
 		}
 		
-		Set selection = logicalNetLayer.getSelectedElements();
+		Set selection = super.logicalNetLayer.getSelectedElements();
 		if(selection.size() == 1)
 		{
 			MapElement me = (MapElement)selection.iterator().next();
-			logicalNetLayer.setCurrentMapElement(me);
+			super.logicalNetLayer.setCurrentMapElement(me);
 		}
 		else
 		if(selection.size() > 1)
 		{
 			Selection sel = new Selection(map);
 			sel.addAll(selection);
-			logicalNetLayer.setCurrentMapElement(sel);
+			super.logicalNetLayer.setCurrentMapElement(sel);
 		}
 	}
 }

@@ -1,8 +1,12 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
+import java.awt.Color;
+import java.awt.Rectangle;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.pad.EllipseCell;
-
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -13,16 +17,6 @@ import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
 import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import java.awt.Color;
-import java.awt.Point;
-import java.awt.Rectangle;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import com.syrus.AMFICOM.map.IntDimension;
 
 public class TunnelLayout implements OperationListener
 {
@@ -44,28 +38,28 @@ public class TunnelLayout implements OperationListener
 	{
 		this.parent = parent;
 
-		internalContext.setDispatcher(new Dispatcher());
+		this.internalContext.setDispatcher(new Dispatcher());
 
-		panel = new UgoPanel(internalContext);
-		panel.getGraph().setGraphEditable(false);
+		this.panel = new UgoPanel(this.internalContext);
+		this.panel.getGraph().setGraphEditable(false);
 
-		internalContext.getDispatcher().register(this, SchemeNavigateEvent.type);
+		this.internalContext.getDispatcher().register(this, SchemeNavigateEvent.type);
 	}
 
 	public UgoPanel getPanel()
 	{
-		return panel;
+		return this.panel;
 	}
 
 	protected void removeSelection()
 	{
-		panel.getGraph().removeSelectionCells();
+		this.panel.getGraph().removeSelectionCells();
 
-		for (int i = 0; i < m; i++) 
+		for (int i = 0; i < this.m; i++) 
 		{
-			for (int j = 0; j < n; j++) 
+			for (int j = 0; j < this.n; j++) 
 			{
-				GraphActions.setObjectBackColor(panel.getGraph(), cells[i][j], Color.WHITE);
+				GraphActions.setObjectBackColor(this.panel.getGraph(), this.cells[i][j], Color.WHITE);
 			}
 		}
 	}
@@ -85,29 +79,29 @@ public class TunnelLayout implements OperationListener
 					if (objs[k] instanceof EllipseCell)
 					{
 						EllipseCell cell = (EllipseCell )objs[k];
-						GraphActions.setObjectBackColor(panel.getGraph(), cell, Color.YELLOW);
-						panel.getGraph().setSelectionCell(cell);
+						GraphActions.setObjectBackColor(this.panel.getGraph(), cell, Color.YELLOW);
+						this.panel.getGraph().setSelectionCell(cell);
 						
 						boolean found = false;
-						for (int i = 0; i < m && !found; i++) 
+						for (int i = 0; i < this.m && !found; i++) 
 						{
-							for (int j = 0; j < n && !found; j++) 
-								if(cells[i][j].equals(cell))
+							for (int j = 0; j < this.n && !found; j++) 
+								if(this.cells[i][j].equals(cell))
 								{
-									activeCoordinates = new IntPoint(i, j);
+									this.activeCoordinates = new IntPoint(i, j);
 									found = true;
-									parent.cableBindingSelected(i, j);
+									this.parent.cableBindingSelected(i, j);
 								}
 						}
 						
 					}
 				}
-				panel.getGraph().setGraphChanged(true);
+				this.panel.getGraph().setGraphChanged(true);
 			}
 			else
 			if(ev.SCHEME_ALL_DESELECTED)
 			{
-				activeCoordinates = null;
+				this.activeCoordinates = null;
 			}
 		}
 	}
@@ -127,9 +121,9 @@ public class TunnelLayout implements OperationListener
 		this.m = m;
 		this.n = n;
 
-		panel.getGraph().removeAll();
+		this.panel.getGraph().removeAll();
 		
-		cells = new EllipseCell[m][n];
+		this.cells = new EllipseCell[m][n];
 
 		for (int i = 0; i < m; i++)
 			for (int j = 0; j < n; j++)
@@ -139,53 +133,53 @@ public class TunnelLayout implements OperationListener
 						(j + 1) * SPACE + 2 * j * RADIUS,
 						2 * RADIUS,
 						2 * RADIUS);
-				cells[i][j] = addCell(panel.getGraph(), "", bounds);
+				this.cells[i][j] = addCell(this.panel.getGraph(), "", bounds);
 			}
 	}
 
 	public void setActiveElement(Object or)
 	{
 		removeSelection();
-		activeCoordinates = binding.getBinding(or);
-		if(activeCoordinates != null)
-			panel.getGraph().setSelectionCell(cells[activeCoordinates.x][activeCoordinates.y]);
+		this.activeCoordinates = this.binding.getBinding(or);
+		if(this.activeCoordinates != null)
+			this.panel.getGraph().setSelectionCell(this.cells[this.activeCoordinates.x][this.activeCoordinates.y]);
 	}
 	
 	public void setActiveCoordinates(IntPoint activeCoordinates)
 	{
 		removeSelection();
 		this.activeCoordinates = activeCoordinates;
-		panel.getGraph().setSelectionCell(cells[activeCoordinates.x][activeCoordinates.y]);
+		this.panel.getGraph().setSelectionCell(this.cells[activeCoordinates.x][activeCoordinates.y]);
 	}
 	
 	public IntPoint getActiveCoordinates()
 	{
-		return activeCoordinates;
+		return this.activeCoordinates;
 	}
 
 	public void updateElements()
 	{
 		int counter = 1;
-		int limit = n * m;
+		int limit = this.n * this.m;
 
-		int istart = binding.isLeftToRight() ? 0 : m - 1;
-		int jstart = binding.isTopToBottom() ? 0 : n - 1;
+		int istart = this.binding.isLeftToRight() ? 0 : this.m - 1;
+		int jstart = this.binding.isTopToBottom() ? 0 : this.n - 1;
 
-		int iend = m - 1 - istart;
-		int jend = n - 1 - jstart;
+		int iend = this.m - 1 - istart;
+		int jend = this.n - 1 - jstart;
 
-		int iincrement = binding.isLeftToRight() ? 1 : -1;
-		int jincrement = binding.isTopToBottom() ? 1 : -1;
+		int iincrement = this.binding.isLeftToRight() ? 1 : -1;
+		int jincrement = this.binding.isTopToBottom() ? 1 : -1;
 
 		int i = istart;
 		int j = jstart;
 
 		while(true)
 		{
-			GraphActions.setText(panel.getGraph(),cells[i][j], String.valueOf(counter++));
+			GraphActions.setText(this.panel.getGraph(),this.cells[i][j], String.valueOf(counter++));
 			if(counter > limit)
 				break;
-			if(binding.isHorizontalVertical())
+			if(this.binding.isHorizontalVertical())
 			{
 				if(i == iend)
 				{

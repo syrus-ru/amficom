@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElementStrategy.java,v 1.10 2005/02/02 08:57:27 krupenn Exp $
+ * $Id: MapCablePathElementStrategy.java,v 1.11 2005/02/07 16:09:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import java.awt.Point;
  * Стратегия управления кабельным путем.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/02/02 08:57:27 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/07 16:09:26 $
  * @module mapviewclient_v1
  */
 public final class MapCablePathElementStrategy extends MapStrategy 
@@ -42,7 +42,7 @@ public final class MapCablePathElementStrategy extends MapStrategy
 	 * Private constructor.
 	 */
 	private MapCablePathElementStrategy()
-	{
+	{//empty
 	}
 
 	/**
@@ -71,24 +71,24 @@ public final class MapCablePathElementStrategy extends MapStrategy
 
 		if ((actionMode == MapState.SELECT_ACTION_MODE))
 		{
-			MapElement mel = logicalNetLayer.getCurrentMapElement();
+			MapElement mel = super.logicalNetLayer.getCurrentMapElement();
 			if (mel instanceof Selection)
 			{
 				Selection sel = (Selection)mel;
-				sel.add(path);
+				sel.add(this.path);
 			}
 			else
 			{
-				Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
-				sel.addAll(logicalNetLayer.getSelectedElements());
-				logicalNetLayer.setCurrentMapElement(sel);
+				Selection sel = new Selection(super.logicalNetLayer.getMapView().getMap());
+				sel.addAll(super.logicalNetLayer.getSelectedElements());
+				super.logicalNetLayer.setCurrentMapElement(sel);
 			}
 		}//MapState.SELECT_ACTION_MODE
 		if ((actionMode != MapState.SELECT_ACTION_MODE) && (actionMode != MapState.MOVE_ACTION_MODE))
 		{
-			logicalNetLayer.deselectAll();
+			super.logicalNetLayer.deselectAll();
 		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
-		path.setSelected(true);
+		this.path.setSelected(true);
 	}
 }
 

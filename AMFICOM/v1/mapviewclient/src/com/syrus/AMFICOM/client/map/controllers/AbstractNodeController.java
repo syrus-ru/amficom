@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.3 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: AbstractNodeController.java,v 1.4 2005/02/07 16:09:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.HashMap;
 /**
  * Контроллер узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/07 16:09:25 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractNodeController implements MapElementController
@@ -47,7 +47,7 @@ public abstract class AbstractNodeController implements MapElementController
 	/**
 	 * Логический слой.
 	 */
-	protected LogicalNetLayer logcalNetLayer;
+	protected LogicalNetLayer logicalNetLayer;
 
 	/** Размер пиктограммы в экранных координатах. */
 	protected static java.util.Map boundsContainer = new HashMap();
@@ -67,9 +67,9 @@ public abstract class AbstractNodeController implements MapElementController
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setLogicalNetLayer(LogicalNetLayer logcalNetLayer)
+	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
 	{
-		this.logcalNetLayer = logcalNetLayer;
+		this.logicalNetLayer = logicalNetLayer;
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public abstract class AbstractNodeController implements MapElementController
 	 */
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		return this.logcalNetLayer;
+		return this.logicalNetLayer;
 	}
 
 	/**

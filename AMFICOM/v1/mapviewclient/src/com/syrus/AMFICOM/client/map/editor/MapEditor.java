@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditor.java,v 1.3 2005/01/11 16:43:05 krupenn Exp $
+ * $Id: MapEditor.java,v 1.4 2005/02/07 16:09:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,14 +26,11 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
 /**
- * Запуск основного окна модуля "Редактор топологических схем"
+ * Запуск основного окна модуля "Редактор топологических схем".
  * 
- * 
- * 
- * @version $Revision: 1.3 $, $Date: 2005/01/11 16:43:05 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.4 $, $Date: 2005/02/07 16:09:26 $
+ * @module mapviewclient_v1
  */
 public class MapEditor
 {
@@ -44,8 +41,8 @@ public class MapEditor
 		if(!Environment.canRun(Environment.MODULE_MAP))
 			return;
 
-		aContext.setApplicationModel(factory.create());
-		Frame frame = new MapEditorMainFrame(aContext);
+		this.aContext.setApplicationModel(factory.create());
+		Frame frame = new MapEditorMainFrame(this.aContext);
 
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif"));
 		frame.setVisible(true);

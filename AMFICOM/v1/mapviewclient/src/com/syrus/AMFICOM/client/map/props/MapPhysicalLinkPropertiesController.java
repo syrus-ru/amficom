@@ -6,19 +6,16 @@
 
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.map.PhysicalLinkType;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.Client.Map.Controllers.PhysicalLinkController;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import com.syrus.AMFICOM.map.AbstractNode;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Map.Controllers.PhysicalLinkController;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
 
 public final class MapPhysicalLinkPropertiesController 
 		extends MapElementPropertiesController 

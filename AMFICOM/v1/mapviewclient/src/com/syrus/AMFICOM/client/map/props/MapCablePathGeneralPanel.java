@@ -1,16 +1,5 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,6 +9,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.mapview.CablePath;
 
 public class MapCablePathGeneralPanel
 		extends JPanel 
@@ -57,7 +55,7 @@ public class MapCablePathGeneralPanel
 
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		return lnl;
+		return this.lnl;
 	}
 
 	private void jbInit()
@@ -65,28 +63,28 @@ public class MapCablePathGeneralPanel
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		cableComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		this.cableComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
 
-		this.setLayout(gridBagLayout1);
+		this.setLayout(this.gridBagLayout1);
 		this.setName(LangModel.getString("Properties"));
 
-		nameLabel.setText(LangModelMap.getString("Name"));
-		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.nameLabel.setText(LangModelMap.getString("Name"));
+		this.nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		cableLabel.setText(LangModelMap.getString("cable"));
-		cableLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.cableLabel.setText(LangModelMap.getString("cable"));
+		this.cableLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		descLabel.setText(LangModelMap.getString("Description"));
-		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.descLabel.setText(LangModelMap.getString("Description"));
+		this.descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		
-		cableComboBox.setEditable(false);
+		this.cableComboBox.setEditable(false);
 
-		this.add(nameLabel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-		this.add(nameTextField, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.add(cableLabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-		this.add(cableComboBox, new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.add(descLabel, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-		this.add(descTextArea, new GridBagConstraints(1, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(this.nameLabel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(this.nameTextField, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(this.cableLabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(this.cableComboBox, new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(this.descLabel, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		this.add(this.descTextArea, new GridBagConstraints(1, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 	}
 
 	public Object getObject()
@@ -96,27 +94,27 @@ public class MapCablePathGeneralPanel
 
 	public void setObject(Object objectResource)
 	{
-		path = (CablePath)objectResource;
+		this.path = (CablePath)objectResource;
 		
-		cableComboBox.removeAllItems();
+		this.cableComboBox.removeAllItems();
 		
-		if(path == null)
+		if(this.path == null)
 		{
-			nameTextField.setEnabled(false);
-			nameTextField.setText("");
-			cableComboBox.setEnabled(false);
-			descTextArea.setEnabled(false);
-			descTextArea.setText("");
+			this.nameTextField.setEnabled(false);
+			this.nameTextField.setText("");
+			this.cableComboBox.setEnabled(false);
+			this.descTextArea.setEnabled(false);
+			this.descTextArea.setText("");
 		}
 		else
 		{
-			nameTextField.setEnabled(true);
-			nameTextField.setText(path.getName());
-			cableComboBox.setEnabled(true);
-			cableComboBox.addItem(path.getSchemeCableLink());
-			cableComboBox.setSelectedItem(path.getSchemeCableLink());
-			descTextArea.setEnabled(true);
-			descTextArea.setText(path.getDescription());
+			this.nameTextField.setEnabled(true);
+			this.nameTextField.setText(this.path.getName());
+			this.cableComboBox.setEnabled(true);
+			this.cableComboBox.addItem(this.path.getSchemeCableLink());
+			this.cableComboBox.setSelectedItem(this.path.getSchemeCableLink());
+			this.descTextArea.setEnabled(true);
+			this.descTextArea.setText(this.path.getDescription());
 		}
 	}
 
@@ -128,8 +126,8 @@ public class MapCablePathGeneralPanel
 	{
 		try 
 		{
-			path.setName(nameTextField.getText());
-			path.setDescription(descTextArea.getText());
+			this.path.setName(this.nameTextField.getText());
+			this.path.setDescription(this.descTextArea.getText());
 			return true;
 		} 
 		catch (Exception ex) 

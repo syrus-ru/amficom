@@ -57,16 +57,16 @@ public class SiteCrossingPanel extends JPanel
 	{
 		this.site = site;
 		this.cpath = null;
-		index1 = -1;
-		index2 = -1;
-		tunnels.clear();
+		this.index1 = -1;
+		this.index2 = -1;
+		this.tunnels.clear();
 		if(site != null)
 		{
 			for(Iterator it = site.getMap().getPhysicalLinksAt(site).iterator(); it.hasNext();)
 			{
 				Object tunnel = it.next();
 				if(!(tunnel instanceof UnboundLink))
-					tunnels.add(tunnel);
+					this.tunnels.add(tunnel);
 			}
 		}
 		repaint();
@@ -76,20 +76,20 @@ public class SiteCrossingPanel extends JPanel
 	{
 		this.cpath = cpath;
 
-		index1 = -1;
-		index2 = -1;
+		this.index1 = -1;
+		this.index2 = -1;
 		
 		if(cpath != null)
 		{
 			for(Iterator it = cpath.getLinks().iterator(); it.hasNext();)
 			{
 				PhysicalLink link = (PhysicalLink)it.next();
-				if(tunnels.contains(link))
+				if(this.tunnels.contains(link))
 				{
-					if(index1 == -1)
-						index1 = tunnels.indexOf(link);
+					if(this.index1 == -1)
+						this.index1 = this.tunnels.indexOf(link);
 					else
-						index2 = tunnels.indexOf(link);
+						this.index2 = this.tunnels.indexOf(link);
 				}
 			}
 		}
@@ -141,11 +141,11 @@ public class SiteCrossingPanel extends JPanel
 				WELL_RADIUS * 2, 
 				WELL_RADIUS * 2);
 
-		int cnt = tunnels.size();
+		int cnt = this.tunnels.size();
 		if(cnt > 0)
 		{
 			double a = Math.PI;
-			Iterator it = tunnels.iterator();
+			Iterator it = this.tunnels.iterator();
 			double added = 2 * Math.PI / cnt;
 			for (int i = 0; i < cnt; i++) 
 			{
@@ -154,17 +154,17 @@ public class SiteCrossingPanel extends JPanel
 			}
 		}
 		
-		if(cpath != null && cnt > 0)
+		if(this.cpath != null && cnt > 0)
 		{
 			double added = 2 * Math.PI / cnt;
-			if(index1 != -1)
+			if(this.index1 != -1)
 			{
-				double a = Math.PI + index1 * added;
+				double a = Math.PI + this.index1 * added;
 				drawPath(g2, centerx, centery, a);
 			}
-			if(index2 != -1)
+			if(this.index2 != -1)
 			{
-				double a = Math.PI + index2 * added;
+				double a = Math.PI + this.index2 * added;
 				drawPath(g2, centerx, centery, a);
 			}
 		}
@@ -280,7 +280,7 @@ public class SiteCrossingPanel extends JPanel
 				(int )(arrowendx - SPIKE_LENGTH * Math.cos(a - 0.2)), 
 				(int )(arrowendy - SPIKE_LENGTH * Math.sin(a - 0.2)));
 
-		AbstractNode node = link.getOtherNode(site);
+		AbstractNode node = link.getOtherNode(this.site);
 		
 		String text = "к узлу \"" + node.getName() + "\"";
 

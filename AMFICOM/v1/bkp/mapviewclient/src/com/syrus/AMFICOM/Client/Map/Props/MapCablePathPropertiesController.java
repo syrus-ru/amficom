@@ -6,25 +6,24 @@
 
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-
-import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.Scheme;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
 public final class MapCablePathPropertiesController 
 		extends MapElementPropertiesController 
@@ -198,7 +197,7 @@ public final class MapCablePathPropertiesController
 		Object result = "";
 		if (key.equals(PROPERTY_SCHEME_CABLE_ID))
 		{
-			schemeCableLinks.clear();
+			this.schemeCableLinks.clear();
 			CablePath cpath = (CablePath)object;
 			for(Iterator it = cpath.getMapView().getSchemes().iterator(); it.hasNext();)
 			{
@@ -206,23 +205,23 @@ public final class MapCablePathPropertiesController
 				for(Iterator it2 = SchemeUtils.getAllCableLinks(scheme).iterator(); it2.hasNext();)
 				{
 					SchemeCableLink scl = (SchemeCableLink )it2.next();
-					schemeCableLinks.put(new ObjectResourceLabel(scl, scl.name()), scl);
+					this.schemeCableLinks.put(new ObjectResourceLabel(scl, scl.name()), scl);
 				}
 			}
-			result = schemeCableLinks;
+			result = this.schemeCableLinks;
 		}
 		else
 		if (key.equals(PROPERTY_START_NODE_ID)
 			|| key.equals(PROPERTY_END_NODE_ID))
 		{
-			nodes.clear();
+			this.nodes.clear();
 			CablePath cpath = (CablePath)object;
 			for(Iterator it = cpath.getMap().getSiteNodes().iterator(); it.hasNext();)
 			{
 				AbstractNode node = (AbstractNode)it.next();
-				nodes.put(new ObjectResourceLabel(node, node.getName()), node);
+				this.nodes.put(new ObjectResourceLabel(node, node.getName()), node);
 			}
-			result = nodes;
+			result = this.nodes;
 		}
 		return result;
 	}

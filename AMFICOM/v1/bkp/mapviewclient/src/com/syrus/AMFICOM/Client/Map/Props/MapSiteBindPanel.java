@@ -52,7 +52,7 @@ public final class MapSiteBindPanel
 	private LogicalNetLayer lnl;
 
 	private JLabel titleLabel = new JLabel();
-	private JTree elementsTree;
+	JTree elementsTree;
 
 	private JPanel buttonsPanel = new JPanel();
 	private JButton bindButton = new JButton();
@@ -71,8 +71,8 @@ public final class MapSiteBindPanel
 	
 	public MapSiteBindPanel()
 	{
-		root.add(elementsBranch);
-		root.add(cablesBranch);
+		this.root.add(this.elementsBranch);
+		this.root.add(this.cablesBranch);
 
 		try
 		{
@@ -92,28 +92,28 @@ public final class MapSiteBindPanel
 
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		return lnl;
+		return this.lnl;
 	}
 
 	private void jbInit()
 	{
-		this.setLayout(gridBagLayout1);
+		this.setLayout(this.gridBagLayout1);
 		this.setName(LangModelMap.getString("SiteBinding"));
-		titleLabel.setText(LangModelMap.getString("SiteBinding"));
+		this.titleLabel.setText(LangModelMap.getString("SiteBinding"));
 
-		elementsTree = new JTree(createTree(null));
-		elementsTree.expandRow(0);
-		elementsTree.setCellRenderer(new SiteBindingRenderer());
+		this.elementsTree = new JTree(createTree(null));
+		this.elementsTree.expandRow(0);
+		this.elementsTree.setCellRenderer(new SiteBindingRenderer());
 
-		elementsTree.getSelectionModel().setSelectionMode
+		this.elementsTree.getSelectionModel().setSelectionMode
             (TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-		elementsTree.addTreeSelectionListener(new TreeSelectionListener()
+		this.elementsTree.addTreeSelectionListener(new TreeSelectionListener()
 			{
 				public void valueChanged(TreeSelectionEvent e)
 				{
 					DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-							elementsTree.getLastSelectedPathComponent();
+							MapSiteBindPanel.this.elementsTree.getLastSelectedPathComponent();
 					if(node == null)
 						showElement(null);
 					else
@@ -121,8 +121,8 @@ public final class MapSiteBindPanel
 				}
 			});
 
-		bindButton.setText("Привязать");
-		bindButton.addActionListener(new ActionListener()
+		this.bindButton.setText("Привязать");
+		this.bindButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -130,35 +130,35 @@ public final class MapSiteBindPanel
 //					bind(or);
 				}
 			});
-		unbindButton.setText("Отвязать");
-		unbindButton.addActionListener(new ActionListener()
+		this.unbindButton.setText("Отвязать");
+		this.unbindButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-							elementsTree.getLastSelectedPathComponent();
+							MapSiteBindPanel.this.elementsTree.getLastSelectedPathComponent();
 					unbindElement(node.getUserObject());
 				}
 			});
 //		jPanel1.add(bindButton, null);
-		buttonsPanel.add(unbindButton, null);
+		this.buttonsPanel.add(this.unbindButton, null);
 
-		schemePanel.getGraph().setGraphEditable(false);
+		this.schemePanel.getGraph().setGraphEditable(false);
 		
-		JScrollPane treeView = new JScrollPane(elementsTree);
+		JScrollPane treeView = new JScrollPane(this.elementsTree);
 		
-		crossingScrollPane.getViewport().add(crossingPanel);
+		this.crossingScrollPane.getViewport().add(this.crossingPanel);
 
-		this.add(titleLabel, ReusedGridBagConstraints.get(0, 0, 3, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.titleLabel, ReusedGridBagConstraints.get(0, 0, 3, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
 		this.add(treeView, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 150, 150));
 		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
-		this.add(schemePanel, ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
-		this.add(crossingScrollPane, ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(this.schemePanel, ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(this.crossingScrollPane, ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
 //		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
-		this.add(buttonsPanel, ReusedGridBagConstraints.get(0, 2, 3, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.buttonsPanel, ReusedGridBagConstraints.get(0, 2, 3, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		
-		schemePanel.setVisible(false);
-		crossingScrollPane.setVisible(true);
+		this.schemePanel.setVisible(false);
+		this.crossingScrollPane.setVisible(true);
 	}
 
 	public Object getObject()
@@ -171,12 +171,12 @@ public final class MapSiteBindPanel
 		MapView mapView = getLogicalNetLayer().getMapView();
 
 		se.siteNodeImpl(null);
-		for (int i = 0; i < elementsBranch.getChildCount(); i++) 
+		for (int i = 0; i < this.elementsBranch.getChildCount(); i++) 
 		{
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode )elementsBranch.getChildAt(i);
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode )this.elementsBranch.getChildAt(i);
 			if(node.getUserObject().equals(se))
 			{
-				elementsBranch.remove(node);
+				this.elementsBranch.remove(node);
 				for (int j = 0; j < node.getChildCount(); j++) 
 				{
 					DefaultMutableTreeNode node2 = (DefaultMutableTreeNode )node.getChildAt(j);
@@ -191,31 +191,31 @@ public final class MapSiteBindPanel
 			}
 		}
 		
-		unboundElements.add(se);
+		this.unboundElements.add(se);
 
-		elementsTree.updateUI();
+		this.elementsTree.updateUI();
 	}
 
 	private void unbindSchemeCableLink(SchemeCableLink scl)
 	{
 		MapView mapView = getLogicalNetLayer().getMapView();
 
-		for (int i = 0; i < cablesBranch.getChildCount(); i++) 
+		for (int i = 0; i < this.cablesBranch.getChildCount(); i++) 
 		{
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode )cablesBranch.getChildAt(i);
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode )this.cablesBranch.getChildAt(i);
 			if(node.getUserObject().equals(scl))
 			{
-				cablesBranch.remove(node);
+				this.cablesBranch.remove(node);
 				break;
 			}
 		}
 
-		unboundElements.add(scl);
+		this.unboundElements.add(scl);
 	
 		CablePath cablePath = mapView.findCablePath(scl);
 
 		List pathLinks = cablePath.getLinks();
-		List siteLinks = mapView.getMap().getPhysicalLinksAt(site);
+		List siteLinks = mapView.getMap().getPhysicalLinksAt(this.site);
 
 		PhysicalLink linkRight = null;
 		PhysicalLink linkLeft = null;
@@ -254,10 +254,10 @@ public final class MapSiteBindPanel
 
 		if(linkLeft instanceof UnboundLink)
 		{
-			if(linkLeft.getStartNode().equals(site))
-				linkLeft.setStartNode(linkRight.getOtherNode(site));
+			if(linkLeft.getStartNode().equals(this.site))
+				linkLeft.setStartNode(linkRight.getOtherNode(this.site));
 			else
-				linkLeft.setEndNode(linkRight.getOtherNode(site));
+				linkLeft.setEndNode(linkRight.getOtherNode(this.site));
 		}
 		else
 		{
@@ -265,8 +265,8 @@ public final class MapSiteBindPanel
 			linkLeft.getBinding().remove(cablePath);
 
 			CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
-					linkLeft.getOtherNode(site),
-					linkRight.getOtherNode(site));
+					linkLeft.getOtherNode(this.site),
+					linkRight.getOtherNode(this.site));
 			command.setLogicalNetLayer(getLogicalNetLayer());
 			command.execute();
 
@@ -276,10 +276,10 @@ public final class MapSiteBindPanel
 			cablePath.addLink(unbound, CableController.generateCCI(unbound));
 		}
 		
-		elementsTree.updateUI();
+		this.elementsTree.updateUI();
 	}
 
-	private void unbindElement(Object or)
+	void unbindElement(Object or)
 	{
 		if(or instanceof SchemeElement)
 		{
@@ -294,7 +294,7 @@ public final class MapSiteBindPanel
 		}
 	}
 
-	private void showElement(Object element)
+	void showElement(Object element)
 	{
 		boolean sen = false;
 		if(element != null)
@@ -303,8 +303,8 @@ public final class MapSiteBindPanel
 			{
 				SchemeElement se = (SchemeElement )element;
 //				schemePanel.getGraph().setSchemeElement(se);
-				crossingScrollPane.setVisible(false);
-				schemePanel.setVisible(true);
+				this.crossingScrollPane.setVisible(false);
+				this.schemePanel.setVisible(true);
 				sen = true;
 			}
 			else
@@ -312,52 +312,52 @@ public final class MapSiteBindPanel
 			{
 				SchemeCableLink scl = (SchemeCableLink )element;
 
-				schemePanel.setVisible(false);
-				crossingScrollPane.setVisible(true);
+				this.schemePanel.setVisible(false);
+				this.crossingScrollPane.setVisible(true);
 				
 				MapView mapView = getLogicalNetLayer().getMapView();
 
-				crossingPanel.setCable(mapView.findCablePath(scl));
+				this.crossingPanel.setCable(mapView.findCablePath(scl));
 
 				AbstractNode startNode = mapView.getStartNode(scl);
 				AbstractNode endNode = mapView.getEndNode(scl);
-				sen = !(startNode.equals(site)) && !(endNode.equals(site));
+				sen = !(startNode.equals(this.site)) && !(endNode.equals(this.site));
 			}
 			else
 			{
-				schemePanel.setVisible(false);
-				crossingPanel.setCable(null);
-				crossingScrollPane.setVisible(true);
+				this.schemePanel.setVisible(false);
+				this.crossingPanel.setCable(null);
+				this.crossingScrollPane.setVisible(true);
 			}
 		}
 		else
 		{
-			schemePanel.setVisible(false);
-			crossingPanel.setCable(null);
-			crossingScrollPane.setVisible(true);
+			this.schemePanel.setVisible(false);
+			this.crossingPanel.setCable(null);
+			this.crossingScrollPane.setVisible(true);
 		}
-		unbindButton.setEnabled(sen);
+		this.unbindButton.setEnabled(sen);
 	}
 
 	public void setObject(Object objectResource)
 	{
-		site = (SiteNode)objectResource;
-		createTree(site);
-		schemePanel.getGraph().removeAll();
-		crossingPanel.setSite(site);
+		this.site = (SiteNode)objectResource;
+		createTree(this.site);
+		this.schemePanel.getGraph().removeAll();
+		this.crossingPanel.setSite(this.site);
 
-		schemePanel.setVisible(false);
-		crossingPanel.setCable(null);
-		crossingScrollPane.setVisible(true);
+		this.schemePanel.setVisible(false);
+		this.crossingPanel.setCable(null);
+		this.crossingScrollPane.setVisible(true);
 
-		if(site == null)
+		if(this.site == null)
 		{
 		}
 		else
 		{
 		}
 
-		elementsTree.updateUI();
+		this.elementsTree.updateUI();
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -407,14 +407,13 @@ public final class MapSiteBindPanel
 
 	public List getUnboundElements()
 	{
-		return unboundElements;
+		return this.unboundElements;
 	}
 
 	private DefaultMutableTreeNode createTree(SiteNode site)
 	{
-		this.
-		elementsBranch.removeAllChildren();
-		cablesBranch.removeAllChildren();
+		this.elementsBranch.removeAllChildren();
+		this.cablesBranch.removeAllChildren();
 		if(site != null)
 		{
 			DefaultMutableTreeNode elementNode;
@@ -449,7 +448,7 @@ public final class MapSiteBindPanel
 					if(se.siteNodeImpl().equals(site.getId()))
 					{
 						elementNode = new DefaultMutableTreeNode(se);
-						elementsBranch.add(elementNode);
+						this.elementsBranch.add(elementNode);
 						for(Iterator it2 = cableElementsDropped.iterator(); it2.hasNext();)
 						{
 							CablePath cablePath = (CablePath)it2.next();
@@ -469,12 +468,12 @@ public final class MapSiteBindPanel
 				{
 					CablePath cablePath = (CablePath)it.next();
 					cableNode = new DefaultMutableTreeNode(cablePath.getSchemeCableLink());
-					cablesBranch.add(cableNode);
+					this.cablesBranch.add(cableNode);
 				}
 			}
 		}
 	
-		return root;
+		return this.root;
 	}
 	
 	private boolean startsAt(SchemeCableLink scl, SchemeElement se)

@@ -1,41 +1,37 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.util.List;
+
+import javax.swing.Box;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainCondition;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.mapview.VoidElement;
-
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.geom.Point2D;
-
-import java.util.List;
-import javax.swing.Box;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.mapview.VoidElement;
 
 public class MapViewPanel
 		extends JPanel 
@@ -90,57 +86,57 @@ public class MapViewPanel
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		domainComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
-		mapComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		this.domainComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		this.mapComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
 
-		this.setLayout(gridBagLayout1);
+		this.setLayout(this.gridBagLayout1);
 		this.setName(LangModel.getString("Properties"));
 
-		nameLabel.setText(LangModelMap.getString("Name"));
-		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.nameLabel.setText(LangModelMap.getString("Name"));
+		this.nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		mapLabel.setText(LangModelMap.getString("Map"));
-		mapLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.mapLabel.setText(LangModelMap.getString("Map"));
+		this.mapLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		domainLabel.setText(LangModelMap.getString("Domain"));
-		domainLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.domainLabel.setText(LangModelMap.getString("Domain"));
+		this.domainLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		longLabel.setText(LangModelMap.getString("Longitude"));
-		longLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.longLabel.setText(LangModelMap.getString("Longitude"));
+		this.longLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		latLabel.setText(LangModelMap.getString("Latitude"));
-		latLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.latLabel.setText(LangModelMap.getString("Latitude"));
+		this.latLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		scaleLabel.setText(LangModelMap.getString("Scale"));
-		scaleLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.scaleLabel.setText(LangModelMap.getString("Scale"));
+		this.scaleLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		schemesLabel.setText(LangModelMap.getString("Schemes"));
-		schemesLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		schemesList.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT * 4));
+		this.schemesLabel.setText(LangModelMap.getString("Schemes"));
+		this.schemesLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.schemesList.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT * 4));
 
-		descLabel.setText(LangModelMap.getString("Description"));
-		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.descLabel.setText(LangModelMap.getString("Description"));
+		this.descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		this.add(nameLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(nameTextField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(mapLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(mapComboBox, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(domainLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(domainComboBox, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(longLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(longTextField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(latLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(latTextField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 4, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(scaleLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(scaleTextField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 5, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(schemesLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 6, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(schemesList, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 6, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.nameLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.nameTextField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.mapLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.mapComboBox, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.domainLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.domainComboBox, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.longLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.longTextField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.latLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.latTextField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 4, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.scaleLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.scaleTextField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 5, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.schemesLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 6, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.schemesList, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 6, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.add(Box.createHorizontalStrut(5), com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 7, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(descLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 8, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(descTextArea, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 8, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(this.descLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 8, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.descTextArea, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 8, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 
-		mapComboBox.setEnabled(false);
-		domainComboBox.setEnabled(false);
+		this.mapComboBox.setEnabled(false);
+		this.domainComboBox.setEnabled(false);
 	}
 
 	public Object getObject()
@@ -152,35 +148,35 @@ public class MapViewPanel
 	{
 		if(objectResource instanceof VoidElement)
 		{
-			view = ((VoidElement)objectResource).getMapView();
+			this.view = ((VoidElement)objectResource).getMapView();
 		}
 		else
-			view = (MapView )objectResource;
+			this.view = (MapView )objectResource;
 
-		domainComboBox.removeAllItems();
-		mapComboBox.removeAllItems();
+		this.domainComboBox.removeAllItems();
+		this.mapComboBox.removeAllItems();
 
-		if(view == null)
+		if(this.view == null)
 		{
-			nameTextField.setEnabled(false);
-			nameTextField.setText("");
-			descTextArea.setEnabled(false);
-			descTextArea.setText("");
+			this.nameTextField.setEnabled(false);
+			this.nameTextField.setText("");
+			this.descTextArea.setEnabled(false);
+			this.descTextArea.setText("");
 
-			longTextField.setEnabled(false);
-			longTextField.setText("");
-			latTextField.setEnabled(false);
-			latTextField.setText("");
+			this.longTextField.setEnabled(false);
+			this.longTextField.setText("");
+			this.latTextField.setEnabled(false);
+			this.latTextField.setText("");
 
-			scaleTextField.setEnabled(false);
-			scaleTextField.setText("");
+			this.scaleTextField.setEnabled(false);
+			this.scaleTextField.setText("");
 			
-			schemesList.removeAll();
+			this.schemesList.removeAll();
 		}
 		else
 		{
-			nameTextField.setEnabled(true);
-			nameTextField.setText(view.getName());
+			this.nameTextField.setEnabled(true);
+			this.nameTextField.setText(this.view.getName());
 
 			Domain domain = null;
 			List domains = null;
@@ -201,7 +197,7 @@ public class MapViewPanel
 			try
 			{
 				domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
-						view.getDomainId(),
+						this.view.getDomainId(),
 						false);
 			}
 			catch (CommunicationException e)
@@ -213,8 +209,8 @@ public class MapViewPanel
 				e.printStackTrace();
 			}
 
-			domainComboBox.addElements(domains);
-			domainComboBox.setSelectedItem(domain);
+			this.domainComboBox.addElements(domains);
+			this.domainComboBox.setSelectedItem(domain);
 
 			List maps = null;
 
@@ -230,21 +226,21 @@ public class MapViewPanel
 			{
 				e.printStackTrace();
 			}
-			mapComboBox.addElements(maps);
-			mapComboBox.setSelectedItem(view.getMap());
+			this.mapComboBox.addElements(maps);
+			this.mapComboBox.setSelectedItem(this.view.getMap());
 
-			descTextArea.setEnabled(true);
-			descTextArea.setText(view.getDescription());
+			this.descTextArea.setEnabled(true);
+			this.descTextArea.setText(this.view.getDescription());
 
-			longTextField.setEnabled(true);
-			longTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(view.getCenter().getX()));
-			latTextField.setEnabled(true);
-			latTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(view.getCenter().getY()));
+			this.longTextField.setEnabled(true);
+			this.longTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(this.view.getCenter().getX()));
+			this.latTextField.setEnabled(true);
+			this.latTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(this.view.getCenter().getY()));
 
-			scaleTextField.setEnabled(true);
-			scaleTextField.setText(String.valueOf(view.getScale()));
+			this.scaleTextField.setEnabled(true);
+			this.scaleTextField.setText(String.valueOf(this.view.getScale()));
 			
-			schemesList.setContents(view.getSchemes());
+			this.schemesList.setContents(this.view.getSchemes());
 		}
 	}
 
@@ -256,19 +252,19 @@ public class MapViewPanel
 	{
 		try 
 		{
-			view.setName(nameTextField.getText());
-			view.setDescription(descTextArea.getText());
+			this.view.setName(this.nameTextField.getText());
+			this.view.setDescription(this.descTextArea.getText());
 
 			try 
 			{
-				double x = Double.parseDouble(longTextField.getText());
-				double y = Double.parseDouble(longTextField.getText());
+				double x = Double.parseDouble(this.longTextField.getText());
+				double y = Double.parseDouble(this.longTextField.getText());
 				
-				view.setCenter(new DoublePoint(x, y));
+				this.view.setCenter(new DoublePoint(x, y));
 
-				double s = Double.parseDouble(scaleTextField.getText());
+				double s = Double.parseDouble(this.scaleTextField.getText());
 				
-				view.setScale(s);
+				this.view.setScale(s);
 			} 
 			catch (NumberFormatException ex) 
 			{

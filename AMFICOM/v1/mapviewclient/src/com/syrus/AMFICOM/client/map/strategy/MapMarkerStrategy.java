@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.17 2005/02/02 08:57:28 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.18 2005/02/07 16:09:26 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -28,7 +28,7 @@ import java.awt.Point;
  * —тратеги€ управлени€ маркером.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/02/02 08:57:28 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/07 16:09:26 $
  * @module mapviewclient_v1
  */
 public final class MapMarkerStrategy extends MapStrategy 
@@ -47,7 +47,7 @@ public final class MapMarkerStrategy extends MapStrategy
 	 * Private constructor.
 	 */
 	private MapMarkerStrategy()
-	{
+	{//empty
 	}
 
 	/**
@@ -76,20 +76,17 @@ public final class MapMarkerStrategy extends MapStrategy
 
 		if ((actionMode == MapState.SELECT_ACTION_MODE))
 		{
-			MapElement mel = logicalNetLayer.getCurrentMapElement();
-			if (mel instanceof Selection)
+			MapElement mel = super.logicalNetLayer.getCurrentMapElement();
+			if (!(mel instanceof Selection))
 			{
-			}
-			else
-			{
-				logicalNetLayer.deselectAll();
+				super.logicalNetLayer.deselectAll();
 			}
 		}//MapState.SELECT_ACTION_MODE
 		else if ((actionMode != MapState.SELECT_ACTION_MODE) && (actionMode != MapState.MOVE_ACTION_MODE))
 		{
-			logicalNetLayer.deselectAll();
+			super.logicalNetLayer.deselectAll();
 		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
-		marker.setSelected(true);
+		this.marker.setSelected(true);
 	}
 
 	/**
@@ -99,17 +96,17 @@ public final class MapMarkerStrategy extends MapStrategy
 	{
 		int actionMode = mapState.getActionMode();
 
-		MarkerController mc = (MarkerController)logicalNetLayer.getMapViewController().getController(marker);
+		MarkerController mc = (MarkerController)super.logicalNetLayer.getMapViewController().getController(this.marker);
 
-		MapCoordinatesConverter converter = logicalNetLayer;
+		MapCoordinatesConverter converter = super.logicalNetLayer;
 
 		//ѕроверка того что маркер можно перемещать и его перемещение
-		if (logicalNetLayer.getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_USE_MARKER))
+		if (super.logicalNetLayer.getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_USE_MARKER))
 		{
-			NodeLink nodeLink = marker.getNodeLink();
-			AbstractNode sn = marker.getStartNode();
-			AbstractNode en = marker.getEndNode();
-			Point anchorPoint = converter.convertMapToScreen(marker.getLocation());
+			NodeLink nodeLink = this.marker.getNodeLink();
+			AbstractNode sn = this.marker.getStartNode();
+			AbstractNode en = this.marker.getEndNode();
+			Point anchorPoint = converter.convertMapToScreen(this.marker.getLocation());
 			Point start = converter.convertMapToScreen(sn.getLocation());
 			Point end = converter.convertMapToScreen(en.getLocation());
 			double lengthFromStartNode;
@@ -117,16 +114,16 @@ public final class MapMarkerStrategy extends MapStrategy
 			lengthFromStartNode = md.lengthFromStartNode;
 			while (lengthFromStartNode > md.nodeLinkLength)
 			{
-				nodeLink = marker.nextNodeLink();
+				nodeLink = this.marker.nextNodeLink();
 				if (nodeLink == null)
 					lengthFromStartNode = md.nodeLinkLength;
 				else
 				{
 					sn = en;
 					en = nodeLink.getOtherNode(sn);
-					marker.setNodeLink(nodeLink);
-					marker.setStartNode(sn);
-					marker.setEndNode(en);
+					this.marker.setNodeLink(nodeLink);
+					this.marker.setStartNode(sn);
+					this.marker.setEndNode(en);
 					start = converter.convertMapToScreen(sn.getLocation());
 					end = converter.convertMapToScreen(en.getLocation());
 					md = new MotionDescriptor(start, end, anchorPoint, point);
@@ -140,16 +137,16 @@ public final class MapMarkerStrategy extends MapStrategy
 			}
 			while (lengthFromStartNode < 0)
 			{
-				nodeLink = marker.previousNodeLink();
+				nodeLink = this.marker.previousNodeLink();
 				if (nodeLink == null)
 					lengthFromStartNode = 0;
 				else
 				{
 					en = sn;
 					sn = nodeLink.getOtherNode(en);
-					marker.setNodeLink(nodeLink);
-					marker.setStartNode(sn);
-					marker.setEndNode(en);
+					this.marker.setNodeLink(nodeLink);
+					this.marker.setStartNode(sn);
+					this.marker.setEndNode(en);
 					start = converter.convertMapToScreen(sn.getLocation());
 					end = converter.convertMapToScreen(en.getLocation());
 					md = new MotionDescriptor(start, end, anchorPoint, point);
@@ -161,8 +158,8 @@ public final class MapMarkerStrategy extends MapStrategy
 					}
 				}
 			}
-			mc.adjustPosition(marker, lengthFromStartNode);
-			mc.notifyMarkerMoved(marker);
+			mc.adjustPosition(this.marker, lengthFromStartNode);
+			mc.notifyMarkerMoved(this.marker);
 		}
 	}
 
@@ -174,7 +171,7 @@ public final class MapMarkerStrategy extends MapStrategy
 		int actionMode = mapState.getActionMode();
 
 		if (actionMode == MapState.MOVE_ACTION_MODE)
-		{
+		{//empty
 		}
 	}
 }

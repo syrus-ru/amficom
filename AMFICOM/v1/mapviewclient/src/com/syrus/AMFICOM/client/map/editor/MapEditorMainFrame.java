@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.20 2005/01/30 15:38:18 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.21 2005/02/07 16:09:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -100,10 +100,9 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.20 $, $Date: 2005/01/30 15:38:18 $
- * @module map_v2
+ * @version $Revision: 1.21 $, $Date: 2005/02/07 16:09:26 $
+ * @module mapviewclient_v1
  * @author $Author: krupenn $
- * @see
  */
 public class MapEditorMainFrame extends JFrame 
 	implements OperationListener, Module
@@ -150,7 +149,7 @@ public class MapEditorMainFrame extends JFrame
 		}
 		Environment.addWindow(this);
 
-		aContext.setDispatcher(internalDispatcher);
+		aContext.setDispatcher(this.internalDispatcher);
 		setContext(aContext);
 	}
 
@@ -162,7 +161,7 @@ public class MapEditorMainFrame extends JFrame
 	private void jbInit()
 	{
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
-		setContentPane(mainPanel);
+		setContentPane(this.mainPanel);
 
 		//Center the window
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -179,30 +178,30 @@ public class MapEditorMainFrame extends JFrame
 				}
 			});
 
-		mainPanel.setLayout(new BorderLayout());
-		desktopPane.setLayout(null);
-		desktopPane.setBackground(SystemColor.control.darker().darker());
+		this.mainPanel.setLayout(new BorderLayout());
+		this.desktopPane.setLayout(null);
+		this.desktopPane.setBackground(SystemColor.control.darker().darker());
 
-		statusBarPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		statusBarPanel.setLayout(new BorderLayout());
-		statusBarPanel.add(statusBar, BorderLayout.CENTER);
+		this.statusBarPanel.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.statusBarPanel.setLayout(new BorderLayout());
+		this.statusBarPanel.add(this.statusBar, BorderLayout.CENTER);
 
-		statusBar.add(StatusBarModel.FIELD_STATUS);
-		statusBar.add(StatusBarModel.FIELD_SERVER);
-		statusBar.add(StatusBarModel.FIELD_SESSION);
-		statusBar.add(StatusBarModel.FIELD_USER);
-		statusBar.add(StatusBarModel.FIELD_DOMAIN);
-		statusBar.add(StatusBarModel.FIELD_TIME);
+		this.statusBar.add(StatusBarModel.FIELD_STATUS);
+		this.statusBar.add(StatusBarModel.FIELD_SERVER);
+		this.statusBar.add(StatusBarModel.FIELD_SESSION);
+		this.statusBar.add(StatusBarModel.FIELD_USER);
+		this.statusBar.add(StatusBarModel.FIELD_DOMAIN);
+		this.statusBar.add(StatusBarModel.FIELD_TIME);
 
-		viewport.setView(desktopPane);
-		scrollPane.setViewport(viewport);
-		scrollPane.setAutoscrolls(true);
+		this.viewport.setView(this.desktopPane);
+		this.scrollPane.setViewport(this.viewport);
+		this.scrollPane.setAutoscrolls(true);
 
-		mainPanel.add(toolBar, BorderLayout.NORTH);
-		mainPanel.add(statusBarPanel, BorderLayout.SOUTH);
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
+		this.mainPanel.add(this.toolBar, BorderLayout.NORTH);
+		this.mainPanel.add(this.statusBarPanel, BorderLayout.SOUTH);
+		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
 
-		this.setJMenuBar(menuBar);
+		this.setJMenuBar(this.menuBar);
 	}
 
 	void setDefaultModel (ApplicationModel aModel)
@@ -268,37 +267,37 @@ public class MapEditorMainFrame extends JFrame
 
 	public JDesktopPane getDesktop()
 	{
-		return desktopPane;
+		return this.desktopPane;
 	}
 
 	public void finalizeModule()
 	{
 		setContext(null);
 		Environment.getDispatcher().unregister(this, ContextChangeEvent.type);
-		statusBar.removeDispatcher(Environment.getDispatcher());
+		this.statusBar.removeDispatcher(Environment.getDispatcher());
 	}
 
 	public void initModule()
 	{
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 
-		statusBar.distribute();
-		statusBar.setWidth(StatusBarModel.FIELD_STATUS, 200);
-		statusBar.setWidth(StatusBarModel.FIELD_SERVER, 250);
-		statusBar.setWidth(StatusBarModel.FIELD_SESSION, 200);
-		statusBar.setWidth(StatusBarModel.FIELD_USER, 100);
-		statusBar.setWidth(StatusBarModel.FIELD_DOMAIN, 150);
-		statusBar.setWidth(StatusBarModel.FIELD_TIME, 50);
+		this.statusBar.distribute();
+		this.statusBar.setWidth(StatusBarModel.FIELD_STATUS, 200);
+		this.statusBar.setWidth(StatusBarModel.FIELD_SERVER, 250);
+		this.statusBar.setWidth(StatusBarModel.FIELD_SESSION, 200);
+		this.statusBar.setWidth(StatusBarModel.FIELD_USER, 100);
+		this.statusBar.setWidth(StatusBarModel.FIELD_DOMAIN, 150);
+		this.statusBar.setWidth(StatusBarModel.FIELD_TIME, 50);
 
-		statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
-		statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusNoConnection"));
-		statusBar.setText(StatusBarModel.FIELD_SESSION, LangModel.getString("statusNoSession"));
-		statusBar.setText(StatusBarModel.FIELD_USER, LangModel.getString("statusNoUser"));
-		statusBar.setText(StatusBarModel.FIELD_DOMAIN, LangModel.getString("statusNoDomain"));
-		statusBar.setText(StatusBarModel.FIELD_TIME, " ");
-		statusBar.organize();
-		statusBar.addDispatcher(Environment.getDispatcher());
-		statusBar.addDispatcher(internalDispatcher);
+		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+		this.statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusNoConnection"));
+		this.statusBar.setText(StatusBarModel.FIELD_SESSION, LangModel.getString("statusNoSession"));
+		this.statusBar.setText(StatusBarModel.FIELD_USER, LangModel.getString("statusNoUser"));
+		this.statusBar.setText(StatusBarModel.FIELD_DOMAIN, LangModel.getString("statusNoDomain"));
+		this.statusBar.setText(StatusBarModel.FIELD_TIME, " ");
+		this.statusBar.organize();
+		this.statusBar.addDispatcher(Environment.getDispatcher());
+		this.statusBar.addDispatcher(this.internalDispatcher);
 
 		// load values from properties file
 		try
@@ -319,121 +318,121 @@ public class MapEditorMainFrame extends JFrame
 		aModel.setCommand("menuSessionNew", 
 				new SessionOpenCommand(
 					Environment.getDispatcher(), 
-					aContext));
+					this.aContext));
 		aModel.setCommand("menuSessionClose", 
 				new SessionCloseCommand(
 					Environment.getDispatcher(), 
-					aContext));
+					this.aContext));
 		aModel.setCommand("menuSessionConnection", 
 				new SessionConnectionCommand(
 					Environment.getDispatcher(), 
-					aContext));
+					this.aContext));
 		aModel.setCommand("menuSessionChangePassword", 
 				new SessionChangePasswordCommand(
 					Environment.getDispatcher(), 
-					aContext));
+					this.aContext));
 		aModel.setCommand("menuSessionDomain", 
 				new SessionDomainCommand(
 					Environment.getDispatcher(), 
-					aContext));
+					this.aContext));
 		aModel.setCommand("menuExit", 
 				new ExitCommand(this));
 
 		aModel.setCommand("menuMapNew", 
 				new MapEditorNewMapCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 		aModel.setCommand("menuMapOpen", 
 				new MapEditorOpenMapCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 		aModel.setCommand("menuMapClose", 
 				new MapEditorCloseMapCommand(
-					desktopPane, 
-					internalDispatcher));
+						this.desktopPane, 
+					this.internalDispatcher));
 		aModel.setCommand("menuMapSave", 
 				new MapEditorSaveMapCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 		aModel.setCommand("menuMapSaveAs", 
 				new MapEditorSaveMapAsCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 		aModel.setCommand("menuMapExport", 
 				new MapExportCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 		aModel.setCommand("menuMapImport", 
 				new MapImportCommand(
-					desktopPane, 
-					aContext));
+					this.desktopPane, 
+					this.aContext));
 
 		aModel.setCommand("menuMapViewAddScheme", 
 				new MapViewAddSchemeCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 		aModel.setCommand("menuMapViewRemoveScheme", 
 				new MapViewRemoveSchemeCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 
 		aModel.setCommand("menuMapViewNew", 
 				new MapEditorNewViewCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 		aModel.setCommand("menuMapViewOpen", 
 				new MapEditorOpenViewCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 		aModel.setCommand("menuMapViewClose", 
 				new MapEditorCloseViewCommand(
-					desktopPane, 
-					internalDispatcher));
+						this.desktopPane, 
+						this.internalDispatcher));
 		aModel.setCommand("menuMapViewSave", 
 				new MapEditorSaveViewCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 		aModel.setCommand("menuMapViewSaveAs", 
 				new MapEditorSaveViewAsCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 
 		aModel.setCommand("menuViewProto", 
 				new ViewMapElementsBarCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 		aModel.setCommand("menuViewAttributes", 
 				new ViewMapPropertiesCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 		aModel.setCommand("menuViewElements", 
 				new ViewMapElementsCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 		aModel.setCommand("menuViewSetup", 
 				new ViewMapSetupCommand(
-					desktopPane, 
-					aContext));
+						this.desktopPane, 
+						this.aContext));
 		aModel.setCommand("menuViewMap", 
 				new ViewMapWindowCommand(
-					internalDispatcher, 
-					desktopPane, 
-					aContext, 
+					this.internalDispatcher, 
+					this.desktopPane, 
+					this.aContext, 
 					new MapMapEditorApplicationModelFactory()));
 		aModel.setCommand("menuViewMapScheme", 
 				new ViewMapNavigatorCommand(
-					desktopPane, 
-					aContext ));
+						this.desktopPane, 
+					this.aContext ));
 		aModel.setCommand("menuViewAll", 
 				new ViewMapAllCommand(
-					desktopPane, 
-					aContext, 
+						this.desktopPane, 
+						this.aContext, 
 					new MapMapEditorApplicationModelFactory()));
           
-		CreateMapReportCommand rc = new CreateMapReportCommand(aContext);
+		CreateMapReportCommand rc = new CreateMapReportCommand(this.aContext);
 		aModel.setCommand("menuReportCreate", rc);
 
-//		aModel.setCommand("menuReportOpen", new CreateMapReportCommand(aContext));
+//		aModel.setCommand("menuReportOpen", new CreateMapReportCommand(this.aContext));
 
 		aModel.add("menuHelpAbout", 
 				new HelpAboutCommand(this));
@@ -443,22 +442,22 @@ public class MapEditorMainFrame extends JFrame
 		if(ConnectionInterface.getInstance() != null)
 		{
 			if(ConnectionInterface.getInstance().isConnected())
-				internalDispatcher.notify(new ContextChangeEvent(
+				this.internalDispatcher.notify(new ContextChangeEvent(
 						ConnectionInterface.getInstance(),
 						ContextChangeEvent.CONNECTION_OPENED_EVENT));
 		}
 		if(SessionInterface.getActiveSession() != null)
 		{
-			aContext.setSessionInterface(SessionInterface.getActiveSession());
-			if(aContext.getSessionInterface().isOpened())
-				internalDispatcher.notify(new ContextChangeEvent(
-						aContext.getSessionInterface(),
+			this.aContext.setSessionInterface(SessionInterface.getActiveSession());
+			if(this.aContext.getSessionInterface().isOpened())
+				this.internalDispatcher.notify(new ContextChangeEvent(
+						this.aContext.getSessionInterface(),
 						ContextChangeEvent.SESSION_OPENED_EVENT));
 		}
 		else
 		{
-			aContext.setSessionInterface(Environment.getDefaultSessionInterface(ConnectionInterface.getInstance()));
-			SessionInterface.setActiveSession(aContext.getSessionInterface());
+			this.aContext.setSessionInterface(Environment.getDefaultSessionInterface(ConnectionInterface.getInstance()));
+			SessionInterface.setActiveSession(this.aContext.getSessionInterface());
 		}
 	}
 
@@ -471,7 +470,7 @@ public class MapEditorMainFrame extends JFrame
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_FRAME_SHOWN);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_SELECTED);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_CLOSED);
-				statusBar.removeDispatcher(this.aContext.getDispatcher());
+				this.statusBar.removeDispatcher(this.aContext.getDispatcher());
 			}
 
 		if(aContext != null)
@@ -485,37 +484,37 @@ public class MapEditorMainFrame extends JFrame
 			aContext.getDispatcher().register(this, MapEvent.MAP_FRAME_SHOWN);
 			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_SELECTED);
 			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_CLOSED);
-			statusBar.addDispatcher(this.aContext.getDispatcher());
+			this.statusBar.addDispatcher(this.aContext.getDispatcher());
 		}
 	}
 
 	public ApplicationContext getContext()
 	{
-		return aContext;
+		return this.aContext;
 	}
 
 	public void setModel(ApplicationModel aModel)
 	{
-		aModel.addListener(menuBar);
-		aModel.addListener(toolBar);
-		menuBar.setModel(aModel);
-		toolBar.setModel(aModel);
+		aModel.addListener(this.menuBar);
+		aModel.addListener(this.toolBar);
+		this.menuBar.setModel(aModel);
+		this.toolBar.setModel(aModel);
 
 		aModel.fireModelChanged();
 	}
 
 	public ApplicationModel getModel()
 	{
-		return aContext.getApplicationModel();
+		return this.aContext.getApplicationModel();
 	}
 
 	public void operationPerformed(OperationEvent ae)
 	{
 		if(ae.getActionCommand().equals(MapEvent.MAP_FRAME_SHOWN))
 		{
-			mapFrame = (MapFrame)ae.getSource();
+			this.mapFrame = (MapFrame)ae.getSource();
 
-//			ApplicationModel aModel = aContext.getApplicationModel();
+//			ApplicationModel aModel = this.aContext.getApplicationModel();
 //			if(aModel != null)
 //			{
 //				aModel.getCommand("menuMapOpen").setParameter("mapFrame", mapFrame);
@@ -535,7 +534,7 @@ public class MapEditorMainFrame extends JFrame
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
 		{
-			ApplicationModel aModel = aContext.getApplicationModel();
+			ApplicationModel aModel = this.aContext.getApplicationModel();
 			aModel.setEnabled("menuMapSave", true);
 			aModel.setEnabled("menuMapSaveAs", true);
 			aModel.setEnabled("menuMapClose", true);
@@ -553,9 +552,9 @@ public class MapEditorMainFrame extends JFrame
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CLOSED))
 		{
-			for(int i = 0; i < desktopPane.getComponents().length; i++)
+			for(int i = 0; i < this.desktopPane.getComponents().length; i++)
 			{
-				Component comp = desktopPane.getComponent(i);
+				Component comp = this.desktopPane.getComponent(i);
 				if (comp instanceof MapFrame)
 				{
 					((MapFrame)comp).setVisible(false);
@@ -569,7 +568,7 @@ public class MapEditorMainFrame extends JFrame
 				else if (comp instanceof MapSchemeTreeFrame)
 					((MapSchemeTreeFrame)comp).setVisible(false);
 			}
-			ApplicationModel aModel = aContext.getApplicationModel();
+			ApplicationModel aModel = this.aContext.getApplicationModel();
 			aModel.setEnabled("menuMapSave", false);
 			aModel.setEnabled("menuMapSaveAs", false);
 			aModel.setEnabled("menuMapClose", false);
@@ -596,11 +595,11 @@ public class MapEditorMainFrame extends JFrame
 			if(cce.SESSION_OPENED)
 			{
 				SessionInterface ssi = (SessionInterface )cce.getSource();
-				if(aContext.getSessionInterface().equals(ssi))
+				if(this.aContext.getSessionInterface().equals(ssi))
 				{
 					if(!Checker.checkCommandByUserId(
-							((RISDSessionInfo )aContext.getSessionInterface()).getUserId(),
-//							((RISDSessionInfo )aContext.getSessionInterface()).getUserIdentifier().toString(),
+							((RISDSessionInfo )this.aContext.getSessionInterface()).getUserId(),
+//							((RISDSessionInfo )this.aContext.getSessionInterface()).getUserIdentifier().toString(),
 							Checker.topologyEditing))
 					{
 						JOptionPane.showMessageDialog(null, LangModelMap.getString("NotEnoughRights"), LangModel.getString("Error"), JOptionPane.OK_OPTION);
@@ -612,14 +611,14 @@ public class MapEditorMainFrame extends JFrame
 			if(cce.SESSION_CLOSED)
 			{
 				SessionInterface ssi = (SessionInterface )cce.getSource();
-				if(aContext.getSessionInterface().equals(ssi))
+				if(this.aContext.getSessionInterface().equals(ssi))
 				{
 					setSessionClosed();
 				}
 			}
 			if(cce.SESSION_CHANGING)
 			{
-				statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusSettingSession"));
+				this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusSettingSession"));
 			}
 //			if(cce.SESSION_CHANGED)
 //			{
@@ -642,7 +641,7 @@ public class MapEditorMainFrame extends JFrame
 			}
 			if(cce.CONNECTION_CHANGING)
 			{
-				statusBar.setText(
+				this.statusBar.setText(
 						StatusBarModel.FIELD_STATUS, 
 						LangModel.getString("statusConnecting"));
 			}
@@ -654,7 +653,7 @@ public class MapEditorMainFrame extends JFrame
 
 	public void setConnectionOpened()
 	{
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuSessionNew", true);
 		aModel.setEnabled("menuSessionClose", false);
@@ -663,13 +662,13 @@ public class MapEditorMainFrame extends JFrame
 
 		aModel.fireModelChanged();
 
-		statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
-		statusBar.setText(StatusBarModel.FIELD_SERVER, ConnectionInterface.getInstance().getServerName());
+		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+		this.statusBar.setText(StatusBarModel.FIELD_SERVER, ConnectionInterface.getInstance().getServerName());
 	}
 
 	public void setConnectionClosed()
 	{
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuSessionNew", true);
 		aModel.setEnabled("menuSessionClose", false);
@@ -684,13 +683,13 @@ public class MapEditorMainFrame extends JFrame
 
 		aModel.fireModelChanged();
 
-		statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusDisconnected"));
-		statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusNoConnection"));
+		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusDisconnected"));
+		this.statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusNoConnection"));
 	}
 
 	public void setConnectionFailed()
 	{
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.setEnabled("menuSessionClose", false);
@@ -705,33 +704,33 @@ public class MapEditorMainFrame extends JFrame
 
 		aModel.fireModelChanged();
 
-		statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusError"));
-		statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusConnectionError"));
+		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusError"));
+		this.statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusConnectionError"));
 	}
 
 	public void setSessionOpened()
 	{
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.setEnabled("menuSessionClose", true);
 		aModel.setEnabled("menuSessionOptions", true);
 		aModel.setEnabled("menuSessionChangePassword", true);
 		aModel.setEnabled("menuSessionDomain", true);
 		aModel.fireModelChanged();
-		domainId = new Identifier(aContext.getSessionInterface().getAccessIdentifier().domain_id);
-		if (domainId != null) 
+		this.domainId = new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().domain_id);
+		if (this.domainId != null) 
 		{
 			setDomainSelected();
 		}
-		statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
-		statusBar.setText(StatusBarModel.FIELD_SESSION, sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
+		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+		this.statusBar.setText(StatusBarModel.FIELD_SESSION, sdf.format(new Date(this.aContext.getSessionInterface().getLogonTime())));
 
 		try
 		{
-			Identifier userId = new Identifier(aContext.getSessionInterface().getAccessIdentifier().user_id);
+			Identifier userId = new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().user_id);
 			User user = (User )AdministrationStorableObjectPool.getStorableObject(
 					userId, true);
-			statusBar.setText(StatusBarModel.FIELD_USER, aContext.getSessionInterface().getUser());
+			this.statusBar.setText(StatusBarModel.FIELD_USER, this.aContext.getSessionInterface().getUser());
 		}
 		catch(ApplicationException ex)
 		{
@@ -741,19 +740,19 @@ public class MapEditorMainFrame extends JFrame
 
 	public void setDomainSelected()
 	{
-		new CloseAllInternalCommand(desktopPane).execute();
+		new CloseAllInternalCommand(this.desktopPane).execute();
 
-		aContext.getDispatcher().notify(new StatusMessageEvent(
+		this.aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE, 
 				LangModel.getString("Initiating")));
 
-		aContext.getDispatcher().notify(new StatusMessageEvent(
+		this.aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModel.getString("DataLoaded")));
 
-		new ViewMapAllCommand(desktopPane, aContext, new MapMapEditorApplicationModelFactory()).execute();
+		new ViewMapAllCommand(this.desktopPane, this.aContext, new MapMapEditorApplicationModelFactory()).execute();
 
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled("menuMap", true);
 		aModel.setEnabled("menuMapView", true);
 		aModel.setEnabled("menuView", true);
@@ -780,10 +779,10 @@ public class MapEditorMainFrame extends JFrame
 
 		try
 		{
-			domainId = new Identifier(aContext.getSessionInterface().getAccessIdentifier().domain_id);
+			this.domainId = new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().domain_id);
 			Domain domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
-					domainId, true);
-			statusBar.setText("domain", domain.getName());
+					this.domainId, true);
+			this.statusBar.setText("domain", domain.getName());
 		}
 		catch(ApplicationException ex)
 		{
@@ -793,7 +792,7 @@ public class MapEditorMainFrame extends JFrame
 
 	public void setSessionClosed()
 	{
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 		setDefaultModel(aModel);
 		aModel.setEnabled("menuSessionNew", true);
 		aModel.setEnabled("menuSessionClose", false);
@@ -826,23 +825,23 @@ public class MapEditorMainFrame extends JFrame
 		aModel.setEnabled("menuViewAll", false);
 		aModel.fireModelChanged();
 
-		new CloseAllInternalCommand(desktopPane).execute();
+		new CloseAllInternalCommand(this.desktopPane).execute();
 
-		statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
-		statusBar.setText(StatusBarModel.FIELD_SESSION, LangModel.getString("statusNoSession"));
-		statusBar.setText(StatusBarModel.FIELD_USER, LangModel.getString("statusNoUser"));
-		statusBar.setText(StatusBarModel.FIELD_DOMAIN, LangModel.getString("statusNoDomain"));
+		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+		this.statusBar.setText(StatusBarModel.FIELD_SESSION, LangModel.getString("statusNoSession"));
+		this.statusBar.setText(StatusBarModel.FIELD_USER, LangModel.getString("statusNoUser"));
+		this.statusBar.setText(StatusBarModel.FIELD_DOMAIN, LangModel.getString("statusNoDomain"));
 	}
 
 	public Dispatcher getInternalDispatcher()
 	{
-		return internalDispatcher;
+		return this.internalDispatcher;
 	}
 
 	void thisComponentShown(ComponentEvent e)
 	{
 		initModule();
-		desktopPane.setPreferredSize(desktopPane.getSize());
+		this.desktopPane.setPreferredSize(this.desktopPane.getSize());
 	}
 
 	protected void processWindowEvent(WindowEvent e)
@@ -855,7 +854,7 @@ public class MapEditorMainFrame extends JFrame
 		{
 			if(getMapFrame() != null)
 				getMapFrame().saveConfig();
-			Command closeCommand = aContext.getApplicationModel().getCommand("menuExit");
+			Command closeCommand = this.aContext.getApplicationModel().getCommand("menuExit");
 			this.setContext(null);
 			closeCommand.execute();
 

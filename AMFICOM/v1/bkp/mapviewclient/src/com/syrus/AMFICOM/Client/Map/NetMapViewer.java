@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.4 2005/02/03 16:24:59 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.5 2005/02/07 16:09:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,63 +13,68 @@ package com.syrus.AMFICOM.Client.Map;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 import java.awt.Component;
-
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+
 import java.util.List;
 
 import javax.swing.JComponent;
 
 /**
- * Класс NetMapViewer, являясь абстрактным, реализует в себе общую 
+ * Класс, являясь абстрактным, реализует в себе общую 
  * функциональность по управлению отображением картографической информации. 
  * Классы, управляющие отображением информации в том или ином формате 
  * (SpatialFX, MapInfo) наследуют этот класс и реализуют специфические
  * для формата операции отображения.
  * Для того, чтобы получить компонент, содержащий в себе отображение 
- * картографии, следует вызвать метод GetComponent()
- * 
- * 
- * 
- * @version $Revision: 1.4 $, $Date: 2005/02/03 16:24:59 $
- * @module map_v2
+ * картографии, следует вызвать метод {@link #getComponent()}
  * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2005/02/07 16:09:25 $
+ * @module mapviewclient_v1
  * @see {@link com.syrus.AMFICOM.Client.Map.ObjectFX.SpatialNetMapViewer} 
  * @see {@link com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer}
  */
 public abstract class NetMapViewer 
 {
 	/**
-	 * Соединение с хранилищем картографической информации
+	 * Соединение с хранилищем картографической информации.
 	 */
 	protected MapConnection mapConnection;
 
 	/**
-	 * отобразить указанный вид кортографии
-	 * 
+	 * Отобразить указанный вид кортографии.
+	 * @param dataBasePath путь к базе картографии
+	 * @param dataBaseView вид в базе картографии
 	 */
 	public abstract void setMap(String dataBasePath, String dataBaseView);
 	
 	/**
-	 * Закрывает сессию и соединение с картой 
+	 * Закрывает сессию и соединение с картой.
 	 */
 	public abstract void closeMap();
 	
 	/**
-	 * Установить соединение с хранилищем топографической информации
+	 * Установить соединение с хранилищем топографической информации.
+	 * @param conn соежинение
 	 */
 	public abstract void setConnection(MapConnection conn);
 	
 	/**
-	 * Получить соединение с хранилищем топографической информации
+	 * Получить соединение с хранилищем топографической информации.
+	 * @return соединение
 	 */
 	public abstract MapConnection getConnection();
 	
 	/**
-	 * Получить графический компонент, в котором отображается картография
+	 * Получить графический компонент, в котором отображается картография.
+	 * @return компонент
 	 */
 	public abstract JComponent getVisualComponent();
 
+	/**
+	 * Получить снимок вида карты с отрисованными объектами.
+	 * @return снимок
+	 */
 	public Image getMapShot()
 	{
 		JComponent component = getVisualComponent();
@@ -87,38 +92,64 @@ public abstract class NetMapViewer
 	 * других специфических действий по отображению топографической информации
 	 * следует переопределить этот метод
 	 * 
-	 * @see SpatialNetMapViewer.init, MapInfoNetMapViewer.init
+	 * @see SpatialNetMapViewer.init() 
+	 * @see MapInfoNetMapViewer.init()
 	 */	
 	public void init()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "init()");
-		
 	}
-	
+
 	/**
-	 * осуществляет сохранение текущик параметров отображения карты для 
-	 * следующей сессии
-	 * 
+	 * Осуществляет сохранение текущик параметров отображения карты для 
+	 * следующей сессии.
 	 */
 	public void saveConfig()
 	{
 	}
 
+	/**
+	 * Компонент.
+	 * @return компонент
+	 */
 	public abstract JComponent getJComponent();
 	
+	/**
+	 * Компонент.
+	 * @return компонент
+	 */
 	public abstract Component getComponent();
 	
 	/**
-	 * 
+	 * Получить логический слой.
+	 * @return 
+	 * логический слой
 	 */
 	public abstract LogicalNetLayer getLogicalNetLayer();
 
+	/**
+	 * Получить список названий доступных видов.
+	 * @return Список видов &lt;{@link String}&gt;
+	 */
 	public abstract List getAvailableViews();
 	
+	/**
+	 * Установить вид.
+	 * @param dataBaseView вид
+	 */
 	public abstract void setView(String dataBaseView);
 
-	public abstract List getLayers();	
+	/**
+	 * Получить список географических слоев.
+	 * @return список слоев &lt;{@link SpatialLayer}&gt;
+	 */
+	public abstract List getLayers();
 	
+	/**
+	 * Создает объект вьюера.
+	 * @param viewerClass класс вьюера
+	 * @return объект вьюера
+	 */
 	public static NetMapViewer create(String viewerClass)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call NetMapViewer.create()");

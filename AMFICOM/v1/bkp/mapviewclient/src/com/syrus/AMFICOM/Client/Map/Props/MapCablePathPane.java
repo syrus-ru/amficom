@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
 public class MapCablePathPane
 		extends JPanel 
@@ -54,55 +55,55 @@ public class MapCablePathPane
 	public void setLogicalNetLayer(LogicalNetLayer lnl)
 	{
 		this.lnl = lnl;
-		gPanel.setLogicalNetLayer(lnl);
-		bPanel.setLogicalNetLayer(lnl);
+		this.gPanel.setLogicalNetLayer(lnl);
+		this.bPanel.setLogicalNetLayer(lnl);
 	}
 
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		return lnl;
+		return this.lnl;
 	}
 
 	private void jbInit()
 	{
 		this.setLayout(new BorderLayout());
-		this.add(tabbedPane, BorderLayout.CENTER);
+		this.add(this.tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		this.tabbedPane.setTabPlacement(SwingConstants.TOP);
 
-		tabbedPane.add(gPanel.getName(), gPanel);
-		tabbedPane.add(bPanel.getName(), bPanel);
+		this.tabbedPane.add(this.gPanel.getName(), this.gPanel);
+		this.tabbedPane.add(this.bPanel.getName(), this.bPanel);
 	}
 
 	public Object getObject()
 	{
-		return path;
+		return this.path;
 	}
 
 	public void setObject(Object or)
 	{
 		this.path = (CablePath)or;
 
-		gPanel.setObject(path);
-		bPanel.setObject(path);
+		this.gPanel.setObject(this.path);
+		this.bPanel.setObject(this.path);
 	}
 
 	public void setContext(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-		gPanel.setContext(aContext);
-		bPanel.setContext(aContext);
+		this.gPanel.setContext(aContext);
+		this.bPanel.setContext(aContext);
 	}
 
 	public void showBindPanel()
 	{
-		tabbedPane.setSelectedComponent(bPanel);
+		this.tabbedPane.setSelectedComponent(this.bPanel);
 	}
 
 	public boolean modify()
 	{
-		if(gPanel.modify()
-			&& bPanel.modify())
+		if(this.gPanel.modify()
+			&& this.bPanel.modify())
 		{
 			return true;
 		}
@@ -111,8 +112,8 @@ public class MapCablePathPane
 
 	public boolean cancel()
 	{
-		gPanel.cancel();
-		bPanel.cancel();
+		this.gPanel.cancel();
+		this.bPanel.cancel();
 		return true;
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRun.java,v 1.2 2004/10/19 11:48:27 krupenn Exp $
+ * $Id: MapEditorRun.java,v 1.3 2005/02/07 16:09:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,15 +20,14 @@ import javax.swing.UIManager;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/19 11:48:27 $
- * @module map_v2
+ * @version $Revision: 1.3 $, $Date: 2005/02/07 16:09:26 $
+ * @module mapviewclient_v1
  * @author $Author: krupenn $
- * @see
  */
 public class MapEditorRun
 {
 	private MapEditorRun()
-	{
+	{//empty
 	}
 	
 	public static void main(String[] args)

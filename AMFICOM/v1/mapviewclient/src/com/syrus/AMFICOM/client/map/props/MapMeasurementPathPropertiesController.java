@@ -6,18 +6,16 @@
 
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.MeasurementPath;
-import com.syrus.AMFICOM.Client.Map.Controllers.MeasurementPathController;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import com.syrus.AMFICOM.map.AbstractNode;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Map.Controllers.MeasurementPathController;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 
 public final class MapMeasurementPathPropertiesController 
 		extends MapElementPropertiesController 

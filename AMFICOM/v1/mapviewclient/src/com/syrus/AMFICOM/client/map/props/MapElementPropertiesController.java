@@ -1,10 +1,10 @@
 
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
 
 public class MapElementPropertiesController
 	implements ObjectResourcePropertiesController

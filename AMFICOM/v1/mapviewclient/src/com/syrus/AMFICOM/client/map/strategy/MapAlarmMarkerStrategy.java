@@ -1,5 +1,5 @@
 /**
- * $Id: MapAlarmMarkerStrategy.java,v 1.10 2005/02/02 08:57:27 krupenn Exp $
+ * $Id: MapAlarmMarkerStrategy.java,v 1.11 2005/02/07 16:09:26 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -21,7 +21,7 @@ import java.awt.Point;
 /**
  * —тратеги€ управлени€ маркером сигнала тревоги.
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/02/02 08:57:27 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/07 16:09:26 $
  * @module mapviewclient_v1
  */
 public final class MapAlarmMarkerStrategy extends MapStrategy 
@@ -40,7 +40,7 @@ public final class MapAlarmMarkerStrategy extends MapStrategy
 	 * Private constructor.
 	 */
 	private MapAlarmMarkerStrategy()
-	{
+	{//empty
 	}
 
 	/**
@@ -69,24 +69,24 @@ public final class MapAlarmMarkerStrategy extends MapStrategy
 
 		if ((actionMode == MapState.SELECT_ACTION_MODE))
 		{
-			MapElement mel = logicalNetLayer.getCurrentMapElement();
+			MapElement mel = super.logicalNetLayer.getCurrentMapElement();
 			if (mel instanceof Selection)
 			{
 				Selection sel = (Selection)mel;
-				sel.add(marker);
+				sel.add(this.marker);
 			}
 			else
 			{
-				Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
-				sel.addAll(logicalNetLayer.getSelectedElements());
-				logicalNetLayer.setCurrentMapElement(sel);
+				Selection sel = new Selection(super.logicalNetLayer.getMapView().getMap());
+				sel.addAll(super.logicalNetLayer.getSelectedElements());
+				super.logicalNetLayer.setCurrentMapElement(sel);
 			}
 		}//MapState.SELECT_ACTION_MODE
 		if ((actionMode != MapState.SELECT_ACTION_MODE) && (actionMode != MapState.MOVE_ACTION_MODE))
 		{
-			logicalNetLayer.deselectAll();
+			super.logicalNetLayer.deselectAll();
 		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
-		marker.setSelected(true);
+		this.marker.setSelected(true);
 	}
 }
 

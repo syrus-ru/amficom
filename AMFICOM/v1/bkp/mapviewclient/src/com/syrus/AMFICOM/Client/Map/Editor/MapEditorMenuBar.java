@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.9 2005/01/26 16:26:14 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.10 2005/02/07 16:09:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,14 +27,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 /**
- * Панель меню модуля "Редактор топологических схем" 
- * 
- * 
- * 
- * @version $Revision: 1.9 $, $Date: 2005/01/26 16:26:14 $
- * @module
+ * Панель меню модуля "Редактор топологических схем".
+ * @version $Revision: 1.10 $, $Date: 2005/02/07 16:09:26 $
+ * @module mapviewclient_v1
  * @author $Author: krupenn $
- * @see
  */
 public class MapEditorMenuBar extends JMenuBar
 		implements ApplicationModelListener
@@ -122,350 +118,350 @@ public class MapEditorMenuBar extends JMenuBar
 					}
 				};
 
-		menuSession.setText(LangModel.getString("menuSession"));
-		menuSession.setName("menuSession");
-		menuSessionNew.setText(LangModel.getString("menuSessionNew"));
-		menuSessionNew.setName("menuSessionNew");
-		menuSessionNew.addActionListener(actionAdapter);
-		menuSessionClose.setText(LangModel.getString("menuSessionClose"));
-		menuSessionClose.setName("menuSessionClose");
-		menuSessionClose.addActionListener(actionAdapter);
-//		menuSessionOptions.setText(LangModel.getString("menuSessionOptions"));
-//		menuSessionOptions.setName("menuSessionOptions");
-//		menuSessionOptions.addActionListener(actionAdapter);
-		menuSessionConnection.setText(LangModel.getString("menuSessionConnection"));
-		menuSessionConnection.setName("menuSessionConnection");
-		menuSessionConnection.addActionListener(actionAdapter);
-		menuSessionChangePassword.setText(LangModel.getString("menuSessionChangePassword"));
-		menuSessionChangePassword.setName("menuSessionChangePassword");
-		menuSessionChangePassword.addActionListener(actionAdapter);
-		menuSessionDomain.setText(LangModel.getString("menuSessionDomain"));
-		menuSessionDomain.setName("menuSessionDomain");
-		menuSessionDomain.addActionListener(actionAdapter);
-		menuExit.setText(LangModel.getString("menuExit"));
-		menuExit.setName("menuExit");
-		menuExit.addActionListener(actionAdapter);
+		this.menuSession.setText(LangModel.getString("menuSession"));
+		this.menuSession.setName("menuSession");
+		this.menuSessionNew.setText(LangModel.getString("menuSessionNew"));
+		this.menuSessionNew.setName("menuSessionNew");
+		this.menuSessionNew.addActionListener(actionAdapter);
+		this.menuSessionClose.setText(LangModel.getString("menuSessionClose"));
+		this.menuSessionClose.setName("menuSessionClose");
+		this.menuSessionClose.addActionListener(actionAdapter);
+//		this.menuSessionOptions.setText(LangModel.getString("menuSessionOptions"));
+//		this.menuSessionOptions.setName("menuSessionOptions");
+//		this.menuSessionOptions.addActionListener(actionAdapter);
+		this.menuSessionConnection.setText(LangModel.getString("menuSessionConnection"));
+		this.menuSessionConnection.setName("menuSessionConnection");
+		this.menuSessionConnection.addActionListener(actionAdapter);
+		this.menuSessionChangePassword.setText(LangModel.getString("menuSessionChangePassword"));
+		this.menuSessionChangePassword.setName("menuSessionChangePassword");
+		this.menuSessionChangePassword.addActionListener(actionAdapter);
+		this.menuSessionDomain.setText(LangModel.getString("menuSessionDomain"));
+		this.menuSessionDomain.setName("menuSessionDomain");
+		this.menuSessionDomain.addActionListener(actionAdapter);
+		this.menuExit.setText(LangModel.getString("menuExit"));
+		this.menuExit.setName("menuExit");
+		this.menuExit.addActionListener(actionAdapter);
 
-		menuView.setText(LangModelMap.getString("menuView"));
-		menuView.setName("menuView");
-		menuViewProto.setText(LangModelMap.getString("menuViewProto"));
-		menuViewProto.setName("menuViewProto");
-		menuViewProto.addActionListener(actionAdapter);
-		menuViewAttributes.setText(LangModelMap.getString("menuViewAttributes"));
-		menuViewAttributes.setName("menuViewAttributes");
-		menuViewAttributes.addActionListener(actionAdapter);
-		menuViewElements.setText(LangModelMap.getString("menuViewElements"));
-		menuViewElements.setName("menuViewElements");
-		menuViewElements.addActionListener(actionAdapter);
-		menuViewSetup.setText(LangModelMap.getString("menuViewSetup"));
-		menuViewSetup.setName("menuViewSetup");
-		menuViewSetup.addActionListener(actionAdapter);
-		menuViewMap.setText(LangModelMap.getString("menuViewMap"));
-		menuViewMap.setName("menuViewMap");
-		menuViewMap.addActionListener(actionAdapter);
-		menuViewMapScheme.setText(LangModelMap.getString("menuViewMapScheme"));
-		menuViewMapScheme.setName("menuViewMapScheme");
-		menuViewMapScheme.addActionListener(actionAdapter);
-		menuViewAll.setText(LangModelMap.getString("menuViewAll"));
-		menuViewAll.setName("menuViewAll");
-		menuViewAll.addActionListener(actionAdapter);
-//		menuViewOptions.setText(LangModelMap.getString("menuViewOptions"));
-//		menuViewOptions.setName("menuViewOptions");
-//		menuViewOptions.addActionListener(actionAdapter);
+		this.menuView.setText(LangModelMap.getString("menuView"));
+		this.menuView.setName("menuView");
+		this.menuViewProto.setText(LangModelMap.getString("menuViewProto"));
+		this.menuViewProto.setName("menuViewProto");
+		this.menuViewProto.addActionListener(actionAdapter);
+		this.menuViewAttributes.setText(LangModelMap.getString("menuViewAttributes"));
+		this.menuViewAttributes.setName("menuViewAttributes");
+		this.menuViewAttributes.addActionListener(actionAdapter);
+		this.menuViewElements.setText(LangModelMap.getString("menuViewElements"));
+		this.menuViewElements.setName("menuViewElements");
+		this.menuViewElements.addActionListener(actionAdapter);
+		this.menuViewSetup.setText(LangModelMap.getString("menuViewSetup"));
+		this.menuViewSetup.setName("menuViewSetup");
+		this.menuViewSetup.addActionListener(actionAdapter);
+		this.menuViewMap.setText(LangModelMap.getString("menuViewMap"));
+		this.menuViewMap.setName("menuViewMap");
+		this.menuViewMap.addActionListener(actionAdapter);
+		this.menuViewMapScheme.setText(LangModelMap.getString("menuViewMapScheme"));
+		this.menuViewMapScheme.setName("menuViewMapScheme");
+		this.menuViewMapScheme.addActionListener(actionAdapter);
+		this.menuViewAll.setText(LangModelMap.getString("menuViewAll"));
+		this.menuViewAll.setName("menuViewAll");
+		this.menuViewAll.addActionListener(actionAdapter);
+//		this.menuViewOptions.setText(LangModelMap.getString("menuViewOptions"));
+//		this.menuViewOptions.setName("menuViewOptions");
+//		this.menuViewOptions.addActionListener(actionAdapter);
 
-		menuMap.setText(LangModelMap.getString("menuMap"));
-		menuMap.setName("menuMap");
-		menuMapNew.setText(LangModelMap.getString("menuMapNew"));
-		menuMapNew.setName("menuMapNew");
-		menuMapNew.addActionListener(actionAdapter);
-		menuMapOpen.setText(LangModelMap.getString("menuMapOpen"));
-		menuMapOpen.setName("menuMapOpen");
-		menuMapOpen.addActionListener(actionAdapter);
-		menuMapClose.setText(LangModelMap.getString("menuMapClose"));
-		menuMapClose.setName("menuMapClose");
-		menuMapClose.addActionListener(actionAdapter);
-		menuMapSave.setText(LangModelMap.getString("menuMapSave"));
-		menuMapSave.setName("menuMapSave");
-		menuMapSave.addActionListener(actionAdapter);
-		menuMapSaveAs.setText(LangModelMap.getString("menuMapSaveAs"));
-		menuMapSaveAs.setName("menuMapSaveAs");
-		menuMapSaveAs.addActionListener(actionAdapter);
-		menuMapExport.setText(LangModelMap.getString("menuMapExport"));
-		menuMapExport.setName("menuMapExport");
-		menuMapExport.addActionListener(actionAdapter);
-		menuMapImport.setText(LangModelMap.getString("menuMapImport"));
-		menuMapImport.setName("menuMapImport");
-		menuMapImport.addActionListener(actionAdapter);
+		this.menuMap.setText(LangModelMap.getString("menuMap"));
+		this.menuMap.setName("menuMap");
+		this.menuMapNew.setText(LangModelMap.getString("menuMapNew"));
+		this.menuMapNew.setName("menuMapNew");
+		this.menuMapNew.addActionListener(actionAdapter);
+		this.menuMapOpen.setText(LangModelMap.getString("menuMapOpen"));
+		this.menuMapOpen.setName("menuMapOpen");
+		this.menuMapOpen.addActionListener(actionAdapter);
+		this.menuMapClose.setText(LangModelMap.getString("menuMapClose"));
+		this.menuMapClose.setName("menuMapClose");
+		this.menuMapClose.addActionListener(actionAdapter);
+		this.menuMapSave.setText(LangModelMap.getString("menuMapSave"));
+		this.menuMapSave.setName("menuMapSave");
+		this.menuMapSave.addActionListener(actionAdapter);
+		this.menuMapSaveAs.setText(LangModelMap.getString("menuMapSaveAs"));
+		this.menuMapSaveAs.setName("menuMapSaveAs");
+		this.menuMapSaveAs.addActionListener(actionAdapter);
+		this.menuMapExport.setText(LangModelMap.getString("menuMapExport"));
+		this.menuMapExport.setName("menuMapExport");
+		this.menuMapExport.addActionListener(actionAdapter);
+		this.menuMapImport.setText(LangModelMap.getString("menuMapImport"));
+		this.menuMapImport.setName("menuMapImport");
+		this.menuMapImport.addActionListener(actionAdapter);
 
-		menuMapView.setText(LangModelMap.getString("menuMapView"));
-		menuMapView.setName("menuMapView");
-		menuMapViewNew.setText(LangModelMap.getString("menuMapViewNew"));
-		menuMapViewNew.setName("menuMapViewNew");
-		menuMapViewNew.addActionListener(actionAdapter);
-		menuMapViewOpen.setText(LangModelMap.getString("menuMapViewOpen"));
-		menuMapViewOpen.setName("menuMapViewOpen");
-		menuMapViewOpen.addActionListener(actionAdapter);
-		menuMapViewClose.setText(LangModelMap.getString("menuMapViewClose"));
-		menuMapViewClose.setName("menuMapViewClose");
-		menuMapViewClose.addActionListener(actionAdapter);
-		menuMapViewSave.setText(LangModelMap.getString("menuMapViewSave"));
-		menuMapViewSave.setName("menuMapViewSave");
-		menuMapViewSave.addActionListener(actionAdapter);
-		menuMapViewSaveAs.setText(LangModelMap.getString("menuMapViewSaveAs"));
-		menuMapViewSaveAs.setName("menuMapViewSaveAs");
-		menuMapViewSaveAs.addActionListener(actionAdapter);
-		menuMapViewAddScheme.setText(LangModelMap.getString("menuMapViewAddScheme"));
-		menuMapViewAddScheme.setName("menuMapViewAddScheme");
-		menuMapViewAddScheme.addActionListener(actionAdapter);
-		menuMapViewRemoveScheme.setText(LangModelMap.getString("menuMapViewRemoveScheme"));
-		menuMapViewRemoveScheme.setName("menuMapViewRemoveScheme");
-		menuMapViewRemoveScheme.addActionListener(actionAdapter);
+		this.menuMapView.setText(LangModelMap.getString("menuMapView"));
+		this.menuMapView.setName("menuMapView");
+		this.menuMapViewNew.setText(LangModelMap.getString("menuMapViewNew"));
+		this.menuMapViewNew.setName("menuMapViewNew");
+		this.menuMapViewNew.addActionListener(actionAdapter);
+		this.menuMapViewOpen.setText(LangModelMap.getString("menuMapViewOpen"));
+		this.menuMapViewOpen.setName("menuMapViewOpen");
+		this.menuMapViewOpen.addActionListener(actionAdapter);
+		this.menuMapViewClose.setText(LangModelMap.getString("menuMapViewClose"));
+		this.menuMapViewClose.setName("menuMapViewClose");
+		this.menuMapViewClose.addActionListener(actionAdapter);
+		this.menuMapViewSave.setText(LangModelMap.getString("menuMapViewSave"));
+		this.menuMapViewSave.setName("menuMapViewSave");
+		this.menuMapViewSave.addActionListener(actionAdapter);
+		this.menuMapViewSaveAs.setText(LangModelMap.getString("menuMapViewSaveAs"));
+		this.menuMapViewSaveAs.setName("menuMapViewSaveAs");
+		this.menuMapViewSaveAs.addActionListener(actionAdapter);
+		this.menuMapViewAddScheme.setText(LangModelMap.getString("menuMapViewAddScheme"));
+		this.menuMapViewAddScheme.setName("menuMapViewAddScheme");
+		this.menuMapViewAddScheme.addActionListener(actionAdapter);
+		this.menuMapViewRemoveScheme.setText(LangModelMap.getString("menuMapViewRemoveScheme"));
+		this.menuMapViewRemoveScheme.setName("menuMapViewRemoveScheme");
+		this.menuMapViewRemoveScheme.addActionListener(actionAdapter);
 
-		menuReport.setText(LangModelReport.getString("label_report"));
-		menuReport.setName("menuReport");
-		menuReportCreate.setText(LangModelReport.getString("label_reportForTemplate"));
-		menuReportCreate.setName("menuReportCreate");
-		menuReportCreate.addActionListener(actionAdapter);
-		menuReport.add(menuReportCreate);
+		this.menuReport.setText(LangModelReport.getString("label_report"));
+		this.menuReport.setName("menuReport");
+		this.menuReportCreate.setText(LangModelReport.getString("label_reportForTemplate"));
+		this.menuReportCreate.setName("menuReportCreate");
+		this.menuReportCreate.addActionListener(actionAdapter);
+		this.menuReport.add(this.menuReportCreate);
 
-		menuHelp.setText(LangModel.getString("menuHelp"));
-		menuHelp.setName("menuHelp");
-		menuHelpContents.setText(LangModel.getString("menuHelpContents"));
-		menuHelpContents.setName("menuHelpContents");
-		menuHelpContents.addActionListener(actionAdapter);
-		menuHelpFind.setText(LangModel.getString("menuHelpFind"));
-		menuHelpFind.setName("menuHelpFind");
-		menuHelpFind.addActionListener(actionAdapter);
-		menuHelpTips.setText(LangModel.getString("menuHelpTips"));
-		menuHelpTips.setName("menuHelpTips");
-		menuHelpTips.addActionListener(actionAdapter);
-		menuHelpStart.setText(LangModel.getString("menuHelpStart"));
-		menuHelpStart.setName("menuHelpStart");
-		menuHelpStart.addActionListener(actionAdapter);
-		menuHelpCourse.setText(LangModel.getString("menuHelpCourse"));
-		menuHelpCourse.setName("menuHelpCourse");
-		menuHelpCourse.addActionListener(actionAdapter);
-		menuHelpHelp.setText(LangModel.getString("menuHelpHelp"));
-		menuHelpHelp.setName("menuHelpHelp");
-		menuHelpHelp.addActionListener(actionAdapter);
-		menuHelpSupport.setText(LangModel.getString("menuHelpSupport"));
-		menuHelpSupport.setName("menuHelpSupport");
-		menuHelpSupport.addActionListener(actionAdapter);
-		menuHelpLicense.setText(LangModel.getString("menuHelpLicense"));
-		menuHelpLicense.setName("menuHelpLicense");
-		menuHelpLicense.addActionListener(actionAdapter);
-		menuHelpAbout.setText(LangModel.getString("menuHelpAbout"));
-		menuHelpAbout.setName("menuHelpAbout");
-		menuHelpAbout.addActionListener(actionAdapter);
+		this.menuHelp.setText(LangModel.getString("menuHelp"));
+		this.menuHelp.setName("menuHelp");
+		this.menuHelpContents.setText(LangModel.getString("menuHelpContents"));
+		this.menuHelpContents.setName("menuHelpContents");
+		this.menuHelpContents.addActionListener(actionAdapter);
+		this.menuHelpFind.setText(LangModel.getString("menuHelpFind"));
+		this.menuHelpFind.setName("menuHelpFind");
+		this.menuHelpFind.addActionListener(actionAdapter);
+		this.menuHelpTips.setText(LangModel.getString("menuHelpTips"));
+		this.menuHelpTips.setName("menuHelpTips");
+		this.menuHelpTips.addActionListener(actionAdapter);
+		this.menuHelpStart.setText(LangModel.getString("menuHelpStart"));
+		this.menuHelpStart.setName("menuHelpStart");
+		this.menuHelpStart.addActionListener(actionAdapter);
+		this.menuHelpCourse.setText(LangModel.getString("menuHelpCourse"));
+		this.menuHelpCourse.setName("menuHelpCourse");
+		this.menuHelpCourse.addActionListener(actionAdapter);
+		this.menuHelpHelp.setText(LangModel.getString("menuHelpHelp"));
+		this.menuHelpHelp.setName("menuHelpHelp");
+		this.menuHelpHelp.addActionListener(actionAdapter);
+		this.menuHelpSupport.setText(LangModel.getString("menuHelpSupport"));
+		this.menuHelpSupport.setName("menuHelpSupport");
+		this.menuHelpSupport.addActionListener(actionAdapter);
+		this.menuHelpLicense.setText(LangModel.getString("menuHelpLicense"));
+		this.menuHelpLicense.setName("menuHelpLicense");
+		this.menuHelpLicense.addActionListener(actionAdapter);
+		this.menuHelpAbout.setText(LangModel.getString("menuHelpAbout"));
+		this.menuHelpAbout.setName("menuHelpAbout");
+		this.menuHelpAbout.addActionListener(actionAdapter);
 
-		menuSession.add(menuSessionNew);
-		menuSession.add(menuSessionClose);
-		menuSession.add(menuSessionChangePassword);
-		menuSession.addSeparator();
-		menuSession.add(menuSessionConnection);
-		menuSession.addSeparator();
-		menuSession.add(menuSessionDomain);
-		menuSession.addSeparator();
-		menuSession.add(menuExit);
+		this.menuSession.add(this.menuSessionNew);
+		this.menuSession.add(this.menuSessionClose);
+		this.menuSession.add(this.menuSessionChangePassword);
+		this.menuSession.addSeparator();
+		this.menuSession.add(this.menuSessionConnection);
+		this.menuSession.addSeparator();
+		this.menuSession.add(this.menuSessionDomain);
+		this.menuSession.addSeparator();
+		this.menuSession.add(this.menuExit);
 
-		menuView.add(menuViewProto);
-		menuView.add(menuViewAttributes);
-		menuView.add(menuViewElements);
-		menuView.add(menuViewSetup);
-		menuView.add(menuViewMap);
-		menuView.add(menuViewMapScheme);
-		menuView.addSeparator();
-		menuView.add(menuViewAll);
- //   menuMap.add(menuMapOptions);
+		this.menuView.add(this.menuViewProto);
+		this.menuView.add(this.menuViewAttributes);
+		this.menuView.add(this.menuViewElements);
+		this.menuView.add(this.menuViewSetup);
+		this.menuView.add(this.menuViewMap);
+		this.menuView.add(this.menuViewMapScheme);
+		this.menuView.addSeparator();
+		this.menuView.add(this.menuViewAll);
+ //   this.menuMap.add(this.menuMapOptions);
 
-		menuMap.add(menuMapNew);
-		menuMap.add(menuMapOpen);
-		menuMap.addSeparator();
-		menuMap.add(menuMapSave);
-		menuMap.add(menuMapSaveAs);
-		menuMap.add(menuMapClose);
-		menuMap.addSeparator();
-		menuMap.add(menuMapExport);
-		menuMap.add(menuMapImport);
+		this.menuMap.add(this.menuMapNew);
+		this.menuMap.add(this.menuMapOpen);
+		this.menuMap.addSeparator();
+		this.menuMap.add(this.menuMapSave);
+		this.menuMap.add(this.menuMapSaveAs);
+		this.menuMap.add(this.menuMapClose);
+		this.menuMap.addSeparator();
+		this.menuMap.add(this.menuMapExport);
+		this.menuMap.add(this.menuMapImport);
 
 
-		menuMapView.add(menuMapViewNew);
-		menuMapView.add(menuMapViewOpen);
-		menuMapView.addSeparator();
-		menuMapView.add(menuMapViewSave);
-		menuMapView.add(menuMapViewSaveAs);
-		menuMapView.add(menuMapViewClose);
-		menuMapView.addSeparator();
-		menuMapView.add(menuMapViewAddScheme);
-		menuMapView.add(menuMapViewRemoveScheme);
+		this.menuMapView.add(this.menuMapViewNew);
+		this.menuMapView.add(this.menuMapViewOpen);
+		this.menuMapView.addSeparator();
+		this.menuMapView.add(this.menuMapViewSave);
+		this.menuMapView.add(this.menuMapViewSaveAs);
+		this.menuMapView.add(this.menuMapViewClose);
+		this.menuMapView.addSeparator();
+		this.menuMapView.add(this.menuMapViewAddScheme);
+		this.menuMapView.add(this.menuMapViewRemoveScheme);
 
-//		menuHelp.add(menuHelpContents);
-//		menuHelp.add(menuHelpFind);
-//		menuHelp.add(menuHelpTips);
-//		menuHelp.add(menuHelpStart);
-//		menuHelp.add(menuHelpCourse);
-//		menuHelp.addSeparator();
-//		menuHelp.add(menuHelpHelp);
-//		menuHelp.addSeparator();
-//		menuHelp.add(menuHelpSupport);
-//		menuHelp.add(menuHelpLicense);
-//		menuHelp.addSeparator();
-		menuHelp.add(menuHelpAbout);
+//		this.menuHelp.add(this.menuHelpContents);
+//		this.menuHelp.add(this.menuHelpFind);
+//		this.menuHelp.add(this.menuHelpTips);
+//		this.menuHelp.add(this.menuHelpStart);
+//		this.menuHelp.add(this.menuHelpCourse);
+//		this.menuHelp.addSeparator();
+//		this.menuHelp.add(this.menuHelpHelp);
+//		this.menuHelp.addSeparator();
+//		this.menuHelp.add(this.menuHelpSupport);
+//		this.menuHelp.add(this.menuHelpLicense);
+//		this.menuHelp.addSeparator();
+		this.menuHelp.add(this.menuHelpAbout);
 
-		this.add(menuSession);
-		this.add(menuMap);
-		this.add(menuMapView);
-		this.add(menuView);
-		this.add(menuReport);    
-		this.add(menuHelp);
+		this.add(this.menuSession);
+		this.add(this.menuMap);
+		this.add(this.menuMapView);
+		this.add(this.menuView);
+		this.add(this.menuReport);    
+		this.add(this.menuHelp);
 	}
 
 	public void setModel(ApplicationModel a)
 	{
-		aModel = a;
+		this.aModel = a;
 	}
 
 	public ApplicationModel getModel()
 	{
-		return aModel;
+		return this.aModel;
 	}
 
 	public void modelChanged(String e[])
 	{
-		menuSession.setVisible(aModel.isVisible("menuSession"));
-		menuSession.setEnabled(aModel.isEnabled("menuSession"));
+		this.menuSession.setVisible(this.aModel.isVisible("menuSession"));
+		this.menuSession.setEnabled(this.aModel.isEnabled("menuSession"));
 
-		menuSessionNew.setVisible(aModel.isVisible("menuSessionNew"));
-		menuSessionNew.setEnabled(aModel.isEnabled("menuSessionNew"));
+		this.menuSessionNew.setVisible(this.aModel.isVisible("menuSessionNew"));
+		this.menuSessionNew.setEnabled(this.aModel.isEnabled("menuSessionNew"));
 
-		menuSessionClose.setVisible(aModel.isVisible("menuSessionClose"));
-		menuSessionClose.setEnabled(aModel.isEnabled("menuSessionClose"));
+		this.menuSessionClose.setVisible(this.aModel.isVisible("menuSessionClose"));
+		this.menuSessionClose.setEnabled(this.aModel.isEnabled("menuSessionClose"));
 
-		menuSessionConnection.setVisible(aModel.isVisible("menuSessionConnection"));
-		menuSessionConnection.setEnabled(aModel.isEnabled("menuSessionConnection"));
+		this.menuSessionConnection.setVisible(this.aModel.isVisible("menuSessionConnection"));
+		this.menuSessionConnection.setEnabled(this.aModel.isEnabled("menuSessionConnection"));
 
-		menuSessionChangePassword.setVisible(aModel.isVisible("menuSessionChangePassword"));
-		menuSessionChangePassword.setEnabled(aModel.isEnabled("menuSessionChangePassword"));
+		this.menuSessionChangePassword.setVisible(this.aModel.isVisible("menuSessionChangePassword"));
+		this.menuSessionChangePassword.setEnabled(this.aModel.isEnabled("menuSessionChangePassword"));
 
-		menuSessionDomain.setVisible(aModel.isVisible("menuSessionDomain"));
-		menuSessionDomain.setEnabled(aModel.isEnabled("menuSessionDomain"));
+		this.menuSessionDomain.setVisible(this.aModel.isVisible("menuSessionDomain"));
+		this.menuSessionDomain.setEnabled(this.aModel.isEnabled("menuSessionDomain"));
 
-		menuExit.setVisible(aModel.isVisible("menuExit"));
-		menuExit.setEnabled(aModel.isEnabled("menuExit"));
+		this.menuExit.setVisible(this.aModel.isVisible("menuExit"));
+		this.menuExit.setEnabled(this.aModel.isEnabled("menuExit"));
 
-		menuView.setVisible(aModel.isVisible("menuView"));
-		menuView.setEnabled(aModel.isEnabled("menuView"));
+		this.menuView.setVisible(this.aModel.isVisible("menuView"));
+		this.menuView.setEnabled(this.aModel.isEnabled("menuView"));
 
-		menuViewProto.setVisible(aModel.isVisible("menuViewProto"));
-		menuViewProto.setEnabled(aModel.isEnabled("menuViewProto"));
+		this.menuViewProto.setVisible(this.aModel.isVisible("menuViewProto"));
+		this.menuViewProto.setEnabled(this.aModel.isEnabled("menuViewProto"));
 
-		menuViewAttributes.setVisible(aModel.isVisible("menuViewAttributes"));
-		menuViewAttributes.setEnabled(aModel.isEnabled("menuViewAttributes"));
+		this.menuViewAttributes.setVisible(this.aModel.isVisible("menuViewAttributes"));
+		this.menuViewAttributes.setEnabled(this.aModel.isEnabled("menuViewAttributes"));
 
-		menuViewElements.setVisible(aModel.isVisible("menuViewElements"));
-		menuViewElements.setEnabled(aModel.isEnabled("menuViewElements"));
+		this.menuViewElements.setVisible(this.aModel.isVisible("menuViewElements"));
+		this.menuViewElements.setEnabled(this.aModel.isEnabled("menuViewElements"));
 
-		menuViewSetup.setVisible(aModel.isVisible("menuViewSetup"));
-		menuViewSetup.setEnabled(aModel.isEnabled("menuViewSetup"));
+		this.menuViewSetup.setVisible(this.aModel.isVisible("menuViewSetup"));
+		this.menuViewSetup.setEnabled(this.aModel.isEnabled("menuViewSetup"));
 
-		menuViewMap.setVisible(aModel.isVisible("menuViewMap"));
-		menuViewMap.setEnabled(aModel.isEnabled("menuViewMap"));
+		this.menuViewMap.setVisible(this.aModel.isVisible("menuViewMap"));
+		this.menuViewMap.setEnabled(this.aModel.isEnabled("menuViewMap"));
 
-		menuViewMapScheme.setVisible(aModel.isVisible("menuViewMapScheme"));
-		menuViewMapScheme.setEnabled(aModel.isEnabled("menuViewMapScheme"));
+		this.menuViewMapScheme.setVisible(this.aModel.isVisible("menuViewMapScheme"));
+		this.menuViewMapScheme.setEnabled(this.aModel.isEnabled("menuViewMapScheme"));
 
-		menuViewAll.setVisible(aModel.isVisible("menuViewAll"));
-		menuViewAll.setEnabled(aModel.isEnabled("menuViewAll"));
+		this.menuViewAll.setVisible(this.aModel.isVisible("menuViewAll"));
+		this.menuViewAll.setEnabled(this.aModel.isEnabled("menuViewAll"));
 
-//		menuViewOptions.setVisible(aModel.isVisible("menuViewOptions"));
-//		menuViewOptions.setEnabled(aModel.isEnabled("menuViewOptions"));
+//		this.menuViewOptions.setVisible(this.aModel.isVisible("menuViewOptions"));
+//		this.menuViewOptions.setEnabled(this.aModel.isEnabled("menuViewOptions"));
 
-		menuMap.setVisible(aModel.isVisible("menuMap"));
-		menuMap.setEnabled(aModel.isEnabled("menuMap"));
+		this.menuMap.setVisible(this.aModel.isVisible("menuMap"));
+		this.menuMap.setEnabled(this.aModel.isEnabled("menuMap"));
 
-		menuMapNew.setVisible(aModel.isVisible("menuMapNew"));
-		menuMapNew.setEnabled(aModel.isEnabled("menuMapNew"));
+		this.menuMapNew.setVisible(this.aModel.isVisible("menuMapNew"));
+		this.menuMapNew.setEnabled(this.aModel.isEnabled("menuMapNew"));
 
-		menuMapOpen.setVisible(aModel.isVisible("menuMapOpen"));
-		menuMapOpen.setEnabled(aModel.isEnabled("menuMapOpen"));
+		this.menuMapOpen.setVisible(this.aModel.isVisible("menuMapOpen"));
+		this.menuMapOpen.setEnabled(this.aModel.isEnabled("menuMapOpen"));
 
-		menuMapClose.setVisible(aModel.isVisible("menuMapClose"));
-		menuMapClose.setEnabled(aModel.isEnabled("menuMapClose"));
+		this.menuMapClose.setVisible(this.aModel.isVisible("menuMapClose"));
+		this.menuMapClose.setEnabled(this.aModel.isEnabled("menuMapClose"));
 
-		menuMapSave.setVisible(aModel.isVisible("menuMapSave"));
-		menuMapSave.setEnabled(aModel.isEnabled("menuMapSave"));
+		this.menuMapSave.setVisible(this.aModel.isVisible("menuMapSave"));
+		this.menuMapSave.setEnabled(this.aModel.isEnabled("menuMapSave"));
 
-		menuMapSaveAs.setVisible(aModel.isVisible("menuMapSaveAs"));
-		menuMapSaveAs.setEnabled(aModel.isEnabled("menuMapSaveAs"));
+		this.menuMapSaveAs.setVisible(this.aModel.isVisible("menuMapSaveAs"));
+		this.menuMapSaveAs.setEnabled(this.aModel.isEnabled("menuMapSaveAs"));
 
-		menuMapExport.setVisible(aModel.isVisible("menuMapExport"));
-		menuMapExport.setEnabled(aModel.isEnabled("menuMapExport"));
+		this.menuMapExport.setVisible(this.aModel.isVisible("menuMapExport"));
+		this.menuMapExport.setEnabled(this.aModel.isEnabled("menuMapExport"));
 
-		menuMapImport.setVisible(aModel.isVisible("menuMapImport"));
-		menuMapImport.setEnabled(aModel.isEnabled("menuMapImport"));
+		this.menuMapImport.setVisible(this.aModel.isVisible("menuMapImport"));
+		this.menuMapImport.setEnabled(this.aModel.isEnabled("menuMapImport"));
 
-		menuMapView.setVisible(aModel.isVisible("menuMapView"));
-		menuMapView.setEnabled(aModel.isEnabled("menuMapView"));
+		this.menuMapView.setVisible(this.aModel.isVisible("menuMapView"));
+		this.menuMapView.setEnabled(this.aModel.isEnabled("menuMapView"));
 
-		menuMapViewNew.setVisible(aModel.isVisible("menuMapViewNew"));
-		menuMapViewNew.setEnabled(aModel.isEnabled("menuMapViewNew"));
+		this.menuMapViewNew.setVisible(this.aModel.isVisible("menuMapViewNew"));
+		this.menuMapViewNew.setEnabled(this.aModel.isEnabled("menuMapViewNew"));
 
-		menuMapViewOpen.setVisible(aModel.isVisible("menuMapViewOpen"));
-		menuMapViewOpen.setEnabled(aModel.isEnabled("menuMapViewOpen"));
+		this.menuMapViewOpen.setVisible(this.aModel.isVisible("menuMapViewOpen"));
+		this.menuMapViewOpen.setEnabled(this.aModel.isEnabled("menuMapViewOpen"));
 
-		menuMapViewClose.setVisible(aModel.isVisible("menuMapViewClose"));
-		menuMapViewClose.setEnabled(aModel.isEnabled("menuMapViewClose"));
+		this.menuMapViewClose.setVisible(this.aModel.isVisible("menuMapViewClose"));
+		this.menuMapViewClose.setEnabled(this.aModel.isEnabled("menuMapViewClose"));
 
-		menuMapViewSave.setVisible(aModel.isVisible("menuMapViewSave"));
-		menuMapViewSave.setEnabled(aModel.isEnabled("menuMapViewSave"));
+		this.menuMapViewSave.setVisible(this.aModel.isVisible("menuMapViewSave"));
+		this.menuMapViewSave.setEnabled(this.aModel.isEnabled("menuMapViewSave"));
 
-		menuMapViewSaveAs.setVisible(aModel.isVisible("menuMapViewSaveAs"));
-		menuMapViewSaveAs.setEnabled(aModel.isEnabled("menuMapViewSaveAs"));
+		this.menuMapViewSaveAs.setVisible(this.aModel.isVisible("menuMapViewSaveAs"));
+		this.menuMapViewSaveAs.setEnabled(this.aModel.isEnabled("menuMapViewSaveAs"));
 
-		menuMapViewAddScheme.setVisible(aModel.isVisible("menuMapViewAddScheme"));
-		menuMapViewAddScheme.setEnabled(aModel.isEnabled("menuMapViewAddScheme"));
+		this.menuMapViewAddScheme.setVisible(this.aModel.isVisible("menuMapViewAddScheme"));
+		this.menuMapViewAddScheme.setEnabled(this.aModel.isEnabled("menuMapViewAddScheme"));
 
-		menuMapViewRemoveScheme.setVisible(aModel.isVisible("menuMapViewRemoveScheme"));
-		menuMapViewRemoveScheme.setEnabled(aModel.isEnabled("menuMapViewRemoveScheme"));
+		this.menuMapViewRemoveScheme.setVisible(this.aModel.isVisible("menuMapViewRemoveScheme"));
+		this.menuMapViewRemoveScheme.setEnabled(this.aModel.isEnabled("menuMapViewRemoveScheme"));
 
-		menuHelp.setVisible(aModel.isVisible("menuHelp"));
-		menuHelp.setEnabled(aModel.isEnabled("menuHelp"));
+		this.menuHelp.setVisible(this.aModel.isVisible("menuHelp"));
+		this.menuHelp.setEnabled(this.aModel.isEnabled("menuHelp"));
 
-		menuHelpContents.setVisible(aModel.isVisible("menuHelpContents"));
-		menuHelpContents.setEnabled(aModel.isEnabled("menuHelpContents"));
+		this.menuHelpContents.setVisible(this.aModel.isVisible("menuHelpContents"));
+		this.menuHelpContents.setEnabled(this.aModel.isEnabled("menuHelpContents"));
 
-		menuHelpFind.setVisible(aModel.isVisible("menuHelpFind"));
-		menuHelpFind.setEnabled(aModel.isEnabled("menuHelpFind"));
+		this.menuHelpFind.setVisible(this.aModel.isVisible("menuHelpFind"));
+		this.menuHelpFind.setEnabled(this.aModel.isEnabled("menuHelpFind"));
 
-		menuHelpTips.setVisible(aModel.isVisible("menuHelpTips"));
-		menuHelpTips.setEnabled(aModel.isEnabled("menuHelpTips"));
+		this.menuHelpTips.setVisible(this.aModel.isVisible("menuHelpTips"));
+		this.menuHelpTips.setEnabled(this.aModel.isEnabled("menuHelpTips"));
 
-		menuHelpStart.setVisible(aModel.isVisible("menuHelpStart"));
-		menuHelpStart.setEnabled(aModel.isEnabled("menuHelpStart"));
+		this.menuHelpStart.setVisible(this.aModel.isVisible("menuHelpStart"));
+		this.menuHelpStart.setEnabled(this.aModel.isEnabled("menuHelpStart"));
 
-		menuHelpCourse.setVisible(aModel.isVisible("menuHelpCourse"));
-		menuHelpCourse.setEnabled(aModel.isEnabled("menuHelpCourse"));
+		this.menuHelpCourse.setVisible(this.aModel.isVisible("menuHelpCourse"));
+		this.menuHelpCourse.setEnabled(this.aModel.isEnabled("menuHelpCourse"));
 
-		menuHelpHelp.setVisible(aModel.isVisible("menuHelpHelp"));
-		menuHelpHelp.setEnabled(aModel.isEnabled("menuHelpHelp"));
+		this.menuHelpHelp.setVisible(this.aModel.isVisible("menuHelpHelp"));
+		this.menuHelpHelp.setEnabled(this.aModel.isEnabled("menuHelpHelp"));
 
-		menuHelpSupport.setVisible(aModel.isVisible("menuHelpSupport"));
-		menuHelpSupport.setEnabled(aModel.isEnabled("menuHelpSupport"));
+		this.menuHelpSupport.setVisible(this.aModel.isVisible("menuHelpSupport"));
+		this.menuHelpSupport.setEnabled(this.aModel.isEnabled("menuHelpSupport"));
 
-		menuHelpLicense.setVisible(aModel.isVisible("menuHelpLicense"));
-		menuHelpLicense.setEnabled(aModel.isEnabled("menuHelpLicense"));
+		this.menuHelpLicense.setVisible(this.aModel.isVisible("menuHelpLicense"));
+		this.menuHelpLicense.setEnabled(this.aModel.isEnabled("menuHelpLicense"));
 
-		menuHelpAbout.setVisible(aModel.isVisible("menuHelpAbout"));
-		menuHelpAbout.setEnabled(aModel.isEnabled("menuHelpAbout"));
+		this.menuHelpAbout.setVisible(this.aModel.isVisible("menuHelpAbout"));
+		this.menuHelpAbout.setEnabled(this.aModel.isEnabled("menuHelpAbout"));
 	}
 
 	public void actionPerformed(ActionEvent e)
 	{
-		if(aModel == null)
+		if(this.aModel == null)
 			return;
 		AbstractButton jb = (AbstractButton )e.getSource();
 		String s = jb.getName();
-		Command command = aModel.getCommand(s);
+		Command command = this.aModel.getCommand(s);
 		command.execute();
 	}
 }

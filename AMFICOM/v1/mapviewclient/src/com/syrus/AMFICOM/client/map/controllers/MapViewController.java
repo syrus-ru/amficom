@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.9 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: MapViewController.java,v 1.10 2005/02/07 16:09:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -53,9 +53,8 @@ import java.util.Iterator;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * &lt;{@link }&gt;
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/07 16:09:25 $
  * @module mapviewclient_v1
  */
 public final class MapViewController

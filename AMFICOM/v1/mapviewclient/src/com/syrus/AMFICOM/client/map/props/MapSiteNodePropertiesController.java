@@ -6,21 +6,16 @@
 
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import java.awt.geom.Point2D;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
 
 public final class MapSiteNodePropertiesController 
 		extends MapElementPropertiesController 

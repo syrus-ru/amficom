@@ -6,20 +6,17 @@
 
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.mapview.Marker;
-import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.mapview.MeasurementPath;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.mapview.Marker;
 
 public final class MapMarkerPropertiesController 
 		extends MapElementPropertiesController 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapStrategy.java,v 1.6 2005/02/02 08:57:28 krupenn Exp $
+ * $Id: MapStrategy.java,v 1.7 2005/02/07 16:09:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import javax.swing.SwingUtilities;
  * или изменением состояния мыши и клавиатуры.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/02 08:57:28 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/07 16:09:27 $
  * @module mapviewclient_v1
  */
 public abstract class MapStrategy
@@ -67,7 +67,7 @@ public abstract class MapStrategy
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges(" + mapElement + ")");
 		
-		MapState mapState = logicalNetLayer.getMapState();
+		MapState mapState = this.logicalNetLayer.getMapState();
 
 		int mouseMode = mapState.getMouseMode();
 
@@ -98,7 +98,7 @@ public abstract class MapStrategy
 	 * @param point new point
 	 */
 	protected void leftMousePressed(MapState mapState, Point point)
-	{
+	{//empty
 	}
 
 	/**
@@ -107,7 +107,7 @@ public abstract class MapStrategy
 	 * @param point new point
 	 */
 	protected void leftMouseDragged(MapState mapState, Point point)
-	{
+	{//empty
 	}
 
 	/**
@@ -116,6 +116,6 @@ public abstract class MapStrategy
 	 * @param point new point
 	 */
 	protected void leftMouseReleased(MapState mapState, Point point)
-	{
+	{//empty
 	}
 }

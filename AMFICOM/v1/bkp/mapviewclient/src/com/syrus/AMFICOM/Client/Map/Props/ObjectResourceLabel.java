@@ -5,8 +5,6 @@ import javax.swing.JLabel;
 public class ObjectResourceLabel extends JLabel implements Comparable 
 {
 	private Object or;
-	private int	status;
-
 	public ObjectResourceLabel(Object or, String text) 
 	{
 		super(text);
@@ -27,6 +25,6 @@ public class ObjectResourceLabel extends JLabel implements Comparable
 
 	public Object getOR()
 	{
-		return or;
+		return this.or;
 	}
 }

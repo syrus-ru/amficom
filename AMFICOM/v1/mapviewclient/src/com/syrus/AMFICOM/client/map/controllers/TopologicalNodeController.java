@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.8 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.9 2005/02/07 16:09:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import javax.swing.ImageIcon;
 /**
  * Контроллер топологического узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/07 16:09:26 $
  * @module mapviewclient_v1
  */
 public class TopologicalNodeController extends AbstractNodeController
@@ -187,6 +187,12 @@ public class TopologicalNodeController extends AbstractNodeController
 		}
 
 		TopologicalNode topologicalNode = (TopologicalNode )node;
+
+		if(topologicalNode.isActive())
+			node.setImageId(openImageId);
+		else
+			node.setImageId(closedImageId);
+
 		if(topologicalNode.isActive())
 			return MapPropertiesManager.getScaledImage(closedImageId);
 

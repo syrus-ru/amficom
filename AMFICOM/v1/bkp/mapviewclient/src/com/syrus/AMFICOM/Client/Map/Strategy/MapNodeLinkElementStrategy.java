@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElementStrategy.java,v 1.11 2005/02/02 08:57:28 krupenn Exp $
+ * $Id: MapNodeLinkElementStrategy.java,v 1.12 2005/02/07 16:09:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import java.awt.Point;
 /**
  * Стратегия управления фрагментом линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/02/02 08:57:28 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/07 16:09:26 $
  * @module mapviewclient_v1
  */
 public final class MapNodeLinkElementStrategy extends MapStrategy 
@@ -46,7 +46,7 @@ public final class MapNodeLinkElementStrategy extends MapStrategy
 	 * Private constructor.
 	 */
 	private MapNodeLinkElementStrategy()
-	{
+	{//empty
 	}
 
 	/**
@@ -73,33 +73,33 @@ public final class MapNodeLinkElementStrategy extends MapStrategy
 	{
 		int actionMode = mapState.getActionMode();
 
-		nodeLink.setSelected(true);
+		this.nodeLink.setSelected(true);
 		if ((actionMode == MapState.SELECT_ACTION_MODE))
 		{
-			MapElement mel = logicalNetLayer.getCurrentMapElement();
+			MapElement mel = super.logicalNetLayer.getCurrentMapElement();
 			if (mel instanceof Selection)
 			{
 				Selection sel = (Selection)mel;
-				sel.add(nodeLink);
+				sel.add(this.nodeLink);
 			}
 			else
 			{
-				Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
-				sel.addAll(logicalNetLayer.getSelectedElements());
-				logicalNetLayer.setCurrentMapElement(sel);
+				Selection sel = new Selection(super.logicalNetLayer.getMapView().getMap());
+				sel.addAll(super.logicalNetLayer.getSelectedElements());
+				super.logicalNetLayer.setCurrentMapElement(sel);
 			}
 		}//MapState.SELECT_ACTION_MODE
 		else if (actionMode == MapState.ALT_LINK_ACTION_MODE)
 		{
-			command = new CreatePhysicalNodeCommandBundle(nodeLink, point);
-			((CreatePhysicalNodeCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
-			logicalNetLayer.getCommandList().add(command);
-			logicalNetLayer.getCommandList().execute();
+			this.command = new CreatePhysicalNodeCommandBundle(this.nodeLink, point);
+			this.command.setLogicalNetLayer(super.logicalNetLayer);
+			super.logicalNetLayer.getCommandList().add(this.command);
+			super.logicalNetLayer.getCommandList().execute();
 		}//MapState.ALT_LINK_ACTION_MODE
 		else if (actionMode != MapState.MOVE_ACTION_MODE)
 		{
-			logicalNetLayer.deselectAll();
-			nodeLink.setSelected(true);
+			super.logicalNetLayer.deselectAll();
+			this.nodeLink.setSelected(true);
 		}//MapState.MOVE_ACTION_MODE
 	}
 }

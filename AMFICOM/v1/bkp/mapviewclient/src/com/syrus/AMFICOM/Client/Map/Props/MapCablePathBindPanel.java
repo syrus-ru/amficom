@@ -42,15 +42,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import com.syrus.AMFICOM.mapview.CablePathBinding;
 
 public final class MapCablePathBindPanel
 		extends JPanel 
 		implements ObjectResourcePropertiesPane, MapPropertiesPane
 {
-	private GridBagLayout gridBagLayout1 = new GridBagLayout();
-	private GridBagLayout gridBagLayout2 = new GridBagLayout();
-	private GridBagLayout gridBagLayout3 = new GridBagLayout();
+	GridBagLayout gridBagLayout1 = new GridBagLayout();
+	GridBagLayout gridBagLayout2 = new GridBagLayout();
+	GridBagLayout gridBagLayout3 = new GridBagLayout();
 
 	private CablePath path;
 
@@ -61,39 +60,39 @@ public final class MapCablePathBindPanel
 	 */
 	private CableBindingController controller;
 	private ObjectResourceTableModel model;
-	private ObjectResourceTable table;
+	ObjectResourceTable table;
 
-	private JLabel titleLabel = new JLabel();
+	JLabel titleLabel = new JLabel();
 
-	private JScrollPane scrollPane = new JScrollPane();
+	JScrollPane scrollPane = new JScrollPane();
 	
-	private JPanel buttonsPanel = new JPanel();
-	private JButton bindButton = new JButton();
-	private JButton bindChainButton = new JButton();
-	private JButton unbindButton = new JButton();
-	private JButton clearBindingButton = new JButton();
+	JPanel buttonsPanel = new JPanel();
+	JButton bindButton = new JButton();
+	JButton bindChainButton = new JButton();
+	JButton unbindButton = new JButton();
+	JButton clearBindingButton = new JButton();
 
-	private JPanel startPanel = new JPanel();
+	JPanel startPanel = new JPanel();
 
-	private JLabel startNodeTitleLabel = new JLabel();
-	private JLabel startNodeLabel = new JLabel();
-	private JLabel startLinkLabel = new JLabel();
-	private JLabel startNodeToLabel = new JLabel();
-	private JTextField startNodeTextField = new JTextField();
-	private ObjComboBox startLinkComboBox = null;
-	private ObjComboBox startNodeToComboBox = null;
+	JLabel startNodeTitleLabel = new JLabel();
+	JLabel startNodeLabel = new JLabel();
+	JLabel startLinkLabel = new JLabel();
+	JLabel startNodeToLabel = new JLabel();
+	JTextField startNodeTextField = new JTextField();
+	ObjComboBox startLinkComboBox = null;
+	ObjComboBox startNodeToComboBox = null;
 
-	private JPanel endPanel = new JPanel();
-	private JLabel endNodeTitleLabel = new JLabel();
-	private JLabel endNodeLabel = new JLabel();
-	private JLabel endLinkLabel = new JLabel();
-	private JLabel endNodeToLabel = new JLabel();
-	private JTextField endNodeTextField = new JTextField();
-	private ObjComboBox endLinkComboBox = null;
-	private ObjComboBox endNodeToComboBox = null;
+	JPanel endPanel = new JPanel();
+	JLabel endNodeTitleLabel = new JLabel();
+	JLabel endNodeLabel = new JLabel();
+	JLabel endLinkLabel = new JLabel();
+	JLabel endNodeToLabel = new JLabel();
+	JTextField endNodeTextField = new JTextField();
+	ObjComboBox endLinkComboBox = null;
+	ObjComboBox endNodeToComboBox = null;
 
-	private AbstractNode startNode;
-	private AbstractNode endNode;
+	AbstractNode startNode;
+	AbstractNode endNode;
 	
 	private PhysicalLink startLastBound;
 	private int startAvailableLinksCount;
@@ -107,9 +106,9 @@ public final class MapCablePathBindPanel
 	
 	public MapCablePathBindPanel()
 	{
-		controller = CableBindingController.getInstance();
-		model = new ObjectResourceTableModel(controller);
-		table = new ObjectResourceTable(model);
+		this.controller = CableBindingController.getInstance();
+		this.model = new ObjectResourceTableModel(this.controller);
+		this.table = new ObjectResourceTable(this.model);
 
 		try
 		{
@@ -129,24 +128,24 @@ public final class MapCablePathBindPanel
 
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		return lnl;
+		return this.lnl;
 	}
 
-	private boolean doChanges = true;
+	boolean doChanges = true;
 
 	private void jbInit()
 	{
 		SimpleMapElementController comboController = 
 				SimpleMapElementController.getInstance();
 
-		startLinkComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
-		startNodeToComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
-		endLinkComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
-		endNodeToComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
+		this.startLinkComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
+		this.startNodeToComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
+		this.endLinkComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
+		this.endNodeToComboBox = new ObjComboBox(comboController, SimpleMapElementController.KEY_NAME);
 
-		this.setLayout(gridBagLayout1);
+		this.setLayout(this.gridBagLayout1);
 		this.setName(LangModelMap.getString("LinkBinding"));
-		titleLabel.setText(LangModelMap.getString("LinkBinding"));
+		this.titleLabel.setText(LangModelMap.getString("LinkBinding"));
 		
 		ActionListener lcbal = new ActionListener()
 			{
@@ -155,28 +154,28 @@ public final class MapCablePathBindPanel
 					if(!MapCablePathBindPanel.this.doChanges)
 						return;
 
-					Object mle = startLinkComboBox.getSelectedItem();
-					Object mle2 = endLinkComboBox.getSelectedItem();
+					Object mle = MapCablePathBindPanel.this.startLinkComboBox.getSelectedItem();
+					Object mle2 = MapCablePathBindPanel.this.endLinkComboBox.getSelectedItem();
 					boolean flag = (mle instanceof PhysicalLink) || (mle2 instanceof PhysicalLink);
-					bindButton.setEnabled(flag);
-					bindChainButton.setEnabled(flag);
+					MapCablePathBindPanel.this.bindButton.setEnabled(flag);
+					MapCablePathBindPanel.this.bindChainButton.setEnabled(flag);
 					
 					MapCablePathBindPanel.this.doChanges = false;
 					if(mle instanceof PhysicalLink)
 					{
 						PhysicalLink pl = (PhysicalLink)mle;
-						startNodeToComboBox.setSelectedItem(pl.getOtherNode(startNode));
+						MapCablePathBindPanel.this.startNodeToComboBox.setSelectedItem(pl.getOtherNode(MapCablePathBindPanel.this.startNode));
 					}
 					if(mle2 instanceof PhysicalLink)
 					{
 						PhysicalLink pl = (PhysicalLink)mle2;
-						endNodeToComboBox.setSelectedItem(pl.getOtherNode(endNode));
+						MapCablePathBindPanel.this.endNodeToComboBox.setSelectedItem(pl.getOtherNode(MapCablePathBindPanel.this.endNode));
 					}
 					MapCablePathBindPanel.this.doChanges = true;
 				}
 			};
-		startLinkComboBox.addActionListener(lcbal);
-		endLinkComboBox.addActionListener(lcbal);
+		this.startLinkComboBox.addActionListener(lcbal);
+		this.endLinkComboBox.addActionListener(lcbal);
 
 		ActionListener ncbal = new ActionListener()
 			{
@@ -185,63 +184,63 @@ public final class MapCablePathBindPanel
 					if(!MapCablePathBindPanel.this.doChanges)
 						return;
 
-					Object mle = startNodeToComboBox.getSelectedItem();
-					Object mle2 = endNodeToComboBox.getSelectedItem();
+					Object mle = MapCablePathBindPanel.this.startNodeToComboBox.getSelectedItem();
+					Object mle2 = MapCablePathBindPanel.this.endNodeToComboBox.getSelectedItem();
 					boolean flag = (mle instanceof SiteNode) || (mle2 instanceof SiteNode);
-					bindButton.setEnabled(flag);
-					bindChainButton.setEnabled(flag);
+					MapCablePathBindPanel.this.bindButton.setEnabled(flag);
+					MapCablePathBindPanel.this.bindChainButton.setEnabled(flag);
 
 					MapCablePathBindPanel.this.doChanges = false;
 					if(mle instanceof SiteNode)
 					{
 						SiteNode s = (SiteNode)mle;
-						startLinkComboBox.setSelectedItem(s.getMap().getPhysicalLink(startNode, s));
+						MapCablePathBindPanel.this.startLinkComboBox.setSelectedItem(s.getMap().getPhysicalLink(MapCablePathBindPanel.this.startNode, s));
 					}
 					if(mle2 instanceof SiteNode)
 					{
 						SiteNode s = (SiteNode)mle2;
-						endLinkComboBox.setSelectedItem(s.getMap().getPhysicalLink(endNode, s));
+						MapCablePathBindPanel.this.endLinkComboBox.setSelectedItem(s.getMap().getPhysicalLink(MapCablePathBindPanel.this.endNode, s));
 					}
 					MapCablePathBindPanel.this.doChanges = true;
 				}
 			};
-		startNodeToComboBox.addActionListener(ncbal);
-		endNodeToComboBox.addActionListener(ncbal);
+		this.startNodeToComboBox.addActionListener(ncbal);
+		this.endNodeToComboBox.addActionListener(ncbal);
 
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		this.table.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+		{
+			public void valueChanged(ListSelectionEvent e)
 			{
-				public void valueChanged(ListSelectionEvent e)
-				{
-					unbindButton.setEnabled(table.getSelectedRowCount() != 0);
-				}
-			});
+				MapCablePathBindPanel.this.unbindButton.setEnabled(MapCablePathBindPanel.this.table.getSelectedRowCount() != 0);
+			}
+		});
 
-		bindButton.setText("Привязать");
-		bindButton.addActionListener(new ActionListener()
+		this.bindButton.setText("Привязать");
+		this.bindButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					addBinding();
 				}
 			});
-		bindChainButton.setText("Привязать цепочку");
-		bindChainButton.addActionListener(new ActionListener()
+		this.bindChainButton.setText("Привязать цепочку");
+		this.bindChainButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					addChainBinding();
 				}
 			});
-		unbindButton.setText("Убрать связь");
-		unbindButton.addActionListener(new ActionListener()
+		this.unbindButton.setText("Убрать связь");
+		this.unbindButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					removeBinding();
 				}
 			});
-		clearBindingButton.setText("Отвязать кабель");
-		clearBindingButton.addActionListener(new ActionListener()
+		this.clearBindingButton.setText("Отвязать кабель");
+		this.clearBindingButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -249,56 +248,56 @@ public final class MapCablePathBindPanel
 				}
 			});
 
-		startPanel.setLayout(gridBagLayout3);
-		startNodeTitleLabel.setText(LangModelMap.getString("StartNodeTitle"));
-		startNodeLabel.setText(LangModelMap.getString("StartNode"));
-		startLinkLabel.setText(LangModelMap.getString("StartLink"));
-		startNodeToLabel.setText(LangModelMap.getString("To"));
+		this.startPanel.setLayout(this.gridBagLayout3);
+		this.startNodeTitleLabel.setText(LangModelMap.getString("StartNodeTitle"));
+		this.startNodeLabel.setText(LangModelMap.getString("StartNode"));
+		this.startLinkLabel.setText(LangModelMap.getString("StartLink"));
+		this.startNodeToLabel.setText(LangModelMap.getString("To"));
 
-		endPanel.setLayout(gridBagLayout2);
-		endNodeTitleLabel.setText(LangModelMap.getString("EndNodeTitle"));
-		endNodeLabel.setText(LangModelMap.getString("EndNode"));
-		endLinkLabel.setText(LangModelMap.getString("EndLink"));
-		endNodeToLabel.setText(LangModelMap.getString("To"));
+		this.endPanel.setLayout(this.gridBagLayout2);
+		this.endNodeTitleLabel.setText(LangModelMap.getString("EndNodeTitle"));
+		this.endNodeLabel.setText(LangModelMap.getString("EndNode"));
+		this.endLinkLabel.setText(LangModelMap.getString("EndLink"));
+		this.endNodeToLabel.setText(LangModelMap.getString("To"));
 
-		buttonsPanel.add(bindButton, null);
-		buttonsPanel.add(bindChainButton, null);
-		buttonsPanel.add(unbindButton, null);
-		buttonsPanel.add(clearBindingButton, null);
+		this.buttonsPanel.add(this.bindButton, null);
+		this.buttonsPanel.add(this.bindChainButton, null);
+		this.buttonsPanel.add(this.unbindButton, null);
+		this.buttonsPanel.add(this.clearBindingButton, null);
 
-		scrollPane.getViewport().add(table);
+		this.scrollPane.getViewport().add(this.table);
 
-		scrollPane.setWheelScrollingEnabled(true);
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		table.setBackground(SystemColor.window);
+		this.scrollPane.setWheelScrollingEnabled(true);
+		this.scrollPane.getViewport().setBackground(SystemColor.window);
+		this.table.setBackground(SystemColor.window);
 
-//		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
-//		this.add(bindingPanel, ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+//		this.this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
+//		this.this.add(this.bindingPanel, ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 		
-		this.add(titleLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(startPanel, ReusedGridBagConstraints.get(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(endPanel, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(scrollPane, ReusedGridBagConstraints.get(0, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
-		this.add(buttonsPanel, ReusedGridBagConstraints.get(0, 4, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.titleLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.startPanel, ReusedGridBagConstraints.get(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.endPanel, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.scrollPane, ReusedGridBagConstraints.get(0, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(this.buttonsPanel, ReusedGridBagConstraints.get(0, 4, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 
-		startPanel.add(startNodeTitleLabel, ReusedGridBagConstraints.get(0, 0, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		startPanel.add(startNodeLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
-		startPanel.add(startLinkLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
-		startPanel.add(startNodeToLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
-		startPanel.add(startNodeTextField, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		startPanel.add(startLinkComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		startPanel.add(startNodeToComboBox, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.startPanel.add(this.startNodeTitleLabel, ReusedGridBagConstraints.get(0, 0, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.startPanel.add(this.startNodeLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
+		this.startPanel.add(this.startLinkLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
+		this.startPanel.add(this.startNodeToLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
+		this.startPanel.add(this.startNodeTextField, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.startPanel.add(this.startLinkComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.startPanel.add(this.startNodeToComboBox, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 
-		endPanel.add(endNodeTitleLabel, ReusedGridBagConstraints.get(0, 0, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		endPanel.add(endNodeLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
-		endPanel.add(endLinkLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
-		endPanel.add(endNodeToLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
-		endPanel.add(endNodeTextField, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		endPanel.add(endLinkComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		endPanel.add(endNodeToComboBox, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.endPanel.add(this.endNodeTitleLabel, ReusedGridBagConstraints.get(0, 0, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.endPanel.add(this.endNodeLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
+		this.endPanel.add(this.endLinkLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
+		this.endPanel.add(this.endNodeToLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
+		this.endPanel.add(this.endNodeTextField, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.endPanel.add(this.endLinkComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.endPanel.add(this.endNodeToComboBox, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 
-		startNodeTextField.setEnabled(false);
-		endNodeTextField.setEnabled(false);
+		this.startNodeTextField.setEnabled(false);
+		this.endNodeTextField.setEnabled(false);
 	}
 
 	public Object getObject()
@@ -308,33 +307,33 @@ public final class MapCablePathBindPanel
 
 	public void setObject(Object objectResource)
 	{
-		path = (CablePath)objectResource;
+		this.path = (CablePath)objectResource;
 
-		table.removeAll();
-		links = new LinkedList();
+		this.table.removeAll();
+		this.links = new LinkedList();
 
-		startNodeTextField.setText("");
-		endNodeTextField.setText("");
-		startLinkComboBox.removeAllItems();
-		endLinkComboBox.removeAllItems();
-		startNodeToComboBox.removeAllItems();
-		endNodeToComboBox.removeAllItems();
+		this.startNodeTextField.setText("");
+		this.endNodeTextField.setText("");
+		this.startLinkComboBox.removeAllItems();
+		this.endLinkComboBox.removeAllItems();
+		this.startNodeToComboBox.removeAllItems();
+		this.endNodeToComboBox.removeAllItems();
 
-		startLinkComboBox.setEnabled(true);
-		endLinkComboBox.setEnabled(true);
-		startNodeToComboBox.setEnabled(true);
-		endNodeToComboBox.setEnabled(true);
+		this.startLinkComboBox.setEnabled(true);
+		this.endLinkComboBox.setEnabled(true);
+		this.startNodeToComboBox.setEnabled(true);
+		this.endNodeToComboBox.setEnabled(true);
 		
-		if(path == null)
+		if(this.path == null)
 		{
 		}
 		else
 		{
-			controller.setCablePath(path);
+			this.controller.setCablePath(this.path);
 
-			links.addAll(path.getLinks());
+			this.links.addAll(this.path.getLinks());
 
-			model.setContents(path.getLinks());
+			this.model.setContents(this.path.getLinks());
 			
 			setBindingPanels();
 		}
@@ -346,33 +345,33 @@ public final class MapCablePathBindPanel
 			
 		PhysicalLinkType unboundType = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.UNBOUND);
 
-		startNode = path.getStartUnboundNode();
+		this.startNode = this.path.getStartUnboundNode();
 		
-		endNode = path.getEndUnboundNode();
+		this.endNode = this.path.getEndUnboundNode();
 
-		if(startNode == null && endNode == null)
+		if(this.startNode == null && this.endNode == null)
 			return;// no unbound elements
 
-		startNodeTextField.setText(startNode.getName());
-		endNodeTextField.setText(endNode.getName());
+		this.startNodeTextField.setText(this.startNode.getName());
+		this.endNodeTextField.setText(this.endNode.getName());
 
-		startLastBound = path.getStartLastBoundLink();
-		endLastBound = path.getEndLastBoundLink();
+		this.startLastBound = this.path.getStartLastBoundLink();
+		this.endLastBound = this.path.getEndLastBoundLink();
 		
-		List smnelinks = path.getMap().getPhysicalLinksAt(startNode);
-		if(startLastBound != null)
-			smnelinks.remove(startLastBound);
+		List smnelinks = this.path.getMap().getPhysicalLinksAt(this.startNode);
+		if(this.startLastBound != null)
+			smnelinks.remove(this.startLastBound);
 
 		List smnenodes = new LinkedList();
 
-		startAvailableLinksCount = smnelinks.size();
+		this.startAvailableLinksCount = smnelinks.size();
 		for(Iterator it = smnelinks.iterator(); it.hasNext();)
 		{
 			PhysicalLink mle = (PhysicalLink)it.next();
 			if(mle.getType().equals(unboundType))
 			{
 				it.remove();
-				startAvailableLinksCount--;
+				this.startAvailableLinksCount--;
 			}
 			else
 			if(mle.getStartNode() instanceof TopologicalNode
@@ -380,24 +379,24 @@ public final class MapCablePathBindPanel
 					it.remove();
 			else
 			{
-				smnenodes.add(mle.getOtherNode(startNode));
+				smnenodes.add(mle.getOtherNode(this.startNode));
 			}
 		}
 
-		List emnelinks = path.getMap().getPhysicalLinksAt(endNode);
-		if(endLastBound != null)
-			emnelinks.remove(endLastBound);
+		List emnelinks = this.path.getMap().getPhysicalLinksAt(this.endNode);
+		if(this.endLastBound != null)
+			emnelinks.remove(this.endLastBound);
 
 		List emnenodes = new LinkedList();
 
-		endAvailableLinksCount = emnelinks.size();
+		this.endAvailableLinksCount = emnelinks.size();
 		for(Iterator it = emnelinks.iterator(); it.hasNext();)
 		{
 			PhysicalLink mle = (PhysicalLink)it.next();
 			if(mle.getType().equals(unboundType))
 			{
 				it.remove();
-				endAvailableLinksCount--;
+				this.endAvailableLinksCount--;
 			}
 			else
 			if(mle.getStartNode() instanceof TopologicalNode
@@ -405,60 +404,60 @@ public final class MapCablePathBindPanel
 					it.remove();
 			else
 			{
-				emnenodes.add(mle.getOtherNode(endNode));
+				emnenodes.add(mle.getOtherNode(this.endNode));
 			}
 		}
 
-		startLinkComboBox.removeAllItems();
-		startLinkComboBox.addItem(stubObject);
-		startLinkComboBox.addElements(smnelinks);
-		startLinkComboBox.setSelectedItem(stubObject);
+		this.startLinkComboBox.removeAllItems();
+		this.startLinkComboBox.addItem(this.stubObject);
+		this.startLinkComboBox.addElements(smnelinks);
+		this.startLinkComboBox.setSelectedItem(this.stubObject);
 
-		endLinkComboBox.removeAllItems();
-		endLinkComboBox.addItem(stubObject);
-		endLinkComboBox.addElements(emnelinks);
-		endLinkComboBox.setSelectedItem(stubObject);
+		this.endLinkComboBox.removeAllItems();
+		this.endLinkComboBox.addItem(this.stubObject);
+		this.endLinkComboBox.addElements(emnelinks);
+		this.endLinkComboBox.setSelectedItem(this.stubObject);
 
-		startNodeToComboBox.removeAllItems();
-		startNodeToComboBox.addItem(stubObject);
-		startNodeToComboBox.addElements(smnenodes);
-		startNodeToComboBox.setSelectedItem(stubObject);
+		this.startNodeToComboBox.removeAllItems();
+		this.startNodeToComboBox.addItem(this.stubObject);
+		this.startNodeToComboBox.addElements(smnenodes);
+		this.startNodeToComboBox.setSelectedItem(this.stubObject);
 
-		endNodeToComboBox.removeAllItems();
-		endNodeToComboBox.addItem(stubObject);
-		endNodeToComboBox.addElements(emnenodes);
-		endNodeToComboBox.setSelectedItem(stubObject);
+		this.endNodeToComboBox.removeAllItems();
+		this.endNodeToComboBox.addItem(this.stubObject);
+		this.endNodeToComboBox.addElements(emnenodes);
+		this.endNodeToComboBox.setSelectedItem(this.stubObject);
 
-		startLinkComboBox.setEnabled(!startNode.equals(path.getEndNode()));
-		endLinkComboBox.setEnabled(!endNode.equals(path.getStartNode()));
-		startNodeToComboBox.setEnabled(startLinkComboBox.isEnabled());
-		endNodeToComboBox.setEnabled(endLinkComboBox.isEnabled());
+		this.startLinkComboBox.setEnabled(!this.startNode.equals(this.path.getEndNode()));
+		this.endLinkComboBox.setEnabled(!this.endNode.equals(this.path.getStartNode()));
+		this.startNodeToComboBox.setEnabled(this.startLinkComboBox.isEnabled());
+		this.endNodeToComboBox.setEnabled(this.endLinkComboBox.isEnabled());
 	}
 
 	/**
 	 * @todo working woth nodelinks and creation/deletion of elements
 	 */
-	private void removeBinding()
+	void removeBinding()
 	{
-		PhysicalLink link = (PhysicalLink)model.getObject(table.getSelectedRow());
-		PhysicalLink previous = path.previousLink(link);
+		PhysicalLink link = (PhysicalLink)this.model.getObject(this.table.getSelectedRow());
+		PhysicalLink previous = this.path.previousLink(link);
 		if(link instanceof UnboundLink)
 		{
 			if(link.getStartNode().equals(link.getEndNode()))
 			{
-				path.removeLink(link);
+				this.path.removeLink(link);
 
 				RemoveUnboundLinkCommandBundle command = 
 						new RemoveUnboundLinkCommandBundle(
 							(UnboundLink)link);
-				command.setLogicalNetLayer(lnl);
+				command.setLogicalNetLayer(this.lnl);
 				command.execute();
 			}
 			else
 			if(previous != null
 				&& previous instanceof UnboundLink)
 			{
-				CableChannelingItem cci = (CableChannelingItem )path.getBinding().get(link);
+				CableChannelingItem cci = (CableChannelingItem )this.path.getBinding().get(link);
 				AbstractNode removedNode = cci.startSiteNodeImpl();
 			
 				if(previous.getEndNode().equals(removedNode))
@@ -477,50 +476,50 @@ public final class MapCablePathBindPanel
 						nl.setStartNode(link.getOtherNode(removedNode));
 				}
 
-				path.removeLink(link);
+				this.path.removeLink(link);
 
 				RemoveUnboundLinkCommandBundle command = 
 						new RemoveUnboundLinkCommandBundle(
 							(UnboundLink)link);
-				command.setLogicalNetLayer(lnl);
+				command.setLogicalNetLayer(this.lnl);
 				command.execute();
 			}
 		}
 		else
 		// replace binding to physical link with unbound link
 		{
-			path.removeLink(link);
+			this.path.removeLink(link);
 
 			CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
 					link.getStartNode(),
 					link.getEndNode());
-			command.setLogicalNetLayer(lnl);
+			command.setLogicalNetLayer(this.lnl);
 			command.execute();
 
 			UnboundLink unbound = command.getUnbound();
-			unbound.setCablePath(path);
-			path.addLink(unbound, CableController.generateCCI(unbound));
-			link.getBinding().remove(path);
+			unbound.setCablePath(this.path);
+			this.path.addLink(unbound, CableController.generateCCI(unbound));
+			link.getBinding().remove(this.path);
 		}
-		model.setContents(path.getLinks());
-		model.fireTableDataChanged();
+		this.model.setContents(this.path.getLinks());
+		this.model.fireTableDataChanged();
 		setBindingPanels();
 	}
 	
-	private void clearBinding()
+	void clearBinding()
 	{
-		path.clearLinks();
+		this.path.clearLinks();
 
 		CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
-			path.getStartNode(), path.getEndNode());
-		command.setLogicalNetLayer(lnl);
+			this.path.getStartNode(), this.path.getEndNode());
+		command.setLogicalNetLayer(this.lnl);
 		command.execute();
 
 		UnboundLink unbound = command.getUnbound();
-		path.addLink(unbound, CableController.generateCCI(unbound));
-		unbound.setCablePath(path);
+		this.path.addLink(unbound, CableController.generateCCI(unbound));
+		unbound.setCablePath(this.path);
 
-		model.fireTableDataChanged();
+		this.model.fireTableDataChanged();
 		setBindingPanels();
 	}
 	
@@ -533,10 +532,10 @@ public final class MapCablePathBindPanel
 		{
 			if(unbound != null)
 			{
-				path.removeLink(unbound);
+				this.path.removeLink(unbound);
 
 				RemoveUnboundLinkCommandBundle command = new RemoveUnboundLinkCommandBundle(unbound);
-				command.setLogicalNetLayer(lnl);
+				command.setLogicalNetLayer(this.lnl);
 				command.execute();
 			}
 		}
@@ -560,67 +559,67 @@ public final class MapCablePathBindPanel
 					nl.setEndNode(link.getOtherNode(fromSite));
 			}
 		}
-		path.addLink(link, CableController.generateCCI(link));
-		link.getBinding().add(path);
+		this.path.addLink(link, CableController.generateCCI(link));
+		link.getBinding().add(this.path);
 	}
 
-	private void addBinding()
+	void addBinding()
 	{
 		PhysicalLink selectedStartLink;
 		PhysicalLink selectedEndLink;
 		
 		Object selectedItem;
 	
-		selectedItem = startLinkComboBox.getSelectedItem();
+		selectedItem = this.startLinkComboBox.getSelectedItem();
 		if(selectedItem instanceof PhysicalLink)
 		{
 			selectedStartLink = (PhysicalLink )selectedItem;
 			
-			UnboundLink unbound = (UnboundLink)path.nextLink(startLastBound);
+			UnboundLink unbound = (UnboundLink)this.path.nextLink(this.startLastBound);
 
 			if(unbound != null)
-				addLinkBinding(selectedStartLink, unbound, startNode);
+				addLinkBinding(selectedStartLink, unbound, this.startNode);
 		}
 		else
 		{
 			selectedStartLink = null;
 		}
 
-		selectedItem = endLinkComboBox.getSelectedItem();
+		selectedItem = this.endLinkComboBox.getSelectedItem();
 		if(selectedItem instanceof PhysicalLink)
 		{
 			selectedEndLink = (PhysicalLink )selectedItem;
 			
 			if(!selectedEndLink.equals(selectedStartLink))
 			{
-				UnboundLink unbound = (UnboundLink)path.previousLink(endLastBound);
+				UnboundLink unbound = (UnboundLink)this.path.previousLink(this.endLastBound);
 
 				if(unbound != null)
-					addLinkBinding(selectedEndLink, unbound, endNode);
+					addLinkBinding(selectedEndLink, unbound, this.endNode);
 			}
 		}
 		
-		model.setContents(path.getLinks());
-		model.fireTableDataChanged();
+		this.model.setContents(this.path.getLinks());
+		this.model.fireTableDataChanged();
 		
 		setBindingPanels();
 	}
 
-	private void addChainBinding()
+	void addChainBinding()
 	{
 		while(true)
 		{
 			addBinding();
 			boolean proceed = false;
 
-			if(startAvailableLinksCount == 1 && startLinkComboBox.isEnabled())
+			if(this.startAvailableLinksCount == 1 && this.startLinkComboBox.isEnabled())
 			{
 				proceed = true;
-				ComboBoxModel cbmodel = startLinkComboBox.getModel();
+				ComboBoxModel cbmodel = this.startLinkComboBox.getModel();
 				for (int i = 0; i < cbmodel.getSize(); i++) 
 				{
-					Object or = (Object )cbmodel.getElementAt(i);
-					if(!or.equals(stubObject))
+					Object or = cbmodel.getElementAt(i);
+					if(!or.equals(this.stubObject))
 					{
 						cbmodel.setSelectedItem(or);
 						break;
@@ -628,14 +627,14 @@ public final class MapCablePathBindPanel
 				}
 			}
 
-			if(endAvailableLinksCount == 1 && endLinkComboBox.isEnabled())
+			if(this.endAvailableLinksCount == 1 && this.endLinkComboBox.isEnabled())
 			{
 				proceed = true;
-				ComboBoxModel cbmodel = endLinkComboBox.getModel();
+				ComboBoxModel cbmodel = this.endLinkComboBox.getModel();
 				for (int i = 0; i < cbmodel.getSize(); i++) 
 				{
-					Object or = (Object )cbmodel.getElementAt(i);
-					if(!or.equals(stubObject))
+					Object or = cbmodel.getElementAt(i);
+					if(!or.equals(this.stubObject))
 					{
 						cbmodel.setSelectedItem(or);
 						break;

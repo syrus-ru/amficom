@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
 
 public final class MapLinkPane
 		extends JPanel 
@@ -54,50 +55,50 @@ public final class MapLinkPane
 	public void setLogicalNetLayer(LogicalNetLayer lnl)
 	{
 		this.lnl = lnl;
-		gPanel.setLogicalNetLayer(lnl);
-		bPanel.setLogicalNetLayer(lnl);
+		this.gPanel.setLogicalNetLayer(lnl);
+		this.bPanel.setLogicalNetLayer(lnl);
 	}
 
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		return lnl;
+		return this.lnl;
 	}
 
 	private void jbInit()
 	{
 		this.setLayout(new BorderLayout());
-		this.add(tabbedPane, BorderLayout.CENTER);
+		this.add(this.tabbedPane, BorderLayout.CENTER);
 
-		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		this.tabbedPane.setTabPlacement(SwingConstants.TOP);
 
-		tabbedPane.add(gPanel.getName(), gPanel);
-		tabbedPane.add(bPanel.getName(), bPanel);
+		this.tabbedPane.add(this.gPanel.getName(), this.gPanel);
+		this.tabbedPane.add(this.bPanel.getName(), this.bPanel);
 	}
 
 	public Object getObject()
 	{
-		return maplink;
+		return this.maplink;
 	}
 
 	public void setObject(Object or)
 	{
 		this.maplink = (PhysicalLink)or;
 
-		gPanel.setObject(maplink);
-		bPanel.setObject(maplink);
+		this.gPanel.setObject(this.maplink);
+		this.bPanel.setObject(this.maplink);
 	}
 
 	public void setContext(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-		gPanel.setContext(aContext);
-		bPanel.setContext(aContext);
+		this.gPanel.setContext(aContext);
+		this.bPanel.setContext(aContext);
 	}
 
 	public boolean modify()
 	{
-		if(gPanel.modify()
-			&& bPanel.modify())
+		if(this.gPanel.modify()
+			&& this.bPanel.modify())
 		{
 //			Dispatcher disp  = aContext.getDispatcher();
 //			if(disp != null)
@@ -113,8 +114,8 @@ public final class MapLinkPane
 
 	public boolean cancel()
 	{
-		gPanel.cancel();
-		bPanel.cancel();
+		this.gPanel.cancel();
+		this.bPanel.cancel();
 		return true;
 	}
 

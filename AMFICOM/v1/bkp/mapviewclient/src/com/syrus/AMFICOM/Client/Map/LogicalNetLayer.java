@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.44 2005/02/03 16:24:59 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.45 2005/02/07 16:09:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import java.util.Set;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.44 $, $Date: 2005/02/03 16:24:59 $
+ * @version $Revision: 1.45 $, $Date: 2005/02/07 16:09:25 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -334,6 +334,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	public void setContext(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
+
+		this.userId = new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().user_id);
 	}
 
 	/**
@@ -373,8 +375,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setMapView(" + mapView + ")");
 
-		this.userId = new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().user_id);
-		
 		if(this.animateThread != null)
 			this.animateThread.stopRunning();
 
@@ -1757,6 +1757,11 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		return com.syrus.AMFICOM.Client.Map.Controllers.MapViewController.getInstance(this);
 	}
 
+	/**
+	 * Получить идентификатор пользователя, от чьего имени создаются
+	 * новые объекты.
+	 * @return идентификатор пользователя
+	 */
 	public Identifier getUserId()
 	{
 		return this.userId;

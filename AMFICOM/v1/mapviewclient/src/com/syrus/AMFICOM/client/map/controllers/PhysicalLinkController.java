@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.6 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.7 2005/02/07 16:09:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import java.util.Iterator;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/07 16:09:26 $
  * @module mapviewclient_v1
  */
 public class PhysicalLinkController extends AbstractLinkController
@@ -318,7 +318,7 @@ public class PhysicalLinkController extends AbstractLinkController
 			return Integer.parseInt(ea.getValue());
 
 		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-		return ltc.getLineSize((PhysicalLinkType )plink.getType());
+		return ltc.getLineSize(getLogicalNetLayer().getUserId(), (PhysicalLinkType )plink.getType());
 	}
 
 	/**
@@ -339,7 +339,7 @@ public class PhysicalLinkController extends AbstractLinkController
 			return ea.getValue();
 
 		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-		return ltc.getStyle((PhysicalLinkType )plink.getType());
+		return ltc.getStyle(getLogicalNetLayer().getUserId(), (PhysicalLinkType )plink.getType());
 	}
 
 	/**
@@ -360,7 +360,7 @@ public class PhysicalLinkController extends AbstractLinkController
 			return LineComboBox.getStrokeByType(ea.getValue());
 
 		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-		return ltc.getStroke((PhysicalLinkType )plink.getType());
+		return ltc.getStroke(getLogicalNetLayer().getUserId(), (PhysicalLinkType )plink.getType());
 	}
 
 	/**
@@ -381,7 +381,7 @@ public class PhysicalLinkController extends AbstractLinkController
 			return new Color(Integer.parseInt(ea.getValue()));
 
 		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-		return ltc.getColor((PhysicalLinkType )plink.getType());
+		return ltc.getColor(getLogicalNetLayer().getUserId(), (PhysicalLinkType )plink.getType());
 	}
 
 	/**
@@ -402,7 +402,7 @@ public class PhysicalLinkController extends AbstractLinkController
 			return new Color(Integer.parseInt(ea.getValue()));
 
 		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-		return ltc.getAlarmedColor((PhysicalLinkType )plink.getType());
+		return ltc.getAlarmedColor(getLogicalNetLayer().getUserId(), (PhysicalLinkType )plink.getType());
 	}
 
 	/**
@@ -423,6 +423,6 @@ public class PhysicalLinkController extends AbstractLinkController
 			return Integer.parseInt(ea.getValue());
 
 		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-		return ltc.getAlarmedLineSize((PhysicalLinkType )plink.getType());
+		return ltc.getAlarmedLineSize(getLogicalNetLayer().getUserId(), (PhysicalLinkType )plink.getType());
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: DefaultMapEditorApplicationModelFactory.java,v 1.4 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: DefaultMapEditorApplicationModelFactory.java,v 1.5 2005/02/07 16:09:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,10 +19,9 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/26 13:32:01 $
- * @module
+ * @version $Revision: 1.5 $, $Date: 2005/02/07 16:09:25 $
+ * @module mapviewclient_v1
  * @author $Author: krupenn $
- * @see
  */
 public class DefaultMapEditorApplicationModelFactory
 		extends MapEditorApplicationModelFactory 

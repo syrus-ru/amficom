@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElementStrategy.java,v 1.10 2005/02/02 08:57:28 krupenn Exp $
+ * $Id: MapPhysicalLinkElementStrategy.java,v 1.11 2005/02/07 16:09:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import java.awt.Point;
 /**
  * Стратегия управления физической линией.
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/02/02 08:57:28 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/07 16:09:27 $
  * @module mapviewclient_v1
  */
 public final class MapPhysicalLinkElementStrategy extends MapStrategy 
@@ -40,7 +40,7 @@ public final class MapPhysicalLinkElementStrategy extends MapStrategy
 	 * Private constructor.
 	 */
 	private MapPhysicalLinkElementStrategy()
-	{
+	{//empty
 	}
 
 	/**
@@ -69,24 +69,24 @@ public final class MapPhysicalLinkElementStrategy extends MapStrategy
 
 		if ((actionMode == MapState.SELECT_ACTION_MODE))
 		{
-			MapElement mel = logicalNetLayer.getCurrentMapElement();
+			MapElement mel = super.logicalNetLayer.getCurrentMapElement();
 			if (mel instanceof Selection)
 			{
 				Selection sel = (Selection)mel;
-				sel.add(link);
+				sel.add(this.link);
 			}
 			else
 			{
-				Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
-				sel.addAll(logicalNetLayer.getSelectedElements());
-				logicalNetLayer.setCurrentMapElement(sel);
+				Selection sel = new Selection(super.logicalNetLayer.getMapView().getMap());
+				sel.addAll(super.logicalNetLayer.getSelectedElements());
+				super.logicalNetLayer.setCurrentMapElement(sel);
 			}
 		}//MapState.SELECT_ACTION_MODE
 		if ((actionMode != MapState.SELECT_ACTION_MODE) && (actionMode != MapState.MOVE_ACTION_MODE))
 		{
-			logicalNetLayer.deselectAll();
+			super.logicalNetLayer.deselectAll();
 		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
-		link.setSelected(true);
+		this.link.setSelected(true);
 	}
 }
 

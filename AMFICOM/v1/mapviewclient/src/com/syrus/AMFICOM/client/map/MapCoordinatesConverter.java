@@ -1,5 +1,5 @@
 /**
- * $Id: MapCoordinatesConverter.java,v 1.1 2004/12/22 16:20:46 krupenn Exp $
+ * $Id: MapCoordinatesConverter.java,v 1.2 2005/02/07 16:09:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,15 +12,15 @@
 package com.syrus.AMFICOM.Client.Map;
 
 import com.syrus.AMFICOM.map.DoublePoint;
+
 import java.awt.Point;
-import java.awt.geom.Point2D;
 
 /**
  * Конвертер географических и экранных координат для отображения элементов карты 
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/22 16:20:46 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/07 16:09:25 $
  * @module
  * @author $Author: krupenn $
  * @see

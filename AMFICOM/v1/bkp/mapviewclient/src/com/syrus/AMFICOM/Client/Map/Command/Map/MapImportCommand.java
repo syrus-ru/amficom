@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.19 2005/02/03 16:24:34 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.20 2005/02/07 16:09:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,8 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
+import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -50,7 +52,7 @@ import javax.swing.JDesktopPane;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.19 $, $Date: 2005/02/03 16:24:34 $
+ * @version $Revision: 1.20 $, $Date: 2005/02/07 16:09:25 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -89,96 +91,38 @@ public class MapImportCommand extends ImportCommand
 			
 		try
 		{
+			Map map = null;
 			System.out.println("Import map");
-	
-			Map map;
-			MapElement me;
-			ImportCommand.ImportObject importObject;
-			String type;
-			java.util.Map exportColumns;
 	
 			String fileName = ImportCommand.openFileForReading(MapPropertiesManager.getLastDirectory());
 			if(fileName == null)
 				return;
-			MapPropertiesManager.setLastDirectory(new File(fileName).getParent());
-			super.open(fileName);
+
+			File file = new File(fileName);
+			MapPropertiesManager.setLastDirectory(file.getParent());
+
+			String ext = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("."));
 	
-			importObject = super.readObject();
-			if(importObject == null)
-				return;
-			type = importObject.type;
-			exportColumns = importObject.exportColumns;
-
-			if(!type.equals(MAP_TYPE))
-				return;
-
-			correctCrossLinks(type, exportColumns);
-
-			Identifier userId = new Identifier(
-				aContext.getSessionInterface().getAccessIdentifier().user_id);
-
-			Identifier domainId = new Identifier(
-				aContext.getSessionInterface().getAccessIdentifier().domain_id);
-
-			map = Map.createInstance(userId, domainId, exportColumns);
-	
-			while(true)
+			if(ext == null)
 			{
-				importObject = super.readObject();
-				if(importObject == null)
-					break;
-				type = importObject.type;
-				exportColumns = importObject.exportColumns;
-
-				correctCrossLinks(type, exportColumns);
-	
-				if(type.equals(MARK_TYPE))
-				{
-					me = Mark.createInstance(userId, exportColumns);
-					map.addNode((Mark )me);
-				}
-				else
-				if(type.equals(NODELINK_TYPE))
-				{
-					me = NodeLink.createInstance(userId, exportColumns);
-					map.addNodeLink((NodeLink )me);
-				}
-				else
-				if(type.equals(LINK_TYPE))
-				{
-					me = PhysicalLink.createInstance(userId, exportColumns);
-					map.addPhysicalLink((PhysicalLink )me);
-				}
-				else
-				if(type.equals(NODE_TYPE))
-				{
-					me = TopologicalNode.createInstance(userId, exportColumns);
-					map.addNode((TopologicalNode )me);
-				}
-				else
-				if(type.equals(COLLECTOR_TYPE))
-				{
-					me = Collector.createInstance(userId, exportColumns);
-					map.addCollector((Collector )me);
-				}
-				else
-				if(type.equals(SITE_TYPE))
-				{
-					me = SiteNode.createInstance(userId, exportColumns);
-					map.addNode((SiteNode )me);
-				}
-				else
-					return;
-	
-				me.setMap(map);
-
-				MapStorableObjectPool.putStorableObject((StorableObject )me);
+				ext = ".xml";
 			}
-	
-			super.close();
+			
+			if(ext.equals(".xml"))
+			{
+				map = loadXML(file);
+			}
+			else
+			if(ext.equals(".esf"))
+			{
+				map = loadESF(fileName);
+			}	
+
+			if(map == null)
+				return;
 
 			MapStorableObjectPool.putStorableObject(map);
-	
+
 			MapView mv = mapFrame.getMapView();
 			mapFrame.getMapViewer().getLogicalNetLayer().getMapViewController().removeSchemes();
 			mv.setMap(map);
@@ -203,6 +147,103 @@ public class MapImportCommand extends ImportCommand
 			e.printStackTrace();
 			setResult(Command.RESULT_NO);
 		}
+	}
+
+	protected Map loadXML(File file)
+	{
+		return null;
+	}
+
+	protected Map loadESF(String fileName)
+		throws DatabaseException,IllegalObjectEntityException
+	{
+		Map map;
+		MapElement me;
+		ImportCommand.ImportObject importObject;
+		String type;
+		java.util.Map exportColumns;
+
+		// make sure default types loaded
+		LinkTypeController.getPens(aContext);
+		NodeTypeController.getTopologicalProtos(aContext);
+
+		super.open(fileName);
+
+		importObject = super.readObject();
+		if(importObject == null)
+			return null;
+		type = importObject.type;
+		exportColumns = importObject.exportColumns;
+
+		if(!type.equals(MAP_TYPE))
+			return null;
+
+		correctCrossLinks(type, exportColumns);
+
+		Identifier userId = new Identifier(
+			aContext.getSessionInterface().getAccessIdentifier().user_id);
+
+		Identifier domainId = new Identifier(
+			aContext.getSessionInterface().getAccessIdentifier().domain_id);
+
+		map = Map.createInstance(userId, domainId, exportColumns);
+
+		while(true)
+		{
+			importObject = super.readObject();
+			if(importObject == null)
+				break;
+			type = importObject.type;
+			exportColumns = importObject.exportColumns;
+
+			correctCrossLinks(type, exportColumns);
+
+			if(type.equals(MARK_TYPE))
+			{
+				me = Mark.createInstance(userId, exportColumns);
+				map.addNode((Mark )me);
+			}
+			else
+			if(type.equals(NODELINK_TYPE))
+			{
+				me = NodeLink.createInstance(userId, exportColumns);
+				map.addNodeLink((NodeLink )me);
+			}
+			else
+			if(type.equals(LINK_TYPE))
+			{
+				me = PhysicalLink.createInstance(userId, exportColumns);
+				map.addPhysicalLink((PhysicalLink )me);
+			}
+			else
+			if(type.equals(NODE_TYPE))
+			{
+				me = TopologicalNode.createInstance(userId, exportColumns);
+				map.addNode((TopologicalNode )me);
+			}
+			else
+			if(type.equals(COLLECTOR_TYPE))
+			{
+				me = Collector.createInstance(userId, exportColumns);
+				map.addCollector((Collector )me);
+			}
+			else
+			if(type.equals(SITE_TYPE))
+			{
+				me = SiteNode.createInstance(userId, exportColumns);
+				map.addNode((SiteNode )me);
+			}
+			else
+				return null;
+
+			me.setMap(map);
+
+			MapStorableObjectPool.putStorableObject((StorableObject )me);
+		}
+
+		super.close();
+
+		return map;
 	}
 
 	private void correctCrossLinks(String type, java.util.Map exportColumns)
@@ -305,4 +346,5 @@ public class MapImportCommand extends ImportCommand
 			exportColumns.put(field, value);
 		}	
 	}
+
 }

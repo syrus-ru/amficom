@@ -1,23 +1,10 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
+import java.util.HashMap;
+
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.Mark;
-import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.Marker;
-import com.syrus.AMFICOM.mapview.MeasurementPath;
-import com.syrus.AMFICOM.mapview.Selection;
-import com.syrus.AMFICOM.mapview.UnboundLink;
-import com.syrus.AMFICOM.mapview.VoidElement;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
-
-import java.util.HashMap;
 
 public final class MapPropsManager 
 {

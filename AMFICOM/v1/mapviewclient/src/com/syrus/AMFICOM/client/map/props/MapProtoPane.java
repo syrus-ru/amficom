@@ -81,28 +81,28 @@ public final class MapProtoPane
 
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		return lnl;
+		return this.lnl;
 	}
 
 	private void jbInit()
 	{
-		this.setLayout(gridBagLayout1);
+		this.setLayout(this.gridBagLayout1);
 		this.setName(LangModel.getString("Properties"));
 
-		nameLabel.setText(LangModelMap.getString("Name"));
-		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.nameLabel.setText(LangModelMap.getString("Name"));
+		this.nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		descLabel.setText(LangModelMap.getString("Description"));
-		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.descLabel.setText(LangModelMap.getString("Description"));
+		this.descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		imageLabel.setText(LangModelMap.getString("Image"));
-		imageLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.imageLabel.setText(LangModelMap.getString("Image"));
+		this.imageLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		imagePanel.setLayout(new BorderLayout());
+		this.imagePanel.setLayout(new BorderLayout());
 
-		imageButton.setText(LangModelMap.getString("Change"));
-		imageButton.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		imageButton.addActionListener(new ActionListener()
+		this.imageButton.setText(LangModelMap.getString("Change"));
+		this.imageButton.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.imageButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -110,13 +110,13 @@ public final class MapProtoPane
 				}
 			});
 
-		this.add(nameLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(nameTextField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(imageLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(imageButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(imagePanel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 1, 1, 2, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(descLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(descTextArea, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(this.nameLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.nameTextField, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.imageLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.imageButton, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.imagePanel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 1, 1, 2, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.descLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.descTextArea, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 	}
 
 	public Object getObject()
@@ -126,33 +126,33 @@ public final class MapProtoPane
 
 	public void setObject(Object objectResource)
 	{
-		proto = (SiteNodeType)objectResource;
-		if(proto == null)
+		this.proto = (SiteNodeType)objectResource;
+		if(this.proto == null)
 		{
-			nameTextField.setEnabled(false);
-			nameTextField.setText("");
-			descTextArea.setEnabled(false);
-			descTextArea.setText("");
+			this.nameTextField.setEnabled(false);
+			this.nameTextField.setText("");
+			this.descTextArea.setEnabled(false);
+			this.descTextArea.setText("");
 
-			imageId = null;
-			imagePanel.removeAll();
-			imageButton.setEnabled(false);
+			this.imageId = null;
+			this.imagePanel.removeAll();
+			this.imageButton.setEnabled(false);
 		}
 		else
 		{
-			nameTextField.setEnabled(true);
-			nameTextField.setText(proto.getName());
-			descTextArea.setEnabled(true);
-			descTextArea.setText(proto.getDescription());
+			this.nameTextField.setEnabled(true);
+			this.nameTextField.setText(this.proto.getName());
+			this.descTextArea.setEnabled(true);
+			this.descTextArea.setText(this.proto.getDescription());
 
-			imageId = proto.getImageId();
-			imagePanel.removeAll();
+			this.imageId = this.proto.getImageId();
+			this.imagePanel.removeAll();
 
 			Image im;
 			try
 			{
 				AbstractImageResource imageResource = (AbstractImageResource )
-					ResourceStorableObjectPool.getStorableObject(imageId, true);
+					ResourceStorableObjectPool.getStorableObject(this.imageId, true);
 				
 				ImageIcon icon = null;
 
@@ -179,9 +179,9 @@ public final class MapProtoPane
 				return;
 			}
 
-			imagePanel.add(new JLabel(new ImageIcon(im)));
-			imagePanel.revalidate();
-			imageButton.setEnabled(true);
+			this.imagePanel.add(new JLabel(new ImageIcon(im)));
+			this.imagePanel.revalidate();
+			this.imageButton.setEnabled(true);
 		}
 	}
 
@@ -190,14 +190,14 @@ public final class MapProtoPane
 		this.aContext = aContext;
 	}
 
-	private void changeImage()
+	void changeImage()
 	{
-		ImagesDialog frame = new ImagesDialog(aContext);
+		ImagesDialog frame = new ImagesDialog(this.aContext);
 		
 		try
 		{
 			AbstractImageResource imageResource = (AbstractImageResource )
-				ResourceStorableObjectPool.getStorableObject(imageId, true);
+				ResourceStorableObjectPool.getStorableObject(this.imageId, true);
 			frame.setImageResource((BitmapImageResource )imageResource);
 		}
 		catch (CommunicationException e)
@@ -222,9 +222,9 @@ public final class MapProtoPane
 		frame.setVisible(true);
 		if(frame.ret_code == 1)
 		{
-			imagePanel.removeAll();
+			this.imagePanel.removeAll();
 			AbstractImageResource ir = frame.getImageResource();
-			imageId = ir.getId();
+			this.imageId = ir.getId();
 			ImageIcon icon;
 
 			if(ir instanceof FileImageResource)
@@ -239,8 +239,8 @@ public final class MapProtoPane
 
 			
 			Image im = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-			imagePanel.add(new JLabel(new ImageIcon(im)));
-			imagePanel.revalidate();
+			this.imagePanel.add(new JLabel(new ImageIcon(im)));
+			this.imagePanel.revalidate();
 		}
 	}
 
@@ -248,9 +248,9 @@ public final class MapProtoPane
 	{
 		try 
 		{
-			proto.setName(nameTextField.getText());
-			proto.setDescription(descTextArea.getText());
-			proto.setImageId(imageId);
+			this.proto.setName(this.nameTextField.getText());
+			this.proto.setDescription(this.descTextArea.getText());
+			this.proto.setImageId(this.imageId);
 			return true;
 		} 
 		catch (Exception ex) 

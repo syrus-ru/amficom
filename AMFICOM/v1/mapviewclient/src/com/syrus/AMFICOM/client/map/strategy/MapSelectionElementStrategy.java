@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.13 2005/02/02 08:57:28 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.14 2005/02/07 16:09:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import java.awt.Point;
 /**
  * Стратегия управления выделенными объектами.
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/02/02 08:57:28 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/07 16:09:27 $
  * @module mapviewclient_v1
  */
 public final class MapSelectionElementStrategy extends MapStrategy 
@@ -48,7 +48,7 @@ public final class MapSelectionElementStrategy extends MapStrategy
 	 * Private constructor.
 	 */
 	private MapSelectionElementStrategy()
-	{
+	{//empty
 	}
 
 	/**
@@ -75,33 +75,33 @@ public final class MapSelectionElementStrategy extends MapStrategy
 	{
 		int actionMode = mapState.getActionMode();
 
-		MapElement mel = logicalNetLayer.getMapElementAtPoint(point);
+		MapElement mel = super.logicalNetLayer.getMapElementAtPoint(point);
 		if ((actionMode == MapState.SELECT_ACTION_MODE))
 		{
 			if (mel instanceof VoidElement)
 			{
-				logicalNetLayer.deselectAll();
-				logicalNetLayer.setCurrentMapElement(mel);
+				super.logicalNetLayer.deselectAll();
+				super.logicalNetLayer.setCurrentMapElement(mel);
 			}//mel instanceof VoidElement
 			else
 			{
 				if (mel.isSelected())
 				{
 					mel.setSelected(false);
-					selection.remove(mel);
-					if (selection.getElements().size() == 0)
+					this.selection.remove(mel);
+					if (this.selection.getElements().size() == 0)
 					{
-						logicalNetLayer.setCurrentMapElement(com.syrus.AMFICOM.mapview.VoidElement.getInstance(logicalNetLayer.getMapView()));
+						super.logicalNetLayer.setCurrentMapElement(com.syrus.AMFICOM.mapview.VoidElement.getInstance(super.logicalNetLayer.getMapView()));
 					}
-					else if (selection.getElements().size() == 1)
+					else if (this.selection.getElements().size() == 1)
 					{
-						logicalNetLayer.setCurrentMapElement((MapElement)selection.getElements().get(0));
+						super.logicalNetLayer.setCurrentMapElement((MapElement)this.selection.getElements().get(0));
 					}
 				}// mel.isSelected()
 				else
 				{
 					mel.setSelected(true);
-					selection.add(mel);
+					this.selection.add(mel);
 				}// ! mel.isSelected()
 			}// ! mel instanceof VoidElement
 		}//MapState.SELECT_ACTION_MODE
@@ -109,15 +109,15 @@ public final class MapSelectionElementStrategy extends MapStrategy
 		{
 			if (mel instanceof VoidElement)
 			{
-				logicalNetLayer.deselectAll();
-				logicalNetLayer.setCurrentMapElement(mel);
+				super.logicalNetLayer.deselectAll();
+				super.logicalNetLayer.setCurrentMapElement(mel);
 			}
 			else
 			{
-				if (!selection.getElements().contains(mel))
+				if (!this.selection.getElements().contains(mel))
 				{
-					logicalNetLayer.deselectAll();
-					logicalNetLayer.setCurrentMapElement(mel);
+					super.logicalNetLayer.deselectAll();
+					super.logicalNetLayer.setCurrentMapElement(mel);
 					mel.setSelected(true);
 				}
 			}
@@ -133,14 +133,14 @@ public final class MapSelectionElementStrategy extends MapStrategy
 
 		if (actionMode == MapState.MOVE_ACTION_MODE)
 		{
-			if (aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
+			if (super.aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 			{
-				if (command == null)
+				if (this.command == null)
 				{
-					command = new MoveSelectionCommandBundle(logicalNetLayer.getStartPoint());
-					((MoveSelectionCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
+					this.command = new MoveSelectionCommandBundle(super.logicalNetLayer.getStartPoint());
+					((MoveSelectionCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
 				}
-				command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
+				this.command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
 			}
 		}//MapState.MOVE_ACTION_MODE
 	}
@@ -154,9 +154,9 @@ public final class MapSelectionElementStrategy extends MapStrategy
 
 		if (actionMode == MapState.MOVE_ACTION_MODE)
 		{
-			logicalNetLayer.getCommandList().add(command);
-			logicalNetLayer.getCommandList().execute();
-			command = null;
+			super.logicalNetLayer.getCommandList().add(this.command);
+			super.logicalNetLayer.getCommandList().execute();
+			this.command = null;
 		}//MapState.MOVE_ACTION_MODE
 		mapState.setActionMode(MapState.NULL_ACTION_MODE);
 	}

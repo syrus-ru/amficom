@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.15 2005/02/02 08:57:28 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.16 2005/02/07 16:09:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import java.util.Iterator;
 /**
  * Стратегия управления топологическим узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/02/02 08:57:28 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/07 16:09:27 $
  * @module mapviewclient_v1
  */
 public final class MapPhysicalNodeElementStrategy extends MapStrategy 
@@ -58,7 +58,7 @@ public final class MapPhysicalNodeElementStrategy extends MapStrategy
 	 * Private constructor.
 	 */
 	private MapPhysicalNodeElementStrategy()
-	{
+	{//empty
 	}
 
 	/**
@@ -77,7 +77,7 @@ public final class MapPhysicalNodeElementStrategy extends MapStrategy
 
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
 	{
-		this.logicalNetLayer = logicalNetLayer;
+		super.logicalNetLayer = logicalNetLayer;
 		this.aContext = logicalNetLayer.getContext();
 	}
 
@@ -90,24 +90,24 @@ public final class MapPhysicalNodeElementStrategy extends MapStrategy
 
 		if ((actionMode == MapState.SELECT_ACTION_MODE))
 		{
-			MapElement mel = logicalNetLayer.getCurrentMapElement();
+			MapElement mel = super.logicalNetLayer.getCurrentMapElement();
 			if (mel instanceof Selection)
 			{
 				Selection sel = (Selection)mel;
-				sel.add(node);
+				sel.add(this.node);
 			}
 			else
 			{
-				Selection sel = new Selection(node.getMap());
-				sel.addAll(logicalNetLayer.getSelectedElements());
-				logicalNetLayer.setCurrentMapElement(sel);
+				Selection sel = new Selection(this.node.getMap());
+				sel.addAll(super.logicalNetLayer.getSelectedElements());
+				super.logicalNetLayer.setCurrentMapElement(sel);
 			}
 		}//MapState.SELECT_ACTION_MODE
 		if ((actionMode != MapState.SELECT_ACTION_MODE) && (actionMode != MapState.MOVE_ACTION_MODE))
 		{
-			logicalNetLayer.deselectAll();
+			super.logicalNetLayer.deselectAll();
 		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
-		node.setSelected(true);
+		this.node.setSelected(true);
 	}
 
 	/**
@@ -120,40 +120,40 @@ public final class MapPhysicalNodeElementStrategy extends MapStrategy
 
 		if (operationMode == MapState.MOVE_FIXDIST)
 		{
-			if (command == null)
+			if (this.command == null)
 			{
-				command = new MoveFixedDistanceCommand(point, logicalNetLayer.getFixedNode(), node);
-				((MoveSelectionCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
+				this.command = new MoveFixedDistanceCommand(point, super.logicalNetLayer.getFixedNode(), this.node);
+				((MoveSelectionCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
 			}
-			command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
+			this.command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
 		}//MapState.MOVE_FIXDIST
 		else if (actionMode == MapState.MOVE_ACTION_MODE)
 		{
-			if (aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
+			if (super.aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 			{
-				if (command == null)
+				if (this.command == null)
 				{
-					command = new MoveSelectionCommandBundle(logicalNetLayer.getStartPoint());
-					((MoveSelectionCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
+					this.command = new MoveSelectionCommandBundle(super.logicalNetLayer.getStartPoint());
+					((MoveSelectionCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
 				}
-				command.setParameter(com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle.END_POINT, point);
+				this.command.setParameter(com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle.END_POINT, point);
 			}
-			node.setCanBind(false);
-			for (Iterator it = node.getMap().getSiteNodes().iterator();it.hasNext();)
+			this.node.setCanBind(false);
+			for (Iterator it = this.node.getMap().getSiteNodes().iterator();it.hasNext();)
 			{
 				SiteNode sit = (SiteNode)it.next();
-				SiteNodeController snc = (SiteNodeController)logicalNetLayer.getMapViewController().getController(sit);
+				SiteNodeController snc = (SiteNodeController)super.logicalNetLayer.getMapViewController().getController(sit);
 				if (!(sit instanceof UnboundNode))
 					if (snc.isMouseOnElement(sit, point))
 					{
-						node.setCanBind(true);
+						this.node.setCanBind(true);
 						break;
 					}
 			}
 		}//MapState.MOVE_ACTION_MODE
 		else if (actionMode == MapState.NULL_ACTION_MODE)
 		{
-			if (!node.isActive())
+			if (!this.node.isActive())
 			{
 				mapState.setActionMode(MapState.DRAW_LINES_ACTION_MODE);
 			}
@@ -170,32 +170,32 @@ public final class MapPhysicalNodeElementStrategy extends MapStrategy
 
 		if (operationMode == MapState.MOVE_FIXDIST)
 		{
-			logicalNetLayer.getCommandList().add(command);
-			logicalNetLayer.getCommandList().execute();
-			command = null;
+			super.logicalNetLayer.getCommandList().add(this.command);
+			super.logicalNetLayer.getCommandList().execute();
+			this.command = null;
 		}//MapState.MOVE_FIXDIST
 		else if (actionMode == MapState.MOVE_ACTION_MODE)
 		{
-			logicalNetLayer.getCommandList().add(command);
-			logicalNetLayer.getCommandList().execute();
-			command = null;
-			PhysicalLink link = node.getPhysicalLink();
+			super.logicalNetLayer.getCommandList().add(this.command);
+			super.logicalNetLayer.getCommandList().execute();
+			this.command = null;
+			PhysicalLink link = this.node.getPhysicalLink();
 			if (link instanceof UnboundLink)
 			{
-				if (node.isCanBind())
+				if (this.node.isCanBind())
 				{
-					for (Iterator it = node.getMap().getSiteNodes().iterator();it.hasNext();)
+					for (Iterator it = this.node.getMap().getSiteNodes().iterator();it.hasNext();)
 					{
 						SiteNode site = (SiteNode)it.next();
-						SiteNodeController snc = (SiteNodeController)logicalNetLayer.getMapViewController().getController(site);
+						SiteNodeController snc = (SiteNodeController)super.logicalNetLayer.getMapViewController().getController(site);
 						if (!(site instanceof UnboundNode))
 							if (snc.isMouseOnElement(site, point))
 							{
-								command = new BindPhysicalNodeToSiteCommandBundle(node, site);
-								((BindPhysicalNodeToSiteCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
-								logicalNetLayer.getCommandList().add(command);
-								logicalNetLayer.getCommandList().execute();
-								command = null;
+								this.command = new BindPhysicalNodeToSiteCommandBundle(this.node, site);
+								((BindPhysicalNodeToSiteCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
+								super.logicalNetLayer.getCommandList().add(this.command);
+								super.logicalNetLayer.getCommandList().execute();
+								this.command = null;
 								break;
 							}
 					}
@@ -205,15 +205,15 @@ public final class MapPhysicalNodeElementStrategy extends MapStrategy
 		else if (actionMode == MapState.DRAW_LINES_ACTION_MODE)
 		{
 			mapState.setActionMode(MapState.NULL_ACTION_MODE);
-			if (command == null)
+			if (this.command == null)
 			{
-				command = new CreateNodeLinkCommandBundle(node);
-				((CreateNodeLinkCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
+				this.command = new CreateNodeLinkCommandBundle(this.node);
+				((CreateNodeLinkCommandBundle)this.command).setLogicalNetLayer(super.logicalNetLayer);
 			}
-			command.setParameter(CreateNodeLinkCommandBundle.END_POINT, point);
-			logicalNetLayer.getCommandList().add(command);
-			logicalNetLayer.getCommandList().execute();
-			command = null;
+			this.command.setParameter(CreateNodeLinkCommandBundle.END_POINT, point);
+			super.logicalNetLayer.getCommandList().add(this.command);
+			super.logicalNetLayer.getCommandList().execute();
+			this.command = null;
 		}//MapState.DRAW_LINES_ACTION_MODE
 
 		mapState.setActionMode(MapState.NULL_ACTION_MODE);

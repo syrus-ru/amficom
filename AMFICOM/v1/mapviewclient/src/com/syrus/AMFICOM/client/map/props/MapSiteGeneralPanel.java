@@ -1,32 +1,29 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
-import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
-
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.geom.Point2D;
-
 import java.util.List;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
+import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
 
 public class MapSiteGeneralPanel
 		extends JPanel 
@@ -81,7 +78,7 @@ public class MapSiteGeneralPanel
 
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		return lnl;
+		return this.lnl;
 	}
 
 	private void jbInit()
@@ -89,51 +86,51 @@ public class MapSiteGeneralPanel
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		typeComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
+		this.typeComboBox = new ObjComboBox(controller, SimpleMapElementController.KEY_NAME);
 
-		this.setLayout(gridBagLayout1);
+		this.setLayout(this.gridBagLayout1);
 		this.setName(LangModel.getString("Properties"));
 
-		nameLabel.setText(LangModelMap.getString("Name"));
-		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.nameLabel.setText(LangModelMap.getString("Name"));
+		this.nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		typeLabel.setText(LangModelMap.getString("Type"));
-		typeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.typeLabel.setText(LangModelMap.getString("Type"));
+		this.typeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		longLabel.setText(LangModelMap.getString("Longitude"));
-		longLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.longLabel.setText(LangModelMap.getString("Longitude"));
+		this.longLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		latLabel.setText(LangModelMap.getString("Latitude"));
-		latLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.latLabel.setText(LangModelMap.getString("Latitude"));
+		this.latLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		descLabel.setText(LangModelMap.getString("Description"));
-		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+		this.descLabel.setText(LangModelMap.getString("Description"));
+		this.descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		addressPanel.setLayout(gridBagLayout2);
-		cityLabel.setText(LangModelMap.getString("City"));
-		streetLabel.setText(LangModelMap.getString("Street"));
-		buildingLabel.setText(LangModelMap.getString("Building"));
-		addressLabel.setText(LangModelMap.getString("Address"));
+		this.addressPanel.setLayout(this.gridBagLayout2);
+		this.cityLabel.setText(LangModelMap.getString("City"));
+		this.streetLabel.setText(LangModelMap.getString("Street"));
+		this.buildingLabel.setText(LangModelMap.getString("Building"));
+		this.addressLabel.setText(LangModelMap.getString("Address"));
 
-		addressPanel.add(cityLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
-		addressPanel.add(cityTextField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		addressPanel.add(streetLabel, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		addressPanel.add(streetTextField, ReusedGridBagConstraints.get(3, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		addressPanel.add(buildingLabel, ReusedGridBagConstraints.get(4, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		addressPanel.add(buildingTextField, ReusedGridBagConstraints.get(5, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.addressPanel.add(this.cityLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
+		this.addressPanel.add(this.cityTextField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.addressPanel.add(this.streetLabel, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		this.addressPanel.add(this.streetTextField, ReusedGridBagConstraints.get(3, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.addressPanel.add(this.buildingLabel, ReusedGridBagConstraints.get(4, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		this.addressPanel.add(this.buildingTextField, ReusedGridBagConstraints.get(5, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 
-		this.add(nameLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(nameTextField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(typeLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(typeComboBox, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(longLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(longTextField, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(latLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(latTextField, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(addressLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(addressPanel, ReusedGridBagConstraints.get(1, 4, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(descLabel, ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(descTextArea, ReusedGridBagConstraints.get(1, 5, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(this.nameLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.nameTextField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.typeLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.typeComboBox, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.longLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.longTextField, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.latLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.latTextField, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.addressLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.addressPanel, ReusedGridBagConstraints.get(1, 4, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(this.descLabel, ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(this.descTextArea, ReusedGridBagConstraints.get(1, 5, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 	}
 
 	public Object getObject()
@@ -143,49 +140,49 @@ public class MapSiteGeneralPanel
 
 	public void setObject(Object objectResource)
 	{
-		site = (SiteNode)objectResource;
+		this.site = (SiteNode)objectResource;
 		
-		typeComboBox.removeAllItems();
+		this.typeComboBox.removeAllItems();
 
-		if(site == null)
+		if(this.site == null)
 		{
-			nameTextField.setEnabled(false);
-			nameTextField.setText("");
-			typeComboBox.setEnabled(false);
-			descTextArea.setEnabled(false);
-			descTextArea.setText("");
+			this.nameTextField.setEnabled(false);
+			this.nameTextField.setText("");
+			this.typeComboBox.setEnabled(false);
+			this.descTextArea.setEnabled(false);
+			this.descTextArea.setText("");
 
-			longTextField.setEnabled(false);
-			longTextField.setText("");
-			latTextField.setEnabled(false);
-			latTextField.setText("");
+			this.longTextField.setEnabled(false);
+			this.longTextField.setText("");
+			this.latTextField.setEnabled(false);
+			this.latTextField.setText("");
 
-			cityTextField.setText("");
-			streetTextField.setText("");
-			buildingTextField.setText("");
+			this.cityTextField.setText("");
+			this.streetTextField.setText("");
+			this.buildingTextField.setText("");
 		}
 		else
 		{
-			nameTextField.setEnabled(true);
-			nameTextField.setText(site.getName());
+			this.nameTextField.setEnabled(true);
+			this.nameTextField.setText(this.site.getName());
 
 			List protos = NodeTypeController.getTopologicalProtos(getLogicalNetLayer().getContext());
 
-			typeComboBox.setEnabled(true);
-			typeComboBox.addElements(protos);
-			typeComboBox.setSelectedItem(site.getType());
+			this.typeComboBox.setEnabled(true);
+			this.typeComboBox.addElements(protos);
+			this.typeComboBox.setSelectedItem(this.site.getType());
 
-			descTextArea.setEnabled(true);
-			descTextArea.setText(site.getDescription());
+			this.descTextArea.setEnabled(true);
+			this.descTextArea.setText(this.site.getDescription());
 
-			longTextField.setEnabled(true);
-			longTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(site.getLocation().getX()));
-			latTextField.setEnabled(true);
-			latTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(site.getLocation().getY()));
+			this.longTextField.setEnabled(true);
+			this.longTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(this.site.getLocation().getX()));
+			this.latTextField.setEnabled(true);
+			this.latTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(this.site.getLocation().getY()));
 
-			cityTextField.setText(site.getCity());
-			streetTextField.setText(site.getStreet());
-			buildingTextField.setText(site.getBuilding());
+			this.cityTextField.setText(this.site.getCity());
+			this.streetTextField.setText(this.site.getStreet());
+			this.buildingTextField.setText(this.site.getBuilding());
 		}
 	}
 
@@ -197,31 +194,25 @@ public class MapSiteGeneralPanel
 	{
 		try 
 		{
-			site.setName(nameTextField.getText());
-			site.setType((SiteNodeType )typeComboBox.getSelectedItem());
-			site.setDescription(descTextArea.getText());
+			this.site.setName(this.nameTextField.getText());
+			this.site.setType((SiteNodeType )this.typeComboBox.getSelectedItem());
+			this.site.setDescription(this.descTextArea.getText());
 			
-//			LogicalNetLayer lnl = (LogicalNetLayer )(site.getMap().getConverter());
-			
-//			SiteNodeController snc = (SiteNodeController )lnl.getMapViewController().getController(site);
-//			snc.updateScaleCoefficient(site);
-//			site.setScaleCoefficient(lnl.getDefaultScale() / lnl.getCurrentScale());
-
 			try 
 			{
-				double x = Double.parseDouble(longTextField.getText());
-				double y = Double.parseDouble(latTextField.getText());
+				double x = Double.parseDouble(this.longTextField.getText());
+				double y = Double.parseDouble(this.latTextField.getText());
 				
-				site.setLocation(new DoublePoint(x, y));
+				this.site.setLocation(new DoublePoint(x, y));
 			} 
 			catch (NumberFormatException ex) 
 			{
 				System.out.println(ex.getMessage());
 			} 
 
-			site.setCity(cityTextField.getText());
-			site.setStreet(streetTextField.getText());
-			site.setBuilding(buildingTextField.getText());
+			this.site.setCity(this.cityTextField.getText());
+			this.site.setStreet(this.streetTextField.getText());
+			this.site.setBuilding(this.buildingTextField.getText());
 			return true;
 		} 
 		catch (Exception ex) 

@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.10 2005/01/21 16:19:57 krupenn Exp $
+ * $Id: MapExportCommand.java,v 1.11 2005/02/07 16:09:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,9 +16,13 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.XMLMapObjectLoader;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.io.File;
@@ -33,7 +37,7 @@ import javax.swing.JDesktopPane;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.10 $, $Date: 2005/01/21 16:19:57 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/07 16:09:25 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see 
@@ -86,12 +90,60 @@ public class MapExportCommand extends ExportCommand
         System.out.println("Closing map");
 
 		Map map = mapFrame.getMap();
-		java.util.Map exportColumns = null;
 		
 		String fileName = ExportCommand.openFileForWriting(MapPropertiesManager.getLastDirectory());
 		if(fileName == null)
 			return;
-		MapPropertiesManager.setLastDirectory(new File(fileName).getParent());
+		File file = new File(fileName);
+		MapPropertiesManager.setLastDirectory(file.getParent());
+		
+		String ext = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("."));
+
+		if(ext == null)
+		{
+			ext = ".xml";
+		}
+		
+		if(ext.equals(".xml"))
+		{
+			saveXML(map, file);
+		}
+		else
+		if(ext.equals(".esf"))
+		{
+			saveESF(map, fileName);
+		}
+//        mapFrame.setTitle(LangModelMap.getString("Map"));
+		setResult(Command.RESULT_OK);
+	}
+
+	protected void saveXML(Map map, File file)
+	{
+//		XMLMapObjectLoader xmlLoader = new XMLMapObjectLoader(new File(fileName));
+		XMLMapObjectLoader xmlLoader = new XMLMapObjectLoader(file);
+		
+		try
+		{
+			xmlLoader.saveMap(map, true);
+		}
+		catch (VersionCollisionException e)
+		{
+			e.printStackTrace();
+		}
+		catch (CommunicationException e)
+		{
+			e.printStackTrace();
+		}
+		catch (DatabaseException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	protected void saveESF(Map map, String fileName)
+	{
+		java.util.Map exportColumns = null;
+
 		super.open(fileName);
 		
 		super.startObject(MAP_TYPE);
@@ -118,9 +170,5 @@ public class MapExportCommand extends ExportCommand
 		}
 		
 		super.close();
-
-//        mapFrame.setTitle(LangModelMap.getString("Map"));
-		setResult(Command.RESULT_OK);
 	}
-
 }

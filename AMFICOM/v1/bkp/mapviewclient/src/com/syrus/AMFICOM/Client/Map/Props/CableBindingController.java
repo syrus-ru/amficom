@@ -6,20 +6,19 @@
 
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.UnboundLink;
-import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import com.syrus.AMFICOM.mapview.CablePathBinding;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 
 public final class CableBindingController implements ObjectResourceController 
 {
@@ -87,7 +86,7 @@ public final class CableBindingController implements ObjectResourceController
 		if (object instanceof PhysicalLink) 
 		{
 			PhysicalLink link = (PhysicalLink)object;
-			CableChannelingItem cci = (CableChannelingItem )cablePath.getBinding().get(link);
+			CableChannelingItem cci = (CableChannelingItem )this.cablePath.getBinding().get(link);
 			if (key.equals(KEY_START_NODE))
 			{
 //				result = link.getStartNode().getName();
@@ -138,7 +137,7 @@ public final class CableBindingController implements ObjectResourceController
 		if (object instanceof PhysicalLink) 
 		{
 			PhysicalLink link = (PhysicalLink)object;
-			CableChannelingItem cci = (CableChannelingItem )cablePath.getBinding().get(link);
+			CableChannelingItem cci = (CableChannelingItem )this.cablePath.getBinding().get(link);
 			if (key.equals(KEY_START_SPARE))
 			{
 				if(cci.physicalLink() != null)
@@ -182,6 +181,6 @@ public final class CableBindingController implements ObjectResourceController
 
 	public CablePath getCablePath()
 	{
-		return cablePath;
+		return this.cablePath;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.6 2005/02/03 16:24:59 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.7 2005/02/07 16:09:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -56,19 +56,19 @@ import javax.swing.ImageIcon;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/03 16:24:59 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/07 16:09:25 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
 {
 	/**
-	 * Фаил откуда загружаются данные
+	 * Фаил откуда загружаются данные.
 	 */
 	protected static String iniFileName = "Map.properties";
 	
 	public static final String MAP_CLONED_IDS = "mapclonedids";
 
-	/** Список полей, которые должны быть в файле настроек */
+	/** Список полей, которые должны быть в файле настроек. */
 
 	protected static final String KEY_MAP_TYPE = "mapType";
 	protected static final String KEY_DATA_BASE_PATH = "dataBasePath";
@@ -91,7 +91,7 @@ public final class MapPropertiesManager
 	protected static final String MAPINFO_CONNECTION = "com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoConnection";
 	protected static final String MAPINFO_VIEWER = "com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer";
 
-	/* values read from inifile */
+	/* values read from inifile. */
 	protected static String mapType = OFX_TYPE;
 	protected static String dataBasePath = "";
 	protected static String dataBaseView = "";
@@ -102,7 +102,7 @@ public final class MapPropertiesManager
 	protected static String lastView = "";
 	protected static String lastDirectory = ".";
 
-	/* display constants */
+	/* display constants. */
 	public static final Color DEFAULT_TEXT_BACKGROUND = SystemColor.window;
 	public static final Color DEFAULT_TEXT_COLOR = SystemColor.controlText;
 	public static final Color DEFAULT_BORDER_COLOR = SystemColor.activeCaptionBorder;
@@ -139,7 +139,7 @@ public final class MapPropertiesManager
 	public static final double DEFAULT_SPARE_LENGTH = 1.5D;
 	public static final int DEFAULT_MOUSE_TOLERANCY = 3;
 
-	/* display variables */
+	/* display variables. */
 	protected static Color textBackground = DEFAULT_TEXT_BACKGROUND;
 	protected static Color textColor = DEFAULT_TEXT_COLOR;
 	protected static Font font = DEFAULT_FONT;
@@ -177,7 +177,7 @@ public final class MapPropertiesManager
 
 	protected static int mouseTolerancy = DEFAULT_MOUSE_TOLERANCY;
 
-	/* show modes */
+	/* show modes. */
 
 	/**
 	 * флаг рисования элемента тревожным цветом при наличии сигнала
@@ -188,22 +188,22 @@ public final class MapPropertiesManager
 	protected static boolean showAlarmState = false;
 
 	/**
-	 * флаг режима отображения топологических узлов
+	 * флаг режима отображения топологических узлов.
 	 */	
 	protected static boolean showPhysicalNodes = true;
 
 	/**
-	 * режим отображения длины
+	 * режим отображения длины.
 	 */
 	protected static boolean showLength = true;
 
 	/**
-	 * флаг отображения подписей к узлам
+	 * флаг отображения подписей к узлам.
 	 */	
 	protected static boolean showNodesNames = false;
 
 	/**
-	 * флаг отображения подписей к линиям
+	 * флаг отображения подписей к линиям.
 	 */	
 	protected static boolean showLinkNames = false;
 	
@@ -350,7 +350,7 @@ public final class MapPropertiesManager
 	}
 
 	/**
-	 * Установить значения из инициализационного файла
+	 * Установить значения из инициализационного файла.
 	 */
 	protected static void setFromIniFile(Properties properties)
 	{
@@ -370,7 +370,7 @@ public final class MapPropertiesManager
 	}
 
 	/**
-	 * установить значения по умолчанию
+	 * установить значения по умолчанию.
 	 */
 	protected static void setDefaults()
 	{
@@ -382,7 +382,7 @@ public final class MapPropertiesManager
 	}
 
 	/**
-	 * Сохранить текущие настройки отображения в файл
+	 * Сохранить текущие настройки отображения в файл.
 	 */
 	public static void saveIniFile()
 	{
@@ -403,7 +403,7 @@ public final class MapPropertiesManager
 		}
 	}
 
-	/** объекты, необходимые для отрисовки пиктограмм */
+	/** объекты, необходимые для отрисовки пиктограмм. */
 
     private static Component component = new Component() {};
     private static MediaTracker tracker = new MediaTracker(component);
@@ -487,7 +487,7 @@ public final class MapPropertiesManager
 	}
 
 	/**
-	 * обеспечивает подгрузку пиктограммы для мгновенного ее отображения
+	 * обеспечивает подгрузку пиктограммы для мгновенного ее отображения.
 	 */
     private static final void loadImage(Image image) 
 	{
@@ -509,7 +509,7 @@ public final class MapPropertiesManager
     }
 
 	/**
-	 * получить идентификатор для подгрузки пиктограммы
+	 * получить идентификатор для подгрузки пиктограммы.
 	 */
     private static final int getNextID() 
 	{
