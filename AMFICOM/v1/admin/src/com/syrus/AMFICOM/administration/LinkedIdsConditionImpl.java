@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.5 2005/02/09 15:44:23 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.6 2005/02/10 07:26:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.administration;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -18,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/09 15:44:23 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/10 07:26:37 $
  * @author $Author: bob $
  * @module admin_v1
  */
@@ -57,8 +56,7 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 			case ObjectEntities.MCM_ENTITY_CODE:
 				MCM mcm = (MCM) object;
 				/* if linked ids is kiss id */
-				List list = new LinkedList(mcm.getKISIds());
-				condition = super.conditionTest(list);
+				condition = super.conditionTest(mcm.getKISIds());
 				if (!condition)
 					condition = this.checkDomain(mcm);
 				break;

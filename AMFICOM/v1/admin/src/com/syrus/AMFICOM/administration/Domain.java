@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.4 2005/02/09 12:49:27 bob Exp $
+ * $Id: Domain.java,v 1.5 2005/02/10 07:26:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,31 +9,31 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/09 12:49:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/10 07:26:37 $
  * @author $Author: bob $
  * @module administration_v1
  */
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
+import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.Characterized;
-import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 
 public class Domain extends DomainMember implements Characterized {
 	private static final long serialVersionUID = 6401785674412391641L;
