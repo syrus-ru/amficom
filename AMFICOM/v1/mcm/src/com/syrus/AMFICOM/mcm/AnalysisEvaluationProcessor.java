@@ -69,8 +69,9 @@ public abstract class AnalysisEvaluationProcessor {
 
 		SetParameter[] arParameters = analysisManager.analyse();
 		Result analysisResult;
+		Identifier analysisResultId = MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULT_ENTITY);
 		try {
-			analysisResult = analysis.createResult(MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULT_ENTITY),
+			analysisResult = analysis.createResult(analysisResultId,
 																						 MeasurementControlModule.iAm.getUserId(),
 																						 measurementResult.getMeasurement(),
 																						 AlarmLevel.ALARM_LEVEL_NONE,
@@ -83,8 +84,9 @@ public abstract class AnalysisEvaluationProcessor {
 			
 		SetParameter[] erParameters = evaluationManager.evaluate();
 		Result evaluationResult;
+		Identifier evaluationResultId = MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULT_ENTITY);
 		try {
-			evaluationResult = evaluation.createResult(MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULT_ENTITY),
+			evaluationResult = evaluation.createResult(evaluationResultId,
 																								 MeasurementControlModule.iAm.getUserId(),
 																								 measurementResult.getMeasurement(),
 																								 evaluationManager.getAlarmLevel(),

@@ -73,7 +73,7 @@ $(LIBNAME): .mach
 	touch $@
 
 .mach:	.corba $(CLASSDIR)
-	$(JAVAC) $(JAVAC_FLAGS) -nowarn \
+	$(JAVAC) $(JAVAC_FLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationManager.java \
