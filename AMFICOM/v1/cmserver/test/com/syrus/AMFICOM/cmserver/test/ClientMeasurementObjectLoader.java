@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.16 2004/10/04 14:30:34 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.17 2004/10/05 14:29:20 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -50,6 +50,7 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementCondition_Transferable;
+import com.syrus.AMFICOM.measurement.corba.MeasurementSetupCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
@@ -63,7 +64,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/10/04 14:30:34 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/05 14:29:20 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -203,18 +204,34 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		}
 	}
 
-	public Analysis loadAnalysis(Identifier id) throws DatabaseException {
-		/**
-		 * FIXME method is not complete !
-		 */
-		throw new UnsupportedOperationException();
+	public Analysis loadAnalysis(Identifier id) throws DatabaseException, CommunicationException {
+        try {
+            return new Analysis(this.server.transmitAnalysis((Identifier_Transferable) id
+                    .getTransferable(), accessIdentifierTransferable));
+        } catch (CreateObjectException e) {
+            String msg = "ClientMeasurementObjectLoader.loadAnalysis | new Analysis(" + id.toString()
+                    + ")";
+            throw new RetrieveObjectException(msg, e);
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientMeasurementObjectLoader.loadAnalysis | server.transmitAnalysis("
+                    + id.toString() + ")";
+            throw new CommunicationException(msg, e);
+        }
 	}
 
-	public Evaluation loadEvaluation(Identifier id) throws DatabaseException {
-		/**
-		 * FIXME method is not complete !
-		 */
-		throw new UnsupportedOperationException();
+	public Evaluation loadEvaluation(Identifier id) throws DatabaseException, CommunicationException {
+        try {
+            return new Evaluation(this.server.transmitEvaluation((Identifier_Transferable) id
+                    .getTransferable(), accessIdentifierTransferable));
+        } catch (CreateObjectException e) {
+            String msg = "ClientMeasurementObjectLoader.loadEvaluation | new Evaluation(" + id.toString()
+                    + ")";
+            throw new RetrieveObjectException(msg, e);
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientMeasurementObjectLoader.loadEvaluation | server.transmitEvaluation("
+                    + id.toString() + ")";
+            throw new CommunicationException(msg, e);
+        }
 	}
 
 	public Test loadTest(Identifier id) throws RetrieveObjectException, CommunicationException {
@@ -364,17 +381,62 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     }
 
 	public List loadEvaluations(List ids) throws DatabaseException, CommunicationException {
-		/**
-		 * FIXME method is not complete !
-		 */
-		throw new UnsupportedOperationException();
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            Evaluation_Transferable[] transferables = this.server
+                    .transmitEvaluations(identifier_Transferables, accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new Evaluation(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }		
 	}
     
     public List loadEvaluationsButIds(StorableObjectCondition storableObjectCondition, List ids) throws DatabaseException, CommunicationException {
-        /**
-         * FIXME method is not complete !
-         */
-        throw new UnsupportedOperationException();
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            Evaluation_Transferable[] transferables;
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            if (storableObjectCondition instanceof DomainCondition) {
+                
+                transferables = this.server
+                .transmitEvaluationsButIdsCondition(identifier_Transferables,
+                                         accessIdentifierTransferable,
+                                         (DomainCondition_Transferable)storableObjectCondition.getTransferable());
+                
+            } else {
+                transferables = this.server
+                .transmitEvaluationsButIds(identifier_Transferables,
+                                         accessIdentifierTransferable);
+                if (storableObjectCondition != null && !(storableObjectCondition instanceof DomainCondition)) {
+                    Log.errorMessage("ClientMeasurementObjectLoader.loadEvaluationsButIds | " +
+                            "Class '" + storableObjectCondition.getClass().getName() + "' is not instanse of DomainCondition");
+                }
+            }
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new Evaluation(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
     }
 
 	public List loadEvaluationTypes(List ids) throws DatabaseException, CommunicationException {
@@ -579,19 +641,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
             }
             if (storableObjectCondition instanceof MeasurementSetupCondition) {
                 MeasurementSetupCondition measurementSetupCondition = (MeasurementSetupCondition)storableObjectCondition;
-                MeasurementType measurementType = measurementSetupCondition.getMeasurementType();               
-                MonitoredElement monitoredElement = measurementSetupCondition.getMonitoredElement();
-                if (measurementType!=null) {
-                    transferables = this.server
-                            .transmitMeasurementSetupsButIdsConditionMeasurement(identifier_Transferables,
+                transferables = this.server
+                            .transmitMeasurementSetupsButIdsCondition(identifier_Transferables,
                                                              accessIdentifierTransferable,
-                                                             (MeasurementType_Transferable) measurementType.getTransferable());
-                } else if (monitoredElement != null) {
-                    transferables = this.server
-                            .transmitMeasurementSetupsButIdsConditionMonitored(identifier_Transferables,
-                                                             accessIdentifierTransferable,
-                                                             (MonitoredElement_Transferable) monitoredElement.getTransferable());
-                }
+                                                             (MeasurementSetupCondition_Transferable) measurementSetupCondition.getTransferable());               
             } else {
                 transferables = this.server
                         .transmitMeasurementSetupsButIds(identifier_Transferables,
@@ -921,7 +974,17 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     }
     
     public void saveMeasurementType(MeasurementType measurementType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub        
+        MeasurementType_Transferable transferables = (MeasurementType_Transferable)measurementType.getTransferable();        
+        try {
+            this.server.receiveMeasurementType(transferables, force, accessIdentifierTransferable);         
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientMeasurementObjectLoader.saveMeasurementType| receiveMeasurementTypes";
+            
+            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+               throw new VersionCollisionException(msg, e);
+            
+            throw new CommunicationException(msg, e);       
+        }       
     }
 
      public void saveAnalysisType(AnalysisType analysisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
@@ -941,43 +1004,143 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     }
 
      public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         EvaluationType_Transferable transferables = (EvaluationType_Transferable)evaluationType.getTransferable();         
+         try {
+             this.server.receiveEvaluationType(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientMeasurementObjectLoader.saveEvaluationType | receiveEvaluationTypes";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveSet(Set set, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         Set_Transferable transferables = (Set_Transferable)set.getTransferable();         
+         try {
+             this.server.receiveSet(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientMeasurementObjectLoader.saveSet | receiveSets";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         MeasurementSetup_Transferable transferables = (MeasurementSetup_Transferable)measurementSetup.getTransferable();         
+         try {
+             this.server.receiveMeasurementSetup(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientMeasurementObjectLoader.saveMeasurementSetup | receiveMeasurementSetups";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveModeling(Modeling modeling, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         Modeling_Transferable transferables = (Modeling_Transferable)modeling.getTransferable();         
+         try {
+             this.server.receiveModeling(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientMeasurementObjectLoader.saveModeling | receiveModelings";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveMeasurement(Measurement measurement, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         Measurement_Transferable transferables = (Measurement_Transferable)measurement.getTransferable();         
+         try {
+             this.server.receiveMeasurement(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientMeasurementObjectLoader.saveMeasurement | receiveMeasurements";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveAnalysis(Analysis analysis, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         Analysis_Transferable transferables = (Analysis_Transferable)analysis.getTransferable();         
+         try {
+             this.server.receiveAnalysis(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientMeasurementObjectLoader.saveAnalysis | receiveAnalysiss";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveEvaluation(Evaluation evaluation, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         Evaluation_Transferable transferables = (Evaluation_Transferable)evaluation.getTransferable();         
+         try {
+             this.server.receiveEvaluation(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientMeasurementObjectLoader.saveEvaluation | receiveEvaluations";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveTest(Test test, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         Test_Transferable transferables = (Test_Transferable)test.getTransferable();         
+         try {
+             this.server.receiveTest(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientMeasurementObjectLoader.saveTest | receiveTests";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveResult(Result result, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         Result_Transferable transferables = (Result_Transferable)result.getTransferable();         
+         try {
+             this.server.receiveResult(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientMeasurementObjectLoader.saveResult | receiveResults";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-//    TODO auto generated stub
+         TemporalPattern_Transferable transferables = (TemporalPattern_Transferable)temporalPattern.getTransferable();         
+         try {
+             this.server.receiveTemporalPattern(transferables, force, accessIdentifierTransferable);         
+         } catch (AMFICOMRemoteException e) {
+             String msg = "ClientMeasurementObjectLoader.saveTemporalPattern | receiveTemporalPatterns";
+             
+             if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+                throw new VersionCollisionException(msg, e);
+             
+             throw new CommunicationException(msg, e);       
+         }
      }
 
      public void saveParameterTypes(List parameterTypes, boolean force) throws DatabaseException, CommunicationException, VersionCollisionException{
@@ -1217,7 +1380,17 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
      
     public void saveParameterType(ParameterType parameterType, boolean force)
             throws VersionCollisionException, DatabaseException, CommunicationException {
-        // TODO Auto-generated method stub
+        ParameterType_Transferable transferables = (ParameterType_Transferable)parameterType.getTransferable();         
+        try {
+            this.server.receiveParameterType(transferables, force, accessIdentifierTransferable);         
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientMeasurementObjectLoader.saveParameterType | receiveParameterTypes";
+            
+            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+               throw new VersionCollisionException(msg, e);
+            
+            throw new CommunicationException(msg, e);       
+        }
 
     }
      
