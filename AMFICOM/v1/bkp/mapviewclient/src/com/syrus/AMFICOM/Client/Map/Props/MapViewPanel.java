@@ -33,10 +33,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
 public class MapViewPanel
 		extends JPanel 
-		implements ObjectResourcePropertiesPane
+		implements ObjectResourcePropertiesPane, MapPropertiesPane
 {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
@@ -154,8 +155,8 @@ public class MapViewPanel
 		else
 			view = (MapView )objectResource;
 
-		domainComboBox.removeAll();
-		mapComboBox.removeAll();
+		domainComboBox.removeAllItems();
+		mapComboBox.removeAllItems();
 
 		if(view == null)
 		{
@@ -305,5 +306,14 @@ public class MapViewPanel
 	public boolean cancel()
 	{
 		return false;
+	}
+
+	public LogicalNetLayer getLogicalNetLayer()
+	{
+		return null;
+	}
+
+	public void setLogicalNetLayer(LogicalNetLayer lnl)
+	{
 	}
 }

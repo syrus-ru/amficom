@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.8 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.9 2005/01/12 14:23:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.util.Iterator;
  * состоит из последовательности атомарных действий
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/12 14:23:19 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -99,8 +99,8 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 		super.removeNodeLink(nodeLink);
 
 		// при этом его концевые топологические узлы становятся неактивными
-		leftNode.setActive(false);
-		rightNode.setActive(false);
+		super.changePhysicalNodeActivity(leftNode, false);
+		super.changePhysicalNodeActivity(rightNode, false);
 
 		MapElementState pls = physicalLink.getState();
 

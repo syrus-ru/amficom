@@ -9,7 +9,9 @@ public abstract class MapConnection
 	
 	public abstract void setPath(String path);
 	public abstract void setView(String name);
+	public abstract void setURL(String url);
 
+	public abstract String getURL();
 	public abstract String getPath();
 	public abstract String getView();
 

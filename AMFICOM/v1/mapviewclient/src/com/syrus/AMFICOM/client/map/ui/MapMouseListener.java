@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.18 2004/12/24 15:42:13 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.19 2005/01/12 14:23:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
  * 
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2004/12/24 15:42:13 $
+ * @version $Revision: 1.19 $, $Date: 2005/01/12 14:23:19 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -303,6 +303,7 @@ public final class MapMouseListener implements MouseListener
 
 					logicalNetLayer.getMapView().setScale(logicalNetLayer.getScale());
 					logicalNetLayer.getMapView().setCenter(logicalNetLayer.getCenter());
+					logicalNetLayer.repaint(true);
 					break;
 				case MapState.ZOOM_TO_RECT:
 					logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -322,6 +323,7 @@ public final class MapMouseListener implements MouseListener
 							logicalNetLayer.getScale());
 						logicalNetLayer.getMapView().setCenter(
 							logicalNetLayer.getCenter());
+						logicalNetLayer.repaint(true);
 					}
 					break;
 				case MapState.MOVE_TO_CENTER:
@@ -337,6 +339,7 @@ public final class MapMouseListener implements MouseListener
 
 					logicalNetLayer.getMapView().setCenter(
 							logicalNetLayer.getCenter());
+					logicalNetLayer.repaint(true);
 					break;
 				case MapState.MOVE_HAND:
 					DoublePoint center = logicalNetLayer.getCenter();
@@ -352,6 +355,7 @@ public final class MapMouseListener implements MouseListener
 
 					logicalNetLayer.getMapView().setCenter(
 							logicalNetLayer.getCenter());
+					logicalNetLayer.repaint(true);
 					break;
 				case MapState.MOVE_FIXDIST:
 					// fall through

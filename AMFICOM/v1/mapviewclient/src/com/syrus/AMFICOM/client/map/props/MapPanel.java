@@ -102,7 +102,7 @@ public class MapPanel
 	{
 		map = (Map)objectResource;
 		
-		domainComboBox.removeAll();
+		domainComboBox.removeAllItems();
 
 		if(map == null)
 		{

@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.3 2005/01/11 16:43:05 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.4 2005/01/12 14:23:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import java.util.*;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/01/11 16:43:05 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/12 14:23:19 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -235,6 +235,7 @@ public class NodeTypeController extends AbstractNodeController
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 		}
 		
 		topologicalProtos.remove(getDefaultUnboundProto(creatorId));

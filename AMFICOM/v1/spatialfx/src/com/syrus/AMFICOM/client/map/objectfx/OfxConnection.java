@@ -1,5 +1,5 @@
 /**
- * $Id: OfxConnection.java,v 1.1 2004/12/01 16:53:11 krupenn Exp $
+ * $Id: OfxConnection.java,v 1.2 2005/01/12 14:24:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import java.util.Vector;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/01 16:53:11 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/12 14:24:07 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -80,6 +80,10 @@ public class OfxConnection extends MapConnection
 		this.dataBaseView = name;
 	}
 
+	public void setURL(String url)
+	{
+	}
+
 	public String getPath()
 	{
 		return OFX_DATABASE_PREFIX + this.dataBasePath;
@@ -88,6 +92,11 @@ public class OfxConnection extends MapConnection
 	public String getView()
 	{
 		return this.dataBaseView;
+	}
+
+	public String getURL()
+	{
+		return "";
 	}
 
 	public boolean connect()

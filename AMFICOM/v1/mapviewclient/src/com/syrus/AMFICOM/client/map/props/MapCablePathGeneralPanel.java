@@ -98,7 +98,7 @@ public class MapCablePathGeneralPanel
 	{
 		path = (CablePath)objectResource;
 		
-		cableComboBox.removeAll();
+		cableComboBox.removeAllItems();
 		
 		if(path == null)
 		{

@@ -196,7 +196,7 @@ public class MapLinkGeneralPanel
 			
 			typeComboBox.setEnabled(true);
 			typeComboBox.addElements(protos);
-			typeComboBox.getModel().setSelectedItem(link.getType());
+			typeComboBox.setSelectedItem(link.getType());
 
 			descTextArea.setEnabled(true);
 			descTextArea.setText(link.getDescription());

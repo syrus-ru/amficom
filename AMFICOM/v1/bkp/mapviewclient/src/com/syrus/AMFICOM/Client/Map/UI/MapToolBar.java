@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.13 2004/12/30 16:17:48 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.14 2005/01/12 14:23:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import java.awt.event.KeyEvent;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/12/30 16:17:48 $
+ * @version $Revision: 1.14 $, $Date: 2005/01/12 14:23:19 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -335,7 +335,10 @@ public final class MapToolBar extends JToolBar
 						{
 							double scale = Double.parseDouble(scaleField.getText());
 							if(scale > 0)
+							{
 								getLogicalNetLayer().setScale(scale);
+								getLogicalNetLayer().repaint(true);
+							}
 						}
 						catch(Exception ex)
 						{
@@ -358,6 +361,7 @@ public final class MapToolBar extends JToolBar
 							double lat = Double.parseDouble(latitudeTextField.getText());
 							getLogicalNetLayer().setCenter(
 								new DoublePoint(lat, lon));
+							getLogicalNetLayer().repaint(true);
 						}
 						catch(Exception ex)
 						{

@@ -170,7 +170,7 @@ public class MapSiteGeneralPanel
 			nameTextField.setText(site.getName());
 
 			List protos = NodeTypeController.getTopologicalProtos(getLogicalNetLayer().getContext());
-			
+
 			typeComboBox.setEnabled(true);
 			typeComboBox.addElements(protos);
 			typeComboBox.setSelectedItem(site.getType());

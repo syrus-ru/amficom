@@ -317,10 +317,10 @@ public final class MapCablePathBindPanel
 
 		startNodeTextField.setText("");
 		endNodeTextField.setText("");
-		startLinkComboBox.removeAll();
-		endLinkComboBox.removeAll();
-		startNodeToComboBox.removeAll();
-		endNodeToComboBox.removeAll();
+		startLinkComboBox.removeAllItems();
+		endLinkComboBox.removeAllItems();
+		startNodeToComboBox.removeAllItems();
+		endNodeToComboBox.removeAllItems();
 
 		startLinkComboBox.setEnabled(true);
 		endLinkComboBox.setEnabled(true);
@@ -412,22 +412,22 @@ public final class MapCablePathBindPanel
 			}
 		}
 
-		startLinkComboBox.removeAll();
+		startLinkComboBox.removeAllItems();
 		startLinkComboBox.addItem(stubObject);
 		startLinkComboBox.addElements(smnelinks);
 		startLinkComboBox.setSelectedItem(stubObject);
 
-		endLinkComboBox.removeAll();
+		endLinkComboBox.removeAllItems();
 		endLinkComboBox.addItem(stubObject);
 		endLinkComboBox.addElements(emnelinks);
 		endLinkComboBox.setSelectedItem(stubObject);
 
-		startNodeToComboBox.removeAll();
+		startNodeToComboBox.removeAllItems();
 		startNodeToComboBox.addItem(stubObject);
 		startNodeToComboBox.addElements(smnenodes);
 		startNodeToComboBox.setSelectedItem(stubObject);
 
-		endNodeToComboBox.removeAll();
+		endNodeToComboBox.removeAllItems();
 		endNodeToComboBox.addItem(stubObject);
 		endNodeToComboBox.addElements(emnenodes);
 		endNodeToComboBox.setSelectedItem(stubObject);

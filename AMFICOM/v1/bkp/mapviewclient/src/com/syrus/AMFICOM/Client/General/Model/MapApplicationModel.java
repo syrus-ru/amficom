@@ -4,8 +4,6 @@ import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.EmptyMapDataSource;
 import com.syrus.AMFICOM.Client.Resource.EmptyMapViewDataSource;
-import com.syrus.AMFICOM.Client.Resource.RISDMapDataSource;
-import com.syrus.AMFICOM.Client.Resource.RISDMapViewDataSource;
 
 public class MapApplicationModel extends ApplicationModel
 {

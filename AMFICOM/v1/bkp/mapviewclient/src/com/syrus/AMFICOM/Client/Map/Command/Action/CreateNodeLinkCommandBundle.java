@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.9 2005/01/11 16:43:05 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.10 2005/01/12 14:23:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import java.util.LinkedList;
  * данная команда
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2005/01/11 16:43:05 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/12 14:23:19 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -215,30 +215,34 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 			physicalLink.setStartNode(physicalLink.getEndNode());
 		physicalLink.setEndNode(endNode);
 
-		MapElementState pls2 = emple.getState();
-
-		// отдельный список, поскольку используется операция удаления
-		LinkedList nodeLinksToMove = new LinkedList();
-		nodeLinksToMove.addAll(emple.getNodeLinks());
-
-		// Перенос фрагментов линии из одной линии в другую
-		for(Iterator it = nodeLinksToMove.iterator(); it.hasNext();)
+		if(emple != null)
+			if(!emple.equals(physicalLink))
 		{
-			NodeLink mnle = (NodeLink)it.next();
-			emple.removeNodeLink(mnle);
-			physicalLink.addNodeLink(mnle);
-			mnle.setPhysicalLink(physicalLink);
-		}			
+			MapElementState pls2 = emple.getState();
 	
-		// Коррекция начального и конечного узлов линии
-		if(emple.getStartNode().equals(endNode))
-			physicalLink.setEndNode(emple.getEndNode());
-		else
-			physicalLink.setEndNode(emple.getStartNode());
-
-		super.registerStateChange(emple, pls2, emple.getState());
-
-		super.removePhysicalLink(emple);
+			// отдельный список, поскольку используется операция удаления
+			LinkedList nodeLinksToMove = new LinkedList();
+			nodeLinksToMove.addAll(emple.getNodeLinks());
+	
+			// Перенос фрагментов линии из одной линии в другую
+			for(Iterator it = nodeLinksToMove.iterator(); it.hasNext();)
+			{
+				NodeLink mnle = (NodeLink)it.next();
+				emple.removeNodeLink(mnle);
+				physicalLink.addNodeLink(mnle);
+				mnle.setPhysicalLink(physicalLink);
+			}			
+		
+			// Коррекция начального и конечного узлов линии
+			if(emple.getStartNode().equals(endNode))
+				physicalLink.setEndNode(emple.getEndNode());
+			else
+				physicalLink.setEndNode(emple.getStartNode());
+	
+			super.registerStateChange(emple, pls2, emple.getState());
+	
+			super.removePhysicalLink(emple);
+		}
 
 		super.registerStateChange(physicalLink, pls, physicalLink.getState());
 	}

@@ -240,5 +240,4 @@ src\com\syrus\AMFICOM\Client\Map\UI\NodeSizePanel.java
 src\com\syrus\AMFICOM\Client\Map\UI\SchemeController.java
 src\com\syrus\AMFICOM\Client\Map\UI\SimpleMapElementController.java
 src\com\syrus\AMFICOM\Client\Resource\EmptyMapViewDataSource.java
-src\com\syrus\AMFICOM\Client\Resource\RISDMapViewDataSource.java
 src\com\syrus\AMFICOM\Client\Resource\MapView\MapView.java

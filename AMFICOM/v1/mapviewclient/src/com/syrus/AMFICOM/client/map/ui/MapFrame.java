@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.16 2004/12/28 17:35:13 krupenn Exp $
+ * $Id: MapFrame.java,v 1.17 2005/01/12 14:23:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -79,7 +79,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2004/12/28 17:35:13 $
+ * @version $Revision: 1.17 $, $Date: 2005/01/12 14:23:19 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -134,6 +134,7 @@ public class MapFrame extends JInternalFrame
 
 		mapConnection.setPath(MapPropertiesManager.getDataBasePath());
 		mapConnection.setView(MapPropertiesManager.getDataBaseView());
+		mapConnection.setURL(MapPropertiesManager.getDataBaseURL());
 
 //		MapConnection mapConnection = MapPropertiesManager.getConnection();
 		mapConnection.connect();

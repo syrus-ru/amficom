@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.3 2004/12/30 16:25:57 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.4 2005/01/12 14:23:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -53,7 +53,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/30 16:25:57 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/12 14:23:19 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -73,6 +73,7 @@ public final class MapPropertiesManager
 	protected static final String KEY_MAP_TYPE = "mapType";
 	protected static final String KEY_DATA_BASE_PATH = "dataBasePath";
 	protected static final String KEY_DATA_BASE_VIEW = "dataBaseView";
+	protected static final String KEY_DATA_BASE_URL = "dataBaseURL";
 	protected static final String KEY_LAST_LONGITUDE = "lastLong";
 	protected static final String KEY_LAST_LATITUDE = "lastLat";
 	protected static final String KEY_LAST_ZOOM = "lastZoom";
@@ -94,6 +95,7 @@ public final class MapPropertiesManager
 	protected static String mapType = OFX_TYPE;
 	protected static String dataBasePath = "";
 	protected static String dataBaseView = "";
+	protected static String dataBaseURL = "";
 	protected static String lastLong = "";
 	protected static String lastLat = "";
 	protected static String lastZoom = "";
@@ -353,6 +355,7 @@ public final class MapPropertiesManager
 	{
 		dataBasePath = iniFile.getValue(KEY_DATA_BASE_PATH);
 		dataBaseView = iniFile.getValue(KEY_DATA_BASE_VIEW);
+		dataBaseURL = iniFile.getValue(KEY_DATA_BASE_URL);
 
 		mapType = iniFile.getValue(KEY_MAP_TYPE);
 		lastLong = iniFile.getValue(KEY_LAST_LONGITUDE);
@@ -373,6 +376,7 @@ public final class MapPropertiesManager
 		mapType = OFX_TYPE;
 		dataBasePath = "";
 		dataBaseView = "";
+		dataBaseURL = "";
 		lastDirectory = ".";
 	}
 
@@ -909,6 +913,16 @@ public final class MapPropertiesManager
 	public static int getMouseTolerancy()
 	{
 		return mouseTolerancy;
+	}
+
+	public static void setDataBaseURL(String _dataBaseURL)
+	{
+		dataBaseURL = _dataBaseURL;
+	}
+
+	public static String getDataBaseURL()
+	{
+		return dataBaseURL;
 	}
 
 	public static void setDataBasePath(String _dataBasePath)

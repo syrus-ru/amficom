@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.6 2004/12/29 19:05:20 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.7 2005/01/12 14:23:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,17 +16,15 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.EmptyMapViewDataSource;
-import com.syrus.AMFICOM.Client.Resource.RISDMapDataSource;
 
 import com.syrus.AMFICOM.Client.Resource.EmptyMapDataSource;
-import com.syrus.AMFICOM.Client.Resource.RISDMapViewDataSource;
 
 /**
  * содержит список функциональных элементов, доступных пользователю 
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/29 19:05:20 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/12 14:23:19 $
  * @module
  * @author $Author: krupenn $
  * @see
