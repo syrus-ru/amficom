@@ -1,15 +1,12 @@
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
-import com.syrus.util.Log;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.TransferableObject;
+import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 
-public class SetParameter implements TransferableObject {
+public class SetParameter implements TransferableObject, TypedObject {
 	private Identifier id;
 	private Identifier type_id;
 	private byte[] value;
