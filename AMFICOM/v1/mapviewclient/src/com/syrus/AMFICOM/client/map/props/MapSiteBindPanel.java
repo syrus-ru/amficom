@@ -301,8 +301,8 @@ public final class MapSiteBindPanel
 		{
 			if(element instanceof SchemeElement)
 			{
-				SchemeElement se = (SchemeElement )element;
-//				schemePanel.getGraph().setSchemeElement(se);
+				SchemeElement schemeElement = (SchemeElement )element;
+				this.schemePanel.getGraph().setSchemeElement(schemeElement);
 				this.crossingScrollPane.setVisible(false);
 				this.schemePanel.setVisible(true);
 				sen = true;
@@ -351,10 +351,10 @@ public final class MapSiteBindPanel
 		this.crossingScrollPane.setVisible(true);
 
 		if(this.site == null)
-		{
+		{//empty
 		}
 		else
-		{
+		{//empty
 		}
 
 		this.elementsTree.updateUI();
@@ -410,11 +410,11 @@ public final class MapSiteBindPanel
 		return this.unboundElements;
 	}
 
-	private DefaultMutableTreeNode createTree(SiteNode site)
+	private DefaultMutableTreeNode createTree(SiteNode siteNode)
 	{
 		this.elementsBranch.removeAllChildren();
 		this.cablesBranch.removeAllChildren();
-		if(site != null)
+		if(siteNode != null)
 		{
 			DefaultMutableTreeNode elementNode;
 			DefaultMutableTreeNode cableNode;
@@ -427,13 +427,13 @@ public final class MapSiteBindPanel
 				Scheme scheme = (Scheme )it.next();
 				schemeElements.addAll(SchemeUtils.getTopLevelElements(scheme));
 			}
-			List cableElementsTransit = mapView.getCablePaths(site);
+			List cableElementsTransit = mapView.getCablePaths(siteNode);
 			List cableElementsDropped = new LinkedList();
 			for(Iterator it = cableElementsTransit.iterator(); it.hasNext();)
 			{
 				CablePath cablePath = (CablePath)it.next();
-				if(cablePath.getStartNode().equals(site)
-					|| cablePath.getEndNode().equals(site))
+				if(cablePath.getStartNode().equals(siteNode)
+					|| cablePath.getEndNode().equals(siteNode))
 				{
 					cableElementsDropped.add(cablePath);
 					it.remove();
@@ -445,7 +445,7 @@ public final class MapSiteBindPanel
 				for(Iterator it = schemeElements.iterator(); it.hasNext();)
 				{
 					SchemeElement se = (SchemeElement )it.next();
-					if(se.siteNodeImpl().equals(site.getId()))
+					if(se.siteNodeImpl().equals(siteNode.getId()))
 					{
 						elementNode = new DefaultMutableTreeNode(se);
 						this.elementsBranch.add(elementNode);

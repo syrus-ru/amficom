@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.26 2005/02/02 09:05:10 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.27 2005/02/09 11:41:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,15 +10,21 @@
 
 package com.syrus.AMFICOM.Client.Map.Popup;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
-import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceSelectionDialog;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateCollectorCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
@@ -28,45 +34,33 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.GenerateUnboundLinkCablingCom
 import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MapElementStateChangeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveCollectorCommandAtomic;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.Props.MapPropertiesPane;
 import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceSelectionDialog;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
-import com.syrus.AMFICOM.map.PhysicalLinkType;
-import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.map.Collector;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Toolkit;
-
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 
 /**
  * Контекстное меню элемента карты
- * 
- * 
- * 
- * @version $Revision: 1.26 $, $Date: 2005/02/02 09:05:10 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.27 $, $Date: 2005/02/09 11:41:44 $
+ * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu
 {
@@ -81,7 +75,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		return logicalNetLayer;
+		return this.logicalNetLayer;
 	}
 
 	public void setPoint(Point point)
@@ -91,7 +85,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 
 	public Point getPoint()
 	{
-		return point;
+		return this.point;
 	}
 
 	public void showProperties(Object me)
@@ -99,8 +93,8 @@ public abstract class MapPopupMenu extends JPopupMenu
 		ObjectResourcePropertiesPane prop = MapPropsManager.getPropsPane(me);
 		if(prop == null)
 			return;
-		prop.setContext(logicalNetLayer.getContext());
-		((MapPropertiesPane )prop).setLogicalNetLayer(logicalNetLayer);
+		prop.setContext(this.logicalNetLayer.getContext());
+		((MapPropertiesPane )prop).setLogicalNetLayer(this.logicalNetLayer);
 		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
 				Environment.getActiveWindow(), 
 				LangModel.getString("Properties"), 
@@ -127,7 +121,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 //			MapElementState mes2 = me.getState();
 //			if(! mes.equals(mes2))
 			{
-				Dispatcher disp = logicalNetLayer.getContext().getDispatcher();
+				Dispatcher disp = this.logicalNetLayer.getContext().getDispatcher();
 				if(disp != null)
 					disp.notify(new MapEvent(this, MapEvent.MAP_CHANGED));
 			}
@@ -141,7 +135,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 	{
 		Collector collector = null;
 
-		List list = logicalNetLayer.getMapView().getMap().getCollectors();
+		List list = this.logicalNetLayer.getMapView().getMap().getCollectors();
 		
 		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
 			
@@ -167,7 +161,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 	{
 		SiteNodeType proto = null;
 
-		List list = NodeTypeController.getTopologicalProtos(logicalNetLayer.getContext());
+		List list = NodeTypeController.getTopologicalProtos(this.logicalNetLayer.getContext());
 
 		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
 			
@@ -222,7 +216,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 
 	protected PhysicalLink selectPhysicalLinkAt(UnboundLink unbound)
 	{
-		Map map = logicalNetLayer.getMapView().getMap();
+		Map map = this.logicalNetLayer.getMapView().getMap();
 		
 		PhysicalLink link = null;
 		
@@ -270,7 +264,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		if(inputValue != null)
 		{
 			CreateCollectorCommandAtomic command = new CreateCollectorCommandAtomic(inputValue);
-			command.setLogicalNetLayer(logicalNetLayer);
+			command.setLogicalNetLayer(this.logicalNetLayer);
 			getLogicalNetLayer().getCommandList().add(command);
 			getLogicalNetLayer().getCommandList().execute();
 			
@@ -296,7 +290,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 			
 		PhysicalLinkType collectorType = LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.COLLECTOR);
 
-		Collector prevCollector = logicalNetLayer.getMapView().getMap().getCollector(mple);
+		Collector prevCollector = this.logicalNetLayer.getMapView().getMap().getCollector(mple);
 		if(prevCollector != null)
 			prevCollector.removePhysicalLink(mple);
 	
@@ -306,7 +300,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		mple.setType(collectorType);
 
 		MapElementStateChangeCommand command2 = new MapElementStateChangeCommand(mple, state, mple.getState());
-		command2.setLogicalNetLayer(logicalNetLayer);
+		command2.setLogicalNetLayer(this.logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command2);
 		getLogicalNetLayer().getCommandList().execute();
 	}
@@ -332,7 +326,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		mple.setType(LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkType.TUNNEL));
 
 		MapElementStateChangeCommand command = new MapElementStateChangeCommand(mple, state, mple.getState());
-		command.setLogicalNetLayer(logicalNetLayer);
+		command.setLogicalNetLayer(this.logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 		
@@ -343,7 +337,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 	protected void removeCollector(Collector collector)
 	{
 		RemoveCollectorCommandAtomic command = new RemoveCollectorCommandAtomic(collector);
-		command.setLogicalNetLayer(logicalNetLayer);
+		command.setLogicalNetLayer(this.logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 	}
@@ -353,7 +347,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		getLogicalNetLayer().deselectAll();
 		me.setSelected(true);
 		DeleteSelectionCommand command = new DeleteSelectionCommand();
-		command.setLogicalNetLayer(logicalNetLayer);
+		command.setLogicalNetLayer(this.logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 	}
@@ -361,7 +355,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 	protected void insertSiteInPlaceOfANode(TopologicalNode node, SiteNodeType proto)
 	{
 		InsertSiteCommandBundle command = new InsertSiteCommandBundle(node, proto);
-		command.setLogicalNetLayer(logicalNetLayer);
+		command.setLogicalNetLayer(this.logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 	}
@@ -372,14 +366,14 @@ public abstract class MapPopupMenu extends JPopupMenu
 			return;
 
 		CreateSiteCommandAtomic command = new CreateSiteCommandAtomic(proto, unbound.getLocation());
-		command.setLogicalNetLayer(logicalNetLayer);
+		command.setLogicalNetLayer(this.logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 		
 		SiteNode site = command.getSite();
 
 		BindUnboundNodeToSiteCommandBundle command2 = new BindUnboundNodeToSiteCommandBundle(unbound, site);
-		command2.setLogicalNetLayer(logicalNetLayer);
+		command2.setLogicalNetLayer(this.logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command2);
 		getLogicalNetLayer().getCommandList().execute();
 		
@@ -390,7 +384,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 	{
 		GenerateCablePathCablingCommandBundle command = 
 				new GenerateCablePathCablingCommandBundle(path, proto);
-		command.setLogicalNetLayer(logicalNetLayer);
+		command.setLogicalNetLayer(this.logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
@@ -401,7 +395,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 	{
 		GenerateUnboundLinkCablingCommandBundle command = 
 				new GenerateUnboundLinkCablingCommandBundle(unbound);
-		command.setLogicalNetLayer(logicalNetLayer);
+		command.setLogicalNetLayer(this.logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 

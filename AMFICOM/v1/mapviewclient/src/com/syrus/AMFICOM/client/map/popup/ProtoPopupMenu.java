@@ -1,5 +1,12 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JMenuItem;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -8,15 +15,7 @@ import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementLabel;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNodeType;
-
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JMenuItem;
 
 public final class ProtoPopupMenu extends MapPopupMenu 
 {
@@ -59,38 +58,38 @@ public final class ProtoPopupMenu extends MapPopupMenu
 
 	private void jbInit() 
 	{
-		removeMenuItem.setText(LangModelMap.getString("Delete"));
-		removeMenuItem.addActionListener(new ActionListener()
+		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					removeProto();
 				}
 			});
-		propertiesMenuItem.setText(LangModelMap.getString("Properties"));
-		propertiesMenuItem.addActionListener(new ActionListener()
+		this.propertiesMenuItem.setText(LangModelMap.getString("Properties"));
+		this.propertiesMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					showProperties();
 				}
 			});
-		this.add(removeMenuItem);
+		this.add(this.removeMenuItem);
 		this.addSeparator();
-		this.add(propertiesMenuItem);
+		this.add(this.propertiesMenuItem);
 	}
 
-	private void showProperties()
+	void showProperties()
 	{
-		ObjectResourcePropertiesPane prop = MapPropsManager.getPropsPane(proto);
+		ObjectResourcePropertiesPane prop = MapPropsManager.getPropsPane(this.proto);
 		if(prop == null)
 			return;
-		((MapPropertiesPane )prop).setLogicalNetLayer(logicalNetLayer);
+		((MapPropertiesPane )prop).setLogicalNetLayer(this.logicalNetLayer);
 		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
 				Environment.getActiveWindow(), 
 				LangModel.getString("Properties"), 
 				true, 
-				proto,
+				this.proto,
 				prop);
 
 		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
@@ -106,10 +105,10 @@ public final class ProtoPopupMenu extends MapPopupMenu
 				
 		dialog.setVisible(true);
 
-		lab.updateIcon();
+		this.lab.updateIcon();
 	}
 
-	private void removeProto()
-	{
+	void removeProto()
+	{//empty
 	}
 }

@@ -119,7 +119,7 @@ public class MapCablePathGeneralPanel
 	}
 
 	public void setContext(ApplicationContext aContext)
-	{
+	{//empty
 	}
 
 	public boolean modify()

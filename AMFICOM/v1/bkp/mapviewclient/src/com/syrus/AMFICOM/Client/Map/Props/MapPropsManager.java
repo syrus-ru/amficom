@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.map.MapElement;
 public final class MapPropsManager 
 {
 	private MapPropsManager()
-	{
+	{//empty
 	}
 
 	private static java.util.Map propsMap = new HashMap();

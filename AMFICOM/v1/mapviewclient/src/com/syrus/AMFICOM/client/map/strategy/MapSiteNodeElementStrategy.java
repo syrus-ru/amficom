@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElementStrategy.java,v 1.13 2005/02/07 16:09:27 krupenn Exp $
+ * $Id: MapSiteNodeElementStrategy.java,v 1.14 2005/02/09 11:41:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import java.awt.Point;
 /**
  * Стратегия управления узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/02/07 16:09:27 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/09 11:41:45 $
  * @module mapviewclient_v1
  */
 public final class MapSiteNodeElementStrategy extends MapStrategy 
@@ -49,7 +49,7 @@ public final class MapSiteNodeElementStrategy extends MapStrategy
 	 * Private constructor.
 	 */
 	private MapSiteNodeElementStrategy()
-	{
+	{// empty
 	}
 
 	/**

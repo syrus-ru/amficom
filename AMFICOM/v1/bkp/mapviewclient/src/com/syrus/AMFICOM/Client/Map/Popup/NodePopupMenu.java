@@ -1,14 +1,13 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.TopologicalNode;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.TopologicalNode;
 
 public final class NodePopupMenu extends MapPopupMenu 
 {
@@ -44,8 +43,8 @@ public final class NodePopupMenu extends MapPopupMenu
 
 	private void jbInit()
 	{
-		removeMenuItem.setText(LangModelMap.getString("Delete"));
-		removeMenuItem.addActionListener(new ActionListener()
+		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -53,8 +52,8 @@ public final class NodePopupMenu extends MapPopupMenu
 				}
 			});
 
-		placeSiteMenuItem.setText(LangModelMap.getString("PlaceSite"));
-		placeSiteMenuItem.addActionListener(new ActionListener()
+		this.placeSiteMenuItem.setText(LangModelMap.getString("PlaceSite"));
+		this.placeSiteMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -62,13 +61,13 @@ public final class NodePopupMenu extends MapPopupMenu
 				}
 			});
 
-		this.add(removeMenuItem);
-		this.add(placeSiteMenuItem);
+		this.add(this.removeMenuItem);
+		this.add(this.placeSiteMenuItem);
 	}
 
-	private void removeNode()
+	void removeNode()
 	{
-		super.removeMapElement(node);
+		super.removeMapElement(this.node);
 //		DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(node);
 //		command.setLogicalNetLayer(logicalNetLayer);
 //		getLogicalNetLayer().getCommandList().add(command);
@@ -77,12 +76,12 @@ public final class NodePopupMenu extends MapPopupMenu
 		getLogicalNetLayer().repaint(false);
 	}
 	
-	private void placeSite()
+	void placeSite()
 	{
 		SiteNodeType proto = super.selectNodeProto();
 		if(proto != null)
 		{
-			super.insertSiteInPlaceOfANode(node, proto);
+			super.insertSiteInPlaceOfANode(this.node, proto);
 			
 			getLogicalNetLayer().repaint(false);
 		}

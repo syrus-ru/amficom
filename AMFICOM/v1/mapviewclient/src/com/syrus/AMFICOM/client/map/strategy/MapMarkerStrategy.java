@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.18 2005/02/07 16:09:26 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.19 2005/02/09 11:41:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import java.awt.Point;
  * Стратегия управления маркером.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/02/07 16:09:26 $
+ * @version $Revision: 1.19 $, $Date: 2005/02/09 11:41:45 $
  * @module mapviewclient_v1
  */
 public final class MapMarkerStrategy extends MapStrategy 
@@ -94,8 +94,6 @@ public final class MapMarkerStrategy extends MapStrategy
 	 */
 	protected void leftMouseDragged(MapState mapState, Point point)
 	{
-		int actionMode = mapState.getActionMode();
-
 		MarkerController mc = (MarkerController)super.logicalNetLayer.getMapViewController().getController(this.marker);
 
 		MapCoordinatesConverter converter = super.logicalNetLayer;

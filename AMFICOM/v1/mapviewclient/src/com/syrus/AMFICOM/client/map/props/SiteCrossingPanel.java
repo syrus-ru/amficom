@@ -50,7 +50,7 @@ public class SiteCrossingPanel extends JPanel
 	int index2 = -1;
 
 	public SiteCrossingPanel()
-	{
+	{//empty
 	}
 
 	public void setSite(SiteNode site)

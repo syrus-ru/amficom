@@ -1,16 +1,13 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.Mark;
-
-import com.syrus.AMFICOM.mapview.Marker;
-import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
+import com.syrus.AMFICOM.mapview.Marker;
 
 public final class MarkerPopupMenu extends MapPopupMenu 
 {
@@ -45,23 +42,23 @@ public final class MarkerPopupMenu extends MapPopupMenu
 
 	private void jbInit()
 	{
-		removeMenuItem.setText(LangModelMap.getString("Delete"));
-		removeMenuItem.addActionListener(new ActionListener()
+		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					removeMark();
 				}
 			});
-		this.add(removeMenuItem);
+		this.add(this.removeMenuItem);
 	}
 
-	private void removeMark()
+	void removeMark()
 	{
-		super.removeMapElement(marker);
+		super.removeMapElement(this.marker);
 		
-		MarkerController mc = (MarkerController)getLogicalNetLayer().getMapViewController().getController(marker);
-		mc.notifyMarkerDeleted(marker);
+		MarkerController markerController = (MarkerController)getLogicalNetLayer().getMapViewController().getController(this.marker);
+		markerController.notifyMarkerDeleted(this.marker);
 
 		getLogicalNetLayer().repaint(false);
 	}

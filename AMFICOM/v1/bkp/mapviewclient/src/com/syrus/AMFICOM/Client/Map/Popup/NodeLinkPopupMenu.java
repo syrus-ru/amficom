@@ -1,13 +1,12 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.NodeLink;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.map.NodeLink;
 
 public final class NodeLinkPopupMenu extends MapPopupMenu 
 {
@@ -42,20 +41,20 @@ public final class NodeLinkPopupMenu extends MapPopupMenu
 
 	private void jbInit()
 	{
-		removeMenuItem.setText(LangModelMap.getString("Delete"));
-		removeMenuItem.addActionListener(new ActionListener()
+		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					removeNodeLink();
 				}
 			});
-		this.add(removeMenuItem);
+		this.add(this.removeMenuItem);
 	}
 
-	private void removeNodeLink()
+	void removeNodeLink()
 	{
-		super.removeMapElement(link);
+		super.removeMapElement(this.link);
 
 		getLogicalNetLayer().repaint(false);
 	}

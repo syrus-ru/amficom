@@ -28,8 +28,8 @@ public class MarkerInfoReport extends ReportData
 	public MarkerInfoReport(ObjectsReport report,int divisionsNumber)
 			throws CreateReportException
 	{
-		tableModel = new MarkerInfoReportTableModel(divisionsNumber,report);
-		columnModel = new MarkerInfoReportColumnModel(divisionsNumber);
+		super.tableModel = new MarkerInfoReportTableModel(divisionsNumber,report);
+		super.columnModel = new MarkerInfoReportColumnModel(divisionsNumber);
 	}
 }
 
@@ -83,41 +83,41 @@ class MarkerInfoReportTableModel extends DividableTableModel
     CablePath cablePath = marker.getCablePath();
 		NodeLink nodeLink = marker.getNodeLink();
 
-    length = 12;
+    this.length = 12;
     
-    tableData = new String[this.getBaseColumnCount()][];
+    this.tableData = new String[this.getBaseColumnCount()][];
     for (int i = 0; i < this.getBaseColumnCount(); i++)
-      tableData[i] = new String[length + 1];
+      this.tableData[i] = new String[this.length + 1];
     //+1 - reserve for name of tunnel in collector
     
     int curCCI = 0;
     
-    tableData[0][curCCI] = LangModelMap.getString("Marker");
-    tableData[1][curCCI++] = marker.getName();
+    this.tableData[0][curCCI] = LangModelMap.getString("Marker");
+    this.tableData[1][curCCI++] = marker.getName();
 
-    tableData[0][curCCI] = "";
-    tableData[1][curCCI++] = "";
+    this.tableData[0][curCCI] = "";
+    this.tableData[1][curCCI++] = "";
     
-    tableData[0][curCCI] = LangModelMap.getString("Cable");
-    tableData[1][curCCI++] = cablePath.getName();//!!!!!!Тут фигня возможно
+    this.tableData[0][curCCI] = LangModelMap.getString("Cable");
+    this.tableData[1][curCCI++] = cablePath.getName();//!!!!!!Тут фигня возможно
 
-    tableData[0][curCCI] = "";
-    tableData[1][curCCI++] = "";
+    this.tableData[0][curCCI] = "";
+    this.tableData[1][curCCI++] = "";
 
-    tableData[0][curCCI] = LangModelMap.getString("mapnodedistances");
-    tableData[1][curCCI++] = nodeLink.getName();//!!!!!!И тут тоже
+    this.tableData[0][curCCI] = LangModelMap.getString("mapnodedistances");
+    this.tableData[1][curCCI++] = nodeLink.getName();//!!!!!!И тут тоже
 
-    tableData[0][curCCI] = "";
-    tableData[1][curCCI++] = "";
+    this.tableData[0][curCCI] = "";
+    this.tableData[1][curCCI++] = "";
 
-    tableData[0][curCCI] = "fornode" + " " + marker.getLeft().getName();
-    tableData[1][curCCI++] = Double.toString(mc.getPhysicalDistanceFromLeft(marker));
+    this.tableData[0][curCCI] = "fornode" + " " + marker.getLeft().getName();
+    this.tableData[1][curCCI++] = Double.toString(mc.getPhysicalDistanceFromLeft(marker));
 
-    tableData[0][curCCI] = "fornode" + " " + marker.getRight().getName();
-    tableData[1][curCCI++] = Double.toString(mc.getPhysicalDistanceFromRight(marker));
+    this.tableData[0][curCCI] = "fornode" + " " + marker.getRight().getName();
+    this.tableData[1][curCCI++] = Double.toString(mc.getPhysicalDistanceFromRight(marker));
     
-    tableData[0][curCCI] = "";
-    tableData[1][curCCI++] = "";
+    this.tableData[0][curCCI] = "";
+    this.tableData[1][curCCI++] = "";
 
     PhysicalLink physicalLink = null;
 		try
@@ -143,28 +143,28 @@ class MarkerInfoReportTableModel extends DividableTableModel
     Collector pipePath =  map.getCollector(physicalLink);
     if (pipePath != null)
     {
-      tableData[0][curCCI] = LangModelMap.getString("Collector");
-      tableData[1][curCCI++] = pipePath.getName();
+      this.tableData[0][curCCI] = LangModelMap.getString("Collector");
+      this.tableData[1][curCCI++] = pipePath.getName();
       
-      tableData[0][curCCI] = LangModelMap.getString("Tunnel");
-      tableData[1][curCCI++] = physicalLink.getName();
-      length++;
+      this.tableData[0][curCCI] = LangModelMap.getString("Tunnel");
+      this.tableData[1][curCCI++] = physicalLink.getName();
+      this.length++;
  
-      tableData[0][curCCI] = LangModelMap.getString("maptunnelposit");
+      this.tableData[0][curCCI] = LangModelMap.getString("maptunnelposit");
     }
     else
     {
-      tableData[0][curCCI] = LangModelMap.getString("Tunnel");
-      tableData[1][curCCI++] = physicalLink.getName();
-      tableData[0][curCCI] = LangModelMap.getString("mapcollectorposit");
+      this.tableData[0][curCCI] = LangModelMap.getString("Tunnel");
+      this.tableData[1][curCCI++] = physicalLink.getName();
+      this.tableData[0][curCCI] = LangModelMap.getString("mapcollectorposit");
     }
     
     IntPoint binding = physicalLink.getBinding().getBinding(cablePath);//И здесь
-    tableData[1][curCCI++] =
+    this.tableData[1][curCCI++] =
       Integer.toString(binding.x) + ":" + Integer.toString(binding.y);
   
-    tableData[0][curCCI] = LangModelMap.getString("geographicCoords");
-    tableData[1][curCCI++] =
+    this.tableData[0][curCCI] = LangModelMap.getString("geographicCoords");
+    this.tableData[1][curCCI++] =
       Double.toString(marker.getLocation().getX()) + ":" +
       Double.toString(marker.getLocation().getY());
 	}
@@ -182,16 +182,16 @@ class MarkerInfoReportTableModel extends DividableTableModel
 	public int getRowCount()
 	{
 		// Если данные можно разложить поровну на такое количество столбцов
-		if (length % this.getDivisionsNumber() == 0)
-			return  (int)(length / this.getDivisionsNumber()); //+заголовок
+		if (this.length % this.getDivisionsNumber() == 0)
+			return  (this.length / this.getDivisionsNumber()); //+заголовок
 		//а если нельзя, то добавляем ещё ряд
-		return (int)(length / this.getDivisionsNumber()) + 1;
+		return (this.length / this.getDivisionsNumber()) + 1;
 	}
 
 	public Object getValueAt(int row, int col)
 	{
 		int index = (this.getRowCount()) *
-      (int) (col / this.getBaseColumnCount()) + row - 1;
+      (col / this.getBaseColumnCount()) + row - 1;
       
 		if (index >= this.length)
 			return "";

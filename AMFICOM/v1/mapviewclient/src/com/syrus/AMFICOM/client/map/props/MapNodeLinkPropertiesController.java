@@ -120,7 +120,7 @@ public final class MapNodeLinkPropertiesController
 	}
 
 	public void setPropertyValue(String key, Object objectKey, Object objectValue) 
-	{
+	{//empty
 	}
 
 	public Class getPropertyClass(String key) 

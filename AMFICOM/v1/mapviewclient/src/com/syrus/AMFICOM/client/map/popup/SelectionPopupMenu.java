@@ -1,27 +1,25 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.Selection;
-import com.syrus.AMFICOM.mapview.UnboundLink;
-import com.syrus.AMFICOM.mapview.UnboundNode;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JMenuItem;
-import com.syrus.AMFICOM.map.Map;
+
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
+import com.syrus.AMFICOM.map.Collector;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.Selection;
+import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.mapview.UnboundNode;
 
 public final class SelectionPopupMenu extends MapPopupMenu 
 {
@@ -54,12 +52,12 @@ public final class SelectionPopupMenu extends MapPopupMenu
 	{
 		this.selection = (Selection)me;
 
-		insertSiteMenuItem.setVisible(selection.isPhysicalNodeSelection());
-		generateMenuItem.setVisible(selection.isUnboundSelection());
-		newCollectorMenuItem.setVisible(selection.isPhysicalLinkSelection());
-		addToCollectorMenuItem.setVisible(selection.isPhysicalLinkSelection());
-		removeCollectorMenuItem.setVisible(selection.isPhysicalLinkSelection());
-		removeFromCollectorMenuItem.setVisible(selection.isPhysicalLinkSelection());
+		this.insertSiteMenuItem.setVisible(this.selection.isPhysicalNodeSelection());
+		this.generateMenuItem.setVisible(this.selection.isUnboundSelection());
+		this.newCollectorMenuItem.setVisible(this.selection.isPhysicalLinkSelection());
+		this.addToCollectorMenuItem.setVisible(this.selection.isPhysicalLinkSelection());
+		this.removeCollectorMenuItem.setVisible(this.selection.isPhysicalLinkSelection());
+		this.removeFromCollectorMenuItem.setVisible(this.selection.isPhysicalLinkSelection());
 	}
 	
 	public static SelectionPopupMenu getInstance()
@@ -69,89 +67,89 @@ public final class SelectionPopupMenu extends MapPopupMenu
 	
 	private void jbInit()
 	{
-		removeMenuItem.setText(LangModelMap.getString("Delete"));
-		removeMenuItem.addActionListener(new ActionListener()
+		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					removeSelection();
 				}
 			});
-		insertSiteMenuItem.setText(LangModelMap.getString("PlaceSite"));
-		insertSiteMenuItem.addActionListener(new ActionListener()
+		this.insertSiteMenuItem.setText(LangModelMap.getString("PlaceSite"));
+		this.insertSiteMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					insertSite();
 				}
 			});
-		generateMenuItem.setText(LangModelMap.getString("GenerateCabling"));
-		generateMenuItem.addActionListener(new ActionListener()
+		this.generateMenuItem.setText(LangModelMap.getString("GenerateCabling"));
+		this.generateMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					generateCabling();
 				}
 			});
-		newCollectorMenuItem.setText(LangModelMap.getString("CreateCollector"));
-		newCollectorMenuItem.addActionListener(new ActionListener()
+		this.newCollectorMenuItem.setText(LangModelMap.getString("CreateCollector"));
+		this.newCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					newCollector();
 				}
 			});
-		removeCollectorMenuItem.setText(LangModelMap.getString("RemoveCollector"));
-		removeCollectorMenuItem.addActionListener(new ActionListener()
+		this.removeCollectorMenuItem.setText(LangModelMap.getString("RemoveCollector"));
+		this.removeCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					removeCollector();
 				}
 			});
-		addToCollectorMenuItem.setText(LangModelMap.getString("AddToCollector"));
-		addToCollectorMenuItem.addActionListener(new ActionListener()
+		this.addToCollectorMenuItem.setText(LangModelMap.getString("AddToCollector"));
+		this.addToCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					addToCollector();
 				}
 			});
-		removeFromCollectorMenuItem.setText(LangModelMap.getString("RemoveFromCollector"));
-		removeFromCollectorMenuItem.addActionListener(new ActionListener()
+		this.removeFromCollectorMenuItem.setText(LangModelMap.getString("RemoveFromCollector"));
+		this.removeFromCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					removeFromCollector();
 				}
 			});
-		this.add(removeMenuItem);
-		this.add(insertSiteMenuItem);
-		this.add(generateMenuItem);
+		this.add(this.removeMenuItem);
+		this.add(this.insertSiteMenuItem);
+		this.add(this.generateMenuItem);
 //		this.addSeparator();
-		this.add(addToCollectorMenuItem);
-		this.add(removeFromCollectorMenuItem);
+		this.add(this.addToCollectorMenuItem);
+		this.add(this.removeFromCollectorMenuItem);
 //		this.addSeparator();
-		this.add(newCollectorMenuItem);
-		this.add(removeCollectorMenuItem);
+		this.add(this.newCollectorMenuItem);
+		this.add(this.removeCollectorMenuItem);
 	}
 
-	private void removeSelection()
+	void removeSelection()
 	{
 		DeleteSelectionCommand command = new DeleteSelectionCommand();
-		command.setLogicalNetLayer(logicalNetLayer);
+		command.setLogicalNetLayer(this.logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
 		getLogicalNetLayer().repaint(false);
 	}
 
-	private void insertSite()
+	void insertSite()
 	{
 		SiteNodeType proto = super.selectNodeProto();
 		if(proto != null)
 		{
-			for(Iterator it = selection.getElements().iterator(); it.hasNext();)
+			for(Iterator it = this.selection.getElements().iterator(); it.hasNext();)
 			{
 				TopologicalNode node = (TopologicalNode)it.next();
 
@@ -162,14 +160,14 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		}
 	}
 
-	private void generateCabling()
+	void generateCabling()
 	{
 		SiteNodeType proto = super.selectNodeProto();
 
 		if(proto != null)
 		{
 			List nodesToBind = new LinkedList();
-			for(Iterator it = selection.getElements().iterator(); it.hasNext();)
+			for(Iterator it = this.selection.getElements().iterator(); it.hasNext();)
 			{
 				MapElement me = (MapElement)it.next();
 				if(me instanceof UnboundNode)
@@ -189,7 +187,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 			}
 	
 			List alreadyBound = new LinkedList();
-			for(Iterator it = selection.getElements().iterator(); it.hasNext();)
+			for(Iterator it = this.selection.getElements().iterator(); it.hasNext();)
 			{
 				MapElement me = (MapElement)it.next();
 				if(me instanceof CablePath)
@@ -215,12 +213,12 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		}
 	}
 
-	private void newCollector()
+	void newCollector()
 	{
 		Collector collector = super.createCollector();
 		if(collector != null)
 		{
-			super.addLinksToCollector(collector, selection.getElements());
+			super.addLinksToCollector(collector, this.selection.getElements());
 
 			getLogicalNetLayer().repaint(false);
 
@@ -228,12 +226,12 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		}
 	}
 
-	private void addToCollector()
+	void addToCollector()
 	{
 		Collector collector = super.selectCollector();
 		if(collector != null)
 		{
-			super.addLinksToCollector(collector, selection.getElements());
+			super.addLinksToCollector(collector, this.selection.getElements());
 			
 			getLogicalNetLayer().repaint(false);
 
@@ -241,12 +239,12 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		}
 	}
 
-	private void removeFromCollector()
+	void removeFromCollector()
 	{
-		for(Iterator it = selection.getElements().iterator(); it.hasNext();)
+		for(Iterator it = this.selection.getElements().iterator(); it.hasNext();)
 		{
 			PhysicalLink link = (PhysicalLink)it.next();
-			Collector collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+			Collector collector = this.logicalNetLayer.getMapView().getMap().getCollector(link);
 			if(collector != null)
 			{
 				super.removeLinkFromCollector(collector, link);
@@ -258,12 +256,12 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 
-	private void removeCollector()
+	void removeCollector()
 	{
-		for(Iterator it = selection.getElements().iterator(); it.hasNext();)
+		for(Iterator it = this.selection.getElements().iterator(); it.hasNext();)
 		{
 			PhysicalLink link = (PhysicalLink)it.next();
-			Collector collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+			Collector collector = this.logicalNetLayer.getMapView().getMap().getCollector(link);
 			if(collector != null)
 			{
 				super.removeLinksFromCollector(collector, collector.getPhysicalLinks());

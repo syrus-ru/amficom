@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.18 2005/02/07 16:09:27 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.19 2005/02/09 11:41:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/02/07 16:09:27 $
+ * @version $Revision: 1.19 $, $Date: 2005/02/09 11:41:45 $
  * @module mapviewclient_v1
  */
 public final class MapVoidElementStrategy extends MapStrategy 
@@ -134,9 +134,9 @@ public final class MapVoidElementStrategy extends MapStrategy
 	 */
 	protected  void selectElementsInRect(Rectangle selectionRect)
 	{
-		Map map = super.logicalNetLayer.getMapView().getMap();
+//		Map map = super.logicalNetLayer.getMapView().getMap();
 		//Здесь просто проверяется что элемент содержится в прямоугольной области
-		Iterator e = map.getNodes().iterator();
+		Iterator e = this.map.getNodes().iterator();
 		
 		//Пробегаем и смотрим вхотит ли в область MapNodeElement
 		while (e.hasNext())
@@ -156,7 +156,7 @@ public final class MapVoidElementStrategy extends MapStrategy
 			}
 		}
 
-		e = map.getNodeLinks().iterator();
+		e = this.map.getNodeLinks().iterator();
 
 		if(super.logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_NODE_LINK)
 		{
@@ -183,7 +183,7 @@ public final class MapVoidElementStrategy extends MapStrategy
 		else
 		if(super.logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK)
 		{
-			for(Iterator it = map.getPhysicalLinks().iterator(); it.hasNext();)
+			for(Iterator it = this.map.getPhysicalLinks().iterator(); it.hasNext();)
 			{
 				PhysicalLink link = (PhysicalLink)it.next();
 				boolean select = true;
@@ -214,7 +214,7 @@ public final class MapVoidElementStrategy extends MapStrategy
 		else
 		if(selection.size() > 1)
 		{
-			Selection sel = new Selection(map);
+			Selection sel = new Selection(this.map);
 			sel.addAll(selection);
 			super.logicalNetLayer.setCurrentMapElement(sel);
 		}

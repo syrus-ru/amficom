@@ -1,15 +1,13 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.mapview.VoidElement;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
+import com.syrus.AMFICOM.map.SiteNodeType;
 
 public class VoidElementPopupMenu extends MapPopupMenu 
 {
@@ -39,59 +37,59 @@ public class VoidElementPopupMenu extends MapPopupMenu
 	}
 	
 	public void setElement(Object me)
-	{
+	{//empty
 	}
 	
 	private void jbInit()
 	{
-		mapPropertiesMenuItem.setText(LangModelMap.getString("MapProperties"));
-		mapPropertiesMenuItem.addActionListener(new ActionListener()
+		this.mapPropertiesMenuItem.setText(LangModelMap.getString("MapProperties"));
+		this.mapPropertiesMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					showMapProperties();
 				}
 			});
-		mapViewPropertiesMenuItem.setText(LangModelMap.getString("MapViewProperties"));
-		mapViewPropertiesMenuItem.addActionListener(new ActionListener()
+		this.mapViewPropertiesMenuItem.setText(LangModelMap.getString("MapViewProperties"));
+		this.mapViewPropertiesMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					showMapViewProperties();
 				}
 			});
-		addSiteMenuItem.setText(LangModelMap.getString("AddSite"));
-		addSiteMenuItem.addActionListener(new ActionListener()
+		this.addSiteMenuItem.setText(LangModelMap.getString("AddSite"));
+		this.addSiteMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					addSite();
 				}
 			});
-		this.add(addSiteMenuItem);
+		this.add(this.addSiteMenuItem);
 		this.addSeparator();
-		this.add(mapPropertiesMenuItem);
-		this.add(mapViewPropertiesMenuItem);
+		this.add(this.mapPropertiesMenuItem);
+		this.add(this.mapViewPropertiesMenuItem);
 	}
 
-	private void showMapProperties()
+	void showMapProperties()
 	{
 		super.showProperties(getLogicalNetLayer().getMapView().getMap());
 	}
 
-	private void showMapViewProperties()
+	void showMapViewProperties()
 	{
 		super.showProperties(getLogicalNetLayer().getMapView());
 	}
 
-	private void addSite()
+	void addSite()
 	{
 		SiteNodeType proto = super.selectNodeProto();
 		
 		if(proto != null)
 		{
-			CreateSiteCommandAtomic command = new CreateSiteCommandAtomic(proto, point);
-			command.setLogicalNetLayer(logicalNetLayer);
+			CreateSiteCommandAtomic command = new CreateSiteCommandAtomic(proto, this.point);
+			command.setLogicalNetLayer(this.logicalNetLayer);
 			getLogicalNetLayer().getCommandList().add(command);
 			getLogicalNetLayer().getCommandList().execute();
 

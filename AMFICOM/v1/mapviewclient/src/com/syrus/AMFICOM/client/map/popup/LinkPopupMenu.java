@@ -1,22 +1,18 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateMarkCommandAtomic;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.Collector;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JMenuItem;
-import com.syrus.AMFICOM.map.Map;
+
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateMarkCommandAtomic;
+import com.syrus.AMFICOM.map.Collector;
+import com.syrus.AMFICOM.map.PhysicalLink;
 
 public final class LinkPopupMenu extends MapPopupMenu 
 {
@@ -54,22 +50,22 @@ public final class LinkPopupMenu extends MapPopupMenu
 	{
 		this.link = (PhysicalLink)me;
 
-		Collector collector = logicalNetLayer.getMapView().getMap().getCollector(link);
-		addToCollectorMenuItem.setVisible(collector == null);
-		newCollectorMenuItem.setVisible(collector == null);
-		removeCollectorMenuItem.setVisible(collector != null);
-		removeFromCollectorMenuItem.setVisible(collector != null);
-		addMarkMenuItem.setVisible(
+		Collector collector = this.logicalNetLayer.getMapView().getMap().getCollector(this.link);
+		this.addToCollectorMenuItem.setVisible(collector == null);
+		this.newCollectorMenuItem.setVisible(collector == null);
+		this.removeCollectorMenuItem.setVisible(collector != null);
+		this.removeFromCollectorMenuItem.setVisible(collector != null);
+		this.addMarkMenuItem.setVisible(
 			getLogicalNetLayer().getContext().getApplicationModel().isEnabled(
 					MapApplicationModel.ACTION_EDIT_MAP));
 		if(collector != null)
 		{
-			removeCollectorMenuItem.setText(
+			this.removeCollectorMenuItem.setText(
 					LangModelMap.getString("RemoveCollector")
 					+ " (" 
 					+ collector.getName()
 					+ ")");
-		removeFromCollectorMenuItem.setText(
+		this.removeFromCollectorMenuItem.setText(
 					LangModelMap.getString("RemoveFromCollector")
 					+ " (" 
 					+ collector.getName()
@@ -79,40 +75,40 @@ public final class LinkPopupMenu extends MapPopupMenu
 
 	private void jbInit()
 	{
-		removeMenuItem.setText(LangModelMap.getString("Delete"));
-		removeMenuItem.addActionListener(new ActionListener()
+		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					removeLink();
 				}
 			});
-		propertiesMenuItem.setText(LangModelMap.getString("Properties"));
-		propertiesMenuItem.addActionListener(new ActionListener()
+		this.propertiesMenuItem.setText(LangModelMap.getString("Properties"));
+		this.propertiesMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					showProperties();
 				}
 			});
-		addMarkMenuItem.setText(LangModelMap.getString("AddMark"));
-		addMarkMenuItem.addActionListener(new ActionListener()
+		this.addMarkMenuItem.setText(LangModelMap.getString("AddMark"));
+		this.addMarkMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					addMark();
 				}
 			});
-		newCollectorMenuItem.setText(LangModelMap.getString("CreateCollector"));
-		newCollectorMenuItem.addActionListener(new ActionListener()
+		this.newCollectorMenuItem.setText(LangModelMap.getString("CreateCollector"));
+		this.newCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					newCollector();
 				}
 			});
-		removeCollectorMenuItem.setText(LangModelMap.getString("RemoveCollector"));
-		removeCollectorMenuItem.addActionListener(new ActionListener()
+		this.removeCollectorMenuItem.setText(LangModelMap.getString("RemoveCollector"));
+		this.removeCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -120,16 +116,16 @@ public final class LinkPopupMenu extends MapPopupMenu
 				}
 			});
 
-		addToCollectorMenuItem.setText(LangModelMap.getString("AddToCollector"));
-		addToCollectorMenuItem.addActionListener(new ActionListener()
+		this.addToCollectorMenuItem.setText(LangModelMap.getString("AddToCollector"));
+		this.addToCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					addToCollector();
 				}
 			});
-		removeFromCollectorMenuItem.setText(LangModelMap.getString("RemoveFromCollector"));
-		removeFromCollectorMenuItem.addActionListener(new ActionListener()
+		this.removeFromCollectorMenuItem.setText(LangModelMap.getString("RemoveFromCollector"));
+		this.removeFromCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
@@ -137,46 +133,46 @@ public final class LinkPopupMenu extends MapPopupMenu
 				}
 			});
 
-		this.add(removeMenuItem);
-		this.add(addMarkMenuItem);
+		this.add(this.removeMenuItem);
+		this.add(this.addMarkMenuItem);
 //		this.addSeparator();
-		this.add(addToCollectorMenuItem);
-		this.add(removeFromCollectorMenuItem);
+		this.add(this.addToCollectorMenuItem);
+		this.add(this.removeFromCollectorMenuItem);
 //		this.addSeparator();
-		this.add(newCollectorMenuItem);
-		this.add(removeCollectorMenuItem);
+		this.add(this.newCollectorMenuItem);
+		this.add(this.removeCollectorMenuItem);
 		this.addSeparator();
-		this.add(propertiesMenuItem);
+		this.add(this.propertiesMenuItem);
 	}
 
-	private void showProperties()
+	void showProperties()
 	{
-		super.showProperties(link);
+		super.showProperties(this.link);
 	}
 
-	private void removeLink()
+	void removeLink()
 	{
-		super.removeMapElement(link);
+		super.removeMapElement(this.link);
 
 		getLogicalNetLayer().repaint(false);
 	}
 
-	private void addMark()
+	void addMark()
 	{
-		CreateMarkCommandAtomic command = new CreateMarkCommandAtomic(link, point);
-		command.setLogicalNetLayer(logicalNetLayer);
+		CreateMarkCommandAtomic command = new CreateMarkCommandAtomic(this.link, this.point);
+		command.setLogicalNetLayer(this.logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
 		getLogicalNetLayer().repaint(false);
 	}
 
-	private void newCollector()
+	void newCollector()
 	{
 		Collector collector = super.createCollector();
 		if(collector != null)
 		{
-			super.addLinkToCollector(collector, link);
+			super.addLinkToCollector(collector, this.link);
 
 			getLogicalNetLayer().repaint(false);
 
@@ -184,12 +180,12 @@ public final class LinkPopupMenu extends MapPopupMenu
 		}
 	}
 
-	private void addToCollector()
+	void addToCollector()
 	{
 		Collector collector = super.selectCollector();
 		if(collector != null)
 		{
-			super.addLinkToCollector(collector, link);
+			super.addLinkToCollector(collector, this.link);
 			
 			getLogicalNetLayer().repaint(false);
 
@@ -197,12 +193,12 @@ public final class LinkPopupMenu extends MapPopupMenu
 		}
 	}
 
-	private void removeFromCollector()
+	void removeFromCollector()
 	{
-		Collector collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+		Collector collector = this.logicalNetLayer.getMapView().getMap().getCollector(this.link);
 		if(collector != null)
 		{
-			super.removeLinkFromCollector(collector, link);
+			super.removeLinkFromCollector(collector, this.link);
 			
 			getLogicalNetLayer().repaint(false);
 
@@ -210,11 +206,11 @@ public final class LinkPopupMenu extends MapPopupMenu
 		}
 	}
 
-	private void removeCollector()
+	void removeCollector()
 	{
 		getLogicalNetLayer().deselectAll();
 
-		Collector collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+		Collector collector = this.logicalNetLayer.getMapView().getMap().getCollector(this.link);
 		if(collector != null)
 		{
 			List list = new LinkedList();

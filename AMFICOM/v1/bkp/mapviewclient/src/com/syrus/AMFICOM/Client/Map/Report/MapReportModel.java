@@ -1,5 +1,11 @@
 package com.syrus.AMFICOM.Client.Map.Report;
 
+import java.awt.Image;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JComponent;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -11,13 +17,6 @@ import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportResultsTablePanel;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-
-import java.awt.Image;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JComponent;
 
 
 public class MapReportModel extends APOReportModel

@@ -1,17 +1,16 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
-import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteNodeCommandBundle;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.mapview.UnboundNode;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteNodeCommandBundle;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.mapview.UnboundNode;
 
 public class UnboundPopupMenu extends MapPopupMenu 
 {
@@ -48,65 +47,65 @@ public class UnboundPopupMenu extends MapPopupMenu
 
 	private void jbInit() 
 	{
-		removeMenuItem.setText(LangModelMap.getString("Delete"));
-		removeMenuItem.addActionListener(new ActionListener()
+		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					removeUnbound();
 				}
 			});
-		bindMenuItem.setText(LangModelMap.getString("Bind"));
-		bindMenuItem.addActionListener(new ActionListener()
+		this.bindMenuItem.setText(LangModelMap.getString("Bind"));
+		this.bindMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					bind();
 				}
 			});
-		generateMenuItem.setText(LangModelMap.getString("GenerateSite"));
-		generateMenuItem.addActionListener(new ActionListener()
+		this.generateMenuItem.setText(LangModelMap.getString("GenerateSite"));
+		this.generateMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					generateSite();
 				}
 			});
-		this.add(removeMenuItem);
-		this.add(bindMenuItem);
-		this.add(generateMenuItem);
+		this.add(this.removeMenuItem);
+		this.add(this.bindMenuItem);
+		this.add(this.generateMenuItem);
 	}
 
-	private void removeUnbound()
+	void removeUnbound()
 	{
-		DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(unbound);
-		command.setLogicalNetLayer(logicalNetLayer);
+		DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(this.unbound);
+		command.setLogicalNetLayer(this.logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
 		getLogicalNetLayer().repaint(false);
 	}
 
-	private void bind()
+	void bind()
 	{
 		SiteNode site = super.selectSiteNode();
 		if(site != null)
 		{
-			BindUnboundNodeToSiteCommandBundle command = new BindUnboundNodeToSiteCommandBundle(unbound, site);
-			command.setLogicalNetLayer(logicalNetLayer);
-			logicalNetLayer.getCommandList().add(command);
-			logicalNetLayer.getCommandList().execute();
+			BindUnboundNodeToSiteCommandBundle command = new BindUnboundNodeToSiteCommandBundle(this.unbound, site);
+			command.setLogicalNetLayer(this.logicalNetLayer);
+			this.logicalNetLayer.getCommandList().add(command);
+			this.logicalNetLayer.getCommandList().execute();
 
 			getLogicalNetLayer().repaint(false);
 		}
 	}
 
-	private void generateSite()
+	void generateSite()
 	{
 		SiteNodeType proto = super.selectNodeProto();
 		if(proto != null)
 		{
-			super.convertUnboundNodeToSite(unbound, proto);
+			super.convertUnboundNodeToSite(this.unbound, proto);
 		}
 	}
 }

@@ -237,7 +237,7 @@ public final class MapLinkBindPanel
 	}
 
 	public void setContext(ApplicationContext aContext)
-	{
+	{//empty
 	}
 
 	public void cableSelected(Object or)

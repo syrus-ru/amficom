@@ -325,7 +325,7 @@ public final class MapCablePathBindPanel
 		this.endNodeToComboBox.setEnabled(true);
 		
 		if(this.path == null)
-		{
+		{//empty
 		}
 		else
 		{
@@ -648,7 +648,7 @@ public final class MapCablePathBindPanel
 	}
 
 	public void setContext(ApplicationContext aContext)
-	{
+	{//empty
 	}
 
 	public boolean modify()

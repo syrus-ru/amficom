@@ -212,7 +212,7 @@ public class MapLinkGeneralPanel
 	}
 
 	public void setContext(ApplicationContext aContext)
-	{
+	{//empty
 	}
 
 	public boolean modify()

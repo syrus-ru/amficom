@@ -155,7 +155,7 @@ public class MapPanel
 	}
 
 	public void setContext(ApplicationContext aContext)
-	{
+	{//empty
 	}
 
 	public boolean modify()

@@ -19,36 +19,36 @@ import java.util.HashMap;
 public final class MapPopupMenuManager 
 {
 	private MapPopupMenuManager()
-	{
+	{//empty
 	}
 
 	private static java.util.Map popupMap = new HashMap();
 
 	static
 	{
-		popupMap.put(com.syrus.AMFICOM.mapview.CablePath.class,
+		popupMap.put(CablePath.class,
 			CablePathPopupMenu.getInstance());
-		popupMap.put(com.syrus.AMFICOM.map.PhysicalLink.class,
+		popupMap.put(PhysicalLink.class,
 			LinkPopupMenu.getInstance());
-		popupMap.put(com.syrus.AMFICOM.map.Mark.class,
+		popupMap.put(Mark.class,
 			MarkPopupMenu.getInstance());
-		popupMap.put(com.syrus.AMFICOM.map.NodeLink.class,
+		popupMap.put(NodeLink.class,
 			NodeLinkPopupMenu.getInstance());
-		popupMap.put(com.syrus.AMFICOM.map.TopologicalNode.class,
+		popupMap.put(TopologicalNode.class,
 			NodePopupMenu.getInstance());
-		popupMap.put(com.syrus.AMFICOM.mapview.Selection.class,
+		popupMap.put(Selection.class,
 			SelectionPopupMenu.getInstance());
-		popupMap.put(com.syrus.AMFICOM.map.SiteNode.class,
+		popupMap.put(SiteNode.class,
 			SitePopupMenu.getInstance());
-		popupMap.put(com.syrus.AMFICOM.mapview.UnboundNode.class,
+		popupMap.put(UnboundNode.class,
 			UnboundPopupMenu.getInstance());
-		popupMap.put(com.syrus.AMFICOM.mapview.UnboundLink.class,
+		popupMap.put(UnboundLink.class,
 			UnboundLinkPopupMenu.getInstance());
-		popupMap.put(com.syrus.AMFICOM.mapview.VoidElement.class,
+		popupMap.put(VoidElement.class,
 			VoidElementPopupMenu.getInstance());
-		popupMap.put(com.syrus.AMFICOM.mapview.Marker.class,
+		popupMap.put(Marker.class,
 			MarkerPopupMenu.getInstance());
-		popupMap.put(com.syrus.AMFICOM.mapview.MeasurementPath.class,
+		popupMap.put(MeasurementPath.class,
 			MeasurementPathPopupMenu.getInstance());
 	}
 	

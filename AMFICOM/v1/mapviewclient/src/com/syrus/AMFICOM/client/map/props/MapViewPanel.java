@@ -245,7 +245,7 @@ public class MapViewPanel
 	}
 
 	public void setContext(ApplicationContext aContext)
-	{
+	{//empty
 	}
 
 	public boolean modify()
@@ -312,6 +312,6 @@ public class MapViewPanel
 	}
 
 	public void setLogicalNetLayer(LogicalNetLayer lnl)
-	{
+	{//empty
 	}
 }

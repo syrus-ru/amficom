@@ -187,7 +187,7 @@ public class MapSiteGeneralPanel
 	}
 
 	public void setContext(ApplicationContext aContext)
-	{
+	{//empty
 	}
 
 	public boolean modify()

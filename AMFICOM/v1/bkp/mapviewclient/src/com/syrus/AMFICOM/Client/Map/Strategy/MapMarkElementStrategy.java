@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.18 2005/02/07 16:09:26 krupenn Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.19 2005/02/09 11:41:44 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -28,7 +28,7 @@ import java.awt.Point;
 /**
  * —тратеги€ управлени€ метки на физической линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/02/07 16:09:26 $
+ * @version $Revision: 1.19 $, $Date: 2005/02/09 11:41:44 $
  * @module mapviewclient_v1
  */
 public final class MapMarkElementStrategy extends MapStrategy 
@@ -106,8 +106,6 @@ public final class MapMarkElementStrategy extends MapStrategy
 	 */
 	protected void leftMouseDragged(MapState mapState, Point point)
 	{
-		int actionMode = mapState.getActionMode();
-
 		MapCoordinatesConverter converter = super.logicalNetLayer;
 
 		if (this.command == null)

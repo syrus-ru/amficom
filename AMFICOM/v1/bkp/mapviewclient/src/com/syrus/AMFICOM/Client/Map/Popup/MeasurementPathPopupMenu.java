@@ -1,22 +1,14 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateMarkCommandAtomic;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateMarkerCommandAtomic;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.Collector;
-
-import com.syrus.AMFICOM.mapview.MeasurementPath;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import javax.swing.JMenuItem;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateMarkerCommandAtomic;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 
 public final class MeasurementPathPopupMenu extends MapPopupMenu 
 {
@@ -49,43 +41,43 @@ public final class MeasurementPathPopupMenu extends MapPopupMenu
 	{
 		this.path = (MeasurementPath)me;
 
-		addMarkerMenuItem.setVisible(
+		this.addMarkerMenuItem.setVisible(
 			getLogicalNetLayer().getContext().getApplicationModel().isEnabled(
 					MapApplicationModel.ACTION_USE_MARKER));
 	}
 
 	private void jbInit()
 	{
-		propertiesMenuItem.setText(LangModelMap.getString("Properties"));
-		propertiesMenuItem.addActionListener(new ActionListener()
+		this.propertiesMenuItem.setText(LangModelMap.getString("Properties"));
+		this.propertiesMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					showProperties();
 				}
 			});
-		addMarkerMenuItem.setText(LangModelMap.getString("AddMarker"));
-		addMarkerMenuItem.addActionListener(new ActionListener()
+		this.addMarkerMenuItem.setText(LangModelMap.getString("AddMarker"));
+		this.addMarkerMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
 					addMarker();
 				}
 			});
-		this.add(addMarkerMenuItem);
+		this.add(this.addMarkerMenuItem);
 		this.addSeparator();
-		this.add(propertiesMenuItem);
+		this.add(this.propertiesMenuItem);
 	}
 
-	private void showProperties()
+	void showProperties()
 	{
-		super.showProperties(path);
+		super.showProperties(this.path);
 	}
 
-	private void addMarker()
+	void addMarker()
 	{
-		CreateMarkerCommandAtomic command = new CreateMarkerCommandAtomic(path, point);
-		command.setLogicalNetLayer(logicalNetLayer);
+		CreateMarkerCommandAtomic command = new CreateMarkerCommandAtomic(this.path, this.point);
+		command.setLogicalNetLayer(this.logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
