@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.39 2004/12/28 12:45:28 arseniy Exp $
+ * $Id: MCM.java,v 1.40 2005/01/11 16:18:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/12/28 12:45:28 $
+ * @version $Revision: 1.40 $, $Date: 2005/01/11 16:18:22 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -38,9 +38,9 @@ public class MCM extends DomainMember implements Characterized {
 
 	private String name;
 	private String description;
+	private String hostname;
 	private Identifier userId;
 	private Identifier serverId;
-	private short tcpPort;
 
 	private List kiss;
 
@@ -67,9 +67,9 @@ public class MCM extends DomainMember implements Characterized {
 
 		this.name = new String(mt.name);
 		this.description = new String(mt.description);
+		this.hostname = new String(mt.hostname);
 		this.userId = new Identifier(mt.user_id);
 		this.serverId = new Identifier(mt.server_id);
-		this.tcpPort = mt.tcp_port;
 
 		try {
 			this.kiss = new ArrayList(mt.kis_ids.length);
@@ -92,9 +92,9 @@ public class MCM extends DomainMember implements Characterized {
 								Identifier domainId,
 								String name,
 								String description,
+								String hostname,
 								Identifier userId,
-								Identifier serverId,
-								short tcpPort) {
+								Identifier serverId) {
 		super(id,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis()),
@@ -103,9 +103,9 @@ public class MCM extends DomainMember implements Characterized {
 					domainId);
 		this.name = name;
 		this.description = description;
+		this.hostname = hostname;
 		this.userId = userId;
 		this.serverId = serverId;
-		this.tcpPort = tcpPort;
 
 		this.characteristics = new LinkedList();
 
@@ -126,21 +126,6 @@ public class MCM extends DomainMember implements Characterized {
 		}
 	}
 
-//	public static MCM getInstance(MCM_Transferable mt) throws CreateObjectException {
-//		MCM mcm = new MCM(mt);
-//		
-//		mcm.mcmDatabase = ConfigurationDatabaseContext.mcmDatabase;
-//		try {
-//			if (mcm.mcmDatabase != null)
-//				mcm.mcmDatabase.insert(mcm);
-//		}
-//		catch (IllegalDataException ide) {
-//			throw new CreateObjectException(ide.getMessage(), ide);
-//		}
-//
-//		return mcm;
-//	}
-
 	public Object getTransferable() {
 		int i = 0;
 
@@ -159,9 +144,9 @@ public class MCM extends DomainMember implements Characterized {
 									(Identifier_Transferable)super.domainId.getTransferable(),
 									new String(this.name),
 									new String(this.description),
+									new String(this.hostname),
 									(Identifier_Transferable)this.userId.getTransferable(),
 									(Identifier_Transferable)this.serverId.getTransferable(),
-									this.tcpPort,
 									charIds,
 									kisIdsT);
 	}
@@ -173,7 +158,11 @@ public class MCM extends DomainMember implements Characterized {
 	public String getDescription() {
 		return this.description;
 	}
-	
+
+	public String getHostName() {
+		return this.hostname;
+	}
+
 	public void setDescription(String description){
 		this.description = description;
 		super.currentVersion = super.getNextVersion();
@@ -185,10 +174,6 @@ public class MCM extends DomainMember implements Characterized {
 
 	public Identifier getServerId() {
 		return this.serverId;
-	}
-
-	public short getTCPPort() {
-		return this.tcpPort;
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
@@ -228,23 +213,24 @@ public class MCM extends DomainMember implements Characterized {
 									 Identifier domainId,
 									 String name,
 									 String description,
+									 String hostname,
 									 Identifier userId,
-									 Identifier serverId,
-									 short tcpPort) throws CreateObjectException {
-		if (creatorId == null || domainId == null || name == null || description == null || 
+									 Identifier serverId) throws CreateObjectException {
+		if (creatorId == null || domainId == null || name == null || description == null || hostname == null || 
 				userId == null || serverId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
+
 		try {
 			return new MCM(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MCM_ENTITY_CODE),
 								creatorId,
 								domainId,
 								name,
 								description,
+								hostname,
 								userId,
-								serverId,
-								tcpPort);
-		} catch (IllegalObjectEntityException e) {
+								serverId);
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("MCM.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -256,6 +242,7 @@ public class MCM extends DomainMember implements Characterized {
 											  Identifier domainId,
 											  String name,
 											  String description,
+												String hostname,
 											  Identifier userId,
 											  Identifier serverId) {
 		super.setAttributes(created,												
@@ -265,9 +252,9 @@ public class MCM extends DomainMember implements Characterized {
 				domainId);
 		this.name = name;
 		this.description = description;
+		this.hostname = hostname;
 		this.userId = userId;
 		this.serverId = serverId;
-//		this.tcpPort = tcpPort;
 	}
 
 	protected synchronized void setKISs0(List kiss) {

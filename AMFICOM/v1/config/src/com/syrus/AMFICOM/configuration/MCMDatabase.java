@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.42 2004/12/29 15:25:47 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.43 2005/01/11 16:18:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/12/29 15:25:47 $
+ * @version $Revision: 1.43 $, $Date: 2005/01/11 16:18:22 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -55,10 +55,11 @@ public class MCMDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_USER_ID = "user_id";
 	public static final String COLUMN_SERVER_ID = "server_id";
-	// tcp_port NUMBER(5,0),
-//	public static final String COLUMN_TCP_PORT  		= "tcp_port";
 	//public static final String COLUMN_LOCATION = "location";
-	//public static final String COLUMN_HOSTNAME = "hostname";
+	public static final String COLUMN_HOSTNAME = "hostname";
+
+	protected static final int SIZE_HOSTNAME_COLUMN = 64;
+
 	private static String columns;
 	private static String updateMultiplySQLValues;
 
@@ -78,9 +79,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_HOSTNAME + COMMA
 				+ COLUMN_USER_ID + COMMA
-				+ COLUMN_SERVER_ID ;
-//				+ COMMA	+ COLUMN_TCP_PORT;
+				+ COLUMN_SERVER_ID;
 		}
 		return columns;
 	}
@@ -92,7 +93,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
-//					+ QUESTION + COMMA
+					+ QUESTION + COMMA
 					+ QUESTION;
     	}
 		return updateMultiplySQLValues;
@@ -104,6 +105,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 			+ DatabaseIdentifier.toSQLString(mcm.getDomainId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(mcm.getUserId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(mcm.getServerId()); 
 		return sql;
@@ -118,6 +120,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getDomainId());
 			DatabaseString.setString(preparedStatement, ++i, mcm.getName(), SIZE_NAME_COLUMN);
 			DatabaseString.setString(preparedStatement, ++i, mcm.getDescription(), SIZE_DESCRIPTION_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, mcm.getHostName(), SIZE_HOSTNAME_COLUMN);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getUserId());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getServerId());
 		}
@@ -146,7 +149,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 																	 null,
 																	 null,
 																	 null,
-																	 (short)0);			
+																	 null);			
 		}
 		mcm.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -155,9 +158,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 						  DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 						  DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 						  DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+							DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_HOSTNAME)),
 						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_USER_ID),
 						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SERVER_ID)
-//						  , resultSet.getShort(COLUMN_TCP_PORT)
 						  );
 		
 		return mcm;
@@ -210,104 +213,109 @@ public class MCMDatabase extends StorableObjectDatabase {
 		}
 		mcm.setKISs0(kiss);
 	}
-    
-    private void retrieveKISIdsByOneQuery(List mcms) throws RetrieveObjectException {
-    	
-    	if ((mcms == null) || (mcms.isEmpty()))
-            return;     
-        
-        StringBuffer sql = new StringBuffer(SQL_SELECT
+
+  private void retrieveKISIdsByOneQuery(List mcms) throws RetrieveObjectException {
+
+    if ((mcms == null) || (mcms.isEmpty()))
+			return;     
+
+    StringBuffer sql = new StringBuffer(SQL_SELECT
                 + COLUMN_ID + COMMA
                 + KISDatabase.COLUMN_MCM_ID
                 + SQL_FROM + ObjectEntities.KIS_ENTITY
                 + SQL_WHERE + KISDatabase.COLUMN_MCM_ID
                 + SQL_IN + OPEN_BRACKET);
-        int i = 1;
-        for (Iterator it = mcms.iterator(); it.hasNext();i++) {
-            MCM mcm = (MCM)it.next();
-            sql.append(DatabaseIdentifier.toSQLString(mcm.getId()));
-            if (it.hasNext()){
-                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-                    sql.append(COMMA);
-                else {
-                    sql.append(CLOSE_BRACKET);
-                    sql.append(SQL_OR);
-                    sql.append(KISDatabase.COLUMN_MCM_ID);
-                    sql.append(SQL_IN);
-                    sql.append(OPEN_BRACKET);
-                }                   
-            }
-        }
-        sql.append(CLOSE_BRACKET);
-        
-        Statement statement = null;
-        ResultSet resultSet = null;
-        Connection connection = DatabaseConnection.getConnection();
-        try {
-            statement = connection.createStatement();
-            Log.debugMessage("MCMDatabase.retrieveKISIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-            resultSet = statement.executeQuery(sql.toString());
-            Map kisMap = new HashMap();
-            while (resultSet.next()) {
-                MCM mcm = null;
-                Identifier mcmId = DatabaseIdentifier.getIdentifier(resultSet, KISDatabase.COLUMN_MCM_ID);
-                for (Iterator it = mcms.iterator(); it.hasNext();) {
-                    MCM mcmToCompare = (MCM) it.next();
-                    if (mcmToCompare.getId().equals(mcmId)){
-                        mcm = mcmToCompare;
-                        break;
-                    }                   
-                }
-                
-                if (mcm == null){
-                    String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot found correspond result for '" + mcmId.getIdentifierString() +"'" ;
-                    throw new RetrieveObjectException(mesg);
-                }                    
-                
-                                
-                Identifier kisId = null;
+		int i = 1;
+		for (Iterator it = mcms.iterator(); it.hasNext();i++) {
+			MCM mcm = (MCM)it.next();
+			sql.append(DatabaseIdentifier.toSQLString(mcm.getId()));
+			if (it.hasNext()) {
+				if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+					sql.append(COMMA);
+				else {
+					sql.append(CLOSE_BRACKET);
+					sql.append(SQL_OR);
+					sql.append(KISDatabase.COLUMN_MCM_ID);
+					sql.append(SQL_IN);
+					sql.append(OPEN_BRACKET);
+				}
+			}
+		}
+		sql.append(CLOSE_BRACKET);
+
+    Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("MCMDatabase.retrieveKISIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql.toString());
+			Map kisMap = new HashMap();
+			while (resultSet.next()) {
+				MCM mcm = null;
+				Identifier mcmId = DatabaseIdentifier.getIdentifier(resultSet, KISDatabase.COLUMN_MCM_ID);
+				for (Iterator it = mcms.iterator(); it.hasNext();) {
+					MCM mcmToCompare = (MCM) it.next();
+					if (mcmToCompare.getId().equals(mcmId)) {
+						mcm = mcmToCompare;
+						break;
+					}
+				}
+
+				if (mcm == null) {
+					String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot found correspond result for '" + mcmId.getIdentifierString() +"'" ;
+					throw new RetrieveObjectException(mesg);
+				}
+
+				Identifier kisId = null;
 				try {
 					kisId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
 					KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(kisId, true);
 					List kiss = (List)kisMap.get(mcm);
-	                if (kiss == null){
-	                    kiss = new LinkedList();
-	                    kisMap.put(mcm, kiss);
-	                }               
-	                kiss.add(kis);
-				} catch (DatabaseException e) {
-					 String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot retrieve kis " + ((kisId == null) ? "null" : kisId.getIdentifierString()) + " for result -- " + e.getMessage();
-			         throw new RetrieveObjectException(mesg, e);
-				} catch (CommunicationException e) {
-					 String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot retrieve kis " + ((kisId == null) ? "null" : kisId.getIdentifierString()) + " for result -- " + e.getMessage();
-			         throw new RetrieveObjectException(mesg, e);
-				}				              
-            }
-            
-            for (Iterator iter = mcms.iterator(); iter.hasNext();) {
-                MCM mcm = (MCM) iter.next();
-                List kiss = (List)kisMap.get(mcm);
-                mcm.setKISs0(kiss);
-            }
-            
-        } catch (SQLException sqle) {
-            String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
-            throw new RetrieveObjectException(mesg, sqle);
-        } finally {
-            try {
-                if (statement != null)
-                    statement.close();
-                if (resultSet != null)
-                    resultSet.close();
-                statement = null;
-                resultSet = null;
-            } catch (SQLException sqle1) {
-                Log.errorException(sqle1);
-            } finally {
-                DatabaseConnection.releaseConnection(connection);
-            }
-        }
-    }
+					if (kiss == null) {
+						kiss = new LinkedList();
+						kisMap.put(mcm, kiss);
+					}
+					kiss.add(kis);
+				}
+				catch (DatabaseException e) {
+					String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot retrieve kis " + ((kisId == null) ? "null" : kisId.getIdentifierString()) + " for result -- " + e.getMessage();
+					throw new RetrieveObjectException(mesg, e);
+				}
+				catch (CommunicationException e) {
+					String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot retrieve kis " + ((kisId == null) ? "null" : kisId.getIdentifierString()) + " for result -- " + e.getMessage();
+					throw new RetrieveObjectException(mesg, e);
+				}
+			}
+
+      for (Iterator iter = mcms.iterator(); iter.hasNext();) {
+				MCM mcm = (MCM) iter.next();
+				List kiss = (List)kisMap.get(mcm);
+				mcm.setKISs0(kiss);
+			}
+
+		}
+		catch (SQLException sqle) {
+			String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+			finally {
+				DatabaseConnection.releaseConnection(connection);
+			}
+		}
+	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -324,25 +332,25 @@ public class MCMDatabase extends StorableObjectDatabase {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
 		try {
 			characteristicDatabase.updateCharacteristics(mcm);
-		} catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
 		}
-	}
-	
-	public void insert(List storableObjects) throws IllegalDataException,
-			CreateObjectException {
-		super.insertEntities(storableObjects);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
-		try {
-			characteristicDatabase.updateCharacteristics(storableObjects);
-		} catch (UpdateObjectException e) {
+		catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) 
-			throws IllegalDataException, VersionCollisionException, 
-			UpdateObjectException {
+	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+		super.insertEntities(storableObjects);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		try {
+			characteristicDatabase.updateCharacteristics(storableObjects);
+		}
+		catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
+	}
+
+	public void update(StorableObject storableObject, int updateKind, Object obj)
+			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		MCM mcm = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_FORCE:
@@ -358,8 +366,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(List storableObjects, int updateKind, Object arg)
-			throws IllegalDataException, VersionCollisionException,
-			UpdateObjectException {
+			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 		case UPDATE_FORCE:
 			super.checkAndUpdateEntities(storableObjects, true);
@@ -372,48 +379,47 @@ public class MCMDatabase extends StorableObjectDatabase {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
 		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
-	
-	public List retrieveByIds(List ids, String condition)
-			throws IllegalDataException, RetrieveObjectException {
+
+	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
 			list = this.retrieveByIdsOneQuery(null, condition);
 		else 
 			list = this.retrieveByIdsOneQuery(ids, condition);
-		
-        if (list != null) {
-            retrieveKISIdsByOneQuery(list);
-            
-            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_MCM);
-            for (Iterator iter = list.iterator(); iter.hasNext();) {
-                MCM mcm = (MCM) iter.next();
-                List characteristics = (List)characteristicMap.get(mcm);
-                mcm.setCharacteristics0(characteristics);
-            }
-        }
+
+    if (list != null) {
+			retrieveKISIdsByOneQuery(list);
+
+      CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_MCM);
+			for (Iterator iter = list.iterator(); iter.hasNext();) {
+				MCM mcm = (MCM) iter.next();
+				List characteristics = (List)characteristicMap.get(mcm);
+				mcm.setCharacteristics0(characteristics);
+			}
+		}
 		return list;	
 		//return retriveByIdsPreparedStatement(ids);
 	}
 
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
-        List list = null;
-        
-        String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
-        
-        try {
-            list = retrieveButIds(ids, condition);
-        }  catch (IllegalDataException ide) {           
-            Log.debugMessage(this.getEnityName() + "Database.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-        }
-        
-        return list;
-    }
-	
+		List list = null;
+
+		String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
+		
+		try {
+				list = retrieveButIds(ids, condition);
+		}  catch (IllegalDataException ide) {           
+				Log.debugMessage(this.getEnityName() + "Database.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+		}
+
+		return list;
+	}
+
 	private List retrieveByKISs(List kisIds) throws RetrieveObjectException, IllegalDataException{
 		if (kisIds == null || kisIds.isEmpty())
 			return Collections.EMPTY_LIST;
-		
+
 		StringBuffer sql = new StringBuffer(
 			COLUMN_ID + SQL_IN + OPEN_BRACKET + 
 				SQL_SELECT + KISDatabase.COLUMN_MCM_ID + SQL_FROM
@@ -436,26 +442,29 @@ public class MCMDatabase extends StorableObjectDatabase {
 		}
 		sql.append(CLOSE_BRACKET);
 		sql.append(CLOSE_BRACKET);
-		
+
 		return this.retrieveByIds(null, sql.toString());
 	}
 
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
+	public List retrieveByCondition(List ids, StorableObjectCondition condition)
+			throws RetrieveObjectException, IllegalDataException {
 		List list = null;
-		if (condition instanceof DomainCondition){
+		if (condition instanceof DomainCondition) {
 			DomainCondition domainCondition = (DomainCondition)condition;
 			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-		} else if (condition instanceof LinkedIdsCondition){
-			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-			List kisIds = linkedIdsCondition.getLinkedIds();
-			if (kisIds == null)
-				kisIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
-			list = this.retrieveByKISs(kisIds);
-		} else {
-			Log.errorMessage(this.getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition.getClass().getName());
-			list = this.retrieveButIds(ids);
 		}
+		else
+			if (condition instanceof LinkedIdsCondition) {
+				LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+				List kisIds = linkedIdsCondition.getLinkedIds();
+				if (kisIds == null)
+					kisIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
+				list = this.retrieveByKISs(kisIds);
+			}
+			else {
+				Log.errorMessage(this.getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition.getClass().getName());
+				list = this.retrieveButIds(ids);
+			}
 		return list;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.32 2004/12/28 12:45:28 arseniy Exp $
+ * $Id: Server.java,v 1.33 2005/01/11 16:18:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/12/28 12:45:28 $
+ * @version $Revision: 1.33 $, $Date: 2005/01/11 16:18:22 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -39,6 +39,7 @@ public class Server extends DomainMember implements Characterized {
 
 	private String name;
 	private String description;
+	private String hostname;
 	private Identifier userId;
 	private List characteristics;
 
@@ -62,8 +63,9 @@ public class Server extends DomainMember implements Characterized {
 			  new Identifier(st.domain_id));
 		this.name = new String(st.name);
 		this.description = new String(st.description);
+		this.hostname = new String(st.hostname);
 		this.userId = new Identifier(st.user_id);
-		
+
 		try {
 			this.characteristics = new ArrayList(st.characteristic_ids.length);
 			for (int i = 0; i < st.characteristic_ids.length; i++)
@@ -81,6 +83,7 @@ public class Server extends DomainMember implements Characterized {
 								 Identifier domainId,
 								 String name,
 								 String description,
+								 String hostname,
 								 Identifier userId) {
 		super(id,
 					new Date(System.currentTimeMillis()),
@@ -90,6 +93,7 @@ public class Server extends DomainMember implements Characterized {
 					domainId);
 		this.name = name;
 		this.description = description;
+		this.hostname = hostname;
 		this.userId = userId;
 
 		this.characteristics = new LinkedList();
@@ -109,21 +113,6 @@ public class Server extends DomainMember implements Characterized {
 		}
 	}
 
-//	public static Server getInstance(Server_Transferable st) throws CreateObjectException {
-//		Server server = new Server(st);
-//		
-//		server.serverDatabase = ConfigurationDatabaseContext.serverDatabase;
-//		try {
-//			if (server.serverDatabase != null)
-//				server.serverDatabase.insert(server);
-//		}
-//		catch (IllegalDataException ide) {
-//			throw new CreateObjectException(ide.getMessage(), ide);
-//		}
-//
-//		return server;
-//	}
-
 	public Object getTransferable() {
 		int i = 0;
 
@@ -135,6 +124,7 @@ public class Server extends DomainMember implements Characterized {
 									   (Identifier_Transferable)super.domainId.getTransferable(),
 									   new String(this.name),
 									   new String(this.description),
+										 new String(this.hostname),
 									   (Identifier_Transferable)this.userId.getTransferable(),
 									   charIds);
 	}
@@ -147,7 +137,7 @@ public class Server extends DomainMember implements Characterized {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
@@ -155,7 +145,11 @@ public class Server extends DomainMember implements Characterized {
 	public String getDescription() {
 		return this.description;
 	}
-	
+
+	public String getHostName() {
+		return this.hostname;
+	}
+
 	public void setDescription(String description){
 		this.description = description;
 		super.currentVersion = super.getNextVersion();
@@ -171,7 +165,7 @@ public class Server extends DomainMember implements Characterized {
 			super.currentVersion = super.getNextVersion();
 		}
 	}
-	
+
 	public void removeCharacteristic(Characteristic characteristic) {
 		if (characteristic != null){
 			this.characteristics.remove(characteristic);
@@ -188,29 +182,32 @@ public class Server extends DomainMember implements Characterized {
 	     if (characteristics != null)
 	     	this.characteristics.addAll(characteristics);
 	}
-	
+
 	public void setCharacteristics(List characteristics) {
 		this.setCharacteristics0(characteristics);
 	     super.currentVersion = super.getNextVersion();
 	}
-	
+
 	public static Server createInstance(Identifier creatorId,
 										Identifier domainId,
 										String name,
 										String description,
+										String hostname,
 										Identifier userId) throws CreateObjectException {
-		if (creatorId == null || domainId == null || name == null || description == null || 
+		if (creatorId == null || domainId == null || name == null || description == null || hostname == null || 
 				userId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
+
 		try {
 			return new Server(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVER_ENTITY_CODE),
 						creatorId,
 						domainId,
 						name,
 						description,
+						hostname,
 						userId);
-		} catch (IllegalObjectEntityException e) {
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Server.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -222,6 +219,7 @@ public class Server extends DomainMember implements Characterized {
 											  Identifier domainId,
 											  String name,
 											  String description,
+												String hostname,
 											  Identifier userId) {
 		super.setAttributes(created,
 					modified,
@@ -230,6 +228,7 @@ public class Server extends DomainMember implements Characterized {
 					domainId);
 		this.name = name;
 		this.description = description;
+		this.hostname = hostname;
 		this.userId = userId;
 	}
 	
