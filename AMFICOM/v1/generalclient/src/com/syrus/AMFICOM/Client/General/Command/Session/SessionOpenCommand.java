@@ -11,6 +11,8 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.General.Checker;
 
+import com.syrus.AMFICOM.Client.General.Report.ReportBuilder;
+
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.text.SimpleDateFormat;
@@ -96,7 +98,7 @@ public class SessionOpenCommand extends VoidCommand //implements Command
 		if(true)
 			return;
 */
-		SessionOpenDialog sDialog = new SessionOpenDialog();
+		final SessionOpenDialog sDialog = new SessionOpenDialog();
 
 		dispatcher.notify(new StatusMessageEvent("Открытие сессии..."));
 		dispatcher.notify(new ContextChangeEvent(
@@ -122,30 +124,39 @@ public class SessionOpenCommand extends VoidCommand //implements Command
 
 		if(sDialog.retCode == sDialog.RET_OK)
 		{
-			DataSourceInterface dataSource = aContext.getApplicationModel().getDataSource(aContext.getSessionInterface());
+			final DataSourceInterface dataSource = aContext.getApplicationModel().getDataSource(aContext.getSessionInterface());
 
 			dispatcher.notify(new StatusMessageEvent("Инициализация начальных данных"));
 
-//			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, true));
-			dataSource.LoadUserDescriptors();
-			dataSource.LoadExecs();
-//			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, true));
+//		statusBar.enableProgressBar(true);
 
-			SessionInterface sess = dataSource.getSession();
-			
-			// Берем сохраненный локально с прошлой сессии домен
-			String ev_domain_id = com.syrus.AMFICOM.Client.General.Model.Environment.getDomainId();
-			
-			// Проверяем, может ли текущий пользователь с ним работать
-			if(Checker.checkObject(sess.getUserId(), Domain.typ, ev_domain_id, Checker.read))
-				sess.setDomainId(ev_domain_id);
-			else
-				sess.setDomainId("");
+      ReportBuilder.invokeAsynchronously(new Runnable()
+      {
+        public void run()
+        {
+          dataSource.LoadUserDescriptors();
+          dataSource.LoadExecs();
+          dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 
-			dispatcher.notify(new StatusMessageEvent("Сессия открыта"));
-			dispatcher.notify(new ContextChangeEvent(
-					sDialog.si,
-					ContextChangeEvent.SESSION_OPENED_EVENT));
+          SessionInterface sess = dataSource.getSession();
+          
+          // Берем сохраненный локально с прошлой сессии домен
+          String ev_domain_id = com.syrus.AMFICOM.Client.General.Model.Environment.getDomainId();
+          
+          // Проверяем, может ли текущий пользователь с ним работать
+          if(Checker.checkObject(sess.getUserId(), Domain.typ, ev_domain_id, Checker.read))
+            sess.setDomainId(ev_domain_id);
+          else
+            sess.setDomainId("");
+    
+          dispatcher.notify(new StatusMessageEvent("Сессия открыта"));
+          dispatcher.notify(new ContextChangeEvent(
+              sDialog.si,
+              ContextChangeEvent.SESSION_OPENED_EVENT));
+        }
+      },
+      "Идёт загрузка. Пожалуйста, подождите.");
 		}
 	}
 }
