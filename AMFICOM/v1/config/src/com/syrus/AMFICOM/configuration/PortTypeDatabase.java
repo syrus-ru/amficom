@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.2 2004/08/11 12:49:06 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.3 2004/08/11 13:22:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/11 12:49:06 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/11 13:22:43 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -82,7 +82,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such port type: " + ptIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "PortTypeDatabase.retrieve | Cannot retrieve Equipment type " + ptIdStr;
+			String mesg = "PortTypeDatabase.retrieve | Cannot retrieve port type " + ptIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -176,9 +176,9 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int update_kind, Object obj) throws IllegalDataException, UpdateObjectException {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
 		PortType portType = this.fromStorableObject(storableObject);
-		switch (update_kind) {
+		switch (updateKind) {
 			default:
 				return;
 		}
