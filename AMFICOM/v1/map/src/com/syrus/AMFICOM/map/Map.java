@@ -1,5 +1,5 @@
 /*
- * $Id: Map.java,v 1.3 2004/12/01 16:16:03 bob Exp $
+ * $Id: Map.java,v 1.4 2004/12/03 13:26:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.map;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/01 16:16:03 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/03 13:26:34 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -205,7 +206,7 @@ public class Map extends StorableObject {
 	}
 
 	public List getCollectors() {
-		return this.collectors;
+		return  Collections.unmodifiableList(this.collectors);
 	}
 	
 	public void setCollectors(List collectors) {
@@ -234,7 +235,7 @@ public class Map extends StorableObject {
 	}
 	
 	public List getMarks() {
-		return this.marks;
+		return  Collections.unmodifiableList(this.marks);
 	}
 	
 	public void setMarks(List marks) {
@@ -254,7 +255,7 @@ public class Map extends StorableObject {
 	}
 	
 	public List getNodeLinks() {
-		return this.nodeLinks;
+		return  Collections.unmodifiableList(this.nodeLinks);
 	}
 	
 	public void setNodeLinks(List nodeLinks) {
@@ -265,7 +266,7 @@ public class Map extends StorableObject {
 	}
 	
 	public List getPhysicalLinks() {
-		return this.physicalLinks;
+		return  Collections.unmodifiableList(this.physicalLinks);
 	}
 	
 	public void setPhysicalLinks(List physicalLinks) {
@@ -276,7 +277,7 @@ public class Map extends StorableObject {
 	}
 	
 	public List getSiteNodes() {
-		return this.siteNodes;
+		return  Collections.unmodifiableList(this.siteNodes);
 	}
 	
 	public void setSiteNodes(List siteNodes) {
@@ -287,7 +288,7 @@ public class Map extends StorableObject {
 	}
 	
 	public List getTopologicalNodes() {
-		return this.topologicalNodes;
+		return  Collections.unmodifiableList(this.topologicalNodes);
 	}
 	
 	public void setTopologicalNodes(List topologicalNodes) {

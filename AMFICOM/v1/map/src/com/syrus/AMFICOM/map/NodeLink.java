@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLink.java,v 1.4 2004/12/01 16:16:03 bob Exp $
+ * $Id: NodeLink.java,v 1.5 2004/12/03 13:26:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.map;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/01 16:16:03 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/03 13:26:34 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -152,7 +153,7 @@ public class NodeLink extends StorableObject implements Characterized {
 
 	
 	public List getCharacteristics() {
-		return this.characteristics;
+		return  Collections.unmodifiableList(this.characteristics);
 	}
 	
 	public void setCharacteristics(final List characteristics) {
