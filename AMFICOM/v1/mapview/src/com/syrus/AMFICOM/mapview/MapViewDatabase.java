@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.1 2004/12/22 15:21:52 cvsadmin Exp $
+* $Id: MapViewDatabase.java,v 1.2 2004/12/27 13:42:36 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,7 +22,9 @@ import java.util.Map;
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -34,6 +36,9 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
@@ -41,8 +46,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/22 15:21:52 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2004/12/27 13:42:36 $
+ * @author $Author: bob $
  * @module mapview_v1
  */
 public class MapViewDatabase extends StorableObjectDatabase {
@@ -93,7 +98,13 @@ public class MapViewDatabase extends StorableObjectDatabase {
 			Identifier id = (Identifier) it.next();
 			List schemeIds = (List)schemeIdsMap.get(id);
 			if (id.equals(mapView.getId())){
-				mapView.setSchemeIds0(schemeIds);
+				try{
+				mapView.setSchemes0(SchemeStorableObjectPool.getStorableObjects(schemeIds, true));
+				}catch(DatabaseException de){
+					throw new RetrieveObjectException(this.getEnityName() + "Database.retrieve | cannot retrieve schemes" ,  de);
+				} catch (CommunicationException ce) {
+					throw new RetrieveObjectException(this.getEnityName() + "Database.retrieve | cannot retrieve schemes" ,  ce);
+				}
 			}
 		}		
 	}	
@@ -145,7 +156,7 @@ public class MapViewDatabase extends StorableObjectDatabase {
 			preparedStatement.setDouble(++i, mapView.getLatitude());
 			preparedStatement.setDouble(++i, mapView.getScale());
 			preparedStatement.setDouble(++i, mapView.getDefaultScale());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mapView.getMapId());					
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mapView.getMap().getId());					
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -163,7 +174,7 @@ public class MapViewDatabase extends StorableObjectDatabase {
 			+ mapView.getLatitude() + COMMA
 			+ mapView.getScale() + COMMA
 			+ mapView.getDefaultScale() + COMMA
-			+ DatabaseIdentifier.toSQLString(mapView.getMapId());
+			+ DatabaseIdentifier.toSQLString(mapView.getMap().getId());
 		return values;
 	}
 	
@@ -173,6 +184,7 @@ public class MapViewDatabase extends StorableObjectDatabase {
 				new MapView(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, 0.0, 0.0, 0.0, 0.0, null) : 
 					fromStorableObject(storableObject);				
 		
+		try{
 		map.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
@@ -184,7 +196,12 @@ public class MapViewDatabase extends StorableObjectDatabase {
 				resultSet.getDouble(COLUMN_LATITUDE),
 				resultSet.getDouble(COLUMN_SCALE),
 				resultSet.getDouble(COLUMN_DEFAULTSCALE),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MAP_ID));		
+				(com.syrus.AMFICOM.map.Map)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MAP_ID), true));
+		}catch(DatabaseException de){
+			throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve map" ,  de);
+		} catch (CommunicationException ce) {
+			throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve map" ,  ce);
+		}
 		return map;
 	}
 
@@ -267,11 +284,11 @@ public class MapViewDatabase extends StorableObjectDatabase {
 		for (Iterator colIter = mapViews.iterator(); colIter.hasNext();) {
 			StorableObject storableObject = (StorableObject) colIter.next();
 	        MapView mapView = fromStorableObject(storableObject);
-	        List linkedObjectList = mapView.getSchemeIds();
+	        List linkedObjectList = mapView.getSchemes();
 	
 	        List linkedObjectIds = new ArrayList(linkedObjectList.size());
 	        for (Iterator it = linkedObjectList.iterator(); it.hasNext();) 
-	            linkedObjectIds.add((Identifier) it.next());
+	            linkedObjectIds.add(((Scheme) it.next()).id());
 	        
 	        mapIdLinkedObjectIds.put(mapView.getId(), linkedObjectIds);
 		}
@@ -303,7 +320,7 @@ public class MapViewDatabase extends StorableObjectDatabase {
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier mapId = (Identifier) it.next();
 			MapView mapView = (MapView) mapIds.get(mapId);
-			linkedObjectIds.put(mapView, mapView.getSchemeIds());
+			linkedObjectIds.put(mapView, mapView.getSchemes());
 		}
 		
 		this.deleteSchemeIds(linkedObjectIds);
@@ -324,9 +341,9 @@ public class MapViewDatabase extends StorableObjectDatabase {
 		int i = 0;
 		for (Iterator mvIter = linkedObjectIds.keySet().iterator(); mvIter.hasNext();) {
 			Identifier mapViewId = (Identifier) mvIter.next();
-			List schemeIds = (List)linkedObjectIds.get(mapViewId);
-			for (Iterator it = schemeIds.iterator(); it.hasNext(); i++) {
-				Identifier id = (Identifier) it.next();
+			List schemes = (List)linkedObjectIds.get(mapViewId);
+			for (Iterator it = schemes.iterator(); it.hasNext(); i++) {
+				com.syrus.AMFICOM.general.corba.Identifier id = ((Scheme) it.next()).id();
 	
 				linkBuffer.append(DatabaseIdentifier.toSQLString(id));
 				if (it.hasNext()) {
@@ -387,7 +404,13 @@ public class MapViewDatabase extends StorableObjectDatabase {
 			MapView map = (MapView) mapIds.get(id);
 			List schemeIds = (List)schemeIdsMap.get(id);				
 			if (id.equals(map.getId())){
-				map.setSchemeIds0(schemeIds);
+				try {
+					map.setSchemes0(SchemeStorableObjectPool.getStorableObjects(schemeIds, true));
+				} catch (DatabaseException de) {
+					throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve schemes" ,  de);
+				} catch (CommunicationException ce) {
+					throw new RetrieveObjectException(this.getEnityName() + "Database.updateEntityFromResultSet | cannot retrieve schemes" ,  ce);
+				}
 			}
 		}
 		return maps;

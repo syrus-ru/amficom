@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.1 2004/12/22 15:21:52 cvsadmin Exp $
+* $Id: MapView.java,v 1.2 2004/12/27 13:42:36 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -25,12 +26,17 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.corba.IdentifierDefaultFactory;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.corba.MapView_Transferable;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/22 15:21:52 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2004/12/27 13:42:36 $
+ * @author $Author: bob $
  * @module mapview_v1
  */
 public class MapView extends StorableObject {
@@ -49,11 +55,11 @@ public class MapView extends StorableObject {
 	private double scale;
 	private double defaultScale;
 
-	private Identifier mapId;
+	private Map map;
 	/**
-	 *  List&lt;Identifier&gt;
+	 *  List&lt;{@link com.syrus.AMFICOM.scheme.corba.Scheme}&gt;
 	 */
-	private List schemeIds;
+	private List schemes;
 
 	private StorableObjectDatabase	mapViewDatabase;
 
@@ -68,7 +74,7 @@ public class MapView extends StorableObject {
 		}
 	}
 
-	public MapView(MapView_Transferable mvt) {
+	public MapView(MapView_Transferable mvt) throws CreateObjectException {
 		super(mvt.header);
 		
 		this.domainId = new Identifier(mvt.domain_id);		
@@ -81,12 +87,23 @@ public class MapView extends StorableObject {
 		this.scale = mvt.scale;
 		this.defaultScale = mvt.defaultScale;		
 
-		this.mapId = new Identifier(mvt.mapId);
-			
-		this.schemeIds = new ArrayList(mvt.schemeIds.length);
-		for (int i = 0; i < mvt.schemeIds.length; i++) {
-			this.schemeIds.add(new Identifier(mvt.schemeIds[i]));
-		}
+		IdentifierDefaultFactory identifierDefaultFactory = new IdentifierDefaultFactory();
+		List schemeIds = new ArrayList(mvt.schemeIds.length);
+		for (int i = 0; i < mvt.schemeIds.length; i++) 
+			schemeIds.add(identifierDefaultFactory.newInstanceFromTransferable(mvt.schemeIds[i]));
+
+		Identifier mapId = new Identifier(mvt.mapId);
+		try{
+			this.map = (Map) MapStorableObjectPool.getStorableObject(mapId, true);
+		}catch(ApplicationException ae){
+			throw new CreateObjectException("MapView.<init> | cannot get map " + mapId.toString(), ae);
+		}			
+		
+		try{
+			this.schemes = SchemeStorableObjectPool.getStorableObjects(schemeIds, true);
+		}catch(ApplicationException ae){
+			throw new CreateObjectException("MapView.<init> | cannot get schemes ", ae);
+		}			
 
 	}
 
@@ -99,7 +116,7 @@ public class MapView extends StorableObject {
 				  final double latitude,
 				  final double scale,
 				  final double defaultScale,
-				  final Identifier mapId) {
+				  final Map map) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -113,9 +130,9 @@ public class MapView extends StorableObject {
 		this.latitude = latitude;
 		this.scale = scale;
 		this.defaultScale = defaultScale;
-		this.mapId = mapId;
+		this.map = map;
 
-		this.schemeIds = new LinkedList();
+		this.schemes = new LinkedList();
 
 		super.currentVersion = super.getNextVersion();
 
@@ -142,9 +159,9 @@ public class MapView extends StorableObject {
 			final double latitude,
 			final double scale,
 			final double defaultScale,
-			final Identifier mapId) 
+			final Map map) 
 		throws CreateObjectException {
-		if (domainId == null || name == null || description == null || mapId == null)
+		if (domainId == null || name == null || description == null || map == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		try {
 			return new MapView(
@@ -157,7 +174,7 @@ public class MapView extends StorableObject {
 					latitude,
 					scale,
 					defaultScale,
-					mapId);
+					map);
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("MapView.createInstance | cannot generate identifier ", e);
 		}
@@ -166,16 +183,16 @@ public class MapView extends StorableObject {
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		dependencies.add(this.domainId);
-		dependencies.add(this.mapId);
-		dependencies.addAll(this.schemeIds);		
+		dependencies.add(this.map);
+		dependencies.addAll(this.schemes);		
 		return dependencies;
 	}
 
 	public Object getTransferable() {
 		int i = 0;
-		Identifier_Transferable[] schemeIdsTransferable = new Identifier_Transferable[this.schemeIds.size()];
-		for (Iterator iterator = this.schemeIds.iterator(); iterator.hasNext();)
-			schemeIdsTransferable[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();		
+		Identifier_Transferable[] schemeIdsTransferable = new Identifier_Transferable[this.schemes.size()];
+		for (Iterator iterator = this.schemes.iterator(); iterator.hasNext();)
+			schemeIdsTransferable[i++] = (((Scheme) iterator.next()).id()).transferable();		
 
 		return new MapView_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable)this.domainId.getTransferable(),
@@ -185,22 +202,22 @@ public class MapView extends StorableObject {
 				this.latitude,
 				this.scale,
 				this.defaultScale,
-				(Identifier_Transferable)this.mapId.getTransferable(),
+				(Identifier_Transferable)this.map.getId().getTransferable(),
 				schemeIdsTransferable);
 	}
 
-	public List getSchemeIds() {
-		return  Collections.unmodifiableList(this.schemeIds);
+	public List getSchemes() {
+		return  Collections.unmodifiableList(this.schemes);
 	}
 	
-	protected void setSchemeIds0(List schemeIds) {
-		this.schemeIds.clear();
-		if (schemeIds != null)
-			this.schemeIds.addAll(schemeIds);
+	protected void setSchemes0(List schemes) {
+		this.schemes.clear();
+		if (schemes != null)
+			this.schemes.addAll(schemes);
 	}
 	
 	public void setSchemeIds(List schemeIds) {
-		this.setSchemeIds0(schemeIds);
+		this.setSchemes0(schemeIds);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -242,7 +259,7 @@ public class MapView extends StorableObject {
 											  final double latitude,
 											  final double scale,
 											  final double defaultScale,
-											  final Identifier mapId) {
+											  final Map map) {
 			super.setAttributes(created,
 					modified,
 					creatorId,
@@ -254,7 +271,7 @@ public class MapView extends StorableObject {
 			this.latitude = latitude;
 			this.scale = scale;
 			this.defaultScale = defaultScale;
-			this.mapId = mapId;
+			this.map = map;
 			
 	}
 
@@ -285,12 +302,12 @@ public class MapView extends StorableObject {
 		super.currentVersion = super.getNextVersion();
 	}
 	
-	public Identifier getMapId() {
-		return this.mapId;
+	public Map getMap() {
+		return this.map;
 	}
 	
-	public void setMapId(Identifier mapId) {
-		this.mapId = mapId;
+	public void setMap(Map map) {
+		this.map = map;
 		super.currentVersion = super.getNextVersion();
 	}
 	
