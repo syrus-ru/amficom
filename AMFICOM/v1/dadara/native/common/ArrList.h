@@ -2,7 +2,7 @@
 #define _ArrList_H
 
 /*
- * Ёлементы создает пользователь, а ArrLust только предоставл€ет массив
+ * Ёлементы создает пользователь, а ArrList только предоставл€ет массив
  * переменной длины со ссылками на элементы.
  * ≈динственный метод дл€ работы с самими элементами - disposeAll() - добавлен
  * исключительно дл€ удобства пользовател€.
@@ -14,6 +14,7 @@ private:
 	void **storage;
 	int allocated;
 	int used;
+	void extendToUsedPlusOne();
 public:
 	ArrList();
 	void disposeAll(); // вспомогательна€ функци€ дл€ удалени€ всех элементов, нулевые ссылки игнорируютс€
@@ -21,6 +22,7 @@ public:
 	void *operator[](int id); // доступ к отдельному элементу (getter дл€ ссылки)
 	void set(int id, void *obj); // установить новое значение дл€ элемента (setter дл€ ссылки)
 	void add(void *obj); // добавл€ет в конец массива новый элемент
+	void slowInsert(int pos, void *obj); // вставл€ет новый элемент на позицию pos; i м б от 0 до getLength() вкл.
 	int getLength(); // длина
 	void qsort(int(*fcmp)(const void**, const void**)); // вызывает qsort дл€ ссылок
 };

@@ -39,7 +39,7 @@ void ArrList::set(int id, void *obj)
 	storage[id] = obj;
 }
 
-void ArrList::add(void *obj)
+void ArrList::extendToUsedPlusOne()
 {
 	if (used == allocated)
 	{
@@ -55,10 +55,24 @@ void ArrList::add(void *obj)
 		storage = new_storage;
 		allocated = new_size;
 	}
-
 	assert (used < allocated);
+}
 
+void ArrList::add(void *obj)
+{
+	extendToUsedPlusOne();
 	storage[used++] = obj;
+}
+
+void ArrList::slowInsert(int pos, void *obj)
+{
+	assert(pos >= 0);
+	assert(pos <= used);
+	int i;
+	extendToUsedPlusOne();
+	for (i = used; i > pos; i--)
+		storage[i] = storage[i - 1];
+	storage[pos] = obj;
 }
 
 int ArrList::getLength()
