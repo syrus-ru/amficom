@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationXMLTestCase.java,v 1.2 2005/02/07 14:43:50 bob Exp $
+ * $Id: ConfigurationXMLTestCase.java,v 1.3 2005/02/08 10:19:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.XMLIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/07 14:43:50 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 10:19:46 $
  * @author $Author: bob $
  * @module tools
  */
@@ -94,7 +94,8 @@ public class ConfigurationXMLTestCase extends TestCase {
 		return wrapper;
 	}
 
-	public void testLinkType() throws IllegalDataException, DatabaseException, CommunicationException, IllegalObjectEntityException, VersionCollisionException {
+	
+	public void testLinkType() throws DatabaseException, CommunicationException, IllegalObjectEntityException {
 		System.out.println("testLinkType:");
 		LinkType linkType = (LinkType) ConfigurationStorableObjectPool.getStorableObject(
 			new Identifier("LinkType_1107771596853"), true);
