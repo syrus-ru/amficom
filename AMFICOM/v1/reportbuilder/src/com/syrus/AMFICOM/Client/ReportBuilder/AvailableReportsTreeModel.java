@@ -4,9 +4,6 @@ import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Image;
 
-
-
-
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
@@ -61,8 +58,8 @@ import com.syrus.AMFICOM.Client.Optimize.Report.OptimizationReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.SurveyReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
-import com.syrus.AMFICOM.Client.Analysis.Report.PredictionReportModel;
-import com.syrus.AMFICOM.Client.Analysis.Report.ModelingReportModel;
+import com.syrus.AMFICOM.Client.Prediction.Report.PredictionReportModel;
+import com.syrus.AMFICOM.Client.Model.Report.ModelingReportModel;
 
 /**
  * <p>Description: Модель дерева с доступными отчётами</p>

@@ -382,7 +382,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				}
 				additionalPanel = (JInternalFrame)ae.getSource();
 				desktopPane.add(additionalPanel);
-				additionalPanel.setSize(selectReportsPanel.getWidth(),450);
+				additionalPanel.setSize(selectReportsPanel.getWidth(),460);
 
 				selectReportsPanel.setSize(
 								selectReportsPanel.getWidth(),

@@ -251,14 +251,6 @@ ReportTemplate rT)
 		if (oe.getActionCommand().equals(TreeDataSelectionEvent.type) &&
 			 oe.getSource().equals(reportsTreePanel))
 		{
-			if (!firstEvent)
-			{
-				firstEvent = true;
-				return;
-			}
-			else
-				firstEvent = false;
-
 			TreePath treePath = reportsTreePanel.getTree().getSelectionPath();
 			if (treePath == null)
 				return;
@@ -266,6 +258,37 @@ ReportTemplate rT)
 			ObjectResourceTreeNode lastElem =
 						(ObjectResourceTreeNode) treePath.getLastPathComponent();
 
+			if ((lastElem.getParent() != null) &&
+				 ((ObjectResourceTreeNode) lastElem.getParent()).getObject()instanceof
+				 ObjectsReport)
+			{
+				ObjectsReport curReport =
+					(ObjectsReport) ((ObjectResourceTreeNode) lastElem.getParent()).
+					getObject();
+
+				if (curReport.view_type.equals(ObjectResourceReportModel.
+														 rt_objectsReport))
+				{
+					ObjectResourceReportModel orrm =
+						(ObjectResourceReportModel) curReport.model;
+
+					Vector columns = (Vector) curReport.getReserve();
+					if (columns.contains((String) lastElem.getObject()))
+						columns.remove((String) lastElem.getObject());
+					else
+						columns.add((String) lastElem.getObject());
+					tdsEventHappened = true;
+					reportsTreePanel.repaint();
+				}
+			}
+
+			if (!firstEvent)
+			{
+				firstEvent = true;
+				return;
+			}
+			else
+				firstEvent = false;
 
 			if (additionalPanel != null)
 			{
@@ -346,29 +369,6 @@ ReportTemplate rT)
 						catch (CreateReportException cre)
 						{}
 					}
-				}
-			}
-			if ((lastElem.getParent() != null) &&
-				 ((ObjectResourceTreeNode) lastElem.getParent()).getObject()instanceof
-				 ObjectsReport)
-			{
-				ObjectsReport curReport =
-					(ObjectsReport) ((ObjectResourceTreeNode) lastElem.getParent()).
-					getObject();
-
-				if (curReport.view_type.equals(ObjectResourceReportModel.
-														 rt_objectsReport))
-				{
-					ObjectResourceReportModel orrm =
-						(ObjectResourceReportModel) curReport.model;
-
-					Vector columns = (Vector) curReport.getReserve();
-					if (columns.contains((String) lastElem.getObject()))
-						columns.remove((String) lastElem.getObject());
-					else
-						columns.add((String) lastElem.getObject());
-					tdsEventHappened = true;
-					reportsTreePanel.repaint();
 				}
 			}
 		}

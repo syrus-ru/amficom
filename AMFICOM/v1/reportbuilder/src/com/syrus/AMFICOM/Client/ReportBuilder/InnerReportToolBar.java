@@ -56,6 +56,7 @@ public class InnerReportToolBar extends JToolBar implements
 	private Dispatcher pDisp;
 
 	JToggleButton addLabelButton = new JToggleButton();
+
 	JToggleButton addImageButton = new JToggleButton();
 
 	JButton deleteObjectButton = new JButton();
@@ -71,7 +72,7 @@ public class InnerReportToolBar extends JToolBar implements
 	public final static int btn_siz = 24;
 
 	public InnerReportToolBar()
-{
+	{
 		super();
 
 		try
@@ -82,10 +83,10 @@ public class InnerReportToolBar extends JToolBar implements
 		{
 			e.printStackTrace();
 		}
-}
+	}
 
 	public InnerReportToolBar(ReportMDIMain mainWindow)
-{
+	{
 		super();
 
 		this.mainWindow = mainWindow;
@@ -97,10 +98,10 @@ public class InnerReportToolBar extends JToolBar implements
 		{
 			e.printStackTrace();
 		}
-}
+	}
 
 	private void jbInit() throws Exception
-{
+	{
 		TemplateInnerToolBar_this_actionAdapter actionAdapter =
 			new TemplateInnerToolBar_this_actionAdapter(this);
 		Dimension buttonSize = new Dimension(btn_siz, btn_siz);
@@ -160,35 +161,39 @@ public class InnerReportToolBar extends JToolBar implements
 		addLabelButton.setPreferredSize(buttonSize);
 
 		addImageButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/graph_report.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+			"images/graph_report.gif").getScaledInstance(16, 16,
+			Image.SCALE_SMOOTH)));
 		addImageButton.setToolTipText(LangModelReport.String("label_addImage"));
 		addImageButton.setMaximumSize(buttonSize);
 		addImageButton.setPreferredSize(buttonSize);
 
 		deleteObjectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
-			getImage(
+															  getImage(
 			"images/delete.gif").getScaledInstance(16, 16,
-			Image.SCALE_SMOOTH)));
+																Image.SCALE_SMOOTH)));
 		deleteObjectButton.setToolTipText(LangModelReport.String(
 			"label_deleteObject"));
 		deleteObjectButton.setMaximumSize(buttonSize);
 		deleteObjectButton.setPreferredSize(buttonSize);
 
-		changeViewButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+		changeViewButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
+															getImage(
 			"images/view_report.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		changeViewButton.setToolTipText(LangModelReport.String("label_viewReport"));
 		changeViewButton.setMaximumSize(buttonSize);
 		changeViewButton.setPreferredSize(buttonSize);
 
-		saveReportButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+		saveReportButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
+															getImage(
 			"images/save_report.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		saveReportButton.setToolTipText(LangModelReport.String("label_saveReport"));
 		saveReportButton.setMaximumSize(buttonSize);
 		saveReportButton.setPreferredSize(buttonSize);
 
 		printReportButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
-			getImage("images/print_report.gif").
-			getScaledInstance(16, 16,
+															 getImage(
+			"images/print_report.gif").
+															 getScaledInstance(16, 16,
 			Image.SCALE_SMOOTH)));
 		printReportButton.setToolTipText(LangModelReport.String("label_print"));
 		printReportButton.setMaximumSize(buttonSize);
@@ -209,35 +214,35 @@ public class InnerReportToolBar extends JToolBar implements
 		changeViewButton.setMargin(new Insets(2, 2, 2, 2));
 		saveReportButton.setMargin(new Insets(2, 2, 2, 2));
 		printReportButton.setMargin(new Insets(2, 2, 2, 2));
-}
+	}
 
 	public void setModel(ApplicationModel a)
-{
+	{
 		aModel = a;
-}
+	}
 
 	public ApplicationModel getModel()
-{
+	{
 		return aModel;
-}
+	}
 
 	public void setDisp(Dispatcher p)
-{
+	{
 		pDisp = p;
-}
+	}
 
 	public Dispatcher getDisp()
-{
+	{
 		return pDisp;
-}
+	}
 
 	public void modelChanged(String e[])
-{
+	{
 
-}
+	}
 
 	public void this_actionPerformed(ActionEvent e)
-{
+	{
 		if (aModel == null)
 			return;
 		AbstractButton jb = (AbstractButton) e.getSource();
@@ -246,48 +251,50 @@ public class InnerReportToolBar extends JToolBar implements
 		Command command = aModel.getCommand(s);
 		command = (Command) command.clone();
 		command.execute();
-}
+	}
 
 	public void clearToggles()
-{
+	{
 		this.addLabelButton.setSelected(false);
 		this.addImageButton.setSelected(false);
-}
+	}
 
 	public void setEditToolBarState(boolean newState)
-{
+	{
 		addLabelButton.setEnabled(newState);
 		addImageButton.setEnabled(newState);
 		deleteObjectButton.setEnabled(newState);
 		changeViewButton.setEnabled(newState);
-}
+	}
 
 	private void addLabelButton_actionPerformed(ActionEvent e)
-{
+	{
 		if (addLabelButton.isSelected())
 		{
-			mainWindow.layoutWOCPanel.itemToAdd = LangModelReport.String("label_lb");
+			mainWindow.layoutWOCPanel.itemToAdd = LangModelReport.String(
+				"label_lb");
 			addImageButton.setSelected(false);
 		}
-		else
+else
 			mainWindow.layoutWOCPanel.itemToAdd = "";
-}
+	}
 
 	private void addImageButton_actionPerformed(ActionEvent e)
 	{
 		if (addImageButton.isSelected())
 		{
-			mainWindow.layoutWOCPanel.itemToAdd = LangModelReport.String("label_im");
+			mainWindow.layoutWOCPanel.itemToAdd = LangModelReport.String(
+				"label_im");
 			addLabelButton.setSelected(false);
 		}
-		else
+else
 			mainWindow.layoutWOCPanel.itemToAdd = "";
 	}
 
 	public void changeViewButton_actionPerformed()
-{
+	{
 		Vector objectRenderers = mainWindow.layoutWOCPanel.reportTemplate.
-			objectRenderers;
+										 objectRenderers;
 		Vector labels = mainWindow.layoutWOCPanel.reportTemplate.labels;
 
 		if (changeViewButton.getToolTipText().equals(
@@ -323,7 +330,8 @@ public class InnerReportToolBar extends JToolBar implements
 
 				mainWindow.layoutScrollPane.getContentPane().removeAll();
 
-				mainWindow.layoutScrollPane.getContentPane().add(mainWindow.innerToolBar,
+				mainWindow.layoutScrollPane.getContentPane().add(mainWindow.
+					innerToolBar,
 					BorderLayout.NORTH);
 				mainWindow.layoutScrollPane.getContentPane().add(new JScrollPane(
 					mainWindow.layoutWCPanel), BorderLayout.CENTER);
@@ -349,7 +357,7 @@ public class InnerReportToolBar extends JToolBar implements
 					if (mainWindow.additionalPanel instanceof SetRestrictionsWindow)
 					{
 						SetRestrictionsWindow addPanel =
-											(SetRestrictionsWindow) mainWindow.additionalPanel;
+							(SetRestrictionsWindow) mainWindow.additionalPanel;
 						theDisp.notify(
 							new OperationEvent(addPanel.orfp.getFilter(), 0,
 													 ObjectResourceFilterPane.
@@ -360,7 +368,6 @@ public class InnerReportToolBar extends JToolBar implements
 						theDisp.notify(
 							new OperationEvent("", 0,
 													 ReportMDIMain.ev_closingAdditionalPanel));
-
 
 					mainWindow.additionalPanel.dispose();
 				}
@@ -383,16 +390,19 @@ public class InnerReportToolBar extends JToolBar implements
 			for (int i = 0; i < objectRenderers.size(); i++)
 				((RenderingObject) objectRenderers.get(i)).saveColumnWidths();
 
-			changeViewButton.setToolTipText(LangModelReport.String("label_viewReport"));
+			changeViewButton.setToolTipText(LangModelReport.String(
+				"label_viewReport"));
 			changeViewButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
-				getImage("images/view_report.gif").
-				getScaledInstance(16, 16,
+																getImage(
+				"images/view_report.gif").
+																getScaledInstance(16, 16,
 				Image.SCALE_SMOOTH)));
 
 			mainWindow.layoutScrollPane.setTitle(LangModelReport.String(
 				"label_templateScheme"));
 			mainWindow.layoutScrollPane.getContentPane().removeAll();
-			mainWindow.layoutScrollPane.getContentPane().add(mainWindow.innerToolBar,
+			mainWindow.layoutScrollPane.getContentPane().add(mainWindow.
+				innerToolBar,
 				BorderLayout.NORTH);
 			mainWindow.layoutScrollPane.getContentPane().add(new JScrollPane(
 				mainWindow.layoutWOCPanel), BorderLayout.CENTER);
@@ -410,22 +420,22 @@ public class InnerReportToolBar extends JToolBar implements
 			printReportButton.setEnabled(false);
 			mainWindow.selectReportsPanel.setEnabled(true);
 		}
-}
+	}
 
 	private void deleteObjectButton_actionPerformed(ActionEvent e)
-{
+	{
 		mainWindow.layoutWOCPanel.deleteselectedObject();
-}
+	}
 
 	private void saveReportButton_actionPerformed(ActionEvent e)
-{
+	{
 		mainWindow.layoutWCPanel.saveToHTML(null, false);
-}
+	}
 
 	private void printReportButton_actionPerformed(ActionEvent e)
-{
+	{
 		mainWindow.layoutWCPanel.printReport();
-}
+	}
 }
 
 class TemplateInnerToolBar_this_actionAdapter implements java.awt.event.
@@ -434,13 +444,13 @@ class TemplateInnerToolBar_this_actionAdapter implements java.awt.event.
 	InnerReportToolBar adaptee;
 
 	TemplateInnerToolBar_this_actionAdapter(InnerReportToolBar adaptee)
-{
+	{
 		this.adaptee = adaptee;
-}
+	}
 
 	public void actionPerformed(ActionEvent e)
-{
+	{
 //    System.out.println("TemplateToolBar: actionPerformed");
 		adaptee.this_actionPerformed(e);
-}
+	}
 }
