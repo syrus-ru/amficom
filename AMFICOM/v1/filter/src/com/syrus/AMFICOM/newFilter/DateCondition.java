@@ -1,5 +1,5 @@
 /*
- * $Id: DateCondition.java,v 1.1 2005/03/31 08:11:40 max Exp $
+ * $Id: DateCondition.java,v 1.2 2005/03/31 09:01:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,11 +10,12 @@ package com.syrus.AMFICOM.newFilter;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/31 08:11:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/31 09:01:33 $
  * @author $Author: max $
  * @module filter_v1
  */
 public class DateCondition {
+	
 	private Date startDate;
 	private Date endDate;
 	
