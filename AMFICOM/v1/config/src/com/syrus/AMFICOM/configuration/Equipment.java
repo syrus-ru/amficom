@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.47 2004/12/15 10:35:31 max Exp $
+ * $Id: Equipment.java,v 1.48 2004/12/15 11:40:03 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2004/12/15 10:35:31 $
+ * @version $Revision: 1.48 $, $Date: 2004/12/15 11:40:03 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -375,13 +375,13 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	public void setSupplier(String supplier) {
 		this.supplier = supplier;
 	}
-	public double getLatitude() {
+	public float getLatitude() {
 		return this.latitude;
 	}
 	public void setLatitude(float latitude) {
 		this.latitude = latitude;
 	}
-	public double getLongitude() {
+	public float getLongitude() {
 		return this.longitude;
 	}
 	public void setLongitude(float longitude) {
