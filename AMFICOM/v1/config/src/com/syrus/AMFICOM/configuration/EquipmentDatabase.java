@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.62 2005/02/03 20:18:52 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.63 2005/02/08 19:56:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/02/03 20:18:52 $
+ * @version $Revision: 1.63 $, $Date: 2005/02/08 19:56:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -419,13 +419,13 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	private void updateEquipmentMELinks(List equipments) throws IllegalDataException, UpdateObjectException {
 		if (equipments == null || equipments.isEmpty())
 			return;
-		java.util.Map collectorIdPhysicalLinkIdsMap = new HashMap();
+		Map monitoredElementIdsMap = new HashMap();
 		for (Iterator it = equipments.iterator(); it.hasNext();) {
 			Equipment equipment = this.fromStorableObject((StorableObject)it.next());
-			List physicalLinkIds = equipment.getMonitoredElementIds();
-			collectorIdPhysicalLinkIdsMap.put(equipment.getId(), physicalLinkIds);
+			List monitoredElementIds = equipment.getMonitoredElementIds();
+			monitoredElementIdsMap.put(equipment.getId(), monitoredElementIds);
 		}		
-		super.updateLinkedEntities(collectorIdPhysicalLinkIdsMap, ObjectEntities.EQUIPMENTMELINK_ENTITY, LINK_COLUMN_EQUIPMENT_ID, LINK_COLUMN_MONITORED_ELEMENT_ID);
+		super.updateLinkedEntities(monitoredElementIdsMap, ObjectEntities.EQUIPMENTMELINK_ENTITY, LINK_COLUMN_EQUIPMENT_ID, LINK_COLUMN_MONITORED_ELEMENT_ID);
 	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj)

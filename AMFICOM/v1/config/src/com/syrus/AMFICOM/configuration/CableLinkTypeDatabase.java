@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.11 2005/02/03 20:15:05 arseniy Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.12 2005/02/08 19:55:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/03 20:15:05 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/08 19:55:24 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -131,7 +131,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void updateCableThreadTypes(List cableLinkTypes) throws UpdateObjectException {
+	private void updateCableThreadTypes(List cableLinkTypes) throws UpdateObjectException, IllegalDataException {
 		if (cableLinkTypes == null || cableLinkTypes.isEmpty())
 			return;
 
