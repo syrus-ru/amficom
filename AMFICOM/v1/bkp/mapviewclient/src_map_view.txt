@@ -16,14 +16,14 @@ src\com\syrus\AMFICOM\Client\Map\Command\Action\BindUnboundNodeToSiteCommandBund
 src\com\syrus\AMFICOM\Client\Map\Command\Action\ChangePhysicalNodeActivityCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateCablePathCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateCollectorCommandAtomic.java
-src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateMarkCommand.java
+src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateMarkCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateMeasurementPathCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateNodeLinkCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateNodeLinkCommandBundle.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreatePhysicalLinkCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreatePhysicalNodeCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreatePhysicalNodeCommandBundle.java
-src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateSiteCommand.java
+src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateSiteCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateUnboundLinkCommandAtomic.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\CreateUnboundLinkCommandBundle.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\DeleteNodeCommandBundle.java
