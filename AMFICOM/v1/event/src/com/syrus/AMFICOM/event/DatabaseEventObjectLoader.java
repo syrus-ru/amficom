@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.3 2005/02/08 09:33:06 arseniy Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.4 2005/02/08 20:11:20 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/08 09:33:06 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/08 20:11:20 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -40,6 +40,10 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 	public Event loadEvent(Identifier id) throws DatabaseException, CommunicationException {
 		return new Event(id);
+	}
+
+	public EventSource loadEventSource(Identifier id) throws DatabaseException, CommunicationException {
+		return new EventSource(id);
 	}
 
 
@@ -72,6 +76,20 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		return list;
 	}
 
+	public List loadEventSources(List ids) throws DatabaseException, CommunicationException {
+		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
+		List list = null;
+		try {
+			list = eventSourceDatabase.retrieveByIds(ids, null);
+		}
+		catch (IllegalDataException e) {
+			String mesg = "DatabaseEventObjectLoader.loadEventSources | Illegal Storable Object: " + e.getMessage();
+			Log.errorMessage(mesg);
+			throw new DatabaseException(mesg, e);
+		}
+		return list;
+	}
+
 
 
 
@@ -97,6 +115,20 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseEventObjectLoader.loadEventsButIds | Illegal Storable Object: " + e.getMessage();
+			Log.errorMessage(mesg);
+			throw new DatabaseException(mesg, e);
+		}
+		return list;
+	}
+
+	public List loadEventSourcesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
+		List list = null;
+		try {
+			list = eventSourceDatabase.retrieveByCondition(ids, condition);
+		}
+		catch (IllegalDataException e) {
+			String mesg = "DatabaseEventObjectLoader.loadEventSourcesButIds | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
@@ -153,6 +185,28 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		}
 	}
 
+	public void saveEventSource(EventSource eventSource, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
+		try {
+			eventSourceDatabase.update(eventSource, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		}
+		catch (UpdateObjectException e) {
+			String mesg = "DatabaseEventObjectLoader.saveEventSource | UpdateObjectException: " + e.getMessage();
+			Log.errorMessage(mesg);
+			throw new DatabaseException(mesg, e);
+		}
+		catch (IllegalDataException e) {
+			String mesg = "DatabaseEventObjectLoader.saveEventSource | Illegal Storable Object: " + e.getMessage();
+			Log.errorMessage(mesg);
+			throw new DatabaseException(mesg, e);
+		}
+		catch (VersionCollisionException e) {
+			String mesg = "DatabaseEventObjectLoader.saveEventSource | VersionCollisionException: " + e.getMessage();
+			Log.errorMessage(mesg);
+			throw new DatabaseException(mesg, e);
+		}
+	}
+
 
 
 
@@ -198,6 +252,28 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		}
 		catch (VersionCollisionException e) {
 			String mesg = "DatabaseEventObjectLoader.saveEvents | VersionCollisionException: " + e.getMessage();
+			Log.errorMessage(mesg);
+			throw new DatabaseException(mesg, e);
+		}
+	}
+
+	public void saveEventSources(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
+		try {
+			eventSourceDatabase.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+		}
+		catch (UpdateObjectException e) {
+			String mesg = "DatabaseEventObjectLoader.saveEventSources | UpdateObjectException: " + e.getMessage();
+			Log.errorMessage(mesg);
+			throw new DatabaseException(mesg, e);
+		}
+		catch (IllegalDataException e) {
+			String mesg = "DatabaseEventObjectLoader.saveEventSources | Illegal Storable Object: " + e.getMessage();
+			Log.errorMessage(mesg);
+			throw new DatabaseException(mesg, e);
+		}
+		catch (VersionCollisionException e) {
+			String mesg = "DatabaseEventObjectLoader.saveEventSources | VersionCollisionException: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}

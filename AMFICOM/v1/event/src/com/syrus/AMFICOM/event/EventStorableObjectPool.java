@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.4 2005/02/08 09:33:48 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.5 2005/02/08 20:11:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/08 09:33:48 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/08 20:11:20 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -37,6 +37,7 @@ public class EventStorableObjectPool extends StorableObjectPool {
 	private static final int EVENTTYPE_OBJECT_POOL_SIZE = 2;
 //	private static final int ALARMTYPE_OBJECT_POOL_SIZE = 2;
 	private static final int EVENT_OBJECT_POOL_SIZE = 10;
+	private static final int EVENTSOURCE_OBJECT_POOL_SIZE = 10;
 //	private static final int ALARM_OBJECT_POOL_SIZE = 10;
 
 	private static EventObjectLoader	eObjectLoader;
@@ -81,6 +82,7 @@ public class EventStorableObjectPool extends StorableObjectPool {
 //		instance.addObjectPool(ObjectEntities.ALARMTYPE_ENTITY_CODE, size);
 
 		instance.addObjectPool(ObjectEntities.EVENT_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.EVENTSOURCE_ENTITY_CODE, size);
 //		instance.addObjectPool(ObjectEntities.ALARM_ENTITY_CODE, size);
 
 		instance.populatePools();
@@ -98,6 +100,7 @@ public class EventStorableObjectPool extends StorableObjectPool {
 //		instance.addObjectPool(ObjectEntities.ALARMTYPE_ENTITY_CODE, ALARMTYPE_OBJECT_POOL_SIZE);
 
 		instance.addObjectPool(ObjectEntities.EVENT_ENTITY_CODE, EVENT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.EVENTSOURCE_ENTITY_CODE, EVENT_OBJECT_POOL_SIZE);
 //		instance.addObjectPool(ObjectEntities.ALARM_ENTITY_CODE, ALARM_OBJECT_POOL_SIZE);
 
 		instance.populatePools();
@@ -139,6 +142,9 @@ public class EventStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.EVENT_ENTITY_CODE:
 				storableObject = eObjectLoader.loadEvent(objectId);
 				break;
+			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
+				storableObject = eObjectLoader.loadEventSource(objectId);
+				break;
 //			case ObjectEntities.ALARM_ENTITY_CODE:
 //				storableObject = eObjectLoader.loadAlarm(objectId);
 //				break;
@@ -160,6 +166,9 @@ public class EventStorableObjectPool extends StorableObjectPool {
 //				break;
 			case ObjectEntities.EVENT_ENTITY_CODE:
 				storableObjects = eObjectLoader.loadEvents(ids);
+				break;
+			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
+				storableObjects = eObjectLoader.loadEventSources(ids);
 				break;
 //			case ObjectEntities.ALARM_ENTITY_CODE:
 //				storableObjects = eObjectLoader.loadAlarms(ids);
@@ -183,6 +192,9 @@ public class EventStorableObjectPool extends StorableObjectPool {
 //				break;
 			case ObjectEntities.EVENT_ENTITY_CODE:
 				loadedList = eObjectLoader.loadEventsButIds(condition, ids);
+				break;
+			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
+				loadedList = eObjectLoader.loadEventSourcesButIds(condition, ids);
 				break;
 //			case ObjectEntities.ALARM_ENTITY_CODE:
 //				loadedList = eObjectLoader.loadAlarmsButIds(condition, ids);
@@ -216,6 +228,12 @@ public class EventStorableObjectPool extends StorableObjectPool {
 						eObjectLoader.saveEvent((Event)list.get(0), force);
 					else 
 						eObjectLoader.saveEvents(list, force);
+					break;
+				case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
+					if (alone)
+						eObjectLoader.saveEventSource((EventSource)list.get(0), force);
+					else 
+						eObjectLoader.saveEventSources(list, force);
 					break;
 //				case ObjectEntities.ALARM_ENTITY_CODE:
 //					if (alone)

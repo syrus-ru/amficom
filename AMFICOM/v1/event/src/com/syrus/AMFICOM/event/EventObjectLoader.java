@@ -1,5 +1,5 @@
 /*
- * $Id: EventObjectLoader.java,v 1.3 2005/02/08 09:33:06 arseniy Exp $
+ * $Id: EventObjectLoader.java,v 1.4 2005/02/08 20:11:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/08 09:33:06 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/08 20:11:20 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -31,6 +31,8 @@ public interface EventObjectLoader {
 
 	Event loadEvent(Identifier id) throws DatabaseException, CommunicationException;
 
+	EventSource loadEventSource(Identifier id) throws DatabaseException, CommunicationException;
+
 //	Alarm loadAlarm(Identifier id) throws DatabaseException, CommunicationException;
 
 
@@ -39,6 +41,8 @@ public interface EventObjectLoader {
 //	List loadAlarmTypes(List ids) throws DatabaseException, CommunicationException;
 
 	List loadEvents(List ids) throws DatabaseException, CommunicationException;
+
+	List loadEventSources(List ids) throws DatabaseException, CommunicationException;
 
 //	List loadAlarms(List ids) throws DatabaseException, CommunicationException;
 
@@ -49,6 +53,8 @@ public interface EventObjectLoader {
 
 	List loadEventsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
+	List loadEventSourcesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+
 //	List loadAlarmsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 
@@ -58,6 +64,8 @@ public interface EventObjectLoader {
 
 	void saveEvent(Event event, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
+	void saveEventSource(EventSource eventSource, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+
 //	void saveAlarm(Alarm alarm, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 
@@ -66,6 +74,8 @@ public interface EventObjectLoader {
 //	void saveAlarmTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveEvents(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+
+	void saveEventSources(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 //	void saveAlarms(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
