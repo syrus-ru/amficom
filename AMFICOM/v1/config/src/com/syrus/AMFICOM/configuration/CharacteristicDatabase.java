@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.7 2004/08/10 09:32:21 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.8 2004/08/11 08:21:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/10 09:32:21 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/11 08:21:04 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -50,6 +50,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     public static final String COLUMN_SERVER_ID     = "server_id";
     // transmission_path_id VARCHAR2(32),
     public static final String COLUMN_TRANSMISSION_PATH_ID  = "transmission_path_id";
+    // port_id VARCHAR2(32),
+    public static final String COLUMN_PORT_ID  = "port_id";
 
 
 	private Characteristic fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -78,7 +80,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			+ COLUMN_SERVER_ID + COMMA 
 			+ COLUMN_MCM_ID + COMMA			
 			+ COLUMN_EQUIPMENT_ID + COMMA
-			+ COLUMN_TRANSMISSION_PATH_ID			
+			+ COLUMN_TRANSMISSION_PATH_ID	
+			+ COLUMN_PORT_ID
 			+ SQL_FROM + ObjectEntities.CHARACTERISTIC_ENTITY
 			+ SQL_WHERE	+ COLUMN_ID + EQUALS + cIdStr;
 		Statement statement = null;
@@ -122,6 +125,13 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 							*       getLong()
 							*/
 						characterizedId = new Identifier(resultSet.getString(COLUMN_TRANSMISSION_PATH_ID));
+						break;
+					case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
+						/**
+							* @todo when change DB Identifier model ,change getString() to
+							*       getLong()
+							*/
+						characterizedId = new Identifier(resultSet.getString(COLUMN_PORT_ID));
 						break;
 					default:
 						characterizedId = null;
@@ -240,6 +250,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			buffer.append(COLUMN_EQUIPMENT_ID);
 			buffer.append(COMMA);
 			buffer.append(COLUMN_TRANSMISSION_PATH_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_PORT_ID);
 			buffer.append(CLOSE_BRACKET);
 			buffer.append(SQL_VALUES);
 			buffer.append(OPEN_BRACKET);			
@@ -279,11 +291,15 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					buffer.append(Identifier.getNullSQLString());
 					buffer.append(COMMA);
 					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
+					buffer.append(Identifier.getNullSQLString());
 					break;
 				case CharacteristicSort._CHARACTERISTIC_SORT_MCM:
 					buffer.append(Identifier.getNullSQLString());
 					buffer.append(COMMA);
 					buffer.append(characterizedIdStr);
+					buffer.append(COMMA);
+					buffer.append(Identifier.getNullSQLString());
 					buffer.append(COMMA);
 					buffer.append(Identifier.getNullSQLString());
 					buffer.append(COMMA);
@@ -297,6 +313,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					buffer.append(characterizedIdStr);
 					buffer.append(COMMA);
 					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
+					buffer.append(Identifier.getNullSQLString());
 					break;
 				case CharacteristicSort._CHARACTERISTIC_SORT_TRANSMISSIONPATH:
 					buffer.append(Identifier.getNullSQLString());
@@ -305,7 +323,20 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					buffer.append(COMMA);
 					buffer.append(Identifier.getNullSQLString());
 					buffer.append(COMMA);
-					buffer.append(characterizedIdStr);					
+					buffer.append(characterizedIdStr);			
+					buffer.append(COMMA);
+					buffer.append(Identifier.getNullSQLString());
+					break;
+				case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
+					buffer.append(characterizedIdStr);
 					break;
 
 			}
