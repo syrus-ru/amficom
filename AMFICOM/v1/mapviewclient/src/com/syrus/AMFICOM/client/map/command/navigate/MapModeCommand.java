@@ -1,5 +1,5 @@
 /**
- * $Id: MapModeCommand.java,v 1.7 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: MapModeCommand.java,v 1.8 2005/01/12 15:45:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/12 15:45:53 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -49,11 +49,6 @@ public class MapModeCommand extends VoidCommand
 			logicalNetLayer = (LogicalNetLayer )value;
 		if(field.equals("applicationModel"))
 			aModel = (ApplicationModel )value;
-	}
-
-	public Object clone()
-	{
-		return new MapModeCommand(logicalNetLayer, modeString, mode);
 	}
 
 	public void execute()

@@ -1,5 +1,5 @@
 /**
- * $Id: ZoomBoxCommand.java,v 1.5 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: ZoomBoxCommand.java,v 1.6 2005/01/12 15:45:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import java.awt.Cursor;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/12 15:45:53 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -45,11 +45,6 @@ public class ZoomBoxCommand extends VoidCommand
 			logicalNetLayer = (LogicalNetLayer )value;
 		if(field.equals("applicationModel"))
 			aModel = (ApplicationModel )value;
-	}
-
-	public Object clone()
-	{
-		return new ZoomBoxCommand(logicalNetLayer);
 	}
 
 	public void execute()

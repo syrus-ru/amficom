@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.8 2004/12/23 16:57:59 krupenn Exp $
+ * $Id: CenterSelectionCommand.java,v 1.9 2005/01/12 15:45:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.map.Map;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/23 16:57:59 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/12 15:45:53 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -49,11 +49,6 @@ public class CenterSelectionCommand extends VoidCommand
 			logicalNetLayer = (LogicalNetLayer )value;
 		if(field.equals("applicationModel"))
 			aModel = (ApplicationModel )value;
-	}
-
-	public Object clone()
-	{
-		return new CenterSelectionCommand(logicalNetLayer);
 	}
 
 	public void execute()

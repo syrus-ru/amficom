@@ -1,5 +1,5 @@
 /**
- * $Id: ZoomInCommand.java,v 1.2 2004/10/19 10:41:03 krupenn Exp $
+ * $Id: ZoomInCommand.java,v 1.3 2005/01/12 15:45:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/19 10:41:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/12 15:45:53 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -43,13 +43,9 @@ public class ZoomInCommand extends VoidCommand
 			aModel = (ApplicationModel )value;
 	}
 
-	public Object clone()
-	{
-		return new ZoomInCommand(logicalNetLayer);
-	}
-
 	public void execute()
 	{
 	    logicalNetLayer.zoomIn();
+		logicalNetLayer.repaint(true);
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: ShowNodesCommand.java,v 1.5 2004/12/01 10:55:32 krupenn Exp $
+ * $Id: ShowNodesCommand.java,v 1.6 2005/01/12 15:45:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/01 10:55:32 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/12 15:45:53 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -51,13 +51,6 @@ public class ShowNodesCommand extends VoidCommand
 			button = (AbstractButton )value;
 		if(field.equals("applicationModel"))
 			aModel = (ApplicationModel )value;
-	}
-
-	public Object clone()
-	{
-		Command com = new ShowNodesCommand(logicalNetLayer);
-		com.setParameter("button", button);
-		return com;
 	}
 
 	Icon visibleIcon = new ImageIcon("images/nodes_visible.gif");
