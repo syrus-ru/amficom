@@ -1,18 +1,11 @@
 package com.syrus.AMFICOM.Client.Resource;
 
-import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptorSeq_TransferableHolder;
 import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptor_Transferable;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Resource.Alarm.EventSource;
 import com.syrus.AMFICOM.Client.Resource.Alarm.SystemEvent;
-import com.syrus.AMFICOM.Client.Resource.Result.ResultSet;
 
-import java.util.Iterator;
 import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Enumeration;
 
 public class SurveyDataSourceImage extends DataSourceImage
 {

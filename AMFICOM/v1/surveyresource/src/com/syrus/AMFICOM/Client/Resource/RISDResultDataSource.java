@@ -1,11 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource;
 
-import java.util.*;
-
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Survey.*;
 import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.General.*;
 
 public class RISDResultDataSource

@@ -14,15 +14,7 @@ TARGET_CLASS_LIST=src_surveyresource.txt
 TARGET_SRC=$(LIBSRC)\surveyresourcesource.jar
 
 SERVERCP=$(LIB)\corba.jar
-CLIENTCP=$(LIB)\io.jar;$(LIB)\util.jar;$(LIB)\generalclient.jar;$(LIB)\main.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\map.jar;$(LIB)\optimize.jar;$(LIB)\schedule.jar;$(LIB)\scheme.jar;$(LIB)\corba_portable.jar;$(LIB)\corba_portable_client.jar;$(LIB)\filter.jar
-
-ORBCP=$(EXTLIB)\aurora.zip;$(EXTLIB)\aurora_client_orbindep.jar;$(EXTLIB)\aurora_client_orbdep.jar
-VBJCP=$(ORACLE_HOME)\lib\vbjorb.jar;$(ORACLE_HOME)\lib\vbjapp.jar
-LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
-SPATIALCP=$(EXTLIB)\ofx.spatialfx.jar
-REPORTCP=$(EXTLIB)\jfreechartK.jar
-JGRAPHCP=$(EXTLIB)\jgraphpad.jar
-
+CLIENTCP=$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\generalclient.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\configuration.jar;$(LIB)\measurement.jar;$(LIB)\map.jar;$(LIB)\mapview.jar;$(LIB)\scheme.jar;$(LIB)\corba_portable.jar;$(LIB)\filter.jar
 
 .PHONY:	$(TARGET)
 
@@ -34,7 +26,7 @@ jar:
 
 impl:
 	$(JAVAC) -d $(CLASSES) \
-		-classpath $(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP);$(REPORTCP);$(JGRAPHCP);$(VBJCP):$(ORBCP) \
+		-classpath $(SERVERCP);$(CLIENTCP) \
 		-sourcepath $(SRC) \
 		@$(TARGET_CLASS_LIST)
 
