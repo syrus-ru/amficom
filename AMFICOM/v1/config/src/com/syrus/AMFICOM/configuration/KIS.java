@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.30 2004/11/15 19:08:58 arseniy Exp $
+ * $Id: KIS.java,v 1.31 2004/11/15 19:14:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/11/15 19:08:58 $
+ * @version $Revision: 1.31 $, $Date: 2004/11/15 19:14:36 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -195,7 +195,7 @@ public class KIS extends DomainMember implements TypedObject {
 		return this.hostname;
 	}
 
-	public int getPort(){
+	public short getPort(){
 		return this.port;
 	}
 
