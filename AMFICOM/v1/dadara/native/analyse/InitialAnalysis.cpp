@@ -175,7 +175,7 @@ return;
       //ep->gain = 0;  ep->gain_thr = 0;
       events->add(ep);
     }
-//* ищем остальные коннекторы
+// ищем остальные коннекторы  и сварки 
     for(int i = shift+1; i<splashes.getLength()-1; i++)
 	{   sp1 = (Splash*)splashes[i];
         sp2 = (Splash*)splashes[i+1];
@@ -236,7 +236,7 @@ void InitialAnalysis::SetConnectorParamsBySplashes( EventParams& ep, Splash& sp1
    }
    ep.R2 = max;
    double l = sp2.begin_thr - sp1.end_conn_n, l_max = reflectiveSize*2;
-   assert(l>0);
+   assert(l>=-1);// -1 может быть так как мы искуствнно расширяем на одну точку каждый всплеск (начало ДО уровня, а конец ПОСЛЕ ) 
    ep.R3 = 2*ep.R2*(l_max-l)/(l+wlet_width)*(wlet_width/l_max);
 }
 // -------------------------------------------------------------------------------------------------
