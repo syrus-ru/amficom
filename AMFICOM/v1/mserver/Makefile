@@ -95,3 +95,5 @@ arch:
 		Makefile \
 		$(IDLDIR)/mserver.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/*.java
+lib: $(LIBNAME)
+	$(CP) $(LIBNAME) $(LIBDIR)  
