@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLink.java,v 1.30 2005/04/04 13:15:59 bass Exp $
+ * $Id: NodeLink.java,v 1.31 2005/04/05 12:02:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты 
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/04/04 13:15:59 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.31 $, $Date: 2005/04/05 12:02:16 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement {
@@ -451,6 +451,7 @@ public class NodeLink extends StorableObject implements MapElement {
 			AbstractNode startNode1 = (AbstractNode) MapStorableObjectPool.getStorableObject(startNodeId1, true);
 			AbstractNode endNode1 = (AbstractNode) MapStorableObjectPool.getStorableObject(endNodeId1, true);
 			NodeLink nodeLink1 = new NodeLink(id1, creatorId, 0L, name1, physicalLink1, startNode1, endNode1, length1);
+			nodeLink1.changed = true;
 			physicalLink1.addNodeLink(nodeLink1);
 
 			return nodeLink1;

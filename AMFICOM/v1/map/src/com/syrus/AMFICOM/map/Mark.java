@@ -1,5 +1,5 @@
 /**
- * $Id: Mark.java,v 1.24 2005/04/04 13:15:58 bass Exp $
+ * $Id: Mark.java,v 1.25 2005/04/05 12:02:16 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.map.corba.Mark_Transferable;
  * в св€зи с чем методы класса {@link AbstractNode}, работающие с лини€ми и 
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/04/04 13:15:58 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2005/04/05 12:02:16 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -548,7 +548,8 @@ public class Mark extends AbstractNode {
 
 		try {
 			PhysicalLink physicalLink1 = (PhysicalLink) MapStorableObjectPool.getStorableObject(physicalLinkId1, false);
-			return new Mark(id1,
+   			Mark mark = new Mark(
+					id1,
 					creatorId,
 					0L,
 					name1,
@@ -560,6 +561,8 @@ public class Mark extends AbstractNode {
 					city1,
 					street1,
 					building1);
+			mark.changed = true;
+			return mark;
 		}
 		catch (ApplicationException e) {
 			throw new CreateObjectException("Mark.createInstance |  ", e);

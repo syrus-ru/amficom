@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.26 2005/04/04 13:15:58 bass Exp $
+ * $Id: Map.java,v 1.27 2005/04/05 12:02:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/04/04 13:15:58 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.27 $, $Date: 2005/04/05 12:02:16 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -945,7 +945,9 @@ public class Map extends DomainMember {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new Map(id1, creatorId, 0L, domainId, name1, description1);
+			Map map = new Map(id1, creatorId, 0L, domainId, name1, description1);
+			map.changed = true;
+			return map;
 		}
 		catch (Exception e) {
 			throw new CreateObjectException("Map.createInstance |  ", e);
