@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.23 2005/03/15 16:29:10 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.24 2005/03/18 18:23:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.mserver;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -19,17 +20,26 @@ import java.util.Map;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
+import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
-import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Application;
@@ -38,7 +48,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/03/15 16:29:10 $
+ * @version $Revision: 1.24 $, $Date: 2005/03/18 18:23:17 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -99,6 +109,13 @@ public class MeasurementServer extends SleepButWorkThread {
 			System.exit(-1);
 		}
 
+		/*	Activate session context*/
+		SessionContext.init(new AccessIdentity(new Date(System.currentTimeMillis()),
+				iAm.getDomainId(),
+				iAm.getUserId(),
+				null));
+
+
 		/*	Create CORBA server with servant(s)	*/
 		activateCORBAServer();
 
@@ -133,7 +150,7 @@ public class MeasurementServer extends SleepButWorkThread {
 
 	private static void activateCORBAServer() {
 		try {
-			corbaServer = new CORBAServer();
+			corbaServer = new CORBAServer(iAm.getHostName());
 			corbaServer.activateServant(new MServerImplementation(), iAm.getId().toString());
 		}
 		catch (CommunicationException ce) {
@@ -213,12 +230,12 @@ public class MeasurementServer extends SleepButWorkThread {
 				testQueue = (Map) mcmTestQueueMap.get(mcmId);
 				mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM) mcmRefs.get(mcmId);
 				if (mcmRef != null) {
+					updateTestsStatus(testQueue, TestStatus.TEST_STATUS_SCHEDULED);
 					testsT = createTransferables(testQueue);
 					if (testsT != null) {
 						try {
 							Log.debugMessage(testsT.length + " tests to send to MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
 							mcmRef.receiveTests(testsT);
-							updateTestsStatus(testQueue, TestStatus.TEST_STATUS_SCHEDULED);
 							testQueue.clear();
 							super.clearFalls();
 						}
@@ -257,6 +274,19 @@ public class MeasurementServer extends SleepButWorkThread {
 	
 	private static void fillMCMTestQueueMap() throws ApplicationException {
 		LinkedIdsCondition lic = new LinkedIdsCondition(mcmTestQueueMap.keySet(), ObjectEntities.TEST_ENTITY_CODE);
+		TypicalCondition tc = new TypicalCondition(TestStatus._TEST_STATUS_NEW,
+				0,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.TEST_ENTITY_CODE,
+				TestWrapper.COLUMN_STATUS);
+		CompoundCondition cc = null;
+		try {
+			cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
+		}
+		catch (CreateObjectException coe) {
+			//Never
+			Log.errorException(coe);
+		}
 
 		Collection addedTestIds = new HashSet();
 		Identifier mcmId;
@@ -264,10 +294,10 @@ public class MeasurementServer extends SleepButWorkThread {
 		for (Iterator it = mcmTestQueueMap.keySet().iterator(); it.hasNext();) {
 			mcmId = (Identifier) it.next();
 			testQueue = (Map) mcmTestQueueMap.get(mcmId);
-			addedTestIds.add(mcmTestQueueMap.get(testQueue.keySet()));
+			addedTestIds.addAll(testQueue.keySet());
 		}
 
-		Collection tests = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(addedTestIds, lic, true);
+		Collection tests = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(addedTestIds, cc, true);
 
 		Test test;
 		for (Iterator it = tests.iterator(); it.hasNext();) {
@@ -306,17 +336,24 @@ public class MeasurementServer extends SleepButWorkThread {
 	}
 
 	private static void updateTestsStatus(Map testQueue, TestStatus status) {
-		try {
-			Identifier testId;
-			Test test;
-			for (Iterator it = testQueue.keySet().iterator(); it.hasNext();) {
-				testId = (Identifier) it.next();
-				test = (Test) testQueue.get(testId);
-				test.updateStatus(status, iAm.getUserId());
+		Identifier testId;
+		Test test;
+		Collection changedTests = new ArrayList(testQueue.size());
+		for (Iterator it = testQueue.keySet().iterator(); it.hasNext();) {
+			testId = (Identifier) it.next();
+			test = (Test) testQueue.get(testId);
+			if (test.getStatus().value() != status.value()) {
+				test.setStatus(status);
+				changedTests.add(test);
 			}
 		}
-		catch (UpdateObjectException uoe) {
-			Log.errorException(uoe);
+
+		StorableObjectDatabase database = MeasurementDatabaseContext.getTestDatabase();
+		try {
+			database.update(changedTests, SessionContext.getAccessIdentity().getUserId(), StorableObjectDatabase.UPDATE_CHECK);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
 		}
 	}
 
@@ -349,18 +386,20 @@ public class MeasurementServer extends SleepButWorkThread {
 					testId = (Identifier) it1.next();
 
 					test = (Test) abortTestQueue.get(testId);
-					try {
-						test.updateStatus(TestStatus.TEST_STATUS_ABORTED, iAm.getUserId());
-					}
-					catch (UpdateObjectException uoe) {
-						Log.errorException(uoe);
-					}
+					test.setStatus(TestStatus.TEST_STATUS_ABORTED);
 					Log.debugMessage("Test '" + test.getId() + "' set ABORTED", Log.DEBUGLEVEL08);
 
 					testQueue.remove(testId);
 				}
 			}
-			
+
+			try {
+				MeasurementStorableObjectPool.flush(true);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+
 			this.abortTestsMap.clear();
 		}
 		else
