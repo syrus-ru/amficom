@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.scheme.corba.*;
 
 public final class SchemeElementController implements ObjectResourceController
 {
-	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_LABEL = "label";
 	public static final String COLUMN_SYMBOL_ID = "symbol_id";
 	public static final String COLUMN_EQUIPMENT_ID = "equipment_id";
@@ -23,7 +22,6 @@ public final class SchemeElementController implements ObjectResourceController
 	public static final String COLUMN_SCHEME_ELEMENT_IDS = "element_ids";
 	public static final String COLUMN_SCHEME_CELL_ID = "scheme_cell_id";
 	public static final String COLUMN_UGO_CELL_ID = "ugo_cell_id";
-	public static final String COLUMN_CHARACTERISTICS = "characteristics";
 
 	private static SchemeElementController instance;
 
@@ -33,13 +31,13 @@ public final class SchemeElementController implements ObjectResourceController
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				StorableObjectDatabase.COLUMN_ID,
-				StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID,
-				StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID,
-				StorableObjectType.COLUMN_CODENAME,
-				StorableObjectType.COLUMN_DESCRIPTION,
+				COLUMN_ID,
+				COLUMN_CREATED,
+				COLUMN_CREATOR_ID,
+				COLUMN_MODIFIED,
+				COLUMN_MODIFIER_ID,
+				COLUMN_CODENAME,
+				COLUMN_DESCRIPTION,
 				COLUMN_NAME,
 				COLUMN_LABEL,
 				COLUMN_SYMBOL_ID,
@@ -87,17 +85,17 @@ public final class SchemeElementController implements ObjectResourceController
 		if (object instanceof SchemeElement)
 		{
 			SchemeElement element = (SchemeElement)object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
+			if (key.equals(COLUMN_ID))
 				result = element.id().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
+			else if (key.equals(COLUMN_CREATED))
 				result = Long.toString(element.created());
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
+			else if (key.equals(COLUMN_CREATOR_ID))
 				result = element.creatorId().identifierString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
+			else if (key.equals(COLUMN_MODIFIED))
 				result = Long.toString(element.modified());
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
+			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = element.modifierId().identifierString();
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			else if (key.equals(COLUMN_DESCRIPTION))
 				result = element.description();
 			else if (key.equals(COLUMN_NAME))
 				result = element.name();

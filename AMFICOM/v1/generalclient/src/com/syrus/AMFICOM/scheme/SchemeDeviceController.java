@@ -8,10 +8,8 @@ import com.syrus.AMFICOM.scheme.corba.*;
 
 public final class SchemeDeviceController implements ObjectResourceController
 {
-	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_SCHEME_PORT_IDS = "scheme_port_ids";
 	public static final String COLUMN_SCHEME_CABLEPORT_IDS = "scheme_cableport_ids";
-	public static final String COLUMN_CHARACTERISTICS = "characteristics";
 
 	private static SchemeDeviceController instance;
 
@@ -21,13 +19,13 @@ public final class SchemeDeviceController implements ObjectResourceController
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				StorableObjectDatabase.COLUMN_ID,
-				StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID,
-				StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID,
-				StorableObjectType.COLUMN_CODENAME,
-				StorableObjectType.COLUMN_DESCRIPTION,
+				COLUMN_ID,
+				COLUMN_CREATED,
+				COLUMN_CREATOR_ID,
+				COLUMN_MODIFIED,
+				COLUMN_MODIFIER_ID,
+				COLUMN_CODENAME,
+				COLUMN_DESCRIPTION,
 				COLUMN_NAME,
 				COLUMN_SCHEME_PORT_IDS,
 				COLUMN_SCHEME_CABLEPORT_IDS,
@@ -63,17 +61,17 @@ public final class SchemeDeviceController implements ObjectResourceController
 		if (object instanceof SchemeDevice)
 		{
 			SchemeDevice device = (SchemeDevice)object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
+			if (key.equals(COLUMN_ID))
 				result = device.id().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
+			else if (key.equals(COLUMN_CREATED))
 				result = Long.toString(device.created());
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
+			else if (key.equals(COLUMN_CREATOR_ID))
 				result = device.creatorId().identifierString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
+			else if (key.equals(COLUMN_MODIFIED))
 				result = Long.toString(device.modified());
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
+			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = device.modifierId().identifierString();
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			else if (key.equals(COLUMN_DESCRIPTION))
 				result = device.description();
 			else if (key.equals(COLUMN_NAME))
 				result = device.name();

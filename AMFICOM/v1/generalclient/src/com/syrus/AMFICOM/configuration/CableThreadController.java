@@ -1,15 +1,14 @@
 package com.syrus.AMFICOM.configuration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.general.*;
 
 public final class CableThreadController implements ObjectResourceController
 {
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_TYPE_ID = "type_id";
-
 	private static CableThreadController instance;
 
 	private List keys;
@@ -18,12 +17,12 @@ public final class CableThreadController implements ObjectResourceController
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				StorableObjectDatabase.COLUMN_ID,
-				StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID,
-				StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID,
-				StorableObjectType.COLUMN_DESCRIPTION,
+				COLUMN_ID,
+				COLUMN_CREATED,
+				COLUMN_CREATOR_ID,
+				COLUMN_MODIFIED,
+				COLUMN_MODIFIER_ID,
+				COLUMN_DESCRIPTION,
 				COLUMN_NAME,
 				COLUMN_TYPE_ID
 		};
@@ -48,7 +47,7 @@ public final class CableThreadController implements ObjectResourceController
 		String name = null;
 		if (key.equals(COLUMN_NAME))
 			name = "Название";
-		if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+		if (key.equals(COLUMN_DESCRIPTION))
 			name = "Описание";
 		return name;
 	}
@@ -59,17 +58,17 @@ public final class CableThreadController implements ObjectResourceController
 		if (object instanceof CableThread)
 		{
 			CableThread thread = (CableThread)object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
+			if (key.equals(COLUMN_ID))
 				result = thread.getId().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
+			else if (key.equals(COLUMN_CREATED))
 				result = thread.getCreated().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
+			else if (key.equals(COLUMN_CREATOR_ID))
 				result = thread.getCreatorId().getIdentifierString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
+			else if (key.equals(COLUMN_MODIFIED))
 				result = thread.getModified().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
+			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = thread.getModifierId().getIdentifierString();
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			else if (key.equals(COLUMN_DESCRIPTION))
 				result = thread.getDescription();
 			else if (key.equals(COLUMN_NAME))
 				result = thread.getName();

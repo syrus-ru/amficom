@@ -7,8 +7,6 @@ import com.syrus.AMFICOM.client_.resource.*;
 
 public final class DomainController implements ObjectResourceController
 {
-	public static final String KEY_NAME = "name";
-	public static final String KEY_DESCRIPTION = "description";
 
 	private static DomainController instance;
 
@@ -18,8 +16,8 @@ public final class DomainController implements ObjectResourceController
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				KEY_NAME,
-				KEY_DESCRIPTION
+				COLUMN_NAME,
+				COLUMN_DESCRIPTION
 		};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
@@ -40,9 +38,9 @@ public final class DomainController implements ObjectResourceController
 	public String getName(final String key)
 	{
 		String name = null;
-		if (key.equals(KEY_NAME))
+		if (key.equals(COLUMN_NAME))
 			name = "Название";
-		if (key.equals(KEY_DESCRIPTION))
+		if (key.equals(COLUMN_DESCRIPTION))
 			name = "Описание";
 		return name;
 	}
@@ -53,9 +51,9 @@ public final class DomainController implements ObjectResourceController
 		if (object instanceof Domain)
 		{
 			Domain domain = (Domain)object;
-			if (key.equals(KEY_NAME))
+			if (key.equals(COLUMN_NAME))
 				result = domain.getName();
-			if (key.equals(KEY_DESCRIPTION))
+			if (key.equals(COLUMN_DESCRIPTION))
 				result = domain.getDescription();
 		}
 		return result;

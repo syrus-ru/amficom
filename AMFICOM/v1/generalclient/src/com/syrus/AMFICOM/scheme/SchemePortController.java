@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.scheme.corba.SchemePort;
 
 public final class SchemePortController implements ObjectResourceController
 {
-	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_SCHEME_LINK_ID = "scheme_link_id";
 	public static final String COLUMN_DIRECTION = "direction";
 	public static final String COLUMN_MEASUREMENT_PORT_ID = "measurement_port_id";
@@ -17,7 +16,6 @@ public final class SchemePortController implements ObjectResourceController
 	public static final String COLUMN_PORT_TYPE_ID = "port_type_id";
 	public static final String COLUMN_SCHEME_CABLE_THREAD_ID = "scheme_cable_thread_id";
 	public static final String COLUMN_SCHEME_DEVICE_ID = "scheme_device_id";
-	public static final String COLUMN_CHARACTERISTICS = "characteristics";
 
 	private static SchemePortController instance;
 
@@ -27,13 +25,13 @@ public final class SchemePortController implements ObjectResourceController
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				StorableObjectDatabase.COLUMN_ID,
-				StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID,
-				StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID,
-				StorableObjectType.COLUMN_CODENAME,
-				StorableObjectType.COLUMN_DESCRIPTION,
+				COLUMN_ID,
+				COLUMN_CREATED,
+				COLUMN_CREATOR_ID,
+				COLUMN_MODIFIED,
+				COLUMN_MODIFIER_ID,
+				COLUMN_CODENAME,
+				COLUMN_DESCRIPTION,
 				COLUMN_NAME,
 				COLUMN_SCHEME_LINK_ID,
 				COLUMN_DIRECTION,
@@ -75,17 +73,17 @@ public final class SchemePortController implements ObjectResourceController
 		if (object instanceof SchemePort)
 		{
 			SchemePort port = (SchemePort)object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
+			if (key.equals(COLUMN_ID))
 				result = port.id().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
+			else if (key.equals(COLUMN_CREATED))
 				result = Long.toString(port.created());
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
+			else if (key.equals(COLUMN_CREATOR_ID))
 				result = port.creatorId().identifierString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
+			else if (key.equals(COLUMN_MODIFIED))
 				result = Long.toString(port.modified());
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
+			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = port.modifierId().identifierString();
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			else if (key.equals(COLUMN_DESCRIPTION))
 				result = port.description();
 			else if (key.equals(COLUMN_NAME))
 				result = port.name();

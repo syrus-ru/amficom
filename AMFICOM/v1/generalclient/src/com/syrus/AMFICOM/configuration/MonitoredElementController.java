@@ -1,13 +1,14 @@
 package com.syrus.AMFICOM.configuration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.client_.resource.*;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 public final class MonitoredElementController implements ObjectResourceController
 {
-	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_MEASUREMENT_PORT_ID = "measurement_port_id";
 	public static final String COLUMN_SORT = "sort";
 	public static final String COLUMN_LOCAL_ADDRESS = "local_address";
@@ -20,11 +21,11 @@ public final class MonitoredElementController implements ObjectResourceControlle
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				StorableObjectDatabase.COLUMN_ID,
-				StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID,
-				StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID,
+				COLUMN_ID,
+				COLUMN_CREATED,
+				COLUMN_CREATOR_ID,
+				COLUMN_MODIFIED,
+				COLUMN_MODIFIER_ID,
 				COLUMN_NAME,
 				COLUMN_MEASUREMENT_PORT_ID,
 				COLUMN_SORT,
@@ -60,15 +61,15 @@ public final class MonitoredElementController implements ObjectResourceControlle
 		if (object instanceof MonitoredElement)
 		{
 			MonitoredElement me = (MonitoredElement)object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
+			if (key.equals(COLUMN_ID))
 				result = me.getId().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
+			else if (key.equals(COLUMN_CREATED))
 				result = me.getCreated().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
+			else if (key.equals(COLUMN_CREATOR_ID))
 				result = me.getCreatorId().getIdentifierString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
+			else if (key.equals(COLUMN_MODIFIED))
 				result = me.getModified().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
+			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = me.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_NAME))
 				result = me.getName();

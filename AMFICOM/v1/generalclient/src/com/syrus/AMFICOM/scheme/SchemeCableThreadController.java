@@ -8,13 +8,10 @@ import com.syrus.AMFICOM.general.*;
 
 public final class SchemeCableThreadController implements ObjectResourceController
 {
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_TYPE_ID = "type_id";
 	public static final String COLUMN_THREAD_ID = "thread_id";
 	public static final String COLUMN_SOURCE_SCHEME_PORT_ID = "source_scheme_port_id";
 	public static final String COLUMN_TARGET_SCHEME_PORT_ID = "target_scheme_port_id";
 	public static final String COLUMN_SCHEME_CABLE_LINK_ID = "scheme_cable_link_id";
-	public static final String COLUMN_CHARACTERISTICS = "characteristics";
 
 	private static SchemeCableThreadController instance;
 
@@ -24,13 +21,13 @@ public final class SchemeCableThreadController implements ObjectResourceControll
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				StorableObjectDatabase.COLUMN_ID,
-				StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID,
-				StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID,
-				StorableObjectType.COLUMN_CODENAME,
-				StorableObjectType.COLUMN_DESCRIPTION,
+				COLUMN_ID,
+				COLUMN_CREATED,
+				COLUMN_CREATOR_ID,
+				COLUMN_MODIFIED,
+				COLUMN_MODIFIER_ID,
+				COLUMN_CODENAME,
+				COLUMN_DESCRIPTION,
 				COLUMN_NAME,
 				COLUMN_TYPE_ID,
 				COLUMN_THREAD_ID,
@@ -69,17 +66,17 @@ public final class SchemeCableThreadController implements ObjectResourceControll
 		if (object instanceof SchemeCableThread)
 		{
 			SchemeCableThread thread = (SchemeCableThread)object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
+			if (key.equals(COLUMN_ID))
 				result = thread.id().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
+			else if (key.equals(COLUMN_CREATED))
 				result = Long.toString(thread.created());
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
+			else if (key.equals(COLUMN_CREATOR_ID))
 				result = thread.creatorId().identifierString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
+			else if (key.equals(COLUMN_MODIFIED))
 				result = Long.toString(thread.modified());
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
+			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = thread.modifierId().identifierString();
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			else if (key.equals(COLUMN_DESCRIPTION))
 				result = thread.description();
 			else if (key.equals(COLUMN_NAME))
 				result = thread.name();

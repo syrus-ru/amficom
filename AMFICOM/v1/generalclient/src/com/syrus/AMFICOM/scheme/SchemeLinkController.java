@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.scheme.corba.SchemeLink;
 
 public final class SchemeLinkController implements ObjectResourceController
 {
-	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_SOURCE_SCHEME_PORT_ID = "source_scheme_port_id";
 	public static final String COLUMN_TARGET_SCHEME_PORT_ID = "target_scheme_port_id";
 	public static final String COLUMN_LINK_ID = "link_id";
@@ -17,7 +16,6 @@ public final class SchemeLinkController implements ObjectResourceController
 	public static final String COLUMN_SITE_NODE_ID = "site_node_id";
 	public static final String COLUMN_OPTICAL_LENGTH = "optical_length";
 	public static final String COLUMN_PHYSICAL_LENGTH = "physical_length";
-	public static final String COLUMN_CHARACTERISTICS = "characteristics";
 
 	private static SchemeLinkController instance;
 
@@ -27,13 +25,13 @@ public final class SchemeLinkController implements ObjectResourceController
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				StorableObjectDatabase.COLUMN_ID,
-				StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID,
-				StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID,
-				StorableObjectType.COLUMN_CODENAME,
-				StorableObjectType.COLUMN_DESCRIPTION,
+				COLUMN_ID,
+				COLUMN_CREATED,
+				COLUMN_CREATOR_ID,
+				COLUMN_MODIFIED,
+				COLUMN_MODIFIER_ID,
+				COLUMN_CODENAME,
+				COLUMN_DESCRIPTION,
 				COLUMN_NAME,
 				COLUMN_SOURCE_SCHEME_PORT_ID,
 				COLUMN_TARGET_SCHEME_PORT_ID,
@@ -75,17 +73,17 @@ public final class SchemeLinkController implements ObjectResourceController
 		if (object instanceof SchemeLink)
 		{
 			SchemeLink link = (SchemeLink)object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
+			if (key.equals(COLUMN_ID))
 				result = link.id().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
+			else if (key.equals(COLUMN_CREATED))
 				result = Long.toString(link.created());
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
+			else if (key.equals(COLUMN_CREATOR_ID))
 				result = link.creatorId().identifierString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
+			else if (key.equals(COLUMN_MODIFIED))
 				result = Long.toString(link.modified());
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
+			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = link.modifierId().identifierString();
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			else if (key.equals(COLUMN_DESCRIPTION))
 				result = link.description();
 			else if (key.equals(COLUMN_NAME))
 				result = link.name();

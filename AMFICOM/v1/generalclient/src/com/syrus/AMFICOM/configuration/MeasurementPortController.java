@@ -7,11 +7,8 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 public final class MeasurementPortController implements ObjectResourceController
 {
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_TYPE_ID = "type_id";
 	public static final String COLUMN_KIS_ID = "kis_id";
 	public static final String COLUMN_PORT_ID = "port_id";
-	public static final String COLUMN_CHARACTERISTICS = "characteristics";
 
 	private static MeasurementPortController instance;
 
@@ -21,12 +18,12 @@ public final class MeasurementPortController implements ObjectResourceController
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				StorableObjectDatabase.COLUMN_ID,
-				StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID,
-				StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID,
-				StorableObjectType.COLUMN_DESCRIPTION,
+				COLUMN_ID,
+				COLUMN_CREATED,
+				COLUMN_CREATOR_ID,
+				COLUMN_MODIFIED,
+				COLUMN_MODIFIER_ID,
+				COLUMN_DESCRIPTION,
 				COLUMN_NAME,
 				COLUMN_TYPE_ID,
 				COLUMN_KIS_ID,
@@ -54,7 +51,7 @@ public final class MeasurementPortController implements ObjectResourceController
 		String name = null;
 		if (key.equals(COLUMN_NAME))
 			name = "Название";
-		if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+		if (key.equals(COLUMN_DESCRIPTION))
 			name = "Описание";
 		return name;
 	}
@@ -65,17 +62,17 @@ public final class MeasurementPortController implements ObjectResourceController
 		if (object instanceof MeasurementPort)
 		{
 			MeasurementPort port = (MeasurementPort)object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
+			if (key.equals(COLUMN_ID))
 				result = port.getId().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
+			else if (key.equals(COLUMN_CREATED))
 				result = port.getCreated().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
+			else if (key.equals(COLUMN_CREATOR_ID))
 				result = port.getCreatorId().getIdentifierString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
+			else if (key.equals(COLUMN_MODIFIED))
 				result = port.getModified().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
+			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = port.getModifierId().getIdentifierString();
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			else if (key.equals(COLUMN_DESCRIPTION))
 				result = port.getDescription();
 			else if (key.equals(COLUMN_NAME))
 				result = port.getName();

@@ -8,14 +8,12 @@ import com.syrus.AMFICOM.scheme.corba.*;
 
 public final class SchemePathController implements ObjectResourceController
 {
-	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_START_DEVICE_ID = "start_device_id";
 	public static final String COLUMN_END_DEVICE_ID = "end_device_id";
 	public static final String COLUMN_PATH_ID = "path_id";
 	public static final String COLUMN_TYPE_ID = "type_id";
 	public static final String COLUMN_SCHEME_ID = "scheme_id";
 	public static final String COLUMN_LINK_IDS = "link_ids";
-	public static final String COLUMN_CHARACTERISTICS = "characteristics";
 
 	private static SchemePathController instance;
 
@@ -25,13 +23,13 @@ public final class SchemePathController implements ObjectResourceController
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				StorableObjectDatabase.COLUMN_ID,
-				StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID,
-				StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID,
-				StorableObjectType.COLUMN_CODENAME,
-				StorableObjectType.COLUMN_DESCRIPTION,
+				COLUMN_ID,
+				COLUMN_CREATED,
+				COLUMN_CREATOR_ID,
+				COLUMN_MODIFIED,
+				COLUMN_MODIFIER_ID,
+				COLUMN_CODENAME,
+				COLUMN_DESCRIPTION,
 				COLUMN_NAME,
 				COLUMN_START_DEVICE_ID,
 				COLUMN_END_DEVICE_ID,
@@ -71,17 +69,17 @@ public final class SchemePathController implements ObjectResourceController
 		if (object instanceof SchemePath)
 		{
 			SchemePath path = (SchemePath)object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
+			if (key.equals(COLUMN_ID))
 				result = path.id().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
+			else if (key.equals(COLUMN_CREATED))
 				result = Long.toString(path.created());
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
+			else if (key.equals(COLUMN_CREATOR_ID))
 				result = path.creatorId().identifierString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
+			else if (key.equals(COLUMN_MODIFIED))
 				result = Long.toString(path.modified());
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
+			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = path.modifierId().identifierString();
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+			else if (key.equals(COLUMN_DESCRIPTION))
 				result = path.description();
 			else if (key.equals(COLUMN_NAME))
 				result = path.name();

@@ -7,14 +7,11 @@ import com.syrus.AMFICOM.general.*;
 
 public final class LinkController implements ObjectResourceController
 {
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_TYPE_ID = "type_id";
 	public static final String COLUMN_SORT = "sort";
 	public static final String COLUMN_SUPPLIER = "supplier";
 	public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
 	public static final String COLUMN_COLOR = "color";
 	public static final String COLUMN_MARK = "mark";
-	public static final String COLUMN_CHARACTERISTICS = "characteristics";
 
 	private static LinkController instance;
 
@@ -24,12 +21,12 @@ public final class LinkController implements ObjectResourceController
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				StorableObjectDatabase.COLUMN_ID,
-				StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID,
-				StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID,
-				StorableObjectType.COLUMN_DESCRIPTION,
+				COLUMN_ID,
+				COLUMN_CREATED,
+				COLUMN_CREATOR_ID,
+				COLUMN_MODIFIED,
+				COLUMN_MODIFIER_ID,
+				COLUMN_DESCRIPTION,
 				COLUMN_NAME,
 				COLUMN_TYPE_ID,
 				COLUMN_SORT,
@@ -59,7 +56,7 @@ public final class LinkController implements ObjectResourceController
 		String name = null;
 		if (key.equals(COLUMN_NAME))
 			name = "Название";
-		if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
+		if (key.equals(COLUMN_DESCRIPTION))
 			name = "Описание";
 		return name;
 	}
@@ -70,15 +67,15 @@ public final class LinkController implements ObjectResourceController
 		if (object instanceof Link)
 		{
 			Link link = (Link)object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
+			if (key.equals(COLUMN_ID))
 				result = link.getId().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
+			else if (key.equals(COLUMN_CREATED))
 				result = link.getCreated().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
+			else if (key.equals(COLUMN_CREATOR_ID))
 				result = link.getCreatorId().getIdentifierString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
+			else if (key.equals(COLUMN_MODIFIED))
 				result = link.getModified().toString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
+			else if (key.equals(COLUMN_MODIFIER_ID))
 				result = link.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_NAME))
 				result = link.getName();
