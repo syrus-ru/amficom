@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationDatabaseContext.java,v 1.1 2005/01/14 18:05:13 arseniy Exp $
+ * $Id: AdministrationDatabaseContext.java,v 1.2 2005/01/18 15:15:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,11 +11,11 @@ package com.syrus.AMFICOM.administration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/14 18:05:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/01/18 15:15:59 $
+ * @author $Author: bass $
  * @todo Declare all fields private as<ol>
  *       <li>they have public accessors; and</li>
- *       <li>there's {@link #init(StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase)}
+ *       <li>there's {@link #init(StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase)}
  *       method which is supposed to be the only modifier for class' fields.</li></ol>
  * @module administration_v1
  */
