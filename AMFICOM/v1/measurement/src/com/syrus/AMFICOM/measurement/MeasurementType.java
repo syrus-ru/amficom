@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.53 2005/02/14 12:02:39 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.54 2005/03/24 16:57:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/02/14 12:02:39 $
+ * @version $Revision: 1.54 $, $Date: 2005/03/24 16:57:57 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -117,9 +117,9 @@ public class MeasurementType extends ActionType {
 							  long version,
 							  String codename,
 							  String description,
-							  List inParameterTypes,
-							  List outParameterTypes,
-							  List measurementPortTypes) {
+							  Collection inParameterTypes,
+							  Collection outParameterTypes,
+							  Collection measurementPortTypes) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -153,9 +153,9 @@ public class MeasurementType extends ActionType {
 	public static MeasurementType createInstance(Identifier creatorId,
 												 String codename,
 												 String description,
-												 List inParameterTypes,
-												 List outParameterTypes,
-												 List measurementPortTypes) throws CreateObjectException {
+												 Collection inParameterTypes,
+												 Collection outParameterTypes,
+												 Collection measurementPortTypes) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0  || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
 
