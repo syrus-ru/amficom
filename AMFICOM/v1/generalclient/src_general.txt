@@ -137,7 +137,6 @@ src/com/syrus/AMFICOM/Client/Resource/Pool.java
 src/com/syrus/AMFICOM/Client/Resource/RISDDataSource.java
 src/com/syrus/AMFICOM/Client/Resource/RISDReportDataSource.java
 src/com/syrus/AMFICOM/Client/Resource/ReportDataSourceImage.java
-src/com/syrus/AMFICOM/Client/Resource/RISDDataSource.java
 src/com/syrus/AMFICOM/Client/Resource/StubResource.java
 src/com/syrus/AMFICOM/Client/Resource/Trash.java
 src/com/syrus/AMFICOM/Client/General/UI/ColorComboBox.java
@@ -207,5 +206,26 @@ src/com/syrus/AMFICOM/Client/Object/ui/JAlertingMessageDialog.java
 src/com/syrus/AMFICOM/Client/Object/ui/JAlertingMessageTableCellRenderer.java
 src/com/syrus/AMFICOM/Client/Object/ui/JAlertingMessageTableHeaderRenderer.java
 src/com/syrus/AMFICOM/Client/Object/ui/JAlertingMessageTableModel.java
+src/com/syrus/AMFICOM/Client/General/Report/APOReportModel.java
+src/com/syrus/AMFICOM/Client/General/Report/ChartFrame.java
+src/com/syrus/AMFICOM/Client/General/Report/CreateReportException.java
+src/com/syrus/AMFICOM/Client/General/Report/DividableTableColumnModel.java
+src/com/syrus/AMFICOM/Client/General/Report/DividableTableModel.java
+src/com/syrus/AMFICOM/Client/General/Report/DocumentRenderer.java
+src/com/syrus/AMFICOM/Client/General/Report/FirmedTextPane.java
+src/com/syrus/AMFICOM/Client/General/Report/ImagePanel.java
+src/com/syrus/AMFICOM/Client/General/Report/ObjectList.java
+src/com/syrus/AMFICOM/Client/General/Report/ObjectResourceReportModel.java
+src/com/syrus/AMFICOM/Client/General/Report/ObjectsReport.java
+src/com/syrus/AMFICOM/Client/General/Report/RenderingObject.java
+src/com/syrus/AMFICOM/Client/General/Report/ReportBuilder.java
+src/com/syrus/AMFICOM/Client/General/Report/ReportChartPanel.java
+src/com/syrus/AMFICOM/Client/General/Report/ReportData.java
+src/com/syrus/AMFICOM/Client/General/Report/ReportModel.java
+src/com/syrus/AMFICOM/Client/General/Report/ReportResultsTablePanel.java
+src/com/syrus/AMFICOM/Client/General/Report/ReportTemplate.java
+src/com/syrus/AMFICOM/Client/General/Report/ReportTemplateImplementationPanel.java
+src/com/syrus/AMFICOM/Client/General/Report/SelectTypeTemplateWindow.java
+src/com/syrus/AMFICOM/Client/General/Report/Statistics.java
+src/com/syrus/AMFICOM/Client/General/Report/TitledPanel.java
 
-src/com/syrus/AMFICOM/Client/General/Report/
