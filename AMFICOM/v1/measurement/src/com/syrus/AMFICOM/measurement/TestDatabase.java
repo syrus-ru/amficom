@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.30 2004/08/30 14:42:26 bob Exp $
+ * $Id: TestDatabase.java,v 1.31 2004/08/31 15:30:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/08/30 14:42:26 $
+ * @version $Revision: 1.31 $, $Date: 2004/08/31 15:30:25 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -466,12 +466,87 @@ public class TestDatabase extends StorableObjectDatabase {
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */
-		String testIdCode = test.getId().getCode();
+		String testIdCode = test.getId().toSQLString();
 		Date startTime = test.getStartTime();
 		Date endTime = test.getEndTime();
 		TemporalPattern temporalPattern = test.getTemporalPattern();		
 		AnalysisType analysisType = test.getAnalysisType();
 		EvaluationType evaluationType = test.getEvaluationType();
+		
+		String sql = SQL_INSERT_INTO + ObjectEntities.TEST_ENTITY
+			+ OPEN_BRACKET
+			+ COLUMN_ID + COMMA
+			+ COLUMN_CREATED + COMMA
+			+ COLUMN_MODIFIED + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_TEMPORAL_TYPE + COMMA
+			+ COLUMN_START_TIME + COMMA
+			+ COLUMN_END_TIME + COMMA
+			+ COLUMN_TEMPORAL_PATTERN_ID + COMMA
+			+ COLUMN_MEASUREMENT_TYPE_ID + COMMA
+			+ COLUMN_ANALYSIS_TYPE_ID + COMMA
+			+ COLUMN_EVALUATION_TYPE_ID + COMMA
+			+ COLUMN_STATUS + COMMA
+			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+			+ COLUMN_RETURN_TYPE + COMMA
+			+ COLUMN_DESCRIPTION
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+			+ testIdCode + COMMA
+			+ DatabaseDate.toUpdateSubString(test.getCreated()) + COMMA
+			+ DatabaseDate.toUpdateSubString(test.getModified()) + COMMA
+			+ test.getCreatorId().toSQLString() + COMMA
+			+ test.getModifierId().toSQLString() + COMMA
+			+ test.getTemporalType().value() + COMMA
+			+ ((startTime != null) ? DatabaseDate.toUpdateSubString(startTime) : SQL_NULL ) + COMMA
+			+ ((endTime != null) ? DatabaseDate.toUpdateSubString(endTime) : SQL_NULL ) + COMMA
+			+ ((temporalPattern != null) ? temporalPattern.getId().toSQLString() : SQL_NULL) + COMMA
+			+ test.getMeasurementType().getId().toSQLString() + COMMA
+			+ ((analysisType != null) ? analysisType.getId().toSQLString(): SQL_NULL) + COMMA			
+			+ ((evaluationType != null) ? evaluationType.getId().toSQLString() : SQL_NULL) + COMMA
+			+ test.getStatus().value() + COMMA
+			+ test.getMonitoredElement().getId().toSQLString() + COMMA
+			+ test.getReturnType().value() + COMMA
+			+ APOSTOPHE + test.getDescription() + APOSTOPHE 
+			+ CLOSE_BRACKET;
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("TestDatabase.insertTest | Inserting  test " + testIdCode, Log.DEBUGLEVEL09);
+			statement.executeUpdate(sql);
+			connection.commit();
+		}
+		catch (SQLException sqle) {
+			String mesg = "TestDatabase.insertTest | Cannot insert test '" + testIdCode + "' -- " + sqle.getMessage();
+			throw new CreateObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+	
+	public void insertList(List list) throws CreateObjectException {
+		insertTestList(list);
+	}
+	
+	private void insertTestList(List tests) throws CreateObjectException {
+		
+		if ((tests == null) || (tests.size() == 0))
+			return;
+		
+		if (tests.size() == 1){
+			Test test = (Test)tests.get(0);
+			insertTest(test);
+			insertMeasurementSetupTestLinks(test);
+			return;
+		}
 		
 		String sql = SQL_INSERT_INTO + ObjectEntities.TEST_ENTITY
 			+ OPEN_BRACKET
@@ -509,50 +584,68 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ QUESTION + COMMA
 			+ QUESTION + CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
+		String testIdCode = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(1, testIdCode);
-			preparedStatement.setTimestamp(2, new Timestamp(test.getCreated().getTime()));
-			preparedStatement.setTimestamp(3, new Timestamp(test.getModified().getTime()));
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(4, test.getCreatorId().getCode());
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(5, test.getModifierId().getCode());
-			preparedStatement.setInt(6, test.getTemporalType().value());
-			preparedStatement.setTimestamp(7, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
-			preparedStatement.setTimestamp(8, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(9, (temporalPattern != null) ? temporalPattern.getId().getCode() : "");
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(10, test.getMeasurementType().getId().getCode());
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(11, (analysisType != null) ? analysisType.getId().getCode() : "");
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(12, (evaluationType != null) ? evaluationType.getId().getCode() : "");
-			preparedStatement.setInt(13, test.getStatus().value());
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(14, test.getMonitoredElement().getId().getCode());
-			preparedStatement.setInt(15, test.getReturnType().value());
-			preparedStatement.setString(16, test.getDescription());
-			Log.debugMessage("TestDatabase.insertTest | Inserting  test " + testIdCode, Log.DEBUGLEVEL09);
-			preparedStatement.executeUpdate();
+
+			for(Iterator it=tests.iterator();it.hasNext();){
+				/**
+				 * FIXME insertMeasurementSetupTestLinks
+				 */
+				Test test = (Test)it.next();
+				/**
+				 * @todo when change DB Identifier model ,change String to long
+				 */
+				testIdCode = test.getId().getCode();
+				Date startTime = test.getStartTime();
+				Date endTime = test.getEndTime();
+				TemporalPattern temporalPattern = test.getTemporalPattern();		
+				AnalysisType analysisType = test.getAnalysisType();
+				EvaluationType evaluationType = test.getEvaluationType();
+	
+				/**
+				  * @todo when change DB Identifier model ,change setString() to setLong()
+				  */
+				preparedStatement.setString(1, testIdCode);
+				preparedStatement.setTimestamp(2, new Timestamp(test.getCreated().getTime()));
+				preparedStatement.setTimestamp(3, new Timestamp(test.getModified().getTime()));
+				/**
+				  * @todo when change DB Identifier model ,change setString() to setLong()
+				  */
+				preparedStatement.setString(4, test.getCreatorId().getCode());
+				/**
+				  * @todo when change DB Identifier model ,change setString() to setLong()
+				  */
+				preparedStatement.setString(5, test.getModifierId().getCode());
+				preparedStatement.setInt(6, test.getTemporalType().value());
+				preparedStatement.setTimestamp(7, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
+				preparedStatement.setTimestamp(8, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
+				/**
+				  * @todo when change DB Identifier model ,change setString() to setLong()
+				  */
+				preparedStatement.setString(9, (temporalPattern != null) ? temporalPattern.getId().getCode() : "");
+				/**
+				  * @todo when change DB Identifier model ,change setString() to setLong()
+				  */
+				preparedStatement.setString(10, test.getMeasurementType().getId().getCode());
+				/**
+				  * @todo when change DB Identifier model ,change setString() to setLong()
+				  */
+				preparedStatement.setString(11, (analysisType != null) ? analysisType.getId().getCode() : "");
+				/**
+				  * @todo when change DB Identifier model ,change setString() to setLong()
+				  */
+				preparedStatement.setString(12, (evaluationType != null) ? evaluationType.getId().getCode() : "");
+				preparedStatement.setInt(13, test.getStatus().value());
+				/**
+				  * @todo when change DB Identifier model ,change setString() to setLong()
+				  */
+				preparedStatement.setString(14, test.getMonitoredElement().getId().getCode());
+				preparedStatement.setInt(15, test.getReturnType().value());
+				preparedStatement.setString(16, test.getDescription());
+				Log.debugMessage("TestDatabase.insertTest | Inserting  test " + testIdCode, Log.DEBUGLEVEL09);
+				preparedStatement.executeUpdate();
+			}
 		}
 		catch (SQLException sqle) {
 			String mesg = "TestDatabase.insertTest | Cannot insert test '" + testIdCode + "' -- " + sqle.getMessage();

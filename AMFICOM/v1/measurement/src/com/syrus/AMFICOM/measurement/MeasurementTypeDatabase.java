@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.21 2004/08/29 11:47:05 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.22 2004/08/31 15:30:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/08/29 11:47:05 $
+ * @version $Revision: 1.22 $, $Date: 2004/08/31 15:30:25 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -271,68 +271,80 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
-	private void insertParameterTypes(MeasurementType measurementType) throws CreateObjectException {
+	private PreparedStatement insertParameterTypesPreparedStatement() throws SQLException{
+		String sql = SQL_INSERT_INTO
+		+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY + OPEN_BRACKET
+		+ LINK_COLUMN_MEASUREMENT_TYPE_ID + COMMA
+		+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
+		+ LINK_COLUMN_PARAMETER_MODE
+		+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+		+ QUESTION + COMMA
+		+ QUESTION + COMMA
+		+ QUESTION
+		+ CLOSE_BRACKET;
+		return connection.prepareStatement(sql);		
+	}
+	
+	private void updatePrepareStatementValues(PreparedStatement preparedStatement,MeasurementType measurementType) throws SQLException{
 		List inParTyps = measurementType.getInParameterTypes();
 		List outParTyps = measurementType.getOutParameterTypes();
-		/**
-		 * @todo when change DB Identifier model ,change String to long
-		 */
 		String measurementTypeIdCode = measurementType.getId().getCode();
-		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY + OPEN_BRACKET
-			+ LINK_COLUMN_MEASUREMENT_TYPE_ID + COMMA
-			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-			+ LINK_COLUMN_PARAMETER_MODE
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION
-			+ CLOSE_BRACKET;
-		PreparedStatement preparedStatement = null;
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */
 		String parameterTypeIdCode = null;
 		String parameterMode = null;
+		
+		for (Iterator iterator = inParTyps.iterator(); iterator.hasNext();) {
+			/**
+			 * @todo when change DB Identifier model ,change setString() to
+			 *       setLong()
+			 */
+			preparedStatement.setString(1, measurementTypeIdCode);
+			parameterTypeIdCode = ((ParameterType) iterator.next()).getId().getCode();
+			/**
+			 * @todo when change DB Identifier model ,change setString() to
+			 *       setLong()
+			 */
+			preparedStatement.setString(2, parameterTypeIdCode);
+			parameterMode = MODE_IN;
+			preparedStatement.setString(3, parameterMode);
+			Log.debugMessage("MeasurementTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for measurement type " + measurementTypeIdCode, Log.DEBUGLEVEL09);
+			preparedStatement.executeUpdate();
+		}
+		for (Iterator iterator = outParTyps.iterator(); iterator.hasNext();) {
+			/**
+			 * @todo when change DB Identifier model ,change setString() to
+			 *       setLong()
+			 */
+			preparedStatement.setString(1, measurementTypeIdCode);
+			parameterTypeIdCode = ((ParameterType) iterator.next()).getId().getCode();
+			/**
+			 * @todo when change DB Identifier model ,change setString() to
+			 *       setLong()
+			 */
+			preparedStatement.setString(2, parameterTypeIdCode);
+			parameterMode = MODE_OUT;
+			preparedStatement.setString(3, parameterMode);
+			Log.debugMessage("MeasurementTypeDatabase.insertParameterTypes | Inserting parameter type '" + parameterTypeIdCode + "' of parameter mode '" + parameterMode + "' for measurement type '" + measurementTypeIdCode + "'", Log.DEBUGLEVEL09);
+			preparedStatement.executeUpdate();
+		}
+
+	}
+	
+	private void insertParameterTypes(MeasurementType measurementType) throws CreateObjectException {
+		/**
+		 * @todo when change DB Identifier model ,change String to long
+		 */
+		
+		PreparedStatement preparedStatement = null;
+		String measurementTypeIdCode = measurementType.getId().getCode();
 		try {
-			preparedStatement = connection.prepareStatement(sql);
-			for (Iterator iterator = inParTyps.iterator(); iterator.hasNext();) {
-				/**
-				 * @todo when change DB Identifier model ,change setString() to
-				 *       setLong()
-				 */
-				preparedStatement.setString(1, measurementTypeIdCode);
-				parameterTypeIdCode = ((ParameterType) iterator.next()).getId().getCode();
-				/**
-				 * @todo when change DB Identifier model ,change setString() to
-				 *       setLong()
-				 */
-				preparedStatement.setString(2, parameterTypeIdCode);
-				parameterMode = MODE_IN;
-				preparedStatement.setString(3, parameterMode);
-				Log.debugMessage("MeasurementTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for measurement type " + measurementTypeIdCode, Log.DEBUGLEVEL09);
-				preparedStatement.executeUpdate();
-			}
-			for (Iterator iterator = outParTyps.iterator(); iterator.hasNext();) {
-				/**
-				 * @todo when change DB Identifier model ,change setString() to
-				 *       setLong()
-				 */
-				preparedStatement.setString(1, measurementTypeIdCode);
-				parameterTypeIdCode = ((ParameterType) iterator.next()).getId().getCode();
-				/**
-				 * @todo when change DB Identifier model ,change setString() to
-				 *       setLong()
-				 */
-				preparedStatement.setString(2, parameterTypeIdCode);
-				parameterMode = MODE_OUT;
-				preparedStatement.setString(3, parameterMode);
-				Log.debugMessage("MeasurementTypeDatabase.insertParameterTypes | Inserting parameter type '" + parameterTypeIdCode + "' of parameter mode '" + parameterMode + "' for measurement type '" + measurementTypeIdCode + "'", Log.DEBUGLEVEL09);
-				preparedStatement.executeUpdate();
-			}
+			preparedStatement = insertParameterTypesPreparedStatement();
+			updatePrepareStatementValues(preparedStatement, measurementType);
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.insertParameterTypes | Cannot insert parameter type '" + parameterTypeIdCode + "' of parameter mode '" + parameterMode + "' for measurement type '" + measurementTypeIdCode + "' -- " + sqle.getMessage();
+			String mesg = "MeasurementTypeDatabase.insertParameterTypes | Cannot insert parameter type for measurement type '" + measurementTypeIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
