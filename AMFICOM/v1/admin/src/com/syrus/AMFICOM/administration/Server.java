@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.11 2005/03/31 15:59:22 arseniy Exp $
+ * $Id: Server.java,v 1.12 2005/04/01 06:51:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,11 @@
 
 package com.syrus.AMFICOM.administration;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
@@ -34,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/03/31 15:59:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/04/01 06:51:54 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -49,13 +48,13 @@ public class Server extends DomainMember implements Characterizable {
 	private String hostname;
 	private Identifier userId;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private StorableObjectDatabase serverDatabase;
 
 	public Server(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-		this.characteristics = new ArrayList();
+		this.characteristics = new LinkedHashSet();
 
 		this.serverDatabase = AdministrationDatabaseContext.serverDatabase;
 		try {
@@ -75,7 +74,7 @@ public class Server extends DomainMember implements Characterizable {
 		this.userId = new Identifier(st.user_id);
 
 		try {
-			this.characteristics = new ArrayList(st.characteristic_ids.length);
+			this.characteristics = new HashSet(st.characteristic_ids.length);
 			for (int i = 0; i < st.characteristic_ids.length; i++)
 				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(st.characteristic_ids[i]), true));
 		}
@@ -106,7 +105,7 @@ public class Server extends DomainMember implements Characterizable {
 		this.hostname = hostname;
 		this.userId = userId;
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 
 		this.serverDatabase = AdministrationDatabaseContext.serverDatabase;
 	}
@@ -171,17 +170,17 @@ public class Server extends DomainMember implements Characterizable {
 		}
 	}
 
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableCollection(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(Collection characteristics) {
+	public void setCharacteristics0(Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(Collection characteristics) {
+	public void setCharacteristics(Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
 	}
@@ -235,8 +234,8 @@ public class Server extends DomainMember implements Characterizable {
 		this.userId = userId;
 	}
 
-	public List getDependencies() {
-		return Collections.singletonList(this.userId);
+	public Set getDependencies() {
+		return Collections.singleton(this.userId);
 	}
 	
 	public void setHostName(String hostname) {

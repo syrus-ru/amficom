@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.18 2005/03/10 15:19:46 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.19 2005/04/01 06:51:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,10 @@
 
 package com.syrus.AMFICOM.administration;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/03/10 15:19:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/04/01 06:51:54 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -60,9 +59,9 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 	// for multiple objects
 
-	public Collection loadUsers(Collection ids) throws ApplicationException {
+	public Set loadUsers(Set ids) throws ApplicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = database.retrieveByIdsByCondition(ids, null);
 		}
@@ -74,9 +73,9 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return collection;
 	}
 
-	public Collection loadDomains(Collection ids) throws ApplicationException {
+	public Set loadDomains(Set ids) throws ApplicationException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = database.retrieveByIdsByCondition(ids, null);
 		}
@@ -88,9 +87,9 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return collection;
 	}
 
-	public Collection loadServers(Collection ids) throws ApplicationException {
+	public Set loadServers(Set ids) throws ApplicationException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = database.retrieveByIdsByCondition(ids, null);
 		}
@@ -102,9 +101,9 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return collection;
 	}
 
-	public Collection loadMCMs(Collection ids) throws ApplicationException {
+	public Set loadMCMs(Set ids) throws ApplicationException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = database.retrieveByIdsByCondition(ids, null);
 		}
@@ -126,9 +125,9 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 
 
-	public Collection loadUsersButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = database.retrieveButIdsByCondition(ids, condition);
 		}
@@ -140,9 +139,9 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return collection;
 	}
 
-	public Collection loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadDomainsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = database.retrieveButIdsByCondition(ids, condition);
 		}
@@ -154,9 +153,9 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return collection;
 	}
 
-	public Collection loadServersButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadServersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = database.retrieveButIdsByCondition(ids, condition);
 		}
@@ -168,9 +167,9 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return collection;
 	}
 
-	public Collection loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadMCMsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = database.retrieveButIdsByCondition(ids, condition);
 		}
@@ -215,22 +214,22 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 
 
-	public void saveUsers(Collection collection, boolean force) throws ApplicationException {
+	public void saveUsers(Set collection, boolean force) throws ApplicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
 		database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveDomains(Collection collection, boolean force) throws ApplicationException {
+	public void saveDomains(Set collection, boolean force) throws ApplicationException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
 		database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveServers(Collection collection, boolean force) throws ApplicationException {
+	public void saveServers(Set collection, boolean force) throws ApplicationException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
 		database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveMCMs(Collection collection, boolean force) throws ApplicationException {
+	public void saveMCMs(Set collection, boolean force) throws ApplicationException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
 		database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
@@ -264,7 +263,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 			storableObjectDatabase.delete(id);
 	}
 
-	public void delete(Collection objects) throws IllegalDataException {
+	public void delete(Set objects) throws IllegalDataException {
 		if (objects == null || objects.isEmpty())
 			return;
 		/**
@@ -275,7 +274,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		/**
 		 * separate objects by kind of entity
 		 */
-		Collection entityObjects;
+		Set entityObjects;
 		Short entityCode;
 		for (Iterator it = objects.iterator(); it.hasNext();) {
 			Object object = it.next();
@@ -290,9 +289,9 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 							+ object.getClass().getName() + " isn't Identifier or Identifiable");
 
 			entityCode = new Short(identifier.getMajor());
-			entityObjects = (Collection) map.get(entityCode);
+			entityObjects = (Set) map.get(entityCode);
 			if (entityObjects == null) {
-				entityObjects = new LinkedList();
+				entityObjects = new HashSet();
 				map.put(entityCode, entityObjects);
 			}
 			entityObjects.add(object);
@@ -301,7 +300,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		StorableObjectDatabase storableObjectDatabase;
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			entityCode = (Short) it.next();
-			entityObjects = (Collection) map.get(entityCode);
+			entityObjects = (Set) map.get(entityCode);
 			storableObjectDatabase = AdministrationDatabaseContext.getDatabase(entityCode);
 			if (storableObjectDatabase != null)
 				storableObjectDatabase.delete(entityObjects);

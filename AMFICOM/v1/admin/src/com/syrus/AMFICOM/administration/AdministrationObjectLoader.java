@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationObjectLoader.java,v 1.8 2005/02/24 14:59:46 arseniy Exp $
+ * $Id: AdministrationObjectLoader.java,v 1.9 2005/04/01 06:51:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.administration;
 
-import java.util.Collection;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -17,8 +16,8 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/24 14:59:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/04/01 06:51:54 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -37,28 +36,28 @@ public interface AdministrationObjectLoader {
 
     // this block for multiple objects
 
-	Collection loadUsers(Collection ids) throws ApplicationException;
+	Set loadUsers(Set ids) throws ApplicationException;
 
-	Collection loadDomains(Collection ids) throws ApplicationException;
+	Set loadDomains(Set ids) throws ApplicationException;
 
-	Collection loadServers(Collection ids) throws ApplicationException;
+	Set loadServers(Set ids) throws ApplicationException;
 
-	Collection loadMCMs(Collection ids) throws ApplicationException;
+	Set loadMCMs(Set ids) throws ApplicationException;
 
-//  PermissionAttributes loadPermissionAttributes(Collection ids) throws ApplicationException;
+//  PermissionAttributes loadPermissionAttributes(Set ids) throws ApplicationException;
 
 
     /* Load StorableObject but argument ids */
 
-	Collection loadUsersButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
+	Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
-	Collection loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
+	Set loadDomainsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
-	Collection loadServersButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
+	Set loadServersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
-	Collection loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
+	Set loadMCMsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
-//  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
+//  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
 
 	void saveUser(User user, boolean force) throws ApplicationException;
@@ -72,13 +71,13 @@ public interface AdministrationObjectLoader {
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws ApplicationException;
 
 
-	void saveUsers(Collection collection, boolean force) throws ApplicationException;
+	void saveUsers(Set collection, boolean force) throws ApplicationException;
 
-	void saveDomains(Collection collection, boolean force) throws ApplicationException;
+	void saveDomains(Set collection, boolean force) throws ApplicationException;
 
-	void saveServers(Collection collection, boolean force) throws ApplicationException;
+	void saveServers(Set collection, boolean force) throws ApplicationException;
 
-	void saveMCMs(Collection collection, boolean force) throws ApplicationException;
+	void saveMCMs(Set collection, boolean force) throws ApplicationException;
 
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws ApplicationException;
 
@@ -88,6 +87,6 @@ public interface AdministrationObjectLoader {
 
 	void delete(Identifier id) throws IllegalDataException;
 
-	void delete(Collection objects) throws IllegalDataException;
+	void delete(Set objects) throws IllegalDataException;
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: XMLAdministrationObjectLoader.java,v 1.9 2005/02/24 16:13:59 bob Exp $
+ * $Id: XMLAdministrationObjectLoader.java,v 1.10 2005/04/01 06:51:54 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,11 +9,9 @@
 package com.syrus.AMFICOM.administration;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -30,7 +28,7 @@ import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/24 16:13:59 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 06:51:54 $
  * @author $Author: bob $
  * @module admin_v1
  */
@@ -48,7 +46,7 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		this.administrationXML.flush();
 	}
 
-	public void delete(Collection ids) throws IllegalDataException {
+	public void delete(Set ids) throws IllegalDataException {
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			this.administrationXML.delete(id);
@@ -60,8 +58,8 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return (Domain) this.loadStorableObject(id);
 	}
 
-	public Collection loadDomains(Collection ids) throws ApplicationException {
-		Collection objects = new ArrayList(ids.size());
+	public Set loadDomains(Set ids) throws ApplicationException {
+		Set objects = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			objects.add(this.loadStorableObject(id));
@@ -69,7 +67,7 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return objects;
 	}
 
-	public Collection loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadDomainsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -77,8 +75,8 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return (MCM) this.loadStorableObject(id);
 	}
 
-	public Collection loadMCMs(Collection ids) throws ApplicationException {
-		Collection objects = new ArrayList(ids.size());
+	public Set loadMCMs(Set ids) throws ApplicationException {
+		Set objects = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			objects.add(this.loadStorableObject(id));
@@ -86,7 +84,7 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return objects;
 	}
 
-	public Collection loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadMCMsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -94,8 +92,8 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return (Server) this.loadStorableObject(id);
 	}
 
-	public Collection loadServers(Collection ids) throws ApplicationException {
-		Collection objects = new ArrayList(ids.size());
+	public Set loadServers(Set ids) throws ApplicationException {
+		Set objects = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			objects.add(this.loadStorableObject(id));
@@ -103,7 +101,7 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return objects;
 	}
 
-	public Collection loadServersButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadServersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -111,8 +109,8 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return (User) this.loadStorableObject(id);
 	}
 
-	public Collection loadUsers(Collection ids) throws ApplicationException {
-		Collection objects = new ArrayList(ids.size());
+	public Set loadUsers(Set ids) throws ApplicationException {
+		Set objects = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			objects.add(this.loadStorableObject(id));
@@ -120,7 +118,7 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return objects;
 	}
 
-	public Collection loadUsersButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -134,7 +132,7 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		this.administrationXML.flush();
 	}
 
-	public void saveDomains(Collection collection, boolean force) throws ApplicationException {
+	public void saveDomains(Set collection, boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 
 	}
@@ -145,7 +143,7 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 
 	}
 
-	public void saveMCMs(Collection collection, boolean force) throws ApplicationException {
+	public void saveMCMs(Set collection, boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 
 	}
@@ -155,7 +153,7 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		this.administrationXML.flush();
 	}
 
-	public void saveServers(Collection collection, boolean force) throws ApplicationException {
+	public void saveServers(Set collection, boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 
 	}
@@ -165,7 +163,7 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		this.administrationXML.flush();
 	}
 
-	public void saveUsers(Collection collection, boolean force) throws ApplicationException {
+	public void saveUsers(Set collection, boolean force) throws ApplicationException {
 		this.saveStorableObjects(collection, force);
 
 	}
@@ -179,7 +177,7 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		} 
 	}
 
-	private List loadStorableObjectButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	private Set loadStorableObjectButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		try {
 			return this.administrationXML.retrieveByCondition(ids, condition);
 		} catch (RetrieveObjectException e) {
@@ -199,7 +197,7 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		} 
 	}
 
-	private void saveStorableObjects(Collection storableObjects, boolean force) throws ApplicationException {
+	private void saveStorableObjects(Set storableObjects, boolean force) throws ApplicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			this.saveStorableObject(storableObject, force);

@@ -1,5 +1,5 @@
 /*
- * $Id: ServerWrapper.java,v 1.2 2005/02/03 08:36:54 bob Exp $
+ * $Id: ServerWrapper.java,v 1.3 2005/04/01 06:51:54 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/03 08:36:54 $
+ * @version $Revision: 1.3 $, $Date: 2005/04/01 06:51:54 $
  * @author $Author: bob $
  * @module admin_v1
  */
@@ -94,7 +95,7 @@ public class ServerWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_USER_ID))
 				server.setUserId((Identifier) value);
 			else if (key.equals(COLUMN_CHARACTERISTICS))
-				server.setCharacteristics((List) value);
+				server.setCharacteristics((Set) value);
 		}
 	}
 
@@ -112,7 +113,7 @@ public class ServerWrapper implements StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS)) { return List.class; }
+		if (key.equals(COLUMN_CHARACTERISTICS)) { return Set.class; }
 		return String.class;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.13 2005/03/24 12:52:40 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.14 2005/04/01 06:51:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,8 @@
 
 package com.syrus.AMFICOM.administration;
 
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -18,13 +18,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/03/24 12:52:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/04/01 06:51:54 $
+ * @author $Author: bob $
  * @module admin_v1
  */
 final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 
-	private LinkedIdsConditionImpl(Collection linkedIds, Short linkedEntityCode, Short entityCode) {
+	private LinkedIdsConditionImpl(Set linkedIds, Short linkedEntityCode, Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
@@ -100,7 +100,7 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 		}
 	}
 
-	public boolean isNeedMore(Collection collection ) {
+	public boolean isNeedMore(Set set) {
 		return true;
 	}
 }

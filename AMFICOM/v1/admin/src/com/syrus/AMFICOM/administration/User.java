@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.6 2005/02/14 13:05:38 arseniy Exp $
+ * $Id: User.java,v 1.7 2005/04/01 06:51:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.administration;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.corba.UserSort;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/14 13:05:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/04/01 06:51:54 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -166,8 +166,8 @@ public class User extends StorableObject {
 		this.description = description;
 	}
 
-	public List getDependencies() {		
-		return Collections.EMPTY_LIST;
+	public Set getDependencies() {		
+		return Collections.EMPTY_SET;
 	}
 	public void setLogin(String login) {
 		this.login = login;

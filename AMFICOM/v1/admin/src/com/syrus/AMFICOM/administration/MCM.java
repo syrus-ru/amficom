@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.10 2005/03/05 21:36:23 arseniy Exp $
+ * $Id: MCM.java,v 1.11 2005/04/01 06:51:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,11 @@
 
 package com.syrus.AMFICOM.administration;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -34,8 +32,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/03/05 21:36:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/04/01 06:51:54 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -48,14 +46,14 @@ public class MCM extends DomainMember implements Characterizable {
 	private Identifier userId;
 	private Identifier serverId;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private StorableObjectDatabase mcmDatabase;
 
 	public MCM(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 		this.mcmDatabase = AdministrationDatabaseContext.mcmDatabase;
 		try {
 			this.mcmDatabase.retrieve(this);
@@ -75,7 +73,7 @@ public class MCM extends DomainMember implements Characterizable {
 		this.serverId = new Identifier(mt.server_id);
 
 		try {
-			this.characteristics = new ArrayList(mt.characteristic_ids.length);
+			this.characteristics = new HashSet(mt.characteristic_ids.length);
 			for (int i = 0; i < mt.characteristic_ids.length; i++)
 				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(mt.characteristic_ids[i]), true));
 		}
@@ -108,7 +106,7 @@ public class MCM extends DomainMember implements Characterizable {
 		this.userId = userId;
 		this.serverId = serverId;
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 
 		this.mcmDatabase = AdministrationDatabaseContext.mcmDatabase;
 	}
@@ -168,17 +166,17 @@ public class MCM extends DomainMember implements Characterizable {
 		}
 	}
 
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableCollection(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
 	}
@@ -236,8 +234,8 @@ public class MCM extends DomainMember implements Characterizable {
 		this.serverId = serverId;
 	}
 	
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public Set getDependencies() {
+		Set dependencies = new HashSet();
 		dependencies.add(this.userId);
 		dependencies.add(this.serverId);
 		return dependencies;
