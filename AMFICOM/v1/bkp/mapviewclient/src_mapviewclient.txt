@@ -14,7 +14,9 @@ src\com\syrus\AMFICOM\Client\General\Model\MapSurveyApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\Map\AnimateThread.java
 src\com\syrus\AMFICOM\Client\Map\LogicalNetLayer.java
 src\com\syrus\AMFICOM\Client\Map\MapConnection.java
+src\com\syrus\AMFICOM\Client\Map\MapConnectionException.java
 src\com\syrus\AMFICOM\Client\Map\MapCoordinatesConverter.java
+src\com\syrus\AMFICOM\Client\Map\MapDataException.java
 src\com\syrus\AMFICOM\Client\Map\MapPropertiesManager.java
 src\com\syrus\AMFICOM\Client\Map\MapState.java
 src\com\syrus\AMFICOM\Client\Map\NetMapViewer.java
@@ -84,11 +86,13 @@ src\com\syrus\AMFICOM\Client\Map\Command\Editor\ViewMapPropertiesCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Editor\ViewMapSetupCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Editor\ViewMapWindowCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\CreateMapReportCommand.java
+src\com\syrus\AMFICOM\Client\Map\Command\Map\MapAddMapCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapCloseCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapExportCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapImportCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapNewCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapOpenCommand.java
+src\com\syrus\AMFICOM\Client\Map\Command\Map\MapRemoveMapCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapSaveAsCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapSaveCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapViewAddSchemeCommand.java
@@ -101,6 +105,7 @@ src\com\syrus\AMFICOM\Client\Map\Command\Map\MapViewSaveCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\CenterSelectionCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\HandPanCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\MapModeCommand.java
+src\com\syrus\AMFICOM\Client\Map\Command\Navigate\MapNavigateCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\MeasureDistanceCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\MoveFixedCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\MoveToCenterCommand.java
@@ -110,6 +115,7 @@ src\com\syrus\AMFICOM\Client\Map\Command\Navigate\ZoomInCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\ZoomOutCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Navigate\ZoomToPointCommand.java
 src\com\syrus\AMFICOM\Client\Map\Controllers\AbstractLinkController.java
+src\com\syrus\AMFICOM\Client\Map\Controllers\AbstractMapElementController.java
 src\com\syrus\AMFICOM\Client\Map\Controllers\AbstractNodeController.java
 src\com\syrus\AMFICOM\Client\Map\Controllers\AlarmMarkerController.java
 src\com\syrus\AMFICOM\Client\Map\Controllers\CableController.java
@@ -133,6 +139,11 @@ src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorMainFrame.java
 src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorMenuBar.java
 src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorRun.java
 src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorToolBar.java
+src\com\syrus\AMFICOM\Client\Map\Operations\AMFICOMSearchPanel.java
+src\com\syrus\AMFICOM\Client\Map\Operations\ControlsFrame.java
+src\com\syrus\AMFICOM\Client\Map\Operations\LayersPanel.java
+src\com\syrus\AMFICOM\Client\Map\Operations\MapChooserPanel.java
+src\com\syrus\AMFICOM\Client\Map\Operations\SpatialSearchPanel.java
 src\com\syrus\AMFICOM\Client\Map\Popup\CablePathPopupMenu.java
 src\com\syrus\AMFICOM\Client\Map\Popup\LinkPopupMenu.java
 src\com\syrus\AMFICOM\Client\Map\Popup\MapPopupMenu.java
@@ -184,11 +195,7 @@ src\com\syrus\AMFICOM\Client\Map\Report\CableLayoutReport.java
 src\com\syrus\AMFICOM\Client\Map\Report\MapReportModel.java
 src\com\syrus\AMFICOM\Client\Map\Report\MarkerInfoReport.java
 src\com\syrus\AMFICOM\Client\Map\Report\TunnelCableListReport.java
-src\com\syrus\AMFICOM\Client\Map\Setup\AMFICOMSearchPanel.java
-src\com\syrus\AMFICOM\Client\Map\Setup\ControlsFrame.java
-src\com\syrus\AMFICOM\Client\Map\Setup\LayersPanel.java
-src\com\syrus\AMFICOM\Client\Map\Setup\MapChooserPanel.java
-src\com\syrus\AMFICOM\Client\Map\Setup\SpatialSearchPanel.java
+src\com\syrus\AMFICOM\Client\Map\Strategy\AbstractMapStrategy.java
 src\com\syrus\AMFICOM\Client\Map\Strategy\MapAlarmMarkerStrategy.java
 src\com\syrus\AMFICOM\Client\Map\Strategy\MapCablePathElementStrategy.java
 src\com\syrus\AMFICOM\Client\Map\Strategy\MapEventMarkerStrategy.java
@@ -205,6 +212,7 @@ src\com\syrus\AMFICOM\Client\Map\Strategy\MapStrategyManager.java
 src\com\syrus\AMFICOM\Client\Map\Strategy\MapUnboundNodeElementStrategy.java
 src\com\syrus\AMFICOM\Client\Map\Strategy\MapVoidElementStrategy.java
 src\com\syrus\AMFICOM\Client\Map\Strategy\VoidStrategy.java
+src\com\syrus\AMFICOM\Client\Map\UI\MapChooserDialog.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapDataFlavor.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapDropTargetListener.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapElementLabel.java
@@ -227,8 +235,13 @@ src\com\syrus\AMFICOM\Client\Map\UI\MapTableController.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapToolBar.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapToolTip.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapToolTippedPanel.java
+src\com\syrus\AMFICOM\Client\Map\UI\MapViewChooserDialog.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapViewTableController.java
 src\com\syrus\AMFICOM\Client\Map\UI\MotionDescriptor.java
 src\com\syrus\AMFICOM\Client\Map\UI\NodeSizePanel.java
 src\com\syrus\AMFICOM\Client\Map\UI\SchemeController.java
 src\com\syrus\AMFICOM\Client\Map\UI\SimpleMapElementController.java
+src\com\syrus\AMFICOM\resource\Cataloged.java
+src\com\syrus\AMFICOM\resource\Library.java
+src\com\syrus\AMFICOM\resource\LibraryType.java
+src\com\syrus\AMFICOM\resource\Package.java
