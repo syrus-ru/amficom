@@ -1,6 +1,5 @@
 SRC=./src
 CLASSES=./classes
-LOAD=../load
 LIB=../lib
 
 LIBNAME=util.jar
@@ -9,7 +8,6 @@ ARCHFILE=util.tar.gz
 
 ORACLECLASSPATH=$(JDEV_HOME)/sqlj/lib/translator.jar:$(JDEV_HOME)/sqlj/lib/runtime12.jar:$(JDEV_HOME)/jdbc/lib/classes12.jar
 VBCLASSPATH=$(ORACLE_HOME)/lib/aurora_client.jar:$(ORACLE_HOME)/lib/vbjorb.jar
-APPCLASSPATH=$(LIB)/io.jar
 
 DBHOSTNAME=mongol
 CONNECTSTRING=mongol
@@ -20,9 +18,6 @@ JAVAC=javac
 SQLJ=$(JDEV_HOME)/bin/sqlj
 SQLJOPTIONS=-compile=false -optcols -u amficom/amficom -url=jdbc:oracle:thin:@$(DBHOSTNAME):1521:$(CONNECTSTRING) -codegen=oraclejdbc -status -d $(CLASSES) -dir $(SRC) -classpath $(ORACLECLASSPATH)
 JAR=jar-3.3.1
-
-
-.PHONY:	clean arch
 
 $(LIBNAME):	misc con corba mail cache
 	$(JAR) -cf $(LIBNAME) \
@@ -50,7 +45,7 @@ log:
 	touch log
 
 mail:
-	$(JAVAC) -d $(CLASSES) -classpath $(ORACLECLASSPATH):$(APPCLASSPATH) \
+	$(JAVAC) -d $(CLASSES) -classpath $(ORACLECLASSPATH) \
 		$(SRC)/com/syrus/util/prefs/ui/JPreferencesManagerFrame.java \
 		$(SRC)/com/syrus/util/prefs/IIOPConnectionManager.java \
 		$(SRC)/com/syrus/util/prefs/PreferencesManager.java
@@ -68,6 +63,7 @@ cache:
 
 $(LIBNAMESERVER):	$(LIBNAME)
 	jar -cf $(LIBNAMESERVER)\
+		-C $(CLASSES) com/syrus/io/Rewriter.class \
 		-C $(CLASSES) com/syrus/util/ByteArray.class \
 		-C $(CLASSES) com/syrus/util/Log.class \
 		-C $(CLASSES) com/syrus/util/Logger.class \
@@ -78,8 +74,8 @@ $(LIBNAMESERVER):	$(LIBNAME)
 		-C $(CLASSES) com/syrus/util/database/Server.class \
 		-C $(CLASSES) com/syrus/util/database/ServerProperties.class
 	cp -f $(LIBNAMESERVER) $(LIB)/
-#	$(LOAD)/lp $(LIBNAMESERVER) $(DBHOSTNAME) $(CONNECTSTRING)
 
+.PHONY: clean
 clean:
 	rm -f $(SRC)/com/syrus/util/database/ServerProperties.java
 	rm -f $(SRC)/com/syrus/util/database/ServerProperties.generated.java
@@ -87,6 +83,7 @@ clean:
 	rm -f $(LIBNAME)
 	rm -f misc con corba log mail cache
 
+.PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
