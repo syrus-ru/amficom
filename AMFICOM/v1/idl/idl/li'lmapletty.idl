@@ -1,5 +1,5 @@
 /*
- * $Id: li'lmapletty.idl,v 1.6 2004/11/25 16:28:01 bob Exp $
+ * $Id: li'lmapletty.idl,v 1.7 2004/11/26 09:16:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,6 +61,11 @@ module com {
 							general::corba::IdentifierSeq_Transferable characteristicIds;
 					};
 					
+					enum AbstractNodeSort {
+							NODE_SORT_SITE,
+							NODE_SORT_TOPOLOGICAL
+						};
+					
 					// was MapSiteElement
 					// MapSiteElement is node
 					struct SiteNode_Transferable {
@@ -109,6 +114,13 @@ module com {
 					};
 					
 					typedef sequence<TopologicalNode_Transferable> TopologicalNodeSeq_Transferable;
+					
+					union AbstractNode_Transferable switch (AbstractNodeSort) {
+						case NODE_SORT_SITE:
+							SiteNode_Transferable siteNode;
+						case NODE_SORT_TOPOLOGICAL:
+							TopologicalNode_Transferable topologicalNode;
+					};
 					
 					// was MapNodeLinkElement
 					// MapNodeLinkElement is map item, line fragment
