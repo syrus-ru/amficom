@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommandAtomic.java,v 1.2 2004/10/20 12:38:40 krupenn Exp $
+ * $Id: CreateMarkCommandAtomic.java,v 1.3 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,7 +30,7 @@ import java.util.Iterator;
 /**
  *  оманда создани€ метки на линии
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/20 12:38:40 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/16 17:31:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -117,6 +117,8 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 
 		Pool.put(MapMarkElement.typ, mark.getId(), mark);
 		map.addNode(mark);
+
+		mark.setScaleCoefficient(logicalNetLayer.getDefaultScale() / logicalNetLayer.getCurrentScale());
 		
 		// операци€ закончена - оповестить слушателей
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

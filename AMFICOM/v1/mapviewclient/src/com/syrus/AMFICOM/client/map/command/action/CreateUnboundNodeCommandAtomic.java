@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundNodeCommandAtomic.java,v 1.2 2004/10/20 12:38:40 krupenn Exp $
+ * $Id: CreateUnboundNodeCommandAtomic.java,v 1.3 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import java.awt.geom.Point2D;
  * Разместить сетевой элемент на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/20 12:38:40 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/16 17:31:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -83,7 +83,7 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 			dataSource.GetUId(MapSiteNodeElement.typ),
 			coordinatePoint,
 			map,
-			logicalNetLayer.getDefaultScale() / logicalNetLayer.getScale(),
+			logicalNetLayer.getDefaultScale() / logicalNetLayer.getCurrentScale(),
 			logicalNetLayer.getUnboundProto());
 	
 		Pool.put(MapSiteNodeElement.typ, unbound.getId(), unbound);

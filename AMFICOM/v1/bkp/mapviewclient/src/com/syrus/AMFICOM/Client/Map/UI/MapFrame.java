@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.11 2004/11/11 18:09:30 krupenn Exp $
+ * $Id: MapFrame.java,v 1.12 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.Client.Map.Command.Navigate.CenterSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.HandPanCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.MapModeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.MeasureDistanceCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Navigate.MoveFixedCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.MoveToCenterCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.ShowNodesCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.ZoomBoxCommand;
@@ -69,7 +70,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/11/11 18:09:30 $
+ * @version $Revision: 1.12 $, $Date: 2004/11/16 17:31:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -217,43 +218,6 @@ public class MapFrame extends JInternalFrame
 	    // load values from properties file
 		mapViewer.init();
 		Environment.getDispatcher().register(this, ContextChangeEvent.type);
-/*
-		aModel.setCommand("menuMapNew", new MapNewCommand(this, aContext));
-		aModel.setCommand("menuMapClose", new MapCloseCommand(this));
-		aModel.setCommand("menuMapOpen", new MapOpenCommand((JDesktopPane )this.getParent(), this, aContext));
-		aModel.setCommand("menuMapSave", new MapSaveCommand(this, aContext));
-
-		aModel.setCommand("menuMapOptions", new MapSelectMapViewerCommand(this));
-
-		aModel.setEnabled("menuExit", true);
-		aModel.setEnabled("menuHelp", true);
-		aModel.setEnabled("menuHelpAbout", true);
-
-		aModel.setEnabled("menuEditUndo", false);
-		aModel.setEnabled("menuEditRedo", false);
-		aModel.setEnabled("menuEditCut", false);
-		aModel.setEnabled("menuEditCopy", false);
-		aModel.setEnabled("menuEditPaste", false);
-		aModel.setEnabled("menuEditSelect", false);
-
-		aModel.setEnabled("menuViewNavigator", false);
-		aModel.setEnabled("menuViewRefresh", false);
-
-		aModel.setEnabled("menuNavigate", false);
-
-		aModel.setEnabled("menuElementCatalogue", false);
-		aModel.setEnabled("menuElementGroup", false);
-		aModel.setEnabled("menuElementUngroup", false);
-		aModel.setEnabled("menuElementAlign", false);
-
-		aModel.setEnabled("menuHelpContents", false);
-		aModel.setEnabled("menuHelpFind", false);
-		aModel.setEnabled("menuHelpTips", false);
-		aModel.setEnabled("menuHelpCourse", false);
-		aModel.setEnabled("menuHelpHelp", false);
-		aModel.setEnabled("menuHelpAbout", false);
-*/
-
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
 	}
 
@@ -272,6 +236,7 @@ public class MapFrame extends JInternalFrame
 		aModel.setCommand(MapApplicationModel.MODE_NODES, new ShowNodesCommand(null));
 		aModel.setCommand(MapApplicationModel.OPERATION_HAND_PAN, new HandPanCommand(null));
 		aModel.setCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE, new MeasureDistanceCommand(null));
+		aModel.setCommand(MapApplicationModel.OPERATION_MOVE_FIXED, new MoveFixedCommand(null));
 
 		aModel.fireModelChanged();
 	}

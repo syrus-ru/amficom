@@ -134,17 +134,21 @@ public final class CableBindingController implements ObjectResourceController
 
 	public void setValue(Object object, final String key, final Object value)
 	{
-		CableChannelingItem cci = (CableChannelingItem )object;
-		if (key.equals(KEY_START_SPARE))
+		if (object instanceof MapPhysicalLinkElement) 
 		{
-			if(cci.physicalLinkId.length() != 0)
-				cci.startSpare = Double.parseDouble((String )value);
-		}
-		else
-		if (key.equals(KEY_END_SPARE))
-		{
-			if(cci.physicalLinkId.length() != 0)
-				cci.endSpare = Double.parseDouble((String )value);
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )object;
+			CableChannelingItem cci = (CableChannelingItem )cablePath.getBinding().get(link);
+			if (key.equals(KEY_START_SPARE))
+			{
+				if(cci.physicalLinkId.length() != 0)
+					cci.startSpare = Double.parseDouble((String )value);
+			}
+			else
+			if (key.equals(KEY_END_SPARE))
+			{
+				if(cci.physicalLinkId.length() != 0)
+					cci.endSpare = Double.parseDouble((String )value);
+			}
 		}
 	}
 

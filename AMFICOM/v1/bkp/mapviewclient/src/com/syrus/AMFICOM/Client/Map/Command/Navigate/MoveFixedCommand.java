@@ -1,5 +1,5 @@
 /**
- * $Id: ZoomBoxCommand.java,v 1.5 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: MoveFixedCommand.java,v 1.1 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,17 +24,17 @@ import java.awt.Cursor;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.1 $, $Date: 2004/11/16 17:31:17 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class ZoomBoxCommand extends VoidCommand
+public class MoveFixedCommand extends VoidCommand
 {
 	LogicalNetLayer logicalNetLayer;
 	ApplicationModel aModel;
 	
-	public ZoomBoxCommand(LogicalNetLayer logicalNetLayer)
+	public MoveFixedCommand(LogicalNetLayer logicalNetLayer)
 	{
 		this.logicalNetLayer = logicalNetLayer;
 	}
@@ -47,36 +47,32 @@ public class ZoomBoxCommand extends VoidCommand
 			aModel = (ApplicationModel )value;
 	}
 
-	public Object clone()
-	{
-		return new ZoomBoxCommand(logicalNetLayer);
-	}
-
 	public void execute()
 	{
-		if(aModel.isSelected(MapApplicationModel.OPERATION_ZOOM_BOX))
+		if(aModel.isSelected(MapApplicationModel.OPERATION_MOVE_FIXED))
 		{
 			logicalNetLayer.getMapState().setActionMode(MapState.NULL_ACTION_MODE);
 			logicalNetLayer.getMapState().setOperationMode(MapState.NO_OPERATION);
+
 			logicalNetLayer.setCursor(Cursor.getDefaultCursor());
 
-			aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_BOX, false);
+			aModel.setSelected(MapApplicationModel.OPERATION_MOVE_FIXED, false);
 			aModel.fireModelChanged();
 		}
 		else
-		if(!aModel.isSelected(MapApplicationModel.OPERATION_ZOOM_BOX))
+		if(!aModel.isSelected(MapApplicationModel.OPERATION_MOVE_FIXED))
 		{
-			aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_BOX, true);
+			aModel.setSelected(MapApplicationModel.OPERATION_MOVE_FIXED, true);
 
 			aModel.setSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE, false);
+			aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_BOX, false);
 			aModel.setSelected(MapApplicationModel.OPERATION_MOVE_TO_CENTER, false);
 			aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_TO_POINT, false);
 			aModel.setSelected(MapApplicationModel.OPERATION_HAND_PAN, false);
-			aModel.setSelected(MapApplicationModel.OPERATION_MOVE_FIXED, false);
 			aModel.fireModelChanged();
 
-			logicalNetLayer.getMapState().setOperationMode(MapState.ZOOM_TO_RECT);
-			logicalNetLayer.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+			logicalNetLayer.getMapState().setOperationMode(MapState.MOVE_FIXDIST);
+			logicalNetLayer.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 		}
 	}
 }

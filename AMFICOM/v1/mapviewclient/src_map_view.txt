@@ -80,6 +80,7 @@ src\com\syrus\AMFICOM\Client\Map\Command\Editor\ViewMapNavigatorCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Editor\ViewMapPropertiesCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Editor\ViewMapSetupCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Editor\ViewMapWindowCommand.java
+src\com\syrus\AMFICOM\Client\Map\Command\Map\CreateMapReportCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapCloseCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapEditorAddSchemeToViewCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Map\MapEditorRemoveSchemeFromViewCommand.java
@@ -161,6 +162,7 @@ src\com\syrus\AMFICOM\Client\Map\Props\MapViewPanel.java
 src\com\syrus\AMFICOM\Client\Map\Props\MapVoidElementPropertiesController.java
 src\com\syrus\AMFICOM\Client\Map\Props\ObjectResourceLabel.java
 src\com\syrus\AMFICOM\Client\Map\Props\TunnelLayout.java
+src\com\syrus\AMFICOM\Client\Map\Report\MapReportModel.java
 src\com\syrus\AMFICOM\Client\Map\Setup\AMFICOMSearchPanel.java
 src\com\syrus\AMFICOM\Client\Map\Setup\ControlsFrame.java
 src\com\syrus\AMFICOM\Client\Map\Setup\LayersPanel.java

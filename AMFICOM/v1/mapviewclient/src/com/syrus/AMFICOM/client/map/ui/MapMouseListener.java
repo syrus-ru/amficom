@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.12 2004/11/12 19:09:55 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.13 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,6 +26,8 @@ import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategyManager;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
@@ -48,7 +50,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/11/12 19:09:55 $
+ * @version $Revision: 1.13 $, $Date: 2004/11/16 17:31:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -110,7 +112,22 @@ public final class MapMouseListener implements MouseListener
 					//Берём фокус
 					logicalNetLayer.getMapViewer().getVisualComponent().grabFocus();
 					break;
-
+				case MapState.MOVE_FIXDIST:
+					logicalNetLayer.deselectAll();
+					logicalNetLayer.getFixedNode().setSelected(true);
+					MapElement mel = logicalNetLayer.getMapElementAtPoint(me.getPoint());
+					if(logicalNetLayer.getFixedNodeList().contains(mel))
+					{
+						mel.setSelected(true);
+						logicalNetLayer.setCurrentMapElement(mel);
+					}
+					else
+					{
+						logicalNetLayer.setCurrentMapElement(
+							VoidMapElement.getInstance(
+								logicalNetLayer.getMapView() ) );
+					}
+					break;
 				case MapState.NODELINK_SIZE_EDIT:
 					// fall throuth
 				case MapState.NO_OPERATION:
@@ -327,6 +344,8 @@ public final class MapMouseListener implements MouseListener
 					logicalNetLayer.getMapView().setCenter(
 							logicalNetLayer.getCenter());
 					break;
+				case MapState.MOVE_FIXDIST:
+					// fall through
 				case MapState.NODELINK_SIZE_EDIT:
 					// fall throuth
 				case MapState.NO_OPERATION:
@@ -349,9 +368,19 @@ public final class MapMouseListener implements MouseListener
 //					mapState.setActionMode(MapState.NULL_ACTION_MODE);
 					break;
 				default:
+					try
+					{
+						System.out.println("unknown map operation: " + mapState.getOperationMode());
+						throw new Exception("dummy");
+					}
+					catch(Exception e)
+					{
+						Environment.log(Environment.LOG_LEVEL_FINER, "current execution point with call stack:", null, null, e);
+					}
 					break;
 			}//switch (mapState.getOperationMode()
-			if(mapState.getOperationMode() != MapState.MOVE_HAND)
+			if(mapState.getOperationMode() != MapState.MOVE_HAND
+				&& mapState.getOperationMode() != MapState.MOVE_FIXDIST)
 				mapState.setOperationMode(MapState.NO_OPERATION);
 
 			//Убираем флаг

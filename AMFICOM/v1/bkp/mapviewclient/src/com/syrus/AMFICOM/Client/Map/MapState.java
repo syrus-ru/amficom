@@ -1,5 +1,5 @@
 /**
- * $Id: MapState.java,v 1.4 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapState.java,v 1.5 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -20,7 +20,7 @@ package com.syrus.AMFICOM.Client.Map;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/16 17:31:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -43,8 +43,6 @@ public final class MapState
 	public final static int SELECT_MARKER_ACTION_MODE = 105;
 	/** –ежим рисовани€ линий (NodeLink и т.д.) */
 	public final static int DRAW_LINES_ACTION_MODE = 106;
-	/** –ежим рисовани€ линий с фиксированной дистанцией до соседнего узла */
-	public final static int FIXDIST_ACTION_MODE = 107;
 	
 	/** ‘лаг состо€ни€ режимов */
 	protected int actionMode = NULL_ACTION_MODE;
@@ -67,6 +65,7 @@ public final class MapState
 	public final static int MOVE_HAND = 304;
 	public final static int NODELINK_SIZE_EDIT = 305;
 	public final static int MEASURE_DISTANCE = 306;
+	public final static int MOVE_FIXDIST = 307;
 
 	/** ‘лаг состо€ни€ режимов дл€ работы с картой */
 	protected int operationMode = NO_OPERATION;

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElementStrategy.java,v 1.4 2004/10/20 12:38:40 krupenn Exp $
+ * $Id: MapSiteNodeElementStrategy.java,v 1.5 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateNodeLinkCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Command.Action.MoveFixedDistanceCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
@@ -33,7 +34,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/20 12:38:40 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/16 17:31:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -76,6 +77,7 @@ public final class MapSiteNodeElementStrategy implements  MapStrategy
 
 		int mouseMode = mapState.getMouseMode();
 		int actionMode = mapState.getActionMode();
+		int operationMode = mapState.getOperationMode();
 
 		Point point = me.getPoint();
 
@@ -108,6 +110,16 @@ public final class MapSiteNodeElementStrategy implements  MapStrategy
 			else
 			if(mouseMode == MapState.MOUSE_DRAGGED)
 			{
+				if(operationMode == MapState.MOVE_FIXDIST)
+				{
+					if(command == null)
+					{
+						command = new MoveFixedDistanceCommand(point, logicalNetLayer.getFixedNode(), site);
+						((MoveSelectionCommandBundle )command).setLogicalNetLayer(logicalNetLayer);
+					}
+					command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
+				}//if(operationMode == MapState.MOVE_FIXDIST)
+				else
 				if (actionMode == MapState.MOVE_ACTION_MODE)
 				{
 					//Если разрешено то перемещаем объект
@@ -116,22 +128,29 @@ public final class MapSiteNodeElementStrategy implements  MapStrategy
 					{
 						if(command == null)
 						{
-							command = new MoveSelectionCommandBundle(point);
+							command = new MoveSelectionCommandBundle(logicalNetLayer.getStartPoint());
 							((MoveSelectionCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
 						}
-						command.setParameter(com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle.END_POINT, point);
+						command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
 					}
 				}//if (actionMode == MapState.MOVE_ACTION_MODE)
 				else
 				if (actionMode == MapState.NULL_ACTION_MODE)
 				{
 					//Это используется для рисования линии (NodeLink)
-					mapState.setActionMode(MapState.DRAW_LINES_ACTION_MODE) ;
+					mapState.setActionMode(MapState.DRAW_LINES_ACTION_MODE);
 				}
 			}//if(mouseMode == MapState.MOUSE_DRAGGED)
 			else
 			if(mouseMode == MapState.MOUSE_RELEASED)
 			{
+				if (operationMode == MapState.MOVE_FIXDIST)
+				{
+					logicalNetLayer.getCommandList().add(command);
+					logicalNetLayer.getCommandList().execute();
+					command = null;
+				}//if (operationMode == MapState.MOVE_FIXDIST)
+				else
 				if (actionMode == MapState.MOVE_ACTION_MODE)
 				{
 					logicalNetLayer.getCommandList().add(command);

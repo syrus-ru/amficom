@@ -1,5 +1,5 @@
 /**
- * $Id: MapModeCommand.java,v 1.4 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: MapModeCommand.java,v 1.5 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/16 17:31:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -60,7 +60,7 @@ public class MapModeCommand extends VoidCommand
 	{
 		if ( aModel.isEnabled(modeString))
 		{
-			if(!aModel.isSelected(modeString))
+//			if(!aModel.isSelected(modeString))
 			{
 				aModel.setSelected(MapApplicationModel.MODE_NODE_LINK, false);
 				aModel.setSelected(MapApplicationModel.MODE_LINK, false);

@@ -1,5 +1,5 @@
 /**
- * $Id: MeasureDistanceCommand.java,v 1.3 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MeasureDistanceCommand.java,v 1.4 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import java.awt.Cursor;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/16 17:31:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -53,7 +53,7 @@ public class MeasureDistanceCommand extends VoidCommand
 		{
 			logicalNetLayer.getMapState().setActionMode(MapState.NULL_ACTION_MODE);
 			logicalNetLayer.getMapState().setOperationMode(MapState.NO_OPERATION);
-			logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			logicalNetLayer.setCursor(Cursor.getDefaultCursor());
 
 			aModel.setSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE, false);
 			aModel.fireModelChanged();
@@ -67,10 +67,11 @@ public class MeasureDistanceCommand extends VoidCommand
 			aModel.setSelected(MapApplicationModel.OPERATION_MOVE_TO_CENTER, false);
 			aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_TO_POINT, false);
 			aModel.setSelected(MapApplicationModel.OPERATION_HAND_PAN, false);
+			aModel.setSelected(MapApplicationModel.OPERATION_MOVE_FIXED, false);
 			aModel.fireModelChanged();
 
 			logicalNetLayer.getMapState().setOperationMode(MapState.MEASURE_DISTANCE);
-			logicalNetLayer.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+			logicalNetLayer.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		}
 	}
 }

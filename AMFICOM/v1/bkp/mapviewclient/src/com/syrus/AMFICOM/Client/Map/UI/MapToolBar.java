@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.8 2004/11/12 19:09:55 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.9 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import java.awt.event.KeyEvent;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/11/12 19:09:55 $
+ * @version $Revision: 1.9 $, $Date: 2004/11/16 17:31:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -65,6 +65,7 @@ public final class MapToolBar extends JToolBar
 	private JToggleButton moveHandButton = new JToggleButton();
 
 	private JToggleButton measureDistanceButton = new JToggleButton();
+	private JToggleButton moveFixedButton = new JToggleButton();
 
 	private JToggleButton showNodesButton = new JToggleButton();
 
@@ -204,6 +205,14 @@ public final class MapToolBar extends JToolBar
 		measureDistanceButton.setMaximumSize(buttonSize);
 		measureDistanceButton.setMinimumSize(buttonSize);
 		measureDistanceButton.setName(MapApplicationModel.OPERATION_MEASURE_DISTANCE);
+
+		moveFixedButton.setIcon(new ImageIcon("images/movefixed.gif"));
+		moveFixedButton.addActionListener(actionAdapter);
+		moveFixedButton.setToolTipText(LangModelMap.getString("MoveFixed"));
+		moveFixedButton.setPreferredSize(buttonSize);
+		moveFixedButton.setMaximumSize(buttonSize);
+		moveFixedButton.setMinimumSize(buttonSize);
+		moveFixedButton.setName(MapApplicationModel.OPERATION_MOVE_FIXED);
 
 		showNodesButton.setIcon(new ImageIcon("images/nodes_visible.gif"));
 		showNodesButton.addActionListener(actionAdapter);
@@ -374,7 +383,9 @@ public final class MapToolBar extends JToolBar
 		this.add(moveToCenterButton);
 		this.add(moveHandButton);
 		this.add(centerObjectButton);
+		this.addSeparator();
 		this.add(measureDistanceButton);
+		this.add(moveFixedButton);
 		this.addSeparator();
 		this.add(showNodesButton);
 		this.addSeparator();
@@ -412,6 +423,7 @@ public final class MapToolBar extends JToolBar
 		aModel.setEnabled(MapApplicationModel.OPERATION_ZOOM_TO_POINT, b);
 		aModel.setEnabled(MapApplicationModel.OPERATION_ZOOM_BOX, b);
 		aModel.setEnabled(MapApplicationModel.OPERATION_MOVE_TO_CENTER, b);
+		aModel.setEnabled(MapApplicationModel.OPERATION_MOVE_FIXED, b);
 		aModel.setEnabled(MapApplicationModel.MODE_NODES, b);
 		aModel.setEnabled(MapApplicationModel.OPERATION_HAND_PAN, b);
 		aModel.setEnabled(MapApplicationModel.OPERATION_MEASURE_DISTANCE, b);
@@ -438,6 +450,7 @@ public final class MapToolBar extends JToolBar
 		aModel.getCommand(MapApplicationModel.MODE_NODES).setParameter("applicationModel", aModel);
 		aModel.getCommand(MapApplicationModel.OPERATION_HAND_PAN).setParameter("applicationModel", aModel);
 		aModel.getCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE).setParameter("applicationModel", aModel);
+		aModel.getCommand(MapApplicationModel.OPERATION_MOVE_FIXED).setParameter("applicationModel", aModel);
 
 		aModel.getCommand(MapApplicationModel.OPERATION_CENTER_SELECTION).setParameter("logicalNetLayer", logicalNetLayer);
 		aModel.getCommand(MapApplicationModel.MODE_NODE_LINK).setParameter("logicalNetLayer", logicalNetLayer);
@@ -452,6 +465,7 @@ public final class MapToolBar extends JToolBar
 		aModel.getCommand(MapApplicationModel.MODE_NODES).setParameter("logicalNetLayer", logicalNetLayer);
 		aModel.getCommand(MapApplicationModel.OPERATION_HAND_PAN).setParameter("logicalNetLayer", logicalNetLayer);
 		aModel.getCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE).setParameter("logicalNetLayer", logicalNetLayer);
+		aModel.getCommand(MapApplicationModel.OPERATION_MOVE_FIXED).setParameter("logicalNetLayer", logicalNetLayer);
 
 		Command command = aModel.getCommand(MapApplicationModel.MODE_NODES);
 		command.setParameter("button", showNodesButton);
@@ -496,6 +510,10 @@ public final class MapToolBar extends JToolBar
 		measureDistanceButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_MEASURE_DISTANCE));
 		measureDistanceButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_MEASURE_DISTANCE));
 		measureDistanceButton.setSelected(aModel.isSelected(MapApplicationModel.OPERATION_MEASURE_DISTANCE));
+
+		moveFixedButton.setVisible(aModel.isVisible(MapApplicationModel.OPERATION_MOVE_FIXED));
+		moveFixedButton.setEnabled(aModel.isEnabled(MapApplicationModel.OPERATION_MOVE_FIXED));
+		moveFixedButton.setSelected(aModel.isSelected(MapApplicationModel.OPERATION_MOVE_FIXED));
 
 		showNodesButton.setVisible(aModel.isVisible(MapApplicationModel.MODE_NODES));
 		showNodesButton.setEnabled(aModel.isEnabled(MapApplicationModel.MODE_NODES));

@@ -33,6 +33,7 @@ public class MapApplicationModel extends ApplicationModel
 	public static final String OPERATION_MOVE_TO_CENTER = "mapActionMoveToCenter";
 	public static final String OPERATION_HAND_PAN = "mapActionHandPan";
 	public static final String OPERATION_MEASURE_DISTANCE = "mapActionMeasureDistance";
+	public static final String OPERATION_MOVE_FIXED = "mapActionMoveFixed";
 
 	public MapApplicationModel()
 	{
@@ -60,6 +61,7 @@ public class MapApplicationModel extends ApplicationModel
 		super.add(OPERATION_MOVE_TO_CENTER);
 		super.add(OPERATION_HAND_PAN);
 		super.add(OPERATION_MEASURE_DISTANCE);
+		super.add(OPERATION_MOVE_FIXED);
 
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.4 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.5 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.Client.Resource.RISDMapViewDataSource;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/16 17:31:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -76,7 +76,7 @@ public class MapEditorApplicationModel extends ApplicationModel
 		add("menuViewAll");
 
 		add("menuReport");
-		add("menuReportOpen");
+		add("menuReportCreate");
 
 		add("menuHelp");
 		add("menuHelpContents");

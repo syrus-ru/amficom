@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.7 2004/11/12 19:09:54 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.8 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.Client.Map.Editor;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
 
@@ -30,7 +31,7 @@ import javax.swing.JMenuItem;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/11/12 19:09:54 $
+ * @version $Revision: 1.8 $, $Date: 2004/11/16 17:31:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -77,6 +78,9 @@ public class MapEditorMenuBar extends JMenuBar
 	JMenuItem menuViewMapScheme = new JMenuItem();
 	JMenuItem menuViewAll = new JMenuItem();
 //	JMenuItem menuViewOptions = new JMenuItem();
+
+	JMenu menuReport = new JMenu();
+	JMenuItem menuReportCreate = new JMenuItem();
 
 	JMenu menuHelp = new JMenu();
 	JMenuItem menuHelpContents = new JMenuItem();
@@ -221,6 +225,13 @@ public class MapEditorMenuBar extends JMenuBar
 		menuMapViewSaveAs.setName("menuMapViewSaveAs");
 		menuMapViewSaveAs.addActionListener(actionAdapter);
 
+		menuReport.setText(LangModelReport.getString("label_report"));
+		menuReport.setName("menuReport");
+		menuReportCreate.setText(LangModelReport.getString("label_reportForTemplate"));
+		menuReportCreate.setName("menuReportCreate");
+		menuReportCreate.addActionListener(actionAdapter);
+		menuReport.add(menuReportCreate);
+
 		menuHelp.setText(LangModel.getString("menuHelp"));
 		menuHelp.setName("menuHelp");
 		menuHelpContents.setText(LangModel.getString("menuHelpContents"));
@@ -309,6 +320,7 @@ public class MapEditorMenuBar extends JMenuBar
 		this.add(menuMapView);
 		this.add(menuScheme);
 		this.add(menuView);
+		this.add(menuReport);    
 		this.add(menuHelp);
 	}
 

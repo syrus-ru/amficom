@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.5 2004/11/12 19:09:55 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.6 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
@@ -27,7 +28,7 @@ import java.awt.event.MouseMotionListener;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.5 $, $Date: 2004/11/12 19:09:55 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/16 17:31:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -62,9 +63,15 @@ public final class MapMouseMotionListener implements MouseMotionListener
 					//Если перемещают карту лапкой
 					logicalNetLayer.handDragged(me);
 					break;
+				case MapState.MOVE_TO_CENTER:
+					break;
+				case MapState.ZOOM_TO_RECT:
+					break;
 				case MapState.NODELINK_SIZE_EDIT:
 					break;
-				default:
+				case MapState.MOVE_FIXDIST:
+					// fall through
+				case MapState.NO_OPERATION:
 					MapElement mapElement = logicalNetLayer.getCurrentMapElement();
 					MapStrategy strategy = MapStrategyManager.getStrategy(mapElement);
 					if(strategy != null)
@@ -77,6 +84,17 @@ public final class MapMouseMotionListener implements MouseMotionListener
 								mapElement, 
 								MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 					logicalNetLayer.repaint();
+					break;
+				default:
+					try
+					{
+						System.out.println("unknown map operation: " + mapState.getOperationMode());
+						throw new Exception("dummy");
+					}
+					catch(Exception e)
+					{
+						Environment.log(Environment.LOG_LEVEL_FINER, "current execution point with call stack:", null, null, e);
+					}
 					break;
 			}//switch (mapState.getOperationMode()
 		}

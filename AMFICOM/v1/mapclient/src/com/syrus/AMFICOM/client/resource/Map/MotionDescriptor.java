@@ -1,5 +1,5 @@
 /**
- * $Id: MotionDescriptor.java,v 1.1 2004/11/10 15:58:30 krupenn Exp $
+ * $Id: MotionDescriptor.java,v 1.2 2004/11/16 17:30:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,21 +36,43 @@ import java.awt.Point;
  *  A - угол медлу векторами (startPoint, endPoint) и  (thisPoint, mousePoint)
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/11/10 15:58:30 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/16 17:30:26 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class MotionDescriptor 
 {
+	/**
+	 * косинус угла наклона фрагмента линии в экранной плоскости
+	 */
 	public double cosB;
+	/**
+	 * синус угла наклона фрагмента линии в экранной плоскости
+	 */
 	public double sinB;
+	/**
+	 * расстояние от текущего положения маркера до точки перемещения 
+	 * указателя мыши в экранных координатах
+	 */
 	public double lengthThisToMousePoint;
+	/**
+	 * косинус угла можду фрагментом линии и вектором перемещения маркера
+	 * (вектор между текущим положением маркера и точкой перемещения 
+	 * указателя мыши) в экранной плоскости
+	 */
 	public double cosA;
+	/**
+	 * расстояние от начального узла фрагмента до предполагаемого нового
+	 * положения маркера на фрагмента в экранных координатах
+	 */
 	public double lengthFromStartNode;
+	/**
+	 * длина фрагмента в экранных координатах
+	 */
 	public double nodeLinkLength;
 
-	public MotionDescriptor(
+	private MotionDescriptor(
 			double cb, 
 			double sb, 
 			double lt, 
@@ -77,14 +99,14 @@ public class MotionDescriptor
 			(endPoint.x - startPoint.x) * (endPoint.x - startPoint.x) +
 			(endPoint.y - startPoint.y) * (endPoint.y - startPoint.y) );
 
+		sinB = (endPoint.y - startPoint.y) / nodeLinkLength;
+
+		cosB = (endPoint.x - startPoint.x) / nodeLinkLength;
+
 		lengthFromStartNode = Math.sqrt( 
 			(thisPoint.x - startPoint.x) * (thisPoint.x - startPoint.x) +
 			(thisPoint.y - startPoint.y) * (thisPoint.y - startPoint.y) );
-
-		sinB =  (endPoint.y - startPoint.y) / nodeLinkLength;
-
-		cosB =  (endPoint.x - startPoint.x) / nodeLinkLength;
-
+			
 		lengthThisToMousePoint = Math.sqrt( 
 			(mousePoint.x - thisPoint.x) * (mousePoint.x - thisPoint.x) +
 			(mousePoint.y - thisPoint.y) * (mousePoint.y - thisPoint.y) );
@@ -93,6 +115,13 @@ public class MotionDescriptor
 			(	(endPoint.x - startPoint.x) * (mousePoint.x - thisPoint.x) + 
 				(endPoint.y - startPoint.y) * (mousePoint.y - thisPoint.y) ) /
 			( nodeLinkLength * lengthThisToMousePoint );
+
+		// скалярное произведение векторов фрагмента и lengthFromStartNode
+		double scalar = (endPoint.x - startPoint.x) * (thisPoint.x - startPoint.x) +
+			(endPoint.y - startPoint.y) * (thisPoint.y - startPoint.y);
+
+		if(scalar < 0)
+			lengthFromStartNode = -lengthFromStartNode;
 
 		lengthFromStartNode = lengthFromStartNode + cosA * lengthThisToMousePoint;
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: MoveToCenterCommand.java,v 1.4 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MoveToCenterCommand.java,v 1.5 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import java.awt.Cursor;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/16 17:31:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -58,7 +58,7 @@ public class MoveToCenterCommand extends VoidCommand
 		{
 			logicalNetLayer.getMapState().setActionMode(MapState.NULL_ACTION_MODE);
 			logicalNetLayer.getMapState().setOperationMode(MapState.NO_OPERATION);
-			logicalNetLayer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			logicalNetLayer.setCursor(Cursor.getDefaultCursor());
 
 			aModel.setSelected(MapApplicationModel.OPERATION_MOVE_TO_CENTER, false);
 			aModel.fireModelChanged();
@@ -72,10 +72,11 @@ public class MoveToCenterCommand extends VoidCommand
 			aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_TO_POINT, false);
 			aModel.setSelected(MapApplicationModel.OPERATION_ZOOM_BOX, false);
 			aModel.setSelected(MapApplicationModel.OPERATION_HAND_PAN, false);
+			aModel.setSelected(MapApplicationModel.OPERATION_MOVE_FIXED, false);
 			aModel.fireModelChanged();
 
 			logicalNetLayer.getMapState().setOperationMode(MapState.MOVE_TO_CENTER);
-			logicalNetLayer.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+			logicalNetLayer.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.3 2004/10/20 12:38:40 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.4 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/20 12:38:40 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/16 17:31:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -145,10 +145,10 @@ public final class MapSelectionElementStrategy implements  MapStrategy
 					{
 						if(command == null)
 						{
-							command = new MoveSelectionCommandBundle(point);
+							command = new MoveSelectionCommandBundle(logicalNetLayer.getStartPoint());
 							((MoveSelectionCommandBundle)command).setLogicalNetLayer(logicalNetLayer);
 						}
-						command.setParameter(com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle.END_POINT, point);
+						command.setParameter(MoveSelectionCommandBundle.END_POINT, point);
 					}
 				}//if (actionMode == MapState.MOVE_ACTION_MODE)
 			}//if(mouseMode == MapState.MOUSE_DRAGGED)

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.3 2004/10/29 14:59:52 krupenn Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.4 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/29 14:59:52 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/16 17:31:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -110,6 +110,8 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 		
 				Pool.put(MapMarker.typ, marker.getId(), marker);
 				mapView.addMarker(marker);
+				
+				marker.setScaleCoefficient(logicalNetLayer.getDefaultScale() / logicalNetLayer.getCurrentScale());
 				
 				marker.notifyMarkerCreated();
 				

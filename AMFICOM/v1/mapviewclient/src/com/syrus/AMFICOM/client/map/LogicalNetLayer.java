@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.21 2004/11/12 19:09:54 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.22 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -83,7 +83,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.21 $, $Date: 2004/11/12 19:09:54 $
+ * @version $Revision: 1.22 $, $Date: 2004/11/16 17:31:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -128,6 +128,13 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 * Текущий элемент
 	 */
 	protected MapElement currentMapElement = null;
+
+	/**
+	 * фиксированный элемент
+	 */
+	protected MapNodeElement fixedNode = null;
+
+	protected List fixedNodeList = new LinkedList();
 
 	/**
 	 * Текущий тип создаваемых физических линий
@@ -438,7 +445,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 	
 	/**
-	 * геттер
+	 * получить текущий масштаб точечных элементов
 	 */
 	public double getCurrentScale()
 	{
@@ -1223,6 +1230,22 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	}
 
 	/**
+	 * Получить текущий фиксированный элемент
+	 */
+	public MapNodeElement getFixedNode()
+	{
+		return fixedNode;
+	}
+
+	/**
+	 * Получить Список узлов, соседних (через фрагменты) с фиксированным узлом
+	 */
+	public List getFixedNodeList()
+	{
+		return fixedNodeList;
+	}
+
+	/**
 	 * Получить текущий выбранный элемент
 	 */
 	public MapElement getCurrentMapElement()
@@ -1238,6 +1261,30 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setCurrentMapElement(" + curMapElement + ")");
 		
 		this.currentMapElement = curMapElement;
+
+		if(getMapState().getOperationMode() == MapState.NO_OPERATION)
+		{
+			boolean canFixDist = (curMapElement instanceof MapPhysicalNodeElement)
+				|| (curMapElement instanceof MapSiteNodeElement);
+			if(getContext().getApplicationModel().isEnabled(
+				MapApplicationModel.OPERATION_MOVE_FIXED) != canFixDist)
+			{
+				if(canFixDist)
+				{
+					fixedNode = (MapNodeElement )curMapElement;
+					fixedNodeList.clear();
+					for(Iterator it = fixedNode.getNodeLinks().iterator(); it.hasNext();)
+					{
+						MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
+						fixedNodeList.add(mnle.getOtherNode(fixedNode));
+					}
+				}
+				getContext().getApplicationModel().setEnabled(
+					MapApplicationModel.OPERATION_MOVE_FIXED,
+					canFixDist);
+				getContext().getApplicationModel().fireModelChanged();
+			}
+		}
 
 		if(curMapElement instanceof VoidMapElement)
 			return;

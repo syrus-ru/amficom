@@ -1,5 +1,5 @@
 /**
- * $Id: MapKeyAdapter.java,v 1.2 2004/09/15 08:21:49 krupenn Exp $
+ * $Id: MapKeyAdapter.java,v 1.3 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import java.awt.event.KeyEvent;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/15 08:21:49 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/16 17:31:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -47,12 +47,12 @@ public final class MapKeyAdapter extends KeyAdapter
 			lnl.getMapState().setActionMode(MapState.ALT_LINK_ACTION_MODE);
 		}
 
-		if (ke.isShiftDown() && ke.isControlDown())
-		{
-			lnl.getMapState().setActionMode(MapState.FIXDIST_ACTION_MODE);
-		}
-		else
-		{
+//		if (ke.isShiftDown() && ke.isControlDown())
+//		{
+//			lnl.getMapState().setActionMode(MapState.FIXDIST_ACTION_MODE);
+//		}
+//		else
+//		{
 			if (ke.isShiftDown())
 			{
 				lnl.getMapState().setActionMode(MapState.SELECT_ACTION_MODE);
@@ -61,7 +61,7 @@ public final class MapKeyAdapter extends KeyAdapter
 			{
 				lnl.getMapState().setActionMode(MapState.MOVE_ACTION_MODE);
 			}
-		}
+//		}
 
 		if (code == KeyEvent.VK_DELETE)
 		{

@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.8 2004/10/20 12:38:40 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.9 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
@@ -37,7 +38,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/20 12:38:40 $
+ * @version $Revision: 1.9 $, $Date: 2004/11/16 17:31:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -383,6 +384,17 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		super.removeNode(node);
 	}
 
+	/**
+	 * Удалить маркер
+	 */
+	public void deleteMarker(MapMarker node)
+	{
+		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_USE_MARKER))
+			return;
+
+		node.getMapView().removeMarker(node);
+	}
+
 	public void execute()
 	{
 		Environment.log(
@@ -418,6 +430,11 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		if ( node instanceof MapMarkElement)
 		{
 			this.deleteMark((MapMarkElement )node);
+		}
+		else
+		if ( node instanceof MapMarker)
+		{
+			this.deleteMarker((MapMarker )node);
 		}
 
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.8 2004/11/12 19:09:54 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.9 2004/11/16 17:31:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.Command.CloseAllInternalCommand;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
 import com.syrus.AMFICOM.Client.General.Command.HelpAboutCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.CreateMapReportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
@@ -97,7 +98,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/11/12 19:09:54 $
+ * @version $Revision: 1.9 $, $Date: 2004/11/16 17:31:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -420,6 +421,9 @@ public class MapEditorMainFrame extends JFrame
 					desktopPane, 
 					aContext, 
 					new MapMapEditorApplicationModelFactory()));
+          
+		CreateMapReportCommand rc = new CreateMapReportCommand(aContext);
+		aModel.setCommand("menuReportCreate", rc);
 
 //		aModel.setCommand("menuReportOpen", new CreateMapReportCommand(aContext));
 
@@ -784,6 +788,8 @@ public class MapEditorMainFrame extends JFrame
 		aModel.setEnabled("menuViewMap", true);
 		aModel.setEnabled("menuViewMapScheme", true);
 		aModel.setEnabled("menuViewAll", true);
+    
+    aModel.setEnabled("menuReportCreate", true);
 
 		aModel.fireModelChanged();
 
@@ -849,8 +855,7 @@ public class MapEditorMainFrame extends JFrame
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING)
 		{
-			if(getMapFrame() != null)
-				getMapFrame().saveConfig();
+			getMapFrame().saveConfig();
 			Command closeCommand = aContext.getApplicationModel().getCommand("menuExit");
 			this.setContext(null);
 			closeCommand.execute();

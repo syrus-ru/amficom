@@ -9,12 +9,14 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 
+import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
+import java.util.Iterator;
 
 public class CablePathPopupMenu extends MapPopupMenu 
 {
@@ -48,6 +50,15 @@ public class CablePathPopupMenu extends MapPopupMenu
 	public void setMapElement(MapElement me)
 	{
 		this.path = (MapCablePathElement )me;
+		
+		boolean canGenerate = false;
+		for(Iterator it = path.getLinks().iterator(); it.hasNext();)
+		{
+			Object link = it.next();
+			if(link instanceof MapUnboundLinkElement)
+				canGenerate = true;
+		}
+		generateMenuItem.setVisible(canGenerate);
 	}
 
 	private void jbInit() 
