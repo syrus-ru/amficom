@@ -1,5 +1,5 @@
 /**
- * $Id: MapEventMarkerStrategy.java,v 1.11 2005/02/07 16:09:26 krupenn Exp $
+ * $Id: MapEventMarkerStrategy.java,v 1.12 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,8 @@
 
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.EventMarker;
@@ -21,7 +23,7 @@ import java.awt.Point;
 /**
  * Стратегия управления маркером события.
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/02/07 16:09:26 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/18 12:19:46 $
  * @module mapviewclient_v1
  */
 public final class MapEventMarkerStrategy extends MapStrategy 
@@ -54,6 +56,7 @@ public final class MapEventMarkerStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMousePressed(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 		if ((actionMode == MapState.SELECT_ACTION_MODE))

@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNodeController.java,v 1.3 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: UnboundNodeController.java,v 1.4 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,9 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.UnboundNode;
@@ -25,7 +27,7 @@ import java.awt.geom.Rectangle2D;
 /**
  * Контроллер непривязанного узела (элемент схемы).
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/18 12:19:46 $
  * @module mapviewclient_v1
  */
 public class UnboundNodeController extends SiteNodeController
@@ -69,6 +71,7 @@ public class UnboundNodeController extends SiteNodeController
 	 * {@inheritDoc}
 	 */
 	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		if(!(mapElement instanceof UnboundNode))
 			return;

@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.14 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.15 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
  * Разместить кабель на карте.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -73,108 +74,106 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();
 		
-		this.startNode = this.mapView.getStartNode(this.scl);
-		this.endNode = this.mapView.getEndNode(this.scl);
-		
-		this.cablePath = this.mapView.findCablePath(this.scl);
-		// если кабельный путь уже есть - ничего не делать
-		if(this.cablePath != null)
-		{
+		try {
+			this.startNode = this.mapView.getStartNode(this.scl);
+			this.endNode = this.mapView.getEndNode(this.scl);
+			this.cablePath = this.mapView.findCablePath(this.scl);
+			// если кабельный путь уже есть - ничего не делать
+			if(this.cablePath != null)
+			{
 //			super.checkCablePathLinks(cablePath);
-			return;
-		}
-
-		this.cablePath = super.createCablePath(this.scl, this.startNode, this.endNode);
-
-//		List ccis = (List )scl.channelingItems;
-
-		// идем по всем узлам кабельного пути от начального
-		SiteNode bufferStartSite = this.startNode;
-
-		// цикл по элементам привязки кабеля.
-		for(int i = 0; i < this.scl.cableChannelingItems().length; i++)
-		{
-			CableChannelingItem cci = this.scl.cableChannelingItems()[i];
-			SiteNode smsne = cci.startSiteNodeImpl();
-			SiteNode emsne = cci.endSiteNodeImpl();
-
-			// если элемент привязки не соответствует топологической схеме
-			// (один из узлов привязки не нанесен на карту) то элемент
-			// привязки опускается
-			if(smsne == null
-				|| emsne == null)
-			{
-				continue;
+				return;
 			}
+			this.cablePath = super.createCablePath(this.scl, this.startNode, this.endNode);
+			// идем по всем узлам кабельного пути от начального
+			SiteNode bufferStartSite = this.startNode;
+			// цикл по элементам привязки кабеля.
+			for(int i = 0; i < this.scl.cableChannelingItems().length; i++)
+			{
+				CableChannelingItem cci = this.scl.cableChannelingItems()[i];
+				SiteNode smsne = cci.startSiteNodeImpl();
+				SiteNode emsne = cci.endSiteNodeImpl();
 
-			// a link between bufferStartSite and current cci exists
-			boolean exists = false;
-			
-			// переходим к следующему узлу кабельного пути
-			if(bufferStartSite.equals(smsne))
-			{
-				bufferStartSite = emsne;
-				exists = true;
-			}
-			else
-			if(bufferStartSite.equals(emsne))
-			{
-				bufferStartSite = smsne;
-				exists = true;
-			}
-			
-			// если ни одно из двух предыдущих условий не выполнено, то есть
-			// существует разрыв последовательности привязки (линии 
-			// bufferStartSite - cci.startSiteId не существует), то
-			// создать на месте разрыва непроложенную линию из одного фрагмента
-			if(!exists)
-			{
-				UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, smsne);
-				this.cablePath.addLink(unbound, CableController.generateCCI(unbound));
-				unbound.setCablePath(this.cablePath);
-
-				bufferStartSite = emsne;
-			}
-			// в противном случае привязать кабель к существующей линии
-			{
-				
-				PhysicalLink link = cci.physicalLinkImpl();
-				
-				// если линия не существует, опустить данный элемент привязки
-				if(link == null)
+				// если элемент привязки не соответствует топологической схеме
+				// (один из узлов привязки не нанесен на карту) то элемент
+				// привязки опускается
+				if(smsne == null
+					|| emsne == null)
 				{
-					UnboundLink unbound = super.createUnboundLinkWithNodeLink(smsne, emsne);
-					this.cablePath.addLink(unbound, CableController.generateCCI(unbound));
-					unbound.setCablePath(this.cablePath);
+					continue;
+				}
+
+				// a link between bufferStartSite and current cci exists
+				boolean exists = false;
+				
+				// переходим к следующему узлу кабельного пути
+				if(bufferStartSite.equals(smsne))
+				{
+					bufferStartSite = emsne;
+					exists = true;
 				}
 				else
+				if(bufferStartSite.equals(emsne))
 				{
-					link.getBinding().add(this.cablePath);
-					if(cci.rowX() != -1
-						&& cci.placeY() != -1)
-						link.getBinding().bind(this.cablePath, cci.rowX(), cci.placeY());
-		
-					this.cablePath.addLink(link, CableController.generateCCI(link));
+					bufferStartSite = smsne;
+					exists = true;
+				}
+				
+				// если ни одно из двух предыдущих условий не выполнено, то есть
+				// существует разрыв последовательности привязки (линии 
+				// bufferStartSite - cci.startSiteId не существует), то
+				// создать на месте разрыва непроложенную линию из одного фрагмента
+				if(!exists)
+				{
+					UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, smsne);
+					this.cablePath.addLink(unbound, CableController.generateCCI(unbound));
+					unbound.setCablePath(this.cablePath);
+
+					bufferStartSite = emsne;
+				}
+				// в противном случае привязать кабель к существующей линии
+				{
+					
+					PhysicalLink link = cci.physicalLinkImpl();
+					
+					// если линия не существует, опустить данный элемент привязки
+					if(link == null)
+					{
+						UnboundLink unbound = super.createUnboundLinkWithNodeLink(smsne, emsne);
+						this.cablePath.addLink(unbound, CableController.generateCCI(unbound));
+						unbound.setCablePath(this.cablePath);
+					}
+					else
+					{
+						link.getBinding().add(this.cablePath);
+						if(cci.rowX() != -1
+							&& cci.placeY() != -1)
+							link.getBinding().bind(this.cablePath, cci.rowX(), cci.placeY());
+			
+						this.cablePath.addLink(link, CableController.generateCCI(link));
+					}
 				}
 			}
+			// если элементы привязки не доходят до конца, создать непривязанную
+			// линию от текущего до конечного узла
+			if(this.endNode != bufferStartSite)
+			{
+				UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, this.endNode);
+				this.cablePath.addLink(unbound, CableController.generateCCI(unbound));
+				unbound.setCablePath(this.cablePath);
+			}
+			// операция закончена - оповестить слушателей
+			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+			this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
+					this.cablePath, 
+					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			this.logicalNetLayer.setCurrentMapElement(this.cablePath);
+			this.logicalNetLayer.notifySchemeEvent(this.cablePath);
+		} catch(Throwable e) {
+			setResult(Command.RESULT_NO);
+			setException(e);
+			e.printStackTrace();
 		}
-
-		// если элементы привязки не доходят до конца, создать непривязанную
-		// линию от текущего до конечного узла
-		if(this.endNode != bufferStartSite)
-		{
-			UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, this.endNode);
-			this.cablePath.addLink(unbound, CableController.generateCCI(unbound));
-			unbound.setCablePath(this.cablePath);
-		}
-
-		// операция закончена - оповестить слушателей
-		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-		this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-				this.cablePath, 
-				MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-		this.logicalNetLayer.setCurrentMapElement(this.cablePath);
-		this.logicalNetLayer.notifySchemeEvent(this.cablePath);
 	}
 
 }

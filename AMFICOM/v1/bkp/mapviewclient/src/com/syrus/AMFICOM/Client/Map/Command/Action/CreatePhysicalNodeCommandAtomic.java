@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.13 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.14 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Controllers.TopologicalNodeController;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -22,7 +23,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
  * создание топологического узла, внесение его в пул и на карту - 
  * атомарное действие 
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
@@ -71,21 +72,24 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 				this.logicalNetLayer.getUserId(),
 				this.physicalLink,
 				this.point);
+
+			TopologicalNodeController tnc = (TopologicalNodeController)getLogicalNetLayer().getMapViewController().getController(this.node);
+	
+			// по умолчанию топологиеский узел не активен
+			tnc.setActive(this.node, false);
+			// установить коэффициент для масштабирования изображения
+			// в соответствии с текущим масштабом отображения карты
+			tnc.updateScaleCoefficient(this.node);
+	
+			this.logicalNetLayer.getMapView().getMap().addNode(this.node);
+			setResult(Command.RESULT_OK);
 		}
 		catch (CreateObjectException e)
 		{
+			setException(e);
+			setResult(Command.RESULT_NO);
 			e.printStackTrace();
 		}
-
-		TopologicalNodeController tnc = (TopologicalNodeController)getLogicalNetLayer().getMapViewController().getController(this.node);
-
-		// по умолчанию топологиеский узел не активен
-		tnc.setActive(this.node, false);
-		// установить коэффициент для масштабирования изображения
-		// в соответствии с текущим масштабом отображения карты
-		tnc.updateScaleCoefficient(this.node);
-
-		this.logicalNetLayer.getMapView().getMap().addNode(this.node);
 	}
 	
 	public void redo() 

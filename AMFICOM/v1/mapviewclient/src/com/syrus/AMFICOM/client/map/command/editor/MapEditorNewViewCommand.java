@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorNewViewCommand.java,v 1.10 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapEditorNewViewCommand.java,v 1.11 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,8 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewCloseCommand;
@@ -29,7 +31,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.10 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/18 12:19:45 $
  * @module
  * @author $Author: krupenn $
  * @see MapNewCommand
@@ -73,9 +75,16 @@ public class MapEditorNewViewCommand extends VoidCommand
 
 		MapView mapView = cmd2.getMapView();
 
-        mapFrame.setMapView(mapView);
-
-		setResult(Command.RESULT_OK);
+        try {
+			mapFrame.setMapView(mapView);
+			setResult(Command.RESULT_OK);
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalLinkCommandAtomic.java,v 1.9 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: CreatePhysicalLinkCommandAtomic.java,v 1.10 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -20,7 +21,7 @@ import com.syrus.AMFICOM.map.PhysicalLink;
  * создание физической линии, внесение ее в пул и на карту - 
  * атомарное действие 
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public class CreatePhysicalLinkCommandAtomic extends MapActionCommand
@@ -63,13 +64,15 @@ public class CreatePhysicalLinkCommandAtomic extends MapActionCommand
 					this.startNode, 
 					this.endNode, 
 					this.logicalNetLayer.getPen());
+			this.logicalNetLayer.getMapView().getMap().addPhysicalLink(this.link);
+			setResult(Command.RESULT_OK);
 		}
 		catch (CreateObjectException e)
 		{
+			setException(e);
+			setResult(Command.RESULT_NO);
 			e.printStackTrace();
 		}
-
-		this.logicalNetLayer.getMapView().getMap().addPhysicalLink(this.link);
 	}
 	
 	public void redo()

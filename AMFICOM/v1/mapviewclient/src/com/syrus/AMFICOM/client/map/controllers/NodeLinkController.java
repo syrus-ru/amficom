@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.4 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.5 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,9 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -36,7 +38,7 @@ import java.util.HashMap;
 /**
  * Контроллер фрагмента линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public final class NodeLinkController extends AbstractLinkController
@@ -156,6 +158,7 @@ public final class NodeLinkController extends AbstractLinkController
 	 * {@inheritDoc}
 	 */
 	public boolean isElementVisible(MapElement mapElement, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		if(! (mapElement instanceof NodeLink))
 			return false;
@@ -173,6 +176,7 @@ public final class NodeLinkController extends AbstractLinkController
 	 * {@inheritDoc}
 	 */
 	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		if(! (mapElement instanceof NodeLink))
 			return;
@@ -265,6 +269,7 @@ public final class NodeLinkController extends AbstractLinkController
 			Rectangle2D.Double visibleBounds, 
 			Stroke stroke, 
 			Color color)
+		throws MapConnectionException, MapDataException
 	{
 		if(!isElementVisible(nodeLink, visibleBounds))
 			return;
@@ -358,6 +363,7 @@ public final class NodeLinkController extends AbstractLinkController
 	 * выделения.
 	 */
 	public boolean isMouseOnElement(MapElement mapElement, Point currentMousePoint)
+		throws MapConnectionException, MapDataException
 	{
 		if(! (mapElement instanceof NodeLink))
 			return false;
@@ -442,6 +448,7 @@ public final class NodeLinkController extends AbstractLinkController
 	 * @param nodeLink фрагмент лниии
 	 */	
 	public void updateLengthLt(NodeLink nodeLink)
+		throws MapConnectionException, MapDataException
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 
@@ -460,6 +467,7 @@ public final class NodeLinkController extends AbstractLinkController
 	 * @param dist топологическое расстояние
 	 */
 	public void setSizeFrom(NodeLink nodeLink, AbstractNode node, double dist)
+		throws MapConnectionException, MapDataException
 	{
 		AbstractNode oppositeNode = 
 			(nodeLink.getStartNode().equals(node)) 
@@ -486,6 +494,7 @@ public final class NodeLinkController extends AbstractLinkController
 	 * @return длина
 	 */
 	public double getScreenLength(NodeLink nodeLink)
+		throws MapConnectionException, MapDataException
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 		
@@ -505,6 +514,7 @@ public final class NodeLinkController extends AbstractLinkController
 	 * @return массив из 2 элементов ({@link #slope})
 	 */
 	public double[] calcScreenSlope(NodeLink nodeLink)
+		throws MapConnectionException, MapDataException
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 		

@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.13 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.14 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,8 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapOpenCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewOpenCommand;
@@ -30,7 +32,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.13 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/18 12:19:45 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -101,15 +103,21 @@ public class MapEditorOpenViewCommand extends VoidCommand
 			if(this.mapFrame == null)
 				return;
 
-			this.mapFrame.setMapView(this.mapView);
-
-			ViewMapPropertiesCommand propCommand = new ViewMapPropertiesCommand(this.desktop, this.aContext);
-			propCommand.execute();
-			this.propFrame = propCommand.frame;
-
-			ViewMapElementsCommand elementsCommand = new ViewMapElementsCommand(this.desktop, this.aContext);
-			elementsCommand.execute();
-			this.elementsFrame = elementsCommand.frame;
+			try {
+				this.mapFrame.setMapView(this.mapView);
+				ViewMapPropertiesCommand propCommand = new ViewMapPropertiesCommand(this.desktop, this.aContext);
+				propCommand.execute();
+				this.propFrame = propCommand.frame;
+				ViewMapElementsCommand elementsCommand = new ViewMapElementsCommand(this.desktop, this.aContext);
+				elementsCommand.execute();
+				this.elementsFrame = elementsCommand.frame;
+			} catch(MapConnectionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch(MapDataException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

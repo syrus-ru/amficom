@@ -1,5 +1,5 @@
 /**
- * $Id: MoveFixedDistanceCommand.java,v 1.6 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: MoveFixedDistanceCommand.java,v 1.7 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,8 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import java.awt.Point;
 
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 
@@ -22,7 +24,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
  * топологического узла, связанного с ним фрагментом линии, при сохранении
  * длины фрагмента
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
@@ -57,14 +59,21 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 	{
 		super.setLogicalNetLayer(logicalNetLayer);
 
-		this.fixedScreenPoint = logicalNetLayer.convertMapToScreen(this.fixedNode.getLocation());
-		Point movedScreenPoint = logicalNetLayer.convertMapToScreen(this.movedNode.getLocation());
-		
-		this.fixedScreenDistance = Math.sqrt(
-				(movedScreenPoint.x - this.fixedScreenPoint.x) 
-					* (movedScreenPoint.x - this.fixedScreenPoint.x) 
-				+ (movedScreenPoint.y - this.fixedScreenPoint.y) 
-					* (movedScreenPoint.y - this.fixedScreenPoint.y));
+		try {
+			this.fixedScreenPoint = logicalNetLayer.convertMapToScreen(this.fixedNode.getLocation());
+			Point movedScreenPoint = logicalNetLayer.convertMapToScreen(this.movedNode.getLocation());
+			this.fixedScreenDistance = Math.sqrt(
+					(movedScreenPoint.x - this.fixedScreenPoint.x) 
+						* (movedScreenPoint.x - this.fixedScreenPoint.x) 
+					+ (movedScreenPoint.y - this.fixedScreenPoint.y) 
+						* (movedScreenPoint.y - this.fixedScreenPoint.y));
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public MoveFixedDistanceCommand(LogicalNetLayer logicalNetLayer)
@@ -86,25 +95,28 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 	 */
 	protected void setShift()
 	{
-		double dist1 = Math.sqrt( 
-			(super.endPoint.x - this.fixedScreenPoint.x) 
-				* (super.endPoint.x - this.fixedScreenPoint.x) 
-			+ (super.endPoint.y - this.fixedScreenPoint.y) 
-				* (super.endPoint.y - this.fixedScreenPoint.y) );
-
-		double sinB1 = (super.endPoint.y - this.fixedScreenPoint.y) / dist1;
-
-		double cosB1 = (super.endPoint.x - this.fixedScreenPoint.x) / dist1;
-
-		Point targetScreenPoint = new Point(
-			(int )(this.fixedScreenPoint.x + cosB1 * this.fixedScreenDistance),
-			(int )(this.fixedScreenPoint.y + sinB1 * this.fixedScreenDistance));
-
-		DoublePoint targetMapPoint = this.logicalNetLayer.convertScreenToMap(targetScreenPoint);
-		DoublePoint startMapPoint = this.logicalNetLayer.convertScreenToMap(super.startPoint);
-
-		super.deltaX = targetMapPoint.getX() - startMapPoint.getX();
-		super.deltaY = targetMapPoint.getY() - startMapPoint.getY();
+		try {
+			double dist1 = Math.sqrt( 
+				(super.endPoint.x - this.fixedScreenPoint.x) 
+					* (super.endPoint.x - this.fixedScreenPoint.x) 
+				+ (super.endPoint.y - this.fixedScreenPoint.y) 
+					* (super.endPoint.y - this.fixedScreenPoint.y) );
+			double sinB1 = (super.endPoint.y - this.fixedScreenPoint.y) / dist1;
+			double cosB1 = (super.endPoint.x - this.fixedScreenPoint.x) / dist1;
+			Point targetScreenPoint = new Point(
+				(int )(this.fixedScreenPoint.x + cosB1 * this.fixedScreenDistance),
+				(int )(this.fixedScreenPoint.y + sinB1 * this.fixedScreenDistance));
+			DoublePoint targetMapPoint = this.logicalNetLayer.convertScreenToMap(targetScreenPoint);
+			DoublePoint startMapPoint = this.logicalNetLayer.convertScreenToMap(super.startPoint);
+			super.deltaX = targetMapPoint.getX() - startMapPoint.getX();
+			super.deltaY = targetMapPoint.getY() - startMapPoint.getY();
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

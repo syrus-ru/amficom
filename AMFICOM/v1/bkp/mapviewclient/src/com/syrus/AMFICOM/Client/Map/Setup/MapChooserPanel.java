@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.5 2005/02/10 11:48:39 krupenn Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.6 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,8 @@
 package com.syrus.AMFICOM.Client.Map.Setup;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 import java.awt.Dimension;
@@ -21,15 +23,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+import org.apache.xpath.axes.PredicatedNodeTest;
+
 /**
  * панель выбора вида карты
- * @version $Revision: 1.5 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/18 12:19:46 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -110,7 +115,19 @@ public class MapChooserPanel extends JPanel
 		if(this.mapFrame == null)
 			return;
 
-		for(Iterator it = this.mapFrame.getMapViewer().getAvailableViews().iterator(); it.hasNext();)
+		List availableViews;
+		try
+		{
+			availableViews = this.mapFrame.getMapViewer().getConnection().getAvailableViews();
+		}
+		catch(MapDataException e)
+		{
+			System.out.println("Cannot get views: " + e.getMessage());
+			e.printStackTrace();
+			return;
+		} 
+
+		for(Iterator it = availableViews.iterator(); it.hasNext();)
 		{
 			this.combo.addItem(it.next());
 		}
@@ -141,6 +158,17 @@ public class MapChooserPanel extends JPanel
 	void changeMap() 
 	{
 		String name = (String )this.combo.getSelectedItem();
-		this.mapFrame.getMapViewer().setView(name);
+		String previousView = this.mapFrame.getMapViewer().getConnection().getView(); 
+		try
+		{
+			this.mapFrame.getMapViewer().getConnection().setView(name);
+			this.mapFrame.getMapViewer().getConnection().connect();
+		}
+		catch(MapConnectionException e)
+		{
+			System.out.println("Cannot change view: " + e.getMessage());
+			e.printStackTrace();
+			this.mapFrame.getMapViewer().getConnection().setView(previousView);
+		}
 	}
 }

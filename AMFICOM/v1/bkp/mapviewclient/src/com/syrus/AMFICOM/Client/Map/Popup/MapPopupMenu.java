@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.27 2005/02/09 11:41:44 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.28 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,8 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateCollectorCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
@@ -59,7 +61,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/02/09 11:41:44 $
+ * @version $Revision: 1.28 $, $Date: 2005/02/18 12:19:46 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu
@@ -377,7 +379,20 @@ public abstract class MapPopupMenu extends JPopupMenu
 		getLogicalNetLayer().getCommandList().add(command2);
 		getLogicalNetLayer().getCommandList().execute();
 		
-		getLogicalNetLayer().repaint(false);
+		try
+		{
+			getLogicalNetLayer().repaint(false);
+		}
+		catch(MapConnectionException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch(MapDataException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	protected void generatePathCabling(CablePath path, SiteNodeType proto)
@@ -388,7 +403,20 @@ public abstract class MapPopupMenu extends JPopupMenu
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
-		getLogicalNetLayer().repaint(false);
+		try
+		{
+			getLogicalNetLayer().repaint(false);
+		}
+		catch(MapConnectionException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch(MapDataException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	protected void convertUnboundLinkToPhysicalLink(UnboundLink unbound)
@@ -399,6 +427,19 @@ public abstract class MapPopupMenu extends JPopupMenu
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
-		getLogicalNetLayer().repaint(false);
+		try
+		{
+			getLogicalNetLayer().repaint(false);
+		}
+		catch(MapConnectionException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch(MapDataException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.map.NodeLink;
 
 public final class NodeLinkPopupMenu extends MapPopupMenu 
@@ -56,6 +58,19 @@ public final class NodeLinkPopupMenu extends MapPopupMenu
 	{
 		super.removeMapElement(this.link);
 
-		getLogicalNetLayer().repaint(false);
+		try
+		{
+			getLogicalNetLayer().repaint(false);
+		}
+		catch(MapConnectionException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch(MapDataException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

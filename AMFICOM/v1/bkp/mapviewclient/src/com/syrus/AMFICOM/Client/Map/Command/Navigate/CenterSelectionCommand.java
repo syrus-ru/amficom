@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.12 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: CenterSelectionCommand.java,v 1.13 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,9 +13,10 @@ package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 
 import java.util.Iterator;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -24,27 +25,15 @@ import com.syrus.AMFICOM.mapview.MapView;
  * Центрировать геометрическое место точек, являющих собой центры 
  * выделенных элементов карты
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
-public class CenterSelectionCommand extends VoidCommand
+public class CenterSelectionCommand extends MapNavigateCommand
 {
-	LogicalNetLayer logicalNetLayer;
-	ApplicationModel aModel;
-	
 	public CenterSelectionCommand(LogicalNetLayer logicalNetLayer)
 	{
-		this.logicalNetLayer = logicalNetLayer;
+		super(logicalNetLayer);
 	}
-
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("logicalNetLayer"))
-			this.logicalNetLayer = (LogicalNetLayer )value;
-		if(field.equals("applicationModel"))
-			this.aModel = (ApplicationModel )value;
-	}
-
 	public void execute()
 	{
 		if(this.logicalNetLayer == null)
@@ -139,8 +128,17 @@ public class CenterSelectionCommand extends VoidCommand
 		
 		point.setLocation(x, y);
 		
-		this.logicalNetLayer.setCenter(point);
-
-		this.logicalNetLayer.repaint(true);
+		try {
+			this.logicalNetLayer.setCenter(point);
+			this.logicalNetLayer.repaint(true);
+		} catch(MapConnectionException e) {
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
+		}
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.15 2005/02/07 16:09:27 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.16 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,8 @@ import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -29,7 +31,7 @@ import java.util.Iterator;
 /**
  * Стратегия управления непривязанным узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/02/07 16:09:27 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/18 12:19:46 $
  * @module mapviewclient_v1
  */
 public final class MapUnboundNodeElementStrategy extends MapStrategy 
@@ -76,6 +78,7 @@ public final class MapUnboundNodeElementStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMousePressed(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 
@@ -105,6 +108,7 @@ public final class MapUnboundNodeElementStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMouseDragged(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 
@@ -139,6 +143,7 @@ public final class MapUnboundNodeElementStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMouseReleased(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 

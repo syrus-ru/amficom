@@ -1,5 +1,5 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.5 2005/02/10 11:48:39 krupenn Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.6 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,8 @@
 package com.syrus.AMFICOM.Client.Map.Setup;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
@@ -30,6 +32,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -37,7 +40,7 @@ import javax.swing.ListSelectionModel;
 
 /**
  * панель поиска географических объектов
- * @version $Revision: 1.5 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/18 12:19:46 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -165,10 +168,16 @@ import javax.swing.ListSelectionModel;
 	public void search()
 	{
 		this.searchButton.setEnabled(false);
-		List found = this.mapFrame.getMapViewer().getLogicalNetLayer().findSpatialObjects(this.searchText);
-
-		this.foundList.setListData(found.toArray());
-
+		try {
+			List found = this.mapFrame.getMapViewer().getLogicalNetLayer().findSpatialObjects(this.searchText);
+			this.foundList.setListData(found.toArray());
+		} catch(MapConnectionException e) {
+			this.foundList.setListData(new String[] {e.getMessage()});
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			this.foundList.setListData(new String[] {e.getMessage()});
+			e.printStackTrace();
+		}
 		this.searchButton.setEnabled(true);
 		this.searching = false;
 	}
@@ -179,8 +188,16 @@ import javax.swing.ListSelectionModel;
 	 */
 	void doCenter()
 	{
-		SpatialObject so = (SpatialObject )this.foundList.getSelectedValue();
-		this.mapFrame.getMapViewer().getLogicalNetLayer().centerSpatialObject(so);
+		try {
+			SpatialObject so = (SpatialObject )this.foundList.getSelectedValue();
+			this.mapFrame.getMapViewer().getLogicalNetLayer().centerSpatialObject(so);
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**

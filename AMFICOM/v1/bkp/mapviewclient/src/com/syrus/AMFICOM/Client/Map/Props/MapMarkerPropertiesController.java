@@ -13,6 +13,8 @@ import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -129,7 +131,10 @@ public final class MapMarkerPropertiesController
 			catch(NumberFormatException e)
 			{
 				System.out.println("Wrong number format");
-				return;
+			} catch(MapConnectionException e) {
+				e.printStackTrace();
+			} catch(MapDataException e) {
+				e.printStackTrace();
 			}
 		}
 	}

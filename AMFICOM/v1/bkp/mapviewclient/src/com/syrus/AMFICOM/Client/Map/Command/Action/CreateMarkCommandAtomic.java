@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommandAtomic.java,v 1.9 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: CreateMarkCommandAtomic.java,v 1.10 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import java.awt.Point;
 import java.util.Iterator;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.map.PhysicalLink;
  * Команда создания метки на линии
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public class CreateMarkCommandAtomic extends MapActionCommand
@@ -69,67 +70,68 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
-
-		if ( !getLogicalNetLayer().getContext().getApplicationModel()
-				.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
-			return;
-
-		this.map = this.logicalNetLayer.getMapView().getMap();
-
-		this.link.sortNodeLinks();
-		this.distance = 0.0;
-		AbstractNode node = this.link.getStartNode();
-
-		for(Iterator it = this.link.getNodeLinks().iterator(); it.hasNext();)
-		{
-			NodeLink mnle = (NodeLink)it.next();
-
-			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer().getMapViewController().getController(mnle);
-
-			if(nlc.isMouseOnElement(mnle, this.point))
-			{
-				DoublePoint dpoint = this.logicalNetLayer.convertScreenToMap(this.point);
-				this.distance += this.logicalNetLayer.distance(node.getLocation(), dpoint);
-				break;
-			}
-			nlc.updateLengthLt(mnle);
-			this.distance += mnle.getLengthLt();
-
-			if(mnle.getStartNode().equals(node))
-				node = mnle.getEndNode();
-			else
-				node = mnle.getStartNode();
-		}
-
 		try
 		{
-			this.mark = Mark.createInstance(
-					this.logicalNetLayer.getUserId(),
-					this.link, 
-					this.distance);
+			Environment.log(
+					Environment.LOG_LEVEL_FINER, 
+					"method call", 
+					getClass().getName(), 
+					"execute()");
+			if ( !getLogicalNetLayer().getContext().getApplicationModel()
+					.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
+				return;
+			this.map = this.logicalNetLayer.getMapView().getMap();
+			this.link.sortNodeLinks();
+			this.distance = 0.0;
+			AbstractNode node = this.link.getStartNode();
+			for(Iterator it = this.link.getNodeLinks().iterator(); it.hasNext();)
+			{
+				NodeLink mnle = (NodeLink)it.next();
+
+				NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer().getMapViewController().getController(mnle);
+
+				if(nlc.isMouseOnElement(mnle, this.point))
+				{
+					DoublePoint dpoint = this.logicalNetLayer.convertScreenToMap(this.point);
+					this.distance += this.logicalNetLayer.distance(node.getLocation(), dpoint);
+					break;
+				}
+				nlc.updateLengthLt(mnle);
+				this.distance += mnle.getLengthLt();
+
+				if(mnle.getStartNode().equals(node))
+					node = mnle.getEndNode();
+				else
+					node = mnle.getStartNode();
+			}
+			try
+			{
+				this.mark = Mark.createInstance(
+						this.logicalNetLayer.getUserId(),
+						this.link, 
+						this.distance);
+			}
+			catch (CreateObjectException e)
+			{
+				e.printStackTrace();
+			}
+			this.map.addNode(this.mark);
+			MarkController mc = (MarkController)getLogicalNetLayer().getMapViewController().getController(this.mark);
+			mc.updateScaleCoefficient(this.mark);
+			// операция закончена - оповестить слушателей
+			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+			this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
+						this.mark,
+						MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			this.logicalNetLayer.setCurrentMapElement(this.mark);
+			setResult(Command.RESULT_OK);
 		}
-		catch (CreateObjectException e)
+		catch(Exception e)
 		{
+			setException(e);
+			setResult(Command.RESULT_NO);
 			e.printStackTrace();
 		}
-
-		this.map.addNode(this.mark);
-
-		MarkController mc = (MarkController)getLogicalNetLayer().getMapViewController().getController(this.mark);
-
-		mc.updateScaleCoefficient(this.mark);
-		
-		// операция закончена - оповестить слушателей
-		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-		this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-					this.mark,
-					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-		this.logicalNetLayer.setCurrentMapElement(this.mark);
 	}
 	
 	public void undo()

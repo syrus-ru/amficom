@@ -11,6 +11,8 @@ import javax.swing.JMenuItem;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
 import com.syrus.AMFICOM.map.SiteNodeType;
@@ -110,7 +112,20 @@ public class CablePathPopupMenu extends MapPopupMenu
 	{
 		super.removeMapElement(this.path);
 
-		getLogicalNetLayer().repaint(false);
+		try
+		{
+			getLogicalNetLayer().repaint(false);
+		}
+		catch(MapConnectionException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch(MapDataException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	void bind()
@@ -149,7 +164,20 @@ public class CablePathPopupMenu extends MapPopupMenu
 		if(proto != null)
 		{
 			super.generatePathCabling(this.path, proto);
-			getLogicalNetLayer().repaint(false);
+			try
+			{
+				getLogicalNetLayer().repaint(false);
+			}
+			catch(MapConnectionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch(MapDataException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	

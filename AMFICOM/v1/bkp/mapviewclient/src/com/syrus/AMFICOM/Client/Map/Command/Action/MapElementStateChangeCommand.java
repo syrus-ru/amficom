@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementStateChangeCommand.java,v 1.5 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: MapElementStateChangeCommand.java,v 1.6 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -19,7 +20,7 @@ import com.syrus.AMFICOM.map.MapElementState;
  * атомарна€ команда изменени€ состо€ни€ элемента карты 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public final class MapElementStateChangeCommand extends MapActionCommand
@@ -49,6 +50,7 @@ public final class MapElementStateChangeCommand extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 		this.me.revert(this.finalState);
+		setResult(Command.RESULT_OK);
 	}
 	
 	public void redo()

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.12 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: MapViewController.java,v 1.13 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,6 +19,8 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemePathCommand;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -54,7 +56,7 @@ import java.util.Iterator;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public final class MapViewController
@@ -143,6 +145,7 @@ public final class MapViewController
 	 * @param visibleBounds видимая облать
 	 */
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		getController(me).paint(me, g, visibleBounds);
 	}
@@ -158,6 +161,7 @@ public final class MapViewController
 	 * <code>false</code>
 	 */
 	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
+		throws MapConnectionException, MapDataException
 	{
 		return getController(me).isMouseOnElement(me, currentMousePoint);
 	}
@@ -172,6 +176,7 @@ public final class MapViewController
 	 * <code>false</code>
 	 */
 	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		return getController(me).isElementVisible(me, visibleBounds);
 	}
@@ -204,6 +209,7 @@ public final class MapViewController
 	 * @param mapView вид
 	 */
 	public void setMapView(com.syrus.AMFICOM.mapview.MapView mapView)
+		throws MapConnectionException, MapDataException
 	{
 		this.mapView = mapView;
 
@@ -262,20 +268,20 @@ public final class MapViewController
 	 *  		double,
 	 *  		Map)}
 	 */
-	public static MapView createMapView(Identifier creatorId, Identifier domainId, Map map)
-		throws CreateObjectException
-	{
-		return com.syrus.AMFICOM.mapview.MapView.createInstance(
-			creatorId,
-			domainId,
-			LangModelMap.getString("New"),
-			"",
-			0.0D,
-			0.0D,
-			1.0D,
-			1.0D,
-			map);
-	}
+//	public static MapView createMapView(Identifier creatorId, Identifier domainId, Map map)
+//		throws CreateObjectException
+//	{
+//		return com.syrus.AMFICOM.mapview.MapView.createInstance(
+//			creatorId,
+//			domainId,
+//			LangModelMap.getString("New"),
+//			"",
+//			0.0D,
+//			0.0D,
+//			1.0D,
+//			1.0D,
+//			map);
+//	}
 
 	/**
 	 * Получить топологический путь по идентификатору измерительного элемента.

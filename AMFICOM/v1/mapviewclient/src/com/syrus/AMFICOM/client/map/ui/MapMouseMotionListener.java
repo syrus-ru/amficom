@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.10 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.11 2005/02/18 12:19:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,9 +11,12 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategyManager;
@@ -28,7 +31,7 @@ import java.awt.event.MouseMotionListener;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.10 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/18 12:19:47 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -53,40 +56,64 @@ public final class MapMouseMotionListener implements MouseMotionListener
 		if ( this.logicalNetLayer.getMapView() != null)
 		{
 			this.logicalNetLayer.setEndPoint(me.getPoint());
-			this.logicalNetLayer.showLatLong(me.getPoint());
+			try {
+				this.logicalNetLayer.showLatLong(me.getPoint());
+			} catch(MapConnectionException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			} catch(MapDataException e3) {
+				// TODO Auto-generated catch block
+				e3.printStackTrace();
+			}
 
 			//Обрабатывает события на панели инстрементов
 			switch (mapState.getOperationMode())
 			{
 				case MapState.MEASURE_DISTANCE:
-					this.logicalNetLayer.repaint(false);
+					this.logicalNetLayer.getContext().getDispatcher().notify(new MapEvent(this, MapEvent.NEED_REPAINT));
 					break;
 				case MapState.MOVE_HAND:
-					//Если перемещают карту лапкой
-					this.logicalNetLayer.handDragged(me);
+					try {
+						//Если перемещают карту лапкой
+						this.logicalNetLayer.handDragged(me);
+					} catch(MapConnectionException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					} catch(MapDataException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
 					break;
 				case MapState.MOVE_TO_CENTER:
 					break;
 				case MapState.ZOOM_TO_RECT:
-					this.logicalNetLayer.repaint(false);
+					this.logicalNetLayer.getContext().getDispatcher().notify(new MapEvent(this, MapEvent.NEED_REPAINT));
 					break;
 				case MapState.NODELINK_SIZE_EDIT:
 					break;
 				case MapState.MOVE_FIXDIST:
 					// fall through
 				case MapState.NO_OPERATION:
-					MapElement mapElement = this.logicalNetLayer.getCurrentMapElement();
-					MapStrategy strategy = MapStrategyManager.getStrategy(mapElement);
-					if(strategy != null)
-					{
-						strategy.setLogicalNetLayer(this.logicalNetLayer);
-						strategy.doContextChanges(me);
+					try {
+						MapElement mapElement = this.logicalNetLayer.getCurrentMapElement();
+						MapStrategy strategy = MapStrategyManager.getStrategy(mapElement);
+						if(strategy != null)
+						{
+							strategy.setLogicalNetLayer(this.logicalNetLayer);
+							strategy.doContextChanges(me);
+						}
+						this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
+									mapElement, 
+									MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+						this.logicalNetLayer.getContext().getDispatcher().notify(
+								new MapEvent(this, MapEvent.NEED_REPAINT));
+					} catch(MapConnectionException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch(MapDataException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
-	
-					this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-								mapElement, 
-								MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-					this.logicalNetLayer.repaint(false);
 					break;
 				default:
 					try
@@ -111,7 +138,16 @@ public final class MapMouseMotionListener implements MouseMotionListener
 		MapState mapState = this.logicalNetLayer.getMapState();
 
 		mapState.setMouseMode( MapState.MOUSE_MOVED);
-		this.logicalNetLayer.showLatLong( me.getPoint());//Выводим значения широты и долготы
+		try {
+			//Выводим значения широты и долготы
+			this.logicalNetLayer.showLatLong( me.getPoint());
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		mapState.setMouseMode( MapState.MOUSE_NONE);
 	}
 }

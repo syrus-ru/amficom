@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.16 2005/02/07 16:09:27 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.17 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,6 +19,8 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.MoveFixedDistanceCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -35,7 +37,7 @@ import java.util.Iterator;
 /**
  * Стратегия управления топологическим узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/02/07 16:09:27 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/18 12:19:46 $
  * @module mapviewclient_v1
  */
 public final class MapPhysicalNodeElementStrategy extends MapStrategy 
@@ -85,6 +87,7 @@ public final class MapPhysicalNodeElementStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMousePressed(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 
@@ -114,6 +117,7 @@ public final class MapPhysicalNodeElementStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMouseDragged(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 		int operationMode = mapState.getOperationMode();
@@ -164,6 +168,7 @@ public final class MapPhysicalNodeElementStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMouseReleased(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 		int operationMode = mapState.getOperationMode();

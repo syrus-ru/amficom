@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.10 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.11 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import java.util.Iterator;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 /**
  * Команда генерации тоннеля по непривязанной линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBundle
@@ -70,23 +71,27 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();
 		
-		this.path.removeLink(this.unbound);
-		this.link = super.createPhysicalLink(
-				this.unbound.getStartNode(), 
-				this.unbound.getEndNode());
-		super.removePhysicalLink(this.unbound);
-		
-		// перенести фрагменты линии в сгенерированный тоннель
-		for(Iterator it2 = this.unbound.getNodeLinks().iterator(); it2.hasNext();)
-		{
-			NodeLink mnle = (NodeLink)it2.next();
-			mnle.setPhysicalLink(this.link);
-			this.link.addNodeLink(mnle);
+		try {
+			this.path.removeLink(this.unbound);
+			this.link = super.createPhysicalLink(
+					this.unbound.getStartNode(), 
+					this.unbound.getEndNode());
+			super.removePhysicalLink(this.unbound);
+			// перенести фрагменты линии в сгенерированный тоннель
+			for(Iterator it2 = this.unbound.getNodeLinks().iterator(); it2.hasNext();)
+			{
+				NodeLink mnle = (NodeLink)it2.next();
+				mnle.setPhysicalLink(this.link);
+				this.link.addNodeLink(mnle);
+			}
+			this.path.addLink(this.link, CableController.generateCCI(this.link));
+			this.link.getBinding().add(this.path);
+			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		} catch(Throwable e) {
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
 		}
-		this.path.addLink(this.link, CableController.generateCCI(this.link));
-		this.link.getBinding().add(this.path);
-
-		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 
 }

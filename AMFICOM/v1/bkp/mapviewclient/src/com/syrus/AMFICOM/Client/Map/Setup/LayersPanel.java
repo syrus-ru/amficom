@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.3 2005/02/10 11:48:39 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.4 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 package com.syrus.AMFICOM.Client.Map.Setup;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.SpatialLayer;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
@@ -37,7 +38,7 @@ import javax.swing.JSeparator;
 
 /**
  * панель управления отображением слоев
- * @version $Revision: 1.3 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/18 12:19:46 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -192,10 +193,18 @@ public class LayersPanel extends JPanel
 	{
 		this.tableData.clear();
 		
-		for(Iterator it = this.mapFrame.getMapViewer().getLayers().iterator(); it.hasNext();)
+		try
 		{
-			SpatialLayer sl = (SpatialLayer )it.next();
-			this.tableData.add(sl);
+			for(Iterator it = this.mapFrame.getMapViewer().getLayers().iterator(); it.hasNext();)
+			{
+				SpatialLayer sl = (SpatialLayer )it.next();
+				this.tableData.add(sl);
+			}
+		}
+		catch(MapDataException e)
+		{
+			System.out.println("cannot get layers");
+			e.printStackTrace();
 		}
 		
 		layoutLayerRows();

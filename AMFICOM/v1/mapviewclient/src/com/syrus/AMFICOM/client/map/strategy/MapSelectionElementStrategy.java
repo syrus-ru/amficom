@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.14 2005/02/07 16:09:27 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.15 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,8 @@ package com.syrus.AMFICOM.Client.Map.Strategy;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.Selection;
@@ -24,7 +26,7 @@ import java.awt.Point;
 /**
  * Стратегия управления выделенными объектами.
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/02/07 16:09:27 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/18 12:19:46 $
  * @module mapviewclient_v1
  */
 public final class MapSelectionElementStrategy extends MapStrategy 
@@ -72,6 +74,7 @@ public final class MapSelectionElementStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMousePressed(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 
@@ -128,6 +131,7 @@ public final class MapSelectionElementStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMouseDragged(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 
@@ -149,6 +153,7 @@ public final class MapSelectionElementStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMouseReleased(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 

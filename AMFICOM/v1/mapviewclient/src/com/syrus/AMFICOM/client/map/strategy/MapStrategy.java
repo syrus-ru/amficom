@@ -1,5 +1,5 @@
 /**
- * $Id: MapStrategy.java,v 1.7 2005/02/07 16:09:27 krupenn Exp $
+ * $Id: MapStrategy.java,v 1.8 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,6 +13,8 @@ package com.syrus.AMFICOM.Client.Map.Strategy;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 
@@ -28,7 +30,7 @@ import javax.swing.SwingUtilities;
  * или изменением состо€ни€ мыши и клавиатуры.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/07 16:09:27 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/18 12:19:46 $
  * @module mapviewclient_v1
  */
 public abstract class MapStrategy
@@ -64,6 +66,7 @@ public abstract class MapStrategy
 	 * @param mapElement элемент карты
 	 */
 	public void doContextChanges(MouseEvent mapElement)
+		throws MapConnectionException, MapDataException
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges(" + mapElement + ")");
 		
@@ -98,6 +101,7 @@ public abstract class MapStrategy
 	 * @param point new point
 	 */
 	protected void leftMousePressed(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException 
 	{//empty
 	}
 
@@ -107,6 +111,7 @@ public abstract class MapStrategy
 	 * @param point new point
 	 */
 	protected void leftMouseDragged(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException 
 	{//empty
 	}
 
@@ -116,6 +121,7 @@ public abstract class MapStrategy
 	 * @param point new point
 	 */
 	protected void leftMouseReleased(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{//empty
 	}
 }

@@ -1,6 +1,7 @@
 classes
 docs
 lib
+model
 .classpath
 .project
 *.deploy

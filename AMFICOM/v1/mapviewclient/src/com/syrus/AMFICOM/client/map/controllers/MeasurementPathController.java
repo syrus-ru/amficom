@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.6 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.7 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,8 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
@@ -45,7 +47,7 @@ import java.util.Iterator;
 /**
  * Контроллер топологическиго пути.
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController
@@ -101,6 +103,7 @@ public final class MeasurementPathController extends AbstractLinkController
 	 * {@inheritDoc}
 	 */
 	public boolean isElementVisible(MapElement mapElement, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		if(! (mapElement instanceof MeasurementPath))
 			return false;
@@ -171,6 +174,7 @@ public final class MeasurementPathController extends AbstractLinkController
 	 * {@inheritDoc}
 	 */
 	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		if(! (mapElement instanceof MeasurementPath))
 			return;
@@ -203,6 +207,7 @@ public final class MeasurementPathController extends AbstractLinkController
 	 * @param selectionVisible рисовать рамку выделения
 	 */
 	public void paint(MeasurementPath mpath, Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color, boolean selectionVisible)
+		throws MapConnectionException, MapDataException
 	{
 		if(!isElementVisible(mpath, visibleBounds))
 			return;
@@ -221,6 +226,7 @@ public final class MeasurementPathController extends AbstractLinkController
 	 * котораый входит в путь.
 	 */
 	public boolean isMouseOnElement(MapElement mapElement, Point currentMousePoint)
+		throws MapConnectionException, MapDataException
 	{
 		if(! (mapElement instanceof MeasurementPath))
 			return false;

@@ -1,5 +1,5 @@
 /**
- * $Id: ShowNodesCommand.java,v 1.7 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: ShowNodesCommand.java,v 1.8 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,37 +15,33 @@ import javax.swing.AbstractButton;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 
 /**
  * Команда включения/выключения режима отображения топологических узлов на карте 
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
-public class ShowNodesCommand extends VoidCommand
+public class ShowNodesCommand extends MapNavigateCommand
 {
-	LogicalNetLayer logicalNetLayer;
 	AbstractButton button;
-	ApplicationModel aModel;
 
 	public ShowNodesCommand(LogicalNetLayer logicalNetLayer)
 	{
-		this.logicalNetLayer = logicalNetLayer;
+		super(logicalNetLayer);
 	}
 
 	public void setParameter(String field, Object value)
 	{
-		if(field.equals("logicalNetLayer"))
-			this.logicalNetLayer = (LogicalNetLayer )value;
+		super.setParameter(field, value);
 		if(field.equals("button"))
 			this.button = (AbstractButton )value;
-		if(field.equals("applicationModel"))
-			this.aModel = (ApplicationModel )value;
 	}
 
 	Icon visibleIcon = new ImageIcon("images/nodes_visible.gif");
@@ -68,6 +64,16 @@ public class ShowNodesCommand extends VoidCommand
 		this.aModel.setSelected(MapApplicationModel.MODE_NODES, 
 				MapPropertiesManager.isShowPhysicalNodes());
 		this.aModel.fireModelChanged();
-		this.logicalNetLayer.repaint(false);
+		try {
+			this.logicalNetLayer.repaint(false);
+		} catch(MapConnectionException e) {
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
+		}
 	}
 }

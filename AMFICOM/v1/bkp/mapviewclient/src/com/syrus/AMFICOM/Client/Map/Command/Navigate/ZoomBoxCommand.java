@@ -1,5 +1,5 @@
 /**
- * $Id: ZoomBoxCommand.java,v 1.7 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: ZoomBoxCommand.java,v 1.8 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,36 +11,23 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import java.awt.Cursor;
+
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 
-import java.awt.Cursor;
-
 /**
  * Команда включения/выключения масштабирования по выбранной области 
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
-public class ZoomBoxCommand extends VoidCommand
+public class ZoomBoxCommand extends MapNavigateCommand
 {
-	LogicalNetLayer logicalNetLayer;
-	ApplicationModel aModel;
-	
 	public ZoomBoxCommand(LogicalNetLayer logicalNetLayer)
 	{
-		this.logicalNetLayer = logicalNetLayer;
-	}
-
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("logicalNetLayer"))
-			this.logicalNetLayer = (LogicalNetLayer )value;
-		if(field.equals("applicationModel"))
-			this.aModel = (ApplicationModel )value;
+		super(logicalNetLayer);
 	}
 
 	public void execute()

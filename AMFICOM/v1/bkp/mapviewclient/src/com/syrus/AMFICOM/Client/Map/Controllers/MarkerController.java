@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.9 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: MarkerController.java,v 1.10 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,7 +13,9 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.Marker;
@@ -42,7 +44,7 @@ import javax.swing.ImageIcon;
 /**
  *  онтроллер маркера.
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public class MarkerController extends AbstractNodeController
@@ -125,6 +127,7 @@ public class MarkerController extends AbstractNodeController
 	 * {@inheritDoc}
 	 */
 	public void paint(MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		if(needInit)
 		{
@@ -144,6 +147,7 @@ public class MarkerController extends AbstractNodeController
 	 * @return рпассто€ние
 	 */
 	public double startToThis(Marker marker)
+		throws MapConnectionException, MapDataException
 	{
 		DoublePoint from = marker.getStartNode().getLocation();
 		DoublePoint to = marker.getLocation();
@@ -159,6 +163,7 @@ public class MarkerController extends AbstractNodeController
 	 * @return рассто€ние
 	 */
 	public double endToThis(Marker marker)
+		throws MapConnectionException, MapDataException
 	{
 		DoublePoint from = marker.getEndNode().getLocation();
 		DoublePoint to = marker.getLocation();
@@ -174,6 +179,7 @@ public class MarkerController extends AbstractNodeController
 	 * @return рассто€ние
 	 */
 	public double getPhysicalDistanceFromLeft(Marker marker)
+		throws MapConnectionException, MapDataException
 	{
 		double kd = marker.getCablePath().getKd();
 		double dist = startToThis(marker);
@@ -198,6 +204,7 @@ public class MarkerController extends AbstractNodeController
 	 * @return рассто€ние
 	 */
 	public double getPhysicalDistanceFromRight(Marker marker)
+		throws MapConnectionException, MapDataException
 	{
 		double kd = marker.getCablePath().getKd();
 		double dist = endToThis(marker);
@@ -309,6 +316,7 @@ public class MarkerController extends AbstractNodeController
 	 * @param dist рассто€ние
 	 */
 	public void moveToFromStartLo(Marker marker, double dist)
+		throws MapConnectionException, MapDataException
 	{
 		if(marker.getPathDecompositor() == null)
 			moveToFromStartLf(marker, dist);
@@ -323,6 +331,7 @@ public class MarkerController extends AbstractNodeController
 	 * @param physicalDistance рассто€ние
 	 */
 	public void moveToFromStartLf(Marker marker, double physicalDistance)
+		throws MapConnectionException, MapDataException
 	{
 		marker.setDistance(physicalDistance);
 		
@@ -374,6 +383,7 @@ public class MarkerController extends AbstractNodeController
 	 * @param node начальный узел
 	 */
 	public void setRelativeToNode(Marker marker, AbstractNode node)
+		throws MapConnectionException, MapDataException
 	{
 		marker.setStartNode(node);
 
@@ -405,6 +415,7 @@ public class MarkerController extends AbstractNodeController
 	 * @param physicalDistance физическое рассто€ние
 	 */
 	public void setRelativeToCablePath(Marker marker, double physicalDistance)
+		throws MapConnectionException, MapDataException
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 
@@ -451,6 +462,7 @@ public class MarkerController extends AbstractNodeController
 	 * @param screenDistance экранное рассто€ние
 	 */
 	public void adjustPosition(Marker marker, double screenDistance)
+		throws MapConnectionException, MapDataException
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 

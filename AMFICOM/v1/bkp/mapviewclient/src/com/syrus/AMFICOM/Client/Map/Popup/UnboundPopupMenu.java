@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteNodeCommandBundle;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -83,7 +85,20 @@ public class UnboundPopupMenu extends MapPopupMenu
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
-		getLogicalNetLayer().repaint(false);
+		try
+		{
+			getLogicalNetLayer().repaint(false);
+		}
+		catch(MapConnectionException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch(MapDataException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	void bind()
@@ -96,7 +111,20 @@ public class UnboundPopupMenu extends MapPopupMenu
 			this.logicalNetLayer.getCommandList().add(command);
 			this.logicalNetLayer.getCommandList().execute();
 
-			getLogicalNetLayer().repaint(false);
+			try
+			{
+				getLogicalNetLayer().repaint(false);
+			}
+			catch(MapConnectionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch(MapDataException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.24 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: MapFrame.java,v 1.25 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,8 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -79,7 +81,7 @@ import com.syrus.AMFICOM.scheme.corba.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.24 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.25 $, $Date: 2005/02/18 12:19:46 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -114,12 +116,14 @@ public class MapFrame extends JInternalFrame
 	protected static MapFrame singleton;
 
 	protected MapFrame(ApplicationContext aContext)
+		throws MapConnectionException, MapDataException
 	{
 		this();
 		setContext(aContext);
 	}
 	
 	public MapFrame()
+		throws MapConnectionException, MapDataException
 	{
 		super();
 
@@ -134,9 +138,8 @@ public class MapFrame extends JInternalFrame
 		mapConnection.connect();
 
 		this.mapViewer = NetMapViewer.create(MapPropertiesManager.getNetMapViewerClassName());
-
-		this.mapViewer.init();
 		this.mapViewer.setConnection(mapConnection);
+		this.mapViewer.init();
 
 		try
 		{
@@ -371,9 +374,9 @@ public class MapFrame extends JInternalFrame
 	}
 
 	public void setMapView( MapView mapView)
+		throws MapConnectionException, MapDataException
 	{
 		getMapViewer().getLogicalNetLayer().setMapView(mapView);
-
 	}
 
 	 void setMap( Map map)
@@ -384,7 +387,6 @@ public class MapFrame extends JInternalFrame
 	public void closeMap()
 	{
 		System.out.println("Closing map");
-//		setMapView(null);
 		setContext(null);
 	}
 

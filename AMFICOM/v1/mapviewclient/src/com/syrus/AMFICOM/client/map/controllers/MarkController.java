@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.6 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: MarkController.java,v 1.7 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,9 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -35,7 +37,7 @@ import javax.swing.ImageIcon;
 /**
  * Контроллер метки.
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public final class MarkController extends AbstractNodeController
@@ -102,6 +104,7 @@ public final class MarkController extends AbstractNodeController
 	 * {@inheritDoc}
 	 */
 	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		if(!(mapElement instanceof Mark))
 			return;
@@ -153,6 +156,7 @@ public final class MarkController extends AbstractNodeController
 	 * @param mark метка
 	 */
 	public void updateSizeInDoubleLt(Mark mark)
+		throws MapConnectionException, MapDataException
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 		
@@ -178,6 +182,7 @@ public final class MarkController extends AbstractNodeController
 	 * @param topologicalDistance топологическая дистанция
 	 */
 	public void moveToFromStartLt(Mark mark, double topologicalDistance)
+		throws MapConnectionException, MapDataException
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 
@@ -224,6 +229,7 @@ public final class MarkController extends AbstractNodeController
 	 * @param screenDistance экранное расстояние
 	 */
 	public void adjustPosition(Mark mark, double screenDistance)
+		throws MapConnectionException, MapDataException
 	{
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 

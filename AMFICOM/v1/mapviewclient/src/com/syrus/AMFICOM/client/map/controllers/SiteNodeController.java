@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeController.java,v 1.3 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: SiteNodeController.java,v 1.4 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,9 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -23,7 +25,7 @@ import java.awt.geom.Rectangle2D;
 /**
  * Контроллер сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public class SiteNodeController extends AbstractNodeController
@@ -67,6 +69,7 @@ public class SiteNodeController extends AbstractNodeController
 	 * {@inheritDoc}
 	 */
 	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		if(!(mapElement instanceof SiteNode))
 			return;

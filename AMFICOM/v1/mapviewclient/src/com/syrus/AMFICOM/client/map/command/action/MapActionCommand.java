@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommand.java,v 1.4 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: MapActionCommand.java,v 1.5 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.map.MapElementState;
 /**
  *  
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public class MapActionCommand extends VoidCommand
@@ -39,6 +39,8 @@ public class MapActionCommand extends VoidCommand
 
 	LogicalNetLayer logicalNetLayer = null;
 	ApplicationContext aContext = null;
+
+	protected Throwable exception = null;
 	
 	public MapActionCommand(int action)
 	{
@@ -67,5 +69,15 @@ public class MapActionCommand extends VoidCommand
 			this.logicalNetLayer = (LogicalNetLayer )value;
 		if(field.equals("applicationContext"))
 			this.aContext = (ApplicationContext )value;
+	}
+
+	public Throwable getException()
+	{
+		return this.exception;
+	}
+	
+	public void setException(Throwable exception)
+	{
+		this.exception = exception;
 	}
 }

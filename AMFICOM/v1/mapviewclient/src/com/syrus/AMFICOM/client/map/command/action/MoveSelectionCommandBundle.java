@@ -1,5 +1,5 @@
 /**
- * $Id: MoveSelectionCommandBundle.java,v 1.7 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: MoveSelectionCommandBundle.java,v 1.8 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,8 @@ import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Mark;
@@ -24,7 +26,7 @@ import com.syrus.AMFICOM.map.Mark;
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public class MoveSelectionCommandBundle extends MapActionCommandBundle
@@ -125,10 +127,18 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	 */
 	protected void setShift()
 	{
-		DoublePoint sp = this.logicalNetLayer.convertScreenToMap(this.startPoint);
-		DoublePoint ep = this.logicalNetLayer.convertScreenToMap(this.endPoint);
-		this.deltaX = ep.getX() - sp.getX();
-		this.deltaY = ep.getY() - sp.getY();
+		try {
+			DoublePoint sp = this.logicalNetLayer.convertScreenToMap(this.startPoint);
+			DoublePoint ep = this.logicalNetLayer.convertScreenToMap(this.endPoint);
+			this.deltaX = ep.getX() - sp.getX();
+			this.deltaY = ep.getY() - sp.getY();
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.11 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.12 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import java.awt.Point;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
@@ -74,6 +75,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	}
 
 	void createSiteToSite(AbstractNode endNode)
+		throws Throwable
 	{
 		PhysicalLink physicalLink = null;
 		NodeLink nodeLink = null;
@@ -89,6 +91,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	}
 
 	void createSiteToNewNode(DoublePoint mapEndPoint)
+		throws Throwable
 	{
 		PhysicalLink physicalLink = null;
 		NodeLink nodeLink = null;
@@ -106,6 +109,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	}
 
 	void createSiteToNode(TopologicalNode endNode)
+		throws Throwable
 	{
 		PhysicalLink physicalLink = null;
 		NodeLink nodeLink = null;
@@ -130,6 +134,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	}
 
 	void createNodeToSite(SiteNode endNode)
+		throws Throwable
 	{
 		// существующая физическая линия завершается на узле site
 
@@ -158,6 +163,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	}
 
 	void createNodeToNewNode(DoublePoint mapEndPoint)
+		throws Throwable
 	{
 		PhysicalLink physicalLink = null;
 		NodeLink nodeLink = null;
@@ -186,6 +192,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	}
 
 	void createNodeToNode(TopologicalNode endNode)
+		throws Throwable
 	{
 		PhysicalLink physicalLink = null;
 		NodeLink nodeLink = null;
@@ -245,106 +252,109 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
-
-		// анализируется элемент в точке, в которой отпущена мышка		
-		MapElement curElementAtPoint = this.logicalNetLayer.getMapElementAtPoint(this.endPoint);
-
-		// если мышка отпущена на том же элементе, то линию не рисовать
-		if(curElementAtPoint.equals(this.startNode))
-			return;
-	
-		this.map = this.logicalNetLayer.getMapView().getMap();
-	
-		AbstractNode endNode = null;
-		PhysicalLink physicalLink = null;
-
-		DoublePoint mapEndPoint = this.logicalNetLayer.convertScreenToMap(this.endPoint);
-
-		// если в конечной точке уже есть элемент, проверяем, какой это узел
-		if ( curElementAtPoint != null
-			&& curElementAtPoint instanceof AbstractNode)
+		try
 		{
-			endNode = (AbstractNode )curElementAtPoint;
-
-			// конечный элемент - топологический узел
-			if(endNode instanceof TopologicalNode)
+			Environment.log(
+					Environment.LOG_LEVEL_FINER, 
+					"method call", 
+					getClass().getName(), 
+					"execute()");
+			// анализируется элемент в точке, в которой отпущена мышка		
+			MapElement curElementAtPoint = this.logicalNetLayer.getMapElementAtPoint(this.endPoint);
+			// если мышка отпущена на том же элементе, то линию не рисовать
+			if(curElementAtPoint.equals(this.startNode))
+				return;
+			this.map = this.logicalNetLayer.getMapView().getMap();
+			AbstractNode endNode = null;
+			PhysicalLink physicalLink = null;
+			DoublePoint mapEndPoint = this.logicalNetLayer.convertScreenToMap(this.endPoint);
+			// если в конечной точке уже есть элемент, проверяем, какой это узел
+			if ( curElementAtPoint != null
+				&& curElementAtPoint instanceof AbstractNode)
 			{
-				TopologicalNode mpne = (TopologicalNode )endNode;
-		
-				// если он активный, то есть находится в середине другой линии,
-				// то в той же точке создается новый
-				if(mpne.isActive())
+				endNode = (AbstractNode )curElementAtPoint;
+
+				// конечный элемент - топологический узел
+				if(endNode instanceof TopologicalNode)
 				{
-					// node created with fake physicalLink
-					// should be later updated (e.g. through call to
-					// nodelink.setPhysicalLink or node.setPhysicalLink)
-					endNode = null;
+					TopologicalNode mpne = (TopologicalNode )endNode;
+			
+					// если он активный, то есть находится в середине другой линии,
+					// то в той же точке создается новый
+					if(mpne.isActive())
+					{
+						// node created with fake physicalLink
+						// should be later updated (e.g. through call to
+						// nodelink.setPhysicalLink or node.setPhysicalLink)
+						endNode = null;
 //					endNode = super.createPhysicalNode(mpne.getPhysicalLink(), mapEndPoint);
+					}
+					else
+					// если он - концевой для линии, то замкнуть новый фрагмент
+					// на него (дорисовка существующей линии или объелинение
+					// физических линий)
+					{
+						super.changePhysicalNodeActivity(mpne, true);
+					}
+				}
+			}
+			else
+			// Если в конечной точке нет элемента, то создаем новый конечный 
+			// топологический узел
+			{
+				endNode = null;
+//			endNode = super.createPhysicalNode(mapEndPoint);
+			}
+			if(endNode == null)
+			{
+				if (this.startNode instanceof SiteNode)
+				{
+					createSiteToNewNode(mapEndPoint);
 				}
 				else
-				// если он - концевой для линии, то замкнуть новый фрагмент
-				// на него (дорисовка существующей линии или объелинение
-				// физических линий)
+				if (this.startNode instanceof TopologicalNode)
 				{
-					super.changePhysicalNodeActivity(mpne, true);
+					createNodeToNewNode(mapEndPoint);
 				}
 			}
-		}
-		else
-		// Если в конечной точке нет элемента, то создаем новый конечный 
-		// топологический узел
-		{
-			endNode = null;
-//			endNode = super.createPhysicalNode(mapEndPoint);
-		}
-
-		if(endNode == null)
-		{
-			if (this.startNode instanceof SiteNode)
-			{
-				createSiteToNewNode(mapEndPoint);
-			}
 			else
-			if (this.startNode instanceof TopologicalNode)
 			{
-				createNodeToNewNode(mapEndPoint);
+				if (this.startNode instanceof SiteNode 
+					&& endNode instanceof SiteNode )
+				{
+					createSiteToSite(endNode);
+				}
+				else
+				if ( this.startNode instanceof SiteNode
+					&& endNode instanceof TopologicalNode )
+				{
+					createSiteToNode((TopologicalNode )endNode);
+				}
+				else
+				if ( this.startNode instanceof TopologicalNode
+					&& endNode instanceof SiteNode )
+				{
+					createNodeToSite((SiteNode )endNode);
+				}
+				else
+				if ( this.startNode instanceof TopologicalNode 
+					&& endNode instanceof TopologicalNode )
+				{
+					createNodeToNode((TopologicalNode )endNode);
+				}
 			}
-		}
-		else
-		{
-			if (this.startNode instanceof SiteNode 
-				&& endNode instanceof SiteNode )
-			{
-				createSiteToSite(endNode);
-			}
-			else
-			if ( this.startNode instanceof SiteNode
-				&& endNode instanceof TopologicalNode )
-			{
-				createSiteToNode((TopologicalNode )endNode);
-			}
-			else
-			if ( this.startNode instanceof TopologicalNode
-				&& endNode instanceof SiteNode )
-			{
-				createNodeToSite((SiteNode )endNode);
-			}
-			else
-			if ( this.startNode instanceof TopologicalNode 
-				&& endNode instanceof TopologicalNode )
-			{
-				createNodeToNode((TopologicalNode )endNode);
-			}
-		}
-		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-//		this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
+			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+			//		this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
 //				physicalLink, 
 //				MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-		this.logicalNetLayer.notifySchemeEvent(physicalLink);
+			this.logicalNetLayer.notifySchemeEvent(physicalLink);
+			setResult(Command.RESULT_OK);
+		}
+		catch(Throwable e)
+		{
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
+		}
 	}
 }

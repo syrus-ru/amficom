@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.8 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.9 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
  * убрать кабельный путь с привязкой из карты
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -47,26 +48,27 @@ public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				getClass().getName(), 
 				"execute()");
 
-		SchemeCableLink scl = this.cablePath.getSchemeCableLink();
-		scl.cableChannelingItems(null);//.clear();
-		
-		List ccis = new LinkedList();
-
-		for(Iterator it = this.cablePath.getLinks().iterator(); it.hasNext();)
-		{
-			PhysicalLink link = (PhysicalLink)it.next();
-			if(link instanceof UnboundLink)
-				continue;
-			ccis.add(this.cablePath.getBinding().getCCI(link));
+		try {
+			SchemeCableLink scl = this.cablePath.getSchemeCableLink();
+			scl.cableChannelingItems(null);//.clear();
+			List ccis = new LinkedList();
+			for(Iterator it = this.cablePath.getLinks().iterator(); it.hasNext();)
+			{
+				PhysicalLink link = (PhysicalLink)it.next();
+				if(link instanceof UnboundLink)
+					continue;
+				ccis.add(this.cablePath.getBinding().getCCI(link));
 //			scl.channelingItems.add(cablePath.getBinding().getCCI(link));
+			}
+			scl.cableChannelingItems((CableChannelingItem [])ccis.toArray(new CableChannelingItem [0]));
+			super.removeCablePathLinks(this.cablePath);
+			super.removeCablePath(this.cablePath);
+			// операция закончена - оповестить слушателей
+			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		} catch(Throwable e) {
+			setResult(Command.RESULT_NO);
+			setException(e);
+			e.printStackTrace();
 		}
-		scl.cableChannelingItems((CableChannelingItem [])ccis.toArray(new CableChannelingItem [0]));
-
-		super.removeCablePathLinks(this.cablePath);
-
-		super.removeCablePath(this.cablePath);
-
-		// операция закончена - оповестить слушателей
-		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 }

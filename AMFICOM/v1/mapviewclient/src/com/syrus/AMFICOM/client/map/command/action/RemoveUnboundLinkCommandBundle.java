@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveUnboundLinkCommandBundle.java,v 1.6 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: RemoveUnboundLinkCommandBundle.java,v 1.7 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 
@@ -18,7 +19,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
  * удаление неприв€занно линии из карты, включа€ элементы, из
  * которых она состоит
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public class RemoveUnboundLinkCommandBundle extends MapActionCommandBundle
@@ -43,7 +44,13 @@ public class RemoveUnboundLinkCommandBundle extends MapActionCommandBundle
 				getClass().getName(), 
 				"execute()");
 
-		super.removeUnboundLink(this.unbound);
+		try {
+			super.removeUnboundLink(this.unbound);
+		} catch(Throwable e) {
+			setResult(Command.RESULT_NO);
+			setException(e);
+			e.printStackTrace();
+		}
 	}
 
 }

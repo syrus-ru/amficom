@@ -1,5 +1,5 @@
 /**
- * $Id: MeasureDistanceCommand.java,v 1.5 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MeasureDistanceCommand.java,v 1.6 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,36 +11,23 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import java.awt.Cursor;
+
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 
-import java.awt.Cursor;
-
 /**
  * Команда включения/выключения масштабирования по выбранной области 
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
-public class MeasureDistanceCommand extends VoidCommand
+public class MeasureDistanceCommand extends MapNavigateCommand
 {
-	LogicalNetLayer logicalNetLayer;
-	ApplicationModel aModel;
-	
 	public MeasureDistanceCommand(LogicalNetLayer logicalNetLayer)
 	{
-		this.logicalNetLayer = logicalNetLayer;
-	}
-
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("logicalNetLayer"))
-			this.logicalNetLayer = (LogicalNetLayer )value;
-		if(field.equals("applicationModel"))
-			this.aModel = (ApplicationModel )value;
+		super(logicalNetLayer);
 	}
 
 	public void execute()

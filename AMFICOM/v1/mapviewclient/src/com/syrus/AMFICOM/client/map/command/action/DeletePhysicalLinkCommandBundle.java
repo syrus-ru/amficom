@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.11 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.12 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
@@ -34,7 +35,7 @@ import java.util.List;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
@@ -70,48 +71,52 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 		if(this.link.isRemoved())
 			return;
 
-		MapView mapView = this.logicalNetLayer.getMapView();
-		this.map = mapView.getMap();
-		
-		List cablePathsToScan = mapView.getCablePaths(this.link);
+		setResult(Command.RESULT_OK);
 
-		this.link.sortNodes();
-		
-		/// удаляются все топологические узлы линии
-		for(Iterator it = this.link.getSortedNodes().iterator(); it.hasNext();)
+		try
 		{
-			AbstractNode ne = (AbstractNode)it.next();
-			if(ne instanceof TopologicalNode)
+			MapView mapView = this.logicalNetLayer.getMapView();
+			this.map = mapView.getMap();
+			List cablePathsToScan = mapView.getCablePaths(this.link);
+			this.link.sortNodes();
+			/// удаляются все топологические узлы линии
+			for(Iterator it = this.link.getSortedNodes().iterator(); it.hasNext();)
 			{
-				TopologicalNode node = (TopologicalNode)ne;
-				super.removeNode(node);
+				AbstractNode ne = (AbstractNode)it.next();
+				if(ne instanceof TopologicalNode)
+				{
+					TopologicalNode node = (TopologicalNode)ne;
+					super.removeNode(node);
+				}
 			}
+			// удаляются все фрагменты линии
+			for(Iterator it = this.link.getNodeLinks().iterator(); it.hasNext();)
+			{
+				NodeLink nodeLink = (NodeLink)it.next();
+				super.removeNodeLink(nodeLink);
+			}
+			// удаляется сама линия
+			super.removePhysicalLink(this.link);
+			// проверяются все кабельные пути, которые проходили по удаленной линии,
+			// и прохождение по ней заменяется непривязанной связью
+			for(Iterator it = cablePathsToScan.iterator(); it.hasNext();)
+			{
+				CablePath cablePath = (CablePath)it.next();
+				
+				cablePath.removeLink(this.link);
+				UnboundLink unbound = super.createUnboundLinkWithNodeLink(
+						this.link.getStartNode(),
+						this.link.getEndNode());
+				unbound.setCablePath(cablePath);
+				cablePath.addLink(unbound, CableController.generateCCI(unbound));
+			}
+			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 		}
-		
-		// удаляются все фрагменты линии
-		for(Iterator it = this.link.getNodeLinks().iterator(); it.hasNext();)
+		catch(Throwable e)
 		{
-			NodeLink nodeLink = (NodeLink)it.next();
-			super.removeNodeLink(nodeLink);
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
 		}
-		
-		// удаляется сама линия
-		super.removePhysicalLink(this.link);
-		
-		// проверяются все кабельные пути, которые проходили по удаленной линии,
-		// и прохождение по ней заменяется непривязанной связью
-		for(Iterator it = cablePathsToScan.iterator(); it.hasNext();)
-		{
-			CablePath cablePath = (CablePath)it.next();
-			
-			cablePath.removeLink(this.link);
-			UnboundLink unbound = super.createUnboundLinkWithNodeLink(
-					this.link.getStartNode(),
-					this.link.getEndNode());
-			unbound.setCablePath(cablePath);
-			cablePath.addLink(unbound, CableController.generateCCI(unbound));
-		}
-
-		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 }

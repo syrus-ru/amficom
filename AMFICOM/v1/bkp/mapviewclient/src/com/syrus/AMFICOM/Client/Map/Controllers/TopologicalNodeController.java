@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.9 2005/02/07 16:09:26 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.10 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,9 @@
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -32,7 +34,7 @@ import javax.swing.ImageIcon;
 /**
  * Контроллер топологического узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/07 16:09:26 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public class TopologicalNodeController extends AbstractNodeController
@@ -203,6 +205,7 @@ public class TopologicalNodeController extends AbstractNodeController
 	 * {@inheritDoc}
 	 */
 	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		if(!(mapElement instanceof TopologicalNode))
 			return;

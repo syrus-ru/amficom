@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.8 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.9 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,8 @@ import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -42,7 +44,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController
@@ -98,16 +100,17 @@ public class NodeTypeController extends AbstractNodeController
 	 * {@inheritDoc}
 	 * Suppress since SiteNodeType is not really a Map Element
 	 */
-	public boolean isSelectionVisible(MapElement me)
-	{
-		throw new UnsupportedOperationException();
-	}
+//	public boolean isSelectionVisible(MapElement me)
+//	{
+//		throw new UnsupportedOperationException();
+//	}
 
 	/**
 	 * {@inheritDoc}
 	 * Suppress since SiteNodeType is not really a Map Element
 	 */
 	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -117,6 +120,7 @@ public class NodeTypeController extends AbstractNodeController
 	 * Suppress since SiteNodeType is not really a Map Element
 	 */
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -126,6 +130,7 @@ public class NodeTypeController extends AbstractNodeController
 	 * Suppress since SiteNodeType is not really a Map Element
 	 */
 	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
+		throws MapConnectionException, MapDataException
 	{
 		throw new UnsupportedOperationException();
 	}

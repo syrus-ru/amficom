@@ -1,5 +1,5 @@
 /**
- * $Id: ZoomOutCommand.java,v 1.4 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: ZoomOutCommand.java,v 1.5 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,37 +11,37 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 
 /**
  * Команда "Отдалить вид со стандартным коэффициентом" 
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
-public class ZoomOutCommand extends VoidCommand
+public class ZoomOutCommand extends MapNavigateCommand
 {
-	LogicalNetLayer logicalNetLayer;
-	ApplicationModel aModel;
-	
 	public ZoomOutCommand(LogicalNetLayer logicalNetLayer)
 	{
-		this.logicalNetLayer = logicalNetLayer;
-	}
-
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("logicalNetLayer"))
-			this.logicalNetLayer = (LogicalNetLayer )value;
-		if(field.equals("applicationModel"))
-			this.aModel = (ApplicationModel )value;
+		super(logicalNetLayer);
 	}
 
 	public void execute()
 	{
-		this.logicalNetLayer.zoomOut();
-		this.logicalNetLayer.repaint(true);
+		try {
+			this.logicalNetLayer.zoomOut();
+			this.logicalNetLayer.repaint(true);
+		} catch(MapConnectionException e) {
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
+		}
 	}
 }

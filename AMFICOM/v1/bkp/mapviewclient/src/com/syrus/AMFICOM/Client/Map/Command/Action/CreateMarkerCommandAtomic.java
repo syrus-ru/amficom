@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.14 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.15 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ import java.awt.Point;
 import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
  * Команда создания метки на линии
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public class CreateMarkerCommandAtomic extends MapActionCommand
@@ -71,71 +72,77 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
-
-		if ( !getLogicalNetLayer().getContext().getApplicationModel()
-				.isEnabled(MapApplicationModel.ACTION_USE_MARKER))
-			return;
-
-		this.mapView = this.logicalNetLayer.getMapView();
-
-		AbstractNode node = this.path.getStartNode();
-		this.path.sortPathElements();
-		List nodeLinks = this.path.getSortedNodeLinks();
-		for(Iterator it = nodeLinks.iterator(); it.hasNext();)
+		try
 		{
-			NodeLink mnle = (NodeLink)it.next();
-
-			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(mnle);
-			MeasurementPathController mpc = (MeasurementPathController )getLogicalNetLayer().getMapViewController().getController(this.path);
-
-			if(nlc.isMouseOnElement(mnle, this.point))
+			Environment.log(
+					Environment.LOG_LEVEL_FINER, 
+					"method call", 
+					getClass().getName(), 
+					"execute()");
+			if ( !getLogicalNetLayer().getContext().getApplicationModel()
+					.isEnabled(MapApplicationModel.ACTION_USE_MARKER))
+				return;
+			this.mapView = this.logicalNetLayer.getMapView();
+			AbstractNode node = this.path.getStartNode();
+			this.path.sortPathElements();
+			List nodeLinks = this.path.getSortedNodeLinks();
+			for(Iterator it = nodeLinks.iterator(); it.hasNext();)
 			{
-				DoublePoint dpoint = this.logicalNetLayer.convertScreenToMap(this.point);
+				NodeLink mnle = (NodeLink)it.next();
 
-				try
+				NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(mnle);
+				MeasurementPathController mpc = (MeasurementPathController )getLogicalNetLayer().getMapViewController().getController(this.path);
+
+				if(nlc.isMouseOnElement(mnle, this.point))
 				{
-					this.marker = Marker.createInstance(
-							this.logicalNetLayer.getUserId(),
-							this.mapView, 
-							node,
-							mnle.getOtherNode(node),
-							mnle,
-							this.path,
-							mpc.getMonitoredElement(this.path).getId(),
-							dpoint);
+					DoublePoint dpoint = this.logicalNetLayer.convertScreenToMap(this.point);
 
-					this.mapView.addMarker(this.marker);
+					try
+					{
+						this.marker = Marker.createInstance(
+								this.logicalNetLayer.getUserId(),
+								this.mapView, 
+								node,
+								mnle.getOtherNode(node),
+								mnle,
+								this.path,
+								mpc.getMonitoredElement(this.path).getId(),
+								dpoint);
 
-					MarkerController mc = (MarkerController )
-							getLogicalNetLayer().getMapViewController().getController(this.marker);
+						this.mapView.addMarker(this.marker);
 
-					mc.updateScaleCoefficient(this.marker);
+						MarkerController mc = (MarkerController )
+								getLogicalNetLayer().getMapViewController().getController(this.marker);
 
-					mc.notifyMarkerCreated(this.marker);
+						mc.updateScaleCoefficient(this.marker);
+
+						mc.notifyMarkerCreated(this.marker);
+					}
+					catch (ApplicationException e)
+					{
+						e.printStackTrace();
+					}
+
+					break;
 				}
-				catch (ApplicationException e)
-				{
-					e.printStackTrace();
-				}
+				nlc.updateLengthLt(mnle);
 
-				break;
+				node = mnle.getOtherNode(node);
 			}
-			nlc.updateLengthLt(mnle);
-
-			node = mnle.getOtherNode(node);
+			// операция закончена - оповестить слушателей
+			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+			this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
+						this.marker,
+						MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			this.logicalNetLayer.setCurrentMapElement(this.marker);
+			setResult(Command.RESULT_OK);
 		}
-
-		// операция закончена - оповестить слушателей
-		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-		this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-					this.marker,
-					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-		this.logicalNetLayer.setCurrentMapElement(this.marker);
+		catch(Exception e)
+		{
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
+		}
 	}
 	
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.16 2005/02/10 11:48:40 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.17 2005/02/18 12:19:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,6 +28,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.16 $, $Date: 2005/02/10 11:48:40 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/18 12:19:47 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -266,7 +267,7 @@ public final class MapToolBar extends JToolBar
 					mod.setModal(true);
 					mod.setVisible(true);
 					if(mod.getReturnCode() == MapOptionsDialog.RET_OK)
-						getLogicalNetLayer().repaint(false);
+						getLogicalNetLayer().getContext().getDispatcher().notify(new MapEvent(this, MapEvent.NEED_REPAINT));
 				}
 			}); 
 		this.optionsButton.setToolTipText(LangModelMap.getString("Options"));

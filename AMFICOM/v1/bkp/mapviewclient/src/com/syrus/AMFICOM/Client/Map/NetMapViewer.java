@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.6 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.7 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import javax.swing.JComponent;
  * Для того, чтобы получить компонент, содержащий в себе отображение 
  * картографии, следует вызвать метод {@link #getComponent()}
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  * @see com.syrus.AMFICOM.Client.Map.ObjectFX.OfxNetMapViewer 
  * @see com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer
@@ -45,19 +45,22 @@ public abstract class NetMapViewer
 	 * Отобразить указанный вид кортографии.
 	 * @param dataBasePath путь к базе картографии
 	 * @param dataBaseView вид в базе картографии
+	 * @deprecated all func should be contained in {@link #setConnection(MapConnection)}
 	 */
-	public abstract void setMap(String dataBasePath, String dataBaseView);
+//	public abstract void setMap(String dataBasePath, String dataBaseView);
 	
 	/**
 	 * Закрывает сессию и соединение с картой.
+	 * @deprecated all func should be contained in {@link #setConnection(MapConnection)}
 	 */
-	public abstract void closeMap();
+//	public abstract void closeMap();
 	
 	/**
 	 * Установить соединение с хранилищем топографической информации.
 	 * @param conn соежинение
 	 */
-	public abstract void setConnection(MapConnection conn);
+	public abstract void setConnection(MapConnection conn)
+		throws MapDataException;
 	
 	/**
 	 * Получить соединение с хранилищем топографической информации.
@@ -96,6 +99,7 @@ public abstract class NetMapViewer
 	 * @see com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer#init()
 	 */	
 	public void init()
+		throws MapDataException
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "init()");
 	}
@@ -130,20 +134,24 @@ public abstract class NetMapViewer
 	/**
 	 * Получить список названий доступных видов.
 	 * @return Список видов &lt;{@link String}&gt;
+	 * @deprecated use {@link MapConnection#getAvailableViews()}
 	 */
-	public abstract List getAvailableViews();
+//	public abstract List getAvailableViews()
+//		throws MapDataException;
 	
 	/**
 	 * Установить вид.
 	 * @param dataBaseView вид
+	 * @deprecated all func should be contained in {@link #setConnection(MapConnection)}
 	 */
-	public abstract void setView(String dataBaseView);
+//	public abstract void setView(String dataBaseView);
 
 	/**
 	 * Получить список географических слоев.
 	 * @return список слоев &lt;{@link SpatialLayer}&gt;
 	 */
-	public abstract List getLayers();
+	public abstract List getLayers()
+		throws MapDataException;
 	
 	/**
 	 * Создает объект вьюера.
@@ -151,6 +159,7 @@ public abstract class NetMapViewer
 	 * @return объект вьюера
 	 */
 	public static NetMapViewer create(String viewerClass)
+		throws MapDataException
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call NetMapViewer.create()");
 
@@ -163,14 +172,17 @@ public abstract class NetMapViewer
 		catch(ClassNotFoundException cnfe)
 		{
 			cnfe.printStackTrace();
+			throw new MapDataException("NetMapViewer.create() throws ClassNotFoundException");
 		}
 		catch(InstantiationException ie)
 		{
 			ie.printStackTrace();
+			throw new MapDataException("NetMapViewer.create() throws InstantiationException");
 		}
 		catch(IllegalAccessException iae)
 		{
 			iae.printStackTrace();
+			throw new MapDataException("NetMapViewer.create() throws IllegalAccessException");
 		}
 		return mapViewer;
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.19 2005/02/09 11:41:45 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.20 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,8 @@
 
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
@@ -30,7 +32,7 @@ import java.util.Set;
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/02/09 11:41:45 $
+ * @version $Revision: 1.20 $, $Date: 2005/02/18 12:19:46 $
  * @module mapviewclient_v1
  */
 public final class MapVoidElementStrategy extends MapStrategy 
@@ -78,6 +80,7 @@ public final class MapVoidElementStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMousePressed(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 
@@ -91,6 +94,7 @@ public final class MapVoidElementStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMouseDragged(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 		int operationMode = mapState.getOperationMode();
@@ -106,6 +110,7 @@ public final class MapVoidElementStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMouseReleased(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 		int operationMode = mapState.getOperationMode();
@@ -133,6 +138,7 @@ public final class MapVoidElementStrategy extends MapStrategy
 	 * @param selectionRect область выборки в экранных координатах
 	 */
 	protected  void selectElementsInRect(Rectangle selectionRect)
+		throws MapConnectionException, MapDataException
 	{
 //		Map map = super.logicalNetLayer.getMapView().getMap();
 		//Здесь просто проверяется что элемент содержится в прямоугольной области

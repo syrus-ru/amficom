@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.15 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.16 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
  *  Уже существующая привязка сохраняется. По непривязанным элементам 
  *  генерируются сетевые узла и схемные элементы привязываются к ним.
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundle
@@ -75,58 +76,60 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();
 		
-		// для последующего цикла необходима последовательность
-		// узлов от начального к конечному
-		SiteNode startsite = (SiteNode)this.path.getStartNode();
-		SiteNode endsite = null;
-		
-		// проверить, что узел является сетевым узлом (если это непривязанный
-		// элемент, сгенерировать на его месте сетевой узел)
-		startsite = this.checkSite(startsite);
-
-		// отдельный список, поскольку используется удаление
-		List list  = new LinkedList();
-		list.addAll(this.path.getLinks());
-
-		// цикл по всем линиям, участвующим в кабельном пути
-		// по непривязанным линиям генерировать тоннели
-		for(Iterator it = list.iterator(); it.hasNext();)
-		{
-			PhysicalLink link = (PhysicalLink)it.next();
-
-			// перейти к следующему узлу
-			if(startsite == link.getEndNode())
-				endsite = (SiteNode)link.getStartNode();
-			else
-				endsite = (SiteNode)link.getEndNode();
-
+		try {
+			// для последующего цикла необходима последовательность
+			// узлов от начального к конечному
+			SiteNode startsite = (SiteNode)this.path.getStartNode();
+			SiteNode endsite = null;
 			// проверить, что узел является сетевым узлом (если это непривязанный
 			// элемент, сгенерировать на его месте сетевой узел)
-			endsite = this.checkSite(endsite);
-
-			// если непривязанная линия, генерировать тоннель
-			if(link instanceof UnboundLink)
+			startsite = this.checkSite(startsite);
+			// отдельный список, поскольку используется удаление
+			List list  = new LinkedList();
+			list.addAll(this.path.getLinks());
+			// цикл по всем линиям, участвующим в кабельном пути
+			// по непривязанным линиям генерировать тоннели
+			for(Iterator it = list.iterator(); it.hasNext();)
 			{
-				this.path.removeLink(link);
-				UnboundLink un = (UnboundLink)link;
-				super.removePhysicalLink(un);
+				PhysicalLink link = (PhysicalLink)it.next();
 
-				link = super.createPhysicalLink(startsite, endsite);
-				// фрагменты переносятся в новый сгенерированный тоннель
-				for(Iterator it2 = un.getNodeLinks().iterator(); it2.hasNext();)
+				// перейти к следующему узлу
+				if(startsite == link.getEndNode())
+					endsite = (SiteNode)link.getStartNode();
+				else
+					endsite = (SiteNode)link.getEndNode();
+
+				// проверить, что узел является сетевым узлом (если это непривязанный
+				// элемент, сгенерировать на его месте сетевой узел)
+				endsite = this.checkSite(endsite);
+
+				// если непривязанная линия, генерировать тоннель
+				if(link instanceof UnboundLink)
 				{
-					NodeLink mnle = (NodeLink)it2.next();
-					mnle.setPhysicalLink(link);
-					link.addNodeLink(mnle);
+					this.path.removeLink(link);
+					UnboundLink un = (UnboundLink)link;
+					super.removePhysicalLink(un);
+
+					link = super.createPhysicalLink(startsite, endsite);
+					// фрагменты переносятся в новый сгенерированный тоннель
+					for(Iterator it2 = un.getNodeLinks().iterator(); it2.hasNext();)
+					{
+						NodeLink mnle = (NodeLink)it2.next();
+						mnle.setPhysicalLink(link);
+						link.addNodeLink(mnle);
+					}
+					this.path.addLink(link, CableController.generateCCI(link));
+					link.getBinding().add(this.path);
 				}
-				this.path.addLink(link, CableController.generateCCI(link));
-				link.getBinding().add(this.path);
+
+				startsite = endsite;
 			}
-
-			startsite = endsite;
+			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		} catch(Throwable e) {
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
 		}
-
-		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 
 	/**

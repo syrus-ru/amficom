@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeElementCommand.java,v 1.9 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: UnPlaceSchemeElementCommand.java,v 1.10 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -20,7 +21,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 /**
  * убрать привязку схемного элемента с карты
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public class UnPlaceSchemeElementCommand extends MapActionCommandBundle
@@ -50,14 +51,17 @@ public class UnPlaceSchemeElementCommand extends MapActionCommandBundle
 
 		this.mapView = this.logicalNetLayer.getMapView();
 
-		if(this.node instanceof UnboundNode)
-			super.removeNode(this.node);
-
-		this.schemeElement.siteNodeImpl(null);
-
-		this.logicalNetLayer.getMapViewController().scanCables(this.schemeElement.scheme());
-
-		// операция закончена - оповестить слушателей
-		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		try {
+			if(this.node instanceof UnboundNode)
+				super.removeNode(this.node);
+			this.schemeElement.siteNodeImpl(null);
+			this.logicalNetLayer.getMapViewController().scanCables(this.schemeElement.scheme());
+			// операция закончена - оповестить слушателей
+			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		} catch(Throwable e) {
+			setResult(Command.RESULT_NO);
+			setException(e);
+			e.printStackTrace();
+		}
 	}
 }

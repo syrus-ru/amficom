@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.21 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.22 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,8 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -53,7 +55,7 @@ import javax.swing.JDesktopPane;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.22 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public class MapImportCommand extends ImportCommand
@@ -135,6 +137,16 @@ public class MapImportCommand extends ImportCommand
 			}
 	
 			setResult(Command.RESULT_OK);
+		}
+		catch (MapConnectionException e)
+		{
+			e.printStackTrace();
+			setResult(Command.RESULT_NO);
+		}
+		catch (MapDataException e)
+		{
+			e.printStackTrace();
+			setResult(Command.RESULT_NO);
 		}
 		catch (DatabaseException e)
 		{

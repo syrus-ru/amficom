@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.9 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.10 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,8 @@ import java.util.List;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -45,7 +47,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController
@@ -133,6 +135,7 @@ public final class LinkTypeController extends AbstractLinkController
 	 * Suppress since PhysicalLinkType is not really a Map Element
 	 */
 	public boolean isElementVisible(MapElement mapElement, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -142,6 +145,7 @@ public final class LinkTypeController extends AbstractLinkController
 	 * Suppress since PhysicalLinkType is not really a Map Element
 	 */
 	public void paint(MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -151,6 +155,7 @@ public final class LinkTypeController extends AbstractLinkController
 	 * Suppress since PhysicalLinkType is not really a Map Element
 	 */
 	public boolean isMouseOnElement(MapElement mapElement, Point currentMousePoint)
+		throws MapConnectionException, MapDataException
 	{
 		throw new UnsupportedOperationException();
 	}

@@ -10,6 +10,8 @@ import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.MapElement;
@@ -141,7 +143,20 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();
 
-		getLogicalNetLayer().repaint(false);
+		try
+		{
+			getLogicalNetLayer().repaint(false);
+		}
+		catch(MapConnectionException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch(MapDataException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	void insertSite()
@@ -156,7 +171,20 @@ public final class SelectionPopupMenu extends MapPopupMenu
 				super.insertSiteInPlaceOfANode(node, proto);
 			}
 
-			getLogicalNetLayer().repaint(false);
+			try
+			{
+				getLogicalNetLayer().repaint(false);
+			}
+			catch(MapConnectionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch(MapDataException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -220,7 +248,20 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		{
 			super.addLinksToCollector(collector, this.selection.getElements());
 
-			getLogicalNetLayer().repaint(false);
+			try
+			{
+				getLogicalNetLayer().repaint(false);
+			}
+			catch(MapConnectionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch(MapDataException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 		}
@@ -233,7 +274,20 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		{
 			super.addLinksToCollector(collector, this.selection.getElements());
 			
-			getLogicalNetLayer().repaint(false);
+			try
+			{
+				getLogicalNetLayer().repaint(false);
+			}
+			catch(MapConnectionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch(MapDataException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 		}
@@ -251,7 +305,20 @@ public final class SelectionPopupMenu extends MapPopupMenu
 			}
 		}
 		
-		getLogicalNetLayer().repaint(false);
+		try
+		{
+			getLogicalNetLayer().repaint(false);
+		}
+		catch(MapConnectionException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch(MapDataException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
@@ -269,7 +336,20 @@ public final class SelectionPopupMenu extends MapPopupMenu
 			}
 		}
 
-		getLogicalNetLayer().repaint(false);
+		try
+		{
+			getLogicalNetLayer().repaint(false);
+		}
+		catch(MapConnectionException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch(MapDataException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}

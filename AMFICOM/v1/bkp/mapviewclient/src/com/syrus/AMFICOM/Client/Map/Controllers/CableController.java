@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.5 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: CableController.java,v 1.6 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,8 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
@@ -42,7 +44,7 @@ import java.util.Iterator;
  * Контроллер кабеля.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController
@@ -118,6 +120,7 @@ public final class CableController extends AbstractLinkController
 	 * {@inheritDoc}
 	 */
 	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		if(! (me instanceof CablePath))
 			return false;
@@ -188,6 +191,7 @@ public final class CableController extends AbstractLinkController
 	 * {@inheritDoc}
 	 */
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		if(! (me instanceof CablePath))
 			return;
@@ -221,6 +225,7 @@ public final class CableController extends AbstractLinkController
 	 * @param selectionVisible рисовать рамку выделения
 	 */
 	public void paint(CablePath cpath, Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color, boolean selectionVisible)
+		throws MapConnectionException, MapDataException
 	{
 		if(!isElementVisible(cpath, visibleBounds))
 			return;
@@ -239,6 +244,7 @@ public final class CableController extends AbstractLinkController
 	 * которая входит в кабель.
 	 */
 	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
+		throws MapConnectionException, MapDataException
 	{
 		if(! (me instanceof CablePath))
 			return false;
@@ -291,6 +297,7 @@ public final class CableController extends AbstractLinkController
 	 * @return дистанция топологическая
 	 */
 	public double getDistanceFromStartLt(CablePath cpath, Point pt)
+		throws MapConnectionException, MapDataException
 	{
 		double distance = 0.0;
 
@@ -325,6 +332,7 @@ public final class CableController extends AbstractLinkController
 	 * @return дистанция физическая
 	 */
 	public double getDistanceFromStartLf(CablePath cpath, Point pt)
+		throws MapConnectionException, MapDataException
 	{
 		double kd = cpath.getKd();
 		return getDistanceFromStartLt(cpath, pt) * kd;

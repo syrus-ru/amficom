@@ -1,5 +1,5 @@
 /**
- * $Id: MapModeCommand.java,v 1.12 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapModeCommand.java,v 1.13 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,40 +11,31 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import java.util.Iterator;
+
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
-import java.util.Iterator;
 
 /**
  * Команда переключения режима работы с картой - режимы фрагмента, линии, пути 
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
-public class MapModeCommand extends VoidCommand
+public class MapModeCommand extends MapNavigateCommand
 {
-	LogicalNetLayer logicalNetLayer;
-	ApplicationModel aModel;
-
 	String modeString;
 	int mode;
 	
 	public MapModeCommand(LogicalNetLayer logicalNetLayer, String modeString, int mode)
 	{
-		this.logicalNetLayer = logicalNetLayer;
+		super(logicalNetLayer);
 		this.modeString = modeString;
 		this.mode = mode;
-	}
-
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("logicalNetLayer"))
-			this.logicalNetLayer = (LogicalNetLayer )value;
-		if(field.equals("applicationModel"))
-			this.aModel = (ApplicationModel )value;
 	}
 
 	public void execute()
@@ -73,7 +64,17 @@ public class MapModeCommand extends VoidCommand
 				this.aModel.fireModelChanged();
 	
 				this.logicalNetLayer.getMapState().setShowMode(this.mode);
-				this.logicalNetLayer.repaint(false);
+				try {
+					this.logicalNetLayer.repaint(false);
+				} catch(MapConnectionException e) {
+					setException(e);
+					setResult(Command.RESULT_NO);
+					e.printStackTrace();
+				} catch(MapDataException e) {
+					setException(e);
+					setResult(Command.RESULT_NO);
+					e.printStackTrace();
+				}
 			}
 		}
 	}

@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundLinkToPhysicalLinkCommandBundle;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.UnboundLink;
@@ -77,7 +79,20 @@ public class UnboundLinkPopupMenu extends MapPopupMenu
 			this.logicalNetLayer.getCommandList().add(command);
 			this.logicalNetLayer.getCommandList().execute();
 
-			getLogicalNetLayer().repaint(false);
+			try
+			{
+				getLogicalNetLayer().repaint(false);
+			}
+			catch(MapConnectionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch(MapDataException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

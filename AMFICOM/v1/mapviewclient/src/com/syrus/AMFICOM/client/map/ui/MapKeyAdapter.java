@@ -1,5 +1,5 @@
 /**
- * $Id: MapKeyAdapter.java,v 1.4 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: MapKeyAdapter.java,v 1.5 2005/02/18 12:19:47 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -12,6 +12,8 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapState;
 
 import java.awt.event.KeyAdapter;
@@ -21,7 +23,7 @@ import java.awt.event.KeyEvent;
  * обработчик событий клавиатуры в окне карты. »спользуетс€ дл€ изменени€ 
  * режима обработки действий (SHIFT, ALT, CTRL) и дл€ удалени€ выбранных 
  * элементов (DEL)
- * @version $Revision: 1.4 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/18 12:19:47 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -59,17 +61,25 @@ public final class MapKeyAdapter extends KeyAdapter
 			}
 //		}
 
-		if (code == KeyEvent.VK_DELETE)
-		{
-			this.logicalNetLayer.delete();
-		}
-		if(ke.isControlDown() && code == KeyEvent.VK_Z)
-		{
-			this.logicalNetLayer.undo();
-		}
-		if(ke.isControlDown() && code == KeyEvent.VK_Y)
-		{
-			this.logicalNetLayer.redo();
+		try {
+			if (code == KeyEvent.VK_DELETE)
+			{
+				this.logicalNetLayer.delete();
+			}
+			if(ke.isControlDown() && code == KeyEvent.VK_Z)
+			{
+				this.logicalNetLayer.undo();
+			}
+			if(ke.isControlDown() && code == KeyEvent.VK_Y)
+			{
+				this.logicalNetLayer.redo();
+			}
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

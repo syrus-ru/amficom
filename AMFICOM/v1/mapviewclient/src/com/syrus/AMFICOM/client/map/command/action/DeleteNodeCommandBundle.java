@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.17 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.18 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
@@ -37,7 +38,7 @@ import java.util.List;
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -61,6 +62,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	 * Удалить узел сети
 	 */
 	protected void deleteSite(SiteNode site)
+		throws Throwable
 	{
 		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 		{
@@ -202,6 +204,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	 * удаление топологического узла
 	 */
 	public void deletePhysicalNode(TopologicalNode topologicalNode)
+		throws Throwable
 	{
 		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 			return;
@@ -348,6 +351,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	 * удаляемый элемент
 	 */
 	protected void deleteUnbound(UnboundNode unbound)
+		throws Throwable
 	{
 		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))
 			return;
@@ -372,6 +376,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	 * Удалить метку на физической линии
 	 */
 	public void deleteMark(Mark mark)
+		throws Throwable
 	{
 		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 			return;
@@ -383,6 +388,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	 * Удалить маркер
 	 */
 	public void deleteMarker(Marker marker)
+		throws Throwable
 	{
 		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_USE_MARKER))
 			return;
@@ -406,33 +412,38 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			
 		this.map = this.logicalNetLayer.getMapView().getMap();
 		
-		//В зависимости от того какого типа node и от флагов разрешения удаляем
-		if ( this.node instanceof UnboundNode)
-		{
-			this.deleteUnbound((UnboundNode)this.node);
+		try {
+			//В зависимости от того какого типа node и от флагов разрешения удаляем
+			if ( this.node instanceof UnboundNode)
+			{
+				this.deleteUnbound((UnboundNode)this.node);
+			}
+			else
+			if ( this.node instanceof SiteNode)
+			{
+				this.deleteSite((SiteNode)this.node);
+			}
+			else
+			if ( this.node instanceof TopologicalNode)
+			{
+				this.deletePhysicalNode((TopologicalNode)this.node);
+			}
+			else
+			if ( this.node instanceof Mark)
+			{
+				this.deleteMark((Mark)this.node);
+			}
+			else
+			if ( this.node instanceof Marker)
+			{
+				this.deleteMarker((Marker)this.node);
+			}
+			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		} catch(Throwable e) {
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
 		}
-		else
-		if ( this.node instanceof SiteNode)
-		{
-			this.deleteSite((SiteNode)this.node);
-		}
-		else
-		if ( this.node instanceof TopologicalNode)
-		{
-			this.deletePhysicalNode((TopologicalNode)this.node);
-		}
-		else
-		if ( this.node instanceof Mark)
-		{
-			this.deleteMark((Mark)this.node);
-		}
-		else
-		if ( this.node instanceof Marker)
-		{
-			this.deleteMarker((Marker)this.node);
-		}
-
-		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 	}
 
 }

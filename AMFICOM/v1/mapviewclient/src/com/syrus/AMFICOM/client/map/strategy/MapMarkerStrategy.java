@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.19 2005/02/09 11:41:45 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.20 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,9 @@ package com.syrus.AMFICOM.Client.Map.Strategy;
 
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Map.UI.MotionDescriptor;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -28,7 +30,7 @@ import java.awt.Point;
  * Стратегия управления маркером.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/02/09 11:41:45 $
+ * @version $Revision: 1.20 $, $Date: 2005/02/18 12:19:46 $
  * @module mapviewclient_v1
  */
 public final class MapMarkerStrategy extends MapStrategy 
@@ -71,6 +73,7 @@ public final class MapMarkerStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMousePressed(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 
@@ -93,6 +96,7 @@ public final class MapMarkerStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMouseDragged(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		MarkerController mc = (MarkerController)super.logicalNetLayer.getMapViewController().getController(this.marker);
 
@@ -165,6 +169,7 @@ public final class MapMarkerStrategy extends MapStrategy
 	 * {@inheritDoc}
 	 */
 	protected void leftMouseReleased(MapState mapState, Point point)
+		throws MapConnectionException, MapDataException
 	{
 		int actionMode = mapState.getActionMode();
 

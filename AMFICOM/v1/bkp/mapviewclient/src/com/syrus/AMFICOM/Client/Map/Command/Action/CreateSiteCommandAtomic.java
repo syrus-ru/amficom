@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomic.java,v 1.11 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.12 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import java.awt.Point;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public class CreateSiteCommandAtomic extends MapActionCommand
@@ -79,48 +80,49 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 
 	public void execute()
 	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"execute()");
-
-		if ( !getLogicalNetLayer().getContext().getApplicationModel()
-				.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
-			return;
-		
-		if(this.coordinatePoint == null)
-			this.coordinatePoint = this.logicalNetLayer.convertScreenToMap(this.point);
-		
-		this.map = this.logicalNetLayer.getMapView().getMap();
-
-		// создать новый узел
 		try
 		{
-			this.site = SiteNode.createInstance(
-					this.logicalNetLayer.getUserId(),
-					this.coordinatePoint,
-					this.proto);
+			Environment.log(
+					Environment.LOG_LEVEL_FINER, 
+					"method call", 
+					getClass().getName(), 
+					"execute()");
+			if ( !getLogicalNetLayer().getContext().getApplicationModel()
+					.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
+				return;
+			if(this.coordinatePoint == null)
+				this.coordinatePoint = this.logicalNetLayer.convertScreenToMap(this.point);
+			this.map = this.logicalNetLayer.getMapView().getMap();
+			// создать новый узел
+			try
+			{
+				this.site = SiteNode.createInstance(
+						this.logicalNetLayer.getUserId(),
+						this.coordinatePoint,
+						this.proto);
+			}
+			catch (CreateObjectException e)
+			{
+				e.printStackTrace();
+			}
+			SiteNodeController snc = (SiteNodeController)getLogicalNetLayer().getMapViewController().getController(this.site);
+			snc.updateScaleCoefficient(this.site);
+			this.map.addNode(this.site);
+			// операция закончена - оповестить слушателей
+			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+			this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
+						this.site, 
+						MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			this.logicalNetLayer.setCurrentMapElement(this.site);
+			this.logicalNetLayer.notifySchemeEvent(this.site);
+			setResult(Command.RESULT_OK);
 		}
-		catch (CreateObjectException e)
+		catch(Exception e)
 		{
+			setException(e);
+			setResult(Command.RESULT_NO);
 			e.printStackTrace();
 		}
-
-		SiteNodeController snc = (SiteNodeController)getLogicalNetLayer().getMapViewController().getController(this.site);
-		
-		snc.updateScaleCoefficient(this.site);
-
-		this.map.addNode(this.site);
-		
-		// операция закончена - оповестить слушателей
-		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-		this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-					this.site, 
-					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-		this.logicalNetLayer.setCurrentMapElement(this.site);
-		this.logicalNetLayer.notifySchemeEvent(this.site);
-
 	}
 	
 	public void undo()

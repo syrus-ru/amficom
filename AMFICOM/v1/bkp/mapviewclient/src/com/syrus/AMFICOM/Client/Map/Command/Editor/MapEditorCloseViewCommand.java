@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorCloseViewCommand.java,v 1.9 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapEditorCloseViewCommand.java,v 1.10 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,8 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapCloseCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
@@ -31,7 +33,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * класс использует команду MapCloseCommand для закрытия карты, после чего
  * генерирует событие закрытия
  * 
- * @version $Revision: 1.9 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/18 12:19:45 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapCloseCommand
@@ -71,10 +73,17 @@ public class MapEditorCloseViewCommand extends VoidCommand
 
 		MapView mapView = cmd2.getMapView();
 
-        mapFrame.setMapView(mapView);
-
-		this.dispatcher.notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
-		setResult(Command.RESULT_OK);
+        try {
+			mapFrame.setMapView(mapView);
+			this.dispatcher.notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
+			setResult(Command.RESULT_OK);
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.14 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.15 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,8 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
@@ -41,7 +43,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/18 12:19:46 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -126,14 +128,22 @@ public final class MapDropTargetListener implements DropTargetListener
 		{
 			if(site instanceof UnboundNode)
 			{
-				this.logicalNetLayer.deselectAll();
-				site.setSelected(true);
-				Point pt = this.logicalNetLayer.convertMapToScreen(site.getLocation());
-				MoveSelectionCommandBundle cmd = new MoveSelectionCommandBundle(pt);
-				cmd.setLogicalNetLayer(this.logicalNetLayer);
-				cmd.setParameter(MoveSelectionCommandBundle.END_POINT, point);
-				this.logicalNetLayer.getCommandList().add(cmd);
-				this.logicalNetLayer.getCommandList().execute();
+				try {
+					this.logicalNetLayer.deselectAll();
+					site.setSelected(true);
+					Point pt = this.logicalNetLayer.convertMapToScreen(site.getLocation());
+					MoveSelectionCommandBundle cmd = new MoveSelectionCommandBundle(pt);
+					cmd.setLogicalNetLayer(this.logicalNetLayer);
+					cmd.setParameter(MoveSelectionCommandBundle.END_POINT, point);
+					this.logicalNetLayer.getCommandList().add(cmd);
+					this.logicalNetLayer.getCommandList().execute();
+				} catch(MapConnectionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch(MapDataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			else
 			{

@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.12 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.13 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import java.awt.Point;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement;
  * или по координатам
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeElementCommand extends MapActionCommandBundle
@@ -90,40 +91,43 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 				.isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))
 			return;
 		
-		// если географическая точка не задана, получить ее из экранной точки
-		if(this.coordinatePoint == null)
-			this.coordinatePoint = this.logicalNetLayer.convertScreenToMap(this.point);
-		
-		MapView mapView = this.logicalNetLayer.getMapView();
-		this.map = mapView.getMap();
-
-		this.site = mapView.findElement(this.schemeElement);
-		if(this.site == null)
-		{
-			MapElement mapElement = this.logicalNetLayer.getMapElementAtPoint(this.point);
-			
-			if(mapElement instanceof SiteNode
-				&& !(mapElement instanceof UnboundNode))
+		try {
+			// если географическая точка не задана, получить ее из экранной точки
+			if(this.coordinatePoint == null)
+				this.coordinatePoint = this.logicalNetLayer.convertScreenToMap(this.point);
+			MapView mapView = this.logicalNetLayer.getMapView();
+			this.map = mapView.getMap();
+			this.site = mapView.findElement(this.schemeElement);
+			if(this.site == null)
 			{
-				this.site = (SiteNode )mapElement;
-				this.schemeElement.siteNodeImpl(this.site);
+				MapElement mapElement = this.logicalNetLayer.getMapElementAtPoint(this.point);
+				
+				if(mapElement instanceof SiteNode
+					&& !(mapElement instanceof UnboundNode))
+				{
+					this.site = (SiteNode )mapElement;
+					this.schemeElement.siteNodeImpl(this.site);
+				}
+				else
+				{
+					this.unbound = super.createUnboundNode(this.coordinatePoint, this.schemeElement);
+					this.site = this.unbound;
+				}
+				
+				this.logicalNetLayer.getMapViewController().scanCables(this.schemeElement.scheme());
 			}
-			else
-			{
-				this.unbound = super.createUnboundNode(this.coordinatePoint, this.schemeElement);
-				this.site = this.unbound;
-			}
-			
-			this.logicalNetLayer.getMapViewController().scanCables(this.schemeElement.scheme());
+			// операция закончена - оповестить слушателей
+			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+			this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
+					this.site, 
+					MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			this.logicalNetLayer.setCurrentMapElement(this.site);
+			this.logicalNetLayer.notifySchemeEvent(this.site);
+		} catch(Throwable e) {
+			setResult(Command.RESULT_NO);
+			setException(e);
+			e.printStackTrace();
 		}
-
-		// операция закончена - оповестить слушателей
-		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
-		this.logicalNetLayer.sendMapEvent(new MapNavigateEvent(
-				this.site, 
-				MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-		this.logicalNetLayer.setCurrentMapElement(this.site);
-		this.logicalNetLayer.notifySchemeEvent(this.site);
 
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLinkController.java,v 1.3 2005/02/03 16:24:01 krupenn Exp $
+ * $Id: UnboundLinkController.java,v 1.4 2005/02/18 12:19:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,8 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.map.MapElement;
@@ -23,7 +25,7 @@ import java.awt.geom.Rectangle2D;
 /**
  * Контроллер элемента непривязанной линии (участка непривязанного кабеля). 
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/02/03 16:24:01 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/18 12:19:46 $
  * @module mapviewclient_v1
  */
 public final class UnboundLinkController extends PhysicalLinkController
@@ -82,6 +84,7 @@ public final class UnboundLinkController extends PhysicalLinkController
 	 * {@inheritDoc}
 	 */
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		if(! (me instanceof UnboundLink))
 			return;

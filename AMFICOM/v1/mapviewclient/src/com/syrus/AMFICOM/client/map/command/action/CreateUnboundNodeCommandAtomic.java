@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundNodeCommandAtomic.java,v 1.10 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: CreateUnboundNodeCommandAtomic.java,v 1.11 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Controllers.UnboundNodeController;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement;
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclietn_v1
  */
 public class CreateUnboundNodeCommandAtomic extends MapActionCommand
@@ -81,18 +82,20 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 				this.coordinatePoint,
 				this.map,
 				this.logicalNetLayer.getUnboundProto());
+			
+			UnboundNodeController unc = (UnboundNodeController)getLogicalNetLayer().getMapViewController().getController(this.unbound);
+
+			unc.updateScaleCoefficient(this.unbound);
+		
+			this.map.addNode(this.unbound);
+			setResult(Command.RESULT_OK);
 		}
 		catch (CreateObjectException e)
 		{
+			setException(e);
+			setResult(Command.RESULT_NO);
 			e.printStackTrace();
-			return;
 		}
-	
-		UnboundNodeController unc = (UnboundNodeController)getLogicalNetLayer().getMapViewController().getController(this.unbound);
-
-		unc.updateScaleCoefficient(this.unbound);
-	
-		this.map.addNode(this.unbound);
 	}
 	
 	public void undo()

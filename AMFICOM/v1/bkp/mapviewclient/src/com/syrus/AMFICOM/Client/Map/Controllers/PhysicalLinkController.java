@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.7 2005/02/07 16:09:26 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.8 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,9 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -37,7 +39,7 @@ import java.util.Iterator;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/07 16:09:26 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  */
 public class PhysicalLinkController extends AbstractLinkController
@@ -141,6 +143,7 @@ public class PhysicalLinkController extends AbstractLinkController
 	 * {@inheritDoc}
 	 */
 	public boolean isElementVisible(MapElement mapElement, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		if(! (mapElement instanceof PhysicalLink))
 			return false;
@@ -166,6 +169,7 @@ public class PhysicalLinkController extends AbstractLinkController
 	 * {@inheritDoc}
 	 */
 	public void paint (MapElement mapElement, Graphics g, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException, MapDataException
 	{
 		if(! (mapElement instanceof PhysicalLink))
 			return;
@@ -204,6 +208,7 @@ public class PhysicalLinkController extends AbstractLinkController
 			Stroke stroke, 
 			Color color, 
 			boolean selectionVisible)
+		throws MapConnectionException, MapDataException
 	{
 		if(!isElementVisible(link, visibleBounds))
 			return;
@@ -267,6 +272,7 @@ public class PhysicalLinkController extends AbstractLinkController
 	 * {@inheritDoc}
 	 */
 	public boolean isMouseOnElement(MapElement mapElement, Point currentMousePoint)
+		throws MapConnectionException, MapDataException
 	{
 		if(! (mapElement instanceof PhysicalLink))
 			return false;
@@ -290,6 +296,7 @@ public class PhysicalLinkController extends AbstractLinkController
 	 * @param link линия
 	 */
 	public void updateLengthLt(PhysicalLink link)
+		throws MapConnectionException, MapDataException
 	{
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{

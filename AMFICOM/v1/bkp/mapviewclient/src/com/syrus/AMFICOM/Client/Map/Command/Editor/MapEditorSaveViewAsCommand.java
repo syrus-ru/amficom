@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveViewAsCommand.java,v 1.8 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapEditorSaveViewAsCommand.java,v 1.9 2005/02/18 12:19:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,9 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewSaveAsCommand;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
@@ -22,6 +25,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 import java.util.Iterator;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 
 /**
  * Класс $RCSfile: MapEditorSaveViewAsCommand.java,v $ используется для сохранения топологической схемы в модуле
@@ -29,7 +33,7 @@ import javax.swing.JDesktopPane;
  * MapSaveAsCommand
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/18 12:19:45 $
  * @module mapviewclient_v1
  * @see MapViewSaveAsCommand
  */
@@ -58,13 +62,13 @@ public class MapEditorSaveViewAsCommand extends VoidCommand
 			setResult(Command.RESULT_NO);
 			return;
 		}
-		MapViewSaveAsCommand mvsac = new MapViewSaveAsCommand(mapFrame.getMapView(), this.aContext);
+		MapViewSaveAsCommand saveAsCommand = new MapViewSaveAsCommand(mapFrame.getMapView(), this.aContext);
 
-		mvsac.execute();
+		saveAsCommand.execute();
 		
-		if(mvsac.getResult() == RESULT_OK)
+		if(saveAsCommand.getResult() == RESULT_OK)
 		{
-			MapView newMapView = mvsac.getNewMapView();
+			MapView newMapView = saveAsCommand.getNewMapView();
 			MapView oldMapView = mapFrame.getMapView();
 			
 			MapViewController controller = mapFrame.getMapViewer()
@@ -72,7 +76,18 @@ public class MapEditorSaveViewAsCommand extends VoidCommand
 
 			if (mapFrame != null)
 			{
-				controller.setMapView(newMapView);
+				try {
+					controller.setMapView(newMapView);
+				} catch(Exception e) {
+					JOptionPane.showMessageDialog(
+							Environment.getActiveWindow(),
+							"Map View saved, but failed to open it in Map Frame",
+							"Map View SaveAs Command",
+							JOptionPane.WARNING_MESSAGE);
+					setResult(Command.RESULT_OK);
+					e.printStackTrace();
+					return;
+				}
 			
 				controller.setMap(oldMapView.getMap());
 				

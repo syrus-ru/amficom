@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.13 2005/02/08 15:11:08 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.14 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.map.Map;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 /**
  *  Команда привязывания непривязанного элемента к узлу.
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/02/08 15:11:08 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
@@ -65,63 +66,56 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 				getClass().getName(), 
 				"execute()");
 
-		MapView mapView = this.logicalNetLayer.getMapView();
-		this.map = mapView.getMap();
-		
-		// список кабельных путей, включающий привязываемый элемент
-		List cablePaths = mapView.getCablePaths(this.unbound);
-		
-		// обновляются концевые узлы кабельных путей
-		for(Iterator it = cablePaths.iterator(); it.hasNext();)
+		try
 		{
-			CablePath cp = (CablePath)it.next();
-			if(cp.getEndNode().equals(this.unbound))
-				cp.setEndNode(this.site);
-			if(cp.getStartNode().equals(this.unbound))
-				cp.setStartNode(this.site);
-		}
+			MapView mapView = this.logicalNetLayer.getMapView();
+			this.map = mapView.getMap();
+			// список кабельных путей, включающий привязываемый элемент
+			List cablePaths = mapView.getCablePaths(this.unbound);
+			// обновляются концевые узлы кабельных путей
+			for(Iterator it = cablePaths.iterator(); it.hasNext();)
+			{
+				CablePath cp = (CablePath)it.next();
+				if(cp.getEndNode().equals(this.unbound))
+					cp.setEndNode(this.site);
+				if(cp.getStartNode().equals(this.unbound))
+					cp.setStartNode(this.site);
+			}
+			//При привязывании меняются концевые узлы линий и фрагментов линий
+			for(Iterator it = this.unbound.getNodeLinks().iterator(); it.hasNext();)
+			{
+				NodeLink nodeLink = (NodeLink)it.next();
+				PhysicalLink physicalLink = nodeLink.getPhysicalLink();
 
-//		// обновляются концевые узлы путей измерений
-//		for(Iterator it = mapView.getMeasurementPaths(unbound).iterator(); it.hasNext();)
-//		{
-//			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
-//			if(mp.getEndNode() == unbound)
-//				mp.setEndNode(site);
-//			if(mp.getStartNode() == unbound)
-//				mp.setStartNode(site);
-//		}
+				MapElementState pls = nodeLink.getState();
+						
+				if(nodeLink.getEndNode().equals(this.unbound))
+					nodeLink.setEndNode(this.site);
+				if(nodeLink.getStartNode().equals(this.unbound))
+					nodeLink.setStartNode(this.site);
 
-		//При привязывании меняются концевые узлы линий и фрагментов линий
-		for(Iterator it = this.unbound.getNodeLinks().iterator(); it.hasNext();)
-		{
-			NodeLink nodeLink = (NodeLink)it.next();
-			PhysicalLink physicalLink = nodeLink.getPhysicalLink();
-
-			MapElementState pls = nodeLink.getState();
+				super.registerStateChange(nodeLink, pls, nodeLink.getState());
 					
-			if(nodeLink.getEndNode().equals(this.unbound))
-				nodeLink.setEndNode(this.site);
-			if(nodeLink.getStartNode().equals(this.unbound))
-				nodeLink.setStartNode(this.site);
+				MapElementState pls2 = physicalLink.getState();
 
-			super.registerStateChange(nodeLink, pls, nodeLink.getState());
-				
-			MapElementState pls2 = physicalLink.getState();
+				if(physicalLink.getEndNode().equals(this.unbound))
+					physicalLink.setEndNode(this.site);
+				if(physicalLink.getStartNode().equals(this.unbound))
+					physicalLink.setStartNode(this.site);
 
-			if(physicalLink.getEndNode().equals(this.unbound))
-				physicalLink.setEndNode(this.site);
-			if(physicalLink.getStartNode().equals(this.unbound))
-				physicalLink.setStartNode(this.site);
-
-			super.registerStateChange(physicalLink, pls2, physicalLink.getState());
-		}//while(e.hasNext())
-
-		super.removeNode(this.unbound);
-
-		SchemeElement se = this.unbound.getSchemeElement();
-		se.siteNodeImpl(this.site);
-
-		this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+				super.registerStateChange(physicalLink, pls2, physicalLink.getState());
+			}//while(e.hasNext())
+			super.removeNode(this.unbound);
+			SchemeElement se = this.unbound.getSchemeElement();
+			se.siteNodeImpl(this.site);
+			this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		}
+		catch(Throwable e)
+		{
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
+		}
 	}
 	
 }

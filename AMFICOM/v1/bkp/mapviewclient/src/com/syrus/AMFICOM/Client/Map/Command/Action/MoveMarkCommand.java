@@ -1,5 +1,5 @@
 /**
- * $Id: MoveMarkCommand.java,v 1.8 2005/02/08 15:11:09 krupenn Exp $
+ * $Id: MoveMarkCommand.java,v 1.9 2005/02/18 12:19:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,10 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Controllers.MarkController;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Mark;
@@ -20,7 +23,7 @@ import com.syrus.AMFICOM.map.Mark;
  * Команда перемещения метки. вызывает только функцию "обновить состояние 
  * местоположения"
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/08 15:11:09 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/18 12:19:44 $
  * @module mapviewclient_v1
  */
 public class MoveMarkCommand extends MapActionCommand
@@ -65,19 +68,41 @@ public class MoveMarkCommand extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 
-		this.markController = (MarkController )super.logicalNetLayer.getMapViewController().getController(this.mark);
-
-		this.distance = this.mark.getDistance();
-		this.markController.moveToFromStartLt(this.mark, this.distance);
+		try {
+			this.markController = (MarkController )super.logicalNetLayer.getMapViewController().getController(this.mark);
+			this.distance = this.mark.getDistance();
+			this.markController.moveToFromStartLt(this.mark, this.distance);
+			setResult(Command.RESULT_OK);
+		} catch(Throwable e) {
+			setException(e);
+			setResult(Command.RESULT_NO);
+			e.printStackTrace();
+		}
 	}
 	
 	public void undo()
 	{
-		this.markController.moveToFromStartLt(this.mark, this.distance);
+		try {
+			this.markController.moveToFromStartLt(this.mark, this.distance);
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void redo()
 	{
-		this.markController.moveToFromStartLt(this.mark, this.initialDistance);
+		try {
+			this.markController.moveToFromStartLt(this.mark, this.initialDistance);
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
