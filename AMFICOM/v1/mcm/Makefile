@@ -80,16 +80,36 @@ $(LIBNAME_INTERFACE):	.corba
 		$(addprefix $(SRCDIR)/,$(SOURCES))
 	touch $@
 
-.corba:	$(CLASSDIR)
+.PHONY: idl
+idl: .idl
+
+# Just idl-to-java compilation
+.idl: $(SRCDIR)
 	$(IDLJ) $(IDLJFLAGS) idl/mcm.idl
+	touch $@
+
+
+.PHONY: corba
+corba: .corba
+
+# Compilation of stubs & skeletons
+.corba:	$(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/corba/*.java
 	touch $@
 
+$(SRCDIR):
 $(CLASSDIR):
+$(LIBDIR):
 	mkdir -p $@
+
+
+.PHONY: idlclean
+idlclean:
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/mcm/corba
+	$(RM) .idl
 
 .PHONY:	clean
 clean:	cleanmach cleancorba cleanhead
@@ -108,8 +128,7 @@ cleanhead:
 	
 
 .PHONY:	cleancorba
-cleancorba:
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/mcm/corba
+cleancorba: idlclean
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/mcm/corba
 	$(RM) .corba
 

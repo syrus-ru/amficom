@@ -1,5 +1,6 @@
 .project
 .classpath
+.settings
 .corba
 .mach
 *.jar
@@ -11,6 +12,7 @@
 *.swp
 *.log
 classes
+test
 logs
 cache
 orb.db

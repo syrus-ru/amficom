@@ -11,7 +11,10 @@
 *.log
 .classpath
 .project
+.settings
 classes
 logs
 cache
+test
 .settings
+.idl
