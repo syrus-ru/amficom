@@ -184,12 +184,12 @@ double fc_BREAKL(double *pars, ModelF &mf, int command, void *extra)
 	if (command == MF_CMD_CHANGE_BY_THRESH)
 	{
 		void **args = (void** )(void* )extra;
-		BreakL_ChangeByThresh(mf, *(ThreshArray *)args[1], *(int *)args[0]);
+		BreakL_ChangeByThresh(mf, *(ThreshDXArray *)args[1], *(ThreshDYArray *)args[2], *(int *)args[0]);
 	}
-	if (command == MF_CMD_FIX_THRESH)
-	{
-		BreakL_FixThresh(mf, *(ThreshArray *)extra);
-	}
+	//if (command == MF_CMD_FIX_THRESH)
+	//{
+	//	BreakL_FixThresh(mf, *(ThreshArray *)extra);
+	//}
 	//prf_e();
 	return 0;
 }

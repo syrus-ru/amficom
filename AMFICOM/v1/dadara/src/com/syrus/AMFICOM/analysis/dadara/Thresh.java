@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.2 2005/02/11 12:10:37 saa Exp $
+ * $Id: Thresh.java,v 1.3 2005/02/21 13:39:33 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,78 +13,81 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/02/11 12:10:37 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/21 13:39:33 $
  * @module
  */
 
-public class Thresh
+// пол€ измен€ютс€ также через JNI-методы ModelFunction
+public abstract class Thresh
 {
-	// пол€ измен€ютс€ также через JNI-методы ModelFunction
-	protected int eventId;
-	protected int typeId; // 0: dA, 1: dL+dXL+dXR
-	protected double[] values; // dA or dL values
 	protected final static boolean[] IS_KEY_UPPER = new boolean[] { true, true, false, false }; // используетс€ в native-коде
-	protected int[] dxL; // defined only for L-type; null if not required
-	protected int[] dxR; // defined only for L-type; null if not required
+	protected final static int[] CONJ_KEY = new int[] { 2, 3, 0, 1 };
+
+	protected int eventId0;
+	protected int eventId1;
 	protected int xMin; // внутри xMin..xMax р/г смещаетс€ равномерно, а вне - согласно dA/dL 
 	protected int xMax;
-	private Thresh()
-	{ // empty and very private
-	}
-	protected Thresh(int eventId, int subId, int xMin, int xMax)
+
+	protected Thresh()
 	{
-		this.eventId = eventId;
-		this.typeId = subId;
-		this.values = new double[] { 0.1, 0.2, -0.1, -0.2 }; // defaults -- XXX
-		//this.values = new double[] { 0.0, 0.0, -0.0, -0.0 }; // defaults -- XXX
-		if (subId != 0)
-		{
-			dxL = new int[] { 1, 2, 1, 2 };
-			dxR = new int[] { 1, 2, 1, 2 };
-		}
-		else
-		{
-			dxL = null;
-			dxR = null;
-		}
+	}
+	protected Thresh(int eventId0, int eventId1, int xMin, int xMax)
+	{
+		this.eventId0 = eventId0;
+		this.eventId1 = eventId1;
 		this.xMin = xMin;
 		this.xMax = xMax;
 	}
+
 	public static Thresh readFromDIS(DataInputStream dis)
-	throws IOException
+	throws IOException, SignatureMismatchException
 	{
-		Thresh ret = new Thresh();
-		ret.eventId = dis.readInt();
-		ret.typeId = dis.readByte();
-		ret.values = new double[4];
-		for (int k = 0; k < 4; k++)
-			ret.values[k] = dis.readDouble();
-		for (int k = 0; k < 4; k++)
-			ret.dxL[k] = dis.readInt();
-		for (int k = 0; k < 4; k++)
-			ret.dxR[k] = dis.readInt();
+		Thresh ret = null;
+		switch (dis.readByte())
+		{
+		case 'X':
+			ret = new ThreshDX();
+			break;
+		case 'Y':
+			ret = new ThreshDY();
+			break;
+		default:
+			// XXX: это вообще не очено здорово, что такие эксепшны нигде не лов€тс€ 
+			throw new SignatureMismatchException("Thresh: readFromDIS: Unrecognized format");
+		}
+		ret.eventId0 = dis.readInt();
+		ret.eventId1 = dis.readInt();
 		ret.xMin = dis.readInt();
 		ret.xMax = dis.readInt();
+		ret.readSpecificFromDIS(dis);
 		return ret;
+	}
+
+	protected void readSpecificFromDIS(DataInputStream dis) throws IOException
+	{ // empty
+	}
+	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException
+	{ // empty
 	}
 
 	public void writeToDOS(DataOutputStream dos)
 	throws IOException
 	{
-		dos.writeInt(eventId);
-		dos.writeInt(typeId);
-		for (int k = 0; k < 4; k++)
-			dos.writeDouble(values[k]);
-		for (int k = 0; k < 4; k++)
-			dos.writeInt(dxL[k]);
-		for (int k = 0; k < 4; k++)
-			dos.writeInt(dxR[k]);
+		if (this instanceof ThreshDX)
+			dos.writeByte('X');
+		else if (this instanceof ThreshDY)
+			dos.writeByte('Y');
+		else
+			throw new UnsupportedOperationException("Unknown Thresh implementation");
+		dos.writeInt(eventId0);
+		dos.writeInt(eventId1);
 		dos.writeInt(xMin);
 		dos.writeInt(xMax);
+		writeSpecificToDOS(dos);
 	}
 
 	public static Thresh[] readArrayFromDIS(DataInputStream dis)
-	throws IOException
+	throws IOException, SignatureMismatchException
 	{
 		int len = dis.readInt();
 		Thresh[] ret = new Thresh[len];

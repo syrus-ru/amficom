@@ -9,32 +9,70 @@ ThreshArray::ThreshArray(JNIEnv *env, jobjectArray array)
 	this->array = array;
 	cur_id = -1;
 	cur_obj = 0;
+	arraySize = env->GetArrayLength(array);
+
 	jclass clazz = env->FindClass(CL_Thresh);
 	assert(clazz);
-	arraySize = env->GetArrayLength(array);
 
 	id_x0     = env->GetFieldID(clazz, N_Thresh_x0, S_Thresh_x0);
 	id_x1     = env->GetFieldID(clazz, N_Thresh_x1, S_Thresh_x1);
-	id_type   = env->GetFieldID(clazz, N_Thresh_type, S_Thresh_type);
-	id_values = env->GetFieldID(clazz, N_Thresh_values, S_Thresh_values);
-	id_dxL    = env->GetFieldID(clazz, N_Thresh_dxL, S_Thresh_dxL);
-	id_dxR    = env->GetFieldID(clazz, N_Thresh_dxR, S_Thresh_dxR);
 
-	jfieldID id_UPPER = env->GetStaticFieldID(clazz, N_Thresh_IS_KEY_UPPER, S_Thresh_IS_KEY_UPPER);
-	jbooleanArray ua = (jbooleanArray )env->GetStaticObjectField(clazz, id_UPPER);
-	assert(ua); // массив должен быть уже проинициализирован в Java
-	int key;
-	for (key = 0; key < 4; key++)
 	{
-		jboolean data = JNI_FALSE;
-		env->GetBooleanArrayRegion(ua, key, 1, &data);
-		UPPER[key] = data == JNI_TRUE;
+		jfieldID id_UPPER = env->GetStaticFieldID(clazz, N_Thresh_IS_KEY_UPPER, S_Thresh_IS_KEY_UPPER);
+		jbooleanArray ua = (jbooleanArray )env->GetStaticObjectField(clazz, id_UPPER);
+		assert(ua); // массив должен быть уже проинициализирован в Java
+		int key;
+		for (key = 0; key < 4; key++)
+		{
+			jboolean data = JNI_FALSE;
+			env->GetBooleanArrayRegion(ua, key, 1, &data);
+			UPPER[key] = data == JNI_TRUE;
+		}
+	}
+
+	{
+		jfieldID id_CONJ = env->GetStaticFieldID(clazz, N_Thresh_CONJ_KEY, S_Thresh_CONJ_KEY);
+		jintArray ca = (jintArray )env->GetStaticObjectField(clazz, id_CONJ);
+		assert(ca);
+		int key;
+		for (key = 0; key < 4; key++)
+		{
+			jint data = 0;
+			env->GetIntArrayRegion(ca, key, 1, &data);
+			CONJ[key] = data;
+		}
 	}
 }
 
 ThreshArray::~ThreshArray()
 {
 	free_cur();
+}
+
+ThreshDXArray::~ThreshDXArray()
+{
+}
+
+ThreshDYArray::~ThreshDYArray()
+{
+}
+
+ThreshDYArray::ThreshDYArray(JNIEnv *env, jobjectArray array)
+: ThreshArray(env, array)
+{
+	jclass clazz = env->FindClass(CL_ThreshDY);
+	assert(clazz);
+	id_typeL  = env->GetFieldID(clazz, N_ThreshDY_typeL, S_ThreshDY_typeL);
+	id_values = env->GetFieldID(clazz, N_ThreshDY_values, S_ThreshDY_values);
+}
+
+ThreshDXArray::ThreshDXArray(JNIEnv *env, jobjectArray array)
+: ThreshArray(env, array)
+{
+	jclass clazz = env->FindClass(CL_ThreshDX);
+	assert(clazz);
+	id_dX     = env->GetFieldID(clazz, N_ThreshDX_dX, S_ThreshDX_dX);
+	id_isRise = env->GetFieldID(clazz, N_ThreshDX_isRise, S_ThreshDX_isRise);
 }
 
 void ThreshArray::free_cur()
@@ -84,10 +122,10 @@ int ThreshArray::getX1(int id)
 		return 0;
 }
 
-int ThreshArray::getType(int id)
+int ThreshDYArray::getTypeL(int id)
 {
 	if (selectId(id))
-		return env->GetIntField(cur_obj, id_type);
+		return env->GetBooleanField(cur_obj, id_typeL);
 	else
 	{
 		fprintf(stderr, "getType -- ??\n"); // FIXME
@@ -95,7 +133,7 @@ int ThreshArray::getType(int id)
 	}
 }
 
-double ThreshArray::getValue(int id, int key)
+double ThreshDYArray::getValue(int id, int key)
 {
 	if (!selectId(id))
 		return 0;
@@ -106,11 +144,11 @@ double ThreshArray::getValue(int id, int key)
 	return data;
 }
 
-int ThreshArray::getDxL(int id, int key)
+int ThreshDXArray::getDX(int id, int key)
 {
 	if (!selectId(id))
 		return 0;
-	jintArray dx = (jintArray )env->GetObjectField(cur_obj, id_dxL);
+	jintArray dx = (jintArray )env->GetObjectField(cur_obj, id_dX);
 	if (dx == 0)
 		return 0;
 	long data = 0;
@@ -118,30 +156,20 @@ int ThreshArray::getDxL(int id, int key)
 	return (int )data;
 }
 
-int ThreshArray::getDxR(int id, int key)
+int ThreshDXArray::getIsRise(int id)
 {
 	if (!selectId(id))
 		return 0;
-	jintArray dx = (jintArray )env->GetObjectField(cur_obj, id_dxR);
-	if (dx == 0)
-		return 0;
-	long data = 0;
-	env->GetIntArrayRegion(dx, key, 1, &data);
-	return (int )data;
+	jboolean rise = env->GetBooleanField(cur_obj, id_isRise);
+	return rise;
 }
 
-void ThreshArray::setX0(int id, int x0)
-{
-	if (selectId(id))
-		env->SetIntField(cur_obj, id_x0, x0);
-}
-
-void ThreshArray::setX1(int id, int x1)
-{
-	if (selectId(id))
-		env->SetIntField(cur_obj, id_x1, x1);
-}
 int ThreshArray::isUpper(int key)
 {
 	return UPPER[key];
+}
+
+int ThreshArray::getConjKey(int key)
+{
+	return CONJ[key];
 }

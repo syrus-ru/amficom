@@ -2,8 +2,9 @@
 #include "BreakL-enh.h"
 #include "BreakL-fit.h"
 #include "BreakL-mf.h"
-#include "../Common/prf.h"
-#include "../Common/ModelF.h"
+#include "../common/prf.h"
+#include "../common/ModelF.h"
+#include "../common/ArrList.h"
 
 //#include <stdio.h> // debug
 
@@ -237,15 +238,17 @@ void BreakLSetRegionFromArray(ModelF &mf, int x0, int N, double *yarr)
 	BreakLReplaceRegion(mf, that);
 }
 
-struct COP0
+// the caller should delete 'upd' by himself
+void BreakLUpdateRegionFromArray(ModelF &mf, int x0, int N, double *upd, int isUpper)
 {
-	int x0;
-	int x1;
-	double dy;
-	int type;
-	int dxL;
-	int dxR;
-};
+	double *data = BreakLToArray(mf.getP(), mf.getNPars(), x0, N);
+	int i;
+	for (i = 0; i < N; i++)
+		if ((upd[i] > data[i]) == isUpper)
+			data[i] = upd[i];
+	BreakLSetRegionFromArray(mf, x0, N, data);
+	delete[] data;
+}
 
 #define _FindExtrTemplate(op) \
 {\
@@ -349,42 +352,94 @@ void BreakL_AddInternalNodesFromTempList(ModelF &mf, int listSize, int *nodeList
 	delete[] nodeList;
 }
 
-void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
+struct THX
 {
-	const int thNp = ta.getLength();
-	if (thNp <= 0)
-		return;
+	int x0;
+	int x1;
+	int dxL;
+	int dxR;
+	int leftMode;
+};
 
+struct THY
+{
+	int x0;
+	int x1;
+	double dy;
+	int typeL;
+};
+
+struct UPDATE_REGION
+{
+	int x0;
+	int N;
+	double *data;
+	UPDATE_REGION(int x0, int N, double *data)
+	{
+		this->x0 = x0;
+		this->N = N;
+		this->data = data;
+	}
+};
+
+void BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key)
+{
 	prf_b("BreakL_ChangeByThresh: entered");
 
+	const int thNpX = taX.getLength();
+	const int thNpY = taY.getLength();
+
+	int conjKey = taX.getConjKey(key);
+	int isUpper = taX.isUpper(key);
+
 	// convert thresholds
-	COP0 *th = new COP0[thNp];
-	assert(th);
-	int j;
-	for (j = 0; j < thNp; j++)
+	THX *thX = 0;
+	if (thNpX > 0)
 	{
-		th[j].x0 = ta.getX0(j);
-		th[j].x1 = ta.getX1(j);
-		th[j].dy = ta.getValue(j, key);
-		th[j].type = ta.getType(j);
-		th[j].dxL = ta.getDxL(j, key);
-		th[j].dxR = ta.getDxR(j, key);
+		thX = new THX[thNpX];
+		assert(thX);
+	}
+	THY *thY = 0;
+	if (thNpY > 0)
+	{
+		thY = new THY[thNpY];
+		assert(thY);
+	}
+	int j;
+	for (j = 0; j < thNpX; j++)
+	{
+		int isRising = taX.getIsRise(j);
+		int leftMode = !!isRising ^ !!isUpper ^ 1;
+		thX[j].leftMode = leftMode;
+		thX[j].x0 = taX.getX0(j);
+		thX[j].x1 = taX.getX1(j);
+		thX[j].dxL = leftMode ? taX.getDX(j, key) : taX.getDX(j, conjKey);
+		thX[j].dxR = leftMode ? taX.getDX(j, conjKey) : taX.getDX(j, key);
+	}
+	for (j = 0; j < thNpY; j++)
+	{
+		thY[j].x0 = taY.getX0(j);
+		thY[j].x1 = taY.getX1(j);
+		thY[j].dy = taY.getValue(j, key);
+		thY[j].typeL = taY.getTypeL(j);
 	}
 
 	prf_b("BreakL_ChangeByThresh: add nodes");
 
 	// добавляем узлы в точках начала и конца всех событий
 	// это изменяет mf
+	// XXX: предполагается, что у каждого X-порога есть два смежных Y-порога,
+	// поэтому достаточно расставить точки только Y-порогов
 	{
-		int *nodeList = new int[thNp * 2];
+		int *nodeList = new int[thNpY * 2];
 		assert(nodeList);
 		// NB: список не обязан быть без повторений, но должен быть монотонным
-		for (j = 0; j < thNp; j++)
+		for (j = 0; j < thNpY; j++)
 		{
-			nodeList[2 * j] = th[j].x0;
-			nodeList[2 * j + 1] = th[j].x1;
+			nodeList[2 * j] = thY[j].x0;
+			nodeList[2 * j + 1] = thY[j].x1;
 		}
-		BreakL_AddInternalNodesFromTempList(mf, thNp * 2, nodeList);
+		BreakL_AddInternalNodesFromTempList(mf, thNpY * 2, nodeList);
 	}
 
 	prf_b("BreakL_ChangeByThresh: process AL threshs");
@@ -406,12 +461,12 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
 			int curX = (int )mfpars[curMn].x;
 
 			// fix curLTn; keep Yx1_prev and Yx1_cur
-			while (curLTn < 0 || curLTn < thNp - 1 && curX >= th[curLTn + 1].x0)
+			while (curLTn < 0 || curLTn < thNpY - 1 && curX >= thY[curLTn + 1].x0)
 			{
 				curLTn++;
-				Yx1L = mf.calcFun(th[curLTn].x1);
-				if (curLTn < thNp - 1)
-					Yx0R = mf.calcFun(th[curLTn + 1].x0);
+				Yx1L = mf.calcFun(thY[curLTn].x1);
+				if (curLTn < thNpY - 1)
+					Yx0R = mf.calcFun(thY[curLTn + 1].x0);
 				else
 					Yx0R = 0;
 				if (Yx1L == Yx0R)
@@ -421,24 +476,22 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
 			// нашли последний порог curLTn, начинающийся левее-либо-там-же от точки curX
 
 			// пространство внутри порога
-			if (curX <= th[curLTn].x1 || curLTn == thNp - 1)
+			if (curX <= thY[curLTn].x1 || curLTn == thNpY - 1)
 			{
-				mfpars[curMn].y += th[curLTn].dy;
+				mfpars[curMn].y += thY[curLTn].dy;
 				continue;
 			}
 
 			// пространство между порогами
 
-			//fprintf(stderr, "LTn %d Mn %d 
+			int xL = thY[curLTn].x1;
+			int xR = thY[curLTn + 1].x0;
 
-			int xL = th[curLTn].x1;
-			int xR = th[curLTn + 1].x0;
+			double dyL = thY[curLTn].dy;
+			double dyR = thY[curLTn + 1].dy;
 
-			double dyL = th[curLTn].dy;
-			double dyR = th[curLTn + 1].dy;
-
-			int typeL = th[curLTn].type;
-			int typeR = th[curLTn + 1].type;
+			int typeL = thY[curLTn].typeL;
+			int typeR = thY[curLTn + 1].typeL;
 
 			double wei;
 
@@ -449,6 +502,10 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
 				wei = (mfpars[curMn].y - Yx1L) / (Yx0R - Yx1L);
 			else
 				wei = (double )(curX - xL) / (xR - xL);
+
+			//fprintf(stderr, "AL threshs: LTn %d Mn %d curX %d xL %d xR %d dyL %g dyR %g tL %d tR %d wei %g\n",
+			//	curLTn, curMn, curX, xL, xR, dyL, dyR, typeL, typeR, wei);
+
 			mfpars[curMn].y += dyL + (dyR - dyL) * wei;
 		}
 	}
@@ -456,84 +513,13 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
 	prf_b("BreakL_ChangeByThresh: process DXLR threshd");
 
 	// apply dx-thresholds
-	/*{
-		int curT;
-		for (curT = 1; curT < thNp - 1; curT++)
-		{
-			int dxL = th[curT].dxL;
-			int dxR = th[curT].dxR;
-
-			if (dxL < 0)
-				dxL = 0;
-			if (dxR < 0)
-				dxR = 0;
-
-			if (dxL == 0 && dxR == 0)
-				continue;
-
-			int xPrev = th[curT - 1].x1;
-			int xNext = th[curT + 1].x0;
-
-			int nBase0 = xNext - xPrev;
-			//fprintf(stderr, "Applying dxL/dxR thresholds: curT %d dxL %d dxR %d, nBase %d\n", curT, dxL, dxR, nBase0);
-
-			if (nBase0 <= 0)
-				continue;
-
-			int W = dxL + dxR;
-
-			int nEnh1 = nBase0 + W;
-			int nEnh2 = nBase0 + W * 2; // "'2': Double-width enh"
-
-			// получаем событие, которое надо расширить, на ширине nBase0 + 2W
-			// расширять будем только на nBase0 + W, а остальное понадобится для контроля
-			// пересечения с исходной кривой
-			// NB: mf.getP() и mf.getNPars() могут возвращать разные значения в разные итерации,
-			// т.к. мы изменяем длину mf в конце итерации
-			double *arr1b = BreakLToArray(mf.getP(), mf.getNPars(), xPrev - dxL * 2, nEnh2);
-
-			// расширяем массив, забивая справа гориз. прямой; исходный вар-т не меняем
-			double *arr2 = new double[nEnh2];
-			assert(arr2);
-			for (j = 0; j < nEnh1; j++)
-				arr2[j] = arr1b[j + dxL];
-			for (j = nEnh1; j < nEnh2; j++)
-				arr2[j] = arr1b[nEnh1 + dxL - 1];
-
-			// собственно расширяем
-			int isUpper = ta.isUpper(key);
-			enhance(arr2, nEnh2, W, isUpper);
-
-			// оформляем плавный переход
-			for (j = 0; j < dxL; j++)
-			{
-				arr2[j] = (arr2[j] * j + arr1b[j] * (dxL - j)) / (double )dxL;
-			}
-			for (j = -dxR; j < 0; j++)
-			{
-				int k = j + nEnh2;
-				arr2[k] = (arr2[k] * -j + arr1b[k] * (dxR + j)) / (double )dxR;
-			}
-
-			// убираем возможные пересечения результата с оригиналом
-			int sign = isUpper ? 1 : -1;
-			for (j = 0; j < nEnh2; j++)
-				if (arr2[j] * sign < arr1b[j] * sign)
-					arr2[j] = arr1b[j];
-
-			// сохраняем в mf
-			BreakLSetRegionFromArray(mf, xPrev - dxL * 2, nEnh2, arr2);
-			delete[] arr1b;
-			delete[] arr2;
-			//fprintf(stderr, "#6\n"); fflush(stderr);
-		}
-	}*/
 	{
+		ArrList updateRegions;
 		int curT;
-		for (curT = 1; curT < thNp - 1; curT++)
+		for (curT = 0; curT < thNpX; curT++)
 		{
-			int dxL = th[curT].dxL;
-			int dxR = th[curT].dxR;
+			int dxL = thX[curT].dxL;
+			int dxR = thX[curT].dxR;
 
 			if (dxL < 0)
 				dxL = 0;
@@ -543,16 +529,15 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
 			if (dxL == 0 && dxR == 0)
 				continue;
 
-			int xPrev = th[curT - 1].x1;
-			int xNext = th[curT + 1].x0;
+			int xBegin = thX[curT].x0;
+			int xEnd = thX[curT].x1;
 
-			int nBase0 = xNext - xPrev;
-			//fprintf(stderr, "Applying dxL/dxR thresholds: curT %d dxL %d dxR %d, nBase %d\n", curT, dxL, dxR, nBase0);
+			int nBase0 = xEnd - xBegin + 1;
+			//fprintf(stderr, "Applying dxL/dxR thresholds: curT %d dxL %d dxR %d, nBase %d; leftMode %d upper %d\n",
+			//	curT, dxL, dxR, nBase0, thX[curT].leftMode, isUpper);
 
 			if (nBase0 <= 0)
 				continue;
-
-			int isUpper = ta.isUpper(key);
 
 			int W = dxL + dxR;
 
@@ -564,56 +549,106 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
 			// пересечения с исходной кривой
 			// NB: mf.getP() и mf.getNPars() могут возвращать разные значения в разные итерации,
 			// т.к. мы изменяем длину mf в конце итерации
-			double *arr1 = BreakLToArray(mf.getP(), mf.getNPars(), xPrev - dxL * 2, nEnh2);
+			double *arr2io = BreakLToArray(mf.getP(), mf.getNPars(), xBegin - dxL * 2, nEnh2);
 
 			// расширяем nBase0->nEnh2, забивая справа гориз. прямой; исходный вар-т не меняем
-			double *arr2a = new double[nEnh1];
-			assert(arr2a);
+			double *arr1t = new double[nEnh1];
+			assert(arr1t);
 			for (j = 0; j < nBase0; j++)
-				arr2a[j] = arr1[j + dxL * 2];
+				arr1t[j] = arr2io[j + dxL * 2];
 			for (j = nBase0; j < nEnh1; j++)
-				arr2a[j] = arr2a[nBase0 - 1];
+				arr1t[j] = arr1t[nBase0 - 1];
 
 			// собственно расширяем
-			enhance(arr2a, nEnh1, W, isUpper);
+			enhance(arr1t, nEnh1, W, isUpper);
 
+			/*
 			// оформляем переход
 			if (isUpper) // для верхнего порога - прямая до пересечения с исх. кривой
 			{
 				// переход справа
-				double yA = arr2a[nEnh1 - 1];
-				double yB = arr1[nEnh2 - 1];
+				double yA = arr1t[nEnh1 - 1];
+				double yB = arr2io[nEnh2 - 1];
 				for (j = 0; j < dxR; j++)
 				{
 					double yJ = yA + (yB - yA) * (j + 1) / dxR;
-					if (arr1[nEnh2 - dxR + j] >= yJ)
+					if (arr2io[nEnh2 - dxR + j] >= yJ)
 						break;
 					else
-						arr1[nEnh2 - dxR + j] = yJ;
+						arr2io[nEnh2 - dxR + j] = yJ;
 				}
 				// переход слева
-				yA = arr2a[0];
-				yB = arr1[0];
+				yA = arr1t[0];
+				yB = arr2io[0];
 				for (j = dxL - 1; j >= 0; j--)
 				{
 					double yJ = yB + (yA - yB) * j / dxL;
-					if (arr1[j] >= yJ)
+					if (arr2io[j] >= yJ)
 						break;
 					else
-						arr1[j] = yJ;
+						arr2io[j] = yJ;
 				}
 			}
 			// убираем возможные пересечения результата с оригиналом
 			int sign = isUpper ? 1 : -1;
 			for (j = 0; j < nEnh1; j++)
-				if (arr1[dxL + j] * sign < arr2a[j] * sign)
-					arr1[dxL + j] = arr2a[j];
+				if (arr2io[dxL + j] * sign < arr1t[j] * sign)
+					arr2io[dxL + j] = arr1t[j];
+			*/
 
-			// сохраняем в mf
-			BreakLSetRegionFromArray(mf, xPrev - dxL * 2, nEnh2, arr1);
-			delete[] arr1;
-			delete[] arr2a;
+			// сглаживаем стык
+			{
+				double sign = isUpper ? 1.0 : -1.0;
+				int leftMode = thX[curT].leftMode;
+				int x0 = leftMode ? 0 : dxL;
+				int x1 = leftMode ? nBase0 + dxL : nEnh1;
+				for (j = x0; j < x1; j++)
+				{
+						arr2io[dxL + j] = arr1t[j];
+				}
+				if (leftMode)
+				{
+					double y0 = arr1t[0];
+					double y1 = arr2io[0];
+					for (j = 1; j < dxL; j++)
+					{
+						double yt = y0 + (y1 - y0) * (double )j / dxL;
+						if (arr2io[dxL - j] * sign < yt * sign)
+							arr2io[dxL - j] = yt;
+						else
+							break;
+					}
+				}
+				else
+				{
+					double y0 = arr1t[nEnh1 - 1];
+					double y1 = arr2io[nEnh2 - 1];
+					for (j = 1; j < dxR; j++)
+					{
+						double yt = y0 + (y1 - y0) * (double )j / dxR;
+						if (arr2io[nEnh2 - 1 - dxR + j] * sign < yt * sign)
+							arr2io[nEnh2 - 1 - dxR + j] = yt;
+						else
+							break;
+					}
+				}
+			}
+
+			// планируем сохранение в mf
+			UPDATE_REGION *ur = new UPDATE_REGION(xBegin - dxL * 2, nEnh2, arr2io);
+			assert(ur);
+			updateRegions.add(ur);
+			delete[] arr1t;
 			//fprintf(stderr, "#6\n"); fflush(stderr);
+		}
+		// сохраняем в mf запланированные изменения
+		int i;
+		for (i = 0; i < updateRegions.getLength(); i++)
+		{
+			UPDATE_REGION *urp = (UPDATE_REGION *)updateRegions[i];
+			BreakLUpdateRegionFromArray(mf, urp->x0, urp->N, urp->data, isUpper);
+			delete[] urp->data;
+			delete urp;
 		}
 	}
 
@@ -621,49 +656,8 @@ void BreakL_ChangeByThresh (ModelF &mf, ThreshArray &ta, int key)
 
 	//fflush(stderr);
 
-	delete[] th;
-}
-
-// корректирует начало и конец L-порогов на основе реального хода кривой.
-// После такой коррекции, начало и конец L-порога указывают на положение
-// максимума, а конец и начало смежных событий - на точки переключения с A на L режим
-// в таком варианте этот метод годится для любой модельной функции
-void BreakL_FixThresh (ModelF &mf, ThreshArray &ta)
-{
-	int N = ta.getLength();
-	//fprintf(stderr, "breakL_FixThresh: N = %d\n", N);
-	int tid;
-	for (tid = 1; tid < N - 1; tid++) // крайние пороги не могут быть L-типа
-	{
-		//fprintf(stderr, "tid %d: type %d\n", tid, (int )ta.getType(tid));
-		if (ta.getType(tid) == 0)
-			continue;
-
-		int x0 = ta.getX0(tid);
-		int x1 = ta.getX1(tid) + 1;
-		if (x0 >= x1)
-		{
-			fprintf(stderr, "tid %d: x0 >= x1\n", tid);
-			fflush(stderr);
-			continue;
-		}
-
-		int iMax = findFirstMax(mf, x0, x1);
-
-		int iMinL = findLastMin(mf, x0, iMax);
-		int iMinR = findFirstMin(mf, iMax, x1);
-
-		// сохраняем
-		ta.setX0(tid, iMax);
-		ta.setX1(tid, iMax);
-
-		// теперь надо соответственно сдвинуть внутрь соседние события
-		//assert(tid > 0);
-		//assert(tid + 1 < N);
-		ta.setX1(tid - 1, iMinL);
-		ta.setX0(tid + 1, iMinR);
-		//fprintf(stderr, "tid %d: x0 %d x1 %d iMinL %d iMaxL %d iMaxR %d iMinR %d\n",
-		//	tid, x0, x1, iMinL, iMaxL, iMaxR, iMinR);
-	}
-	//fflush(stderr);
+	if (thNpX > 0)
+		delete[] thX;
+	if (thNpY > 0)
+		delete[] thY;
 }

@@ -211,37 +211,20 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nCha
 /*
  * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
  * Method:    nChangeByThresh
- * Signature: ([Lcom/syrus/AMFICOM/analysis/dadara/Thresh;I)V
+ * Signature: ([Lcom/syrus/AMFICOM/analysis/dadara/ThreshDX;[Lcom/syrus/AMFICOM/analysis/dadara/ThreshDY;I)V
  */
 JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nChangeByThresh
-  (JNIEnv *env, jobject obj, jobjectArray threshArr, jint key)
+  (JNIEnv *env, jobject obj, jobjectArray threshArrDX, jobjectArray threshArrDY, jint key)
 {
 	prf_b("nChangeByThresh");
 	ModelF mf;
 	if (ModelF_J2C(env, obj, mf))
 		assert(0);
-	ThreshArray ta(env, threshArr);
+	ThreshDXArray taDX(env, threshArrDX);
+	ThreshDYArray taDY(env, threshArrDY);
 	int key_ = key;
-	void *args[2] = { &key, &ta };
+	void *args[3] = { &key, &taDX, &taDY };
 	mf.execCmd(MF_CMD_CHANGE_BY_THRESH, args);
-	ModelF_C2J_update(env, mf, obj);
-	prf_e();
-}
-
-/*
- * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
- * Method:    nFixThresh
- * Signature: ([Lcom/syrus/AMFICOM/analysis/dadara/Thresh;)V
- */
-JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFixThresh
-  (JNIEnv *env, jobject obj, jobjectArray threshArr)
-{
-	prf_b("nFixThresh");
-	ModelF mf;
-	if (ModelF_J2C(env, obj, mf))
-		assert(0);
-	ThreshArray ta(env, threshArr);
-	mf.execCmd(MF_CMD_FIX_THRESH, (void *)&ta);
 	ModelF_C2J_update(env, mf, obj);
 	prf_e();
 }

@@ -7,22 +7,33 @@ public class ReflectogramMath
 	private ReflectogramMath() {
 	}
 
+	public static int getArrayMaxIndex(double[] yArr, int x0, int x1)
+	{
+		int ret = x0;
+		for (int i = x0; i <= x1; i++)
+			if (yArr[ret] < yArr[i])
+				ret = i;
+		System.err.println("getArrayMaxIndex: x0=" + x0 + "; x1=" + x1 + "; ret=" + ret);
+		return ret;
+	}
+
+	public static int getArrayMinIndex(double[] yArr, int x0, int x1)
+	{
+		int ret = x0;
+		for (int i = x0; i <= x1; i++)
+			if (yArr[ret] > yArr[i])
+				ret = i;
+		return ret;
+	}
+
 	public static double getArrayMax(double[] yArr)
 	{
-		double ret = yArr[0];
-		for (int i = 0; i < yArr.length; i++)
-			if (ret < yArr[i])
-				ret = yArr[i];
-		return ret;
+		return yArr[getArrayMaxIndex(yArr, 0, yArr.length - 1)];
 	}
 
 	public static double getArrayMin(double[] yArr)
 	{
-		double ret = yArr[0];
-		for (int i = 0; i < yArr.length; i++)
-			if (ret > yArr[i])
-				ret = yArr[i];
-		return ret;
+		return yArr[getArrayMinIndex(yArr, 0, yArr.length - 1)];
 	}
 
 	public static double[] getReflectogrammFromEvents(ReflectogramEvent[] re, int arrayLength)

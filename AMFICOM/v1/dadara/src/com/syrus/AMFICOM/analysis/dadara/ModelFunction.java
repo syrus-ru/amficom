@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.7 $, $Date: 2005/02/08 11:46:27 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/21 13:39:33 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -32,9 +32,8 @@ public class ModelFunction {
 	private native double nF(double x);
 	private native double[] nFArray(double x0, double step, int length);
 	private native void nChangeByACXL(double dA, double dC, double dX, double dL); // преобразование к своему ACXL-порогу
-	private native void nChangeByThresh(Thresh[] thresh, int key); // изменение порогом Thresh
-	private native void nFixThresh(Thresh[] thresh); // корректировка параметров Thresh в соответствии с м.ф. 
-	//private native void nChangeByOther(int code, double[] changePars); // изменение другим специфическим способом
+	private native void nChangeByThresh(ThreshDX[] threshDX, ThreshDY[] threshDY, int key); // изменение порогом Thresh
+	//private native void nFixThresh(Thresh[] thresh); // корректировка параметров Thresh в соответствии с м.ф.
 	private native double nRMS(double y[], int begin, int end); // end is included
 
 	private static final int FITMODE_VARY_ALL = 1; // фитируем кривую, варьируем все параметры
@@ -381,25 +380,15 @@ public class ModelFunction {
 //	{
 //		//nChangeByOther(0, changePars);
 //	}
-	public void changeByThresh(Thresh[] thresh, int key)
+	public void changeByThresh(ThreshDX[] threshDX, ThreshDY[] threshDY, int key)
 	{
-		nChangeByThresh(thresh, key);
+		nChangeByThresh(threshDX, threshDY, key);
 	}
 
-	public void fixThresh(Thresh[] thresh)
-	{
-//		System.err.print("fixThresh: A:");
-//		for (int i = 0; i < thresh.length; i++)
-//			System.err.print(" (" + thresh[i].xMin + "," + thresh[i].xMax + ")");
-//		System.err.println();
-
-		nFixThresh(thresh);
-
-//		System.err.print("fixThresh: B:");
-//		for (int i = 0; i < thresh.length; i++)
-//			System.err.print(" (" + thresh[i].xMin + "," + thresh[i].xMax + ")");
-//		System.err.println();
-	}
+//	public void fixThresh(Thresh[] thresh)
+//	{
+//		nFixThresh(thresh);
+//	}
 
 	public void writeToDOS(DataOutputStream dos) throws IOException {
 		dos.writeInt(shapeID);

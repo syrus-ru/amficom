@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.11 2005/02/15 11:20:38 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.12 2005/02/21 13:39:33 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/02/15 11:20:38 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/21 13:39:33 $
  * @module
  */
 
@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.syrus.io.BellcoreStructure;
+import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
@@ -280,5 +281,25 @@ public class CoreAnalysisManager
 	public static double getMedian(double[] y)
 	{
 		return nMedian(y, y.length / 2);
+	}
+
+	/**
+	 * Уточняет параметры коннектора. Такое уточнение призвано защитить алгоритмы
+	 * L-масштабирования от шумов, а также дать необх. инф. о положении максимума
+	 * коннектора, чтобы можно было отличить фронт от спада.
+	 * @param mf Модельная кривая
+	 * @param evBegin Начальное начало события
+	 * @param evEnd Начальный конец события
+	 * @return int[3] { первый минимум (уточненное начала), максимум, последний минимум (уточненный конец) } 
+	 */
+	public static int[] getConnectorMinMaxMin(ModelFunction mf, int evBegin, int evEnd)
+	{
+		int x0 = evBegin;
+		int N = evEnd - evBegin + 1;
+		double[] arr = mf.funFillArray(x0, 1.0, N);
+		int iMax = ReflectogramMath.getArrayMaxIndex(arr, 0, N - 1);
+		int iLMin = ReflectogramMath.getArrayMinIndex(arr, 0, iMax);
+		int iRMin = ReflectogramMath.getArrayMinIndex(arr, iMax, N - 1);
+		return new int[] {evBegin + iLMin, evBegin + iMax, evBegin + iRMin};
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.6 2005/02/15 14:19:18 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.7 2005/02/21 13:39:33 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+
 /**
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/02/15 14:19:18 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/21 13:39:33 $
  * @module
  */
 public class ModelTraceManager
@@ -36,11 +38,14 @@ public class ModelTraceManager
 		thMTCache = null;
 	}
 
-	protected void createVoidThMTCacheEntry(int key)
+	// очищает записи кэша, зависящие от ключа key в порогах
+	// (это key и Thresh.CONJ_KEY[key])
+	protected void invalidateThMTByKey(int key)
 	{
 		if (thMTCache == null)
 			thMTCache = new ModelTrace[] { null, null, null, null };
 		thMTCache[key] = null;
+		thMTCache[Thresh.CONJ_KEY[key]] = null;
 	}
 
 	protected boolean isThMFCacheValid(int key)
@@ -57,7 +62,7 @@ public class ModelTraceManager
 
 		LinkedList thresholds = new LinkedList();
 		Thresh last; // далее будет всегда указывать на текущий порог "линейного" типа
-		thresholds.add(last = new Thresh(-1, 0, 0, 0)); // "C" coding style
+		thresholds.add(last = new ThreshDY(-1, false, 0, 0)); // "C" coding style
 		for (int i = 0; i < se.length; i++)
 		{
 			int evBegin = se[i].getBegin();
@@ -66,23 +71,52 @@ public class ModelTraceManager
 			{
 			case SimpleReflectogramEvent.LINEAR:
 				last.xMax = evEnd;
+				last.eventId1 = i;
 				break;
 			case SimpleReflectogramEvent.SPLICE:
 				last.xMax = evBegin;
-				thresholds.add(last = new Thresh(i, 0, evEnd, evEnd));
+				last.eventId1 = i;
+				thresholds.add(new ThreshDX(i, evBegin, evEnd, false, 1)); // FIXME: isRise = ?
+				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
 				break;
 			case SimpleReflectogramEvent.CONNECTOR:
+				int[] pos = CoreAnalysisManager.getConnectorMinMaxMin(mf, evBegin, evEnd);
+				evBegin = pos[0];
+				int evCenter = pos[1];
+				evEnd = pos[2];
 				last.xMax = evBegin;
-				//int evCenter = (evBegin + evEnd) / 2;
-				// сохраняем в объект Thresh начало и конец события;
-				// положение его максимума будет уточнено *потом*, в native-коде
-				thresholds.add(last = new Thresh(i, 1, evBegin, evEnd));
-				thresholds.add(last = new Thresh(i, 0, evEnd, evEnd));
+				last.eventId1 = i;
+				thresholds.add(new ThreshDX(i, evBegin, evCenter, true, 1));
+				thresholds.add(new ThreshDY(i, true, evCenter, evCenter));
+				thresholds.add(new ThreshDX(i, evCenter, evEnd, false, 1));
+				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
+				System.err.println("CONNECTOR: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd);
 				break;
 			}
 		}
-		tl = (Thresh[] )thresholds.toArray(new Thresh[thresholds.size()]);
-		mf.fixThresh(tl);
+		Thresh[] tl = (Thresh[] )thresholds.toArray(new Thresh[thresholds.size()]);
+		setTL(tl);
+	}
+
+	private void setTL(Thresh tl[])
+	{
+		tL = tl;
+		// формируем отдельно списки tDX и tDY
+		LinkedList thresholds = new LinkedList();
+		for (int i = 0; i < tL.length; i++)
+		{
+			if (tL[i] instanceof ThreshDX)
+				thresholds.add(tL[i]);
+		}
+		tDX = (ThreshDX[] )thresholds.toArray(new ThreshDX[thresholds.size()]);
+
+		thresholds = new LinkedList();
+		for (int i = 0; i < tL.length; i++)
+		{
+			if (tL[i] instanceof ThreshDY)
+				thresholds.add(tL[i]);
+		}
+		tDY = (ThreshDY[] )thresholds.toArray(new ThreshDY[thresholds.size()]);
 	}
 
 	private ModelTrace reMT;
@@ -177,26 +211,6 @@ public class ModelTraceManager
 			return 1.0; // FIXME
 	}
 
-//	public void fixEventTypes(ModelTraceManager etalon, int delta)
-//	{
-//		throw new UnsupportedOperationException();
-//		invalidateThMTCache();
-//		// FIXME: just a copy-paste
-//		// XXX: rude alg.: probable errors when end - begin < delta
-//		// just a copy-paste from old analysis
-//		if (re.length == etalon.re.length)
-//		{
-//			for (int i = 0; i < etalon.re.length; i++)
-//			{
-//				if (Math.abs(re[i].getBegin() - etalon.re[i].getBegin()) < delta
-//						&& Math.abs(re[i].getEnd() - etalon.re[i].getEnd()) < delta)
-//				{
-//					re[i].setEventType(etalon.re[i].getEventType());
-//				}
-//			}
-//		}
-//	}
-
 	/**
 	 * Определяет значение порога в данной точке.
 	 * В целях повышения производительности,
@@ -215,14 +229,15 @@ public class ModelTraceManager
 	// FIXME: нет ограничения на отрицательные значения порогов
 	public void changeThresholdBy(int nEvent, int key, double dH, int dW)
 	{
-		createVoidThMTCacheEntry(key);
-		ArrayList tlist = getAllThreshByNEvent(nEvent);
-		for (int i = 0; i < tlist.size(); i++)
-		{
-			((Thresh )tlist.get(i)).dxL[key] += dW;
-			((Thresh )tlist.get(i)).dxR[key] += dW;
-			((Thresh )tlist.get(i)).values[key] += dH;
-		}
+		throw new UnsupportedOperationException();
+//		invalidateThMTByKey(key);
+//		ArrayList tlist = getAllThreshByNEvent(nEvent);
+//		for (int i = 0; i < tlist.size(); i++)
+//		{
+//			throw new UnsupportedOperationException();
+//			//((Thresh )tlist.get(i)).dX[key] += dW; // FIXME
+//			//((Thresh )tlist.get(i)).values[key] += dH;
+//		}
 	}
 
 	/**
@@ -251,7 +266,7 @@ public class ModelTraceManager
 		public static final int TYPE_DXF = 3;
 		public static final int TYPE_DXT = 4;
 		private static final int MAX_DX = 1000;
-		private static final int MIN_DX = 0;
+		private static final int MIN_DX = -1000;
 		private int type;
 		private Thresh th;
 		protected ThreshEditor(int type, Thresh th)
@@ -265,34 +280,25 @@ public class ModelTraceManager
 		}
 		public double getValue(int key)
 		{
-			if (type == TYPE_DXF)
-				return th.dxL[key];
-			if (type == TYPE_DXT)
-				return th.dxR[key];
-			return th.values[key];
+			if (type == TYPE_DXF || type == TYPE_DXT)
+				return ((ThreshDX )th).dX[key];
+			else
+				return ((ThreshDY )th).values[key];
 		}
 		public void setValue(int key, double value)
 		{
-			ModelTraceManager.this.createVoidThMTCacheEntry(key);
-			if (type == TYPE_DXF)
+			ModelTraceManager.this.invalidateThMTByKey(key);
+			if (type == TYPE_DXF || type == TYPE_DXT)
 			{
-				th.dxL[key] = (int )value;
-				if (th.dxL[key] > MAX_DX)
-					th.dxL[key] = MAX_DX;
-				if (th.dxL[key] < MIN_DX)
-					th.dxL[key] = MIN_DX;
-			}
-			else if (type == TYPE_DXT)
-			{
-				System.err.println("TYPE_DXT change");
-				th.dxR[key] = (int )value;
-				if (th.dxR[key] > MAX_DX)
-					th.dxR[key] = MAX_DX;
-				if (th.dxR[key] < MIN_DX)
-					th.dxR[key] = MIN_DX;
+				int val = (int )value;
+				if (val > MAX_DX)
+					val = MAX_DX;
+				if (val < MIN_DX)
+					val = MIN_DX;
+				((ThreshDX )th).dX[key] = val;
 			}
 			else
-				th.values[key] = value;
+				((ThreshDY )th).values[key] = value;
 		}
 	}
 
@@ -306,15 +312,16 @@ public class ModelTraceManager
 		for (int i = 0; i < tlist.size(); i++)
 		{
 			Thresh th = ((Thresh )tlist.get(i));
-			if (th.typeId == 0)
+			if (th instanceof ThreshDX)
 			{
-				ret.add(new ThreshEditor(ThreshEditor.TYPE_A, th));
+				ret.add(new ThreshEditor(ThreshEditor.TYPE_DXF, th)); // @todo: выбирать TYPE_DXF либо TYPE_DXT
 			}
-			else
+			if (th instanceof ThreshDY)
 			{
-				ret.add(new ThreshEditor(ThreshEditor.TYPE_DXF, th));
-				ret.add(new ThreshEditor(ThreshEditor.TYPE_DXT, th));
-				ret.add(new ThreshEditor(ThreshEditor.TYPE_L, th));
+				if (((ThreshDY )th).typeL)
+					ret.add(new ThreshEditor(ThreshEditor.TYPE_L, th));
+				else
+					ret.add(new ThreshEditor(ThreshEditor.TYPE_A, th));
 			}
 		}
 		return (ThreshEditor[] )ret.toArray(new ThreshEditor[ret.size()]);
@@ -336,9 +343,9 @@ public class ModelTraceManager
 		else
 		{
 			ModelFunction tmp = mf.copy();
-			tmp.changeByThresh(tl, key);
+			tmp.changeByThresh(tDX, tDY, key);
 			thMt = new ModelTraceImplMF(tmp, traceLength);
-			createVoidThMTCacheEntry(key);
+			invalidateThMTByKey(key);
 			thMTCache[key] = thMt;
 		}
 		return thMt;
@@ -437,7 +444,7 @@ public class ModelTraceManager
 		try
 		{
 			dos.writeLong(SIGNATURE_THRESH);
-			Thresh.writeArrayToDOS(tl, dos);
+			Thresh.writeArrayToDOS(tL, dos);
 			return baos.toByteArray();
 		} catch (IOException e)
 		{
@@ -460,9 +467,9 @@ public class ModelTraceManager
 			if (signature != SIGNATURE_THRESH)
 				throw new SignatureMismatchException();
 			Thresh[] tl2 = Thresh.readArrayFromDIS(dis);
-			if (this.tl.length != tl2.length) 
+			if (this.tL.length != tl2.length) 
 				throw new SignatureMismatchException();
-			this.tl = tl2; 
+			setTL(tl2); 
 		}
 		catch (IOException e)
 		{
@@ -478,25 +485,27 @@ public class ModelTraceManager
 		}
 	}
 
-	protected Thresh[] tl;
+	protected Thresh[] tL;
+	protected ThreshDX[] tDX;
+	protected ThreshDY[] tDY;
 
-	public class ThresholdHandle
+	public class ThresholdHandle // DY only; tDY numbering
 	{
-		private Thresh th;
+		private ThreshDY th;
 		private int key;
 		protected int posX;
 		protected double posY;
 		protected ThresholdHandle(int thId, int key, int posX, double posY)
 		{
-			this.th = tl[thId];
+			this.th = tDY[thId];
 			this.key = key;
 			int posMin = th.xMin;
 			int posMax = th.xMax;
-			if (th.typeId != 0 && thId > 0 && thId < tl.length - 1)
+			if (th.typeL && thId > 0 && thId < tDY.length - 1)
 			{
 				// уточняем положение точки привязки по ширине 98% максимума кривой
-				posMin = tl[thId - 1].xMax;
-				posMax = tl[thId + 1].xMin;
+				posMin = tDY[thId - 1].xMax;
+				posMax = tDY[thId + 1].xMin;
 				if (posMin < posMax)
 				{
 //					System.err.println("initial posMin=" + posMin + " posMax=" + posMax);
@@ -543,7 +552,7 @@ public class ModelTraceManager
 		public void moveBy(int dx, double dy)
 		{
 			// dx is ignored now
-			createVoidThMTCacheEntry(key);
+			invalidateThMTByKey(key);
 			posY += dy;
 			th.values[key] += dy;
 		}
@@ -562,14 +571,14 @@ public class ModelTraceManager
 	// при выборе между A и L - по уровню Y = (Y_A + Y_L)/2 
 	private int getNearestThreshByX(int key, int x)
 	{
-		for (int i = 0; i < tl.length - 1; i++)
+		for (int i = 0; i < tDY.length - 1; i++)
 		{
-			int thisEnd = tl[i].xMax;
-			int nextBegin = tl[i + 1].xMin;
+			int thisEnd = tDY[i].xMax;
+			int nextBegin = tDY[i + 1].xMin;
 			if (x > nextBegin)
 				continue;
 			int separator;
-			if (tl[i].typeId == 0 && tl[i + 1].typeId == 0)
+			if (tDY[i].typeL == false && tDY[i + 1].typeL == false)
 			{
 				// между порогами, A-A
 				// устанавливаем границу раздела посередине
@@ -594,29 +603,43 @@ public class ModelTraceManager
 				return i;
 			}
 		}
-		// note: empty tl would cause return of -1
-		return tl.length - 1;
+		// note: empty tDY would cause return of -1
+		return tDY.length - 1;
 	}
 
 	private ArrayList getAllThreshByNEvent(int nEvent)
 	{
 		ArrayList ret = new ArrayList();
-		for (int i = 0; i < tl.length; i++)
+		/*
+		for (int i = 0; i < tL.length; i++)
 		{
-			if (tl[i].eventId == -1 && nEvent == 0
-					|| tl[i].eventId == nEvent)
-				ret.add(tl[i]);
+			if (tL[i].eventId == -1 && nEvent == 0
+					|| tL[i].eventId == nEvent)
+				ret.add(tL[i]);
 		}
 		// если это линейное событие без собственных порогов,
 		// то надо выбрать покрывающий его порог
 		if (ret.size() == 0)
 		{
-			for (int i = 1; i < tl.length; i++)
-				if (tl[i].eventId > nEvent)
+			for (int i = 1; i < tL.length; i++)
+				if (tL[i].eventId > nEvent)
 				{
-					ret.add(tl[i - 1]);
+					ret.add(tL[i - 1]);
 					break;
 				}
+		}*/
+		/*
+		for (int i = 0; i < tL.length; i++)
+		{
+			if (tL[i].xMax >= se[nEvent].getBegin()
+					&& tL[i].xMin <= se[nEvent].getEnd())
+				ret.add(tL[i]);
+		}
+		*/
+		for (int i = 0; i < tL.length; i++)
+		{
+			if (tL[i].eventId0 <= nEvent && tL[i].eventId1 >= nEvent)
+				ret.add(tL[i]);
 		}
 		return ret;
 	}

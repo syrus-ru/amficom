@@ -62,9 +62,8 @@ const int MF_PAR_FLAG_L = 4;
 #define MF_CMD_FIX_RANGE_PREFIT 3
 #define MF_CMD_FIX_RANGE_FINFIT 4
 #define MF_CMD_ACXL_CHANGE 5
-//#define MF_CMD_CHANGE_OTHER 6
 #define MF_CMD_CHANGE_BY_THRESH 7 /* BREAKL only */
-#define MF_CMD_FIX_THRESH 8 /* BREAKL only */
+//#define MF_CMD_FIX_THRESH 8 /* BREAKL only */
 
 #define MF_CMD_LIN_SET_BY_X1Y1X2Y2 2101
 
