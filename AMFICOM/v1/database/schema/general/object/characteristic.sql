@@ -15,7 +15,7 @@ CREATE TABLE Characteristic (
  visible NUMBER(1) NOT NULL,
 --
  sort NUMBER(2) NOT NULL,
- characterized_id VARCHAR2(32),
+ characterizable_id VARCHAR2(32),
 --
  CONSTRAINT chc_pk PRIMARY KEY (id),
  CONSTRAINT chc_creator_fk FOREIGN KEY (creator_id)
