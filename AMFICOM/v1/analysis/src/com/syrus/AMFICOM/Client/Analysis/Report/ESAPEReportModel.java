@@ -102,9 +102,9 @@ abstract public class ESAPEReportModel extends APOReportModel
 	{
 	}
 
-	public boolean isTableReport(ObjectsReport rp)
+	public int getReportKind(ObjectsReport rp)
 	{
-		boolean returnValue = true;
+		int returnValue = 1;
 
 		if (  rp.field.equals(reflectogram)
 			|| rp.field.equals(mask_view)
@@ -112,7 +112,7 @@ abstract public class ESAPEReportModel extends APOReportModel
 			|| rp.field.equals(filtered_reflect)
 			|| rp.field.equals(histogram)
 			|| rp.field.equals(pred_time_distrib))
-			returnValue = false;
+			returnValue = 0;
 
 		return returnValue;
 	}
