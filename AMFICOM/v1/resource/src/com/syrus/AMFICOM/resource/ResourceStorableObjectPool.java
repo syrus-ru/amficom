@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.2 2004/12/28 15:44:52 max Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.3 2004/12/28 16:59:32 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.2 $, $Date: 2004/12/28 15:44:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/12/28 16:59:32 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -59,7 +59,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 
 		instance.addObjectPool(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, size);
 				
-		instance.polulatePools();
+		instance.populatePools();
 	}
 	
 	public static void init(ResourceObjectLoader rObjectLoader1) {
@@ -72,7 +72,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		
 		instance.addObjectPool(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE, IMAGERESOURCE_OBJECT_POOL_SIZE);
 		
-		instance.polulatePools();
+		instance.populatePools();
 	}
 	
 	public static void refresh() throws DatabaseException, CommunicationException {        
