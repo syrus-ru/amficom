@@ -148,7 +148,6 @@ public class SchemeCableLink extends StubResource
 		{
 			physical_length = 0;
 		}
-
 		cable_threads = new ArrayList();
 		for (int i = 0; i < transferable.cable_threads.length; i++)
 			cable_threads.add(new SchemeCableThread(transferable.cable_threads[i]));
@@ -194,6 +193,11 @@ public class SchemeCableLink extends StubResource
 
 	public void updateLocalFromTransferable()
 	{
+		for (Iterator it = cable_threads.iterator(); it.hasNext();)
+		{
+			SchemeCableThread thread = (SchemeCableThread)it.next();
+			thread.cable_link_id = id;
+		}
 	}
 
 	public Object clone(DataSourceInterface dataSource)

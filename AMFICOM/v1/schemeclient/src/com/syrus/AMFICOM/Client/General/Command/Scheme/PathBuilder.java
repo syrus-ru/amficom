@@ -242,7 +242,7 @@ public class PathBuilder
 		int number = 0;
 		ListIterator it = pes.listIterator(pes.size());
 		if (it.hasPrevious())
-			number = ((PathElement)it.previous()).n;
+			number = ((PathElement)it.previous()).n + 1;
 
 		PathElement newPE = new PathElement();
 		newPE.setType(PathElement.LINK);
@@ -319,7 +319,7 @@ public class PathBuilder
 		int number = 0;
 		ListIterator it = pes.listIterator(pes.size());
 		if (it.hasPrevious())
-			number = ((PathElement)it.previous()).n;
+			number = ((PathElement)it.previous()).n + 1;
 
 		PathElement newPE = new PathElement();
 		newPE.setType(PathElement.CABLE_LINK);
@@ -424,7 +424,7 @@ public class PathBuilder
 		for (Iterator it2 = dev.cableports.iterator(); it2.hasNext();)
 		{
 			SchemeCablePort port = (SchemeCablePort)it2.next();
-//			if (port.direction_type.equals(direction))
+			if (port.direction_type.equals(direction))
 				ports.add(port);
 		}
 		return ports;

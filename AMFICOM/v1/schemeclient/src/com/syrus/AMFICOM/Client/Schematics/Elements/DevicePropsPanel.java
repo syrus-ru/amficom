@@ -88,7 +88,7 @@ public class DevicePropsPanel extends JPanel
 						{
 							box.setSelected(null);
 							table.setRowSelectionInterval(i, i);
-							dev.getCrossRoute().remove(getObjectResource(i, 0));
+							dev.getCrossRoute().remove((SchemePort)getObjectResource(i, 0));
 						}
 					}
 					for (int i = 0; i < getRowCount(); i++)
@@ -98,20 +98,20 @@ public class DevicePropsPanel extends JPanel
 								e.getSource().equals(box))
 						{
 							table.setRowSelectionInterval(i, i);
-							dev.getCrossRoute().put(getObjectResource(i, 0), box.getSelectedItem());
+							dev.getCrossRoute().add((SchemePort)getObjectResource(i, 0), (SchemeCableThread)box.getSelectedItem());
 						}
 					}
 				}
 			}
 		}
 
-		RouteTableModel(Collection ports, Map crossroute)
+		RouteTableModel(Collection ports, PortThreadMap crossroute)
 		{
 			ObjectResourceSorter sorter = SchemePort.getDefaultSorter();
 			sorter.setDataSet(ports);
 			List sortedPorts = sorter.default_sort();
 
-			sorter.setDataSet(crossroute);
+			sorter.setDataSet(crossroute.getAllThreads());
 			List sortedThreads = sorter.default_sort();
 
 			Object[][] data = new Object[sortedPorts.size()][2];

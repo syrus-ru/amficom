@@ -307,6 +307,8 @@ class SchemePathModel extends ObjectResourceModel
 	{
 		if(col_id.equals("id"))
 			return sp.getId();
+		if(col_id.equals("full_path"))
+			return sp.getName();
 		if(col_id.equals("name"))
 			return sp.getName();
 		return "";

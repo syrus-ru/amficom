@@ -18,7 +18,7 @@ public class SchemeDevice extends StubResource implements Serializable
 	public Collection ports;
 	public Collection cableports;
 
-	private Map crossroute;
+	private PortThreadMap crossroute;
 	public Map attributes;
 
 	public SchemeDevice(SchemeDevice_Transferable transferable)
@@ -33,7 +33,7 @@ public class SchemeDevice extends StubResource implements Serializable
 		ports = new ArrayList();
 		cableports = new ArrayList();
 		attributes = new HashMap();
-		crossroute = new HashMap();
+		crossroute = new PortThreadMap();
 		transferable = new SchemeDevice_Transferable();
 	}
 
@@ -52,12 +52,12 @@ public class SchemeDevice extends StubResource implements Serializable
 		return id;
 	}
 
-	public Map getCrossRoute()
+	public PortThreadMap getCrossRoute()
 	{
 		return crossroute;
 	}
 
-	public void setCrossRoute(Map crossroute)
+	public void setCrossRoute(PortThreadMap crossroute)
 	{
 		this.crossroute = crossroute;
 	}
@@ -66,21 +66,38 @@ public class SchemeDevice extends StubResource implements Serializable
 	{
 		if (!isCrossRouteValid())
 			createDefaultCrossRoute();
-		return (SchemeCableThread)crossroute.get(port);
+		return crossroute.get(port);
 	}
+
+//	public String getRoutedThreadId(String port_id)
+//	{
+//		if (!isCrossRouteValid())
+//			createDefaultCrossRoute();
+//		return (String)crossroute.get(port_id);
+//	}
+
 
 	public SchemePort getRoutedPort(SchemeCableThread thread)
 	{
 		if (!isCrossRouteValid())
 			createDefaultCrossRoute();
-		for (Iterator it = crossroute.keySet().iterator(); it.hasNext();)
-		{
-			SchemePort port = (SchemePort)it.next();
-			if (crossroute.get(port).equals(thread))
-				return port;
-		}
-		return null;
+		return crossroute.get(thread);
 	}
+
+
+//	public String getRoutedPortId(String thread_id)
+//	{
+//		if (!isCrossRouteValid())
+//			createDefaultCrossRoute();
+//		for (Iterator it = crossroute.keySet().iterator(); it.hasNext();)
+//		{
+//			SchemePort port = (SchemePort)it.next();
+//			if (crossroute.get(port).equals(thread_id))
+//				return port.getId();
+//		}
+//		return null;
+//	}
+
 
 	public boolean isCrossRouteValid()
 	{
@@ -90,7 +107,7 @@ public class SchemeDevice extends StubResource implements Serializable
 			return false;
 
 		//check ports
-		for (Iterator it = crossroute.keySet().iterator(); it.hasNext();)
+		for (Iterator it = crossroute.getAllPorts().iterator(); it.hasNext();)
 		{
 			SchemePort port = (SchemePort)it.next();
 			if (!ports.contains(port))
@@ -111,7 +128,7 @@ public class SchemeDevice extends StubResource implements Serializable
 			for (Iterator tit = cable.cable_threads.iterator(); tit.hasNext();)
 				threads.add((SchemeCableThread)tit.next());
 		}
-		for (Iterator it = crossroute.values().iterator(); it.hasNext();)
+		for (Iterator it = crossroute.getAllThreads().iterator(); it.hasNext();)
 		{
 			SchemeCableThread thread = (SchemeCableThread)it.next();
 			if (!threads.contains(thread))
@@ -122,7 +139,7 @@ public class SchemeDevice extends StubResource implements Serializable
 
 	public void createDefaultCrossRoute()
 	{
-		crossroute = new HashMap();
+		crossroute = new PortThreadMap();
 		if (ports.isEmpty() || !hasCablesConnected())
 			return;
 
@@ -199,7 +216,7 @@ public class SchemeDevice extends StubResource implements Serializable
 		return null;
 	}
 
-	private void findCrossRoute(Collection cables, String direction, Map crossroute)
+	private void findCrossRoute(Collection cables, String direction, PortThreadMap crossroute)
 	{
 		List freePorts = new ArrayList(ports.size());
 		List freeThreads = new ArrayList();
@@ -223,7 +240,7 @@ public class SchemeDevice extends StubResource implements Serializable
 						p = getPortByNumber(freePorts, num);
 					if (p != null)
 					{
-						crossroute.put(p, thread);
+						crossroute.add(p, thread);
 						freePorts.remove(p);
 						if (freePorts.isEmpty())
 							break;
@@ -234,8 +251,12 @@ public class SchemeDevice extends StubResource implements Serializable
 			}
 			if (!freePorts.isEmpty() && !freeThreads.isEmpty())
 			{
+				Iterator it = freeThreads.iterator();
 				for (int i = 0; i < Math.min(freePorts.size(), freeThreads.size()); i++)
-					crossroute.put(freePorts.get(i), freeThreads.get(i));
+				{
+					SchemeCableThread thread = (SchemeCableThread)it.next();
+					crossroute.add((SchemePort)freePorts.get(i), thread);
+				}
 			}
 		}
 	}
@@ -254,7 +275,7 @@ public class SchemeDevice extends StubResource implements Serializable
 		ports = new ArrayList(transferable.ports.length);
 		cableports = new ArrayList(transferable.cableports.length);
 		attributes = new HashMap(transferable.attributes.length);
-		crossroute = new HashMap();
+		crossroute = new PortThreadMap();
 
 		for (int i = 0; i < transferable.ports.length; i++)
 			ports.add(new SchemePort(transferable.ports[i]));
@@ -262,6 +283,12 @@ public class SchemeDevice extends StubResource implements Serializable
 			cableports.add(new SchemeCablePort(transferable.cableports[i]));
 		for(int i = 0; i < transferable.attributes.length; i++)
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
+
+//		for (int i = 0; i < transferable.portmap.length; i++)
+//		{
+//
+//
+//		}
 	}
 
 	public void setTransferableFromLocal()
@@ -296,11 +323,12 @@ public class SchemeDevice extends StubResource implements Serializable
 			ea.setTransferableFromLocal();
 			transferable.attributes[i++] = ea.transferable;
 		}
+//		transferable.portmap = crossroute.getTransferable();
 	}
 
 	public void updateLocalFromTransferable()
 	{
-		crossroute = new HashMap();
+		crossroute = new PortThreadMap();
 		for (Iterator it = ports.iterator(); it.hasNext();)
 		{
 			SchemePort port = (SchemePort)it.next();

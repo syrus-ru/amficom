@@ -17,6 +17,8 @@ public class SchemeCableThread extends StubResource implements Serializable
 	public String link_type_id = "";
 	public String thread_id = "";
 
+	public transient String cable_link_id = "";
+
 	public Map attributes;
 
 	public SchemeCableThread(SchemeCableThread_Transferable transferable)

@@ -106,20 +106,20 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			{
 				if (mode == CREATING_PATH)
 				{
-//					if (!pathpanel.links_to_add.isEmpty())
-//						pathpanel.addSelectedLinks();
+					if (!pathpanel.links_to_add.isEmpty())
+						pathpanel.addSelectedLinks();
 
-		 Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
-		 PathBuilder.addLink(pathpanel.path.links, (SchemeLink)pathpanel.links_to_add.get(0));
-		 int st_size = pathpanel.path.links.size();
-			boolean res = PathBuilder.explore(scheme, pathpanel.path);
-			int end_size = pathpanel.path.links.size();
-			System.out.println("RES after add = " + res + "; " + (end_size - st_size) + " elements added!");
-			System.out.println("last element = " + pathpanel.path.links.listIterator(pathpanel.path.links.size()).previous());
-
-			dispatcher.notify(new SchemeNavigateEvent(
-					new SchemePath[] {pathpanel.path},
-					SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT));
+//		 Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
+//		 PathBuilder.addLink(pathpanel.path.links, (SchemeLink)pathpanel.links_to_add.get(0));
+//		 int st_size = pathpanel.path.links.size();
+//			boolean res = PathBuilder.explore(scheme, pathpanel.path);
+//			int end_size = pathpanel.path.links.size();
+//			System.out.println("RES after add = " + res + "; " + (end_size - st_size) + " elements added!");
+//			System.out.println("last element = " + pathpanel.path.links.listIterator(pathpanel.path.links.size()).previous());
+//
+//			dispatcher.notify(new SchemeNavigateEvent(
+//					new SchemePath[] {pathpanel.path},
+//					SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT));
 
 //          else if (pathpanel.setting_obj instanceof Scheme)
 //					{
@@ -154,11 +154,12 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 						String id = pathpanel.device_to_add.getId();
 						pathpanel.setStartDevice(id);
 
-					Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
-						boolean res = PathBuilder.explore(scheme, pathpanel.path);
+//					Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
+//						boolean res = PathBuilder.explore(scheme, pathpanel.path);
+
 //					PathBuilder.addSchemeElement(pathpanel.path.links,
 //																			 (SchemeElement)Pool.get(SchemeElement.typ, id));
-						System.out.println(res);
+//						System.out.println(res);
 					}
 				}
 			}
