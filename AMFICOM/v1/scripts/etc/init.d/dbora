@@ -1,0 +1,147 @@
+#!/bin/sh
+
+LSNRCTL_START="yes"
+DBSTART_START="yes"
+DBSHUT_START="yes"
+AGENTCTL_START="no"
+OEMCTL_START="no"
+
+check_exe() {
+	if [ "$2" = "yes" ]
+	then
+		if [ ! -x "$1" ]
+		then
+			echo "$1 missing or is not executable; exitting..."
+		fi
+	elif [ "$2" = "no" ]
+	then
+		true
+	else
+		echo "Variable can be either \"yes\" or \"no\", but not $2; exitting..."
+		exit 1
+	fi
+}
+
+pre() {
+	ORACLE_OWNER="oracle"
+	ORAINVENTORY="oinstall"
+	oracle_home=`grep "${ORACLE_OWNER}" /etc/passwd | cut -d: -f6`
+	if [ -z "${oracle_home}" ]
+	then
+		echo "User oracle not found; exitting..."
+		exit 1
+	fi
+	touch "${oracle_home}/.hushlogin"
+	chown "${ORACLE_OWNER}:${ORAINVENTORY}" "${oracle_home}/.hushlogin"
+	ORACLE_HOME=`su - "${ORACLE_OWNER}" -c 'echo "${ORACLE_HOME}"'`
+	if [ -z "${ORACLE_HOME}" ]
+	then
+		echo "User oracle's environment not set up; exitting..."
+		exit 1
+	fi
+
+	LSNRCTL="${ORACLE_HOME}/bin/lsnrctl"
+	DBSTART="${ORACLE_HOME}/bin/dbstart"
+	DBSHUT="${ORACLE_HOME}/bin/dbshut"
+	AGENTCTL="${ORACLE_HOME}/bin/agentctl"
+	OEMCTL="${ORACLE_HOME}/bin/oemctl"
+
+	check_exe ${LSNRCTL} ${LSNRCTL_START}
+	check_exe ${DBSTART} ${DBSTART_START}
+	check_exe ${DBSHUT} ${DBSHUT_START}
+	check_exe ${AGENTCTL} ${AGENTCTL_START}
+	check_exe ${OEMCTL} ${OEMCTL_START}
+}
+
+post() {
+	unset ORACLE_HOME oracle_home ORAINVENTORY ORACLE_OWNER \
+		LSNRCTL LSNRCTL_START \
+		DBSTART DBSTART_START \
+		DBSHUT	DBSHUT_START \
+		AGENTCTL AGENTCTL_START \
+		OEMCTL OEMCTL_START
+}
+
+case "$1" in
+	start)
+		# Start the Oracle databases:
+		# The following command assumes that the oracle login
+		# will not prompt the user for any values
+		pre
+		if [ "${LSNRCTL_START}" = "yes" ]
+		then
+			echo "\033[1;33;42m> Starting lsnrctl...\033[0m"
+			su - "${ORACLE_OWNER}" -c "${LSNRCTL} start"
+		fi
+		if [ "${DBSTART_START}" = "yes" ]
+		then
+			echo "\033[1;33;42m> Starting database instance...\033[0m"
+			su - "${ORACLE_OWNER}" -c "${DBSTART}"
+		fi
+		if [ "${AGENTCTL_START}" = "yes" ]
+		then
+			echo "\033[1;33;42m> Starting agentctl...\033[0m"
+			su - "${ORACLE_OWNER}" -c "${AGENTCTL} start"
+		fi
+		if [ "${OEMCTL_START}" = "yes" ]
+		then
+			echo "\033[1;33;42m> Starting oemctl...\033[0m"
+			su - "${ORACLE_OWNER}" -c "${OEMCTL} start oms"
+		fi
+		post
+		;;
+	stop)
+		# Stop the Oracle databases:
+		# The following command assumes that the oracle login
+		# will not prompt the user for any values
+		pre
+		if [ "${OEMCTL_START}" = "yes" ]
+		then
+			echo "\033[1;33;42m> Stopping oemctl...\033[0m"
+			su - "${ORACLE_OWNER}" -c "${OEMCTL} stop oms SYSMAN/sysman"
+		fi
+		if [ "${AGENTCTL_START}" = "yes" ]
+		then
+			echo "\033[1;33;42m> Stopping agentctl...\033[0m"
+			su - "${ORACLE_OWNER}" -c "{AGENTCTL} stop"
+		fi
+		if [ "${DBSHUT_START}" = "yes" ]
+		then
+			echo "\033[1;33;42m> Stopping database instance...\033[0m"
+			su - "${ORACLE_OWNER}" -c "${DBSHUT}"
+		fi
+		if [ "${LSNRCTL_START}" = "yes" ]
+		then
+			echo "\033[1;33;42m> Stopping lsnrctl...\033[0m"
+			su - "${ORACLE_OWNER}" -c "${LSNRCTL} stop"
+		fi
+		post
+		;;
+	status)
+		pre
+		if [ "${LSNRCTL_START}" = "yes" ]
+		then
+			echo "\033[1;33;42m> lsnrctl status:\033[0m"
+			su - "${ORACLE_OWNER}" -c "${LSNRCTL} status"
+		fi
+		if [ "${AGENTCTL_START}" = "yes" ]
+		then
+			echo "\033[1;33;42m> agentctl status:\033[0m"
+			su - "${ORACLE_OWNER}" -c "${AGENTCTL} status"
+		fi
+		if [ "${OEMCTL_START}" = "yes" ]
+		then
+			echo "\033[1;33;42m> oemctl status:\033[0m"
+			su - "${ORACLE_OWNER}" -c "${OEMCTL} status oms SYSMAN/sysman"
+		fi
+		post
+		;;
+	restart)
+		$0 stop
+		$0 start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|status}"
+		exit 1
+		;;
+esac

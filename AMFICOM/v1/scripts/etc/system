@@ -1,0 +1,101 @@
+*ident	"@(#)system	1.18	97/06/27 SMI" /* SVR4 1.5 */
+*
+* SYSTEM SPECIFICATION FILE
+*
+
+* moddir:
+*
+*	Set the search path for modules.  This has a format similar to the
+*	csh path variable. If the module isn't found in the first directory
+*	it tries the second and so on. The default is /kernel /usr/kernel
+*
+*	Example:
+*		moddir: /kernel /usr/kernel /other/modules
+
+
+
+* root device and root filesystem configuration:
+*
+*	The following may be used to override the defaults provided by
+*	the boot program:
+*
+*	rootfs:		Set the filesystem type of the root.
+*
+*	rootdev:	Set the root device.  This should be a fully
+*			expanded physical pathname.  The default is the
+*			physical pathname of the device where the boot
+*			program resides.  The physical pathname is
+*			highly platform and configuration dependent.
+*
+*	Example:
+*		rootfs:ufs
+*		rootdev:/sbus@1,f8000000/esp@0,800000/sd@3,0:a
+*
+*	(Swap device configuration should be specified in /etc/vfstab.)
+
+
+
+* exclude:
+*
+*	Modules appearing in the moddir path which are NOT to be loaded,
+*	even if referenced. Note that `exclude' accepts either a module name,
+*	or a filename which includes the directory.
+*
+*	Examples:
+*		exclude: win
+*		exclude: sys/shmsys
+
+
+
+* forceload:
+*
+*	Cause these modules to be loaded at boot time, (just before mounting
+*	the root filesystem) rather than at first reference. Note that
+* 	forceload expects a filename which includes the directory. Also
+*	note that loading a module does not necessarily imply that it will
+*	be installed.
+*
+*	Example:
+*		forceload: drv/foo
+
+
+
+* set:
+*
+*	Set an integer variable in the kernel or a module to a new value.
+*	This facility should be used with caution.  See system(4).
+*
+*	Examples:
+*
+*	To set variables in 'unix':
+*
+*		set nautopush=32
+*		set maxusers=40
+*
+*	To set a variable named 'debug' in the module named 'test_module'
+*
+*		set test_module:debug = 0x13
+
+* Begin MDD root info (do not edit)
+forceload: misc/md_trans
+forceload: misc/md_raid
+forceload: misc/md_hotspares
+forceload: misc/md_sp
+forceload: misc/md_stripe
+forceload: misc/md_mirror
+forceload: drv/pcisch
+forceload: drv/glm
+forceload: drv/sd
+rootdev:/pseudo/md@0:0,2,blk
+* End MDD root info (do not edit)
+
+* Needed by Oracle 10g installation:
+set semsys:seminfo_shmmin=1
+set semsys:seminfo_shmseg=10
+set semsys:seminfo_semmni=100
+set semsys:seminfo_semmns=1024
+set semsys:seminfo_semmsl=256
+set semsys:seminfo_semvmx=32767
+set shmsys:shminfo_shmmax=4294967295
+set shmsys:shminfo_shmmni=100
+set noexec_user_stack=1

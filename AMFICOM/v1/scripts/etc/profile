@@ -1,0 +1,158 @@
+#ident	"@(#)profile	1.19	01/03/13 SMI"	/* SVr4.0 1.3	*/
+
+# The profile that all logins get before using their own .profile.
+# vim:ft=sh:
+
+trap ""  2 3
+export LOGNAME PATH
+
+if [ -z "${TERM}" ]
+then
+	if /bin/i386
+	then
+		TERM=sun-color
+	else
+		TERM=sun
+	fi
+	export TERM
+elif [ "${TERM}" = "xterm" ]
+then
+	# Sun terminfo database is braindead.
+	TERM=dtterm
+fi
+
+#	Login and -su shells get /etc/profile services.
+#	-rsh is given its environment in its .profile.
+
+case "$0" in
+-sh | -ksh | -jsh | -bash)
+
+	if [ ! -f .hushlogin ]
+	then
+		/usr/sbin/quota
+		#	Allow the user to break the Message-Of-The-Day only.
+		trap "trap '' 2"  2
+		/bin/cat -s /etc/motd
+		trap "" 2
+
+		/bin/mail -E
+		case $? in
+		0) 
+			echo "You have new mail."
+		  	;;
+		2) 
+			echo "You have mail."
+		   	;;
+		esac
+	fi
+esac
+
+umask 022
+trap  2 3
+
+case "$0" in
+-bash)
+	# Set PROMPT_COMMAND for all terminals except Linux and Sun
+	# consoles.
+	if [ "${TERM}" != "sun-color" -a "${TERM}" != "sun" -a "${TERM}" != "linux" ]
+	then
+		PROMPT_COMMAND="echo -ne \"\033]0;${LOGNAME}@${HOSTNAME%%.*}:${PWD/#$HOME/~}\007\""
+
+		export PROMPT_COMMAND
+	fi
+esac
+
+# When migrating to Solaris 2.10, it may be necessary to detect 64-bit
+# architectures by running ``prtconf -x''.
+PATH=""
+MANPATH=""
+LD_LIBRARY_PATH=""
+if /bin/sun -o /bin/sparc
+then
+	LD_LIBRARY_PATH_64=""
+fi
+
+PREFIXES="/ /usr/ /usr/local/ /usr/sfw/ /opt/sfw/ /usr/dt/ /usr/openwin/"
+for PREFIX in ${PREFIXES}
+do
+	if [ "${LOGNAME}" = "root" -o "${LOGNAME}" = "toor" ]
+	then
+		if [ "${PATH}" ]
+		then
+			PATH="${PATH}:${PREFIX}sbin"
+		else
+			PATH="${PREFIX}sbin"
+		fi
+	fi
+
+	if [ "${PATH}" ]
+	then
+		PATH="${PATH}:${PREFIX}bin"
+	else
+		PATH="${PREFIX}bin"
+	fi
+
+	if [ "${MANPATH}" ]
+	then
+		MANPATH="${MANPATH}:${PREFIX}man:${PREFIX}share/man"
+	else
+		MANPATH="${PREFIX}man:${PREFIX}share/man"
+	fi
+
+	if [ "${LD_LIBRARY_PATH}" ]
+	then
+		LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${PREFIX}lib"
+	else
+		LD_LIBRARY_PATH="${PREFIX}lib"
+	fi
+
+	if /bin/sun -o /bin/sparc
+	then
+		if [ "${LD_LIBRARY_PATH_64}" ]
+		then
+			LD_LIBRARY_PATH_64="${LD_LIBRARY_PATH_64}:${PREFIX}lib/sparcv9"
+		else
+			LD_LIBRARY_PATH_64="${PREFIX}lib/sparcv9"
+		fi
+	fi
+done
+unset PREFIX PREFIXES
+
+export PATH MANPATH LD_LIBRARY_PATH
+if /bin/sun -o /bin/sparc
+then
+	export LD_LIBRARY_PATH_64
+fi
+
+
+PAGER=less
+export PAGER
+
+
+if [ -f /etc/TIMEZONE ]
+then
+	. /etc/TIMEZONE
+	for VAR in `/usr/xpg4/bin/grep -Ev '(^#|^$)' /etc/TIMEZONE | sed 's/^\([^=]*\)=[^=]*$/\1/'`
+	do
+		export ${VAR}
+	done
+	unset VAR
+fi
+
+
+case "`uname -i`" in
+	"SUNW,Ultra-5_10")
+		CFLAGS="-O2 -mcpu=ultrasparc -mv8plus -mvis -threads"
+		CXXFLAGS="-O2 -mcpu=ultrasparc -mv8plus -mvis -threads"
+		;;
+	"SUNW,Sun-Fire-V240")
+		CFLAGS="-O2 -mcpu=ultrasparc3 -mv8plus -mvis -threads"
+		CXXFLAGS="-O2 -mcpu=ultrasparc3 -mv8plus -mvis -threads"
+		;;
+	"i86pc")
+		CFLAGS="-O2"
+		CXXFLAGS="-O2"
+		;;
+esac
+
+export CFLAGS CXXFLAGS

@@ -1,0 +1,21 @@
+#ident	"@(#)init.dfl	1.6	00/05/27 SMI"
+#
+# This file is /etc/default/init.  /etc/TIMEZONE is a symlink to this file.
+# This file looks like a shell script, but it is not.  To maintain
+# compatibility with old versions of /etc/TIMEZONE, some shell constructs
+# (i.e., export commands) are allowed in this file, but are ignored.
+#
+# Lines of this file should be of the form VAR=value, where VAR is one of
+# TZ, LANG, CMASK, or any of the LC_* environment variables.
+#
+TZ=Europe/Moscow
+CMASK=022
+LANG=ru_RU.KOI8-R
+LANG=ru_RU.KOI8-R
+LC_CTYPE=ru_RU.KOI8-R
+LC_NUMERIC=ru_RU.KOI8-R
+LC_TIME=ru_RU.KOI8-R
+LC_COLLATE=ru_RU.KOI8-R
+LC_MONETARY=ru_RU.KOI8-R
+LC_MESSAGES=ru_RU.KOI8-R
+LC_ALL=ru_RU.KOI8-R
