@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabaseContext.java,v 1.15 2004/10/06 15:45:15 max Exp $
+ * $Id: MeasurementDatabaseContext.java,v 1.16 2004/10/13 07:52:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,21 +8,14 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Iterator;
-import java.util.List;
 
-import org.apache.xalan.lib.sql.ObjectArray;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/10/06 15:45:15 $
- * @author $Author: max $
+ * @version $Revision: 1.16 $, $Date: 2004/10/13 07:52:39 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 

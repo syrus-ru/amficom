@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.5 2004/10/12 08:00:54 bob Exp $
+ * $Id: Modeling.java,v 1.6 2004/10/13 07:53:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
@@ -26,8 +25,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/10/12 08:00:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2004/10/13 07:53:04 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 

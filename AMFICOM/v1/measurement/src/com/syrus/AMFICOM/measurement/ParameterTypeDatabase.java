@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.27 2004/09/20 14:06:50 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.28 2004/10/13 07:52:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,12 +23,11 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/09/20 14:06:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2004/10/13 07:52:39 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 

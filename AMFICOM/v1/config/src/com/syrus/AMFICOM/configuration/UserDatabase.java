@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.15 2004/09/20 14:13:38 bob Exp $
+ * $Id: UserDatabase.java,v 1.16 2004/10/13 07:52:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,12 +23,11 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/09/20 14:13:38 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2004/10/13 07:52:39 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 

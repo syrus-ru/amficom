@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.29 2004/10/06 15:45:15 max Exp $
+ * $Id: AnalysisType.java,v 1.30 2004/10/13 07:52:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.w3c.dom.EntityReference;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -29,8 +28,8 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/10/06 15:45:15 $
- * @author $Author: max $
+ * @version $Revision: 1.30 $, $Date: 2004/10/13 07:52:39 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
