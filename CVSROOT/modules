@@ -145,6 +145,7 @@ dbscheme_v1	AMFICOM/v1/dbscheme
 akp		hw/akp
 trc		hw/trc
 tracedatareader	hw/tracedatareader
+tcpconnect	hw/tcpconnect
 t4		hw/t4
 r6		hw/r6
 
