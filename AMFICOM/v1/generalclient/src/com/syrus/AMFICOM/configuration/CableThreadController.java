@@ -17,14 +17,7 @@ public final class CableThreadController implements ObjectResourceController
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				COLUMN_ID,
-				COLUMN_CREATED,
-				COLUMN_CREATOR_ID,
-				COLUMN_MODIFIED,
-				COLUMN_MODIFIER_ID,
-				COLUMN_DESCRIPTION,
 				COLUMN_NAME,
-				COLUMN_TYPE_ID
 		};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));

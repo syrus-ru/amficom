@@ -15,15 +15,7 @@ public final class TransmissionPathTypeController implements ObjectResourceContr
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				COLUMN_ID,
-				COLUMN_CREATED,
-				COLUMN_CREATOR_ID,
-				COLUMN_MODIFIED,
-				COLUMN_MODIFIER_ID,
-				COLUMN_CODENAME,
-				COLUMN_DESCRIPTION,
-				COLUMN_NAME,
-				COLUMN_CHARACTERISTICS
+				COLUMN_NAME
 		};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
@@ -115,5 +107,9 @@ public final class TransmissionPathTypeController implements ObjectResourceContr
 	{
 		Class clazz = String.class;
 		return clazz;
+	}
+	
+	public static String getPropertyPaneClassName() {
+		return "com.syrus.AMFICOM.Client.Configure.UI.TransmissionPathTypePane";
 	}
 }

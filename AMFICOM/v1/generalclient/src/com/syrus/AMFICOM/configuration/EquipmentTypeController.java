@@ -17,9 +17,7 @@ public final class EquipmentTypeController implements ObjectResourceController {
 
 	private EquipmentTypeController() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_ID, COLUMN_CREATED, COLUMN_CREATOR_ID, COLUMN_MODIFIED,
-				COLUMN_MODIFIER_ID, COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_MANUFACTURER,
-				COLUMN_MANUFACTURER_CODE, COLUMN_CHARACTERISTICS};
+		String[] keysArray = new String[] { COLUMN_NAME };
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -101,5 +99,9 @@ public final class EquipmentTypeController implements ObjectResourceController {
 	public Class getPropertyClass(String key) {
 		Class clazz = String.class;
 		return clazz;
+	}
+	
+	public static String getPropertyPaneClassName() {
+		return "com.syrus.AMFICOM.Client.Configure.UI.EquipmentTypePane";
 	}
 }
