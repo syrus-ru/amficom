@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModuleSetup.java,v 1.3 2005/03/23 20:43:01 arseniy Exp $
+ * $Id: MeasurementControlModuleSetup.java,v 1.4 2005/03/23 20:49:38 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/23 20:43:01 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/23 20:49:38 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -221,6 +221,8 @@ public class MeasurementControlModuleSetup {
 			Log.errorException(e);
 		}
 
+		//TODO Analysis types
+		//TODO Evaluation types
 		
 	}
 
