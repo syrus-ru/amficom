@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.51 2004/12/22 12:15:25 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.52 2004/12/22 12:23:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2004/12/22 12:15:25 $
+ * @version $Revision: 1.52 $, $Date: 2004/12/22 12:23:40 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -448,7 +448,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		for (Iterator it = transceivers.keySet().iterator(); it.hasNext();)
 			((Transceiver)transceivers.get(it.next())).shutdown();
 		deactivateCORBAServer();
-//		DatabaseConnection.closeConnection();
+		DatabaseConnection.closeConnection();
 	}
 
 
