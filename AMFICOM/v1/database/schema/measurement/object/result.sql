@@ -14,9 +14,9 @@ CREATE TABLE Result (
 --
  CONSTRAINT res_pk PRIMARY KEY (id),
  CONSTRAINT res_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT res_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
 --
  CONSTRAINT res_mnt_fk FOREIGN KEY (measurement_id)
   REFERENCES Measurement (id) ON DELETE CASCADE,

@@ -15,6 +15,11 @@ CREATE TABLE MonitoredElement (
  local_address VARCHAR2(64) NOT NULL, 
 --
  CONSTRAINT me_pk PRIMARY KEY (id),
+ CONSTRAINT me_creator_fk FOREIGN KEY (creator_id)
+  REFERENCES "User" (id) ON DELETE CASCADE,
+ CONSTRAINT me_modifier_fk FOREIGN KEY (modifier_id)
+  REFERENCES "User" (id) ON DELETE CASCADE,
+--
  CONSTRAINT me_meport_fk FOREIGN KEY (measurement_port_id)
   REFERENCES MeasurementPort (id) ON DELETE CASCADE
 );

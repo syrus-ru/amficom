@@ -11,9 +11,9 @@ CREATE TABLE EvaluationType (
  CONSTRAINT evatype_pk PRIMARY KEY (id),
  CONSTRAINT evatype_uniq UNIQUE (codename),
  CONSTRAINT evatype_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT evatype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE
+  REFERENCES "User" (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE evaluationtype_seq ORDER;

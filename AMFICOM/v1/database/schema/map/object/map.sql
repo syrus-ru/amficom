@@ -11,9 +11,9 @@ CREATE TABLE Map (
 --
  CONSTRAINT map_pk PRIMARY KEY (id),
  CONSTRAINT map_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT map_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT map_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE
 );

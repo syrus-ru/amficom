@@ -14,9 +14,9 @@ CREATE TABLE CableThreadType (
 --
  CONSTRAINT ctkptype_pk PRIMARY KEY (id),
  CONSTRAINT ctptype_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT ctptype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT ctptype_clinktype_fk FOREIGN KEY (link_type_id)
   REFERENCES LinkType (id) ON DELETE CASCADE
 );

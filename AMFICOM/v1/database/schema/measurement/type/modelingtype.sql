@@ -11,9 +11,9 @@ CREATE TABLE ModelingType (
  CONSTRAINT modtype_pk PRIMARY KEY (id),
  CONSTRAINT modtype_uniq UNIQUE (codename),
  CONSTRAINT modtype_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT modtype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE
+  REFERENCES "User" (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE ModelingType_seq ORDER;

@@ -13,9 +13,9 @@ CREATE TABLE PortType (
 --
  CONSTRAINT porttype_pk PRIMARY KEY (id),
  CONSTRAINT porttype_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT porttype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE
+  REFERENCES "User" (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE porttype_seq ORDER;

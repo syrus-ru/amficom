@@ -21,9 +21,9 @@ CREATE TABLE Test (
 --
  CONSTRAINT test_pk PRIMARY KEY (id),
  CONSTRAINT test_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT test_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
 --
  CONSTRAINT test_tp_fk FOREIGN KEY (temporal_pattern_id)
   REFERENCES TemporalPattern (id) ON DELETE CASCADE,

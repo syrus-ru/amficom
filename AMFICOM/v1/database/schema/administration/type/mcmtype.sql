@@ -10,9 +10,9 @@ CREATE TABLE MCMType (
 --
  CONSTRAINT mcmtype_pk PRIMARY KEY (id),
  CONSTRAINT mcmtype_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT mcmtype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE
+  REFERENCES "User" (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE mcmtype_seq ORDER;

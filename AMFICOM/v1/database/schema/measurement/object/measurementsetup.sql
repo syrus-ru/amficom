@@ -14,18 +14,18 @@ CREATE TABLE MeasurementSetup (
 --
  CONSTRAINT mntsetup_pk PRIMARY KEY (id),
  CONSTRAINT mntsetup_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT mntsetup_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
 --
  CONSTRAINT mntsetup_parset_fk FOREIGN KEY (parameter_set_id)
-  REFERENCES Sett (id) ON DELETE CASCADE,
+  REFERENCES "Set" (id) ON DELETE CASCADE,
  CONSTRAINT mntsetup_criset_fk FOREIGN KEY (criteria_set_id)
-  REFERENCES Sett (id) ON DELETE CASCADE,
+  REFERENCES "Set" (id) ON DELETE CASCADE,
  CONSTRAINT mntsetup_thrset_fk FOREIGN KEY (threshold_set_id)
-  REFERENCES Sett (id) ON DELETE CASCADE,
+  REFERENCES "Set" (id) ON DELETE CASCADE,
  CONSTRAINT mntsetup_etalon_fk FOREIGN KEY (etalon_id)
-  REFERENCES Sett (id) ON DELETE CASCADE
+  REFERENCES "Set" (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE measurementsetup_seq ORDER;

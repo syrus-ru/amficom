@@ -11,9 +11,9 @@ CREATE TABLE MeasurementType (
  CONSTRAINT mnttype_pk PRIMARY KEY (id),
  CONSTRAINT mnttype_uniq UNIQUE (codename),
  CONSTRAINT mnttype_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT mnttype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE
+  REFERENCES "User" (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE measurementtype_seq ORDER;

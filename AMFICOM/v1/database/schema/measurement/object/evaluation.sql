@@ -14,9 +14,9 @@ CREATE TABLE Evaluation (
 --
  CONSTRAINT eva_pk PRIMARY KEY (id),
  CONSTRAINT aeva_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT eva_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
 --
  CONSTRAINT eva_evatype_fk FOREIGN KEY (type_id)
   REFERENCES EvaluationType (id) ON DELETE CASCADE,
@@ -26,9 +26,9 @@ CREATE TABLE Evaluation (
   REFERENCES Measurement (id) ON DELETE CASCEDE,
 --
  CONSTRAINT eva_thrset_fk FOREIGN KEY (threshold_set_id)
-  REFERENCES Sett (id) ON DELETE CASCADE,
+  REFERENCES "Set" (id) ON DELETE CASCADE,
  CONSTRAINT eva_eta_fk FOREIGN KEY (ETALON_ID)
-  REFERENCES Sett (id) ON DELETE CASCADE
+  REFERENCES "Set" (id) ON DELETE CASCADE
  );
 
 CREATE SEQUENCE evaluaition_seq ORDER;

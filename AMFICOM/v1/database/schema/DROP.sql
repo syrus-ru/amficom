@@ -4,4 +4,4 @@
 @@./configuration/DROP.sql
 @@./administration/DROP.sql
 @@./general/DROP.sql
-@@./users/DROP.sql
+@@./user/DROP.sql

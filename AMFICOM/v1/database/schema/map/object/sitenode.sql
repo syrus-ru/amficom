@@ -17,9 +17,9 @@ CREATE TABLE SiteNode (
 --
  CONSTRAINT sitnode_pk PRIMARY KEY (id),
  CONSTRAINT sitnode_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT sitnode_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT sitnode_type_modifier_fk FOREIGN KEY (site_node_type_id)
   REFERENCES SiteNodeType (id) ON DELETE CASCADE
 );

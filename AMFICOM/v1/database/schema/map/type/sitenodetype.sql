@@ -14,9 +14,9 @@ CREATE TABLE SiteNodeType (
  CONSTRAINT sitnodetype_pk PRIMARY KEY (id),
  CONSTRAINT sitnodetype_uniq UNIQUE (codename),
  CONSTRAINT sitnodetype_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT sitnodetype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE
+  REFERENCES "User" (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE sitenodetype_seq ORDER;

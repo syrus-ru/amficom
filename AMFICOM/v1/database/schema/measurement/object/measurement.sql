@@ -18,9 +18,9 @@ CREATE TABLE Measurement (
 --
  CONSTRAINT measurement_pk PRIMARY KEY (id),
  CONSTRAINT mnt_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT mnt_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
 --
  CONSTRAINT mnt_mnttype_fk FOREIGN KEY (type_id)
   REFERENCES MeasurementType (id) ON DELETE CASCADE,

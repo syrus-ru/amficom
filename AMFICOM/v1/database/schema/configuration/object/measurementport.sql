@@ -15,9 +15,9 @@ CREATE TABLE MeasurementPort (
 --
  CONSTRAINT mp_pk PRIMARY KEY (id),
  CONSTRAINT mp_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT mp_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
 --
  CONSTRAINT mp_kis_fk FOREIGN KEY (kis_id)
   REFERENCES KIS (id) ON DELETE CASCADE,

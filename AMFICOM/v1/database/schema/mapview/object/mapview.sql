@@ -16,9 +16,9 @@ CREATE TABLE MapView (
 --
  CONSTRAINT mv_pk PRIMARY KEY (id),
  CONSTRAINT mv_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT mv_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT mv_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE,
  CONSTRAINT mv_map_fk FOREIGN KEY (map_id)

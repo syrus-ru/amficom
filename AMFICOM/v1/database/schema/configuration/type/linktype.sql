@@ -17,9 +17,9 @@ CREATE TABLE LinkType (
 --
  CONSTRAINT lkptype_pk PRIMARY KEY (id),
  CONSTRAINT lkptype_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT lkptype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE
+  REFERENCES "User" (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE linktype_seq ORDER;

@@ -12,9 +12,9 @@ CREATE TABLE MeasurementPortType (
 --
  CONSTRAINT mptype_pk PRIMARY KEY (id),
  CONSTRAINT mptype_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT mptype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE
+  REFERENCES "User" (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE MeasurementPortType_seq ORDER;

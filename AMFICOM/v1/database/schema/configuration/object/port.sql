@@ -14,9 +14,9 @@ CREATE TABLE Port (
 --
  CONSTRAINT port_pk PRIMARY KEY (id),
  CONSTRAINT port_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT port_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
 --
  CONSTRAINT port_porttype_fk FOREIGN KEY (type_id)
   REFERENCES PortType (id) ON DELETE CASCADE,

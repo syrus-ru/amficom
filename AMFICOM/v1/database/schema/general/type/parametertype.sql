@@ -14,9 +14,9 @@ CREATE TABLE ParameterType (
 --
  CONSTRAINT partype_uniq UNIQUE (codename),
  CONSTRAINT partype_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT partype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE
+  REFERENCES "User" (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE parametertype_seq ORDER;

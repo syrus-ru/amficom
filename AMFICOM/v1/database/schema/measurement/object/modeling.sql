@@ -14,9 +14,9 @@ CREATE TABLE Modeling (
 --
  CONSTRAINT mod_pk PRIMARY KEY (id),
  CONSTRAINT mod_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT mod_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
 --
  CONSTRAINT mod_modtype_fk FOREIGN KEY (type_id)
   REFERENCES ModelingType (id) ON DELETE CASCADE,
@@ -24,7 +24,7 @@ CREATE TABLE Modeling (
   REFERENCES MonitoredElement (id) ON DELETE CASCADE,
 --
  CONSTRAINT mod_argset_fk FOREIGN KEY (argument_set_id)
-  REFERENCES Sett (id) ON DELETE CASCADE
+  REFERENCES "Set" (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE Modeling_seq ORDER;

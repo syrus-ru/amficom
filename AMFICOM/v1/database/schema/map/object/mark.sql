@@ -17,9 +17,9 @@ CREATE TABLE Mark (
 --
  CONSTRAINT mark_pk PRIMARY KEY (id),
  CONSTRAINT mark_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT mark_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT mark_phlink_fk FOREIGN KEY (physical_link_id)
   REFERENCES PhysicalLink (id) ON DELETE CASCADE
 );

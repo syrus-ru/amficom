@@ -13,9 +13,9 @@ CREATE TABLE TemporalPattern (
 --
  CONSTRAINT tp_pk PRIMARY KEY (id),
  CONSTRAINT tp_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT tp_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE
+  REFERENCES "User" (id) ON DELETE CASCADE
  )
  NESTED TABLE value STORE AS value_tab;
 

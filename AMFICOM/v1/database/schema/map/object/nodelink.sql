@@ -13,9 +13,9 @@ CREATE TABLE NodeLink (
 --
  CONSTRAINT nodelink_pk PRIMARY KEY (id),
  CONSTRAINT nodelink_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT nodelink_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT nodelink_phlink_type_fk FOREIGN KEY (physical_link_id)
   REFERENCES PhysicalLink (id) ON DELETE CASCADE
 );

@@ -1,5 +1,5 @@
-REM users
-@@./users/CREATE.sql
+REM user
+@@./user/CREATE.sql
 
 REM general
 @@./general/CREATE.sql

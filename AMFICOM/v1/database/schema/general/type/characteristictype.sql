@@ -13,9 +13,9 @@ CREATE TABLE CharacteristicType (
 --
  CONSTRAINT chctype_pk PRIMARY KEY (id),
  CONSTRAINT chctype_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT chctype_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT chctype_uniq UNIQUE (codename),
  CONSTRAINT chctype_dt_fk FOREIGN KEY (data_type)
   REFERENCES DataType (id) ON DELETE CASCADE
