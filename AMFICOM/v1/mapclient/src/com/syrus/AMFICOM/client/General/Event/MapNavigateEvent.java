@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.4 2004/10/15 14:09:00 krupenn Exp $
+ * $Id: MapNavigateEvent.java,v 1.5 2004/10/18 07:50:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,7 @@ package com.syrus.AMFICOM.Client.General.Event;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/15 14:09:00 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/18 07:50:26 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -118,7 +118,7 @@ public class MapNavigateEvent extends MapEvent
 	/**
 	 * Идентификатор схемной Линии
 	 */
-	protected String schemeLinkId;
+	protected String schemePathElementId;
 
 //    protected Object descriptor;
 
@@ -157,10 +157,10 @@ public class MapNavigateEvent extends MapEvent
 			double distance,
 			String schemePathId,
 			String meId,
-			String schemeLinkId)
+			String schemePathElementId)
 	{
 		this(source, typ, markerId, distance, schemePathId, meId);
-        this.schemeLinkId = schemeLinkId;
+        this.schemePathElementId = schemePathElementId;
 	}
 
 	public void setMarkerId(String markerId)
@@ -203,14 +203,14 @@ public class MapNavigateEvent extends MapEvent
 		return meId;
 	}
 
-	public void setSchemeLinkId(String schemeLinkId)
+	public void setSchemePathElementId(String schemePathElementId)
 	{
-		this.schemeLinkId = schemeLinkId;
+		this.schemePathElementId = schemePathElementId;
 	}
 
-	public String getSchemeLinkId()
+	public String getSchemePathElementId()
 	{
-		return schemeLinkId;
+		return schemePathElementId;
 	}
 /*
 	public void setDescriptor(Object descriptor)
