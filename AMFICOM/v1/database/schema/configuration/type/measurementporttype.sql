@@ -8,6 +8,8 @@ CREATE TABLE MeasurementPortType (
  codename VARCHAR2(32) NOT NULL,
  description VARCHAR2(256),
 --
+ name VARCHAR2(64),
+--
  CONSTRAINT mptype_pk PRIMARY KEY (id),
  CONSTRAINT mptype_creator_fk FOREIGN KEY (creator_id)
   REFERENCES Users (id) ON DELETE CASCADE,

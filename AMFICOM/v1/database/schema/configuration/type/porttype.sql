@@ -8,6 +8,8 @@ CREATE TABLE PortType (
  codename VARCHAR2(32) NOT NULL,
  description VARCHAR2(256),
 --
+ name VARCHAR2(64),
+--
  CONSTRAINT porttype_pk PRIMARY KEY (id),
  CONSTRAINT porttype_creator_fk FOREIGN KEY (creator_id)
   REFERENCES Users (id) ON DELETE CASCADE,
