@@ -1,7 +1,6 @@
 classes
 doc
 nbproject
-test
 build.xml
 *.deploy
 *.jar
@@ -16,3 +15,5 @@ build.xml
 .project
 .settings
 .#*
+cache
+logs
