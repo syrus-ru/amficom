@@ -37,8 +37,8 @@ public class DefaultConfigApplicationModelFactory
 		aModel.setUsable("menuSchemeJElType", false);
 		aModel.setUsable("menuSchemeJElement", false);
 
-		aModel.setUsable("menuObjectNetDir", false);
-		aModel.setUsable("menuObjectJDir", false);
+//		aModel.setUsable("menuObjectNetDir", false);
+//		aModel.setUsable("menuObjectJDir", false);
 
 		aModel.setVisible("menuNet", false);
 		aModel.setUsable("menuNetDirLink", false);
