@@ -9,6 +9,8 @@ public interface KISConnection {
 
 	void establish(long kisConnectionTimeout) throws CommunicationException;
 
+	void establish(long kisConnectionTimeout, boolean dropIfAlreadyEstablished) throws CommunicationException; 
+
 	void drop();
 
 	void transmitMeasurement(Measurement measurement) throws CommunicationException;

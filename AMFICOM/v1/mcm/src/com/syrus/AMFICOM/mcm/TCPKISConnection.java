@@ -8,12 +8,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 public class TCPKISConnection implements KISConnection {
-	private static final String KEY_KIS_HOST_NAME = "KISHostName";
-	private static final String KEY_KIS_TCP_PORT = "KISTCPPort";
 	
-	private static final String KIS_HOST_NAME = "127.0.0.1";
-	private static final short KIS_TCP_PORT = 7501;
-
 	private static final int KIS_TCP_SOCKET_DISCONNECTED = -1;
 
 	private Identifier kisId;
@@ -26,24 +21,32 @@ public class TCPKISConnection implements KISConnection {
 		
 		this.kisHostName = kis.getHostName();
 		if (this.kisHostName == null)
-			this.kisHostName = ApplicationProperties.getString(KEY_KIS_HOST_NAME, KIS_HOST_NAME);
+			this.kisHostName = ApplicationProperties.getString(MeasurementControlModule.KEY_KIS_HOST_NAME, MeasurementControlModule.KIS_HOST_NAME);
 
 		this.kisTCPPort = kis.getTCPPort();
 		if (this.kisTCPPort <= 0)
-			this.kisTCPPort = (short)ApplicationProperties.getInt(KEY_KIS_TCP_PORT, (int)KIS_TCP_PORT);
+			this.kisTCPPort = (short)ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TCP_PORT, (int)MeasurementControlModule.KIS_TCP_PORT);
 
 		this.kisTCPSocket = KIS_TCP_SOCKET_DISCONNECTED;
 	}
-	
+
 	public boolean isEstablished() {
-		return (this.kisTCPSocket > 0);
+		return (this.kisTCPSocket != KIS_TCP_SOCKET_DISCONNECTED);
 	}
 
 	public void establish(long kisConnectionTimeout) throws CommunicationException {
+		this.establish(kisConnectionTimeout, true);
+	}
+
+	public void establish(long kisConnectionTimeout, boolean dropIfAlreadyEstablished) throws CommunicationException {
 		Log.debugMessage("TCPKISConnection.establish | Connecting to KIS '" + this.kisId + "' on host '" + this.kisHostName + "', port " + this.kisTCPPort, Log.DEBUGLEVEL07);
 		if (this.isEstablished()) {
-			Log.errorMessage("TCPKISConnection.establish | Connection with KIS '" + this.kisId + "' already established -- nothing to do!");
-			return;
+			if (dropIfAlreadyEstablished)
+				this.drop();
+			else {
+				Log.errorMessage("TCPKISConnection.establish | Connection with KIS '" + this.kisId + "' already established -- nothing to do!");
+				return;
+			}
 		}
 
 		long deadtime = System.currentTimeMillis() + kisConnectionTimeout;
@@ -60,7 +63,6 @@ public class TCPKISConnection implements KISConnection {
 					Log.errorException(ex);
 				}
 			}
-
 		}
 		if (this.isEstablished())
 			Log.debugMessage("TCPKISConnection.establish | Connected to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);

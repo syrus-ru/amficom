@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.42 2004/11/17 17:07:51 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.43 2004/11/18 16:21:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/11/17 17:07:51 $
+ * @version $Revision: 1.43 $, $Date: 2004/11/18 16:21:35 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -59,8 +59,13 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String KEY_MAX_FALLS = "MaxFalls";
 	public static final String KEY_TICK_TIME = "TickTime";
 	public static final String KEY_FORWARD_PROCESSING = "ForwardProcessing";
+	public static final String KEY_TCP_PORT = "TCPPort";
 	public static final String KEY_KIS_TICK_TIME = "KISTickTime";
 	public static final String KEY_KIS_MAX_FALLS = "KISMaxFalls";
+	public static final String KEY_KIS_HOST_NAME = "KISHostName";
+	public static final String KEY_KIS_TCP_PORT = "KISTCPPort";
+	public static final String KEY_KIS_MAX_OPENED_CONNECTIONS = "MaxOpenedConnections";
+	public static final String KEY_KIS_CONNECTION_TIMEOUT = "KISConnectionTimeout";
 
 	public static final String ID = "mcm_1";
 	public static final String DB_SID = "amficom";
@@ -68,8 +73,13 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String DB_LOGIN_NAME = "amficom";
 	public static final int TICK_TIME = 5;
 	public static final int FORWARD_PROCESSING = 2;
+	public static final short TCP_PORT = 7500;
 	public static final int KIS_TICK_TIME = 1;
 	public static final int KIS_MAX_FALLS = 10;
+	public static final String KIS_HOST_NAME = "127.0.0.1";
+	public static final short KIS_TCP_PORT = 7501;
+	public static final int KIS_MAX_OPENED_CONNECTIONS = 1;
+	public static final int KIS_CONNECTION_TIMEOUT = 120;
 
 	/*	Error codes for method processFall()	(remove results, ...)*/
 	public static final int FALL_CODE_RECEIVE_RESULTS = 1;
@@ -83,9 +93,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	/*	Results for transfer to server	*/
 	protected static List resultList;	//List <Result>
 
-	/*	key - kis_id, value - corresponding transmitter-receiver	*/
-	protected static Map transceivers;	//Map <Identifier kisId, Transceiver transceiver>
-
 	/*	key - test_id, value - corresponding test processor	*/
 	protected static Map testProcessors;	//Map <Identifier testId, TestProcessor testProcessor>
 
@@ -95,10 +102,11 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	/*	object reference to Measurement Server	*/
 	protected static MServer mServerRef;
 
-	/*	Reference to Transmission Manager*/
-	protected static TransmissionManager transmissionManager;
-
+	/*	Reference to KISConnectionManager*/
 	protected static KISConnectionManager kisConnectionManager;
+
+	/*	Reference to Transceiver*/
+	protected static Transceiver transceiver;
 
 	private long forwardProcessing;
 	private boolean running;
@@ -159,8 +167,11 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		/*	Create map of test processors*/
 		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
 
-		/*	Create and start transceiver manager*/
-		activateTransceiverManager();
+		/*	Create (and start - ?) KIS connection manager*/
+		activateKISConnectionManager();
+
+		/*	Create and start transceiver*/
+		activateTransceiver();
 
 		/*	Start main loop	*/
 		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
@@ -247,10 +258,16 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		NewIdentifierPool.setIdentifierGeneratorServer(mServerRef);
 	}
 
-	private static void activateTransceiverManager() {
+	private static void activateKISConnectionManager() {
+		kisConnectionManager = new KISConnectionManager();
+
+//		kisConnectionManager.start();
+	}
+
+	private static void activateTransceiver() {
 		try {
-			transmissionManager = new TransmissionManager();
-			transmissionManager.start();
+			transceiver = new Transceiver();
+			transceiver.start();
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);

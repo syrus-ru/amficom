@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.26 2004/11/17 17:07:51 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.27 2004/11/18 16:21:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/11/17 17:07:51 $
+ * @version $Revision: 1.27 $, $Date: 2004/11/18 16:21:35 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -116,6 +116,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 
 						if (measurementId != null) {
 							try {
+								Log.debugMessage("Creating measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 								measurement = super.test.createMeasurement(measurementId,
 																													 MeasurementControlModule.iAm.getUserId(),
 																													 this.currentTimeStamp);
@@ -124,6 +125,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 							}
 							catch (CreateObjectException coe) {
 								Log.errorException(coe);
+								super.fallCode = FALL_CODE_CREATE_MEASUREMENT;
 								super.sleepCauseOfFall();
 							}
 							catch (IllegalObjectEntityException ioee) {
@@ -132,7 +134,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 						}	//if (measurementId != null)
 
 						if (measurement != null) {
-							MeasurementControlModule.transmissionManager.addMeasurement(measurement, super.kis, this);
+							MeasurementControlModule.transceiver.transmitMeasurementToKIS(measurement, super.kis, this);
 							super.numberOfScheduledMeasurements ++;
 							this.currentTimeStamp = null;
 						}

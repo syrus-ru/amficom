@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.29 2004/11/15 20:14:20 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.30 2004/11/18 16:21:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/11/15 20:14:20 $
+ * @version $Revision: 1.30 $, $Date: 2004/11/18 16:21:35 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -194,7 +194,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		}
 	}
 
-	private void updateMyTestStatus(TestStatus status) {
+	private final void updateMyTestStatus(TestStatus status) {
 		TestStatusVerifier tsv = new TestStatusVerifier(this.test.getId(), status);
 		tsv.start();
 
@@ -206,17 +206,17 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		}
 	}
 
-	protected void complete() {
+	protected final void complete() {
 		this.updateMyTestStatus(TestStatus.TEST_STATUS_COMPLETED);
 		this.shutdown();
 	}
 
-	protected void abort() {
+	protected final void abort() {
 		this.updateMyTestStatus(TestStatus.TEST_STATUS_ABORTED);
 		this.shutdown();
 	}
 
-	protected void shutdown() {
+	protected final void shutdown() {
 		this.running = false;
 		this.cleanup();
 	}
