@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 import javax.swing.AbstractListModel;
@@ -14,8 +15,8 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/11/03 10:50:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2004/11/16 08:06:30 $
+ * @author $Author: stas $
  * @module generalclient_v1
  */
 public class ObjListModel extends AbstractListModel implements MutableComboBoxModel, Serializable {
@@ -53,7 +54,7 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 	/**
 	 * Set the value of the selected item. The selected item may be null.
 	 * <p>
-	 * 
+	 *
 	 * @param anObject
 	 *            The combo box value or null for no selection.
 	 */
@@ -122,7 +123,7 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 
 	/**
 	 * Returns the index-position of the specified object in the list.
-	 * 
+	 *
 	 * @param anObject
 	 * @return an int representing the index position, where 0 is the first
 	 *         position
@@ -149,6 +150,11 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 		if (this.objects.size() == 1 && this.selectedObject == null && anObject != null) {
 			setSelectedItem(anObject);
 		}
+	}
+
+	public void addElements(Collection objects) {
+		this.objects.addAll(objects);
+		fireIntervalAdded(this, this.objects.size() - objects.size(), this.objects.size() - 1);
 	}
 
 	// implements javax.swing.MutableComboBoxModel
