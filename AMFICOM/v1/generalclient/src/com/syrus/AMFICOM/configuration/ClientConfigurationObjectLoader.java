@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.13 2005/01/24 11:51:21 krupenn Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.14 2005/02/02 09:02:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,20 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import com.syrus.AMFICOM.administration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkTypeSort;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.CableThread_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
@@ -26,8 +34,6 @@ import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -37,23 +43,16 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
-import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.util.Log;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 /**
- * @version $Revision: 1.13 $, $Date: 2005/01/24 11:51:21 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/02/02 09:02:34 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 
@@ -96,6 +95,28 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
+	public CableLinkType loadCableLinkType(Identifier id) throws DatabaseException, CommunicationException {
+		try {
+			return new CableLinkType(this.server.transmitCableLinkType((Identifier_Transferable) id.getTransferable(),
+				accessIdentifierTransferable));
+		} catch (AMFICOMRemoteException e) {
+			String msg = "ClientConfigurationLoader.loadCableLinkType | server.transmitCableLinkType(" + id.toString()
+					+ ")";
+			throw new CommunicationException(msg, e);
+		}
+	}
+
+	public CableThread loadCableThread(Identifier id) throws DatabaseException, CommunicationException {
+		try {
+			return new CableThread(this.server.transmitCableThread((Identifier_Transferable) id.getTransferable(),
+				accessIdentifierTransferable));
+		} catch (AMFICOMRemoteException e) {
+			String msg = "ClientConfigurationLoader.loadCableThread | server.transmitCableThread(" + id.toString()
+					+ ")";
+			throw new CommunicationException(msg, e);
+		}
+	}
+
 	public CableThreadType loadCableThreadType(Identifier id) throws DatabaseException, CommunicationException {
 		try {
 			return new CableThreadType(this.server.transmitCableThreadType((Identifier_Transferable) id
@@ -104,6 +125,46 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			String msg = "ClientConfigurationLoader.loadCharacteristicType | server.transmitCharacteristicType("
 					+ id.toString() + ")";
 			throw new CommunicationException(msg, e);
+		}
+	}
+
+	public List loadCableLinkTypes(List ids) throws DatabaseException, CommunicationException {
+		try {
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+			int i = 0;
+			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+				Identifier id = (Identifier) it.next();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+			}
+			CableLinkType_Transferable[] transferables = this.server.transmitCableLinkTypes(identifierTransferables,
+				accessIdentifierTransferable);
+			List list = new ArrayList(transferables.length);
+			for (int j = 0; j < transferables.length; j++) {
+				list.add(new CableLinkType(transferables[j]));
+			}
+			return list;
+		} catch (AMFICOMRemoteException e) {
+			throw new CommunicationException(e);
+		}
+	}
+
+	public List loadCableThreads(List ids) throws DatabaseException, CommunicationException {
+		try {
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+			int i = 0;
+			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+				Identifier id = (Identifier) it.next();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+			}
+			CableThread_Transferable[] transferables = this.server.transmitCableThreads(identifierTransferables,
+				accessIdentifierTransferable);
+			List list = new ArrayList(transferables.length);
+			for (int j = 0; j < transferables.length; j++) {
+				list.add(new CableThread(transferables[j]));
+			}
+			return list;
+		} catch (AMFICOMRemoteException e) {
+			throw new CommunicationException(e);
 		}
 	}
 
@@ -486,6 +547,54 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 				}
 			}
 			return list;
+		} catch (AMFICOMRemoteException e) {
+			throw new CommunicationException(e);
+		}
+	}
+
+	public List loadCableLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+			CommunicationException {
+		try {
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+			CableLinkType_Transferable[] transferables;
+			int i = 0;
+			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+				Identifier id = (Identifier) it.next();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+			}
+			transferables = this.server.transmitCableLinkTypesButIdsCondition(identifierTransferables,
+				(StorableObjectCondition_Transferable) condition.getTransferable(), accessIdentifierTransferable);
+			List list = new ArrayList(transferables.length);
+			for (int j = 0; j < transferables.length; j++) {
+				list.add(new CableLinkType(transferables[j]));
+			}
+			return list;
+		} catch (CreateObjectException e) {
+			throw new RetrieveObjectException(e);
+		} catch (AMFICOMRemoteException e) {
+			throw new CommunicationException(e);
+		}
+	}
+
+	public List loadCableThreadsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+			CommunicationException {
+		try {
+			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+			CableThread_Transferable[] transferables;
+			int i = 0;
+			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+				Identifier id = (Identifier) it.next();
+				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+			}
+			transferables = this.server.transmitCableThreadButIdsCondition(identifierTransferables,
+				(StorableObjectCondition_Transferable) condition.getTransferable(), accessIdentifierTransferable);
+			List list = new ArrayList(transferables.length);
+			for (int j = 0; j < transferables.length; j++) {
+				list.add(new CableThread(transferables[j]));
+			}
+			return list;
+		} catch (CreateObjectException e) {
+			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
@@ -978,6 +1087,74 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		}
 	}
 
+	public void saveCableThread(CableThread cableThread, boolean force) throws VersionCollisionException,
+			DatabaseException, CommunicationException {
+		CableThread_Transferable transferables = (CableThread_Transferable) cableThread.getTransferable();
+		try {
+			this.server.receiveCableThread(transferables, force, accessIdentifierTransferable);
+		} catch (AMFICOMRemoteException e) {
+			String msg = "ClientConfigurationObjectLoader.saveCableThread ";
+
+			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+				throw new VersionCollisionException(msg, e);
+
+			throw new CommunicationException(msg, e);
+		}
+	}
+
+	public void saveCableLinkType(CableLinkType cableLinkType, boolean force) throws VersionCollisionException,
+			DatabaseException, CommunicationException {
+		CableLinkType_Transferable transferables = (CableLinkType_Transferable) cableLinkType.getTransferable();
+		try {
+			this.server.receiveCableLinkType(transferables, force, accessIdentifierTransferable);
+		} catch (AMFICOMRemoteException e) {
+			String msg = "ClientConfigurationObjectLoader.saveCableLinkType ";
+
+			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+				throw new VersionCollisionException(msg, e);
+
+			throw new CommunicationException(msg, e);
+		}
+	}
+
+	public void saveCableLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		CableLinkType_Transferable[] transferables = new CableLinkType_Transferable[list.size()];
+		int i = 0;
+		for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			transferables[i] = (CableLinkType_Transferable) ((CableLinkType) it.next()).getTransferable();
+		}
+		try {
+			this.server.receiveCableLinkTypes(transferables, force, accessIdentifierTransferable);
+		} catch (AMFICOMRemoteException e) {
+			String msg = "ClientConfigurationObjectLoader.saveCableLinkTypes ";
+
+			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+				throw new VersionCollisionException(msg, e);
+
+			throw new CommunicationException(msg, e);
+		}
+	}
+
+	public void saveCableThreads(List list, boolean force) throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		CableThread_Transferable[] transferables = new CableThread_Transferable[list.size()];
+		int i = 0;
+		for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			transferables[i] = (CableThread_Transferable) ((CableThread) it.next()).getTransferable();
+		}
+		try {
+			this.server.receiveCableThreads(transferables, force, accessIdentifierTransferable);
+		} catch (AMFICOMRemoteException e) {
+			String msg = "ClientConfigurationObjectLoader.saveCableThreads ";
+
+			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+				throw new VersionCollisionException(msg, e);
+
+			throw new CommunicationException(msg, e);
+		}
+	}
+
 	public void saveCableThreadType(CableThreadType cableThreadType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
 		CableThreadType_Transferable transferables = (CableThreadType_Transferable) cableThreadType.getTransferable();
@@ -1004,44 +1181,6 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 			this.server.receiveCableThreadTypes(transferables, force, accessIdentifierTransferable);
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientConfigurationObjectLoader.saveCableThreadTypes ";
-
-			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
-				throw new VersionCollisionException(msg, e);
-
-			throw new CommunicationException(msg, e);
-		}
-	}
-
-	public void saveCharacteristics(List list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
-		Characteristic_Transferable[] transferables = new Characteristic_Transferable[list.size()];
-		int i = 0;
-		for (Iterator it = list.iterator(); it.hasNext(); i++) {
-			transferables[i] = (Characteristic_Transferable) ((Characteristic) it.next()).getTransferable();
-		}
-		try {
-			this.server.receiveCharacteristics(transferables, force, accessIdentifierTransferable);
-		} catch (AMFICOMRemoteException e) {
-			String msg = "ClientConfigurationObjectLoader.saveCharacteristics ";
-
-			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
-				throw new VersionCollisionException(msg, e);
-
-			throw new CommunicationException(msg, e);
-		}
-	}
-
-	public void saveCharacteristicTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
-		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[list.size()];
-		int i = 0;
-		for (Iterator it = list.iterator(); it.hasNext(); i++) {
-			transferables[i] = (CharacteristicType_Transferable) ((CharacteristicType) it.next()).getTransferable();
-		}
-		try {
-			this.server.receiveCharacteristicTypes(transferables, force, accessIdentifierTransferable);
-		} catch (AMFICOMRemoteException e) {
-			String msg = "ClientConfigurationObjectLoader.saveCharacteristicTypes ";
 
 			if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
 				throw new VersionCollisionException(msg, e);
