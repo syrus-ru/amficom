@@ -1,21 +1,20 @@
-CREATE TABLE ImageResource (
- id VARCHAR2(32),
+CREATE TABLE imageresource (
+ id VARCHAR2(32);
+--
  created DATE NOT NULL,
  modified DATE NOT NULL,
- creator_id VARCHAR2(32) NOT NULL,
- modifier_id VARCHAR2(32) NOT NULL,
+ creator_id VARCHAR2 NOT NULL,
+ modifier_id VARCHAR2 NOT NULL,
 --
- codename VARCHAR2(32) NOT NULL,
- sort NUMBER(2),
+ codename VARCHAR2(256),
  image BLOB,
+ sort NUMBER(1) NOT NULL,
 --
- CONSTRAINT imres_pk PRIMARY KEY (id),
- CONSTRAINT imres_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
- CONSTRAINT imres_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
---
- CONSTRAINT imres_uniq UNIQUE (codename)
+ CONSTRAINT img_pk PRIMARY KEY (id),
+ CONSTRAINT img_crt_id_fk FOREIGN KEY (creator_id)
+  REFERENCES users (id) ON DELETE CASCADE,
+ CONSTRAINT img_mod_id_fk FOREIGN KEY (modifier_id)
+  REFERENCES USERS (id) ON DELETE CASCADE,
+ CONSTRAINT img_cn_uk UNIQUE (CODENAME)
 );
-
-CREATE SEQUENCE ImageResource_seq ORDER;
+ 
