@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceObjectLoader.java,v 1.2 2004/12/28 15:43:56 max Exp $
+ * $Id: ResourceObjectLoader.java,v 1.3 2005/01/14 11:24:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,63 +31,62 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/28 15:43:56 $
- * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/01/14 11:24:23 $
+ * @author $Author: bass $
  * @module resource_v1
  */
 public class ResourceObjectLoader {
-	
+
 	public StorableObject loadImageResource(Identifier id) throws DatabaseException {
 		StorableObject storableObject;
 		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
 		try {
 			int sort = database.getSort(id);
 			switch (sort) {
-			case ImageResourceSort._BITMAP:
-				storableObject = new BitmapImageResource(id);
-				return storableObject;
-			case ImageResourceSort._FILE:
-				storableObject = new FileImageResource(id);
-				return storableObject;
-			case ImageResourceSort._SCHEME:
-				storableObject = new SchemeImageResource(id);
-				return storableObject;
-			default:
-				throw new RetrieveObjectException("ResourceObjectLoader.loadImageResource | wrong sort" + sort);
+				case ImageResourceSort._BITMAP:
+					storableObject = new BitmapImageResource(id);
+					return storableObject;
+				case ImageResourceSort._FILE:
+					storableObject = new FileImageResource(id);
+					return storableObject;
+				case ImageResourceSort._SCHEME:
+					storableObject = new SchemeImageResource(id);
+					return storableObject;
+				default:
+					throw new RetrieveObjectException("ResourceObjectLoader.loadImageResource | wrong sort" + sort); //$NON-NLS-1$
 			}			
 		} catch (RetrieveObjectException e) {
-			Log.errorMessage("ResourceObjectLoader.loadImageResource | RetrieveObjectException: " + e.getMessage());
-			throw new DatabaseException("ResourceObjectLoader.loadImageResource | RetrieveObjectException: " + e.getMessage());
+			Log.errorMessage("ResourceObjectLoader.loadImageResource | RetrieveObjectException: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("ResourceObjectLoader.loadImageResource | RetrieveObjectException: " + e.getMessage()); //$NON-NLS-1$
 		} catch (ObjectNotFoundException e) {
-			Log.errorMessage("ResourceObjectLoader.loadImageResource | ObjectNotFoundException: " + e.getMessage());
-			throw new DatabaseException("ResourceObjectLoader.loadImageResource | ObjectNotFoundException: " + e.getMessage());
+			Log.errorMessage("ResourceObjectLoader.loadImageResource | ObjectNotFoundException: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("ResourceObjectLoader.loadImageResource | ObjectNotFoundException: " + e.getMessage()); //$NON-NLS-1$
 		}
 	}
-	
+
 	public List loadImageResources(List ids) throws DatabaseException {
 		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
 		List list = Collections.EMPTY_LIST;
 		try {
 			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMeasumentObjectLoader.loadImageResources | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.loadImageResources | Illegal Storable Object: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("DatabaseMeasumentObjectLoader.loadImageResources | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("DatabaseMeasumentObjectLoader.loadImageResources | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
 		}
 		return list;
 	}
-	
+
 	public List loadImageResourcesButIds (StorableObjectCondition condition, List ids) throws DatabaseException {
 		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
 		List list = Collections.EMPTY_LIST;
 		try {
 			list = database.retrieveByCondition(ids, condition);
 		} catch (RetrieveObjectException e) {
-			Log.errorMessage("ResourceObjectLoader.loadImageResourcesButIds | RetrieveObjectException: " + e.getMessage());
-			throw new DatabaseException("ResourceObjectLoader.loadImageResourcesButIds | RetrieveObjectException: " + e.getMessage());
+			Log.errorMessage("ResourceObjectLoader.loadImageResourcesButIds | RetrieveObjectException: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("ResourceObjectLoader.loadImageResourcesButIds | RetrieveObjectException: " + e.getMessage()); //$NON-NLS-1$
 		} catch (IllegalDataException e) {
-			Log.errorMessage("ResourceObjectLoader.loadImageResourcesButIds | IllegalDataException: " + e.getMessage());
-			throw new DatabaseException("ResourceObjectLoader.loadImageResourcesButIds | IllegalDataException: " + e.getMessage());
+			Log.errorMessage("ResourceObjectLoader.loadImageResourcesButIds | IllegalDataException: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("ResourceObjectLoader.loadImageResourcesButIds | IllegalDataException: " + e.getMessage()); //$NON-NLS-1$
 		}
 		return list;
 	}
@@ -105,57 +104,50 @@ public class ResourceObjectLoader {
 					database = ResourceDatabaseContext.getImageResourceDatabase();
 					break;
 				default:
-					Log.errorMessage("ResourceObjectLoader.refresh | Unknown entity: " + entityCode);                
+					Log.errorMessage("ResourceObjectLoader.refresh | Unknown entity: " + entityCode);                 //$NON-NLS-1$
 			}
 			if (database != null)
 				return database.refresh(storableObjects);
 
-      return Collections.EMPTY_SET;
-		}
-		catch (DatabaseException e) {
-			Log.errorMessage("ResourceObjectLoader.refresh | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("ResourceObjectLoader.refresh | DatabaseException: " + e.getMessage(), e);
+			return Collections.EMPTY_SET;
+		} catch (DatabaseException e) {
+			Log.errorMessage("ResourceObjectLoader.refresh | DatabaseException: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("ResourceObjectLoader.refresh | DatabaseException: " + e.getMessage(), e); //$NON-NLS-1$
 		}
 	}
-	
+
 	public void saveImageResource(AbstractImageResource abstractImageResource, boolean force) throws DatabaseException {
 		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
 		try {
 			database.update(abstractImageResource, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("ResourceObjectLoader.saveImageResource | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("ResourceObjectLoader.saveImageResource | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("ResourceObjectLoader.saveImageResource | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("ResourceObjectLoader.saveImageResource | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("ResourceObjectLoader.saveImageResource | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("ResourceObjectLoader.saveImageResource | VersionCollisionException: " + e.getMessage());
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("ResourceObjectLoader.saveImageResource | UpdateObjectException: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("ResourceObjectLoader.saveImageResource | UpdateObjectException: " + e.getMessage()); //$NON-NLS-1$
+		} catch (IllegalDataException e) {
+			Log.errorMessage("ResourceObjectLoader.saveImageResource | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("ResourceObjectLoader.saveImageResource | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("ResourceObjectLoader.saveImageResource | VersionCollisionException: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("ResourceObjectLoader.saveImageResource | VersionCollisionException: " + e.getMessage()); //$NON-NLS-1$
 		}
 	}
-	
+
 	public void saveImageResources(List list, boolean force) throws DatabaseException {
 		ImageResourceDatabase database = (ImageResourceDatabase)ResourceDatabaseContext.getImageResourceDatabase();
 		try {
 			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("ResourceObjectLoader.saveImageResources | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("ResourceObjectLoader.saveImageResources | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("ResourceObjectLoader.saveImageResources | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("ResourceObjectLoader.saveImageResources | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("ResourceObjectLoader.saveImageResources | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("ResourceObjectLoader.saveImageResources | VersionCollisionException: " + e.getMessage());
+		} catch (UpdateObjectException e) {
+			Log.errorMessage("ResourceObjectLoader.saveImageResources | UpdateObjectException: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("ResourceObjectLoader.saveImageResources | UpdateObjectException: " + e.getMessage()); //$NON-NLS-1$
+		} catch (IllegalDataException e) {
+			Log.errorMessage("ResourceObjectLoader.saveImageResources | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("ResourceObjectLoader.saveImageResources | Illegal Storable Object: " + e.getMessage()); //$NON-NLS-1$
+		} catch (VersionCollisionException e) {
+			Log.errorMessage("ResourceObjectLoader.saveImageResources | VersionCollisionException: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("ResourceObjectLoader.saveImageResources | VersionCollisionException: " + e.getMessage()); //$NON-NLS-1$
 		}
 	}
-	
+
 	public void delete(Identifier id) throws DatabaseException {
 		delete(id, null);		
 	}
@@ -176,11 +168,10 @@ public class ResourceObjectLoader {
 			Identifier identifier = null;
 			if (object instanceof Identifier)
 				identifier = (Identifier)object;
+			else if (object instanceof Identified)
+				identifier = ((Identified)object).getId();
 			else
-				if (object instanceof Identified)
-					identifier = ((Identified)object).getId();
-				else
-					throw new DatabaseException("ResourceObjectLoader.delete | Object " + object.getClass().getName() + " isn't Identifier or Identified");
+				throw new DatabaseException("ResourceObjectLoader.delete | Object " + object.getClass().getName() + " isn't Identifier or Identified"); //$NON-NLS-1$ //$NON-NLS-2$
 			Short entityCode = new Short(identifier.getMajor());
 			List list = (List)map.get(entityCode);
 			if (list == null) {
@@ -213,9 +204,8 @@ public class ResourceObjectLoader {
 			Object obj = ids.iterator().next();
 			if (obj instanceof Identifier)
 				entityCode = ((Identifier)obj).getMajor();
-			else
-				if (obj instanceof Identified)
-					entityCode = ((Identified)obj).getId().getMajor();
+			else if (obj instanceof Identified)
+				entityCode = ((Identified)obj).getId().getMajor();
 		}
 		try {
 			StorableObjectDatabase database = null;
@@ -224,21 +214,19 @@ public class ResourceObjectLoader {
 					database = ResourceDatabaseContext.getImageResourceDatabase();
 					break;
 				default:
-					Log.errorMessage("ResourceObjectLoader.delete | Unknown entity: " + entityCode);                
+					Log.errorMessage("ResourceObjectLoader.delete | Unknown entity: " + entityCode);                 //$NON-NLS-1$
 			}
 
 			if (database != null) {
 				if (id != null)
 					database.delete(id);
-				else
-					if (ids != null && !ids.isEmpty()) {
-						database.delete(ids);
-					}
+				else if (ids != null && !ids.isEmpty()) {
+					database.delete(ids);
+				}
 			}
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("ResourceObjectLoader.delete | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("ResourceObjectLoader.delete | DatabaseException: " + e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorMessage("ResourceObjectLoader.delete | DatabaseException: " + e.getMessage()); //$NON-NLS-1$
+			throw new DatabaseException("ResourceObjectLoader.delete | DatabaseException: " + e.getMessage()); //$NON-NLS-1$
 		}
 	}
 }
