@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.34 2004/10/18 10:57:57 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.35 2004/10/19 07:22:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/10/18 10:57:57 $
+ * @version $Revision: 1.35 $, $Date: 2004/10/19 07:22:32 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -512,6 +512,8 @@ public abstract class StorableObjectDatabase {
 		return retrieveButIds(ids, null);
 	}
 	
+	public abstract List retrieveByCondition(List ids, StorableObjectCondition condition)  throws RetrieveObjectException, IllegalDataException;
+	
 	/**
 	 * retrive storable objects by additional condition and identifiers not in ids   
 	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identified}&gt;
@@ -532,8 +534,7 @@ public abstract class StorableObjectDatabase {
 					buffer.append(SQL_IN);
 					buffer.append(OPEN_BRACKET);
 	
-					int i = 1;
-					for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+					for (Iterator it = ids.iterator(); it.hasNext();) {
 						Object object = it.next();
 						Identifier id = null;
 						if (object instanceof Identifier)
@@ -546,7 +547,7 @@ public abstract class StorableObjectDatabase {
 	
 						if (id != null){
 							buffer.append(id.toSQLString());
-							if (i < idsLength)
+							if (it.hasNext())
 								buffer.append(COMMA);
 						}
 					}
@@ -601,8 +602,7 @@ public abstract class StorableObjectDatabase {
 					buffer.append(SQL_IN);
 					buffer.append(OPEN_BRACKET);
 
-					int i = 1;
-					for (Iterator it = ids.iterator(); it.hasNext(); i++) {						
+					for (Iterator it = ids.iterator(); it.hasNext();) {						
 						Object object = it.next();
 						Identifier id = null;
 						if (object instanceof Identifier)
@@ -613,7 +613,7 @@ public abstract class StorableObjectDatabase {
 															object.getClass().getName() 
 															+ " isn't Identifier or Identified");
 						buffer.append(id.toSQLString());
-						if (i < idsLength)
+						if (it.hasNext())
 							buffer.append(COMMA);
 					}
 
