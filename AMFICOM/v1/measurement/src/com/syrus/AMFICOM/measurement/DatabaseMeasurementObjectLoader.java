@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.33 2005/02/04 12:01:53 arseniy Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.34 2005/02/04 14:02:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,86 +28,12 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/02/04 12:01:53 $
+ * @version $Revision: 1.34 $, $Date: 2005/02/04 14:02:05 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader {
-
-	/**
-	 * delete storable objects of one kind of entity
-	 * 
-	 * @param id
-	 * @param ids
-	 * @throws DatabaseException
-	 */
-	private void delete(Identifier id, List ids) throws DatabaseException {
-		short entityCode = (id != null) ? id.getMajor() : 0;
-		if (id == null) {
-			if (ids.isEmpty())
-				return;
-			Object obj = ids.iterator().next();
-			if (obj instanceof Identifier)
-				entityCode = ((Identifier) obj).getMajor();
-			else if (obj instanceof Identified)
-				entityCode = ((Identified) obj).getId().getMajor();
-		}
-		try {
-			StorableObjectDatabase database = MeasurementDatabaseContext.getDatabase(entityCode);
-			if (database != null) {
-				if (id != null)
-					database.delete(id);
-				else if (ids != null && !ids.isEmpty()) {
-					database.delete(ids);
-				}
-			}
-		} catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseMeasumentObjectLoader.delete | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("DatabaseMeasumentObjectLoader.delete | DatabaseException: " + e.getMessage());
-		}
-	}
-
-	public void delete(Identifier id) throws DatabaseException, CommunicationException {
-		delete(id, null);
-	}
-
-	public void delete(List ids) throws DatabaseException, CommunicationException {
-		if (ids == null || ids.isEmpty())
-			return;
-		/**
-		 * TODO: use Trove collection instead java.util.Map
-		 */
-		Map map = new HashMap();
-
-		/**
-		 * separate objects by kind of entity
-		 */
-		for (Iterator it = ids.iterator(); it.hasNext();) {
-			Object object = it.next();
-			Identifier identifier = null;
-			if (object instanceof Identifier)
-				identifier = (Identifier) object;
-			else if (object instanceof Identified)
-				identifier = ((Identified) object).getId();
-			else
-				throw new DatabaseException("DatabaseMeasumentObjectLoader.delete | Object "
-						+ object.getClass().getName() + " isn't Identifier or Identified");
-			Short entityCode = new Short(identifier.getMajor());
-			List list = (List) map.get(entityCode);
-			if (list == null) {
-				list = new LinkedList();
-				map.put(entityCode, list);
-			}
-			list.add(object);
-		}
-
-		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
-			Short entityCode = (Short) it.next();
-			List list = (List) map.get(entityCode);
-			delete(null, list);
-		}
-	}
 
 	public MeasurementType loadMeasurementType(Identifier id) throws DatabaseException, CommunicationException {
 		return new MeasurementType(id);
@@ -160,6 +86,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	public TemporalPattern loadTemporalPattern(Identifier id) throws DatabaseException, CommunicationException {
 		return new TemporalPattern(id);
 	}
+
+
+
+
 
 	// for multiple objects
 
@@ -344,6 +274,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 		return list;
 	}
+
+
+
+
 
 	public List loadAnalysesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
@@ -547,6 +481,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 		return list;
 	}
+
+
+
+
 
 	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws DatabaseException,
 			CommunicationException {
@@ -847,6 +785,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
+
+
+
+
 	public void saveMeasurementTypes(List list, boolean force) throws DatabaseException, CommunicationException {
 		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.measurementTypeDatabase;
 		try {
@@ -1137,6 +1079,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
+
+
+
+
 	public java.util.Set refresh(java.util.Set storableObjects) throws DatabaseException, CommunicationException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
@@ -1154,6 +1100,90 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		catch (DatabaseException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage(), e);
+		}
+	}
+
+
+
+
+
+	public void delete(Identifier id) throws DatabaseException, CommunicationException {
+		delete(id, null);
+	}
+
+	public void delete(List ids) throws DatabaseException, CommunicationException {
+		if (ids == null || ids.isEmpty())
+			return;
+		/**
+		 * TODO: use Trove collection instead java.util.Map
+		 */
+		Map map = new HashMap();
+
+		/**
+		 * separate objects by kind of entity
+		 */
+		for (Iterator it = ids.iterator(); it.hasNext();) {
+			Object object = it.next();
+			Identifier identifier = null;
+			if (object instanceof Identifier)
+				identifier = (Identifier) object;
+			else
+				if (object instanceof Identified)
+					identifier = ((Identified) object).getId();
+				else
+					throw new DatabaseException("DatabaseMeasumentObjectLoader.delete | Object "
+							+ object.getClass().getName()
+							+ " isn't Identifier or Identified");
+			Short entityCode = new Short(identifier.getMajor());
+			List list = (List) map.get(entityCode);
+			if (list == null) {
+				list = new LinkedList();
+				map.put(entityCode, list);
+			}
+			list.add(object);
+		}
+
+		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
+			Short entityCode = (Short) it.next();
+			List list = (List) map.get(entityCode);
+			delete(null, list);
+		}
+	}
+
+	/**
+	 * delete storable objects of one kind of entity
+	 * 
+	 * @param id
+	 * @param ids
+	 * @throws DatabaseException
+	 */
+	private void delete(Identifier id, List ids) throws DatabaseException {
+		short entityCode = (id != null) ? id.getMajor() : 0;
+		if (id == null) {
+			if (ids.isEmpty())
+				return;
+			Object obj = ids.iterator().next();
+			if (obj instanceof Identifier)
+				entityCode = ((Identifier) obj).getMajor();
+			else
+				if (obj instanceof Identified)
+					entityCode = ((Identified) obj).getId().getMajor();
+		}
+		try {
+			StorableObjectDatabase database = MeasurementDatabaseContext.getDatabase(entityCode);
+			if (database != null) {
+				if (id != null)
+					database.delete(id);
+				else
+					if (ids != null && !ids.isEmpty()) {
+						database.delete(ids);
+					}
+			}
+		}
+		catch (IllegalDataException e) {
+			String mesg = "DatabaseMeasumentObjectLoader.delete | IllegalDataException: " + e.getMessage();
+			Log.errorMessage(mesg);
+			throw new DatabaseException(mesg, e);
 		}
 	}
 

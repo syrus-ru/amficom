@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.4 2005/02/04 13:02:59 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.5 2005/02/04 14:02:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,11 @@
 package com.syrus.AMFICOM.administration;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -25,7 +29,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/04 13:02:59 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/04 14:02:21 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -51,6 +55,9 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 	//	public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException, CommunicationException {
 	//		return new PermissionAttributes(id);
 	//	}
+
+
+
 
 	// for multiple objects
 
@@ -116,6 +123,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 	/* Load Administration StorableObject but argument ids */
 
+
+
+
+
 	public List loadUsersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
 		List list = null;
@@ -175,6 +186,9 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 	//  public PermissionAttributes loadPermissionAttributesButIds(Identifier id) throws DatabaseException, CommunicationException {
 	//      return new PermissionAttributes(id);
 	//  }
+
+
+
 
 	public void saveUser(User user, boolean force) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
@@ -266,6 +280,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 	//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException ;
 
+
+
+
+
 	public void saveUsers(List list, boolean force) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
 		try {
@@ -356,6 +374,9 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 	//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException ;
 
+
+
+
 	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
@@ -373,6 +394,52 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		catch (DatabaseException e) {
 			Log.errorMessage("DatabaseAdministrationObjectLoader.refresh | DatabaseException: " + e.getMessage());
 			throw new DatabaseException("DatabaseAdministrationObjectLoader.refresh | DatabaseException: " + e.getMessage());
+		}
+	}
+
+
+
+
+	public void delete(Identifier id) throws CommunicationException, DatabaseException {
+		delete(id, null);
+	}
+
+	public void delete(List ids) throws CommunicationException, DatabaseException {
+		if (ids == null || ids.isEmpty())
+			return;
+		/**
+		 * TODO: use Trove collection instead java.util.Map
+		 */
+		Map map = new HashMap();
+
+		/**
+		 * separate objects by kind of entity
+		 */
+		for (Iterator it = ids.iterator(); it.hasNext();) {
+			Object object = it.next();
+			Identifier identifier = null;
+			if (object instanceof Identifier)
+				identifier = (Identifier) object;
+			else
+				if (object instanceof Identified)
+					identifier = ((Identified) object).getId();
+				else
+					throw new DatabaseException("DatabaseAdministrationObjectLoader.delete | Object "
+							+ object.getClass().getName()
+							+ " isn't Identifier or Identified");
+			Short entityCode = new Short(identifier.getMajor());
+			List list = (List) map.get(entityCode);
+			if (list == null) {
+				list = new LinkedList();
+				map.put(entityCode, list);
+			}
+			list.add(object);
+		}
+
+		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
+			Short entityCode = (Short) it.next();
+			List list = (List) map.get(entityCode);
+			delete(null, list);
 		}
 	}
 
@@ -400,17 +467,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 			}
 		}
 		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseAdministrationObjectLoader.delete | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("DatabaseAdministrationObjectLoader.delete | DatabaseException: " + e.getMessage());
+			String mesg = "DatabaseAdministrationObjectLoader.delete | IllegalDataException: " + e.getMessage();
+			Log.errorMessage(mesg);
+			throw new DatabaseException(mesg, e);
 		}
-	}
-
-	public void delete(Identifier id) throws CommunicationException, DatabaseException {
-		delete(id, null);
-	}
-
-	public void delete(List ids) throws CommunicationException, DatabaseException {
-		delete(null, ids);
 	}
 
 }
