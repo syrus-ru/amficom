@@ -1,5 +1,5 @@
 /*
- * $Id: resource.idl,v 1.6 2004/10/04 13:33:18 bass Exp $
+ * $Id: resource.idl,v 1.7 2004/11/12 14:38:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,8 @@ module Resource
 		::CORBA::OctetSeq image;	// should be valid
 	};
 	typedef sequence <ImageResource_Transferable> ImageResourceSeq_Transferable;
+	typedef ImageResource_Transferable ImageResource;
+	typedef sequence<ImageResource> ImageResourceSeq;
 
 	struct ImageCatalogue_Transferable
 	{
