@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.23 2004/08/18 18:10:46 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.24 2004/08/19 12:23:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 //import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/08/18 18:10:46 $
+ * @version $Revision: 1.24 $, $Date: 2004/08/19 12:23:10 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -521,19 +522,67 @@ public class MeasurementControlModule extends SleepButWorkThread {
 		for (int i = 0; i < mcmT.kis_ids.length; i++) {
 			try {
 				KIS_Transferable kisT = mServerRef.transmitKIS(mcmT.kis_ids[i]);
+
 				Equipment_Transferable eqT = mServerRef.transmitEquipment(kisT.equipment_id);
-				Equipment equipment = (Equipment)ConfigurationStorableObjectPool.getStorableObject(new Identifier(eqT.id), true);
-				for (int j = 0; j < eqT.port_ids.length; j++)
-					ConfigurationStorableObjectPool.getStorableObject(new Identifier(eqT.port_ids[j]), true);
+				try {
+					new Equipment(eqT);
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+				Port_Transferable portT;
+				for (int j = 0; j < eqT.port_ids.length; j++) {
+					portT = mServerRef.transmitPort(eqT.port_ids[j]);
+					try {
+						new Port(portT);
+					}
+					catch (CreateObjectException coe) {
+						Log.errorException(coe);
+					}
+				}
+				/*	If Equipment is monitored (i. e. - has monitored elements),
+				 *	we also must retrieve it's monitored elements, it's KIS
+				 *  and subsequent information. Disregard now	*/
 
-				KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(new Identifier(kisT.id), true);
+				try {
+					new KIS(kisT);
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
 
-				for (int j = 0; j < kisT.measurement_port_ids.length; j++)
-					ConfigurationStorableObjectPool.getStorableObject(new Identifier(kisT.measurement_port_ids[j]), true);
+				MeasurementPort_Transferable mportT;
+				for (int j = 0; j < kisT.measurement_port_ids.length; j++) {
+					mportT = mServerRef.transmitMeasurementPort(kisT.measurement_port_ids[j]);
+					try {
+						new MeasurementPort(mportT);
+					}
+					catch (CreateObjectException coe) {
+						Log.errorException(coe);
+					}
+				}
 
+				/*	Now load only transmission paths.
+				 *	Other sorts of monitored element - disregard	*/
 				MonitoredElement_Transferable[] mesT = mServerRef.transmitKISMonitoredElements(kisT.id);
-				for (int j = 0; j < mesT.length; j++)
-					ConfigurationStorableObjectPool.getStorableObject(new Identifier(mesT[j].id), true);
+				TransmissionPath_Transferable tpT;
+				for (int j = 0; j < mesT.length; j++) {
+					for (int k = 0; k < mesT[j].monitored_domain_member_ids.length; k++) {
+						tpT = mServerRef.transmitTransmissionPath(mesT[j].monitored_domain_member_ids[k]);
+						try {
+							new TransmissionPath(tpT);
+						}
+						catch (CreateObjectException coe) {
+							Log.errorException(coe);
+						}
+					}
+					try {
+						new MonitoredElement(mesT[j]);
+					}
+					catch (CreateObjectException coe) {
+						Log.errorException(coe);
+					}
+				}
 			}
 			catch (Exception e) {
 				Log.errorException(e);
@@ -545,6 +594,10 @@ public class MeasurementControlModule extends SleepButWorkThread {
 
 		/*	Close database connection*/
 		DatabaseConnection.closeConnection();
+	}
+
+	private static void receiveMonitoredElements(Equipment_Transferable equipmentT) {
+		
 	}
 
 	private static void activateCORBASetupServer() {
