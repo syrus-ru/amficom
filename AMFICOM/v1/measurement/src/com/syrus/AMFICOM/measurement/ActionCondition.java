@@ -1,5 +1,5 @@
 /*
- * $Id: ActionCondition.java,v 1.3 2005/02/11 16:31:48 bob Exp $
+ * $Id: ActionCondition.java,v 1.4 2005/02/24 11:22:23 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,9 +29,10 @@ import com.syrus.AMFICOM.measurement.corba.ActionCondition_Transferable;
  * or
  * 	list, containing one element - identifier of the action - as <code>linkedIds</code>
  * 
- * @version $Revision: 1.3 $, $Date: 2005/02/11 16:31:48 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/24 11:22:23 $
  * @author $Author: bob $
  * @module measurement_v1
+ * @deprecated use {@link com.syrus.AMFICOM.general.LinkedIdsCondition}
  */
 public class ActionCondition implements StorableObjectCondition {
 	private Short entityCode;
