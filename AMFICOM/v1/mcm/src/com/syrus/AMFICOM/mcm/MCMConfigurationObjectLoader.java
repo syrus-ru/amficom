@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.12 2004/11/17 09:31:10 max Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.13 2004/11/19 23:09:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
 import com.syrus.AMFICOM.configuration.CharacteristicType;
 import com.syrus.AMFICOM.configuration.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
-import com.syrus.AMFICOM.configuration.ConfigurationObjectLoader;
+import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainDatabase;
 import com.syrus.AMFICOM.configuration.Equipment;
@@ -64,12 +64,12 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/11/17 09:31:10 $
- * @author $Author: max $
+ * @version $Revision: 1.13 $, $Date: 2004/11/19 23:09:30 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
-public final class MCMConfigurationObjectLoader implements ConfigurationObjectLoader {
+public final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoader {
 
 	public MCMConfigurationObjectLoader() {
 	}
@@ -1242,8 +1242,7 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
 		throw new UnsupportedOperationException("method isn't complete");
 		}		
 		
-		public void saveKISType(KISType kisType, boolean force) throws VersionCollisionException, DatabaseException,
-				CommunicationException {
+		public void saveKISType(KISType kisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}

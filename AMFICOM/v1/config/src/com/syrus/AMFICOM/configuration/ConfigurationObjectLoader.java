@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.20 2004/11/19 12:09:39 bob Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.21 2004/11/19 23:08:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,15 +18,15 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/11/19 12:09:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2004/11/19 23:08:28 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
 public interface ConfigurationObjectLoader {
 
 	CableThreadType loadCableThreadType(Identifier id) throws DatabaseException, CommunicationException;
-	
+
 	CharacteristicType loadCharacteristicType(Identifier id) throws DatabaseException, CommunicationException;
 
 	EquipmentType loadEquipmentType(Identifier id) throws DatabaseException, CommunicationException;
@@ -36,7 +36,7 @@ public interface ConfigurationObjectLoader {
 	MeasurementPortType loadMeasurementPortType(Identifier id) throws DatabaseException, CommunicationException;
 
 	KISType loadKISType(Identifier id) throws DatabaseException, CommunicationException;
-	
+
 	Characteristic loadCharacteristic(Identifier id) throws DatabaseException, CommunicationException;
 
 	LinkType loadLinkType(Identifier id) throws DatabaseException, CommunicationException;
@@ -70,7 +70,7 @@ public interface ConfigurationObjectLoader {
     // this block for multiple objects
 
 	List loadCableThreadTypes(List ids) throws DatabaseException, CommunicationException;
-	
+
 	List loadCharacteristicTypes(List ids) throws DatabaseException, CommunicationException;
 
 	List loadEquipmentTypes(List ids) throws DatabaseException, CommunicationException;
@@ -112,9 +112,9 @@ public interface ConfigurationObjectLoader {
 	List loadMonitoredElements(List ids) throws DatabaseException, CommunicationException;
 
     /* Load Configuration StorableObject but argument ids */
-    
+
 	List loadCableThreadTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
-	
+
 	List loadCharacteristicTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 	List loadEquipmentTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
@@ -156,7 +156,7 @@ public interface ConfigurationObjectLoader {
 	List loadMonitoredElementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 	void saveCableThreadType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-	
+
 	void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveEquipmentType(EquipmentType equipmentType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
@@ -206,7 +206,7 @@ public interface ConfigurationObjectLoader {
 	void saveMeasurementPortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveCableThreadTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-	
+
 	void saveCharacteristics(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveKISTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
@@ -240,9 +240,9 @@ public interface ConfigurationObjectLoader {
 	void saveMonitoredElements(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	Set refresh(Set storableObjects) throws CommunicationException, DatabaseException;
-    
-    void delete(Identifier id) throws CommunicationException, DatabaseException;
-    
-    void delete(List ids) throws CommunicationException, DatabaseException;
+
+	void delete(Identifier id) throws CommunicationException, DatabaseException;
+
+	void delete(List ids) throws CommunicationException, DatabaseException;
 
 }

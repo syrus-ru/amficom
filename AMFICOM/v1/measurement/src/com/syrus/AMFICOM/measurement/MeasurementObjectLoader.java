@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.13 2004/11/19 11:40:23 bob Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.14 2004/11/19 23:08:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/11/19 11:40:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2004/11/19 23:08:59 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -35,7 +35,7 @@ public interface MeasurementObjectLoader {
 	Set loadSet(Identifier id) throws DatabaseException, CommunicationException;
 
 	MeasurementSetup loadMeasurementSetup(Identifier id) throws DatabaseException, CommunicationException;
-	
+
 	Modeling loadModeling(Identifier id) throws DatabaseException, CommunicationException;
 
 	Measurement loadMeasurement(Identifier id) throws DatabaseException, CommunicationException;
@@ -49,7 +49,7 @@ public interface MeasurementObjectLoader {
 	Result loadResult(Identifier id) throws DatabaseException, CommunicationException;
 
 	TemporalPattern loadTemporalPattern(Identifier id) throws DatabaseException, CommunicationException;
-	
+
 	List loadParameterTypes(List ids) throws DatabaseException, CommunicationException;
 
 	List loadMeasurementTypes(List ids) throws DatabaseException, CommunicationException;
@@ -59,7 +59,7 @@ public interface MeasurementObjectLoader {
 	List loadEvaluationTypes(List ids) throws DatabaseException, CommunicationException;
 
 	List loadSets(List ids) throws DatabaseException, CommunicationException;
-	
+
 	List loadModelings(List ids) throws DatabaseException, CommunicationException;
 
 	List loadMeasurementSetups(List ids) throws DatabaseException, CommunicationException;
@@ -75,9 +75,9 @@ public interface MeasurementObjectLoader {
 	List loadResults(List ids) throws DatabaseException, CommunicationException;
 
 	List loadTemporalPatterns(List ids) throws DatabaseException, CommunicationException;
-	
+
 	/* Load Measurement StorableObject but argument ids */
-	
+
 	List loadParameterTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 	List loadMeasurementTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
@@ -87,7 +87,7 @@ public interface MeasurementObjectLoader {
 	List loadEvaluationTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 	List loadSetsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
-	
+
 	List loadModelingsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 	List loadMeasurementSetupsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
@@ -155,11 +155,11 @@ public interface MeasurementObjectLoader {
 	void saveResults(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveTemporalPatterns(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-    
-    java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException, DatabaseException;
-    
-    void delete(Identifier id) throws CommunicationException, DatabaseException;
-    
-    void delete(List ids) throws CommunicationException, DatabaseException;
+
+	java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException, DatabaseException;
+
+	void delete(Identifier id) throws CommunicationException, DatabaseException;
+
+	void delete(List ids) throws CommunicationException, DatabaseException;
 
 }
