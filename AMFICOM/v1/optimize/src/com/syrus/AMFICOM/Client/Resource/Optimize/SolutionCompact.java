@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.Client.General.UI.PropertyEditor;
 import com.syrus.AMFICOM.Client.General.UI.PropertyRenderer;
 import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.StubResource;;
 
 
 // ВНИМАНИЕ! При изменениях этого класса его надо отдавать Андрею как исходникик, так как он у него лежит в map !
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 // класс хранит только информацию о топологии решения (берёт его из класса Scheme)
 // дополнительная информация ( цены оборудования, список оборудования и т.п.) -  в классе InfoToStore
 //==========================================================================================================
-public class SolutionCompact extends ObjectResource
+public class SolutionCompact extends StubResource
 { public String id = "";
   public String name = "";
   public String created = "";// время создания

@@ -73,10 +73,14 @@ extends ObjectResourceTableRenderer
     s += "\"<font color = \"#007733\">"+ ((SchemeElement)Pool.get( SchemeElement.typ, path.start_device_id)).name
                                           + "</font> <font color = \"#000000\"> : </font>";
     PathElement pe;
-    for( Iterator links = path.links.iterator(); links.hasNext();)
+    for( Iterator links = path.links.iterator();  links.hasNext();)
     { pe = (PathElement) links.next();
       id = pe.link_id;
       name = pe.getName();
+      if(! links.hasNext())  
+      { // в конце стрелочку не ставим (если это последдний элемент, то выход)
+     break;
+      }	
       if( unilinks.contains(id)){ s += "("+name+")" + "->";}
       else{ s += name + "->";}
     }
