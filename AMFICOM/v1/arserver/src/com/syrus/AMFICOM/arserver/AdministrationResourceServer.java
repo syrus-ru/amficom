@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationResourceServer.java,v 1.2 2005/01/17 16:54:21 max Exp $
+ * $Id: AdministrationResourceServer.java,v 1.3 2005/04/04 13:55:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,23 +17,23 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/17 16:54:21 $
- * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/04/04 13:55:21 $
+ * @author $Author: bass $
  * @module arserver_v1
  */
 public class AdministrationResourceServer extends SleepButWorkThread {
 	
-	public static final String	APPLICATION_NAME			= "arserver";
-	public static final String	KEY_DB_HOST_NAME			= "DBHostName";
-	public static final String	KEY_DB_SID					= "DBSID";
-	public static final String	KEY_DB_CONNECTION_TIMEOUT	= "DBConnectionTimeout";
-	public static final String	KEY_DB_LOGIN_NAME			= "DBLoginName";
-	public static final String	KEY_TICK_TIME				= "TickTime";
-	public static final String	KEY_MAX_FALLS				= "MaxFalls";
+	public static final String	APPLICATION_NAME			= "arserver"; //$NON-NLS-1$
+	public static final String	KEY_DB_HOST_NAME			= "DBHostName"; //$NON-NLS-1$
+	public static final String	KEY_DB_SID					= "DBSID"; //$NON-NLS-1$
+	public static final String	KEY_DB_CONNECTION_TIMEOUT	= "DBConnectionTimeout"; //$NON-NLS-1$
+	public static final String	KEY_DB_LOGIN_NAME			= "DBLoginName"; //$NON-NLS-1$
+	public static final String	KEY_TICK_TIME				= "TickTime"; //$NON-NLS-1$
+	public static final String	KEY_MAX_FALLS				= "MaxFalls"; //$NON-NLS-1$
 	
-	public static final String	DB_SID						= "amficom";
+	public static final String	DB_SID						= "amficom"; //$NON-NLS-1$
 	public static final int		DB_CONNECTION_TIMEOUT		= 120;
-	public static final String	DB_LOGIN_NAME				= "amficom";
+	public static final String	DB_LOGIN_NAME				= "amficom"; //$NON-NLS-1$
 	public static final int		TICK_TIME					= 5;
 
 	/* CORBA server */
@@ -78,7 +78,7 @@ public class AdministrationResourceServer extends SleepButWorkThread {
 		
         /* Start main loop */
 		final AdministrationResourceServer server = new AdministrationResourceServer();
-		Log.debugMessage("AdministrationResourceServer.startup | Ready.", Log.DEBUGLEVEL03);
+		Log.debugMessage("AdministrationResourceServer.startup | Ready.", Log.DEBUGLEVEL03); //$NON-NLS-1$
 		server.start();
 
 		/* Add shutdown hook */
@@ -93,7 +93,7 @@ public class AdministrationResourceServer extends SleepButWorkThread {
 		/* Create local CORBA server end activate servant */
 		try {
 			corbaServer = new CORBAServer();
-			corbaServer.activateServant(new ARServerImpl(), "ARServer");
+			corbaServer.activateServant(new ARServerImpl(), "ARServer"); //$NON-NLS-1$
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
@@ -106,7 +106,7 @@ public class AdministrationResourceServer extends SleepButWorkThread {
 	
 	private static void deactivateCORBAServer() {
 		try {
-			corbaServer.deactivateServant("ARServer");
+			corbaServer.deactivateServant("ARServer"); //$NON-NLS-1$
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
@@ -120,7 +120,7 @@ public class AdministrationResourceServer extends SleepButWorkThread {
 		case FALL_CODE_NO_ERROR:
 			break;
 		default:
-			Log.errorMessage("processError | Unknown error code: " + super.fallCode);
+			Log.errorMessage("processError | Unknown error code: " + super.fallCode); //$NON-NLS-1$
 		}
 		super.clearFalls();
 	}
@@ -130,7 +130,7 @@ public class AdministrationResourceServer extends SleepButWorkThread {
 
 		deactivateCORBAServer();
 
-		Log.debugMessage("AdministrationResourceServer.shutdown | serialize ResourceStorableObjectPool" , Log.DEBUGLEVEL03);
+		Log.debugMessage("AdministrationResourceServer.shutdown | serialize ResourceStorableObjectPool" , Log.DEBUGLEVEL03); //$NON-NLS-1$
 		ResourceStorableObjectPool.serializePool();		
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: ARServerImpl.java,v 1.8 2005/03/04 12:05:00 bass Exp $
+ * $Id: ARServerImpl.java,v 1.9 2005/04/04 13:55:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,9 +7,10 @@
  */
 package com.syrus.AMFICOM.arserver;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.arserver.corba.ARServerPOA;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -50,7 +51,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/04 12:05:00 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/04 13:55:21 $
  * @author $Author: bass $
  * @module arserver_v1
  */
@@ -75,8 +76,8 @@ public class ARServerImpl extends ARServerPOA {
 				condition = new EquivalentCondition(transferable.equialentCondition());
 				break;
 			default:
-				String msg = "ARServerImpl.restoreCondition | condition class " + transferable.getClass().getName()
-						+ " is not suppoted";
+				String msg = "ARServerImpl.restoreCondition | condition class " + transferable.getClass().getName() //$NON-NLS-1$
+						+ " is not suppoted"; //$NON-NLS-1$
 				Log.errorMessage(msg);
 				throw new IllegalDataException(msg);
 
@@ -89,18 +90,17 @@ public class ARServerImpl extends ARServerPOA {
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(id_Transferable);
-		Log.debugMessage("ARServerImplementation.delete | trying to delete " + id, Log.DEBUGLEVEL03);
+		Log.debugMessage("ARServerImplementation.delete | trying to delete " + id, Log.DEBUGLEVEL03); //$NON-NLS-1$
 		ResourceStorableObjectPool.delete(id);
 	}
 	
 	public void deleteList(Identifier_Transferable[] id_Transferables,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		Log.debugMessage("ARServerImplementation.deleteList | Trying to delete... ", Log.DEBUGLEVEL03);
-		Collection idList = new ArrayList(id_Transferables.length);
-		for (int i = 0; i < id_Transferables.length; i++) {
-            idList.add(new Identifier(id_Transferables[i]));			
-		}
+		Log.debugMessage("ARServerImplementation.deleteList | Trying to delete... ", Log.DEBUGLEVEL03); //$NON-NLS-1$
+		final Set idList = new HashSet(id_Transferables.length);
+		for (int i = 0; i < id_Transferables.length; i++)
+			idList.add(new Identifier(id_Transferables[i]));			
 		try {
         	ResourceStorableObjectPool.delete(idList);
         } catch (IllegalDataException e) {
@@ -118,7 +118,7 @@ public class ARServerImpl extends ARServerPOA {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("ARServerImplementation.receiveImageResource | Received " + " imageResource", Log.DEBUGLEVEL07);
+		Log.debugMessage("ARServerImplementation.receiveImageResource | Received " + " imageResource", Log.DEBUGLEVEL07); //$NON-NLS-1$ //$NON-NLS-2$
 		try {
 			imageResource_Transferable.header.modifier_id = accessIdentifier.user_id;
 			ImageResourceSort sort = imageResource_Transferable.data.discriminator();
@@ -134,10 +134,10 @@ public class ARServerImpl extends ARServerPOA {
 				abstractImageResource = new SchemeImageResource(imageResource_Transferable);
 				break;
 			default:
-				throw new AMFICOMRemoteException("Unsupported sort value " + sort.value(), ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO,"Unsupported sort value");
+				throw new AMFICOMRemoteException("Unsupported sort value " + sort.value(), ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO,"Unsupported sort value"); //$NON-NLS-1$ //$NON-NLS-2$
 			}         	
 			ResourceStorableObjectPool.putStorableObject(abstractImageResource);
-			ImageResourceDatabase database = (ImageResourceDatabase) ResourceDatabaseContext.getImageResourceDatabase();
+			ImageResourceDatabase database = ResourceDatabaseContext.getImageResourceDatabase();
 			database.update(abstractImageResource, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorException(e);
@@ -166,9 +166,9 @@ public class ARServerImpl extends ARServerPOA {
         /**
         * TODO check user for access
         */
-        Log.debugMessage("ARServerImplementation.receiveImageResources | Received "
-            + imageResource_Transferables.length + " ImageResources", Log.DEBUGLEVEL07);
-        Collection imageResourceList = new ArrayList(imageResource_Transferables.length);
+        Log.debugMessage("ARServerImplementation.receiveImageResources | Received " //$NON-NLS-1$
+            + imageResource_Transferables.length + " ImageResources", Log.DEBUGLEVEL07); //$NON-NLS-1$
+        final Set imageResources = new HashSet(imageResource_Transferables.length);
         try {
 			for (int i = 0; i < imageResource_Transferables.length; i++) {
 				imageResource_Transferables[i].header.modifier_id = accessIdentifier.user_id;
@@ -189,17 +189,17 @@ public class ARServerImpl extends ARServerPOA {
 							imageResource_Transferables[i]);
 					break;
 				default:
-					throw new AMFICOMRemoteException("Unsupported sort value " + sort.value(), ErrorCode.ERROR_RETRIEVE,
+					throw new AMFICOMRemoteException("Unsupported sort value " + sort.value(), ErrorCode.ERROR_RETRIEVE, //$NON-NLS-1$
 							CompletionStatus.COMPLETED_NO,
-							"Unsupported sort value " + sort.value());
+							"Unsupported sort value " + sort.value()); //$NON-NLS-1$
 				}
 				ResourceStorableObjectPool
 						.putStorableObject(abstractImageResource);
-				imageResourceList.add(abstractImageResource);
+				imageResources.add(abstractImageResource);
 			}
-			ImageResourceDatabase database = (ImageResourceDatabase) ResourceDatabaseContext
+			ImageResourceDatabase database = ResourceDatabaseContext
 					.getImageResourceDatabase();
-			database.update(imageResourceList,
+			database.update(imageResources,
 					new Identifier(accessIdentifier.user_id),
 					force ? StorableObjectDatabase.UPDATE_FORCE
 							: StorableObjectDatabase.UPDATE_CHECK);
@@ -228,7 +228,7 @@ public class ARServerImpl extends ARServerPOA {
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(id_Transferable);
-        Log.debugMessage("ARServerImpl.transmitImageResource | require " + id.toString(), Log.DEBUGLEVEL07);
+        Log.debugMessage("ARServerImpl.transmitImageResource | require " + id.toString(), Log.DEBUGLEVEL07); //$NON-NLS-1$
         try {
             AbstractImageResource abstractImageResource = (AbstractImageResource) ResourceStorableObjectPool.getStorableObject(id, true);
             return (ImageResource_Transferable) abstractImageResource.getTransferable();
@@ -258,47 +258,47 @@ public class ARServerImpl extends ARServerPOA {
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		try {
-            Identifier domainId = new Identifier(accessIdentifier.domain_id);
-            Log.debugMessage("ARServerImpl.transmitImageResources | requiere "
-                    + (ids_Transferable.length == 0 ? "all" : Integer
-                            .toString(ids_Transferable.length))
-                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
-            Collection list;
-            if (ids_Transferable.length > 0) {
-                Collection idsList = new ArrayList(ids_Transferable.length);
-                for (int i = 0; i < ids_Transferable.length; i++)
-                    idsList.add(new Identifier(ids_Transferable[i]));
-                list = ResourceStorableObjectPool.getStorableObjects(idsList, true);
-            } else
-                list = ResourceStorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE), true);
+			Identifier domainId = new Identifier(accessIdentifier.domain_id);
+			Log.debugMessage("ARServerImpl.transmitImageResources | requiere " //$NON-NLS-1$
+					+ (ids_Transferable.length == 0 ? "all" : Integer //$NON-NLS-1$
+							.toString(ids_Transferable.length))
+					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07); //$NON-NLS-1$
+			Collection list;
+			if (ids_Transferable.length > 0) {
+				final Set ids = new HashSet(ids_Transferable.length);
+				for (int i = 0; i < ids_Transferable.length; i++)
+					ids.add(new Identifier(ids_Transferable[i]));
+				list = ResourceStorableObjectPool.getStorableObjects(ids, true);
+			} else
+				list = ResourceStorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE), true);
 
-            ImageResource_Transferable[] transferables = new ImageResource_Transferable[list.size()];
-            int i = 0;
-            for (Iterator it = list.iterator(); it.hasNext(); i++) {
-                AbstractImageResource abstractImageResource = (AbstractImageResource) it.next();
-                transferables[i] = (ImageResource_Transferable) abstractImageResource.getTransferable();
-            }
-            return transferables;
+			ImageResource_Transferable[] transferables = new ImageResource_Transferable[list.size()];
+			int i = 0;
+			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+				AbstractImageResource abstractImageResource = (AbstractImageResource) it.next();
+				transferables[i] = (ImageResource_Transferable) abstractImageResource.getTransferable();
+			}
+			return transferables;
 
-        } catch (RetrieveObjectException roe) {
-            Log.errorException(roe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-                    .getMessage());
-        } catch (IllegalDataException ide) {
-            Log.errorException(ide);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
-                    .getMessage());
-        } catch (IllegalObjectEntityException ioee) {
-            Log.errorException(ioee);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
-                    .getMessage());
-        } catch (ApplicationException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		} catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+					.getMessage());
+		} catch (IllegalDataException ide) {
+			Log.errorException(ide);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
+					.getMessage());
+		} catch (IllegalObjectEntityException ioee) {
+			Log.errorException(ioee);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
+					.getMessage());
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 	
 	public ImageResource_Transferable[] transmitImageResourcesButIds(
@@ -307,17 +307,17 @@ public class ARServerImpl extends ARServerPOA {
             throws AMFICOMRemoteException {
         try {
             Identifier domainId = new Identifier(accessIdentifier.domain_id);
-            Log.debugMessage("ARServerImpl.transmitImageResourcesButIds | requiere "
-                    + (identifier_Transferables.length == 0 ? "all" : Integer
+            Log.debugMessage("ARServerImpl.transmitImageResourcesButIds | requiere " //$NON-NLS-1$
+                    + (identifier_Transferables.length == 0 ? "all" : Integer //$NON-NLS-1$
                             .toString(identifier_Transferables.length))
-                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
+                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07); //$NON-NLS-1$
             Collection list;
             if (identifier_Transferables.length > 0) {
-                Collection idsList = new ArrayList(identifier_Transferables.length);
+                final Set ids = new HashSet(identifier_Transferables.length);
                 for (int i = 0; i < identifier_Transferables.length; i++)
-                    idsList.add(new Identifier(identifier_Transferables[i]));
+                    ids.add(new Identifier(identifier_Transferables[i]));
 
-                list = ResourceStorableObjectPool.getStorableObjectsByConditionButIds(idsList, new EquivalentCondition(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE), true);
+                list = ResourceStorableObjectPool.getStorableObjectsByConditionButIds(ids, new EquivalentCondition(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE), true);
 
             } else
                 list = ResourceStorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE), true);
@@ -357,19 +357,19 @@ public class ARServerImpl extends ARServerPOA {
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable storableObjectCondition_Transferable)
 			throws AMFICOMRemoteException {
-		Log.debugMessage("ARServerImpl.transmitImageResourcesButIdsCondition | requiere "
-				+ (identifier_Transferables.length == 0 ? "all"
+		Log.debugMessage("ARServerImpl.transmitImageResourcesButIdsCondition | requiere " //$NON-NLS-1$
+				+ (identifier_Transferables.length == 0 ? "all" //$NON-NLS-1$
 						: Integer.toString(identifier_Transferables.length))
-				+ " item(s) ", Log.DEBUGLEVEL07);
+				+ " item(s) ", Log.DEBUGLEVEL07); //$NON-NLS-1$
 		try {
 			Collection list;
 			StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
 			if (identifier_Transferables.length > 0) {
-				Collection idsList = new ArrayList(identifier_Transferables.length);
+				final Set ids = new HashSet(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
-					idsList.add(new Identifier(identifier_Transferables[i]));
+					ids.add(new Identifier(identifier_Transferables[i]));
 
-				list = ResourceStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
+				list = ResourceStorableObjectPool.getStorableObjectsByConditionButIds(ids,
 					condition , true);
 			} else
 				list = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -409,7 +409,7 @@ public class ARServerImpl extends ARServerPOA {
 	
 	public Identifier_Transferable getGeneratedIdentifier(short entityCode) throws AMFICOMRemoteException {
 		try {
-			Log.debugMessage("ARServerImpl.getGeneratedIdentifier | generate new Identifer for "
+			Log.debugMessage("ARServerImpl.getGeneratedIdentifier | generate new Identifer for " //$NON-NLS-1$
 					+ ObjectEntities.codeToString(entityCode), Log.DEBUGLEVEL07);
 			Identifier identifier = IdentifierGenerator.generateIdentifier(entityCode);
 			return (Identifier_Transferable) identifier.getTransferable();
@@ -418,27 +418,27 @@ public class ARServerImpl extends ARServerPOA {
 			throw new AMFICOMRemoteException(
 								ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
 								CompletionStatus.COMPLETED_NO,
-								"Illegal object entity: '"
+								"Illegal object entity: '" //$NON-NLS-1$
 										+ ObjectEntities
 												.codeToString(entityCode)
-										+ "'");
+										+ "'"); //$NON-NLS-1$
 		} catch (IdentifierGenerationException ige) {
 			Log.errorException(ige);
 			throw new AMFICOMRemoteException(
 								ErrorCode.ERROR_RETRIEVE,
 								CompletionStatus.COMPLETED_NO,
-								"Cannot create major/minor entries of identifier for entity: '"
+								"Cannot create major/minor entries of identifier for entity: '" //$NON-NLS-1$
 										+ ObjectEntities
 												.codeToString(entityCode)
-										+ "' -- " + ige.getMessage());
+										+ "' -- " + ige.getMessage()); //$NON-NLS-1$
 		}
 	}
 	
 	public Identifier_Transferable[] getGeneratedIdentifierRange(
 			short entityCode, int size) throws AMFICOMRemoteException {
 		Log.debugMessage(
-				"ARServerImpl.getGeneratedIdentifierRange | generate new Identifer range "
-						+ size + " for "
+				"ARServerImpl.getGeneratedIdentifierRange | generate new Identifer range " //$NON-NLS-1$
+						+ size + " for " //$NON-NLS-1$
 						+ ObjectEntities.codeToString(entityCode),
 				Log.DEBUGLEVEL07);
 		try {
@@ -453,14 +453,14 @@ public class ARServerImpl extends ARServerPOA {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(
 					ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
-					CompletionStatus.COMPLETED_NO, "Illegal object entity: '"
-							+ ObjectEntities.codeToString(entityCode) + "'");
+					CompletionStatus.COMPLETED_NO, "Illegal object entity: '" //$NON-NLS-1$
+							+ ObjectEntities.codeToString(entityCode) + "'"); //$NON-NLS-1$
 		} catch (IdentifierGenerationException ige) {
 			Log.errorException(ige);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
 					CompletionStatus.COMPLETED_NO,
-					"Cannot create major/minor entries of identifier for entity: '"
-							+ ObjectEntities.codeToString(entityCode) + "' -- "
+					"Cannot create major/minor entries of identifier for entity: '" //$NON-NLS-1$
+							+ ObjectEntities.codeToString(entityCode) + "' -- " //$NON-NLS-1$
 							+ ige.getMessage());
 		}
 	}	

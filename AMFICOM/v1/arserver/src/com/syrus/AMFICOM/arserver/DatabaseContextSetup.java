@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.2 2005/02/01 15:10:12 max Exp $
+ * $Id: DatabaseContextSetup.java,v 1.3 2005/04/04 13:55:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,24 +25,24 @@ import com.syrus.util.ApplicationProperties;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/01 15:10:12 $
- * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/04/04 13:55:21 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 
 public abstract class DatabaseContextSetup {
 	
-	public static final String 	KEY_RESOURCE_POOL_SIZE = "ImageResourcePoolSize";
-	public static final String 	KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
-	public static final String 	KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
-	public static final String 	KEY_REFRESH_TIMEOUT = "RefreshTimeout";
-	public static final String 	KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
+	public static final String 	KEY_RESOURCE_POOL_SIZE = "ImageResourcePoolSize"; //$NON-NLS-1$
+	public static final String 	KEY_GENERAL_POOL_SIZE = "GeneralPoolSize"; //$NON-NLS-1$
+	public static final String 	KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize"; //$NON-NLS-1$
+	public static final String 	KEY_REFRESH_TIMEOUT = "RefreshTimeout"; //$NON-NLS-1$
+	public static final String 	KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly"; //$NON-NLS-1$
 
 	public static final int 	DEFAULT_RESOURCE_POOL_SIZE = 1000;
 	public static final int 	DEFAULT_GENERAL_POOL_SIZE = 1000;
 	public static final int 	DEFAULT_ADMINISTRATION_POOL_SIZE = 1000;
 	public static final int 	DEFAULT_REFRESH_TIMEOUT = 5;
-	public static final String 	DEFAULT_DATABASE_LOADER_ONLY = "false";
+	public static final String 	DEFAULT_DATABASE_LOADER_ONLY = "false"; //$NON-NLS-1$
 
 	private DatabaseContextSetup() {
 		// empty
