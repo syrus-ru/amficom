@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.33 2005/03/04 13:34:49 bass Exp $
+ * $Id: PhysicalLink.java,v 1.34 2005/03/04 14:24:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -48,9 +48,11 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * Предуствновленными являются  два типа - 
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/03/04 13:34:49 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.34 $, $Date: 2005/03/04 14:24:15 $
  * @module map_v1
+ * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
+ * @todo nodeLinks should be transient
  */
 public class PhysicalLink extends StorableObject implements Characterizable, TypedObject, MapElement {
 
@@ -93,12 +95,11 @@ public class PhysicalLink extends StorableObject implements Characterizable, Typ
 	private boolean					leftToRight;
 	private boolean					topToBottom;
 
-	private List					nodeLinks;
-
 	private List					characteristics;
 
 	private StorableObjectDatabase	physicalLinkDatabase;
 
+	private transient List nodeLinks = null;
 
 	protected transient Map map;
 
@@ -208,7 +209,10 @@ public class PhysicalLink extends StorableObject implements Characterizable, Typ
 
 		this.selected = false;
 		
-		this.binding = new PhysicalLinkBinding(physicalLinkType.getBindingDimension());
+		if(physicalLinkType == null)
+			this.binding = new PhysicalLinkBinding(new IntDimension(0, 0));
+		else
+			this.binding = new PhysicalLinkBinding(physicalLinkType.getBindingDimension());
 	}
 
 	public void insert() throws CreateObjectException {
@@ -462,6 +466,8 @@ public class PhysicalLink extends StorableObject implements Characterizable, Typ
 	}
 	
 	public List getNodeLinks() {
+		if(this.nodeLinks == null || this.nodeLinks.isEmpty())
+			this.nodeLinks = findNodeLinks();
 		return  Collections.unmodifiableList(this.nodeLinks);
 	}
 	
@@ -681,6 +687,7 @@ public class PhysicalLink extends StorableObject implements Characterizable, Typ
 	/**
 	 * Сортировать фрагменты линии по цепочке начиная от начального узла.
 	 * При сортировке фрагментов сортируются также узлы
+	 * @todo getNodeLinks() is unmodifiable so iterator.remove throws Ex
 	 */
 	public void sortNodeLinks()
 	{
@@ -1008,4 +1015,9 @@ public class PhysicalLink extends StorableObject implements Characterizable, Typ
   			throw new CreateObjectException("PhysicalLink.createInstance |  ", e);
   		}
   	}
+
+	private List findNodeLinks()
+	{
+		return this.map.getNodeLinks(this);
+	}
 }
