@@ -312,10 +312,6 @@ public class AnalysisUtil
 						ByteArray.toByteArray((int)defaultMinuitParams[i]));
 			}
 		}
-		catch (IOException ex)
-		{
-			ex.printStackTrace();
-		}
 		catch (CreateObjectException e)
 		{
 				// FIXME
