@@ -15,7 +15,6 @@ public class TraceEvent
 	public static final int LOSS = 32;
 	public static final int CONNECTOR = 40;
 	public static final int TERMINATE = 50;
-	//public static final int CONCAVITY = 7;
 	public static final int OVERALL_STATS = 100;
 
 	public static final int DENOISED = 101;
@@ -25,6 +24,17 @@ public class TraceEvent
 	public int first_point;
 	public int last_point;
 	public double[] data;
+
+	public double loss = 0; // свойство определено для лин.уч., коннекторов, сварок и н/ид; не определено для начала и конца волокна 
+
+	public double getLoss()
+	{
+		return loss;
+	}
+	public void setLoss(double v)
+	{
+		loss = v;
+	}
 
 	public TraceEvent (int type, int first_point, int last_point)
 	{

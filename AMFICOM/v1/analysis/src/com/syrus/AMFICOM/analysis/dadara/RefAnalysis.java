@@ -70,7 +70,7 @@ public class RefAnalysis
 
 			double asympB = re[i].getAsympY0();
 			double asympE = re[i].getAsympY1();
-
+			
 			if (type == TraceEvent.LINEAR) {
 			    // TODO: использовать mloss вместо asympB,asympE,
 			    // т.к. (нынешние) asympB,asympE зависят от смежных участков.
@@ -82,6 +82,7 @@ public class RefAnalysis
 				ModelTrace yMT = new ArrayModelTrace(y); 
 				events[i].data[3] = ReflectogramComparer.getRMSDeviation(mtm.getModelTrace(), yMT, re[i]);
 				events[i].data[4] = ReflectogramComparer.getMaxDeviation(mtm.getModelTrace(), yMT, re[i]);
+				events[i].setLoss(re[i].getMLoss()); 
 			} else if (type == TraceEvent.CONNECTOR) {
 				events[i].data = new double[4];
 				events[i].data[0] = top - asympB;
@@ -89,17 +90,20 @@ public class RefAnalysis
 				events[i].data[2] = events[i].data[0]
 						- re[i].getALet(); // XXX
 				events[i].data[3] = 0; // FIXIT: больше не используется, убрать
+				events[i].setLoss(re[i].getMLoss()); 
 			} else if (type == TraceEvent.LOSS || type == TraceEvent.GAIN) {
 				events[i].data = new double[3];
 				events[i].data[0] = top - asympB;
 				events[i].data[1] = top - asympE;
 				events[i].data[2] = re[i].getMLoss();
+				events[i].setLoss(re[i].getMLoss()); 
 			} else if (type == TraceEvent.TERMINATE) {
 				events[i].data = new double[3];
 				events[i].data[0] = top - asympB;
 				events[i].data[1] = events[i].data[0]
 						- re[i].getALet(); // XXX
 				events[i].data[2] = 0; // FIXIT: больше не используется, убрать
+				events[i].setLoss(0); 
 			} else if (type == TraceEvent.INITIATE) {
 				// extrapolate first linear event to x = 0
 				for (int j = 1; j < re.length; j++)
@@ -144,11 +148,13 @@ public class RefAnalysis
 				events[i].data[1] = top - Po; // Po
 				events[i].data[2] = edz;
 				events[i].data[3] = adz;
+				events[i].setLoss(0); 
 			} else if (type == TraceEvent.NON_IDENTIFIED) {
 				events[i].data = new double[3];
 				events[i].data[0] = top - asympB;
 				events[i].data[1] = top - asympE;
 				events[i].data[2] = events[i].data[1] - events[i].data[0]; //eventMaxDeviation
+				events[i].setLoss(re[i].getMLoss()); 
 			}
 		}
 

@@ -332,7 +332,8 @@ implements OperationListener
 					 Double.toString(MathRef.round_3(res_km * (double)events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 dash, // отраж
-					 Double.toString(MathRef.round_3(events[i].data[1] - events[i].data[0])), // потери
+					 //Double.toString(MathRef.round_3(events[i].data[1] - events[i].data[0])), // потери
+					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
 					 Double.toString(MathRef.round_4(events[i].data[2] / res_km)) //затух
 				});
 				break;
@@ -342,7 +343,8 @@ implements OperationListener
 					 Double.toString(MathRef.round_3(res_km * (double)events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 dash, // отраж
-					 dash, // потери
+					 //dash, // потери
+					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
 					 dash  // затух
 				});
 				break;
@@ -352,7 +354,8 @@ implements OperationListener
 					 Double.toString(MathRef.round_3(res_km * (double)events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3(res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 Double.toString(MathRef.round_2(MathRef.calcReflectance(sigma, events[i].data[0] - events[i].data[2]))), // отраж
-					 Double.toString(MathRef.round_3(events[i].data[1] - events[i].data[0])), // потери
+					 //Double.toString(MathRef.round_3(events[i].data[1] - events[i].data[0])), // потери
+					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
 					 dash  // затух
 				});
 				break;
@@ -362,7 +365,8 @@ implements OperationListener
 					 Double.toString(MathRef.round_3 (res_km * (double)events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3 (res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 dash, // отраж
-					 Double.toString( MathRef.round_3 ( events[i].data[2])), // потери
+					 //Double.toString( MathRef.round_3 ( events[i].data[2])), // потери
+					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
 					 dash  // затух
 				});
 				break;
@@ -372,7 +376,8 @@ implements OperationListener
 					 Double.toString(MathRef.round_3 (res_km * (double)events[i].first_point)), //начало
 					 Double.toString(MathRef.round_3 (res_km * (events[i].last_point - events[i].first_point))), //протяженность
 					 dash, // отраж
-					 Double.toString( MathRef.round_3 ( events[i].data[2])), // потери
+					 //Double.toString( MathRef.round_3 ( events[i].data[2])), // потери
+					 Double.toString(MathRef.round_3(events[i].getLoss())), // потери
 					 dash  // затух
 				});
 				break;
