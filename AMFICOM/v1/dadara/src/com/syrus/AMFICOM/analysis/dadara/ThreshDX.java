@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.6 2005/03/14 12:19:38 saa Exp $
+ * $Id: ThreshDX.java,v 1.7 2005/03/18 13:44:33 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/03/14 12:19:38 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/18 13:44:33 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -67,6 +67,7 @@ public class ThreshDX extends Thresh
 		int compareSign = goodSign(key) * (IS_KEY_HARD[key] ? 1 : -1);
 		if (dX[key] * compareSign < dX[LIMIT_KEY[key]] * compareSign)
 			dX[key] = dX[LIMIT_KEY[key]];
+		correctDX(key);
 	}
 
 	protected void arrangeLimits(int key)
@@ -74,14 +75,15 @@ public class ThreshDX extends Thresh
 		int compareSign = goodSign(key) * (IS_KEY_HARD[key] ? 1 : -1);
 		if (dX[key] * compareSign < dX[FORCEMOVE_KEY[key]] * compareSign)
 			dX[FORCEMOVE_KEY[key]] = dX[key];
+		correctDX(key);
 	}
 
 	public void changeAllBy(int delta)
 	{
-		for (int k = 0; k < 4; k++)
+		for (int key = 0; key < 4; key++)
 		{
-			dX[k] += (IS_KEY_UPPER[k] ? delta : -delta) * (IS_KEY_HARD[k] ? 2 : 1);
-			correctDX(k);
+			dX[key] += goodSign(key) * delta * (IS_KEY_HARD[key] ? 2 : 1);
+			correctDX(key);
 		}
 		
 	}
