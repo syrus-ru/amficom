@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.configuration;
 
 import com.syrus.AMFICOM.general.StorableObject_Database;
 
-public class ConfigurationDatabaseContext {
+public abstract class ConfigurationDatabaseContext {
 	public static StorableObject_Database characteristicTypeDatabase;
 
 	public static StorableObject_Database characteristicDatabase;

@@ -67,23 +67,21 @@ $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
 
 
-$(LIBNAME): mach client
+$(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
-.PHONY:	mach
-mach:	.mach
-.mach:	corba $(CLASSDIR)
-	$(JAVAC) $(JAVAC_FLAGS) \
+.mach:	.corba $(CLASSDIR)
+	$(JAVAC) $(JAVAC_FLAGS) -nowarn \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainMember.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characterized.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characteristic.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Equipment.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/Equipment_Database.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement_Database.java
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/KIS.java
+	touch $@
 
-.PHONY:	corba
-corba:	.corba
 .corba:	$(CLASSDIR)
 	$(IDL2JAVA) $(IDL2JAVA_FLAGS) \
 		$(IDLDIR)/configuration.idl
@@ -96,17 +94,8 @@ corba:	.corba
 $(CLASSDIR):
 	mkdir -p $@
 
-.PHONY:	client
-client:	.client
-.client:	$(CLASSDIR)
-	$(JAVAC) \
-		$(JAVAC_FLAGS) -nowarn \
-		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(EXTCLASSPATH):$(DEPRECATEDCLASSPATH):$(CLASSDIR) \
-		$(shell find $(SRCDIR)/com/syrus/AMFICOM/Client -name '*.java')
-	touch $@
-
 .PHONY:	clean
-clean:	cleanmach cleancorba cleanclient
+clean:	cleanmach cleancorba
 	$(RM) -f $(LIBNAME)
 
 .PHONY:	cleanmach
@@ -119,12 +108,6 @@ cleancorba:
 	$(RM) -rf $(SRCDIR)/com/syrus/AMFICOM/configuration/corba
 	$(RM) -rf $(CLASSDIR)/com/syrus/AMFICOM/configuration/corba
 	$(RM) -f .corba
-
-.PHONY:	cleanclient
-cleanclient:
-	$(RM) \
-		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
-		.client
 
 #### Archive ####
 .PHONY:	arch
