@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.80 2005/01/19 20:38:48 arseniy Exp $
+ * $Id: configuration.idl,v 1.81 2005/02/11 09:11:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,14 +24,6 @@ module corba {
 //		void getKIS() raises (general::corba::AMFICOMRemoteException);
 //	};
 
-
-//////////////////// AccessIdentifier ///////////////////
-	struct AccessIdentifier_Transferable {
-		long long started;
-		general::corba::Identifier_Transferable domain_id;
-		general::corba::Identifier_Transferable user_id;		
-		general::corba::Identifier_Transferable session_id;
-	};
 
 /////////////////////// EquipmentType /////////////////////
 	struct EquipmentType_Transferable {

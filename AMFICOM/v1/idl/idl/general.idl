@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.55 2005/02/09 08:59:35 bob Exp $
+ * $Id: general.idl,v 1.56 2005/02/11 09:11:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -81,6 +81,14 @@ module corba {
 		ErrorCode error_code;
 		CompletionStatus completion_status;
 		wstring message;
+	};
+
+//////////////////// AccessIdentifier ///////////////////
+	struct AccessIdentifier_Transferable {
+		long long started;
+		general::corba::Identifier_Transferable domain_id;
+		general::corba::Identifier_Transferable user_id;		
+		general::corba::Identifier_Transferable session_id;
 	};
 
 ////////////////////// ParameterType //////////////////////
