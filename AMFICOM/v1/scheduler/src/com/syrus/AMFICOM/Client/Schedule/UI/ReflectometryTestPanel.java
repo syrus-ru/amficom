@@ -154,6 +154,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	private AComboBox				averageQuantityComboBox		= new AComboBox();
 	private Dispatcher				dispatcher;
+	private SchedulerModel schedulerModel;
 
 	private JTextField				refractTextField			= new JTextField();
 
@@ -172,6 +173,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	public ReflectometryTestPanel(ApplicationContext aContext, MeasurementPort port, Test test) {
 		this.aContext = aContext;
+		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		initModule(aContext.getDispatcher());
 		init();
 		setPort(port);
@@ -338,6 +340,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			}
 		} catch (ApplicationException ae) {
 			SchedulerModel.showErrorMessage(this, ae);
+			this.schedulerModel.setBreakData();
 		}
 		return set;
 	}

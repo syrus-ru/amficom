@@ -32,11 +32,13 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.Schedule.TestsEditor;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Test;
 
-public class PlanPanel extends JPanel implements OperationListener {
+public class PlanPanel extends JPanel implements OperationListener, TestsEditor {
 
 	private static final long	serialVersionUID	= 1032754807376863494L;
 
@@ -101,6 +103,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	protected Point					tmppos;
 	private ApplicationContext		aContext;
+	private SchedulerModel schedulerModel;
 
 	private Dispatcher				dispatcher;
 	private int						maxZoom			= 50;
@@ -115,6 +118,8 @@ public class PlanPanel extends JPanel implements OperationListener {
 		this.aContext = aContext;
 		this.parent = parent;
 		this.toolBar = new PlanToolBar(aContext, this);
+		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
+		this.schedulerModel.addTestsEditor(this);
 
 		setLayout(new VerticalFlowLayout());
 		// setLayout(new GridLayout(0,1));
@@ -240,22 +245,22 @@ public class PlanPanel extends JPanel implements OperationListener {
 			for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
 				Object key = it.next();
 				TestLine line = (TestLine) this.testLines.get(key);
-				line.unregisterDispatcher();
+				((SchedulerModel)this.aContext.getApplicationModel()).removeTestsEditor(line);
 			}
 			this.testLines.clear();
 			removeAll();
 			revalidate();
 			this.parent.repaint();
 		}
-		else if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
-			updateTests();
-			repaint();
-			revalidate();
-			this.parent.repaint();
-		}
+//		else if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
+//			updateTests1();
+//			repaint();
+//			revalidate();
+//			this.parent.repaint();
+//		}
 
 	}
-
+	
 	public void setScale(int n) {
 		if (n < 0 || n >= SCALES.length) {
 			Environment.log(Environment.LOG_LEVEL_WARNING, "Unsupported scale: " //$NON-NLS-1$
@@ -418,9 +423,15 @@ public class PlanPanel extends JPanel implements OperationListener {
 		setScale(scale);
 		setStartDate(startDate);
 		SchedulerModel model = (SchedulerModel) this.aContext.getApplicationModel();
-		model.updateTests(this.scaleStart.getTime(), this.scaleEnd.getTime());
-		updateTests();
-		this.setCursor(UIStorage.DEFAULT_CURSOR);
+		try {
+			model.updateTests(this.scaleStart.getTime(), this.scaleEnd.getTime());
+			updateTests1();
+			this.setCursor(UIStorage.DEFAULT_CURSOR);
+
+		} catch (ApplicationException e) {
+			SchedulerModel.showErrorMessage(this, e);
+		}
+		
 	}
 
 	void updateTestLines() {
@@ -480,11 +491,11 @@ public class PlanPanel extends JPanel implements OperationListener {
 	private void initModule(Dispatcher dispatcher) {
 		// timer.start();
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
+//		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 	}
 
 	public void unregisterDispatcher() {
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TESTS);
+//		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 	}
 
 	private void updateRealScale() {
@@ -561,7 +572,14 @@ public class PlanPanel extends JPanel implements OperationListener {
 		}
 	}
 
-	protected void updateTests() {
+	public void updateTests() {
+		updateTests1();
+		repaint();
+		revalidate();
+		this.parent.repaint();
+	}
+	
+	protected void updateTests1() {
 		Collection tests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
 		for (Iterator it = tests.iterator(); it.hasNext();) {
 			Test test = (Test) it.next();

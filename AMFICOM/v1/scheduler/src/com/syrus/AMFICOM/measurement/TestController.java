@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.2 2005/02/25 09:18:38 bob Exp $
+ * $Id: TestController.java,v 1.3 2005/02/28 13:30:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/25 09:18:38 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/28 13:30:43 $
  * @author $Author: bob $
  * @module module
  */
@@ -100,7 +100,7 @@ public class TestController implements ObjectResourceController {
 		else if (key.equals(KEY_TEST_OBJECT))
 			name = LangModelSchedule.getString("TestObject"); //$NON-NLS-1$
 		else if (key.equals(KEY_MEASUREMENT_TYPE))
-			name = LangModelSchedule.getString("MeasurementType"); //$NON-NLS-1$
+			name = LangModelSchedule.getString("Measurement_type"); //$NON-NLS-1$
 		else if (key.equals(KEY_START_TIME))
 			name = LangModelSchedule.getString("TestStartTime"); //$NON-NLS-1$
 		else if (key.equals(KEY_STATUS))

@@ -387,7 +387,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		this.aContext.getDispatcher().notify(
 												new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE,
-																		LangModelSchedule.getString("Loading_BD")));
+																		LangModelSchedule.getString("Loading_DB")));
 		//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
@@ -404,7 +404,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		this.aContext.getDispatcher().notify(
 												new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE,
 																		LangModelSchedule
-																				.getString("Loding_BD_finished")));
+																				.getString("Loding_DB_finished")));
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_SESSION_DOMAIN, true);

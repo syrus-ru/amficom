@@ -55,6 +55,7 @@ import com.syrus.AMFICOM.Client.General.UI.DateSpinner;
 import com.syrus.AMFICOM.Client.General.UI.TimeSpinner;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.Schedule.TestTemporalStampsEditor;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client_.general.ui_.ObjList;
@@ -66,7 +67,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternController;
-import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TemporalPattern.TimeLine;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
@@ -75,7 +75,7 @@ public class TimeParametersFrame extends JInternalFrame {
 
 	private static final long	serialVersionUID	= 6562288896016470275L;
 
-	public class TimeParametersPanel extends JPanel implements OperationListener {
+	public class TimeParametersPanel extends JPanel implements OperationListener, TestTemporalStampsEditor {
 
 		private static final long	serialVersionUID	= -7975294015403739057L;
 
@@ -109,7 +109,7 @@ public class TimeParametersFrame extends JInternalFrame {
 		JButton						applyButton;
 		Collection					temporalPatterns;
 
-		private Test				test;
+//		private Test				test;
 
 		public TimeParametersPanel() {
 			init();
@@ -118,6 +118,7 @@ public class TimeParametersFrame extends JInternalFrame {
 		public TimeParametersPanel(ApplicationContext aContext) {
 			this.aContext = aContext;
 			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
+			this.schedulerModel.setTestTemporalStampsEditor(this);
 			initModule(aContext.getDispatcher());
 			init();
 		}
@@ -125,16 +126,16 @@ public class TimeParametersFrame extends JInternalFrame {
 		private void initModule(Dispatcher dispatcher) {
 			this.dispatcher = dispatcher;
 			this.dispatcher.register(this, ContextChangeEvent.type);
-			this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TEST);
-			this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
-			this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
+//			this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TEST);
+//			this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
+//			this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 		}
 
 		public void unregisterDispatcher() {
 			this.dispatcher.unregister(this, ContextChangeEvent.type);
-			this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TEST);
-			this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TESTS);
-			this.dispatcher.unregister(this, SchedulerModel.COMMAND_DATA_REQUEST);
+//			this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TEST);
+//			this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TESTS);
+//			this.dispatcher.unregister(this, SchedulerModel.COMMAND_DATA_REQUEST);
 		}
 
 		private void init() {
@@ -446,7 +447,11 @@ public class TimeParametersFrame extends JInternalFrame {
 					public void actionPerformed(ActionEvent e) {
 						TimeParametersPanel.this.createButton.setEnabled(false);
 						TimeParametersPanel.this.applyButton.setEnabled(false);
-						TimeParametersPanel.this.schedulerModel.applyTest();
+						try {
+							TimeParametersPanel.this.schedulerModel.applyTest();
+						} catch (ApplicationException e1) {
+							SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+						}
 						TimeParametersPanel.this.createButton.setEnabled(true);
 						TimeParametersPanel.this.applyButton.setEnabled(true);
 
@@ -458,7 +463,11 @@ public class TimeParametersFrame extends JInternalFrame {
 					public void actionPerformed(ActionEvent e) {
 						TimeParametersPanel.this.createButton.setEnabled(false);
 						TimeParametersPanel.this.applyButton.setEnabled(false);
-						TimeParametersPanel.this.schedulerModel.createTest();
+						try {
+							TimeParametersPanel.this.schedulerModel.createTest();
+						} catch (ApplicationException e1) {
+							SchedulerModel.showErrorMessage(TimeParametersPanel.this, e1);
+						}
 						TimeParametersPanel.this.createButton.setEnabled(true);
 						TimeParametersPanel.this.applyButton.setEnabled(true);
 					}
@@ -482,8 +491,9 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.periodicalRadioButton.doClick();
 		}
 		
-		private void sendParameters() {
 
+		
+		public TestTemporalStamps getTestTemporalStamps() {
 			TestTemporalType temporalType = null;
 			TemporalPattern temporalPattern = null;
 			if (this.oneRadioButton.isSelected()) {
@@ -491,11 +501,18 @@ public class TimeParametersFrame extends JInternalFrame {
 			} else if (this.periodicalRadioButton.isSelected()) {
 				temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
 				temporalPattern = (TemporalPattern) TimeParametersPanel.this.timeStamps.getSelectedValue();
+				if (temporalPattern == null) {
+					JOptionPane.showMessageDialog(this,
+						LangModelSchedule.getString("Have not choosen temporal pattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+						JOptionPane.OK_OPTION);
+					this.schedulerModel.setBreakData();
+					return null;
+				}
 			} else if (this.continuosRadioButton.isSelected()) {
 				temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS;
 			} else {
 				// SchedulerModel.showErrorMessage(this, ne)
-				return;
+				return null;
 			}
 
 			Calendar dateCal = Calendar.getInstance();
@@ -516,45 +533,52 @@ public class TimeParametersFrame extends JInternalFrame {
 			dateCal.set(Calendar.SECOND, 0);
 			dateCal.set(Calendar.MILLISECOND, 0);
 			long end = dateCal.getTimeInMillis();
+			
+			if (end < start) {
+				JOptionPane.showMessageDialog(this,
+					LangModelSchedule.getString("End time less than begin time"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+					JOptionPane.OK_OPTION);
+				this.schedulerModel.setBreakData();
+				return null;
+				
+			}
 
-			TestTemporalStamps timeStamps = new TestTemporalStamps(temporalType, new Date(start), new Date(end),
+			return new TestTemporalStamps(temporalType, new Date(start), new Date(end),
 																	temporalPattern);
-			this.schedulerModel.setTestTimeStamps(timeStamps);
+			
 		}
+		
+		public void setTestTemporalStamps(TestTemporalStamps testTemporalStamps) {		
 
+			Date startTime = testTemporalStamps.getStartTime();
+			this.startDateSpinner.getModel().setValue(startTime);
+			this.startTimeSpinner.getModel().setValue(startTime);
+			Date endTime = testTemporalStamps.getEndTime();
+			if (endTime != null) {
+				this.endDateSpinner.getModel().setValue(endTime);
+				this.endTimeSpinner.getModel().setValue(endTime);
+			}
+
+			switch (testTemporalStamps.getTestTemporalType().value()) {
+				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+					this.oneRadioButton.doClick();
+					break;
+				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+					this.periodicalRadioButton.doClick();
+					this.timeStamps.setSelectedValue(testTemporalStamps.getTemporalPattern(), true);
+					break;
+				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
+					this.continuosRadioButton.doClick();
+					break;
+
+			}
+
+		
+		}
+		
 		public void operationPerformed(OperationEvent ae) {
 			String commandName = ae.getActionCommand();
-			if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
-				this.sendParameters();
-			} else if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TEST)|| commandName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
-				Test test = this.schedulerModel.getSelectedTest();
-				if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
-					this.test = test;
-					Date startTime = this.test.getStartTime();
-					this.startDateSpinner.getModel().setValue(startTime);
-					this.startTimeSpinner.getModel().setValue(startTime);
-					Date endTime = this.test.getEndTime();
-					if (endTime != null) {
-						this.endDateSpinner.getModel().setValue(endTime);
-						this.endTimeSpinner.getModel().setValue(endTime);
-					}
-
-					switch (this.test.getTemporalType().value()) {
-						case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-							this.oneRadioButton.doClick();
-							break;
-						case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-							this.periodicalRadioButton.doClick();
-							this.timeStamps.setSelectedValue(this.test.getTemporalPattern(), true);
-							break;
-						case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-							this.continuosRadioButton.doClick();
-							break;
-
-					}
-
-				}
-			} else if (ae instanceof ContextChangeEvent) {
+			if (ae instanceof ContextChangeEvent) {
 				try {
 					refreshTemporalPatterns();
 				} catch (ApplicationException e) {

@@ -27,28 +27,30 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
+
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.Schedule.TestEditor;
+import com.syrus.AMFICOM.Client.Schedule.TestsEditor;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 
 /**
  * @author Vladimir Dolzhenko
  */
-public class TableFrame extends JInternalFrame implements OperationListener {
+public class TableFrame extends JInternalFrame implements TestsEditor, TestEditor {
 
 	Dispatcher			dispatcher;
-	SchedulerModel				schedulerModel;
+	SchedulerModel		schedulerModel;
 	ObjectResourceTable	listTable;
 	ApplicationContext	aContext;
 	private JPanel		panel;
@@ -59,63 +61,43 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 	public TableFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
 		if (aContext != null) {
-			initModule(aContext.getDispatcher());
+			// initModule(aContext.getDispatcher());
 			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
+			this.schedulerModel.addTestsEditor(this);
+			this.schedulerModel.addTestEditor(this);
 		}
 		init();
 		this.command = new WindowCommand(this);
 	}
 
-	public void operationPerformed(OperationEvent ae) {
-		String commandName = ae.getActionCommand();
-		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
-		if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
-			Test test = this.schedulerModel.getSelectedTest();
-			if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
-				Collection savedTests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
-				this.test = test;
-
-				ObjectResourceTableModel tableModel = (ObjectResourceTableModel) this.listTable.getModel();
-				int rowIndex = tableModel.getIndexOfObject(test);
-
-				if (rowIndex<0) {
-					if (test.isChanged()) {
-						tableModel.getContents().add(test);
-						this.listTable.repaint();
-						this.listTable.revalidate();
-					} else
-						savedTests.add(test);
-				}
-				rowIndex = ((ObjectResourceTableModel) this.listTable.getModel()).getIndexOfObject(test);
-				this.listTable.setRowSelectionInterval(rowIndex, rowIndex);
-
-			}
-
-		} else if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
-			this.listTable.removeAll();
-			this.setSavedTests();
-			this.listTable.revalidate();
-			this.listTable.repaint();
-
-		} 
+	public void updateTest() {
+		this.test = this.schedulerModel.getSelectedTest();
+		ObjectResourceTableModel tableModel = (ObjectResourceTableModel) this.listTable.getModel();
+		int rowIndex = tableModel.getIndexOfObject(this.test);
+		if (rowIndex >= 0) {
+			rowIndex = ((ObjectResourceTableModel) this.listTable.getModel()).getIndexOfObject(this.test);
+			this.listTable.setRowSelectionInterval(rowIndex, rowIndex);
+		}
 	}
 
-	public void setSavedTests() {
-		SwingUtilities.invokeLater(new Runnable() {
+	public void updateTests() {
+		this.setTests();
+		this.updateTest();
+	}
 
-			public void run() {
-				ObjectResourceTableModel model = (ObjectResourceTableModel) TableFrame.this.listTable.getModel();
-				model.clear();
-				Collection tests = ((SchedulerModel) TableFrame.this.aContext.getApplicationModel()).getTests();
-				//System.out.println("tests.size:"+tests.size());
-				for (Iterator it = tests.iterator(); it.hasNext();) {
-					Test test = (Test) it.next();
-					if (model.getIndexOfObject(test) < 0) {
-						model.getContents().add(test);
-					}
-				}
+	private void setTests() {
+		this.listTable.removeAll();
+		ObjectResourceTableModel model = (ObjectResourceTableModel) TableFrame.this.listTable.getModel();
+		model.clear();
+		Collection tests = this.schedulerModel.getTests();
+		for (Iterator it = tests.iterator(); it.hasNext();) {
+			Test test = (Test) it.next();
+			if (model.getIndexOfObject(test) < 0) {
+				model.getContents().add(test);
 			}
-		});
+		}
+		this.listTable.revalidate();
+		this.listTable.repaint();
 	}
 
 	private JPanel getPanel() {
@@ -134,8 +116,13 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 					ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 					if (!lsm.isSelectionEmpty()) {
 						int selectedRow = lsm.getMinSelectionIndex();
-						TableFrame.this.schedulerModel.setSelectedTest((Test) ((ObjectResourceTableModel) TableFrame.this.listTable.getModel())
-							.getObject(selectedRow));
+						try {
+							TableFrame.this.schedulerModel
+									.setSelectedTest((Test) ((ObjectResourceTableModel) TableFrame.this.listTable
+											.getModel()).getObject(selectedRow));
+						} catch (ApplicationException e1) {
+							SchedulerModel.showErrorMessage(TableFrame.this, e1);
+						}
 					}
 				}
 
@@ -149,22 +136,22 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 				public void mouseClicked(MouseEvent evt) {
 					final JTable table = ((JTable) evt.getSource());
-					//					if (SwingUtilities.isLeftMouseButton(evt)) {
-					//						int rowIndex = table.getSelectedRow();
-					//						TestTableModel model = (TestTableModel) table.getModel();
-					//						TestTableRow line = (TestTableRow)
+					// if (SwingUtilities.isLeftMouseButton(evt)) {
+					// int rowIndex = table.getSelectedRow();
+					// TestTableModel model = (TestTableModel) table.getModel();
+					// TestTableRow line = (TestTableRow)
 					// model.getRow(rowIndex);
-					//						if (model != null) {
-					//							//System.out.println("test:" + line.getTest());
-					//							Test test = (Test) line.getObjectResource();
-					//							//TableFrame.this.skipTestUpdate = true;
-					//							TableFrame.this.dispatcher
-					//									.notify(new TestUpdateEvent(this, test,
+					// if (model != null) {
+					// //System.out.println("test:" + line.getTest());
+					// Test test = (Test) line.getObjectResource();
+					// //TableFrame.this.skipTestUpdate = true;
+					// TableFrame.this.dispatcher
+					// .notify(new TestUpdateEvent(this, test,
 					// TestUpdateEvent.TEST_SELECTED_EVENT));
-					//							//System.out.println("send test:"+test.getId());
-					//							//TableFrame.this.skipTestUpdate = false;
-					//						}
-					//					} else
+					// //System.out.println("send test:"+test.getId());
+					// //TableFrame.this.skipTestUpdate = false;
+					// }
+					// } else
 					if (SwingUtilities.isRightMouseButton(evt)) {
 						System.out.println("RightMouseButton");
 						final int[] rowIndices = table.getSelectedRows();
@@ -175,29 +162,33 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 								public void actionPerformed(ActionEvent e) {
 
-									int temp = JOptionPane
-											.showConfirmDialog(Environment.getActiveWindow(), LangModelSchedule
-													.getString("AreYouShureDeleteTests"), LangModelSchedule
-													.getString("ConfirmDeleting"), JOptionPane.YES_NO_OPTION);
+									int temp = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
+										LangModelSchedule.getString("Are_you_shure_delete_tests"), LangModelSchedule
+												.getString("Confirm_deleting"), JOptionPane.YES_NO_OPTION);
 									if (temp == JOptionPane.YES_OPTION) {
 										if (TableFrame.this.rowToRemove == null)
 											TableFrame.this.rowToRemove = new LinkedList();
 										else
 											TableFrame.this.rowToRemove.clear();
-										for (int i = 0; i < rowIndices.length; i++) {											
+										for (int i = 0; i < rowIndices.length; i++) {
 											Test test = (Test) model.getObject(rowIndices[i]);
 											TableFrame.this.rowToRemove.add(test);
 										}
 										for (Iterator it = TableFrame.this.rowToRemove.iterator(); it.hasNext();) {
-											Test test = (Test) it.next();											
-											TableFrame.this.schedulerModel.removeTest(test);
-											model.getContents().remove(test);
+											Test test = (Test) it.next();
+											try {
+												TableFrame.this.schedulerModel.removeTest(test);
+												model.getContents().remove(test);
+											} catch (ApplicationException e1) {
+												SchedulerModel.showErrorMessage(TableFrame.this, e1);
+											}
+
 										}
 										table.revalidate();
 										table.repaint();
 									}
 								}
-							});							
+							});
 							JPopupMenu popup = new JPopupMenu();
 							popup.add(deleteTestMenuItem);
 							popup.show(table, evt.getX(), evt.getY());
@@ -210,12 +201,15 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			 * TODO set custom renderer
 			 */
 			{
-//				//int vColIndex = 0;
-//				TestTableCellRenderer tableCellRenderer = new TestTableCellRenderer();
-//				for (int vColIndex = 0; vColIndex < tableModel.getColumnCount(); vColIndex++) {
-//					TableColumn col = this.listTable.getColumnModel().getColumn(vColIndex);
-//					col.setCellRenderer(tableCellRenderer);
-//				}
+				// //int vColIndex = 0;
+				// TestTableCellRenderer tableCellRenderer = new
+				// TestTableCellRenderer();
+				// for (int vColIndex = 0; vColIndex <
+				// tableModel.getColumnCount(); vColIndex++) {
+				// TableColumn col =
+				// this.listTable.getColumnModel().getColumn(vColIndex);
+				// col.setCellRenderer(tableCellRenderer);
+				// }
 			}
 			JTableHeader header = this.listTable.getTableHeader();
 
@@ -236,17 +230,6 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		setIconifiable(true);
 		this.panel = getPanel();
 		setContentPane(this.panel);
-	}
-
-	private void initModule(Dispatcher dispatcher) {
-		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TEST);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
-	}
-
-	public void unregisterDispatcher() {
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TEST);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 	}
 
 	/**

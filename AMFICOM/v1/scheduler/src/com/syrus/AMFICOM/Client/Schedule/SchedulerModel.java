@@ -10,7 +10,7 @@ import java.awt.Component;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.RISDDataSource;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -59,59 +60,54 @@ import com.syrus.util.Log;
  */
 public class SchedulerModel extends ApplicationModel implements OperationListener {
 
-	public static final String		COMMAND_ADD_PARAM_PANEL			= "AddParamPanel";			//$NON-NLS-1$
+	public static final String			COMMAND_ADD_PARAM_PANEL			= "AddParamPanel";			//$NON-NLS-1$
 
-	public static final String		COMMAND_AVAILABLE_ME			= "AvailableMe";
-	public static final String		COMMAND_CHANGE_KIS				= "ChangeKIS";				//$NON-NLS-1$
-	public static final String		COMMAND_CHANGE_ME_TYPE			= "ChangeMEType";			//$NON-NLS-1$
-	public static final String		COMMAND_CHANGE_PARAM_PANEL		= "ChangeParamPanel";		//$NON-NLS-1$
-	public static final String		COMMAND_CHANGE_PORT_TYPE		= "ChangePortType";		//$NON-NLS-1$
-	public static final String		COMMAND_CHANGE_STATUSBAR_STATE	= "ChangeStatusBarState";
-	public static final String		COMMAND_CHANGE_TEST_TYPE		= "ChangeTestType";		//$NON-NLS-1$
-	public static final String		COMMAND_CLEAN					= "Clean";
+	public static final String			COMMAND_AVAILABLE_ME			= "AvailableMe";
+	public static final String			COMMAND_CHANGE_KIS				= "ChangeKIS";				//$NON-NLS-1$
+	public static final String			COMMAND_CHANGE_ME_TYPE			= "ChangeMEType";			//$NON-NLS-1$
+	public static final String			COMMAND_CHANGE_PARAM_PANEL		= "ChangeParamPanel";		//$NON-NLS-1$
+	public static final String			COMMAND_CHANGE_PORT_TYPE		= "ChangePortType";		//$NON-NLS-1$
+	public static final String			COMMAND_CHANGE_STATUSBAR_STATE	= "ChangeStatusBarState";
+	public static final String			COMMAND_CHANGE_TEST_TYPE		= "ChangeTestType";		//$NON-NLS-1$
+	public static final String			COMMAND_CLEAN					= "Clean";	
 
-	public static final String		COMMAND_DATA_REQUEST			= "DataRequest";			//$NON-NLS-1$
+	// private static final boolean CREATE_ALLOW = true;
 
-	public static final String		COMMAND_REFRESH_TESTS			= "RefreshTests";
-	public static final String		COMMAND_REFRESH_TEST			= "RefreshTest";
+	private static final int			FLAG_APPLY						= 1 << 1;
+	private static final int			FLAG_CREATE						= 1 << 2;
+	private ApplicationContext			aContext;
+	private Dispatcher					dispatcher;												// =
 
+	private int							flag							= 0;
 
-//	private static final boolean	CREATE_ALLOW					= true;
+	private ObjectResourceTreeModel		treeModel;
 
-	private static final int		FLAG_APPLY						= 1 << 1;
-	private static final int		FLAG_CREATE						= 1 << 0;
-	private ApplicationContext		aContext;
-	private Dispatcher				dispatcher;												// =
+	private Collection					tests							= new LinkedList();
+	private Test						selectedTest;
 
-	private int						flag							= 0;
+	private MeasurementTypeEditor		measurementTypeEditor;
+	private KISEditor					kisEditor;
+	private MonitoredElementEditor		monitoredElementEditor;
+	private AnalysisTypeEditor			analysisTypeEditor;
+	private EvaluationTypeEditor		evaluationTypeEditor;
+	private SetEditor					setEditor;
+	private MeasurementSetupEditor		measurementSetupEditor;
+	private ReturnTypeEditor			returnTypeEditor;
+	private TestTemporalStampsEditor	testTemporalStampsEditor;
+	private TestsEditor[]				testsEditors						= new TestsEditor[0];
+	private TestEditor[]				testEditors						= new TestEditor[0];
+	
+	private MeasurementType				measurementType					= null;
+	private KIS							kis								= null;
+	private MonitoredElement			monitoredElement				= null;
+	private AnalysisType				analysisType					= null;
+	private EvaluationType				evaluationType					= null;
+	private Set							set								= null;
+	private Collection					measurementSetupIds				= null;
+	private TestReturnType				returnType						= null;
+	private TestTemporalStamps			testTimeStamps					= null;
 
-	private ObjectResourceTreeModel	treeModel;
-
-	private Collection				tests							= new HashSet();
-	private Collection				unsavedTests					= new HashSet();
-	private Test					selectedTest;
-
-	private boolean					acquireMeasurementType			= false;
-	private boolean					acquireKIS						= false;
-	private boolean					acquireMonitoredElement			= false;
-	private boolean					acquireAnalysisType				= false;
-	private boolean					acquireEvaluationType			= false;
-	private boolean					acquireSet						= false;
-	private boolean					acquireMeasurementSetup			= false;
-	private boolean					acquireReturnType				= false;
-	private boolean					acquireTestTemporalStamps		= false;
-
-	private MeasurementType			measurementType					= null;
-	private KIS						kis								= null;
-	private MonitoredElement		monitoredElement				= null;
-	private AnalysisType			analysisType					= null;
-	private EvaluationType			evaluationType					= null;
-	private Set						set								= null;
-	private Collection				measurementSetupIds				= null;
-	private TestReturnType			returnType						= null;
-	private TestTemporalStamps		testTimeStamps					= null;
-
-	private DataSourceInterface		dataSourceInterface;
+	private DataSourceInterface			dataSourceInterface;
 
 	public SchedulerModel(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -192,32 +188,63 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		return this.treeModel;
 	}
 
-	/**
-	 * @return Returns the unsavedTests.
-	 */
-	public Collection getUnsavedTests() {
-		return this.unsavedTests;
-	}
-
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
-		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());		
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equals(COMMAND_CLEAN)) {
 			if (!obj.equals(this)) {
 				if (this.tests != null)
 					this.tests.clear();
-				if (this.unsavedTests != null)
-					this.unsavedTests.clear();
 			}
 
-		} 
+		}
+	}
+
+	public void removeTest(Test test) throws ApplicationException {
+		this.tests.remove(test);
+		this.selectedTest = null;
+		this.refreshTests();
+	}
+
+	private void refreshTest() throws ApplicationException {
+		this.measurementTypeEditor.setMeasurementType(this.selectedTest.getMeasurementType());
+		MonitoredElement monitoredElement = this.selectedTest.getMonitoredElement();
+		MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(
+			monitoredElement.getMeasurementPortId(), true);
+		this.kisEditor
+				.setKIS((KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true));
+		this.monitoredElementEditor.setMonitoredElement(monitoredElement);
+		this.analysisTypeEditor.setAnalysisType(this.selectedTest.getAnalysisType());
+		this.evaluationTypeEditor.setEvaluationType(this.selectedTest.getEvaluationType());
+		Collection measurementSetupIds = this.selectedTest.getMeasurementSetupIds();
+		if (!measurementSetupIds.isEmpty()) {
+			Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
+			MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(
+				mainMeasurementSetupId, true);
+			this.setEditor.setSet(measurementSetup.getParameterSet());
+		}
+		this.measurementSetupEditor.setMeasurementSetupIds(measurementSetupIds);
+		this.returnTypeEditor.setReturnType(this.selectedTest.getReturnType());
+		{
+			TestTemporalStamps timeStamps = new TestTemporalStamps(this.selectedTest.getTemporalType(),
+																	this.selectedTest.getStartTime(), this.selectedTest
+																			.getEndTime(), this.selectedTest
+																			.getTemporalPattern());
+			this.testTemporalStampsEditor.setTestTemporalStamps(timeStamps);
+		}
+
+		for (int i = 0; i < this.testEditors.length; i++) {
+			this.testEditors[i].updateTest();
+		}
 	}
 	
-	public void removeTest(Test test) {
-		this.tests.remove(test);
-		this.unsavedTests.remove(test);
-		this.selectedTest = null;
+	private void refreshTests() throws ApplicationException {
+		for (int i = 0; i < this.testsEditors.length; i++) {
+			this.testsEditors[i].updateTests();
+		}
+		
+		this.refreshTest();
 	}
 
 	/**
@@ -228,107 +255,101 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		this.treeModel = treeModel;
 	}
 
-	public void applyTest() {
+	public void applyTest() throws ApplicationException {
 		this.flag = FLAG_APPLY;
 		this.startGetData();
 	}
 
-	public void createTest() {
+	public void createTest() throws ApplicationException {
 		this.flag = FLAG_CREATE;
 		this.startGetData();
 	}
 
-	private void startGetData() {
-		this.acquireMeasurementType = false;
-		this.acquireKIS = false;
-		this.acquireMonitoredElement = false;
-		this.acquireAnalysisType = false;
-		this.acquireEvaluationType = false;
-		this.acquireSet = false;
-		this.acquireMeasurementSetup = false;
-		this.acquireReturnType = false;
-		this.acquireTestTemporalStamps = false;
+	private void startGetData() throws ApplicationException {
+		this.measurementType = this.measurementTypeEditor.getMeasurementType();
+		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
+			this.kis = this.kisEditor.getKIS();
+		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
+			this.monitoredElement = this.monitoredElementEditor.getMonitoredElement();
+		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
+			this.analysisType = this.analysisTypeEditor.getAnalysisType();
+		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
+			this.evaluationType = this.evaluationTypeEditor.getEvaluationType();
+		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
+			this.set = this.setEditor.getSet();
+		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
+			this.measurementSetupIds = this.measurementSetupEditor.getMeasurementSetupIds();
+		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
+			this.returnType = this.returnTypeEditor.getReturnType();
+		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
+			this.testTimeStamps = this.testTemporalStampsEditor.getTestTemporalStamps();
+		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
+			this.generateTest();
+	}
 
-		this.measurementType = null;
-		this.kis = null;
-		this.monitoredElement = null;
-		this.analysisType = null;
-		this.evaluationType = null;
-		this.set = null;
-		this.measurementSetupIds = null;
-		this.returnType = null;
-		this.testTimeStamps = null;
-
-		this.dispatcher.notify(new OperationEvent(this, 0, //$NON-NLS-1$
-													COMMAND_DATA_REQUEST));
+	public void setBreakData() {
+		this.flag = 0;
 	}
 
 	public void updateTests(long startTime,
-							long endTime) {
-		try {
-			// Environment.log(Environment.LOG_LEVEL_INFO, "updateTests",
-			// getClass().getName()); //$NON-NLS-1$
-			// this.setCursor(UIStorage.WAIT_CURSOR);
-			this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
-					.getString("Updating_tests_from_BD"))); //$NON-NLS-1$
-			DataSourceInterface dsi = this.aContext.getDataSource();
-			if (dsi == null)
-				return;
+							long endTime) throws ApplicationException {
+		// Environment.log(Environment.LOG_LEVEL_INFO, "updateTests",
+		// getClass().getName()); //$NON-NLS-1$
+		// this.setCursor(UIStorage.WAIT_CURSOR);
+		this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
+				.getString("Updating tests from DB"))); //$NON-NLS-1$
+		DataSourceInterface dsi = this.aContext.getDataSource();
+		if (dsi == null)
+			return;
 
-			ConfigurationStorableObjectPool.refresh();
-			MeasurementStorableObjectPool.refresh();
+		ConfigurationStorableObjectPool.refresh();
+		MeasurementStorableObjectPool.refresh();
 
-			Date startDate = new Date(startTime);
-			Date endDate = new Date(endTime);
+		Date startDate = new Date(startTime);
+		Date endDate = new Date(endTime);
 
-			TypicalCondition startTypicalCondition = new TypicalCondition(startDate, endDate,
-																			OperationSort.OPERATION_IN_RANGE,
-																			ObjectEntities.TEST_ENTITY_CODE,
-																			TestWrapper.COLUMN_START_TIME);
-			TypicalCondition endTypicalCondition = new TypicalCondition(startDate, endDate,
+		TypicalCondition startTypicalCondition = new TypicalCondition(startDate, endDate,
 																		OperationSort.OPERATION_IN_RANGE,
 																		ObjectEntities.TEST_ENTITY_CODE,
-																		TestWrapper.COLUMN_END_TIME);
-			CompoundCondition compoundCondition = new CompoundCondition(startTypicalCondition,
-																		CompoundConditionSort.AND, endTypicalCondition);
+																		TestWrapper.COLUMN_START_TIME);
+		TypicalCondition endTypicalCondition = new TypicalCondition(startDate, endDate,
+																	OperationSort.OPERATION_IN_RANGE,
+																	ObjectEntities.TEST_ENTITY_CODE,
+																	TestWrapper.COLUMN_END_TIME);
+		CompoundCondition compoundCondition = new CompoundCondition(startTypicalCondition, CompoundConditionSort.AND,
+																	endTypicalCondition);
 
-			this.tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+		this.tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
 
-			{
-				List alarmsIds = null;
-				List testArgumentSetIds = null;
-				if (alarmsIds != null)
-					dsi.GetAlarms((String[]) alarmsIds.toArray(new String[alarmsIds.size()]));
-				if (testArgumentSetIds != null)
-					dsi.LoadTestArgumentSets((String[]) testArgumentSetIds
-							.toArray(new String[testArgumentSetIds.size()]));
-			}
-
-			this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
-					.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
-			this.dispatcher.notify(new OperationEvent(this, 0, COMMAND_REFRESH_TESTS));
-		} catch (ApplicationException ae) {
-			Log.errorException(ae);
+		{
+			List alarmsIds = null;
+			List testArgumentSetIds = null;
+			if (alarmsIds != null)
+				dsi.GetAlarms((String[]) alarmsIds.toArray(new String[alarmsIds.size()]));
+			if (testArgumentSetIds != null)
+				dsi.LoadTestArgumentSets((String[]) testArgumentSetIds.toArray(new String[testArgumentSetIds.size()]));
 		}
+
+		this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
+				.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
+		this.refreshTests();
 	}
 
 	public Test getSelectedTest() {
 		return this.selectedTest;
 	}
 
-	public void setSelectedTest(Test selectedTest) {
+	public void setSelectedTest(Test selectedTest) throws ApplicationException {
 		this.selectedTest = selectedTest;
-		this.dispatcher.notify(new OperationEvent(this.selectedTest, 0, COMMAND_REFRESH_TEST));
+		this.refreshTest();
 	}
 
 	public void commitChanges() throws ApplicationException {
 		MeasurementStorableObjectPool.flush(true);
 	}
 
-	private void generateTest() {
-		if (this.acquireMeasurementType && this.acquireKIS && this.acquireMonitoredElement && this.acquireAnalysisType
-				&& this.acquireEvaluationType && this.acquireSet && this.acquireMeasurementSetup
-				&& this.acquireReturnType && this.acquireTestTemporalStamps) {
+	private void generateTest() throws ApplicationException {
+		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 
 			Test test = (this.flag == FLAG_APPLY) ? this.selectedTest : null;
 
@@ -366,7 +387,6 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
 				}
-				this.unsavedTests.add(test);
 				this.tests.add(test);
 			} else {
 				test.setAttributes(test.getCreated(), new Date(System.currentTimeMillis()), test.getCreatorId(),
@@ -379,71 +399,101 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			} catch (IllegalObjectEntityException e) {
 				Log.debugException(e, Log.DEBUGLEVEL05);
 			}
-			
+
 			this.selectedTest = test;
-			this.dispatcher.notify(new OperationEvent(this, 0, COMMAND_REFRESH_TESTS));
+			this.refreshTests();
 		}
 	}
 
 	public static void showErrorMessage(Component component,
-										Exception exc) {
-		exc.printStackTrace();
-		JOptionPane.showMessageDialog(component, exc.getMessage(), LangModelSchedule.getString("Error"),
+										Exception exception) {
+		exception.printStackTrace();
+		JOptionPane.showMessageDialog(component, exception.getMessage(), LangModelSchedule.getString("Error"),
 			JOptionPane.OK_OPTION);
 	}
 
-	public void setAnalysisType(AnalysisType analysisType) {
-		this.analysisType = analysisType;
-		this.acquireAnalysisType = true;
-		this.generateTest();
+	public void addTestsEditor(TestsEditor testsEditor) {
+		TestsEditor[] testEditors = new TestsEditor[this.testsEditors.length + 1];
+		System.arraycopy(this.testsEditors, 0, testEditors, 1, this.testsEditors.length);
+		testEditors[0] = testsEditor;
+		this.testsEditors = testEditors;
 	}
 
-	public void setEvaluationType(EvaluationType evaluationType) {
-		this.evaluationType = evaluationType;
-		this.acquireEvaluationType = true;
-		this.generateTest();
+	public void removeTestsEditor(TestsEditor testsEditor) {
+		int index = -1;
+		for (int i = 0; i < this.testsEditors.length; i++) {
+			if (this.testsEditors[i].equals(testsEditor)) {
+				index = i;
+				break;
+			}
+		}
+
+		if (index >= 0) {
+			TestsEditor[] testEditors = new TestsEditor[this.testsEditors.length - 1];
+			System.arraycopy(this.testsEditors, 0, testEditors, 0, index + 1);
+			System.arraycopy(this.testsEditors, index + 1, testEditors, index, this.testsEditors.length - index - 1);
+			this.testsEditors = testEditors;
+		}
+	}
+	
+	public void addTestEditor(TestEditor testEditor) {
+		TestEditor[] testEditors = new TestEditor[this.testEditors.length + 1];
+		System.arraycopy(this.testEditors, 0, testEditors, 1, this.testEditors.length);
+		testEditors[0] = testEditor;
+		this.testEditors = testEditors;
 	}
 
-	public void setKis(KIS kis) {
-		this.kis = kis;
-		this.acquireKIS = true;
-		this.generateTest();
+	public void removeTestEditor(TestEditor testEditor) {
+		int index = -1;
+		for (int i = 0; i < this.testEditors.length; i++) {
+			if (this.testEditors[i].equals(testEditor)) {
+				index = i;
+				break;
+			}
+		}
+
+		if (index >= 0) {
+			TestEditor[] testEditors = new TestEditor[this.testEditors.length - 1];
+			System.arraycopy(this.testEditors, 0, testEditors, 0, index + 1);
+			System.arraycopy(this.testEditors, index + 1, testEditors, index, this.testEditors.length - index - 1);
+			this.testEditors = testEditors;
+		}
+	}
+	
+	public void setAnalysisTypeEditor(AnalysisTypeEditor analysisTypeEditor) {
+		this.analysisTypeEditor = analysisTypeEditor;
 	}
 
-	public void setMeasurementSetupIds(Collection measurementSetupIds) {
-		this.measurementSetupIds = measurementSetupIds;
-		this.acquireMeasurementSetup = true;
-		this.generateTest();
+	public void setEvaluationTypeEditor(EvaluationTypeEditor evaluationTypeEditor) {
+		this.evaluationTypeEditor = evaluationTypeEditor;
 	}
 
-	public void setMeasurementType(MeasurementType measurementType) {
-		this.measurementType = measurementType;
-		this.acquireMeasurementType = true;
-		this.generateTest();
+	public void setKisEditor(KISEditor kisEditor) {
+		this.kisEditor = kisEditor;
 	}
 
-	public void setMonitoredElement(MonitoredElement monitoredElement) {
-		this.monitoredElement = monitoredElement;
-		this.acquireMonitoredElement = true;
-		this.generateTest();
+	public void setMeasurementSetupEditor(MeasurementSetupEditor measurementSetupEditor) {
+		this.measurementSetupEditor = measurementSetupEditor;
 	}
 
-	public void setReturnType(TestReturnType returnType) {
-		this.returnType = returnType;
-		this.acquireReturnType = true;
-		this.generateTest();
+	public void setMeasurementTypeEditor(MeasurementTypeEditor measurementTypeEditor) {
+		this.measurementTypeEditor = measurementTypeEditor;
 	}
 
-	public void setSet(Set set) {
-		this.set = set;
-		this.acquireSet = true;
-		this.generateTest();
+	public void setMonitoredElementEditor(MonitoredElementEditor monitoredElementEditor) {
+		this.monitoredElementEditor = monitoredElementEditor;
 	}
 
-	public void setTestTimeStamps(TestTemporalStamps testTimeStamps) {
-		this.testTimeStamps = testTimeStamps;
-		this.acquireTestTemporalStamps = true;
-		this.generateTest();
+	public void setReturnTypeEditor(ReturnTypeEditor returnTypeEditor) {
+		this.returnTypeEditor = returnTypeEditor;
+	}
+
+	public void setSetEditor(SetEditor setEditor) {
+		this.setEditor = setEditor;
+	}
+
+	public void setTestTemporalStampsEditor(TestTemporalStampsEditor testTemporalStampsEditor) {
+		this.testTemporalStampsEditor = testTemporalStampsEditor;
 	}
 
 }

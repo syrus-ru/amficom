@@ -5,35 +5,39 @@
 
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import java.awt.event.*;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-import javax.swing.*;
+import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.Schedule.ReturnTypeEditor;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
-import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 
 /**
  * @author Vladimir Dolzhenko
  */
-public class SaveParametersFrame extends JInternalFrame implements OperationListener {
+public class SaveParametersFrame extends JInternalFrame implements ReturnTypeEditor {
 
-	// private ApplicationContext aContext;
-	private SchedulerModel	schedulerModel;
-	private Dispatcher		dispatcher;
 	private JPanel			panel;
 
 	private JRadioButton	allResultsButton;
 	private JRadioButton	recognizedEventsButton;
 	private JRadioButton	measurementIdButton;
-	private Test			test;
 	private Command			command;
 
 	/**
@@ -59,8 +63,8 @@ public class SaveParametersFrame extends JInternalFrame implements OperationList
 		// this.aContext = aContext;
 		init();
 		if (aContext != null) {
-			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
-			this.initModule(aContext.getDispatcher());
+			SchedulerModel schedulerModel = (SchedulerModel) aContext.getApplicationModel();
+			schedulerModel.setReturnTypeEditor(this);
 		}
 		this.command = new WindowCommand(this);
 	}
@@ -120,47 +124,22 @@ public class SaveParametersFrame extends JInternalFrame implements OperationList
 
 	}
 
-	private void initModule(Dispatcher dispatcher) {
-		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TEST);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
-	}
-
-	public void unregisterDispatcher() {
-		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TEST);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
-	}
-
-	private void sendParameters() {
+	public TestReturnType getReturnType() {
 		TestReturnType returnType = TestReturnType.TEST_RETURN_TYPE_WHOLE;
 		if (this.recognizedEventsButton.isSelected())
 			returnType = TestReturnType.TEST_RETURN_TYPE_EVENTS;
 		else if (this.measurementIdButton.isSelected())
 			returnType = TestReturnType.TEST_RETURN_TYPE_REFERENCE;
-		this.schedulerModel.setReturnType(returnType);
+		return returnType;
 	}
 
-	public void operationPerformed(OperationEvent ae) {
-		String commandName = ae.getActionCommand();
-		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
-		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
-			this.sendParameters();
-		} else if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TEST)
-				|| commandName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
-			Test test = this.schedulerModel.getSelectedTest();
-			if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
-				this.test = test;
-				TestReturnType returnType = test.getReturnType();
-				if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_WHOLE)) {
-					this.allResultsButton.doClick();
-				} else if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_EVENTS)) {
-					this.recognizedEventsButton.doClick();
-				} else if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_REFERENCE)) {
-					this.measurementIdButton.doClick();
-				}
-			}
+	public void setReturnType(TestReturnType returnType) {
+		if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_WHOLE)) {
+			this.allResultsButton.doClick();
+		} else if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_EVENTS)) {
+			this.recognizedEventsButton.doClick();
+		} else if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_REFERENCE)) {
+			this.measurementIdButton.doClick();
 		}
 	}
 

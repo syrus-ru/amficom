@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client_.general.ui_.ObjList;
-import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 
@@ -127,7 +127,11 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 					if (TestRequestPanel.this.tests != null) {
 						Test test = (Test) TestRequestPanel.this.tests.get(me.getId());
 						if (test != null)
-							TestRequestPanel.this.schedulerModel.setSelectedTest(test);
+							try {
+								TestRequestPanel.this.schedulerModel.setSelectedTest(test);
+							} catch (ApplicationException e1) {
+								SchedulerModel.showErrorMessage(TestRequestPanel.this, e1);
+							}
 					}
 					TestRequestPanel.this.skip = false;
 				}
@@ -137,54 +141,18 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TEST);
-		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 	}
 
 	public void unregisterDispatcher() {
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_DATA_REQUEST);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TEST);
-		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TESTS);
+		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
 	}
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		// Object obj = ae.getSource();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
-		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
-			/**
-			 * TODO remove when testRequest'll enable again
-			 */
-			// TestRequest testRequest = getParameters();
-			//
-			// this.dispatcher.notify(new OperationEvent(testRequest == null
-			// ? (Object) "" : (Object) testRequest, //$NON-NLS-1$
-			// 0, SchedulerModel.COMMAND_SEND_DATA));
-		} else if (commandName.equals(SchedulerModel.COMMAND_CHANGE_KIS)) {
-			// kisId = (String) obj;
-			// System.out.println("kisId:" + kisId);
-		} else if (commandName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)) {
-			// String meId = (String) obj;
-			// System.out.println("meId:" + meId);
-			// MonitoredElement me = (MonitoredElement)
-			// Pool.get(MonitoredElement.typ, meId);
-			// this.testList.setSelected(me);
-			// if (this.testList.getSelectedIndex() < 0) {
-			// this.testList.add(me);
-			// this.testList.setSelected(me);
-			// }
-
-		} else if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TEST)
-				|| commandName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
-			this.cleanAllFields();
-		} else if (commandName.equals(SchedulerModel.COMMAND_CHANGE_TEST_TYPE)) {
-			// String testTypeId = (String) obj;
-			// TestType testType = (TestType) Pool.get(TestType.typ,
-			// testTypeId);
-			// this.typeTextField.setText(testType.getName());
-			// this.typeTextField.setCaretPosition(0);
-		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
+		if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
 			cleanAllFields();
 		} 
 	}
