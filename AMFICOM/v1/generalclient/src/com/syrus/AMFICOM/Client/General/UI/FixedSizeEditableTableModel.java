@@ -7,29 +7,29 @@ import javax.swing.table.*;
 public class FixedSizeEditableTableModel extends AbstractTableModel
 {
 	protected String[] columnNames;
-	protected Object[] p_defaultv;
+	protected Object[] defaultValues;
 	protected List rows = new ArrayList();
 	protected int[] editable;
 
-	public FixedSizeEditableTableModel (String[] p_columns, // заголовки столбцов
-																			Object[] p_defaultv,// дефолтные значения
-																			String[] p_rows,    // заголовки (0й столбец) строк
+	public FixedSizeEditableTableModel (String[] columnNames, // заголовки столбцов
+																			Object[] defaultValues,// дефолтные значения
+																			String[] rowTitles,    // заголовки (0й столбец) строк
 																			int[] editable)     // номера редактируемых столбцов
 	{
 		// Устанавливаем заголовки столбцов
-		columnNames = new String[p_columns.length];
-		this.p_defaultv = p_defaultv;
-		for (int i = 0; i < p_columns.length; i++)
-			columnNames[i] = new String(p_columns[i]);
+		this.columnNames = new String[columnNames.length];
+		this.defaultValues = defaultValues;
+		for (int i = 0; i < columnNames.length; i++)
+			columnNames[i] = new String(columnNames[i]);
 
 		// устанавливаем заголовки строк
-		if (p_rows != null)
-			for (int i = 0; i < p_rows.length; i++)
+		if (rowTitles != null)
+			for (int i = 0; i < rowTitles.length; i++)
 			{
-				List row = new ArrayList(p_columns.length);
-				row.add(p_rows[i]);  // устанавливаем заголовки строк
-				for (int j = 0; j < p_defaultv.length; j++)
-					row.add(p_defaultv[j]); // устанавливаем дефолтные данные
+				List row = new ArrayList(columnNames.length);
+				row.add(rowTitles[i]);  // устанавливаем заголовки строк
+				for (int j = 0; j < defaultValues.length; j++)
+					row.add(defaultValues[j]); // устанавливаем дефолтные данные
 				rows.add(row);
 			}
 
@@ -75,7 +75,7 @@ public class FixedSizeEditableTableModel extends AbstractTableModel
 	{
 		if (c == 0)
 			return String.class;
-		return p_defaultv[c-1].getClass();
+		return defaultValues[c-1].getClass();
 	}
 
 	public void setValueAt(Object value, int row, int col)
@@ -85,10 +85,10 @@ public class FixedSizeEditableTableModel extends AbstractTableModel
 		super.fireTableCellUpdated(row, col);
 	}
 
-	public int addRow (String p_row, Object[] values)
+	public int addRow(String rowTitle, Object[] values)
 	{
 		List r = new ArrayList(values.length + 1);
-		r.add(p_row);
+		r.add(rowTitle);
 		for (int i = 0; i < values.length; i++)
 			r.add(values[i]);
 		rows.add(r);
@@ -96,29 +96,63 @@ public class FixedSizeEditableTableModel extends AbstractTableModel
 		return rows.size() - 1;
 	}
 
-	public int addRow (String p_row)
+	public int addRow(String rowTitle)
 	{
-		List r = new ArrayList(p_defaultv.length + 1);
-		r.add(p_row);
-		for (int i = 0; i < p_defaultv.length; i++)
-			r.add(p_defaultv[i]);
+		List r = new ArrayList(defaultValues.length + 1);
+		r.add(rowTitle);
+		for (int i = 0; i < defaultValues.length; i++)
+			r.add(defaultValues[i]);
 		rows.add(r);
 		super.fireTableRowsInserted(rows.size() - 1, rows.size() - 1);
 		return rows.size() - 1;
 	}
 
-	public void removeRow (int row)
+	public void removeRow(int row)
 	{
 		rows.remove(row);
 		super.fireTableRowsDeleted(row, row);
 	}
 
-	public void updateRow(Object[] updatedRow, int row)
+	public void updateRow(Object value, int row)
+	{
+		List r = (List)rows.get(row);
+		r.set(1, value);
+		super.fireTableDataChanged();
+	}
+
+	public void updateRow(Object[] values, int row)
 	{
 		List r = (List)rows.get(row);
 
-		for (int i = 0; i < updatedRow.length; i++)
-			r.set(i + 1, updatedRow[i]);
+		for (int i = 0; i < values.length; i++)
+			r.set(i + 1, values[i]);
+		super.fireTableDataChanged();
+	}
+
+	public void updateRow(String rowTitle, Object value, int row)
+	{
+		List r = (List) rows.get(row);
+		r.set(0, rowTitle);
+		r.set(1, value);
+		super.fireTableDataChanged();
+	}
+
+	public void updateRow(String rowTitle, Object[] values, int row)
+	{
+		List r = (List) rows.get(row);
+		r.set(0, rowTitle);
+		for (int i = 0; i < values.length; i++)
+			r.set(i + 1, values[i]);
+		super.fireTableDataChanged();
+	}
+
+	public void updateColumn(Object[] updatedData, int col)
+	{
+		for (int i = 0; i < updatedData.length; i++)
+		{
+			List r = (List) rows.get(i);
+			r.set(col, updatedData[i]);
+		}
 		super.fireTableDataChanged();
 	}
 

@@ -295,6 +295,21 @@ public final class Pool {
 	 */
 	public static void remove(Object obj)
 	{
+		for (Iterator mapit = objHash.values().iterator(); mapit.hasNext();)
+		{
+			Map map = (Map)mapit.next();
+			for (Iterator objit = map.values().iterator(); objit.hasNext(); )
+				if (objit.next().equals(obj))
+				{
+					objit.remove();
+					if (map.isEmpty())
+						mapit.remove();
+				}
+		}
+	}
+/*
+	public static void remove(Object obj)
+	{
 		Iterator enum4 = objHash.keySet().iterator();
 		for (Iterator enum1 = objHash.values().iterator(); enum1.hasNext();) {
 			String key2 = (String) enum4.next();
@@ -310,7 +325,7 @@ public final class Pool {
 			}
 		}
 	}
-
+*/
 	// получить список объектов типа obj_type_id
 	public static Set getKeys() {
 		return objHash.keySet();
