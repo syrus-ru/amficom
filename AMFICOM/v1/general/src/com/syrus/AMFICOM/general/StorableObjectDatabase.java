@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.96 2005/02/11 18:40:16 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.97 2005/02/14 12:57:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/02/11 18:40:16 $
+ * @version $Revision: 1.97 $, $Date: 2005/02/14 12:57:13 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -679,18 +679,22 @@ public abstract class StorableObjectDatabase {
 				+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
 		Identifier id = null;
+		Collection linkedIds = null;
 		Identifier linkedId = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			for (Iterator iterator = idLinkedObjectIdsMap.keySet().iterator(); iterator.hasNext();) {
-				id = (Identifier) iterator.next();
-				linkedId = (Identifier) idLinkedObjectIdsMap.get(id);
-				DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
-				DatabaseIdentifier.setIdentifier(preparedStatement, 2, linkedId);
-				Log.debugMessage("StorableObjectDatabase.insertLinkedEntityIds | Inserting linked entity  " + linkedId + " for " + id,
-						Log.DEBUGLEVEL09);
-				preparedStatement.executeUpdate();
+			for (Iterator it1 = idLinkedObjectIdsMap.keySet().iterator(); it1.hasNext();) {
+				id = (Identifier) it1.next();
+				linkedIds = (Collection) idLinkedObjectIdsMap.get(id);
+				for (Iterator it2 = linkedIds.iterator(); it2.hasNext();) {
+					linkedId = (Identifier) it2.next();
+					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
+					DatabaseIdentifier.setIdentifier(preparedStatement, 2, linkedId);
+					Log.debugMessage("StorableObjectDatabase.insertLinkedEntityIds | Inserting linked entity  " + linkedId + " for " + id,
+							Log.DEBUGLEVEL09);
+					preparedStatement.executeUpdate();
+				}
 			}
 			connection.commit();
 		}
@@ -1085,7 +1089,7 @@ public abstract class StorableObjectDatabase {
 
 		Map dbLinkedObjIdsMap = new HashMap();
 		Identifier id;
-		List dbLinkedObjIds;
+		Collection dbLinkedObjIds;
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -1097,7 +1101,7 @@ public abstract class StorableObjectDatabase {
 
 			while (resultSet.next()) {
 				id = DatabaseIdentifier.getIdentifier(resultSet, idColumnName);
-				dbLinkedObjIds = (List) dbLinkedObjIdsMap.get(id);
+				dbLinkedObjIds = (Collection) dbLinkedObjIdsMap.get(id);
 				if (dbLinkedObjIds == null) {
 					dbLinkedObjIds = new LinkedList();
 					dbLinkedObjIdsMap.put(id, dbLinkedObjIds);
@@ -1110,15 +1114,15 @@ public abstract class StorableObjectDatabase {
 			throw new UpdateObjectException(mesg, sqle);
 		}
 
-		List linkedObjIds;
+		Collection linkedObjIds;
 		Map insertIdsMap = new HashMap();
 		Map deleteIdsMap = new HashMap();
 		Identifier linkedObjId;
-		List alteringIds;
+		Collection alteringIds;
 		for (Iterator it1 = idLinkedIdMap.keySet().iterator(); it1.hasNext();) {
 			id = (Identifier) it1.next();
-			linkedObjIds = (List) idLinkedIdMap.get(id);
-			dbLinkedObjIds = (List) dbLinkedObjIdsMap.get(id);
+			linkedObjIds = (Collection) idLinkedIdMap.get(id);
+			dbLinkedObjIds =  (Collection) dbLinkedObjIdsMap.get(id);
 
 			if (dbLinkedObjIds != null) {
 
