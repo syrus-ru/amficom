@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.4 2005/02/24 10:00:37 arseniy Exp $
+ * $Id: TestWrapper.java,v 1.5 2005/03/10 21:07:27 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,13 +15,14 @@ import java.util.Date;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/24 10:00:37 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/10 21:07:27 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -78,13 +79,13 @@ public class TestWrapper implements StorableObjectWrapper {
 			if (key.equals(COLUMN_END_TIME))
 				return test.getEndTime();
 			if (key.equals(COLUMN_TEMPORAL_PATTERN_ID))
-				return test.getTemporalPattern();
+				return test.getTemporalPatternId();
 			if (key.equals(COLUMN_MEASUREMENT_TYPE_ID))
-				return test.getMeasurementType();
+				return test.getMeasurementTypeId();
 			if (key.equals(COLUMN_ANALYSIS_TYPE_ID))
-				return test.getAnalysisType();
+				return test.getAnalysisTypeId();
 			if (key.equals(COLUMN_EVALUATION_TYPE_ID))
-				return test.getEvaluationType();
+				return test.getEvaluationTypeId();
 			if (key.equals(COLUMN_STATUS))
 				return new Integer(test.getStatus().value());
 			if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
@@ -113,13 +114,13 @@ public class TestWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_END_TIME))
 				test.setEndTime(new Date(Long.parseLong((String) value)));
 			else if (key.equals(COLUMN_TEMPORAL_PATTERN_ID))
-				test.setTemporalPattern((TemporalPattern) value);
+				test.setTemporalPatternId((Identifier) value);
 			else if (key.equals(COLUMN_MEASUREMENT_TYPE_ID))
-				test.setMeasurementType((MeasurementType) value);
+				test.setMeasurementTypeId((Identifier) value);
 			else if (key.equals(COLUMN_ANALYSIS_TYPE_ID))
-				test.setAnalysisType((AnalysisType) value);
+				test.setAnalysisTypeId((Identifier) value);
 			else if (key.equals(COLUMN_EVALUATION_TYPE_ID))
-				test.setEvaluationType((EvaluationType) value);
+				test.setEvaluationTypeId((Identifier) value);
 			else if (key.equals(COLUMN_STATUS))
 				test.setStatus(TestStatus.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID))

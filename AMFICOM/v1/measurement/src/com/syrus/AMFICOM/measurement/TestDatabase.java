@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.78 2005/03/10 15:20:56 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.79 2005/03/10 21:07:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/03/10 15:20:56 $
+ * @version $Revision: 1.79 $, $Date: 2005/03/10 21:07:27 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -101,18 +101,18 @@ public class TestDatabase extends StorableObjectDatabase {
 		Test test = this.fromStorableObject(storableObject);
 		Date startTime = test.getStartTime();
 		Date endTime = test.getEndTime();
-		TemporalPattern temporalPattern = test.getTemporalPattern();		
-		AnalysisType analysisType = test.getAnalysisType();
-		EvaluationType evaluationType = test.getEvaluationType();
+		Identifier temporalPatternId = test.getTemporalPatternId();		
+		Identifier analysisTypeId = test.getAnalysisTypeId();
+		Identifier evaluationTypeId = test.getEvaluationTypeId();
 
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ test.getTemporalType().value() + COMMA
 			+ ((startTime != null) ? DatabaseDate.toUpdateSubString(startTime) : SQL_NULL ) + COMMA
 			+ ((endTime != null) ? DatabaseDate.toUpdateSubString(endTime) : SQL_NULL ) + COMMA
-			+ ((temporalPattern != null) ? DatabaseIdentifier.toSQLString(temporalPattern.getId()) : SQL_NULL) + COMMA
-			+ DatabaseIdentifier.toSQLString(test.getMeasurementType().getId()) + COMMA
-			+ ((analysisType != null) ? DatabaseIdentifier.toSQLString(analysisType.getId()): SQL_NULL) + COMMA			
-			+ ((evaluationType != null) ? DatabaseIdentifier.toSQLString(evaluationType.getId()) : SQL_NULL) + COMMA
+			+ ((temporalPatternId != null) ? DatabaseIdentifier.toSQLString(temporalPatternId) : SQL_NULL) + COMMA
+			+ DatabaseIdentifier.toSQLString(test.getMeasurementTypeId()) + COMMA
+			+ ((analysisTypeId != null) ? DatabaseIdentifier.toSQLString(analysisTypeId): SQL_NULL) + COMMA			
+			+ ((evaluationTypeId != null) ? DatabaseIdentifier.toSQLString(evaluationTypeId) : SQL_NULL) + COMMA
 			+ test.getStatus().value() + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getMonitoredElement().getId()) + COMMA
 			+ test.getReturnType().value() + COMMA
@@ -133,17 +133,17 @@ public class TestDatabase extends StorableObjectDatabase {
 		Test test = this.fromStorableObject(storableObject);
 		Date startTime = test.getStartTime();
 		Date endTime = test.getEndTime();
-		TemporalPattern temporalPattern = test.getTemporalPattern();		
-		AnalysisType analysisType = test.getAnalysisType();
-		EvaluationType evaluationType = test.getEvaluationType();
+		Identifier temporalPatternId = test.getTemporalPatternId();		
+		Identifier analysisTypeId = test.getAnalysisTypeId();
+		Identifier evaluationTypeId = test.getEvaluationTypeId();
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		preparedStatement.setInt(++i, test.getTemporalType().value());
 		preparedStatement.setTimestamp(++i, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
 		preparedStatement.setTimestamp(++i, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (temporalPattern != null) ? temporalPattern.getId() : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, test.getMeasurementType().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (analysisType != null) ? analysisType.getId() : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (evaluationType != null) ? evaluationType.getId() : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (temporalPatternId != null) ? temporalPatternId : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, test.getMeasurementTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (analysisTypeId != null) ? analysisTypeId : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (evaluationTypeId != null) ? evaluationTypeId : null);
 		preparedStatement.setInt(++i, test.getStatus().value());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, test.getMonitoredElement().getId());
 		preparedStatement.setInt(++i, test.getReturnType().value());
@@ -169,20 +169,9 @@ public class TestDatabase extends StorableObjectDatabase {
 				new Test(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME, 
 						 null, null, null, null, 0, null, null) :
 					this.fromStorableObject(storableObject);
-		TemporalPattern temporalPattern;
-		MeasurementType measurementType;
-		AnalysisType analysisType;
-		EvaluationType evaluationType;
+				
 		MonitoredElement monitoredElement;
 		try {			
-			Identifier temportalPatternId = DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_TEMPORAL_PATTERN_ID);
-			temporalPattern = (temportalPatternId != null) ? (TemporalPattern)MeasurementStorableObjectPool.getStorableObject(temportalPatternId, true) : null;
-			
-			measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_MEASUREMENT_TYPE_ID), true);
-			Identifier analysisTypeId = DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_ANALYSIS_TYPE_ID);
-			analysisType = (analysisTypeId != null) ? (AnalysisType)MeasurementStorableObjectPool.getStorableObject(analysisTypeId, true) : null;
-			Identifier evaluationTypeId = DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_EVALUATION_TYPE_ID);
-			evaluationType = (evaluationTypeId != null) ? (EvaluationType)MeasurementStorableObjectPool.getStorableObject(evaluationTypeId, true) : null;
 			Identifier monitoredElementId = DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
 			monitoredElement = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(monitoredElementId, true);
 		}
@@ -198,10 +187,10 @@ public class TestDatabase extends StorableObjectDatabase {
 						   resultSet.getInt(TestWrapper.COLUMN_TEMPORAL_TYPE),
 						   DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_START_TIME),
 						   DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_END_TIME),
-						   temporalPattern,
-						   measurementType,
-						   analysisType,
-						   evaluationType,
+						   DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_TEMPORAL_PATTERN_ID),
+						   DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_MEASUREMENT_TYPE_ID),
+						   DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_ANALYSIS_TYPE_ID),
+						   DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_EVALUATION_TYPE_ID),
 						   resultSet.getInt(TestWrapper.COLUMN_STATUS),
 						   monitoredElement,
 						   resultSet.getInt(TestWrapper.COLUMN_RETURN_TYPE),
@@ -670,10 +659,10 @@ public class TestDatabase extends StorableObjectDatabase {
 	}
 
 	public void delete(Identifier id) throws IllegalDataException {
-		throw new IllegalDataException("Deleting tests is incorrect");
+		throw new UnsupportedOperationException("Deleting tests is incorrect -- test '" + id + "'");
 	}
 	
-	public void delete(List ids) throws IllegalDataException {
-		throw new IllegalDataException("Deleting tests is incorrect");
+	public void delete(Collection ids) {
+		throw new UnsupportedOperationException("Deleting tests is incorrect -- collection of " + ids.size() + "' tests");
 	}
 }
