@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.9 2005/02/03 08:37:26 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.10 2005/02/04 14:36:36 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import java.util.Map;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  * 
- * @version $Revision: 1.9 $, $Date: 2005/02/03 08:37:26 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/04 14:36:36 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -45,7 +45,7 @@ public class StorableObjectXML {
 	private StorableObjectWrapper getWrapper(final short entityCode) throws IllegalDataException {
 		StorableObjectWrapper wrapper = null;
 		String className = ObjectGroupEntities.getPackageName(entityCode) + "."
-				+ ObjectEntities.codeToString(entityCode) + "StorableObjectWrapper";
+				+ ObjectEntities.codeToString(entityCode) + "Wrapper";
 		try {
 			Class clazz = Class.forName(className);
 			Method method = clazz.getMethod("getInstance", new Class[0]);
