@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-resource.idl,v 1.1 2004/11/29 19:21:58 bass Exp $
+ * $Id: scheme-resource.idl,v 1.2 2004/12/06 08:30:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,18 +15,19 @@ module com {
 	module syrus {
 		module AMFICOM {
 			module resource {
-				native ImageResource;
+				native BitmapImageResource;
+				native SchemeImageResource;
 
 				abstract valuetype SchemeSymbolContainer {
 					attribute corba::ImageResource symbol;
-					attribute ImageResource symbolImpl;
+					attribute BitmapImageResource symbolImpl;
 				};
 
 				abstract valuetype SchemeCellContainer: SchemeSymbolContainer {
 					attribute corba::ImageResource schemeCell;
-					attribute ImageResource schemeCellImpl;
+					attribute SchemeImageResource schemeCellImpl;
 					attribute corba::ImageResource ugoCell;
-					attribute ImageResource ugoCellImpl;
+					attribute SchemeImageResource ugoCellImpl;
 				};
 			};
 		};
