@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalConditionUI.java,v 1.8 2005/03/21 08:41:34 bob Exp $
+ * $Id: LogicalConditionUI.java,v 1.9 2005/03/21 13:04:06 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,15 +30,15 @@ import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.ServiceItem;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/21 08:41:34 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/21 13:04:06 $
  * @author $Author: bob $
  * @module filter_v1
  */
 public class LogicalConditionUI {
 
-	private Item				rootItem;
+	private Item			rootItem;
 
-	private LogicalSchemeUI		logicalSchemeUI;
+	private LogicalSchemeUI	logicalSchemeUI;
 
 	public LogicalConditionUI() {
 		// nothing
@@ -154,38 +154,42 @@ public class LogicalConditionUI {
 		}
 		splitPane.setOneTouchExpandable(false);
 		splitPane.setResizeWeight(0.2);
+		this.populateRootItem();
 		return splitPane;
+	}
+
+	private void populateRootItem() {
+		LogicalItem result = new LogicalItem(LogicalItem.ROOT);
+		this.rootItem.addChild(result);
+
+		LogicalItem andOperator0 = new LogicalItem(LogicalItem.AND);
+
+		LogicalItem andOperator1 = new LogicalItem(LogicalItem.AND);
+		andOperator0.addChild(andOperator1);
+		LogicalItem andOperator2 = new LogicalItem(LogicalItem.AND);
+		LogicalItem andOperator3 = new LogicalItem(LogicalItem.AND);
+		andOperator1.addChild(andOperator2);
+		andOperator1.addChild(andOperator3);
+		LogicalItem condition1 = new LogicalItem(LogicalItem.CONDITION, "TectCondition1");
+		LogicalItem condition2 = new LogicalItem(LogicalItem.CONDITION, "TectCondition2");
+		andOperator0.addChild(condition1);
+		andOperator0.addChild(condition2);
+		result.addChild(andOperator0);
+
+		LogicalItem andOperator4 = new LogicalItem(LogicalItem.AND);
+		andOperator0.addChild(andOperator4);
+		LogicalItem andOperator5 = new LogicalItem(LogicalItem.AND);
+		LogicalItem andOperator6 = new LogicalItem(LogicalItem.AND);
+		LogicalItem andOperator7 = new LogicalItem(LogicalItem.AND);
+		andOperator4.addChild(andOperator5);
+		andOperator4.addChild(andOperator6);
+		andOperator4.addChild(andOperator7);
 	}
 
 	private Item getRootItem() {
 		if (this.rootItem == null) {
 			this.rootItem = new ServiceItem();
-			LogicalItem result = new LogicalItem(LogicalItem.ROOT);
-			this.rootItem.addChild(result);
 
-			LogicalItem andOperator0 = new LogicalItem(LogicalItem.AND);
-			
-			LogicalItem andOperator1 = new LogicalItem(LogicalItem.AND);
-			andOperator0.addChild(andOperator1);
-			LogicalItem andOperator2 = new LogicalItem(LogicalItem.AND);
-			LogicalItem andOperator3 = new LogicalItem(LogicalItem.AND);
-			andOperator1.addChild(andOperator2);
-			andOperator1.addChild(andOperator3);
-			LogicalItem condition1 = new LogicalItem(LogicalItem.CONDITION, "TectCondition1");
-			LogicalItem condition2 = new LogicalItem(LogicalItem.CONDITION, "TectCondition2");
-			andOperator0.addChild(condition1);
-			andOperator0.addChild(condition2);
-			result.addChild(andOperator0);
-			
-			LogicalItem andOperator4 = new LogicalItem(LogicalItem.AND);
-			andOperator0.addChild(andOperator4);
-			LogicalItem andOperator5 = new LogicalItem(LogicalItem.AND);
-			LogicalItem andOperator6 = new LogicalItem(LogicalItem.AND);
-			LogicalItem andOperator7 = new LogicalItem(LogicalItem.AND);
-			andOperator4.addChild(andOperator5);
-			andOperator4.addChild(andOperator6);
-			andOperator4.addChild(andOperator7);
-			
 		}
 		return this.rootItem;
 	}

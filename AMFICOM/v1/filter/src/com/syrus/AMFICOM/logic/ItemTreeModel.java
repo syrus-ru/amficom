@@ -1,5 +1,5 @@
 /*
- * $Id: ItemTreeModel.java,v 1.1 2005/03/21 08:40:45 bob Exp $
+ * $Id: ItemTreeModel.java,v 1.2 2005/03/21 13:04:06 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/21 08:40:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/21 13:04:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -147,13 +147,14 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	protected void insertNodeInto(Item parent, Item child) {
 		int childCount = this.getChildCount(parent);
 		int[] newIndexs = new int[1];
+		Object[] objects = new Object[] {child};
 		for (int i = 0; i < childCount; i++) {
 			if (this.getChild(parent, i).equals(child)) {
 				newIndexs[0] = i;
 				break;
 			}
 		}
-		nodesWereInserted(parent, newIndexs);
+		nodesWereInserted(parent, objects, newIndexs);
 	}
 
 	/**
@@ -253,13 +254,11 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	 * childIndices should be the index of the new elements and must be sorted
 	 * in ascending order.
 	 */
-	protected void nodesWereInserted(Item node, int[] childIndices) {
+	protected void nodesWereInserted(Item node, Object[] newChildren, int[] childIndices) {
 		if (this.listeners != null && node != null && childIndices != null && childIndices.length > 0) {
-			int cCount = childIndices.length;
-			Object[] newChildren = new Object[cCount];
-
-			for (int counter = 0; counter < cCount; counter++)
-				newChildren[counter] = node.getChildren().get(childIndices[counter]);
+			for (int i = 0; i < childIndices.length; i++) {
+				System.out.println("nodesWereInserted | to node " + node.getName() + " #" + childIndices[i] + ", " + ((Item)newChildren[i]).getName());
+			}
 			fireTreeNodesInserted(this, getPathToRoot(node), childIndices, newChildren);
 		}
 	}
@@ -362,7 +361,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 		if (sortList != null) {
 			sortList.sorted = false;
 		}
-		System.out.println("addItem | parentItem:" + parentItem.getName() + ", childItem:" + childItem.getName());
+		System.out.println("addItem | parentItem:" + parentItem.getName() + ", childItem:" + childItem.getName() );
 		this.addObject(parent, childItem);
 		for (Iterator it = childItem.getChildren().iterator(); it.hasNext();) {
 			Item item1 = (Item) it.next();
@@ -409,7 +408,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 		});
 	}
 	
-	public void setParentPerformed(Item item, Item oldParent, Item newParent) {
+	public void setParentPerformed(Item item, Item oldParent, Item newParent) {		
 		if (oldParent!=null) {
 			removeNodeFromParent(oldParent, item);
 		}

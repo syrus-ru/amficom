@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.6 2005/03/21 08:41:34 bob Exp $
+ * $Id: LogicalTreeUI.java,v 1.7 2005/03/21 13:04:06 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/21 08:41:34 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/21 13:04:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -55,10 +55,15 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 
 	private class ItemTreeCellRenderer extends DefaultTreeCellRenderer {
 
-		public Component getTreeCellRendererComponent(JTree tree1, Object value, boolean selected1, boolean expanded,
-				boolean leaf, int row, boolean hasFocus1) {
+		public Component getTreeCellRendererComponent(	JTree tree1,
+														Object value,
+														boolean selected1,
+														boolean expanded,
+														boolean leaf,
+														int row,
+														boolean hasFocus1) {
 			Component treeCellRendererComponent = super.getTreeCellRendererComponent(tree1, value, selected1, expanded,
-					leaf, row, hasFocus1);
+				leaf, row, hasFocus1);
 
 			if (value instanceof Item) {
 				Item item = (Item) value;
@@ -68,9 +73,10 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 			return treeCellRendererComponent;
 		}
 	}
-	private static final Insets	nullInsets			= new Insets(0, 0, 0, 0);
+	private static final Insets	nullInsets	= new Insets(0, 0, 0, 0);
 
-	private static Icon getStringIcon(String s, int angle) {
+	private static Icon getStringIcon(	String s,
+										int angle) {
 		int w = 16;
 		int h = 16;
 		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
@@ -89,21 +95,17 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 		Icon icon = new ImageIcon(img);
 		return icon;
 	}
-	private JPanel				panel;
+	private JPanel		panel;
 	// private ItemListener itemListener;
 
 	// private DefaultMutableTreeNode root;
-	private Item				rootItem;
+	private Item		rootItem;
 
-	private JTree				tree;
+	private JTree		tree;
 
-	SelectionListener[]			selectionListeners	= new SelectionListener[0];
+	SelectionListener[]	selectionListeners	= new SelectionListener[0];
 
-	ItemTreeModel				treeModel;
-
-	public LogicalTreeUI() {
-		// empty
-	}
+	ItemTreeModel		treeModel;
 
 	public LogicalTreeUI(Item rootItem) {
 		this.setRootItem(rootItem);
@@ -113,8 +115,12 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 		this.addItem(null, item);
 	}
 
-	public void addItem(Item parentItem, Item childItem) {
+	public void addItem(Item parentItem,
+						Item childItem) {
 		if (this.treeModel == null) {
+			if (this.rootItem == null) {
+				this.rootItem = new ServiceItem("/");
+			}
 			this.treeModel = new ItemTreeModel(this.rootItem);
 		}
 		childItem.addChangeListener(this.treeModel.getItemListener());
@@ -159,7 +165,14 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 	 */
 	public void expandAll(boolean expand) {
 		// Traverse tree from root
-		if (this.rootItem != null) expandAll(new TreePath(this.rootItem), expand);
+		if (this.rootItem != null)
+			expandAll(new TreePath(this.rootItem), null, expand);
+	}
+
+	public void expandAll(Item item) {
+		// Traverse tree from root
+		if (this.rootItem != null)
+			expandAll(new TreePath(this.rootItem), item, true);
 	}
 
 	public JPanel getPanel() {
@@ -194,7 +207,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 			box.add(collapseButton);
 
 			JScrollPane scrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+														ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			scrollPane.getViewport().add(this.getTree());
 
 			GridBagConstraints gbc = new GridBagConstraints();
@@ -217,6 +230,9 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 	public JTree getTree() {
 		if (this.tree == null) {
 			if (this.treeModel == null) {
+				if (this.rootItem == null) {
+					this.rootItem = new ServiceItem("/");
+				}
 				this.treeModel = new ItemTreeModel(this.rootItem);
 			}
 			this.tree = new JTree(this.treeModel);
@@ -229,7 +245,8 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 				public void valueChanged(TreeSelectionEvent e) {
 					JTree jTree = (JTree) e.getSource();
 					TreePath[] selectionPaths = jTree.getSelectionPaths();
-					if (selectionPaths == null) return;
+					if (selectionPaths == null)
+						return;
 					Collection items = new ArrayList(selectionPaths.length);
 					for (int j = 0; j < selectionPaths.length; j++) {
 						Item itemNode = (Item) selectionPaths[j].getLastPathComponent();
@@ -291,8 +308,11 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 		});
 	}
 
-	public void setRootItem(Item rootItem) {		
+	public void setRootItem(Item rootItem) {
 		this.rootItem = rootItem;
+		if (this.treeModel == null) {
+			this.treeModel = new ItemTreeModel(this.rootItem);
+		}
 		List children = this.rootItem.getChildren();
 		if (children != null) {
 			for (Iterator it = children.iterator(); it.hasNext();) {
@@ -308,16 +328,20 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 		for (Iterator it = items.iterator(); it.hasNext();) {
 			Item item = (Item) it.next();
 			item.addChangeListener(itemListener1);
+			System.out.println("addChangeListener | " + item.getName());
 			List children = item.getChildren();
-			if (children != null) this.addChangeListener(children);
+			this.addChangeListener(children);
 		}
 	}
 
-	private Item addObject(Item parent, Item child) {
+	private Item addObject(	Item parent,
+							Item child) {
 		return addObject(parent, child, false);
 	}
 
-	private Item addObject(Item parent1, final Item child, boolean shouldBeVisible) {
+	private Item addObject(	Item parent1,
+							final Item child,
+							boolean shouldBeVisible) {
 		if (parent1 == null) {
 			parent1 = this.rootItem;
 		}
@@ -349,15 +373,18 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 		return child;
 	}
 
-	private void expandAll(TreePath parent, boolean expand) {
+	private void expandAll(	TreePath parent,
+							Item item,
+							boolean expand) {
 		// Traverse children
 		Item node = (Item) parent.getLastPathComponent();
+		if (item != null && node.equals(item))
+			return;
 		List children = node.getChildren();
-		if (children == null) System.out.println(node.getName() + "\t" + node.getClass());
 		for (Iterator it = children.iterator(); it.hasNext();) {
 			Item n = (Item) it.next();
 			TreePath path = parent.pathByAddingChild(n);
-			expandAll(path, expand);
+			expandAll(path, item, expand);
 		}
 
 		// Expansion or collapse must be done bottom-up
@@ -368,7 +395,8 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 		}
 	}
 
-	private List getTreePath(List objects, Item item) {
+	private List getTreePath(	List objects,
+								Item item) {
 		if (objects == null) {
 			objects = new LinkedList();
 		}
@@ -382,13 +410,15 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 		return objects;
 	}
 
-	Item getItemNode(Item parent, Item item) {
+	Item getItemNode(	Item parent,
+						Item item) {
 
 		Item node = null;
 		if (parent == null) {
 			parent = this.rootItem;
 		}
-		if (parent.equals(item)) return parent;
+		if (parent.equals(item))
+			return parent;
 		List children = parent.getChildren();
 		if (children != null) {
 			for (Iterator it = children.iterator(); it.hasNext();) {
@@ -398,7 +428,8 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 					break;
 				}
 				node = this.getItemNode(item2, item);
-				if (node != null) break;
+				if (node != null)
+					break;
 			}
 		}
 

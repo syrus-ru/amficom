@@ -5,8 +5,6 @@
  */
 package com.syrus.AMFICOM.logic;
 
-import java.util.Collections;
-import java.util.List;
 
 public class ServiceItem extends AbstractItem {
 
@@ -16,6 +14,11 @@ public class ServiceItem extends AbstractItem {
 
 	public ServiceItem() {
 		this.name = "service" + (serviceCount++);
+	}
+	
+	public ServiceItem(String name) {
+		this.name = name;
+		serviceCount++;
 	}
 
 	public int getMaxChildrenCount() {
