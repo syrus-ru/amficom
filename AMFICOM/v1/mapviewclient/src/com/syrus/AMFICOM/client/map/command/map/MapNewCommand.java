@@ -1,5 +1,5 @@
 /**
- * $Id: MapNewCommand.java,v 1.15 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapNewCommand.java,v 1.16 2005/02/24 13:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.map.Map;
 /**
  * создание новой карты (Map). включает в себ€ создание нового вида
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/24 13:38:42 $
  * @module mapviewclient_v1
  */
 public class MapNewCommand extends VoidCommand
@@ -42,8 +42,6 @@ public class MapNewCommand extends VoidCommand
 	{
 		Environment.log(Environment.LOG_LEVEL_CONFIG, "Creating new map", getClass().getName(), "execute()");
 		
-//		new MapViewNewCommand(mapFrame, aContext).execute();
-
 		System.out.println("Creating new map context");
 		this.aContext.getDispatcher().notify(
 				new StatusMessageEvent(

@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.14 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.15 2005/02/24 13:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.JOptionPane;
 /**
  * Команда отображает окно карты 
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/24 13:38:42 $
  * @module mapviewclient_v1
  */
 public class ViewMapWindowCommand extends VoidCommand
@@ -144,6 +144,8 @@ public class ViewMapWindowCommand extends VoidCommand
 		if(mvnc.getResult() == Command.RESULT_OK)
 		{
 			mapView = mvnc.getMapView();
+			mapView.setCenter(this.mapFrame.getMapViewer().getLogicalNetLayer().getCenter());
+			mapView.setScale(this.mapFrame.getMapViewer().getLogicalNetLayer().getScale());
 		}
 		else
 			return;

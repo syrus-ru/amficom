@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.14 2005/02/22 11:00:14 krupenn Exp $
+ * $Id: MapViewNewCommand.java,v 1.15 2005/02/24 13:38:42 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,10 +18,13 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
@@ -29,7 +32,7 @@ import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 /**
  * создать новый вид 
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/02/22 11:00:14 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/24 13:38:42 $
  * @module mapviewclient_v1
  */
 public class MapViewNewCommand extends VoidCommand
@@ -59,18 +62,21 @@ public class MapViewNewCommand extends VoidCommand
 			this.aContext.getSessionInterface().getAccessIdentifier();
 		Identifier creatorId = new Identifier(ait.user_id);
 		Identifier domainId = new Identifier(ait.domain_id);
-
+		
+		DoublePoint center = MapPropertiesManager.getCenter();
+		double zoom = MapPropertiesManager.getZoom();
+		
 		try
 		{
-			this.mapView = com.syrus.AMFICOM.mapview.MapView.createInstance(
+			this.mapView = MapView.createInstance(
 					creatorId,
 					domainId,
 					LangModelMap.getString("New"),
 					"",
-					0.0D,
-					0.0D,
-					1.0D,
-					1.0D,
+					center.getX(),
+					center.getY(),
+					zoom,
+					zoom,
 					this.map);
 
 			MapViewStorableObjectPool.putStorableObject(this.mapView);
