@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.11 2005/03/28 12:01:54 bob Exp $
+ * $Id: ThreshDX.java,v 1.12 2005/03/28 12:20:40 bob Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.11 $, $Date: 2005/03/28 12:01:54 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/28 12:20:40 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -30,11 +30,11 @@ public class ThreshDX extends Thresh
 		return this.rise ^ IS_KEY_UPPER[key] ? 1 : -1;
 	}
 
-	protected ThreshDX(int eventId, int xMin, int xMax, boolean isRise)
+	protected ThreshDX(int eventId, int xMin, int xMax, boolean rise)
 	{
 		super(eventId, eventId, xMin, xMax);
-		int dx = isRise ? -1 : +1;
-		this.rise = isRise;
+		int dx = rise ? -1 : +1;
+		this.rise = rise;
 		this.dX = new int[] { dx, 2 * dx, -dx, -2 * dx };
 	}
 

@@ -32,7 +32,7 @@ const char *N_ThreshDY_values	= "values";
 const char *S_ThreshDY_values	= "[D";
 const char *N_ThreshDX_dX		= "dX";
 const char *S_ThreshDX_dX		= "[I";
-const char *N_ThreshDX_isRise	= "isRise";
+const char *N_ThreshDX_isRise	= "rise";
 const char *S_ThreshDX_isRise	= "Z";
 
 const char *N_SE_begin			= "begin";
