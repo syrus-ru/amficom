@@ -1,5 +1,6 @@
 #ifdef __unix__
 
+#include <errno.h>
 #include "connect.h"
 
 void init ()
