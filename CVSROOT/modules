@@ -82,6 +82,8 @@ admin_v1	AMFICOM/v1/admin
 config_v1	AMFICOM/v1/config
 #M	configclient_v1	Client configuring module
 configclient_v1	AMFICOM/v1/configclient
+#M	optimize_v1	Client module for optimization
+optimize_v1	AMFICOM/v1/optimize
 #M	main_v1		Main module
 main_v1		AMFICOM/v1/main
 #M	map_v1		Mapping module
