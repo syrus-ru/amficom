@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.client.general.ui_;
+package com.syrus.AMFICOM.client_.general.ui_;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.client.resource.ObjectResourceController;
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.1 $, $Date: 2004/08/25 06:07:01 $
- * @author $Author: bob $
+ * @version $Revision: 1.1 $, $Date: 2004/08/26 10:21:39 $
+ * @author $Author: krupenn $
  * @module generalclient_v1
  */
 public abstract class AbstractLabelCellRenderer extends JLabel implements TableCellRenderer {

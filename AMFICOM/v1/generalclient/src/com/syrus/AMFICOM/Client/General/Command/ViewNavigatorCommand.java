@@ -14,9 +14,7 @@ public class ViewNavigatorCommand extends VoidCommand
 	public ApplicationContext aContext;
 	public JDesktopPane desktop;
 	public String title;
-//	public String root_name;
-//	public String[] root_objects;
-//	public String[] filters;
+
 	public ViewNavigatorFrame frame;
 
 	ObjectResourceTreeModel ortm;
@@ -26,9 +24,6 @@ public class ViewNavigatorCommand extends VoidCommand
 		this.dispatcher = dispatcher;
 		this.desktop = desktop;
 		this.title = title;
-//		this.root_name = root_name;
-//		this.root_objects = root_objects;
-//		this.filters = filters;
 	}
 
 	public void setParameter(String field, Object value)
@@ -56,18 +51,13 @@ public class ViewNavigatorCommand extends VoidCommand
 
 	public void execute()
 	{
-
-/*
-		ObjectResourceTreePanel panel = new ObjectResourceTreePanel(dispatcher);
-		panel.createTree (root_name, root_objects, filters);
-*/
 		frame = null;
 		for(int i = 0; i < desktop.getComponents().length; i++)
 		{
 			Component comp = desktop.getComponent(i);
 			if (comp instanceof ViewNavigatorFrame)
 			{
-				frame = (ViewNavigatorFrame)comp;
+				frame = (ViewNavigatorFrame )comp;
 				break;
 			}
 		}

@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.client.general.ui_;
+package com.syrus.AMFICOM.client_.general.ui_;
 
 import java.awt.Component;
 
@@ -13,8 +13,8 @@ import javax.swing.border.EmptyBorder;
 
 /**
  * Renderer for JCheckBox items based on JLabel.
- * @version $Revision: 1.1 $, $Date: 2004/08/25 06:07:01 $
- * @author $Author: bob $
+ * @version $Revision: 1.1 $, $Date: 2004/08/26 10:21:39 $
+ * @author $Author: krupenn $
  * @module generalclient_v1
  */
 public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {

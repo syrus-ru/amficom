@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.client.general.ui_;
+package com.syrus.AMFICOM.client_.general.ui_;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client.resource.ObjectResourceController;
@@ -12,8 +12,8 @@ import javax.swing.table.AbstractTableModel;
 import java.util.Iterator;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/25 09:09:08 $
- * @author $Author: bob $
+ * @version $Revision: 1.1 $, $Date: 2004/08/26 10:21:39 $
+ * @author $Author: krupenn $
  * @module generalclient_v1
  */
 public class ObjectResourceTableModel extends AbstractTableModel {

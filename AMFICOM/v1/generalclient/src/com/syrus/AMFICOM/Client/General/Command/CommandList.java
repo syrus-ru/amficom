@@ -56,6 +56,11 @@ public class CommandList extends VoidCommand implements Command
 	{
 	}
 
+	public CommandList(int maxlength)
+	{
+		this.maxlength = maxlength;
+	}
+
 	/**
 	 * выполнить следующие c команд в списке
 	 */

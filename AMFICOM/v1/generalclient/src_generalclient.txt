@@ -121,6 +121,7 @@ src\com\syrus\AMFICOM\Client\General\Report\DividableTableModel.java
 src\com\syrus\AMFICOM\Client\General\Report\DocumentRenderer.java
 src\com\syrus\AMFICOM\Client\General\Report\FirmedTextPane.java
 src\com\syrus\AMFICOM\Client\General\Report\ImagePanel.java
+src\com\syrus\AMFICOM\Client\General\Report\JPanelRenderer.java
 src\com\syrus\AMFICOM\Client\General\Report\ObjectList.java
 src\com\syrus\AMFICOM\Client\General\Report\ObjectResourceDivList.java
 src\com\syrus\AMFICOM\Client\General\Report\ObjectResourceReportModel.java
@@ -224,6 +225,7 @@ src\com\syrus\AMFICOM\Client\Resource\ImageResource.java
 src\com\syrus\AMFICOM\Client\Resource\MiscUtil.java
 src\com\syrus\AMFICOM\Client\Resource\MyDataFlavor.java
 src\com\syrus\AMFICOM\Client\Resource\ObjectResource.java
+src\com\syrus\AMFICOM\Client\Resource\ObjectResourceController.java
 src\com\syrus\AMFICOM\Client\Resource\ObjectResourceModel.java
 src\com\syrus\AMFICOM\Client\Resource\ObjectResourceNameSorter.java
 src\com\syrus\AMFICOM\Client\Resource\ObjectResourceSorter.java
@@ -270,4 +272,13 @@ src\com\syrus\AMFICOM\Client\Resource\System\ClientModel.java
 src\com\syrus\AMFICOM\Client\Resource\System\Server.java
 src\com\syrus\AMFICOM\Client\Resource\System\ServerDisplayModel.java
 src\com\syrus\AMFICOM\Client\Resource\System\ServerModel.java
+src\com\syrus\AMFICOM\client_\general\ui_\AbstractComboBoxCellRenderer.java
+src\com\syrus\AMFICOM\client_\general\ui_\AbstractLabelCellRenderer.java
+src\com\syrus\AMFICOM\client_\general\ui_\ColorCellRenderer.java
+src\com\syrus\AMFICOM\client_\general\ui_\ColumnSorter.java
+src\com\syrus\AMFICOM\client_\general\ui_\LabelCheckBoxRenderer.java
+src\com\syrus\AMFICOM\client_\general\ui_\ObjectResourceTable.java
+src\com\syrus\AMFICOM\client_\general\ui_\ObjectResourceTableModel.java
+src\com\syrus\AMFICOM\client_\general\ui_\StubComboBoxCellRenderer.java
+src\com\syrus\AMFICOM\client_\general\ui_\StubLabelCellRenderer.java
 src\com\syrus\AMFICOM\corba\portable\client\ClientImpl.java

@@ -1,5 +1,5 @@
 /**
- * $Id: VoidCommand.java,v 1.8 2004/08/23 12:11:45 krupenn Exp $
+ * $Id: VoidCommand.java,v 1.9 2004/08/26 10:21:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/08/23 12:11:45 $
+ * @version $Revision: 1.9 $, $Date: 2004/08/26 10:21:39 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -64,10 +64,9 @@ public class VoidCommand implements Command, Cloneable
 	/** пустая команда не выполняет никаких действий */ 
 	public void execute()
 	{
-		System.out.println("Void command executed for " + source.toString() + " - ignored");
 		try
 		{
-			throw new Exception("dummy");
+			throw new Exception("Void command executed for " + source.toString() + " - ignored");
 		}
 		catch(Exception e)
 		{
@@ -88,61 +87,48 @@ public class VoidCommand implements Command, Cloneable
 	// пустая команда не выполняет никаких действий
 	public void undo()
 	{
-		System.out.println("Void command undo for " + source.toString() + " - ignored");
-		try
-		{
-			throw new Exception("dummy");
-		}
-		catch(Exception e)
-		{
-			System.out.println("current execution point with call stack: " + this);
-			e.printStackTrace();
-		}
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "Void command undo() - ignored");
+		
 	}
 
 	// пустая команда не выполняет никаких действий
 	public void redo()
 	{
-		System.out.println("Void command redo for " + source.toString() + " - defaults to \'EXECUTE\'");
-		try
-		{
-			throw new Exception("dummy");
-		}
-		catch(Exception e)
-		{
-			System.out.println("current execution point with call stack: " + this);
-			e.printStackTrace();
-		}
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "Void command redo() - defaults to \'EXECUTE\'");
 		execute();
 	}
 
 	// пустая команда не выполняет никаких действий
 	public void commit_execute()
 	{
-		System.out.println("Void command execution commit for " + source.toString());
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "Void command execution commit() - ignored");
 	}
 
 	// пустая команда не выполняет никаких действий
 	public void commit_undo()
 	{
-		System.out.println("Void command undo commit for " + source.toString() + " - ignored");
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "Void command undo commit() - ignored");
 	}
 
 	// у пустой команды нет источника
 	public Object getSource()
 	{
-		System.out.println("Source for Void command is " + source.toString() + " - ignored");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call for Void command, ret val " + source.toString() + " - ignored", 
+				getClass().getName(), 
+				"getSource()");
+		
 		return null;
 	}
 
 	// пустая команда не имеет параметров
 	public void setParameter(String field, Object value)
 	{
-//		System.out.println("Set for Void command paramenter " + field +
-//				" to value " + value.toString() + " - ignored");
 		try
 		{
-			throw new Exception("dummy");
+			throw new Exception("Set for Void command paramenter " + field +
+				" to value " + value.toString() + " - ignored");
 		}
 		catch(Exception e)
 		{
