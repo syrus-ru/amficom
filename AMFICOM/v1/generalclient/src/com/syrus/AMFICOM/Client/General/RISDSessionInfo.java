@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.29 2005/04/04 07:29:44 bob Exp $
+ * $Id: RISDSessionInfo.java,v 1.30 2005/04/04 12:56:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -74,7 +74,7 @@ import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.29 $, $Date: 2005/04/04 07:29:44 $
+ * @version $Revision: 1.30 $, $Date: 2005/04/04 12:56:01 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -210,7 +210,10 @@ public final class RISDSessionInfo extends SessionInterface {
 			try {
 				ecode = ci.getServer().Logon(getUser(), Rewriter.write(getPassword()), ior, accessIdentityHolder);
 				System.out.println("ecode is " + ecode);
-			} catch (com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException e) {
+			} catch (NullPointerException npe) {
+				npe.printStackTrace();
+			}
+			catch (com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException e) {
 //				 TODO Auto-generated catch block
 				e.printStackTrace();
 //				throw new ApplicationException(e);
