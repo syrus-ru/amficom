@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
+import com.syrus.util.Log;
+
 public class DatabaseDate {
 	
 	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd HHmmss");
@@ -20,8 +22,9 @@ public class DatabaseDate {
 		String dateStr = resultset.getString(column);
 		if(dateStr != null)
 			date = SDF.parse(dateStr);
+		else Log.errorMessage("DatabaseDate.fromQuerySubString | date in column '" + column +"' is NULL");
 		}catch(ParseException pe){
-			//
+			Log.errorMessage("DatabaseDate.fromQuerySubString | parse exception '" + pe.getMessage() + '\'');
 		}
 		return date;
 	}
