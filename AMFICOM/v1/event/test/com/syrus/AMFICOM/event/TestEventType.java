@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventType.java,v 1.1 2005/02/07 12:01:20 arseniy Exp $
+ * $Id: TestEventType.java,v 1.2 2005/02/08 12:02:59 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.event;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.Test;
@@ -15,6 +16,7 @@ import junit.framework.Test;
 import com.syrus.AMFICOM.event.corba.EventType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -26,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/07 12:01:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/08 12:02:59 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -106,5 +108,18 @@ public class TestEventType extends CommonEventTest {
 		}
 
 		eventType.insert();
+	}
+
+//	public void testDelete() throws ApplicationException {
+//		TypicalCondition tc = new TypicalCondition(EventType.CODENAME_MEASUREMENT_ALARM, OperationSort.OPERATION_EQUALS, new Short(ObjectEntities.EVENTTYPE_ENTITY_CODE), StorableObjectWrapper.COLUMN_CODENAME);
+//		List eventTypes = EventStorableObjectPool.getStorableObjectsByCondition(tc, true);
+//		List eventTypeIds = new LinkedList();
+//		EventType eventType;
+//		for (Iterator it = eventTypes.iterator(); it.hasNext();) {
+//			eventType = (EventType) it.next();
+//			System.out.println("Event Type id '" + eventType.getId());
+//			eventTypeIds.add(eventType.getId());
+//		}
+//		EventStorableObjectPool.delete(eventTypeIds);
 	}
 }

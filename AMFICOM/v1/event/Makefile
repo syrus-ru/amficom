@@ -21,7 +21,6 @@ SOURCES := com/syrus/AMFICOM/event/EventDatabaseContext.java \
 	com/syrus/AMFICOM/event/EventObjectLoader.java \
 	com/syrus/AMFICOM/event/DatabaseEventObjectLoader.java \
 	com/syrus/AMFICOM/event/EventStorableObjectPool.java \
-	com/syrus/AMFICOM/event/TypicalConditionImpl.java \
 	com/syrus/AMFICOM/event/EventType.java \
 	com/syrus/AMFICOM/event/EventTypeDatabase.java \
 	com/syrus/AMFICOM/event/EventTypeWrapper.java \
@@ -29,7 +28,9 @@ SOURCES := com/syrus/AMFICOM/event/EventDatabaseContext.java \
 	com/syrus/AMFICOM/event/EventDatabase.java \
 	com/syrus/AMFICOM/event/EventWrapper.java \
 	com/syrus/AMFICOM/event/EventParameter.java \
-	com/syrus/AMFICOM/event/EventSource.java
+	com/syrus/AMFICOM/event/EventSource.java \
+	com/syrus/AMFICOM/event/TypicalConditionImpl.java \
+	com/syrus/AMFICOM/event/DatabaseTypicalConditionImpl.java
 
 
 $(LIBNAME): .mach
