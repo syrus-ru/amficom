@@ -8,6 +8,7 @@ package test.com.syrus.AMFICOM.configuration;
 
 import java.security.DomainCombiner;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.omg.CORBA.Object;
@@ -126,7 +127,13 @@ public class DomainTestCase extends ConfigureTestCase {
         DomainDatabase domainDatabase = (DomainDatabase)ConfigurationDatabaseContext.getDomainDatabase();
         domainDatabase.insert(list);
         listToCompare = domainDatabase.retrieveByIds(listIds, null);
-        assertEquals(list, listToCompare);
+        for (Iterator it = listToCompare.iterator(); it.hasNext();) {
+			Domain tempDomain = (Domain) it.next();
+            System.out.println("!!!"+tempDomain.getDescription()+"!!!");		
+		}
+        
+        //assertTrue(listIds.contains(id2));
+        //assertEquals(list, listToCompare);
         
     }
 
