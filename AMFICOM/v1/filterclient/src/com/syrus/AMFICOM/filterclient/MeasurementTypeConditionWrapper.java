@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeConditionWrapper.java,v 1.1 2005/03/17 10:07:46 max Exp $
+ * $Id: MeasurementTypeConditionWrapper.java,v 1.2 2005/03/25 11:23:08 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,19 +9,19 @@ package com.syrus.AMFICOM.filterclient;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.MeasurementTypeWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/17 10:07:46 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/25 11:23:08 $
  * @author $Author: max $
  * @module measurement_v1
  */
@@ -33,44 +33,26 @@ public class MeasurementTypeConditionWrapper implements ConditionWrapper {
 	private ArrayList measurementPortTypes;
 	
 	private Collection initialCollection;
-	//private Collection keys = new LinkedList();
-	
-	private Map nameKey = new HashMap();
-	private Map keyType = new HashMap();
-	//private Map keyLinkedCollection = new HashMap();
-	
+		
 	private static final String CODENAME = "search by field \"CODENAME\"";
 	private static final String PORTTYPE = "search by MeasurementPortTypes";
 	private static final String PARAMTYPE = "search by ParameterTypes";
 		
+	private String[] keys = {
+			StorableObjectWrapper.COLUMN_CODENAME,
+			MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID,
+			StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID
+			};
+	private String[] keyNames = {CODENAME, PORTTYPE, PARAMTYPE};
+	private byte[] keyTypes = {ConditionWrapper.STRING, ConditionWrapper.LIST, ConditionWrapper.LIST};
+	
 	public MeasurementTypeConditionWrapper(Collection initialMeasurementType,
 			Collection measurementPortTypes, Collection parameterTypes) {
-		
 		this.initialCollection = initialMeasurementType;
 		this.parameterTypes = new ArrayList(parameterTypes);
-		this.measurementPortTypes = new ArrayList(measurementPortTypes);
+		this.measurementPortTypes = new ArrayList(measurementPortTypes);				
+	}
 		
-		this.nameKey.put(CODENAME, StorableObjectWrapper.COLUMN_CODENAME);
-		this.nameKey.put(PORTTYPE, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
-		this.nameKey.put(PARAMTYPE, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
-		
-		this.keyType.put(StorableObjectWrapper.COLUMN_CODENAME, new Byte(ConditionWrapper.STRING));
-		this.keyType.put(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID, new Byte(ConditionWrapper.LIST));		
-		this.keyType.put(StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID, new Byte(ConditionWrapper.LIST));		
-	}
-	
-	public Collection getKeyNames() {
-		return this.nameKey.keySet();
-	}
-	
-	public String getKey(String keyName) {
-		return (String) this.nameKey.get(keyName);
-	}
-	
-	public byte getType(String key) {
-		return ((Byte) this.keyType.get(key)).byteValue();
-	}
-	
 	public String[] getLinkedNames(String key) throws IllegalDataException {
 		if (key.equals(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID)) {
 			String[] names = new String[this.measurementPortTypes.size()];
@@ -93,31 +75,27 @@ public class MeasurementTypeConditionWrapper implements ConditionWrapper {
 	
 	public Object getLinkedObject(String key, int indexNumber) throws IllegalDataException {
 		if (key.equals(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID)) {
-			return this.measurementPortTypes.get(indexNumber);
+			return ((MeasurementPortType)this.measurementPortTypes.get(indexNumber)).getId();
 		} else if (key.equals(StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID)) {
-			return this.parameterTypes.get(indexNumber);
+			return ((ParameterType)this.parameterTypes.get(indexNumber)).getId();
 		} else {
 			throw new IllegalDataException("MeasurementTypeConditionWrapper.getLinkedObject | Wrong key");
 		}
 	}
 	
-	public String[] getInitialNames() {
-		String[] names = new String[this.initialCollection.size()];
-		int i = 0;
-		for (Iterator it = this.initialCollection.iterator(); it.hasNext();i++) {
-			MeasurementType mt = (MeasurementType) it.next();
-			names[i] = mt.getDescription();
-		}
-		return names;
+	public Collection getInitialEntities() {
+		return this.initialCollection;
 	}
+	
+	public String getInitialName(StorableObject storableObject) {
+		MeasurementType mt = (MeasurementType) storableObject;	
+		return mt.getDescription();		
+	}
+	
+	public String[] getKeys() {return this.keys;}
+	public String[] getKeyNames() {return this.keyNames;}
+	public short getEntityCode() {return this.entityCode;}
+	public byte[] getTypes() {return this.keyTypes;}
 
-	public short getEntityCode() {
-		return this.entityCode;
-	}
-	
-	public Collection getKeys() {
-		return this.nameKey.values();
-	}
-	
 	
 }
