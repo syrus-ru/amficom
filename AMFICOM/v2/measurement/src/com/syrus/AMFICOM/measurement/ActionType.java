@@ -2,16 +2,12 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectType;
 
-public abstract class ActionType extends StorableObject {
-	String codename;
-	String description;
+public abstract class ActionType extends StorableObjectType {
 
 	public ActionType(Identifier id) {
 		super(id);
-		this.codename = null;
-		this.description = null;
 	}
 
 	public ActionType(Identifier id,
@@ -25,17 +21,9 @@ public abstract class ActionType extends StorableObject {
 					created,
 					modified,
 					creator_id,
-					modifier_id);
-		this.codename = codename;
-		this.description = description;
-	}
-
-	public String getCodename() {
-		return this.codename;
-	}
-
-	public String getDescription() {
-		return this.description;
+					modifier_id,
+					codename,
+					description);
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -47,8 +35,8 @@ public abstract class ActionType extends StorableObject {
 		super.setAttributes(created,
 												modified,
 												creator_id,
-												modifier_id);
-		this.codename = codename;
-		this.description = description;
+												modifier_id,
+												codename,
+												description);
 	}
 }
