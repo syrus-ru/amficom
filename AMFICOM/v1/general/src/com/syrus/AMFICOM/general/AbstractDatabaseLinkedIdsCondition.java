@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.6 2005/02/09 10:19:45 max Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.7 2005/02/10 08:18:49 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,26 +13,24 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/09 10:19:45 $
- * @author $Author: max $
+ * @version $Revision: 1.7 $, $Date: 2005/02/10 08:18:49 $
+ * @author $Author: bob $
  * @module general_v1
  */
-public abstract class AbstractDatabaseLinkedIdsCondition implements
-		DatabaseStorableObjectCondition {
+public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStorableObjectCondition {
 
 	protected LinkedIdsCondition	condition;
-	
+
 	public AbstractDatabaseLinkedIdsCondition(LinkedIdsCondition delegate) {
 		this.condition = delegate;
 	}
-	
+
 	public Short getEntityCode() {
 		return this.condition.getEntityCode();
 	}
 
 	protected String getQuery(String columnName) throws IllegalDataException {
-		
-		
+
 		if (columnName == null)
 			throw new IllegalDataException("AbstractDatabaseLinkedIdsCondition.getQuery | "
 					+ ObjectEntities.codeToString(this.getEntityCode()) + " isn't supported");
@@ -74,12 +72,22 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements
 		return buffer.toString();
 	}
 
-	protected String getLinkedQuery(final String linkedColumnIdName, final String linkedColumnTargetName,
-			final String linkedTableName) throws IllegalDataException {
+	protected String getLinkedQuery(final String linkedColumnIdName,
+									final String linkedColumnTargetName,
+									final String linkedTableName) throws IllegalDataException {
+		return this.getLinkedQuery(StorableObjectWrapper.COLUMN_ID, linkedColumnIdName, linkedColumnTargetName,
+			linkedTableName);
+
+	}
+
+	protected String getLinkedQuery(final String columnName,
+									final String linkedColumnIdName,
+									final String linkedColumnTargetName,
+									final String linkedTableName) throws IllegalDataException {
 		StringBuffer query = new StringBuffer();
 		query.append(" 1=0 ");
 		query.append(StorableObjectDatabase.SQL_OR);
-		query.append(StorableObjectWrapper.COLUMN_ID);
+		query.append(columnName);
 		query.append(StorableObjectDatabase.SQL_IN);
 		query.append(StorableObjectDatabase.OPEN_BRACKET);
 		query.append(StorableObjectDatabase.SQL_SELECT);
