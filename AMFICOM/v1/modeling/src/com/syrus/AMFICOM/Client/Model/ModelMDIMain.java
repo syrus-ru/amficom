@@ -69,6 +69,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 	PropsFrame propsFrame;
 	ElementsListFrame elementsListFrame;
 	JInternalFrame schemeFrame;
+	SchemePanelNoEdition panel;
 	SchemeGraph graph;
 
 //  public ISMMapContext ismMapContext;
@@ -567,40 +568,52 @@ public class ModelMDIMain extends JFrame implements OperationListener
 			{
 				updTraceFrames();
 
-				propsFrame = new PropsFrame(aContext, true);
-				propsFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
-				desktopPane.add(propsFrame);
-
-				elementsListFrame = new ElementsListFrame(aContext, false);
-				elementsListFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
-				desktopPane.add(elementsListFrame);
-
-				schemeFrame = new JInternalFrame()
+				if (propsFrame == null)
 				{
-					protected void fireInternalFrameEvent(int id)
+					propsFrame = new PropsFrame(aContext, true);
+					propsFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
+					desktopPane.add(propsFrame);
+				}
+
+				if (elementsListFrame == null)
+				{
+					elementsListFrame = new ElementsListFrame(aContext, false);
+					elementsListFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
+					desktopPane.add(elementsListFrame);
+				}
+
+				if (schemeFrame == null)
+				{
+					schemeFrame = new JInternalFrame()
 					{
-						if (id == InternalFrameEvent.INTERNAL_FRAME_CLOSING)
+						protected void fireInternalFrameEvent(int id)
 						{
-							//elementsListFrame.setVisible(false);
-							//propsFrame.setVisible(false);
-							elementsListFrame.dispose();
-							propsFrame.dispose();
-							super.fireInternalFrameEvent(id);
+							if (id == InternalFrameEvent.INTERNAL_FRAME_CLOSING)
+							{
+								elementsListFrame.setVisible(false);
+								propsFrame.setVisible(false);
+//								elementsListFrame.dispose();
+//								propsFrame.dispose();
+								super.fireInternalFrameEvent(id);
+							}
 						}
-					}
-				};
-				schemeFrame.setResizable(true);
-				schemeFrame.setClosable(true);
-				schemeFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-				schemeFrame.setMaximizable(true);
-				schemeFrame.setIconifiable(true);
-				schemeFrame.getContentPane().setLayout(new BorderLayout());
-				SchemePanelNoEdition panel = new SchemePanelNoEdition(aContext);
-				graph = panel.getGraph();
-				schemeFrame.getContentPane().add(panel, BorderLayout.CENTER);
-				schemeFrame.setTitle(LangModelModel.getString("elementsMainTitle"));
-				schemeFrame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-				desktopPane.add(schemeFrame);
+					};
+					schemeFrame.setResizable(true);
+					schemeFrame.setClosable(true);
+					schemeFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+					schemeFrame.setMaximizable(true);
+					schemeFrame.setIconifiable(true);
+					schemeFrame.getContentPane().setLayout(new BorderLayout());
+					schemeFrame.setTitle(LangModelModel.getString("elementsMainTitle"));
+					schemeFrame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
+					desktopPane.add(schemeFrame);
+
+					panel = new SchemePanelNoEdition(aContext);
+					schemeFrame.getContentPane().add(panel, BorderLayout.CENTER);
+					panel.operationPerformed(ae);
+				}
+
+				//graph = panel.getGraph();
 
 				Dimension dim = desktopPane.getSize();
 
@@ -626,7 +639,6 @@ public class ModelMDIMain extends JFrame implements OperationListener
 
 				Scheme scheme = (Scheme)see.obj;
 				paramsFrame.setModelingScheme(scheme);
-
 			}
 			if(see.CLOSE_SCHEME)
 			{
