@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.75 2005/03/05 21:37:32 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.76 2005/03/10 15:20:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/03/05 21:37:32 $
+ * @version $Revision: 1.76 $, $Date: 2005/03/10 15:20:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -449,44 +449,10 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete (List storableObjects) {
-		//TODO implement this method
-	}
-//
-//	public AnalysisType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
-//		Collection objects = null;
-//		try {
-//			objects = this.retrieveByIds(null, StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
-//		}
-//		catch (IllegalDataException ide) {				
-//			throw new RetrieveObjectException(ide);
-//		}
-//
-//		if ((objects == null) || (objects.isEmpty()))
-//			throw new ObjectNotFoundException("No analysis type with codename: '" + codename + "'");
-//
-//		return (AnalysisType) objects.iterator().next();
-//	}
-//
-//	public Collection retrieveAll() throws RetrieveObjectException {
-//		try {
-//			return this.retrieveByIds(null, null);
-//		}
-//		catch (IllegalDataException ide) {
-//			throw new RetrieveObjectException(ide);
-//		}
-//	}
-
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		Collection objects = null; 
-		if ((ids == null) || (ids.isEmpty()))
-			objects = this.retrieveByIdsOneQuery(null, condition);
-		else
-			objects = this.retrieveByIdsOneQuery(ids, condition);
-
-		this.retrieveParameterTypesByOneQuery(objects);
-
-		return objects;
+	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Collection collection = super.retrieveByCondition(conditionQuery);
+		this.retrieveParameterTypesByOneQuery(collection);
+		return collection;
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
@@ -497,37 +463,5 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		DatabaseString.setString(preparedStatement, ++i, analysisType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return i;
 	}
-	
-//  private List retrieveButIdsByCriteriaSet(List ids, List criteriaSetIds) throws RetrieveObjectException, IllegalDataException {
-//		if (criteriaSetIds != null && !criteriaSetIds.isEmpty()) {
-//			String condition = new String();
-//			StringBuffer criteriaSetIdNames = new StringBuffer();        
-//
-//	    int i = 1;
-//			for (Iterator it = criteriaSetIds.iterator(); it.hasNext(); i++) {
-//				criteriaSetIdNames.append(DatabaseIdentifier.toSQLString((Identifier) it.next()));
-//				if (it.hasNext()) {
-//					if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-//						criteriaSetIdNames.append(COMMA);
-//					else {
-//						criteriaSetIdNames.append(CLOSE_BRACKET);
-//						criteriaSetIdNames.append(SQL_OR);
-//						criteriaSetIdNames.append(SetWrapper.LINK_COLUMN_SET_ID);
-//						criteriaSetIdNames.append(SQL_IN);
-//						criteriaSetIdNames.append(OPEN_BRACKET);
-//					}
-//				}
-//			}
-//
-//	    condition = AnalysisTypeWrapper.PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET
-//					+ SQL_SELECT + StorableObjectWrapper.COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
-//					+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + criteriaSetIdNames
-//					+ CLOSE_BRACKET
-//					+ CLOSE_BRACKET
-//					+ SQL_AND + AnalysisTypeWrapper.PARAMETER_MODE + EQUALS + APOSTOPHE + AnalysisTypeWrapper.MODE_CRITERION + APOSTOPHE;
-//
-//			return this.retrieveByIds(ids, condition);
-//		}
-//		return Collections.EMPTY_LIST;
-//	}
+
 }

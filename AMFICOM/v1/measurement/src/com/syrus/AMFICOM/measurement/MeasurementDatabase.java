@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.70 2005/03/10 12:52:09 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.71 2005/03/10 15:20:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/03/10 12:52:09 $
+ * @version $Revision: 1.71 $, $Date: 2005/03/10 15:20:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -240,66 +240,5 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 	}
-
-//	private void updateStatus(Measurement measurement) throws UpdateObjectException {
-//		String measurementIdStr = DatabaseIdentifier.toSQLString(measurement.getId());
-//		String sql = SQL_UPDATE
-//			+ ObjectEntities.MEASUREMENT_ENTITY
-//			+ SQL_SET
-//			+ MeasurementWrapper.COLUMN_STATUS + EQUALS + Integer.toString(measurement.getStatus().value()) + COMMA
-//			+ StorableObjectWrapper.COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(measurement.getModified()) + COMMA
-//			+ StorableObjectWrapper.COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(measurement.getModifierId())
-//			+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + measurementIdStr;
-//		Statement statement = null;
-//		Connection connection = DatabaseConnection.getConnection();
-//		try {
-//			statement = connection.createStatement();
-//			Log.debugMessage("MeasurementDatabase.updateStatus | Trying: " + sql, Log.DEBUGLEVEL09);
-//			statement.executeUpdate(sql);
-//			connection.commit();
-//		}
-//		catch (SQLException sqle) {
-//			String mesg = "MeasurementDatabase.updateStatus | Cannot update status of measurement '" + measurementIdStr + "' -- " + sqle.getMessage();
-//			throw new UpdateObjectException(mesg, sqle);
-//		}
-//		finally {
-//			try {
-//				if (statement != null)
-//					statement.close();
-//				statement = null;
-//			}
-//			catch (SQLException sqle1) {
-//				Log.errorException(sqle1);
-//			}
-//			finally {
-//				DatabaseConnection.releaseConnection(connection);
-//			}
-//		}
-//	}	
-
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		if ((ids == null) || (ids.isEmpty()))
-			return this.retrieveByIdsOneQuery(null, condition);
-		return this.retrieveByIdsOneQuery(ids, condition);	
-		//return retriveByIdsPreparedStatement(ids, condition);
-	}
-
-//	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
-//		List list = null;
-//
-//		String condition = MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
-//				+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
-//				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
-//				+ CLOSE_BRACKET;
-//
-//		try {
-//			list = retrieveButIds(ids, condition);
-//		}
-//		catch (IllegalDataException ide) {           
-//			Log.debugMessage("MeasurementDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-//		}
-//
-//		return list;
-//	}
 
 }

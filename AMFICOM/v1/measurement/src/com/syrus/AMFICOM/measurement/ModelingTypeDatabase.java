@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.26 2005/03/05 21:37:32 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.27 2005/03/10 15:20:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/03/05 21:37:32 $
+ * @version $Revision: 1.27 $, $Date: 2005/03/10 15:20:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -408,41 +408,11 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
-//
-//	public ModelingType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
-//		Collection objects = null;
-//		try {
-//			objects = this.retrieveByIds( null , StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
-//		}
-//		catch (IllegalDataException ide) {				
-//			throw new RetrieveObjectException(ide);
-//		}
-//
-//		if ((objects == null) || (objects.isEmpty()))
-//			throw new ObjectNotFoundException("No modeling type with codename: '" + codename + "'");
-//
-//		return (ModelingType) objects.iterator().next();
-//	}
 
-	public Collection retrieveAll() throws RetrieveObjectException {
-		try {
-			return this.retrieveByIds(null, null);
-		}
-		catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide);
-		}
-	}
-
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		Collection objects = null; 
-		if ((ids == null) || (ids.isEmpty()))
-			objects = this.retrieveByIdsOneQuery(null, condition);
-		else
-			objects = this.retrieveByIdsOneQuery(ids, condition);
-
-		this.retrieveParameterTypesByOneQuery(objects);
-
-		return objects;	
+	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Collection collection = super.retrieveByCondition(conditionQuery);
+		this.retrieveParameterTypesByOneQuery(collection);
+		return collection;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.50 2005/03/05 09:58:22 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.51 2005/03/10 15:20:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/03/05 09:58:22 $
+ * @version $Revision: 1.51 $, $Date: 2005/03/10 15:20:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -153,28 +153,4 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		this.insertEntities(storableObjects);
 	}
 
-	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
-		if ((ids == null) || (ids.isEmpty()))
-			return this.retrieveByIdsOneQuery(null, conditions);
-		return this.retrieveByIdsOneQuery(ids, conditions);	
-		//return retriveByIdsPreparedStatement(ids, conditions);
-	}
-//
-//	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
-//		List list = null;
-//		
-//		String condition = AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
-//				+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
-//				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
-//			+ CLOSE_BRACKET;
-//
-//		try {
-//			list = retrieveButIds(ids, condition);
-//		}
-//		catch (IllegalDataException ide) {
-//			Log.debugMessage("AnalysisDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-//		}
-//
-//		return list;
-//	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.77 2005/03/05 09:58:23 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.78 2005/03/10 15:20:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,10 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.KISWrapper;
-import com.syrus.AMFICOM.configuration.MeasurementPortWrapper;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.MonitoredElementWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -40,7 +37,6 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -48,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/03/05 09:58:23 $
+ * @version $Revision: 1.78 $, $Date: 2005/03/10 15:20:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -621,77 +617,58 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 */
-	public Collection retrieveTests(TestStatus status) throws RetrieveObjectException {
-		Collection objects = null;
-		try{
-			objects = this.retrieveByIds(null, TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(status.value())
-									+ SQL_ORDER_BY + TestWrapper.COLUMN_START_TIME + SQL_ASC);
-		}
-		catch(IllegalDataException ide) {
-			Log.debugMessage("TestDatabase.retrieveTests | Trying: " + ide, Log.DEBUGLEVEL09);
-		}
-		return objects;
+//	public Collection retrieveTests(TestStatus status) throws RetrieveObjectException {
+//		Collection objects = null;
+//		try{
+//			objects = this.retrieveByIdsByCondition(null, TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(status.value())
+//									+ SQL_ORDER_BY + TestWrapper.COLUMN_START_TIME + SQL_ASC);
+//		}
+//		catch(IllegalDataException ide) {
+//			Log.debugMessage("TestDatabase.retrieveTests | Trying: " + ide, Log.DEBUGLEVEL09);
+//		}
+//		return objects;
+//	}
+
+//	public Collection retrieveTestsForMCM(Identifier mcmId, TestStatus status) throws RetrieveObjectException {
+//		
+//		String mcmIdStr = DatabaseIdentifier.toSQLString(mcmId);
+//		String condition = TestWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
+//				+ SQL_SELECT
+//				+ StorableObjectWrapper.COLUMN_ID
+//				+ SQL_FROM + ObjectEntities.ME_ENTITY
+//				+ SQL_WHERE + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
+//					+ SQL_SELECT
+//					+ StorableObjectWrapper.COLUMN_ID
+//					+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
+//					+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET
+//						+ SQL_SELECT
+//						+ StorableObjectWrapper.COLUMN_ID
+//						+ SQL_FROM + ObjectEntities.KIS_ENTITY
+//						+ SQL_WHERE + KISWrapper.COLUMN_MCM_ID + EQUALS + mcmIdStr
+//					+ CLOSE_BRACKET
+//				+ CLOSE_BRACKET
+//			+ CLOSE_BRACKET
+//				+ SQL_AND + TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(status.value())
+//			+ SQL_ORDER_BY + TestWrapper.COLUMN_START_TIME + SQL_ASC;		
+//
+//		Collection objects = null;
+//		
+//		try {
+//			objects = this.retrieveByIdsByCondition(null, condition);
+//		}
+//		catch (IllegalDataException ide) {			
+//			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+//		}
+//		
+//		return objects;
+//	}
+
+	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Collection collection = super.retrieveByCondition(conditionQuery);
+		this.retrieveMeasurementSetupTestLinksByOneQuery(collection);
+		return collection;
 	}
 
-	public Collection retrieveTestsForMCM(Identifier mcmId, TestStatus status) throws RetrieveObjectException {
-		
-		String mcmIdStr = DatabaseIdentifier.toSQLString(mcmId);
-		String condition = TestWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
-				+ SQL_SELECT
-				+ StorableObjectWrapper.COLUMN_ID
-				+ SQL_FROM + ObjectEntities.ME_ENTITY
-				+ SQL_WHERE + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
-					+ SQL_SELECT
-					+ StorableObjectWrapper.COLUMN_ID
-					+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
-					+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET
-						+ SQL_SELECT
-						+ StorableObjectWrapper.COLUMN_ID
-						+ SQL_FROM + ObjectEntities.KIS_ENTITY
-						+ SQL_WHERE + KISWrapper.COLUMN_MCM_ID + EQUALS + mcmIdStr
-					+ CLOSE_BRACKET
-				+ CLOSE_BRACKET
-			+ CLOSE_BRACKET
-				+ SQL_AND + TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(status.value())
-			+ SQL_ORDER_BY + TestWrapper.COLUMN_START_TIME + SQL_ASC;		
-
-		Collection objects = null;
-		
-		try {
-			objects = this.retrieveByIds(null, condition);
-		}
-		catch (IllegalDataException ide) {			
-			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-		}
-		
-		return objects;
-	}
-	
-	public Collection retrieveAll() throws RetrieveObjectException {
-		Collection objects = null;
-		
-		try {
-			objects = this.retrieveByIds(null, null);
-		}
-		catch (IllegalDataException ide) {			
-			Log.debugMessage("TestDatabase.retrieveAll | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-		}
-		
-		return objects;
-	}
-
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		Collection objects = null; 
-		if ((ids == null) || (ids.isEmpty()))
-			objects = this.retrieveByIdsOneQuery(null, condition);
-		else
-			objects = this.retrieveByIdsOneQuery(ids, condition);
-		
-		this.retrieveMeasurementSetupTestLinksByOneQuery(objects);	
-		
-		return objects;
-	}
-	
 	public void delete(Identifier id) throws IllegalDataException {
 		throw new IllegalDataException("Deleting tests is incorrect");
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.70 2005/03/05 21:37:32 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.71 2005/03/10 15:20:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/03/05 21:37:32 $
+ * @version $Revision: 1.71 $, $Date: 2005/03/10 15:20:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -459,73 +459,11 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
-//
-//	public EvaluationType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
-//		Collection objects = null;
-//		try {
-//			objects = this.retrieveByIds(null, StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
-//		}
-//		catch (IllegalDataException ide) {				
-//			throw new RetrieveObjectException(ide);
-//		}
-//
-//		if ((objects == null) || (objects.isEmpty()))
-//			throw new ObjectNotFoundException("No evaluation type with codename: '" + codename + "'");
-//
-//		return (EvaluationType) objects.iterator().next();
-//	}
 
-	public Collection retrieveAll() throws RetrieveObjectException {
-		try {
-			return this.retrieveByIds(null, null);
-		}
-		catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide);
-		}
+	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Collection collection = super.retrieveByCondition(conditionQuery);
+		this.retrieveParameterTypesByOneQuery(collection);
+		return collection;
 	}
 
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		Collection objects = null; 
-		if ((ids == null) || (ids.isEmpty()))
-			objects = this.retrieveByIdsOneQuery(null, condition);
-		else
-			objects = this.retrieveByIdsOneQuery(ids, condition);
-
-		this.retrieveParameterTypesByOneQuery(objects);
-
-		return objects;	
-	}
-	 
-//	private List retrieveButIdByThresholdSet(List ids, List thresholdSetIds) throws RetrieveObjectException, IllegalDataException {
-//		if (thresholdSetIds != null && !thresholdSetIds.isEmpty()) {
-//			String condition = new String();
-//			StringBuffer thresholds = new StringBuffer();
-//
-//			int i = 1;
-//			for (Iterator it = thresholdSetIds.iterator(); it.hasNext(); i++) {
-//				thresholds.append(DatabaseIdentifier.toSQLString((Identifier) it.next()));
-//				if (it.hasNext()) {
-//					if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-//						thresholds.append(COMMA);
-//					else {
-//						thresholds.append(CLOSE_BRACKET);
-//						thresholds.append(SQL_OR);
-//						thresholds.append(SetWrapper.LINK_COLUMN_SET_ID);
-//						thresholds.append(SQL_IN);
-//						thresholds.append(OPEN_BRACKET);
-//					}
-//				}
-//			}
-//
-//	    condition = PARAMETER_TYPE_ID + SQL_IN
-//						+ OPEN_BRACKET
-//						+ SQL_SELECT + StorableObjectWrapper.COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
-//						+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + thresholds
-//						+ CLOSE_BRACKET
-//					+ CLOSE_BRACKET
-//					+ SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + EvaluationTypeWrapper.MODE_THRESHOLD + APOSTOPHE;
-//			return retrieveButIds(ids, condition);
-//		}
-//		return Collections.EMPTY_LIST;
-//	}
 }

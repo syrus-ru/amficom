@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.20 2005/03/05 09:57:16 arseniy Exp $
+ * $Id: CableThreadDatabase.java,v 1.21 2005/03/10 15:20:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/03/05 09:57:16 $
+ * @version $Revision: 1.21 $, $Date: 2005/03/10 15:20:11 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -170,28 +170,6 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
 
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
-	}
-
-	public Collection retrieveAll() throws RetrieveObjectException {
-		Collection objects = null;
-		try {
-			objects = this.retrieveByIds(null, null);
-		}
-		catch (IllegalDataException ide) {
-			Log.debugMessage("CableThreadDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
-			throw new RetrieveObjectException(ide);
-		}
-		return objects;
-	}
-
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		Collection objects = null;
-		if ((ids == null) || (ids.isEmpty()))
-			objects = this.retrieveByIdsOneQuery(null, condition);
-		else
-			objects = this.retrieveByIdsOneQuery(ids, condition);
-
-		return objects;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.57 2005/03/05 09:57:16 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.58 2005/03/10 15:20:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/03/05 09:57:16 $
+ * @version $Revision: 1.58 $, $Date: 2005/03/10 15:20:11 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -478,17 +478,6 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public Collection retrieveAll() throws RetrieveObjectException {
-		Collection objects = null;
-		try {
-			objects = this.retrieveByIds(null, null);
-		} catch (IllegalDataException ide) {
-			Log.debugMessage("MonitoredElementDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
-			throw new RetrieveObjectException(ide);
-		}
-		return objects;
-	}
-
 	public void delete(Identifier id) throws IllegalDataException {
 		if (id.getMajor() != ObjectEntities.ME_ENTITY_CODE)
 			throw new IllegalDataException("MonitoredElementDatabase.delete | Cannot delete object of code "
@@ -555,15 +544,10 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		Collection objects = null;
-		if ((ids == null) || (ids.isEmpty()))
-			objects = this.retrieveByIdsOneQuery(null, condition);
-		else
-			objects = this.retrieveByIdsOneQuery(ids, condition);
-
-		this.retrieveMonitoredDomainMemberIdsByOneQuery(objects);
-
-		return objects;
+	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Collection collection = super.retrieveByCondition(conditionQuery);
+		this.retrieveMonitoredDomainMemberIdsByOneQuery(collection);
+		return collection;
 	}
+
 }

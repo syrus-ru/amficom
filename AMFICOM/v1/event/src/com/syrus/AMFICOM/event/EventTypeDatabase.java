@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.18 2005/03/05 21:37:36 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.19 2005/03/10 15:24:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/03/05 21:37:36 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/10 15:24:13 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -363,16 +363,10 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		Collection collection = null; 
-		if ((ids == null) || (ids.isEmpty()))
-			collection = this.retrieveByIdsOneQuery(null, condition);
-		else
-			collection = this.retrieveByIdsOneQuery(ids, condition);
-
+	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Collection collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveParameterTypesByOneQuery(collection);
-
-		return collection;		
+		return collection;
 	}
 
 }

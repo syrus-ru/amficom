@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.76 2005/03/05 09:58:23 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.77 2005/03/10 15:20:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/03/05 09:58:23 $
+ * @version $Revision: 1.77 $, $Date: 2005/03/10 15:20:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -310,10 +310,9 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		List meIds = new ArrayList();
 
 		String msIdStr = DatabaseIdentifier.toSQLString(measurementSetup.getId());
-		String sql = SQL_SELECT
-			+ MeasurementSetupWrapper.LINK_COLUMN_ME_ID
-			+ SQL_FROM + ObjectEntities.MSMELINK_ENTITY
-			+ SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + EQUALS + msIdStr;
+		String sql = SQL_SELECT + MeasurementSetupWrapper.LINK_COLUMN_ME_ID
+				+ SQL_FROM + ObjectEntities.MSMELINK_ENTITY
+				+ SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + EQUALS + msIdStr;
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -326,7 +325,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				meIds.add(DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.LINK_COLUMN_ME_ID));
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetupMELinks | Cannot retrieve monitored element ids for measurement setup '" + msIdStr + "' -- " + sqle.getMessage();
+			String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetupMELinks | Cannot retrieve monitored element ids for measurement setup '"
+					+ msIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -340,14 +340,15 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally{
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 		measurementSetup.setMonitoredElementIds0(meIds);
 	}
-    
-    private void retrieveMeasurementSetupMELinksByOneQuery(Collection measurementSetups) throws RetrieveObjectException {
+	
+	private void retrieveMeasurementSetupMELinksByOneQuery(Collection measurementSetups) throws RetrieveObjectException {
 		if ((measurementSetups == null) || (measurementSetups.isEmpty()))
 			return;
 
@@ -374,25 +375,10 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public Collection retrieveAll() throws RetrieveObjectException {
-		try{
-			return this.retrieveByIds(null, null);
-		}
-		catch(IllegalDataException ide){
-			throw new RetrieveObjectException(ide);
-		}
+	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Collection collection = super.retrieveByCondition(conditionQuery);
+		this.retrieveMeasurementSetupMELinksByOneQuery(collection);
+		return collection;
 	}
-	
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		Collection objects = null; 
-		if ((ids == null) || (ids.isEmpty()))
-			objects = this.retrieveByIdsOneQuery(null, condition);
-		else
-			objects = this.retrieveByIdsOneQuery(ids, condition);
-		
-		this.retrieveMeasurementSetupMELinksByOneQuery(objects);
-		
-		
-		return objects;	
-	}
+
 }

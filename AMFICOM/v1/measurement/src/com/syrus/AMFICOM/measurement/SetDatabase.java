@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.77 2005/03/10 12:52:09 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.78 2005/03/10 15:20:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/03/10 12:52:09 $
+ * @version $Revision: 1.78 $, $Date: 2005/03/10 15:20:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -554,20 +554,14 @@ public class SetDatabase extends StorableObjectDatabase {
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
-									+ ObjectEntities.SETMELINK_ENTITY
-									+ SQL_WHERE
-									+ SetWrapper.LINK_COLUMN_SET_ID + EQUALS
-									+ setIdStr);
-			statement.executeUpdate(SQL_DELETE_FROM 
-									+ ObjectEntities.SETPARAMETER_ENTITY
-									+ SQL_WHERE
-									+ SetWrapper.LINK_COLUMN_SET_ID + EQUALS
-									+ setIdStr);									
-			statement.executeUpdate(SQL_DELETE_FROM 
-									+ this.getEnityName()
-									+ SQL_WHERE
-									+ StorableObjectWrapper.COLUMN_ID + EQUALS
-									+ setIdStr);
+					+ ObjectEntities.SETMELINK_ENTITY
+					+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + EQUALS + setIdStr);
+			statement.executeUpdate(SQL_DELETE_FROM
+					+ ObjectEntities.SETPARAMETER_ENTITY
+					+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + EQUALS + setIdStr);									
+			statement.executeUpdate(SQL_DELETE_FROM
+					+ this.getEnityName()
+					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + setIdStr);
 			connection.commit();
 		}
 		catch (SQLException sqle1) {
@@ -588,45 +582,11 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public Collection retrieveAll() throws RetrieveObjectException {
-		try {
-			return this.retrieveByIds(null, null);
-		}
-		catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide);
-		}
+	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Collection collection = super.retrieveByCondition(conditionQuery);
+		this.retrieveSetParametersByOneQuery(collection);
+		this.retrieveSetMELinksByOneQuery(collection);
+		return collection;
 	}
 
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		Collection objects = null; 
-		if ((ids == null) || (ids.isEmpty()))
-			objects = this.retrieveByIdsOneQuery(null, condition);
-		else
-			objects = this.retrieveByIdsOneQuery(ids, condition);
-
-		this.retrieveSetParametersByOneQuery(objects);
-		this.retrieveSetMELinksByOneQuery(objects);
-
-		return objects;
-	}
-
-//	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
-//		List list = null;
-//
-//		String condition = StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
-//				+ SetWrapper.LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETMELINK_ENTITY
-//				+ SQL_WHERE + SetWrapper.LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
-//				+ StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
-//				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS
-//				+ DatabaseIdentifier.toSQLString(domain.getId()) + CLOSE_BRACKET
-//				+ CLOSE_BRACKET;
-//		try {
-//			list = retrieveButIds(ids, condition);
-//		}
-//		catch (IllegalDataException ide) {
-//			Log.debugMessage("MeasurementDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-//		}
-//
-//		return list;
-//	}
 }
