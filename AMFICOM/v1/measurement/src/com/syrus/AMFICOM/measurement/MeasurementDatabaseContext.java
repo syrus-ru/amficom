@@ -1,34 +1,34 @@
 package com.syrus.AMFICOM.measurement;
 
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 public abstract class MeasurementDatabaseContext {
 
-	protected static StorableObject_Database	analysisDatabase;
-	protected static StorableObject_Database	analysisTypeDatabase;
-	protected static StorableObject_Database	evaluationDatabase;
-	protected static StorableObject_Database	evaluationTypeDatabase;
-	protected static StorableObject_Database	measurementDatabase;
-	protected static StorableObject_Database	measurementSetupDatabase;
-	protected static StorableObject_Database	measurementTypeDatabase;
-	protected static StorableObject_Database	parameterTypeDatabase;
-	protected static StorableObject_Database	resultDatabase;
-	protected static StorableObject_Database	setDatabase;
-	protected static StorableObject_Database	temporalPatternDatabase;
-	protected static StorableObject_Database	testDatabase;
+	protected static StorableObjectDatabase	analysisDatabase;
+	protected static StorableObjectDatabase	analysisTypeDatabase;
+	protected static StorableObjectDatabase	evaluationDatabase;
+	protected static StorableObjectDatabase	evaluationTypeDatabase;
+	protected static StorableObjectDatabase	measurementDatabase;
+	protected static StorableObjectDatabase	measurementSetupDatabase;
+	protected static StorableObjectDatabase	measurementTypeDatabase;
+	protected static StorableObjectDatabase	parameterTypeDatabase;
+	protected static StorableObjectDatabase	resultDatabase;
+	protected static StorableObjectDatabase	setDatabase;
+	protected static StorableObjectDatabase	temporalPatternDatabase;
+	protected static StorableObjectDatabase	testDatabase;
 
-	public static void init(StorableObject_Database analysisDatabase,
-			StorableObject_Database analysisTypeDatabase,
-			StorableObject_Database evaluationDatabase,
-			StorableObject_Database evaluationTypeDatabase,
-			StorableObject_Database measurementDatabase,
-			StorableObject_Database measurementSetupDatabase,
-			StorableObject_Database measurementTypeDatabase,
-			StorableObject_Database parameterTypeDatabase,
-			StorableObject_Database resultDatabase,
-			StorableObject_Database setDatabase,
-			StorableObject_Database temporalPatternDatabase,
-			StorableObject_Database testDatabase) {
+	public static void init(StorableObjectDatabase analysisDatabase,
+			StorableObjectDatabase analysisTypeDatabase,
+			StorableObjectDatabase evaluationDatabase,
+			StorableObjectDatabase evaluationTypeDatabase,
+			StorableObjectDatabase measurementDatabase,
+			StorableObjectDatabase measurementSetupDatabase,
+			StorableObjectDatabase measurementTypeDatabase,
+			StorableObjectDatabase parameterTypeDatabase,
+			StorableObjectDatabase resultDatabase,
+			StorableObjectDatabase setDatabase,
+			StorableObjectDatabase temporalPatternDatabase,
+			StorableObjectDatabase testDatabase) {
 		MeasurementDatabaseContext.analysisDatabase = analysisDatabase;
 		MeasurementDatabaseContext.analysisTypeDatabase = analysisTypeDatabase;
 		MeasurementDatabaseContext.evaluationDatabase = evaluationDatabase;

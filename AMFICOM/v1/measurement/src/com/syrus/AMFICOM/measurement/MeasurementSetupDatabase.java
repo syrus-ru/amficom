@@ -11,10 +11,10 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
-public class MeasurementSetupDatabase extends StorableObject_Database {
+public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 	public static final String	COLUMN_CRITERIA_SET_ID				= "criteriaSetId";
 	public static final String	COLUMN_DESCRIPTION					= "description";

@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
@@ -24,7 +24,7 @@ public class MeasurementSetup extends StorableObject {
 	private long measurementDuration;
 	private ArrayList monitoredElementIds;
 
-	private StorableObject_Database measurementSetupDatabase;
+	private StorableObjectDatabase measurementSetupDatabase;
 
 	public MeasurementSetup(Identifier id) throws RetrieveObjectException {
 		super(id);

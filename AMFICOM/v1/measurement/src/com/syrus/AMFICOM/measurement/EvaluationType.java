@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -17,7 +17,7 @@ public class EvaluationType extends ActionType {
 	private ArrayList etalonParameterTypes;
 	private ArrayList outParameterTypes;
 
-	private StorableObject_Database evaluationTypeDatabase;
+	private StorableObjectDatabase evaluationTypeDatabase;
 
 	public EvaluationType(Identifier id) throws RetrieveObjectException {
 		super(id);

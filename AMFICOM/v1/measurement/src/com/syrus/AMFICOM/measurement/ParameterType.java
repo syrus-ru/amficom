@@ -4,7 +4,7 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 public class ParameterType extends StorableObjectType {
 	private String name;
 
-	private StorableObject_Database parameterTypeDatabase;
+	private StorableObjectDatabase parameterTypeDatabase;
 
 	public ParameterType(Identifier id) throws RetrieveObjectException {
 		super(id);

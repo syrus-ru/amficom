@@ -8,10 +8,10 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
-public class EvaluationDatabase extends StorableObject_Database {
+public class EvaluationDatabase extends StorableObjectDatabase {
 
 	public static final String	COLUMN_TYPE_ID				= "typeId";
 	public static final String	COLUMN_MONITORED_ELEMENT_ID	= "monitoredElementId";

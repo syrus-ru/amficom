@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.general;
 import java.sql.Connection;
 import com.syrus.util.database.DatabaseConnection;
 
-public abstract class StorableObject_Database {
+public abstract class StorableObjectDatabase {
 
 	public static final String	COLUMN_CREATED					= "created";
 	public static final String	COLUMN_CREATOR_ID				= "creator_id";
@@ -35,7 +35,7 @@ public abstract class StorableObject_Database {
 
 	protected static Connection	connection;
 
-	public StorableObject_Database() {
+	public StorableObjectDatabase() {
 		connection = DatabaseConnection.getConnection();
 	}
 

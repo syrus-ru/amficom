@@ -12,12 +12,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 
-public class ResultDatabase extends StorableObject_Database {
+public class ResultDatabase extends StorableObjectDatabase {
 	
 //	 measurementId VARCHAR2(32) NOT NULL,
 	public static final String COLUMN_MEASUREMENT_ID		=	"measurementId";

@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -16,7 +16,7 @@ public class AnalysisType extends ActionType {
 	private ArrayList criteriaParameterTypes;
 	private ArrayList outParameterTypes;
 
-	private StorableObject_Database analysisTypeDatabase;
+	private StorableObjectDatabase analysisTypeDatabase;
 
 	public AnalysisType(Identifier id) throws RetrieveObjectException {
 		super(id);

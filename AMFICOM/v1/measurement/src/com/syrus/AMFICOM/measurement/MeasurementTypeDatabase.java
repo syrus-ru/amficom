@@ -9,12 +9,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
-public class MeasurementTypeDatabase extends StorableObject_Database  {
+public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	public static final String MODE_IN = "IN";
 	public static final String MODE_OUT = "OUT";
 	

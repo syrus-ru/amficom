@@ -7,7 +7,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -25,7 +25,7 @@ public class Measurement extends Action {
 	private String localAddress;
 	private Identifier testId;
 
-	private StorableObject_Database measurementDatabase;
+	private StorableObjectDatabase measurementDatabase;
 
 	public Measurement(Identifier id) throws RetrieveObjectException {
 		super(id);

@@ -10,11 +10,11 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
-public class TemporalPatternDatabase extends StorableObject_Database {
+public class TemporalPatternDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_DESCRIPTION 	= "description";
 	public static final String COLUMN_VALUE 		= "value";
 

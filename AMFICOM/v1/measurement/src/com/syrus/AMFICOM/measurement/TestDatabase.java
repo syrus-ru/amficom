@@ -11,12 +11,12 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 
-public class TestDatabase extends StorableObject_Database {
+public class TestDatabase extends StorableObjectDatabase {
 //	 analysisTypeId VARCHAR2(32),
 	public static final String COLUMN_ANALYSIS_TYPE_ID	= "analysisTypeId";
 	// description VARCHAR2(256),

@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.ContinuousTestTimeStamps;
@@ -43,7 +43,7 @@ public class Test extends StorableObject {
 	private MeasurementSetup		mainMeasurementSetup;
 	private KIS						kis;
 
-	private StorableObject_Database	testDatabase;
+	private StorableObjectDatabase	testDatabase;
 
 	public Test(Identifier id) throws RetrieveObjectException {
 		super(id);

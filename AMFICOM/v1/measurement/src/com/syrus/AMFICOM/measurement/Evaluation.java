@@ -5,7 +5,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -15,7 +15,7 @@ public class Evaluation extends Action {
 	private Set thresholdSet;
 	private Set etalon;
 
-	private StorableObject_Database evaluationDatabase;
+	private StorableObjectDatabase evaluationDatabase;
 
 	public Evaluation(Identifier id) throws RetrieveObjectException {
 		super(id);

@@ -5,7 +5,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.event.corba.AlarmLevel;
 public class Analysis extends Action {
 	private Set criteriaSet;
 
-	private StorableObject_Database analysisDatabase;
+	private StorableObjectDatabase analysisDatabase;
 
 	public Analysis(Identifier id) throws RetrieveObjectException {
 		super(id);

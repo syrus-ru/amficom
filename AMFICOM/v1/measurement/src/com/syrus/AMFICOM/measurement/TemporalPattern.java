@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -609,7 +609,7 @@ public class TemporalPattern extends StorableObject {
 
 	private String[]				cronStrings;
 	private String					description;
-	private StorableObject_Database	temporalPatternDatabase;
+	private StorableObjectDatabase	temporalPatternDatabase;
 
 	private HashMap					templates;
 	private long[]					times;

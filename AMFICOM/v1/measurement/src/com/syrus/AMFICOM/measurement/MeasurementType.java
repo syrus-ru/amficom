@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -15,7 +15,7 @@ public class MeasurementType extends ActionType {
 	private ArrayList inParameterTypes;
 	private ArrayList outParameterTypes;
 
-	private StorableObject_Database measurementTypeDatabase;
+	private StorableObjectDatabase measurementTypeDatabase;
 
 	public MeasurementType(Identifier id) throws RetrieveObjectException {
 		super(id);

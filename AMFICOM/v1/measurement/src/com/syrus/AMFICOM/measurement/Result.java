@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -20,7 +20,7 @@ public class Result extends StorableObject {
 	private int alarmLevel;
 	private SetParameter[] parameters;
 
-	private StorableObject_Database resultDatabase;
+	private StorableObjectDatabase resultDatabase;
 
 	public Result(Identifier id) throws RetrieveObjectException {
 		super(id);
