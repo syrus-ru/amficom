@@ -66,7 +66,7 @@ public class DatabaseConnection {
 			long deadtime = System.currentTimeMillis() + db_conn_timeout;
 			boolean connected;
 			for (connected = false; System.currentTimeMillis() < deadtime && !connected;) {
-				Log.debugMessage("Attemting to connect to database: " + url, Log.DEBUGLEVEL03);
+				Log.debugMessage("Attemting to connect to database: " + url + " as " + db_login_name, Log.DEBUGLEVEL03);
 				try {
 					connection = DriverManager.getConnection(url, db_login_name, PASSWORD);
 					connection.setAutoCommit(autocommit);
