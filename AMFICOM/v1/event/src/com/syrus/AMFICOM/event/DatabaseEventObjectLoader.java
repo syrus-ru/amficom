@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.7 2005/02/24 15:00:07 arseniy Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.8 2005/02/24 15:23:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
@@ -23,31 +24,30 @@ import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/24 15:00:07 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/24 15:23:06 $
  * @author $Author: arseniy $
  * @module event_v1
  */
 public class DatabaseEventObjectLoader implements EventObjectLoader {
 
-	public EventType loadEventType(Identifier id) throws DatabaseException {
+	public EventType loadEventType(Identifier id) throws ApplicationException {
 		return new EventType(id);
 	}
 
-	public Event loadEvent(Identifier id) throws DatabaseException {
+	public Event loadEvent(Identifier id) throws ApplicationException {
 		return new Event(id);
 	}
 
-	public EventSource loadEventSource(Identifier id) throws DatabaseException {
+	public EventSource loadEventSource(Identifier id) throws ApplicationException {
 		return new EventSource(id);
 	}
 
 
 
-	public Collection loadEventTypes(Collection ids) throws DatabaseException {
+	public Collection loadEventTypes(Collection ids) throws ApplicationException {
 		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
 		Collection collection = null;
 		try {
@@ -61,7 +61,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		return collection;
 	}
 
-	public Collection loadEvents(Collection ids) throws DatabaseException {
+	public Collection loadEvents(Collection ids) throws ApplicationException {
 		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
 		Collection collection = null;
 		try {
@@ -75,7 +75,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		return collection;
 	}
 
-	public Collection loadEventSources(Collection ids) throws DatabaseException {
+	public Collection loadEventSources(Collection ids) throws ApplicationException {
 		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
 		Collection collection = null;
 		try {
@@ -92,7 +92,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 
 
-	public Collection loadEventTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException {
+	public Collection loadEventTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
 		Collection collection = null;
 		try {
@@ -106,7 +106,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		return collection;
 	}
 
-	public Collection loadEventsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException {
+	public Collection loadEventsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
 		Collection collection = null;
 		try {
@@ -120,7 +120,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		return collection;
 	}
 
-	public Collection loadEventSourcesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException {
+	public Collection loadEventSourcesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
 		Collection collection = null;
 		try {
@@ -137,17 +137,17 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 
 
-	public void saveEventType(EventType eventType, boolean force) throws DatabaseException, VersionCollisionException {
+	public void saveEventType(EventType eventType, boolean force) throws ApplicationException {
 		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
 		eventTypeDatabase.update(eventType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveEvent(Event event, boolean force) throws DatabaseException, VersionCollisionException {
+	public void saveEvent(Event event, boolean force) throws ApplicationException {
 		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
 		eventDatabase.update(event, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveEventSource(EventSource eventSource, boolean force) throws DatabaseException, VersionCollisionException {
+	public void saveEventSource(EventSource eventSource, boolean force) throws ApplicationException {
 		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
 		eventSourceDatabase.update(eventSource, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
@@ -155,17 +155,17 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 
 
-	public void saveEventTypes(Collection collection, boolean force) throws DatabaseException, VersionCollisionException {
+	public void saveEventTypes(Collection collection, boolean force) throws ApplicationException {
 		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
 		eventTypeDatabase.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveEvents(Collection collection, boolean force) throws DatabaseException, VersionCollisionException {
+	public void saveEvents(Collection collection, boolean force) throws ApplicationException {
 		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
 		eventDatabase.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveEventSources(Collection collection, boolean force) throws DatabaseException, VersionCollisionException {
+	public void saveEventSources(Collection collection, boolean force) throws ApplicationException {
 		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
 		eventSourceDatabase.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
@@ -173,7 +173,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 
 
-	public Set refresh(Set storableObjects) throws DatabaseException {
+	public Set refresh(Set storableObjects) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
 

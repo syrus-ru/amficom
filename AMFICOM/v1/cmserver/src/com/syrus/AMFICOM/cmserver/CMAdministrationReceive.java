@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationReceive.java,v 1.4 2005/02/14 14:29:22 arseniy Exp $
+ * $Id: CMAdministrationReceive.java,v 1.5 2005/02/24 15:21:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,21 +24,20 @@ import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/14 14:29:22 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/24 15:21:32 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -62,10 +61,6 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 		catch (IllegalObjectEntityException e) {
 			Log.errorException(e);
@@ -101,10 +96,6 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
-		catch (IllegalDataException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
 		catch (IllegalObjectEntityException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e.getMessage());
@@ -134,10 +125,6 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 		catch (IllegalObjectEntityException e) {
 			Log.errorException(e);
@@ -177,10 +164,6 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
-		catch (IllegalDataException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
 		catch (IllegalObjectEntityException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e.getMessage());
@@ -214,10 +197,6 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 		catch (IllegalObjectEntityException e) {
 			Log.errorException(e);
@@ -257,10 +236,6 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
-		catch (IllegalDataException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
 		catch (IllegalObjectEntityException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e.getMessage());
@@ -294,10 +269,6 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 		catch (IllegalObjectEntityException e) {
 			Log.errorException(e);
@@ -336,10 +307,6 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 		catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 		catch (IllegalObjectEntityException e) {
 			Log.errorException(e);

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.59 2005/02/24 10:08:00 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.60 2005/02/24 15:21:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
@@ -65,7 +64,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/02/24 10:08:00 $
+ * @version $Revision: 1.60 $, $Date: 2005/02/24 15:21:52 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -313,11 +312,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 					transceiver.start();
 					transceivers.put(kisId, transceiver);
 					Log.debugMessage("Started transceiver for KIS '" + kisId + "'", Log.DEBUGLEVEL07);
-				} catch (DatabaseException e) {
-					// TODO Auto-generated catch block
-					Log.errorException(e);
-				} catch (CommunicationException e) {
-					// TODO Auto-generated catch block
+				} catch (ApplicationException e) {
 					Log.errorException(e);
 				}
 			}
