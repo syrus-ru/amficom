@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.17 2005/02/02 15:17:13 krupenn Exp $
+ * $Id: Map.java,v 1.18 2005/02/11 15:14:50 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,8 +40,8 @@ import java.util.Set;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/02/02 15:17:13 $
+ * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2005/02/11 15:14:50 $
  * @module map_v1
  */
 public class Map extends StorableObject {
@@ -176,15 +176,16 @@ public class Map extends StorableObject {
 
 	protected Map(final Identifier id, 
 				  final Identifier creatorId, 
+				  final long version,
 				  final Identifier domainId, 
 				  final String name, 
 				  final String description) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
+		super(id,
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version);
 		this.domainId = domainId;
 		this.name = name;
 		this.description = description;
@@ -195,8 +196,6 @@ public class Map extends StorableObject {
 		this.physicalLinks = new LinkedList();
 		this.marks = new LinkedList();
 		this.collectors = new LinkedList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.mapDatabase = MapDatabaseContext.getMapDatabase();
 	}
@@ -224,12 +223,15 @@ public class Map extends StorableObject {
 
 		try 
 		{
-			return new Map(
+			Map map = new Map(
 				IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAP_ENTITY_CODE),
 				creatorId,
+				0L,
 				domainId,
 				name,
 				description);
+			map.changed = true;
+			return map;
 		} catch (IllegalObjectEntityException e) 
 		{
 			throw new CreateObjectException("Map.createInstance | cannot generate identifier ", e);
@@ -302,7 +304,7 @@ public class Map extends StorableObject {
 	
 	public void setCollectors(List collectors) {
 		this.setCollectors0(collectors);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public String getDescription() {
@@ -315,7 +317,7 @@ public class Map extends StorableObject {
 	
 	public void setDescription(String description) {
 		this.setDescription0(description);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}	
 	
 	public Identifier getDomainId() {
@@ -328,7 +330,7 @@ public class Map extends StorableObject {
 	
 	public void setDomainId(Identifier domainId) {
 		this.setDomainId0(domainId);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public List getMarks() {
@@ -343,7 +345,7 @@ public class Map extends StorableObject {
 	
 	public void setMarks(List marks) {
 		this.setMarks0(marks);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public String getName() {
@@ -356,7 +358,7 @@ public class Map extends StorableObject {
 	
 	public void setName(String name) {
 		this.setName0(name);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public List getNodeLinks() {
@@ -371,7 +373,7 @@ public class Map extends StorableObject {
 	
 	public void setNodeLinks(List nodeLinks) {
 		this.setNodeLinks0(nodeLinks);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public List getPhysicalLinks() {
@@ -382,12 +384,12 @@ public class Map extends StorableObject {
 		this.physicalLinks.clear();
 		if (physicalLinks != null)
 			this.physicalLinks.addAll(physicalLinks);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public void setPhysicalLinks(List physicalLinks) {
 		this.setPhysicalLinks0(physicalLinks);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public List getSiteNodes() {
@@ -402,7 +404,7 @@ public class Map extends StorableObject {
 	
 	public void setSiteNodes(List siteNodes) {
 		this.setSiteNodes0(siteNodes);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public List getTopologicalNodes() {
@@ -417,20 +419,22 @@ public class Map extends StorableObject {
 	
 	public void setTopologicalNodes(List topologicalNodes) {
 		this.setTopologicalNodes0(topologicalNodes);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
-											  Identifier modifierId,											  
+											  Identifier modifierId,
+											  long version,
 											  String name,
 											  String description,
 											  Identifier domainId) {
 			super.setAttributes(created,
 					modified,
 					creatorId,
-					modifierId);
+					modifierId,
+					version);
 			this.name = name;
 			this.description = description;
 			this.domainId = domainId;
@@ -461,7 +465,7 @@ public class Map extends StorableObject {
 			this.marks.add(node);
 		node.setMap(this);
 		node.setRemoved(false);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	/**
@@ -477,7 +481,7 @@ public class Map extends StorableObject {
 		else if (node instanceof Mark)
 			this.marks.remove(node);
 		node.setRemoved(true);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	/**
@@ -550,7 +554,7 @@ public class Map extends StorableObject {
 		this.collectors.add(collector);
 		collector.setMap(this);
 		collector.setRemoved(false);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	/**
@@ -561,7 +565,7 @@ public class Map extends StorableObject {
 		collector.setSelected(false);
 		this.collectors.remove(collector);
 		collector.setRemoved(true);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	/**
@@ -605,7 +609,7 @@ public class Map extends StorableObject {
 		this.physicalLinks.add(physicalLink);
 		physicalLink.setMap(this);
 		physicalLink.setRemoved(false);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	/**
@@ -621,7 +625,7 @@ public class Map extends StorableObject {
 		Collector coll = getCollector(physicalLink);
 		if (coll != null)
 			coll.removePhysicalLink(physicalLink);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	/**
@@ -663,7 +667,7 @@ public class Map extends StorableObject {
 		this.nodeLinks.add(nodeLink);
 		nodeLink.setMap(this);
 		nodeLink.setRemoved(false);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	/**
@@ -674,7 +678,7 @@ public class Map extends StorableObject {
 		nodeLink.setSelected(false);
 		this.nodeLinks.remove(nodeLink);
 		nodeLink.setRemoved(true);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	/**
@@ -790,6 +794,7 @@ public class Map extends StorableObject {
 			return new Map(
 				id,
 				creatorId,
+				0L,
 				domainId,
 				name,
 				description);

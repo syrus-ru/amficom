@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLink.java,v 1.22 2005/02/09 12:50:11 bob Exp $
+ * $Id: NodeLink.java,v 1.23 2005/02/11 15:14:51 bob Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -44,7 +44,7 @@ import java.util.List;
  * не живут сами по себе, а вход€т в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bob $
- * @version $Revision: 1.22 $, $Date: 2005/02/09 12:50:11 $
+ * @version $Revision: 1.23 $, $Date: 2005/02/11 15:14:51 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements Characterized, MapElement {
@@ -124,17 +124,18 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 
 	protected NodeLink(final Identifier id,
 			final Identifier creatorId,
+			final long version,
 			final String name,
 			final PhysicalLink physicalLink,
 			final AbstractNode startNode,
 			final AbstractNode endNode,
 			final double length) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
+		super(id,
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version);
 		this.name = name;
 		this.physicalLink = physicalLink;
 		this.startNode = startNode;
@@ -142,8 +143,6 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		this.length = length;
 
 		this.characteristics = new LinkedList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.nodeLinkDatabase = MapDatabaseContext.getNodeLinkDatabase();
 
@@ -189,14 +188,17 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			return new NodeLink(
+			NodeLink nodeLink = new NodeLink(
 				IdentifierPool.getGeneratedIdentifier(ObjectEntities.NODE_LINK_ENTITY_CODE),
 				creatorId,
+				0L,
 				name,
 				physicalLink,
 				starNode,
 				endNode,
 				length);
+			nodeLink.changed = true;
+			return nodeLink;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("NodeLink.createInstance | cannot generate identifier ", e);
 		}
@@ -233,13 +235,13 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 	public void addCharacteristic(Characteristic characteristic)
 	{
 		this.characteristics.add(characteristic);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public void removeCharacteristic(Characteristic characteristic)
 	{
 		this.characteristics.remove(characteristic);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	protected void setCharacteristics0(final List characteristics) {
@@ -250,7 +252,7 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 	
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public AbstractNode getEndNode() {
@@ -263,7 +265,7 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 	
 	public void setEndNode(AbstractNode endNode) {
 		this.setEndNode0(endNode);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public double getLength() {
@@ -276,7 +278,7 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 	
 	public void setLength(double length) {
 		this.setLength0(length);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public String getName() {
@@ -289,7 +291,7 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 	
 	public void setName(String name) {
 		this.setName0(name);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public PhysicalLink getPhysicalLink() {
@@ -306,7 +308,7 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 	
 	public void setPhysicalLink(PhysicalLink physicalLink) {
 		this.setPhysicalLink0(physicalLink);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public AbstractNode getStartNode() {
@@ -319,13 +321,14 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 	
 	public void setStartNode(AbstractNode startNode) {
 		this.setStartNode0(startNode);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
-											  Identifier modifierId,											  
+											  Identifier modifierId,
+											  long version,
 											  String name,
 											  PhysicalLink physicalLink,
 											  AbstractNode startNode,
@@ -334,7 +337,8 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 			super.setAttributes(created,
 					modified,
 					creatorId,
-					modifierId);
+					modifierId,
+					version);
 			this.name = name;
 			this.physicalLink = physicalLink;
 			this.startNode = startNode;
@@ -527,6 +531,7 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
   			NodeLink nodeLink = new NodeLink(
   					id, 
   					creatorId, 
+  					0L,
   					name,
   					physicalLink,
   					startNode,

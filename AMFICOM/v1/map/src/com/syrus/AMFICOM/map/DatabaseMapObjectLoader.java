@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMapObjectLoader.java,v 1.4 2004/12/09 13:52:27 bob Exp $
+ * $Id: DatabaseMapObjectLoader.java,v 1.5 2005/02/11 15:14:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/09 13:52:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/11 15:14:50 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -405,8 +406,8 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			CommunicationException {
 		CollectorDatabase database = (CollectorDatabase) MapDatabaseContext.getCollectorDatabase();
 		try {
-			database.update(collector, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(collector, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveCollector | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveCollector | UpdateObjectException: "
@@ -422,8 +423,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			CommunicationException {
 		MapDatabase database = (MapDatabase) MapDatabaseContext.getMapDatabase();
 		try {
-			database.update(map, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
-				null);
+			database.update(map, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveMap | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveMap | UpdateObjectException: " + e.getMessage());
@@ -437,8 +437,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			CommunicationException {
 		MarkDatabase database = (MarkDatabase) MapDatabaseContext.getMarkDatabase();
 		try {
-			database.update(mark, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
-				null);
+			database.update(mark, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveMark | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveMark | UpdateObjectException: " + e.getMessage());
@@ -452,8 +451,8 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			CommunicationException {
 		NodeLinkDatabase database = (NodeLinkDatabase) MapDatabaseContext.getNodeLinkDatabase();
 		try {
-			database.update(nodeLink,
-				force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(nodeLink, SessionContext.getAccessIdentity().getUserId(), 
+				force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveNodeLink | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveNodeLink | UpdateObjectException: "
@@ -469,8 +468,8 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			DatabaseException, CommunicationException {
 		PhysicalLinkDatabase database = (PhysicalLinkDatabase) MapDatabaseContext.getPhysicalLinkDatabase();
 		try {
-			database.update(physicalLink, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(physicalLink, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.savePhysicalLink | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.savePhysicalLink | UpdateObjectException: "
@@ -486,8 +485,8 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			throws VersionCollisionException, DatabaseException, CommunicationException {
 		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) MapDatabaseContext.getPhysicalLinkTypeDatabase();
 		try {
-			database.update(physicalLinkType, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(physicalLinkType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.savePhysicalLinkType | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.savePhysicalLinkType | UpdateObjectException: "
@@ -504,8 +503,8 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			CommunicationException {
 		SiteNodeDatabase database = (SiteNodeDatabase) MapDatabaseContext.getSiteNodeDatabase();
 		try {
-			database.update(siteNode,
-				force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(siteNode, SessionContext.getAccessIdentity().getUserId(), 
+				force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveSiteNode | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveSiteNode | UpdateObjectException: "
@@ -521,8 +520,8 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			DatabaseException, CommunicationException {
 		SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) MapDatabaseContext.getSiteNodeTypeDatabase();
 		try {
-			database.update(siteNodeType, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(siteNodeType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveSiteNodeType | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveSiteNodeType | UpdateObjectException: "
@@ -538,8 +537,8 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			DatabaseException, CommunicationException {
 		TopologicalNodeDatabase database = (TopologicalNodeDatabase) MapDatabaseContext.getTopologicalNodeDatabase();
 		try {
-			database.update(topologicalNode, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(topologicalNode, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveTopologicalNode | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveTopologicalNode | UpdateObjectException: "
@@ -557,8 +556,8 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			CommunicationException {
 		CollectorDatabase database = (CollectorDatabase) MapDatabaseContext.getCollectorDatabase();
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveCollectors | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveCollectors | UpdateObjectException: "
@@ -575,8 +574,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			CommunicationException {
 		MapDatabase database = (MapDatabase) MapDatabaseContext.getMapDatabase();
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
-				null);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveMaps | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveMaps | UpdateObjectException: " + e.getMessage());
@@ -591,8 +589,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			CommunicationException {
 		MarkDatabase database = (MarkDatabase) MapDatabaseContext.getMarkDatabase();
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK,
-				null);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveMarks | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveMarks | UpdateObjectException: " + e.getMessage());
@@ -607,7 +604,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		NodeLinkDatabase database = (NodeLinkDatabase) MapDatabaseContext.getNodeLinkDatabase();
 		try {
 			database.update(list,
-				force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+				SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveNodeLinks | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveNodeLinks | UpdateObjectException: "
@@ -623,8 +620,8 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			CommunicationException {
 		PhysicalLinkDatabase database = (PhysicalLinkDatabase) MapDatabaseContext.getPhysicalLinkDatabase();
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.savePhysicalLinks | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.savePhysicalLinks | UpdateObjectException: "
@@ -640,8 +637,8 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			CommunicationException {
 		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) MapDatabaseContext.getPhysicalLinkTypeDatabase();
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.savePhysicalLinkTypes | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.savePhysicalLinkTypes | UpdateObjectException: "
@@ -659,7 +656,7 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 		SiteNodeDatabase database = (SiteNodeDatabase) MapDatabaseContext.getSiteNodeDatabase();
 		try {
 			database.update(list,
-				force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+				SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveSiteNodes | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveSiteNodes | UpdateObjectException: "
@@ -675,8 +672,8 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			CommunicationException {
 		SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) MapDatabaseContext.getSiteNodeTypeDatabase();
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveSiteNodeTypes | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveSiteNodeType | UpdateObjectException: "
@@ -692,8 +689,8 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			CommunicationException {
 		TopologicalNodeDatabase database = (TopologicalNodeDatabase) MapDatabaseContext.getTopologicalNodeDatabase();
 		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE
-					: StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMapObjectLoader.saveTopologicalNodes | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMapObjectLoader.saveTopologicalNodes | UpdateObjectException: "

@@ -1,5 +1,5 @@
 /**
- * $Id: Collector.java,v 1.21 2005/02/09 12:50:11 bob Exp $
+ * $Id: Collector.java,v 1.22 2005/02/11 15:14:50 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import java.util.List;
  * в него линий. Линии не обязаны быть связными.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.21 $, $Date: 2005/02/09 12:50:11 $
+ * @version $Revision: 1.22 $, $Date: 2005/02/11 15:14:50 $
  * @module map_v1
  */
 public class Collector 
@@ -117,21 +117,20 @@ public class Collector
 
 	protected Collector(final Identifier id,
 					final Identifier creatorId,
+					final long version,
 					final String name,
 					final String description) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
+		super(id,
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version);
 		this.name = name;
 		this.description = description;		
 
 		this.physicalLinks = new LinkedList();
 		this.characteristics = new LinkedList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
 	}
@@ -158,11 +157,14 @@ public class Collector
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			return new Collector(
+			Collector collector = new Collector(
 				IdentifierPool.getGeneratedIdentifier(ObjectEntities.COLLECTOR_ENTITY_CODE),
 				creatorId,
+				0L,
 				name,
 				description);
+			collector.changed = true;
+			return collector;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Collector.createInstance | cannot generate identifier ", e);
 		}
@@ -199,13 +201,13 @@ public class Collector
 	public void addCharacteristic(Characteristic characteristic)
 	{
 		this.characteristics.add(characteristic);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public void removeCharacteristic(Characteristic characteristic)
 	{
 		this.characteristics.remove(characteristic);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	protected void setCharacteristics0(final List characteristics) {
@@ -216,7 +218,7 @@ public class Collector
 	
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public String getDescription() {
@@ -229,7 +231,7 @@ public class Collector
 	
 	public void setDescription(String description) {
 		this.setDescription0(description);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public String getName() {
@@ -242,7 +244,7 @@ public class Collector
 	
 	public void setName(String name) {
 		this.setName0(name);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public List getPhysicalLinks() {
@@ -257,19 +259,21 @@ public class Collector
 	
 	public void setPhysicalLinks(List physicalLinks) {
 		this.setPhysicalLinks0(physicalLinks);
-		super.currentVersion = super.getNextVersion();		
+		this.changed = true;		
 	}
 	
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
-											  Identifier modifierId,											  
+											  Identifier modifierId,		
+											  long version,
 											  String name,
 											  String description) {
 			super.setAttributes(created,
 					modified,
 					creatorId,
-					modifierId);
+					modifierId,
+					version);
 			this.name = name;
 			this.description = description;					
 	}
@@ -281,7 +285,7 @@ public class Collector
 	public void removePhysicalLink(PhysicalLink link)
 	{
 		this.physicalLinks.remove(link);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	/**
@@ -291,7 +295,7 @@ public class Collector
 	public void addPhysicalLink(PhysicalLink link)
 	{
 		this.physicalLinks.add(link);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	/**
@@ -451,7 +455,7 @@ public class Collector
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Collector collector = new Collector(id, creatorId, name, description);
+			Collector collector = new Collector(id, creatorId, 0L, name, description);
 			for (Iterator it = physicalLinkIds.iterator(); it.hasNext();) {
 				Identifier physicalLinkId = (Identifier) it.next();
 				PhysicalLink physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(physicalLinkId,

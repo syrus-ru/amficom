@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.10 2005/02/07 10:33:10 bob Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.11 2005/02/11 15:14:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -30,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/07 10:33:10 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/11 15:14:51 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -138,7 +139,7 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
 		PhysicalLink physicalLink = (storableObject == null) ? 
-				new PhysicalLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, null, null, null, 
+				new PhysicalLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null, 
 						null, null, null, 0, 0, false, false) : 
 					fromStorableObject(storableObject);
 				
@@ -161,6 +162,7 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+							   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),							   
 							   type,
@@ -207,34 +209,34 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		PhysicalLink physicalLink = this.fromStorableObject(storableObject);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(physicalLink, false);
+				super.checkAndUpdateEntity(physicalLink, modifierId, false);
 				characteristicDatabase.updateCharacteristics(physicalLink);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(physicalLink, true);
+				super.checkAndUpdateEntity(physicalLink, modifierId, true);
 				characteristicDatabase.updateCharacteristics(physicalLink);
 				return;
 		}
 	}
 	
 	
-	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 		VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				characteristicDatabase.updateCharacteristics(storableObjects);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);		
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
 				characteristicDatabase.updateCharacteristics(storableObjects);
 				return;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.9 2005/02/07 10:33:10 bob Exp $
+ * $Id: NodeLinkDatabase.java,v 1.10 2005/02/11 15:14:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -31,7 +32,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/07 10:33:10 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/11 15:14:51 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -112,7 +113,7 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
 		NodeLink nodeLink = (storableObject == null) ? 
-				new NodeLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, null, null, 0.0) : 
+				new NodeLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, 0.0) : 
 					fromStorableObject(storableObject);
 
 		PhysicalLink physicalLink;
@@ -135,6 +136,7 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+							   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 							   physicalLink,
 							   startNode,
@@ -174,34 +176,34 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		NodeLink nodeLink = this.fromStorableObject(storableObject);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(nodeLink, false);
+				super.checkAndUpdateEntity(nodeLink, modifierId, false);
 				characteristicDatabase.updateCharacteristics(nodeLink);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(nodeLink, true);
+				super.checkAndUpdateEntity(nodeLink, modifierId, true);
 				characteristicDatabase.updateCharacteristics(nodeLink);
 				return;
 		}
 	}
 	
 	
-	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 		VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				characteristicDatabase.updateCharacteristics(storableObjects);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);		
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
 				characteristicDatabase.updateCharacteristics(storableObjects);
 				return;
 		}

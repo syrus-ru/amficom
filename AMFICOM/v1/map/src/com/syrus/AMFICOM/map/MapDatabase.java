@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.13 2005/02/07 10:33:10 bob Exp $
+ * $Id: MapDatabase.java,v 1.14 2005/02/11 15:14:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/07 10:33:10 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/11 15:14:51 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -284,13 +284,14 @@ public class MapDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
 		Map map = (storableObject == null) ? 
-				new Map(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, null) : 
+				new Map(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null) : 
 					fromStorableObject(storableObject);				
 		
 		map.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+							   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 							   DatabaseIdentifier.getIdentifier(resultSet, MapWrapper.COLUMN_DOMAIN_ID));		
@@ -341,17 +342,17 @@ public class MapDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		Map map = this.fromStorableObject(storableObject);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(map, false);
+				super.checkAndUpdateEntity(map, modifierId, false);
 				characteristicDatabase.updateCharacteristics(map);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(map, true);
+				super.checkAndUpdateEntity(map, modifierId, true);
 				characteristicDatabase.updateCharacteristics(map);
 				return;
 		}
@@ -365,17 +366,17 @@ public class MapDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 		VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				characteristicDatabase.updateCharacteristics(storableObjects);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);		
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
 				characteristicDatabase.updateCharacteristics(storableObjects);
 				return;
 		}

@@ -1,12 +1,10 @@
 /**
- * $Id: PhysicalLinkType.java,v 1.17 2005/02/09 12:50:11 bob Exp $
+ * $Id: PhysicalLinkType.java,v 1.18 2005/02/11 15:14:51 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
  *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.map;
@@ -41,7 +39,7 @@ import java.util.List;
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
  * @author $Author: bob $
- * @version $Revision: 1.17 $, $Date: 2005/02/09 12:50:11 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/11 15:14:51 $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterized {
@@ -108,24 +106,23 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 
 	protected PhysicalLinkType(final Identifier id,
 						   final Identifier creatorId,
+						   final long version,
 						   final String codename,
 						   final String name,
 						   final String description,
 						   final IntDimension bindingDimension) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
-		super.codename = codename;
+		super(id,
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version,
+			codename,
+			description);
 		this.name = name;
-		this.description = description;
 		this.bindingDimension = new IntDimension(bindingDimension.getWidth(), bindingDimension.getHeight());
 
 		this.characteristics = new LinkedList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.physicalLinkTypeDatabase = MapDatabaseContext.getPhysicalLinkTypeDatabase();
 	}
@@ -151,12 +148,15 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			return new PhysicalLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE),
+			PhysicalLinkType physicalLinkType = new PhysicalLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE),
 				creatorId,
+				0L,
 				codename,
 				name,
 				description,
 				bindingDimension);
+			physicalLinkType.changed = true;
+			return physicalLinkType;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("PhysicalLinkType.createInstance | cannot generate identifier ", e);
 		}
@@ -168,13 +168,13 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 	
 	public void addCharacteristic(Characteristic characteristic){
 		this.characteristics.add(characteristic);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public void removeCharacteristic(Characteristic characteristic)
 	{
 		this.characteristics.remove(characteristic);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public List getDependencies() {
@@ -204,7 +204,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 	
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public String getDescription() {
@@ -217,7 +217,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 	
 	public void setDescription(String description) {
 		this.setDescription0(description);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public String getName() {
@@ -230,13 +230,14 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 	
 	public void setName(String name) {
 		this.setName0(name);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
+											  long version,
 											  String codename,
 											  String name,
 											  String description,
@@ -246,6 +247,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 					modified,
 					creatorId,
 					modifierId,
+					version,
 					codename,
 					description);
 			this.bindingDimension = new IntDimension(width, height);
@@ -260,7 +262,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 	
 	public void setBindingDimension(IntDimension bindingDimension){
 		this.setBindingDimension0(bindingDimension);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 

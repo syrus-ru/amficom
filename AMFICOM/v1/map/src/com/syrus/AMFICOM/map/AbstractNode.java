@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNode.java,v 1.10 2005/02/02 14:48:45 krupenn Exp $
+ * $Id: AbstractNode.java,v 1.11 2005/02/11 15:14:50 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,8 +27,8 @@ import java.util.List;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/02/02 14:48:45 $
+ * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/02/11 15:14:50 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -90,6 +90,7 @@ public abstract class AbstractNode
 			Date modified,
 			Identifier creatorId,
 			Identifier modifierId,
+			long version,
 			String name,
 			String desription,
 			double longitude,
@@ -100,6 +101,7 @@ public abstract class AbstractNode
 			modified,
 			creatorId,
 			modifierId,
+			version,
 			name,
 			desription,
 			new DoublePoint(longitude, latitude));
@@ -110,10 +112,11 @@ public abstract class AbstractNode
 			Date modified,
 			Identifier creatorId,
 			Identifier modifierId,
+			long version,
 			String name,
 			String desription,
 			DoublePoint location) {
-		super(id, created, modified, creatorId, modifierId);
+		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = desription;
 		this.location.setLocation(location.getX(), location.getY());
@@ -131,7 +134,7 @@ public abstract class AbstractNode
 	
 	public void setImageId(Identifier imageId) {
 		this.imageId = imageId;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public List getCharacteristics() {
@@ -141,13 +144,13 @@ public abstract class AbstractNode
 	public void addCharacteristic(Characteristic ch)
 	{
 		this.characteristics.add(ch);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public void removeCharacteristic(Characteristic ch)
 	{
 		this.characteristics.remove(ch);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	/**
@@ -183,7 +186,7 @@ public abstract class AbstractNode
 	
 	public void setDescription(String description) {
 		this.setDescription0(description);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public String getName() {
@@ -196,7 +199,7 @@ public abstract class AbstractNode
 	
 	public void setName(String name) {
 		this.setName0(name);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	protected void setCharacteristics0(final List characteristics) {
@@ -207,7 +210,7 @@ public abstract class AbstractNode
 	
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public DoublePoint getLocation(){
@@ -217,7 +220,7 @@ public abstract class AbstractNode
 	public void setLocation(DoublePoint location)
 	{
 		this.location.setLocation(location.getX(), location.getY());
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	/**

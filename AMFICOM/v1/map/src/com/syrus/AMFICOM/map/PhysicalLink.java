@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.27 2005/02/09 15:12:53 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.28 2005/02/11 15:14:51 bob Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -51,8 +51,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * ѕредуствновленными €вл€ютс€  два типа - 
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/02/09 15:12:53 $
+ * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2005/02/11 15:14:51 $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -172,6 +172,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 
 	protected PhysicalLink(final Identifier id,
 						   final Identifier creatorId,
+						   final long version,
 						   final String name, 
 						   final String description,
 						   final PhysicalLinkType physicalLinkType,
@@ -184,12 +185,12 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 						   final int dimensionY,
 						   final boolean leftToRight,
 						   final boolean topToBottom) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
+		super(id,
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version);
 		this.name = name;
 		this.description = description;
 		this.physicalLinkType = physicalLinkType;
@@ -205,8 +206,6 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 
 		this.characteristics = new LinkedList();
 		this.nodeLinks = new LinkedList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
 
@@ -269,9 +268,10 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			return new PhysicalLink(
+			PhysicalLink physicalLink = new PhysicalLink(
 				IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE),
 				creatorId,
+				0L,
 				name, 
 				description,
 				physicalLinkType,
@@ -284,6 +284,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 				dimensionY,
 				leftToRight,
 				topToBottom);
+			physicalLink.changed = true;
+			return physicalLink;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("PhysicalLink.createInstance | cannot generate identifier ", e);
 		}
@@ -327,7 +329,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setType(StorableObjectType type) {
 		this.physicalLinkType = (PhysicalLinkType )type;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public List getCharacteristics() {
@@ -337,13 +339,13 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	public void addCharacteristic(Characteristic characteristic)
 	{
 		this.characteristics.add(characteristic);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public void removeCharacteristic(Characteristic characteristic)
 	{
 		this.characteristics.remove(characteristic);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	protected void setCharacteristics0(final List characteristics) {
@@ -354,7 +356,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public String getBuilding() {
@@ -367,7 +369,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setBuilding(String building) {
 		this.setBuilding0(building);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public String getCity() {
@@ -380,7 +382,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setCity(String city) {
 		this.setCity0(city);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}	
 	
 	
@@ -394,7 +396,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setDescription(String description) {
 		this.setDescription0(description);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public int getDimensionX() {
@@ -403,7 +405,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setDimensionX(int dimensionX) {
 		this.dimensionX = dimensionX;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public int getDimensionY() {
@@ -412,7 +414,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setDimensionY(int dimensionY) {
 		this.dimensionY = dimensionY;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}	
 	
 	public AbstractNode getEndNode() {
@@ -426,7 +428,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setEndNode(AbstractNode endNode) {
 		this.setEndNode0(endNode);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public boolean isLeftToRight() {
@@ -439,7 +441,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setLeftToRight(boolean leftToRight) {
 		this.setLeftToRight0(leftToRight);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public String getName() {
@@ -448,7 +450,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setPhysicalLinkType(PhysicalLinkType physicalLinkType) {
 		this.physicalLinkType = physicalLinkType;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	protected void setName0(String name) {
@@ -457,7 +459,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setName(String name) {
 		this.setName0(name);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public List getNodeLinks() {
@@ -469,7 +471,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		if (nodeLinks != null)
 			this.nodeLinks.addAll(nodeLinks);
 		this.nodeLinksSorted = false;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public AbstractNode getStartNode() {
@@ -484,7 +486,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setStartNode(AbstractNode startNode) {
 		this.setStartNode0(startNode);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public String getStreet() {
@@ -497,7 +499,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setStreet(String street) {
 		this.setStreet0(street);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public boolean isTopToBottom() {
@@ -510,13 +512,14 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setTopToBottom(boolean topToBottom) {
 		this.setTopToBottom0(topToBottom);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
-											  Identifier modifierId,											  
+											  Identifier modifierId,	
+											  long version,
 											  String name,
 											  String description,
 											  PhysicalLinkType physicalLinkType,
@@ -532,7 +535,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 			super.setAttributes(created,
 					modified,
 					creatorId,
-					modifierId);
+					modifierId,
+					version);
 			this.name = name;
 			this.description = description;
 			this.physicalLinkType = physicalLinkType;
@@ -582,7 +586,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	{
 		this.nodeLinks.remove(nodeLink);
 		this.nodeLinksSorted = false;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	/**
@@ -594,7 +598,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	{
 		this.nodeLinks.add(addNodeLink);
 		this.nodeLinksSorted = false;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 
@@ -605,7 +609,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	{	
 		this.nodeLinks.clear();
 		this.nodeLinksSorted = false;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	/**
@@ -991,7 +995,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
   					endNodeId, true);
   			PhysicalLink link = new PhysicalLink(
   					id, 
-  					creatorId, 
+  					creatorId,
+  					0L,
   					name,
   					description,
   					physicalLinkType, 

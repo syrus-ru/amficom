@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNode.java,v 1.19 2005/02/09 12:50:11 bob Exp $
+ * $Id: TopologicalNode.java,v 1.20 2005/02/11 15:14:51 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import java.util.List;
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
  * @author $Author: bob $
- * @version $Revision: 1.19 $, $Date: 2005/02/09 12:50:11 $
+ * @version $Revision: 1.20 $, $Date: 2005/02/11 15:14:51 $
  * @module map_v1
  */
 public class TopologicalNode extends AbstractNode {
@@ -112,52 +112,50 @@ public class TopologicalNode extends AbstractNode {
 
 	protected TopologicalNode(final Identifier id,
 			final Identifier creatorId,
+			final long version, 
 			String name,
 			String description,
 			double longitude,
 			double latitude,
 			boolean active) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
-		super.name = name;
-		super.description = description;
-		super.location = new DoublePoint(longitude, latitude);
+		super(id,
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version,
+			name,
+			description,
+			new DoublePoint(longitude, latitude));
 		this.active = active;
 
 		this.characteristics = new LinkedList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
 	}
 
 	protected TopologicalNode(final Identifier id,
 			final Identifier creatorId,
+			final long version,
 			String name,
 			String description,
 			PhysicalLink physicalLink,
 			double longitude,
 			double latitude,
 			boolean active) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
-		this.name = name;
-		this.description = description;
+		super(id,
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version,
+			name,
+			description,
+			new DoublePoint(longitude, latitude));
 		this.physicalLink = physicalLink;
-		this.location = new DoublePoint(longitude, latitude);
 		this.active = active;
 
 		this.characteristics = new LinkedList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
 
@@ -199,17 +197,19 @@ public class TopologicalNode extends AbstractNode {
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			Identifier id =
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE);
-			return new TopologicalNode(
-				id,
+			TopologicalNode topologicalNode = new TopologicalNode(
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE),
 				creatorId,
+				0L,
 				name,
 				description,
 				physicalLink,
 				location.getX(),
 				location.getY(),
 				false);
+			topologicalNode.changed = true;
+			return topologicalNode;
+			
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("TopologicalNode.createInstance | cannot generate identifier ", e);
 		}
@@ -235,7 +235,7 @@ public class TopologicalNode extends AbstractNode {
 				description,
 				physicalLink,
 				location);
-	}
+		}
 
 	public static TopologicalNode createInstance(
 			final Identifier creatorId,
@@ -303,7 +303,7 @@ public class TopologicalNode extends AbstractNode {
 	 */
 	public void setActive(boolean active) {
 		this.active = active;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public PhysicalLink getPhysicalLink() {
@@ -318,7 +318,8 @@ public class TopologicalNode extends AbstractNode {
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
-											  Identifier modifierId,											  
+											  Identifier modifierId,	
+											  long version,
 											  String name,
 											  String description,
 											  double longitude,
@@ -327,7 +328,8 @@ public class TopologicalNode extends AbstractNode {
 			super.setAttributes(created,
 					modified,
 					creatorId,
-					modifierId);
+					modifierId,
+					version);
 			this.name = name;
 			this.description = description;
 			this.location.setLocation(longitude, latitude);
@@ -426,12 +428,14 @@ public class TopologicalNode extends AbstractNode {
 				physicalLinkId, false);
 			TopologicalNode node = new TopologicalNode(
 					id, 
-					creatorId, 
+					creatorId,
+					0L,
 					name,
 					description,
 					x, 
 					y,
 					active);
+			node.changed = true;
 			node.setPhysicalLink(physicalLink);
 
 			return node;

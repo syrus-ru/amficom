@@ -1,5 +1,5 @@
 /**
- * $Id: Mark.java,v 1.18 2005/02/09 12:50:11 bob Exp $
+ * $Id: Mark.java,v 1.19 2005/02/11 15:14:51 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import java.util.ListIterator;
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bob $
- * @version $Revision: 1.18 $, $Date: 2005/02/09 12:50:11 $
+ * @version $Revision: 1.19 $, $Date: 2005/02/11 15:14:51 $
  * @module map_v1
  */
 public class Mark extends AbstractNode implements Characterized {
@@ -130,6 +130,7 @@ public class Mark extends AbstractNode implements Characterized {
 
 	protected Mark(final Identifier id, 
 				   final Identifier creatorId, 
+				   final long version,
 				   final String name, 
 				   final String description,
 				   final double longitude, 
@@ -139,15 +140,15 @@ public class Mark extends AbstractNode implements Characterized {
 				   final String city, 
 				   final String street, 
 				   final String building) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
-		super.name = name;
-		super.description = description;
-		super.location = new DoublePoint(longitude, latitude);		
+		super(id,
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version,
+			name,
+			description,
+			new DoublePoint(longitude, latitude));
 		this.physicalLink = physicalLink;
 		this.distance = distance;
 		this.city = city;
@@ -155,8 +156,6 @@ public class Mark extends AbstractNode implements Characterized {
 		this.building = building;
 
 		super.characteristics = new LinkedList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.markDatabase = MapDatabaseContext.getMarkDatabase();
 	}
@@ -206,8 +205,9 @@ public class Mark extends AbstractNode implements Characterized {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new Mark(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MARK_ENTITY_CODE), 
-					creatorId, 
+			Mark mark = new Mark(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MARK_ENTITY_CODE), 
+					creatorId,
+					0L,
 					name,
 					description,
 					longitude, 
@@ -217,6 +217,8 @@ public class Mark extends AbstractNode implements Characterized {
 					city,
 					street,
 					building);
+			mark.changed = true;
+			return mark;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Mark.createInstance | cannot generate identifier ", e);
 		}
@@ -255,7 +257,7 @@ public class Mark extends AbstractNode implements Characterized {
 	
 	public void setBuilding(String building) {
 		this.setBuilding0(building);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public String getCity() {
@@ -268,7 +270,7 @@ public class Mark extends AbstractNode implements Characterized {
 	
 	public void setCity(String city) {
 		this.setCity0(city);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public double getDistance() {
@@ -281,7 +283,7 @@ public class Mark extends AbstractNode implements Characterized {
 	
 	public void setDistance(double distance) {
 		this.setDistance0(distance);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public PhysicalLink getPhysicalLink() {
@@ -294,7 +296,7 @@ public class Mark extends AbstractNode implements Characterized {
 	
 	public void setPhysicalLink(PhysicalLink physicalLink) {
 		this.setPhysicalLink0(physicalLink);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public String getStreet() {
@@ -307,14 +309,15 @@ public class Mark extends AbstractNode implements Characterized {
 	
 	public void setStreet(String street) {
 		this.setStreet0(street);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	protected synchronized void setAttributes(
 			Date created,
 			Date modified,
 			Identifier creatorId,
-			Identifier modifierId,											  
+			Identifier modifierId,
+			long version,
 			String name,
 			String description,
 			double longitude,
@@ -327,7 +330,8 @@ public class Mark extends AbstractNode implements Characterized {
 		super.setAttributes(created,
 				modified,
 				creatorId,
-				modifierId);
+				modifierId,
+				version);
 		super.name = name;
 		super.description = description;
 		super.location.setLocation(longitude, latitude);
@@ -559,7 +563,8 @@ public class Mark extends AbstractNode implements Characterized {
       					physicalLinkId, false);
       			return new Mark(
       					id, 
-      					creatorId, 
+      					creatorId,
+      					0L,
       					name,
       					description,
       					x, 

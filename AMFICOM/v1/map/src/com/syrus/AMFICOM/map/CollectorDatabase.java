@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.13 2005/02/07 10:33:10 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.14 2005/02/11 15:14:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/07 10:33:10 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/11 15:14:50 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -134,13 +134,14 @@ public class CollectorDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
 		Collector collector = (storableObject == null) ? 
-				new Collector(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null) : 
+				new Collector(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null) : 
 					fromStorableObject(storableObject);				
 		
 		collector.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+							   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));		
 		return collector;
@@ -180,17 +181,17 @@ public class CollectorDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		Collector collector = this.fromStorableObject(storableObject);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(collector, false);
+				super.checkAndUpdateEntity(collector, modifierId, false);
 				characteristicDatabase.updateCharacteristics(collector);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(collector, true);
+				super.checkAndUpdateEntity(collector, modifierId, true);
 				characteristicDatabase.updateCharacteristics(collector);
 				return;
 		}
@@ -198,17 +199,17 @@ public class CollectorDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 		VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				characteristicDatabase.updateCharacteristics(storableObjects);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);		
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
 				characteristicDatabase.updateCharacteristics(storableObjects);
 				return;
 		}

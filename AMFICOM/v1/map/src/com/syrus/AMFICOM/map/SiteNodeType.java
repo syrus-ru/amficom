@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeType.java,v 1.14 2005/02/09 12:50:11 bob Exp $
+ * $Id: SiteNodeType.java,v 1.15 2005/02/11 15:14:51 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import java.util.List;
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
  * @author $Author: bob $
- * @version $Revision: 1.14 $, $Date: 2005/02/09 12:50:11 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/11 15:14:51 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterized {
@@ -109,26 +109,25 @@ public class SiteNodeType extends StorableObjectType implements Characterized {
 
 	protected SiteNodeType(final Identifier id,
 			final Identifier creatorId,
+			final long version,
 			final String codename,
 			final String name,
 			final String description,
 			final Identifier imageId,
 			final boolean topological) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
-		super.codename = codename;
-		super.description = description;
+		super(id,
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version,
+			codename,
+			description);
 		this.name = name;
 		this.imageId = imageId;
 		this.topological = topological;
 
 		this.characteristics = new LinkedList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.siteNodeTypeDatabase = MapDatabaseContext.getSiteNodeTypeDatabase();
 	}
@@ -157,14 +156,17 @@ public class SiteNodeType extends StorableObjectType implements Characterized {
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			return new SiteNodeType(
+			SiteNodeType siteNodeType = new SiteNodeType(
 				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE),
 				creatorId,
+				0L,
 				codename,
 				name,
 				description,
 				imageId,
 				isTopological);
+			siteNodeType.changed = true;
+			return siteNodeType;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("SiteNodeType.createInstance | cannot generate identifier ", e);
 		}
@@ -177,13 +179,13 @@ public class SiteNodeType extends StorableObjectType implements Characterized {
 	public void addCharacteristic(Characteristic characteristic)
 	{
 		this.characteristics.add(characteristic);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public void removeCharacteristic(Characteristic characteristic)
 	{
 		this.characteristics.remove(characteristic);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public List getDependencies() {
@@ -224,33 +226,34 @@ public class SiteNodeType extends StorableObjectType implements Characterized {
 	
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public void setDescription(final String description) {
 		super.description = description;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public void setImageId(final Identifier imageId) {
 		this.imageId = imageId;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public void setName(final String name) {
 		this.name = name;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public void setTopological(final boolean topological) {
 		this.topological = topological;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
+											  long version,
 											  String codename,
 											  String name,
 											  String description,
@@ -260,6 +263,7 @@ public class SiteNodeType extends StorableObjectType implements Characterized {
 					modified,
 					creatorId,
 					modifierId,
+					version,
 					codename,
 					description);
 			this.name = name;

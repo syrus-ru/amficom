@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNode.java,v 1.19 2005/02/09 12:50:11 bob Exp $
+ * $Id: SiteNode.java,v 1.20 2005/02/11 15:14:51 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
  * @author $Author: bob $
- * @version $Revision: 1.19 $, $Date: 2005/02/09 12:50:11 $
+ * @version $Revision: 1.20 $, $Date: 2005/02/11 15:14:51 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -130,33 +130,32 @@ public class SiteNode extends AbstractNode implements TypedObject {
 
 	protected SiteNode(final Identifier id,
 			final Identifier creatorId,
+			final long version,
 			final Identifier imageId,
-			String name,
-			String description,
-			SiteNodeType type,
-			double longitude,
-			double latitude,
-			String city,
-			String street,
-			String building) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
+			final String name,
+			final String description,
+			final SiteNodeType type,
+			final double longitude,
+			final double latitude,
+			final String city,
+			final String street,
+			final String building) {
+		super(id,
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version,
+			name,
+			description,
+			new DoublePoint(longitude, latitude));
 		this.imageId = imageId;
 		this.type = type;
-		this.name = name;
-		this.description = description;
-		this.location = new DoublePoint(longitude, latitude);
 		this.city = city;
 		this.street = street;
 		this.building = building;
 
 		this.characteristics = new LinkedList();
-
-		super.currentVersion = super.getNextVersion();
 
 		this.siteNodeDatabase = MapDatabaseContext.getSiteNodeDatabase();
 
@@ -189,9 +188,10 @@ public class SiteNode extends AbstractNode implements TypedObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			return new SiteNode(
+			SiteNode siteNode = new SiteNode(
 				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE),
 				creatorId,
+				0L,
 				siteNodeType.getImageId(),
 				name,
 				description,
@@ -201,6 +201,8 @@ public class SiteNode extends AbstractNode implements TypedObject {
 				city,
 				street,
 				building);
+			siteNode.changed = true;
+			return siteNode;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("SiteNode.createInstance | cannot generate identifier ", e);
 		}
@@ -220,7 +222,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 			location,
 			"",
 			"",
-			"");
+			"");		
 	}
 
 	public static SiteNode importInstance(
@@ -246,9 +248,10 @@ public class SiteNode extends AbstractNode implements TypedObject {
 			|| building == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new SiteNode(
+		SiteNode siteNode = new SiteNode(
 				id,
 				creatorId,
+				0L,
 				type.getImageId(),
 				name,
 				description,
@@ -258,6 +261,8 @@ public class SiteNode extends AbstractNode implements TypedObject {
 				city,
 				street,
 				building);
+		siteNode.changed = true;
+		return siteNode;
 	}
 
 	public List getDependencies() {
@@ -293,7 +298,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	public void setType(StorableObjectType type) {
 		this.type = (SiteNodeType )type;
 		setImageId(this.type.getImageId());
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 
 	public String getBuilding() {
@@ -302,7 +307,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	
 	public void setBuilding(String building) {
 		this.building = building;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public String getCity() {
@@ -311,7 +316,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	
 	public void setCity(String city) {
 		this.city = city;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	public String getStreet() {
@@ -320,13 +325,14 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	
 	public void setStreet(String street) {
 		this.street = street;
-		super.currentVersion = super.getNextVersion();
+		this.changed = true;
 	}
 	
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
-											  Identifier modifierId,											  
+											  Identifier modifierId,	
+											  long version,
 											  String name,
 											  String description,
 											  double longitude,
@@ -339,7 +345,8 @@ public class SiteNode extends AbstractNode implements TypedObject {
 			super.setAttributes(created,
 					modified,
 					creatorId,
-					modifierId);
+					modifierId,
+					version);
 			this.name = name;
 			this.description = description;
 			this.location.setLocation(longitude, latitude);
@@ -480,8 +487,9 @@ public class SiteNode extends AbstractNode implements TypedObject {
 				imageId = ((AbstractImageResource ) list.get(0)).getId();
 
       			return new SiteNode(
-      					id, 
-      					creatorId, 
+      					id,
+      					creatorId,
+      					0L,
       					imageId,
       					name,
       					description,

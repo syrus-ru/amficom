@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMapObjectLoader.java,v 1.1 2005/02/07 16:18:10 krupenn Exp $
+ * $Id: XMLMapObjectLoader.java,v 1.2 2005/02/11 15:14:51 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectXML;
@@ -30,8 +31,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/07 16:18:10 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2005/02/11 15:14:51 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -100,7 +101,7 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 	private void saveStorableObject(StorableObject storableObject) throws CommunicationException {
 		Identifier id = storableObject.getId();
 		try {
-			this.mapXML.updateObject(storableObject);
+			this.mapXML.updateObject(storableObject, SessionContext.getAccessIdentity().getUserId());
 		} catch (UpdateObjectException e) {
 			throw new CommunicationException("XMLMapObjectLoader.save"
 					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
