@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.46 2005/02/11 11:55:22 bob Exp $
+ * $Id: EvaluationType.java,v 1.47 2005/02/14 11:00:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -31,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/02/11 11:55:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.47 $, $Date: 2005/02/14 11:00:52 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -44,10 +46,10 @@ public class EvaluationType extends ActionType {
 
 	public static final String CODENAME_DADARA = "dadara";
 
-	private List inParameterTypes;
-	private List thresholdParameterTypes;
-	private List etalonParameterTypes;
-	private List outParameterTypes;
+	private Collection inParameterTypes;
+	private Collection thresholdParameterTypes;
+	private Collection etalonParameterTypes;
+	private Collection outParameterTypes;
 
 	private StorableObjectDatabase evaluationTypeDatabase;
 
@@ -64,13 +66,13 @@ public class EvaluationType extends ActionType {
 
 		try {
 			for (Iterator it = this.inParameterTypes.iterator(); it.hasNext();)
-				MeasurementStorableObjectPool.putStorableObject((ParameterType) it.next());
+				GeneralStorableObjectPool.putStorableObject((ParameterType) it.next());
 			for (Iterator it = this.thresholdParameterTypes.iterator(); it.hasNext();)
-				MeasurementStorableObjectPool.putStorableObject((ParameterType) it.next());
+				GeneralStorableObjectPool.putStorableObject((ParameterType) it.next());
 			for (Iterator it = this.etalonParameterTypes.iterator(); it.hasNext();)
-				MeasurementStorableObjectPool.putStorableObject((ParameterType) it.next());
+				GeneralStorableObjectPool.putStorableObject((ParameterType) it.next());
 			for (Iterator it = this.outParameterTypes.iterator(); it.hasNext();)
-				MeasurementStorableObjectPool.putStorableObject((ParameterType) it.next());
+				GeneralStorableObjectPool.putStorableObject((ParameterType) it.next());
 		}
 		catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
@@ -78,26 +80,30 @@ public class EvaluationType extends ActionType {
 	}
 
 	public EvaluationType(EvaluationType_Transferable ett) throws CreateObjectException {
-		super(ett.header,
-			  new String(ett.codename),
-			  new String(ett.description));
+		super(ett.header, new String(ett.codename), new String(ett.description));
 
 		try {
-			this.inParameterTypes = new ArrayList(ett.in_parameter_type_ids.length);
+			List parTypIds;
+
+			parTypIds = new ArrayList(ett.in_parameter_type_ids.length);
 			for (int i = 0; i < ett.in_parameter_type_ids.length; i++)
-				this.inParameterTypes.add(MeasurementStorableObjectPool.getStorableObject(new Identifier(ett.in_parameter_type_ids[i]), true));
-	
-			this.thresholdParameterTypes = new ArrayList(ett.threshold_parameter_type_ids.length);
+				parTypIds.add(new Identifier(ett.in_parameter_type_ids[i]));
+			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+
+			parTypIds.clear();
 			for (int i = 0; i < ett.threshold_parameter_type_ids.length; i++)
-				this.thresholdParameterTypes.add(MeasurementStorableObjectPool.getStorableObject(new Identifier(ett.threshold_parameter_type_ids[i]), true));
-	
-			this.etalonParameterTypes = new ArrayList(ett.etalon_parameter_type_ids.length);
+				parTypIds.add(new Identifier(ett.threshold_parameter_type_ids[i]));
+			this.thresholdParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+
+			parTypIds.clear();
 			for (int i = 0; i < ett.etalon_parameter_type_ids.length; i++)
-				this.etalonParameterTypes.add(MeasurementStorableObjectPool.getStorableObject(new Identifier(ett.etalon_parameter_type_ids[i]), true));
-	
-			this.outParameterTypes = new ArrayList(ett.out_parameter_type_ids.length);
+				parTypIds.add(new Identifier(ett.etalon_parameter_type_ids[i]));
+			this.etalonParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+
+			parTypIds.clear();
 			for (int i = 0; i < ett.out_parameter_type_ids.length; i++)
-				this.outParameterTypes.add(MeasurementStorableObjectPool.getStorableObject(new Identifier(ett.out_parameter_type_ids[i]), true));
+				parTypIds.add(new Identifier(ett.out_parameter_type_ids[i]));
+			this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -178,16 +184,6 @@ public class EvaluationType extends ActionType {
 		}
 	}
 
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.evaluationTypeDatabase != null)
-				this.evaluationTypeDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
-		}
-	}
-
 	public Object getTransferable() {
 		int i;
 
@@ -220,24 +216,20 @@ public class EvaluationType extends ActionType {
 											   outParTypeIds);
 	}
 
-  public short getEntityCode() {
-		return ObjectEntities.EVALUATIONTYPE_ENTITY_CODE;
+  public Collection getInParameterTypes() {
+		return Collections.unmodifiableCollection(this.inParameterTypes);
 	}
 
-  public List getInParameterTypes() {
-		return Collections.unmodifiableList(this.inParameterTypes);
+	public Collection getThresholdParameterTypes() {
+		return Collections.unmodifiableCollection(this.thresholdParameterTypes);
 	}
 
-	public List getThresholdParameterTypes() {
-		return Collections.unmodifiableList(this.thresholdParameterTypes);
+	public Collection getEtalonParameterTypes() {
+		return Collections.unmodifiableCollection(this.etalonParameterTypes);
 	}
 
-	public List getEtalonParameterTypes() {
-		return Collections.unmodifiableList(this.etalonParameterTypes);
-	}
-
-	public List getOutParameterTypes() {
-		return Collections.unmodifiableList(this.outParameterTypes);
+	public Collection getOutParameterTypes() {
+		return Collections.unmodifiableCollection(this.outParameterTypes);
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -256,17 +248,17 @@ public class EvaluationType extends ActionType {
 			description);
 	}
 
-	protected synchronized void setParameterTypes(List inParameterTypes,
-												  List thresholdParameterTypes,
-												  List etalonParameterTypes,
-												  List outParameterTypes) {
+	protected synchronized void setParameterTypes(Collection inParameterTypes,
+			Collection thresholdParameterTypes,
+			Collection etalonParameterTypes,
+			Collection outParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		this.setThresholdParameterTypes0(thresholdParameterTypes);
 		this.setEtalonParameterTypes0(etalonParameterTypes);
 		this.setOutParameterTypes0(outParameterTypes);
 	}
 
-	protected void setInParameterTypes0(List inParameterTypes) {
+	protected void setInParameterTypes0(Collection inParameterTypes) {
 		if (this.inParameterTypes == null)
 			this.inParameterTypes = new ArrayList();
 		else
@@ -281,12 +273,12 @@ public class EvaluationType extends ActionType {
 	 * @param inParameterTypes
 	 *            The inParameterTypes to set.
 	 */
-	public void setInParameterTypes(List inParameterTypes) {
+	public void setInParameterTypes(Collection inParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		super.changed = true;		
 	}
 
-	protected void setThresholdParameterTypes0(List thresholdParameterTypes) {
+	protected void setThresholdParameterTypes0(Collection thresholdParameterTypes) {
 		if (this.thresholdParameterTypes == null)
 			this.thresholdParameterTypes = new ArrayList();
 		else
@@ -301,12 +293,12 @@ public class EvaluationType extends ActionType {
 	 * @param thresholdParameterTypes
 	 *            The thresholdParameterTypes to set.
 	 */
-	public void setThresholdParameterTypes(List thresholdParameterTypes) {
+	public void setThresholdParameterTypes(Collection thresholdParameterTypes) {
 		this.setThresholdParameterTypes0(thresholdParameterTypes);
 		super.changed = true;
 	}
 
-	protected void setEtalonParameterTypes0(List etalonParameterTypes) {
+	protected void setEtalonParameterTypes0(Collection etalonParameterTypes) {
 		if (this.etalonParameterTypes == null)
 			this.etalonParameterTypes = new ArrayList();
 		else
@@ -321,12 +313,12 @@ public class EvaluationType extends ActionType {
 	 * @param etalonParameterTypes
 	 *            The etalonParameterTypes to set.
 	 */
-	public void setEtalonParameterTypes(List etalonParameterTypes) {
+	public void setEtalonParameterTypes(Collection etalonParameterTypes) {
 		this.setEtalonParameterTypes0(etalonParameterTypes);
 		super.changed = true;
 	}
 
-	protected void setOutParameterTypes0(List outParameterTypes) {
+	protected void setOutParameterTypes0(Collection outParameterTypes) {
 		if (this.outParameterTypes == null)
 			this.outParameterTypes = new ArrayList();
 		else
@@ -341,7 +333,7 @@ public class EvaluationType extends ActionType {
 	 * @param outParameterTypes
 	 *            The outParameterTypes to set.
 	 */
-	public void setOutParameterTypes(List outParameterTypes) {
+	public void setOutParameterTypes(Collection outParameterTypes) {
 		this.setOutParameterTypes0(outParameterTypes);
 		super.changed = true;
 	}

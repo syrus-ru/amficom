@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.51 2005/02/11 16:31:48 bob Exp $
+ * $Id: MeasurementType.java,v 1.52 2005/02/14 11:00:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import java.util.Iterator;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -34,8 +35,8 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/02/11 16:31:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.52 $, $Date: 2005/02/14 11:00:52 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -66,9 +67,9 @@ public class MeasurementType extends ActionType {
 
 		try {
 			for (Iterator it = this.inParameterTypes.iterator(); it.hasNext();)
-				MeasurementStorableObjectPool.putStorableObject((ParameterType) it.next());
+				GeneralStorableObjectPool.putStorableObject((ParameterType) it.next());
 			for (Iterator it = this.outParameterTypes.iterator(); it.hasNext();)
-				MeasurementStorableObjectPool.putStorableObject((ParameterType) it.next());
+				GeneralStorableObjectPool.putStorableObject((ParameterType) it.next());
 			for (Iterator it = this.measurementPortTypes.iterator(); it.hasNext();)
 				ConfigurationStorableObjectPool.putStorableObject((MeasurementPortType) it.next());
 		}
@@ -83,23 +84,22 @@ public class MeasurementType extends ActionType {
 			  new String(mtt.description));
 
 		try {
-			List inParameterTypeIds = new ArrayList(mtt.in_parameter_type_ids.length);
+			List typeIds;
+			
+			typeIds = new ArrayList(mtt.in_parameter_type_ids.length);
 			for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
-				inParameterTypeIds.add(new Identifier(mtt.in_parameter_type_ids[i]));
+				typeIds.add(new Identifier(mtt.in_parameter_type_ids[i]));
+			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(typeIds, true);
 
-			this.inParameterTypes = MeasurementStorableObjectPool.getStorableObjects(inParameterTypeIds, true);
-
-			List outParameterTypeIds = new ArrayList(mtt.out_parameter_type_ids.length);
+			typeIds.clear();
 			for (int i = 0; i < mtt.out_parameter_type_ids.length; i++)
-				outParameterTypeIds.add(new Identifier(mtt.out_parameter_type_ids[i]));
+				typeIds.add(new Identifier(mtt.out_parameter_type_ids[i]));
+			this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(typeIds, true);
 
-			this.outParameterTypes = MeasurementStorableObjectPool.getStorableObjects(outParameterTypeIds, true);
-
-			List measurementPortTypeIds = new ArrayList(mtt.measurement_port_type_ids.length);
+			typeIds.clear();
 			for (int i = 0; i < mtt.measurement_port_type_ids.length; i++)
-				measurementPortTypeIds.add(new Identifier(mtt.measurement_port_type_ids[i]));
-
-			this.measurementPortTypes = ConfigurationStorableObjectPool.getStorableObjects(measurementPortTypeIds, true);
+				typeIds.add(new Identifier(mtt.measurement_port_type_ids[i]));
+			this.measurementPortTypes = ConfigurationStorableObjectPool.getStorableObjects(typeIds, true);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -172,16 +172,6 @@ public class MeasurementType extends ActionType {
 		}
 	}
 
-	public void insert() throws CreateObjectException {
-		try {
-			if (this.measurementTypeDatabase != null)
-				this.measurementTypeDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae.getMessage(), ae);
-		}
-	}
-
 	public Object getTransferable() {
 		int i;
 
@@ -235,13 +225,12 @@ public class MeasurementType extends ActionType {
 			description);
 	}
 
-	protected synchronized void setParameterTypes(List inParameterTypes,
-												  List outParameterTypes) {
+	protected synchronized void setParameterTypes(Collection inParameterTypes, Collection outParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		this.setOutParameterTypes0(outParameterTypes);
 	}
 
-	protected void setInParameterTypes0(List inParameterTypes) {
+	protected void setInParameterTypes0(Collection inParameterTypes) {
 		if (this.inParameterTypes == null)
 			this.inParameterTypes = new ArrayList();
 		else
@@ -256,12 +245,12 @@ public class MeasurementType extends ActionType {
 	 * @param inParameterTypes
 	 *            The inParameterTypes to set.
 	 */
-	public void setInParameterTypes(List inParameterTypes) {
+	public void setInParameterTypes(Collection inParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		super.changed = true;		
 	}
 
-	protected void setOutParameterTypes0(List outParameterTypes) {
+	protected void setOutParameterTypes0(Collection outParameterTypes) {
 		if (this.outParameterTypes == null)
 			this.outParameterTypes = new ArrayList();
 		else
@@ -276,12 +265,12 @@ public class MeasurementType extends ActionType {
 	 * @param outParameterTypes
 	 *            The outParameterTypes to set.
 	 */
-	public void setOutParameterTypes(List outParameterTypes) {
+	public void setOutParameterTypes(Collection outParameterTypes) {
 		this.setOutParameterTypes0(outParameterTypes);
 		super.changed = true;		
 	}
 
-	protected void setMeasurementPortTypes0(List measurementPortTypes) {
+	protected void setMeasurementPortTypes0(Collection measurementPortTypes) {
 		this.measurementPortTypes.clear();
 		if (measurementPortTypes != null)
 	     	this.measurementPortTypes.addAll(measurementPortTypes);
@@ -292,7 +281,7 @@ public class MeasurementType extends ActionType {
 	 * @param measurementPortTypes
 	 * 		The measurementPortTypes to set
 	 */
-	public void setMeasurementPortTypes(List measurementPortTypes) {
+	public void setMeasurementPortTypes(Collection measurementPortTypes) {
 		this.setMeasurementPortTypes0(measurementPortTypes);
 		super.changed = true;		
 	}
