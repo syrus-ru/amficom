@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectdbInterfaceLoad.sqlj,v 1.1.2.4 2004/08/27 08:09:21 bass Exp $
+ * $Id: ObjectdbInterfaceLoad.sqlj,v 1.1.2.5 2004/08/27 10:14:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import sqlj.runtime.SQLNullException;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/08/27 08:09:21 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/08/27 10:14:37 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -1748,9 +1748,7 @@ final class ObjectdbInterfaceLoad {
 			Collection vector = new LinkedList();
 			while (uIt.next()) {
 				String object_id = null;
-				Timestamp lastlogin;
-				long last_login = 0;
-				long logged = 0;
+				long lastLogin = 0;
 				int sessions = 0;
 
 				String It_id = uIt.id();
@@ -1764,13 +1762,14 @@ final class ObjectdbInterfaceLoad {
 					It_type = "";
 				if (It_type.equals("operatorprofile")) {
 					object_id = uIt.operator_id();
+					Timestamp lastlogin;
 					#sql [connCtx] {
-						select LAST_LOGIN into :lastlogin from AMFIcOM.OPERATORPROFILES where ID = :object_id
+						SELECT last_login INTO :lastlogin FROM amficom.operatorprofiles WHERE id = :object_id
 					};
-					last_login = lastlogin.getTime();
-					logged = last_login;
+					if (lastlogin != null)
+						lastLogin = lastlogin.getTime();
 					#sql [connCtx] {
-						select COUNT(*) into :sessions from AMFIcOM.LOGGEDUSERS where USER_ID = :It_id
+						SELECT count(*) INTO :sessions FROM amficom.loggedusers WHERE user_id = :It_id
 					};
 				} else if (It_type.equals("operationalprofile")) {
 					object_id = uIt.operational_id();
@@ -1785,11 +1784,11 @@ final class ObjectdbInterfaceLoad {
 				Collection vector2 = new LinkedList();
 				CategoryIdIterator ciIt = null;
 				try {
-					#sql [connCtx] ciIt = { select CATEGORY_ID from AMFICOM.USERCATEGORIES
-							where USER_ID = :It_id };
-					while (ciIt.next()) {
+					#sql [connCtx] ciIt = {
+						SELECT category_id FROM amficom.usercategories WHERE user_id = :It_id
+					};
+					while (ciIt.next())
 						vector2.add(ciIt.category_id());
-					}
 				} finally {
 					if (ciIt != null)
 						ciIt.close();
@@ -1809,7 +1808,7 @@ final class ObjectdbInterfaceLoad {
 						giIt.close();
 				}
 				String group_ids[] = (String[]) (vector2.toArray(new String[vector2.size()]));
-				vector.add(new User_Transferable(It_id, object_id, It_login, It_type, last_login, logged, sessions, category_ids, group_ids));
+				vector.add(new User_Transferable(It_id, object_id, It_login, It_type, lastLogin, lastLogin, sessions, category_ids, group_ids));
 			}
 			userseq.value = (User_Transferable[]) (vector.toArray(new User_Transferable[vector.size()]));
 		} finally {

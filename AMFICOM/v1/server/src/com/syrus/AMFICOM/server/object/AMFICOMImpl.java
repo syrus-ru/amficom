@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMImpl.java,v 1.1.2.1 2004/08/27 08:09:21 bass Exp $
+ * $Id: AMFICOMImpl.java,v 1.1.2.2 2004/08/27 10:14:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,45 +34,15 @@ import org.omg.CORBA.StringHolder;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/27 08:09:21 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/27 10:14:37 $
  * @author $Author: bass $
  * @module server_v1
  */
-public final class AMFICOMImpl extends _AMFICOMImplBase {
+final class AMFICOMImpl extends _AMFICOMImplBase {
 	private static final Connection CONN = DefaultContext.getDefaultContext().getConnection();
 
 	static {
-		System.out.println("Static initializer");
-		try {
-			CONN.setAutoCommit(false);
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-		}
 		DatabaseConnection.setConnection(CONN);
-		
-		System.out.println(CONN);
-		System.out.println(DefaultContext.getDefaultContext());
-		System.out.println(DefaultContext.getDefaultContext().getConnection());
-	}
-
-	{
-		System.out.println("Instance initializer");
-
-		System.out.println(CONN);
-		System.out.println(DefaultContext.getDefaultContext());
-		System.out.println(DefaultContext.getDefaultContext().getConnection());
-
-		System.out.println("New connection");
-		try {
-			System.out.println(new DefaultContext(CONN));
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-		}
-	}
-
-	public org.omg.CORBA.Object _initializeAuroraObject() {
-		System.out.println("_initializeAuroraObject()");
-		return this;
 	}
 
 	/**
