@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.4 2005/01/24 10:44:21 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.5 2005/01/25 06:35:57 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import java.util.*;
  * <li>It must override {@link #isConditionTrue(Object)}.</li></ul> 
  *
  * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/01/24 10:44:21 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/25 06:35:57 $
  * @module general_v1
  */
 public class StringFieldCondition implements StorableObjectCondition {
@@ -80,7 +80,7 @@ public class StringFieldCondition implements StorableObjectCondition {
 	}
 
 	public StringFieldCondition(final String string, final Short entityCode, final StringFieldSort sort) {
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".StringFieldConditionImpl";  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		final String className = ObjectGroupEntities.getPackageName(entityCode.shortValue()) + ".StringFieldConditionImpl";  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		try {
 			Constructor ctor = Class.forName(className)
 				.getDeclaredConstructor(new Class[]{
