@@ -20,6 +20,11 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
+import com.syrus.AMFICOM.Client.Resource.Result.Analysis;
+import com.syrus.AMFICOM.Client.Resource.Result.Evaluation;
+import com.syrus.AMFICOM.Client.Resource.Result.Test;
+import com.syrus.AMFICOM.Client.Resource.Result.TestArgumentSet;
+import com.syrus.AMFICOM.Client.Resource.Result.TestRequest;
 import com.syrus.AMFICOM.Client.Schedule.UI.*;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 import com.syrus.util.Log;
@@ -173,6 +178,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		this.dispatcher.register(this, StatusMessageEvent.type);
 		this.dispatcher.register(this, RefChangeEvent.typ);
 		this.dispatcher.register(this, RefUpdateEvent.typ);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE);
 
 		this.dispatcher.register(this, "contextchange");
 		Environment.the_dispatcher.register(this, "contextchange");
@@ -251,7 +257,11 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
+		Object obj = ae.getSource();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
+		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE)) {
+			this.statusBar.enableProgressBar(((Boolean) obj).booleanValue());
+		}
 		if (commandName.equals(StatusMessageEvent.type)) {
 			StatusMessageEvent sme = (StatusMessageEvent) ae;
 			statusBar.setText("status", sme.getText());
@@ -366,7 +376,45 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		statusBar.setText("domain", Pool.getName(Domain.typ, domainId));
 
 		treeFrame.init();
-		dispatcher.notify(new OperationEvent(this,0,SchedulerModel.COMMAND_CLEAN));
+		Hashtable unsavedTestArgumentSet = Pool.getChangedHash(TestArgumentSet.typ);
+		Hashtable unsavedAnalysis = Pool.getChangedHash(Analysis.typ);
+		Hashtable unsavedEvaluation = Pool.getChangedHash(Evaluation.typ);
+		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.TYP);
+		Hashtable unsavedTest = Pool.getChangedHash(Test.TYPE);
+
+		for (int i = 0; i < 5; i++) {
+			Hashtable table;
+			switch (i) {
+				case 0:
+					table = unsavedTestArgumentSet;
+					break;
+				case 1:
+					table = unsavedAnalysis;
+					break;
+				case 2:
+					table = unsavedEvaluation;
+					break;
+				case 3:
+					table = unsavedTestRequest;
+					break;
+				case 4:
+					table = unsavedTest;
+					break;
+				default:
+					table = null;
+					break;
+			}
+			if (table != null) {
+				Set keys = table.keySet();
+				for (Iterator it = keys.iterator(); it.hasNext();) {
+					String key = (String) it.next();
+					ObjectResource obj = (ObjectResource) table.get(key);
+					obj.setChanged(false);
+				}
+			}
+		}
+
+		dispatcher.notify(new OperationEvent(this, 0, SchedulerModel.COMMAND_CLEAN));
 
 		paramsFrame.setVisible(true);
 		propsFrame.setVisible(true);

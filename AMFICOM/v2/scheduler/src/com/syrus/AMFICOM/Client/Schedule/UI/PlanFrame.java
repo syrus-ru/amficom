@@ -10,12 +10,12 @@ import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class PlanFrame extends JInternalFrame {
 
-	ApplicationContext	aContext;
-	PlanToolBar			toolBar;
-	PlanPanel			mainPanel;
+	//private ApplicationContext aContext;
+	private PlanToolBar	toolBar;
+	private PlanPanel	mainPanel;
 
 	public PlanFrame(ApplicationContext aContext) {
-		this.aContext = aContext;
+		//this.aContext = aContext;
 
 		setTitle(LangModelSchedule.getString("Plan.Title")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
@@ -28,16 +28,15 @@ public class PlanFrame extends JInternalFrame {
 		JScrollPane scroll = new JScrollPane();
 
 		//		PlanLayeredPanel panel = new PlanLayeredPanel();
-		mainPanel = new PlanPanel(scroll, aContext);
-		toolBar = mainPanel.getToolBar();
+		this.mainPanel = new PlanPanel(scroll, aContext);
+		this.toolBar = this.mainPanel.getToolBar();
 		//		panel.setGraphPanel(mainPanel);
-		scroll.getViewport().add(mainPanel);
+		scroll.getViewport().add(this.mainPanel);
 
 		getContentPane().setBackground(SystemColor.window);
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(toolBar, BorderLayout.NORTH);
+		getContentPane().add(this.toolBar, BorderLayout.NORTH);
 		getContentPane().add(scroll, BorderLayout.CENTER);
-		toolBar.applyChanges();
 	}
 
 }

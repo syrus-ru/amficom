@@ -10,6 +10,7 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Report.ReportBuilder;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -19,6 +20,7 @@ import com.syrus.AMFICOM.Client.Resource.Result.Evaluation;
 import com.syrus.AMFICOM.Client.Resource.Result.Test;
 import com.syrus.AMFICOM.Client.Resource.Result.TestArgumentSet;
 import com.syrus.AMFICOM.Client.Resource.Result.TestRequest;
+import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
@@ -58,7 +60,7 @@ class PlanToolBar extends JPanel {
 	private static final boolean	CREATE_ALLOW	= true;
 	static final int				H				= 22;
 	private JButton					applyButton		= new JButton();
-	
+
 	private JButton					dateButton		= new JButton(UIStorage.CALENDAR_ICON);
 	JSpinner						dateSpinner		= new DateSpinner();
 
@@ -66,14 +68,14 @@ class PlanToolBar extends JPanel {
 
 	PlanPanel						panel;
 	private ApplicationContext		aContext;
-	private AComboBox				scaleComboBox;
+	AComboBox						scaleComboBox;
 	JSpinner						timeSpinner		= new TimeSpinner();
 
 	private JButton					zoomInButton	= new JButton();
 	private JButton					zoomNoneButton	= new JButton();
 	private JButton					zoomOutButton	= new JButton();
 
-	public PlanToolBar(ApplicationContext aContext, PlanPanel panel) {
+	public PlanToolBar(final ApplicationContext aContext, final PlanPanel panel) {
 		this.aContext = aContext;
 		if (aContext != null) {
 			// nothing
@@ -259,7 +261,28 @@ class PlanToolBar extends JPanel {
 		applyButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				applyChanges();
+				aContext.getDispatcher().notify(
+												new OperationEvent(new Boolean(true), 0,
+																	SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE));
+				ReportBuilder.invokeAsynchronously(new Runnable() {
+
+					public void run() {
+						PlanToolBar.this.saveTest();
+						Calendar date = Calendar.getInstance();
+						date.setTime((Date) PlanToolBar.this.dateSpinner.getValue());
+						Calendar time = Calendar.getInstance();
+						time.setTime((Date) PlanToolBar.this.timeSpinner.getValue());
+
+						date.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
+						date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
+
+						panel.updateDate(date.getTime(), PlanToolBar.this.scaleComboBox.getSelectedIndex());
+						aContext.getDispatcher()
+								.notify(
+										new OperationEvent(new Boolean(false), 0,
+															SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE));
+					}
+				}, LangModelSchedule.getString("Updating_tests_from_BD"));
 			}
 		});
 
@@ -281,23 +304,10 @@ class PlanToolBar extends JPanel {
 		return icon;
 	}
 
-	void applyChanges() {
-		saveTest();
-		Calendar date = Calendar.getInstance();
-		date.setTime((Date) dateSpinner.getValue());
-		Calendar time = Calendar.getInstance();
-		time.setTime((Date) timeSpinner.getValue());
-
-		date.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
-		date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
-
-		this.panel.updateDate(date.getTime(), this.scaleComboBox.getSelectedIndex());
-	}
-
 	//private void jbInit() throws Exception {
 	//}
 
-	private void saveTest() {
+	void saveTest() {
 		DataSourceInterface dataSource = this.aContext.getDataSourceInterface();
 		Hashtable unsavedTestArgumentSet = Pool.getChangedHash(TestArgumentSet.typ);
 		Hashtable unsavedAnalysis = Pool.getChangedHash(Analysis.typ);

@@ -36,7 +36,7 @@ public final class UIStorage {
 
 	public static final Icon				MINUS_ICON				= UIStorage.getStringIcon("-");						//$NON-NLS-1$
 
-	public static final Icon				CALENDAR_ICON			= UIStorage.getStringIcon("^");						//$NON-NLS-1$
+	public static final Icon				CALENDAR_ICON			= UIStorage.getStringIcon("..");						//$NON-NLS-1$
 
 	public static final Icon				TIME_ICON				= UIStorage.getStringIcon("t");						//$NON-NLS-1$
 

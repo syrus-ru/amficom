@@ -530,10 +530,10 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		}
 
 		minuteRadioButton.doClick();
-		paramsRadioButton.doClick();
-		oneRadioButton.doClick();
+		paramsRadioButton.doClick();		
 		synchroRadioButton.doClick();
 		periodicalRadioButton.doClick();
+		oneRadioButton.doClick();
 	}
 
 	void showStartCalendar() {

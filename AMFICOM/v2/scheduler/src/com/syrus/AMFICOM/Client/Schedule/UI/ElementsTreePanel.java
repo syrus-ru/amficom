@@ -56,7 +56,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 			if (ElementsTreePanel.this.surveyDsi == null)
 				ElementsTreePanel.this.surveyDsi = new SurveyDataSourceImage(aContext.getDataSourceInterface());
-			
+
 			for (Enumeration testTypeEn = Pool.getHash(TestType.typ).elements(); testTypeEn.hasMoreElements();) {
 				TestType testType = (TestType) testTypeEn.nextElement();
 				ElementsTreePanel.this.surveyDsi.getTestSetupByTestType(testType.getId());
@@ -128,27 +128,29 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				if (node.getObject().equals(ROOT_NODE_NAME))
 					ret = TestType.class; //$NON-NLS-1$
 			} else if (obj instanceof TestType) {
-//				//System.out.println("testType:" + ((TestType) obj).name);
-//				TestType testType = (TestType) obj;
-//				//System.out.println("testType.id:"+testType.id);
-//				skipTestUpdate = true;
-//				dispatcher
-//						.notify(new OperationEvent(testType.getId(), 0, TestParametersPanel.COMMAND_CHANGE_TEST_TYPE));
-//				skipTestUpdate = false;
+				//				//System.out.println("testType:" + ((TestType) obj).name);
+				TestType testType = (TestType) obj;
+				//				//System.out.println("testType.id:"+testType.id);
+				skipTestUpdate = true;
+				dispatcher
+						.notify(new OperationEvent(testType.getId(), 0, TestParametersPanel.COMMAND_CHANGE_TEST_TYPE));
+				skipTestUpdate = false;
 				ret = KIS.class;
 			} else if (obj instanceof KIS) {
 				KIS kis = (KIS) obj;
 				//System.out.println("KIS:" + kis.type_id);
-//				skipTestUpdate = true;
-//				dispatcher.notify(new OperationEvent(kis.getId(), 0, TestParametersPanel.COMMAND_CHANGE_KIS));
-//				//				Vector ports = kis.access_ports;
-//				//				for (Enumeration e = ports.elements(); e.hasMoreElements();)
-//				// {
-//				//					AccessPort port = (AccessPort) e.nextElement();
-//				//					dispatcher.notify(new OperationEvent(port.type_id, 0,
-//				//							TestParametersPanel.COMMAND_CHANGE_PORT_TYPE));
-//				//				}
-//				skipTestUpdate = false;
+				//				skipTestUpdate = true;
+				//				dispatcher.notify(new OperationEvent(kis.getId(), 0,
+				// TestParametersPanel.COMMAND_CHANGE_KIS));
+				//				// Vector ports = kis.access_ports;
+				//				// for (Enumeration e = ports.elements();
+				// e.hasMoreElements();)
+				//				// {
+				//				// AccessPort port = (AccessPort) e.nextElement();
+				//				// dispatcher.notify(new OperationEvent(port.type_id, 0,
+				//				// TestParametersPanel.COMMAND_CHANGE_PORT_TYPE));
+				//				// }
+				//				skipTestUpdate = false;
 				ret = AccessPort.class;
 			} else if (obj instanceof AccessPort) {
 				//System.out.println("AccessPort:" + ((AccessPort)
@@ -158,14 +160,15 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				ret = MonitoredElement.class;
 				this.dispatcher.notify(new OperationEvent(port, 0, TestParametersPanel.COMMAND_CHANGE_PORT_TYPE));
 
-//				Vector vec = this.getChildNodes(node);
-//				for (int i = 0; i < vec.size(); i++) {
-//					ObjectResourceTreeNode n = (ObjectResourceTreeNode) vec.get(i);
-//					Object o = n.getObject();
-//					MonitoredElement me = (MonitoredElement) o;
-//					this.dispatcher.notify(new OperationEvent(me.getId(), 0, TestParametersPanel.COMMAND_CHANGE_ME_TYPE));
-//
-//				}
+				Vector vec = this.getChildNodes(node);
+				for (int i = 0; i < vec.size(); i++) {
+					ObjectResourceTreeNode n = (ObjectResourceTreeNode) vec.get(i);
+					Object o = n.getObject();
+					MonitoredElement me = (MonitoredElement) o;
+					this.dispatcher
+							.notify(new OperationEvent(me.getId(), 0, TestParametersPanel.COMMAND_CHANGE_ME_TYPE));
+
+				}
 				ElementsTreePanel.this.skipTestUpdate = false;
 			}
 			return ret;
@@ -332,7 +335,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 			if (selectedClass.equals(MonitoredElement.class)) {
 				this.loadButton.setEnabled(true);
-				MonitoredElement me = (MonitoredElement)set.get(dse.getSelectionNumber());
+				MonitoredElement me = (MonitoredElement) set.get(dse.getSelectionNumber());
 				this.dispatcher.notify(new OperationEvent(me.getId(), 0, TestParametersPanel.COMMAND_CHANGE_ME_TYPE));
 			} else
 				this.loadButton.setEnabled(false);

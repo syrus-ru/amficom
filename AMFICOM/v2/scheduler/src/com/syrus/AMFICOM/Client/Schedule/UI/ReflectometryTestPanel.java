@@ -228,10 +228,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				if ((pulseStr == null) || (pulseStr.length() == 0))
 					throw new IllegalArgumentException(LangModelSchedule.getString("pulse_width_is_not_set"));
 				apt = (ActionParameterType) testType.getSortedArguments().get(PARAMETER_PULSE_WIDTH);
-				byteArray = new ByteArray(Double.parseDouble(pulseStr));
+				byteArray = new ByteArray(Long.parseLong(pulseStr));
 				// dsi.GetUId("testargument")
 				Parameter pulseWidthParam = new Parameter(dsi.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
-						.getBytes(), PARAMETER_PULSE_WIDTH, "double"); //$NON-NLS-1$
+						.getBytes(), PARAMETER_PULSE_WIDTH, "long"); //$NON-NLS-1$
 				tas.addArgument(pulseWidthParam);
 
 				Object resolution = resolutionComboBox.getSelectedItem();
@@ -254,6 +254,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				String distanceStr = distance.toString();
 				if ((distanceStr == null) || (distanceStr.length() == 0))
 					throw new IllegalArgumentException(LangModelSchedule.getString("distance_is_not_set"));
+				System.out.println("distanceStr:"+distanceStr);
 				apt = (ActionParameterType) testType.getSortedArguments().get(PARAMETER_MAX_DISTANCE);
 				byteArray = new ByteArray(Double.parseDouble(distanceStr));
 				Parameter maxDistanceParam = new Parameter(dsi.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray

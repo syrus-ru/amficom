@@ -180,13 +180,18 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				for (Iterator it = this.unsavedTests.keySet().iterator(); it.hasNext();) {
 					Object key = it.next();
 					Test test = (Test) this.unsavedTests.get(key);
-					if (!test.isChanged()) {						
+					if (!test.isChanged()) {
 						System.out.println("remove " + key);
 						this.unsavedTests.remove(key);
 						this.tests.put(test.getId(), test);
 					}
 				}
 			}
+		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
+			if (this.unsavedTests != null)
+				this.unsavedTests.clear();
+			if (this.tests != null)
+				this.tests.clear();
 		}
 	}
 
@@ -351,6 +356,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, SchedulerModel.COMMAND_TEST_SAVED_OK);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 	}
 
 }

@@ -11,11 +11,14 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
+import com.syrus.AMFICOM.CORBA.Constant.AlarmTypeConstants;
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
+import com.syrus.AMFICOM.CORBA.Survey.ElementaryTestAlarm;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.TestType;
@@ -115,16 +118,43 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 			Color color = table.getBackground();
 			Test test = line.getTest();
-			if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
-				color = TestLine.COLOR_COMPLETED;
-			} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
-				color = TestLine.COLOR_SCHEDULED;
-			} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
-				color = TestLine.COLOR_PROCCESSING;
-			} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
-				color = TestLine.COLOR_ABORDED;
-			} else {
-				color = TestLine.COLOR_UNRECOGNIZED;
+			ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();
+			if (testAlarms.length != 0) {
+				for (int i = 0; i < testAlarms.length; i++) {
+					Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[i].alarm_id);
+					if (alarm != null) {
+						System.out.println("alarm.type_id:"+alarm.type_id);
+						if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
+							color = Color.RED;
+						} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING))
+							color = Color.YELLOW;
+					}
+				}
+			}
+			int statusIndex = -1;
+			{
+				int columnCount = model.getColumnCount();
+				String statusString = LangModelSchedule.getString("Status");
+				for (int i = 0; i < columnCount; i++)
+					if (model.getColumnName(i).equals(statusString)) {
+						statusIndex = i;
+						break;
+					}
+			}		
+			
+
+			if (vColIndex == table.convertColumnIndexToView(statusIndex)) {
+				if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
+					color = TestLine.COLOR_COMPLETED;
+				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_SCHEDULED)) {
+					color = TestLine.COLOR_SCHEDULED;
+				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_PROCESSING)) {
+					color = TestLine.COLOR_PROCCESSING;
+				} else if (test.getStatus().equals(TestStatus.TEST_STATUS_ABORTED)) {
+					color = TestLine.COLOR_ABORDED;
+				} else {
+					color = TestLine.COLOR_UNRECOGNIZED;
+				}
 			}
 
 			if (isSelected) {
@@ -523,11 +553,11 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 				this.savedTests.clear();
 			if (this.unsavedTests != null)
 				this.unsavedTests.clear();
-			TestTableModel model = (TestTableModel)this.listTable.getModel();
+			TestTableModel model = (TestTableModel) this.listTable.getModel();
 			model.removeAll();
 			this.listTable.revalidate();
 			this.listTable.repaint();
-			
+
 		}
 	}
 
@@ -578,7 +608,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 					} else if (SwingUtilities.isRightMouseButton(evt)) {
 						final int[] rowIndices = table.getSelectedRows();
 						if ((rowIndices != null) && (rowIndices.length > 0)) {
-							final TestTableModel model = (TestTableModel) table.getModel();							
+							final TestTableModel model = (TestTableModel) table.getModel();
 							JMenuItem deleteTestMenuItem = new JMenuItem(LangModelSchedule.getString("delete_tests")); //$NON-NLS-1$
 							deleteTestMenuItem.addActionListener(new ActionListener() {
 
@@ -597,11 +627,12 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 								}
 							});
 							/**
-							 * @TODO remove comments when test will be correct remove from other panels
+							 * @TODO remove comments when test will be correct
+							 *       remove from other panels
 							 */
-//							JPopupMenu popup = new JPopupMenu();
-//							popup.add(deleteTestMenuItem);
-//							popup.show(table, evt.getX(), evt.getY());
+							//							JPopupMenu popup = new JPopupMenu();
+							//							popup.add(deleteTestMenuItem);
+							//							popup.show(table, evt.getX(), evt.getY());
 						}
 					}
 

@@ -5,6 +5,7 @@
  */
 package com.syrus.AMFICOM.Client.Schedule;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import com.syrus.AMFICOM.CORBA.General.TestReturnType;
@@ -28,6 +29,7 @@ import com.syrus.AMFICOM.Client.Resource.Result.TimeStamp;
 import com.syrus.AMFICOM.Client.Resource.Test.AnalysisType;
 import com.syrus.AMFICOM.Client.Resource.Test.EvaluationType;
 import com.syrus.AMFICOM.Client.Resource.Test.TestType;
+import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 
 /**
  * @author Vladimir Dolzhenko
@@ -42,6 +44,7 @@ public class SchedulerModel implements OperationListener {
 	public static final String	COMMAND_TEST_SAVED_OK			= "TestSavedOk";	//$NON-NLS-1$
 	public static final String	COMMAND_CLEAN					= "Clean";
 	public static final String	COMMAND_AVAILABLE_ME			= "AvailableMe";
+	public static final String	COMMAND_CHANGE_STATUSBAR_STATE  = "ChangeStatusBarState";
 	
 
 	public static final int		DATA_ID_ELEMENTS				= 5;
@@ -208,14 +211,15 @@ public class SchedulerModel implements OperationListener {
 		test.setKisId(kis.id);
 		test.setMonitoredElementId(me.id);
 
-		test.setReturnType(returnType);
-		test.setUserId(aContext.getSessionInterface().getUserId());
-		test.setTimeStamp((TimeStamp) receiveData.get(TimeStamp.TYP));
+		test.setReturnType(this.returnType);
+		test.setUserId(this.aContext.getSessionInterface().getUserId());
+		test.setTimeStamp((TimeStamp) this.receiveData.get(TimeStamp.TYP));
 		{
 
-			TestArgumentSet testArgumentSet = (TestArgumentSet) receiveData
+			TestArgumentSet testArgumentSet = (TestArgumentSet) this.receiveData
 					.get(TestArgumentSet.typ);
 			if (testArgumentSet != null) {
+				testArgumentSet.setTestTypeId(testType.getId());
 				testArgumentSet.setId(dsi.GetUId(TestArgumentSet.typ));
 				testArgumentSet.setChanged(true);
 				Pool.put(TestArgumentSet.typ, testArgumentSet.getId(),
@@ -273,6 +277,8 @@ public class SchedulerModel implements OperationListener {
 		testRequest.addTest(test);
 		test.setRequestId(testRequest.getId());
 		test.setChanged(true);
+		
+		test.setName(ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(test.getStartTime())));
 
 		this.dispatcher.notify(new TestUpdateEvent(this, test,
 				TestUpdateEvent.TEST_SELECTED_EVENT));
