@@ -3,6 +3,9 @@ package com.syrus.AMFICOM.general;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import com.syrus.io.ByteArrayConverter;
+import com.syrus.io.IntelDataInputStream;
+
 public class WavetekReader extends DataReader
 {
 	BellcoreStructure bs;

@@ -3,6 +3,8 @@ package com.syrus.AMFICOM.general;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import com.syrus.io.IntelDataInputStream;
+
 public class BellcoreReader extends DataReader
 {
 	BellcoreStructure bs;

@@ -3,6 +3,8 @@ package com.syrus.AMFICOM.general;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import com.syrus.io.IntelDataOutputStream;
+
 public class BellcoreWriter
 {
 	byte[] data;

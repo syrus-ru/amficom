@@ -32,6 +32,7 @@ package com.syrus.AMFICOM.general;
 import java.io.File;
 import java.text.SimpleDateFormat;
 
+import com.syrus.io.ByteArrayConverter;
 import com.syrus.util.TraceDataReader;
 
 public class TraceReader extends DataReader
