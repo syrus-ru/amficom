@@ -320,7 +320,7 @@ public class SchemeGraphUI extends GPGraphUI
 		{
 			DefaultCableLink link = (DefaultCableLink)selected;
 			if (link.getSchemeCableLink() != null)
-				link.getSchemeCableLink().name = (String)link.getUserObject();
+				link.getSchemeCableLink().setName((String)link.getUserObject());
 		}
 	}
 
