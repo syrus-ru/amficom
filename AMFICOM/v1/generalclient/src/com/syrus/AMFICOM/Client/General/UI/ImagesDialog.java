@@ -1,14 +1,24 @@
+/*
+ * $Id: ImagesDialog.java,v 1.4 2004/09/27 06:20:52 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.UI;
-import java.awt.Frame;
-import java.awt.Dimension;
-import javax.swing.JDialog;
-import java.awt.BorderLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.ImageResource;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.JDialog;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 06:20:52 $
+ * @module generalclient_v1
+ */
 public class ImagesDialog extends JDialog 
 {
 	private ImagesPanel jPanel1;
@@ -39,7 +49,7 @@ public class ImagesDialog extends JDialog
 
 	private void jbInit() throws Exception
 	{
-		jPanel1 = new ImagesPanel(aContext.getDataSourceInterface());
+		jPanel1 = new ImagesPanel(aContext.getDataSource());
 		this.setSize(new Dimension(400, 300));
 		this.setResizable(false);
 		this.getContentPane().setLayout(borderLayout1);

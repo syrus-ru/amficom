@@ -1,49 +1,25 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\General\UI\GeneralPanel.java                           * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: GeneralPanel.java,v 1.6 2004/09/27 06:22:25 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
 
 package com.syrus.AMFICOM.Client.General.UI;
-
-import oracle.jdeveloper.layout.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import javax.swing.JPanel;
+import oracle.jdeveloper.layout.XYLayout;
 
-
-
-public class GeneralPanel extends PropertiesPanel
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2004/09/27 06:22:25 $
+ * @module generalclient_v1
+ */
+public class GeneralPanel extends JPanel implements ObjectResourcePropertiesPane
 {
 	XYLayout xYLayout1 = new XYLayout();
 
@@ -51,27 +27,12 @@ public class GeneralPanel extends PropertiesPanel
 
 	public GeneralPanel()
 	{
-		super();
-		try
-		{
-			jbInit();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		jbInit();
 	}
 
-	private void jbInit() throws Exception
+	private void jbInit()
 	{
 		setName(LangModel.getString("labelTabbedProperties"));
-
-//		xYLayout1.setWidth(610);
-//		xYLayout1.setHeight(410);
-
-//		this.setPreferredSize(new Dimension(510, 410));
-//		this.setMaximumSize(new Dimension(510, 410));
-//		this.setMinimumSize(new Dimension(510, 410));
 		this.setLayout(xYLayout1);
 	}
 
@@ -116,4 +77,8 @@ public class GeneralPanel extends PropertiesPanel
 		return false;
 	}
 
+	public boolean cancel()
+	{
+		return false;
+	}
 }

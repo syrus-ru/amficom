@@ -1,15 +1,25 @@
-package com.syrus.AMFICOM.Client.General.UI;
+/*
+ * $Id: ObjectResourceCatalogButtonsPanel.java,v 1.5 2004/09/27 06:19:46 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
 
-import oracle.jdeveloper.layout.*;
+package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
+import oracle.jdeveloper.layout.XYConstraints;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2004/09/27 06:19:46 $
+ * @module generalclient_v1
+ */
 public class ObjectResourceCatalogButtonsPanel extends JPanel
 {
 	public ApplicationContext aContext;
@@ -22,9 +32,9 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 	public JButton buttonProperties = new JButton();
 	public JButton buttonSave = new JButton();
 
-	PropertiesPanel pp;
+	ObjectResourcePropertiesPane pp;
 
-	public ObjectResourceCatalogButtonsPanel(PropertiesPanel pp)
+	public ObjectResourceCatalogButtonsPanel(ObjectResourcePropertiesPane pp)
 	{
 		super();
 		try
@@ -38,7 +48,7 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 		setPropertiesPanel(pp);
 	}
 
-	public void setPropertiesPanel(PropertiesPanel pp)
+	public void setPropertiesPanel(ObjectResourcePropertiesPane pp)
 	{
 		this.pp = pp;
 	}
