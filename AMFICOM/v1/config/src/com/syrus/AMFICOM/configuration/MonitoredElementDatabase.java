@@ -8,6 +8,10 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.*;
 
 public class MonitoredElementDatabase extends StorableObjectDatabase {
+	//	 kis_id VARCHAR2(32) NOT NULL,
+    public static final String COLUMN_KIS_ID        = "kis_id";
+    // local_address VARCHAR2(64) NOT NULL,
+    public static final String COLUMN_LOCAL_ADDRESS = "local_address";
 
 	private MonitoredElement fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MonitoredElement)
@@ -21,17 +25,17 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveMonitoredElement(MonitoredElement monitoredElement) throws ObjectNotFoundException, RetrieveObjectException {
-		String meIdStr = monitoredElement.getId().toString();
-		String sql = "SELECT "
-			+ DatabaseDate.toQuerySubString("created") + ", "
-			+ DatabaseDate.toQuerySubString("modified") + ", "
-			+ "creator_id, "
-			+ "modifier_id, "
-			+ "domain_id, "
-			+ "kis_id, "
-			+ "local_address"
-			+ " FROM " + ObjectEntities.ME_ENTITY
-			+ " WHERE id = " + meIdStr;
+		String meIdStr = monitoredElement.getId().toSQLString();
+		String sql = SQL_SELECT
+			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
+			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ DomainMember.COLUMN_DOMAIN_ID + COMMA		
+			+ COLUMN_KIS_ID + COMMA
+			+ COLUMN_LOCAL_ADDRESS
+			+ SQL_FROM + ObjectEntities.ME_ENTITY
+			+ SQL_WHERE + COLUMN_ID + EQUALS + meIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -39,13 +43,29 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			Log.debugMessage("MonitoredElement_Database.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				monitoredElement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
-																			 DatabaseDate.fromQuerySubString(resultSet, "modified"),
-																			 new Identifier(resultSet.getString("creator_id")),
-																			 new Identifier(resultSet.getString("modifier_id")),
-																			 new Identifier(resultSet.getString("domain_id")),
-																			 new Identifier(resultSet.getString("kis_id")),
-																			 resultSet.getString("local_address"));
+				monitoredElement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+											   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+											   /**
+												 * @todo when change DB Identifier model ,change getString() to
+												 *       getLong()
+												 */
+											   new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+											   /**
+												 * @todo when change DB Identifier model ,change getString() to
+												 *       getLong()
+												 */
+											   new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+											   /**
+												 * @todo when change DB Identifier model ,change getString() to
+												 *       getLong()
+												 */
+											   new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
+											   /**
+												 * @todo when change DB Identifier model ,change getString() to
+												 *       getLong()
+												 */
+											   new Identifier(resultSet.getString(COLUMN_KIS_ID)),
+											   resultSet.getString(COLUMN_LOCAL_ADDRESS));
 			else
 				throw new ObjectNotFoundException("No such monitored element: " + meIdStr);
 		}
@@ -99,19 +119,28 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	private void insertMonitoredElement(MonitoredElement monitoredElement) throws CreateObjectException {
-		String meIdStr = monitoredElement.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.ME_ENTITY
-			+ " (id, created, modified, creator_id, modifier_id, domain_id, kis_id, local_address)"
-			+ " VALUES ("
-			+ meIdStr + ", "
-			+ DatabaseDate.toUpdateSubString(monitoredElement.getCreated()) + ", "
-			+ DatabaseDate.toUpdateSubString(monitoredElement.getModified()) + ", "
-			+ monitoredElement.getCreatorId().toString() + ", "
-			+ monitoredElement.getModifierId().toString() + ", "
-			+ monitoredElement.getDomainId().toString() + ", "
-			+ monitoredElement.getKISId().toString() + ", '"
+		String meIdStr = monitoredElement.getId().toSQLString();
+		String sql = SQL_INSERT_INTO + ObjectEntities.ME_ENTITY
+			+ OPEN_BRACKET 
+			+ COLUMN_ID + COMMA
+			+ COLUMN_CREATED + COMMA
+			+ COLUMN_MODIFIED + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+			+ COLUMN_KIS_ID + COMMA
+			+ COLUMN_LOCAL_ADDRESS
+			+ CLOSE_BRACKET
+			+ SQL_VALUES + OPEN_BRACKET			
+			+ meIdStr + COMMA
+			+ DatabaseDate.toUpdateSubString(monitoredElement.getCreated()) + COMMA
+			+ DatabaseDate.toUpdateSubString(monitoredElement.getModified()) + COMMA
+			+ monitoredElement.getCreatorId().toSQLString() + COMMA
+			+ monitoredElement.getModifierId().toSQLString() + COMMA
+			+ monitoredElement.getDomainId().toSQLString() + COMMA
+			+ monitoredElement.getKISId().toSQLString() + COMMA + APOSTOPHE
 			+ monitoredElement.getLocalAddress()
-			+ "')";
+			+ APOSTOPHE + CLOSE_BRACKET;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
