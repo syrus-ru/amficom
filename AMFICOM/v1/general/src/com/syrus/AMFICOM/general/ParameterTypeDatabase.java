@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.6 2005/02/07 08:51:30 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.7 2005/02/07 14:54:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/07 08:51:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/02/07 14:54:31 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -81,7 +81,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
 		ParameterType parameterType = (storableObject == null) ? 
-					new ParameterType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, null, DataType._DATA_TYPE_DATA) : 
+					new ParameterType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, null, DataType._DATA_TYPE_RAW) : 
 					this.fromStorableObject(storableObject);
 		parameterType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 									DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),

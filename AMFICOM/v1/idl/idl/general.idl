@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.52 2005/02/02 14:07:16 bob Exp $
+ * $Id: general.idl,v 1.53 2005/02/07 14:54:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,7 @@ module corba {
 		DATA_TYPE_STRING,
 		DATA_TYPE_DATE,
 		DATA_TYPE_LONG,
-		DATA_TYPE_DATA
+		DATA_TYPE_RAW
 	};
 
 	enum ErrorCode {
