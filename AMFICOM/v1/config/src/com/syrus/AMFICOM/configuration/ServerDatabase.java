@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.16 2004/08/30 14:39:41 bob Exp $
+ * $Id: ServerDatabase.java,v 1.17 2004/09/08 13:18:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -26,12 +25,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.17 $, $Date: 2004/09/08 13:18:01 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -47,44 +47,80 @@ public class ServerDatabase extends StorableObjectDatabase {
     // user_id VARCHAR2(32) NOT NULL,
     public static final String COLUMN_USER_ID       = "user_id";    
 
+    private String updateColumns;
+    private String updateMultiplySQLValues;
+    
 	private Server fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Server)
 			return (Server) storableObject;
 		throw new IllegalDataException("ServerDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
+	protected String getEnityName() {		
+		return "Server";
+	}	
+	
+	protected String getTableName() {		
+		return ObjectEntities.SERVER_ENTITY;
+	}
+	
+	protected String getUpdateColumns() {		
+		if (this.updateColumns == null){
+			this.updateColumns = super.getUpdateColumns() + COMMA
+				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+				+ COLUMN_NAME + COMMA
+				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_USER_ID;		
+		}
+		return this.updateColumns;
+	}	
+	
+	protected String getUpdateMultiplySQLValues() {
+		if (this.updateMultiplySQLValues == null){
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;		
+		}
+		return this.updateMultiplySQLValues;
+	}	
+	
+	
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
+			UpdateObjectException {
+		Server server = fromStorableObject(storableObject);
+		return super.getUpdateSingleSQLValues(storableObject) + COMMA
+			+ server.getDomainId().toSQLString() + COMMA
+			+ APOSTOPHE + server.getName() + APOSTOPHE + COMMA
+			+ APOSTOPHE + server.getDescription() + APOSTOPHE + COMMA
+			+ server.getUserId().toSQLString();
+	}
+
+	
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		Server server = this.fromStorableObject(storableObject);
-		this.retrieveServer(server);
+		this.retrieveEntity(server);
 		server.setCharacteristics(characteristicDatabase.retrieveCharacteristics(server.getId(), CharacteristicSort.CHARACTERISTIC_SORT_SERVER));
 	}
 	
-	private String retrieveServerQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
-		+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-		+ COLUMN_NAME + COMMA
-		+ COLUMN_DESCRIPTION + COMMA
-		+ COLUMN_USER_ID
-		+ SQL_FROM + ObjectEntities.SERVER_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+	protected String retrieveQuery(String condition){
+		return super.retrieveQuery(condition) + COMMA
+			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+			+ COLUMN_NAME + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_USER_ID
+			+ SQL_FROM + ObjectEntities.SERVER_ENTITY
+			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+	}	
 
-	}
-	
-	private Server updateServerFromResultSet(Server server, ResultSet resultSet) throws SQLException{
-		Server server1 = server;
-		if (server1 == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			server1 = new Server(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null);			
-		}
-		server1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+			throws IllegalDataException, RetrieveObjectException, SQLException {
+		Server server = (storableObject==null)?
+				new Server(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null) :
+					fromStorableObject(storableObject);
+		server.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 								DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 								/**
 									* @todo when change DB Identifier model ,change getString() to getLong()
@@ -104,44 +140,34 @@ public class ServerDatabase extends StorableObjectDatabase {
 									* @todo when change DB Identifier model ,change getString() to getLong()
 									*/
 								new Identifier(resultSet.getString(COLUMN_USER_ID)));
-		return server1;
+		return server;
 	}
 
-
-	private void retrieveServer(Server server) throws ObjectNotFoundException, RetrieveObjectException {
-		String serverIdStr = server.getId().toSQLString();
-		String sql = retrieveServerQuery(COLUMN_ID + EQUALS + serverIdStr);
-
-		Statement statement = null;
-		ResultSet resultSet = null;
+	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+		throws IllegalDataException, UpdateObjectException {
+		Server server = fromStorableObject(storableObject);
+		super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			statement = connection.createStatement();
-			Log.debugMessage("ServerDatabase.retrieveServer | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) 
-				updateServerFromResultSet(server, resultSet);
-			else
-				throw new ObjectNotFoundException("No such server: " + serverIdStr);
+			/**
+			  * @todo when change DB Identifier model ,change setString() to setLong()
+			  */
+			preparedStatement.setString(6, server.getDomainId().getCode());
+			preparedStatement.setString(7, server.getName());
+			preparedStatement.setString(8, server.getDescription());
+			/**
+			  * @todo when change DB Identifier model ,change setString() to setLong()
+			  */
+			preparedStatement.setString(9, server.getUserId().getCode());
+			/**
+			  * @todo when change DB Identifier model ,change setString() to setLong()
+			  */
+			preparedStatement.setString(10, server.getId().getCode());
+			
+		} catch (SQLException sqle) {
+			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
-		catch (SQLException sqle) {
-			String mesg = "ServerDatabase.retrieveServer | Cannot retrieve server " + serverIdStr;
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}	
-	
+	}
+
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Server server = this.fromStorableObject(storableObject);
@@ -195,7 +221,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Server server = this.fromStorableObject(storableObject);
 		try {
-			this.insertServer(server);
+			this.insertEntity(server);
 		}
 		catch (CreateObjectException e) {
 			try {
@@ -215,183 +241,53 @@ public class ServerDatabase extends StorableObjectDatabase {
 			Log.errorException(sqle);
 		}
 	}
-
-	private void insertServer(Server server) throws CreateObjectException {
-		String serverIdStr = server.getId().toSQLString();
-		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.SERVER_ENTITY + OPEN_BRACKET
-			+ COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-			+ COLUMN_NAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_USER_ID
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ serverIdStr + COMMA
-			+ DatabaseDate.toUpdateSubString(server.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(server.getModified()) + COMMA
-			+ server.getCreatorId().toSQLString() + COMMA
-			+ server.getModifierId().toSQLString() + COMMA
-			+ server.getDomainId().toSQLString() + COMMA
-			+ APOSTOPHE + server.getName() + APOSTOPHE + COMMA
-			+ APOSTOPHE + server.getDescription() + APOSTOPHE + COMMA
-			+ server.getUserId().toSQLString()
-			+ CLOSE_BRACKET;
-
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("ServerDatabase.insertServer | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-		}
-		catch (SQLException sqle) {
-			String mesg = "ServerDatabase.insertServer | Cannot insert server " + serverIdStr;
-			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
+	
+	
+	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+		insertEntities(storableObjects);
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, 
+			VersionCollisionException, UpdateObjectException {
 		Server server = this.fromStorableObject(storableObject);
 		switch (updateKind) {
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntity(storableObject, false);
+				break;
+			case UPDATE_FORCE:					
 			default:
+				super.checkAndUpdateEntity(storableObject, true);		
 				return;
 		}
 	}
 	
-	public List retrieveByIds(List ids) throws RetrieveObjectException {
+	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+		VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {	
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntities(storableObjects, false);
+				break;
+			case UPDATE_FORCE:					
+			default:
+				super.checkAndUpdateEntities(storableObjects, true);		
+				return;
+		}
+		
+	}	
+	
+	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			return retriveByIdsOneQuery(null);
-		return retriveByIdsOneQuery(ids);	
-		//return retriveByIdsPreparedStatement(ids);
-	}
-	
-	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			String condition = null;
-			if (ids!=null){
-				StringBuffer buffer = new StringBuffer(COLUMN_ID);
-				int idsLength = ids.size();
-				if (idsLength == 1){
-					buffer.append(EQUALS);
-					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-				} else{
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					
-					int i = 1;
-					for(Iterator it=ids.iterator();it.hasNext();i++){
-						Identifier id = (Identifier)it.next();
-						buffer.append(id.toSQLString());
-						if (i < idsLength)
-							buffer.append(COMMA);
-					}
-					
-					buffer.append(CLOSE_BRACKET);
-					condition = buffer.toString();
-				}
-			}
-			sql = retrieveServerQuery(condition);
+			list = retriveByIdsOneQuery(null, condition);
+		else list = retriveByIdsOneQuery(ids, condition);
+		
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+		for(Iterator it=list.iterator();it.hasNext();){
+			Server server = (Server)it.next();
+			server.setCharacteristics(characteristicDatabase.retrieveCharacteristics(server.getId(), CharacteristicSort.CHARACTERISTIC_SORT_SERVER));
 		}
 		
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("ServerDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()){
-				result.add(updateServerFromResultSet(null, resultSet));
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "ServerDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return result;
-	}
-	
-	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				return retriveByIdsOneQuery(ids);
-			}
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			buffer.append(EQUALS);							
-			buffer.append(QUESTION);
-			
-			sql = retrieveServerQuery(buffer.toString());
-		}
-			
-		PreparedStatement stmt = null;
-		ResultSet resultSet = null;
-		try {
-			stmt = connection.prepareStatement(sql.toString());
-			for(Iterator it = ids.iterator();it.hasNext();){
-				Identifier id = (Identifier)it.next(); 
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				String idStr = id.getIdentifierString();
-				stmt.setString(1, idStr);
-				resultSet = stmt.executeQuery();
-				if (resultSet.next()){
-					result.add(updateServerFromResultSet(null, resultSet));
-				} else{
-					Log.errorMessage("ServerDatabase.retriveByIdsPreparedStatement | No such server: " + idStr);									
-				}
-				
-			}
-		}catch (SQLException sqle) {
-			String mesg = "ServerDatabase.retriveByIdsPreparedStatement | Cannot retrieve server " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				if (stmt != null)
-					stmt.close();
-				stmt = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}			
-		
-		return result;
+		return list;
 	}
 
 }
