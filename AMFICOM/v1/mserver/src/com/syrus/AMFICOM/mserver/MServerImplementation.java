@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.12 2004/08/31 15:35:34 bob Exp $
+ * $Id: MServerImplementation.java,v 1.13 2004/10/13 15:27:22 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,10 +8,12 @@
 
 package com.syrus.AMFICOM.mserver;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -27,6 +29,7 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 
 import com.syrus.AMFICOM.configuration.CharacteristicType;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -57,6 +60,9 @@ import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 
+import com.syrus.AMFICOM.measurement.Analysis;
+import com.syrus.AMFICOM.measurement.Evaluation;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -67,6 +73,9 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
+import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
@@ -77,12 +86,13 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
+import com.syrus.AMFICOM.mserver.corba.MServerOperations;
 import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/31 15:35:34 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2004/10/13 15:27:22 $
+ * @author $Author: max $
  * @module mserver_v1
  */
 
@@ -465,8 +475,84 @@ public class MServerImplementation extends MServerPOA {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
 		}
 	}
+    
+    public Measurement_Transferable[] transmitMeasurements(Identifier_Transferable[] id_Transferables) throws AMFICOMRemoteException  {
+        
+        try {
+            List list;
+            List idsList = new ArrayList(id_Transferables.length);
+            for (int i = 0; i < id_Transferables.length; i++) {
+                idsList.add(new Identifier(id_Transferables[i]));
+            }
+            
+            list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+            
+            Measurement_Transferable[] transferables = new Measurement_Transferable[list.size()];
+            int i = 0;
+            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+                Measurement measurement = (Measurement) it.next();
+                transferables[i] = (Measurement_Transferable) measurement.getTransferable();
+            }
+            return transferables;
 
-	public AnalysisType_Transferable transmitAnalysisType(Identifier_Transferable idT) throws AMFICOMRemoteException {
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        }
+    }
+    
+    public Analysis_Transferable transmitAnalysis(Identifier_Transferable id_Transferable) throws AMFICOMRemoteException  {
+        
+        try {
+            Identifier id  = new Identifier(id_Transferable);
+            Analysis analysis = (Analysis) MeasurementStorableObjectPool.getStorableObject(id, true);
+            Analysis_Transferable transferables = (Analysis_Transferable) analysis.getTransferable();
+            return transferables;
+
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        }
+    }
+    
+    public Analysis_Transferable[] transmitAnalyses(Identifier_Transferable[] id_Transferables) throws AMFICOMRemoteException  {
+        
+        try {
+            List list;
+            List idsList = new ArrayList(id_Transferables.length);
+            for (int i = 0; i < id_Transferables.length; i++) {
+                idsList.add(new Identifier(id_Transferables[i]));
+            }
+            
+            list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+            
+            Analysis_Transferable[] transferables = new Analysis_Transferable[list.size()];
+            int i = 0;
+            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+                Analysis analysis = (Analysis) it.next();
+                transferables[i] = (Analysis_Transferable) analysis.getTransferable();
+            }
+            return transferables;
+
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        }
+    }
+    
+    public AnalysisType_Transferable transmitAnalysisType(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			AnalysisType analysisType = new AnalysisType(id);
@@ -481,6 +567,53 @@ public class MServerImplementation extends MServerPOA {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
 		}
 	}
+    
+    public Evaluation_Transferable transmitEvaluation(Identifier_Transferable id_Transferable) throws AMFICOMRemoteException  {
+        
+        try {
+            Identifier id  = new Identifier(id_Transferable);
+            Evaluation evaluation = (Evaluation) MeasurementStorableObjectPool.getStorableObject(id, true);
+            Evaluation_Transferable transferables = (Evaluation_Transferable) evaluation.getTransferable();
+            return transferables;
+
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        }
+    }
+    
+    public Evaluation_Transferable[] transmitEvaluations(Identifier_Transferable[] id_Transferables) throws AMFICOMRemoteException  {
+        
+        try {
+            List list;
+            List idsList = new ArrayList(id_Transferables.length);
+            for (int i = 0; i < id_Transferables.length; i++) {
+                idsList.add(new Identifier(id_Transferables[i]));
+            }
+            
+            list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+            
+            Evaluation_Transferable[] transferables = new Evaluation_Transferable[list.size()];
+            int i = 0;
+            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+                Evaluation evaluation = (Evaluation) it.next();
+                transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
+            }
+            return transferables;
+
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        }
+    }
 
 	public EvaluationType_Transferable transmitEvaluationType(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
