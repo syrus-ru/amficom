@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogFrame.java,v 1.5 2004/09/27 06:16:58 bass Exp $
+ * $Id: ObjectResourceCatalogFrame.java,v 1.6 2004/09/27 09:32:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,14 +11,13 @@ package com.syrus.AMFICOM.Client.General.UI;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.*;
 import java.awt.*;
 import java.util.List;
 import javax.swing.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2004/09/27 06:16:58 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/27 09:32:54 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogFrame

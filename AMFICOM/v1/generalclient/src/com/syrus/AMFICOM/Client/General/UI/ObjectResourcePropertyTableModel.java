@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertyTableModel.java,v 1.4 2004/09/27 05:55:00 bass Exp $
+ * $Id: ObjectResourcePropertyTableModel.java,v 1.5 2004/09/27 09:33:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import java.awt.Component;
 import java.util.*;
@@ -16,7 +15,7 @@ import javax.swing.table.AbstractTableModel;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 05:55:00 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/27 09:33:42 $
  * @module generalclient_v1
  */
 public class ObjectResourcePropertyTableModel extends AbstractTableModel

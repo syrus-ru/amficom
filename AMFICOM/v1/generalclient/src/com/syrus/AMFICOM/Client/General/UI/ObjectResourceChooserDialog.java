@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceChooserDialog.java,v 1.4 2004/09/27 06:15:02 bass Exp $
+ * $Id: ObjectResourceChooserDialog.java,v 1.5 2004/09/27 09:33:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -31,7 +30,7 @@ import oracle.jdeveloper.layout.XYLayout;
  * setCanDelete(boolean bool)
  *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 06:15:02 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/27 09:33:03 $
  * @module generalclient_v1
  */
 public class ObjectResourceChooserDialog extends JDialog 
