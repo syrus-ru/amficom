@@ -5,8 +5,6 @@ CREATE TABLE Port (
  creator_id VARCHAR2(32) NOT NULL,
  modifier_id VARCHAR2(32) NOT NULL,
 --
- domain_id VARCHAR2(32),
---
  type_id VARCHAR2(32) NOT NULL,
 --
  description VARCHAR2(256),
