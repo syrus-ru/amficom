@@ -11,6 +11,8 @@ public class ObjectEntities {
 	public static final String EVATYPPARTYPLINK_ENTITY = "EvaTypParTypLink";
 
 	/*	Administration	*/
+	public static final String PERMATTR_ENTITY = "PermissionAttributes";
+	public static final String DOMAIN_ENTITY = "domain";
 	public static final String MCM_ENTITY = "mcm";
 	public static final String SERVER_ENTITY = "Server";
 	public static final String USER_ENTITY = "User";
@@ -44,9 +46,11 @@ public class ObjectEntities {
 	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0004;
 
 	/*	Administration 129 -- 256	*/
-	public static final short MCM_ENTITY_CODE = 0x0081;
-	public static final short SERVER_ENTITY_CODE = 0x0082;
-	public static final short USER_ENTITY_CODE = 0x0083;
+	public static final short PERMATTR_ENTITY_CODE = 0x0081;
+	public static final short DOMAIN_ENTITY_CODE = 0x0082;
+	public static final short MCM_ENTITY_CODE = 0x0083;
+	public static final short SERVER_ENTITY_CODE = 0x0084;
+	public static final short USER_ENTITY_CODE = 0x0085;
 
 	/*	Configuration	257 -- 384*/
 	public static final short ME_ENTITY_CODE = 0x0100;
