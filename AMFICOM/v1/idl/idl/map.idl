@@ -1,5 +1,5 @@
 /**
- * $Id: map.idl,v 1.7 2004/09/17 11:26:51 krupenn Exp $
+ * $Id: map.idl,v 1.8 2004/09/21 14:23:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,19 +24,6 @@ module CORBA
 {
 module Map
 {
-/*
-	struct MapProtoGroup_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring parent_id;
-		::CORBA::WStringSeq group_ids;
-		::CORBA::WStringSeq mapproto_ids;
-		long long modified;
-	};
-	typedef sequence <MapProtoGroup_Transferable> MapProtoGroupSeq_Transferable;
-*/
-
 	struct MapNodeProtoElement_Transferable
 	{
 		wstring id;
@@ -64,19 +51,7 @@ module Map
 		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <MapLinkProtoElement_Transferable> MapLinkProtoElementSeq_Transferable;
-/*
-	struct MapPathProtoElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
 
-		long long modified;
-
-		General::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <MapPathProtoElement_Transferable> MapPathProtoElementSeq_Transferable;
-*/
 	struct MapSiteElement_Transferable
 	{
 		wstring id;
@@ -198,41 +173,6 @@ module Map
 	};
 	typedef sequence <MapPipePathElement_Transferable> MapPipePathElementSeq_Transferable;
 
-/*
-	struct MapCablePathElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
-
-		wstring mapId;
-
-		wstring startNodeId;//начало
-		wstring endNodeId;//конец
-		General::ElementAttributeSeq_Transferable attributes;
-
-		::CORBA::WStringSeq physicalLinkIds;
-	};
-	typedef sequence <MapCablePathElement_Transferable> MapCablePathElementSeq_Transferable;
-*/
-/*
-	struct MapPathElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring typeId;
-		wstring description;
-
-		wstring mapViewId;
-
-		wstring startNodeId;//начало
-		wstring endNodeId;//конец
-		General::ElementAttributeSeq_Transferable attributes;
-
-		::CORBA::WStringSeq physicalLinkIds;
-	};
-	typedef sequence <MapPathElement_Transferable> MapPathElementSeq_Transferable;
-*/
 	struct Map_Transferable
 	{
 		wstring id;
@@ -275,8 +215,6 @@ module Map
 		
 		wstring mapId;
 		::CORBA::WStringSeq schemeIds;
-
-//		::CORBA::WStringSeq cablePathIds;
 	};
 	typedef sequence <MapView_Transferable> MapViewSeq_Transferable;
 
