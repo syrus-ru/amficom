@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.32 2004/10/21 10:34:35 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.33 2004/10/27 14:27:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,9 +28,10 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/10/21 10:34:35 $
+ * @version $Revision: 1.33 $, $Date: 2004/10/27 14:27:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -83,9 +84,9 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			UpdateObjectException {
 		ParameterType parameterType = fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + parameterType.getCodename() + APOSTOPHE + COMMA
-			+ APOSTOPHE + parameterType.getDescription() + APOSTOPHE + COMMA
-			+ APOSTOPHE + parameterType.getName() + APOSTOPHE + COMMA +
+			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getCodename()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getDescription()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getName()) + APOSTOPHE + COMMA +
 			+ parameterType.getSort().value();
 	}	
 
@@ -131,9 +132,9 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 												  *       getLong()
 												  */
 												 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-												 resultSet.getString(COLUMN_CODENAME),
-												 resultSet.getString(COLUMN_DESCRIPTION),
-												 resultSet.getString(COLUMN_NAME),
+												 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
+												 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+												 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 												 resultSet.getInt(COLUMN_SORT));
 		return parameterType;
 	}
@@ -189,7 +190,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		List list = null;
 		
 		try {
-			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + codename + APOSTOPHE);
+			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename) + APOSTOPHE);
 		}  catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
 		}

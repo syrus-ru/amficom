@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.32 2004/10/26 14:48:45 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.33 2004/10/27 14:27:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import java.util.List;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainMember;
 import com.syrus.AMFICOM.general.Identified;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/10/26 14:48:45 $
+ * @version $Revision: 1.33 $, $Date: 2004/10/27 14:27:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -61,7 +62,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	private String updateMultiplySQLValues;	
 	
 	protected String getEnityName() {		
-		return "Measurement";
+		return ObjectEntities.MEASUREMENT_ENTITY;
 	}
 	
 	
@@ -114,13 +115,13 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		Measurement measurement = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ measurement.getType().getId().toSQLString() + COMMA
-			+ APOSTOPHE + measurement.getName() + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getName()) + APOSTOPHE + COMMA
 			+ measurement.getMonitoredElementId().toSQLString() + COMMA
 			+ measurement.getSetup().getId().toSQLString() + COMMA
 			+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) + COMMA
 			+ Long.toString(measurement.getDuration()) + COMMA
 			+ Integer.toString(measurement.getStatus().value()) + COMMA
-			+ APOSTOPHE + measurement.getLocalAddress() + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getLocalAddress()) + APOSTOPHE + COMMA
 			+ measurement.getTestId().toSQLString();
 		return values;
 	}
@@ -194,7 +195,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
 			measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
-			name = resultSet.getString(COLUMN_NAME);
+			name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
@@ -223,7 +224,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 									DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
 									resultSet.getLong(COLUMN_DURATION),
 									resultSet.getInt(COLUMN_STATUS),
-									resultSet.getString(COLUMN_LOCAL_ADDRESS),
+									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LOCAL_ADDRESS)),
 									/**
 									 * @todo when change DB Identifier model ,change getString() to getLong()
 									 */

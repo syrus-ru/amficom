@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.34 2004/10/21 05:33:10 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.35 2004/10/27 14:27:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import java.util.Iterator;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainMember;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -37,7 +38,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/10/21 05:33:10 $
+ * @version $Revision: 1.35 $, $Date: 2004/10/27 14:27:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -61,7 +62,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	private String updateMultiplySQLValues;	
 	
 	protected String getEnityName() {
-		return "MeasurementSetup";
+		return ObjectEntities.MS_ENTITY;
 	}
 	
 	
@@ -271,7 +272,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			+ criteriaSetIdSubstr + COMMA
 			+ thresholdSetIdSubstr + COMMA
 			+ etalonIdSubstr + COMMA
-			+ APOSTOPHE + measurementSetup.getDescription() + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementSetup.getDescription()) + APOSTOPHE + COMMA
 			+ Long.toString(measurementSetup.getMeasurementDuration());
 		return values;
 	}
@@ -424,25 +425,24 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException(ae);
 		}
 
-		String description = resultSet.getString(COLUMN_DESCRIPTION);
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
 		measurementSetup.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-																	 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-																	 /**
-																		* @todo when change DB Identifier model ,change getString() to
-																		*       getLong()
-																		*/
-																	 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-																	 /**
-																		* @todo when change DB Identifier model ,change getString() to
-																		*       getLong()
-																		*/
-																	 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-																	 parameterSet,
-																	 criteriaSet,
-																	 thresholdSet,
-																	 etalon,
-																	 (description != null) ? description : "",
-																	 resultSet.getLong(COLUMN_MEASUREMENT_DURAION));
+									   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+									   /**
+									    * @todo when change DB Identifier model ,change getString() to getLong()
+									    */
+									   new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+									   /**
+										* @todo when change DB Identifier model ,change getString() to
+										*       getLong()
+										*/
+									   new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+									   parameterSet,
+									   criteriaSet,
+									   thresholdSet,
+									   etalon,
+									   (description != null) ? description : "",
+									   resultSet.getLong(COLUMN_MEASUREMENT_DURAION));
 		return measurementSetup;
 	}
 

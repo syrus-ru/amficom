@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.32 2004/10/19 07:48:21 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.33 2004/10/27 14:27:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,9 +31,10 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/10/19 07:48:21 $
+ * @version $Revision: 1.33 $, $Date: 2004/10/27 14:27:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -65,7 +66,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	
 	
 	protected String getEnityName() {
-		return "AnalysisType";
+		return ObjectEntities.ANALYSISTYPE_ENTITY;
 	}
 	
 	
@@ -96,8 +97,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		AnalysisType analysisType = fromStorableObject(storableObject);		
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA 
-			+ APOSTOPHE + analysisType.getCodename() + APOSTOPHE + COMMA 
-			+ APOSTOPHE + analysisType.getDescription() + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(analysisType.getCodename()) + APOSTOPHE + COMMA 
+			+ APOSTOPHE + DatabaseString.toQuerySubString(analysisType.getDescription()) + APOSTOPHE;
 		return sql;
 	}
 	
@@ -136,8 +137,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 												  *       getLong()
 												  */
 												 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-												 resultSet.getString(COLUMN_CODENAME),
-												 resultSet.getString(COLUMN_DESCRIPTION));
+												 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
+												 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
 		return analysisType;
 	}
 

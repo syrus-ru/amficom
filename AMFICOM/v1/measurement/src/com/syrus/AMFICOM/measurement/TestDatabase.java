@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.42 2004/10/19 11:09:27 bass Exp $
+ * $Id: TestDatabase.java,v 1.43 2004/10/27 14:27:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import java.util.List;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -47,8 +48,8 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/10/19 11:09:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.43 $, $Date: 2004/10/27 14:27:50 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -74,7 +75,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	private String updateMultiplySQLValues;	
 	
 	protected String getEnityName() {
-		return "Test";
+		return ObjectEntities.TEST_ENTITY;
 	}	
 	
 	protected String getTableName() {		
@@ -137,7 +138,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ test.getStatus().value() + COMMA
 			+ test.getMonitoredElement().getId().toSQLString() + COMMA
 			+ test.getReturnType().value() + COMMA
-			+ APOSTOPHE + test.getDescription() + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(test.getDescription()) + APOSTOPHE;
 	}
 	
 	
@@ -254,7 +255,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-		String description = resultSet.getString(COLUMN_DESCRIPTION);
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
 		test.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 											 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 											 /**

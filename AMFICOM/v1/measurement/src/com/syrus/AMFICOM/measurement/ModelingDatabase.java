@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.7 2004/10/19 11:37:14 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.8 2004/10/27 14:27:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainMember;
 import com.syrus.AMFICOM.general.Identifier;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/10/19 11:37:14 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/27 14:27:50 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -140,7 +141,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
     	String schemePathId = modeling.getSchemePathId();
     	
         String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-            + APOSTOPHE + modeling.getName() + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(modeling.getName()) + APOSTOPHE + COMMA
             + ((monitoredElementId != null) ? monitoredElementId.toSQLString() : Identifier.getNullSQLString()) + COMMA
 			+ APOSTOPHE + ((schemePathId != null) ? schemePathId : "") + APOSTOPHE + COMMA
             + modeling.getMeasurementType().getId().toSQLString() + COMMA
@@ -194,7 +195,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
                                                      * @todo when change DB Identifier model ,change getString() to getLong()
                                                      */
                                                      new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-                                                     resultSet.getString(COLUMN_NAME),
+                                                     DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
                                                      (meId != null) ? new Identifier(meId) : null,
                                                      /**
                                                       * @todo when change DB Identifier model ,change getString() to getLong()

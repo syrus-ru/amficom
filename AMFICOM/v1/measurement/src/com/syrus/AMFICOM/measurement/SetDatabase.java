@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.31 2004/10/19 07:48:21 bob Exp $
+ * $Id: SetDatabase.java,v 1.32 2004/10/27 14:27:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,9 +37,10 @@ import com.syrus.util.Log;
 import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/10/19 07:48:21 $
+ * @version $Revision: 1.32 $, $Date: 2004/10/27 14:27:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -90,7 +91,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		Set set = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ Integer.toString(set.getSort().value()) + COMMA
-			+ APOSTOPHE + set.getDescription() + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(set.getDescription()) + APOSTOPHE;
 		return values;
 	}
 	
@@ -135,19 +136,19 @@ public class SetDatabase extends StorableObjectDatabase {
 		Set set = (storableObject == null) ?
 				new Set(new Identifier(resultSet.getString(COLUMN_ID)), null, 0, null, null, null) :			
 				fromStorableObject(storableObject);
-		String description = resultSet.getString(COLUMN_DESCRIPTION);
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
 		set.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-											/**
-												* @todo when change DB Identifier model ,change getString() to getLong()
-												*/												
-											new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-											/**
-												* @todo when change DB Identifier model ,change getString() to getLong()
-												*/
-											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-											resultSet.getInt(COLUMN_SORT),
-											(description != null) ? description : "");
+						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+						  /**
+							* @todo when change DB Identifier model ,change getString() to getLong()
+							*/
+						  new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+						  /**
+						    * @todo when change DB Identifier model ,change getString() to getLong()
+							*/
+						  new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+						  resultSet.getInt(COLUMN_SORT),
+						  (description != null) ? description : "");
 		return set;
 	}
 
@@ -185,14 +186,14 @@ public class SetDatabase extends StorableObjectDatabase {
 					throw new RetrieveObjectException(ae);
 				}
 				parameter = new SetParameter(/**
-																			* @todo when change DB Identifier model ,change getString() to getLong()
-																			*/
-																			new Identifier(resultSet.getString(COLUMN_ID)),
-																			/**
-																			 * @todo when change DB Identifier model ,change getString() to getLong()
-																			 */
-																			parameterType,
-																			ByteArrayDatabase.toByteArray((BLOB)resultSet.getBlob(LINK_COLUMN_VALUE)));
+				 							  * @todo when change DB Identifier model ,change getString() to getLong()
+			 								  */
+											 new Identifier(resultSet.getString(COLUMN_ID)),
+											 /**
+											   * @todo when change DB Identifier model ,change getString() to getLong()
+											   */
+											 parameterType,
+											 ByteArrayDatabase.toByteArray((BLOB)resultSet.getBlob(LINK_COLUMN_VALUE)));
 				parameters.add(parameter);
 			}
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.29 2004/10/19 07:48:21 bob Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.30 2004/10/27 14:27:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,9 +32,10 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/10/19 07:48:21 $
+ * @version $Revision: 1.30 $, $Date: 2004/10/27 14:27:50 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -111,8 +112,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		EvaluationType evaluationType = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-		+ APOSTOPHE + evaluationType.getCodename() + APOSTOPHE + COMMA
-		+ APOSTOPHE + evaluationType.getDescription() + APOSTOPHE;		
+		+ APOSTOPHE + DatabaseString.toQuerySubString(evaluationType.getCodename()) + APOSTOPHE + COMMA
+		+ APOSTOPHE + DatabaseString.toQuerySubString(evaluationType.getDescription()) + APOSTOPHE;		
 		return values;
 	}
 	
@@ -153,8 +154,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 												  *       getLong()
 												  */
 												 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-												 resultSet.getString(COLUMN_CODENAME),
-												 resultSet.getString(COLUMN_DESCRIPTION));
+												 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
+												 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
 		return evaluationType;
 	}
 
@@ -426,7 +427,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		List list = null;
 		
 		try {
-			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + codename + APOSTOPHE);
+			list = retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename) + APOSTOPHE);
 		}  catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
 		}
