@@ -13,7 +13,7 @@ TRANSCEIVER_DIR := ./transceiver
 
 include ../tools/Makefile.inc
 
-APPCLASSPATH := $(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/dadara.jar
+APPCLASSPATH := $(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/event.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/dadara.jar
 
 JAVAH := javah
 JAVAH_FLAGS := \
