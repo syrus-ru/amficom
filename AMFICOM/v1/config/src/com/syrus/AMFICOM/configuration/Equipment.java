@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.34 2004/11/15 15:30:53 bob Exp $
+ * $Id: Equipment.java,v 1.35 2004/11/24 12:32:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/11/15 15:30:53 $
+ * @version $Revision: 1.35 $, $Date: 2004/11/24 12:32:45 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -223,24 +223,27 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		return this.portIds;
 	}
 
-	public void setCharacteristics(List characteristics) {
-		this.characteristics = characteristics;
+	public void setCharacteristics(final List characteristics) {
+		this.characteristics.clear();
+		if (characteristics != null)
+				this.characteristics.addAll(characteristics);
+		super.currentVersion = super.getNextVersion();
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						Identifier domainId,
-																						EquipmentType type,
-																						String name,
-																						String description,
-																						Identifier imageId) {
-		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												domainId);
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  Identifier domainId,
+											  EquipmentType type,
+											  String name,
+											  String description,
+											  Identifier imageId) {
+		super.setAttributes(created,												
+							modified,
+							creatorId,
+							modifierId,
+							domainId);
 		this.type = type;
 		this.name = name;
 		this.description = description;
