@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.4 2005/02/25 12:06:35 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.5 2005/03/24 13:04:38 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,16 +11,15 @@ package com.syrus.AMFICOM.resource;
 import java.util.Collection;
 import java.util.Date;
 
-import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.TypicalSort;
-import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/25 12:06:35 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/03/24 13:04:38 $
+ * @author $Author: arseniy $
  * @module resource_v1
  */
 public class TypicalConditionImpl extends TypicalCondition {
@@ -94,21 +93,19 @@ public class TypicalConditionImpl extends TypicalCondition {
 		
 	}
 
-	public boolean isNeedMore(Collection collection) throws ApplicationException {
+	public boolean isNeedMore(Collection collection) {
 		return true;
 	}
 
-	public boolean isConditionTrue(Object object) throws ApplicationException {
-		boolean result = false;
-		Wrapper wrapper = null;
-		if (object instanceof AbstractImageResource) {
+	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
+		Wrapper wrapper;
+		if (object instanceof AbstractImageResource)
 			wrapper = ImageResourceWrapper.getInstance();
-			result = super.parseCondition(wrapper.getValue(object, this.key));
-		}
 		else
-			Log.errorMessage("TypicalConditionImpl.isConditionTrue | Class " + object.getClass().getName() //$NON-NLS-1$
-					+ " is not supported"); //$NON-NLS-1$
-		return result;
+			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + object.getClass().getName(),
+					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+
+		return super.parseCondition(wrapper.getValue(object, this.key));
 	}
 
 }
