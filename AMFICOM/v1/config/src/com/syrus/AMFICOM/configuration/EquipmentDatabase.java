@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.47 2004/12/03 18:53:08 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.48 2004/12/03 18:57:14 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2004/12/03 18:53:08 $
- * @author $Author: bob $
+ * @version $Revision: 1.48 $, $Date: 2004/12/03 18:57:14 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -138,7 +138,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		Equipment equipment = storableObject == null ? null : fromStorableObject(storableObject);
 		if (equipment == null){
 			equipment = new Equipment(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null,
-									   null, null);			
+									   null, null, "", 0, 0);			
 		}
 		String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
@@ -234,7 +234,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
                 else {
                     sql.append(CLOSE_BRACKET);
                     sql.append(SQL_OR);
-                    sql.append(COLUMN_ID);
+                    sql.append(PortDatabase.COLUMN_EQUIPMENT_ID);
                     sql.append(SQL_IN);
                     sql.append(OPEN_BRACKET);
                 }                   
@@ -362,7 +362,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
                 else {
                     sql.append(CLOSE_BRACKET);
                     sql.append(SQL_OR);
-                    sql.append(COLUMN_ID);
+                    sql.append(LINK_COLUMN_EQUIPMENT_ID);
                     sql.append(SQL_IN);
                     sql.append(OPEN_BRACKET);
                 }                   

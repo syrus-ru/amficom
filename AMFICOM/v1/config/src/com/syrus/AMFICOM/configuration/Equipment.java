@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.37 2004/11/30 14:27:51 bob Exp $
+ * $Id: Equipment.java,v 1.38 2004/12/03 18:57:14 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/11/30 14:27:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.38 $, $Date: 2004/12/03 18:57:14 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -44,6 +44,9 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	private String name;
 	private String description;
 	private Identifier imageId;
+    private double longitude;
+    private double latitude;
+    private String supplier;
 
 	private List portIds;
 
@@ -83,6 +86,9 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		this.name = new String(et.name);
 		this.description = new String(et.description);
 		this.imageId = new Identifier(et.image_id);
+        this.supplier = new String(et.supplier);
+        this.longitude = et.longitude;
+        this.latitude = et.latitude;
 
 		this.portIds = new ArrayList(et.port_ids.length);
 		for (int i = 0; i < et.port_ids.length; i++)
@@ -104,7 +110,10 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 										EquipmentType type,
 										String name,
 										String description,
-										Identifier imageId) {
+										Identifier imageId,
+                                        String supplier,
+                                        double longitude,
+                                        double latitude) {
 				super(id,
 							new Date(System.currentTimeMillis()),
 							new Date(System.currentTimeMillis()),
@@ -118,6 +127,9 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 				this.name = name;
 				this.description = description;
 				this.imageId = imageId;
+                this.supplier = supplier;
+                this.longitude = longitude;
+                this.latitude = latitude;
 
 				this.portIds = new LinkedList();
 
@@ -143,14 +155,20 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 										   EquipmentType type,
 										   String name,
 										   String description,
-										   Identifier imageId) {
+										   Identifier imageId,
+                                           String supplier,
+                                           double longitude,
+                                           double latitude) {
 		return new Equipment(IdentifierPool.generateId(ObjectEntities.EQUIPMENT_ENTITY_CODE),
 							creatorId,
 							domainId,
 							type,
 							name,
 							description,
-							imageId);
+							imageId,
+                            supplier,
+                            longitude,
+                            latitude);
 	}
 	
 	public static Equipment getInstance(Equipment_Transferable et) throws CreateObjectException{
@@ -191,6 +209,9 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 										  (Identifier_Transferable)this.type.getId().getTransferable(),
 										  new String(this.name),
 										  new String(this.description),
+                                          new String(this.supplier),
+                                          this.longitude,
+                                          this.latitude,
 										  (Identifier_Transferable)this.imageId.getTransferable(),
 										  pIds,
 										  charIds);
@@ -265,5 +286,24 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		dependencies.add(this.portIds);
 		dependencies.addAll(this.characteristics);
 		return dependencies;
+	}
+	
+	public String getSupplier() {
+		return this.supplier;
+	}
+	public void setSupplier(String supplier) {
+		this.supplier = supplier;
+	}
+	public double getLatitude() {
+		return this.latitude;
+	}
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+	public double getLongitude() {
+		return this.longitude;
+	}
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 }
