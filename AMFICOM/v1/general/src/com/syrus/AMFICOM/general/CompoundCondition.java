@@ -1,5 +1,5 @@
 /*
-* $Id: CompoundCondition.java,v 1.2 2005/01/21 08:21:41 bob Exp $
+* $Id: CompoundCondition.java,v 1.3 2005/01/21 08:26:30 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/21 08:21:41 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/21 08:26:30 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -30,7 +30,7 @@ public class CompoundCondition implements StorableObjectCondition {
 	public static final int OPERATION_OR	= 1;
 	public static final int OPERATION_XOR	= 2;
 	
-	private static final ORB orb =  JavaSoftORBUtil.getInstance().getORB();
+	private static final ORB ORB_INSTANCE =  JavaSoftORBUtil.getInstance().getORB();
 
 	private StorableObjectCondition firstCondition;
 	private int operation;
@@ -127,11 +127,11 @@ public class CompoundCondition implements StorableObjectCondition {
 		} 
 
 		
-		Any any1 = orb.create_any();
+		Any any1 = ORB_INSTANCE.create_any();
 		any1.insert_Value(transferable2);
 		transferable.innerConditions[0] = any1;
 
-		Any any2 = orb.create_any();
+		Any any2 = ORB_INSTANCE.create_any();
 		any1.insert_Value(transferable3);
 		transferable.innerConditions[2] = any2;
 
