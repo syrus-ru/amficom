@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.32 2004/10/20 14:56:27 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.33 2004/10/20 15:03:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/10/20 14:56:27 $
+ * @version $Revision: 1.33 $, $Date: 2004/10/20 15:03:02 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -608,8 +608,9 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
         StringBuffer measurementIdsStr = new StringBuffer();
         
        	for (Iterator it = measurementIds.iterator(); it.hasNext();) {
-        		measurementIdsStr.append( ((Identifier) it.next()).getIdentifierString() );
-        		if (it.hasNext())
+       		 Identifier id = (Identifier) it.next();
+       		 measurementIdsStr.append( id.toSQLString() );
+       		 if (it.hasNext())
         			measurementIdsStr.append(COMMA);
        	}
         
