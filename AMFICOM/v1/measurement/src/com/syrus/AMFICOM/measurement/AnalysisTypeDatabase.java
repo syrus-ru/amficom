@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.34 2004/11/02 07:36:38 max Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.35 2004/11/02 09:08:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/11/02 07:36:38 $
- * @author $Author: max $
+ * @version $Revision: 1.35 $, $Date: 2004/11/02 09:08:46 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -458,33 +459,37 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 
     private List retrieveButIdsByCriteriaSet(List ids, List criteriaSetIds) throws RetrieveObjectException, IllegalDataException {
         
-        String condition = new String();
-        StringBuffer criteriaSetIdNames = new StringBuffer();        
-        
-        int i=1;
-        for (Iterator it = criteriaSetIds.iterator(); it.hasNext();) {
-            criteriaSetIdNames.append( ((Identifier) it.next()).getIdentifierString() );
-            if (it.hasNext()){
-                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-                    criteriaSetIdNames.append(COMMA);
-                else {
-                    criteriaSetIdNames.append(CLOSE_BRACKET);
-                    criteriaSetIdNames.append(SQL_OR);
-                    criteriaSetIdNames.append(COLUMN_ID);
-                    criteriaSetIdNames.append(SQL_IN);
-                    criteriaSetIdNames.append(OPEN_BRACKET);
-                }                   
-            }
-        }
-        
-        condition = PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET 
-                + SQL_SELECT + SetDatabase.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
-				    + SQL_WHERE + SetDatabase.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + criteriaSetIdNames 
-					+ CLOSE_BRACKET
-                + CLOSE_BRACKET 
-                + SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + MODE_CRITERION + APOSTOPHE;
-        
-        return retrieveByIds( ids, condition);
+    	
+    	if (criteriaSetIds != null && !criteriaSetIds.isEmpty()){
+	        String condition = new String();
+	        StringBuffer criteriaSetIdNames = new StringBuffer();        
+	        
+	        int i=1;
+	        for (Iterator it = criteriaSetIds.iterator(); it.hasNext();) {
+	            criteriaSetIdNames.append( ((Identifier) it.next()).getIdentifierString() );
+	            if (it.hasNext()){
+	                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+	                    criteriaSetIdNames.append(COMMA);
+	                else {
+	                    criteriaSetIdNames.append(CLOSE_BRACKET);
+	                    criteriaSetIdNames.append(SQL_OR);
+	                    criteriaSetIdNames.append(COLUMN_ID);
+	                    criteriaSetIdNames.append(SQL_IN);
+	                    criteriaSetIdNames.append(OPEN_BRACKET);
+	                }                   
+	            }
+	        }
+	        
+	        condition = PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET 
+	                + SQL_SELECT + SetDatabase.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+					    + SQL_WHERE + SetDatabase.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + criteriaSetIdNames 
+						+ CLOSE_BRACKET
+	                + CLOSE_BRACKET 
+	                + SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + MODE_CRITERION + APOSTOPHE;
+	        
+	        return retrieveByIds( ids, condition);
+    	} 
+    		return Collections.EMPTY_LIST;
     }
     
     
