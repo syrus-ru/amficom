@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.14 2004/09/03 07:55:50 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.15 2004/09/03 08:04:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/09/03 07:55:50 $
+ * @version $Revision: 1.15 $, $Date: 2004/09/03 08:04:03 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -110,32 +110,36 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract String getUpdateMultiplySQLValues();
 
-	protected abstract String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException;
+	protected abstract String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException;
 
 	protected void insertEntity(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		String storableObjectIdStr = storableObject.getId().toSQLString();
-		String sql = SQL_INSERT_INTO + this.getTableName() + OPEN_BRACKET + this.getUpdateColumns()
-				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + storableObjectIdStr + COMMA
-				+ this.getUpdateSingleSQLValues(storableObject) + CLOSE_BRACKET;
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.insertEntity | Trying: " + sql,
-						Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-		} catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.insertEntity | Cannot insert "
-					+ this.getEnityName() + " '" + storableObjectIdStr + "' -- "
-					+ sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
-		} finally {
+		try{
+			String sql = SQL_INSERT_INTO + this.getTableName() + OPEN_BRACKET + this.getUpdateColumns()
+					+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + storableObjectIdStr + COMMA
+					+ this.getUpdateSingleSQLValues(storableObject) + CLOSE_BRACKET;
+			Statement statement = null;
 			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				statement = connection.createStatement();
+				Log.debugMessage(this.getEnityName() + "Database.insertEntity | Trying: " + sql,
+							Log.DEBUGLEVEL09);
+				statement.executeUpdate(sql);
+			} catch (SQLException sqle) {
+				String mesg = this.getEnityName() + "Database.insertEntity | Cannot insert "
+						+ this.getEnityName() + " '" + storableObjectIdStr + "' -- "
+						+ sqle.getMessage();
+				throw new CreateObjectException(mesg, sqle);
+			} finally {
+				try {
+					if (statement != null)
+						statement.close();
+					statement = null;
+				} catch (SQLException sqle1) {
+					Log.errorException(sqle1);
+				}
 			}
+		} catch(UpdateObjectException uoe){
+			throw new CreateObjectException(uoe);
 		}
 	}
 
