@@ -1,5 +1,5 @@
 /**
- * $Id: Marker.java,v 1.7 2005/03/09 14:57:55 bass Exp $
+ * $Id: Marker.java,v 1.8 2005/03/30 10:28:23 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -24,7 +24,6 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.PathDecomposer;
 
 import java.util.*;
 import java.util.Date;
@@ -52,7 +51,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2005/03/09 14:57:55 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/30 10:28:23 $
  * @module mapview_v1
  * @author $Author: bass $
  */
@@ -84,11 +83,6 @@ public class Marker extends AbstractNode
 	 * »змерительный путь, на котором находитс€ маркер.
 	 */
 	protected MeasurementPath measurementPath;
-	/**
-	 * ƒекомпозитор пути, позвол€ющий маркеру передвигатьс€ вдоль 
-	 * измерительного пути.
-	 */
-	protected PathDecomposer spd = null;
 	/**
 	 * “екущий кабель, на котором находитс€ маркер.
 	 */
@@ -235,8 +229,6 @@ public class Marker extends AbstractNode
 
 		this.measurementPath = path;
 		this.startNode = this.measurementPath.getStartNode();
-		
-		this.spd = new PathDecomposer(this.measurementPath.getSchemePath());
 	}
 
 	/**
@@ -387,16 +379,6 @@ public class Marker extends AbstractNode
 	public Object getDescriptor()
 	{
 		return this.descriptor;
-	}
-
-	public PathDecomposer getPathDecompositor()
-	{
-		return this.spd;
-	}
-	
-	public void setPathDecompositor(PathDecomposer spd)
-	{
-		this.spd = spd;
 	}
 
 	public void setNodeLink(NodeLink nodeLink)

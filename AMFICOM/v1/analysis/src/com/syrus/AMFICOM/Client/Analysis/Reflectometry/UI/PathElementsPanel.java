@@ -7,7 +7,6 @@ import java.awt.event.MouseEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.PathDecomposer;
 import com.syrus.AMFICOM.scheme.corba.PathElementKind;
 
 public final class PathElementsPanel extends AnalysisPanel
@@ -28,7 +27,6 @@ public final class PathElementsPanel extends AnalysisPanel
 	public void setPath(SchemePath path)
 	{
 		this.path = path;
-		PathDecomposer decomposer = new PathDecomposer(path);
 //		if (events != null)
 //			decompositor.setTotalOpticalLength(events[events.length - 1].last_point * deltaX);
 //		else if (ep != null)

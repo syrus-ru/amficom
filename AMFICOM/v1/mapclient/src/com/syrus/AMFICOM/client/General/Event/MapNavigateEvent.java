@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.16 2005/03/04 19:28:43 bass Exp $
+ * $Id: MapNavigateEvent.java,v 1.17 2005/03/30 10:28:23 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
  *
  *
  *
- * @version $Revision: 1.16 $, $Date: 2005/03/04 19:28:43 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/30 10:28:23 $
  * @module mapclient_v2
  * @author $Author: bass $
  */
@@ -123,7 +123,7 @@ public class MapNavigateEvent extends MapEvent
 	/**
 	 * Декомпозитор пути измерений.
 	 */
-	protected Object spd = null;
+	protected Object schemePath = null;
 	
 	public MapNavigateEvent(
 			Object source,
@@ -221,14 +221,14 @@ public class MapNavigateEvent extends MapEvent
 		return descriptor;
 	}
 */
-	public void setSchemePathDecompositor(Object spd)
+	public void setSchemePath(final Object schemePath)
 	{
-		this.spd = spd;
+		this.schemePath = schemePath;
 	}
 
-	public Object getSchemePathDecompositor()
+	public Object getSchemePath()
 	{
-		return this.spd;
+		return this.schemePath;
 	}
 
 	public boolean isMapMarkerCreated()

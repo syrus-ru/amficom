@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.15 2005/03/28 08:25:11 bass Exp $
+ * $Id: MarkerController.java,v 1.16 2005/03/30 10:28:23 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,6 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.PathDecomposer;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 import java.awt.Graphics;
@@ -44,7 +43,7 @@ import javax.swing.ImageIcon;
 /**
  * Контроллер маркера.
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/03/28 08:25:11 $
+ * @version $Revision: 1.16 $, $Date: 2005/03/30 10:28:23 $
  * @module mapviewclient_v1
  */
 public class MarkerController extends AbstractNodeController
@@ -303,10 +302,11 @@ public class MarkerController extends AbstractNodeController
 	 */
 	public double getFromStartLengthLo(Marker marker)
 	{
-		if(marker.getPathDecompositor() == null)
+		final SchemePath schemePath = marker.getMeasurementPath().getSchemePath();
+		if (schemePath == null)
 			return getFromStartLengthLf(marker);
 
-		return marker.getPathDecompositor().getOpticalDistance(getFromStartLengthLf(marker));
+		return schemePath.getOpticalDistance(getFromStartLengthLf(marker));
 	}
 
 	/**
@@ -318,10 +318,11 @@ public class MarkerController extends AbstractNodeController
 	public void moveToFromStartLo(Marker marker, double dist)
 		throws MapConnectionException, MapDataException
 	{
-		if(marker.getPathDecompositor() == null)
+		final SchemePath schemePath = marker.getMeasurementPath().getSchemePath();
+		if (schemePath == null)
 			moveToFromStartLf(marker, dist);
 		else
-			moveToFromStartLf(marker, marker.getPathDecompositor().getPhysicalDistance(dist));
+			moveToFromStartLf(marker, schemePath.getPhysicalDistance(dist));
 	}
 
 	/**
@@ -636,8 +637,6 @@ public class MarkerController extends AbstractNodeController
 	 */
 	public void notifyMarkerCreated(Marker marker)
 	{
-		marker.setPathDecompositor(new PathDecomposer(marker.getMeasurementPath().getSchemePath()));
-
 		getLogicalNetLayer().sendMapEvent(
 			new MapNavigateEvent(
 				this,

@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.54 2005/03/22 17:35:16 bass Exp $
+ * $Id: LogicalNetLayer.java,v 1.55 2005/03/30 10:28:23 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -70,7 +70,6 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
 import com.syrus.AMFICOM.scheme.*;
-import com.syrus.AMFICOM.scheme.PathDecomposer;
 
 /**
  * ”правл€ет отображением логической структуры сети.
@@ -78,7 +77,7 @@ import com.syrus.AMFICOM.scheme.PathDecomposer;
  * 
  * 
  * @author $Author: bass $
- * @version $Revision: 1.54 $, $Date: 2005/03/22 17:35:16 $
+ * @version $Revision: 1.55 $, $Date: 2005/03/30 10:28:23 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -1087,8 +1086,9 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					Marker marker = this.mapView.getMarker(mne.getMarkerId());
 					if(marker != null)
 					{
-						if(marker.getPathDecompositor() == null)
-							marker.setPathDecompositor((PathDecomposer )mne.getSchemePathDecompositor());
+						final MeasurementPath measurementPath = marker.getMeasurementPath();
+						if (measurementPath.getSchemePath() == null)
+							measurementPath.setSchemePath((SchemePath) mne.getSchemePath());
 
 						MarkerController mc = (MarkerController)getMapViewController().getController(marker);
 
