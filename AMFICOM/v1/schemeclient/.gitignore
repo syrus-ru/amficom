@@ -12,6 +12,9 @@ scheme.jpx~
 *.swp
 *.tar
 *.gz
+.classpath
+.project
+.nbintdb
 scheme.jpx
 doc
 oldsrc
