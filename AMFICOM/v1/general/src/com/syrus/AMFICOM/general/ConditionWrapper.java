@@ -1,5 +1,5 @@
 /*
- * $Id: ConditionWrapper.java,v 1.2 2005/03/16 17:08:00 bob Exp $
+ * $Id: ConditionWrapper.java,v 1.3 2005/03/25 10:48:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,34 +11,38 @@ package com.syrus.AMFICOM.general;
 import java.util.Collection;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/16 17:08:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/03/25 10:48:33 $
+ * @author $Author: max $
  * @module general_v1
  */
 public interface ConditionWrapper {
 
-	byte	INT			= 0;
-	byte	FLOAT		= 1;
-	byte	DOUBLE		= 2;
-	byte	STRING		= 3;
-	byte	LIST		= 4;
-	byte	CONSTRAINT	= 5;
+	public static final byte	INT			= 0;
 
-	Object getLinkedObject(	String key,
-							int indexNumber) throws IllegalDataException;
+	public static final byte	FLOAT		= 1;
 
-	String getKey(String keyName);
+	public static final byte	DOUBLE		= 2;
 
-	byte getType(String key);
+	public static final byte	STRING		= 3;
 
-	String[] getLinkedNames(String key) throws IllegalDataException;
+	public static final byte	LIST		= 4;
 
-	Collection getKeys();
+	public static final byte	CONSTRAINT	= 5;
 
-	Collection getKeyNames();
+	Object getLinkedObject(String key, int indexNumber)
+			throws IllegalDataException;
 
-	String[] getInitialNames();
+	public byte[] getTypes();
+
+	public String[] getKeys();
+
+	public String[] getKeyNames();
+
+	public String[] getLinkedNames(String key) throws IllegalDataException;
+
+	public String getInitialName(StorableObject storableObject);
+
+	public Collection getInitialEntities();
 
 	short getEntityCode();
-
 }
