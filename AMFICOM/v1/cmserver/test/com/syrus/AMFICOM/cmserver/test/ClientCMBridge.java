@@ -1,5 +1,5 @@
 /*
- * $Id: ClientCMBridge.java,v 1.5 2004/11/25 15:42:17 bob Exp $
+ * $Id: ClientCMBridge.java,v 1.6 2005/01/18 07:12:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,10 +18,10 @@ import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.PortableServer.POA;
 import org.omg.PortableServer.POAHelper;
 
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.cmserver.corba.CMServerHelper;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.User;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/11/25 15:42:17 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/18 07:12:35 $
  * @author $Author: bob $
  * @module module
  */
