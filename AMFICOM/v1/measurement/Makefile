@@ -76,10 +76,11 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalPatternDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/Test.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/TestDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/TestCondition.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/LinkedIdsCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/DomainCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/StringFieldCondition.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ResultCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ResultSortCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetupCondition.java 
 	touch $@
