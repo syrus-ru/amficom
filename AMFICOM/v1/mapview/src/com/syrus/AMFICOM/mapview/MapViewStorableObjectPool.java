@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.2 2004/12/27 13:41:56 bob Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.3 2005/02/08 14:07:57 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/27 13:41:56 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 14:07:57 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -216,7 +216,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(List ids) throws DatabaseException, CommunicationException {
+	public static void delete(List ids) throws DatabaseException, CommunicationException, IllegalDataException {
 		instance.deleteImpl(ids);
 	}
 
