@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.13 2005/03/21 15:04:23 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.14 2005/03/24 09:09:36 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/03/21 15:04:23 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/24 09:09:36 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -97,11 +97,22 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 	public LogicalSchemeUI(Item rootItem) {
 		if (!rootItem.isService()) {
-			Item rootItem2 = new ServiceItem();
-			rootItem2.addChild(rootItem);
-			rootItem = rootItem2;
+			if (this.rootServiceItem == null) {
+				Item rootItem2 = new ServiceItem();
+				rootItem2.addChild(rootItem);
+				rootItem = rootItem2;
+			} else {
+				Item rootItem2 = this.rootServiceItem.getSourceItem();
+				List children = new ArrayList(rootItem2.getChildren());
+				for (Iterator it = children.iterator(); it.hasNext();) {
+					Item item = (Item) it.next();
+					item.setParent(null);
+				}
+				rootItem2.addChild(rootItem);
+			}
 		}
-		this.rootServiceItem = new ViewItem(rootItem);
+		if (this.rootServiceItem == null)
+			this.rootServiceItem = new ViewItem(rootItem);
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 
@@ -387,6 +398,8 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		this.selectedItems.clear();
 		for (Iterator it = this.items.iterator(); it.hasNext();) {
 			ViewItem item = (ViewItem) it.next();
+			if (item.isService())
+				continue;
 			if ( // top left
 			(x1 < item.x && item.x < x2 && y1 < item.y && item.y < y2)
 					||
@@ -780,6 +793,8 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		this.secondSelectedLineItem = null;
 		for (Iterator it = selectedItems.iterator(); it.hasNext();) {
 			Item item = (Item) it.next();
+			if (item.isService())
+				continue;
 			ViewItem viewItem;
 			if (item instanceof ViewItem)
 				viewItem = (ViewItem) item;
