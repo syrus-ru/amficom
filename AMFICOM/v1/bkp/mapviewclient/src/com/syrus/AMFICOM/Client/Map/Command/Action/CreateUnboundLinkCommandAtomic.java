@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundLinkCommandAtomic.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: CreateUnboundLinkCommandAtomic.java,v 1.2 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,12 +28,12 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/21 14:59:20 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-class CreateUnboundLinkCommandAtomic extends MapActionCommand
+public class CreateUnboundLinkCommandAtomic extends MapActionCommand
 {
 	MapUnboundLinkElement link;
 	
@@ -74,21 +74,23 @@ class CreateUnboundLinkCommandAtomic extends MapActionCommand
 				link);
 
 		// копировать атрибуты отображения из протоэлемента
-		link.attributes = (HashMap )ResourceUtil.copyAttributes(
-				dataSource, 
-				logicalNetLayer.getUnboundPen().attributes);
+//		link.attributes = (HashMap )ResourceUtil.copyAttributes(
+//				dataSource, 
+//				logicalNetLayer.getUnboundPen().attributes);
 
 		map.addPhysicalLink(link);
 	}
 	
 	public void redo()
 	{
-		logicalNetLayer.getMapView().getMap().addPhysicalLink(link);
+		map.addPhysicalLink(link);
+		Pool.put(MapPhysicalLinkElement.typ, link.getId(), link);
 	}
 	
 	public void undo()
 	{
-		logicalNetLayer.getMapView().getMap().removePhysicalLink(link);
+		map.removePhysicalLink(link);
+		Pool.remove(MapPhysicalLinkElement.typ, link.getId());
 	}
 }
 

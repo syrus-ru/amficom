@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.3 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,21 +13,19 @@ package com.syrus.AMFICOM.Client.Map;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.CommandList;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
-import com.syrus.AMFICOM.Client.Resource.ImageResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveNodeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
+import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
+import com.syrus.AMFICOM.Client.Resource.ImageResource;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
@@ -42,6 +40,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -64,7 +63,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/21 14:59:20 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -571,42 +570,26 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			com.setParameter("logicalNetLayer", this);
 			com.execute();
 		}
-/*
+
 		if (getMapState().getShowMode() == MapState.SHOW_CABLE_PATH)
 		{
-			//Последовательность отображения
-			//1 Path
-			//2 physicalLink которвые не вошли в transmissionPath
-			//Выбираем какие physicalLink надо показать
-			e = getMapView().getMap().getPhysicalLinks().iterator();
-			while (e.hasNext())
+			elementsToDisplay.addAll(getMapView().getMap().getPhysicalLinks());
+			for(Iterator it = getMapView().getCablePaths().iterator(); it.hasNext();)
+			{
+				MapCablePathElement cpath = 
+					(MapCablePathElement )it.next();
+				cpath.paint(g);
+				elementsToDisplay.removeAll(cpath.getLinks());
+			}
+			for(Iterator it = elementsToDisplay.iterator(); it.hasNext();)
 			{
 				MapPhysicalLinkElement mple = 
-					(MapPhysicalLinkElement )e.next();
-				physicalLinkToShow.add(mple.getId());
+					(MapPhysicalLinkElement )it.next();
+				mple.paint(g);
 			}
-
-			//Удаляем из них какие не надо
-			e = map.getTransmissionPath().iterator();
-			while (e.hasNext())
-			{
-				MapTransmissionPathElement mtpe = 
-					(MapTransmissionPathElement )e.next();
-				mtpe.paint( g);
-				physicalLinkToShow.removeAll(mtpe.physicalLink_ids);
-			}
-
-			e = physicalLinkToShow.iterator();
-			while (e.hasNext())
-			{
-				map.getPhysicalLink((String )e.next()).paint(g);
-			}
-			return;
 		}
-*/
-
-		if (getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK
-			|| getMapState().getShowMode() == MapState.SHOW_CABLE_PATH)
+		else
+		if (getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK)
 		{
 			e = getMapView().getMap().getPhysicalLinks().iterator();
 			while (e.hasNext())
@@ -623,10 +606,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			while (e.hasNext())
 			{
 				MapNodeLinkElement curNodeLink = (MapNodeLinkElement )e.next();
-//				if ( !getMapView().getMap().getPhysicalLink(curNodeLink.getPhysicalLinkId()).isSelected())
-				{
-					curNodeLink.paint(p);
-				}
+				curNodeLink.paint(p);
 			}
 		}
 	}

@@ -1,21 +1,20 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Map.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.Client.Resource.Map.MapLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Map.Props.CableBindingController;
-import com.syrus.AMFICOM.Client.Map.UI.ReusedGridBagConstraints;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -32,6 +31,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import java.util.Iterator;
 
 public final class MapCablePathBindPanel extends JPanel implements ObjectResourcePropertiesPane
 {
@@ -94,7 +94,7 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 
 	}
 
-	private void jbInit() throws Exception
+	private void jbInit()
 	{
 		this.setLayout(gridBagLayout1);
 		this.setName(LangModelMap.getString("LinkBinding"));
@@ -223,16 +223,28 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		startNodeTextField.setText(startNode.getName());
 		endNodeTextField.setText(endNode.getName());
 
-		MapLinkElement smle = path.getStartLastBoundLink();
-		MapLinkElement emle = path.getEndLastBoundLink();
+		MapPhysicalLinkElement smle = path.getStartLastBoundLink();
+		MapPhysicalLinkElement emle = path.getEndLastBoundLink();
 		
 		List smnelinks = path.getMap().getPhysicalLinksAt(startNode);
 		if(smle != null)
 			smnelinks.remove(smle);
+		for(Iterator it = smnelinks.iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement mle = (MapPhysicalLinkElement )it.next();
+			if(mle.getMapProtoId().equals(MapLinkProtoElement.UNBOUND))
+				it.remove();
+		}
 
 		List emnelinks = path.getMap().getPhysicalLinksAt(endNode);
 		if(emle != null)
 			emnelinks.remove(emle);
+		for(Iterator it = emnelinks.iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement mle = (MapPhysicalLinkElement )it.next();
+			if(mle.getMapProtoId().equals(MapLinkProtoElement.UNBOUND))
+				it.remove();
+		}
 
 		startLinkComboBox.setContents(smnelinks, true);
 		startLinkComboBox.setSelected(null);
@@ -243,8 +255,6 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 	private void addBinding()
 	{
 		MapLinkElement mle = (MapLinkElement )startLinkComboBox.getSelectedObjectResource();
-
-		
 
 		CableChannelingItem cci = new CableChannelingItem(
 			path

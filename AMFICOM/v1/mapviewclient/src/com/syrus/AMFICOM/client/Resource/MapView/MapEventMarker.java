@@ -17,7 +17,7 @@ public class MapEventMarker extends MapMarker
 			Rectangle bounds, 
 			String imageId,
 			double len, 
-			MapPathElement path)
+			MapMeasurementPathElement path)
 	{
 		super(id, map, bounds, imageId, len, path);
 

@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapAlarmMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapEventMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapPathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public final class MapStrategyManager
 			MapNodeLinkElementStrategy.getInstance());
 		strategyMap.put(MapMarker.class,
 			MapMarkerStrategy.getInstance());
-		strategyMap.put(MapPathElement.class,
+		strategyMap.put(com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement.class,
 			MapPathElementStrategy.getInstance());
 		strategyMap.put(MapPhysicalLinkElement.class,
 			MapPhysicalLinkElementStrategy.getInstance());

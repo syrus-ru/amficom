@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundLinkElement.java,v 1.3 2004/09/18 14:12:04 krupenn Exp $
+ * $Id: MapUnboundLinkElement.java,v 1.4 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,7 +39,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/18 14:12:04 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/21 14:59:20 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -75,9 +75,8 @@ public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Ser
 		return null;//new MapLinkPane();
 	}
 
-	boolean isSelectionVisible()
+	public boolean isSelectionVisible()
 	{
-//		return isSelected() || cablePath.isSelected();
 		return isSelected() || cablePath.isSelectionVisible();
 	}
 
@@ -87,8 +86,6 @@ public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Ser
 	 */
 	public void paint(Graphics g)
 	{
-//		super.paint(g);
-
 		BasicStroke stroke = (BasicStroke )this.getStroke();
 		Stroke str = new BasicStroke(
 				MapPropertiesManager.getUnboundThickness(), 
@@ -98,7 +95,18 @@ public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Ser
 				stroke.getDashArray(), 
 				stroke.getDashPhase());
 
-		paint(g, str, MapPropertiesManager.getUnboundLinkColor(), isSelectionVisible());
-//		paint(g, str, MapPropertiesManager.getUnboundLinkColor(), isSelected() || cablePath.isSelected());
+		paint(g, str, MapPropertiesManager.getUnboundLinkColor(), false);
+	}
+
+
+	public void setCablePath(MapCablePathElement cablePath)
+	{
+		this.cablePath = cablePath;
+	}
+
+
+	public MapCablePathElement getCablePath()
+	{
+		return cablePath;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.2 2004/09/15 08:28:52 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.3 2004/09/21 14:56:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,10 +11,9 @@
 
 package com.syrus.AMFICOM.Client.Map;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.io.IniFile;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -36,7 +35,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/15 08:28:52 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/21 14:56:16 $
  * @module
  * @author $Author: krupenn $
  * @see

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElement.java,v 1.8 2004/09/17 11:38:44 krupenn Exp $
+ * $Id: MapPhysicalNodeElement.java,v 1.9 2004/09/21 14:56:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,12 +14,10 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapPhysicalNodeElement_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 
 import java.awt.Image;
 import java.awt.Rectangle;
@@ -38,7 +36,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/09/17 11:38:44 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/21 14:56:16 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -101,9 +99,9 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
-		String cloned_id = (String)Pool.get("mapclonedids", id);
-		if (cloned_id != null)
-			return Pool.get(MapPhysicalNodeElement.typ, cloned_id);
+		String clonedId = (String)Pool.get("mapclonedids", id);
+		if (clonedId != null)
+			return Pool.get(MapPhysicalNodeElement.typ, clonedId);
 
 		MapPhysicalNodeElement mpne = new MapPhysicalNodeElement(
 				dataSource.GetUId(MapPhysicalNodeElement.typ),

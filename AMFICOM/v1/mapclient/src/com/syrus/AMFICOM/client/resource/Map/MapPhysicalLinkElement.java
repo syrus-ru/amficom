@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.11 2004/09/18 13:57:23 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.12 2004/09/21 14:56:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,21 +14,17 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapPhysicalLinkElement_Transferable;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
@@ -47,7 +43,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/09/18 13:57:23 $
+ * @version $Revision: 1.12 $, $Date: 2004/09/21 14:56:16 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -64,6 +60,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	protected ArrayList nodeLinks = new ArrayList();
 
 	protected String mapProtoId = "";
+	protected MapLinkProtoElement proto;
 
 	protected String city = "";
 	protected String street = "";
@@ -97,6 +94,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		endNode = eNode;
 		selected = false;
 		mapProtoId = proto.getId();
+		this.proto = proto;
 		
 		binding = new MapPhysicalLinkBinding(this, proto.getBindingDimension());
 
@@ -106,16 +104,16 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
-		String cloned_id = (String)Pool.get("mapclonedids", id);
-		if (cloned_id != null)
-			return Pool.get(MapPhysicalLinkElement.typ, cloned_id);
+		String clonedId = (String)Pool.get("mapclonedids", id);
+		if (clonedId != null)
+			return Pool.get(MapPhysicalLinkElement.typ, clonedId);
 
 		MapPhysicalLinkElement mple = new MapPhysicalLinkElement(
 				dataSource.GetUId(MapPhysicalLinkElement.typ),
 				(MapNodeElement )startNode.clone(dataSource),
 				(MapNodeElement )endNode.clone(dataSource),
 				(Map )map.clone(dataSource),
-				(MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, mapProtoId));
+				getProto());
 				
 		mple.changed = changed;
 		mple.description = description;
@@ -198,7 +196,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		{
 			this.nodeLinkIds.add( ((MapNodeLinkElement )nodeLinks.get(i)).getId());
 		}
-		transferable.nodeLinkIds = (String[] )nodeLinkIds.toArray(new String[0]);
+		transferable.nodeLinkIds = (String[] )nodeLinkIds.toArray(new String[nodeLinkIds.size()]);
 	}
 
 	public Object getTransferable()
@@ -229,6 +227,8 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 			MapNodeLinkElement mnle = getMap().getNodeLink((String )nodeLinkIds.get(i));
 			this.nodeLinks.add( mnle);
 		}
+		
+		proto = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, mapProtoId);
 	}
 
 	public ObjectResourceModel getModel()
@@ -273,7 +273,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		return s1 + s2 + s3;
 	}
 
-	boolean isSelectionVisible()
+	public boolean isSelectionVisible()
 	{
 		return isSelected() || selectionVisible;
 	}
@@ -319,45 +319,6 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		return returnValue;
 	}
 
-	/**
-	 * Возвращяет длинну линии пересчитанную на коэффициент топологической 
-	 * привязки
-	 */
-	public double getLengthLf()
-	{
-		double Kd = getKd();
-		return getLengthLt() * Kd;
-	}
-
-	/**
-	 * возвращает строительную длину линии
-	 */
-	public double getPhysicalLength()
-	{
-//		if(LINK_ID == null)
-			return 0.0D;
-//		SchemeCableLink scl = (SchemeCableLink )Pool.get(SchemeCableLink.typ, LINK_ID);
-//		if(scl == null)
-//			return 0.0D;
-//		return scl.getPhysicalLength();
-	}
-
-	/**
-	 * возвращает коэффициент топологической привязки
-	 */
-	public double getKd()
-	{
-//		double ph_len = getPhysicalLength();
-//		if(ph_len == 0.0D)
-//			return 1.0;
-//		double top_len = getSizeInDoubleLt();
-//		if(top_len == 0.0D)
-			return 1.0;
-//
-//		double Kd = ph_len / top_len;
-//		return Kd;
-	}
-		
 	/**
 	 * возвращает false, поскольку проверка проводится как правило по всем
 	 * элементам, и в частности по фрагментам линии, что вернет true
@@ -539,7 +500,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 			mnle.setPhysicalLinkId(getId());
 			this.nodeLinks.add(mnle);
 		}
-		this.mapProtoId = mples.mapProtoId;
+		this.setMapProtoId(mples.mapProtoId);
 		
 		nodeLinksSorted = false;
 	}
@@ -586,7 +547,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 
 		transferable = new MapPhysicalLinkElement_Transferable();
 
-//		updateLocalFromTransferable();
+		updateLocalFromTransferable();
 		Pool.put(getTyp(), getId(), this);
 		Pool.put("serverimage", getId(), this);
 	}
@@ -595,6 +556,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	public void setMapProtoId(String mapProtoId)
 	{
 		this.mapProtoId = mapProtoId;
+		proto = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, mapProtoId);
 	}
 
 
@@ -645,4 +607,66 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		return building;
 	}
 
+
+	public void setProto(MapLinkProtoElement proto)
+	{
+		this.proto = proto;
+		if(proto != null)
+			this.mapProtoId = proto.getId();
+	}
+
+
+	public MapLinkProtoElement getProto()
+	{
+		return proto;
+	}
+
+	/**
+	 * Получить толщину линии
+	 */
+	public int getLineSize ()
+	{
+		return proto.getLineSize();
+	}
+
+	/**
+	 * Получить вид линии
+	 */
+	public String getStyle ()
+	{
+		return proto.getStyle();
+	}
+
+	/**
+	 * Получить стиль линии
+	 */
+	public Stroke getStroke ()
+	{
+		return proto.getStroke();
+	}
+
+	/**
+	 * Получить цвет
+	 */
+	public Color getColor()
+	{
+		return proto.getColor();
+	}
+
+	/**
+	 * получить цвет при наличии сигнала тревоги
+	 */
+	public Color getAlarmedColor()
+	{
+		return proto.getAlarmedColor();
+	}
+
+	/**
+	 * получить толщину линии при наличи сигнала тревоги
+	 */
+	public int getAlarmedLineSize ()
+	{
+		return proto.getAlarmedLineSize();
+	}
+	
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.9 2004/09/17 11:38:44 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.10 2004/09/21 14:56:16 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,14 +13,12 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapNodeLinkElement_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -43,7 +41,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/09/17 11:38:44 $
+ * @version $Revision: 1.10 $, $Date: 2004/09/21 14:56:16 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -93,9 +91,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
-		String cloned_id = (String)Pool.get("mapclonedids", id);
-		if (cloned_id != null)
-			return Pool.get(MapNodeLinkElement.typ, cloned_id);
+		String clonedId = (String)Pool.get("mapclonedids", id);
+		if (clonedId != null)
+			return Pool.get(MapNodeLinkElement.typ, clonedId);
 
 		MapNodeLinkElement mnle = new MapNodeLinkElement(
 				dataSource.GetUId(MapNodeLinkElement.typ),
@@ -208,7 +206,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		return getMap().getPhysicalLink(getPhysicalLinkId()).getAlarmState();
 	}
 
-	boolean isSelectionVisible()
+	public boolean isSelectionVisible()
 	{
 		return isSelected() || getMap().getPhysicalLink(getPhysicalLinkId()).isSelectionVisible();
 	}
@@ -318,15 +316,15 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 			double l1 = 6;
 			
 			// a - угол наклона
-			double sin_a = (from.y - to.y) / length;
+			double sinA = (from.y - to.y) / length;
 
-			double cos_a = (from.x - to.x) / length;
+			double cosA = (from.x - to.x) / length;
 
-			int lxshift = (int )(l * sin_a);
-			int lyshift = (int )(l * cos_a);
+			int lxshift = (int )(l * sinA);
+			int lyshift = (int )(l * cosA);
 
-			int l1xshift = (int )(l1 * sin_a);
-			int l1yshift = (int )(l1 * cos_a);
+			int l1xshift = (int )(l1 * sinA);
+			int l1yshift = (int )(l1 * cosA);
 
 			p.setColor(MapPropertiesManager.getFirstSelectionColor());
 			p.drawLine(
@@ -498,9 +496,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	{
 		MapNodeElement oppositeNode = (startNode.equals(node)) ? endNode : startNode;
 
-		double prev_dist = getLengthLt();
+		double prevDist = getLengthLt();
 		
-		double coef = dist / prev_dist;
+		double coef = dist / prevDist;
 
 		double absc = coef * (node.getAnchor().x - oppositeNode.getAnchor().x) + oppositeNode.getAnchor().x;
 		double ordi = coef * (node.getAnchor().y - oppositeNode.getAnchor().y) + oppositeNode.getAnchor().y;
@@ -523,8 +521,8 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	}
 
 
-	protected double cos_b;
-	protected double sin_b;
+	protected double cosB;
+	protected double sinB;
 	
 	public void calcScreenSlope()
 	{
@@ -537,19 +535,19 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 				(end.x - start.x) * (end.x - start.x) +
 				(end.y - start.y) * (end.y - start.y) );
 
-		cos_b = (end.y - start.y) / nodeLinkLength;
+		cosB = (end.y - start.y) / nodeLinkLength;
 
-		sin_b = (end.x - start.x) / nodeLinkLength;
+		sinB = (end.x - start.x) / nodeLinkLength;
 	}
 	
 	public double getScreenSin()
 	{
-		return sin_b;
+		return sinB;
 	}
 	
 	public double getScreenCos()
 	{
-		return cos_b;
+		return cosB;
 	}
 
 	/**

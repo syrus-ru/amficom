@@ -67,16 +67,16 @@ public final class CableBindingController implements ObjectResourceController
 		if (key.equals(KEY_START_NODE))
 			name = LangModelMap.getString("StartNode");
 		else
-		if (key.equals(KEY_START_NODE))
+		if (key.equals(KEY_START_SPARE))
 			name = LangModelMap.getString("StartSpare");
 		else
-		if (key.equals(KEY_START_NODE))
-			name = LangModelMap.getString("PhysicalLink");
+		if (key.equals(KEY_LINK))
+			name = LangModelMap.getString("Tunnel");
 		else
-		if (key.equals(KEY_START_NODE))
+		if (key.equals(KEY_END_SPARE))
 			name = LangModelMap.getString("EndSpare");
 		else
-		if (key.equals(KEY_START_NODE))
+		if (key.equals(KEY_END_NODE))
 			name = LangModelMap.getString("EndNode");
 		return name;
 	}

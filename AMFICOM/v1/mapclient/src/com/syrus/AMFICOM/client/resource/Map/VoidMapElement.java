@@ -1,5 +1,5 @@
 /**
- * $Id: VoidMapElement.java,v 1.6 2004/09/15 08:28:52 krupenn Exp $
+ * $Id: VoidMapElement.java,v 1.7 2004/09/21 14:56:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
@@ -25,7 +24,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/15 08:28:52 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/21 14:56:17 $
  * @module
  * @author $Author: krupenn $
  * @see

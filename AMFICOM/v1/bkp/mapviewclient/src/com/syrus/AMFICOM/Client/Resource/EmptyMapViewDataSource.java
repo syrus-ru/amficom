@@ -2,25 +2,17 @@ package com.syrus.AMFICOM.Client.Resource;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.EmptyDataSource;
-import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
-import com.syrus.AMFICOM.Client.Resource.ImageResource;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
+import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCablePort;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeDevice;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
 
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.General.ElementAttributeType;
-import com.syrus.AMFICOM.Client.Resource.Map.Map;
-import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import java.awt.Color;
-import java.awt.Dimension;
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -30,7 +22,6 @@ import java.io.ObjectOutputStream;
 
 import java.util.Vector;
 
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 public class EmptyMapViewDataSource
@@ -199,7 +190,7 @@ public class EmptyMapViewDataSource
 		Pool.put(Scheme.typ, scheme.getId(), scheme);
 	}
 	
-	public void LoadMapViews(String[] ids)
+	public void loadMapViews(String[] ids)
 	{
 		if(getSession() == null)
 			return;
@@ -233,7 +224,7 @@ public class EmptyMapViewDataSource
 		}
 	}
 	
-	public void SaveMapViews(String[] mv_ids)
+	public void saveMapViews(String[] mv_ids)
 	{
 		MapView mv = (MapView )Pool.get(MapView.typ, mv_ids[0]);
 

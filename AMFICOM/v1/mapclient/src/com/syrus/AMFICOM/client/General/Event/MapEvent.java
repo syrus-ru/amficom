@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.1 2004/09/13 12:00:25 krupenn Exp $
+ * $Id: MapEvent.java,v 1.2 2004/09/21 14:56:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,14 +10,12 @@
 
 package com.syrus.AMFICOM.Client.General.Event;
 
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-
 /**
  * Событие карты
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:00:25 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/21 14:56:16 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementPanel.java,v 1.2 2004/09/15 08:21:49 krupenn Exp $
+ * $Id: MapElementPanel.java,v 1.3 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,12 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
@@ -51,7 +57,7 @@ import javax.swing.event.ListSelectionListener;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/15 08:21:49 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/21 14:59:20 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -59,6 +65,7 @@ import javax.swing.event.ListSelectionListener;
 public final class MapElementPanel extends JPanel
 {
 	Map map;
+	MapView mapView;
 	ApplicationContext aContext;
 	
 	LogicalNetLayer logicalNetLayer;
@@ -89,7 +96,7 @@ public final class MapElementPanel extends JPanel
 
 	protected boolean performProcessing = true;
 	
-	public MapElementPanel(LogicalNetLayer logicalNetLayer, Map map)
+	public MapElementPanel(LogicalNetLayer logicalNetLayer)
 	{
 		try
 		{
@@ -100,17 +107,19 @@ public final class MapElementPanel extends JPanel
 			ex.printStackTrace();
 		}
 		setLogicalNetLayer(logicalNetLayer);
-		setMap(map);
   }
   
 	void jbInit()
 	{
 		typeComboBox.addItem(MapSiteNodeElement.typ);
 		typeComboBox.addItem(MapPhysicalLinkElement.typ);
+		typeComboBox.addItem(MapPipePathElement.typ);
+		typeComboBox.addItem(MapCablePathElement.typ);
+//		typeComboBox.addItem(SchemeElement.typ);
 		typeComboBox.addItem(MapPhysicalNodeElement.typ);
 		typeComboBox.addItem(MapMarkElement.typ);
-//		typeComboBox.addItem(MapTransmissionPathElement.typ);
-		typeComboBox.addItem(com.syrus.AMFICOM.Client.Resource.MapView.MapMarker.typ);
+		typeComboBox.addItem(com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement.typ);
+		typeComboBox.addItem(MapMarker.typ);
 
 		typeComboBox.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -172,9 +181,21 @@ public final class MapElementPanel extends JPanel
 		updateTable();
 	}
 
+	public void setMapView(MapView mapView)
+	{
+		this.mapView = mapView;
+		setEnabled(mapView != null);
+		updateTable();
+	}
+
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
 	{
 		this.logicalNetLayer = logicalNetLayer;
+		if(logicalNetLayer != null)
+		{
+			mapView = logicalNetLayer.getMapView();
+			map = mapView.getMap();
+		}
 		setEnabled(logicalNetLayer != null);
 		updateTable();
 	}
@@ -240,19 +261,33 @@ public final class MapElementPanel extends JPanel
 			if(selection.equals(MapPhysicalLinkElement.typ))
 				dataSet = map.getPhysicalLinks();
 			else
-/*
-			if(selection.equals(MapTransmissionPathElement.typ))
-				dataSet = map.getTransmissionPath();
+			if(selection.equals(com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement.typ))
+				dataSet = mapView.getMeasurementPaths();
 			else
-*/				
 			if(selection.equals(MapPhysicalNodeElement.typ))
 				dataSet = map.getMapPhysicalNodeElements();
 			else
 			if(selection.equals(MapMarkElement.typ))
 				dataSet = map.getMapMarkElements();
+			else
+			if(selection.equals(MapMarker.typ))
+				dataSet = mapView.getMarkers();
+			else
+			if(selection.equals(MapPipePathElement.typ))
+				dataSet = map.getCollectors();
+			else
+			if(selection.equals(MapCablePathElement.typ))
+				dataSet = mapView.getCablePaths();
 //			else
-//			if(selection.equals(MapMarker.typ))
-//				dataSet = map.getMarkers();
+//			if(selection.equals(SchemeElement.typ))
+//			{
+//				for(Iterator it = map.getMapSiteNodeElements().iterator(); it.hasNext();)
+//				{
+//					MapSiteNodeElement site = (MapSiteNodeElement )it.next();
+//					if(
+//				}
+//				dataSet = mapView.getPaths();
+//			}
 		}
 
 		model.setContents(dataSet);

@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkProtoElement.java,v 1.4 2004/09/16 10:37:49 krupenn Exp $
+ * $Id: MapLinkProtoElement.java,v 1.5 2004/09/21 14:56:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,9 +13,7 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapLinkProtoElement_Transferable;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 
 import java.awt.Dimension;
@@ -34,7 +32,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/16 10:37:49 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/21 14:56:16 $
  * @module
  * @author $Author: krupenn $
  * @see

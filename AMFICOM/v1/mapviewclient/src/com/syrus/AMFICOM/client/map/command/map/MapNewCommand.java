@@ -38,7 +38,7 @@ public class MapNewCommand extends VoidCommand
 
 	public void execute()
 	{
-		Environment.log(Environment.LOG_LEVEL_CONFIG, "Creating new map context", getClass().getName(), "execute()");
+		Environment.log(Environment.LOG_LEVEL_CONFIG, "Creating new map", getClass().getName(), "execute()");
 		
 //		new MapViewNewCommand(mapFrame, aContext).execute();
 
@@ -46,7 +46,7 @@ public class MapNewCommand extends VoidCommand
 		aContext.getDispatcher().notify(
 				new StatusMessageEvent(
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapNewContext")));
+						LangModelMap.getString("MapNew")));
 		mc = new Map();
 
 		mc.setId(aContext.getDataSourceInterface().GetUId(com.syrus.AMFICOM.Client.Resource.Map.Map.typ));

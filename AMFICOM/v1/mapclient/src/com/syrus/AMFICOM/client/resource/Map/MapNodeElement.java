@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElement.java,v 1.6 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapNodeElement.java,v 1.7 2004/09/21 14:56:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,12 +13,11 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
 import com.syrus.AMFICOM.Client.Resource.ImageResource;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
-
-import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 
 import java.awt.BasicStroke;
 import java.awt.Component;
@@ -42,7 +41,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/21 14:56:16 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -363,7 +362,7 @@ public abstract class MapNodeElement extends StubResource
 
 	public void setMap( Map map)
 	{
-		map = map;
+		this.map = map;
 	}
 
 	//Можно ли перемещать

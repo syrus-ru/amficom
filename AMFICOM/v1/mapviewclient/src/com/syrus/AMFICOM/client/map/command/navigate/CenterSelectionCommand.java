@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: CenterSelectionCommand.java,v 1.2 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import java.util.LinkedList;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/21 14:59:20 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -101,7 +101,7 @@ public class CenterSelectionCommand extends VoidCommand
 				lis.add(me.getAnchor());
 		}
 
-		for(Iterator it = logicalNetLayer.getMapView().getPaths().iterator(); it.hasNext();)
+		for(Iterator it = logicalNetLayer.getMapView().getMeasurementPaths().iterator(); it.hasNext();)
 		{
 			me = (MapElement )it.next();
 			if(me.isSelected())

@@ -19,9 +19,6 @@ public final class MapLinkPane extends JPanel implements ObjectResourcePropertie
 	
 	MapLinkGeneralPanel gPanel = new MapLinkGeneralPanel();
 	MapLinkBindPanel bPanel = new MapLinkBindPanel();
-//	MapLinkCatalogPanel caPanel = new MapLinkCatalogPanel();
-//	MapLinkPortsPanel lpPanel = new MapLinkPortsPanel();
-//	MapLinkCharacteristicsPanel chPanel = new MapLinkCharacteristicsPanel();
 
 	MapPhysicalLinkElement maplink;
 
@@ -62,9 +59,6 @@ public final class MapLinkPane extends JPanel implements ObjectResourcePropertie
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(bPanel.getName(), bPanel);
-//		tabbedPane.add(caPanel.getName(), caPanel);
-//		tabbedPane.add(lpPanel.getName(), lpPanel);
-//		tabbedPane.add(chPanel.getName(), chPanel);
 	}
 
 	public ObjectResource getObjectResource()
@@ -76,13 +70,8 @@ public final class MapLinkPane extends JPanel implements ObjectResourcePropertie
 	{
 		this.maplink = (MapPhysicalLinkElement )or;
 
-//		System.out.println("set prop pane to " + maplink.name);
-
 		gPanel.setObjectResource(maplink);
 		bPanel.setObjectResource(maplink);
-//		caPanel.setObjectResource(maplink);
-//		lpPanel.setObjectResource(maplink);
-//		chPanel.setObjectResource(maplink);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -90,9 +79,6 @@ public final class MapLinkPane extends JPanel implements ObjectResourcePropertie
 		this.aContext = aContext;
 		gPanel.setContext(aContext);
 		bPanel.setContext(aContext);
-//		caPanel.setContext(aContext);
-//		lpPanel.setContext(aContext);
-//		chPanel.setContext(aContext);
 	}
 
 	public boolean modify()
@@ -100,9 +86,6 @@ public final class MapLinkPane extends JPanel implements ObjectResourcePropertie
 		if(gPanel.modify()
 			&& bPanel.modify())
 			return true;
-//		caPanel.modify();
-//		lpPanel.modify();
-//		chPanel.modify();
 		return false;
 	}
 

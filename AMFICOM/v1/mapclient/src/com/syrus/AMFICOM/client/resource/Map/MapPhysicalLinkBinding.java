@@ -1,8 +1,10 @@
 package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+
 import java.awt.Dimension;
 import java.awt.Point;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,15 +62,20 @@ public final class MapPhysicalLinkBinding
 				bindingMap2[i][j] = null;
 			}
 		}
-
+		
 		if(bindingMap != null)
-			for (int i = 0; i < bindingMap.length; i++) 
+		{
+			int mini = Math.min(bindingMap.length, bindingMap2.length);
+
+			for (int i = 0; i < mini; i++) 
 			{
-				for (int j = 0; j < bindingMap[i].length; j++) 
+				int minj = Math.min(bindingMap[i].length, bindingMap2[i].length);
+				for (int j = 0; j < minj; j++) 
 				{
 					bindingMap2[i][j] = bindingMap[i][j];
 				}
 			}
+		}
 		bindingMap = bindingMap2;
 	}
 	

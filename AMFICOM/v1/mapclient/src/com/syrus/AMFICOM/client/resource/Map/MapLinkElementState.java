@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkElementState.java,v 1.1 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapLinkElementState.java,v 1.2 2004/09/21 14:56:16 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,7 +18,7 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/21 14:56:16 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -31,7 +31,7 @@ public class MapLinkElementState extends MapElementState
 	MapNodeElement startNode;//начало
 	MapNodeElement endNode;//конец
 
-	java.util.HashMap attributes = new HashMap();
+	java.util.Map attributes = new HashMap();
 
 	public MapLinkElementState(MapLinkElement mle)
 	{

@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveNodeLinkCommandAtomic.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: RemoveNodeLinkCommandAtomic.java,v 1.2 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,18 +12,19 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
 /**
  * удаление фрагмента линии связи из карты - атомарное действие 
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/21 14:59:20 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-class RemoveNodeLinkCommandAtomic extends MapActionCommand
+public class RemoveNodeLinkCommandAtomic extends MapActionCommand
 {
 	MapNodeLinkElement link;
 	
@@ -41,16 +42,19 @@ class RemoveNodeLinkCommandAtomic extends MapActionCommand
 	public void execute()
 	{
 		logicalNetLayer.getMapView().getMap().removeNodeLink(link);
+		Pool.remove(MapNodeLinkElement.typ, link.getId());
 	}
 	
 	public void redo()
 	{
 		logicalNetLayer.getMapView().getMap().removeNodeLink(link);
+		Pool.remove(MapNodeLinkElement.typ, link.getId());
 	}
 	
 	public void undo()
 	{
 		logicalNetLayer.getMapView().getMap().addNodeLink(link);
+		Pool.put(MapNodeLinkElement.typ, link.getId(), link);
 	}
 }
 

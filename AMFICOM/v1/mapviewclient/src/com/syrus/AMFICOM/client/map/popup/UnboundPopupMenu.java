@@ -113,78 +113,35 @@ public class UnboundPopupMenu extends MapPopupMenu
 
 	private void bind()
 	{
-		List list = new ArrayList();
-		for(Iterator it = getLogicalNetLayer().getMapView().getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
+		MapSiteNodeElement site = super.selectSiteNode();
+		if(site != null)
 		{
-			MapSiteNodeElement site = (MapSiteNodeElement )it.next();
-			if(!( site instanceof MapUnboundNodeElement))
-				list.add(site);
-		}
-		
-		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
-			
-		dialog.setModal(true);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = dialog.getSize();
-		dialog.setLocation(
-				(screenSize.width - frameSize.width) / 2, 
-				(screenSize.height - frameSize.height) / 2);
-
-		dialog.show();
-
-		if(dialog.getReturnCode() == ObjectResourceSelectionDialog.RET_OK)
-		{
-			MapSiteNodeElement site = (MapSiteNodeElement )dialog.getSelected();
-			if(site != null)
-			{
-				BindToSiteCommandBundle command = new BindToSiteCommandBundle(unbound, site);
-				command.setLogicalNetLayer(logicalNetLayer);
-				logicalNetLayer.getCommandList().add(command);
-				logicalNetLayer.getCommandList().execute();
-			}
+			BindToSiteCommandBundle command = new BindToSiteCommandBundle(unbound, site);
+			command.setLogicalNetLayer(logicalNetLayer);
+			logicalNetLayer.getCommandList().add(command);
+			logicalNetLayer.getCommandList().execute();
 		}
 	}
 
 	private void generateSite()
 	{
-		MapNodeProtoElement proto;
-		
-		List list = logicalNetLayer.getTopologicalProtos();
-		
-		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
-			
-		dialog.setModal(true);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = dialog.getSize();
-		dialog.setLocation(
-				(screenSize.width - frameSize.width) / 2, 
-				(screenSize.height - frameSize.height) / 2);
-
-		dialog.show();
-
-		if(dialog.getReturnCode() == ObjectResourceSelectionDialog.RET_OK)
+		MapNodeProtoElement proto = super.selectNodeProto();
+		if(proto != null)
 		{
-			proto = (MapNodeProtoElement )dialog.getSelected();
-			if(proto != null)
-			{
-				CreateSiteCommand command = new CreateSiteCommand(proto, point);
-				command.setLogicalNetLayer(logicalNetLayer);
-				getLogicalNetLayer().getCommandList().add(command);
-				getLogicalNetLayer().getCommandList().execute();
-				
-				MapSiteNodeElement site = command.getSite();
+			CreateSiteCommand command = new CreateSiteCommand(proto, point);
+			command.setLogicalNetLayer(logicalNetLayer);
+			getLogicalNetLayer().getCommandList().add(command);
+			getLogicalNetLayer().getCommandList().execute();
+			
+			MapSiteNodeElement site = command.getSite();
 
-				BindToSiteCommandBundle command2 = new BindToSiteCommandBundle(unbound, site);
-				command2.setLogicalNetLayer(logicalNetLayer);
-				getLogicalNetLayer().getCommandList().add(command2);
-				getLogicalNetLayer().getCommandList().execute();
-				
-				getLogicalNetLayer().repaint();
-				
-			}
+			BindToSiteCommandBundle command2 = new BindToSiteCommandBundle(unbound, site);
+			command2.setLogicalNetLayer(logicalNetLayer);
+			getLogicalNetLayer().getCommandList().add(command2);
+			getLogicalNetLayer().getCommandList().execute();
+			
+			getLogicalNetLayer().repaint();
 		}
 	}
-
 }
+

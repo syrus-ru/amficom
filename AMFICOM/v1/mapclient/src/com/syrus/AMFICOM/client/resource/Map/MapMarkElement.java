@@ -3,14 +3,12 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapMarkElement_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;
@@ -117,9 +115,9 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
-		String cloned_id = (String)Pool.get("mapclonedids", id);
-		if (cloned_id != null)
-			return Pool.get(MapMarkElement.typ, cloned_id);
+		String clonedId = (String)Pool.get("mapclonedids", id);
+		if (clonedId != null)
+			return Pool.get(MapMarkElement.typ, clonedId);
 
 		MapMarkElement mme = new MapMarkElement(
 				dataSource.GetUId(MapMarkElement.typ),
@@ -201,7 +199,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		link = (MapPhysicalLinkElement )Pool.get(MapPhysicalLinkElement.typ, linkId);
 		if(link != null)
 		{
-			Map mc = (Map)Pool.get(com.syrus.AMFICOM.Client.Resource.Map.Map.typ, this.mapId);
+			map = (Map )Pool.get(com.syrus.AMFICOM.Client.Resource.Map.Map.typ, this.mapId);
 		}
 	}
 
@@ -327,26 +325,26 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		Graphics2D pg = ( Graphics2D)g;
 		pg.setStroke(new BasicStroke(MapPropertiesManager.getBorderThickness()));
 		
-		int width = getBounds().width;
-		int height = getBounds().height;
-
 		pg.setColor(MapPropertiesManager.getBorderColor());
 		pg.setBackground(MapPropertiesManager.getTextBackground());
 		pg.setFont(MapPropertiesManager.getFont());
 
+		int width = getBounds().width;
+		int height = g.getFontMetrics().getHeight();
+
 		String s1 = getName();
 		pg.drawRect(
 				p.x + width, 
-				p.y - g.getFontMetrics().getHeight() + 2,
+				p.y - height + 2,
 				pg.getFontMetrics().stringWidth(s1), 
-				pg.getFontMetrics().getHeight() );
+				height );
 
 		pg.setColor(MapPropertiesManager.getTextBackground());
 		pg.fillRect(
 				p.x + width, 
-				p.y - g.getFontMetrics().getHeight() + 2,
+				p.y - height + 2,
 				pg.getFontMetrics().stringWidth(s1), 
-				pg.getFontMetrics().getHeight() );
+				height );
 
 		g.setColor(MapPropertiesManager.getTextColor());
 		g.drawString(
@@ -354,13 +352,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 				p.x + width, 
 				p.y - 2 );
 	}
-/*
-	public void move (double deltaX, double deltaY)
-	{
-		super.move(deltaX, deltaY);
-		distance = getFromStartLengthLt();
-	}
-*/
+
 	public double getFromStartLengthLt()
 	{
 		link.sortNodeLinks();
@@ -473,7 +465,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		
 		ListIterator it = link.getNodeLinks().listIterator(
 				link.getNodeLinks().size());
-		for(;it.hasPrevious();)
+		while(it.hasPrevious())
 		{
 			MapNodeLinkElement nl = (MapNodeLinkElement )it.previous();
 			if(nl == nodeLink)
@@ -646,7 +638,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		
 		path = distance - path;
 
-		double nodeLinkLength =  nodeLink.getScreenLength();
+//		double nodeLinkLength =  nodeLink.getScreenLength();
 		nodeLink.calcScreenSlope();
 		double cos_b = nodeLink.getScreenCos();
 		double sin_b = nodeLink.getScreenSin();

@@ -1,5 +1,5 @@
 /**
- * $Id: DropSchemeElementCommand.java,v 1.2 2004/09/15 08:12:50 krupenn Exp $
+ * $Id: DropSchemeElementCommand.java,v 1.3 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -29,7 +29,7 @@ import java.awt.geom.Point2D;
  * –азместить элемент типа mpe на карте. используетс€ при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/15 08:12:50 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/21 14:59:20 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -49,7 +49,18 @@ public class DropSchemeElementCommand extends MapActionCommand
 	/**
 	 * точка, в которой создаетс€ новый топологический узел
 	 */
-	Point point;
+	Point point = null;
+	Point2D.Double coordinatePoint = null;
+
+	public DropSchemeElementCommand(
+			SchemeElement se,
+			Point2D.Double dpoint)
+	{
+		super(MapActionCommand.ACTION_DRAW_NODE);
+		this.se = se;
+		this.coordinatePoint = dpoint;
+	}
+
 
 	public DropSchemeElementCommand(
 			SchemeElement se,
@@ -70,7 +81,8 @@ public class DropSchemeElementCommand extends MapActionCommand
 		
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 	
-		Point2D.Double coordinatePoint = logicalNetLayer.convertScreenToMap(point);
+		if(coordinatePoint == null)
+			coordinatePoint = logicalNetLayer.convertScreenToMap(point);
 		
 		map = logicalNetLayer.getMapView().getMap();
 		

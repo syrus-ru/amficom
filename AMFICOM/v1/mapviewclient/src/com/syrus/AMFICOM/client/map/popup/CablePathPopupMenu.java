@@ -1,14 +1,33 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesDialog;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Map.Command.Action.BindCablePathCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane;
+import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 
+import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.JMenuItem;
+import java.util.Iterator;
 
 public class CablePathPopupMenu extends MapPopupMenu 
 {
@@ -91,55 +110,53 @@ public class CablePathPopupMenu extends MapPopupMenu
 
 	private void removeCablePath()
 	{
-		getLogicalNetLayer().deselectAll();
-		path.setSelected(true);
-		DeleteSelectionCommand command = new DeleteSelectionCommand();
-		command.setLogicalNetLayer(logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command);
-		getLogicalNetLayer().getCommandList().execute();
+		super.removeMapElement(path);
 
 		getLogicalNetLayer().repaint();
 	}
 
 	private void bind()
 	{
-/*	
-		List list = new ArrayList();
-		for(Iterator it = getLogicalNetLayer().getMapView().getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
-		{
-			MapSiteNodeElement site = (MapSiteNodeElement )it.next();
-			if(!( site instanceof MapUnboundNodeElement))
-				list.add(site);
-		}
-		
-		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
-			
-		dialog.setModal(true);
+		MapCablePathPane prop = (MapCablePathPane )MapCablePathPane.getInstance();
+		prop.setContext(logicalNetLayer.getContext());
+		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
+				Environment.getActiveWindow(), 
+				LangModel.getString("Properties"), 
+				true, 
+				path,
+				prop);
 
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = dialog.getSize();
+		prop.showBindPanel();
+
+		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension frameSize =  dialog.getSize();
+
+		if (frameSize.height > screenSize.height)
+			frameSize.height = screenSize.height;
+		if (frameSize.width > screenSize.width)
+			frameSize.width = screenSize.width;
 		dialog.setLocation(
-				(screenSize.width - frameSize.width) / 2, 
-				(screenSize.height - frameSize.height) / 2);
+				(screenSize.width - frameSize.width)/2, 
+				(screenSize.height - frameSize.height)/2);
+		dialog.setVisible(true);
 
-		dialog.show();
-
-		if(dialog.getReturnCode() == ObjectResourceSelectionDialog.RET_OK)
+		if ( dialog.ifAccept())
 		{
-			MapSiteNodeElement site = (MapSiteNodeElement )dialog.getSelected();
-			if(site != null)
-			{
-				BindToSiteCommandBundle command = new BindToSiteCommandBundle(path, site);
-				command.setLogicalNetLayer(logicalNetLayer);
-				logicalNetLayer.getCommandList().add(command);
-				logicalNetLayer.getCommandList().execute();
-			}
 		}
-*/
 	}
 
 	private void generateCabling()
 	{
-	}
+		MapNodeProtoElement proto = (MapNodeProtoElement )Pool.get(
+				MapNodeProtoElement.typ, 
+				MapNodeProtoElement.WELL);
 
+		BindCablePathCommandBundle command = 
+				new BindCablePathCommandBundle(path, proto);
+		command.setLogicalNetLayer(logicalNetLayer);
+		getLogicalNetLayer().getCommandList().add(command);
+		getLogicalNetLayer().getCommandList().execute();
+
+		getLogicalNetLayer().repaint();
+	}
 }

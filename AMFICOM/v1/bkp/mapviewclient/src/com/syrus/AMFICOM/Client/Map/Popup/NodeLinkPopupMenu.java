@@ -55,9 +55,7 @@ public final class NodeLinkPopupMenu extends MapPopupMenu
 
 	private void removeNodeLink()
 	{
-		getLogicalNetLayer().deselectAll();
-		link.setSelected(true);
-		getLogicalNetLayer().delete();
+		super.removeMapElement(link);
 
 		getLogicalNetLayer().repaint();
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.5 2004/09/17 11:38:44 krupenn Exp $
+ * $Id: MapElement.java,v 1.6 2004/09/21 14:56:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/17 11:38:44 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/21 14:56:16 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -69,16 +69,6 @@ public interface MapElement
 	boolean isMouseOnThisObject(Point currentMousePoint);
 
 	/**
-	 * стратегия обработки элемента в результате действий пользователя
-	 */
-//	MapStrategy getMapStrategy();
-
-	/**
-	 * контекстное меню элемента
-	 */
-//	MapPopupMenu getContextMenu();
-	
-	/**
 	 * панель свойств элемента
 	 */
 //	String getPropertyPaneClassName();
@@ -88,11 +78,6 @@ public interface MapElement
 	 */
 	boolean isMovable();
 	
-	/**
-	 * сдвинуть элемент с заданным смещением
-	 */
-//	void move (double deltaX, double deltaY);
-
 	/**
 	 * текст всплывающей подсказки
 	 */

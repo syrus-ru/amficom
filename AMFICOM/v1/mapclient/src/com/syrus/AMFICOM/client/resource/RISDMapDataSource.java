@@ -23,10 +23,6 @@ import com.syrus.AMFICOM.CORBA.Resource.ImageResourceSeq_TransferableHolder;
 import com.syrus.AMFICOM.CORBA.Resource.ImageResource_Transferable;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.DataSourceImage;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
-import com.syrus.AMFICOM.Client.Resource.ImageResource;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
@@ -36,9 +32,6 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.RISDConfigDataSource;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -130,7 +123,7 @@ public class RISDMapDataSource
 		MapLinkProtoElement_Transferable links[];
 		MapLinkProtoElement link;
 
-		Vector loaded_objects = new Vector();
+		Vector loadedObjects = new Vector();
 		ObjectResource or;
 
 		try
@@ -164,7 +157,7 @@ public class RISDMapDataSource
 		{
 			proto = new MapNodeProtoElement(protos[i]);
 			Pool.put("mapprotoelement", proto.getId(), proto);
-			loaded_objects.add(proto);
+			loadedObjects.add(proto);
 	    }
 
 		links = lh.value;
@@ -175,19 +168,19 @@ public class RISDMapDataSource
 			link = new MapLinkProtoElement(links[i]);
 			Pool.put("maplinkproto", link.getId(), link);
 //			Pool.putName("maplinkproto", link.getId(), link.getName());
-			loaded_objects.add(link);
+			loadedObjects.add(link);
 	    }
 
 		// update loaded objects
-		count = loaded_objects.size();
+		count = loadedObjects.size();
 	    for (i = 0; i < count; i++)
 		{
-			or = (ObjectResource )loaded_objects.get(i);
+			or = (ObjectResource )loadedObjects.get(i);
 			or.updateLocalFromTransferable();
 		}
 	}
 */
-	public void LoadMapProtoElements(String[] eids, String[] lids)
+	public void loadMapProtoElements(String[] eids, String[] lids)
 	{
 		if(getSession() == null)
 			return;
@@ -200,8 +193,6 @@ public class RISDMapDataSource
 		int ecode = 0;
 		int count;
 		ImageResourceSeq_TransferableHolder ih = new ImageResourceSeq_TransferableHolder();
-		ImageResource_Transferable images[];
-		ImageResource image;
 
 		MapNodeProtoElementSeq_TransferableHolder peh = new MapNodeProtoElementSeq_TransferableHolder();
 		MapNodeProtoElement_Transferable protos[];
@@ -211,7 +202,7 @@ public class RISDMapDataSource
 		MapLinkProtoElement_Transferable links[];
 		MapLinkProtoElement link;
 
-		Vector loaded_objects = new Vector();
+		Vector loadedObjects = new Vector();
 		ObjectResource or;
 
 		try
@@ -251,7 +242,7 @@ public class RISDMapDataSource
 		{
 			proto = new MapNodeProtoElement(protos[i]);
 			Pool.put(MapNodeProtoElement.typ, proto.getId(), proto);
-			loaded_objects.add(proto);
+			loadedObjects.add(proto);
 	    }
 
 		links = lh.value;
@@ -261,14 +252,14 @@ public class RISDMapDataSource
 		{
 			link = new MapLinkProtoElement(links[i]);
 			Pool.put(MapLinkProtoElement.typ, link.getId(), link);
-			loaded_objects.add(link);
+			loadedObjects.add(link);
 	    }
 
 		// update loaded objects
-		count = loaded_objects.size();
+		count = loadedObjects.size();
 	    for (i = 0; i < count; i++)
 		{
-			or = (ObjectResource )loaded_objects.get(i);
+			or = (ObjectResource )loadedObjects.get(i);
 			or.updateLocalFromTransferable();
 		}
 	}
@@ -282,14 +273,14 @@ public class RISDMapDataSource
 
 		int ecode;
 
-		Vector image_vec = new Vector();
+		Vector imageVec = new Vector();
 		ImageResource_Transferable images[];
 
 		MapNodeProtoElement_Transferable mpes[] = new MapNodeProtoElement_Transferable[nids.length];
 		for(int i = 0; i < nids.length; i++)
 		{
 			MapNodeProtoElement mpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, nids[i]);
-			image_vec.add(ImageCatalogue.get(mpe.getImageId()));
+			imageVec.add(ImageCatalogue.get(mpe.getImageId()));
 			mpe.setTransferableFromLocal();
 			mpes[i] = (MapNodeProtoElement_Transferable )mpe.getTransferable();
 		}
@@ -303,8 +294,8 @@ public class RISDMapDataSource
 		}
 
 		int i = 0;
-		images = new ImageResource_Transferable[image_vec.size()];
-		for(Enumeration enum = image_vec.elements(); enum.hasMoreElements(); i++)
+		images = new ImageResource_Transferable[imageVec.size()];
+		for(Enumeration enum = imageVec.elements(); enum.hasMoreElements(); i++)
 		{
 			ObjectResource os = (ObjectResource )enum.nextElement();
 			if(os != null)
@@ -344,7 +335,6 @@ public class RISDMapDataSource
 			return;
 
 		int ecode;
-		String []gids = new String[0];
 		try
 		{
 			ecode = ((RISDSessionInfo )getSession()).ci.server.RemoveMapProtoElements(
@@ -375,7 +365,7 @@ public class RISDMapDataSource
 
 		int ecode;
 
-		Vector image_vec = new Vector();
+		Vector imageVec = new Vector();
 		ImageResource_Transferable images[] = new ImageResource_Transferable[0];;
 		MapProtoElement_Transferable mpes[] = new MapProtoElement_Transferable[0];
 		MapProtoGroup_Transferable mpgs[] = new MapProtoGroup_Transferable[ids.length];
@@ -436,7 +426,7 @@ public class RISDMapDataSource
 	}
 */	
 
-	public void LoadMaps(String[] ids)
+	public void loadMaps(String[] ids)
 	{
 		if(getSession() == null)
 			return;
@@ -449,8 +439,7 @@ public class RISDMapDataSource
 		int ecode = 0;
 		int count;
 		ImageResourceSeq_TransferableHolder ih = new ImageResourceSeq_TransferableHolder();
-		ImageResource_Transferable images[];
-		ImageResource image;
+
 		MapSeq_TransferableHolder mh = new MapSeq_TransferableHolder();
 		Map_Transferable maps[];
 		Map mc;
@@ -478,7 +467,7 @@ public class RISDMapDataSource
 		MapPipePathElement_Transferable collectors[];
 		MapPipePathElement  collector;
 
-		Vector loaded_objects = new Vector();
+		Vector loadedObjects = new Vector();
 		ObjectResource or;
 
 		try
@@ -522,7 +511,7 @@ public class RISDMapDataSource
 		{
 			mc = new Map(maps[i]);
 			Pool.put(Map.typ, mc.getId(), mc);
-			loaded_objects.add(mc);
+			loadedObjects.add(mc);
 	    }
 
 		sites = sh.value;
@@ -532,7 +521,7 @@ public class RISDMapDataSource
 		{
 			site = new MapSiteNodeElement(sites[i]);
 			Pool.put(MapSiteNodeElement.typ, site.getId(), site);
-			loaded_objects.add(site);
+			loadedObjects.add(site);
 	    }
 
 		marks = mrh.value;
@@ -542,7 +531,7 @@ public class RISDMapDataSource
 		{
 			mark = new MapMarkElement(marks[i]);
 			Pool.put(MapMarkElement.typ, mark.getId(), mark);
-			loaded_objects.add(mark);
+			loadedObjects.add(mark);
 	    }
 
 		nodes = nh.value;
@@ -552,7 +541,7 @@ public class RISDMapDataSource
 		{
 			node = new MapPhysicalNodeElement(nodes[i]);
 			Pool.put(MapPhysicalNodeElement.typ, node.getId(), node);
-			loaded_objects.add(node);
+			loadedObjects.add(node);
 	    }
 
 		nodelinks = nlh.value;
@@ -562,7 +551,7 @@ public class RISDMapDataSource
 		{
 			nodelink = new MapNodeLinkElement(nodelinks[i]);
 			Pool.put(MapNodeLinkElement.typ, nodelink.getId(), nodelink);
-			loaded_objects.add(nodelink);
+			loadedObjects.add(nodelink);
 	    }
 
 		links = lh.value;
@@ -572,7 +561,7 @@ public class RISDMapDataSource
 		{
 			link = new MapPhysicalLinkElement(links[i]);
 			Pool.put(MapPhysicalLinkElement.typ, link.getId(), link);
-			loaded_objects.add(link);
+			loadedObjects.add(link);
 	    }
 
 		collectors = ch.value;
@@ -582,14 +571,14 @@ public class RISDMapDataSource
 		{
 			collector = new MapPipePathElement(collectors[i]);
 			Pool.put(MapPipePathElement.typ, collector.getId(), collector);
-			loaded_objects.add(collector);
+			loadedObjects.add(collector);
 	    }
 
 		// update loaded objects
-		count = loaded_objects.size();
+		count = loadedObjects.size();
 	    for (i = 0; i < count; i++)
 		{
-			or = (ObjectResource )loaded_objects.get(i);
+			or = (ObjectResource )loadedObjects.get(i);
 			or.updateLocalFromTransferable();
 		}
 	}
@@ -605,17 +594,15 @@ public class RISDMapDataSource
 
 		int i;
 		int ecode = 0;
-		int count;
 		ObjectResource os;
 
-		Hashtable image_vec = new Hashtable();
-		ArrayList site_vec = new ArrayList();
-		ArrayList node_vec = new ArrayList();
-		ArrayList mark_vec = new ArrayList();
-		ArrayList nodelink_vec = new ArrayList();
-		ArrayList link_vec = new ArrayList();
-		ArrayList collector_vec = new ArrayList();
-		ArrayList vec;
+		Hashtable imageVec = new Hashtable();
+		ArrayList siteVec = new ArrayList();
+		ArrayList nodeVec = new ArrayList();
+		ArrayList markVec = new ArrayList();
+		ArrayList nodelinkVec = new ArrayList();
+		ArrayList linkVec = new ArrayList();
+		ArrayList collectorVec = new ArrayList();
 
 		ImageResource_Transferable images[];
 		Map_Transferable maps[];
@@ -625,15 +612,6 @@ public class RISDMapDataSource
 		MapNodeLinkElement_Transferable nodelinks[];
 		MapPhysicalLinkElement_Transferable links[];
 		MapPipePathElement_Transferable collectors[];
-
-		ImageResource image;
-		Map map;
-		MapSiteNodeElement site;
-		MapMarkElement mark;
-		MapPhysicalNodeElement node;
-		MapNodeLinkElement nodelink;
-		MapPhysicalLinkElement link;
-		MapPipePathElement collector;
 
 		maps = new Map_Transferable[mc_ids.length];
 		for(i = 0; i < mc_ids.length; i++)
@@ -648,52 +626,51 @@ public class RISDMapDataSource
 				os = (ObjectResource )it.next();
 				os.setTransferableFromLocal();
 				if(os.getTyp().equals(MapPhysicalNodeElement.typ))
-					node_vec.add(os.getTransferable());
+					nodeVec.add(os.getTransferable());
 				if(os.getTyp().equals(MapSiteNodeElement.typ))
-					site_vec.add(os.getTransferable());
+					siteVec.add(os.getTransferable());
 				if(os.getTyp().equals(MapMarkElement.typ))
-					mark_vec.add(os.getTransferable());
+					markVec.add(os.getTransferable());
 			}
 
 			for(Iterator it = mc.getNodeLinks().iterator(); it.hasNext();)
 			{
 				os = (ObjectResource )it.next();
 				os.setTransferableFromLocal();
-				nodelink_vec.add(os.getTransferable());
+				nodelinkVec.add(os.getTransferable());
 			}
 
 			for(Iterator it = mc.getPhysicalLinks().iterator(); it.hasNext();)
 			{
 				os = (ObjectResource )it.next();
 				os.setTransferableFromLocal();
-				link_vec.add(os.getTransferable());
+				linkVec.add(os.getTransferable());
 			}
 
 			for(Iterator it = mc.getCollectors().iterator(); it.hasNext();)
 			{
 				os = (ObjectResource )it.next();
 				os.setTransferableFromLocal();
-				collector_vec.add(os.getTransferable());
+				collectorVec.add(os.getTransferable());
 			}
 		}
 	
 		nodes = (MapPhysicalNodeElement_Transferable [])
-			node_vec.toArray(new MapPhysicalNodeElement_Transferable[0]);
+			nodeVec.toArray(new MapPhysicalNodeElement_Transferable [nodeVec.size()]);
 		sites = (MapSiteElement_Transferable [])
-			site_vec.toArray(new MapSiteElement_Transferable[0]);
+			siteVec.toArray(new MapSiteElement_Transferable [siteVec.size()]);
 		marks = (MapMarkElement_Transferable [])
-			mark_vec.toArray(new MapMarkElement_Transferable[0]);
+			markVec.toArray(new MapMarkElement_Transferable [markVec.size()]);
 		nodelinks = (MapNodeLinkElement_Transferable [])
-			node_vec.toArray(new MapNodeLinkElement_Transferable[0]);
+			nodelinkVec.toArray(new MapNodeLinkElement_Transferable [nodelinkVec.size()]);
 		links = (MapPhysicalLinkElement_Transferable [])
-			node_vec.toArray(new MapPhysicalLinkElement_Transferable[0]);
+			linkVec.toArray(new MapPhysicalLinkElement_Transferable [linkVec.size()]);
 		collectors = (MapPipePathElement_Transferable [])
-			node_vec.toArray(new MapPipePathElement_Transferable[0]);
+			collectorVec.toArray(new MapPipePathElement_Transferable [collectorVec.size()]);
 
-		count = image_vec.size();
-		images = new ImageResource_Transferable[image_vec.size()];
+		images = new ImageResource_Transferable[imageVec.size()];
 		i = 0;
-		for(Enumeration enum = image_vec.elements(); enum.hasMoreElements(); i++)
+		for(Enumeration enum = imageVec.elements(); enum.hasMoreElements(); i++)
 		{
 			os = (ObjectResource )enum.nextElement();
 			os.setTransferableFromLocal();
@@ -781,17 +758,15 @@ public class RISDMapDataSource
 
 		System.out.println("RemoveFromMap:");
 	
-		int i;
 		int ecode = 0;
-		int count;
 		ObjectResource os;
 
-		ArrayList site_vec = new ArrayList();
-		ArrayList node_vec = new ArrayList();
-		ArrayList mark_vec = new ArrayList();
-		ArrayList nodelink_vec = new ArrayList();
-		ArrayList link_vec = new ArrayList();
-		ArrayList collector_vec = new ArrayList();
+		ArrayList siteVec = new ArrayList();
+		ArrayList nodeVec = new ArrayList();
+		ArrayList markVec = new ArrayList();
+		ArrayList nodelinkVec = new ArrayList();
+		ArrayList linkVec = new ArrayList();
+		ArrayList collectorVec = new ArrayList();
 		List vec;
 
 		String maps[];
@@ -802,14 +777,6 @@ public class RISDMapDataSource
 		String links[];
 		String collectors[];
 
-		Map map;
-		MapSiteNodeElement site;
-		MapMarkElement mark;
-		MapPhysicalNodeElement node;
-		MapNodeLinkElement nodelink;
-		MapPhysicalLinkElement link;
-		MapPipePathElement collector;
-
 		maps = new String[0];
 
 		vec = mc.getRemovedElements();
@@ -817,24 +784,24 @@ public class RISDMapDataSource
 		{
 			os = (ObjectResource )it.next();
 			if(os.getTyp().equals(MapPhysicalNodeElement.typ))
-				node_vec.add(os.getId());
+				nodeVec.add(os.getId());
 			if(os.getTyp().equals(MapSiteNodeElement.typ))
-				site_vec.add(os.getId());
+				siteVec.add(os.getId());
 			if(os.getTyp().equals(MapMarkElement.typ))
-				mark_vec.add(os.getId());
+				markVec.add(os.getId());
 			if(os.getTyp().equals(MapNodeLinkElement.typ))
-				nodelink_vec.add(os.getId());
+				nodelinkVec.add(os.getId());
 			if(os.getTyp().equals(MapPhysicalLinkElement.typ))
-				link_vec.add(os.getId());
+				linkVec.add(os.getId());
 			if(os.getTyp().equals(MapPipePathElement.typ))
-				collector_vec.add(os.getId());
+				collectorVec.add(os.getId());
 		}
-		nodes = (String[] )node_vec.toArray(new String[node_vec.size()]);
-		sites = (String[] )site_vec.toArray(new String[site_vec.size()]);
-		marks = (String[] )mark_vec.toArray(new String[mark_vec.size()]);
-		nodelinks = (String[] )nodelink_vec.toArray(new String[nodelink_vec.size()]);
-		links = (String[] )link_vec.toArray(new String[link_vec.size()]);
-		collectors = (String[] )collector_vec.toArray(new String[collector_vec.size()]);
+		nodes = (String[] )nodeVec.toArray(new String[nodeVec.size()]);
+		sites = (String[] )siteVec.toArray(new String[siteVec.size()]);
+		marks = (String[] )markVec.toArray(new String[markVec.size()]);
+		nodelinks = (String[] )nodelinkVec.toArray(new String[nodelinkVec.size()]);
+		links = (String[] )linkVec.toArray(new String[linkVec.size()]);
+		collectors = (String[] )collectorVec.toArray(new String[collectorVec.size()]);
 
 		try
 		{

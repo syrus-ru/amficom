@@ -69,7 +69,7 @@ public class MapOpenCommand extends VoidCommand
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapContextOpening")));
 
-		new MapDataSourceImage(dataSource).LoadMaps();
+		new MapDataSourceImage(dataSource).loadMaps();
 
 		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(dataSource, com.syrus.AMFICOM.Client.Resource.Map.Map.typ);
 

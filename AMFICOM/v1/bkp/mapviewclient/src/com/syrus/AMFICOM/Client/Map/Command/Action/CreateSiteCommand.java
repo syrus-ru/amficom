@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommand.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
+ * $Id: CreateSiteCommand.java,v 1.3 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import java.util.HashMap;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/21 14:59:20 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -98,7 +98,7 @@ public class CreateSiteCommand extends MapActionCommand
 				proto);
 
 		// копировать атрибуты отображения из протоэлемента
-		site.attributes = (HashMap )ResourceUtil.copyAttributes(dataSource, proto.attributes);
+//		site.attributes = (HashMap )ResourceUtil.copyAttributes(dataSource, proto.attributes);
 
 		Pool.put(MapSiteNodeElement.typ, site.getId(), site);
 		map.addNode(site);
@@ -117,10 +117,12 @@ public class CreateSiteCommand extends MapActionCommand
 	public void undo()
 	{
 		map.removeNode(site);
+		Pool.remove(MapSiteNodeElement.typ, site.getId());
 	}
 	
 	public void redo()
 	{
 		map.addNode(site);
+		Pool.put(MapSiteNodeElement.typ, site.getId(), site);
 	}
 }

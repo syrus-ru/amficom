@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
@@ -16,17 +17,21 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import java.util.Iterator;
 
 public final class LinkPopupMenu extends MapPopupMenu 
 {
 	private JMenuItem removeMenuItem = new JMenuItem();
 	private JMenuItem propertiesMenuItem = new JMenuItem();
 	private JMenuItem addMarkMenuItem = new JMenuItem();
-	private JMenuItem newCollectorMenuItem = new JMenuItem();
 	private JMenuItem addToCollectorMenuItem = new JMenuItem();
+	private JMenuItem removeFromCollectorMenuItem = new JMenuItem();
+	private JMenuItem newCollectorMenuItem = new JMenuItem();
+	private JMenuItem removeCollectorMenuItem = new JMenuItem();
 
 	private MapPhysicalLinkElement link;
 	
@@ -53,6 +58,12 @@ public final class LinkPopupMenu extends MapPopupMenu
 	public void setMapElement(MapElement me)
 	{
 		this.link = (MapPhysicalLinkElement )me;
+
+		MapPipePathElement collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+		addToCollectorMenuItem.setVisible(collector == null);
+		newCollectorMenuItem.setVisible(collector == null);
+		removeCollectorMenuItem.setVisible(collector != null);
+		removeFromCollectorMenuItem.setVisible(collector != null);
 	}
 
 	private void jbInit()
@@ -89,6 +100,15 @@ public final class LinkPopupMenu extends MapPopupMenu
 					newCollector();
 				}
 			});
+		removeCollectorMenuItem.setText(LangModelMap.getString("RemoveCollector"));
+		removeCollectorMenuItem.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					removeCollector();
+				}
+			});
+
 		addToCollectorMenuItem.setText(LangModelMap.getString("AddToCollector"));
 		addToCollectorMenuItem.addActionListener(new ActionListener()
 			{
@@ -97,11 +117,24 @@ public final class LinkPopupMenu extends MapPopupMenu
 					addToCollector();
 				}
 			});
+		removeFromCollectorMenuItem.setText(LangModelMap.getString("RemoveFromCollector"));
+		removeFromCollectorMenuItem.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					removeFromCollector();
+				}
+			});
+
 		this.add(removeMenuItem);
 		this.add(propertiesMenuItem);
 		this.add(addMarkMenuItem);
-		this.add(newCollectorMenuItem);
+		this.addSeparator();
 		this.add(addToCollectorMenuItem);
+		this.add(removeFromCollectorMenuItem);
+		this.addSeparator();
+		this.add(newCollectorMenuItem);
+		this.add(removeCollectorMenuItem);
 	}
 
 	private void showProperties()
@@ -111,9 +144,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 
 	private void removeLink()
 	{
-		getLogicalNetLayer().deselectAll();
-		link.setSelected(true);
-		getLogicalNetLayer().delete();
+		super.removeMapElement(link);
 
 		getLogicalNetLayer().repaint();
 	}
@@ -134,65 +165,59 @@ public final class LinkPopupMenu extends MapPopupMenu
 
 	private void newCollector()
 	{
-		String inputValue = JOptionPane.showInputDialog(
-				Environment.getActiveWindow(), 
-				"Введите имя коллектора", 
-				"Коллектор1");
-		if(inputValue != null)
+		MapPipePathElement collector = super.createCollector();
+		if(collector != null)
 		{
-			MapPipePathElement collector = new MapPipePathElement(
-					logicalNetLayer.getContext().getDataSourceInterface().GetUId(
-							MapPipePathElement.typ),
-					link.getMap());
+			super.addLinkToCollector(collector, link);
 
-			MapElementState state = link.getState();
-			collector.addLink(link);
-			MapLinkProtoElement proto = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, MapLinkProtoElement.COLLECTIOR);
-			link.setMapProtoId(proto.getId());
-
-			MapElementStateChangeCommand command = new MapElementStateChangeCommand(link, state, link.getState());
-			command.setLogicalNetLayer(logicalNetLayer);
-			getLogicalNetLayer().getCommandList().add(command);
-			getLogicalNetLayer().getCommandList().execute();
-			
 			getLogicalNetLayer().repaint();
+
+			getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 		}
 	}
 
 	private void addToCollector()
 	{
-		MapPipePathElement collector;
-		
-		List list = logicalNetLayer.getMapView().getMap().getCollectors();
-		
-		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
-			
-		dialog.setModal(true);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = dialog.getSize();
-		dialog.setLocation(
-				(screenSize.width - frameSize.width) / 2, 
-				(screenSize.height - frameSize.height) / 2);
-
-		dialog.show();
-
-		if(dialog.getReturnCode() == ObjectResourceSelectionDialog.RET_OK)
+		MapPipePathElement collector = super.selectCollector();
+		if(collector != null)
 		{
-			collector = (MapPipePathElement )dialog.getSelected();
-			if(collector != null)
-			{
-				MapElementState state = link.getState();
-				collector.addLink(link);
-				link.setMapProtoId(MapLinkProtoElement.COLLECTIOR);
+			super.addLinkToCollector(collector, link);
+			
+			getLogicalNetLayer().repaint();
 
-				MapElementStateChangeCommand command = new MapElementStateChangeCommand(link, state, link.getState());
-				command.setLogicalNetLayer(logicalNetLayer);
-				getLogicalNetLayer().getCommandList().add(command);
-				getLogicalNetLayer().getCommandList().execute();
-				
-				getLogicalNetLayer().repaint();
-			}
+			getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
 		}
 	}
+
+	private void removeFromCollector()
+	{
+		MapPipePathElement collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+		if(collector != null)
+		{
+			super.removeLinkFromCollector(collector, link);
+			
+			getLogicalNetLayer().repaint();
+
+			getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		}
+	}
+
+	private void removeCollector()
+	{
+		getLogicalNetLayer().deselectAll();
+
+		MapPipePathElement collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+		if(collector != null)
+		{
+			List list = new LinkedList();
+			list.addAll(collector.getLinks());
+			super.removeLinksFromCollector(collector, list);
+			super.removeCollector(collector);
+
+			getLogicalNetLayer().repaint();
+
+			getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		}
+	}
+
 }

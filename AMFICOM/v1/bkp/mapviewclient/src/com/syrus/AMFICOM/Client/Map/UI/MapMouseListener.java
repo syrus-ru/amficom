@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.5 2004/09/18 14:12:04 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.6 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,7 +51,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/18 14:12:04 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/21 14:59:20 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -176,6 +176,7 @@ public final class MapMouseListener implements MouseListener
 						if(contextMenu != null)
 						{
 							contextMenu.setLogicalNetLayer(logicalNetLayer);
+							contextMenu.setMapElement(mapElement);
 							contextMenu.setPoint(me.getPoint());
 							JPopupMenu popup = (JPopupMenu )contextMenu;
 							popup.show(

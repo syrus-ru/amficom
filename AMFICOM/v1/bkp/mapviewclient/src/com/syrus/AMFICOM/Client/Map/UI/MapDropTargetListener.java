@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.2 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import javax.swing.JOptionPane;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/21 14:59:20 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -83,7 +83,18 @@ public final class MapDropTargetListener implements DropTargetListener
 				{
 					or = (ObjectResource )transferable.getTransferData(df[0]);
 
-					schemeElementDropped(or, point);
+					if(or instanceof SchemeElement)
+					{
+						SchemeElement se = (SchemeElement )or;
+
+						schemeElementDropped(se, point);
+					}
+					else
+					if(or instanceof SchemeCableLink)
+					{
+						SchemeCableLink scl = (SchemeCableLink )or;
+						schemeCableLinkDropped(scl, point);
+					}
 				}
 				else
 				{
@@ -113,69 +124,63 @@ public final class MapDropTargetListener implements DropTargetListener
 		logicalNetLayer.getCommandList().execute();
 	}
 
-	protected void schemeElementDropped(ObjectResource or, Point point)
+	protected void schemeElementDropped(SchemeElement se, Point point)
 	{
-		if(or instanceof SchemeElement)
+		MapSiteNodeElement site = logicalNetLayer.getMapView().findElement(se);
+		if(site != null)
 		{
-			SchemeElement se = (SchemeElement )or;
-
-			MapSiteNodeElement site = logicalNetLayer.getMapView().findElement(se);
-			if(site != null)
+			if(site instanceof MapUnboundNodeElement)
 			{
-				if(site instanceof MapUnboundNodeElement)
-				{
-					logicalNetLayer.deselectAll();
-					site.setSelected(true);
-					Point pt = logicalNetLayer.convertMapToScreen(site.getAnchor());
-					MoveSelectionCommandBundle cmd = new MoveSelectionCommandBundle(pt);
-					cmd.setLogicalNetLayer(logicalNetLayer);
-					cmd.setParameter(MoveSelectionCommandBundle.END_POINT, point);
-					logicalNetLayer.getCommandList().add(cmd);
-					logicalNetLayer.getCommandList().execute();
-				}
-				else
-				{
-					site.setSelected(true);
-				}
+				logicalNetLayer.deselectAll();
+				site.setSelected(true);
+				Point pt = logicalNetLayer.convertMapToScreen(site.getAnchor());
+				MoveSelectionCommandBundle cmd = new MoveSelectionCommandBundle(pt);
+				cmd.setLogicalNetLayer(logicalNetLayer);
+				cmd.setParameter(MoveSelectionCommandBundle.END_POINT, point);
+				logicalNetLayer.getCommandList().add(cmd);
+				logicalNetLayer.getCommandList().execute();
 			}
 			else
 			{
-				DropSchemeElementCommand cmd = new DropSchemeElementCommand(se, point);
-				cmd.setLogicalNetLayer(logicalNetLayer);
-				logicalNetLayer.getCommandList().add(cmd);
-				logicalNetLayer.getCommandList().execute();
+				site.setSelected(true);
 			}
 		}
 		else
-		if(or instanceof SchemeCableLink)
 		{
-			SchemeCableLink scl = (SchemeCableLink )or;
-
-			MapCablePathElement cp = logicalNetLayer.getMapView().findCablePath(scl);
-			if(cp != null)
-			{
-				cp.setSelected(true);
-			}
-			else
-			{
-				MapSiteNodeElement[] mne = logicalNetLayer.getMapView().getSideNodes(scl);
-		
-				if(mne[0] == null || mne[1] == null)
-				{
-					JOptionPane.showMessageDialog(
-						Environment.getActiveWindow(), 
-						"Unable to place scheme cable link",
-						"Place nodes first!", 
-						JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-
-				DropSchemeCableLinkCommand cmd = new DropSchemeCableLinkCommand(scl);
-				cmd.setLogicalNetLayer(logicalNetLayer);
-				logicalNetLayer.getCommandList().add(cmd);
-				logicalNetLayer.getCommandList().execute();
-			}
+			DropSchemeElementCommand cmd = new DropSchemeElementCommand(se, point);
+			cmd.setLogicalNetLayer(logicalNetLayer);
+			logicalNetLayer.getCommandList().add(cmd);
+			logicalNetLayer.getCommandList().execute();
 		}
+	}
+
+	protected void schemeCableLinkDropped(SchemeCableLink scl, Point point)
+	{
+		MapCablePathElement cp = logicalNetLayer.getMapView().findCablePath(scl);
+		if(cp != null)
+		{
+			cp.setSelected(true);
+		}
+		else
+		{
+			MapSiteNodeElement[] mne = logicalNetLayer.getMapView().getSideNodes(scl);
+	
+			if(mne[0] == null || mne[1] == null)
+			{
+				JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(), 
+					"Unable to place scheme cable link",
+					"Place nodes first!", 
+					JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+
+			DropSchemeCableLinkCommand cmd = new DropSchemeCableLinkCommand(scl);
+			cmd.setLogicalNetLayer(logicalNetLayer);
+			logicalNetLayer.getCommandList().add(cmd);
+			logicalNetLayer.getCommandList().execute();
+		}
+	}
 /*					
 		else
 		if(or instanceof SchemePath)
@@ -184,7 +189,6 @@ public final class MapDropTargetListener implements DropTargetListener
 			logicalNetLayer.getMapView().placeElement(sp);
 		}
 */
-	}
 
 	public void dragEnter(DropTargetDragEvent dtde)
 	{

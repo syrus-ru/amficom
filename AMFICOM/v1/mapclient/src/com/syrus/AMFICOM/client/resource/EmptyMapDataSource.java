@@ -3,12 +3,6 @@ package com.syrus.AMFICOM.Client.Resource;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.EmptyDataSource;
-import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
-import com.syrus.AMFICOM.Client.Resource.ImageResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttributeType;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
@@ -26,8 +20,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import java.util.Vector;
-
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -44,7 +36,7 @@ public class EmptyMapDataSource
 		super(si);
 	}
 
-	public void LoadMapProtoElements(String[] eids, String[] lids)
+	public void loadMapProtoElements(String[] eids, String[] lids)
 	{
 		LoadMapProtoElements();
 	}
@@ -224,7 +216,7 @@ public class EmptyMapDataSource
 		LoadAttributeTypes();
 	}
 
-	public void LoadMaps(String[] ids)
+	public void loadMaps(String[] ids)
 	{
 		if(getSession() == null)
 			return;

@@ -1,14 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-
 public class DefaultMapApplicationModelFactory
 		extends MapApplicationModelFactory 
 {
-	public DefaultMapApplicationModelFactory()
-	{
-	}
-
 	public ApplicationModel create()
 	{
 		ApplicationModel aModel = super.create();

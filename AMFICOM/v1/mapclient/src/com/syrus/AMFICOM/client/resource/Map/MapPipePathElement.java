@@ -4,13 +4,14 @@ import com.syrus.AMFICOM.CORBA.Map.MapPipePathElement_Transferable;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
-import java.lang.CloneNotSupportedException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,11 +37,12 @@ public class MapPipePathElement extends MapLinkElement
 
 	public MapPipePathElement(
 			String id,
+			String name,
 			Map map)
 	{
 		super();
 		this.id = id;
-		this.name = id;
+		this.name = name;
 		this.map = map;
 		
 		if(map != null)
@@ -50,13 +52,18 @@ public class MapPipePathElement extends MapLinkElement
 
 		transferable = new MapPipePathElement_Transferable();
 	}
+	
+	public String getTyp()
+	{
+		return typ;
+	}
 
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
-		String cloned_id = (String)Pool.get("mapclonedids", id);
-		if (cloned_id != null)
-			return Pool.get(MapPipePathElement.typ, cloned_id);
+		String clonedId = (String)Pool.get("mapclonedids", id);
+		if (clonedId != null)
+			return Pool.get(MapPipePathElement.typ, clonedId);
 
 		MapPipePathElement mppe = (MapPipePathElement )super.clone();
 		mppe.setId(dataSource.GetUId(MapPipePathElement.typ));

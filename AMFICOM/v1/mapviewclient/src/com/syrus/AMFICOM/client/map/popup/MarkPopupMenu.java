@@ -55,9 +55,7 @@ public final class MarkPopupMenu extends MapPopupMenu
 
 	private void removeMark()
 	{
-		getLogicalNetLayer().deselectAll();
-		mark.setSelected(true);
-		getLogicalNetLayer().delete();
+		super.removeMapElement(mark);
 
 		getLogicalNetLayer().repaint();
 	}

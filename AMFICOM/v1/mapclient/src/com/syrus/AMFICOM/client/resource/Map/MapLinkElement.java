@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkElement.java,v 1.6 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapLinkElement.java,v 1.7 2004/09/21 14:56:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,15 +12,14 @@
 package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.StubResource;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttributeType;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 
 import java.awt.Color;
 import java.awt.Stroke;
@@ -33,7 +32,7 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/21 14:56:16 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -56,7 +55,7 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 	protected MapNodeElement endNode;
 
 	/** атрибуты отображения */
-	public java.util.HashMap attributes = new HashMap();
+	public java.util.Map attributes = new HashMap();
 
 	/** флаг выделения */
 	protected boolean selected = false;
@@ -230,10 +229,10 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 	/**
 	 * вспомогательная функция
 	 */
-    private boolean toBoolean(String bool) 
-	{
-		return ((bool != null) && bool.equalsIgnoreCase("true"));
-    }
+//    private boolean toBoolean(String bool) 
+//	{
+//		return ((bool != null) && bool.equalsIgnoreCase("true"));
+//    }
 	
 	/**
 	 * Установить толщину линии при выделении

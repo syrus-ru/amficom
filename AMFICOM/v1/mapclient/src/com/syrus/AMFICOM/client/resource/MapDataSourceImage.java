@@ -1,58 +1,35 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Класс хранения отображения БД на клиентскую часть          * //
-// *           задача модуля - для минимизации трафика клиент-сервер      * //
-// *           хранить подгружаемые с сервера объекты, так что при        * //
-// *           последующем запуске клиентской части проверяется образ     * //
-// *           на наличие необходимых объектов, и в случае их отсутствия  * //
-// *           они подгружаются с сервера                                 * //
-// *                                                                      * //
-// * Тип: Java 1.4.0                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 24 mar 2003                                                      * //
-// * Расположение: ISM\prog\java\AMFICOM\com\syrus\AMFICOM\Client\        * //
-// *        Resource\DataSourceImage.java                                 * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 9.0.3.9.93                       * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.4.0)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
-
+/**
+ * $Id: MapDataSourceImage.java,v 1.6 2004/09/21 14:56:16 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
 package com.syrus.AMFICOM.Client.Resource;
 
 import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptor_Transferable;
-import com.syrus.AMFICOM.Client.Resource.DataSourceImage;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
-import com.syrus.AMFICOM.Client.Resource.ImageResource;
-
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.RISDMapDataSource;
 
 import java.util.Vector;
 
+/**
+ * Класс хранения отображения БД на клиентскую часть
+ * задача модуля - для минимизации трафика клиент-сервер
+ * хранить подгружаемые с сервера объекты, так что при
+ * последующем запуске клиентской части проверяется образ
+ * на наличие необходимых объектов, и в случае их отсутствия
+ * они подгружаются с сервера
+ * 
+ * @version $Revision: 1.6 $, $Date: 2004/09/21 14:56:16 $
+ * @module
+ * @author $Author: krupenn $
+ * @see
+ */
 public class MapDataSourceImage extends DataSourceImage
 {
 	protected MapDataSourceImage()
@@ -64,7 +41,7 @@ public class MapDataSourceImage extends DataSourceImage
 		super(di);
 	}
 
-	public void LoadProtoElements()
+	public void loadProtoElements()
 	{
 		ResourceDescriptor_Transferable[] desc = GetDescriptors(MapNodeProtoElement.typ);
 		ResourceDescriptor_Transferable[] desc2 = GetDescriptors(MapLinkProtoElement.typ);
@@ -84,15 +61,15 @@ public class MapDataSourceImage extends DataSourceImage
 		{
 			if(this.di instanceof RISDMapDataSource)
 			{
-				((RISDMapDataSource )this.di).LoadMapProtoElements(
-					(String[] )ids.toArray(new String[0]), 
-					(String[] )ids2.toArray(new String[0]));
+				((RISDMapDataSource )this.di).loadMapProtoElements(
+					(String[] )ids.toArray(new String[ids.size()]), 
+					(String[] )ids2.toArray(new String[ids2.size()]));
 			}
 			else
 			{
-				((EmptyMapDataSource )this.di).LoadMapProtoElements(
-					(String[] )ids.toArray(new String[0]), 
-					(String[] )ids2.toArray(new String[0]));
+				((EmptyMapDataSource )this.di).loadMapProtoElements(
+					(String[] )ids.toArray(new String[ids.size()]), 
+					(String[] )ids2.toArray(new String[ids2.size()]));
 			}
 			save(MapNodeProtoElement.typ);
 			save(MapLinkProtoElement.typ);
@@ -117,7 +94,7 @@ public class MapDataSourceImage extends DataSourceImage
 */
 	}
 
-	public void LoadMaps()
+	public void loadMaps()
 	{
 		ResourceDescriptor_Transferable[] desc = GetDomainDescriptors(Map.typ);
 
@@ -136,11 +113,11 @@ public class MapDataSourceImage extends DataSourceImage
 		{
 			if(this.di instanceof RISDMapDataSource)
 			{
-				((RISDMapDataSource )this.di).LoadMaps((String[] )ids.toArray());
+				((RISDMapDataSource )this.di).loadMaps((String[] )ids.toArray(new String[ids.size()]));
 			}
 			else
 			{
-				((EmptyMapDataSource )this.di).LoadMaps((String[] )ids.toArray());
+				((EmptyMapDataSource )this.di).loadMaps((String[] )ids.toArray(new String[ids.size()]));
 			}
 			save(Map.typ);
 			save(ImageResource.typ, ImageCatalogue.getHash());

@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeProtoElement.java,v 1.4 2004/09/16 10:37:49 krupenn Exp $
+ * $Id: MapNodeProtoElement.java,v 1.5 2004/09/21 14:56:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,20 +14,11 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapNodeProtoElement_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.General.UI.PropertyEditor;
-import com.syrus.AMFICOM.Client.General.UI.PropertyRenderer;
-import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
+import com.syrus.AMFICOM.Client.Map.UI.MapDataFlavor;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.UI.MapDataFlavor;
-import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
-
-import java.awt.Color;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 
@@ -36,15 +27,13 @@ import java.io.Serializable;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * тип узла 
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/16 10:37:49 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/21 14:56:16 $
  * @module
  * @author $Author: krupenn $
  * @see

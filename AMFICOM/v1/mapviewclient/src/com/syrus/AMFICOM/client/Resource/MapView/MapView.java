@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.3 2004/09/15 08:21:49 krupenn Exp $
+ * $Id: MapView.java,v 1.4 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,8 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
+import com.syrus.AMFICOM.Client.Map.Command.Action.DropSchemeCableLinkCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.DropSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -49,7 +51,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/15 08:21:49 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/21 14:59:20 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -297,11 +299,17 @@ public final class MapView extends StubResource
 	public void addScheme(Scheme sch)
 	{
 		this.schemes.add(sch);
+		scanElements(sch);
+		scanCables(sch);
+		scanPaths(sch);
 	}
 	
 	public void removeScheme(Scheme sch)
 	{
 		this.schemes.remove(sch);
+		removePaths(sch);
+		removeCables(sch);
+		removeElements(sch);
 	}
 	
 	/**
@@ -463,12 +471,85 @@ public final class MapView extends StubResource
 		return pe;
 	}
 
+	public void scanElements(Scheme scheme)
+	{
+		for(Iterator it = scheme.getTopLevelElements().iterator(); it.hasNext();)
+		{
+			SchemeElement element = (SchemeElement )it.next();
+			MapSiteNodeElement node = findElement(element);
+			if(node == null)
+			{
+				if(element.getLong() != 0.0D
+					|| element.getLat() != 0.0D)
+				{
+					placeElement(
+						element, 
+						new Point2D.Double(
+							element.getLong(), 
+							element.getLat()));
+				}
+			}
+		}
+	}
+	
+	public void scanCables(Scheme scheme)
+	{
+		for(Iterator it = scheme.getTopLevelCableLinks().iterator(); it.hasNext();)
+		{
+			SchemeCableLink scl = (SchemeCableLink )it.next();
+			MapCablePathElement cp = logicalNetLayer.getMapView().findCablePath(scl);
+			if(cp == null)
+			{
+				MapSiteNodeElement[] mne = logicalNetLayer.getMapView().getSideNodes(scl);
+		
+				if(mne[0] != null && mne[1] != null)
+				{
+					DropSchemeCableLinkCommand cmd = new DropSchemeCableLinkCommand(scl);
+					cmd.setLogicalNetLayer(logicalNetLayer);
+					logicalNetLayer.getCommandList().add(cmd);
+					logicalNetLayer.getCommandList().execute();
+				}
+			}
+		}
+	}
+
+	public void scanPaths(Scheme scheme)
+	{
+	}
+
+	public void removePaths(Scheme scheme)
+	{
+	}
+
+	public void removeCables(Scheme scheme)
+	{
+	}
+
+	public void removeElements(Scheme scheme)
+	{
+	}
+
+/*
+	public void placeElement(SchemeCableLink scl, MapLinkProtoElement mplpe)
+	{
+	}
+*/	
+	/**
+	 * Разместить элемент на карте.
+	 */
+	public void placeElement(SchemeElement se, Point2D.Double point)
+	{
+		DropSchemeElementCommand cmd = new DropSchemeElementCommand(se, point);
+		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.execute();
+	}
+
 	/**
 	 * Разместить элемент sp типа mtppe на карте. используется при переносе 
 	 * (drag/drop)
 	 */
 /*
-	public void placeElement(SchemePath sp, MapTransmissionPathProtoElement mtppe)
+	public void placeElement(SchemePath sp)
 	{
 		if(sp == null)
 			return;
@@ -540,10 +621,13 @@ public final class MapView extends StubResource
 	}
 */	
 	/**
-	 * Разместить элемент scl типа mplpe на карте. используется при переносе 
-	 * (drag/drop)
+	 * коррекция начального и конечного узлов топологической прокладки кабеля
+	 * по элементам карты, в которых размещены начальный и конечный элемент
+	 * схемного кабеля
+	 * 
+	 * @param mcpe
+	 * @param scl
 	 */
-	 
 	public void correctStartEndNodes(MapCablePathElement mcpe, SchemeCableLink scl)
 	{
 		MapSiteNodeElement[] mne = getSideNodes(scl);
@@ -554,8 +638,22 @@ public final class MapView extends StubResource
 		}
 	}
 	
+	/**
+	 * поле сделано статическим, чтобы каждый раз при вызове метода 
+	 * getSideNodes не создавался новый массив ссылок
+	 */
 	private static MapSiteNodeElement[] linkSideNodes = new MapSiteNodeElement[2];
 	
+	/**
+	 * Возвращает массив из двух топологических элементов, в которых 
+	 * расположены концевые элементы кабеля. Если элемент не найден (не
+	 * нанесен на карту), соответствующий элемент массива равен null
+	 * 
+	 * @param scl
+	 * @return 
+	 * 	linkSideNodes[0] - начальный узел
+	 *  linkSideNodes[1] - конечный узел
+	 */
 	public MapSiteNodeElement[] getSideNodes(SchemeCableLink scl)
 	{
 		linkSideNodes[0] = null;
@@ -586,241 +684,11 @@ public final class MapView extends StubResource
 		return linkSideNodes;
 	}
 	
-/*
-	public void placeElement(SchemeCableLink scl, MapLinkProtoElement mplpe)
-	{
-		DataSourceInterface dataSource = mapMainFrame.getContext().getDataSourceInterface();
-
-		MapPhysicalLinkElement theLink;
-		if ( mapMainFrame.aContext.getApplicationModel()
-				.isEnabled("mapActionCreateLink"))
-		{
-			if(scl == null)
-				return;
-
-			Scheme scheme = (Scheme )Pool.get(Scheme.typ, getMap().schemeId);
-
-			MapSiteNodeElement smne;
-			MapSiteNodeElement emne;
-			try
-			{
-//				SchemeElement se = scheme.getTopLevelElement(scheme.getSchemeElementByCablePort(scl.sourceportId));
-				SchemeElement se = scheme.getTopologicalElement(scheme.getSchemeElementByCablePort(scl.sourcePortId));
-				smne = findElement(se.getId());
-//				SchemeElement se2 = scheme.getTopLevelElement(scheme.getSchemeElementByCablePort(scl.targetPortId));
-				SchemeElement se2 = scheme.getTopologicalElement(scheme.getSchemeElementByCablePort(scl.targetPortId));
-				emne = findElement(se2.getId());
-			}
-			catch(Exception ex)
-			{
-				System.out.println("Place nodes first!!!");
-				return;
-			}
-			
-
-			if(smne == null || emne == null)
-				return;
-
-			MapNodeLinkElement nodeLink = new MapNodeLinkElement( 
-				dataSource.GetUId( MapNodeLinkElement.typ),
-				smne, 
-				emne, 
-				getMap());
-			Pool.put(MapNodeLinkElement.typ, nodeLink.getId(), nodeLink);
-			getMap().getNodeLinks().add(nodeLink);
-
-			theLink = new MapPhysicalLinkElement(
-					dataSource.GetUId( MapPhysicalLinkElement.typ ),
-					smne, 
-					emne,
-					getMap());
-
-			theLink.typeId = mplpe.getId();
-			theLink.attributes = ResourceUtil.copyAttributes(dataSource, mplpe.attributes);
-			theLink.nodeLink_ids.add( nodeLink.getId());
-			theLink.link_type_id = scl.cable_link_type_id;
-			theLink.LINK_ID = scl.getId();
-			theLink.name = scl.getName();
-
-			Pool.put( MapPhysicalLinkElement.typ, theLink.getId(), theLink );
-			getMap().getPhysicalLinks().add(theLink);
-		}
-	}
-*/	
 	/**
-	 * Разместить элемент типа mtppe на карте. используется при переносе 
-	 * (drag/drop)
-	 */
-/*
-	public void placeElement(MapTransmissionPathProtoElement mtppe)
-	{
-		if(sp == null)
-			return;
-
-		// fill in plink_ids. assume plink_ids are sorted!
-		Vector plink_ids = new Vector();
-
-		PathElement pes[] = new PathElement[sp.links.size()];
-		for(int i = 0; i < sp.links.size(); i++)
-		{
-			PathElement pe = (PathElement )sp.links.get(i);
-			pes[pe.n] = pe;
-		}
-		for(int i = 0; i < pes.length; i++)
-		{
-			PathElement pe = pes[i];
-			if(pe.is_cable)
-			{
-				MapPhysicalLinkElement mple = findPhysicalLink(pe.link_id);
-				if(mple == null)
-				{
-					System.out.println("Place cables first!!!");
-					return;
-				}
-				plink_ids.add(mple.getId());
-			}
-		}
-
-		MapTransmissionPathElement mtpe = findPath(sp.getId());
-		if(mtpe != null)
-		{
-			mtpe.physicalLink_ids = plink_ids;
-
-			mtpe.select();
-			return;
-		}
-
-		DataSourceInterface dataSource = mapMainFrame.getContext().getDataSourceInterface();
-
-		MapTransmissionPathElement thePath;
-		if ( mapMainFrame.aContext.getApplicationModel()
-				.isEnabled("mapActionCreatePath"))
-		{
-			Scheme scheme = (Scheme )Pool.get(Scheme.typ, getMap().scheme_id);
-
-			MapSiteNodeElement smne = findElement(scheme.getTopologicalElement(sp.start_device_id).getId());
-			MapSiteNodeElement emne = findElement(scheme.getTopologicalElement(sp.end_device_id).getId());
-
-			if(smne == null || emne == null)
-				return;
-
-			thePath = new MapTransmissionPathElement(
-					dataSource.GetUId( MapPhysicalLinkElement.typ ),
-					smne, 
-					emne,
-					getMap());
-			Pool.put(MapTransmissionPathElement.typ, thePath.getId(), thePath);
-
-			thePath.type_id = mtppe.getId();
-			thePath.attributes = ResourceUtil.copyAttributes(dataSource, mtppe.attributes);
-			thePath.physicalLink_ids = plink_ids;
-			thePath.PATH_ID = sp.getId();
-			thePath.name = sp.getName();
-
-			getMap().getTransmissionPath().add(thePath);
-		}
-	}
-*/	
-
-	/**
-	 * Разместить элемент типа mplpe на карте. используется при переносе 
-	 * (drag/drop)
-	 */
-	public void placeElement(MapLinkProtoElement mplpe)
-	{
-/*
-		MapPhysicalLinkElement mple = findPhysicalLink(scl.getId());
-		if(mple != null)
-		{
-			MapSiteNodeElement smne;
-			MapSiteNodeElement emne;
-			try
-			{
-				Scheme scheme = (Scheme )Pool.get(Scheme.typ, getMap().scheme_id);
-
-//				SchemeElement se = scheme.getTopLevelElement(scheme.getSchemeElementByCablePort(scl.source_port_id));
-				SchemeElement se = scheme.getTopologicalElement(scheme.getSchemeElementByCablePort(scl.source_port_id));
-				smne = findElement(se.getId());
-//				SchemeElement se2 = scheme.getTopLevelElement(scheme.getSchemeElementByCablePort(scl.target_port_id));
-				SchemeElement se2 = scheme.getTopologicalElement(scheme.getSchemeElementByCablePort(scl.target_port_id));
-				emne = findElement(se2.getId());
-			}
-			catch(Exception ex)
-			{
-				System.out.println("Place nodes first!!!");
-				return;
-			}
-			if(smne != null && emne != null)
-			{
-				mple.startNode = smne; 
-				mple.endNode = emne;
-			}
-
-			mple.select();
-			return;
-		}
-
-		DataSourceInterface dataSource = mapMainFrame.getContext().getDataSourceInterface();
-
-		MapPhysicalLinkElement theLink;
-		if ( mapMainFrame.aContext.getApplicationModel()
-				.isEnabled("mapActionCreateLink"))
-		{
-			if(scl == null)
-				return;
-
-			Scheme scheme = (Scheme )Pool.get(Scheme.typ, getMap().scheme_id);
-
-			MapSiteNodeElement smne;
-			MapSiteNodeElement emne;
-			try
-			{
-//				SchemeElement se = scheme.getTopLevelElement(scheme.getSchemeElementByCablePort(scl.source_port_id));
-				SchemeElement se = scheme.getTopologicalElement(scheme.getSchemeElementByCablePort(scl.source_port_id));
-				smne = findElement(se.getId());
-//				SchemeElement se2 = scheme.getTopLevelElement(scheme.getSchemeElementByCablePort(scl.target_port_id));
-				SchemeElement se2 = scheme.getTopologicalElement(scheme.getSchemeElementByCablePort(scl.target_port_id));
-				emne = findElement(se2.getId());
-			}
-			catch(Exception ex)
-			{
-				System.out.println("Place nodes first!!!");
-				return;
-			}
-			
-
-			if(smne == null || emne == null)
-				return;
-
-			MapNodeLinkElement nodeLink = new MapNodeLinkElement( 
-				dataSource.GetUId( MapNodeLinkElement.typ),
-				smne, 
-				emne, 
-				getMap());
-			Pool.put(MapNodeLinkElement.typ, nodeLink.getId(), nodeLink);
-			getMap().getNodeLinks().add(nodeLink);
-
-			theLink = new MapPhysicalLinkElement(
-					dataSource.GetUId( MapPhysicalLinkElement.typ ),
-					smne, 
-					emne,
-					getMap());
-
-			theLink.type_id = mplpe.getId();
-			theLink.attributes = ResourceUtil.copyAttributes(dataSource, mplpe.attributes);
-			theLink.nodeLink_ids.add( nodeLink.getId());
-			theLink.link_type_id = scl.cable_link_type_id;
-			theLink.LINK_ID = scl.getId();
-			theLink.name = scl.getName();
-
-			Pool.put( MapPhysicalLinkElement.typ, theLink.getId(), theLink );
-			getMap().getPhysicalLinks().add(theLink);
-		}
-*/	
-	}
-
-	/**
-	 * Найти элемент на карте.
+	 * Найти элемент карты, к которому привязан данный схемный элемент.
+	 * @param se
+	 * @return 
+	 * 	null если элемент не найден
 	 */
 	public MapSiteNodeElement findElement(SchemeElement se)
 	{
@@ -941,7 +809,7 @@ public final class MapView extends StubResource
 	/**
 	 * Получить список путей тестирования
 	 */
-	public ArrayList getPaths()
+	public ArrayList getMeasurementPaths()
 	{
 		return measurementPaths;
 	}
@@ -949,7 +817,7 @@ public final class MapView extends StubResource
 	/**
 	 * Добавить новый путь тестирования
 	 */
-	public void addPath(MapPathElement ob)
+	public void addMeasurementPath(MapMeasurementPathElement ob)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addTransmissionPath(" + ob + ")");
 
@@ -959,7 +827,7 @@ public final class MapView extends StubResource
 	/**
 	 * Удалить путь тестирования
 	 */
-	public void removePath(MapPathElement ob)
+	public void removeMeasurementPath(MapMeasurementPathElement ob)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeTransmissionPath(" + ob + ")");
 
@@ -967,7 +835,7 @@ public final class MapView extends StubResource
 //		removedElements.add(ob);
 	}
 
-	public LinkedList getPaths(MapPhysicalLinkElement mple)
+	public LinkedList getMeasurementPaths(MapPhysicalLinkElement mple)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mple + ")");
 		
@@ -981,7 +849,7 @@ public final class MapView extends StubResource
 		return returnVector;
 	}
 
-	public LinkedList getPaths(MapNodeElement mne)
+	public LinkedList getMeasurementPaths(MapNodeElement mne)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mne + ")");
 
@@ -996,7 +864,7 @@ public final class MapView extends StubResource
 		return returnVector;
 	}
 
-	public LinkedList getPaths(MapNodeLinkElement mnle)
+	public LinkedList getMeasurementPaths(MapNodeLinkElement mnle)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mnle + ")");
 
@@ -1066,7 +934,7 @@ public final class MapView extends StubResource
 			returnVector.add( mapElement);
 		}
 
-		e = getPaths().iterator();
+		e = getMeasurementPaths().iterator();
 		while (e.hasNext())
 		{
 			MapElement mapElement = (MapElement )e.next();

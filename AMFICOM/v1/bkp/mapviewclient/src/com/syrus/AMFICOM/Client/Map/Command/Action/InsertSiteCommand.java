@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommand.java,v 1.1 2004/09/16 10:39:53 krupenn Exp $
+ * $Id: InsertSiteCommand.java,v 1.2 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
 
@@ -36,7 +37,7 @@ import java.util.Iterator;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/16 10:39:53 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/21 14:59:20 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -124,6 +125,10 @@ public class InsertSiteCommand extends MapActionCommandBundle
 		if(node.isActive())
 		{
 			link1 = createPhysicalLink(link.getStartNode(), site);
+			link1.setProto(link.getProto());
+			MapPipePathElement collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+			if(collector != null)
+				collector.addLink(link1);
 
 			// получить все фрагменты первой филической линии
 			java.util.List nodelinks = link.getNodeLinks();

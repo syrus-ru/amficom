@@ -1,5 +1,5 @@
 /**
- * $Id: DropSchemeCableLinkCommand.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: DropSchemeCableLinkCommand.java,v 1.2 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -12,6 +12,8 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
@@ -24,12 +26,17 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * –азместить элемент типа mpe на карте. используетс€ при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/21 14:59:20 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -94,25 +101,47 @@ public class DropSchemeCableLinkCommand extends MapActionCommandBundle
 		
 		cablePath = createCablePath(scl, startNode, endNode);
 
-		unbound = createUnboundLink(startNode, endNode);
-		
-		nodeLink = createNodeLink(startNode, endNode);
+		scl.channelingItems = sortCCIS(startNode, endNode, scl.channelingItems);
+		List ccis = (List )scl.channelingItems;
 
-		cablePath.addLink(unbound);
-		
-		unbound.addNodeLink(nodeLink);
-		nodeLink.setPhysicalLinkId(unbound.getId());
-				
-//		sort();
-//
-//		for(Iterator it = scl.channeling_items.iterator(); it.hasNext();)
-//		{
-//			CableChannelingItem cci = (CableChannelingItem )it.next();
-//			MapSiteNodeElement smsne = map.getMapSiteNodeElement(cci.start_site_id);
-//			MapSiteNodeElement emsne = map.getMapSiteNodeElement(cci.end_site_id);
-//			MapPhysicalLinkElement link = getMap().getPhysicalLink(cci.physical_link_id);
-//			if(link.)
-//		}
+		MapSiteNodeElement bufferStartSite = startNode;
+		MapSiteNodeElement bufferEndSite;
+
+		for(Iterator it = ccis.iterator(); it.hasNext();)
+		{
+			CableChannelingItem cci = (CableChannelingItem )it.next();
+			MapSiteNodeElement smsne = map.getMapSiteNodeElement(cci.startSiteId);
+			MapSiteNodeElement emsne = map.getMapSiteNodeElement(cci.endSiteId);
+			MapPhysicalLinkElement link = map.getPhysicalLink(cci.physicalLinkId);
+			if(smsne == null
+				|| emsne == null
+				|| link == null)
+			{
+				break;
+			}
+			
+			if(smsne == bufferStartSite)
+				bufferEndSite = emsne;
+			else
+				bufferEndSite = smsne;
+
+			cablePath.addLink(link);
+
+			bufferStartSite = bufferEndSite;
+		}
+
+		if(endNode != bufferStartSite)
+		{
+			unbound = createUnboundLink(bufferStartSite, endNode);
+			unbound.setCablePath(cablePath);
+			
+			nodeLink = createNodeLink(bufferStartSite, endNode);
+	
+			cablePath.addLink(unbound);
+			
+			unbound.addNodeLink(nodeLink);
+			nodeLink.setPhysicalLinkId(unbound.getId());
+		}
 
 		// операци€ закончена - оповестить слушателей
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
@@ -124,4 +153,25 @@ public class DropSchemeCableLinkCommand extends MapActionCommandBundle
 		logicalNetLayer.notifyCatalogueEvent(cablePath);
 	}
 	
+	protected List sortCCIS(MapSiteNodeElement start, MapSiteNodeElement end, Collection ccis)
+	{
+		MapSiteNodeElement bufferSite = start;
+		
+		List retCCIs = new LinkedList();
+		
+		while(bufferSite != end)
+		{
+			for(Iterator it = ccis.iterator(); it.hasNext();)
+			{
+				CableChannelingItem cci = (CableChannelingItem )it.next();
+				if(cci.startSiteId.equals(bufferSite.getId()))
+				{
+					retCCIs.add(cci);
+					bufferSite = map.getMapSiteNodeElement(cci.endSiteId);
+					break;
+				}
+			}
+		}
+		return retCCIs;
+	}
 }

@@ -1,14 +1,19 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateCollectorCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.MapElementStateChangeCommand;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.AMFICOM.Client.Resource.MapView.*;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -17,14 +22,17 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JMenuItem;
 import java.util.Iterator;
+import javax.swing.JOptionPane;
 
 public final class SelectionPopupMenu extends MapPopupMenu 
 {
 	private JMenuItem removeMenuItem = new JMenuItem();
 	private JMenuItem insertSiteMenuItem = new JMenuItem();
 	private JMenuItem generateMenuItem = new JMenuItem();
-	private JMenuItem newCollectorMenuItem = new JMenuItem();
 	private JMenuItem addToCollectorMenuItem = new JMenuItem();
+	private JMenuItem removeFromCollectorMenuItem = new JMenuItem();
+	private JMenuItem newCollectorMenuItem = new JMenuItem();
+	private JMenuItem removeCollectorMenuItem = new JMenuItem();
 	
 	private static SelectionPopupMenu instance = new SelectionPopupMenu();
 	
@@ -51,6 +59,8 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		generateMenuItem.setVisible(selection.isUnboundSelection());
 		newCollectorMenuItem.setVisible(selection.isPhysicalLinkSelection());
 		addToCollectorMenuItem.setVisible(selection.isPhysicalLinkSelection());
+		removeCollectorMenuItem.setVisible(selection.isPhysicalLinkSelection());
+		removeFromCollectorMenuItem.setVisible(selection.isPhysicalLinkSelection());
 	}
 	
 	public static SelectionPopupMenu getInstance()
@@ -92,6 +102,14 @@ public final class SelectionPopupMenu extends MapPopupMenu
 					newCollector();
 				}
 			});
+		removeCollectorMenuItem.setText(LangModelMap.getString("RemoveCollector"));
+		removeCollectorMenuItem.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					removeCollector();
+				}
+			});
 		addToCollectorMenuItem.setText(LangModelMap.getString("AddToCollector"));
 		addToCollectorMenuItem.addActionListener(new ActionListener()
 			{
@@ -100,11 +118,23 @@ public final class SelectionPopupMenu extends MapPopupMenu
 					addToCollector();
 				}
 			});
+		removeFromCollectorMenuItem.setText(LangModelMap.getString("RemoveFromCollector"));
+		removeFromCollectorMenuItem.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					removeFromCollector();
+				}
+			});
 		this.add(removeMenuItem);
 		this.add(insertSiteMenuItem);
 		this.add(generateMenuItem);
-		this.add(newCollectorMenuItem);
+		this.addSeparator();
 		this.add(addToCollectorMenuItem);
+		this.add(removeFromCollectorMenuItem);
+		this.addSeparator();
+		this.add(newCollectorMenuItem);
+		this.add(removeCollectorMenuItem);
 	}
 
 	private void removeSelection()
@@ -119,39 +149,17 @@ public final class SelectionPopupMenu extends MapPopupMenu
 
 	private void insertSite()
 	{
-		MapNodeProtoElement proto;
-		
-		List list = logicalNetLayer.getTopologicalProtos();
-
-		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
-			
-		dialog.setModal(true);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = dialog.getSize();
-		dialog.setLocation(
-				(screenSize.width - frameSize.width) / 2, 
-				(screenSize.height - frameSize.height) / 2);
-
-		dialog.show();
-
-		if(dialog.getReturnCode() == ObjectResourceSelectionDialog.RET_OK)
+		MapNodeProtoElement proto = super.selectNodeProto();
+		if(proto != null)
 		{
-			proto = (MapNodeProtoElement )dialog.getSelected();
-			if(proto != null)
+			for(Iterator it = selection.getElements().iterator(); it.hasNext();)
 			{
-				for(Iterator it = selection.getElements().iterator(); it.hasNext();)
-				{
-					MapPhysicalNodeElement node = (MapPhysicalNodeElement )it.next();
+				MapPhysicalNodeElement node = (MapPhysicalNodeElement )it.next();
 
-					InsertSiteCommand command = new InsertSiteCommand(node, proto);
-					command.setLogicalNetLayer(logicalNetLayer);
-					getLogicalNetLayer().getCommandList().add(command);
-					getLogicalNetLayer().getCommandList().execute();
-				}
-
-				getLogicalNetLayer().repaint();
+				super.insertSiteInPlaceOfANode(node, proto);
 			}
+
+			getLogicalNetLayer().repaint();
 		}
 	}
 
@@ -161,9 +169,63 @@ public final class SelectionPopupMenu extends MapPopupMenu
 
 	private void newCollector()
 	{
+		MapPipePathElement collector = super.createCollector();
+		if(collector != null)
+		{
+			super.addLinksToCollector(collector, selection.getElements());
+
+			getLogicalNetLayer().repaint();
+
+			getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		}
 	}
 
 	private void addToCollector()
 	{
+		MapPipePathElement collector = super.selectCollector();
+		if(collector != null)
+		{
+			super.addLinksToCollector(collector, selection.getElements());
+			
+			getLogicalNetLayer().repaint();
+
+			getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+		}
 	}
+
+	private void removeFromCollector()
+	{
+		for(Iterator it = selection.getElements().iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			MapPipePathElement collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+			if(collector != null)
+			{
+				super.removeLinkFromCollector(collector, link);
+			}
+		}
+		
+		getLogicalNetLayer().repaint();
+
+		getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+	}
+
+	private void removeCollector()
+	{
+		for(Iterator it = selection.getElements().iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			MapPipePathElement collector = logicalNetLayer.getMapView().getMap().getCollector(link);
+			if(collector != null)
+			{
+				super.removeLinksFromCollector(collector, collector.getLinks());
+				super.removeCollector(collector);
+			}
+		}
+
+		getLogicalNetLayer().repaint();
+
+		getLogicalNetLayer().sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+	}
+
 }

@@ -3,18 +3,10 @@ package com.syrus.AMFICOM.Client.Resource;
 import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Map.MapViewSeq_TransferableHolder;
 import com.syrus.AMFICOM.CORBA.Map.MapView_Transferable;
-
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.RISDSchemeDataSource;
-
-import com.syrus.AMFICOM.Client.Resource.MapView.MapPathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 public class RISDMapViewDataSource
@@ -50,7 +42,7 @@ public class RISDMapViewDataSource
 		MapPathProtoElement_Transferable paths[];
 		MapPathProtoElement path;
 
-		Vector loaded_objects = new Vector();
+		Vector loadedObjects = new Vector();
 		ObjectResource or;
 
 		try
@@ -85,14 +77,14 @@ public class RISDMapViewDataSource
 			path = new MapPathProtoElement(paths[i]);
 			Pool.put("mappathproto", path.getId(), path);
 //			Pool.putName("mappathproto", path.getId(), path.getName());
-			loaded_objects.add(path);
+			loadedObjects.add(path);
 	    }
 
 		// update loaded objects
-		count = loaded_objects.size();
+		count = loadedObjects.size();
 	    for (i = 0; i < count; i++)
 		{
-			or = (ObjectResource )loaded_objects.get(i);
+			or = (ObjectResource )loadedObjects.get(i);
 			or.updateLocalFromTransferable();
 		}
 	}
@@ -114,7 +106,7 @@ public class RISDMapViewDataSource
 		MapPathProtoElement_Transferable paths[];
 		MapPathProtoElement path;
 
-		Vector loaded_objects = new Vector();
+		Vector loadedObjects = new Vector();
 		ObjectResource or;
 
 		try
@@ -144,19 +136,19 @@ public class RISDMapViewDataSource
 		{
 			path = new MapPathProtoElement(paths[i]);
 			Pool.put(MapPathProtoElement.typ, path.getId(), path);
-			loaded_objects.add(path);
+			loadedObjects.add(path);
 	    }
 
 		// update loaded objects
-		count = loaded_objects.size();
+		count = loadedObjects.size();
 	    for (i = 0; i < count; i++)
 		{
-			or = (ObjectResource )loaded_objects.get(i);
+			or = (ObjectResource )loadedObjects.get(i);
 			or.updateLocalFromTransferable();
 		}
 	}
 
-	public void SaveMapViewProtoElements(String[] path_ids)
+	public void SaveMapViewProtoElements(String[] pathIds)
 	{
 		if(getSession() == null)
 			return;
@@ -165,11 +157,11 @@ public class RISDMapViewDataSource
 
 		int ecode;
 
-		Vector image_vec = new Vector();
-		MapPathProtoElement_Transferable mpes[] = new MapPathProtoElement_Transferable[path_ids.length];
-		for(int i = 0; i < path_ids.length; i++)
+		Vector imageVec = new Vector();
+		MapPathProtoElement_Transferable mpes[] = new MapPathProtoElement_Transferable[pathIds.length];
+		for(int i = 0; i < pathIds.length; i++)
 		{
-			MapPathProtoElement mpe = (MapPathProtoElement )Pool.get(MapPathProtoElement.typ, path_ids[i]);
+			MapPathProtoElement mpe = (MapPathProtoElement )Pool.get(MapPathProtoElement.typ, pathIds[i]);
 			mpe.setTransferableFromLocal();
 			mpes[i] = (MapPathProtoElement_Transferable )mpe.getTransferable();
 		}
@@ -194,7 +186,7 @@ public class RISDMapViewDataSource
 		}
 	}
 	
-	public void RemoveMapViewProtoElements(String[] path_ids)
+	public void RemoveMapViewProtoElements(String[] pathIds)
 	{
 		if(getSession() == null)
 			return;
@@ -207,7 +199,7 @@ public class RISDMapViewDataSource
 		{
 			ecode = ((RISDSessionInfo )getSession()).ci.server.RemoveMapViewProtoElements(
 					((RISDSessionInfo )getSession()).accessIdentity, 
-					path_ids);
+					pathIds);
 		}
 		catch (Exception ex)
 		{
@@ -223,7 +215,7 @@ public class RISDMapViewDataSource
 		}
 	}
 */	
-	public void LoadMapViews(String[] ids)
+	public void loadMapViews(String[] ids)
 	{
 		if(getSession() == null)
 			return;
@@ -236,14 +228,12 @@ public class RISDMapViewDataSource
 		int ecode = 0;
 		int count;
 		MapViewSeq_TransferableHolder mh = new MapViewSeq_TransferableHolder();
-		MapView_Transferable mvs[];
-		MapView mv;
 
 //		MapPathElementSeq_TransferableHolder ph = new MapPathElementSeq_TransferableHolder();
 //		MapPathElement_Transferable paths[];
 //		MapPathElement path;
 
-		Vector loaded_objects = new Vector();
+		Vector loadedObjects = new Vector();
 		ObjectResource or;
 
 		try
@@ -274,19 +264,19 @@ public class RISDMapViewDataSource
 //		{
 //			path = new MapPathElement(paths[i]);
 //			Pool.put(MapPathElement.typ, path.getId(), path);
-//			loaded_objects.add(path);
+//			loadedObjects.add(path);
 //	    }
 
 		// update loaded objects
-		count = loaded_objects.size();
+		count = loadedObjects.size();
 	    for (i = 0; i < count; i++)
 		{
-			or = (ObjectResource )loaded_objects.get(i);
+			or = (ObjectResource )loadedObjects.get(i);
 			or.updateLocalFromTransferable();
 		}
 	}
 
-	public void SaveMapViews(String[] mv_ids)
+	public void saveMapViews(String[] mvIds)
 	{
 		if(getSession() == null)
 			return;
@@ -297,21 +287,19 @@ public class RISDMapViewDataSource
 
 		int i;
 		int ecode = 0;
-		int count;
-		ObjectResource os;
 
-		ArrayList path_vec = new ArrayList();
+//		ArrayList pathVec = new ArrayList();
 
 		MapView_Transferable maps[];
 //		MapPathElement_Transferable paths[];
 
 		MapView mv;
-		MapPathElement path;
+//		MapPathElement path;
 
-		maps = new MapView_Transferable[mv_ids.length];
-		for(i = 0; i < mv_ids.length; i++)
+		maps = new MapView_Transferable[mvIds.length];
+		for(i = 0; i < mvIds.length; i++)
 		{
-			mv = (MapView )Pool.get(MapView.typ, mv_ids[i]);
+			mv = (MapView )Pool.get(MapView.typ, mvIds[i]);
 			mv.setTransferableFromLocal();
 			maps[i] = (MapView_Transferable )mv.getTransferable();
 
@@ -319,13 +307,13 @@ public class RISDMapViewDataSource
 //			{
 //				os = (ObjectResource )it.next();
 //				os.setTransferableFromLocal();
-//				path_vec.add(os.getTransferable());
+//				pathVec.add(os.getTransferable());
 //			}
 
 		}
 
 //		paths = (MapPathElement_Transferable [])
-//			node_vec.toArray(new MapPathElement_Transferable[0]);
+//			nodeVec.toArray(new MapPathElement_Transferable[0]);
 	
 		try
 		{
@@ -347,7 +335,7 @@ public class RISDMapViewDataSource
 		}
 	}
 
-	public void RemoveMapView(String mv_id)
+	public void removeMapView(String mv_id)
 	{
 		MapView mv = (MapView )Pool.get(MapView.typ, mv_id);
 
@@ -362,7 +350,7 @@ public class RISDMapViewDataSource
 
 		String[] maps = new String[1];
 		maps[0] = mv.getId();
-		String[] leer = new String[0];
+//		String[] leer = new String[0];
 
 		try
 		{
@@ -400,7 +388,7 @@ public class RISDMapViewDataSource
 		int count;
 		ObjectResource os;
 
-		ArrayList path_vec = new ArrayList();
+		ArrayList pathVec = new ArrayList();
 		List vec;
 
 		String[] maps = new String[0];
@@ -414,10 +402,10 @@ public class RISDMapViewDataSource
 //		{
 //			os = (ObjectResource )vec.get(i);
 //			if(os.getTyp().equals(MapPathElement.typ))
-//				path_vec.add(os.getId());
+//				pathVec.add(os.getId());
 //		}
 
-		paths = path_vec.copyInto(new String[path_vec.size()]);
+		paths = pathVec.copyInto(new String[pathVec.size()]);
 
 		try
 		{

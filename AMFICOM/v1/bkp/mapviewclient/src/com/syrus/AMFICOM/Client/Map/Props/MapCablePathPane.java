@@ -81,6 +81,11 @@ public class MapCablePathPane extends JPanel implements ObjectResourceProperties
 		bPanel.setContext(aContext);
 	}
 
+	public void showBindPanel()
+	{
+		tabbedPane.setSelectedComponent(bPanel);
+	}
+
 	public boolean modify()
 	{
 		if(gPanel.modify()

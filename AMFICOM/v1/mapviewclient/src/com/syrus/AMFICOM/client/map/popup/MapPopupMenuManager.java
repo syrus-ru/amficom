@@ -54,10 +54,10 @@ public final class MapPopupMenuManager
 	public static MapPopupMenu getPopupMenu(MapElement me)
 	{
 		MapPopupMenu menu = (MapPopupMenu )popupMap.get(me.getClass());
-		if(menu != null)
-		{
-			menu.setMapElement(me);
-		}
+//		if(menu != null)
+//		{
+//			menu.setMapElement(me);
+//		}
 		return menu;
 	}
 	

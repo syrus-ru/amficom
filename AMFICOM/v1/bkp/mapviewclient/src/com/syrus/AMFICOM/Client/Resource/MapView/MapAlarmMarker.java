@@ -28,7 +28,7 @@ public class MapAlarmMarker extends MapMarker
 			Rectangle bounds, 
 			String imageID,
 			double len, 
-			MapPathElement path,
+			MapMeasurementPathElement path,
 			String link_id)
 	{
 		super(id, map, bounds, imageID, len, path);

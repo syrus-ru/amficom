@@ -76,34 +76,16 @@ public class VoidElementPopupMenu extends MapPopupMenu
 
 	private void addSite()
 	{
-		MapNodeProtoElement proto;
+		MapNodeProtoElement proto = super.selectNodeProto();
 		
-		List list = logicalNetLayer.getTopologicalProtos();
-		
-		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
-			
-		dialog.setModal(true);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = dialog.getSize();
-		dialog.setLocation(
-				(screenSize.width - frameSize.width) / 2, 
-				(screenSize.height - frameSize.height) / 2);
-
-		dialog.show();
-
-		if(dialog.getReturnCode() == ObjectResourceSelectionDialog.RET_OK)
+		if(proto != null)
 		{
-			proto = (MapNodeProtoElement )dialog.getSelected();
-			if(proto != null)
-			{
-				CreateSiteCommand command = new CreateSiteCommand(proto, point);
-				command.setLogicalNetLayer(logicalNetLayer);
-				getLogicalNetLayer().getCommandList().add(command);
-				getLogicalNetLayer().getCommandList().execute();
-				
-				getLogicalNetLayer().repaint();
-			}
+			CreateSiteCommand command = new CreateSiteCommand(proto, point);
+			command.setLogicalNetLayer(logicalNetLayer);
+			getLogicalNetLayer().getCommandList().add(command);
+			getLogicalNetLayer().getCommandList().execute();
+
+			getLogicalNetLayer().repaint();
 		}
 	}
 }

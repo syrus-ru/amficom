@@ -76,46 +76,23 @@ public final class NodePopupMenu extends MapPopupMenu
 
 	private void removeNode()
 	{
-		DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(node);
-		command.setLogicalNetLayer(logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command);
-		getLogicalNetLayer().getCommandList().execute();
+		super.removeMapElement(node);
+//		DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(node);
+//		command.setLogicalNetLayer(logicalNetLayer);
+//		getLogicalNetLayer().getCommandList().add(command);
+//		getLogicalNetLayer().getCommandList().execute();
 
 		getLogicalNetLayer().repaint();
 	}
 	
 	private void placeSite()
 	{
-		MapPhysicalLinkElement link = node.getMap().getPhysicalLink(node.getPhysicalLinkId());
-
-		MapNodeProtoElement proto;
-		
-		List list = logicalNetLayer.getTopologicalProtos();
-
-		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
-			
-		dialog.setModal(true);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = dialog.getSize();
-		dialog.setLocation(
-				(screenSize.width - frameSize.width) / 2, 
-				(screenSize.height - frameSize.height) / 2);
-
-		dialog.show();
-
-		if(dialog.getReturnCode() == ObjectResourceSelectionDialog.RET_OK)
+		MapNodeProtoElement proto = super.selectNodeProto();
+		if(proto != null)
 		{
-			proto = (MapNodeProtoElement )dialog.getSelected();
-			if(proto != null)
-			{
-				InsertSiteCommand command = new InsertSiteCommand(node, proto);
-				command.setLogicalNetLayer(logicalNetLayer);
-				getLogicalNetLayer().getCommandList().add(command);
-				getLogicalNetLayer().getCommandList().execute();
-				
-				getLogicalNetLayer().repaint();
-			}
+			super.insertSiteInPlaceOfANode(node, proto);
+			
+			getLogicalNetLayer().repaint();
 		}
 	}
 }

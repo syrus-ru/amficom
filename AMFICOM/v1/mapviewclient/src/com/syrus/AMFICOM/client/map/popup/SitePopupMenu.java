@@ -71,10 +71,11 @@ public final class SitePopupMenu extends MapPopupMenu
 
 	private void removeSite()
 	{
-		DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(site);
-		command.setLogicalNetLayer(logicalNetLayer);
-		getLogicalNetLayer().getCommandList().add(command);
-		getLogicalNetLayer().getCommandList().execute();
+		super.removeMapElement(site);
+//		DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(site);
+//		command.setLogicalNetLayer(logicalNetLayer);
+//		getLogicalNetLayer().getCommandList().add(command);
+//		getLogicalNetLayer().getCommandList().execute();
 
 		getLogicalNetLayer().repaint();
 	}

@@ -2,13 +2,11 @@ package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.UI.ColorComboBox;
 import com.syrus.AMFICOM.Client.General.UI.LineThickComboBox;
-
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -124,9 +122,13 @@ public class MapOptionsDialog extends JDialog
 		init();
 	}
 
-	private void jbInit() throws Exception
+	private void jbInit()
 	{
-		this.setSize(new Dimension(821, 366));
+		this.setSize(new Dimension(850, 400));
+		
+		Dimension verticalSeparatorDimension = new Dimension(10, 1);
+		Dimension horizontalSeparatorDimension = new Dimension(1, 10);
+		Dimension fieldDimension = new Dimension(50, 24);
 
 		this.getContentPane().setLayout(gridBagLayout1);
 		visualPropsPanel.setLayout(gridBagLayout2);
@@ -137,18 +139,46 @@ public class MapOptionsDialog extends JDialog
 		showModesPanel.setLayout(gridBagLayout7);
 
 		jSeparator1.setOrientation(SwingConstants.VERTICAL);
-		jSeparator1.setBounds(new Rectangle(95, 116, 10, 10));
-		jSeparator1.setMinimumSize(new Dimension(10, 1));
+//		jSeparator1.setBounds(new Rectangle(95, 116, 10, 10));
+		jSeparator1.setPreferredSize(verticalSeparatorDimension);
 		jSeparator2.setOrientation(SwingConstants.VERTICAL);
-		jSeparator2.setMinimumSize(new Dimension(10, 1));
+		jSeparator2.setPreferredSize(verticalSeparatorDimension);
 		jSeparator3.setOrientation(SwingConstants.HORIZONTAL);
-		jSeparator3.setMinimumSize(new Dimension(1, 10));
+		jSeparator3.setPreferredSize(horizontalSeparatorDimension);
 		jSeparator4.setOrientation(SwingConstants.VERTICAL);
-		jSeparator4.setMinimumSize(new Dimension(10, 1));
+		jSeparator4.setPreferredSize(verticalSeparatorDimension);
 		jSeparator5.setOrientation(SwingConstants.VERTICAL);
-		jSeparator5.setMinimumSize(new Dimension(10, 1));
+		jSeparator5.setPreferredSize(verticalSeparatorDimension);
 		jSeparator6.setOrientation(SwingConstants.HORIZONTAL);
-		jSeparator6.setMinimumSize(new Dimension(1, 10));
+		jSeparator6.setPreferredSize(horizontalSeparatorDimension);
+
+		thicknessComboBox.setPreferredSize(fieldDimension);
+		colorComboBox.setPreferredSize(fieldDimension);
+		styleComboBox.setPreferredSize(fieldDimension);
+
+		selectionThicknessComboBox.setPreferredSize(fieldDimension);
+		selectionColorComboBox.setPreferredSize(fieldDimension);
+		selectionStyleComboBox.setPreferredSize(fieldDimension);
+		firstSelectionColorComboBox.setPreferredSize(fieldDimension);
+		secondSelectionColorComboBox.setPreferredSize(fieldDimension);
+
+		alarmedThicknessComboBox.setPreferredSize(fieldDimension);
+		alarmedColorComboBox.setPreferredSize(fieldDimension);
+		alarmedStyleComboBox.setPreferredSize(fieldDimension);
+
+		borderThicknessComboBox.setPreferredSize(fieldDimension);
+		borderColorComboBox.setPreferredSize(fieldDimension);
+		textColorComboBox.setPreferredSize(fieldDimension);
+		backgroundColorComboBox.setPreferredSize(fieldDimension);
+		fontComboBox.setPreferredSize(fieldDimension);
+		metricTextField.setPreferredSize(fieldDimension);
+
+		unboundThicknessComboBox.setPreferredSize(fieldDimension);
+		unboundLinkColorComboBox.setPreferredSize(fieldDimension);
+		unboundLinkPositionColorComboBox.setPreferredSize(fieldDimension);
+		unboundElementColorComboBox.setPreferredSize(fieldDimension);
+		canBindColorComboBox.setPreferredSize(fieldDimension);
+		spareTextField.setPreferredSize(fieldDimension);
 
 		thicknessLanel.setText("Толщина линии");
 		colorLabel.setText("Цвет линии");
@@ -167,14 +197,12 @@ public class MapOptionsDialog extends JDialog
 		firstSelectionColorLabel.setText("Первый цвет выделения линии");
 		secondSelectionColorLabel.setText("Второй цвет выделения линии");
 		metricLabel.setText("Метрика");
-		metricTextField.setText("jTextField1");
 		unboundThicknessLanel.setText("Толщина непроложенного кабеля");
 		unboundLinkColorLabel.setText("Цвет непроложенного кабеля");
 		unboundLinkPositionColorLabel.setText("Цвет линии с непривязанным кабелем");
 		unboundElementColorLabel.setText("Цвет непривязанного элемента");
 		canBindColorLabel.setText("Цвет режимя привязки элемента");
 		spareLabel.setText("Запас по умолчанию при привязке, м");
-		spareTextField.setText("jTextField1");
 		showLengthCheckBox.setText("Отображать длины");
 		showLinkNamesCheckBox.setText("Отображать названия линий");
 		showNodeNamesCheckBox.setText("Отображать названия узлов");
@@ -186,7 +214,7 @@ public class MapOptionsDialog extends JDialog
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					okButton_actionPerformed(e);
+					ok();
 				}
 			});
 		cancelButton.setText("Отменить");
@@ -194,82 +222,82 @@ public class MapOptionsDialog extends JDialog
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					cancelButton_actionPerformed(e);
+					cancel();
 				}
 			});
 
-		visualPropsPanel.add(thicknessLanel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		visualPropsPanel.add(thicknessLanel, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		visualPropsPanel.add(thicknessComboBox, ReusedGridBagConstraints.get(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		visualPropsPanel.add(colorLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		visualPropsPanel.add(colorLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		visualPropsPanel.add(colorComboBox, ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		visualPropsPanel.add(styleLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		visualPropsPanel.add(styleLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		visualPropsPanel.add(styleComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
 
-		selectionPropsPanel.add(selectionThicknessLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		selectionPropsPanel.add(selectionThicknessLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		selectionPropsPanel.add(selectionThicknessComboBox, ReusedGridBagConstraints.get(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		selectionPropsPanel.add(selectionColorLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		selectionPropsPanel.add(selectionColorLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		selectionPropsPanel.add(selectionColorComboBox, ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		selectionPropsPanel.add(selectionStyleLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		selectionPropsPanel.add(selectionStyleLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		selectionPropsPanel.add(selectionStyleComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		selectionPropsPanel.add(firstSelectionColorLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		selectionPropsPanel.add(firstSelectionColorLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		selectionPropsPanel.add(firstSelectionColorComboBox, ReusedGridBagConstraints.get(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		selectionPropsPanel.add(secondSelectionColorLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		selectionPropsPanel.add(secondSelectionColorLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		selectionPropsPanel.add(secondSelectionColorComboBox, ReusedGridBagConstraints.get(1, 4, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
 
-		alarmedPropsPanel.add(alarmedThicknessLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
+		alarmedPropsPanel.add(alarmedThicknessLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		alarmedPropsPanel.add(alarmedThicknessComboBox, ReusedGridBagConstraints.get(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		alarmedPropsPanel.add(alarmedColorLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		alarmedPropsPanel.add(alarmedColorLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		alarmedPropsPanel.add(alarmedColorComboBox, ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		alarmedPropsPanel.add(alarmedStyleLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		alarmedPropsPanel.add(alarmedStyleLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		alarmedPropsPanel.add(alarmedStyleComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
 
-		textPropsPanel.add(borderThicknessLanel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		textPropsPanel.add(borderThicknessLanel, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		textPropsPanel.add(borderThicknessComboBox, ReusedGridBagConstraints.get(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		textPropsPanel.add(borderColorLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		textPropsPanel.add(borderColorLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		textPropsPanel.add(borderColorComboBox, ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		textPropsPanel.add(textColorLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		textPropsPanel.add(textColorLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		textPropsPanel.add(textColorComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		textPropsPanel.add(backgroundColorLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		textPropsPanel.add(backgroundColorLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		textPropsPanel.add(backgroundColorComboBox, ReusedGridBagConstraints.get(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		textPropsPanel.add(fontLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		textPropsPanel.add(fontLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		textPropsPanel.add(fontComboBox, ReusedGridBagConstraints.get(1, 4, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		textPropsPanel.add(metricLabel, ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		textPropsPanel.add(metricLabel, ReusedGridBagConstraints.get(0, 5, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		textPropsPanel.add(metricTextField, ReusedGridBagConstraints.get(1, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
 
-		unboundPropsPanel.add(unboundThicknessLanel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		unboundPropsPanel.add(unboundThicknessLanel, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		unboundPropsPanel.add(unboundThicknessComboBox, ReusedGridBagConstraints.get(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		unboundPropsPanel.add(unboundLinkColorLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		unboundPropsPanel.add(unboundLinkColorLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		unboundPropsPanel.add(unboundLinkColorComboBox, ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		unboundPropsPanel.add(unboundLinkPositionColorLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		unboundPropsPanel.add(unboundLinkPositionColorLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		unboundPropsPanel.add(unboundLinkPositionColorComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		unboundPropsPanel.add(unboundElementColorLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		unboundPropsPanel.add(unboundElementColorLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		unboundPropsPanel.add(unboundElementColorComboBox, ReusedGridBagConstraints.get(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		unboundPropsPanel.add(canBindColorLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		unboundPropsPanel.add(canBindColorLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		unboundPropsPanel.add(canBindColorComboBox, ReusedGridBagConstraints.get(1, 4, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
-		unboundPropsPanel.add(spareLabel, ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		unboundPropsPanel.add(spareLabel, ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		unboundPropsPanel.add(spareTextField, ReusedGridBagConstraints.get(1, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 50, 0));
 
-		showModesPanel.add(showLengthCheckBox, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		showModesPanel.add(showLinkNamesCheckBox, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		showModesPanel.add(showNodeNamesCheckBox, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
-		showModesPanel.add(showPhysicalNodesCheckBox, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		showModesPanel.add(showLengthCheckBox, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		showModesPanel.add(showLinkNamesCheckBox, ReusedGridBagConstraints.get(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		showModesPanel.add(showNodeNamesCheckBox, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		showModesPanel.add(showPhysicalNodesCheckBox, ReusedGridBagConstraints.get(0, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 
 		buttonsPanel.add(okButton, null);
 		buttonsPanel.add(cancelButton, null);
 
-		this.getContentPane().add(visualPropsPanel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.getContentPane().add(visualPropsPanel, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.getContentPane().add(jSeparator1, ReusedGridBagConstraints.get(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
-		this.getContentPane().add(selectionPropsPanel, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.getContentPane().add(selectionPropsPanel, ReusedGridBagConstraints.get(2, 0, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.getContentPane().add(jSeparator2, ReusedGridBagConstraints.get(3, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
-		this.getContentPane().add(alarmedPropsPanel, ReusedGridBagConstraints.get(4, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.getContentPane().add(alarmedPropsPanel, ReusedGridBagConstraints.get(4, 0, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.getContentPane().add(jSeparator3, ReusedGridBagConstraints.get(0, 1, 5, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
-		this.getContentPane().add(textPropsPanel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.getContentPane().add(textPropsPanel, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.getContentPane().add(jSeparator4, ReusedGridBagConstraints.get(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
-		this.getContentPane().add(unboundPropsPanel, ReusedGridBagConstraints.get(2, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.getContentPane().add(unboundPropsPanel, ReusedGridBagConstraints.get(2, 2, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.getContentPane().add(jSeparator5, ReusedGridBagConstraints.get(3, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
-		this.getContentPane().add(showModesPanel, ReusedGridBagConstraints.get(4, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.getContentPane().add(showModesPanel, ReusedGridBagConstraints.get(4, 2, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.getContentPane().add(jSeparator6, ReusedGridBagConstraints.get(0, 3, 5, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
-		this.getContentPane().add(buttonsPanel, ReusedGridBagConstraints.get(0, 4, 5, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.getContentPane().add(buttonsPanel, ReusedGridBagConstraints.get(0, 4, 5, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 
 	}
 	
@@ -355,14 +383,14 @@ public class MapOptionsDialog extends JDialog
 		MapPropertiesManager.setCanBindColor(canBindColorComboBox.getSelectedColor());
 	}
 
-	private void okButton_actionPerformed(ActionEvent e)
+	private void ok()
 	{
 		commit();
 		retCode = RET_OK;
 		dispose();
 	}
 
-	private void cancelButton_actionPerformed(ActionEvent e)
+	private void cancel()
 	{
 		dispose();
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.2 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,12 +25,12 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/21 14:59:20 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-class CreatePhysicalNodeCommandAtomic extends MapActionCommand
+public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 {
 	MapPhysicalNodeElement node;
 	Point2D.Double point;
@@ -57,10 +57,7 @@ class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 				logicalNetLayer.getMapView().getMap(),
 				MapNodeElement.DEFAULT_BOUNDS);
 
-		Pool.put(
-				MapPhysicalNodeElement.typ, 
-				node.getId(), 
-				node);
+		Pool.put(MapPhysicalNodeElement.typ, node.getId(), node);
 
 		// установить коэффициент для масштабирования изображения
 		// в соответствии с текущим масштабом отображения карты
@@ -75,10 +72,12 @@ class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 	public void redo()
 	{
 		logicalNetLayer.getMapView().getMap().addNode(node);
+		Pool.put(MapPhysicalNodeElement.typ, node.getId(), node);
 	}
 	
 	public void undo()
 	{
 		logicalNetLayer.getMapView().getMap().removeNode(node);
+		Pool.remove(MapPhysicalNodeElement.typ, node.getId());
 	}
 }

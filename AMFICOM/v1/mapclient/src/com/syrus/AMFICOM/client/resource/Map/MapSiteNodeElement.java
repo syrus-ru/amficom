@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElement.java,v 1.4 2004/09/17 11:38:44 krupenn Exp $
+ * $Id: MapSiteNodeElement.java,v 1.5 2004/09/21 14:56:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,10 +16,9 @@ import com.syrus.AMFICOM.CORBA.Map.MapSiteElement_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
@@ -27,7 +26,6 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.Serializable;
 
-import java.lang.CloneNotSupportedException;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -36,7 +34,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/17 11:38:44 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/21 14:56:17 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -44,7 +42,7 @@ import java.util.Iterator;
 public class MapSiteNodeElement extends MapNodeElement implements Serializable
 {
 	private static final long serialVersionUID = 02L;
-	public static final String typ = "mapequipmentelement";
+	public static final String typ = "mapsiteelement";
 
 	protected MapSiteElement_Transferable transferable;
 
@@ -101,9 +99,9 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
-		String cloned_id = (String)Pool.get("mapclonedids", id);
-		if (cloned_id != null)
-			return Pool.get(MapSiteNodeElement.typ, cloned_id);
+		String clonedid = (String)Pool.get("mapclonedids", id);
+		if (clonedid != null)
+			return Pool.get(MapSiteNodeElement.typ, clonedid);
 
 		MapSiteNodeElement mene = new MapSiteNodeElement(
 				dataSource.GetUId(MapSiteNodeElement.typ),

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.3 2004/09/15 08:12:50 krupenn Exp $
+ * $Id: MapMarker.java,v 1.4 2004/09/21 14:59:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapPathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -62,7 +62,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/15 08:12:50 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/21 14:59:20 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -101,7 +101,7 @@ public class MapMarker extends StubResource implements MapElement
 	protected int nodeLinkIndex = 0;
 
 	public Hashtable attributes = new Hashtable();
-	protected MapPathElement transmissionPath;
+	protected MapMeasurementPathElement transmissionPath;
 	protected SchemePath schemePath = null;
 	protected TransmissionPath catalogPath = null;
 	protected String me_id = "";
@@ -126,7 +126,7 @@ public class MapMarker extends StubResource implements MapElement
 			Rectangle bounds, 
 			String imageId,
 			double len, 
-			MapPathElement path)
+			MapMeasurementPathElement path)
 	{
 /*
 		this.id = id;
@@ -240,7 +240,7 @@ public class MapMarker extends StubResource implements MapElement
 		selected = false;
 	}
 */
-	public MapPathElement getTransmissionPath()
+	public MapMeasurementPathElement getTransmissionPath()
 	{
 		return this.transmissionPath;
 	}
@@ -694,7 +694,7 @@ public class MapMarker extends StubResource implements MapElement
 
 	public double getSizeInDoubleLf()
 	{
-		double Kd = getMap().getPhysicalLink(nodeLink.getPhysicalLinkId()).getKd();
+		double Kd = 1.0;//getMap().getPhysicalLink(nodeLink.getPhysicalLinkId()).getKd();
 		return getSizeInDoubleLt() * Kd;
 	}
 
