@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.10 2004/08/09 14:13:54 bob Exp $
+ * $Id: KISDatabase.java,v 1.11 2004/08/09 14:17:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/09 14:13:54 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/09 14:17:55 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -103,8 +103,8 @@ public class KISDatabase extends StorableObjectDatabase {
 														* @todo when change DB Identifier model ,change getString() to getLong()
 														*/
 													new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),													
-													resultSet.getString(EquipmentDatabase.COLUMN_NAME),
-													resultSet.getString(EquipmentDatabase.COLUMN_DESCRIPTION),													
+													resultSet.getString(COLUMN_NAME),
+													resultSet.getString(COLUMN_DESCRIPTION),													
 													/**
 														* @todo when change DB Identifier model ,change getString() to getLong()
 														*/
