@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.54 2005/02/08 11:28:56 max Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.55 2005/02/08 20:04:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -41,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/02/08 11:28:56 $
- * @author $Author: max $
+ * @version $Revision: 1.55 $, $Date: 2005/02/08 20:04:49 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -550,36 +549,36 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		return list;	
 	}
 	 
-	private List retrieveButIdByThresholdSet(List ids, List thresholdSetIds) throws RetrieveObjectException, IllegalDataException {
-		if (thresholdSetIds != null && !thresholdSetIds.isEmpty()) {
-			String condition = new String();
-			StringBuffer thresholds = new StringBuffer();
-
-			int i = 1;
-			for (Iterator it = thresholdSetIds.iterator(); it.hasNext(); i++) {
-				thresholds.append(DatabaseIdentifier.toSQLString((Identifier) it.next()));
-				if (it.hasNext()) {
-					if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-						thresholds.append(COMMA);
-					else {
-						thresholds.append(CLOSE_BRACKET);
-						thresholds.append(SQL_OR);
-						thresholds.append(SetWrapper.LINK_COLUMN_SET_ID);
-						thresholds.append(SQL_IN);
-						thresholds.append(OPEN_BRACKET);
-					}
-				}
-			}
-
-	    condition = PARAMETER_TYPE_ID + SQL_IN
-						+ OPEN_BRACKET
-						+ SQL_SELECT + StorableObjectWrapper.COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
-						+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + thresholds
-						+ CLOSE_BRACKET
-					+ CLOSE_BRACKET
-					+ SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + EvaluationTypeWrapper.MODE_THRESHOLD + APOSTOPHE;
-			return retrieveButIds(ids, condition);
-		}
-		return Collections.EMPTY_LIST;
-	}
+//	private List retrieveButIdByThresholdSet(List ids, List thresholdSetIds) throws RetrieveObjectException, IllegalDataException {
+//		if (thresholdSetIds != null && !thresholdSetIds.isEmpty()) {
+//			String condition = new String();
+//			StringBuffer thresholds = new StringBuffer();
+//
+//			int i = 1;
+//			for (Iterator it = thresholdSetIds.iterator(); it.hasNext(); i++) {
+//				thresholds.append(DatabaseIdentifier.toSQLString((Identifier) it.next()));
+//				if (it.hasNext()) {
+//					if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+//						thresholds.append(COMMA);
+//					else {
+//						thresholds.append(CLOSE_BRACKET);
+//						thresholds.append(SQL_OR);
+//						thresholds.append(SetWrapper.LINK_COLUMN_SET_ID);
+//						thresholds.append(SQL_IN);
+//						thresholds.append(OPEN_BRACKET);
+//					}
+//				}
+//			}
+//
+//	    condition = PARAMETER_TYPE_ID + SQL_IN
+//						+ OPEN_BRACKET
+//						+ SQL_SELECT + StorableObjectWrapper.COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+//						+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + thresholds
+//						+ CLOSE_BRACKET
+//					+ CLOSE_BRACKET
+//					+ SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + EvaluationTypeWrapper.MODE_THRESHOLD + APOSTOPHE;
+//			return retrieveButIds(ids, condition);
+//		}
+//		return Collections.EMPTY_LIST;
+//	}
 }

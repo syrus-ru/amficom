@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.61 2005/02/08 11:40:04 max Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.62 2005/02/08 20:04:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -26,7 +25,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -44,8 +42,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/02/08 11:40:04 $
- * @author $Author: max $
+ * @version $Revision: 1.62 $, $Date: 2005/02/08 20:04:49 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -703,57 +701,58 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		return i;
 		}
 
-	private List retrieveButIdsByMeasurementPortType(List ids, List measurementPortTypes) throws RetrieveObjectException {
-		List list = null;
-
-		if (measurementPortTypes != null && !measurementPortTypes.isEmpty()) {
-			StringBuffer buffer = new StringBuffer(StorableObjectWrapper.COLUMN_ID + SQL_IN
-					+ OPEN_BRACKET
-						+ SQL_SELECT + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + SQL_FROM +  ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY
-						+ SQL_WHERE + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID + SQL_IN
-							+ OPEN_BRACKET);
-			int i = 1;
-			for (Iterator it = measurementPortTypes.iterator(); it.hasNext(); i++) {
-				Object object = it.next();
-				Identifier id = null;
-				if (object instanceof Identifier)
-					id = (Identifier) object;
-				else
-					if (object instanceof Identified)
-						id = ((Identified) object).getId();
-					else
-						throw new RetrieveObjectException(
-								getEnityName() + "Database.retrieveButIdsByMeasurementPortType | Object "
-								+ object.getClass().getName() + " isn't Identifier or Identified");
-	
-				if (id != null) {
-					buffer.append(DatabaseIdentifier.toSQLString(id));
-					if (it.hasNext()) {
-						if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-							buffer.append(COMMA);
-						else {
-							buffer.append(CLOSE_BRACKET);
-							buffer.append(SQL_OR);
-							buffer.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
-							buffer.append(SQL_IN);
-							buffer.append(OPEN_BRACKET);
-						}					
-					}
-				}
-			}
-			buffer.append(CLOSE_BRACKET);
-			buffer.append(CLOSE_BRACKET);	
-			String condition = buffer.toString();
-			try {
-				Log.debugMessage(getEnityName() + "Database.retrieveButIdsByMeasurementPortType | Try with additional condition: " + condition, Log.DEBUGLEVEL09);
-				list = retrieveButIds(ids, condition);
-			}
-			catch (IllegalDataException ide) {
-				Log.debugMessage(getEnityName() + "Database.retrieveButIdsByMeasurementPortType | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-			}
-		}
-		else
-			list = Collections.EMPTY_LIST;
-
-		return list;
-	}}
+//	private List retrieveButIdsByMeasurementPortType(List ids, List measurementPortTypes) throws RetrieveObjectException {
+//		List list = null;
+//
+//		if (measurementPortTypes != null && !measurementPortTypes.isEmpty()) {
+//			StringBuffer buffer = new StringBuffer(StorableObjectWrapper.COLUMN_ID + SQL_IN
+//					+ OPEN_BRACKET
+//						+ SQL_SELECT + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + SQL_FROM +  ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY
+//						+ SQL_WHERE + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID + SQL_IN
+//							+ OPEN_BRACKET);
+//			int i = 1;
+//			for (Iterator it = measurementPortTypes.iterator(); it.hasNext(); i++) {
+//				Object object = it.next();
+//				Identifier id = null;
+//				if (object instanceof Identifier)
+//					id = (Identifier) object;
+//				else
+//					if (object instanceof Identified)
+//						id = ((Identified) object).getId();
+//					else
+//						throw new RetrieveObjectException(
+//								getEnityName() + "Database.retrieveButIdsByMeasurementPortType | Object "
+//								+ object.getClass().getName() + " isn't Identifier or Identified");
+//	
+//				if (id != null) {
+//					buffer.append(DatabaseIdentifier.toSQLString(id));
+//					if (it.hasNext()) {
+//						if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+//							buffer.append(COMMA);
+//						else {
+//							buffer.append(CLOSE_BRACKET);
+//							buffer.append(SQL_OR);
+//							buffer.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
+//							buffer.append(SQL_IN);
+//							buffer.append(OPEN_BRACKET);
+//						}					
+//					}
+//				}
+//			}
+//			buffer.append(CLOSE_BRACKET);
+//			buffer.append(CLOSE_BRACKET);	
+//			String condition = buffer.toString();
+//			try {
+//				Log.debugMessage(getEnityName() + "Database.retrieveButIdsByMeasurementPortType | Try with additional condition: " + condition, Log.DEBUGLEVEL09);
+//				list = retrieveButIds(ids, condition);
+//			}
+//			catch (IllegalDataException ide) {
+//				Log.debugMessage(getEnityName() + "Database.retrieveButIdsByMeasurementPortType | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+//			}
+//		}
+//		else
+//			list = Collections.EMPTY_LIST;
+//
+//		return list;
+//	}
+}

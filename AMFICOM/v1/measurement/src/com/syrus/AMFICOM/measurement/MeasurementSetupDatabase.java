@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.62 2005/02/08 11:36:42 max Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.63 2005/02/08 20:04:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,15 +14,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -42,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/02/08 11:36:42 $
- * @author $Author: max $
+ * @version $Revision: 1.63 $, $Date: 2005/02/08 20:04:49 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -548,142 +545,142 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		return list;	
 	}
 
-	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
-		List list = null;
-		
-		String condition = StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET
-				+ SQL_SELECT + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
-				+ SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET
-					+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
-					+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
-					+ CLOSE_BRACKET
-				+ CLOSE_BRACKET;		
-		try {
-			list = retrieveButIds(ids, condition);
-		}  catch (IllegalDataException ide) {			
-			Log.debugMessage("MeasurementSetupDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-		}
-		
-		return list;
-	}
+//	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+//		List list = null;
+//		
+//		String condition = StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET
+//				+ SQL_SELECT + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
+//				+ SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET
+//					+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
+//					+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
+//					+ CLOSE_BRACKET
+//				+ CLOSE_BRACKET;		
+//		try {
+//			list = retrieveButIds(ids, condition);
+//		}  catch (IllegalDataException ide) {			
+//			Log.debugMessage("MeasurementSetupDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+//		}
+//		
+//		return list;
+//	}
 
-	private List retrieveButIdsByMeasurementType(List ids, List measurementTypeIds) throws RetrieveObjectException {
-		List list = null;
-		
-		int i=1;
-		StringBuffer mtIdsStr = new StringBuffer();
-        for (Iterator it = measurementTypeIds.iterator(); it.hasNext();i++) {
-       		 Identifier id = (Identifier) it.next();
-       		 mtIdsStr.append( DatabaseIdentifier.toSQLString(id) );
-       		 if (it.hasNext()){
-	       		 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-	       		 	mtIdsStr.append(COMMA);
-	       		 else {
-	                mtIdsStr.append(CLOSE_BRACKET);
-	                mtIdsStr.append(SQL_AND);
-                    mtIdsStr.append(SQL_OR);
-	                mtIdsStr.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
-	                mtIdsStr.append(SQL_IN);
-	                mtIdsStr.append(OPEN_BRACKET);
-	       		 }  
-       		 }
-       	}
-		
-		String condition = MeasurementSetupWrapper.COLUMN_PARAMETER_SET_ID + SQL_IN + OPEN_BRACKET		
-							+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
-							+ SQL_WHERE + StorableObjectWrapper.COLUMN_TYPE_ID + SQL_IN + OPEN_BRACKET			
-								+ SQL_SELECT + StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID
-								+ SQL_FROM + ObjectEntities.MNTTYPPARTYPLINK_ENTITY + SQL_WHERE
-								+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID 
-								+ SQL_IN
-								+ OPEN_BRACKET
-								+ mtIdsStr.toString()
-								+ CLOSE_BRACKET
-							+ CLOSE_BRACKET							
-			+ CLOSE_BRACKET;
-		
-		
-		try {
-			list = retrieveButIds(ids, condition);
-		}  catch (IllegalDataException ide) {			
-			Log.debugMessage("MeasurementSetupDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-		}
-		
-		return list;
-	}
+//	private List retrieveButIdsByMeasurementType(List ids, List measurementTypeIds) throws RetrieveObjectException {
+//		List list = null;
+//		
+//		int i=1;
+//		StringBuffer mtIdsStr = new StringBuffer();
+//        for (Iterator it = measurementTypeIds.iterator(); it.hasNext();i++) {
+//       		 Identifier id = (Identifier) it.next();
+//       		 mtIdsStr.append( DatabaseIdentifier.toSQLString(id) );
+//       		 if (it.hasNext()){
+//	       		 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+//	       		 	mtIdsStr.append(COMMA);
+//	       		 else {
+//	                mtIdsStr.append(CLOSE_BRACKET);
+//	                mtIdsStr.append(SQL_AND);
+//                    mtIdsStr.append(SQL_OR);
+//	                mtIdsStr.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
+//	                mtIdsStr.append(SQL_IN);
+//	                mtIdsStr.append(OPEN_BRACKET);
+//	       		 }  
+//       		 }
+//       	}
+//		
+//		String condition = MeasurementSetupWrapper.COLUMN_PARAMETER_SET_ID + SQL_IN + OPEN_BRACKET		
+//							+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+//							+ SQL_WHERE + StorableObjectWrapper.COLUMN_TYPE_ID + SQL_IN + OPEN_BRACKET			
+//								+ SQL_SELECT + StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID
+//								+ SQL_FROM + ObjectEntities.MNTTYPPARTYPLINK_ENTITY + SQL_WHERE
+//								+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID 
+//								+ SQL_IN
+//								+ OPEN_BRACKET
+//								+ mtIdsStr.toString()
+//								+ CLOSE_BRACKET
+//							+ CLOSE_BRACKET							
+//			+ CLOSE_BRACKET;
+//		
+//		
+//		try {
+//			list = retrieveButIds(ids, condition);
+//		}  catch (IllegalDataException ide) {			
+//			Log.debugMessage("MeasurementSetupDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+//		}
+//		
+//		return list;
+//	}
 
-	private List retrieveButIdsByMonitoredElement(List ids, List monitoredElementIds) throws RetrieveObjectException {
-		if (monitoredElementIds == null || monitoredElementIds.isEmpty())
-			return Collections.EMPTY_LIST;
-		List list = null;
-		
-		int i=1;
-		StringBuffer meIdsStr = new StringBuffer();
-        for (Iterator it = monitoredElementIds.iterator(); it.hasNext();i++) {
-       		 Identifier id = (Identifier) it.next();
-       		 meIdsStr.append( DatabaseIdentifier.toSQLString(id) );
-       		 if (it.hasNext()){
-	       		 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-	       		 	meIdsStr.append(COMMA);
-	       		 else {
-	                meIdsStr.append(CLOSE_BRACKET);
-	                meIdsStr.append(SQL_OR);
-                    meIdsStr.append(SQL_IN);
-	                meIdsStr.append(MeasurementSetupWrapper.LINK_COLUMN_ME_ID);
-	                meIdsStr.append(SQL_IN);
-	                meIdsStr.append(OPEN_BRACKET);
-	       		 }  
-       		 }
-       	}
-        
-		String condition = StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET
-					+ SQL_SELECT + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
-					+ SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_ME_ID + SQL_IN 
-					+ OPEN_BRACKET
-					+ meIdsStr.toString()
-					+ CLOSE_BRACKET
-				+ CLOSE_BRACKET;		
-		
-		try {
-			list = retrieveButIds(ids, condition);
-		}  catch (IllegalDataException ide) {			
-			Log.debugMessage("MeasurementSetupDatabase.retrieveButIdsByMonitoredElement | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-		}
-		
-		return list;
-	}
+//	private List retrieveButIdsByMonitoredElement(List ids, List monitoredElementIds) throws RetrieveObjectException {
+//		if (monitoredElementIds == null || monitoredElementIds.isEmpty())
+//			return Collections.EMPTY_LIST;
+//		List list = null;
+//		
+//		int i=1;
+//		StringBuffer meIdsStr = new StringBuffer();
+//        for (Iterator it = monitoredElementIds.iterator(); it.hasNext();i++) {
+//       		 Identifier id = (Identifier) it.next();
+//       		 meIdsStr.append( DatabaseIdentifier.toSQLString(id) );
+//       		 if (it.hasNext()){
+//	       		 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+//	       		 	meIdsStr.append(COMMA);
+//	       		 else {
+//	                meIdsStr.append(CLOSE_BRACKET);
+//	                meIdsStr.append(SQL_OR);
+//                    meIdsStr.append(SQL_IN);
+//	                meIdsStr.append(MeasurementSetupWrapper.LINK_COLUMN_ME_ID);
+//	                meIdsStr.append(SQL_IN);
+//	                meIdsStr.append(OPEN_BRACKET);
+//	       		 }  
+//       		 }
+//       	}
+//        
+//		String condition = StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET
+//					+ SQL_SELECT + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
+//					+ SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_ME_ID + SQL_IN 
+//					+ OPEN_BRACKET
+//					+ meIdsStr.toString()
+//					+ CLOSE_BRACKET
+//				+ CLOSE_BRACKET;		
+//		
+//		try {
+//			list = retrieveButIds(ids, condition);
+//		}  catch (IllegalDataException ide) {			
+//			Log.debugMessage("MeasurementSetupDatabase.retrieveButIdsByMonitoredElement | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+//		}
+//		
+//		return list;
+//	}
 
-    private List retrieveButIdMeasurementIds(List ids, List measurementIds) throws RetrieveObjectException, IllegalDataException {
-    	
-    	if (measurementIds != null && !measurementIds.isEmpty()){
-	        StringBuffer measurementIdsStr = new StringBuffer();
-	        
-	       	int i=1;
-	        for (Iterator it = measurementIds.iterator(); it.hasNext();i++) {
-	       		 Identifier id = (Identifier) it.next();
-	       		 measurementIdsStr.append( DatabaseIdentifier.toSQLString(id) );
-	       		 if (it.hasNext()){
-		       		 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-		       		 	measurementIdsStr.append(COMMA);
-		       		 else {
-		                measurementIdsStr.append(CLOSE_BRACKET);
-		                measurementIdsStr.append(SQL_AND);
-                        measurementIdsStr.append(NOT);
-                        measurementIdsStr.append(SQL_IN);
-		                measurementIdsStr.append(MeasurementSetupWrapper.LINK_COLUMN_ME_ID);
-		                measurementIdsStr.append(SQL_IN);
-		                measurementIdsStr.append(OPEN_BRACKET);
-		       		 }  
-	       		 }
-	       	}
-	        
-	        String condition = StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET	
-	                        + SQL_SELECT + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
-	                        + SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_ME_ID + NOT + SQL_IN + OPEN_BRACKET + measurementIdsStr.toString() 
-	                        + CLOSE_BRACKET
-	                    + CLOSE_BRACKET;        
-	        return retrieveButIds(ids , condition);
-    	}
-    	return Collections.EMPTY_LIST;
-    }
+//    private List retrieveButIdMeasurementIds(List ids, List measurementIds) throws RetrieveObjectException, IllegalDataException {
+//    	
+//    	if (measurementIds != null && !measurementIds.isEmpty()){
+//	        StringBuffer measurementIdsStr = new StringBuffer();
+//	        
+//	       	int i=1;
+//	        for (Iterator it = measurementIds.iterator(); it.hasNext();i++) {
+//	       		 Identifier id = (Identifier) it.next();
+//	       		 measurementIdsStr.append( DatabaseIdentifier.toSQLString(id) );
+//	       		 if (it.hasNext()){
+//		       		 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+//		       		 	measurementIdsStr.append(COMMA);
+//		       		 else {
+//		                measurementIdsStr.append(CLOSE_BRACKET);
+//		                measurementIdsStr.append(SQL_AND);
+//                        measurementIdsStr.append(NOT);
+//                        measurementIdsStr.append(SQL_IN);
+//		                measurementIdsStr.append(MeasurementSetupWrapper.LINK_COLUMN_ME_ID);
+//		                measurementIdsStr.append(SQL_IN);
+//		                measurementIdsStr.append(OPEN_BRACKET);
+//		       		 }  
+//	       		 }
+//	       	}
+//	        
+//	        String condition = StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET	
+//	                        + SQL_SELECT + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
+//	                        + SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_ME_ID + NOT + SQL_IN + OPEN_BRACKET + measurementIdsStr.toString() 
+//	                        + CLOSE_BRACKET
+//	                    + CLOSE_BRACKET;        
+//	        return retrieveButIds(ids , condition);
+//    	}
+//    	return Collections.EMPTY_LIST;
+//    }
 }

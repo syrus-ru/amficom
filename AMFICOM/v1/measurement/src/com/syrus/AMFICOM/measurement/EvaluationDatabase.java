@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.34 2005/02/08 11:19:37 max Exp $
+ * $Id: EvaluationDatabase.java,v 1.35 2005/02/08 20:04:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -28,12 +26,11 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/02/08 11:19:37 $
- * @author $Author: max $
+ * @version $Revision: 1.35 $, $Date: 2005/02/08 20:04:49 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -193,24 +190,24 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		//return retriveByIdsPreparedStatement(ids, condition);
 	}
 
-	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
-		List list = null;
-
-		String condition = EvaluationWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN
-				+ OPEN_BRACKET
-					+ SQL_SELECT
-					+ StorableObjectWrapper.COLUMN_ID
-					+ SQL_FROM + ObjectEntities.ME_ENTITY
-					+ SQL_WHERE + DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
-				+ CLOSE_BRACKET;
-
-		try {
-			list = retrieveButIds(ids, condition);
-		}
-		catch (IllegalDataException ide) {
-			Log.debugMessage("EvaluationDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-		}
-
-		return list;
-	}
+//	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+//		List list = null;
+//
+//		String condition = EvaluationWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN
+//				+ OPEN_BRACKET
+//					+ SQL_SELECT
+//					+ StorableObjectWrapper.COLUMN_ID
+//					+ SQL_FROM + ObjectEntities.ME_ENTITY
+//					+ SQL_WHERE + DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
+//				+ CLOSE_BRACKET;
+//
+//		try {
+//			list = retrieveButIds(ids, condition);
+//		}
+//		catch (IllegalDataException ide) {
+//			Log.debugMessage("EvaluationDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+//		}
+//
+//		return list;
+//	}
 }

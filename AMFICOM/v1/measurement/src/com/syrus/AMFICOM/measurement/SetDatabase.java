@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.56 2005/02/08 19:43:01 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.57 2005/02/08 20:04:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,6 @@ import java.util.Map;
 
 import oracle.sql.BLOB;
 
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -46,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/02/08 19:43:01 $
+ * @version $Revision: 1.57 $, $Date: 2005/02/08 20:04:49 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -695,23 +693,23 @@ public class SetDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
-		List list = null;
-
-		String condition = StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
-				+ SetWrapper.LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETMELINK_ENTITY
-				+ SQL_WHERE + SetWrapper.LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
-				+ StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
-				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS
-				+ DatabaseIdentifier.toSQLString(domain.getId()) + CLOSE_BRACKET
-				+ CLOSE_BRACKET;
-		try {
-			list = retrieveButIds(ids, condition);
-		}
-		catch (IllegalDataException ide) {
-			Log.debugMessage("MeasurementDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-		}
-
-		return list;
-	}
+//	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+//		List list = null;
+//
+//		String condition = StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
+//				+ SetWrapper.LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETMELINK_ENTITY
+//				+ SQL_WHERE + SetWrapper.LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
+//				+ StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
+//				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS
+//				+ DatabaseIdentifier.toSQLString(domain.getId()) + CLOSE_BRACKET
+//				+ CLOSE_BRACKET;
+//		try {
+//			list = retrieveButIds(ids, condition);
+//		}
+//		catch (IllegalDataException ide) {
+//			Log.debugMessage("MeasurementDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+//		}
+//
+//		return list;
+//	}
 }
