@@ -13,16 +13,31 @@ import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 public class Analysis_Database extends StorableObject_Database {
-	
-	public void retrieve(StorableObject storableObject) throws Exception {
-		Analysis analysis = null;
-		if (storableObject instanceof Analysis)
-			analysis = (Analysis)storableObject;
-		else
-			throw new Exception("Analysis_Database.retrieve | Illegal Storable Object: " + storableObject.getClass().getName());
 
+	private Analysis fromStorableObject(StorableObject storableObject) throws Exception {
+		if (storableObject instanceof Analysis)
+			return (Analysis)storableObject;
+		else
+			throw new Exception("Analysis_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
+
+	public void retrieve(StorableObject storableObject) throws Exception {
+		Analysis analysis = this.fromStorableObject(storableObject);
+		this.retrieveAnalysis(analysis);
+	}
+
+	private void retrieveAnalysis(Analysis analysis) throws Exception {
 		String analysis_id_str = analysis.getId().toString();
-		String sql = "SELECT type_id, criteria_set_id, monitored_element_id FROM " + ObjectEntities.ANALYSIS_ENTITY + " WHERE id = " + analysis_id_str;
+		String sql = "SELECT "
+			+ DatabaseDate.toQuerySubString("created") + ", " 
+			+ DatabaseDate.toQuerySubString("modified") + ", "
+			+ "creator_id, "
+			+ "modifier_id, "
+			+ "type_id, "
+			+ "criteria_set_id, "
+			+ "monitored_element_id "
+			+ " FROM " + ObjectEntities.ANALYSIS_ENTITY
+			+ " WHERE id = " + analysis_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -31,7 +46,11 @@ public class Analysis_Database extends StorableObject_Database {
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				Set criteria_set = new Set(new Identifier(resultSet.getLong("criteria_set_id")));
-				analysis.setAttributes(new Identifier(resultSet.getLong("type_id")),
+				analysis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
+															 DatabaseDate.fromQuerySubString(resultSet, "modified"),
+															 new Identifier(resultSet.getLong("creator_id")),
+															 new Identifier(resultSet.getLong("modifier_id")),
+															 new Identifier(resultSet.getLong("type_id")),
 															 criteria_set,
 															 new Identifier(resultSet.getLong("monitored_element_id")));
 			}
@@ -56,12 +75,7 @@ public class Analysis_Database extends StorableObject_Database {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
-		Analysis analysis = null;
-		if (storableObject instanceof Analysis)
-			analysis = (Analysis)storableObject;
-		else
-			throw new Exception("Analysis_Database.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		Analysis analysis = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -69,20 +83,49 @@ public class Analysis_Database extends StorableObject_Database {
 	}
 
 	public void insert(StorableObject storableObject) throws Exception {
-		Analysis analysis = null;
-		if (storableObject instanceof Analysis)
-			analysis = (Analysis)storableObject;
-		else
-			throw new Exception("Analysis_Database.insert | Illegal Storable Object: " + storableObject.getClass().getName());
+		Analysis analysis = this.fromStorableObject(storableObject);
+		try {
+			this.insertAnalysis(analysis);
+		}
+		catch (Exception e) {
+			try {
+				connection.rollback();
+			}
+			catch (SQLException sqle) {
+				Log.errorMessage("Exception in rolling back");
+				Log.errorException(sqle);
+			}
+			throw e;
+		}
+		try {
+			connection.commit();
+		}
+		catch (SQLException sqle) {
+			Log.errorMessage("Exception in commiting");
+			Log.errorException(sqle);
+		}
+	}
 
+	private void insertAnalysis(Analysis analysis) throws Exception {
+		Analysis analysis = this.fromStorableObject(storableObject);
 		String analysis_id_str = analysis.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.ANALYSIS_ENTITY + " (id, type_id, criteria_set_id, monitored_element_id) VALUES (" + analysis_id_str + ", " + analysis.getTypeId().toString() + ", " + analysis.getCriteriaSet().getId().toString() + ", " + analysis.getMonitoredElementId().toString() + ")";
+		String sql = "INSERT INTO " + ObjectEntities.ANALYSIS_ENTITY
+			+ " (id, type_id, criteria_set_id, monitored_element_id)"
+			+ " VALUES ("
+			+ analysis_id_str + ", "
+			+ DatabaseDate.toUpdateSubString(user.getCreated()) + ", "
+			+ DatabaseDate.toUpdateSubString(user.getModified()) + ", "
+			+ user.getCreatorId().toString() + ", "
+			+ user.getModifierId().toString() + ", "
+			+ analysis.getTypeId().toString() + ", "
+			+ analysis.getCriteriaSet().getId().toString() + ", "
+			+ analysis.getMonitoredElementId().toString()
+			+ ")";
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("Analysis_Database.insert | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-			connection.commit();
 		}
 		catch (SQLException sqle) {
 			String mesg = "Analysis_Database.insert | Cannot insert analysis " + analysis_id_str;
@@ -99,10 +142,10 @@ public class Analysis_Database extends StorableObject_Database {
 	}
 
 	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
-		Analysis analysis = null;
-		if (storableObject instanceof Analysis)
-			analysis = (Analysis)storableObject;
-		else
-			throw new Exception("Analysis_Database.update | Illegal Storable Object: " + storableObject.getClass().getName());
+		Analysis analysis = this.fromStorableObject(storableObject);
+		switch (update_kind) {
+			default:
+				return;
+		}
 	}
 }

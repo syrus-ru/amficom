@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
@@ -12,12 +13,22 @@ public abstract class Action extends StorableObject {
 
 	public Action(Identifier id) {
 		super(id);
+		this.type_id = null;
+		this.monitored_element_id = null;
 	}
 
 	public Action(Identifier id,
+								Date created,
+								Date modified,
+								Identifier creator_id,
+								Identifier modifier_id,
 								Identifier type_id,
 								Identifier monitored_element_id) {
-		super(id);
+		super(id,
+					created,
+					modified,
+					creator_id,
+					modifier_id);
 		this.type_id = type_id;
 		this.monitored_element_id = monitored_element_id;
 	}
@@ -31,6 +42,8 @@ public abstract class Action extends StorableObject {
 	}
 
 	public abstract Result createResult(Identifier id,
+																			Identifier creator_id,
+																			Identifier modifier_id,
 																			Measurement measurement,
 																			AlarmLevel alarm_level,
 																			Identifier[] parameter_ids,
