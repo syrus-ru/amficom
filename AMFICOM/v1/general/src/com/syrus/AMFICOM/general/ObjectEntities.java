@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.42 2005/01/13 14:16:11 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.43 2005/01/14 06:25:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/01/13 14:16:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2005/01/14 06:25:23 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public final class ObjectEntities {
@@ -132,8 +132,8 @@ public final class ObjectEntities {
 	 */
 
 	/*
-	 * General:				65-96		(0x0041-0x0060)
-	 * General Types:	97-128	(0x0061-0x0080)
+	 * General:               65- 96 (0x0041-0x0060)
+	 * General Types:         97-128 (0x0061-0x0080)
 	 */
 	public static final short GENERAL_MIN_ENTITY_CODE = 0x0041;
 
@@ -144,8 +144,8 @@ public final class ObjectEntities {
 	public static final short GENERAL_MAX_ENTITY_CODE = 0x0080;
 
 	/*
-	 * Event:				129-192 (0x0081-0x00C0)
-	 * Event Types:	193-256 (0x00C1-0x0100)
+	 * Event:                129-192 (0x0081-0x00C0)
+	 * Event Types:	         193-256 (0x00C1-0x0100)
 	 */
 	public static final short EVENT_MIN_ENTITY_CODE = 0x0081;
 
@@ -426,7 +426,7 @@ public final class ObjectEntities {
 				return MODELINGTYPE_ENTITY;
 
 			case SITE_NODE_TYPE_ENTITY_CODE:
-				return SITE_NODE_ENTITY;
+				return SITE_NODE_TYPE_ENTITY;
 			case PHYSICAL_LINK_TYPE_ENTITY_CODE:
 				return PHYSICAL_LINK_TYPE_ENTITY;
 
