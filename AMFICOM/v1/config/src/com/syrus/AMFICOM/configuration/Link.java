@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.10 2004/11/19 08:59:52 bob Exp $
+ * $Id: Link.java,v 1.11 2004/11/25 08:37:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,7 +7,9 @@
  */
 package com.syrus.AMFICOM.configuration;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/11/19 08:59:52 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2004/11/25 08:37:39 $
+ * @author $Author: max $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterized, TypedObject {
@@ -80,7 +82,17 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 				break;
 			default:
 				break;
+        
 		}
+        
+        try {
+            this.characteristics = new ArrayList(lt.characteristic_ids.length);
+            for (int i = 0; i < lt.characteristic_ids.length; i++)
+                this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(lt.characteristic_ids[i]), true));
+        }
+        catch (ApplicationException ae) {
+            throw new CreateObjectException(ae);
+        }
 		
 		try {
 			this.type = (AbstractLinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(lt.type_id), true);
@@ -121,7 +133,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		this.linkId = linkId;
 		this.color = color;
 		this.mark = mark;
-		
+		this.characteristics = new ArrayList();
 		this.linkDatabase = ConfigurationDatabaseContext.linkDatabase;
 	}
 	
@@ -174,7 +186,12 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	}
 	
 	public Object getTransferable() {		
-		return new Link_Transferable(super.getHeaderTransferable(),
+		int i = 0;
+        Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+        for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+            charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+        
+        return new Link_Transferable(super.getHeaderTransferable(),
 									 (Identifier_Transferable)super.domainId.getTransferable(),
 									 new String(this.name),
 									 new String(this.description),
@@ -185,7 +202,8 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 									 this.supplierCode,				
 									 (this.linkId != null) ? (Identifier_Transferable)this.linkId.getTransferable() : (new Identifier_Transferable("")),
 									 (this.color != null) ? this.color : "",
-									 (this.mark != null) ? this.mark : "");
+									 (this.mark != null) ? this.mark : "",
+                                     charIds);
 	}
 	
 	protected synchronized void setAttributes(Date created,
@@ -275,9 +293,12 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		return this.mark;
 	}
 	
-	public void setCharacteristics(List characteristics) {
-		this.characteristics = characteristics;
-	}
+	public void setCharacteristics(final List characteristics) {
+        this.characteristics.clear();
+        if (characteristics != null)
+                this.characteristics.addAll(characteristics);
+        super.currentVersion = super.getNextVersion();
+    }
 	
 	public List getDependencies() {
 		List dependencies = new LinkedList();

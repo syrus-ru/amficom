@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.33 2004/11/23 15:24:41 bob Exp $
+ * $Id: KIS.java,v 1.34 2004/11/25 08:37:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -24,8 +25,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/11/23 15:24:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.34 $, $Date: 2004/11/25 08:37:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -44,9 +45,8 @@ public class KIS extends DomainMember {
 	private String description;
 	private String hostname;
 	private short tcpPort;
-
 	private List measurementPortIds;	//List <MeasurementPort>
-
+	private List characteristics;
 	private StorableObjectDatabase kisDatabase;
 
 	public KIS(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
@@ -74,6 +74,15 @@ public class KIS extends DomainMember {
 		this.measurementPortIds = new ArrayList(kt.measurement_port_ids.length);
 		for (int i = 0; i < kt.measurement_port_ids.length; i++)
 			this.measurementPortIds.add(new Identifier(kt.measurement_port_ids[i]));
+        
+        try {
+            this.characteristics = new ArrayList(kt.characteristic_ids.length);
+            for (int i = 0; i < kt.characteristic_ids.length; i++)
+                this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(kt.characteristic_ids[i]), true));
+        }
+        catch (ApplicationException ae) {
+            throw new CreateObjectException(ae);
+        }
 
 	}
 
@@ -99,7 +108,7 @@ public class KIS extends DomainMember {
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
 		this.measurementPortIds = new ArrayList();
-		
+		this.characteristics = new ArrayList();
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 	}
 
@@ -154,7 +163,12 @@ public class KIS extends DomainMember {
 		Identifier_Transferable[] mportIds = new Identifier_Transferable[this.measurementPortIds.size()];
 		for (Iterator iterator = this.measurementPortIds.iterator(); iterator.hasNext();)
 			mportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
+		
+        i = 0;
+        Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+        for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+            charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+        
 		return new KIS_Transferable(super.getHeaderTransferable(),
 																(Identifier_Transferable)super.domainId.getTransferable(),
 																new String(this.name),
@@ -163,6 +177,7 @@ public class KIS extends DomainMember {
 																this.tcpPort,
 																(Identifier_Transferable)this.equipmentId.getTransferable(),
 																(Identifier_Transferable)this.mcmId.getTransferable(),
+                                                                charIds,
 																mportIds);
 	}
 
@@ -240,7 +255,19 @@ public class KIS extends DomainMember {
 		List dependencies = new LinkedList();
 		dependencies.add(this.equipmentId);
 		dependencies.add(this.mcmId);
-		dependencies.addAll(this.measurementPortIds);		
+		dependencies.addAll(this.measurementPortIds);
+        dependencies.addAll(this.characteristics);
 		return dependencies;
 	}
+    
+    public List getCharacteristics() {
+        return this.characteristics;
+    }
+    
+    public void setCharacteristics(final List characteristics) {
+        this.characteristics.clear();
+        if (characteristics != null)
+                this.characteristics.addAll(characteristics);
+        super.currentVersion = super.getNextVersion();
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.16 2004/11/15 14:02:55 bob Exp $
+ * $Id: EquipmentType.java,v 1.17 2004/11/25 08:37:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,10 +8,12 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -19,11 +21,12 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/11/15 14:02:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2004/11/25 08:37:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -33,6 +36,8 @@ public class EquipmentType extends StorableObjectType {
 	private String name;
 
 	private StorableObjectDatabase equipmentTypeDatabase;
+    
+    private List characteristics;
 
 	public EquipmentType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -51,6 +56,14 @@ public class EquipmentType extends StorableObjectType {
 			  new String(ett.codename),
 			  new String(ett.description));	
 		this.name = ett.name;
+        try {
+            this.characteristics = new ArrayList(ett.characteristic_ids.length);
+            for (int i = 0; i < ett.characteristic_ids.length; i++)
+                this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(ett.characteristic_ids[i]), true));
+        }
+        catch (ApplicationException ae) {
+            throw new CreateObjectException(ae);
+        }
 	}
 	
 	protected EquipmentType(Identifier id,
@@ -66,7 +79,7 @@ public class EquipmentType extends StorableObjectType {
 				codename,
 				description);
 		this.name = name;
-		
+        this.characteristics = new ArrayList();		
 		this.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
 	}
 
@@ -107,10 +120,16 @@ public class EquipmentType extends StorableObjectType {
 	}
 	
 	public Object getTransferable() {
+        int i = 0;
+        Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+        for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+            charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+        
 		return new EquipmentType_Transferable(super.getHeaderTransferable(),
 											  new String(super.codename),
 											  (super.description != null) ? (new String(super.description)) : "",
-											  (this.name != null) ? (new String(this.name)) : "");
+											  (this.name != null) ? (new String(this.name)) : "",
+                                              charIds);
 	}
 	
 	protected synchronized void setAttributes(Date created,
@@ -139,6 +158,17 @@ public class EquipmentType extends StorableObjectType {
 	}
 	
 	public List getDependencies() {		
-		return Collections.EMPTY_LIST;
+		return this.characteristics;
 	}
+    
+    public List getCharacteristics() {
+        return this.characteristics;
+    }
+    
+    public void setCharacteristics(final List characteristics) {
+        this.characteristics.clear();
+        if (characteristics != null)
+                this.characteristics.addAll(characteristics);
+        super.currentVersion = super.getNextVersion();
+    }
 }

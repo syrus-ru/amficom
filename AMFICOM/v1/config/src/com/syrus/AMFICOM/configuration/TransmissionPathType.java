@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.5 2004/11/15 13:50:27 bob Exp $
+ * $Id: TransmissionPathType.java,v 1.6 2004/11/25 08:37:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,11 +7,13 @@
  */
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -19,10 +21,11 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/11/15 13:50:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2004/11/25 08:37:39 $
+ * @author $Author: max $
  * @module module_name
  */
 
@@ -31,7 +34,7 @@ public class TransmissionPathType extends StorableObjectType {
 	static final long serialVersionUID = 5311725679846973948L;	
 	
     private String name;
-    
+    private List characteristics;
     private StorableObjectDatabase transmissionPathTypeDatabase;
     
     public TransmissionPathType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
@@ -49,6 +52,14 @@ public class TransmissionPathType extends StorableObjectType {
 			  new String(tptt.codename),
 			  new String(tptt.description));
         this.name = tptt.name;
+        try {
+            this.characteristics = new ArrayList(tptt.characteristic_ids.length);
+            for (int i = 0; i < tptt.characteristic_ids.length; i++)
+                this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(tptt.characteristic_ids[i]), true));
+        }
+        catch (ApplicationException ae) {
+            throw new CreateObjectException(ae);
+        }        
     }
     protected TransmissionPathType(Identifier id,
              Identifier creatorId,
@@ -63,7 +74,7 @@ public class TransmissionPathType extends StorableObjectType {
                 codename,
                 description);
         this.name = name;
-        
+        this.characteristics = new ArrayList();
         this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.transmissionPathTypeDatabase;
     }
     /**
@@ -101,10 +112,16 @@ public class TransmissionPathType extends StorableObjectType {
     }
     
     public Object getTransferable() {
+        int i = 0;
+        Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+        for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+            charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+        
         return new TransmissionPathType_Transferable(super.getHeaderTransferable(),
                 new String(super.codename),
                 (super.description != null) ? (new String(super.description)) : "",
-                (this.name != null) ? (new String(this.name)) : "");
+                (this.name != null) ? (new String(this.name)) : "",
+                charIds);
     }
     
     public String getName(){
@@ -132,7 +149,18 @@ public class TransmissionPathType extends StorableObjectType {
         this.name = name;
     }
 
-	public List getDependencies() {		
-		return Collections.EMPTY_LIST;
-	}
+    public List getDependencies() {        
+        return this.characteristics;
+    }
+    
+    public List getCharacteristics() {
+        return this.characteristics;
+    }
+    
+    public void setCharacteristics(final List characteristics) {
+        this.characteristics.clear();
+        if (characteristics != null)
+                this.characteristics.addAll(characteristics);
+        super.currentVersion = super.getNextVersion();
+    }
 }

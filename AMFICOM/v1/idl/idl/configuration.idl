@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.54 2004/11/24 08:12:36 bob Exp $
+ * $Id: configuration.idl,v 1.55 2004/11/25 08:38:23 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,6 +62,8 @@ module corba {
 		wstring codename;
 		wstring description;
 		wstring name;
+		
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
 	
 	typedef sequence <EquipmentType_Transferable> EquipmentTypeSeq_Transferable;
@@ -75,6 +77,8 @@ module corba {
 		wstring codename;
 		wstring description;
 		wstring name;
+		
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
 	
 	typedef sequence <TransmissionPathType_Transferable> TransmissionPathTypeSeq_Transferable;
@@ -88,6 +92,8 @@ module corba {
 		wstring codename;
 		wstring description;
 		wstring name;
+		
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
 	
 	typedef sequence <PortType_Transferable> PortTypeSeq_Transferable;
@@ -100,6 +106,8 @@ module corba {
 		wstring codename;
 		wstring description;
 		wstring name;
+		
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
 
 	typedef sequence <MeasurementPortType_Transferable> MeasurementPortTypeSeq_Transferable;
@@ -129,6 +137,7 @@ module corba {
 		wstring manufacturer;
 		wstring manufacturerCode;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable image_id;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
 
 	typedef LinkType_Transferable LinkType;
@@ -346,7 +355,7 @@ module corba {
 		short tcp_port;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable equipment_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable mcm_id;
-
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable measurement_port_ids;
 	};
 	
@@ -363,7 +372,7 @@ module corba {
 		wstring description;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable kis_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable port_id;
-	
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
 
 	typedef sequence <MeasurementPort_Transferable> MeasurementPortSeq_Transferable;
@@ -418,7 +427,8 @@ module corba {
 		
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable link_id;
 		wstring color;
-		wstring mark;		
+		wstring mark;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;		
 	};
 
 	typedef sequence <Link_Transferable> LinkSeq_Transferable;

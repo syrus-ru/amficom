@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.7 2004/11/19 08:59:52 bob Exp $
+ * $Id: LinkType.java,v 1.8 2004/11/25 08:37:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,14 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -23,8 +25,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/11/19 08:59:52 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2004/11/25 08:37:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -39,7 +41,7 @@ public class LinkType extends AbstractLinkType {
 	private String					manufacturer;
 	private String					manufacturerCode;
 	private Identifier				imageId;
-
+	private List                    characteristics;
 	private StorableObjectDatabase	linkTypeDatabase;
 
 	public LinkType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
@@ -53,13 +55,21 @@ public class LinkType extends AbstractLinkType {
 		}
 	}
 
-	public LinkType(LinkType_Transferable ltt) {
+	public LinkType(LinkType_Transferable ltt) throws CreateObjectException {
 		super(ltt.header, new String(ltt.codename), new String(ltt.description));
 		this.sort = ltt.sort.value();
 		this.manufacturer = ltt.manufacturer;
 		this.manufacturerCode = ltt.manufacturerCode;
 		this.imageId = new Identifier(ltt.image_id);
 		this.name = ltt.name;
+        try {
+            this.characteristics = new ArrayList(ltt.characteristic_ids.length);
+            for (int i = 0; i < ltt.characteristic_ids.length; i++)
+                this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(ltt.characteristic_ids[i]), true));
+        }
+        catch (ApplicationException ae) {
+            throw new CreateObjectException(ae);
+        }
 	}
 
 	protected LinkType(Identifier id,
@@ -78,7 +88,7 @@ public class LinkType extends AbstractLinkType {
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
 		this.imageId = imageId;
-
+		this.characteristics = new ArrayList();
 		this.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
 
 	}
@@ -113,12 +123,18 @@ public class LinkType extends AbstractLinkType {
 	}
 
 	public Object getTransferable() {
-		return new LinkType_Transferable(super.getHeaderTransferable(),
+		int i = 0;
+        Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+        for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+            charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+        
+        return new LinkType_Transferable(super.getHeaderTransferable(),
 										 new String(super.codename),
 										 (super.description != null) ? (new String(super.description)) : "",
 										 (this.name != null) ? (new String(this.name)) : "",
 										 LinkTypeSort.from_int(this.sort), this.manufacturer, this.manufacturerCode,
-										 (Identifier_Transferable) this.imageId.getTransferable());
+										 (Identifier_Transferable) this.imageId.getTransferable(),
+                                         charIds);
 	}
 
 	protected synchronized void setAttributes(	Date created,
@@ -165,8 +181,19 @@ public class LinkType extends AbstractLinkType {
 		this.name = name;
 	}
 
-	public List getDependencies() {		
-		return Collections.EMPTY_LIST;
-	}
+	public List getDependencies() {        
+        return this.characteristics;
+    }
+    
+    public List getCharacteristics() {
+        return this.characteristics;
+    }
+    
+    public void setCharacteristics(final List characteristics) {
+        this.characteristics.clear();
+        if (characteristics != null)
+                this.characteristics.addAll(characteristics);
+        super.currentVersion = super.getNextVersion();
+    }
 }
 

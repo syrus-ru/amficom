@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.16 2004/11/16 15:54:24 bob Exp $
+ * $Id: MeasurementPort.java,v 1.17 2004/11/25 08:37:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,9 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,8 +28,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/11/16 15:54:24 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2004/11/25 08:37:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 public class MeasurementPort extends StorableObject implements TypedObject{
@@ -40,7 +42,7 @@ public class MeasurementPort extends StorableObject implements TypedObject{
 	
 	private Identifier kisId;
 	private Identifier portId;
-	
+	private List characteristics;
 	private StorableObjectDatabase measurementPortDatabase;
 	
 	public MeasurementPort(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
@@ -70,7 +72,14 @@ public class MeasurementPort extends StorableObject implements TypedObject{
 		
 		this.kisId = new Identifier(mpt.kis_id);
 		this.portId = new Identifier(mpt.port_id);	
-
+		try {
+            this.characteristics = new ArrayList(mpt.characteristic_ids.length);
+            for (int i = 0; i < mpt.characteristic_ids.length; i++)
+                this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(mpt.characteristic_ids[i]), true));
+        }
+        catch (ApplicationException ae) {
+            throw new CreateObjectException(ae);
+        }
 	}
 	
 	protected MeasurementPort(Identifier id,
@@ -90,7 +99,7 @@ public class MeasurementPort extends StorableObject implements TypedObject{
 		this.description = description;
 		this.kisId = kisId;
 		this.portId = portId;
-		
+		this.characteristics = new ArrayList();
 		this.measurementPortDatabase = ConfigurationDatabaseContext.measurementPortDatabase;
 	}
 	
@@ -137,13 +146,18 @@ public class MeasurementPort extends StorableObject implements TypedObject{
 	}
 	
 	public Object getTransferable() {
-		    
+		int i = 0;
+        Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+        for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+            charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+        
 		return new MeasurementPort_Transferable(super.getHeaderTransferable(),
 												(Identifier_Transferable)this.type.getId().getTransferable(),
 												new String(this.name),
 												new String(this.description),
 												(Identifier_Transferable)this.kisId.getTransferable(),
-												(Identifier_Transferable)this.portId.getTransferable());
+												(Identifier_Transferable)this.portId.getTransferable(),
+                                                charIds);
 	}
 
 	public StorableObjectType getType() {
@@ -197,6 +211,7 @@ public class MeasurementPort extends StorableObject implements TypedObject{
 		dependencies.add(this.type);
 		dependencies.add(this.kisId);
 		dependencies.add(this.portId);
+        dependencies.addAll(this.characteristics);
 		return dependencies;
 	}
 	
@@ -209,4 +224,15 @@ public class MeasurementPort extends StorableObject implements TypedObject{
 		this.currentVersion = super.getNextVersion();
 		this.type = type;
 	}
+    
+    public List getCharacteristics() {
+        return this.characteristics;
+    }
+    
+    public void setCharacteristics(final List characteristics) {
+        this.characteristics.clear();
+        if (characteristics != null)
+                this.characteristics.addAll(characteristics);
+        super.currentVersion = super.getNextVersion();
+    }
 }
