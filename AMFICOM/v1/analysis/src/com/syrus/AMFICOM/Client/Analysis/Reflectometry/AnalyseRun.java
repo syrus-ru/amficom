@@ -1,20 +1,11 @@
+
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry;
 
-import javax.swing.UIManager;
+import com.syrus.AMFICOM.Client.General.Model.ReflectometryAnalyseApplicationModelFactory;
 
-import com.syrus.AMFICOM.Client.General.Model.*;
+public class AnalyseRun {
 
-public class AnalyseRun
-{
-	public static void main(String[] args)
-	{
-		try {
-			UIManager.setLookAndFeel(Environment.getLookAndFeel());
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-
+	public static void main(String[] args) {
 		new Analyse(new ReflectometryAnalyseApplicationModelFactory());
 	}
 }

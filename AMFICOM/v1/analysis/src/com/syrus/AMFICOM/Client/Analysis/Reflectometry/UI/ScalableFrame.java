@@ -60,7 +60,7 @@ public class ScalableFrame extends SimpleResizableFrame
 
 	public void setGraph (double[] y, double deltaX, boolean isReversedY, String id)
 	{
-		TraceEventsPanel p = new TraceEventsPanel((ScalableLayeredPanel)panel, y, deltaX);
+		TraceEventsPanel p = new TraceEventsPanel(panel, y, deltaX);
 		setGraph (p, isReversedY, id);
 	}
 

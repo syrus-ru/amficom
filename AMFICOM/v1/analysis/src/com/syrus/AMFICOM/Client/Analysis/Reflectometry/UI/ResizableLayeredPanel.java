@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 
 public class ResizableLayeredPanel extends JPanel
 {
@@ -75,7 +75,7 @@ public class ResizableLayeredPanel extends JPanel
 		this.add(toolbar, BorderLayout.NORTH);
 		this.add(mainPanel, BorderLayout.CENTER);
 		
-		this.mainPanel.setBackground(UIManager.getColor(AnalysisResourceKeys.COLOR_GRAPHICS_BACKGROUND));
+		this.mainPanel.setBackground(UIManager.getColor(ResourceKeys.COLOR_GRAPHICS_BACKGROUND));
 
 		toolbar.setVisible(false);
 
