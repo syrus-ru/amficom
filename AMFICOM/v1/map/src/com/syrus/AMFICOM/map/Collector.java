@@ -1,5 +1,5 @@
 /*
- * $Id: Collector.java,v 1.2 2004/11/28 14:34:47 bob Exp $
+ * $Id: Collector.java,v 1.3 2004/11/30 14:27:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/28 14:34:47 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/30 14:27:08 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -81,7 +81,7 @@ public class Collector extends StorableObject implements Characterized {
 		}
 	}
 
-	protected Collector(	final Identifier id,
+	protected Collector(final Identifier id,
 					final Identifier creatorId,
 					final String name,
 					final String description) {

@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNode.java,v 1.2 2004/11/28 14:34:48 bob Exp $
+ * $Id: TopologicalNode.java,v 1.3 2004/11/30 14:27:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/28 14:34:48 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/30 14:27:08 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -80,7 +80,6 @@ public class TopologicalNode extends Node {
 			final Identifier creatorId,
 			String name,
 			String description,
-			PhysicalLink physicalLink,
 			double longitude,
 			double latitude,
 			boolean active) {
@@ -90,7 +89,6 @@ public class TopologicalNode extends Node {
 		super.modified = new Date(time);
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
-		this.physicalLink = physicalLink;
 		this.name = name;
 		this.description = description;
 		this.longitude = longitude;
@@ -119,10 +117,7 @@ public class TopologicalNode extends Node {
 	}
 
 	public List getDependencies() {
-		List dependencies = new LinkedList();
-		dependencies.add(this.physicalLink);
-		dependencies.addAll(this.characteristics);
-		return dependencies;
+		return this.characteristics;
 	}
 
 	public Object getTransferable() {
@@ -147,5 +142,25 @@ public class TopologicalNode extends Node {
 
 	public PhysicalLink getPhysicalLink() {
 		return this.physicalLink;
+	}
+	
+	protected synchronized void setAttributes(Date created,
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,											  
+											  String name,
+											  String description,
+											  double longitude,
+											  double latitude,
+											  boolean active) {
+			super.setAttributes(created,
+					modified,
+					creatorId,
+					modifierId);
+			this.name = name;
+			this.description = description;
+			this.longitude = longitude;
+			this.latitude = latitude;
+			this.active = active;					
 	}
 }

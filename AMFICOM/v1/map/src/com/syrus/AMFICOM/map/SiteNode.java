@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNode.java,v 1.2 2004/11/28 14:34:48 bob Exp $
+ * $Id: SiteNode.java,v 1.3 2004/11/30 14:27:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/28 14:34:48 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/30 14:27:08 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -197,5 +197,33 @@ public class SiteNode extends Node implements TypedObject {
 	public void setStreet(String street) {
 		this.street = street;
 		super.currentVersion = super.getNextVersion();
+	}
+	
+	protected synchronized void setAttributes(Date created,
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,											  
+											  String name,
+											  String description,
+											  double longitude,
+											  double latitude,
+											  Identifier imageId,
+											  SiteNodeType type,
+											  String city,
+											  String street,
+											  String building) {
+			super.setAttributes(created,
+					modified,
+					creatorId,
+					modifierId);
+			this.name = name;
+			this.description = description;
+			this.longitude = longitude;
+			this.latitude = latitude;
+			this.imageId = imageId;
+			this.type = type;
+			this.city = city;
+			this.street = street;
+			this.building = building;					
 	}
 }

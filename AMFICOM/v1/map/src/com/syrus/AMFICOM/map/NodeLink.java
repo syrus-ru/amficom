@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLink.java,v 1.2 2004/11/28 14:34:48 bob Exp $
+ * $Id: NodeLink.java,v 1.3 2004/11/30 14:27:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/28 14:34:48 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/30 14:27:08 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -205,5 +205,25 @@ public class NodeLink extends StorableObject implements Characterized {
 	public void setStartNode(Node startNode) {
 		this.startNode = startNode;
 		super.currentVersion = super.getNextVersion();
+	}
+	
+	protected synchronized void setAttributes(Date created,
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,											  
+											  String name,
+											  PhysicalLink physicalLink,
+											  Node startNode,
+											  Node endNode,
+											  double length) {
+			super.setAttributes(created,
+					modified,
+					creatorId,
+					modifierId);
+			this.name = name;
+			this.physicalLink = physicalLink;
+			this.startNode = startNode;
+			this.endNode = endNode;
+			this.length = length;					
 	}
 }
