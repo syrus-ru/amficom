@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.20 2004/09/06 09:28:42 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.21 2004/09/08 10:20:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -20,9 +21,10 @@ import java.util.List;
 
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
+import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/09/06 09:28:42 $
+ * @version $Revision: 1.21 $, $Date: 2004/09/08 10:20:23 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -69,6 +71,10 @@ public abstract class StorableObjectDatabase {
 	public static final int 	UPDATE_CHECK 		= -3;
 
 	protected static Connection	connection;
+	
+	private String updateColumnsString;
+	private String updateMultiplySQLValuesString;
+	private String retrieveQueryString;
 
 	public StorableObjectDatabase() {
 		connection = DatabaseConnection.getConnection();
@@ -116,17 +122,41 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract String getTableName();
 
-	protected abstract String getUpdateColumns();
+	protected String getUpdateColumns(){
+		if (this.updateColumnsString == null){
+			this.updateColumnsString = COLUMN_ID + COMMA
+				+ COLUMN_CREATED + COMMA
+				+ COLUMN_MODIFIED + COMMA
+				+ COLUMN_CREATOR_ID + COMMA
+				+ COLUMN_MODIFIER_ID;
+		}
+		return this.updateColumnsString;
+	}
 
-	protected abstract String getUpdateMultiplySQLValues();
+	protected String getUpdateMultiplySQLValues(){
+		if (this.updateMultiplySQLValuesString == null){
+			this.updateMultiplySQLValuesString = QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;			
+		}
+		return this.updateMultiplySQLValuesString; 
+	}
 
-	protected abstract String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException;
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException{
+		return storableObject.getId().toSQLString() + COMMA
+		+ DatabaseDate.toUpdateSubString(storableObject.getCreated()) + COMMA
+		+ DatabaseDate.toUpdateSubString(storableObject.getModified()) + COMMA
+		+ storableObject.getCreatorId().toSQLString() + COMMA 
+		+ storableObject.getModifierId().toSQLString();
+	}
 
 	protected void insertEntity(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		String storableObjectIdStr = storableObject.getId().toSQLString();
 		try{
 			String sql = SQL_INSERT_INTO + this.getTableName() + OPEN_BRACKET + this.getUpdateColumns()
-					+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + storableObjectIdStr + COMMA
+					+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET 
 					+ this.getUpdateSingleSQLValues(storableObject) + CLOSE_BRACKET;
 			Statement statement = null;
 			try {
@@ -164,7 +194,8 @@ public abstract class StorableObjectDatabase {
 			return;
 		}
 
-		String sql = SQL_INSERT_INTO + this.getTableName() + OPEN_BRACKET + this.getUpdateColumns()
+		String sql = SQL_INSERT_INTO + this.getTableName() + OPEN_BRACKET				
+				+ this.getUpdateColumns()
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + this.getUpdateMultiplySQLValues()
 				+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
@@ -241,11 +272,40 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected abstract String retrieveQuery(final String condition);
+	protected String retrieveQuery(final String condition){
+		if (this.retrieveQueryString == null){
+			this.retrieveQueryString = SQL_SELECT
+				+ COLUMN_ID + COMMA
+				+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
+				+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+				+ COLUMN_CREATOR_ID + COMMA
+				+ COLUMN_MODIFIER_ID; 
+		}
+		return this.retrieveQueryString; 
+	}
 
-	protected abstract void setEntityForPreparedStatement(	StorableObject storableObject,
+	protected void setEntityForPreparedStatement(StorableObject storableObject,
 								PreparedStatement preparedStatement)
-			throws IllegalDataException, UpdateObjectException;
+			throws IllegalDataException, UpdateObjectException{
+		try {
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(1, storableObject.getId().getCode());
+			preparedStatement.setTimestamp(2, new Timestamp(storableObject.getCreated().getTime()));
+			preparedStatement.setTimestamp(3, new Timestamp(storableObject.getModified().getTime()));
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(4, storableObject.getCreatorId().getCode());
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(5, storableObject.getModifierId().getCode());
+		} catch (SQLException sqle) {
+			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
+		}
+	}
 
 	protected void checkAndUpdateEntity(StorableObject localStorableObject,final boolean force) 
 					throws IllegalDataException, UpdateObjectException, VersionCollisionException {
@@ -407,7 +467,6 @@ public abstract class StorableObjectDatabase {
 				buffer.append(COLUMN_ID);
 				int idsLength = ids.size();
 				if (idsLength == 1) {
-					buffer.append(SQL_AND);
 					buffer.append(EQUALS);
 					buffer.append(((Identifier) ids.iterator().next()).toSQLString());
 				} else {
