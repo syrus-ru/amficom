@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.73 2005/03/16 12:49:30 bass Exp $
+ * $Id: Equipment.java,v 1.74 2005/03/23 18:02:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/03/16 12:49:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.74 $, $Date: 2005/03/23 18:02:27 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -235,17 +235,17 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		return new Equipment_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable) this.getDomainId().getTransferable(),
 				(Identifier_Transferable) this.type.getId().getTransferable(),
-				new String(this.name),
-				new String(this.description),
-				new String(this.supplier),
-				new String(this.supplierCode),
+				this.name != null ? new String(this.name) : "",
+				this.description != null ? new String(this.description) : "",
+				this.supplier != null ? new String(this.supplier) : "",
+				this.supplierCode != null ? new String(this.supplierCode) : "",
 				this.longitude,
 				this.latitude,
-				new String(this.hwSerial),
-				new String(this.hwVersion),
-				new String(this.swSerial),
-				new String(this.swVersion),
-				new String(this.inventoryNumber),
+				this.hwSerial != null ? new String(this.hwSerial) : "",
+				this.hwVersion != null ? new String(this.hwVersion) : "",
+				this.swSerial != null ? new String(this.swSerial) : "",
+				this.swVersion != null ? new String(this.swVersion) : "",
+				this.inventoryNumber != null ? new String(this.inventoryNumber) : "",
 				(Identifier_Transferable) this.imageId.getTransferable(),
 				charIds);
 	}
