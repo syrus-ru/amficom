@@ -35,20 +35,20 @@
 
 package com.syrus.AMFICOM.Client.Resource.ISM;
 
-import java.io.*;
-import java.util.*;
+import com.syrus.AMFICOM.CORBA.ISM.AccessPort_Transferable;
+import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
+import com.syrus.AMFICOM.Client.Configure.UI.AccessPortPane;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
+import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
+import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.ISM.*;
-import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
+import java.io.IOException;
+import java.io.Serializable;
 
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Configure.UI.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 public class AccessPort extends ObjectResource implements Serializable
 {

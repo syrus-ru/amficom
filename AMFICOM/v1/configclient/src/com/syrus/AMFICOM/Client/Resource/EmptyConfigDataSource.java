@@ -4,7 +4,7 @@ import com.syrus.AMFICOM.Client.General.SessionInterface;
 //import com.syrus.AMFICOM.Client.Resource.Map.*;
 //import com.syrus.AMFICOM.Client.Resource.Object.*;
 
-public class EmptyConfigDataSource extends EmptyMapDataSource 
+public class EmptyConfigDataSource extends EmptyDataSource 
 {
 	protected EmptyConfigDataSource()
 	{

@@ -25,14 +25,15 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.MyUtil;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeDevice;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 
 import oracle.jdeveloper.layout.VerticalFlowLayout;
+
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class EquipmentTypeGeneralPanel extends GeneralPanel
 {

@@ -1,36 +1,33 @@
 package com.syrus.AMFICOM.Client.Configure.Report;
 
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Enumeration;
-
-import javax.swing.table.TableColumn;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JOptionPane;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.CORBA.Scheme.SchemeOptimizeInfo_Transferable;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
-
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-import com.syrus.AMFICOM.Client.Resource.Network.Link;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.KISType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
-
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Report.ReportData;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
-import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
+import com.syrus.AMFICOM.Client.General.Report.ReportData;
+import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
+import com.syrus.AMFICOM.Client.Resource.ISMDirectory.KISType;
+import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
+import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
+import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
+import com.syrus.AMFICOM.Client.Resource.Network.Link;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 /**
  * <p>Title: </p>

@@ -4,21 +4,27 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
-
 import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
 import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
-
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-
+import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
+import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
+import com.syrus.AMFICOM.Client.Resource.Network.CablePort;
+import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
+import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
+import com.syrus.AMFICOM.Client.Resource.Network.Link;
+import com.syrus.AMFICOM.Client.Resource.Network.Port;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CharacteristicType;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
@@ -339,7 +345,6 @@ public class CharacteristicsPanel extends JPanel
 			}
 		}
 	}
-
 
 	void setCharacteristicAtHash(Hashtable table, String name, String value)
 	{

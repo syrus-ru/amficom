@@ -10,8 +10,7 @@ JAVAC=javac
 JAR=jar
 
 TARGET=$(LIB)\configureclient.jar
-TARGET_RUN=$(LIB)\run\configureclientrun.jar
-TARGET_CLASS_LIST=src_config.txt
+TARGET_CLASS_LIST=src_configclient.txt
 TARGET_SRC=$(LIBSRC)\configureclientsource.jar
 
 LIBNAME_OBJECT=$(LIB)\ServerObjectInterface.jar
@@ -42,7 +41,6 @@ $(TARGET):	impl jar
 
 jar:
 	$(JAR) -cf $(TARGET) -C $(CLASSES) com
-	$(JAR) -cf $(TARGET_RUN) -C $(CLASSES) com\syrus\AMFICOM\Client\Configure\ConfigureRun.class
 	$(JAR) -cf $(TARGET_SRC) -C $(SRC) com
 
 impl:

@@ -1,15 +1,12 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.BorderLayout;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+
+import java.awt.BorderLayout;
 
 public class EquipmentTypeCharacteristicsPanel extends GeneralPanel
 {

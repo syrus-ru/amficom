@@ -1,22 +1,26 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import java.util.*;
-import java.text.SimpleDateFormat;
-import oracle.jdeveloper.layout.*;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTablePane;
+import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
+import com.syrus.AMFICOM.Client.Resource.DataSet;
+import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
+import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
+import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Command.Map.*;
+import java.awt.Dimension;
+
+import java.text.SimpleDateFormat;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import oracle.jdeveloper.layout.XYConstraints;
 
 public class TransmissionPathFibrePanel extends GeneralPanel
 {

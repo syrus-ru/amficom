@@ -1,23 +1,19 @@
 package com.syrus.AMFICOM.Client.General.Command.Config;
 
-import java.awt.*;
-import javax.swing.*;
-import java.util.*;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
+import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
+import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
+import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
+import com.syrus.AMFICOM.Client.Resource.Network.Link;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-//import com.syrus.AMFICOM.Client.Test.*;
-import com.syrus.AMFICOM.Client.Configure.*;
-import com.syrus.AMFICOM.Client.Map.*;
-import com.syrus.AMFICOM.Client.Map.UI.Display.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Command.Map.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
 
 public class ImportCatalogCommand extends VoidCommand
 {

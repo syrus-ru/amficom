@@ -1,50 +1,41 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.Color;
-
-import java.util.Vector;
-import java.util.Enumeration;
-
-import javax.swing.ImageIcon;
-
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceDomainFilter;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
-
+import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectDataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.ConfigDataSourceImage;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.DataSet;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
-
-import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
+import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
 import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.KISType;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
+import com.syrus.AMFICOM.Client.Resource.ISMDirectory.KISType;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
-
+import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
+import com.syrus.AMFICOM.Client.Resource.Network.CablePort;
 import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
 import com.syrus.AMFICOM.Client.Resource.Network.Link;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
 import com.syrus.AMFICOM.Client.Resource.Network.Port;
-import com.syrus.AMFICOM.Client.Resource.Network.CablePort;
-
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
-
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.Client.Resource.ObjectDataSourceImage;
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+
+import java.awt.Color;
+
+import java.util.Enumeration;
+import java.util.Vector;
+
+import javax.swing.ImageIcon;
 
 public class ConfigTreeModel extends ObjectResourceTreeModel
 {

@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
 import com.syrus.AMFICOM.Client.General.*;
 
 public class RISDConfigDataSource 
-		extends RISDMaintenanceDataSource
+		extends RISDDirectoryDataSource
 		implements DataSourceInterface 
 {
 	protected RISDConfigDataSource()
