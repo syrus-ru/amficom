@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.91 2005/02/18 18:16:57 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.92 2005/03/21 11:49:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/02/18 18:16:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.92 $, $Date: 2005/03/21 11:49:04 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -141,6 +141,10 @@ public class CMServerImpl extends CMMeasurementTransmit {
 																ObjectEntities.USER_ENTITY_CODE,
 																UserWrapper.COLUMN_LOGIN);
 			Collection collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (collection.isEmpty())
+				/* TODO add ErrorCode login not found */
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, "User login '"
+						+ userLogin + "' not found.");
 			Identifier id = ((User) collection.iterator().next()).getId();
 			return (Identifier_Transferable) id.getTransferable();
 		} catch (RetrieveObjectException roe) {
@@ -163,6 +167,10 @@ public class CMServerImpl extends CMMeasurementTransmit {
 																ObjectEntities.USER_ENTITY_CODE,
 																StorableObjectWrapper.COLUMN_NAME);
 			Collection collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (collection.isEmpty())
+				/* TODO add ErrorCode userName not found */
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, "User name '"
+						+ userName + "' not found.");
 			Identifier id = ((User) collection.iterator().next()).getId();
 			return (Identifier_Transferable) id.getTransferable();
 		} catch (RetrieveObjectException roe) {
