@@ -97,11 +97,13 @@ reportbuilder_v1	AMFICOM/v1/reportbuilder
 server_v1	AMFICOM/v1/server
 #M	servermisc_v1	Miscellaneous files for server-side modules
 servermisc_v1	AMFICOM/v1/servermisc
+#M	serverprocess_v1	Server process
+serverprocess_v1	AMFICOM/v1/serverprocess
 #M	load_v1		Initial data server load
 load_v1		AMFICOM/v1/load
 #M	connjdbc_v1	Client-side JDBC connection stub
 connjdbc_v1	AMFICOM/v1/connjdbc
-#M	corbaportable_v1	Client-side JDBC connection stub
+#M	corbaportable_v1	Corba portable
 corbaportable_v1	AMFICOM/v1/corbaportable
 #M	importmif_v1	Patch for SpatialFX libraries which allows for TEXT spatial objects
 importmif_v1	AMFICOM/v1/importmif
