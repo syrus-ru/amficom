@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.19 2005/01/17 08:25:07 bob Exp $
+ * $Id: MeasurementServer.java,v 1.20 2005/02/15 12:36:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.mserver;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -39,8 +40,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/01/17 08:25:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2005/02/15 12:36:13 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
@@ -247,7 +248,7 @@ public class MeasurementServer extends SleepButWorkThread {
 	private static void fillMCMTestQueueMap() {
 		TestDatabase testDatabase = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
 		Identifier mcmId;
-		List tests = null;
+		Collection tests = null;
 //		synchronized (mcmTestQueueMap) {
 			for (Iterator it = mcmTestQueueMap.getMCMIdsIterator(); it.hasNext();) {
 				mcmId = (Identifier)it.next();
@@ -360,7 +361,7 @@ public class MeasurementServer extends SleepButWorkThread {
 			this.queueMap.put(mcmId, queue);
 		}
 
-		void addTests(Identifier mcmId, List tests) {
+		void addTests(Identifier mcmId, Collection tests) {
 			List queue = (List)this.queueMap.get(mcmId);
 			if (queue != null) {
 				Test test;

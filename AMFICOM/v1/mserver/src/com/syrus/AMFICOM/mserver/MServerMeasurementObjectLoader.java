@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.18 2004/12/24 13:40:42 arseniy Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.19 2005/02/15 12:36:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.mserver;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -20,10 +21,11 @@ import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/12/24 13:40:42 $
+ * @version $Revision: 1.19 $, $Date: 2005/02/15 12:36:13 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -47,7 +49,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			if (mcmRef != null) {
 				try {
 					measurement = new Measurement(mcmRef.transmitMeasurement((Identifier_Transferable)id.getTransferable()));
-					measurement.insert();
+					MeasurementDatabaseContext.getMeasurementDatabase().insert(measurement);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -62,6 +64,9 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
+				}
+				catch (IllegalDataException ide) {
+					Log.errorException(ide);
 				}
 			}
 			else {
@@ -83,7 +88,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			if (mcmRef != null) {
 				try {
 					analysis = new Analysis(mcmRef.transmitAnalysis((Identifier_Transferable)id.getTransferable()));
-					analysis.insert();
+					MeasurementDatabaseContext.getAnalysisDatabase().insert(analysis);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -98,6 +103,9 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
+				}
+				catch (IllegalDataException ide) {
+					Log.errorException(ide);
 				}
 			}
 			else {
@@ -119,7 +127,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			if (mcmRef != null) {
 				try {
 					evaluation = new Evaluation(mcmRef.transmitEvaluation((Identifier_Transferable)id.getTransferable()));
-					evaluation.insert();
+					MeasurementDatabaseContext.getEvaluationDatabase().insert(evaluation);
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -134,6 +142,9 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
+				}
+				catch (IllegalDataException ide) {
+					Log.errorException(ide);
 				}
 			}
 			else {

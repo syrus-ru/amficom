@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.26 2005/01/19 20:57:34 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.27 2005/02/15 12:36:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,60 +8,69 @@
 
 package com.syrus.AMFICOM.setup;
 
-import java.util.Date;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
+import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.MCM;
+import com.syrus.AMFICOM.administration.Server;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.corba.UserSort;
+import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
+import com.syrus.AMFICOM.configuration.Equipment;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.Port;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.configuration.TransmissionPathType;
+import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
+import com.syrus.AMFICOM.configuration.corba.PortSort;
+import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.ParameterTypeDatabase;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.MCM;
-import com.syrus.AMFICOM.administration.User;
-import com.syrus.AMFICOM.administration.Server;
-import com.syrus.AMFICOM.administration.corba.UserSort;
-import com.syrus.AMFICOM.configuration.Port;
-import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.TransmissionPathType;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.corba.PortSort;
-import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
-import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
-import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
-import com.syrus.AMFICOM.measurement.SetParameter;
-import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.EvaluationType;
-import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
+import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.TemporalPattern;
+import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
-import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.AMFICOM.mserver.DatabaseContextSetup;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
-import com.syrus.util.Log;
 import com.syrus.util.ByteArray;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/01/19 20:57:34 $
+ * @version $Revision: 1.27 $, $Date: 2005/02/15 12:36:13 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -74,30 +83,6 @@ public final class MeasurementServerSetup {
 	/**
 	 * @todo Use ParameterTypeCodenames
 	 */
-	public static final String CODENAME_REF_WVLEN = "ref_wvlen";
-	public static final String CODENAME_REF_TRCLEN = "ref_trclen";
-	public static final String CODENAME_REF_RES = "ref_res";
-	public static final String CODENAME_REF_PULSWD = "ref_pulswd";
-	public static final String CODENAME_REF_IOR = "ref_ior";
-	public static final String CODENAME_REF_SCANS = "ref_scans";
-	public static final String CODENAME_REFLECTOGRAMMA = "reflectogramma";
-	public static final String CODENAME_DADARA_TACTIC = "ref_uselinear";
-	public static final String CODENAME_DADARA_EVENT_SIZE = "ref_eventsize";
-	public static final String CODENAME_DADARA_CONN_FALL_PARAMS = "ref_conn_fall_params";
-	public static final String CODENAME_DADARA_MIN_LEVEL = "ref_min_level";
-	public static final String CODENAME_DADARA_MAX_LEVEL_NOISE = "ref_max_level_noise";
-	public static final String CODENAME_DADARA_MIN_LEVEL_TO_FIND_END = "ref_min_level_to_find_end";
-	public static final String CODENAME_DADARA_MIN_WELD = "ref_min_weld";
-	public static final String CODENAME_DADARA_MIN_CONNECTOR = "ref_min_connector";
-	public static final String CODENAME_DADARA_STRATEGY = "ref_strategy";
-	public static final String CODENAME_DADARA_EVENT_ARRAY = "dadara_event_array";
-	public static final String CODENAME_DADARA_ETALON_EVENT_ARRAY = "dadara_etalon_event_array";
-	public static final String CODENAME_DADARA_THRESHOLDS = "dadara_thresholds";
-	public static final String CODENAME_DADARA_ALARM_ARRAY = "dadara_alarm_array";
-
-	private static final String CODENAME_MEASUREMENT_TYPE_REFLECTOMETRY = "reflectometry";
-	private static final String CODENAME_ANALYSIS_TYPE_DADARA = "dadara";
-	private static final String CODENAME_EVALUATION_TYPE_DADARA = "dadara"; 
 
 	private MeasurementServerSetup() {
 		// singleton constructor
@@ -121,45 +106,36 @@ public final class MeasurementServerSetup {
 
 		Identifier domainId = createDomain(sysAdminId);
 
-
 		Identifier serverUserId = createUser(sysAdminId,
-																				 "mserver",
-																				 UserSort.USER_SORT_SERVERPROCESS,
-																				 "User Serverovich",
-																				 "User for measurement server");
-		Identifier serverId = createServer(sysAdminId,
-																			 domainId,
-																			 "mongol",
-																			 serverUserId);
+				"mserver",
+				UserSort.USER_SORT_SERVERPROCESS,
+				"User Serverovich",
+				"User for measurement server");
+		Identifier serverId = createServer(sysAdminId, domainId, "mongol", serverUserId);
 
 		Identifier mcmUserId = createUser(sysAdminId,
-																			"mcm",
-																			UserSort.USER_SORT_MCM,
-																			"User Mcmovich",
-																			"User for measurement control module");
+				"mcm",
+				UserSort.USER_SORT_MCM,
+				"User Mcmovich",
+				"User for measurement control module");
 		Identifier mcmId = createMCM(sysAdminId, domainId, "aldan", mcmUserId, serverId);
 
-		Identifier equipmentId = createEquipment(sysAdminId,
-																						 domainId,
-																						 equipmentType);
+		Identifier equipmentId = createEquipment(sysAdminId, domainId, equipmentType);
 
 		Identifier portId1 = createPort(sysAdminId, portType, equipmentId);
 		Identifier portId2 = createPort(sysAdminId, portType, equipmentId);
 
 		Identifier tpId = createTransmissionPath(sysAdminId, domainId, portId1, portId2, transmissionPathType);
 
-
-		Identifier kisId = createKIS(sysAdminId, domainId, equipmentId, mcmId, "rtu-1", (short)7501);
+		Identifier kisId = createKIS(sysAdminId, domainId, equipmentId, mcmId, "rtu-1", (short) 7501);
 
 		Identifier mportId = createMeasurementPort(sysAdminId, mPortType, kisId, portId1);
 
 		MonitoredElement monitoredElement = createMonitoredElement(sysAdminId, domainId, mportId, tpId);
 
-
 		createParameterTypes(sysAdminId);
 
 		createTests(sysAdminId, monitoredElement);
-
 
 		DatabaseConnection.closeConnection();
 	}
@@ -167,13 +143,8 @@ public final class MeasurementServerSetup {
 	private static Identifier createSystemAdministrator() {
 		try {
 			Identifier userId = IdentifierGenerator.generateIdentifier(ObjectEntities.USER_ENTITY_CODE);
-			User user = User.createInstance(userId,
-					"sys",
-					UserSort.USER_SORT_SYSADMIN,
-					"sys",
-					"System Administrator");
-																			
-			user.insert();
+			User user = User.createInstance(userId, "sys", UserSort.USER_SORT_SYSADMIN, "sys", "System Administrator");
+			AdministrationDatabaseContext.getUserDatabase().insert(user);
 			return user.getId();
 		}
 		catch (Exception e) {
@@ -184,13 +155,8 @@ public final class MeasurementServerSetup {
 
 	private static EquipmentType createEquipmentType(Identifier creatorId) {
 		try {
-			EquipmentType eqType = EquipmentType.createInstance(creatorId,
-					"EqTypeKIS",
-					"",
-					"",
-					"",
-					"");
-			eqType.insert();
+			EquipmentType eqType = EquipmentType.createInstance(creatorId, "EqTypeKIS", "", "", "", "");
+			ConfigurationDatabaseContext.getEquipmentTypeDatabase().insert(eqType);
 			return eqType;
 		}
 		catch (Exception e) {
@@ -198,30 +164,30 @@ public final class MeasurementServerSetup {
 			return null;
 		}
 	}
-    
-    private static TransmissionPathType createTransmissionPathType(Identifier creatorId) {
-        try {
-            TransmissionPathType transmissionPathType = TransmissionPathType.createInstance(creatorId,
+
+	private static TransmissionPathType createTransmissionPathType(Identifier creatorId) {
+		try {
+			TransmissionPathType transmissionPathType = TransmissionPathType.createInstance(creatorId,
 					"Type of TransmissionPath",
-                    "",
-					"");            
-            transmissionPathType.insert();
-            return transmissionPathType;
-        }
-        catch (Exception e) {
-            Log.errorException(e);
-            return null;
-        }
-    }
-    
-    private static PortType createPortType(Identifier creatorId) {
+					"",
+					"");
+			ConfigurationDatabaseContext.getTransmissionPathTypeDatabase().insert(transmissionPathType);
+			return transmissionPathType;
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			return null;
+		}
+	}
+
+	private static PortType createPortType(Identifier creatorId) {
 		try {
 			PortType portType = PortType.createInstance(creatorId,
 					"PortTypeReflectometry",
 					"",
 					"",
 					PortTypeSort.PORTTYPESORT_ELECTRICAL);
-			portType.insert();
+			ConfigurationDatabaseContext.getPortTypeDatabase().insert(portType);
 			return portType;
 		}
 		catch (Exception e) {
@@ -232,11 +198,8 @@ public final class MeasurementServerSetup {
 
 	private static MeasurementPortType createMeasurementPortType(Identifier creatorId) {
 		try {
-			MeasurementPortType mportType = MeasurementPortType.createInstance(creatorId,
-					"MeasurementPortTypeReflectometry",
-					"",
-					"");
-			mportType.insert();
+			MeasurementPortType mportType = MeasurementPortType.createInstance(creatorId, "MeasurementPortTypeReflectometry", "", "");
+			ConfigurationDatabaseContext.getMeasurementPortTypeDatabase().insert(mportType);
 			return mportType;
 		}
 		catch (Exception e) {
@@ -247,11 +210,8 @@ public final class MeasurementServerSetup {
 
 	private static Identifier createDomain(Identifier creatorId) {
 		try {
-			Domain domain = Domain.createInstance(creatorId,
-					null,
-					"domain 1",
-					"System domain");
-			domain.insert();
+			Domain domain = Domain.createInstance(creatorId, null, "domain 1", "System domain");
+			AdministrationDatabaseContext.getDomainDatabase().insert(domain);
 			return domain.getId();
 		}
 		catch (Exception e) {
@@ -260,18 +220,10 @@ public final class MeasurementServerSetup {
 		}
 	}
 
-	private static Identifier createServer(Identifier creatorId,
-																				 Identifier domainId,
-																				 String hostname,
-																				 Identifier serverUserId) {
+	private static Identifier createServer(Identifier creatorId, Identifier domainId, String hostname, Identifier serverUserId) {
 		try {
-			Server server = Server.createInstance(creatorId,
-				domainId,
-				"server 1",
-				"Measurement server",
-				hostname,
-				serverUserId);
-			server.insert();
+			Server server = Server.createInstance(creatorId, domainId, "server 1", "Measurement server", hostname, serverUserId);
+			AdministrationDatabaseContext.getServerDatabase().insert(server);
 			return server.getId();
 		}
 		catch (Exception e) {
@@ -281,19 +233,13 @@ public final class MeasurementServerSetup {
 	}
 
 	private static Identifier createMCM(Identifier creatorId,
-										Identifier domainId,
-										String hostname,
-										Identifier mcmUserId,
-										Identifier serverId) {
+			Identifier domainId,
+			String hostname,
+			Identifier mcmUserId,
+			Identifier serverId) {
 		try {
-			MCM mcm = MCM.createInstance(creatorId,
-				domainId,
-				"mcm 1",
-				"Measurement control module",
-				hostname,
-				mcmUserId,
-				serverId);
-			mcm.insert();
+			MCM mcm = MCM.createInstance(creatorId, domainId, "mcm 1", "Measurement control module", hostname, mcmUserId, serverId);
+			AdministrationDatabaseContext.getMCMDatabase().insert(mcm);
 			return mcm.getId();
 		}
 		catch (Exception e) {
@@ -303,21 +249,14 @@ public final class MeasurementServerSetup {
 	}
 
 	private static Identifier createKIS(Identifier creatorId,
-																			Identifier domainId,
-																			Identifier equipmentId,
-																			Identifier mcmId,
-																			String hostName,
-																			short tcpPort) {
+			Identifier domainId,
+			Identifier equipmentId,
+			Identifier mcmId,
+			String hostName,
+			short tcpPort) {
 		try {
-			KIS kis = KIS.createInstance(creatorId,
-					domainId,
-					"KIS",
-					"kis ",
-					hostName,
-					tcpPort,
-					equipmentId,
-					mcmId);
-			kis.insert();
+			KIS kis = KIS.createInstance(creatorId, domainId, "KIS", "kis ", hostName, tcpPort, equipmentId, mcmId);
+			ConfigurationDatabaseContext.getKISDatabase().insert(kis);
 			return kis.getId();
 		}
 		catch (Exception e) {
@@ -326,9 +265,7 @@ public final class MeasurementServerSetup {
 		}
 	}
 
-	private static Identifier createEquipment(Identifier creatorId,
-																						Identifier domainId,
-																						EquipmentType eqType) {
+	private static Identifier createEquipment(Identifier creatorId, Identifier domainId, EquipmentType eqType) {
 		try {
 			Equipment eq = Equipment.createInstance(creatorId,
 					domainId,
@@ -341,11 +278,11 @@ public final class MeasurementServerSetup {
 					0.0f,
 					0.0f,
 					"",
-                    "",
-                    "",
-                    "",
-                    "");
-			eq.insert();			
+					"",
+					"",
+					"",
+					"");
+			ConfigurationDatabaseContext.getEquipmentDatabase().insert(eq);
 			return eq.getId();
 		}
 		catch (Exception e) {
@@ -354,16 +291,10 @@ public final class MeasurementServerSetup {
 		}
 	}
 
-	private static Identifier createPort(Identifier creatorId,
-										 PortType type,
-										 Identifier equipmentId) {
+	private static Identifier createPort(Identifier creatorId, PortType type, Identifier equipmentId) {
 		try {
-			Port port = Port.createInstance(creatorId,
-					type,
-					"Port",
-					equipmentId,
-					PortSort.PORT_SORT_PORT);
-			port.insert(); 
+			Port port = Port.createInstance(creatorId, type, "Port", equipmentId, PortSort.PORT_SORT_PORT);
+			ConfigurationDatabaseContext.getPortDatabase().insert(port);
 			return port.getId();
 		}
 		catch (Exception e) {
@@ -373,10 +304,10 @@ public final class MeasurementServerSetup {
 	}
 
 	private static Identifier createTransmissionPath(Identifier creatorId,
-													 Identifier domainId,
-													 Identifier startPortId,
-													 Identifier finishPortId,
-													 TransmissionPathType type) {
+			Identifier domainId,
+			Identifier startPortId,
+			Identifier finishPortId,
+			TransmissionPathType type) {
 		try {
 			TransmissionPath tp = TransmissionPath.createInstance(creatorId,
 					domainId,
@@ -385,7 +316,7 @@ public final class MeasurementServerSetup {
 					type,
 					startPortId,
 					finishPortId);
-			tp.insert();
+			ConfigurationDatabaseContext.getTransmissionPathDatabase().insert(tp);
 			return tp.getId();
 		}
 		catch (Exception e) {
@@ -395,9 +326,9 @@ public final class MeasurementServerSetup {
 	}
 
 	private static Identifier createMeasurementPort(Identifier creatorId,
-													MeasurementPortType type,
-													Identifier kisId,
-													Identifier portId) {
+			MeasurementPortType type,
+			Identifier kisId,
+			Identifier portId) {
 		try {
 			MeasurementPort mport = MeasurementPort.createInstance(creatorId,
 					type,
@@ -405,7 +336,7 @@ public final class MeasurementServerSetup {
 					"MeasurementPortTest",
 					kisId,
 					portId);
-			mport.insert(); 
+			ConfigurationDatabaseContext.getMeasurementPortDatabase().insert(mport);
 			return mport.getId();
 		}
 		catch (Exception e) {
@@ -415,9 +346,9 @@ public final class MeasurementServerSetup {
 	}
 
 	private static MonitoredElement createMonitoredElement(Identifier creatorId,
-														   Identifier domainId,
-														   Identifier mPortId,
-														   Identifier transmissionPathId) {
+			Identifier domainId,
+			Identifier mPortId,
+			Identifier transmissionPathId) {
 		try {
 			List mdmIds = new ArrayList(1);
 			mdmIds.add(transmissionPathId);
@@ -428,7 +359,7 @@ public final class MeasurementServerSetup {
 					MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
 					"ME",
 					mdmIds);
-			monitoredElement.insert(); 
+			ConfigurationDatabaseContext.getMonitoredElementDatabase().insert(monitoredElement);
 			return monitoredElement;
 		}
 		catch (Exception e) {
@@ -437,19 +368,10 @@ public final class MeasurementServerSetup {
 		}
 	}
 
-	private static Identifier createUser(Identifier creatorId,
-										 String login,
-										 UserSort sort,
-										 String name,
-										 String description) {
+	private static Identifier createUser(Identifier creatorId, String login, UserSort sort, String name, String description) {
 		try {
-			User user = User.createInstance(creatorId,
-					login,
-					sort,
-					name,
-					description);
-																			
-			user.insert();
+			User user = User.createInstance(creatorId, login, sort, name, description);
+			AdministrationDatabaseContext.getUserDatabase().insert(user);
 			return user.getId();
 		}
 		catch (Exception e) {
@@ -466,92 +388,164 @@ public final class MeasurementServerSetup {
 		List outParTyps;
 
 		inParTyps = new ArrayList(6);
-		inParTyps.add(createParameterType(creatorId, CODENAME_REF_WVLEN, "For reflectometry", "Wavelength"));
-		inParTyps.add(createParameterType(creatorId, CODENAME_REF_TRCLEN, "For reflectometry", "Trace length"));
-		inParTyps.add(createParameterType(creatorId, CODENAME_REF_RES, "For reflectometry", "Resolution"));
-		inParTyps.add(createParameterType(creatorId, CODENAME_REF_PULSWD, "For reflectometry", "Pulse width"));
-		inParTyps.add(createParameterType(creatorId, CODENAME_REF_IOR, "For reflectometry", "Index of refraction"));
-		inParTyps.add(createParameterType(creatorId, CODENAME_REF_SCANS, "For reflectometry", "Number of averages"));
+		inParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.TRACE_WAVELENGTH,
+				"For reflectometry",
+				"Wavelength",
+				DataType.DATA_TYPE_INTEGER));
+		inParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.TRACE_LENGTH,
+				"For reflectometry",
+				"Trace length",
+				DataType.DATA_TYPE_LONG));
+		inParTyps.add(createParameterType(creatorId, ParameterTypeCodenames.TRACE_RESOLUTION, "For reflectometry", "Resolution", DataType.DATA_TYPE_DOUBLE));
+		inParTyps.add(createParameterType(creatorId, ParameterTypeCodenames.TRACE_PULSE_WIDTH, "For reflectometry", "Pulse width", DataType.DATA_TYPE_LONG));
+		inParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION,
+				"For reflectometry",
+				"Index of refraction",
+				DataType.DATA_TYPE_DOUBLE));
+		inParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.TRACE_AVERAGE_COUNT,
+				"For reflectometry",
+				"Number of averages",
+				DataType.DATA_TYPE_LONG));
 		outParTyps = new ArrayList(1);
-		ParameterType parTypRefl = createParameterType(creatorId, CODENAME_REFLECTOGRAMMA, "For reflectometry", "Reflectogramma");
+		ParameterType parTypRefl = createParameterType(creatorId,
+				ParameterTypeCodenames.REFLECTOGRAMMA,
+				"For reflectometry",
+				"Reflectogramma",
+				DataType.DATA_TYPE_RAW);
 		outParTyps.add(parTypRefl);
-		createMeasurementType(creatorId, CODENAME_MEASUREMENT_TYPE_REFLECTOMETRY, "Reflectometry", inParTyps, outParTyps);
+		createMeasurementType(creatorId, MeasurementType.CODENAME_REFLECTOMETRY, "Reflectometry", inParTyps, outParTyps);
 
 		inParTyps = new ArrayList(1);
 		inParTyps.add(parTypRefl);
 		criParTyps = new ArrayList(10);
-		criParTyps.add(createParameterType(creatorId, CODENAME_DADARA_TACTIC, "For DADARA analysis", "Tactic"));
-		criParTyps.add(createParameterType(creatorId, CODENAME_DADARA_EVENT_SIZE, "For DADARA analysis", "Event size"));
-		criParTyps.add(createParameterType(creatorId, CODENAME_DADARA_CONN_FALL_PARAMS, "For DADARA analysis", "Connector fall"));
-		criParTyps.add(createParameterType(creatorId, CODENAME_DADARA_MIN_LEVEL, "For DADARA analysis", "Min level"));
-		criParTyps.add(createParameterType(creatorId, CODENAME_DADARA_MAX_LEVEL_NOISE, "For DADARA analysis", "Max level noise"));
-		criParTyps.add(createParameterType(creatorId, CODENAME_DADARA_MIN_LEVEL_TO_FIND_END, "For DADARA analysis", "Min level to find end"));
-		criParTyps.add(createParameterType(creatorId, CODENAME_DADARA_MIN_WELD, "For DADARA analysis", "Min weld"));
-		criParTyps.add(createParameterType(creatorId, CODENAME_DADARA_MIN_CONNECTOR, "For DADARA analysis", "Min connector"));
-		criParTyps.add(createParameterType(creatorId, CODENAME_DADARA_STRATEGY, "For DADARA analysis", "strategy"));
+		criParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.WAVELET_TYPE,
+				"For DADARA analysis",
+				"Tactic",
+				DataType.DATA_TYPE_INTEGER));
+		criParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.EVENT_SIZE,
+				"For DADARA analysis",
+				"Event size",
+				DataType.DATA_TYPE_DOUBLE));
+		criParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.CONNECTOR_FORM_FACTOR,
+				"For DADARA analysis",
+				"Connector fall",
+				DataType.DATA_TYPE_DOUBLE));
+		criParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.MIN_EVENT_LEVEL,
+				"For DADARA analysis",
+				"Min level",
+				DataType.DATA_TYPE_DOUBLE));
+		criParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.MAX_NOISE_LEVEL,
+				"For DADARA analysis",
+				"Max level noise",
+				DataType.DATA_TYPE_DOUBLE));
+		criParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.MIN_END_LEVEL,
+				"For DADARA analysis",
+				"Min level to find end",
+				DataType.DATA_TYPE_DOUBLE));
+		criParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.MIN_SPLICE,
+				"For DADARA analysis",
+				"Min weld",
+				DataType.DATA_TYPE_DOUBLE));
+		criParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.MIN_CONNECTOR,
+				"For DADARA analysis",
+				"Min connector",
+				DataType.DATA_TYPE_DOUBLE));
+		criParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.STRATEGY,
+				"For DADARA analysis",
+				"strategy",
+				DataType.DATA_TYPE_INTEGER));
 		etaParTyps = new ArrayList(1);
-		ParameterType parTypEtalonEventArr = createParameterType(creatorId, CODENAME_DADARA_ETALON_EVENT_ARRAY, "For DADARA analysis", "Etalon event array");
+		ParameterType parTypEtalonEventArr = createParameterType(creatorId,
+				ParameterTypeCodenames.DADARA_ETALON_EVENTS,
+				"For DADARA analysis",
+				"Etalon event array",
+				DataType.DATA_TYPE_RAW);
 		etaParTyps.add(parTypEtalonEventArr);
 		outParTyps = new ArrayList(1);
-		ParameterType parTypEventArr = createParameterType(creatorId, CODENAME_DADARA_EVENT_ARRAY, "For DADARA analysis", "Event array");
+		ParameterType parTypEventArr = createParameterType(creatorId,
+				ParameterTypeCodenames.DADARA_EVENTS,
+				"For DADARA analysis",
+				"Event array",
+				DataType.DATA_TYPE_RAW);
 		outParTyps.add(parTypEventArr);
-		createAnalysisType(creatorId, CODENAME_ANALYSIS_TYPE_DADARA, "DADARA", inParTyps, criParTyps, etaParTyps, outParTyps);
+		createAnalysisType(creatorId, AnalysisType.CODENAME_DADARA, "DADARA", inParTyps, criParTyps, etaParTyps, outParTyps);
 
 		inParTyps = new ArrayList(1);
 		inParTyps.add(parTypRefl);
 		thrParTyps = new ArrayList(1);
-		thrParTyps.add(createParameterType(creatorId, CODENAME_DADARA_THRESHOLDS, "For DADARA analysis", "Thresholds"));
+		thrParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.DADARA_THRESHOLDS,
+				"For DADARA analysis",
+				"Thresholds",
+				DataType.DATA_TYPE_RAW));
 		etaParTyps = new ArrayList(1);
 		etaParTyps.add(parTypEtalonEventArr);
 		outParTyps = new ArrayList(1);
-		outParTyps.add(createParameterType(creatorId, CODENAME_DADARA_ALARM_ARRAY, "For DADARA analysis", "Alarms"));
-		createEvaluationType(creatorId, CODENAME_EVALUATION_TYPE_DADARA, "DADARA", inParTyps, thrParTyps, etaParTyps, outParTyps);
+		outParTyps.add(createParameterType(creatorId,
+				ParameterTypeCodenames.DADARA_ALARMS,
+				"For DADARA analysis",
+				"Alarms",
+				DataType.DATA_TYPE_RAW));
+		createEvaluationType(creatorId, EvaluationType.CODENAME_DADARA, "DADARA", inParTyps, thrParTyps, etaParTyps, outParTyps);
 	}
 
 	private static void checkParameterTypes() {
-		ParameterTypeDatabase parameterTypeDatabase = (ParameterTypeDatabase)GeneralDatabaseContext.getParameterTypeDatabase();
-		AnalysisTypeDatabase analysisTypeDatabase = ((AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase());
-		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase());
-		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase());
+		ParameterTypeDatabase parameterTypeDatabase = (ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase();
+		AnalysisTypeDatabase analysisTypeDatabase = ((AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase());
+		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase) MeasurementDatabaseContext.getEvaluationTypeDatabase());
+		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase());
 
 		try {
-			List parameterTypes = parameterTypeDatabase.retrieveAll();
+			Collection parameterTypes = parameterTypeDatabase.retrieveAll();
 			ParameterType pt;
 			for (Iterator i = parameterTypes.iterator(); i.hasNext();) {
-				pt = (ParameterType)i.next();
+				pt = (ParameterType) i.next();
 				System.out.println("id: " + pt.getId() + ", codename: " + pt.getCodename() + ", name: " + pt.getName());
 			}
 
-			List measurementTypes = measurementTypeDatabase.retrieveAll();
+			Collection measurementTypes = measurementTypeDatabase.retrieveAll();
 			MeasurementType mt;
 			for (Iterator i = measurementTypes.iterator(); i.hasNext();) {
-				mt = (MeasurementType)i.next();
+				mt = (MeasurementType) i.next();
 				System.out.println("id: " + mt.getId() + ", codename: " + mt.getCodename() + ", description: " + mt.getDescription());
-				List inp = mt.getInParameterTypes();
+				Collection inp = mt.getInParameterTypes();
 				for (Iterator j = inp.iterator(); j.hasNext();) {
-					System.out.println("	in par id: " + ((ParameterType)j.next()).getId());
+					System.out.println("	in par id: " + ((ParameterType) j.next()).getId());
 				}
 			}
 
-			List analysisTypes = analysisTypeDatabase.retrieveAll();
+			Collection analysisTypes = analysisTypeDatabase.retrieveByCondition(null, new EquivalentCondition(ObjectEntities.ANALYSISTYPE_ENTITY_CODE));
 			AnalysisType at;
 			for (Iterator i = analysisTypes.iterator(); i.hasNext();) {
-				at = (AnalysisType)i.next();
+				at = (AnalysisType) i.next();
 				System.out.println("id: " + at.getId() + ", codename: " + at.getCodename() + ", description: " + at.getDescription());
-				List inp = at.getInParameterTypes();
+				Collection inp = at.getInParameterTypes();
 				for (Iterator j = inp.iterator(); j.hasNext();) {
-					System.out.println("	in par id: " + ((ParameterType)j.next()).getId());
+					System.out.println("	in par id: " + ((ParameterType) j.next()).getId());
 				}
 			}
 
-			List evaluationTypes = evaluationTypeDatabase.retrieveAll();
+			Collection evaluationTypes = evaluationTypeDatabase.retrieveAll();
 			EvaluationType et;
 			for (Iterator i = evaluationTypes.iterator(); i.hasNext();) {
-				et = (EvaluationType)i.next();
+				et = (EvaluationType) i.next();
 				System.out.println("id: " + et.getId() + ", codename: " + et.getCodename() + ", description: " + et.getDescription());
-				List inp = et.getInParameterTypes();
+				Collection inp = et.getInParameterTypes();
 				for (Iterator j = inp.iterator(); j.hasNext();) {
-					System.out.println("	in par id: " + ((ParameterType)j.next()).getId());
+					System.out.println("	in par id: " + ((ParameterType) j.next()).getId());
 				}
 			}
 		}
@@ -561,15 +555,13 @@ public final class MeasurementServerSetup {
 	}
 
 	private static ParameterType createParameterType(Identifier creatorId,
-																									 String codename,
-																									 String description,
-																									 String name) {
+			String codename,
+			String description,
+			String name,
+			DataType dataType) {
 		try {
-			ParameterType parameterType = ParameterType.createInstance(creatorId,
-						codename,
-						description,
-						name);
-			parameterType.insert();
+			ParameterType parameterType = ParameterType.createInstance(creatorId, codename, description, name, dataType);
+			GeneralDatabaseContext.getParameterTypeDatabase().insert(parameterType);
 			return parameterType;
 		}
 		catch (Exception e) {
@@ -579,10 +571,10 @@ public final class MeasurementServerSetup {
 	}
 
 	private static void createMeasurementType(Identifier creatorId,
-											  String codename,
-											  String description,
-											  List inParameterTypes,
-											  List outParameterTypes) {
+			String codename,
+			String description,
+			List inParameterTypes,
+			List outParameterTypes) {
 		try {
 			MeasurementType measurementType = MeasurementType.createInstance(creatorId,
 					codename,
@@ -590,7 +582,7 @@ public final class MeasurementServerSetup {
 					inParameterTypes,
 					outParameterTypes,
 					new ArrayList());
-			measurementType.insert();
+			MeasurementDatabaseContext.getMeasurementTypeDatabase().insert(measurementType);
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -598,12 +590,12 @@ public final class MeasurementServerSetup {
 	}
 
 	private static void createAnalysisType(Identifier creatorId,
-										   String codename,
-										   String description,
-										   List inParameterTypes,
-										   List criParameterTypes,
-										   List	etaParameterTypes,
-										   List outParameterTypes) {
+			String codename,
+			String description,
+			List inParameterTypes,
+			List criParameterTypes,
+			List etaParameterTypes,
+			List outParameterTypes) {
 		try {
 			AnalysisType analysisType = AnalysisType.createInstance(creatorId,
 					codename,
@@ -612,7 +604,7 @@ public final class MeasurementServerSetup {
 					criParameterTypes,
 					etaParameterTypes,
 					outParameterTypes);
-			analysisType.insert();
+			MeasurementDatabaseContext.getAnalysisTypeDatabase().insert(analysisType);
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -620,12 +612,12 @@ public final class MeasurementServerSetup {
 	}
 
 	private static void createEvaluationType(Identifier creatorId,
-											 String codename,
-											 String description,
-											 List inParameterTypes,
-											 List thrParameterTypes,
-											 List	etaParameterTypes,
-											 List outParameterTypes) {
+			String codename,
+			String description,
+			List inParameterTypes,
+			List thrParameterTypes,
+			List etaParameterTypes,
+			List outParameterTypes) {
 		try {
 			EvaluationType evaluationType = EvaluationType.createInstance(creatorId,
 					codename,
@@ -634,7 +626,7 @@ public final class MeasurementServerSetup {
 					thrParameterTypes,
 					etaParameterTypes,
 					outParameterTypes);
-			evaluationType.insert();
+			MeasurementDatabaseContext.getEvaluationTypeDatabase().insert(evaluationType);
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -646,12 +638,7 @@ public final class MeasurementServerSetup {
 		meIds.add(monitoredElement.getId());
 		Set parameterSet = createParameterSet(creatorId, meIds);
 		Set criteriaSet = createCriteriaSet(creatorId, meIds);
-		MeasurementSetup measurementSetup = createMeasurementSetup(creatorId,
-			parameterSet,
-			null,
-			null,
-			null,
-			meIds);
+		MeasurementSetup measurementSetup = createMeasurementSetup(creatorId, parameterSet, null, null, null, meIds);
 		List msIds = new ArrayList(1);
 		msIds.add(measurementSetup.getId());
 		createOnetimeTest(creatorId, monitoredElement, msIds);
@@ -662,15 +649,26 @@ public final class MeasurementServerSetup {
 	}
 
 	private static Set createParameterSet(Identifier creatorId, List monitoredElementIds) {
-		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase)GeneralDatabaseContext.getParameterTypeDatabase());
-		
+		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase());
+
 		try {
-			ParameterType wvlenParam = parameterTypeDatabase.retrieveForCodename(CODENAME_REF_WVLEN);
-			ParameterType trclenParam = parameterTypeDatabase.retrieveForCodename(CODENAME_REF_TRCLEN);
-			ParameterType resParam = parameterTypeDatabase.retrieveForCodename(CODENAME_REF_RES);
-			ParameterType pulswdParam = parameterTypeDatabase.retrieveForCodename(CODENAME_REF_PULSWD);
-			ParameterType iorParam = parameterTypeDatabase.retrieveForCodename(CODENAME_REF_IOR);
-			ParameterType scansParam = parameterTypeDatabase.retrieveForCodename(CODENAME_REF_SCANS);
+			TypicalCondition tc = new TypicalCondition(ParameterTypeCodenames.TRACE_WAVELENGTH, OperationSort.OPERATION_EQUALS, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType wvlenParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+
+			tc = new TypicalCondition(ParameterTypeCodenames.TRACE_LENGTH, OperationSort.OPERATION_EQUALS, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType trclenParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			
+			tc = new TypicalCondition(ParameterTypeCodenames.TRACE_RESOLUTION, OperationSort.OPERATION_EQUALS, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType resParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			
+			tc = new TypicalCondition(ParameterTypeCodenames.TRACE_PULSE_WIDTH, OperationSort.OPERATION_EQUALS, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType pulswdParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			
+			tc = new TypicalCondition(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION, OperationSort.OPERATION_EQUALS, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType iorParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			
+			tc = new TypicalCondition(ParameterTypeCodenames.TRACE_AVERAGE_COUNT, OperationSort.OPERATION_EQUALS, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType scansParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
 
 			SetParameter[] params = new SetParameter[6];
 			params[0] = SetParameter.createInstance(wvlenParam, new ByteArray((int) 1625).getBytes());
@@ -690,7 +688,7 @@ public final class MeasurementServerSetup {
 					"Set of measurement parameters",
 					params,
 					monitoredElementIds);
-			set.insert();
+			MeasurementDatabaseContext.getSetDatabase().insert(set);
 			return set;
 		}
 		catch (Exception e) {
@@ -700,17 +698,61 @@ public final class MeasurementServerSetup {
 	}
 
 	private static Set createCriteriaSet(Identifier creatorId, List monitoredElementIds) {
-		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase)GeneralDatabaseContext.getParameterTypeDatabase());
+		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase());
 		try {
-			ParameterType tacticParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_TACTIC);
-			ParameterType eventsizeParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_EVENT_SIZE);
-			ParameterType connfallParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_CONN_FALL_PARAMS);
-			ParameterType minlevelParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MIN_LEVEL);
-			ParameterType maxlevelnoiseParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MAX_LEVEL_NOISE);
-			ParameterType minlevelendParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MIN_LEVEL_TO_FIND_END);
-			ParameterType minweldParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MIN_WELD);
-			ParameterType minconnectorParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MIN_CONNECTOR);
-			ParameterType strategyParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_STRATEGY);
+			TypicalCondition tc = new TypicalCondition(ParameterTypeCodenames.WAVELET_TYPE,
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType tacticParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+
+			tc = new TypicalCondition(ParameterTypeCodenames.EVENT_SIZE,
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType eventsizeParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+
+			tc = new TypicalCondition(ParameterTypeCodenames.CONNECTOR_FORM_FACTOR,
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType connfallParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+
+			tc = new TypicalCondition(ParameterTypeCodenames.MIN_EVENT_LEVEL,
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType minlevelParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+
+			tc = new TypicalCondition(ParameterTypeCodenames.MAX_NOISE_LEVEL,
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType maxlevelnoiseParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+
+			tc = new TypicalCondition(ParameterTypeCodenames.MIN_END_LEVEL,
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType minlevelendParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+
+			tc = new TypicalCondition(ParameterTypeCodenames.MIN_SPLICE,
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType minweldParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+
+			tc = new TypicalCondition(ParameterTypeCodenames.MIN_CONNECTOR,
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType minconnectorParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+
+			tc = new TypicalCondition(ParameterTypeCodenames.STRATEGY,
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
+			ParameterType strategyParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
 
 			SetParameter[] params = new SetParameter[9];
 			params[0] = SetParameter.createInstance(tacticParam, new ByteArray((int) 1).getBytes());
@@ -736,7 +778,7 @@ public final class MeasurementServerSetup {
 					"Set of criteria",
 					params,
 					monitoredElementIds);
-			set.insert();
+			MeasurementDatabaseContext.getSetDatabase().insert(set);
 			return set;
 		}
 		catch (Exception e) {
@@ -746,11 +788,11 @@ public final class MeasurementServerSetup {
 	}
 
 	private static MeasurementSetup createMeasurementSetup(Identifier creatorId,
-														   Set parameterSet,
-														   Set criteriaSet,
-														   Set thresholdSet,
-														   Set etalon,
-														   List monitoredElementIds) {
+			Set parameterSet,
+			Set criteriaSet,
+			Set thresholdSet,
+			Set etalon,
+			List monitoredElementIds) {
 		try {
 			MeasurementSetup mSetup = MeasurementSetup.createInstance(creatorId,
 					parameterSet,
@@ -760,7 +802,7 @@ public final class MeasurementServerSetup {
 					"created by MeasurementSetupTestCase",
 					1000 * 60 * 10,
 					monitoredElementIds);
-			mSetup.insert();
+			MeasurementDatabaseContext.getMeasurementSetupDatabase().insert(mSetup);
 			return mSetup;
 		}
 		catch (Exception e) {
@@ -773,10 +815,8 @@ public final class MeasurementServerSetup {
 		try {
 			String[] strings = new String[1];
 			strings[0] = "*/10 * * * *";
-			TemporalPattern temporalPattern = TemporalPattern.createInstance(creatorId,
-				"TemporalPattern",
-				strings);
-			TemporalPattern temporalPattern1 = new TemporalPattern((TemporalPattern_Transferable)temporalPattern.getTransferable());
+			TemporalPattern temporalPattern = TemporalPattern.createInstance(creatorId, "TemporalPattern", strings);
+			TemporalPattern temporalPattern1 = new TemporalPattern((TemporalPattern_Transferable) temporalPattern.getTransferable());
 			return temporalPattern1;
 		}
 		catch (Exception e) {
@@ -785,30 +825,33 @@ public final class MeasurementServerSetup {
 		}
 	}
 
-	private static Test createOnetimeTest(Identifier creatorId,
-																				MonitoredElement monitoredElement,
-																				List measurementSetupIds) {
-		AnalysisTypeDatabase analysisTypeDatabase = ((AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase());
-		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase());
-		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase());
+	private static Test createOnetimeTest(Identifier creatorId, MonitoredElement monitoredElement, List measurementSetupIds) {
+		AnalysisTypeDatabase analysisTypeDatabase = ((AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase());
+		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase) MeasurementDatabaseContext.getEvaluationTypeDatabase());
+		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase());
 		try {
-			MeasurementType measurementType = measurementTypeDatabase.retrieveForCodename(CODENAME_MEASUREMENT_TYPE_REFLECTOMETRY);
-			AnalysisType analysisType = analysisTypeDatabase.retrieveForCodename(CODENAME_ANALYSIS_TYPE_DADARA);
-			EvaluationType evaluationType = evaluationTypeDatabase.retrieveForCodename(CODENAME_EVALUATION_TYPE_DADARA);
+			TypicalCondition tc = new TypicalCondition(MeasurementType.CODENAME_REFLECTOMETRY, OperationSort.OPERATION_EQUALS, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			MeasurementType measurementType = (MeasurementType) measurementTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+
+			tc = new TypicalCondition(AnalysisType.CODENAME_DADARA, OperationSort.OPERATION_EQUALS, ObjectEntities.ANALYSISTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			AnalysisType analysisType = (AnalysisType) analysisTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+
+			tc = new TypicalCondition(EvaluationType.CODENAME_DADARA, OperationSort.OPERATION_EQUALS, ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			EvaluationType evaluationType = (EvaluationType) evaluationTypeDatabase.retrieveByCondition(null, tc).iterator().next();
 
 			Test test = Test.createInstance(creatorId,
-				new Date(System.currentTimeMillis()),
-				null,
-				null,
-				TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME,
-				measurementType,
-				analysisType,
-				evaluationType,
-				monitoredElement,
-				TestReturnType.TEST_RETURN_TYPE_WHOLE,
-				"Onetime test",
-				measurementSetupIds);
-			test.insert();
+					new Date(System.currentTimeMillis()),
+					null,
+					null,
+					TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME,
+					measurementType,
+					analysisType,
+					evaluationType,
+					monitoredElement,
+					TestReturnType.TEST_RETURN_TYPE_WHOLE,
+					"Onetime test",
+					measurementSetupIds);
+			MeasurementDatabaseContext.getTestDatabase().insert(test);
 			return test;
 		}
 		catch (Exception e) {
@@ -818,16 +861,21 @@ public final class MeasurementServerSetup {
 	}
 
 	private static Test createPeriodicalTest(Identifier creatorId,
-											 TemporalPattern temporalPattern,
-											 MonitoredElement monitoredElement,
-											 List measurementSetupIds) {
-		AnalysisTypeDatabase analysisTypeDatabase = ((AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase());
-		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase());
-		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase());
+			TemporalPattern temporalPattern,
+			MonitoredElement monitoredElement,
+			List measurementSetupIds) {
+		AnalysisTypeDatabase analysisTypeDatabase = ((AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase());
+		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase) MeasurementDatabaseContext.getEvaluationTypeDatabase());
+		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase());
 		try {
-			MeasurementType measurementType = measurementTypeDatabase.retrieveForCodename(CODENAME_MEASUREMENT_TYPE_REFLECTOMETRY);
-			AnalysisType analysisType = analysisTypeDatabase.retrieveForCodename(CODENAME_ANALYSIS_TYPE_DADARA);
-			EvaluationType evaluationType = evaluationTypeDatabase.retrieveForCodename(CODENAME_EVALUATION_TYPE_DADARA);
+			TypicalCondition tc = new TypicalCondition(MeasurementType.CODENAME_REFLECTOMETRY, OperationSort.OPERATION_EQUALS, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			MeasurementType measurementType = (MeasurementType) measurementTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+
+			tc = new TypicalCondition(AnalysisType.CODENAME_DADARA, OperationSort.OPERATION_EQUALS, ObjectEntities.ANALYSISTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			AnalysisType analysisType = (AnalysisType) analysisTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+
+			tc = new TypicalCondition(EvaluationType.CODENAME_DADARA, OperationSort.OPERATION_EQUALS, ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			EvaluationType evaluationType = (EvaluationType) evaluationTypeDatabase.retrieveByCondition(null, tc).iterator().next();
 
 			Test test = Test.createInstance(creatorId,
 					new Date(System.currentTimeMillis()),
@@ -841,7 +889,7 @@ public final class MeasurementServerSetup {
 					TestReturnType.TEST_RETURN_TYPE_WHOLE,
 					"Onetime test",
 					measurementSetupIds);
-			test.insert();
+			MeasurementDatabaseContext.getTestDatabase().insert(test);
 			return test;
 		}
 		catch (Exception e) {
@@ -853,7 +901,7 @@ public final class MeasurementServerSetup {
 	private static void establishDatabaseConnection() {
 		String dbHostName = ApplicationProperties.getString("DBHostName", Application.getInternetAddress());
 		String dbSid = ApplicationProperties.getString("DBSID", DB_SID);
-		long dbConnTimeout = ApplicationProperties.getInt("DBConnectionTimeout", DB_CONNECTION_TIMEOUT)*1000;
+		long dbConnTimeout = ApplicationProperties.getInt("DBConnectionTimeout", DB_CONNECTION_TIMEOUT) * 1000;
 		String dbLoginName = ApplicationProperties.getString("DBLoginName", DB_LOGIN_NAME);
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);

@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.26 2005/01/19 20:57:34 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.27 2005/02/15 12:36:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.mserver;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -90,7 +91,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/01/19 20:57:34 $
+ * @version $Revision: 1.27 $, $Date: 2005/02/15 12:36:13 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -566,17 +567,17 @@ public class MServerImplementation extends MServerPOA {
     public Measurement_Transferable[] transmitMeasurements(Identifier_Transferable[] id_Transferables) throws AMFICOMRemoteException  {
         
         try {
-            List list;
+            Collection collection;
             List idsList = new ArrayList(id_Transferables.length);
             for (int i = 0; i < id_Transferables.length; i++) {
                 idsList.add(new Identifier(id_Transferables[i]));
             }
             
-            list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+            collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
             
-            Measurement_Transferable[] transferables = new Measurement_Transferable[list.size()];
+            Measurement_Transferable[] transferables = new Measurement_Transferable[collection.size()];
             int i = 0;
-            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+            for (Iterator it = collection.iterator(); it.hasNext(); i++) {
                 Measurement measurement = (Measurement) it.next();
                 transferables[i] = (Measurement_Transferable) measurement.getTransferable();
             }
@@ -599,18 +600,18 @@ public class MServerImplementation extends MServerPOA {
             LinkedIdsCondition_Transferable linkedIdsCondition_Transferable,
             Identifier_Transferable[] identifier_Transferables) throws AMFICOMRemoteException {
         try {            
-            List list;
+            Collection collection;
             if (identifier_Transferables.length > 0) {
                 List idsList = new ArrayList(identifier_Transferables.length);
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
-                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
+                collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
             } else 
-                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
+                collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
 
-            Measurement_Transferable[] transferables = new Measurement_Transferable[list.size()];
+            Measurement_Transferable[] transferables = new Measurement_Transferable[collection.size()];
             int i = 0;
-            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+            for (Iterator it = collection.iterator(); it.hasNext(); i++) {
                 Measurement measurement = (Measurement) it.next();
                 transferables[i] = (Measurement_Transferable) measurement.getTransferable();
             }
@@ -661,17 +662,17 @@ public class MServerImplementation extends MServerPOA {
     public Analysis_Transferable[] transmitAnalyses(Identifier_Transferable[] id_Transferables) throws AMFICOMRemoteException  {
         
         try {
-            List list;
+            Collection collection;
             List idsList = new ArrayList(id_Transferables.length);
             for (int i = 0; i < id_Transferables.length; i++) {
                 idsList.add(new Identifier(id_Transferables[i]));
             }
             
-            list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+            collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
             
-            Analysis_Transferable[] transferables = new Analysis_Transferable[list.size()];
+            Analysis_Transferable[] transferables = new Analysis_Transferable[collection.size()];
             int i = 0;
-            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+            for (Iterator it = collection.iterator(); it.hasNext(); i++) {
                 Analysis analysis = (Analysis) it.next();
                 transferables[i] = (Analysis_Transferable) analysis.getTransferable();
             }
@@ -695,18 +696,18 @@ public class MServerImplementation extends MServerPOA {
             Identifier_Transferable[] identifier_Transferables)
             throws AMFICOMRemoteException {
         try {            
-            List list;
+            Collection collection;
             if (identifier_Transferables.length > 0) {
                 List idsList = new ArrayList(identifier_Transferables.length);
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
-                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
+                collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
             } else 
-                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
+                collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
 
-            Analysis_Transferable[] transferables = new Analysis_Transferable[list.size()];
+            Analysis_Transferable[] transferables = new Analysis_Transferable[collection.size()];
             int i = 0;
-            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+            for (Iterator it = collection.iterator(); it.hasNext(); i++) {
                 Analysis analysis = (Analysis) it.next();
                 transferables[i] = (Analysis_Transferable) analysis.getTransferable();
             }
@@ -776,17 +777,17 @@ public class MServerImplementation extends MServerPOA {
     public Evaluation_Transferable[] transmitEvaluations(Identifier_Transferable[] id_Transferables) throws AMFICOMRemoteException  {
         
         try {
-            List list;
+            Collection collection;
             List idsList = new ArrayList(id_Transferables.length);
             for (int i = 0; i < id_Transferables.length; i++) {
                 idsList.add(new Identifier(id_Transferables[i]));
             }
             
-            list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
+            collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
             
-            Evaluation_Transferable[] transferables = new Evaluation_Transferable[list.size()];
+            Evaluation_Transferable[] transferables = new Evaluation_Transferable[collection.size()];
             int i = 0;
-            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+            for (Iterator it = collection.iterator(); it.hasNext(); i++) {
                 Evaluation evaluation = (Evaluation) it.next();
                 transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
             }
@@ -809,18 +810,18 @@ public class MServerImplementation extends MServerPOA {
             LinkedIdsCondition_Transferable linkedIdsCondition_Transferable,
             Identifier_Transferable[] identifier_Transferables) throws AMFICOMRemoteException {
         try {            
-            List list;
+            Collection collection;
             if (identifier_Transferables.length > 0) {
                 List idsList = new ArrayList(identifier_Transferables.length);
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
-                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
+                collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
             } else 
-                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
+                collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
 
-            Evaluation_Transferable[] transferables = new Evaluation_Transferable[list.size()];
+            Evaluation_Transferable[] transferables = new Evaluation_Transferable[collection.size()];
             int i = 0;
-            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+            for (Iterator it = collection.iterator(); it.hasNext(); i++) {
                 Evaluation evaluation = (Evaluation) it.next();
                 transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
             }
