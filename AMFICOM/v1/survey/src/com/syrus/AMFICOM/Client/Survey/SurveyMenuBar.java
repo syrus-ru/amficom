@@ -388,7 +388,7 @@ public class SurveyMenuBar extends JMenuBar
 		menuToolsLock.addActionListener(actionAdapter);
 		menuToolsStyle.setText(LangModelSurvey.getString("Style"));
 		menuToolsStyle.setName("menuToolsStyle");
-		menuToolsStyleText.setText(LangModelSurvey.getString("menuToolsStyleText"));
+		menuToolsStyleText.setText(LangModelSurvey.getString("Style"));
 		menuToolsStyleText.setName("menuToolsStyleText");
 		menuToolsStyleText.addActionListener(actionAdapter);
 		menuToolsStyleGraph.setText(LangModelSurvey.getString("Graphics"));
