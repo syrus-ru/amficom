@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicSeqContainer.java,v 1.1 2004/12/21 15:35:01 bass Exp $
+ * $Id: CharacteristicSeqContainer.java,v 1.2 2005/01/20 09:58:02 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,12 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.Characteristic;
+import com.syrus.AMFICOM.general.Characteristic;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/12/21 15:35:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/20 09:58:02 $
  * @module scheme_v1
  */
 public final class CharacteristicSeqContainer {

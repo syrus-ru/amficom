@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImpl.java,v 1.10 2004/12/22 11:07:45 bass Exp $
+ * $Id: SchemeImpl.java,v 1.11 2005/01/20 09:58:02 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
@@ -20,7 +20,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2004/12/22 11:07:45 $
+ * @version $Revision: 1.11 $, $Date: 2005/01/20 09:58:02 $
  * @module scheme_v1
  */
 final class SchemeImpl extends Scheme implements Cloneable {
@@ -73,20 +73,23 @@ final class SchemeImpl extends Scheme implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see com.syrus.AMFICOM.administration.ComSyrusAmficomAdministrationScheme#domain()
+	 */
 	public Domain_Transferable domain() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param newDomain
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationScheme#domain(com.syrus.AMFICOM.configuration.corba.Domain_Transferable)
+	 * @see com.syrus.AMFICOM.administration.ComSyrusAmficomAdministrationScheme#domain(com.syrus.AMFICOM.administration.corba.Domain_Transferable)
 	 */
 	public void domain(Domain_Transferable newDomain) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationScheme#domainImpl()
+	 * @see com.syrus.AMFICOM.administration.ComSyrusAmficomAdministrationScheme#domainImpl()
 	 */
 	public Domain domainImpl() {
 		throw new UnsupportedOperationException();
@@ -94,7 +97,7 @@ final class SchemeImpl extends Scheme implements Cloneable {
 
 	/**
 	 * @param newDomainImpl
-	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationScheme#domainImpl(com.syrus.AMFICOM.configuration.Domain)
+	 * @see com.syrus.AMFICOM.administration.ComSyrusAmficomAdministrationScheme#domainImpl(com.syrus.AMFICOM.administration.Domain)
 	 */
 	public void domainImpl(Domain newDomainImpl) {
 		throw new UnsupportedOperationException();

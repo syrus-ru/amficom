@@ -1,4 +1,5 @@
 classes
+lib
 .classpath
 .project
 .settings
@@ -9,6 +10,7 @@ test
 *.swp
 *.tar
 *.gz
+*.bz2
 *.jar
 *.jardesc
 *.jpr
@@ -16,3 +18,4 @@ test
 *.zip
 *.rar
 build.bat
+.#*

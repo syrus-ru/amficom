@@ -1,11 +1,9 @@
 MODULE_NAME := scheme_v1
 
 LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
-ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
+ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.bz2
 
 IDLDIR=../idl_v1/idl
-
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar
 
 JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4
@@ -13,15 +11,6 @@ JIKESFLAGS = -target 1.4.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-
-JAVAC=javac
-JAVACFLAGS=-O \
-	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
-	-d $(CLASSDIR) \
-	-deprecation \
-	-encoding $(ENCODING) \
-	-extdirs $(JAVA_HOME)/jre/lib/ext \
-	-g
 
 # Directories that contain both hand-written and generated files.
 DIRS_TO_SCRUB = \
@@ -55,7 +44,7 @@ $(LIBNAME): .mach
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		-classpath $(AMFICOMCLASSPATH):$(CLASSDIR) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
 	touch $@
 
@@ -64,7 +53,9 @@ idl: .idl
 
 # Just idl-to-java compilation
 .idl: $(SRCDIR)
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-administration.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-configuration.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-general.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-map.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-resource.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme-vt.idl
@@ -77,17 +68,21 @@ corba: .corba
 # Compilation of stubs & skeletons
 .corba:	$(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH) \
+		-classpath $(AMFICOMCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/*.java
 	touch $@
 
+$(SRCDIR):
 $(CLASSDIR):
+$(LIBDIR):
 	mkdir -p $@
 
 .PHONY: idlclean
 idlclean:
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/administration
 	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/configuration
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/general
 	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/map
 	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/resource
 	$(RM) -r $(IDL_GENERATED_SCHEMA_SOURCES)
@@ -104,7 +99,9 @@ cleanmach: cleancorba
 
 .PHONY: cleancorba
 cleancorba: idlclean
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/administration
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/configuration
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/general
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/map
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/resource
 	$(RM) -r $(IDL_GENERATED_SCHEMA_CLASSES)
@@ -112,19 +109,39 @@ cleancorba: idlclean
 
 #### Install ####
 .PHONY:	install
-install: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)
+install: $(LIBNAME) $(LIBDIR)
+	$(CP) $<
 
-#### Archive ####
-.PHONY:	arch
-arch:
-	echo $(IDL_GENERATED_SCHEMA_SOURCES)
-	tar -czvf $(ARCHFILE) \
+#### Uninstall ####
+.PHONY: uninstall
+uninstall: $(LIBDIR)/$(LIBNAME)
+	$(RM) $<
+
+#### Distribution ####
+.PHONY: dist
+dist:
+	-ln -s \
+		$(IDLDIR)/scheme-administration.idl \
 		$(IDLDIR)/scheme-configuration.idl \
-		$(IDLDIR)/scheme-java.idl \
+		$(IDLDIR)/scheme-general.idl \
 		$(IDLDIR)/scheme-map.idl \
 		$(IDLDIR)/scheme-resource.idl \
 		$(IDLDIR)/scheme-vt.idl \
+		.
+	tar ch \
+		scheme-administration.idl \
+		scheme-configuration.idl \
+		scheme-general.idl \
+		scheme-map.idl \
+		scheme-resource.idl \
+		scheme-vt.idl \
 		Makefile \
+		README \
 		$(SRCDIR)/com/syrus/AMFICOM/scheme/*.java \
-		$(filter-out $(wildcard $(IDL_GENERATED_SCHEMA_SOURCES)), $(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/corba/*.java))
+		$(filter-out $(wildcard $(IDL_GENERATED_SCHEMA_SOURCES)), $(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/corba/*.java)) \
+		| bzip2 -9 >$(ARCHFILE)
+	$(RM) *.idl
+
+#### Archive ####
+.PHONY:	arch
+arch: dist

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePathImpl.java,v 1.9 2004/12/22 10:00:13 bass Exp $
+ * $Id: SchemePathImpl.java,v 1.10 2005/01/20 09:58:02 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,14 @@ package com.syrus.AMFICOM.scheme.corba;
 
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2004/12/22 10:00:13 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/20 09:58:02 $
  * @module scheme_v1
  */
 final class SchemePathImpl extends SchemePath implements Cloneable {
@@ -29,7 +30,7 @@ final class SchemePathImpl extends SchemePath implements Cloneable {
 
 	/**
 	 * @param characteristic
-	 * @see com.syrus.AMFICOM.configuration.Characterizable#addCharacteristic(Characteristic)
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
 	 */
 	public void addCharacteristic(final Characteristic characteristic) {
 		throw new UnsupportedOperationException();
@@ -184,7 +185,7 @@ final class SchemePathImpl extends SchemePath implements Cloneable {
 
 	/**
 	 * @param characteristic
-	 * @see com.syrus.AMFICOM.configuration.Characterizable#removeCharacteristic(Characteristic)
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(Characteristic)
 	 */
 	public void removeCharacteristic(final Characteristic characteristic) {
 		throw new UnsupportedOperationException();
