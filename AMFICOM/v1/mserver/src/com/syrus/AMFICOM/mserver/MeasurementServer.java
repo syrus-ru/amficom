@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.15 2004/08/29 13:38:02 bob Exp $
+ * $Id: MeasurementServer.java,v 1.16 2004/08/30 14:41:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.configuration.Server;
+import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestDatabase;
@@ -37,7 +38,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/29 13:38:02 $
+ * @version $Revision: 1.16 $, $Date: 2004/08/30 14:41:50 $
  * @author $Author: bob $
  * @module mserver_v1
  */
@@ -232,7 +233,7 @@ public class MeasurementServer extends SleepButWorkThread {
 	}
 	
 	private static void fillMCMTestQueueMap() {
-		TestDatabase testDatabase = TestDatabase.getInstance();
+		TestDatabase testDatabase = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
 		Identifier mcmId;
 		List tests = null;
 //		synchronized (mcmTestQueueMap) {

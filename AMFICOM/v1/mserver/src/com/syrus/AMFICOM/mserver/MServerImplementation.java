@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.10 2004/08/23 20:48:36 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.11 2004/08/30 14:41:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -81,8 +81,8 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/23 20:48:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2004/08/30 14:41:50 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 
@@ -302,6 +302,10 @@ public class MServerImplementation extends MServerPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (Exception e)  {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException();
 		}
 	}
 
