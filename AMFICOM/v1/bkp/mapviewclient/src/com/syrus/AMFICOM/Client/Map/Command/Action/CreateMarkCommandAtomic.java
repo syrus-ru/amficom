@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommand.java,v 1.4 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: CreateMarkCommandAtomic.java,v 1.1 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,6 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
@@ -28,24 +27,30 @@ import java.awt.geom.Point2D;
 import java.util.Iterator;
 
 /**
- * Разместить элемент типа mpe на карте. используется при переносе 
- * (drag/drop), в точке point (в экранных координатах)
+ * Команда создания метки на линии
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.1 $, $Date: 2004/10/18 15:33:00 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public class CreateMarkCommand extends MapActionCommand
+public class CreateMarkCommandAtomic extends MapActionCommand
 {
+	/**
+	 * созданный элемент метки
+	 */
+	MapMarkElement mark;
+
 	/**
 	 * Выбранный фрагмент линии
 	 */
-	MapMarkElement mark;
 	MapPhysicalLinkElement link;
 	
 	Map map;
 	
+	/**
+	 * дистанция от начала линии, на которой создается метка
+	 */
 	double distance;
 	
 	/**
@@ -53,7 +58,7 @@ public class CreateMarkCommand extends MapActionCommand
 	 */
 	Point point;
 
-	public CreateMarkCommand(
+	public CreateMarkCommandAtomic(
 			MapPhysicalLinkElement link,
 			Point point)
 	{
@@ -64,18 +69,20 @@ public class CreateMarkCommand extends MapActionCommand
 
 	public void execute()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
 
 		if ( !getLogicalNetLayer().getContext().getApplicationModel()
 				.isEnabled("mapActionCreateEquipment"))
 			return;
 		
-		DataSourceInterface dataSource = aContext.getDataSource();
-	
-		Point2D.Double coordinatePoint = logicalNetLayer.convertScreenToMap(point);
-		
 		map = logicalNetLayer.getMapView().getMap();
 
+//		Point2D.Double coordinatePoint = logicalNetLayer.convertScreenToMap(point);
+		
 		link.sortNodeLinks();
 		distance = 0.0;
 		MapNodeElement node = link.getStartNode();

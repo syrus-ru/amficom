@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.11 2004/10/15 14:09:21 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.12 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,13 +63,14 @@ import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Управляет отображением логической структуры сети.
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/10/15 14:09:21 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/18 15:33:00 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -762,7 +763,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		if(ae.getActionCommand().equals(MapEvent.MAP_CHANGED))
 		{
-			List selectedElements = getMapView().getMap().getSelectedElements();
+			Set selectedElements = getMapView().getMap().getSelectedElements();
 			if(selectedElements.size() > 1)
 			{
 				MapSelection sel;
@@ -783,7 +784,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 				if(getCurrentMapElement() instanceof MapSelection)
 				{
-					MapElement me = (MapElement )selectedElements.get(0);
+					MapElement me = (MapElement )selectedElements.iterator().next();
 					setCurrentMapElement(me);
 					this.sendMapEvent(new MapEvent(me, MapEvent.MAP_ELEMENT_SELECTED));
 				}
@@ -1671,7 +1672,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	/**
 	 * Получить список выбранных элементов
 	 */	
-	public List getSelectedElements()
+	public Set getSelectedElements()
 	{
 /*
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getSelectedElements()");
@@ -1984,7 +1985,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				new ImageResource("cableinlet", "cableinlet", "images/cableinlet.gif"));
 
 			mnpe = new MapNodeProtoElement(
-				MapNodeProtoElement.WELL,
+				MapNodeProtoElement.CABLE_INLET,
 				LangModelMap.getString("CableInlet"),
 				true,
 				"cableinlet",

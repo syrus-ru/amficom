@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.4 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.5 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/18 15:33:00 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -145,8 +145,7 @@ public class MapSaveAsCommand extends VoidCommand
 /*
 			if(!mc2.scheme_id.equals(mc.scheme_id))
 			{
-				Pool.removeHash("schemeclonedids");
-				Pool.removeHash("mapclonedids");
+				Pool.removeHash(MapPropertiesManager.MAP_CLONED_IDS);
 			}
 */
 			Pool.put( mc2.getTyp(), mc2.getId(), mc2);

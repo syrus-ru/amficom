@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelection.java,v 1.7 2004/10/15 14:09:21 krupenn Exp $
+ * $Id: MapSelection.java,v 1.8 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/15 14:09:21 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -160,12 +160,12 @@ public final class MapSelection extends StubResource
 
 	public boolean isSelected()
 	{
-		return true;
+		throw new UnsupportedOperationException();
 	}
 
 	public MapElementState getState()
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public void setSelected(boolean selected)
@@ -179,6 +179,7 @@ public final class MapSelection extends StubResource
 
 	public void setId(String id)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public String getName()
@@ -188,6 +189,7 @@ public final class MapSelection extends StubResource
 
 	public void setName(String name)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean isVisible(Rectangle2D.Double visibleBounds)
@@ -215,11 +217,6 @@ public final class MapSelection extends StubResource
 		return true;
 	}
 
-	public boolean isMovable()
-	{
-		return true;
-	}
-	
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
 	public static String getPropertyPaneClassName()
@@ -234,11 +231,12 @@ public final class MapSelection extends StubResource
 
 	public Object clone(DataSourceInterface dataSource)
 	{
-		return null;
+		throw new UnsupportedOperationException();
 	}
 	
 	public void revert(MapElementState state)
 	{
+		throw new UnsupportedOperationException();
 	}
 	
 	public List getElements()

@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.3 2004/10/14 15:39:05 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.4 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/14 15:39:05 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -63,7 +63,11 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 	
 	public void execute()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
 
 		DataSourceInterface dataSource = getLogicalNetLayer().getContext().getDataSource();
 

@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.3 2004/10/14 15:39:05 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.4 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,13 +26,13 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * В данном классе реализуется алгоритм удаления NodeLink. В зависимости
+ * В данном классе реализуется алгоритм удаления связи. В зависимости
  * от того, какие конечные точки на концах происходит операция удаления 
  * фрагментов линий, линий, узлов  (и путей). Команда
  * состоит из последовательности атомарных действий
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/14 15:39:05 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -58,10 +58,14 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 
 	public void execute()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
 		
-		// фрагмент может быть удален в результате атомарной команды в составе
-		// другой команды удаления, в этом случае у него будет выставлен
+		// связь может быть удалена в результате атомарной команды в составе
+		// другой команды удаления, в этом случае у неё будет выставлен
 		// флаг isRemoved
 		if(link.isRemoved())
 			return;
@@ -73,6 +77,7 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 
 		link.sortNodes();
 		
+		/// удаляются все топологические узлы линии
 		for(Iterator it = link.getSortedNodes().iterator(); it.hasNext();)
 		{
 			MapNodeElement ne = (MapNodeElement )it.next();
@@ -83,14 +88,18 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 			}
 		}
 		
+		// удаляются все фрагменты линии
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{
 			MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
 			super.removeNodeLink(nodeLink);
 		}
 		
+		// удаляется сама линия
 		super.removePhysicalLink(link);
 		
+		// проверяются все кабельные пути, которые проходили по удаленной линии,
+		// и прохождение по ней заменяется непривязанной связью
 		for(Iterator it = cablePathsToScan.iterator(); it.hasNext();)
 		{
 			MapCablePathElement cpath = (MapCablePathElement )it.next();

@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.3 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.4 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,11 +11,11 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.geom.Point2D;
 
@@ -25,14 +25,17 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 {
+	/** создаваемый топологический узел */
 	MapPhysicalNodeElement node;
+	
+	/** географические координаты узла */
 	Point2D.Double point;
 	
 	public CreatePhysicalNodeCommandAtomic(Point2D.Double point)
@@ -48,6 +51,12 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 	
 	public void execute()
 	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
+
 		DataSourceInterface dataSource = aContext.getDataSource();
 
 		node = new MapPhysicalNodeElement(

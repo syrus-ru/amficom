@@ -1,5 +1,5 @@
 /**
- * $Id: DefaultMapEditorApplicationModelFactory.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: DefaultMapEditorApplicationModelFactory.java,v 1.3 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -33,9 +33,6 @@ public class DefaultMapEditorApplicationModelFactory
 
 		aModel.setUsable("mapActionViewProperties", true);
 		aModel.setUsable("mapActionEditProperties", true);
-
-//		aModel.setVisible("menuMapOptions", false);
-//		aModel.setVisible("menuMapCatalogue", false);
 
 		aModel.setVisible("menuScheme", false);
 

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMeasurementPathCommandAtomic.java,v 1.2 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: CreateMeasurementPathCommandAtomic.java,v 1.3 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,33 +11,36 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 
 /**
- * создание физической линии, внесение ее в пул и на карту - 
- * атомарное действие 
+ * создание прокладки измерительного пути 
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 {
+	/** создаваемый измерительный путь */
 	MapMeasurementPathElement mp;
 	
+	/** схемный путь */
 	SchemePath path;
 	
+	/** начальный узел */
 	MapNodeElement startNode;
+	
+	/** конечный узел */
 	MapNodeElement endNode;
 	
 	public CreateMeasurementPathCommandAtomic(
@@ -58,6 +61,11 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 	
 	public void execute()
 	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
 		DataSourceInterface dataSource = aContext.getDataSource();
 		
 		mp = new MapMeasurementPathElement(
@@ -69,18 +77,6 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 		Pool.put(MapMeasurementPathElement.typ, mp.getId(), mp);
 
 		logicalNetLayer.getMapView().addMeasurementPath(mp);
-	}
-	
-	public void redo()
-	{
-		logicalNetLayer.getMapView().addMeasurementPath(mp);
-		Pool.put(MapMeasurementPathElement.typ, mp.getId(), mp);
-	}
-	
-	public void undo()
-	{
-		logicalNetLayer.getMapView().removeMeasurementPath(mp);
-		Pool.remove(MapMeasurementPathElement.typ, mp.getId());
 	}
 }
 

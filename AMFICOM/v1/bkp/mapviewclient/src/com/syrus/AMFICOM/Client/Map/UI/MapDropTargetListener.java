@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.3 2004/10/09 13:34:24 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.4 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
@@ -44,7 +44,7 @@ import javax.swing.JOptionPane;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/09 13:34:24 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -118,7 +118,7 @@ public final class MapDropTargetListener implements DropTargetListener
 
 	protected void mapElementDropped(MapNodeProtoElement mpe, Point point)
 	{
-		CreateSiteCommand cmd = new CreateSiteCommand(mpe, point);
+		CreateSiteCommandAtomic cmd = new CreateSiteCommandAtomic(mpe, point);
 		cmd.setLogicalNetLayer(logicalNetLayer);
 		logicalNetLayer.getCommandList().add(cmd);
 		logicalNetLayer.getCommandList().execute();

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandAtomic.java,v 1.3 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: CreateNodeLinkCommandAtomic.java,v 1.4 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,11 +11,11 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
 /**
  * создание фрагмента линии связи, внесение ее в пул и на карту - 
@@ -23,13 +23,16 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class CreateNodeLinkCommandAtomic extends MapActionCommand
 {
+	/**
+	 * создаваемый фрагмент линии
+	 */
 	MapNodeLinkElement nodeLink;
 	
 	MapNodeElement startNode;
@@ -51,6 +54,12 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand
 	
 	public void execute()
 	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
+
 		DataSourceInterface dataSource = aContext.getDataSource();
 
 		nodeLink = new MapNodeLinkElement( 

@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
@@ -80,7 +80,7 @@ public class VoidElementPopupMenu extends MapPopupMenu
 		
 		if(proto != null)
 		{
-			CreateSiteCommand command = new CreateSiteCommand(proto, point);
+			CreateSiteCommandAtomic command = new CreateSiteCommandAtomic(proto, point);
 			command.setLogicalNetLayer(logicalNetLayer);
 			getLogicalNetLayer().getCommandList().add(command);
 			getLogicalNetLayer().getCommandList().execute();

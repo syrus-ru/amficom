@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.12 2004/10/14 15:39:05 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.13 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/10/14 15:39:05 $
+ * @version $Revision: 1.13 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -124,7 +124,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	public Object clone(DataSourceInterface dataSource)
 	{
 /*
-		String cloned_id = (String)Pool.get("mapclonedids", id);
+		String cloned_id = (String)Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
 		if (cloned_id != null)
 			return Pool.get(MapPathElement.typ, cloned_id);
 
@@ -147,11 +147,11 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		mtpe.type_id = type_id;
 
 		Pool.put(MapPathElement.typ, mtpe.getId(), mtpe);
-		Pool.put("mapclonedids", id, mtpe.getId());
+		Pool.put(MapPropertiesManager.MAP_CLONED_IDS, id, mtpe.getId());
 
 		mtpe.physicalLink_ids = new Vector(physicalLink_ids.size());
 		for (int i = 0; i < physicalLink_ids.size(); i++)
-			mtpe.physicalLink_ids.add(Pool.get("mapclonedids", (String )physicalLink_ids.get(i)));
+			mtpe.physicalLink_ids.add(Pool.get(MapPropertiesManager.MAP_CLONED_IDS, (String )physicalLink_ids.get(i)));
 
 		mtpe.attributes = new Hashtable();
 		for(Enumeration enum = attributes.elements(); enum.hasMoreElements();)

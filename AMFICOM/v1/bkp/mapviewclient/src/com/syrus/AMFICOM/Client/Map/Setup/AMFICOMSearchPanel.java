@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.2 2004/10/06 09:27:27 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.3 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,7 +51,7 @@ import javax.swing.table.JTableHeader;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/18 15:33:00 $
  * @author $Author: krupenn $
  * @see
  */
@@ -285,7 +285,7 @@ import javax.swing.table.JTableHeader;
 		int[] selection = table.getSelectedRows();
 		for (int i = 0; i < selection.length; i++)
 		{
-			MapElement mapE = (MapElement )model.getObjectResource(selection[i]);
+			MapElement mapE = (MapElement )model.getObject(selection[i]);
 			mapE.setSelected(true);
 		}
 

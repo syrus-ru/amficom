@@ -322,7 +322,7 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 	 */
 	private void removeBinding()
 	{
-		MapPhysicalLinkElement link = (MapPhysicalLinkElement )model.getObjectResource(table.getSelectedRow());
+		MapPhysicalLinkElement link = (MapPhysicalLinkElement )model.getObject(table.getSelectedRow());
 		MapPhysicalLinkElement previous = path.previousLink(link);
 		if(link instanceof MapUnboundLinkElement)
 		{

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.10 2004/10/14 15:39:05 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.11 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateCollectorCommandAtomic;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.GenerateCablePathCablingCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.GenerateUnboundLinkCablingCommandBundle;
@@ -60,7 +60,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/10/14 15:39:05 $
+ * @version $Revision: 1.11 $, $Date: 2004/10/18 15:33:00 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -351,7 +351,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 
 	protected void convertUnboundNodeToSite(MapUnboundNodeElement unbound, MapNodeProtoElement proto)
 	{
-		CreateSiteCommand command = new CreateSiteCommand(proto, unbound.getAnchor());
+		CreateSiteCommandAtomic command = new CreateSiteCommandAtomic(proto, unbound.getAnchor());
 		command.setLogicalNetLayer(logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();

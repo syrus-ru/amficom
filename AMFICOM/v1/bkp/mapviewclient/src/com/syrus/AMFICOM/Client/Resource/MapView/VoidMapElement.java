@@ -1,5 +1,5 @@
 /**
- * $Id: VoidMapElement.java,v 1.3 2004/10/06 09:27:28 krupenn Exp $
+ * $Id: VoidMapElement.java,v 1.4 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/06 09:27:28 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -93,6 +93,7 @@ public final class VoidMapElement extends StubResource implements MapElement
 
 	public void setSelected(boolean selected)
 	{
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean isMouseOnThisObject(Point currentMousePoint)

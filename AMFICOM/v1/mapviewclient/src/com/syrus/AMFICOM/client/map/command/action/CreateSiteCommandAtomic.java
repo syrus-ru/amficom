@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommand.java,v 1.4 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.1 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -10,48 +10,51 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
-
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
-import java.util.HashMap;
-
 /**
- * –азместить элемент типа mpe на карте. используетс€ при переносе 
+ * –азместить сетевой элемент на карте. используетс€ при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.1 $, $Date: 2004/10/18 15:33:00 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public class CreateSiteCommand extends MapActionCommand
+public class CreateSiteCommandAtomic extends MapActionCommand
 {
 	/**
-	 * ¬ыбранный фрагмент линии
+	 * создаваемый узел
 	 */
 	MapSiteNodeElement site;
+	
+	/** тип создаваемого элемента */
 	MapNodeProtoElement proto;
 	
 	Map map;
 	
 	/**
-	 * точка, в которой создаетс€ новый топологический узел
+	 * экранна€ точка, в которой создаетс€ новый топологический узел
 	 */
 	Point point = null;
+	
+	/**
+	 * географическа€ точка, в которой создаетс€ новый топологический узел.
+	 * может инициализироватьс€ по point
+	 */
 	Point2D.Double coordinatePoint = null;
 
-	public CreateSiteCommand(
+	public CreateSiteCommandAtomic(
 			MapNodeProtoElement proto,
 			Point2D.Double dpoint)
 	{
@@ -60,7 +63,7 @@ public class CreateSiteCommand extends MapActionCommand
 		this.coordinatePoint = dpoint;
 	}
 
-	public CreateSiteCommand(
+	public CreateSiteCommandAtomic(
 			MapNodeProtoElement proto,
 			Point point)
 	{
@@ -76,7 +79,11 @@ public class CreateSiteCommand extends MapActionCommand
 
 	public void execute()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
 
 		if ( !getLogicalNetLayer().getContext().getApplicationModel()
 				.isEnabled("mapActionCreateEquipment"))
@@ -88,7 +95,7 @@ public class CreateSiteCommand extends MapActionCommand
 			coordinatePoint = logicalNetLayer.convertScreenToMap(point);
 		
 		map = logicalNetLayer.getMapView().getMap();
-
+		
 		// создать новый узел
 		site = new MapSiteNodeElement(
 				dataSource.GetUId( MapSiteNodeElement.typ),
@@ -96,9 +103,6 @@ public class CreateSiteCommand extends MapActionCommand
 				map,
 				logicalNetLayer.getDefaultScale() / logicalNetLayer.getScale(),
 				proto);
-
-		// копировать атрибуты отображени€ из протоэлемента
-//		site.attributes = (HashMap )ResourceUtil.copyAttributes(dataSource, proto.attributes);
 
 		Pool.put(MapSiteNodeElement.typ, site.getId(), site);
 		map.addNode(site);

@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.1 2004/10/14 15:39:05 krupenn Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.2 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,25 +12,19 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLinkBinding;
-import java.util.Iterator;
-import java.util.List;
-
 /**
- *  Команда удаления элемента наследника класса MapNodeElement. Команда
- * состоит из  последовательности атомарных действий
+ *  команда привязывания непривязанной линии к тоннелю. концевые узлы
+ *  неправязанной линии и тоннеля должны совпадать
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/10/14 15:39:05 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -38,9 +32,13 @@ import java.util.List;
 public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommandBundle
 {
 	/**
-	 * Удаляемый узел
+	 * привязываемая линия
 	 */
 	MapUnboundLinkElement unbound;
+	
+	/**
+	 * тоннель
+	 */
 	MapPhysicalLinkElement link;
 	
 	/**
@@ -48,7 +46,9 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 	 */
 	Map map;
 
-	public BindUnboundLinkToPhysicalLinkCommandBundle(MapUnboundLinkElement unbound, MapPhysicalLinkElement link)
+	public BindUnboundLinkToPhysicalLinkCommandBundle(
+		MapUnboundLinkElement unbound, 
+		MapPhysicalLinkElement link)
 	{
 		this.unbound = unbound;
 		this.link = link;
@@ -56,27 +56,23 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 	
 	public void execute()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
-
-		DataSourceInterface dataSource =
-				getLogicalNetLayer()
-						.getContext()
-							.getDataSource();
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
 
 		MapView mapView = logicalNetLayer.getMapView();
 		map = mapView.getMap();
 		
-		List cablePaths = logicalNetLayer.getMapView().getCablePaths(unbound);
-
+		// удаляется непривязанная линия
 		super.removeUnboundLink(unbound);
 		
-		for(Iterator it = cablePaths.iterator(); it.hasNext();)
-		{
-			MapCablePathElement cp = (MapCablePathElement )it.next();
-			cp.removeLink(unbound);
-			cp.addLink(link);
-			link.getBinding().add(cp);
-		}
+		// одновляется информация о привязке кабульного пути
+		MapCablePathElement cp = unbound.getCablePath();
+		cp.removeLink(unbound);
+		cp.addLink(link);
+		link.getBinding().add(cp);
 
 		logicalNetLayer.repaint();
 	}

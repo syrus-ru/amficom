@@ -1,5 +1,5 @@
 /**
- * $Id: MoveNodeCommand.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MoveNodeCommand.java,v 1.2 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -83,7 +83,11 @@ public class MoveNodeCommand extends MapActionCommand
 	
 	public void execute()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
 		
 		node.setAnchor(new Point2D.Double(anchor.x + deltaX, anchor.y + deltaY));
 	}

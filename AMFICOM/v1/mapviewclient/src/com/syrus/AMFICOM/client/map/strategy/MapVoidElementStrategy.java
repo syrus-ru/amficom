@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.6 2004/10/15 14:09:21 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.7 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,6 +33,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 
 import java.util.List;
+import java.util.Set;
 import javax.swing.SwingUtilities;
 
 /**
@@ -40,7 +41,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/15 14:09:21 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/18 15:33:00 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -185,10 +186,10 @@ public final class MapVoidElementStrategy implements  MapStrategy
 			}
 		}
 		
-		List selection = logicalNetLayer.getSelectedElements();
+		Set selection = logicalNetLayer.getSelectedElements();
 		if(selection.size() == 1)
 		{
-			MapElement me = (MapElement )selection.get(0);
+			MapElement me = (MapElement )selection.iterator().next();
 			logicalNetLayer.setCurrentMapElement(me);
 		}
 		else

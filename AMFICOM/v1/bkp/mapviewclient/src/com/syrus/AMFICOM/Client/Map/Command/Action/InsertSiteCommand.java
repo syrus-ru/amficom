@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommand.java,v 1.7 2004/10/14 15:39:05 krupenn Exp $
+ * $Id: InsertSiteCommand.java,v 1.8 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/14 15:39:05 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/18 15:33:00 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -73,7 +73,11 @@ public class InsertSiteCommand extends MapActionCommandBundle
 
 	public void execute()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
 
 		if ( !getLogicalNetLayer().getContext().getApplicationModel()
 				.isEnabled("mapActionCreateEquipment"))
@@ -109,7 +113,7 @@ public class InsertSiteCommand extends MapActionCommandBundle
 			registerStateChange(mnle, nls, mnle.getState());
 		}
 
-		removeNode(node);
+		super.removeNode(node);
 
 		MapElementState pls = link.getState();
 

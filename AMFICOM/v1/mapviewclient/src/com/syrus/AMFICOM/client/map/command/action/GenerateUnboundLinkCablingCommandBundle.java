@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.1 2004/10/14 15:39:05 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.2 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/10/14 15:39:05 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -64,7 +64,11 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 	
 	public void execute()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
 
 		DataSourceInterface dataSource = getLogicalNetLayer().getContext().getDataSource();
 

@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalLinkCommandAtomic.java,v 1.3 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: CreatePhysicalLinkCommandAtomic.java,v 1.4 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,14 +11,11 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
-
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
-
-import java.util.HashMap;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
 /**
  * создание физической линии, внесение ее в пул и на карту - 
@@ -26,16 +23,20 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class CreatePhysicalLinkCommandAtomic extends MapActionCommand
 {
+	/** создаваемая линия */
 	MapPhysicalLinkElement link;
 	
+	/** начальный узел */
 	MapNodeElement startNode;
+	
+	/** конечный узел */
 	MapNodeElement endNode;
 	
 	public CreatePhysicalLinkCommandAtomic(
@@ -54,6 +55,12 @@ public class CreatePhysicalLinkCommandAtomic extends MapActionCommand
 	
 	public void execute()
 	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
+
 		DataSourceInterface dataSource = aContext.getDataSource();
 		
 		link = new MapPhysicalLinkElement( 
@@ -63,11 +70,6 @@ public class CreatePhysicalLinkCommandAtomic extends MapActionCommand
 				logicalNetLayer.getMapView().getMap(),
 				logicalNetLayer.getPen());
 		Pool.put(MapPhysicalLinkElement.typ, link.getId(), link);
-
-		// копировать атрибуты отображения из протоэлемента
-//		link.attributes = (HashMap )ResourceUtil.copyAttributes(
-//				dataSource, 
-//				logicalNetLayer.getPen().attributes);
 
 		logicalNetLayer.getMapView().getMap().addPhysicalLink(link);
 	}

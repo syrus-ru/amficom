@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.4 2004/10/14 15:39:05 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.5 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -12,7 +12,6 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
@@ -23,18 +22,15 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
-import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 /**
- *   оманда удалени€ элемента наследника класса MapNodeElement.  оманда
- * состоит из  последовательности атомарных действий
+ *   оманда прив€зывани€ топологического узла, принадлежащего
+ *  неприв€занному кабелю, к элементу узла. при этом лини€, которой 
+ *  принадлежит данный узел, делитс€ на 2 части
  * 
  * 
- * 
- * @version $Revision: 1.4 $, $Date: 2004/10/14 15:39:05 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -42,21 +38,38 @@ import java.util.ListIterator;
 public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 {
 	/**
-	 * ”дал€емый узел
+	 * ѕеретаскиваемый узел
 	 */
 	MapPhysicalNodeElement node;
+	
+	/** ”зел, к которому прив€зываетс€ топологический узел */
 	MapSiteNodeElement site;
 
+	/** 
+	 * узел, наход€щийс€ "слева" от перетаскиваемого узла на той же линии,
+	 * что и перетаскиваемый узел
+	 */
 	MapNodeElement node1 = null;
+
+	/** 
+	 * узел, наход€щийс€ "справа" от перетаскиваемого узла на той же линии,
+	 * что и перетаскиваемый узел
+	 */
 	MapNodeElement node2 = null;
+
+	/**
+	 * ¬ид, на котором производитс€ операци€
+	 */
+	MapView mapView;
 
 	/**
 	 *  арта, на которой производитс€ операци€
 	 */
-	MapView mapView;
 	Map map;
 
-	public BindPhysicalNodeToSiteCommandBundle(MapPhysicalNodeElement node, MapSiteNodeElement site)
+	public BindPhysicalNodeToSiteCommandBundle(
+			MapPhysicalNodeElement node, 
+			MapSiteNodeElement site)
 	{
 		this.node = node;
 		this.site = site;
@@ -64,15 +77,19 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 	
 	public void execute()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
-
-		DataSourceInterface dataSource = aContext.getDataSource();
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
 
 		mapView = logicalNetLayer.getMapView();
 		map = mapView.getMap();
 
 		MapPhysicalLinkElement link = map.getPhysicalLink(node.getPhysicalLinkId());
 
+		// находим "ливый" и "правый" узлы, одновременно обновл€ем
+		// концевые узлы фрагментов
 		for(Iterator it = node.getNodeLinks().iterator(); it.hasNext();)
 		{
 			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
@@ -88,38 +105,42 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 				mnle.setEndNode(site);
 		}
 
-		removeNode(node);
+		// топологический узел удал€етс€
+		super.removeNode(node);
 
+		// обновл€ютс€ концевые узлы линии
 		if(link.getStartNode() == node)
 			link.setStartNode(site);
 		else
 		if(link.getEndNode() == node)
 			link.setEndNode(site);
 
-		MapUnboundLinkElement link1 = super.createUnboundLink(link.getStartNode(), site);
-		link1.setProto(link.getProto());
+		// создаетс€ втора€ лини€
+		MapUnboundLinkElement newLink = super.createUnboundLink(link.getStartNode(), site);
+		newLink.setProto(link.getProto());
 
 		// single cpath, as long as link is UnboundLink
 		MapCablePathElement cpath = (MapCablePathElement )(mapView.getCablePaths(link).getFirst());
 		
-		cpath.addLink(link1);
-		link1.setCablePath(cpath);
+		// нова€ лини€ добавл€етс€ в кабельный путь
+		cpath.addLink(newLink);
+		newLink.setCablePath(cpath);
 
-		// получить все фрагменты первой филической линии
-		java.util.List nodelinks = link.getNodeLinks();
-	
+		// переносим фрагменты в новую линию пока не наткнемс€ на
+		// созданный узел
+		super.moveNodeLinks(
+				link,
+				newLink,
+				false,
+				site,
+				null);
+		link.setStartNode(site);
+		cpath.sortLinks();
+/* MapActionBundleCommand
+
 		// определить начальный узел и начальный фрагмент физической линии
-		MapNodeLinkElement startNodeLink = null;
+		MapNodeLinkElement startNodeLink = link.getStartNodeLink();
 		MapNodeElement startNode = link.getStartNode();
-		for(Iterator it = nodelinks.iterator(); it.hasNext();)
-		{
-			startNodeLink = (MapNodeLinkElement )it.next();
-			if(startNodeLink.getStartNode() == link.getStartNode()
-				|| startNodeLink.getEndNode() == link.getStartNode())
-			{
-				break;
-			}
-		}
 	
 		// не€вный цикл по фракментам линии - перекидывать фрагменты в новую 
 		// физическую линию. движемс€ по фрагментам от первого пока не наткнемс€
@@ -128,9 +149,8 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 		{
 			// перекинуть фрагмент в новую линию
 			link.removeNodeLink(startNodeLink);
-			link1.addNodeLink(startNodeLink);
-			
-			startNodeLink.setPhysicalLinkId(link1.getId());
+			newLink.addNodeLink(startNodeLink);
+			startNodeLink.setPhysicalLinkId(newLink.getId());
 
 			// перейти к следующему узлу
 			startNode = startNodeLink.getOtherNode(startNode);
@@ -139,24 +159,16 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 			// концевые узлы и закончить
 			if(startNode == site)
 			{
-				link1.setEndNode(site);
+				newLink.setEndNode(site);
 				link.setStartNode(site);
 				cpath.sortLinks();
 				break;
 			}
 			
 			// перейти к следующему фрагменту
-			for(Iterator it = startNode.getNodeLinks().iterator(); it.hasNext();)
-			{
-				MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
-				if(startNodeLink != mnle)
-				{
-					startNodeLink = mnle;
-					break;
-				}
-			}
+			startNodeLink = startNode.getOtherNodeLink(startNodeLink);
 		}//for(;;)
-
+*/
 		logicalNetLayer.repaint();
 	}
 }

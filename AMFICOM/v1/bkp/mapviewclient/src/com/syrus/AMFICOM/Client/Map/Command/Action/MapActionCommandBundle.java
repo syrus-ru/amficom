@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.6 2004/10/14 15:39:05 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.7 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,7 +39,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/14 15:39:05 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -79,7 +79,7 @@ public class MapActionCommandBundle extends CommandBundle
 	 */
 	protected MapSiteNodeElement createSite(Point2D.Double point,  MapNodeProtoElement proto)
 	{
-		CreateSiteCommand cmd = new CreateSiteCommand(proto, point);
+		CreateSiteCommandAtomic cmd = new CreateSiteCommandAtomic(proto, point);
 		cmd.setLogicalNetLayer(logicalNetLayer);
 		cmd.execute();
 		add(cmd);
@@ -296,28 +296,81 @@ public class MapActionCommandBundle extends CommandBundle
 		}
 		cablePath.clearLinks();
 	}
-/*
-	protected void checkCablePathLinks(MapCablePathElement cablePath)
-	{
-//		cablePath.sortLinks();
-//		MapNodeElement ne = cablePath.getStartNode();
-//		for(Iterator it = cablePath.getLinks().iterator(); it.hasNext();)
-//		{
-//			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-//			if(link instanceof MapUnboundLinkElement)
-//			{
-//				this.removeUnboundLink((MapUnboundLinkElement )link);
-//			}
-//			else
-//			{
-//				link.getBinding().remove(cablePath.getSchemeCableLink());
-//			}
-//		}
-//		cablePath.clearLinks();
-	}
-*/
+
 	protected void removeMeasurementPathCables(MapMeasurementPathElement mPath)
 	{
 		mPath.clearCablePaths();
+	}
+
+
+	/**
+	 * фрагменты линии link переносятся в линию newLink начиная от начального
+	 * фрагмента, пока не встретится узел firstConditionalNodeExit или
+	 * secondConditionalNodeExit. Возвращается встреченный узел.
+	 * 
+	 * @param link
+	 * @param newLink
+	 * @param registerStateChange
+	 * @param firstConditionalNodeExit
+	 * @param secondConditionalNodeExit
+	 * @return 
+	 */
+	protected MapNodeElement moveNodeLinks(
+		MapPhysicalLinkElement link, 
+		MapPhysicalLinkElement newLink,
+		boolean registerStateChange,
+		MapNodeElement firstConditionalNodeExit,
+		MapNodeElement secondConditionalNodeExit)
+	{
+		MapNodeElement foundNode = null;
+		MapElementState state = null;
+		
+		// определить начальный узел и начальный фрагмент физической линии
+		MapNodeLinkElement startNodeLink = link.getStartNodeLink();
+		MapNodeElement startNode = link.getStartNode();
+
+		// неявный цикл по фракментам линии - перекидывать фрагменты в новую 
+		// физическую линию. движемся по фрагментам от первого пока не
+		// наткнемся на фрагмент, соседний с удаленным
+		for(;;)
+		{
+			// перекинуть фрагмент в новую линию
+			link.removeNodeLink(startNodeLink);
+			newLink.addNodeLink(startNodeLink);
+			
+			if(registerStateChange)
+				state = startNodeLink.getState();
+			
+			startNodeLink.setPhysicalLinkId(newLink.getId());
+			
+			if(registerStateChange)
+				this.registerStateChange(
+					startNodeLink, 
+					state, 
+					startNodeLink.getState());
+			
+			// перейти к следующему узлу
+			startNode = startNodeLink.getOtherNode(startNode);
+			
+			// если наткнулись на разрыв линии связи, то обновить
+			// концевые узлы и закончить
+			if(startNode.equals(firstConditionalNodeExit))
+			{
+				foundNode = firstConditionalNodeExit;
+				newLink.setEndNode(firstConditionalNodeExit);
+				break;
+			}
+			else
+			if(startNode.equals(secondConditionalNodeExit))
+			{
+				foundNode = secondConditionalNodeExit;
+				newLink.setEndNode(secondConditionalNodeExit);
+				break;
+			}
+
+			startNodeLink = startNode.getOtherNodeLink(startNodeLink);
+		}//for(;;)
+		
+		return foundNode;
 	}
 }

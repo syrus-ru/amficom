@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveUnboundLinkCommandBundle.java,v 1.1 2004/10/14 15:39:05 krupenn Exp $
+ * $Id: RemoveUnboundLinkCommandBundle.java,v 1.2 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -20,7 +21,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/10/14 15:39:05 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -41,6 +42,12 @@ public class RemoveUnboundLinkCommandBundle extends MapActionCommandBundle
 	
 	public void execute()
 	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
+
 		super.removeUnboundLink(unbound);
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.5 2004/10/14 15:39:05 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.6 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,6 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
 import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
@@ -36,7 +35,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/14 15:39:05 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -70,53 +69,66 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 
 		MapView mapView = logicalNetLayer.getMapView();
 		
-		List cablePathsToScan = mapView.getCablePaths(node);
-		if(! (node instanceof MapUnboundNodeElement))
+		// если удаляется сетевой узел (не непривязанный элемент),
+		// необходимо проверить все кабельные пути, включающие его
+		for(Iterator it = mapView.getCablePaths(node).iterator(); it.hasNext();)
 		{
-			for(Iterator it = cablePathsToScan.iterator(); it.hasNext();)
+			MapCablePathElement cpath = (MapCablePathElement )it.next();
+			
+			// если удаляемый узел содержит привязку концевого элемента
+			// кабельного пути, кабельный путь убирается с карты
+			if(cpath.getStartNode().equals(node)
+				|| cpath.getEndNode().equals(node))
 			{
-				MapCablePathElement cpath = (MapCablePathElement )it.next();
-				if(cpath.getStartNode().equals(node)
-					|| cpath.getEndNode().equals(node))
+				super.removeCablePathLinks(cpath);
+				super.removeCablePath(cpath);
+			}
+			else
+			// в противном случае прохождение кабельного пути через узел
+			// заменяется на непривязанную линию
+			{
+				MapPhysicalLinkElement left = null;
+				MapPhysicalLinkElement right = null;
+				
+				// находятся "левая" и "крайняя" линия пути относительно
+				// удаляемого узла. Их будет две, поскольку случай
+				// одной линии рассмотрен предыдущим ифом
+				for(Iterator it2 = cpath.getLinks().iterator(); it2.hasNext();)
 				{
-					super.removeCablePathLinks(cpath);
-					super.removeCablePath(cpath);
+					MapPhysicalLinkElement le = (MapPhysicalLinkElement )it2.next();
+					if(le.getStartNode().equals(node)
+						|| le.getEndNode().equals(node))
+					{
+						if(left == null)
+							left = le;
+						else
+							right = le;
+					}
 				}
-				else
+				
+				// удаляются линии
+				cpath.removeLink(left);
+				cpath.removeLink(right);
+
+				// вместо них создается новая непривязанная
+				MapUnboundLinkElement unbound = 
+					super.createUnboundLinkWithNodeLink(
+						left.getOtherNode(node),
+						right.getOtherNode(node));
+				unbound.setCablePath(cpath);
+				cpath.addLink(unbound);
+
+				// если "левая" была непмривязанной, она удаляется (вместе 
+				// со своими фрагментами
+				if(left instanceof MapUnboundLinkElement)
 				{
-					MapPhysicalLinkElement left = null;
-					MapPhysicalLinkElement right = null;
-					
-					for(Iterator it2 = cpath.getLinks().iterator(); it2.hasNext();)
-					{
-						MapPhysicalLinkElement le = (MapPhysicalLinkElement )it2.next();
-						if(le.getStartNode().equals(node)
-							|| le.getEndNode().equals(node))
-						{
-							if(left == null)
-								left = le;
-							else
-								right = le;
-						}
-					}
-
-					cpath.removeLink(left);
-					cpath.removeLink(right);
-
-					MapUnboundLinkElement unbound = super.createUnboundLinkWithNodeLink(
-							left.getOtherNode(node),
-							right.getOtherNode(node));
-					unbound.setCablePath(cpath);
-					cpath.addLink(unbound);
-
-					if(left instanceof MapUnboundLinkElement)
-					{
-						super.removeUnboundLink((MapUnboundLinkElement )left);
-					}
-					if(right instanceof MapUnboundLinkElement)
-					{
-						super.removeUnboundLink((MapUnboundLinkElement )right);
-					}
+					super.removeUnboundLink((MapUnboundLinkElement )left);
+				}
+				// если "правая" была непмривязанной, она удаляется (вместе 
+				// со своими фрагментами
+				if(right instanceof MapUnboundLinkElement)
+				{
+					super.removeUnboundLink((MapUnboundLinkElement )right);
 				}
 			}
 		}
@@ -133,16 +145,21 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 					.getPhysicalLink(nodeLink.getPhysicalLinkId());
 					
 			if(physicalLink instanceof MapUnboundLinkElement)
+			{
+				// данный случай обработан в предыдущем цикле
+				// (непривязанная линия удалена)
 				continue;
-			MapNodeElement otherNode = physicalLink.getOtherNode(node);
+			}
+
+			// узел на другом конце фрагмента линии
 			MapNodeElement oppositeNode = nodeLink.getOtherNode(node);
 
 			// если фрагмент соединяет два узла сети, он составляет одну
 			// физическую линию, которую, следовательно, необходимо удалить
 			if(oppositeNode instanceof MapSiteNodeElement)
 			{
-				removeNodeLink(nodeLink);
-				removePhysicalLink(physicalLink);
+				super.removeNodeLink(nodeLink);
+				super.removePhysicalLink(physicalLink);
 			}//if(oppositeNode instanceof MapSiteNodeElement)
 			else
 			{
@@ -152,9 +169,9 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 				// из физической линии
 				if(physicalNode.isActive())
 				{
-					changePhysicalNodeActivity(physicalNode, false);
+					super.changePhysicalNodeActivity(physicalNode, false);
 					
-					removeNodeLink(nodeLink);
+					super.removeNodeLink(nodeLink);
 
 					MapElementState pls = physicalLink.getState();
 
@@ -165,22 +182,21 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 					else
 						physicalLink.setStartNode(oppositeNode);
 
-					registerStateChange(physicalLink, pls, physicalLink.getState());
+					super.registerStateChange(physicalLink, pls, physicalLink.getState());
 				}//if(mpne.isActive())
 				else
 				// в противном случае фрагмент составляет одну
 				// физическую линию, ее необходимо удалить, а также
 				// конечный топологический узел
 				{
-					removeNode(physicalNode);
-					removeNodeLink(nodeLink);
-					removePhysicalLink(physicalLink);
+					super.removeNode(physicalNode);
+					super.removeNodeLink(nodeLink);
+					super.removePhysicalLink(physicalLink);
 				}
 			}//if ! (oppositeNode instanceof MapSiteNodeElement)
 		}//while(e.hasNext())
 
-		removeNode(node);
-
+		super.removeNode(node);
 	}
 	
 	/**
@@ -213,9 +229,9 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 				// удалить, а также конечный топологический узел
 				if(oppositeNode instanceof MapSiteNodeElement)
 				{
-					removeNode(node);
-					removeNodeLink(nodeLink);
-					removePhysicalLink(physicalLink);
+					super.removeNode(node);
+					super.removeNodeLink(nodeLink);
+					super.removePhysicalLink(physicalLink);
 				}//if(oppositeNode instanceof MapSiteNodeElement)
 				else
 				// в противном случае топологический узел - концевой для
@@ -223,27 +239,27 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 				{
 					MapPhysicalNodeElement mpne = (MapPhysicalNodeElement )oppositeNode;
 
-					removeNode(node);
-					removeNodeLink(nodeLink);
+					super.removeNode(node);
+					super.removeNodeLink(nodeLink);
 					
 					MapElementState pls = physicalLink.getState();
 
 					physicalLink.removeNodeLink(nodeLink);
 
-					registerStateChange(physicalLink, pls, physicalLink.getState());
+					super.registerStateChange(physicalLink, pls, physicalLink.getState());
 					
 					// если второй топологический узел тоже не активен, то 
 					// имеется физическая лниия из одного фрагмента и двух
 					// узлов, все это хозяйство надо удалить
 					if(!mpne.isActive())
 					{
-						removeNode(mpne);
-						removePhysicalLink(physicalLink);
+						super.removeNode(mpne);
+						super.removePhysicalLink(physicalLink);
 					}
 					else
 					// в противном случае обновить концевой узел физической линии
 					{
-						changePhysicalNodeActivity(mpne, false);
+						super.changePhysicalNodeActivity(mpne, false);
 
 						MapElementState pls2 = physicalLink.getState();
 						
@@ -252,7 +268,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 						else
 							physicalLink.setStartNode(mpne);
 
-						registerStateChange(physicalLink, pls2, physicalLink.getState());
+						super.registerStateChange(physicalLink, pls2, physicalLink.getState());
 					}
 				}// if ! (oppositeNode instanceof MapSiteNodeElement)
 			}//while(e.hasNext())
@@ -274,9 +290,9 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 					(MapNodeElement )nodeLinkRight.getOtherNode(node);
 
 			// удалить два фрагмента и связывающий их узел с карты
-			removeNodeLink(nodeLinkLeft);
-			removeNodeLink(nodeLinkRight);
-			removeNode(node);
+			super.removeNodeLink(nodeLinkLeft);
+			super.removeNodeLink(nodeLinkRight);
+			super.removeNode(node);
 
 			// В случае, если физическая линия состоит из двух фрагментов,
 			// возможны 5 комбинаций:
@@ -305,34 +321,41 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			
 			if(doRemoveLink)
 			{
-				removePhysicalLink(physicalLink);
+				// удаляется линия
+				super.removePhysicalLink(physicalLink);
 				if(nodeLeft instanceof MapPhysicalNodeElement)
 				{
-					removeNode(nodeLeft);
+					super.removeNode(nodeLeft);
 					if(nodeLeft != nodeRight)
-						removeNode(nodeRight);
+						super.removeNode(nodeRight);
 				}
 			}
 			else
 			{
 				// создать новый фрагмент линии и добавить на карту и в линию
-				MapNodeLinkElement newNodeLink = createNodeLink(nodeLeft, nodeRight);
+				MapNodeLinkElement newNodeLink = super.createNodeLink(nodeLeft, nodeRight);
 				newNodeLink.setPhysicalLinkId(physicalLink.getId());
 
 				physicalLink.addNodeLink(newNodeLink);
 			}
 
-			registerStateChange(physicalLink, pls, physicalLink.getState());
+			super.registerStateChange(physicalLink, pls, physicalLink.getState());
 
 		}//if ( node.isActive() )
 	}
 
+	/**
+	 * удаление непривязанного узла.
+	 * при этом с карты убираются все кабельные пути, содержащие 
+	 * удаляемый элемент
+	 */
 	protected void deleteUnbound(MapUnboundNodeElement unbound)
 	{
 		MapView mapView = logicalNetLayer.getMapView();
 	
-		deleteSite(unbound);
-		
+		super.removeNode(unbound);
+
+		// отдельный список для удаления		
 		List cablePaths = new LinkedList();
 		cablePaths.addAll(mapView.getCablePaths(unbound));
 		
@@ -352,12 +375,16 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		if ( !getContext().getApplicationModel().isEnabled("mapActionMarkDelete"))
 			return;
 
-		removeNode(node);
+		super.removeNode(node);
 	}
 
 	public void execute()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
 
 		// узел может быть удален в результате атомарной команда в составе
 		// другой команды удаления, в этом случае у него будет выставлен
@@ -370,22 +397,22 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		//В зависимости от того какого типа node и от флагов разрешения удаляем
 		if ( node instanceof MapUnboundNodeElement)
 		{
-			deleteUnbound((MapUnboundNodeElement )node);
+			this.deleteUnbound((MapUnboundNodeElement )node);
 		}
 		else
 		if ( node instanceof MapSiteNodeElement)
 		{
-			deleteSite((MapSiteNodeElement )node);
+			this.deleteSite((MapSiteNodeElement )node);
 		}
 		else
 		if ( node instanceof MapPhysicalNodeElement)
 		{
-			deletePhysicalNode((MapPhysicalNodeElement )node);
+			this.deletePhysicalNode((MapPhysicalNodeElement )node);
 		}
 		else
 		if ( node instanceof MapMarkElement)
 		{
-			deleteMark((MapMarkElement )node);
+			this.deleteMark((MapMarkElement )node);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.3 2004/10/14 15:39:05 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.4 2004/10/18 15:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,12 +26,11 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- *  Команда удаления элемента наследника класса MapNodeElement. Команда
- * состоит из  последовательности атомарных действий
+ *  Команда привязывания непривязанного элемента к узлу
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/14 15:39:05 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/18 15:33:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -39,19 +38,23 @@ import java.util.List;
 public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 {
 	/**
-	 * Удаляемый узел
+	 * привязываемый элемент
 	 */
 	MapUnboundNodeElement unbound;
+	
+	/**
+	 * узел
+	 */
 	MapSiteNodeElement site;
 
-	String prevSiteId;
-	
 	/**
 	 * Карта, на которой производится операция
 	 */
 	Map map;
 
-	public BindUnboundNodeToSiteCommandBundle(MapUnboundNodeElement unbound, MapSiteNodeElement site)
+	public BindUnboundNodeToSiteCommandBundle(
+			MapUnboundNodeElement unbound, 
+			MapSiteNodeElement site)
 	{
 		this.unbound = unbound;
 		this.site = site;
@@ -59,13 +62,19 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 	
 	public void execute()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "execute()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"execute()");
 
 		MapView mapView = logicalNetLayer.getMapView();
 		map = mapView.getMap();
 		
+		// список кабельных путей, включающий привязываемый элемент
 		List cablePaths = logicalNetLayer.getMapView().getCablePaths(unbound);
 		
+		// обновляются концевые узлы кабельных путей
 		for(Iterator it = cablePaths.iterator(); it.hasNext();)
 		{
 			MapCablePathElement cp = (MapCablePathElement )it.next();
@@ -75,8 +84,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 				cp.setStartNode(site);
 		}
 
-		//При удалении узла удаляются все фрагменты линий, исходящие из него
-		// бежим по списку удаляемых фрагментов
+		//При привязывании меняются концевые узлы линий и фрагментов линий
 		for(Iterator it = unbound.getNodeLinks().iterator(); it.hasNext();)
 		{
 			MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
@@ -90,7 +98,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 			if(nodeLink.getStartNode() == unbound)
 				nodeLink.setStartNode(site);
 
-			registerStateChange(nodeLink, pls, nodeLink.getState());
+			super.registerStateChange(nodeLink, pls, nodeLink.getState());
 				
 			MapElementState pls2 = physicalLink.getState();
 
@@ -99,35 +107,17 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 			if(physicalLink.getStartNode() == unbound)
 				physicalLink.setStartNode(site);
 
-			registerStateChange(physicalLink, pls2, physicalLink.getState());
+			super.registerStateChange(physicalLink, pls2, physicalLink.getState());
 			
 		}//while(e.hasNext())
 
-		removeNode(unbound);
+		super.removeNode(unbound);
 
 		SchemeElement se = unbound.getSchemeElement();
-		prevSiteId = se.siteId;		
 		se.siteId = site.getId();
 
 		logicalNetLayer.repaint();
 	}
 	
-	public void undo()
-	{
-		super.undo();
-		
-		unbound.setCanBind(false);
-		SchemeElement se = unbound.getSchemeElement();
-		se.siteId = prevSiteId;
-	}
-
-	public void redo()
-	{
-		super.redo();
-		
-		SchemeElement se = unbound.getSchemeElement();
-		se.siteId = site.getId();
-	}
-
 }
 

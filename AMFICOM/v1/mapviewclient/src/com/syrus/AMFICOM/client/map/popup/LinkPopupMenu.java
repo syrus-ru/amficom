@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JMenuItem;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateMarkCommandAtomic;
 
 public final class LinkPopupMenu extends MapPopupMenu 
 {
@@ -159,7 +160,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 		if ( getLogicalNetLayer().getContext().getApplicationModel().isEnabled("mapActionMarkCreate"))
 		{
 
-			CreateMarkCommand command = new CreateMarkCommand(link, point);
+			CreateMarkCommandAtomic command = new CreateMarkCommandAtomic(link, point);
 			command.setLogicalNetLayer(logicalNetLayer);
 			getLogicalNetLayer().getCommandList().add(command);
 			getLogicalNetLayer().getCommandList().execute();
