@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.21 2004/08/26 14:59:18 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.22 2004/08/27 07:44:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/08/26 14:59:18 $
+ * @version $Revision: 1.22 $, $Date: 2004/08/27 07:44:24 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -61,7 +61,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		this.retrieveParameterTypes(analysisType);
 	}
 	
-	private static String retrieveAnalysisTypeQuery(String condition){
+	private String retrieveAnalysisTypeQuery(String condition){
 		return SQL_SELECT
 		+ COLUMN_ID + COMMA
 		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
@@ -75,7 +75,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 
 	}
 	
-	private static AnalysisType updateAnalysisTypeFromResultSet(AnalysisType analysisType, ResultSet resultSet) throws SQLException{
+	private AnalysisType updateAnalysisTypeFromResultSet(AnalysisType analysisType, ResultSet resultSet) throws SQLException{
 		AnalysisType analysisType1 = analysisType;
 		if (analysisType == null){
 			/**
@@ -391,7 +391,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public static void delete(AnalysisType analysisType) {
+	public void delete(AnalysisType analysisType) {
 		String analysisTypeIdStr = analysisType.getId().toSQLString();
 		Statement statement = null;
 		try {
@@ -419,7 +419,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public static AnalysisType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
+	public AnalysisType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
 		String sql = SQL_SELECT
 				+ COLUMN_ID
 				+ SQL_FROM + ObjectEntities.ANALYSISTYPE_ENTITY
@@ -453,7 +453,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public static List retrieveAll() throws RetrieveObjectException {
+	public List retrieveAll() throws RetrieveObjectException {
 		List analysisTypes = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
 		String sql = SQL_SELECT
 				+ COLUMN_ID
@@ -490,14 +490,14 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		return analysisTypes;
 	}
 	
-	public static List retrieveByIds(List ids) throws RetrieveObjectException {
+	public List retrieveByIds(List ids) throws RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return new LinkedList();
 		return retriveByIdsOneQuery(ids);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
 	
-	private static List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
 		List result = new LinkedList();
 		String sql;
 		{
@@ -553,7 +553,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		return result;
 	}
 	
-	private static List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
 		List result = new LinkedList();
 		String sql;
 		{

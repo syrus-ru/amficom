@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.19 2004/08/23 20:47:37 arseniy Exp $
+ * $Id: Set.java,v 1.20 2004/08/27 07:44:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/23 20:47:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2004/08/27 07:44:24 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -92,9 +92,9 @@ public class Set extends StorableObject {
 		}
 	}	
 	
-	private Set(Identifier id,
+	protected Set(Identifier id,
 							Identifier creatorId,
-							SetSort sort,
+							int sort,
 							String description,
 							SetParameter[] parameters,
 							List monitoredElementIds) {
@@ -104,7 +104,7 @@ public class Set extends StorableObject {
 		super.modified = new Date(time);
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
-		this.sort = sort.value();
+		this.sort = sort;
 		this.description = description;
 		this.parameters = parameters;
 		this.monitoredElementIds = monitoredElementIds;
@@ -130,7 +130,7 @@ public class Set extends StorableObject {
 																	 List monitoredElementIds) {
 		return new Set(id,
 									 creatorId,
-									 sort,
+									 sort.value(),
 									 description,
 									 parameters,
 									 monitoredElementIds);

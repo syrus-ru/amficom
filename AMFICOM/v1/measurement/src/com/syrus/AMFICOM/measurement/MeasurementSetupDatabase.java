@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.16 2004/08/26 14:59:38 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.17 2004/08/27 07:44:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/26 14:59:38 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/27 07:44:24 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -306,8 +306,9 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	private static String retrieveMeasurementSetupQuery(String condition){
+	private String retrieveMeasurementSetupQuery(String condition){
 		return SQL_SELECT
+		+ COLUMN_ID + COMMA
 		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
 		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
 		+ COLUMN_CREATOR_ID + COMMA
@@ -323,7 +324,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 	}
 	
-	private static MeasurementSetup updateMeasurementSetupFromResultSet(MeasurementSetup measurementSetup, ResultSet resultSet) throws RetrieveObjectException, SQLException{
+	private MeasurementSetup updateMeasurementSetupFromResultSet(MeasurementSetup measurementSetup, ResultSet resultSet) throws RetrieveObjectException, SQLException{
 		MeasurementSetup measurementSetup1 = measurementSetup;
 		if (measurementSetup == null){
 			/**
@@ -499,7 +500,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public static List retrieveAll() throws RetrieveObjectException {
+	public List retrieveAll() throws RetrieveObjectException {
 		List ports = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
 		String sql = SQL_SELECT
 				+ COLUMN_ID
@@ -536,7 +537,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		return ports;
 	}
 
-	public static void delete(MeasurementSetup measurementSetup) {
+	public void delete(MeasurementSetup measurementSetup) {
 		String msIdStr = measurementSetup.getId().toSQLString();
 		Statement statement = null;
 		try {
@@ -565,14 +566,14 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public static List retrieveByIds(List ids) throws RetrieveObjectException {
+	public List retrieveByIds(List ids) throws RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return new LinkedList();
 		return retriveByIdsOneQuery(ids);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
 	
-	private static List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
 		List result = new LinkedList();
 		String sql;
 		{
@@ -628,7 +629,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		return result;
 	}
 	
-	private static List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
 		List result = new LinkedList();
 		String sql;
 		{

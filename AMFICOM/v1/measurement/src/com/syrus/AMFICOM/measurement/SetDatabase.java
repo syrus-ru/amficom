@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.20 2004/08/23 20:47:37 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.21 2004/08/27 07:44:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,8 +32,8 @@ import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/08/23 20:47:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2004/08/27 07:44:24 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -59,42 +60,60 @@ public class SetDatabase extends StorableObjectDatabase {
 		this.retrieveSetParameters(set);
 		this.retrieveSetMELinks(set);
 	}
+	
+	private String retrieveSetQuery(String condition){
+		return SQL_SELECT
+		+ COLUMN_ID + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
+		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+		+ COLUMN_CREATOR_ID + COMMA
+		+ COLUMN_MODIFIER_ID + COMMA
+		+ COLUMN_SORT + COMMA
+		+ COLUMN_DESCRIPTION 
+		+ SQL_FROM 
+		+ ObjectEntities.SET_ENTITY
+		+ SQL_WHERE
+		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+
+	}
+	
+	private Set updateSetFromResultSet(Set set, ResultSet resultSet) throws SQLException{
+		Set set1 = set;
+		if (set == null){
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			set1 = new Set(new Identifier(resultSet.getString(COLUMN_ID)), null, 0, null, null, null);
+		}
+		String description = resultSet.getString(COLUMN_DESCRIPTION);
+		set1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+											/**
+												* @todo when change DB Identifier model ,change getString() to getLong()
+												*/												
+											new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+											/**
+												* @todo when change DB Identifier model ,change getString() to getLong()
+												*/
+											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+											resultSet.getInt(COLUMN_SORT),
+											(description != null) ? description : "");
+
+		return set1;
+	}
+
 
 	private void retrieveSet(Set set) throws ObjectNotFoundException, RetrieveObjectException {
 		String setIdStr = set.getId().toSQLString();
-		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_SORT + COMMA
-			+ COLUMN_DESCRIPTION 
-			+ SQL_FROM 
-			+ ObjectEntities.SET_ENTITY
-			+ SQL_WHERE
-			+ COLUMN_ID	+ EQUALS
-			+ setIdStr;
+		String sql = retrieveSetQuery(COLUMN_ID	+ EQUALS + setIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("SetDatabase.retrieveSet | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) {
-				String description = resultSet.getString(COLUMN_DESCRIPTION);
-				set.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-													DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-													/**
-														* @todo when change DB Identifier model ,change getString() to getLong()
-														*/												
-													new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-													/**
-														* @todo when change DB Identifier model ,change getString() to getLong()
-														*/
-													new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-													resultSet.getInt(COLUMN_SORT),
-													(description != null) ? description : "");
-			}
+			if (resultSet.next()) 
+				updateSetFromResultSet(set,resultSet);
 			else
 				throw new ObjectNotFoundException("No such set: " + setIdStr);
 		}
@@ -600,4 +619,122 @@ public class SetDatabase extends StorableObjectDatabase {
 		return sets;
 	}
 
+	public List retrieveByIds(List ids) throws RetrieveObjectException {
+		if ((ids == null) || (ids.isEmpty()))
+			return new LinkedList();
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
+	}
+	
+	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				buffer.append(EQUALS);
+				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+			} else{
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				
+				int i = 1;
+				for(Iterator it=ids.iterator();it.hasNext();i++){
+					Identifier id = (Identifier)it.next();
+					buffer.append(id.toSQLString());
+					if (i < idsLength)
+						buffer.append(COMMA);
+				}
+				
+				buffer.append(CLOSE_BRACKET);
+			}
+			sql = retrieveSetQuery(buffer.toString());
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("MeasurementSetupDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				result.add(updateSetFromResultSet(null, resultSet));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "MeasurementSetupDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return result;
+	}
+	
+	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				return retriveByIdsOneQuery(ids);
+			}
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(EQUALS);							
+			buffer.append(QUESTION);
+			
+			sql =retrieveSetQuery(buffer.toString());
+		}
+			
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(sql.toString());
+			for(Iterator it = ids.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next(); 
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				String idStr = id.getIdentifierString();
+				stmt.setString(1, idStr);
+				resultSet = stmt.executeQuery();
+				if (resultSet.next()){
+					result.add(updateSetFromResultSet(null, resultSet));
+				} else{
+					Log.errorMessage("MeasurementSetupDatabase.retriveByIdsPreparedStatement | No such measurement setup: " + idStr);									
+				}
+				
+			}
+		}catch (SQLException sqle) {
+			String mesg = "MeasurementSetupDatabase.retriveByIdsPreparedStatement | Cannot retrieve measurement setup " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (stmt != null)
+					stmt.close();
+				stmt = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}			
+		
+		return result;
+	}
 }
