@@ -7,7 +7,7 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.Resource.Object.User;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public final class MapViewController implements ObjectResourceController 
+public final class MapViewTableController implements ObjectResourceController 
 {
 	public static final String KEY_NAME = "Name";
 	public static final String KEY_DOMAIN = "Domain";
@@ -33,14 +33,14 @@ public final class MapViewController implements ObjectResourceController
 	public static final String KEY_CREATED = "Created";
 	public static final String KEY_MODIFIED = "Modified";
 
-	private static MapViewController instance;
+	private static MapViewTableController instance;
 
 	private List keys;
 
 	  static SimpleDateFormat sdf =
 		new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
-	private MapViewController() 
+	private MapViewTableController() 
 	{
 		// empty private constructor
 		String[] keysArray = new String[] { 
@@ -53,10 +53,10 @@ public final class MapViewController implements ObjectResourceController
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static MapViewController getInstance() 
+	public static MapViewTableController getInstance() 
 	{
 		if (instance == null)
-			instance = new MapViewController();
+			instance = new MapViewTableController();
 		return instance;
 	}
 	

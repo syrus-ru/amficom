@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public final class MapController implements ObjectResourceController 
+public final class MapTableController implements ObjectResourceController 
 {
 	public static final String KEY_NAME = "Name";
 	public static final String KEY_DOMAIN = "Domain";
@@ -24,7 +24,7 @@ public final class MapController implements ObjectResourceController
 	public static final String KEY_CREATED = "Created";
 	public static final String KEY_MODIFIED = "Modified";
 
-	private static MapController instance;
+	private static MapTableController instance;
 
 	private List keys;
 
@@ -39,7 +39,7 @@ public final class MapController implements ObjectResourceController
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 
-	private MapController() 
+	private MapTableController() 
 	{
 		// empty private constructor
 		String[] keysArray = new String[] { 
@@ -52,10 +52,10 @@ public final class MapController implements ObjectResourceController
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static MapController getInstance() 
+	public static MapTableController getInstance() 
 	{
 		if (instance == null)
-			instance = new MapController();
+			instance = new MapTableController();
 		return instance;
 	}
 	
