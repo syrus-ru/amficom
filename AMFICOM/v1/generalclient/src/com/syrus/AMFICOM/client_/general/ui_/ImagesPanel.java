@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanel.java,v 1.3 2004/12/15 15:13:01 bass Exp $
+ * $Id: ImagesPanel.java,v 1.4 2005/02/08 11:27:38 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,25 +8,47 @@
 
 package com.syrus.AMFICOM.client_.general.ui_;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.StringFieldCondition;
-import com.syrus.AMFICOM.general.corba.StringFieldSort;
-import com.syrus.AMFICOM.resource.*;
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.ImageResourceWrapper;
+import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
+import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
+
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/12/15 15:13:01 $
+ * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/02/08 11:27:38 $
  * @module generalclient_v1
  */
 public class ImagesPanel extends JPanel
@@ -70,10 +92,13 @@ public class ImagesPanel extends JPanel
 		disp.register(this, "selectir");
 
 		try {
-			StringFieldCondition condition = new StringFieldCondition(
-					String.valueOf(ImageResourceSort._BITMAP),
-					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
-					StringFieldSort.STRINGSORT_INTEGER);
+			TypicalCondition condition = new TypicalCondition(
+				ImageResourceSort._BITMAP,
+				ImageResourceSort._BITMAP,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
+				ImageResourceWrapper.COLUMN_SORT);
+			
 			List bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			for (Iterator it = bitMaps.iterator(); it.hasNext(); ) {
