@@ -9,6 +9,8 @@ test
 *.swp
 *.tar
 *.gz
+*.jar
+*.jardesc
 *.jpr
 *.jpx
 *.zip
