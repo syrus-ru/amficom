@@ -49,29 +49,29 @@ import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilterPane;
 public class InnerReportToolBar extends JToolBar implements
 	ApplicationModelListener
 {
-	ReportMDIMain mainWindow = null;
+	private ReportMDIMain mainWindow = null;
 
 	private ApplicationModel aModel;
 
 	private Dispatcher pDisp;
 
-	JToggleButton addLabelButton = new JToggleButton();
+	private JToggleButton addLabelButton = new JToggleButton();
 
-	JToggleButton addImageButton = new JToggleButton();
+	private JToggleButton addImageButton = new JToggleButton();
 
-	JButton deleteObjectButton = new JButton();
+	private JButton deleteObjectButton = new JButton();
 
-	JButton changeViewButton = new JButton();
+	private JButton changeViewButton = new JButton();
 
-	JButton saveReportButton = new JButton();
+	private JButton saveReportButton = new JButton();
 
-	JButton printReportButton = new JButton();
+	private JButton printReportButton = new JButton();
 
-	public final static int img_siz = 16;
+	private final static int img_siz = 16;
 
-	public final static int btn_siz = 24;
+	private final static int btn_siz = 24;
 
-	public InnerReportToolBar()
+	protected InnerReportToolBar()
 	{
 		super();
 
