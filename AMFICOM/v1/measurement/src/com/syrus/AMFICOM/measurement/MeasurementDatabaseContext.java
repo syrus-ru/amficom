@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabaseContext.java,v 1.23 2005/02/16 13:52:22 arseniy Exp $
+ * $Id: MeasurementDatabaseContext.java,v 1.24 2005/02/22 14:10:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/02/16 13:52:22 $
+ * @version $Revision: 1.24 $, $Date: 2005/02/22 14:10:30 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -40,6 +40,7 @@ public class MeasurementDatabaseContext {
 	public static void init(final StorableObjectDatabase measurementTypeDatabase1,
 													final StorableObjectDatabase analysisTypeDatabase1,
 													final StorableObjectDatabase evaluationTypeDatabase1,
+													final StorableObjectDatabase modelingTypeDatabase1,
 													final StorableObjectDatabase setDatabase1,
 													final StorableObjectDatabase modelingDatabase1,
 													final StorableObjectDatabase measurementSetupDatabase1,
@@ -57,6 +58,9 @@ public class MeasurementDatabaseContext {
 
 		if (evaluationTypeDatabase1 != null)
 			evaluationTypeDatabase = evaluationTypeDatabase1;
+
+		if (modelingTypeDatabase1 != null)
+			modelingTypeDatabase = modelingTypeDatabase1;
 
 		if (setDatabase1 != null)
 			setDatabase = setDatabase1;
@@ -118,6 +122,9 @@ public class MeasurementDatabaseContext {
 			case ObjectEntities.MODELING_ENTITY_CODE:
 				return modelingDatabase;
 
+			case ObjectEntities.MODELINGTYPE_ENTITY_CODE:
+				return modelingTypeDatabase;
+
 			case ObjectEntities.RESULT_ENTITY_CODE:
 				return resultDatabase;
 
@@ -146,7 +153,7 @@ public class MeasurementDatabaseContext {
 	}
 	public static StorableObjectDatabase getEvaluationTypeDatabase() {
 		return evaluationTypeDatabase;
-	}	
+	}
 	public static StorableObjectDatabase getModelingDatabase() {
 		return modelingDatabase;
 	}
