@@ -795,7 +795,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		this.setClosable(true);
 		this.setMaximizable(true);
 		this.setIconifiable(true);
-		this.setTitle(LangModelSurvey.String("ResultFrameTitle"));
+		this.setTitle(LangModelSurvey.String("Results"));
 		this.addInternalFrameListener(new javax.swing.event.InternalFrameAdapter()
 		{
 			public void internalFrameOpened(InternalFrameEvent e)
@@ -822,13 +822,13 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		jTabbedPane1.setBorder(BorderFactory.createEmptyBorder());
 
 		tModelPar = new GeneralTableModel(
-				new String[] {LangModelSurvey.String("ArgParameter"),
-				LangModelSurvey.String("ArgValue")},
+				new String[] {LangModelSurvey.String("Input_parameter"),
+				LangModelSurvey.String("Value")},
 				new String[] {"11", "11"},
 				0);
 		tModelRes = new GeneralTableModel(
-				new String[] {LangModelSurvey.String("ResParameter"),
-				LangModelSurvey.String("ResValue")},
+				new String[] {LangModelSurvey.String("Output_parameter"),
+				LangModelSurvey.String("Value")},
 				new String[] {"22", "22"},
 				0);
 
@@ -854,7 +854,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		splitPane.setOneTouchExpandable(false);
 		splitPane.setResizeWeight(.5);
 
-		jTabbedPane1.add(LangModelSurvey.String("ResultTabTitle"), splitPane);
+		jTabbedPane1.add(LangModelSurvey.String("Parameters"), splitPane);
 
 		this.getContentPane().add(jTabbedPane1, BorderLayout.CENTER);
 		this.setVisible(true);

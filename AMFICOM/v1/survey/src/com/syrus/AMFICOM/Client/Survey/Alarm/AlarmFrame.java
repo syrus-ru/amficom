@@ -86,7 +86,7 @@ public class AlarmFrame extends JInternalFrame
 		this.setMaximizable(true);
 		this.setResizable(true);
 
-			this.setTitle(LangModelSurvey.getString("AlarmTitle"));
+			this.setTitle(LangModelSurvey.getString("Alarm_signals"));
 		this.getContentPane().setLayout(borderLayout1);
 //		this.setTitle("Сигналы тревоги");
 		this.addInternalFrameListener(new javax.swing.event.InternalFrameAdapter()
