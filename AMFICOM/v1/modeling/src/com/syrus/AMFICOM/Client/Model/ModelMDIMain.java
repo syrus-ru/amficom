@@ -331,7 +331,8 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				mmp = new MapMarkersPanel(mmlp, internal_dispatcher, y, delta_x);
 				analysisFrame.setGraph(mmp, true, "primarytrace");
 			}
-			String path_id = (String)Pool.get("activecontext", "activepathid");
+			com.syrus.AMFICOM.general.corba.Identifier path_id =
+					(com.syrus.AMFICOM.general.corba.Identifier)Pool.get("activecontext", "activepathid");
 			mmp.setSchemePathId(path_id);
 
 			new InitialAnalysisCommand().execute();//1
