@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.25 2005/02/18 12:19:46 krupenn Exp $
+ * $Id: MapFrame.java,v 1.26 2005/02/25 13:49:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,6 +58,7 @@ import com.syrus.AMFICOM.Client.Map.Command.Navigate.ZoomBoxCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.ZoomInCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.ZoomOutCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.ZoomToPointCommand;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -81,7 +82,7 @@ import com.syrus.AMFICOM.scheme.corba.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.25 $, $Date: 2005/02/18 12:19:46 $
+ * @version $Revision: 1.26 $, $Date: 2005/02/25 13:49:17 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -440,21 +441,7 @@ public class MapFrame extends JInternalFrame
 				try
 				{
 					MapStorableObjectPool.flush(true);//save map
-				}
-				catch (VersionCollisionException e)
-				{
-					e.printStackTrace();
-				}
-				catch (IllegalDataException e)
-				{
-					e.printStackTrace();
-				}
-				catch (CommunicationException e)
-				{
-					e.printStackTrace();
-				}
-				catch (DatabaseException e)
-				{
+				} catch(ApplicationException e) {
 					e.printStackTrace();
 				}
 				canClose = true;

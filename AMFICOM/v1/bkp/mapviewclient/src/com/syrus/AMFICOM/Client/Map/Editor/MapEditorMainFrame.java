@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.21 2005/02/07 16:09:26 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.22 2005/02/25 13:49:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,7 +10,32 @@
 
 package com.syrus.AMFICOM.Client.Map.Editor;
 
+import java.awt.AWTEvent;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowEvent;
+import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Properties;
+
+import javax.swing.BorderFactory;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+
 import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.ConnectionInterface;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Command.CloseAllInternalCommand;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
@@ -20,7 +45,6 @@ import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
-import com.syrus.AMFICOM.Client.General.ConnectionInterface;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
@@ -34,8 +58,6 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.Module;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorCloseMapCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.MapEditorCloseViewCommand;
@@ -55,52 +77,26 @@ import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapPropertiesCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapSetupCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapWindowCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.CreateMapReportCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewAddSchemeCommand;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewRemoveSchemeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapExportCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapImportCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewAddSchemeCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewRemoveSchemeCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
-import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-
-import java.awt.AWTEvent;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowEvent;
-
-import java.io.FileInputStream;
-
-import java.text.SimpleDateFormat;
-
-import java.util.Date;
-import java.util.Properties;
-
-import javax.swing.BorderFactory;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
+import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Основное окно модуля Редактор топологической схемы
  * 
  * 
  * 
- * @version $Revision: 1.21 $, $Date: 2005/02/07 16:09:26 $
+ * @version $Revision: 1.22 $, $Date: 2005/02/25 13:49:16 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -725,17 +721,7 @@ public class MapEditorMainFrame extends JFrame
 		this.statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
 		this.statusBar.setText(StatusBarModel.FIELD_SESSION, sdf.format(new Date(this.aContext.getSessionInterface().getLogonTime())));
 
-		try
-		{
-			Identifier userId = new Identifier(this.aContext.getSessionInterface().getAccessIdentifier().user_id);
-			User user = (User )AdministrationStorableObjectPool.getStorableObject(
-					userId, true);
-			this.statusBar.setText(StatusBarModel.FIELD_USER, this.aContext.getSessionInterface().getUser());
-		}
-		catch(ApplicationException ex)
-		{
-			ex.printStackTrace();
-		}
+		this.statusBar.setText(StatusBarModel.FIELD_USER, this.aContext.getSessionInterface().getUser());
 	}
 
 	public void setDomainSelected()

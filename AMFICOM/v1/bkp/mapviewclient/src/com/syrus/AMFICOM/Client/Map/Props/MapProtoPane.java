@@ -1,21 +1,5 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
-import com.syrus.AMFICOM.client_.general.ui_.ImagesDialog;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.resource.AbstractImageResource;
-import com.syrus.AMFICOM.resource.BitmapImageResource;
-import com.syrus.AMFICOM.resource.FileImageResource;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -31,6 +15,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.client_.general.ui_.ImagesDialog;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.resource.AbstractImageResource;
+import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.FileImageResource;
+import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 
 public final class MapProtoPane
 		extends JPanel 
@@ -168,14 +167,7 @@ public final class MapProtoPane
 				}
 
 				im = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-			}
-			catch (CommunicationException e)
-			{
-				e.printStackTrace();
-				return;
-			}
-			catch (DatabaseException e)
-			{
+			} catch(ApplicationException e) {
 				e.printStackTrace();
 				return;
 			}
@@ -200,14 +192,7 @@ public final class MapProtoPane
 			AbstractImageResource imageResource = (AbstractImageResource )
 				ResourceStorableObjectPool.getStorableObject(this.imageId, true);
 			frame.setImageResource((BitmapImageResource )imageResource);
-		}
-		catch (CommunicationException e)
-		{
-			e.printStackTrace();
-			return;
-		}
-		catch (DatabaseException e)
-		{
+		} catch(ApplicationException e) {
 			e.printStackTrace();
 			return;
 		}

@@ -20,8 +20,6 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -136,13 +134,7 @@ public class MapPanel
 				domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
 						this.map.getDomainId(),
 						false);
-			}
-			catch (CommunicationException e)
-			{
-				e.printStackTrace();
-			}
-			catch (DatabaseException e)
-			{
+			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
 

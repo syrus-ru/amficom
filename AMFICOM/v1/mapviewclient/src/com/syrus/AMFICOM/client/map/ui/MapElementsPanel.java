@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.16 2005/02/22 11:00:15 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.17 2005/02/25 13:49:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2005/02/22 11:00:15 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/25 13:49:17 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -258,7 +258,7 @@ public final class MapElementsPanel extends JPanel
 		this.table.clearSelection();
 
 		String selection = (String )this.typeComboBox.getSelectedItem();
-		Collection dataSet = new LinkedList();
+		Collection elements = new LinkedList();
 
 		if(this.map != null && this.logicalNetLayer != null)
 		{
@@ -266,7 +266,7 @@ public final class MapElementsPanel extends JPanel
 
 			SiteNodeType well = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.WELL);
 			SiteNodeType piquet = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.PIQUET);
-			SiteNodeType cableinlet = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET);
+//			SiteNodeType cableinlet = NodeTypeController.getSiteNodeType(creatorId, SiteNodeType.CABLE_INLET);
 
 			if(selection.equals(ELEMENTS_SITE))
 			{
@@ -275,7 +275,7 @@ public final class MapElementsPanel extends JPanel
 					SiteNode site = (SiteNode)it.next();
 					if(		!site.getType().equals(well)
 						&&	!site.getType().equals(piquet) )
-							dataSet.add(site);
+							elements.add(site);
 				}
 			}
 			else
@@ -285,7 +285,7 @@ public final class MapElementsPanel extends JPanel
 				{
 					SiteNode site = (SiteNode)it.next();
 					if(site.getType().equals(well))
-						dataSet.add(site);
+						elements.add(site);
 				}
 			}
 			else
@@ -295,30 +295,30 @@ public final class MapElementsPanel extends JPanel
 				{
 					SiteNode site = (SiteNode)it.next();
 					if(site.getType().equals(piquet))
-						dataSet.add(site);
+						elements.add(site);
 				}
 			}
 			else
 			if(selection.equals(ELEMENTS_LINK))
-				dataSet = this.map.getPhysicalLinks();
+				elements = this.map.getPhysicalLinks();
 			else
 			if(selection.equals(ELEMENTS_PATH))
-				dataSet = this.logicalNetLayer.getMapView().getMeasurementPaths();
+				elements = this.logicalNetLayer.getMapView().getMeasurementPaths();
 			else
 			if(selection.equals(ELEMENTS_NODE))
-				dataSet = this.map.getTopologicalNodes();
+				elements = this.map.getTopologicalNodes();
 			else
 			if(selection.equals(ELEMENTS_MARK))
-				dataSet = this.map.getMarks();
+				elements = this.map.getMarks();
 			else
 			if(selection.equals(ELEMENTS_MARKER))
-				dataSet = this.logicalNetLayer.getMapView().getMarkers();
+				elements = this.logicalNetLayer.getMapView().getMarkers();
 			else
 			if(selection.equals(ELEMENTS_COLLECTOR))
-				dataSet = this.map.getCollectors();
+				elements = this.map.getCollectors();
 			else
 			if(selection.equals(ELEMENTS_CABLE))
-				dataSet = this.logicalNetLayer.getMapView().getCablePaths();
+				elements = this.logicalNetLayer.getMapView().getCablePaths();
 //			else
 //			if(selection.equals(SchemeElement.typ))
 //			{
@@ -331,7 +331,7 @@ public final class MapElementsPanel extends JPanel
 //			}
 		}
 
-		this.model.setContents(dataSet);
+		this.model.setContents(elements);
 
 		this.mouseSelect = true;
 

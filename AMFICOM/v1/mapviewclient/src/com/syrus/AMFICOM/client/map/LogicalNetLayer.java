@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.47 2005/02/25 12:52:38 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.48 2005/02/25 13:49:16 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -9,6 +9,21 @@
 */
 
 package com.syrus.AMFICOM.Client.Map;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Stroke;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.CommandList;
@@ -35,16 +50,6 @@ import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
 import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.mapview.AlarmMarker;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.EventMarker;
-import com.syrus.AMFICOM.mapview.Marker;
-import com.syrus.AMFICOM.mapview.MeasurementPath;
-import com.syrus.AMFICOM.mapview.Selection;
-import com.syrus.AMFICOM.mapview.VoidElement;
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -56,26 +61,18 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.mapview.AlarmMarker;
+import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.EventMarker;
+import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.Marker;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.AMFICOM.mapview.Selection;
+import com.syrus.AMFICOM.mapview.VoidElement;
 import com.syrus.AMFICOM.scheme.PathDecompositor;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
-
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Stroke;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 /**
  * ”правл€ет отображением логической структуры сети.
@@ -83,7 +80,7 @@ import java.util.Set;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.47 $, $Date: 2005/02/25 12:52:38 $
+ * @version $Revision: 1.48 $, $Date: 2005/02/25 13:49:16 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -1130,8 +1127,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						this.mapView.removeMarker(marker);
 					if(marker instanceof AlarmMarker)
 					{
-						AlarmMarker amarker = (AlarmMarker)marker;
 /*
+						AlarmMarker amarker = (AlarmMarker)marker;
 						MapPhysicalLinkElement link = findMapLinkByCableLink(marker.link_id);
 						if(link != null)
 						{

@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveAsCommand.java,v 1.13 2005/02/22 11:00:14 krupenn Exp $
+ * $Id: MapViewSaveAsCommand.java,v 1.14 2005/02/25 13:49:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,14 +22,11 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Props.MapViewPanel;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
-import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
-import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 
@@ -37,7 +34,7 @@ import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
  * Класс используется для сохранения топологической схемы с новым
  * именем
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/02/22 11:00:14 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/25 13:49:16 $
  * @module mapviewclient_v1
  */
 public class MapViewSaveAsCommand extends VoidCommand
@@ -126,21 +123,7 @@ public class MapViewSaveAsCommand extends VoidCommand
 			try
 			{
 				MapViewStorableObjectPool.flush(true);// save mapview
-			}
-			catch (VersionCollisionException e)
-			{
-				e.printStackTrace();
-			}
-			catch (IllegalDataException e)
-			{
-				e.printStackTrace();
-			}
-			catch (CommunicationException e)
-			{
-				e.printStackTrace();
-			}
-			catch (DatabaseException e)
-			{
+			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.12 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapExportCommand.java,v 1.13 2005/02/25 13:49:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,10 +22,8 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.XMLMapObjectLoader;
@@ -37,7 +35,7 @@ import com.syrus.AMFICOM.map.XMLMapObjectLoader;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/25 13:49:16 $
  * @module mapviewclient_v1
  */
 public class MapExportCommand extends ExportCommand
@@ -122,17 +120,7 @@ public class MapExportCommand extends ExportCommand
 		try
 		{
 			xmlLoader.saveMap(map, true);
-		}
-		catch (VersionCollisionException e)
-		{
-			e.printStackTrace();
-		}
-		catch (CommunicationException e)
-		{
-			e.printStackTrace();
-		}
-		catch (DatabaseException e)
-		{
+		} catch(ApplicationException e) {
 			e.printStackTrace();
 		}
 	}

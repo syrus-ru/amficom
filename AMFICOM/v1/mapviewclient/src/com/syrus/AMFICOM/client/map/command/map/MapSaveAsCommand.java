@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.14 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.15 2005/02/25 13:49:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,13 +22,10 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Props.MapPanel;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
-import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 
@@ -36,7 +33,7 @@ import com.syrus.AMFICOM.map.MapStorableObjectPool;
  * Класс $RCSfile: MapSaveAsCommand.java,v $ используется для сохранения 
  * топологической схемы с новым именем
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/25 13:49:16 $
  * @module mapviewclient_v1
  */
 public class MapSaveAsCommand extends VoidCommand
@@ -121,21 +118,7 @@ public class MapSaveAsCommand extends VoidCommand
 			try
 			{
 				MapStorableObjectPool.flush(true);// save newMap
-			}
-			catch (VersionCollisionException e)
-			{
-				e.printStackTrace();
-			}
-			catch (IllegalDataException e)
-			{
-				e.printStackTrace();
-			}
-			catch (CommunicationException e)
-			{
-				e.printStackTrace();
-			}
-			catch (DatabaseException e)
-			{
+			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
 

@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.Map.Report;
 
+import javax.swing.table.TableColumn;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
@@ -9,9 +11,7 @@ import com.syrus.AMFICOM.Client.General.Report.ReportData;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
-import com.syrus.AMFICOM.mapview.Marker;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.IntPoint;
@@ -22,8 +22,7 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.CablePath;
-
-import javax.swing.table.TableColumn;
+import com.syrus.AMFICOM.mapview.Marker;
 
 public class MarkerInfoReport extends ReportData {
 	public MarkerInfoReport(ObjectsReport report, int divisionsNumber)
@@ -67,10 +66,8 @@ class MarkerInfoReportTableModel extends DividableTableModel {
 			marker = (Marker )MapStorableObjectPool.getStorableObject(
 					markerId,
 					false);
-		} catch(DatabaseException dExc) {
-			dExc.printStackTrace();
-		} catch(CommunicationException cExc) {
-			cExc.printStackTrace();
+		} catch(ApplicationException e) {
+			e.printStackTrace();
 		}
 
 		MarkerController mc = (MarkerController )MarkerController.getInstance();
@@ -146,10 +143,9 @@ class MarkerInfoReportTableModel extends DividableTableModel {
 					.getStorableObject(
 							marker.getNodeLink().getPhysicalLink().getId(), 
 							false);
-		} catch(DatabaseException dExc) {
-			dExc.printStackTrace();
-		} catch(CommunicationException cExc) {
-			cExc.printStackTrace();
+		} catch(ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		if(physicalLink == null)

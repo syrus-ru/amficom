@@ -1,20 +1,18 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.Map;
-
-import java.text.SimpleDateFormat;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public final class MapTableController implements ObjectResourceController 
 {
@@ -85,13 +83,7 @@ public final class MapTableController implements ObjectResourceController
 			{
 				Domain domain = (Domain )AdministrationStorableObjectPool.getStorableObject(map.getDomainId(), false);
 				result = domain.getName();
-			}
-			catch (CommunicationException e)
-			{
-				result = "";
-			}
-			catch (DatabaseException e)
-			{
+			} catch(ApplicationException e) {
 				result = "";
 			}
 		}
@@ -102,13 +94,7 @@ public final class MapTableController implements ObjectResourceController
 			{
 				User user = (User )AdministrationStorableObjectPool.getStorableObject(map.getCreatorId(), false);
 				result = user.getName();
-			}
-			catch (CommunicationException e)
-			{
-				result = "";
-			}
-			catch (DatabaseException e)
-			{
+			} catch(ApplicationException e) {
 				result = "";
 			}
 		}

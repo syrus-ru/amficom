@@ -15,8 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.mapview.MapView;
 
 public final class MapViewTableController implements ObjectResourceController 
@@ -79,13 +78,7 @@ public final class MapViewTableController implements ObjectResourceController
 			try
 			{
 				result = AdministrationStorableObjectPool.getStorableObject(view.getDomainId(), false);
-			}
-			catch (CommunicationException e)
-			{
-				e.printStackTrace();
-			}
-			catch (DatabaseException e)
-			{
+			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
 		}
@@ -95,13 +88,7 @@ public final class MapViewTableController implements ObjectResourceController
 			try
 			{
 				result = AdministrationStorableObjectPool.getStorableObject(view.getCreatorId(), false);
-			}
-			catch (CommunicationException e)
-			{
-				e.printStackTrace();
-			}
-			catch (DatabaseException e)
-			{
+			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
 		}

@@ -23,8 +23,6 @@ public final class MapSitePane
 
 	private LogicalNetLayer lnl;
 
-	private ApplicationContext aContext;
-
 	private static MapSitePane instance = new MapSitePane();
 
 	private MapSitePane()
@@ -83,7 +81,6 @@ public final class MapSitePane
 
 	public void setContext(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
 		this.gPanel.setContext(aContext);
 		this.bPanel.setContext(aContext);
 	}

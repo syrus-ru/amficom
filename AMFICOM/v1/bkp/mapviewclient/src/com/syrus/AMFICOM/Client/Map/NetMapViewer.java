@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.8 2005/02/22 14:45:35 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.9 2005/02/25 13:49:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,9 +25,9 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * (SpatialFX, MapInfo) наследуют этот класс и реализуют специфические
  * для формата операции отображения.
  * Для того, чтобы получить компонент, содержащий в себе отображение 
- * картографии, следует вызвать метод {@link #getComponent()}
+ * картографии, следует вызвать метод {@link #getVisualComponent()}
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/22 14:45:35 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/25 13:49:16 $
  * @module mapviewclient_v1
  * @see com.syrus.AMFICOM.Client.Map.ObjectFX.OfxNetMapViewer 
  * @see com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer

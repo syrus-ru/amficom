@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.9 2005/02/25 13:03:32 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.10 2005/02/25 13:49:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,17 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Map;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.resource.AbstractImageResource;
-import com.syrus.AMFICOM.resource.FileImageResource;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
@@ -30,19 +19,25 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.swing.ImageIcon;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.resource.AbstractImageResource;
+import com.syrus.AMFICOM.resource.FileImageResource;
+import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 
 /**
  * Класс управляет инициализацией картографического отображения.
@@ -57,7 +52,7 @@ import javax.swing.ImageIcon;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/25 13:03:32 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/25 13:49:16 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 

@@ -184,8 +184,8 @@ public class SiteCrossingPanel extends JPanel
 		double cosA = Math.cos(a);
 
 		// смещение по x и по y для линии выделения
-		int lxshift = (int )(TUNNEL_WIDTH * sinA);
-		int lyshift = (int )(TUNNEL_WIDTH * cosA);
+//		int lxshift = (int )(TUNNEL_WIDTH * sinA);
+//		int lyshift = (int )(TUNNEL_WIDTH * cosA);
 		
 		int endx = (int )(centerx + TUNNEL_LENGTH * cosA);
 		int endy = (int )(centery + TUNNEL_LENGTH * sinA);

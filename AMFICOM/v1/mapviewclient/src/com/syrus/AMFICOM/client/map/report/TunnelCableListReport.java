@@ -1,13 +1,16 @@
 package com.syrus.AMFICOM.Client.Map.Report;
 
+import java.util.ListIterator;
+
+import javax.swing.table.TableColumn;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.IntPoint;
@@ -15,10 +18,6 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-
-import java.util.ListIterator;
-
-import javax.swing.table.TableColumn;
 
 public class TunnelCableListReport extends ReportData
 {
@@ -71,14 +70,8 @@ class TunnelCableListReportTableModel extends DividableTableModel
 		{
 			physicalLink = (PhysicalLink )MapStorableObjectPool
 					.getStorableObject(physicalLinkId, false);
-		}
-		catch(DatabaseException dExc)
-		{
-			dExc.printStackTrace();
-		}
-		catch(CommunicationException cExc)
-		{
-			cExc.printStackTrace();
+		} catch(ApplicationException e) {
+			e.printStackTrace();
 		}
 
 		if(physicalLink == null)

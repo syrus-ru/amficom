@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.10 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: MarkerController.java,v 1.11 2005/02/25 13:49:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import javax.swing.ImageIcon;
 /**
  * Контроллер маркера.
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/25 13:49:16 $
  * @module mapviewclient_v1
  */
 public class MarkerController extends AbstractNodeController
@@ -497,8 +497,9 @@ public class MarkerController extends AbstractNodeController
 	 */
 	public double getFromStartLengthLt(Marker marker)
 	{
-		double pathLength = 0;
 /*
+		double pathLength = 0;
+
 		Vector nl = transmissionPath.sortNodeLinks();
 		Vector pl = transmissionPath.sortPhysicalLinks();
 		Vector n = transmissionPath.sortNodes();
