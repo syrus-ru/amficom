@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.2 2004/12/15 12:02:20 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.3 2004/12/23 10:36:57 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,11 +14,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
-//import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2004/12/15 12:02:20 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/23 10:36:57 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
