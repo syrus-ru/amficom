@@ -1,13 +1,13 @@
-OUT=akp.a
-OUTSO=libakp.so
+OUT := akp.a
+OUTSO := libakp.so
 
-CXX=g++#-3.4.1
-CXXFLAGS=-O3 -Wall -W
+CXX := g++#-3.4.1
+CXXFLAGS := -O3 -Wall -W
 
-AR=ar
-ARFLAGS=rcsv
+AR := ar
+ARFLAGS := rcsv
 
-OBJS=ByteArray.o \
+OBJS := ByteArray.o \
 	Parameter.o \
 	Segment.o \
 	KISInfoSegment.o \
@@ -16,7 +16,7 @@ OBJS=ByteArray.o \
 	ResultSegment.o
 #OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 
-ARCHFILE=akp.tar.gz
+ARCHFILE := akp.tar.gz
 
 
 .PHONY:	clean arch
