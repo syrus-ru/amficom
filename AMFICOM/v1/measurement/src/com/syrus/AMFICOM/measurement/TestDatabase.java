@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.59 2005/01/28 07:40:36 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.60 2005/01/28 08:20:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,25 +52,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/01/28 07:40:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.60 $, $Date: 2005/01/28 08:20:35 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class TestDatabase extends StorableObjectDatabase {
-	public static final String COLUMN_ANALYSIS_TYPE_ID	= "analysis_type_id";
-	public static final String COLUMN_DESCRIPTION	= "description";
-	public static final String COLUMN_END_TIME	= "end_time";
-	public static final String COLUMN_EVALUATION_TYPE_ID	= "evaluation_type_id";
-	public static final String COLUMN_MEASUREMENT_TYPE_ID	= "measurement_type_id";
-	public static final String COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
-	public static final String COLUMN_RETURN_TYPE	= "return_type";
-	public static final String COLUMN_START_TIME	= "start_time";
-	public static final String COLUMN_STATUS	= "status";
-	public static final String COLUMN_TEMPORAL_PATTERN_ID	= "temporal_pattern_id";
-	public static final String COLUMN_TEMPORAL_TYPE	= "temporal_type";
-	
-	public static final String LINK_COLMN_MEASUREMENT_SETUP_ID = "measurement_setup_id";
 	public static final String LINK_COLMN_TEST_ID = "test_id";
 	
     public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
@@ -85,17 +72,17 @@ public class TestDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_TEMPORAL_TYPE + COMMA
-				+ COLUMN_START_TIME + COMMA
-				+ COLUMN_END_TIME + COMMA
-				+ COLUMN_TEMPORAL_PATTERN_ID + COMMA
-				+ COLUMN_MEASUREMENT_TYPE_ID + COMMA
-				+ COLUMN_ANALYSIS_TYPE_ID + COMMA
-				+ COLUMN_EVALUATION_TYPE_ID + COMMA
-				+ COLUMN_STATUS + COMMA
-				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-				+ COLUMN_RETURN_TYPE + COMMA
-				+ COLUMN_DESCRIPTION;
+				+ TestWrapper.COLUMN_TEMPORAL_TYPE + COMMA
+				+ TestWrapper.COLUMN_START_TIME + COMMA
+				+ TestWrapper.COLUMN_END_TIME + COMMA
+				+ TestWrapper.COLUMN_TEMPORAL_PATTERN_ID + COMMA
+				+ TestWrapper.COLUMN_MEASUREMENT_TYPE_ID + COMMA
+				+ TestWrapper.COLUMN_ANALYSIS_TYPE_ID + COMMA
+				+ TestWrapper.COLUMN_EVALUATION_TYPE_ID + COMMA
+				+ TestWrapper.COLUMN_STATUS + COMMA
+				+ TestWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
+				+ TestWrapper.COLUMN_RETURN_TYPE + COMMA
+				+ TestWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}	
@@ -144,8 +131,8 @@ public class TestDatabase extends StorableObjectDatabase {
 	
 	protected String retrieveQuery(String condition) {
 		String query = super.retrieveQuery(condition);
-		query = query.replaceFirst(COLUMN_START_TIME, DatabaseDate.toQuerySubString(COLUMN_START_TIME));
-		query = query.replaceFirst(COLUMN_END_TIME, DatabaseDate.toQuerySubString(COLUMN_END_TIME));
+		query = query.replaceFirst(TestWrapper.COLUMN_START_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_START_TIME));
+		query = query.replaceFirst(TestWrapper.COLUMN_END_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_END_TIME));
 		return query;
 	}
 	
@@ -201,35 +188,35 @@ public class TestDatabase extends StorableObjectDatabase {
 		EvaluationType evaluationType;
 		MonitoredElement monitoredElement;
 		try {			
-			Identifier temportalPatternId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TEMPORAL_PATTERN_ID);
+			Identifier temportalPatternId = DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_TEMPORAL_PATTERN_ID);
 			temporalPattern = (temportalPatternId != null) ? (TemporalPattern)MeasurementStorableObjectPool.getStorableObject(temportalPatternId, true) : null;
 			
-			measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_TYPE_ID), true);
-			Identifier analysisTypeId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ANALYSIS_TYPE_ID);
+			measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_MEASUREMENT_TYPE_ID), true);
+			Identifier analysisTypeId = DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_ANALYSIS_TYPE_ID);
 			analysisType = (analysisTypeId != null) ? (AnalysisType)MeasurementStorableObjectPool.getStorableObject(analysisTypeId, true) : null;
-			Identifier evaluationTypeId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_EVALUATION_TYPE_ID);
+			Identifier evaluationTypeId = DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_EVALUATION_TYPE_ID);
 			evaluationType = (evaluationTypeId != null) ? (EvaluationType)MeasurementStorableObjectPool.getStorableObject(evaluationTypeId, true) : null;
-			Identifier monitoredElementId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MONITORED_ELEMENT_ID);
+			Identifier monitoredElementId = DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
 			monitoredElement = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(monitoredElementId, true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(TestWrapper.COLUMN_DESCRIPTION));
 		test.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 						   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 						   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 						   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-						   resultSet.getInt(COLUMN_TEMPORAL_TYPE),
-						   DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
-						   DatabaseDate.fromQuerySubString(resultSet, COLUMN_END_TIME),
+						   resultSet.getInt(TestWrapper.COLUMN_TEMPORAL_TYPE),
+						   DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_START_TIME),
+						   DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_END_TIME),
 						   temporalPattern,
 						   measurementType,
 						   analysisType,
 						   evaluationType,
-						   resultSet.getInt(COLUMN_STATUS),
+						   resultSet.getInt(TestWrapper.COLUMN_STATUS),
 						   monitoredElement,
-						   resultSet.getInt(COLUMN_RETURN_TYPE),
+						   resultSet.getInt(TestWrapper.COLUMN_RETURN_TYPE),
 						   (description != null) ? description: "");
 
 		return test;
@@ -238,7 +225,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	private void retrieveMeasurementSetupTestLinks(Test test) throws RetrieveObjectException {
 		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		String sql = SQL_SELECT
-			+ LINK_COLMN_MEASUREMENT_SETUP_ID
+			+ TestWrapper.LINK_COLMN_MEASUREMENT_SETUP_ID
 			+ SQL_FROM + ObjectEntities.MSTESTLINK_ENTITY
 			+ SQL_WHERE + LINK_COLMN_TEST_ID + EQUALS + testIdStr;
 		Statement statement = null;
@@ -250,7 +237,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			Log.debugMessage("TestDatabase.retrieveMeasurementSetupTestLinks | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()){
-				msList.add(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLMN_MEASUREMENT_SETUP_ID));
+				msList.add(DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.LINK_COLMN_MEASUREMENT_SETUP_ID));
 			}
 		}
 		catch (SQLException sqle) {
@@ -283,7 +270,7 @@ public class TestDatabase extends StorableObjectDatabase {
             return;     
         
         StringBuffer sql = new StringBuffer(SQL_SELECT
-                + LINK_COLMN_MEASUREMENT_SETUP_ID + COMMA
+                + TestWrapper.LINK_COLMN_MEASUREMENT_SETUP_ID + COMMA
                 + LINK_COLMN_TEST_ID
                 + SQL_FROM + ObjectEntities.MSTESTLINK_ENTITY
                 + SQL_WHERE + LINK_COLMN_TEST_ID
@@ -330,7 +317,7 @@ public class TestDatabase extends StorableObjectDatabase {
                     throw new RetrieveObjectException(mesg);
                 }
                     
-                Identifier msId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLMN_MEASUREMENT_SETUP_ID);
+                Identifier msId = DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.LINK_COLMN_MEASUREMENT_SETUP_ID);
                 List msIds = (List)msIdMap.get(test);
                 if (msIds == null){
                     msIds = new LinkedList();
@@ -595,7 +582,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		String sql = SQL_INSERT_INTO + ObjectEntities.MSTESTLINK_ENTITY
 			+ OPEN_BRACKET
 			+ LINK_COLMN_TEST_ID + COMMA
-			+ LINK_COLMN_MEASUREMENT_SETUP_ID
+			+ TestWrapper.LINK_COLMN_MEASUREMENT_SETUP_ID
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 			+ QUESTION + COMMA
 			+ QUESTION
@@ -682,7 +669,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		String sql = SQL_UPDATE + ObjectEntities.TEST_ENTITY
 			+ SQL_SET
-			+ COLUMN_STATUS + EQUALS + Integer.toString(test.getStatus().value()) + COMMA
+			+ TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(test.getStatus().value()) + COMMA
 			+ COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(test.getModified()) + COMMA
 			+ COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(test.getModifierId())
 			+ SQL_WHERE + COLUMN_ID + EQUALS + testIdStr;
@@ -748,8 +735,8 @@ public class TestDatabase extends StorableObjectDatabase {
 	public List retrieveTests(TestStatus status) throws RetrieveObjectException {
 		List list = null;
 		try{
-			list = this.retrieveByIds(null, COLUMN_STATUS + EQUALS + Integer.toString(status.value())
-									+ SQL_ORDER_BY + COLUMN_START_TIME + SQL_ASC);
+			list = this.retrieveByIds(null, TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(status.value())
+									+ SQL_ORDER_BY + TestWrapper.COLUMN_START_TIME + SQL_ASC);
 		}
 		catch(IllegalDataException ide) {
 			Log.debugMessage("TestDatabase.retrieveTests | Trying: " + ide, Log.DEBUGLEVEL09);
@@ -760,7 +747,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	public List retrieveTestsForMCM(Identifier mcmId, TestStatus status) throws RetrieveObjectException {
 		
 		String mcmIdStr = DatabaseIdentifier.toSQLString(mcmId);
-		String condition = COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
+		String condition = TestWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
 				+ SQL_SELECT
 				+ COLUMN_ID
 				+ SQL_FROM + ObjectEntities.ME_ENTITY
@@ -776,8 +763,8 @@ public class TestDatabase extends StorableObjectDatabase {
 					+ CLOSE_BRACKET
 				+ CLOSE_BRACKET
 			+ CLOSE_BRACKET
-				+ SQL_AND + COLUMN_STATUS + EQUALS + Integer.toString(status.value())
-			+ SQL_ORDER_BY + COLUMN_START_TIME + SQL_ASC;		
+				+ SQL_AND + TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(status.value())
+			+ SQL_ORDER_BY + TestWrapper.COLUMN_START_TIME + SQL_ASC;		
 
 		List list = null;
 		
@@ -807,10 +794,10 @@ public class TestDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByTimeRange(List ids, Domain domain, Date start, Date end) throws RetrieveObjectException {
 		List list = null;		
 		
-		String condition = COLUMN_START_TIME + " <= " + DatabaseDate.toUpdateSubString(end)
-			+ SQL_AND + COLUMN_END_TIME + " >= " + DatabaseDate.toUpdateSubString(start)
+		String condition = TestWrapper.COLUMN_START_TIME + " <= " + DatabaseDate.toUpdateSubString(end)
+			+ SQL_AND + TestWrapper.COLUMN_END_TIME + " >= " + DatabaseDate.toUpdateSubString(start)
 			+ SQL_AND 
-			+ COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
+			+ TestWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
 				+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
 				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
 			+ CLOSE_BRACKET;
