@@ -1,5 +1,5 @@
 /*
-* $Id: StringFieldConditionImpl.java,v 1.1 2005/01/24 10:58:28 bob Exp $
+* $Id: StringFieldConditionImpl.java,v 1.2 2005/01/26 15:26:59 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import com.syrus.AMFICOM.general.corba.StringFieldSort;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/24 10:58:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/01/26 15:26:59 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 final class StringFieldConditionImpl extends StringFieldCondition {
@@ -29,14 +29,25 @@ final class StringFieldConditionImpl extends StringFieldCondition {
 		boolean condition = false;		
 		if (object instanceof ParameterType) {
 			ParameterType parameterType = (ParameterType)object;
-			switch(this.sort){
+			switch(this.sort) {
 				case StringFieldSort._STRINGSORT_BASE:
 					if (parameterType.getCodename().equals(this.string)) {
 						condition = true;
 					}
 					break;
 			}
-		} 
+		}
+		else
+			if (object instanceof CharacteristicType) {
+				CharacteristicType characteristicType = (CharacteristicType) object;
+				switch (this.sort) {
+					case StringFieldSort._STRINGSORT_BASE:
+						if (characteristicType.getCodename().equals(this.string)) {
+							condition = true;
+						}
+						break;
+				}
+			}
 		return condition;
 	}
 
