@@ -70,8 +70,8 @@ cleancorba:
 
 #### Install ####
 .PHONY:	install
-install: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)
+install: $(LIBNAME) $(LIBDIR)
+	$(CP) $^
 
 
 #### Archive ####

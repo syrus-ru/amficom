@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.4 2004/12/21 10:44:03 arseniy Exp $
+# $Id: Makefile,v 1.5 2005/02/28 15:00:44 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -81,6 +81,6 @@ $(LIBNAME): .all
 		-C $(CLASSDIR) com
 
 #### Install ####
-install: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)
+install: $(LIBNAME) $(LIBDIR)
+	$(CP) $^
 

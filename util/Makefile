@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.19 2005/02/04 07:05:03 max Exp $
+# $Id: Makefile,v 1.20 2005/02/28 15:02:39 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -110,5 +110,5 @@ $(MODULE_NAME)server.jar: .all
 	$(JAR) cf $@ \
 		$(foreach file, $(filter $(foreach class, $(subst .,/, $(SERVER_INCLUDED_CLASSES)), $(foreach suffix, $(CLASS_SUFFIXES), $(class)$(suffix))), $(foreach classfile, $(shell find $(CLASSDIR) -name '*\.class'), $(subst $(CLASSDIR)/,,$(classfile)))), -C $(CLASSDIR) '$(file)')
 
-install: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)
+install: $(LIBNAME) $(LIBDIR)
+	$(CP) $^

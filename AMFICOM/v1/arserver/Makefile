@@ -55,9 +55,8 @@ cleancorba:
 
 #### Install ####
 .PHONY:	install
-install: $(LIBNAME) $(LIBNAME_INTERFACE)
-	$(CP) $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)
-	$(RM) $(LIBNAME) $(LIBNAME_INTERFACE)
+install: $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)
+	$(CP) $^
 
 #### Archive ####
 #.PHONY:	arch

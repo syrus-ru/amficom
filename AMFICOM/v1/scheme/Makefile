@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.12 2005/02/28 14:24:19 bass Exp $
+# $Id: Makefile,v 1.13 2005/02/28 15:02:39 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -116,7 +116,7 @@ cleancorba: idlclean
 #### Install ####
 .PHONY:	install
 install: $(LIBNAME) $(LIBDIR)
-	$(CP) $<
+	$(CP) $^
 
 #### Uninstall ####
 .PHONY: uninstall

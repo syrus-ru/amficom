@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.10 2004/12/29 10:52:30 arseniy Exp $
+# $Id: Makefile,v 1.11 2005/02/28 15:01:25 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -39,6 +39,6 @@ clean:
 
 #### Install ####
 .PHONY:	install
-install: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)
+install: $(LIBNAME) $(LIBDIR)
+	$(CP) $^
 
