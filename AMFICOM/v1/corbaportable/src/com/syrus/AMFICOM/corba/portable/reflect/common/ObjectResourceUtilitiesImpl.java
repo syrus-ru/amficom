@@ -1,25 +1,20 @@
 package com.syrus.AMFICOM.corba.portable.reflect.common;
 
 import com.syrus.AMFICOM.corba.portable.common.DatabaseAccessException;
-import com.syrus.AMFICOM.server.prefs.JDBCConnectionManager;
+import com.syrus.AMFICOM.server.prefs.JdbcConnectionManager;
 import java.sql.SQLException;
+import javax.sql.DataSource;
 import sqlj.runtime.ExecutionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/22 12:27:26 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/14 12:51:40 $
  * @author $Author: bass $
  */
 public abstract class ObjectResourceUtilitiesImpl {
-	protected ObjectResourceUtilitiesImpl() {
-	}
+	private static final DataSource DATA_SOURCE = JdbcConnectionManager.getDataSource();
 
-	static {
-		try {
-			Class.forName(JDBCConnectionManager.class.getName());
-		} catch (ClassNotFoundException cnfe) {
-			;
-		}
+	protected ObjectResourceUtilitiesImpl() {
 	}
 
 	protected abstract String[] getIds(DefaultContext connCtx, ExecutionContext execCtx) throws SQLException;
