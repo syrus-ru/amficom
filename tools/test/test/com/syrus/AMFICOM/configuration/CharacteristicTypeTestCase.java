@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeTestCase.java,v 1.1 2004/08/27 15:15:57 bob Exp $
+ * $Id: CharacteristicTypeTestCase.java,v 1.2 2004/08/31 15:29:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/27 15:15:57 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/31 15:29:12 $
  * @author $Author: bob $
  * @module tools
  */
@@ -56,7 +56,7 @@ public class CharacteristicTypeTestCase extends ConfigureTestCase {
 		CharacteristicType chType = CharacteristicType.createInstance(id, ConfigureTestCase.creatorId, "CharacteristicTypeTestCase",
 															"characteristicType created by CharacteristicTypeTestCase",
 															DataType._DATA_TYPE_STRING, false,false);
-		CharacteristicType chType2 = new CharacteristicType((CharacteristicType_Transferable) chType.getTransferable());
+		CharacteristicType chType2 = CharacteristicType.getInstance((CharacteristicType_Transferable) chType.getTransferable());
 
 		assertEquals(chType.getId(), chType2.getId());
 

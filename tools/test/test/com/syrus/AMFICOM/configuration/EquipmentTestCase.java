@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTestCase.java,v 1.3 2004/08/25 09:42:39 bob Exp $
+ * $Id: EquipmentTestCase.java,v 1.4 2004/08/31 15:29:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.List;
 
 import junit.framework.Test;
 
+import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentType;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/25 09:42:39 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/31 15:29:12 $
  * @author $Author: bob $
  * @module tools
  */
@@ -54,16 +55,24 @@ public class EquipmentTestCase extends ConfigureTestCase {
 	public void testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
 
-		List list = EquipmentDatabase.retrieveAll();
+		EquipmentDatabase equipmentDatabase = (EquipmentDatabase) ConfigurationDatabaseContext
+				.getEquipmentDatabase();
 
-		List eqTypelist = EquipmentTypeDatabase.retrieveAll();
+		EquipmentTypeDatabase equipmentTypeDatabase = (EquipmentTypeDatabase) ConfigurationDatabaseContext
+				.getEquipmentTypeDatabase();
+
+		KISDatabase kisDatabase = (KISDatabase) ConfigurationDatabaseContext.getKISDatabase();
+
+		List list = equipmentDatabase.retrieveAll();
+
+		List eqTypelist = equipmentTypeDatabase.retrieveAll();
 
 		if (eqTypelist.isEmpty())
 			fail("must be at less one equipment type at db");
 
 		EquipmentType eqType = (EquipmentType) eqTypelist.get(0);
 
-		List kislist = KISDatabase.retrieveAll();
+		List kislist = kisDatabase.retrieveAll();
 
 		if (kislist.isEmpty())
 			fail("must be at less one kis at db");
@@ -76,7 +85,7 @@ public class EquipmentTestCase extends ConfigureTestCase {
 							"equipment created by EquipmentTestCase",
 							new Identifier("Image_1"));
 
-		Equipment eq2 = new Equipment((Equipment_Transferable) eq.getTransferable());
+		Equipment eq2 = Equipment.getInstance((Equipment_Transferable) eq.getTransferable());
 
 		assertEquals(eq.getId(), eq2.getId());
 
@@ -85,12 +94,14 @@ public class EquipmentTestCase extends ConfigureTestCase {
 		assertEquals(eq2.getId(), eq3.getId());
 
 		if (!list.isEmpty())
-			EquipmentDatabase.delete(eq);
+			equipmentDatabase.delete(eq);
 
 	}
 
 	public void testRetriveAll() throws RetrieveObjectException, ObjectNotFoundException {
-		List list = EquipmentDatabase.retrieveAll();
+		EquipmentDatabase equipmentDatabase = (EquipmentDatabase) ConfigurationDatabaseContext
+				.getEquipmentDatabase();
+		List list = equipmentDatabase.retrieveAll();
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			Equipment eq = (Equipment) it.next();
 			Equipment eq2 = new Equipment(eq.getId());

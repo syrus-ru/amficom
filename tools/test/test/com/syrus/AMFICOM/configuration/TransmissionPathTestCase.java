@@ -1,10 +1,11 @@
 /*
- * $Id: TransmissionPathTestCase.java,v 1.1 2004/08/16 09:03:21 bob Exp $
+ * $Id: TransmissionPathTestCase.java,v 1.2 2004/08/31 15:29:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
+
 package test.com.syrus.AMFICOM.configuration;
 
 import java.util.Iterator;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import junit.framework.Test;
 
+import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
@@ -27,7 +29,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/16 09:03:21 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/31 15:29:12 $
  * @author $Author: bob $
  * @module tools
  */
@@ -51,9 +53,13 @@ public class TransmissionPathTestCase extends ConfigureTestCase {
 	public void testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
 
-		List list = TransmissionPathDatabase.retrieveAll();
+		TransmissionPathDatabase transmissionPathDatabase = (TransmissionPathDatabase) ConfigurationDatabaseContext
+				.getTransmissionPathDatabase();
+		PortDatabase portDatabase = (PortDatabase) ConfigurationDatabaseContext.getPortDatabase();
 
-		List portList = PortDatabase.retrieveAll();
+		List list = transmissionPathDatabase.retrieveAll();
+
+		List portList = portDatabase.retrieveAll();
 
 		if (portList.isEmpty())
 			fail("must be at less one port at db");
@@ -61,12 +67,13 @@ public class TransmissionPathTestCase extends ConfigureTestCase {
 		Port port = (Port) portList.get(0);
 
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TRANSPATH_ENTITY_CODE);
-		
-		TransmissionPath transmissionPath = TransmissionPath.createInstance(id, creatorId,domainId,"testCaseTransmissionPath", " created by TransmissionPathTestCase",port.getId(),port.getId());
 
+		TransmissionPath transmissionPath = TransmissionPath
+				.createInstance(id, creatorId, domainId, "testCaseTransmissionPath",
+						" created by TransmissionPathTestCase", port.getId(), port.getId());
 
-		TransmissionPath transmissionPath2 = new TransmissionPath((TransmissionPath_Transferable) transmissionPath
-				.getTransferable());
+		TransmissionPath transmissionPath2 = TransmissionPath
+				.getInstance((TransmissionPath_Transferable) transmissionPath.getTransferable());
 
 		assertEquals(transmissionPath.getId(), transmissionPath2.getId());
 
@@ -75,12 +82,14 @@ public class TransmissionPathTestCase extends ConfigureTestCase {
 		assertEquals(transmissionPath2.getId(), transmissionPath3.getId());
 
 		if (!list.isEmpty())
-			TransmissionPathDatabase.delete(transmissionPath);
+			transmissionPathDatabase.delete(transmissionPath);
 
 	}
 
 	public void testRetriveAll() throws RetrieveObjectException, ObjectNotFoundException {
-		List list = TransmissionPathDatabase.retrieveAll();
+		TransmissionPathDatabase transmissionPathDatabase = (TransmissionPathDatabase) ConfigurationDatabaseContext
+				.getTransmissionPathDatabase();
+		List list = transmissionPathDatabase.retrieveAll();
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			TransmissionPath transmissionPath = (TransmissionPath) it.next();
 			TransmissionPath transmissionPath2 = new TransmissionPath(transmissionPath.getId());

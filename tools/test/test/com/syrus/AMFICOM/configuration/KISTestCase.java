@@ -1,5 +1,5 @@
 /*
- * $Id: KISTestCase.java,v 1.3 2004/08/25 09:42:39 bob Exp $
+ * $Id: KISTestCase.java,v 1.4 2004/08/31 15:29:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,10 @@ import java.util.List;
 
 import junit.framework.Test;
 
+import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
+import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.MCM;
@@ -29,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/25 09:42:39 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/31 15:29:12 $
  * @author $Author: bob $
  * @module tools
  */
@@ -48,9 +50,15 @@ public class KISTestCase extends ConfigureTestCase {
 
 	public void testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
-		List list = KISDatabase.retrieveAll();
 
-		List eqList = EquipmentDatabase.retrieveAll();
+		EquipmentDatabase equipmentDatabase = (EquipmentDatabase) ConfigurationDatabaseContext
+				.getEquipmentDatabase();
+
+		KISDatabase kisDatabase = (KISDatabase) ConfigurationDatabaseContext.getKISDatabase();
+
+		List list = kisDatabase.retrieveAll();
+
+		List eqList = equipmentDatabase.retrieveAll();
 
 		if (eqList.isEmpty())
 			fail("must be at less one equipment at db");
@@ -62,7 +70,7 @@ public class KISTestCase extends ConfigureTestCase {
 						"testCaseKIS", "kis  created by KISTestCase ", ((Equipment) eqList
 								.get(0)).getId(), mcm.getId());
 
-		KIS kis2 = new KIS((KIS_Transferable) kis.getTransferable());
+		KIS kis2 = KIS.getInstance((KIS_Transferable) kis.getTransferable());
 
 		assertEquals(kis.getId(), kis2.getId());
 
@@ -71,7 +79,7 @@ public class KISTestCase extends ConfigureTestCase {
 		assertEquals(kis2.getId(), kis3.getId());
 
 		if (!list.isEmpty())
-			KISDatabase.delete(kis);
+			kisDatabase.delete(kis);
 
 	}
 
@@ -80,7 +88,9 @@ public class KISTestCase extends ConfigureTestCase {
 	}
 
 	public void testRetriveAll() throws RetrieveObjectException, ObjectNotFoundException {
-		List list = KISDatabase.retrieveAll();
+		KISDatabase kisDatabase = (KISDatabase) ConfigurationDatabaseContext.getKISDatabase();
+
+		List list = kisDatabase.retrieveAll();
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			KIS kis = (KIS) it.next();
 			KIS kis2 = new KIS(kis.getId());

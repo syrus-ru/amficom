@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTestCase.java,v 1.1 2004/08/27 15:15:57 bob Exp $
+ * $Id: CharacteristicTestCase.java,v 1.2 2004/08/31 15:29:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -30,10 +29,9 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/27 15:15:57 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/31 15:29:12 $
  * @author $Author: bob $
  * @module tools
  */
@@ -84,7 +82,7 @@ public class CharacteristicTestCase extends ConfigureTestCase {
 															CharacteristicSort._CHARACTERISTIC_SORT_EQUIPMENT,
 															"testValue",
 															equipment.getId());
-		Characteristic chType2 = new Characteristic((Characteristic_Transferable) chType.getTransferable());
+		Characteristic chType2 = Characteristic.getInstance((Characteristic_Transferable) chType.getTransferable());
 
 		assertEquals(chType.getId(), chType2.getId());
 
@@ -95,6 +93,28 @@ public class CharacteristicTestCase extends ConfigureTestCase {
 		//if (list.size() > 3)
 		//	characteristicTypeDatabase.delete(chType);
 
+	}
+	
+	public void testRetrieveCharacteristics() throws RetrieveObjectException, ObjectNotFoundException{
+		
+		EquipmentDatabase equipmentDatabase = (EquipmentDatabase)ConfigurationDatabaseContext.getEquipmentDatabase();
+		List eqList = equipmentDatabase.retrieveAll();
+
+		if (eqList.isEmpty())
+			fail("must be at less one equipment at db");
+
+		Equipment equipment = (Equipment) eqList.get(0);
+		
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
+		List charactericstics = characteristicDatabase.retrieveCharacteristics(equipment.getId(), CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT);
+		
+		for(Iterator it=charactericstics.iterator();it.hasNext();){
+			Characteristic ch = (Characteristic)it.next();
+			Characteristic ch2 = new Characteristic(ch.getId());
+			assertEquals(ch.getId(), ch2.getId());
+		}
+			
+		
 	}
 
 	public void testRetriveAll() throws RetrieveObjectException, ObjectNotFoundException {

@@ -1,10 +1,11 @@
 /*
- * $Id: MonitoredElementTestCase.java,v 1.3 2004/08/26 14:14:49 bob Exp $
+ * $Id: MonitoredElementTestCase.java,v 1.4 2004/08/31 15:29:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
+
 package test.com.syrus.AMFICOM.configuration;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import junit.framework.Test;
 
+import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -29,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/26 14:14:49 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/31 15:29:12 $
  * @author $Author: bob $
  * @module tools
  */
@@ -53,24 +55,29 @@ public class MonitoredElementTestCase extends ConfigureTestCase {
 	public void testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
 
-		List list = MonitoredElementDatabase.retrieveAll();
+		MonitoredElementDatabase monitoredElementDatabase = (MonitoredElementDatabase) ConfigurationDatabaseContext
+				.getMonitoredElementDatabase();
+		MeasurementPortDatabase measurementPortDatabase = (MeasurementPortDatabase) ConfigurationDatabaseContext
+				.getMeasurementPortDatabase();
+		List list = monitoredElementDatabase.retrieveAll();
 
-		List measurementPortList = MeasurementPortDatabase.retrieveAll();
+		List measurementPortList = measurementPortDatabase.retrieveAll();
 
 		if (measurementPortList.isEmpty())
 			fail("must be at less one measurement port at db");
-		
+
 		List monitoredDomainMemberIds = new ArrayList();
 
 		MeasurementPort meaurementPort = (MeasurementPort) measurementPortList.get(0);
 
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.ME_ENTITY_CODE);
-		
-		MonitoredElement me = MonitoredElement.createInstance(id, creatorId, domainId, meaurementPort.getId(), 
-															  MonitoredElementSort._MONITOREDELEMENT_SORT_PORT,
-															  "testCaseAddress", monitoredDomainMemberIds);
 
-		MonitoredElement me2 = new MonitoredElement((MonitoredElement_Transferable) me
+		MonitoredElement me = MonitoredElement
+				.createInstance(id, creatorId, domainId, meaurementPort.getId(),
+						MonitoredElementSort._MONITOREDELEMENT_SORT_PORT, "testCaseAddress",
+						monitoredDomainMemberIds);
+
+		MonitoredElement me2 = MonitoredElement.getInstance((MonitoredElement_Transferable) me
 				.getTransferable());
 
 		assertEquals(me.getId(), me2.getId());
@@ -79,13 +86,15 @@ public class MonitoredElementTestCase extends ConfigureTestCase {
 
 		assertEquals(me2.getId(), me3.getId());
 
-//		if (!list.isEmpty())
-//			MonitoredElementDatabase.delete(me);
+		//		if (!list.isEmpty())
+		//			monitoredElementDatabase.delete(me);
 
 	}
 
 	public void testRetriveAll() throws RetrieveObjectException, ObjectNotFoundException {
-		List list = MeasurementPortDatabase.retrieveAll();
+		MonitoredElementDatabase monitoredElementDatabase = (MonitoredElementDatabase) ConfigurationDatabaseContext
+				.getMonitoredElementDatabase();
+		List list = monitoredElementDatabase.retrieveAll();
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			MeasurementPort measurementPort = (MeasurementPort) it.next();
 			MeasurementPort measurementPort2 = new MeasurementPort(measurementPort.getId());

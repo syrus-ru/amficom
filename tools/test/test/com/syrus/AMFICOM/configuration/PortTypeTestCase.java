@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeTestCase.java,v 1.2 2004/08/16 09:05:09 bob Exp $
+ * $Id: PortTypeTestCase.java,v 1.3 2004/08/31 15:29:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,10 @@ import java.util.List;
 
 import junit.framework.Test;
 
+import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
+import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -25,7 +27,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/16 09:05:09 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/31 15:29:12 $
  * @author $Author: bob $
  * @module tools
  */
@@ -49,11 +51,14 @@ public class PortTypeTestCase extends ConfigureTestCase {
 
 	public void testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
-		List list = PortTypeDatabase.retrieveAll();
+		
+		PortTypeDatabase portTypeDatabase = (PortTypeDatabase) ConfigurationDatabaseContext.getPortDatabase();
+
+		List list = portTypeDatabase.retrieveAll();
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.PORTTYPE_ENTITY_CODE);
 		PortType portType = PortType.createInstance(id, ConfigureTestCase.creatorId, "testCasePortType",
 													"portType created by PortTypeTestCase");
-		PortType portType2 = new PortType((PortType_Transferable) portType.getTransferable());
+		PortType portType2 = PortType.getInstance((PortType_Transferable) portType.getTransferable());
 
 		assertEquals(portType.getId(), portType2.getId());
 
@@ -62,12 +67,14 @@ public class PortTypeTestCase extends ConfigureTestCase {
 		assertEquals(portType2.getId(), portType3.getId());
 
 		if (!list.isEmpty())
-			PortTypeDatabase.delete(portType);
+			portTypeDatabase.delete(portType);
 
 	}
 
 	public void testRetriveAll() throws RetrieveObjectException, ObjectNotFoundException {
-		List list = PortTypeDatabase.retrieveAll();
+		PortTypeDatabase portTypeDatabase = (PortTypeDatabase) ConfigurationDatabaseContext.getPortDatabase();
+		
+		List list = portTypeDatabase.retrieveAll();
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			PortType portType = (PortType) it.next();
 			PortType portType2 = new PortType(portType.getId());

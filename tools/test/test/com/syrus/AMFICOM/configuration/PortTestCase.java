@@ -1,5 +1,5 @@
 /*
- * $Id: PortTestCase.java,v 1.2 2004/08/16 09:05:09 bob Exp $
+ * $Id: PortTestCase.java,v 1.3 2004/08/31 15:29:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.List;
 
 import junit.framework.Test;
 
+import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
 import com.syrus.AMFICOM.configuration.Port;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/16 09:05:09 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/31 15:29:12 $
  * @author $Author: bob $
  * @module tools
  */
@@ -54,14 +55,20 @@ public class PortTestCase extends ConfigureTestCase {
 	public void testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
 
-		List list = PortDatabase.retrieveAll();
+		PortDatabase portDatabase = (PortDatabase) ConfigurationDatabaseContext.getPortDatabase();
 
-		List portTypeList = PortTypeDatabase.retrieveAll();
+		PortTypeDatabase portTypeDatabase = (PortTypeDatabase) ConfigurationDatabaseContext.getPortDatabase();
+		
+		EquipmentDatabase equipmentDatabase = (EquipmentDatabase) ConfigurationDatabaseContext.getEquipmentDatabase();
+		
+		List list = portDatabase.retrieveAll();
+
+		List portTypeList = portTypeDatabase.retrieveAll();
 		
 		if (portTypeList.isEmpty())
 			fail("must be at less one port type at db");
 		
-		List equipmentList = EquipmentDatabase.retrieveAll();
+		List equipmentList = equipmentDatabase.retrieveAll();
 		
 		if (equipmentList.isEmpty())
 			fail("must be at less one equipment at db");
@@ -75,7 +82,7 @@ public class PortTestCase extends ConfigureTestCase {
 		Port port = Port.createInstance(id, ConfigureTestCase.creatorId, type, "testCasePort", equipment.getId(),
 										PortSort._PORT_SORT_PORT);
 
-		Port port2 = new Port((Port_Transferable) port.getTransferable());
+		Port port2 = Port.getInstance((Port_Transferable) port.getTransferable());
 
 		assertEquals(port.getId(), port2.getId());
 
@@ -84,12 +91,14 @@ public class PortTestCase extends ConfigureTestCase {
 		assertEquals(port2.getId(), port3.getId());
 
 		if (!list.isEmpty())
-			PortDatabase.delete(port);
+			portDatabase.delete(port);
 
 	}
 
 	public void testRetriveAll() throws RetrieveObjectException, ObjectNotFoundException {
-		List list = PortDatabase.retrieveAll();
+		PortDatabase portDatabase = (PortDatabase) ConfigurationDatabaseContext.getPortDatabase();
+
+		List list = portDatabase.retrieveAll();
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			Port port = (Port) it.next();
 			Port port2 = new Port(port.getId());

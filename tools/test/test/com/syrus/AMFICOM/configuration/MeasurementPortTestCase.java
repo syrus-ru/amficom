@@ -1,10 +1,11 @@
 /*
- * $Id: MeasurementPortTestCase.java,v 1.1 2004/08/16 09:03:21 bob Exp $
+ * $Id: MeasurementPortTestCase.java,v 1.2 2004/08/31 15:29:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
+
 package test.com.syrus.AMFICOM.configuration;
 
 import java.util.Iterator;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import junit.framework.Test;
 
+import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -31,7 +33,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/16 09:03:21 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/31 15:29:12 $
  * @author $Author: bob $
  * @module tools
  */
@@ -55,21 +57,31 @@ public class MeasurementPortTestCase extends ConfigureTestCase {
 	public void testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
 
-		List list = MeasurementPortDatabase.retrieveAll();
+		PortDatabase portDatabase = (PortDatabase) ConfigurationDatabaseContext.getPortDatabase();
 
-		List measurementPortTypeList = MeasurementPortTypeDatabase.retrieveAll();
+		MeasurementPortDatabase measurementPortDatabase = (MeasurementPortDatabase) ConfigurationDatabaseContext
+				.getMeasurementPortDatabase();
+
+		MeasurementPortTypeDatabase measurementPortTypeDatabase = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext
+				.getMeasurementPortTypeDatabase();
+
+		KISDatabase kisDatabase = (KISDatabase) ConfigurationDatabaseContext.getKISDatabase();
+
+		List list = measurementPortDatabase.retrieveAll();
+
+		List measurementPortTypeList = measurementPortTypeDatabase.retrieveAll();
 
 		if (measurementPortTypeList.isEmpty())
 			fail("must be at less one measurement port type at db");
 
-		List kisList = KISDatabase.retrieveAll();
+		List kisList = kisDatabase.retrieveAll();
 
 		if (kisList.isEmpty())
 			fail("must be at less one kis at db");
 
 		KIS kis = (KIS) kisList.get(0);
 
-		List portList = PortDatabase.retrieveAll();
+		List portList = portDatabase.retrieveAll();
 
 		if (portList.isEmpty())
 			fail("must be at less one port at db");
@@ -80,13 +92,12 @@ public class MeasurementPortTestCase extends ConfigureTestCase {
 
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
 
-		MeasurementPort measurementPort = MeasurementPort.createInstance(id, creatorId, type,
-																			"testCaseMeasurementPort",
-																			"created by MeasurementPortTestCase", kis
-																					.getId(), port.getId());
+		MeasurementPort measurementPort = MeasurementPort
+				.createInstance(id, creatorId, type, "testCaseMeasurementPort",
+						"created by MeasurementPortTestCase", kis.getId(), port.getId());
 
-		MeasurementPort measurementPort2 = new MeasurementPort((MeasurementPort_Transferable) measurementPort
-				.getTransferable());
+		MeasurementPort measurementPort2 = MeasurementPort
+				.getInstance((MeasurementPort_Transferable) measurementPort.getTransferable());
 
 		assertEquals(measurementPort.getId(), measurementPort2.getId());
 
@@ -95,12 +106,15 @@ public class MeasurementPortTestCase extends ConfigureTestCase {
 		assertEquals(measurementPort2.getId(), measurementPort3.getId());
 
 		if (!list.isEmpty())
-			MeasurementPortDatabase.delete(measurementPort);
+			measurementPortDatabase.delete(measurementPort);
 
 	}
 
 	public void testRetriveAll() throws RetrieveObjectException, ObjectNotFoundException {
-		List list = MeasurementPortDatabase.retrieveAll();
+		MeasurementPortDatabase measurementPortDatabase = (MeasurementPortDatabase) ConfigurationDatabaseContext
+				.getMeasurementPortDatabase();
+
+		List list = measurementPortDatabase.retrieveAll();
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			MeasurementPort measurementPort = (MeasurementPort) it.next();
 			MeasurementPort measurementPort2 = new MeasurementPort(measurementPort.getId());

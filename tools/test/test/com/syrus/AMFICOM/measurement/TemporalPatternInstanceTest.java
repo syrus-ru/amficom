@@ -17,7 +17,6 @@ import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
-import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 
 /**
  * @author Vladimir Dolzhenko
