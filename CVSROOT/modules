@@ -89,6 +89,8 @@ load_v1		AMFICOM/v1/load
 connjdbc_v1	AMFICOM/v1/connjdbc
 #M	importmif_v1	Patch for SpatialFX libraries which allows for TEXT spatial objects
 importmif_v1	AMFICOM/v1/importmif
+#M	agent_v1	Agent
+agent_v1	AMFICOM/v1/agent
 
 akp		hw/akp
 trc		hw/trc
