@@ -47,7 +47,7 @@ static int dfcmp(const void *a, const void *b)
 
 static double log2add(double v)
 {
-	return exp(v * log(10.0) / 5.0);
+	return pow(10, v / 5);
 }
 static double add2log(double v)
 {
@@ -134,6 +134,7 @@ static double dB2dy(double y0, double dB)
  * вых. значение - в отн. дБ, по ур. ~1(?) сигма
  * len2 - интересующий пользователя интервал шума, д б <= size (д включать м.з.)
  */
+/*
 void findNoiseArray(double *data, double *outNoise, int size, int len2)
 {
 	//prf_b("findNoiseArray: enter");
@@ -220,17 +221,12 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
         	out[0] = vMax + MAX_VALUE_TO_INITIAL_DB_NOISE;
     }
 
-	//FILE *f = fopen("noise.tmp", "w"); assert(f);
-
 	// строим кривую кумулятивного минимума
 	for (i = 1; i < len2; i++)
 	{
-		//fprintf(f,"%d %g\n", i, out[i]);
 		if (out[i] > out[i - 1])
 			out[i] = out[i - 1];
 	}
-
-	//fclose(f);
 
 	// формируем выходной массив
 	for (i = 0; i < len2; i++)
@@ -241,15 +237,7 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 
 	//prf_b("findNoiseArray: done");
 
-	/*
-	FILE *f = fopen ("noise.tmp", "w");
-	assert(f);
-	for (i = 0; i < size; i++)
-		fprintf(f, "%d %g %g %g\n", i, data[i], out[i], temp[i]);
-	fclose(f);
-	*/
-
-	// сохраняем в пользовательский массив
+    // сохраняем в пользовательский массив
 	for (i = 0; i < len2; i++)
 		outNoise[i] = out[i];
 
@@ -258,3 +246,104 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 
 	//prf_b("findNoiseArray: exiting");
 }
+/*/
+// более корректное поведение при определении начального уровня шума?
+void findNoiseArray(double *data, double *outNoise, int size, int len2)
+{
+	if (len2 <= 0)
+		return;
+
+	//prf_b("findNoiseArray: enter");
+
+	const int width = NETTESTWIDTH;
+	// mlen должно получиться четным
+	const int mlen = width * 10;
+	// -1 здесь для выравнивания x-коорд.
+	const int nsam = mlen - 2 * width - 1;
+	const int mofs = mlen / 2 - 1;
+	double gist[nsam];
+
+	assert(len2 <= size);
+
+	assert(size > mlen); // XXX
+
+	double *temp = new double[size]; // здесь временно будет исх. р/г в лин. масшт.
+	assert(temp);
+	double *out = new double[size]; // здесь - шум
+	assert(out);
+
+	double levelPrec0 = log2add(prec0) - 1; // XXX
+
+	//prf_b("findNoiseArray: log2add");
+
+	int i;
+	// приводим к линейному масштабу
+	for (i = 0; i < size && i < len2 + mlen - mofs; i++)
+		temp[i] = log2add(data[i]);
+
+	//prf_b("findNoiseArray: first estimation");
+
+	// первая оценка уровня шума
+	const int step = 4; // коэф-т загрубления - 4 точки - для ускорения расчета
+	for (i = 0; i < size - mlen && i < len2 - mofs; i += step)
+	{
+		int j;
+		// определяем начальный уровень шума
+		for (j = 0; j < nsam; j ++)
+		{
+			double v0 = temp[i + j];
+			double v1 = temp[i + j + width];
+			double v2 = temp[i + j + width * 2];
+			gist[j] = fabs(v2 + v0 - v1 - v1) + levelPrec0 * v1; // XXX
+		}
+		double dv = destroyAndGetMedian(gist, nsam, nsam / 2);
+		out[i + mofs] = add2log(dv);
+	}
+	//prf_b("findNoiseArray: expand & process");
+	if (step > 1)
+		for (i = 0; i < size - mlen && i < len2 - mofs; i++)
+		out[i + mofs] = out[i/step*step + mofs];
+
+    // расширяем до краев массива - влево
+	for (i = 0; i < mofs; i++)
+	{
+		out[i] = out[mofs];
+	}
+	// и - если надо - вправо
+	for (i = size - mlen + mofs; i < size && i < len2; i++)
+	{
+		out[i] = out[size - mlen + mofs - 1];
+	}
+
+    // делаем поправку на начало рефлектограммы
+    {
+		// ищем абс. макс. усредненной р/г
+        double vMax = data[0];
+        for (i = 0; i < len2; i++)
+        {
+        	if (vMax < data[i])
+            	vMax = data[i];
+        }
+        // поправляем начальный уровень шума
+        if (out[0] > vMax + MAX_VALUE_TO_INITIAL_DB_NOISE)
+        	out[0] = vMax + MAX_VALUE_TO_INITIAL_DB_NOISE;
+    }
+
+	// строим кривую кумулятивного минимума
+	for (i = 1; i < len2; i++)
+	{
+		if (out[i] > out[i - 1])
+			out[i] = out[i - 1];
+	}
+
+	//prf_b("findNoiseArray: dB2dy");
+	// формируем выходной массив
+	for (i = 0; i < len2; i++)
+		outNoise[i] = dB2dy(data[i], out[i]);
+
+	//prf_b("findNoiseArray: done");
+
+	delete[] temp;
+	delete[] out;
+}
+//*/
