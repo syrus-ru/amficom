@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.63 2004/12/08 08:48:42 bass Exp $
+ * $Id: configuration.idl,v 1.64 2004/12/09 12:33:08 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -146,10 +146,27 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable image_id;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
-
+	typedef sequence<LinkType_Transferable> LinkTypeSeq_Transferable;
 	typedef LinkType_Transferable LinkType;
 	typedef sequence<LinkType> LinkTypeSeq;
-	typedef LinkType_Transferable CableLinkType;
+
+
+	struct CableLinkType_Transferable {
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
+		
+		wstring codename;
+		wstring description;
+		wstring name;
+		LinkTypeSort sort;
+		wstring manufacturer;
+		wstring manufacturerCode;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable image_id;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
+		
+		general::corba::IdentifierSeq_Transferable cableThreadTypeIds;
+	};
+	typedef sequence<CableLinkType_Transferable> CableLinkTypeSeq_Transferable;
+	typedef CableLinkType_Transferable CableLinkType;
 	typedef sequence<CableLinkType> CableLinkTypeSeq;
 
 	struct CableThreadType_Transferable {
@@ -157,11 +174,13 @@ module corba {
 		
 		wstring codename;
 		wstring description;
-		wstring mark;
+		wstring name;
+		
 		wstring color;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable link_type_id;
+		
+		general::corba::Identifier_Transferable linkTypeId;
 	};
-
+	typedef sequence<CableThreadType_Transferable> CableThreadTypeSeq_Transferable;
 	typedef CableThreadType_Transferable CableThreadType;
 	typedef sequence<CableThreadType> CableThreadTypeSeq;
 
@@ -169,7 +188,7 @@ module corba {
 		case LINK_TYPE:
 			LinkType_Transferable linkType;
 		case CABLE_LINK_TYPE:
-			LinkType_Transferable cableLinkType;
+			CableLinkType_Transferable cableLinkType;
 		case CABLE_THREAD_TYPE:
 			CableThreadType_Transferable cableThreadType;
 	};
@@ -438,8 +457,7 @@ module corba {
 ///////////////////// Link /////////////////////
 	enum LinkSort{
 		LINKSORT_LINK,
-		LINKSORT_CABLELINK,
-		LINKSORT_CABLELINK_THREAD
+		LINKSORT_CABLELINK		
 	};
 
 	struct Link_Transferable {
@@ -466,6 +484,20 @@ module corba {
 	typedef sequence <Link_Transferable> LinkSeq_Transferable;
 	typedef Link_Transferable Link;
 	typedef sequence<Link> LinkSeq;
+	
+///////////////////// CableThread /////////////////////
+	struct CableThread_Transferable {
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+		
+		wstring name;
+		wstring description;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;		
+	};
+
+	typedef sequence <CableThread_Transferable> CableThreadSeq_Transferable;
+	typedef CableThread_Transferable CableThread;
+	typedef sequence<Link> CableThreadSeq;
 //////////////// Conditions //////////////
 
 	struct DomainCondition_Transferable {
