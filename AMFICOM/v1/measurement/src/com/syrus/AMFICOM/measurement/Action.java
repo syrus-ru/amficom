@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.19 2005/01/27 11:54:50 bob Exp $
+ * $Id: Action.java,v 1.20 2005/01/27 15:54:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/01/27 11:54:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2005/01/27 15:54:08 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -102,4 +102,10 @@ public abstract class Action extends StorableObject implements TypedObject {
 
 	public abstract Result createResult(Identifier resultCreatorId, SetParameter[] parameters) throws CreateObjectException;
 
+	/**
+	 * @return Returns the parentAction.
+	 */
+	protected final Action getParentAction() {
+		return this.parentAction;
+	}
 }
