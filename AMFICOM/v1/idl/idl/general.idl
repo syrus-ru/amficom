@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.17 2004/09/10 10:01:53 krupenn Exp $
+ * $Id: general.idl,v 1.18 2004/09/28 14:46:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,6 +51,7 @@ module corba {
 		ERROR_EMPTY,
 		ERROR_UID,
 		ERROR_DELETE,
+		ERROR_VERSION_COLLISION,
 		ERROR_PASSWORD_EXPIRED
 	};
 
