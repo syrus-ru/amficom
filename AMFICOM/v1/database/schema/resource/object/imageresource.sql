@@ -18,3 +18,5 @@ CREATE TABLE imageresource (
  CONSTRAINT img_cn_uk UNIQUE (CODENAME)
 );
  
+
+ CREATE SEQUENCE ImageResource_seq ORDER;
