@@ -1,5 +1,5 @@
-DROP TABLE users;
+DROP TABLE characteristic;
 DROP TABLE serverproperty;
 
-DROP SEQUENCE users_seq;
+DROP SEQUENCE characteristic_seq;
 

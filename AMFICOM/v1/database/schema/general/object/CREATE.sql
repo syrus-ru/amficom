@@ -1,3 +1,2 @@
 @@serverproperty.sql
-@@users.sql
-
+@@characteristic.sql
