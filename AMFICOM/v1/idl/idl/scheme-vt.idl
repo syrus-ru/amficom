@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.4 2004/11/29 19:21:58 bass Exp $
+ * $Id: scheme-vt.idl,v 1.5 2004/12/08 08:48:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,9 +9,6 @@
  *
  * NUMERIC_IDENTIFIER (off by default) -- Identifier will
  *  hold primitive major and minor fields rather than a string;
- *
- * REDUNDANT_DEPS (off by default) -- StorableObject will
- *  depend on User.
  */
 
 #ifndef SCHEME_VT_IDL

@@ -1,5 +1,5 @@
 /*
- * $Id: li'lmapletty-vt.idl,v 1.1 2004/11/24 08:43:47 bob Exp $
+ * $Id: li'lmapletty-vt.idl,v 1.2 2004/12/08 08:48:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,9 +11,6 @@
  *
  * NUMERIC_IDENTIFIER (off by default, implies MAP_COMMON) -- Identifier will
  *  hold primitive major and minor fields rather than a string;
- *
- * REDUNDANT_DEPS (off by default, implies MAP_COMMON) -- StorableObject will
- *  depend on User.
  */
 
 #ifndef MAP_VT_IDL

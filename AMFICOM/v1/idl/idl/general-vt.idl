@@ -1,5 +1,5 @@
 /*
- * $Id: general-vt.idl,v 1.4 2004/11/29 10:18:11 bass Exp $
+ * $Id: general-vt.idl,v 1.5 2004/12/08 08:48:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,6 @@
  *
  * NUMERIC_IDENTIFIER (off by default) -- Identifier
  *  will hold primitive major and minor fields rather than a string;
- *
- * REDUNDANT_DEPS (off by default) -- StorableObject
- *  will depend on User.
  */
 
 #ifndef GENERAL_VT_IDL
@@ -37,26 +34,7 @@ module java {
 module com {
 	module syrus {
 		module AMFICOM {
-
-#ifdef REDUNDANT_DEPS
-
-			module configuration {
-				module corba {
-					valuetype User;
-				};
-			};
-
-#endif // REDUNDANT_DEPS
-
 			module general {
-				native Identifier;
-
-				abstract valuetype ComSyrusAmficomGeneralIStorableObject {
-					Identifier getId();
-					Identifier getCreatorId();
-					Identifier getModifierId();
-				};
-
 				module corba {
 					/**
 					 * Common superinterface for both "valuetyped" and "native java"
@@ -82,9 +60,7 @@ module com {
 					 * @see StorableObject
 					 * @see StorableObjectImpl
 					 */
-					abstract valuetype IStorableObject:
-							::java::util::JavaUtilIStorableObject,
-							::com::syrus::AMFICOM::general::ComSyrusAmficomGeneralIStorableObject {
+					abstract valuetype IStorableObject: ::java::util::JavaUtilIStorableObject {
 						boolean isChanged();
 						StorableObject_Transferable getHeaderTransferable();
 					};
@@ -143,42 +119,10 @@ module com {
 
 						readonly attribute long long created;
 						readonly attribute long long modified;
-#ifdef REDUNDANT_DEPS
-						readonly attribute configuration::corba::User creator;
-						readonly attribute configuration::corba::User modifier;
-#endif // REDUNDANT_DEPS
 						readonly attribute long long version;
 					};
 				};
 			};
-
-#ifdef REDUNDANT_DEPS
-
-			module configuration {
-				module corba {
-					valuetype User:
-							general::corba::StorableObject,
-							general::corba::Namable,
-							general::corba::Describable {
-						enum Sort {
-							SYSADMIN,
-							REGULAR,
-							SERVER,
-							MCM
-						};
-
-						private wstring login;
-						private Sort sort;
-						private wstring thisName;
-						private wstring thisDescription;
-					};
-
-					typedef sequence<User> UserSeq;
-				};
-			};
-
-#endif // REDUNDANT_DEPS
-
 		};
 	};
 };
