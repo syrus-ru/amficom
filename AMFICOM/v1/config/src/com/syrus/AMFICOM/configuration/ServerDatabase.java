@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.22 2004/10/19 07:48:58 bob Exp $
+ * $Id: ServerDatabase.java,v 1.23 2004/10/20 10:52:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/10/19 07:48:58 $
+ * @version $Revision: 1.23 $, $Date: 2004/10/20 10:52:12 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -273,7 +273,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
         List list = null;
         
         String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString();

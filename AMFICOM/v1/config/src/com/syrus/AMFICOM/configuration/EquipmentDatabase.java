@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.37 2004/10/19 07:48:58 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.38 2004/10/20 10:52:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/10/19 07:48:58 $
+ * @version $Revision: 1.38 $, $Date: 2004/10/20 10:52:12 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -481,12 +481,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
         }
         
         return list;
-    }
-	
-	
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#retrieveByCondition(java.util.List, com.syrus.AMFICOM.general.StorableObjectCondition)
-	 */
+    }	
+
 	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
 			IllegalDataException {
 		List list;
