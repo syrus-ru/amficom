@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.1 2004/07/22 11:28:31 arseniy Exp $
+# $Id: Makefile,v 1.2 2004/07/22 13:13:42 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -13,11 +13,20 @@ IDLDIR=../idl_v1/idl
 
 APPCLASSPATH = $(LIBDIR)/util.jar
 
+#JAVACFLAGS = -source 1.4
+#SUNJAVACFLAGS = -target 1.2
+#JIKESFLAGS = -target 1.1
+
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
 
+
+tmp:
+	jikes +Pall -bootclasspath /usr/local/java/jre/lib/rt.jar \
+		-classpath $(AMFICOMCLASSPATH) \
+		$(SRCDIR)/com/syrus/AMFICOM/Client/General/Command/Survey/SurveySchemeOpenCommand.java
 
 $(LIBNAME): .mach .loc
 	$(JAR) -cf $@ \
@@ -70,6 +79,4 @@ cleanloc:
 .PHONY:	arch
 arch:
 	tar -czvf $(ARCHFILE) \
-		Makefile \
-		$(IDLDIR)/general.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/general/*.java
+		Makefile
