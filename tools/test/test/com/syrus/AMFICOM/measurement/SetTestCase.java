@@ -1,5 +1,5 @@
 /*
- * $Id: SetTestCase.java,v 1.6 2004/10/29 07:30:48 bob Exp $
+ * $Id: SetTestCase.java,v 1.7 2004/11/02 12:26:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package test.com.syrus.AMFICOM.measurement;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.Test;
@@ -21,12 +22,14 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.ParameterType;
+import com.syrus.AMFICOM.measurement.ParameterTypeCodenames;
 import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetDatabase;
@@ -36,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/10/29 07:30:48 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/02 12:26:30 $
  * @author $Author: bob $
  * @module tools
  */
@@ -57,7 +60,7 @@ public class SetTestCase extends AbstractMesurementTestCase {
 		return suiteWrapper(SetTestCase.class);
 	}
 
-	public void testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
+	public void _testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException, IOException {
 
 		ParameterTypeDatabase parameterTypeDatabase = (ParameterTypeDatabase) MeasurementDatabaseContext
@@ -90,7 +93,8 @@ public class SetTestCase extends AbstractMesurementTestCase {
 		params[0] = new SetParameter(paramId, wvlenParam, new ByteArray((double) 1625).getBytes());
 
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-		//params[1] = new SetParameter(paramId, trclenParam, new ByteArray((double) 131072).getBytes());
+		//params[1] = new SetParameter(paramId, trclenParam, new
+		// ByteArray((double) 131072).getBytes());
 		params[1] = new SetParameter(paramId, trclenParam, new ByteArray((double) 125000).getBytes());
 
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
@@ -106,8 +110,8 @@ public class SetTestCase extends AbstractMesurementTestCase {
 		params[5] = new SetParameter(paramId, scansParam, new ByteArray((long) 4096).getBytes());
 
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.SET_ENTITY_CODE);
-		Set set = Set.createInstance(id, creatorId, SetSort.SET_SORT_MEASUREMENT_PARAMETERS, "testCaseSet",
-						params, monitoredElementIds);
+		Set set = Set.createInstance(id, creatorId, SetSort.SET_SORT_MEASUREMENT_PARAMETERS, "testCaseSet", params,
+										monitoredElementIds);
 
 		Set set2 = Set.getInstance((Set_Transferable) set.getTransferable());
 
@@ -118,6 +122,24 @@ public class SetTestCase extends AbstractMesurementTestCase {
 		assertEquals(set2, set3);
 		System.out.println(set.toString());
 
+	}
+
+	public void testRetriveAll() throws RetrieveObjectException, IllegalDataException, IOException {
+		SetDatabase setDatabase = (SetDatabase) MeasurementDatabaseContext.getSetDatabase();
+		List list = setDatabase.retrieveButIds(null);
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			Set set = (Set) it.next();
+			SetParameter[] parameters = set.getParameters();
+			for (int i = 0; i < parameters.length; i++) {
+				SetParameter param = parameters[i];
+				if (param.getType().getCodename().equals(ParameterTypeCodenames.TRACE_AVERAGE_COUNT)) {
+					ByteArray byteArray = new ByteArray(param.getValue());
+					long l = byteArray.toLong();
+					System.out.println(set.getId().toSQLString() + "\t " + ParameterTypeCodenames.TRACE_AVERAGE_COUNT
+							+ " = " + l);
+				}
+			}
+		}
 	}
 
 }

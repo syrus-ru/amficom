@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeTestCase.java,v 1.3 2004/08/31 15:29:12 bob Exp $
+ * $Id: EquipmentTypeTestCase.java,v 1.4 2004/11/02 12:26:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/31 15:29:12 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/02 12:26:30 $
  * @author $Author: bob $
  * @module tools
  */
@@ -55,7 +55,7 @@ public class EquipmentTypeTestCase extends ConfigureTestCase {
 		List list = equipmentTypeDatabase.retrieveAll();
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE);
 		EquipmentType eqType = EquipmentType.createInstance(id, ConfigureTestCase.creatorId, "testCaseEqType",
-									"portType created by EquipmentTypeTestCase");
+									"equipmentType created by EquipmentTypeTestCase", "equipmentType" );
 		EquipmentType eqType2 = EquipmentType.getInstance((EquipmentType_Transferable) eqType.getTransferable());
 
 		assertEquals(eqType.getId(), eqType2.getId());

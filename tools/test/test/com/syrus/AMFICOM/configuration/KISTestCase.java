@@ -1,5 +1,5 @@
 /*
- * $Id: KISTestCase.java,v 1.4 2004/08/31 15:29:12 bob Exp $
+ * $Id: KISTestCase.java,v 1.5 2004/11/02 12:26:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,9 +16,10 @@ import junit.framework.Test;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
-import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.KISDatabase;
+import com.syrus.AMFICOM.configuration.KISType;
+import com.syrus.AMFICOM.configuration.KISTypeDatabase;
 import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/31 15:29:12 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/02 12:26:30 $
  * @author $Author: bob $
  * @module tools
  */
@@ -51,8 +52,8 @@ public class KISTestCase extends ConfigureTestCase {
 	public void testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
 
-		EquipmentDatabase equipmentDatabase = (EquipmentDatabase) ConfigurationDatabaseContext
-				.getEquipmentDatabase();
+		EquipmentDatabase equipmentDatabase = (EquipmentDatabase) ConfigurationDatabaseContext.getEquipmentDatabase();
+		KISTypeDatabase kisTypeDatabase = (KISTypeDatabase) ConfigurationDatabaseContext.getKISTypeDatabase();
 
 		KISDatabase kisDatabase = (KISDatabase) ConfigurationDatabaseContext.getKISDatabase();
 
@@ -63,12 +64,17 @@ public class KISTestCase extends ConfigureTestCase {
 		if (eqList.isEmpty())
 			fail("must be at less one equipment at db");
 
+		List kisTypeList = kisTypeDatabase.retrieveAll();
+
+		if (kisTypeList.isEmpty())
+			fail("must be at less one kis type at db");
+
 		MCM mcm = new MCM(new Identifier("MCM_2"));
 
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.KIS_ENTITY_CODE);
-		KIS kis = KIS.createInstance(id, ConfigureTestCase.creatorId, ConfigureTestCase.domainId,
-						"testCaseKIS", "kis  created by KISTestCase ", ((Equipment) eqList
-								.get(0)).getId(), mcm.getId());
+		KIS kis = KIS.createInstance(id, ConfigureTestCase.creatorId, ConfigureTestCase.domainId, "testCaseKIS",
+										"kis  created by KISTestCase ", ((KISType) kisTypeList.get(0)),
+										((Equipment) eqList.get(0)).getId(), mcm.getId());
 
 		KIS kis2 = KIS.getInstance((KIS_Transferable) kis.getTransferable());
 

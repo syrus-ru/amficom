@@ -1,5 +1,5 @@
 /*
- * $Id: CreationTestTestCase.java,v 1.1 2004/10/29 07:30:42 bob Exp $
+ * $Id: CreationTestTestCase.java,v 1.2 2004/11/02 12:26:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.ParameterType;
+import com.syrus.AMFICOM.measurement.ParameterTypeCodenames;
 import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetDatabase;
@@ -50,7 +51,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/29 07:30:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/02 12:26:30 $
  * @author $Author: bob $
  * @module tools
  */
@@ -106,14 +107,15 @@ public class CreationTestTestCase extends AbstractMesurementTestCase {
 		//List measurementSetupIds = new ArrayList();
 		//measurementSetupIds.add(((MeasurementSetup)
 		// measurementSetupList.get(0)).getId());
-		ParameterType wvlenParam = parameterTypeDatabase.retrieveForCodename("ref_wvlen");
-		ParameterType trclenParam = parameterTypeDatabase.retrieveForCodename("ref_trclen");
-		ParameterType resParam = parameterTypeDatabase.retrieveForCodename("ref_res");
-		ParameterType pulswdParam = parameterTypeDatabase.retrieveForCodename("ref_pulswd");
-		ParameterType iorParam = parameterTypeDatabase.retrieveForCodename("ref_ior");
-		ParameterType scansParam = parameterTypeDatabase.retrieveForCodename("ref_scans");
+		ParameterType wvlenParam = parameterTypeDatabase.retrieveForCodename(ParameterTypeCodenames.TRACE_WAVELENGTH);
+		ParameterType trclenParam = parameterTypeDatabase.retrieveForCodename(ParameterTypeCodenames.TRACE_LENGTH);
+		ParameterType resParam = parameterTypeDatabase.retrieveForCodename(ParameterTypeCodenames.TRACE_RESOLUTION);
+		ParameterType pulswdParam = parameterTypeDatabase.retrieveForCodename(ParameterTypeCodenames.TRACE_PULSE_WIDTH);
+		ParameterType iorParam = parameterTypeDatabase.retrieveForCodename(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION);
+		ParameterType scansParam = parameterTypeDatabase.retrieveForCodename(ParameterTypeCodenames.TRACE_AVERAGE_COUNT);
+		ParameterType flagsParam = parameterTypeDatabase.retrieveForCodename(ParameterTypeCodenames.TRACE_FLAGS);
 
-		SetParameter[] params = new SetParameter[6];
+		SetParameter[] params = new SetParameter[7];
 
 		Identifier paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
 		params[0] = new SetParameter(paramId, wvlenParam, new ByteArray((double) 1625).getBytes());
@@ -121,10 +123,10 @@ public class CreationTestTestCase extends AbstractMesurementTestCase {
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
 		//params[1] = new SetParameter(paramId, trclenParam, new
 		// ByteArray((double) 131072).getBytes());
-		params[1] = new SetParameter(paramId, trclenParam, new ByteArray((double) 125000).getBytes());
+		params[1] = new SetParameter(paramId, trclenParam, new ByteArray((double) 50000).getBytes());
 
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-		params[2] = new SetParameter(paramId, resParam, new ByteArray((double) 8).getBytes());
+		params[2] = new SetParameter(paramId, resParam, new ByteArray((double) 4).getBytes());
 
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
 		params[3] = new SetParameter(paramId, pulswdParam, new ByteArray((long) 5000).getBytes());
@@ -133,7 +135,10 @@ public class CreationTestTestCase extends AbstractMesurementTestCase {
 		params[4] = new SetParameter(paramId, iorParam, new ByteArray((double) 1.46820).getBytes());
 
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-		params[5] = new SetParameter(paramId, scansParam, new ByteArray((long) 4096).getBytes());
+		params[5] = new SetParameter(paramId, scansParam, new ByteArray((long) 45312).getBytes());
+		
+		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
+		params[6] = new SetParameter(paramId, flagsParam, new ByteArray((long) 4).getBytes());
 
 		Identifier setId = IdentifierGenerator.generateIdentifier(ObjectEntities.SET_ENTITY_CODE);
 		Set set = Set.createInstance(setId, creatorId, SetSort.SET_SORT_MEASUREMENT_PARAMETERS, "setTestCase#"
@@ -181,8 +186,8 @@ public class CreationTestTestCase extends AbstractMesurementTestCase {
 
 		Date startDate = new Date(System.currentTimeMillis());
 
-		Test test = Test.createInstance(id, creatorId, startDate, new Date(System.currentTimeMillis() + 1000 * 60 * 60
-				* 24), temporalPettern, temporalType, measurementType, analysisType, evaluationType, me,
+		Test test = Test.createInstance(id, creatorId, startDate, new Date(System.currentTimeMillis() + 1000 * 60 * 10
+				), temporalPettern, temporalType, measurementType, analysisType, evaluationType, me,
 										TestReturnType.TEST_RETURN_TYPE_WHOLE, "cretated by TestTestCase at "
 												+ DatabaseDate.SDF.format(startDate), measurementSetupIds);
 
