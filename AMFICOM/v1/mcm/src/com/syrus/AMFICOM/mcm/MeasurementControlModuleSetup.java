@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModuleSetup.java,v 1.4 2005/03/23 20:49:38 arseniy Exp $
+ * $Id: MeasurementControlModuleSetup.java,v 1.5 2005/03/24 17:01:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,12 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
+import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.mserver.corba.MServerHelper;
@@ -45,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/23 20:49:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/24 17:01:46 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -216,14 +220,34 @@ public class MeasurementControlModuleSetup {
 				measurementTypes.add(new MeasurementType(measurementTypesT[i]));
 			MeasurementDatabaseContext.getMeasurementTypeDatabase().insert(measurementTypes);
 
+			//Analysis types
+			ids = new HashSet(measurementTypes.size());
+			MeasurementType measurementType;
+			for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
+				measurementType = (MeasurementType) it.next();
+				ids.add(measurementType.getId());
+			}
+			lic = new LinkedIdsCondition(ids, ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+			AnalysisType_Transferable[] analysisTypesT = mServerRef.transmitAnalysisTypesButIdsByCondition(new Identifier_Transferable[0],
+					StorableObjectConditionBuilder.getConditionTransferable(lic));
+			Collection analysisTypes = new HashSet(analysisTypesT.length);
+			for (int i = 0; i < analysisTypesT.length; i++)
+				analysisTypes.add(new AnalysisType(analysisTypesT[i]));
+			MeasurementDatabaseContext.getAnalysisTypeDatabase().insert(analysisTypes);
+
+			//Evaluation types
+			lic = new LinkedIdsCondition(ids, ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+			EvaluationType_Transferable[] evaluationTypesT = mServerRef.transmitEvaluationTypesButIdsByCondition(new Identifier_Transferable[0],
+					StorableObjectConditionBuilder.getConditionTransferable(lic));
+			Collection evaluationTypes = new HashSet(evaluationTypesT.length);
+			for (int i = 0; i < evaluationTypesT.length; i++)
+				evaluationTypes.add(new EvaluationType(evaluationTypesT[i]));
+			MeasurementDatabaseContext.getEvaluationTypeDatabase().insert(evaluationTypes);
 		}
 		catch (Exception e) {
 			Log.errorException(e);
 		}
 
-		//TODO Analysis types
-		//TODO Evaluation types
-		
 	}
 
 	private static void establishDatabaseConnection() {
