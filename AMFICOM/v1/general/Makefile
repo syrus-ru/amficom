@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.30 2005/02/07 15:24:43 arseniy Exp $
+# $Id: Makefile,v 1.31 2005/02/10 18:57:50 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -21,6 +21,38 @@ $(call checkenve,ORACLE_HOME)
 
 APPCLASSPATH := $(LIBDIR)/util.jar
 
+
+SOURCES := com/syrus/AMFICOM/general/ObjectEntities.java \
+	com/syrus/AMFICOM/general/ObjectGroupEntities.java \
+	com/syrus/AMFICOM/general/Identifier.java \
+	com/syrus/AMFICOM/general/Identified.java \
+	com/syrus/AMFICOM/general/TransferableObject.java \
+	com/syrus/AMFICOM/general/StorableObject.java \
+	com/syrus/AMFICOM/general/StorableObjectType.java \
+	com/syrus/AMFICOM/general/StorableObjectDatabase.java \
+	com/syrus/AMFICOM/general/StorableObjectWrapper.java \
+	com/syrus/AMFICOM/general/DatabaseIdentifier.java \
+	com/syrus/AMFICOM/general/StorableObjectCondition.java \
+	com/syrus/AMFICOM/general/DatabaseStorableObjectCondition.java \
+	com/syrus/AMFICOM/general/GeneralDatabaseContext.java \
+	com/syrus/AMFICOM/general/DatabaseException.java \
+	com/syrus/AMFICOM/general/ApplicationException.java \
+	com/syrus/AMFICOM/general/IllegalDataException.java \
+	com/syrus/AMFICOM/general/IllegalObjectEntityException.java \
+	com/syrus/AMFICOM/general/VersionCollisionException.java \
+	com/syrus/AMFICOM/general/ObjectNotFoundException.java \
+	com/syrus/AMFICOM/general/UpdateObjectException.java \
+	com/syrus/AMFICOM/general/RetrieveObjectException.java \
+	com/syrus/AMFICOM/general/CreateObjectException.java \
+	com/syrus/AMFICOM/general/IdentifierPool.java \
+	com/syrus/AMFICOM/general/IdentifierLoader.java \
+	com/syrus/AMFICOM/general/SleepButWorkThread.java \
+	com/syrus/AMFICOM/general/ParameterType.java \
+	com/syrus/AMFICOM/general/ParameterTypeWrapper.java \
+	com/syrus/AMFICOM/general/ParameterTypeDatabase.java
+
+#$(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java)
+
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
@@ -29,7 +61,7 @@ $(LIBNAME): .mach
 	$(JAVAC) \
 		$(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java)
+		$(addprefix $(SRCDIR)/,$(SOURCES))
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -51,7 +83,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/general/*.class)
+	$(RM) $(subst $$,\$$,$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/general/*.class))
 	$(RM) .mach
 
 .PHONY:	cleancorba
