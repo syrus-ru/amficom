@@ -31,7 +31,7 @@ public class TCPKISConnection implements KISConnection {
 
 		this.kisTCPPort = kis.getTCPPort();
 		if (this.kisTCPPort <= 0)
-			this.kisTCPPort = (short)ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TCP_PORT, (int)MeasurementControlModule.KIS_TCP_PORT);
+			this.kisTCPPort = (short)ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TCP_PORT, MeasurementControlModule.KIS_TCP_PORT);
 
 		this.kisTCPSocket = KIS_TCP_SOCKET_DISCONNECTED;
 	}
@@ -107,8 +107,7 @@ public class TCPKISConnection implements KISConnection {
 				Log.debugMessage("TCPKISConnection.receiveKISReport | Received report for measurement '" + this.kisReport.getMeasurementId() + "'", Log.DEBUGLEVEL07);
 			return this.kisReport;
 		}
-		else
-			throw new CommunicationException("TCPKISConnection.receiveKISReport | Cannot receive report");
+		throw new CommunicationException("TCPKISConnection.receiveKISReport | Cannot receive report");
 	}
 
 	public Identifier getKISId() {
