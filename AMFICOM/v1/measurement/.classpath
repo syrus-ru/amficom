@@ -3,8 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/general_v1"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/configuration.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/util.jar"/>
 	<classpathentry kind="var" path="ORACLE_HOME/jdbc/lib/classes12.jar"/>
+	<classpathentry kind="src" path="/config_v1"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
