@@ -1,5 +1,5 @@
 /*
- * $Id: ImportCommand.java,v 1.2 2005/01/13 15:13:35 krupenn Exp $
+ * $Id: ImportCommand.java,v 1.3 2005/01/14 07:34:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.JOptionPane;
  * Класс $RCSfile: ImportCommand.java,v $ 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/01/13 15:13:35 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/14 07:34:15 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -65,7 +65,7 @@ public abstract class ImportCommand extends VoidCommand
 	{
 	}
 	
-	protected final Identifier getClonedId(short entityCode, Identifier id)
+	protected final Identifier getClonedId(short entityCode, String id)
 		throws IllegalObjectEntityException
 	{
 		Identifier clonedId = (Identifier )clonedIds.get(id);
@@ -74,7 +74,7 @@ public abstract class ImportCommand extends VoidCommand
 		return clonedId;
 	}
 	
-	private final Identifier cloneId(short entityCode, Identifier id)
+	private final Identifier cloneId(short entityCode, String id)
 		throws IllegalObjectEntityException
 	{
 		Identifier clonedId;
