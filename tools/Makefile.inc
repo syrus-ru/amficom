@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.8 2004/07/08 09:00:09 bob Exp $
+# $Id: Makefile.inc,v 1.9 2004/07/09 14:15:08 bob Exp $
 #
 # vim:set ft=make:
 #
@@ -213,4 +213,4 @@ IDLJFLAGS = \
 PMD_JAR = $(shell find $(PMD_HOME) -name pmd-*.jar)
 PMD_JARS = $(shell find $(PMD_HOME) -name '*\.[jz][ai][pr]' -printf '%p:')
 
-PMD_RULES = rulesets/unusedcode.xml,rulesets/imports.xml,rulesets/basic.xml,rulesets/braces.xml,rulesets/clone.xml,rulesets/codesize.xml,rulesets/coupling.xml,rulesets/design.xml,rulesets/favorites.xml,rulesets/junit.xml,rulesets/naming.xml,rulesets/newrules.xml,rulesets/scratchpad.xml,rulesets/strictexception.xml,rulesets/strings.xml
+PMD_RULES = rulesets/unusedcode.xml,rulesets/imports.xml,rulesets/basic.xml,rulesets/clone.xml,rulesets/codesize.xml,rulesets/coupling.xml,rulesets/design.xml,rulesets/favorites.xml,rulesets/junit.xml,rulesets/naming.xml,rulesets/newrules.xml,rulesets/scratchpad.xml,rulesets/strictexception.xml,rulesets/strings.xml
