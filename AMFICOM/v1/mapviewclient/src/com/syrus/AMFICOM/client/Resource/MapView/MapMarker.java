@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.6 2004/09/27 07:41:34 krupenn Exp $
+ * $Id: MapMarker.java,v 1.7 2004/09/29 15:20:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,37 +63,27 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/27 07:41:34 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/29 15:20:01 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
 
-public class MapMarker extends StubResource implements MapElement
+public class MapMarker extends MapNodeElement implements MapElement
 {
 	public static final String typ = "mapmarker";
-
-	protected Map map;
 
 	/** Размер пиктограммы маркера */
 	public static final Rectangle defaultBounds = new Rectangle(20, 20);
 
-	protected boolean selected;
-	protected Image icon;
-
 	protected Rectangle bounds = new Rectangle(defaultBounds);
 
-	protected String id;
-	protected String name = LangModelMap.getString("Marker");
 	protected double distance = 0.0;
 	protected String symbol_id;
 	protected String path_id;
 	protected String description;
 
-	protected Point2D.Double anchor = new Point2D.Double( 0, 0);
 	protected Point2D.Double bufferAnchor = new Point2D.Double( 0, 0);
-	protected String mapID;
-	protected String imageId;
 
 	protected MapNodeLinkElement nodeLink;
 	protected MapNodeElement startNode;
@@ -101,7 +91,6 @@ public class MapMarker extends StubResource implements MapElement
 
 	protected int nodeLinkIndex = 0;
 
-	public Hashtable attributes = new Hashtable();
 	protected MapMeasurementPathElement transmissionPath;
 	protected SchemePath schemePath = null;
 	protected TransmissionPath catalogPath = null;
@@ -253,21 +242,6 @@ public class MapMarker extends StubResource implements MapElement
 		bounds = rec;
 	}
 
-	public void setImageId(String iconPath)
-	{
-		imageId = iconPath;
-		ImageIcon imageIcon = new ImageIcon(imageId);
-		icon = imageIcon.getImage().getScaledInstance(
-				(int )getBounds().getWidth(),
-				(int )getBounds().getHeight(),
-				Image.SCALE_SMOOTH);
-	}
-
-	public String getImageId()
-	{
-		return imageId;
-	}
-	
 	public Point2D.Double getAnchor()
 	{
 /*
@@ -401,7 +375,7 @@ public class MapMarker extends StubResource implements MapElement
 		pg.setStroke(MapPropertiesManager.getSelectionStroke());
 
 		pg.drawImage(
-				icon,
+				getImage(),
 				p.x - width / 2,
 				p.y - height / 2,
 				null);
@@ -416,25 +390,6 @@ public class MapMarker extends StubResource implements MapElement
 				width,
 				height);
 		}
-	}
-
-	public boolean isMouseOnThisObject (Point currentMousePoint)
-	{
-		MapCoordinatesConverter converter = getMap().getConverter();
-
-		int width = (int )getBounds().getWidth();
-		int height = (int )getBounds().getHeight();
-		Point p = converter.convertMapToScreen(anchor);
-		Rectangle imageBounds = new Rectangle( 
-				p.x - width / 2, 
-				p.y - height / 2, 
-				width, 
-				height);
-		if (imageBounds.contains(currentMousePoint))
-		{
-			return true;
-		}
-		return false;
 	}
 
 	public void move (double deltaX, double deltaY)
