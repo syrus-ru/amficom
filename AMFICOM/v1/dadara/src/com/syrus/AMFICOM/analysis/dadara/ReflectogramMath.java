@@ -13,7 +13,6 @@ public class ReflectogramMath
 		for (int i = x0; i <= x1; i++)
 			if (yArr[ret] < yArr[i])
 				ret = i;
-		System.err.println("getArrayMaxIndex: x0=" + x0 + "; x1=" + x1 + "; ret=" + ret);
 		return ret;
 	}
 
