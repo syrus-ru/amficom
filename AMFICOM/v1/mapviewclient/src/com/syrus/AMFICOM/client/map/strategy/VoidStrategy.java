@@ -1,5 +1,5 @@
 /**
- * $Id: VoidStrategy.java,v 1.4 2005/02/02 07:56:01 krupenn Exp $
+ * $Id: VoidStrategy.java,v 1.5 2005/02/02 08:57:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,14 +10,11 @@
 
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.map.MapElement;
-
-import java.awt.event.MouseEvent;
 /**
  * Пустая стратегия. Ничего не делает.
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/02 07:56:01 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/02 08:57:28 $
  * @module mapviewclient_v1
  */
 public final class VoidStrategy extends MapStrategy 

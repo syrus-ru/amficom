@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.16 2005/02/02 07:56:01 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.17 2005/02/02 08:57:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
@@ -24,15 +23,12 @@ import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.Selection;
 
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-
-import javax.swing.SwingUtilities;
 
 /**
  * Стратегия управления маркером.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/02/02 07:56:01 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/02 08:57:28 $
  * @module mapviewclient_v1
  */
 public final class MapMarkerStrategy extends MapStrategy 

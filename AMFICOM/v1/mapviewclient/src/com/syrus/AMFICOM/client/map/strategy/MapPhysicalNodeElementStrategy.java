@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.14 2005/02/02 07:56:01 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.15 2005/02/02 08:57:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,6 @@
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindPhysicalNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateNodeLinkCommandBundle;
@@ -30,16 +29,13 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
 import java.awt.Point;
-import java.awt.event.MouseEvent;
 
 import java.util.Iterator;
-
-import javax.swing.SwingUtilities;
 
 /**
  * Стратегия управления топологическим узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/02/02 07:56:01 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/02 08:57:28 $
  * @module mapviewclient_v1
  */
 public final class MapPhysicalNodeElementStrategy extends MapStrategy 

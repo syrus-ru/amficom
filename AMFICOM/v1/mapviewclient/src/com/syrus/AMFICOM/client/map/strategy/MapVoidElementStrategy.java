@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.16 2005/02/02 07:56:01 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.17 2005/02/02 08:57:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
@@ -24,17 +23,14 @@ import com.syrus.AMFICOM.mapview.VoidElement;
 
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
 
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.swing.SwingUtilities;
-
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/02/02 07:56:01 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/02 08:57:28 $
  * @module mapviewclient_v1
  */
 public final class MapVoidElementStrategy extends MapStrategy 
@@ -127,6 +123,8 @@ public final class MapVoidElementStrategy extends MapStrategy
 					Math.abs(endX - startX),
 					Math.abs(endY - startY));
 			selectElementsInRect(selectionRect);
+
+			mapState.setActionMode(MapState.NULL_ACTION_MODE);
 		}//MapState.SELECT_MARKER_ACTION_MODE && MapState.NO_OPERATION
 	}
 
@@ -216,12 +214,10 @@ public final class MapVoidElementStrategy extends MapStrategy
 		else
 		if(selection.size() > 1)
 		{
-			Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
+			Selection sel = new Selection(map);
 			sel.addAll(selection);
 			logicalNetLayer.setCurrentMapElement(sel);
 		}
-
-		logicalNetLayer.getMapState().setActionMode(MapState.NULL_ACTION_MODE);
 	}
 }
 

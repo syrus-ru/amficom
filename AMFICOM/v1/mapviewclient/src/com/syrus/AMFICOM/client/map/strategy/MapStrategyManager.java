@@ -1,5 +1,5 @@
 /**
- * $Id: MapStrategyManager.java,v 1.9 2005/02/01 16:16:13 krupenn Exp $
+ * $Id: MapStrategyManager.java,v 1.10 2005/02/02 08:57:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import java.util.HashMap;
 /**
  * Хранилище стратегий для элементов карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/01 16:16:13 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/02 08:57:28 $
  * @module mapviewclient_v1
  */
 public final class MapStrategyManager 
@@ -75,7 +75,9 @@ public final class MapStrategyManager
 	{
 		MapStrategy strategy = (MapStrategy )strategyMap.get(mapElement.getClass());
 		if(strategy != null)
+		{
 			strategy.setMapElement(mapElement);
+		}
 		return strategy;
 	}
 }

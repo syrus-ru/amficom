@@ -1,5 +1,5 @@
 /**
- * $Id: MapStrategy.java,v 1.5 2005/02/02 07:56:01 krupenn Exp $
+ * $Id: MapStrategy.java,v 1.6 2005/02/02 08:57:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.map.MapElement;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+
 import javax.swing.SwingUtilities;
 
 /**
@@ -26,10 +27,8 @@ import javax.swing.SwingUtilities;
  * режимом работы пользователя с картой, режимом отображения, состоянием
  * или изменением состояния мыши и клавиатуры.
  * 
- * 
- * 
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/02 07:56:01 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/02 08:57:28 $
  * @module mapviewclient_v1
  */
 public abstract class MapStrategy
@@ -39,7 +38,7 @@ public abstract class MapStrategy
 	 */
 	protected LogicalNetLayer logicalNetLayer;
 	/**
-	 * контекст приложения
+	 * контекст приложения.
 	 */
 	protected ApplicationContext aContext;
 
@@ -64,17 +63,17 @@ public abstract class MapStrategy
 	 * Применить стратегию действий к элементу карты.
 	 * @param mapElement элемент карты
 	 */
-	public void doContextChanges(MouseEvent me)
+	public void doContextChanges(MouseEvent mapElement)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges(" + me + ")");
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges(" + mapElement + ")");
 		
 		MapState mapState = logicalNetLayer.getMapState();
 
 		int mouseMode = mapState.getMouseMode();
 
-		Point point = me.getPoint();
+		Point point = mapElement.getPoint();
 
-		if(SwingUtilities.isLeftMouseButton(me))
+		if(SwingUtilities.isLeftMouseButton(mapElement))
 		{
 			if(mouseMode == MapState.MOUSE_PRESSED)
 			{
