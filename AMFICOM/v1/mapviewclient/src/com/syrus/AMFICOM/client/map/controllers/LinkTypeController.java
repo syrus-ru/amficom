@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.5 2005/01/24 16:51:32 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.6 2005/02/02 08:58:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -48,7 +48,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/01/24 16:51:32 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/02 08:58:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -160,14 +160,14 @@ public final class LinkTypeController extends AbstractLinkController
 	 */
 	public void setLineSize (PhysicalLinkType link, int size)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_THICKNESS);
+		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_THICKNESS);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 		{
 			try
 			{
 				ea = Characteristic.createInstance(
-						link.getCreatorId(),
+						getLogicalNetLayer().getUserId(),
 						cType,
 						"",
 						"",
@@ -192,7 +192,7 @@ public final class LinkTypeController extends AbstractLinkController
 	 */
 	public int getLineSize (PhysicalLinkType link)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_THICKNESS);
+		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_THICKNESS);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 			return MapPropertiesManager.getThickness();
@@ -204,14 +204,14 @@ public final class LinkTypeController extends AbstractLinkController
 	 */
 	public void setStyle (PhysicalLinkType link, String style)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_STYLE);
+		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_STYLE);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 		{
 			try
 			{
 				ea = Characteristic.createInstance(
-						link.getCreatorId(),
+						getLogicalNetLayer().getUserId(),
 						cType,
 						"",
 						"",
@@ -236,7 +236,7 @@ public final class LinkTypeController extends AbstractLinkController
 	 */
 	public String getStyle (PhysicalLinkType link)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_STYLE);
+		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_STYLE);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 			return MapPropertiesManager.getStyle();
@@ -248,7 +248,7 @@ public final class LinkTypeController extends AbstractLinkController
 	 */
 	public Stroke getStroke (PhysicalLinkType link)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_STYLE);
+		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_STYLE);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 			return MapPropertiesManager.getStroke();
@@ -261,14 +261,14 @@ public final class LinkTypeController extends AbstractLinkController
 	 */
 	public void setColor (PhysicalLinkType link, Color color)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_COLOR);
+		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_COLOR);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 		{
 			try
 			{
 				ea = Characteristic.createInstance(
-						link.getCreatorId(),
+						getLogicalNetLayer().getUserId(),
 						cType,
 						"",
 						"",
@@ -297,7 +297,7 @@ public final class LinkTypeController extends AbstractLinkController
 		Color color = (Color )colorsHolder.get(link);
 		if(color == null)
 		{
-			CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_COLOR);
+			CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_COLOR);
 			Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 
 			if(ea == null)
@@ -315,14 +315,14 @@ public final class LinkTypeController extends AbstractLinkController
 	 */
 	public void setAlarmedColor (PhysicalLinkType link, Color color)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_ALARMED_COLOR);
+		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_ALARMED_COLOR);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 		{
 			try
 			{
 				ea = Characteristic.createInstance(
-						link.getCreatorId(),
+						getLogicalNetLayer().getUserId(),
 						cType,
 						"",
 						"",
@@ -351,7 +351,7 @@ public final class LinkTypeController extends AbstractLinkController
 		Color color = (Color )alarmedColorsHolder.get(link);
 		if(color == null)
 		{
-			CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_ALARMED_COLOR);
+			CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_ALARMED_COLOR);
 			Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 			if(ea == null)
 				color = MapPropertiesManager.getAlarmedColor();
@@ -367,14 +367,14 @@ public final class LinkTypeController extends AbstractLinkController
 	 */
 	public void setAlarmedLineSize (PhysicalLinkType link, int size)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_ALARMED_THICKNESS);
+		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_ALARMED_THICKNESS);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 		{
 			try
 			{
 				ea = Characteristic.createInstance(
-						link.getCreatorId(),
+						getLogicalNetLayer().getUserId(),
 						cType,
 						"",
 						"",
@@ -399,7 +399,7 @@ public final class LinkTypeController extends AbstractLinkController
 	 */
 	public int getAlarmedLineSize (PhysicalLinkType link)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getCreatorId(), ATTRIBUTE_ALARMED_THICKNESS);
+		CharacteristicType cType = getCharacteristicType(getLogicalNetLayer().getUserId(), ATTRIBUTE_ALARMED_THICKNESS);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 			return MapPropertiesManager.getAlarmedThickness();

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.4 2005/01/26 10:17:31 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.5 2005/02/02 08:58:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,11 +10,6 @@
  */
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
-
-import java.awt.Color;
-import java.awt.Stroke;
-import java.util.Iterator;
-import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
@@ -33,38 +28,60 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.map.MapElement;
 
+import java.awt.Color;
+import java.awt.Stroke;
+
+import java.util.Iterator;
+import java.util.List;
+
 /**
- * линейный элемента карты 
- * 
- * 
- * 
- * @version $Revision: 1.4 $, $Date: 2005/01/26 10:17:31 $
- * @module
+ * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.5 $, $Date: 2005/02/02 08:58:10 $
+ * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController implements MapElementController
 {
+	/** Кодовое имя атрибута "Толщина линии". */
 	public static final String ATTRIBUTE_THICKNESS = "thickness";
+	/** Кодовое имя атрибута "Цвет". */
 	public static final String ATTRIBUTE_COLOR = "color";
+	/** Кодовое имя атрибута "Стиль линии". */
 	public static final String ATTRIBUTE_STYLE = "style";
+	/** Кодовое имя атрибута "Толщина линии при сигнале тревоги". */
 	public static final String ATTRIBUTE_ALARMED_THICKNESS = "alarmed_thckness";
+	/** Кодовое имя атрибута "Цвет при сигнале тревоги". */
 	public static final String ATTRIBUTE_ALARMED_COLOR = "alarmed_color";
 
-	protected LogicalNetLayer lnl;
+	/**
+	 * Логический слой.
+	 */
+	protected LogicalNetLayer logicalNetLayer;
 
-	public void setLogicalNetLayer(LogicalNetLayer lnl)
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
 	{
-		this.lnl = lnl;
+		this.logicalNetLayer = logicalNetLayer;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		return lnl;
+		return logicalNetLayer;
 	}
 
 	public abstract boolean isSelectionVisible(MapElement me);
 
+	/**
+	 * 
+	 * @param userId
+	 * @param codename
+	 * @return 
+	 */
 	public static CharacteristicType getCharacteristicType(
 			Identifier userId, 
 			String codename)
@@ -126,18 +143,24 @@ public abstract class AbstractLinkController implements MapElementController
 	}
 
 	/**
-	 * Установить толщину линии
+	 * Установить толщину линии. Толщина определяется
+	 * атрибутом {@link #ATTRIBUTE_THICKNESS}. В случае, если
+	 * такого атрибута у элемента нет, создается новый.
+	 * @param mapElement элемент карты
+	 * @param size толщина линии
 	 */
 	public void setLineSize (MapElement link, int size)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_THICKNESS);
+		CharacteristicType cType = getCharacteristicType(
+				getLogicalNetLayer().getUserId(), 
+				ATTRIBUTE_THICKNESS);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 		{
 			try
 			{
 				ea = Characteristic.createInstance(
-						link.getMap().getCreatorId(),
+						getLogicalNetLayer().getUserId(),
 						cType,
 						"",
 						"",
@@ -158,39 +181,52 @@ public abstract class AbstractLinkController implements MapElementController
 	}
 
 	/**
-	 * Получить толщину линии
+	 * Получить толщину линии. Толщина определяется
+	 * атрибутом {@link #ATTRIBUTE_THICKNESS}. В случае, если
+	 * такого атрибута у элемента нет, берется значение по умолчанию
+	 * ({@link MapPropertiesManager#getThickness()}).
+	 * @param mapElement элемент карты
+	 * @return толщина линии
 	 */
-	public int getLineSize (MapElement link)
+	public int getLineSize (MapElement mapElement)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_THICKNESS);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+				getLogicalNetLayer().getUserId(), 
+				ATTRIBUTE_THICKNESS);
+		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
 			return MapPropertiesManager.getThickness();
 		return Integer.parseInt(ea.getValue());
 	}
 
 	/**
-	 * Установить вид линии
+	 * Установить вид линии. Стиль определяется
+	 * атрибутом {@link #ATTRIBUTE_STYLE}. В случае, если
+	 * такого атрибута у элемента нет, создается новый.
+	 * @param mapElement элемент карты
+	 * @param style стиль
 	 */
-	public void setStyle (MapElement link, String style)
+	public void setStyle (MapElement mapElement, String style)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_STYLE);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+				getLogicalNetLayer().getUserId(), 
+				ATTRIBUTE_STYLE);
+		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
 		{
 			try
 			{
 				ea = Characteristic.createInstance(
-						link.getMap().getCreatorId(),
+						getLogicalNetLayer().getUserId(),
 						cType,
 						"",
 						"",
 						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
 						"",
-						link.getId(),
+						mapElement.getId(),
 						true,
 						true);
-				link.addCharacteristic(ea);
+				mapElement.addCharacteristic(ea);
 			}
 			catch (CreateObjectException e)
 			{
@@ -202,24 +238,38 @@ public abstract class AbstractLinkController implements MapElementController
 	}
 
 	/**
-	 * Получить вид линии
+	 * Получить вид линии. Стиль определяется
+	 * атрибутом {@link #ATTRIBUTE_STYLE}. В случае, если
+	 * такого атрибута у элемента нет, берется значение по умолчанию
+	 * ({@link MapPropertiesManager#getStyle()}).
+	 * @param mapElement элемент карты
+	 * @return стиль
 	 */
-	public String getStyle (MapElement link)
+	public String getStyle (MapElement mapElement)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_STYLE);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+				getLogicalNetLayer().getUserId(), 
+				ATTRIBUTE_STYLE);
+		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
 			return MapPropertiesManager.getStyle();
 		return ea.getValue();
 	}
 
 	/**
-	 * Получить стиль линии
+	 * Получить стиль линии. Стиль определяется
+	 * атрибутом {@link #ATTRIBUTE_STYLE}. В случае, если
+	 * такого атрибута у элемента нет, берется значение по умолчанию
+	 * ({@link MapPropertiesManager#getStroke()}).
+	 * @param mapElement элемент карты
+	 * @return стиль
 	 */
-	public Stroke getStroke (MapElement link)
+	public Stroke getStroke (MapElement mapElement)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_STYLE);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+				getLogicalNetLayer().getUserId(), 
+				ATTRIBUTE_STYLE);
+		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
 			return MapPropertiesManager.getStroke();
 
@@ -227,27 +277,33 @@ public abstract class AbstractLinkController implements MapElementController
 	}
 
 	/**
-	 * Установить цвет
+	 * Установить цвет. Цает определяется
+	 * атрибутом {@link #ATTRIBUTE_COLOR}. В случае, если
+	 * такого атрибута у элемента нет, создается новый.
+	 * @param mapElement элемент карты
+	 * @param color цвет
 	 */
-	public void setColor (MapElement link, Color color)
+	public void setColor (MapElement mapElement, Color color)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_COLOR);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+				getLogicalNetLayer().getUserId(), 
+				ATTRIBUTE_COLOR);
+		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
 		{
 			try
 			{
 				ea = Characteristic.createInstance(
-						link.getMap().getCreatorId(),
+						getLogicalNetLayer().getUserId(),
 						cType,
 						"",
 						"",
 						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
 						"",
-						link.getId(),
+						mapElement.getId(),
 						true,
 						true);
-				link.addCharacteristic(ea);
+				mapElement.addCharacteristic(ea);
 			}
 			catch (CreateObjectException e)
 			{
@@ -259,39 +315,52 @@ public abstract class AbstractLinkController implements MapElementController
 	}
 
 	/**
-	 * Получить цвет
+	 * Получить цвет. Цает определяется
+	 * атрибутом {@link #ATTRIBUTE_COLOR}. В случае, если
+	 * такого атрибута у элемента нет, берется значение по умолчанию
+	 * ({@link MapPropertiesManager#getColor()}).
+	 * @param mapElement элемент карты
+	 * @return цвет
 	 */
-	public Color getColor(MapElement link)
+	public Color getColor(MapElement mapElement)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_COLOR);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+				getLogicalNetLayer().getUserId(), 
+				ATTRIBUTE_COLOR);
+		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
 			return MapPropertiesManager.getColor();
 		return new Color(Integer.parseInt(ea.getValue()));
 	}
 
 	/**
-	 * установить цвет при наличии сигнала тревоги
+	 * Установить цвет при наличии сигнала тревоги. Цает определяется
+	 * атрибутом {@link #ATTRIBUTE_ALARMED_COLOR}. В случае, если
+	 * такого атрибута у элемента нет, создается новый.
+	 * @param mapElement элемент карты
+	 * @param color цвет
 	 */
-	public void setAlarmedColor (MapElement link, Color color)
+	public void setAlarmedColor (MapElement mapElement, Color color)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_ALARMED_COLOR);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+				getLogicalNetLayer().getUserId(), 
+				ATTRIBUTE_ALARMED_COLOR);
+		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
 		{
 			try
 			{
 				ea = Characteristic.createInstance(
-						link.getMap().getCreatorId(),
+						getLogicalNetLayer().getUserId(),
 						cType,
 						"",
 						"",
 						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
 						"",
-						link.getId(),
+						mapElement.getId(),
 						true,
 						true);
-				link.addCharacteristic(ea);
+				mapElement.addCharacteristic(ea);
 			}
 			catch (CreateObjectException e)
 			{
@@ -303,11 +372,18 @@ public abstract class AbstractLinkController implements MapElementController
 	}
 
 	/**
-	 * получить цвет при наличии сигнала тревоги
+	 * Получить цвет при наличии сигнала тревоги. Цает определяется
+	 * атрибутом {@link #ATTRIBUTE_ALARMED_COLOR}. В случае, если
+	 * такого атрибута у элемента нет, берется значение по умолчанию
+	 * ({@link MapPropertiesManager#getAlarmedColor()}).
+	 * @param mapElement элемент карты
+	 * @return цвет
 	 */
 	public Color getAlarmedColor(MapElement link)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_ALARMED_COLOR);
+		CharacteristicType cType = getCharacteristicType(
+				getLogicalNetLayer().getUserId(), 
+				ATTRIBUTE_ALARMED_COLOR);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
 		if(ea == null)
 			return MapPropertiesManager.getAlarmedColor();
@@ -315,27 +391,33 @@ public abstract class AbstractLinkController implements MapElementController
 	}
 
 	/**
-	 * установить толщину линии при наличи сигнала тревоги
+	 * Установить толщину линии при наличи сигнала тревоги. Толщина определяется
+	 * атрибутом {@link #ATTRIBUTE_ALARMED_THICKNESS}. В случае, если
+	 * такого атрибута у элемента нет, создается новый.
+	 * @param mapElement элемент карты
+	 * @param size толщина линии
 	 */
-	public void setAlarmedLineSize (MapElement link, int size)
+	public void setAlarmedLineSize (MapElement mapElement, int size)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_ALARMED_THICKNESS);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+				getLogicalNetLayer().getUserId(), 
+				ATTRIBUTE_ALARMED_THICKNESS);
+		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
 		{
 			try
 			{
 				ea = Characteristic.createInstance(
-						link.getMap().getCreatorId(),
+						getLogicalNetLayer().getUserId(),
 						cType,
 						"",
 						"",
 						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
 						"",
-						link.getId(),
+						mapElement.getId(),
 						true,
 						true);
-				link.addCharacteristic(ea);
+				mapElement.addCharacteristic(ea);
 			}
 			catch (CreateObjectException e)
 			{
@@ -347,12 +429,19 @@ public abstract class AbstractLinkController implements MapElementController
 	}
 
 	/**
-	 * получить толщину линии при наличи сигнала тревоги
+	 * Получить толщину линии при наличи сигнала тревоги. Толщина определяется
+	 * атрибутом {@link #ATTRIBUTE_ALARMED_THICKNESS}. В случае, если
+	 * такого атрибута у элемента нет, берется значение по умолчанию
+	 * ({@link MapPropertiesManager#getAlarmedThickness()}).
+	 * @param mapElement элемент карты
+	 * @return толщина линии
 	 */
-	public int getAlarmedLineSize (MapElement link)
+	public int getAlarmedLineSize(MapElement mapElement)
 	{
-		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_ALARMED_THICKNESS);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		CharacteristicType cType = getCharacteristicType(
+				getLogicalNetLayer().getUserId(), 
+				ATTRIBUTE_ALARMED_THICKNESS);
+		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
 			return MapPropertiesManager.getAlarmedThickness();
 		return Integer.parseInt(ea.getValue());
