@@ -11,7 +11,7 @@ import com.syrus.io.*;
 import com.syrus.AMFICOM.server.*;
 import com.syrus.io.FileToDirectory;
 
-public class LoadEquipmentCatalogNew extends Object
+public class LoadEquipmentCatalogNew
 {
 	LogWriter frame;
 	ConnectionManager connectionManager;
