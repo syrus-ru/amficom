@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.4 2005/02/03 08:37:25 bob Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.5 2005/02/03 14:24:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/03 08:37:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 14:24:46 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -36,8 +36,8 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns  = super.getColumns(mode) + COMMA
-				+ CharacteristicTypeWrapper.COLUMN_CODENAME + COMMA
-				+ CharacteristicTypeWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ CharacteristicTypeWrapper.COLUMN_DATA_TYPE + COMMA				
 				+ CharacteristicTypeWrapper.COLUMN_SORT;
 		}
@@ -113,8 +113,8 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 										 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 										 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 										 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-										 DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicTypeWrapper.COLUMN_CODENAME)),
-										 DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicTypeWrapper.COLUMN_DESCRIPTION)),
+										 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
+										 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 										 resultSet.getInt(CharacteristicTypeWrapper.COLUMN_DATA_TYPE),
 										 resultSet.getInt(CharacteristicTypeWrapper.COLUMN_SORT));
 
@@ -193,7 +193,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		List list = null;
 
 		try {
-			list = this.retrieveByIds( null , CharacteristicTypeWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			list = this.retrieveByIds( null , StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.8 2005/02/03 08:37:25 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.9 2005/02/03 14:24:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/03 08:37:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/02/03 14:24:46 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -45,9 +45,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ CharacteristicWrapper.COLUMN_TYPE_ID + COMMA
-			+ CharacteristicWrapper.COLUMN_NAME + COMMA
-			+ CharacteristicWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+			+ StorableObjectWrapper.COLUMN_NAME + COMMA
+			+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 			+ CharacteristicWrapper.COLUMN_VALUE + COMMA
 			+ CharacteristicWrapper.COLUMN_EDITABLE + COMMA
 			+ CharacteristicWrapper.COLUMN_VISIBLE + COMMA
@@ -143,7 +143,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 
 		CharacteristicType characteristicType;
 		try {
-			characteristicType = (CharacteristicType)GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, CharacteristicWrapper.COLUMN_TYPE_ID), true);
+			characteristicType = (CharacteristicType)GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -153,8 +153,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 									 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 									 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 									 characteristicType,
-									 DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicWrapper.COLUMN_NAME)),
-									 DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicWrapper.COLUMN_DESCRIPTION)),
+									 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+									 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 									 sort,
 									 DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicWrapper.COLUMN_VALUE)),
 									 characterizedId,
