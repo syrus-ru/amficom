@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.7 2005/03/01 15:43:01 krupenn Exp $
+ * $Id: AbstractNodeController.java,v 1.8 2005/03/02 12:31:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
 
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
@@ -32,10 +31,10 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Контроллер узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/03/01 15:43:01 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/02 12:31:39 $
  * @module mapviewclient_v1
  */
-public abstract class AbstractNodeController implements MapElementController
+public abstract class AbstractNodeController extends AbstractMapElementController
 {
 	/** Размер пиктограммы поумолчанию. */
 	public static final Rectangle DEFAULT_BOUNDS = new Rectangle(14, 14);
@@ -43,11 +42,6 @@ public abstract class AbstractNodeController implements MapElementController
 	public static final Rectangle MIN_BOUNDS = new Rectangle(6, 6);
 	/** Максимальный размер элемента. */
 	public static final Rectangle MAX_BOUNDS = new Rectangle(40, 40);
-
-	/**
-	 * Логический слой.
-	 */
-	protected LogicalNetLayer logicalNetLayer;
 
 	/** Размер пиктограммы в экранных координатах. */
 	protected static java.util.Map boundsContainer = new HashMap();
@@ -63,22 +57,6 @@ public abstract class AbstractNodeController implements MapElementController
 	 * вхождения центра элемента в видимую область.
 	 */
 	protected static Rectangle searchBounds = new Rectangle();
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-		this.logicalNetLayer = logicalNetLayer;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public LogicalNetLayer getLogicalNetLayer()
-	{
-		return this.logicalNetLayer;
-	}
 
 	/**
 	 * Получить размер пиктограммы поумолчанию.

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.11 2005/03/01 15:43:01 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.12 2005/03/02 12:31:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -37,10 +36,10 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/03/01 15:43:01 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/02 12:31:39 $
  * @module mapviewclient_v1
  */
-public abstract class AbstractLinkController implements MapElementController
+public abstract class AbstractLinkController extends AbstractMapElementController
 {
 	/** Кодовое имя атрибута "Толщина линии". */
 	public static final String ATTRIBUTE_THICKNESS = "thickness";
@@ -52,27 +51,6 @@ public abstract class AbstractLinkController implements MapElementController
 	public static final String ATTRIBUTE_ALARMED_THICKNESS = "alarmed_thckness";
 	/** Кодовое имя атрибута "Цвет при сигнале тревоги". */
 	public static final String ATTRIBUTE_ALARMED_COLOR = "alarmed_color";
-
-	/**
-	 * Логический слой.
-	 */
-	protected LogicalNetLayer logicalNetLayer;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-		this.logicalNetLayer = logicalNetLayer;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public LogicalNetLayer getLogicalNetLayer()
-	{
-		return this.logicalNetLayer;
-	}
 
 	/**
 	 * Определить, видна ли рамка выделения элемента карты.
