@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.3 2004/08/09 08:28:51 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.4 2004/08/12 11:46:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,13 +21,18 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/09 08:28:51 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/12 11:46:44 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class MeasurementStorableObjectPool {
 	private static final int OBJECT_POOL_MAP_SIZE = 14;	/*	Number of entities*/
+
+	private static final int PARAMETERTYPE_OBJECT_POOL_SIZE = 9;
+	private static final int MEASUREMENTTYPE_OBJECT_POOL_SIZE = 1;
+	private static final int ANALYSISTYPE_OBJECT_POOL_SIZE = 1;
+	private static final int EVALUATIONTYPE_OBJECT_POOL_SIZE = 1;
 
 	private static final int SET_OBJECT_POOL_SIZE = 4;
 	private static final int SETPARAMETER_OBJECT_POOL_SIZE = 4;
@@ -39,10 +44,6 @@ public class MeasurementStorableObjectPool {
 	private static final int RESULT_OBJECT_POOL_SIZE = 4;
 	private static final int RESULTPARAMETER_OBJECT_POOL_SIZE = 4;
 	private static final int TEMPORALPATTERN_OBJECT_POOL_SIZE = 2;
-	private static final int PARAMETERTYPE_OBJECT_POOL_SIZE = 9;
-	private static final int MEASUREMENTTYPE_OBJECT_POOL_SIZE = 1;
-	private static final int ANALYSISTYPE_OBJECT_POOL_SIZE = 1;
-	private static final int EVALUATIONTYPE_OBJECT_POOL_SIZE = 1;
 
 	private static Map objectPoolMap; /*	Map <String objectEntity, LRUMap objectPool>	*/
 	private static MeasurementObjectLoader mObjectLoader;

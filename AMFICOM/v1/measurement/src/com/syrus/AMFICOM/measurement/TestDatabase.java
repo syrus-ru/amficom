@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.15 2004/08/10 19:05:19 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.16 2004/08/12 11:46:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,10 +28,14 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
+import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
+import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/10 19:05:19 $
+ * @version $Revision: 1.16 $, $Date: 2004/08/12 11:46:44 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -129,7 +133,7 @@ public class TestDatabase extends StorableObjectDatabase {
 													 (analysisTypeIdCode != null) ? (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(analysisTypeIdCode), true) : null,
 													 (evaluationTypeIdCode != null) ? (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(evaluationTypeIdCode), true) : null,
 													 resultSet.getInt(COLUMN_STATUS),
-													 null, //!! (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(monitoredElementIdCode), true),
+													 (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(monitoredElementIdCode), true),
 													 resultSet.getInt(COLUMN_RETURN_TYPE),
 													 (description != null) ? description: "");
 			}
@@ -556,21 +560,66 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-//	public static List retrieveTestsForMCMOrderByStartTime(Identifier mcmId) {
-//		String mcmIdStr = mcmId.toSQLString();
-//		String sql = SQL_SELECT
-//			+ COLUMN_ID
-//			+ SQL_FROM + ObjectEntities.TEST_ENTITY
-//			+ SQL_WHERE + COLUMN_MONITORED_ELEMENT_ID + SQL_IN
-//				+ OPEN_BRACKET
-//				+ SQL_SELECT
-//				+ COLUMN_ID
-//				+ SQL_FROM + ObjectEntities.ME_ENTITY
-//				+ SQL_WHERE + "path_id" + SQL_IN
-//					+ OPEN_BRACKET
-//					+ SQL_SELECT
-//					+ COLUMN_ID
-//					+ SQL_FROM + "transmissionpaths"
-//				+ CLOSE_BRACKET
-//	}
+	
+	public static List retrieveTestsForMCM(Identifier mcmId) throws RetrieveObjectException {
+		List tests = new ArrayList();
+
+		String mcmIdStr = mcmId.toSQLString();
+		String sql = SQL_SELECT
+			+ COLUMN_ID
+			+ SQL_FROM + ObjectEntities.TEST_ENTITY
+			+ SQL_WHERE + COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
+				+ SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.ME_ENTITY
+				+ SQL_WHERE + MonitoredElementDatabase.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
+					+ SQL_SELECT
+					+ COLUMN_ID
+					+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
+					+ SQL_WHERE + MeasurementPortDatabase.COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET
+						+ SQL_SELECT
+						+ COLUMN_ID
+						+ SQL_FROM + ObjectEntities.KIS_ENTITY
+						+ SQL_WHERE + KISDatabase.COLUMN_MCM_ID + EQUALS + mcmIdStr
+					+ CLOSE_BRACKET
+				+ CLOSE_BRACKET
+			+ CLOSE_BRACKET;
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				/**
+				  * @todo when change DB Identifier model ,change getString() to getLong()
+				  */
+				try {
+					tests.add(new Test(new Identifier(resultSet.getString(COLUMN_ID))));
+				}
+				catch (ObjectNotFoundException onfe) {
+					Log.errorException(onfe);
+				}
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "TestDatabase.retrieveTestsForMCM | Cannot retrieve test for mcm " + mcmIdStr;
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return tests;
+	}
 }

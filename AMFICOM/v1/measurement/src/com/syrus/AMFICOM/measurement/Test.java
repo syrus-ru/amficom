@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.25 2004/08/06 16:07:07 arseniy Exp $
+ * $Id: Test.java,v 1.26 2004/08/12 11:46:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,8 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
@@ -30,11 +32,9 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.ContinuousTestTimeStamps;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.KIS;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/08/06 16:07:07 $
+ * @version $Revision: 1.26 $, $Date: 2004/08/12 11:46:44 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -136,19 +136,19 @@ public class Test extends StorableObject {
 	private String description;
 	private List measurementSetupIds;
 
-	private KIS kis;
 	private MeasurementSetup mainMeasurementSetup;
 	
 	private StorableObjectDatabase	testDatabase;
 	
 
-	public Test(Identifier id) throws RetrieveObjectException {
+	public Test(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
 		this.testDatabase = MeasurementDatabaseContext.testDatabase;
 		try {
 			this.testDatabase.retrieve(this);
-		} catch (Exception e) {
+		}
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -177,8 +177,7 @@ public class Test extends StorableObject {
 		 */
 		this.evaluationType = (tt.evaluation_type_id.identifier_string != "")	? (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(tt.evaluation_type_id), true) : null;
 		this.status = tt.status.value();
-//!!
-//		this.monitoredElement = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(tt.monitored_element_id), true);
+		this.monitoredElement = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(tt.monitored_element_id), true);
 		this.returnType = tt.return_type.value();
 		this.description = new String(tt.description);
 		this.measurementSetupIds = new ArrayList(tt.measurement_setup_ids.length);
@@ -186,8 +185,6 @@ public class Test extends StorableObject {
 			this.measurementSetupIds.add(new Identifier(tt.measurement_setup_ids[i]));
 
 		this.mainMeasurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject((Identifier)this.measurementSetupIds.get(0), true);
-//!!
-//		this.kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(this.monitoredElement.getKISId());
 
 		this.testDatabase = MeasurementDatabaseContext.testDatabase;
 		try {
@@ -319,10 +316,6 @@ public class Test extends StorableObject {
 
 	public EvaluationType getEvaluationType() {
 		return this.evaluationType;
-	}
-
-	public KIS getKIS() {
-		return this.kis;
 	}
 
 	public List getMeasurementSetupIds() {
@@ -515,9 +508,6 @@ public class Test extends StorableObject {
 		this.monitoredElement = monitoredElement;
 		this.returnType = returnType;
 		this.description = description;
-
-//!!
-//		this.kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(this.monitoredElement.getKISId(), true);
 	}
 
 	protected synchronized void setMeasurementSetupIds(List measurementSetupIds) {
