@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.50 2005/01/27 07:51:12 arseniy Exp $
+ * $Id: measurement.idl,v 1.51 2005/01/27 16:09:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -287,17 +287,23 @@ module corba {
 			long long end;
 	};
 
-	struct ResultCondition_Transferable {	
-			short	entity_code;
-			general::corba::Identifier_Transferable domain_id;
-			long long start;
-			long long end;
-	};
 
-	struct ResultSortCondition_Transferable {
-			short	entity_code;
-			general::corba::Identifier_Transferable measurement_id;
-			ResultSort sort;
+/**
+	Condition for manipulate with different actions and their results
+	if entity_code == RESULT_ENTITY_CODE
+		this condition is used to find all results,
+		whose actions have parent action of id 'action_id'
+
+	NOTE: to find for a given action it's result,
+	use LinkedIdsCondition with RESULT_ENTITY_CODE as entityCode
+	and one from this:
+		identifier of the action as identifier
+		or
+		list with one element - identifier of the action - as linkedIds
+*/
+	struct ActionCondition_Transferable {
+		short entity_code;
+		general::corba::Identifier_Transferable action_id;
 	};
 
 };
