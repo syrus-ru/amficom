@@ -42,6 +42,50 @@ public class RISDSurveyDataSource
 
 	}
 
+	public void GetAlarmTypes()
+	{
+		if(si == null)
+			return;
+		if(!si.isOpened())
+			return;
+
+
+		int i;
+		int ecode = 0;
+		int count;
+		AlarmTypeSeq_TransferableHolder ath = new AlarmTypeSeq_TransferableHolder();
+		AlarmType_Transferable ats[];
+		AlarmType at;
+
+		try
+		{
+			ecode = si.ci.server.GetAlarmTypes(si.accessIdentity, ath);
+		}
+		catch (Exception ex)
+		{
+			System.err.print("Error getting Alarms type: " + ex.getMessage());
+			ex.printStackTrace();
+			return;
+		}
+
+		if (ecode != Constants.ERROR_NO_ERROR)
+		{
+			System.out.println ("Failed GetAlarmTypes! status = " + ecode);
+			return;
+		}
+
+		ats = ath.value;
+		count = ats.length;
+		if(count != 0)
+			System.out.println("...Done! " + count + " alarm type(s) fetched");
+	    for (i = 0; i < count; i++)
+		{
+			at = new AlarmType(ats[i]);
+			Pool.put(AlarmType.typ, at.getId(), at);
+	    }
+
+	}
+
 	public void GetAlarms()
 	{
 		if(si == null)

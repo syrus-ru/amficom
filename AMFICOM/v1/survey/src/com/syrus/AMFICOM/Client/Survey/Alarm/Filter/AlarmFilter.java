@@ -104,9 +104,9 @@ public class AlarmFilter extends ObjectResourceFilter
 		if(colId.equals("Execution_finish"))
 			return new String[] {"time"};
 		if(colId.equals("Chief_executor"))
-			return new String[] {"string", "list"};
+			return new String[] {"string"};//, "list"
 		if(colId.equals("Executor"))
-			return new String[] {"string", "list"};
+			return new String[] {"string"};//, "list"
 
 		return new String[] {};
 	}
