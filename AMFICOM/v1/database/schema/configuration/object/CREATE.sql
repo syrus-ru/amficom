@@ -5,6 +5,8 @@
 @@monitoredelement.sql
 @@equipment.sql
 @@equipmentmelink.sql
+@@port.sql
+@@measurementport.sql
 @@transmissionpath.sql
 @@transmissionpathmelink.sql
 @@characteristic.sql

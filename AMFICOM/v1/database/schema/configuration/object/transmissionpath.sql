@@ -24,7 +24,6 @@ CREATE TABLE TransmissionPath (
 --
  CONSTRAINT tpath_start_port_fk FOREIGN KEY (start_port_id)
   REFERENCES Port (id) ON DELETE CASCADE,
--
  CONSTRAINT tpath_finish_port_fk FOREIGN KEY (finish_port_id)
   REFERENCES Port (id) ON DELETE CASCADE
 

@@ -19,15 +19,11 @@ CREATE TABLE MeasurementPort (
  CONSTRAINT mp_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES Users (id) ON DELETE CASCADE,
 --
- CONSTRAINT mp_domain_fk FOREIGN KEY (domain_id)
-  REFERENCES Domain (id) ON DELETE CASCADE,
---
- CONSTRAINT eqp_kis_fk FOREIGN KEY (kis_id)
+ CONSTRAINT mp_kis_fk FOREIGN KEY (kis_id)
   REFERENCES KIS (id) ON DELETE CASCADE,
 --
- CONSTRAINT eqp_port_fk FOREIGN KEY (port_id)
+ CONSTRAINT mp_port_fk FOREIGN KEY (port_id)
   REFERENCES Port (id) ON DELETE CASCADE
-
 );
 
 CREATE SEQUENCE measurementport_seq ORDER;

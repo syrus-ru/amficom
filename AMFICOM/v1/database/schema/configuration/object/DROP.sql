@@ -1,6 +1,8 @@
 DROP TABLE characteristic;
 DROP TABLE transmissionpathmelink;
 DROP TABLE transmissionpath;
+DROP TABLE measurementport;
+DROP TABLE port.sql;
 DROP TABLE equipmentmelink;
 DROP TABLE equipment;
 DROP TABLE monitoredelement;
@@ -11,6 +13,8 @@ DROP TABLE domain;
 
 DROP SEQUENCE characteristic_seq;
 DROP SEQUENCE transmissionpath_seq;
+DROP SEQUENCE measurementport_seq;
+DROP SEQUENCE port_seq;
 DROP SEQUENCE equipment_seq;
 DROP SEQUENCE monitoredelement_seq;
 DROP SEQUENCE kis_seq;
