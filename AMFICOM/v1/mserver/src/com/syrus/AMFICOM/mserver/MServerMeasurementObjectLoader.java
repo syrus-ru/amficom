@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.14 2004/11/24 09:23:02 arseniy Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.15 2004/12/10 09:10:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,53 +29,30 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
-import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
+import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
-import com.syrus.AMFICOM.measurement.EvaluationType;
-import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
-import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
-import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
-import com.syrus.AMFICOM.measurement.Modeling;
-import com.syrus.AMFICOM.measurement.ParameterType;
-import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
-import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.ResultDatabase;
-import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.SetDatabase;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
-import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
-import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
-
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/11/24 09:23:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2004/12/10 09:10:39 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 
-public class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
+public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	protected static Identifier mcmId;
 	protected static Object lock;
 	
 	static {
 		lock = new Object();
-	}
-
-	public MServerMeasurementObjectLoader() {
 	}
 
 	public Measurement loadMeasurement(Identifier id) throws RetrieveObjectException, CommunicationException {
@@ -233,19 +210,6 @@ public class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoa
 		return list;
 	}
 
-	public List loadAnalysisTypes(List ids) throws DatabaseException, CommunicationException {
-		AnalysisTypeDatabase database = (AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MServerMeasumentObjectLoader.loadAnalysisTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MServerMeasumentObjectLoader.loadAnalysisTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
 	public List loadEvaluations(List ids) throws DatabaseException, CommunicationException {
 		EvaluationDatabase database = (EvaluationDatabase)MeasurementDatabaseContext.getEvaluationDatabase();
 		List list;
@@ -296,23 +260,6 @@ public class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoa
 		return list;
 	}
 
-	public List loadEvaluationTypes(List ids) throws DatabaseException, CommunicationException {
-		EvaluationTypeDatabase database = (EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MServerMeasumentObjectLoader.loadEvaluationTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MServerMeasumentObjectLoader.loadEvaluationTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadModelings(List ids) throws DatabaseException, CommunicationException {
-		throw new UnsupportedOperationException("MServerMeasurementObjectLoader.loadModelings | mserver doesn't need in modeling");
-	}
-
   public List loadMeasurements(List ids) throws DatabaseException, CommunicationException {
 		MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
 		List list;
@@ -361,270 +308,7 @@ public class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoa
 			throw new DatabaseException("MServerMeasumentObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
 		}
 		return list;
-	}
-
-	public List loadMeasurementSetups(List ids) throws DatabaseException, CommunicationException {
-		MeasurementSetupDatabase database = (MeasurementSetupDatabase)MeasurementDatabaseContext.getMeasurementSetupDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MServerMeasumentObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MServerMeasumentObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadMeasurementTypes(List ids) throws DatabaseException, CommunicationException {
-		MeasurementTypeDatabase database = (MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MServerMeasumentObjectLoader.loadMeasurementTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MServerMeasumentObjectLoader.loadMeasurementTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadParameterTypes(List ids) throws DatabaseException, CommunicationException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MServerMeasumentObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MServerMeasumentObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadResults(List ids) throws DatabaseException, CommunicationException {
-		ResultDatabase database = (ResultDatabase)MeasurementDatabaseContext.getResultDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MServerMeasumentObjectLoader.loadResults | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MServerMeasumentObjectLoader.loadResults | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadSets(List ids) throws DatabaseException, CommunicationException {
-		SetDatabase database = (SetDatabase)MeasurementDatabaseContext.getSetDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MServerMeasumentObjectLoader.loadSets | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MServerMeasumentObjectLoader.loadSets | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadTemporalPatterns(List ids) throws DatabaseException, CommunicationException {
-		TemporalPatternDatabase database = (TemporalPatternDatabase)MeasurementDatabaseContext.getTemporalPatternDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MServerMeasumentObjectLoader.loadTemporalPatterns | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MServerMeasumentObjectLoader.loadTemporalPatterns | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadTests(List ids) throws DatabaseException, CommunicationException {
-		TestDatabase database = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MServerMeasumentObjectLoader.loadTests | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MServerMeasumentObjectLoader.loadTests | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public java.util.Set refresh(java.util.Set s) {
-//      TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveParameterType(ParameterType parameterType, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveAnalysisType(AnalysisType analysisType, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveSet(Set set, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveModeling(Modeling modeling, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveMeasurement(Measurement measurement, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveAnalysis(Analysis analysis, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveEvaluation(Evaluation evaluation, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveTest(Test test, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveResult(Result result, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveParameterTypes(List list, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveMeasurementTypes(List list, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveAnalysisTypes(List list, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveEvaluationTypes(List list, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveSets(List list, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveModelings(List list, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveMeasurementSetups(List list, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveMeasurements(List list, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveAnalyses(List list, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveEvaluations(List list, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveTests(List list, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveResults(List list, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveTemporalPatterns(List list, boolean force) throws DatabaseException, CommunicationException {
-//    	 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-		/* Load Measurement StorableObject but argument ids */
-
-	public List loadParameterTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-	//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-	
-	public List loadMeasurementTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-	//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-	
-	public List loadAnalysisTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-	//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-	
-	public List loadEvaluationTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-	//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-	
-	public List loadSetsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-	//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-	
-	public List loadModelingsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-	//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-	
-	public List loadMeasurementSetupsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-	//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
+	}	
 
 	public List loadMeasurementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 		MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
@@ -734,31 +418,6 @@ public class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoa
 			Log.errorMessage("MServerMeasumentObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + ae.getMessage());
 			throw new DatabaseException("MServerMeasumentObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + ae.getMessage());
 		}
-	}
-
-	public List loadTestsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public List loadResultsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public List loadTemporalPatternsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void delete(Identifier id) throws CommunicationException, DatabaseException {
-//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void delete(List ids) throws CommunicationException, DatabaseException {
-//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
+	}	
 
 }
