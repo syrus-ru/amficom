@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.20 2004/11/29 09:33:29 max Exp $
+ * $Id: MeasurementServerSetup.java,v 1.21 2004/12/09 15:28:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,12 +28,12 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/11/29 09:33:29 $
- * @author $Author: max $
+ * @version $Revision: 1.21 $, $Date: 2004/12/09 15:28:10 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 
-public class MeasurementServerSetup {
+public final class MeasurementServerSetup {
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final String DB_LOGIN_NAME = "amficom";
@@ -64,6 +64,7 @@ public class MeasurementServerSetup {
 	private static final String CODENAME_EVALUATION_TYPE_DADARA = "dadara"; 
 
 	private MeasurementServerSetup() {
+		// singleton constructor
 	}
 
 	public static void main(String[] args) {
@@ -128,16 +129,15 @@ public class MeasurementServerSetup {
 
 	private static Identifier createSystemAdministrator() {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.USER_ENTITY_CODE);
-			User user = User.createInstance(id,
-																			id,
-																			"sys",
-																			UserSort.USER_SORT_SYSADMIN,
-																			"sys",
-																			"System Administrator");
+			Identifier userId = IdentifierGenerator.generateIdentifier(ObjectEntities.USER_ENTITY_CODE);
+			User user = User.createInstance(userId,
+					"sys",
+					UserSort.USER_SORT_SYSADMIN,
+					"sys",
+					"System Administrator");
 																			
 			User user1 = User.getInstance((User_Transferable)user.getTransferable());
-			return id;
+			return user1.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -147,14 +147,12 @@ public class MeasurementServerSetup {
 
 	private static EquipmentType createEquipmentType(Identifier creatorId) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE);
-			EquipmentType eqType = EquipmentType.createInstance(id,
-																													creatorId,
-																													"EqTypeKIS",
-																													"",
-																													"");
+			EquipmentType eqType = EquipmentType.createInstance(creatorId,
+					"EqTypeKIS",
+					"",
+					"");
 			EquipmentType eqType1 = EquipmentType.getInstance((EquipmentType_Transferable)eqType.getTransferable());
-			return eqType;
+			return eqType1;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -164,9 +162,7 @@ public class MeasurementServerSetup {
     
     private static TransmissionPathType createTransmissionPathType(Identifier creatorId) {
         try {
-            Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
-            TransmissionPathType transmissionPathType = TransmissionPathType.createInstance(id,
-            		creatorId,
+            TransmissionPathType transmissionPathType = TransmissionPathType.createInstance(creatorId,
 					"Type of TransmissionPath",
                     "",
 					"");            
@@ -180,15 +176,13 @@ public class MeasurementServerSetup {
     
     private static PortType createPortType(Identifier creatorId) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.PORTTYPE_ENTITY_CODE);
-			PortType portType = PortType.createInstance(id,
-																									creatorId,
-																									"PortTypeReflectometry",
-                                                                                                    "",
-																									"",
-                                                                                                    PortTypeSort.PORTTYPESORT_ELECTRICAL);
+			PortType portType = PortType.createInstance(creatorId,
+					"PortTypeReflectometry",
+					"",
+					"",
+					PortTypeSort.PORTTYPESORT_ELECTRICAL);
 			PortType portType1 = PortType.getInstance((PortType_Transferable)portType.getTransferable());
-			return portType;
+			return portType1;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -198,14 +192,12 @@ public class MeasurementServerSetup {
 
 	private static MeasurementPortType createMeasurementPortType(Identifier creatorId) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
-			MeasurementPortType mportType = MeasurementPortType.createInstance(id,
-																																				 creatorId,
-																																				 "MeasurementPortTypeReflectometry",
-                                                                                                                                                 "",
-																																				 "");
+			MeasurementPortType mportType = MeasurementPortType.createInstance(creatorId,
+					"MeasurementPortTypeReflectometry",
+					"",
+					"");
 			MeasurementPortType mportType1 = MeasurementPortType.getInstance((MeasurementPortType_Transferable)mportType.getTransferable());
-			return mportType;
+			return mportType1;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -215,14 +207,12 @@ public class MeasurementServerSetup {
 
 	private static Identifier createDomain(Identifier creatorId) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.DOMAIN_ENTITY_CODE);
-			Domain domain = Domain.createInstance(id,
-																						creatorId,
-																						null,
-																						"domain 1",
-																						"System domain");
+			Domain domain = Domain.createInstance(creatorId,
+					null,
+					"domain 1",
+					"System domain");
 			Domain domain1 = Domain.getInstance((Domain_Transferable)domain.getTransferable());
-			return id;
+			return domain1.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -234,15 +224,13 @@ public class MeasurementServerSetup {
 																				 Identifier domainId,
 																				 Identifier serverUserId) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.SERVER_ENTITY_CODE);
-			Server server = Server.createInstance(id,
-																						creatorId,
-																						domainId,
-																						"server 1",
-																						"Measurement server",
-																						serverUserId);
-			Server.getInstance((Server_Transferable)server.getTransferable());
-			return id;
+			Server server = Server.createInstance(creatorId,
+				domainId,
+				"server 1",
+				"Measurement server",
+				serverUserId);
+			Server server1 = Server.getInstance((Server_Transferable)server.getTransferable());
+			return server1.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -251,22 +239,20 @@ public class MeasurementServerSetup {
 	}
 
 	private static Identifier createMCM(Identifier creatorId,
-																			Identifier domainId,
-																			Identifier mcmUserId,
-																			Identifier serverId,
-																			short tcpPort) {
+										Identifier domainId,
+										Identifier mcmUserId,
+										Identifier serverId,
+										short tcpPort) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.MCM_ENTITY_CODE);
-			MCM mcm = MCM.createInstance(id,
-																	 creatorId,
-																	 domainId,
-																	 "mcm 1",
-																	 "Measurement control module",
-																	 mcmUserId,
-																	 serverId,
-																	 tcpPort);
-			MCM.getInstance((MCM_Transferable)mcm.getTransferable());
-			return id;
+			MCM mcm = MCM.createInstance(creatorId,
+				domainId,
+				"mcm 1",
+				"Measurement control module",
+				mcmUserId,
+				serverId,
+				tcpPort);
+			MCM mcm1 = MCM.getInstance((MCM_Transferable)mcm.getTransferable());
+			return mcm1.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -281,18 +267,16 @@ public class MeasurementServerSetup {
 																			String hostName,
 																			short tcpPort) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.KIS_ENTITY_CODE);
-			KIS kis = KIS.createInstance(id,
-																	 creatorId,
-																	 domainId,
-																	 "KIS",
-																	 "kis ",
-																	 hostName,
-																	 tcpPort,
-																	 equipmentId,
-																	 mcmId);
-			KIS.getInstance((KIS_Transferable)kis.getTransferable());
-			return id;
+			KIS kis = KIS.createInstance(creatorId,
+					domainId,
+					"KIS",
+					"kis ",
+					hostName,
+					tcpPort,
+					equipmentId,
+					mcmId);
+			KIS kis1 = KIS.getInstance((KIS_Transferable)kis.getTransferable());
+			return kis1.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -304,16 +288,17 @@ public class MeasurementServerSetup {
 																						Identifier domainId,
 																						EquipmentType eqType) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.EQUIPMENT_ENTITY_CODE);
-			Equipment eq = Equipment.createInstance(id,
-																							creatorId,
-																							domainId,
-																							eqType,
-																							"Equipment",
-																							"equipment",
-																							new Identifier("Image_1"));
+			Equipment eq = Equipment.createInstance(creatorId,
+					domainId,
+					eqType,
+					"Equipment",
+					"equipment",
+					new Identifier("Image_1"),
+					"default supplier",
+					0.0,
+					0.0);
 			Equipment eq1 = Equipment.getInstance((Equipment_Transferable)eq.getTransferable());
-			return id;
+			return eq1.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -322,18 +307,16 @@ public class MeasurementServerSetup {
 	}
 
 	private static Identifier createPort(Identifier creatorId,
-																			 PortType type,
-																			 Identifier equipmentId) {
+										 PortType type,
+										 Identifier equipmentId) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.PORT_ENTITY_CODE);
-			Port port = Port.createInstance(id,
-																			creatorId,
-																			type,
-																			"Port",
-																			equipmentId,
-																			PortSort.PORT_SORT_PORT);
+			Port port = Port.createInstance(creatorId,
+					type,
+					"Port",
+					equipmentId,
+					PortSort.PORT_SORT_PORT);
 			Port port1 = Port.getInstance((Port_Transferable)port.getTransferable()); 
-			return id;
+			return port1.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -342,22 +325,20 @@ public class MeasurementServerSetup {
 	}
 
 	private static Identifier createTransmissionPath(Identifier creatorId,
-																									 Identifier domainId,
-																									 Identifier startPortId,
-																									 Identifier finishPortId,
-                                                                                                     TransmissionPathType type) {
+													 Identifier domainId,
+													 Identifier startPortId,
+													 Identifier finishPortId,
+													 TransmissionPathType type) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TRANSPATH_ENTITY_CODE);
-			TransmissionPath tp = TransmissionPath.createInstance(id,
-																														creatorId,
-																														domainId,
-																														"TransmissionPath",
-																														"TransmissionPath",
-                                                                                                                        type,
-																														startPortId,
-																														finishPortId);
+			TransmissionPath tp = TransmissionPath.createInstance(creatorId,
+					domainId,
+					"TransmissionPath",
+					"TransmissionPath",
+					type,
+					startPortId,
+					finishPortId);
 			TransmissionPath tp1 = TransmissionPath.getInstance((TransmissionPath_Transferable)tp.getTransferable());
-			return id;
+			return tp1.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -366,20 +347,18 @@ public class MeasurementServerSetup {
 	}
 
 	private static Identifier createMeasurementPort(Identifier creatorId,
-																									MeasurementPortType type,
-																									Identifier kisId,
-																									Identifier portId) {
+													MeasurementPortType type,
+													Identifier kisId,
+													Identifier portId) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
-			MeasurementPort mport = MeasurementPort.createInstance(id,
-																														 creatorId,
-																														 type,
-																														 "MeasurementPort",
-																														 "MeasurementPortTest",
-																														 kisId,
-																														 portId);
+			MeasurementPort mport = MeasurementPort.createInstance(creatorId,
+					type,
+					"MeasurementPort",
+					"MeasurementPortTest",
+					kisId,
+					portId);
 			MeasurementPort mport1 = MeasurementPort.getInstance((MeasurementPort_Transferable)mport.getTransferable()); 
-			return id;
+			return mport1.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -388,23 +367,21 @@ public class MeasurementServerSetup {
 	}
 
 	private static MonitoredElement createMonitoredElement(Identifier creatorId,
-																												 Identifier domainId,
-																												 Identifier mPortId,
-																												 Identifier transmissionPathId) {
+														   Identifier domainId,
+														   Identifier mPortId,
+														   Identifier transmissionPathId) {
 		try {
 			List mdmIds = new ArrayList(1);
 			mdmIds.add(transmissionPathId);
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.ME_ENTITY_CODE);
-			MonitoredElement monitoredElement = MonitoredElement.createInstance(id,
-																																					creatorId,
-																																					domainId,
-																																					"ME",
-																																					mPortId,
-																																					MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
-																																					"ME",
-																																					mdmIds);
+			MonitoredElement monitoredElement = MonitoredElement.createInstance(creatorId,
+					domainId,
+					"ME",
+					mPortId,
+					MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
+					"ME",
+					mdmIds);
 			MonitoredElement monitoredElement1 = MonitoredElement.getInstance((MonitoredElement_Transferable)monitoredElement.getTransferable()); 
-			return monitoredElement;
+			return monitoredElement1;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -413,21 +390,19 @@ public class MeasurementServerSetup {
 	}
 
 	private static Identifier createUser(Identifier creatorId,
-																			 String login,
-																			 UserSort sort,
-																			 String name,
-																			 String description) {
+										 String login,
+										 UserSort sort,
+										 String name,
+										 String description) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.USER_ENTITY_CODE);
-			User user = User.createInstance(id,
-																			creatorId,
-																			login,
-																			sort,
-																			name,
-																			description);
+			User user = User.createInstance(creatorId,
+					login,
+					sort,
+					name,
+					description);
 																			
 			User user1 = User.getInstance((User_Transferable)user.getTransferable());
-			return id;
+			return user1.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -541,12 +516,10 @@ public class MeasurementServerSetup {
 																									 String description,
 																									 String name) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
-			ParameterType parameterType = ParameterType.createInstance(id,
-																																 creatorId,
-																																 codename,
-																																 description,
-																																 name);
+			ParameterType parameterType = ParameterType.createInstance(creatorId,
+						codename,
+						description,
+						name);
 			ParameterType.getInstance((ParameterType_Transferable)parameterType.getTransferable());
 			return parameterType;
 		}
@@ -557,19 +530,17 @@ public class MeasurementServerSetup {
 	}
 
 	private static void createMeasurementType(Identifier creatorId,
-																						String codename,
-																						String description,
-																						List inParameterTypes,
-																						List outParameterTypes) {
+											  String codename,
+											  String description,
+											  List inParameterTypes,
+											  List outParameterTypes) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-			MeasurementType measurementType = MeasurementType.createInstance(id,
-																																			 creatorId,
-																																			 codename,
-																																			 description,
-																																			 inParameterTypes,
-																																			 outParameterTypes,
-																																			 new ArrayList());
+			MeasurementType measurementType = MeasurementType.createInstance(creatorId,
+					codename,
+					description,
+					inParameterTypes,
+					outParameterTypes,
+					new ArrayList());
 			MeasurementType.getInstance((MeasurementType_Transferable)measurementType.getTransferable());
 		}
 		catch (Exception e) {
@@ -578,22 +549,20 @@ public class MeasurementServerSetup {
 	}
 
 	private static void createAnalysisType(Identifier creatorId,
-																				 String codename,
-																				 String description,
-																				 List inParameterTypes,
-																				 List criParameterTypes,
-																				 List	etaParameterTypes,
-																				 List outParameterTypes) {
+										   String codename,
+										   String description,
+										   List inParameterTypes,
+										   List criParameterTypes,
+										   List	etaParameterTypes,
+										   List outParameterTypes) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
-			AnalysisType analysisType = AnalysisType.createInstance(id,
-																															creatorId,
-																															codename,
-																															description,
-																															inParameterTypes,
-																															criParameterTypes,
-																															etaParameterTypes,
-																															outParameterTypes);
+			AnalysisType analysisType = AnalysisType.createInstance(creatorId,
+					codename,
+					description,
+					inParameterTypes,
+					criParameterTypes,
+					etaParameterTypes,
+					outParameterTypes);
 			AnalysisType.getInstance((AnalysisType_Transferable)analysisType.getTransferable());
 		}
 		catch (Exception e) {
@@ -602,22 +571,20 @@ public class MeasurementServerSetup {
 	}
 
 	private static void createEvaluationType(Identifier creatorId,
-																					 String codename,
-																					 String description,
-																					 List inParameterTypes,
-																					 List thrParameterTypes,
-																					 List	etaParameterTypes,
-																					 List outParameterTypes) {
+											 String codename,
+											 String description,
+											 List inParameterTypes,
+											 List thrParameterTypes,
+											 List	etaParameterTypes,
+											 List outParameterTypes) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
-			EvaluationType evaluationType = EvaluationType.createInstance(id,
-																																		creatorId,
-																																		codename,
-																																		description,
-																																		inParameterTypes,
-																																		thrParameterTypes,
-																																		etaParameterTypes,
-																																		outParameterTypes);
+			EvaluationType evaluationType = EvaluationType.createInstance(creatorId,
+					codename,
+					description,
+					inParameterTypes,
+					thrParameterTypes,
+					etaParameterTypes,
+					outParameterTypes);
 			EvaluationType.getInstance((EvaluationType_Transferable)evaluationType.getTransferable());
 		}
 		catch (Exception e) {
@@ -630,13 +597,12 @@ public class MeasurementServerSetup {
 		meIds.add(monitoredElement.getId());
 		Set parameterSet = createParameterSet(creatorId, meIds);
 		Set criteriaSet = createCriteriaSet(creatorId, meIds);
-		MeasurementSetup measurementSetup = createMeasurementSetup(creatorId, 
-																															 parameterSet,
-																															 null,
-																															 null,
-																															 null,
-																															 meIds);
-
+		MeasurementSetup measurementSetup = createMeasurementSetup(creatorId,
+			parameterSet,
+			null,
+			null,
+			null,
+			meIds);
 		List msIds = new ArrayList(1);
 		msIds.add(measurementSetup.getId());
 		createOnetimeTest(creatorId, monitoredElement, msIds);
@@ -658,34 +624,25 @@ public class MeasurementServerSetup {
 			ParameterType scansParam = parameterTypeDatabase.retrieveForCodename(CODENAME_REF_SCANS);
 
 			SetParameter[] params = new SetParameter[6];
-			Identifier paramId;
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[0] = new SetParameter(paramId, wvlenParam, new ByteArray((int) 1625).getBytes());
+			params[0] = SetParameter.createInstance(wvlenParam, new ByteArray((int) 1625).getBytes());
 
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[1] = new SetParameter(paramId, trclenParam, new ByteArray((double) 131072).getBytes());
+			params[1] = SetParameter.createInstance(trclenParam, new ByteArray((double) 131072).getBytes());
 
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[2] = new SetParameter(paramId, resParam, new ByteArray((double) 8).getBytes());
+			params[2] = SetParameter.createInstance(resParam, new ByteArray((double) 8).getBytes());
 
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[3] = new SetParameter(paramId, pulswdParam, new ByteArray((long) 5000).getBytes());
+			params[3] = SetParameter.createInstance(pulswdParam, new ByteArray((long) 5000).getBytes());
 
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[4] = new SetParameter(paramId, iorParam, new ByteArray((double) 1.457).getBytes());
+			params[4] = SetParameter.createInstance(iorParam, new ByteArray((double) 1.457).getBytes());
 
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[5] = new SetParameter(paramId, scansParam, new ByteArray((double) 4000).getBytes());
+			params[5] = SetParameter.createInstance(scansParam, new ByteArray((double) 4000).getBytes());
 
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.SET_ENTITY_CODE);
-			Set set = Set.createInstance(id,
-																	 creatorId,
-																	 SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
-																	 "Set of measurement parameters",
-																	 params,
-																	 monitoredElementIds);
+			Set set = Set.createInstance(creatorId,
+					SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
+					"Set of measurement parameters",
+					params,
+					monitoredElementIds);
 			Set set1 = Set.getInstance((Set_Transferable) set.getTransferable());
-			return set;
+			return set1;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -707,43 +664,31 @@ public class MeasurementServerSetup {
 			ParameterType strategyParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_STRATEGY);
 
 			SetParameter[] params = new SetParameter[9];
-			Identifier paramId;
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[0] = new SetParameter(paramId, tacticParam, new ByteArray((int) 1).getBytes());
+			params[0] = SetParameter.createInstance(tacticParam, new ByteArray((int) 1).getBytes());
 
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[1] = new SetParameter(paramId, eventsizeParam, new ByteArray((int) 2).getBytes());
+			params[1] = SetParameter.createInstance(eventsizeParam, new ByteArray((int) 2).getBytes());
 
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[2] = new SetParameter(paramId, connfallParam, new ByteArray((double) 5.0).getBytes());
+			params[2] = SetParameter.createInstance(connfallParam, new ByteArray((double) 5.0).getBytes());
 
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[3] = new SetParameter(paramId, minlevelParam, new ByteArray((double) 0.5).getBytes());
+			params[3] = SetParameter.createInstance(minlevelParam, new ByteArray((double) 0.5).getBytes());
 
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[4] = new SetParameter(paramId, maxlevelnoiseParam, new ByteArray((double) 1.0).getBytes());
+			params[4] = SetParameter.createInstance(maxlevelnoiseParam, new ByteArray((double) 1.0).getBytes());
 
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[5] = new SetParameter(paramId, minlevelendParam, new ByteArray((double) 3.0).getBytes());
+			params[5] = SetParameter.createInstance(minlevelendParam, new ByteArray((double) 3.0).getBytes());
 
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[6] = new SetParameter(paramId, minweldParam, new ByteArray((double) 0.2).getBytes());
+			params[6] = SetParameter.createInstance(minweldParam, new ByteArray((double) 0.2).getBytes());
 
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[7] = new SetParameter(paramId, minconnectorParam, new ByteArray((double) 0.2).getBytes());
+			params[7] = SetParameter.createInstance(minconnectorParam, new ByteArray((double) 0.2).getBytes());
 
-			paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-			params[8] = new SetParameter(paramId, strategyParam, new ByteArray((int) 1).getBytes());
+			params[8] = SetParameter.createInstance(strategyParam, new ByteArray((int) 1).getBytes());
 
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.SET_ENTITY_CODE);
-			Set set = Set.createInstance(id,
-																	 creatorId,
-																	 SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
-																	 "Set of criteria",
-																	 params,
-																	 monitoredElementIds);
+			Set set = Set.createInstance(creatorId,
+					SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
+					"Set of criteria",
+					params,
+					monitoredElementIds);
 			Set set1 = Set.getInstance((Set_Transferable) set.getTransferable());
-			return set;
+			return set1;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -752,24 +697,22 @@ public class MeasurementServerSetup {
 	}
 
 	private static MeasurementSetup createMeasurementSetup(Identifier creatorId,
-																												 Set parameterSet,
-																												 Set criteriaSet,
-																												 Set thresholdSet,
-																												 Set etalon,
-																												 List monitoredElementIds) {
+														   Set parameterSet,
+														   Set criteriaSet,
+														   Set thresholdSet,
+														   Set etalon,
+														   List monitoredElementIds) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.MS_ENTITY_CODE);
-			MeasurementSetup mSetup = MeasurementSetup.createInstance(id,
-																																creatorId,
-																																parameterSet,
-																																criteriaSet,
-																																thresholdSet,
-																																etalon,
-																																"created by MeasurementSetupTestCase",
-																																1000 * 60 * 10,
-																																monitoredElementIds);
+			MeasurementSetup mSetup = MeasurementSetup.createInstance(creatorId,
+					parameterSet,
+					criteriaSet,
+					thresholdSet,
+					etalon,
+					"created by MeasurementSetupTestCase",
+					1000 * 60 * 10,
+					monitoredElementIds);
 			MeasurementSetup mSetup1 = MeasurementSetup.getInstance((MeasurementSetup_Transferable)mSetup.getTransferable());
-			return mSetup;
+			return mSetup1;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -779,15 +722,13 @@ public class MeasurementServerSetup {
 
 	private static TemporalPattern createTemporalPattern(Identifier creatorId) {
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE);
 			String[] strings = new String[1];
 			strings[0] = "*/10 * * * *";
-			TemporalPattern temporalPattern = TemporalPattern.createInstance(id,
-																																			 creatorId,
-																																			 "TemporalPattern",
-																																			 strings);
+			TemporalPattern temporalPattern = TemporalPattern.createInstance(creatorId,
+				"TemporalPattern",
+				strings);
 			TemporalPattern temporalPattern1 = new TemporalPattern((TemporalPattern_Transferable)temporalPattern.getTransferable());
-			return temporalPattern;
+			return temporalPattern1;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -802,27 +743,24 @@ public class MeasurementServerSetup {
 		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase());
 		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase());
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);
-
 			MeasurementType measurementType = measurementTypeDatabase.retrieveForCodename(CODENAME_MEASUREMENT_TYPE_REFLECTOMETRY);
 			AnalysisType analysisType = analysisTypeDatabase.retrieveForCodename(CODENAME_ANALYSIS_TYPE_DADARA);
 			EvaluationType evaluationType = evaluationTypeDatabase.retrieveForCodename(CODENAME_EVALUATION_TYPE_DADARA);
 
-			Test test = Test.createInstance(id,
-																			creatorId,
-																			new Date(System.currentTimeMillis()),
-																			null,
-																			null,
-																			TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME,
-																			measurementType,
-																			analysisType,
-																			evaluationType,
-																			monitoredElement,
-																			TestReturnType.TEST_RETURN_TYPE_WHOLE,
-																			"Onetime test",
-																			measurementSetupIds);
+			Test test = Test.createInstance(creatorId,
+				new Date(System.currentTimeMillis()),
+				null,
+				null,
+				TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME,
+				measurementType,
+				analysisType,
+				evaluationType,
+				monitoredElement,
+				TestReturnType.TEST_RETURN_TYPE_WHOLE,
+				"Onetime test",
+				measurementSetupIds);
 			Test test1 = Test.getInstance((Test_Transferable)test.getTransferable());
-			return test;
+			return test1;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -831,34 +769,31 @@ public class MeasurementServerSetup {
 	}
 
 	private static Test createPeriodicalTest(Identifier creatorId,
-																					 TemporalPattern temporalPattern,
-																					 MonitoredElement monitoredElement,
-																					 List measurementSetupIds) {
+											 TemporalPattern temporalPattern,
+											 MonitoredElement monitoredElement,
+											 List measurementSetupIds) {
 		AnalysisTypeDatabase analysisTypeDatabase = ((AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase());
 		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase());
 		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase());
 		try {
-			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);
-
 			MeasurementType measurementType = measurementTypeDatabase.retrieveForCodename(CODENAME_MEASUREMENT_TYPE_REFLECTOMETRY);
 			AnalysisType analysisType = analysisTypeDatabase.retrieveForCodename(CODENAME_ANALYSIS_TYPE_DADARA);
 			EvaluationType evaluationType = evaluationTypeDatabase.retrieveForCodename(CODENAME_EVALUATION_TYPE_DADARA);
 
-			Test test = Test.createInstance(id,
-																			creatorId,
-																			new Date(System.currentTimeMillis()),
-																			new Date(System.currentTimeMillis() + 1000 * 60 * 30),
-																			temporalPattern,
-																			TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL,
-																			measurementType,
-																			analysisType,
-																			evaluationType,
-																			monitoredElement,
-																			TestReturnType.TEST_RETURN_TYPE_WHOLE,
-																			"Onetime test",
-																			measurementSetupIds);
+			Test test = Test.createInstance(creatorId,
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis() + 1000 * 60 * 30),
+					temporalPattern,
+					TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL,
+					measurementType,
+					analysisType,
+					evaluationType,
+					monitoredElement,
+					TestReturnType.TEST_RETURN_TYPE_WHOLE,
+					"Onetime test",
+					measurementSetupIds);
 			Test test1 = Test.getInstance((Test_Transferable)test.getTransferable());
-			return test;
+			return test1;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
