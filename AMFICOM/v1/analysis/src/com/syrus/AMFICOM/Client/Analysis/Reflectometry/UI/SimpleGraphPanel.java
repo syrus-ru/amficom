@@ -130,8 +130,13 @@ public class SimpleGraphPanel extends JPanel
 		int[] yArr = new int[N + 1];
 		for (int j = 0; j <= N; j++)
 		{
-			xArr[j] = (int)((j + x0) * scaleX + 1);
-			yArr[j] = (int)((maxY - y[j + i0] - top) * scaleY);
+			xArr[j] = (int )((j + x0) * scaleX + 1);
+			yArr[j] = (int )((maxY - y[j + i0] - top) * scaleY);
+			// XXX: to avoid rounding errors, we could use smth like this:
+			//double vx = (j + x0) * scaleX + 1;
+			//double vy = (maxY - y[j + i0] - top) * scaleY;
+			//xArr[j] = Math.round((float )vx);
+			//yArr[j] = Math.round((float )vy);
 		}
 		g.drawPolyline(xArr, yArr, N + 1);
 //		for (int j = 0; j < N; j++)
