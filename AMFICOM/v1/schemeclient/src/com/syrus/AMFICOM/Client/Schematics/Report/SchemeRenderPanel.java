@@ -125,3 +125,4 @@ public class SchemeRenderPanel extends SchemePanelNoEdition
 		schemeGraph.getUI().paint(g,schemeGraph);
 	}*/
 }
+

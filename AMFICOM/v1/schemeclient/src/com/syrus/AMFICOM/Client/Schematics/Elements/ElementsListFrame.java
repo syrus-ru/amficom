@@ -520,3 +520,4 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 		updateUI();
 	}
 }
+

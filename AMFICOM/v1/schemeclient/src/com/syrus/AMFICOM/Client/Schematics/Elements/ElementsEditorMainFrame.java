@@ -553,3 +553,4 @@ class ElementsEditorMainFrame_this_componentAdapter extends java.awt.event.Compo
 		adaptee.this_componentShown(e);
 	}
 }
+

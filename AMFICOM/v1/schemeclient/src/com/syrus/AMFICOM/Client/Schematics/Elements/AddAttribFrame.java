@@ -226,3 +226,4 @@ public class AddAttribFrame extends JDialog
 		return type;
 	}
 }
+

@@ -85,3 +85,4 @@ public class DeviceCell extends DefaultGraphCell
 		return undo;
 	}*/
 }
+

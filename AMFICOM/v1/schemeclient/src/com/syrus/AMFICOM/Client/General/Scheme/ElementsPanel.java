@@ -767,3 +767,4 @@ class ToolBarPanel extends UgoPanel.ToolBarPanel
 	}
 }
 }
+

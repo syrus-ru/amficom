@@ -25,3 +25,4 @@ public class SchemeEditorRun
 		new SchemeEditor(new DefaultSchematicsApplicationModelFactory());
 	}
 }
+

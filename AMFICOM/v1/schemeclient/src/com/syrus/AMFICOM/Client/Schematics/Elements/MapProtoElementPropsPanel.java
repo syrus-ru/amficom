@@ -187,3 +187,4 @@ public class MapProtoElementPropsPanel extends JPanel
 		return new_proto;
 	}
 }
+

@@ -95,3 +95,4 @@ public class SchemeElementsEvent extends OperationEvent
 			CREATE_ALARMED_LINK = true;
 		}
 }
+

@@ -236,3 +236,4 @@ class GraphSizeFrame extends JDialog
 		}
 	}
  }
+

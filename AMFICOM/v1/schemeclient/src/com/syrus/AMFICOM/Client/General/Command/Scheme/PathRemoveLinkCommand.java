@@ -31,6 +31,3 @@ public class PathRemoveLinkCommand extends VoidCommand
 	}
 }
 
-
-
-

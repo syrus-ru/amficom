@@ -277,3 +277,4 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 	}
 
 }
+

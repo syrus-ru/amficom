@@ -293,3 +293,4 @@ public class SchemePropsPanel extends JPanel
 		return scheme_types[schemeTypeComboBox.getSelectedIndex()];
 	}
 }
+

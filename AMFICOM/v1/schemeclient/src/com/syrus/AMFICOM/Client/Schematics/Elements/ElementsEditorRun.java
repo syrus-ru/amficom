@@ -25,3 +25,4 @@ public class ElementsEditorRun
 		new ElementsEditor(new DefaultSchematicsApplicationModelFactory());
 	}
 }
+

@@ -843,3 +843,4 @@ public class UgoPanel extends JPanel
 		}
 	}
 }
+

@@ -64,3 +64,4 @@ public class BlockPortCell extends DefaultGraphCell
 		out.writeBoolean(is_cable_port);
 	}*/
 }
+

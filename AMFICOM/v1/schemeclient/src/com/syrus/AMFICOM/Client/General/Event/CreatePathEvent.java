@@ -61,3 +61,4 @@ public class CreatePathEvent extends OperationEvent
 			PE_SELECTED = true;
 	}
 }
+

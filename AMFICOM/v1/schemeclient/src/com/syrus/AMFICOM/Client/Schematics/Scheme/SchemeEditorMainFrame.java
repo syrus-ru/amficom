@@ -792,3 +792,4 @@ class SchemeEditorMainFrame_this_componentAdapter extends java.awt.event.Compone
 		adaptee.this_componentShown(e);
 	}
 }
+

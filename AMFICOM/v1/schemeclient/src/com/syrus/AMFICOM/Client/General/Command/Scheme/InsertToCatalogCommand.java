@@ -801,3 +801,4 @@ public class InsertToCatalogCommand extends VoidCommand
 		return null;
 	}
 }
+

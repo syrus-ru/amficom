@@ -265,3 +265,4 @@ public class DefaultLink extends DefaultEdge
 		scheme_path_id = id;
 	}
 }
+

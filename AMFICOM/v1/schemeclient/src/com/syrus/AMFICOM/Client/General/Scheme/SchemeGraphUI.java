@@ -307,3 +307,4 @@ public class SchemeGraphUI extends GPGraphUI
 		}
 	}
 }
+

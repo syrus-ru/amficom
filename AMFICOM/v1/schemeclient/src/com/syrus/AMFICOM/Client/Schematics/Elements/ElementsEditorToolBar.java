@@ -126,3 +126,4 @@ class ElementsEditorToolBar_this_actionAdapter implements java.awt.event.ActionL
 		adaptee.this_actionPerformed(e);
 	}
 }
+

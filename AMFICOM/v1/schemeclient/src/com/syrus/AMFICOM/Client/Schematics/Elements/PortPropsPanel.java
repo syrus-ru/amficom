@@ -444,3 +444,4 @@ public class PortPropsPanel extends JPanel
 		}
 	}
 }
+

@@ -218,3 +218,4 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 	}
 
 }
+

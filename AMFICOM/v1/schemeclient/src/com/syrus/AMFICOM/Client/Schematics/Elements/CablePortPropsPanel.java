@@ -411,3 +411,4 @@ public class CablePortPropsPanel extends JPanel
 		}
 	}
 }
+

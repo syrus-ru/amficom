@@ -30,3 +30,4 @@ public class ShowFrameCommand extends VoidCommand
 		}
 	}
 }
+

@@ -43,3 +43,4 @@ public class ComponentNewCommand extends VoidCommand
 		cell_graph.selectionNotify();
 	}
 }
+
