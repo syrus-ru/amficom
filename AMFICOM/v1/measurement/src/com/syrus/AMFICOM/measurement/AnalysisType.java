@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.47 2005/01/26 15:38:40 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.48 2005/01/28 07:40:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/01/26 15:38:40 $
+ * @version $Revision: 1.48 $, $Date: 2005/01/28 07:40:36 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -85,19 +85,19 @@ public class AnalysisType extends ActionType {
 		try {
 			this.inParameterTypes = new ArrayList(att.in_parameter_type_ids.length);
 			for (int i = 0; i < att.in_parameter_type_ids.length; i++)
-				this.inParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(att.in_parameter_type_ids[i]), true));
+				this.inParameterTypes.add(MeasurementStorableObjectPool.getStorableObject(new Identifier(att.in_parameter_type_ids[i]), true));
 	
 			this.criteriaParameterTypes = new ArrayList(att.criteria_parameter_type_ids.length);
 			for (int i = 0; i < att.criteria_parameter_type_ids.length; i++)
-				this.criteriaParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(att.criteria_parameter_type_ids[i]), true));
+				this.criteriaParameterTypes.add(MeasurementStorableObjectPool.getStorableObject(new Identifier(att.criteria_parameter_type_ids[i]), true));
 	
 			this.etalonParameterTypes = new ArrayList(att.etalon_parameter_type_ids.length);
 			for (int i = 0; i < att.etalon_parameter_type_ids.length; i++)
-				this.etalonParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(att.etalon_parameter_type_ids[i]), true));
+				this.etalonParameterTypes.add(MeasurementStorableObjectPool.getStorableObject(new Identifier(att.etalon_parameter_type_ids[i]), true));
 	
 			this.outParameterTypes = new ArrayList(att.out_parameter_type_ids.length);
 			for (int i = 0; i < att.out_parameter_type_ids.length; i++)
-				this.outParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(att.out_parameter_type_ids[i]), true));
+				this.outParameterTypes.add(MeasurementStorableObjectPool.getStorableObject(new Identifier(att.out_parameter_type_ids[i]), true));
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);

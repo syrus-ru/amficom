@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.6 2005/01/21 14:39:19 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.7 2005/01/28 07:40:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/01/21 14:39:19 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/28 07:40:36 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -163,10 +163,10 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
 				if (parameterMode.equals(MODE_IN))
-					inParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+					inParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				else
 					if (parameterMode.equals(MODE_OUT))
-						outParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+						outParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					else
 						Log.errorMessage("ModelingTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeId);
 			}

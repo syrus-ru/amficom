@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.6 2005/01/26 15:38:41 arseniy Exp $
+ * $Id: ModelingType.java,v 1.7 2005/01/28 07:40:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/01/26 15:38:41 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/28 07:40:36 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -79,11 +79,11 @@ public class ModelingType extends ActionType {
 		try {
 			this.inParameterTypes = new ArrayList(mtt.in_parameter_type_ids.length);
 			for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
-				this.inParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mtt.in_parameter_type_ids[i]), true));
+				this.inParameterTypes.add(MeasurementStorableObjectPool.getStorableObject(new Identifier(mtt.in_parameter_type_ids[i]), true));
 
 			this.outParameterTypes = new ArrayList(mtt.out_parameter_type_ids.length);
 			for (int i = 0; i < mtt.out_parameter_type_ids.length; i++)
-				this.outParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mtt.out_parameter_type_ids[i]), true));
+				this.outParameterTypes.add(MeasurementStorableObjectPool.getStorableObject(new Identifier(mtt.out_parameter_type_ids[i]), true));
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);

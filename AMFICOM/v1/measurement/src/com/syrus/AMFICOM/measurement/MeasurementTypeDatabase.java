@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.57 2005/01/27 15:50:02 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.58 2005/01/28 07:40:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/01/27 15:50:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.58 $, $Date: 2005/01/28 07:40:36 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -146,10 +146,10 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
 				if (parameterMode.equals(MeasurementTypeWrapper.MODE_IN))
-					inParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+					inParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				else
 					if (parameterMode.equals(MeasurementTypeWrapper.MODE_OUT))
-						outParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+						outParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					else
 						Log.errorMessage("MeasurementTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeId);
 			}
@@ -308,7 +308,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			Identifier measurementPortTypeId;
 			while (resultSet.next()) {
 				measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
-				measurementPortTypes.add((MeasurementPortType) ConfigurationStorableObjectPool.getStorableObject(measurementPortTypeId, true));
+				measurementPortTypes.add(ConfigurationStorableObjectPool.getStorableObject(measurementPortTypeId, true));
 			}
 		}
 		catch (SQLException sqle) {
@@ -399,7 +399,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 					measurementPortTypes = new ArrayList();
 					measurementPortTypesMap.put(measurementTypeId, measurementPortTypes);
 				}
-				measurementPortTypes.add((MeasurementPortType) ConfigurationStorableObjectPool.getStorableObject(measurementPortTypeId, true));
+				measurementPortTypes.add(ConfigurationStorableObjectPool.getStorableObject(measurementPortTypeId, true));
 			}
 
 			MeasurementType measurementType;

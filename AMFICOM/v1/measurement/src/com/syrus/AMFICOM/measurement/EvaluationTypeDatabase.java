@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.49 2005/01/27 14:11:35 bob Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.50 2005/01/28 07:40:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/01/27 14:11:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.50 $, $Date: 2005/01/28 07:40:36 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -155,16 +155,16 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
 				if (parameterMode.equals(EvaluationTypeWrapper.MODE_IN))
-					inParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+					inParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				else
 					if (parameterMode.equals(EvaluationTypeWrapper.MODE_THRESHOLD))
-						thresholdParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+						thresholdParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					else
 						if (parameterMode.equals(EvaluationTypeWrapper.MODE_ETALON))
-							etalonParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+							etalonParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 						else
 							if (parameterMode.equals(EvaluationTypeWrapper.MODE_OUT))
-								outParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+								outParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 							else
 								Log.errorMessage("EvaluationTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeId);
 			}

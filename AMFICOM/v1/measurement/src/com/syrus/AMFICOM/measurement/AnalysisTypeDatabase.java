@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.54 2005/01/27 14:11:23 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.55 2005/01/28 07:40:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/01/27 14:11:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.55 $, $Date: 2005/01/28 07:40:36 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -140,16 +140,16 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
 				if (parameterMode.equals(AnalysisTypeWrapper.MODE_IN))
-					inParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+					inParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					else
 						if (parameterMode.equals(AnalysisTypeWrapper.MODE_CRITERION))
-							criteriaParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+							criteriaParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 						else
 							if (parameterMode.equals(AnalysisTypeWrapper.MODE_ETALON))
-								etalonParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+								etalonParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 							else
 								if (parameterMode.equals(AnalysisTypeWrapper.MODE_OUT))
-									outParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+									outParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 								else
 									Log .errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeId);
 			}

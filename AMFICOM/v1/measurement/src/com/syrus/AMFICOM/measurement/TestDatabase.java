@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.58 2005/01/26 15:38:41 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.59 2005/01/28 07:40:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,7 +52,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/01/26 15:38:41 $
+ * @version $Revision: 1.59 $, $Date: 2005/01/28 07:40:36 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -387,9 +387,9 @@ public class TestDatabase extends StorableObjectDatabase {
 		String sql = SQL_SELECT
 			+ COLUMN_ID
 			+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
-			+ SQL_WHERE + MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr
-				+ SQL_AND + MeasurementDatabase.COLUMN_STATUS + EQUALS + Integer.toString(measurementStatus.value())
-			+ SQL_ORDER_BY + MeasurementDatabase.COLUMN_START_TIME + " ASC";
+			+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
+				+ SQL_AND + MeasurementWrapper.COLUMN_STATUS + EQUALS + Integer.toString(measurementStatus.value())
+			+ SQL_ORDER_BY + MeasurementWrapper.COLUMN_START_TIME + " ASC";
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -399,7 +399,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			Log.debugMessage("TestDatabase.retrieveMeasurementsOrderByStartTime | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()){
-				measurements.add((Measurement)MeasurementStorableObjectPool.getStorableObject(
+				measurements.add(MeasurementStorableObjectPool.getStorableObject(
 								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), true));
 			}
 		}
@@ -435,13 +435,13 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ COLUMN_ID
 			+ SQL_FROM
 			+ ObjectEntities.MEASUREMENT_ENTITY
-			+ SQL_WHERE + MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr
-				+ SQL_AND + MeasurementDatabase.COLUMN_START_TIME + EQUALS
+			+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
+				+ SQL_AND + MeasurementWrapper.COLUMN_START_TIME + EQUALS
 					+ OPEN_BRACKET
 						+ SQL_SELECT
-						+ SQL_FUNCTION_MAX + OPEN_BRACKET + MeasurementDatabase.COLUMN_START_TIME + CLOSE_BRACKET
+						+ SQL_FUNCTION_MAX + OPEN_BRACKET + MeasurementWrapper.COLUMN_START_TIME + CLOSE_BRACKET
 						+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
-						+ SQL_WHERE + MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr
+						+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
 					+ CLOSE_BRACKET;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -485,7 +485,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		String sql = SQL_SELECT
 			+ SQL_COUNT + " count "
 			+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
-			+ SQL_WHERE + MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr;
+			+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -523,13 +523,13 @@ public class TestDatabase extends StorableObjectDatabase {
 		String sql = SQL_SELECT
 			+ SQL_COUNT + " count "
 			+ SQL_FROM + ObjectEntities.RESULT_ENTITY
-			+ SQL_WHERE + ResultDatabase.COLUMN_SORT + EQUALS + Integer.toString(resultSort.value())
-				+ SQL_AND + ResultDatabase.COLUMN_MEASUREMENT_ID + SQL_IN
+			+ SQL_WHERE + ResultWrapper.COLUMN_SORT + EQUALS + Integer.toString(resultSort.value())
+				+ SQL_AND + ResultWrapper.COLUMN_MEASUREMENT_ID + SQL_IN
 					+ OPEN_BRACKET
 						+ SQL_SELECT
 						+ COLUMN_ID
 						+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
-						+ SQL_WHERE + MeasurementDatabase.COLUMN_TEST_ID + EQUALS + testIdStr
+						+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
 					+ CLOSE_BRACKET;
 		Statement statement = null;
 		ResultSet resultSet = null;
