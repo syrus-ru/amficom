@@ -11,6 +11,10 @@ package com.syrus.AMFICOM.general;
  */
 public class PoolId {
 	
+	private PoolId(){
+		// nothing
+	}
+	
 	public static Identifier getId(String entity){
 		/**
 		 * TODO write code to getId  

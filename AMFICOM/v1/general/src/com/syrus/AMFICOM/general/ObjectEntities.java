@@ -19,6 +19,7 @@ public abstract class ObjectEntities {
 
 	/*	Configuration	*/
 	public static final String CHARACTERISTIC_ENTITY = "Characterisctic";
+	public static final String EQUIPMENT_ENTITY = "Equipment";
 	public static final String ME_ENTITY = "MonitoredElement";
 	public static final String KIS_ENTITY = "kis";
 	public static final String MCM_ENTITY = "mcm";
