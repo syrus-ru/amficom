@@ -4,12 +4,12 @@
 #include <string.h> // min_sig related
 #include <stdlib.h> // rand() for many tries
 
-#include "inf.h"
+#include "../common/inf.h"
 
 #include "ModelF-fit.h"
 
-#include "../Common/ModelF.h"
-#include "../Common/com_syrus_AMFICOM_analysis_dadara_ModelFunction.h"
+#include "../common/ModelF.h"
+#include "../common/com_syrus_AMFICOM_analysis_dadara_ModelFunction.h"
 
 
 const int debug = 6;

@@ -11,7 +11,7 @@
 	#endif
 #endif
 
-#define HUGE 1e99
+#define HUGE 1e308
 
 #endif
 
