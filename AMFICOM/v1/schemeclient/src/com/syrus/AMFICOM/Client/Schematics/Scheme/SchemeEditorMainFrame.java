@@ -762,18 +762,18 @@ class SchemeEditorWindowArranger extends WindowArranger
 		if (catalogFrame != null)
 			normalize(catalogFrame);
 
-		f.editorFrame.setSize(3*w/5, h);
-		f.ugoFrame.setSize(w/5, 2 * h / 5);
-		f.generalFrame.setSize(w/5, 3 * h / 10);
-		f.characteristicFrame.setSize(w/5, 3 * h / 10);
+		f.editorFrame.setSize(11*w/20, h);
+		f.ugoFrame.setSize(w/4, 3 * h / 10);
+		f.generalFrame.setSize(w/4, 4 * h / 10);
+		f.characteristicFrame.setSize(w/4, 3 * h / 10);
 		f.treeFrame.setSize(w/5, h);
 		if (catalogFrame != null)
 			catalogFrame.setSize(3*w/5, h);
 
 		f.editorFrame.setLocation(w/5, 0);
-		f.ugoFrame.setLocation(4*w/5, 3 * h / 5);
-		f.generalFrame.setLocation(4*w/5, 0);
-		f.characteristicFrame.setLocation(4*w/5, 3*h/10);
+		f.ugoFrame.setLocation(3*w/4, 7 * h / 10);
+		f.generalFrame.setLocation(3*w/4, 0);
+		f.characteristicFrame.setLocation(3*w/4, 4*h/10);
 		f.treeFrame.setLocation(0, 0);
 		if (catalogFrame != null)
 			catalogFrame.setLocation(w/5, 0);

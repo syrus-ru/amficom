@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractPropertiesFrame.java,v 1.1 2005/03/10 08:09:08 stas Exp $
+ * $Id: AbstractPropertiesFrame.java,v 1.2 2005/03/11 16:10:46 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
+import java.awt.*;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.lang.reflect.*;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/10 08:09:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/11 16:10:46 $
  * @module schemeclient_v1
  */
 
@@ -42,6 +43,7 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame
 	
 	protected ObjectResourceController controller;
 	protected ObjectResourcePropertiesPane panel;
+	protected GeneralPanel emptyPane;
 	
 	protected AbstractPropertiesFrame(String title, ApplicationContext aContext) {
 		super(title);
@@ -66,6 +68,11 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame
 		this.scrollPane = new JScrollPane();
 		this.getContentPane().setLayout(new BorderLayout());
 		this.getContentPane().add(scrollPane, BorderLayout.CENTER);
+		
+		this.emptyPane = new GeneralPanel();
+		JComponent pane = this.emptyPane.getGUI();
+		pane.setBackground(Color.WHITE);
+		setPropertiesPane(pane);
 	}
 	
 	public void setContext(ApplicationContext aContext) {
@@ -91,24 +98,25 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame
 	public void setObjectResourceController(ObjectResourceController controller) {
 		this.controller = controller;
 
-		PropertiesMananager manager = getPropertiesPaneManager();
-		ObjectResourcePropertiesPane pane;
-		if (manager != null)
-			pane = getPropertiesPane(manager);
+		if (this.controller != null) {
+			PropertiesMananager manager = getPropertiesPaneManager();
+			if (manager != null)
+				this.panel = getPropertiesPane(manager);
+			else
+				this.panel = emptyPane;
+		}
 		else
-			pane = new GeneralPanel();
-		setPropertiesPane(pane);
+			this.panel = emptyPane;
+		setPropertiesPane((JComponent)this.panel);
 	}
 	
 	protected void setObject(Object obj) {
 		this.panel.setObject(obj);
 	}
 	
-	protected void setPropertiesPane(ObjectResourcePropertiesPane propertiesPane) {
+	protected void setPropertiesPane(JComponent propertiesPane) {
 		scrollPane.getViewport().removeAll();
-		this.panel = propertiesPane;
-		scrollPane.getViewport().add((JComponent)propertiesPane);
-		propertiesPane.setContext(aContext);
+		scrollPane.getViewport().add(propertiesPane);
 	}
 	
 		/**
@@ -117,20 +125,18 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame
 	 */
 	public void operationPerformed(OperationEvent e) {
 		if (e.getActionCommand().equals(TreeDataSelectionEvent.type)) {
-			TreeDataSelectionEvent tdse = (TreeDataSelectionEvent)e;
+			TreeDataSelectionEvent tdse = (TreeDataSelectionEvent) e;
 			ObjectResourceController controller0 = tdse.getController();
 
-			if (controller0 != null) {
-				if (this.controller == null || !this.controller.equals(controller0))
-					setObjectResourceController(controller0);
+			if (this.controller == null || !this.controller.equals(controller0))
+				setObjectResourceController(controller0);
 
-				List data = tdse.getList();
-				int n = tdse.getSelectionNumber();
-				if (n != -1)
-					setObject(data.get(n));
-				else
-					setObject(null);
-			}
+			List data = tdse.getList();
+			int n = tdse.getSelectionNumber();
+			if (n != -1)
+				setObject(data.get(n));
+			else
+				setObject(null);
 		}
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.2 2005/03/10 09:25:06 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.3 2005/03/11 16:10:46 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/10 09:25:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/11 16:10:46 $
  * @module schemeclient_v1
  */
 
@@ -37,10 +37,12 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 	JTextField tfNameText = new JTextField();
 	JLabel lbDescriptionLabel = new JLabel(Constants.TEXT_DESCRIPTION);
 	JTextArea taDescriptionArea = new JTextArea(2,10);
-	JLabel lbTestTypeLabel = new JLabel(Constants.TEXT_TEST_TYPES);
+	JLabel lbTestTypeLabel = new JLabel(Constants.TEXT_MEASUREMENT_TYPES);
+	JPanel pnGeneralPanel = new JPanel();
 	JTree trTestTypeTree;
-	TreeDataModel model;
-	
+	TreeDataModel model = new MeasurementTypeModel();
+	List measurementTypes;
+		
 	protected MeasurementPortTypeGeneralPanel()
 	{
 		super();
@@ -62,36 +64,13 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 
 	private void jbInit() throws Exception
 	{
-		model = new MeasurementTypeModel();
 		trTestTypeTree = new StorableObjectTree(new Dispatcher(), model);
 		trTestTypeTree.setRootVisible(false);
+		measurementTypes = getMeasurementTypes();
 	
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
 		pnPanel0.setLayout( gbPanel0 );
-
-		lbNameLabel.setFocusable( false );
-		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 0;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 0;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( lbNameLabel, gbcPanel0 );
-		pnPanel0.add( lbNameLabel );
-
-		gbcPanel0.gridx = 2;
-		gbcPanel0.gridy = 0;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( tfNameText, gbcPanel0 );
-		pnPanel0.add( tfNameText );
 
 		lbDescriptionLabel.setFocusable( false );
 		gbcPanel0.gridx = 0;
@@ -102,50 +81,100 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 		gbcPanel0.weightx = 0;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets( 0,5,0,2 );
 		gbPanel0.setConstraints( lbDescriptionLabel, gbcPanel0 );
 		pnPanel0.add( lbDescriptionLabel );
 
 		JScrollPane scpDescriptionArea = new JScrollPane( taDescriptionArea );
-		gbcPanel0.gridx = 2;
-		gbcPanel0.gridy = 1;
-		gbcPanel0.gridwidth = 2;
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 2;
+		gbcPanel0.gridwidth = 4;
 		gbcPanel0.gridheight = 2;
 		gbcPanel0.fill = GridBagConstraints.BOTH;
 		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 0.5;
+		gbcPanel0.weighty = 1;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets( 0,2,0,2 );
 		gbPanel0.setConstraints( scpDescriptionArea, gbcPanel0 );
 		pnPanel0.add( scpDescriptionArea );
 
 		lbTestTypeLabel.setFocusable( false );
 		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 3;
+		gbcPanel0.gridy = 4;
 		gbcPanel0.gridwidth = 2;
 		gbcPanel0.gridheight = 1;
 		gbcPanel0.fill = GridBagConstraints.BOTH;
 		gbcPanel0.weightx = 0;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets( 0,5,0,2 );
 		gbPanel0.setConstraints( lbTestTypeLabel, gbcPanel0 );
 		pnPanel0.add( lbTestTypeLabel );
 
 		JScrollPane scpTestTypeTree = new JScrollPane( trTestTypeTree );
-		scpTestTypeTree.setPreferredSize(Constants.TEXT_AREA_SIZE);
-		gbcPanel0.gridx = 2;
-		gbcPanel0.gridy = 3;
-		gbcPanel0.gridwidth = 2;
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 5;
+		gbcPanel0.gridwidth = 4;
 		gbcPanel0.gridheight = 2;
 		gbcPanel0.fill = GridBagConstraints.BOTH;
 		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 1.5;
+		gbcPanel0.weighty = 1;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets( 0,2,0,2 );
 		gbPanel0.setConstraints( scpTestTypeTree, gbcPanel0 );
 		pnPanel0.add( scpTestTypeTree );
+
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( "" ) );
+		GridBagLayout gbGeneralPanel = new GridBagLayout();
+		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
+		pnGeneralPanel.setLayout( gbGeneralPanel );
+
+		lbNameLabel.setFocusable( false );
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets( 0,0,0,2 );
+		gbGeneralPanel.setConstraints( lbNameLabel, gbcGeneralPanel );
+		pnGeneralPanel.add( lbNameLabel );
+
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets( 0,0,0,0 );
+		gbGeneralPanel.setConstraints( tfNameText, gbcGeneralPanel );
+		pnGeneralPanel.add( tfNameText );
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 0;
+		gbcPanel0.gridwidth = 4;
+		gbcPanel0.gridheight = 1;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets( 0,0,0,0 );
+		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
+		pnPanel0.add( pnGeneralPanel );
 		
-		this.setLayout(new BorderLayout());
-		this.add(pnPanel0, BorderLayout.CENTER);
+		pnPanel0.setBackground(Color.WHITE);
+		pnGeneralPanel.setBackground(Color.WHITE);
+		scpDescriptionArea.setPreferredSize(Constants.TEXT_AREA_SIZE);
+		scpTestTypeTree.setPreferredSize(Constants.TEXT_AREA_SIZE);
 	}
 
+	public JComponent getGUI() {
+		return pnPanel0; 
+	}
+	
 	public Object getObject() {
 		return type;
 	}
@@ -163,27 +192,34 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 				Collection mPTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 						condition, true);
 				
-				List types = new LinkedList();
-				getMeasurementTypes(types, model.getRoot());
-				for (Iterator it = types.iterator(); it.hasNext();) {
+				for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
 					CheckableTreeNode node = (CheckableTreeNode)it.next();
 					node.setChecked(mPTypes.contains(node.getUserObject()));
 				}
+				trTestTypeTree.updateUI();
 			} catch (ApplicationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}	
+		}
+		else {
+			this.tfNameText.setText(Constants.TEXT_EMPTY);
+			this.taDescriptionArea.setText(Constants.TEXT_EMPTY);
+			for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
+				CheckableTreeNode node = (CheckableTreeNode)it.next();
+				node.setChecked(false);
+			}
+			trTestTypeTree.updateUI();
+		}
 	}
 	
-	void getMeasurementTypes(List types, StorableObjectTreeNode startNode) {
-		for (Enumeration en = startNode.children(); en.hasMoreElements();) {
-			StorableObjectTreeNode node = (StorableObjectTreeNode)en.nextElement();
-			if (node instanceof CheckableTreeNode) {
-				types.add(node);
-				getMeasurementTypes(types, node);
-			}
+	List getMeasurementTypes() {
+		List types = new LinkedList();
+		for (Enumeration en = model.getRoot().children(); en.hasMoreElements();) {
+			CheckableTreeNode node = (CheckableTreeNode)en.nextElement();
+			types.add(node);
 		}
+		return types;
 	}
 
 	public boolean modify() {
@@ -194,7 +230,6 @@ public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
 		this.type.setDescription(this.taDescriptionArea.getText());
 		
 		List types = new LinkedList();
-		getMeasurementTypes(types, model.getRoot());
 		for (Iterator it = types.iterator(); it.hasNext();) {
 			CheckableTreeNode node = (CheckableTreeNode) it.next();
 			MeasurementType mtype = (MeasurementType)node.getUserObject(); 

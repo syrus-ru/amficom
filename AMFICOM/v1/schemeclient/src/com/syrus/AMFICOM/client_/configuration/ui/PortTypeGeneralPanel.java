@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.1 2005/03/10 08:09:08 stas Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.2 2005/03/11 16:10:46 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,10 @@
 package com.syrus.AMFICOM.client_.configuration.ui;
 
 import java.awt.*;
+
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
@@ -19,7 +21,7 @@ import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/10 08:09:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/11 16:10:46 $
  * @module schemeclient_v1
  */
 
@@ -38,6 +40,7 @@ public class PortTypeGeneralPanel extends GeneralPanel {
 	JComboBox cmbSortCombo = new AComboBox(sorts);
 	JLabel lbDescriptionLabel = new JLabel(Constants.TEXT_DESCRIPTION);
 	JTextArea taDescriptionArea = new JTextArea(2,10);
+	JPanel pnGeneralPanel = new JPanel();
 	
 	protected PortTypeGeneralPanel() {
 		super();
@@ -58,52 +61,6 @@ public class PortTypeGeneralPanel extends GeneralPanel {
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
 		pnPanel0.setLayout( gbPanel0 );
 
-		lbNameLabel.setFocusable( false );
-		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 0;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 0;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( lbNameLabel, gbcPanel0 );
-		pnPanel0.add( lbNameLabel );
-
-		gbcPanel0.gridx = 2;
-		gbcPanel0.gridy = 0;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( tfNameText, gbcPanel0 );
-		pnPanel0.add( tfNameText );
-
-		lbSortLabel.setFocusable( false );
-		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 1;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 0;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( lbSortLabel, gbcPanel0 );
-		pnPanel0.add( lbSortLabel );
-
-		gbcPanel0.gridx = 2;
-		gbcPanel0.gridy = 1;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( cmbSortCombo, gbcPanel0 );
-		pnPanel0.add( cmbSortCombo );
-
 		lbDescriptionLabel.setFocusable( false );
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 2;
@@ -113,24 +70,97 @@ public class PortTypeGeneralPanel extends GeneralPanel {
 		gbcPanel0.weightx = 0;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets( 0,5,0,2 );
 		gbPanel0.setConstraints( lbDescriptionLabel, gbcPanel0 );
 		pnPanel0.add( lbDescriptionLabel );
 
 		JScrollPane scpDescriptionArea = new JScrollPane( taDescriptionArea );
-		scpDescriptionArea.setPreferredSize(Constants.TEXT_AREA_SIZE);
-		gbcPanel0.gridx = 2;
-		gbcPanel0.gridy = 2;
-		gbcPanel0.gridwidth = 2;
+		gbcPanel0.gridx = 1;
+		gbcPanel0.gridy = 3;
+		gbcPanel0.gridwidth = 3;
 		gbcPanel0.gridheight = 2;
 		gbcPanel0.fill = GridBagConstraints.BOTH;
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 1;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets(0, 2, 0, 2);
 		gbPanel0.setConstraints( scpDescriptionArea, gbcPanel0 );
 		pnPanel0.add( scpDescriptionArea );
 
-		this.setLayout(new BorderLayout());
-		this.add(pnPanel0, BorderLayout.CENTER);
+		GridBagLayout gbGeneralPanel = new GridBagLayout();
+		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
+		pnGeneralPanel.setLayout( gbGeneralPanel );
+
+		lbNameLabel.setFocusable( false );
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets( 0,0,0,2 );
+		gbGeneralPanel.setConstraints( lbNameLabel, gbcGeneralPanel );
+		pnGeneralPanel.add( lbNameLabel );
+
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets( 0,0,0,0 );
+		gbGeneralPanel.setConstraints( tfNameText, gbcGeneralPanel );
+		pnGeneralPanel.add( tfNameText );
+
+		lbSortLabel.setFocusable( false );
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 1;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets( 0,0,0,2 );
+		gbGeneralPanel.setConstraints( lbSortLabel, gbcGeneralPanel );
+		pnGeneralPanel.add( lbSortLabel );
+
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 1;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets( 0,0,0,0 );
+		gbGeneralPanel.setConstraints( cmbSortCombo, gbcGeneralPanel );
+		pnGeneralPanel.add( cmbSortCombo );
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 0;
+		gbcPanel0.gridwidth = 4;
+		gbcPanel0.gridheight = 2;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets( 0,0,0,0 );
+		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
+		pnPanel0.add( pnGeneralPanel );
+
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder(Constants.TEXT_EMPTY) );
+		pnGeneralPanel.setBackground(Color.WHITE);
+		pnPanel0.setBackground(Color.WHITE);
+		scpDescriptionArea.setPreferredSize(Constants.TEXT_AREA_SIZE);
+		cmbSortCombo.setFont(UIGeneralStorage.DIALOG_FONT);
+	}
+	
+	public JComponent getGUI() {
+		return pnPanel0; 
 	}
 
 	public Object getObject() {

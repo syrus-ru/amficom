@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkTypeGeneralPanel.java,v 1.1 2005/03/10 08:09:08 stas Exp $
+ * $Id: AbstractLinkTypeGeneralPanel.java,v 1.2 2005/03/11 16:10:46 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.UI.UIGeneralStorage;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
 import com.syrus.AMFICOM.configuration.*;
@@ -20,7 +21,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/10 08:09:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/11 16:10:46 $
  * @module schemeclient_v1
  */
 
@@ -37,7 +38,9 @@ public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 	JTextField tfManufacturerCodeText = new JTextField();
 	JLabel lbDescriptionLabel = new JLabel(Constants.TEXT_DESCRIPTION);
 	JTextArea taDescriptionArea = new JTextArea(2,10);
-
+//	JPanel pnDescriptionPanel = new JPanel();
+	JPanel pnGeneralPanel = new JPanel();
+	
 	protected AbstractLinkTypeGeneralPanel() {
 		super();
 		try {
@@ -55,104 +58,132 @@ public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 	private void jbInit() throws Exception {
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
-		pnPanel0.setLayout( gbPanel0 );
+		pnPanel0.setLayout(gbPanel0);
 
-		lbNameLabel.setFocusable( false );
+		pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(""));
+		GridBagLayout gbGeneralPanel = new GridBagLayout();
+		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
+		pnGeneralPanel.setLayout(gbGeneralPanel);
+
+		lbNameLabel.setFocusable(false);
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
+		gbGeneralPanel.setConstraints(lbNameLabel, gbcGeneralPanel);
+		pnGeneralPanel.add(lbNameLabel);
+
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 4;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets(0, 0, 0, 0);
+		gbGeneralPanel.setConstraints(tfNameText, gbcGeneralPanel);
+		pnGeneralPanel.add(tfNameText);
+
+		lbManufacturerLabel.setFocusable(false);
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 2;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
+		gbGeneralPanel.setConstraints(lbManufacturerLabel, gbcGeneralPanel);
+		pnGeneralPanel.add(lbManufacturerLabel);
+
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 2;
+		gbcGeneralPanel.gridwidth = 4;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets(0, 0, 0, 0);
+		gbGeneralPanel.setConstraints(tfManufacturerText, gbcGeneralPanel);
+		pnGeneralPanel.add(tfManufacturerText);
+
+		lbManufacturerCodeLabel.setFocusable(false);
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 4;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
+		gbGeneralPanel.setConstraints(lbManufacturerCodeLabel, gbcGeneralPanel);
+		pnGeneralPanel.add(lbManufacturerCodeLabel);
+
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 4;
+		gbcGeneralPanel.gridwidth = 4;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbcPanel0.insets = new Insets(0, 0, 0, 0);
+		gbGeneralPanel.setConstraints(tfManufacturerCodeText, gbcGeneralPanel);
+		pnGeneralPanel.add(tfManufacturerCodeText);
+		
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 0;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( lbNameLabel, gbcPanel0 );
-		pnPanel0.add( lbNameLabel );
-
-		gbcPanel0.gridx = 2;
-		gbcPanel0.gridy = 0;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 1;
+		gbcPanel0.gridwidth = 6;
+		gbcPanel0.gridheight = 6;
 		gbcPanel0.fill = GridBagConstraints.BOTH;
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( tfNameText, gbcPanel0 );
-		pnPanel0.add( tfNameText );
+		gbPanel0.setConstraints(pnGeneralPanel, gbcPanel0);
+		pnPanel0.add(pnGeneralPanel);
 
-		lbManufacturerLabel.setFocusable( false );
+		lbDescriptionLabel.setFocusable(false);
 		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 1;
+		gbcPanel0.gridy = 6;
 		gbcPanel0.gridwidth = 2;
 		gbcPanel0.gridheight = 1;
 		gbcPanel0.fill = GridBagConstraints.BOTH;
 		gbcPanel0.weightx = 0;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( lbManufacturerLabel, gbcPanel0 );
-		pnPanel0.add( lbManufacturerLabel );
+		gbcPanel0.insets = new Insets(0, 5, 0, 2);
+		gbPanel0.setConstraints(lbDescriptionLabel, gbcPanel0);
+		pnPanel0.add(lbDescriptionLabel);
 
-		gbcPanel0.gridx = 2;
-		gbcPanel0.gridy = 1;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( tfManufacturerText, gbcPanel0 );
-		pnPanel0.add( tfManufacturerText );
-
-		lbManufacturerCodeLabel.setFocusable( false );
-		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 2;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 0;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( lbManufacturerCodeLabel, gbcPanel0 );
-		pnPanel0.add( lbManufacturerCodeLabel );
-
-		gbcPanel0.gridx = 2;
-		gbcPanel0.gridy = 2;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( tfManufacturerCodeText, gbcPanel0 );
-		pnPanel0.add( tfManufacturerCodeText );
-
-		lbDescriptionLabel.setFocusable( false );
-		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 3;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 0;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( lbDescriptionLabel, gbcPanel0 );
-		pnPanel0.add( lbDescriptionLabel );
-
-		JScrollPane scpDescriptionArea = new JScrollPane( taDescriptionArea );
-		scpDescriptionArea.setPreferredSize(Constants.TEXT_AREA_SIZE);
-		gbcPanel0.gridx = 2;
-		gbcPanel0.gridy = 3;
-		gbcPanel0.gridwidth = 2;
+		JScrollPane scpDescriptionArea = new JScrollPane(taDescriptionArea);
+		gbcPanel0.gridx = 1;
+		gbcPanel0.gridy = 7;
+		gbcPanel0.gridwidth = 5;
 		gbcPanel0.gridheight = 2;
 		gbcPanel0.fill = GridBagConstraints.BOTH;
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 1;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( scpDescriptionArea, gbcPanel0 );
-		pnPanel0.add( scpDescriptionArea );
+		gbcPanel0.insets = new Insets(0, 2, 0, 2);
+		gbPanel0.setConstraints(scpDescriptionArea, gbcPanel0);
+		pnPanel0.add(scpDescriptionArea);
 
-		this.setLayout(new BorderLayout());
-		this.add(pnPanel0, BorderLayout.CENTER);
+		pnGeneralPanel.setBackground(Color.WHITE);
+		pnPanel0.setBackground(Color.WHITE);
+		scpDescriptionArea.setPreferredSize(Constants.TEXT_AREA_SIZE);
+	}
+	
+	public JComponent getGUI() {
+		return pnPanel0; 
 	}
 
 	public Object getObject() {

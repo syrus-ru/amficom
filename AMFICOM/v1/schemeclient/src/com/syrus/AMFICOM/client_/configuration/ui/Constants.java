@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.2 2005/03/10 09:25:06 stas Exp $
+ * $Id: Constants.java,v 1.3 2005/03/11 16:10:46 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.awt.Dimension;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/10 09:25:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/11 16:10:46 $
  * @module schemeclient_v1
  */
 
@@ -36,10 +36,10 @@ public class Constants {
 	public static final String TEXT_ADD_CHARACTERISTIC = Messages.getString("Constants.add_characteristic"); //$NON-NLS-1$
 	public static final String TEXT_REMOVE_CHARACTERISTIC = Messages.getString("Constants.remove_characteristic"); //$NON-NLS-1$
 	public static final String TEXT_PARAMETERS = Messages.getString("Constants.parameters"); //$NON-NLS-1$
-	public static final String TEXT_MEASUREMENTS = Messages.getString("Constants.measurements"); //$NON-NLS-1$
+	public static final String TEXT_MEASUREMENT_PORT_TYPES = Messages.getString("Constants.measurement_port_types"); //$NON-NLS-1$
 	public static final String TEXT_PORTS = Messages.getString("Constants.ports"); //$NON-NLS-1$
 	public static final String TEXT_TYPE = Messages.getString("Constants.type"); //$NON-NLS-1$
-	public static final String TEXT_TEST_TYPES = Messages.getString("Constants.test_types"); //$NON-NLS-1$
+	public static final String TEXT_MEASUREMENT_TYPES = Messages.getString("Constants.measurement_types"); //$NON-NLS-1$
 	public static final String TEXT_INPUT = Messages.getString("Constants.input"); //$NON-NLS-1$
 	public static final String TEXT_OUTPUT = Messages.getString("Constants.output"); //$NON-NLS-1$
 	public static final String CHARACTERISTICTYPESORT_OPTICAL = Messages.getString("Constants.optical_characteristics"); //$NON-NLS-1$
