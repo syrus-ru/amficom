@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
-//import com.syrus.AMFICOM.Client.Resource.ISM.LengthContainer;
+import com.syrus.AMFICOM.Client.Resource.ISM.LengthContainer;
 
 public class SchemePathDecompositor
 {
