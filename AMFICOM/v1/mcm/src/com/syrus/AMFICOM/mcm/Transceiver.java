@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.11 2004/07/30 12:28:15 arseniy Exp $
+ * $Id: Transceiver.java,v 1.12 2004/07/30 14:11:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,8 +25,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/07/30 12:28:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2004/07/30 14:11:49 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -36,7 +37,8 @@ public class Transceiver extends SleepButWorkThread {
 	private final String taskFileName;
 	private final String reportFileName;
 	private boolean running;
-	private List measurementQueue;//List <Measurement>
+	
+	private Map measurementQueue;//Map <Measurement, KISReport>
 	private Map processingMeasurements;//Map <Identifier, Measurement>
 	private Map testProcessors;//Map <Measurement, TestProcessor>
 
@@ -53,7 +55,7 @@ public class Transceiver extends SleepButWorkThread {
 
 		this.running = true;
 		
-		this.measurementQueue = Collections.synchronizedList(new ArrayList());
+		this.measurementQueue = Collections.synchronizedMap(new Hashtable());
 		this.processingMeasurements = Collections.synchronizedMap(new Hashtable());
 		this.testProcessors = Collections.synchronizedMap(new Hashtable());
 	}
@@ -61,7 +63,7 @@ public class Transceiver extends SleepButWorkThread {
 	protected void addMeasurement(Measurement measurement, TestProcessor testProcessor) {
 		Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED) {
-			this.measurementQueue.add(measurement);
+			this.measurementQueue.put(measurement, null);
 			this.testProcessors.put(measurement, testProcessor);
 		}
 		else
@@ -74,10 +76,11 @@ public class Transceiver extends SleepButWorkThread {
 		KISReport kisReport = null;
 		TestProcessor testProcessor = null;
 		Result result;
+		Iterator measumentIterator = this.measurementQueue.keySet().iterator();
 		while (this.running) {
 			if (measurement == null) {
 				if (! this.measurementQueue.isEmpty()) {
-					measurement = (Measurement)this.measurementQueue.get(0);
+					measurement = (Measurement)measumentIterator.next();
 					measurementId = measurement.getId();
 				}
 			}//if (measurement == null)
@@ -127,8 +130,10 @@ public class Transceiver extends SleepButWorkThread {
 						catch (UpdateObjectException uoe) {
 							Log.errorException(uoe);
 						}
-						if (result != null)
+						if (result != null){
+							this.measurementQueue.put(measurement, result);
 							testProcessor.addMeasurementResult(result);
+						}
 					}
 					else
 						Log.errorMessage("Cannot find test processor for measurement '" + measurementId.toString() + "'; throwing away it's report");
