@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationTransmit.java,v 1.5 2005/02/02 13:57:37 bob Exp $
+ * $Id: CMConfigurationTransmit.java,v 1.6 2005/02/03 20:23:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -69,8 +69,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/02 13:57:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/02/03 20:23:57 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -121,7 +121,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 				list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
 			} else
 				list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
-					new EquivalentCondition(ObjectEntities.CABLE_LINKTYPE_ENTITY_CODE), true);
+					new EquivalentCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE), true);
 
 			CableLinkType_Transferable[] transferables = new CableLinkType_Transferable[list.size()];
 			int i = 0;
@@ -277,7 +277,7 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 				list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
 			} else
 				list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
-					new EquivalentCondition(ObjectEntities.CABLE_THREAD_ENTITY_CODE), true);
+					new EquivalentCondition(ObjectEntities.CABLETHREAD_ENTITY_CODE), true);
 
 			CableThread_Transferable[] transferables = new CableThread_Transferable[list.size()];
 			int i = 0;
