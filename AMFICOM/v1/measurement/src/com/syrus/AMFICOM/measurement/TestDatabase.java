@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
@@ -388,7 +390,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		 * @todo when change DB Identifier model ,change String to long
 		 */
 		String testIdCode = test.getId().getCode();
-		ArrayList msIds = test.getMeasurementSetupIds();
+		List msIds = test.getMeasurementSetupIds();
 		String sql = SQL_INSERT_INTO + ObjectEntities.MSTESTLINK_ENTITY
 			+ OPEN_BRACKET
 			+ LINK_COLMN_TEST_ID + COMMA + LINK_COLMN_MEASUREMENT_SETUP_ID + CLOSE_BRACKET
