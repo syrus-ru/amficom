@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.2 2005/01/17 10:54:59 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.3 2005/01/21 13:44:23 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,8 @@ import com.syrus.AMFICOM.general.corba.StringFieldSort;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/17 10:54:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/01/21 13:44:23 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class StringFieldCondition extends com.syrus.AMFICOM.general.StringFieldCondition {
@@ -31,7 +31,6 @@ public class StringFieldCondition extends com.syrus.AMFICOM.general.StringFieldC
 			PhysicalLinkType linkType = (PhysicalLinkType )object;
 			switch(this.sort){
 				case StringFieldSort._STRINGSORT_BASE:
-				case StringFieldSort._STRINGSORT_USERLOGIN:
 					if (linkType.getCodename().lastIndexOf(this.string) != -1){
 						condition = true;						
 					}
