@@ -15,6 +15,9 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,PMD_HOME)
 
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/pmd/rules/*.java) 
+
+
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com rulesets
@@ -29,4 +32,4 @@ clean:
 .mach:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(PMD_JARS) \
-		$(shell find . -name '*\.java')
+		$(SOURCES)
