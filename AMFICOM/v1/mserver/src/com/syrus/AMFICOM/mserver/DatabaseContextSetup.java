@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.24 2005/03/18 17:01:07 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.25 2005/03/18 18:16:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
@@ -56,7 +57,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/03/18 17:01:07 $
+ * @version $Revision: 1.25 $, $Date: 2005/03/18 18:16:33 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -110,9 +111,9 @@ public abstract class DatabaseContextSetup {
 	}
 
 	public static void initObjectPools() {
-		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader());
-		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader());
-		ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader());
-		MeasurementStorableObjectPool.init(new MServerMeasurementObjectLoader());
+		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader(), StorableObjectResizableLRUMap.class);
+		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader(), StorableObjectResizableLRUMap.class);
+		ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader(), StorableObjectResizableLRUMap.class);
+		MeasurementStorableObjectPool.init(new MServerMeasurementObjectLoader(), StorableObjectResizableLRUMap.class);
 	}
 }
