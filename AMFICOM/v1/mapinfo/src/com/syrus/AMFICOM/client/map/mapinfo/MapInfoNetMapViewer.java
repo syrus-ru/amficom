@@ -201,7 +201,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	public JComponent getVisualComponent()
 	{
 		if(mapImagePanel == null)
-			mapImagePanel = new MapImagePanel();
+			mapImagePanel = new MapImagePanel(this.lnl);
 		if(scrollPane == null)
 			scrollPane = new MapScrollPane(this);
 		return scrollPane;

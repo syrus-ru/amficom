@@ -23,6 +23,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.DataInputStream;
 import java.io.EOFException;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.OptionalDataException;
 import java.net.URL;
@@ -325,7 +326,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	 */
 	public void repaint(boolean fullRepaint)
 	{
-    if (!mapImagePanel.getImageChanged())
+    if (!fullRepaint)
       mapImagePanel.repaint();
     else
     {  
@@ -346,7 +347,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
         int dataSize = mapImagePanel.getWidth() * mapImagePanel.getHeight() * 2;
         byte[] img = new byte[dataSize];
   
-  /*      try
+        try
         {
           Object readObject = ois.readObject();
           if (readObject instanceof String)
@@ -357,8 +358,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
             return;
           }
         }
-        catch (Exception optExc)
-        {}*/
+        catch (IOException optExc)
+        {}
   
   
         try
@@ -381,6 +382,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
         exc.printStackTrace();
       }
     }
+    
+    super.paint(mapImagePanel.getGraphics());
 	}
 	
 	/**
@@ -469,8 +472,23 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 
       ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
       
-      double newScale = ((Double)ois.readObject()).doubleValue();
-      this.mapImagePanel.setZoom(newScale);
+      try
+      {
+        Object readObject = ois.readObject();
+        if (readObject instanceof String)
+        {
+          Environment.log(
+              Environment.LOG_LEVEL_FINER, 
+              (String)readObject);
+          return;
+        }
+        
+        double newScale = ((Double)readObject).doubleValue();
+        this.mapImagePanel.setZoom(newScale);
+      }
+      catch (IOException optExc)
+      {}
+      
       
       int dataSize = mapImagePanel.getWidth() * mapImagePanel.getHeight() * 2;
       byte[] img = new byte[dataSize];

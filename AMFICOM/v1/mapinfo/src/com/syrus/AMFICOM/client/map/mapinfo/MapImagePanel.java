@@ -8,21 +8,21 @@ import javax.swing.JPanel;
 public class MapImagePanel extends JPanel
 {
   private Image mapImage;
-  private boolean imageChanged = true;
+  private MapInfoLogicalNetLayer layerToPaint = null;
   
   private DoublePoint center = new DoublePoint (0,0);
-  private double zoom = 1;
+  private double zoom = 100000;
   
 	public static final double ZOOM_FACTOR = 2D;  
   
-  public MapImagePanel()
+  public MapImagePanel(MapInfoLogicalNetLayer layerToPaint)
   {
+    this.layerToPaint = layerToPaint;
   }
   
   public void setImage(Image newImage)
   {
     this.mapImage = newImage;
-    this.setImageChanged(false);    
     this.repaint();
   }
 
@@ -51,20 +51,9 @@ public class MapImagePanel extends JPanel
       paint(g);
   }*/
 
-  public void setImageChanged(boolean ic)
-  {
-    this.imageChanged = ic;
-  }
-
-  public boolean getImageChanged()
-  {
-    return this.imageChanged;
-  }
-
   public void setCenter(DoublePoint c)
   {
     center = c;
-    this.setImageChanged(true);
   }
 
   public DoublePoint getCenter()
@@ -75,7 +64,6 @@ public class MapImagePanel extends JPanel
   public void setZoom(double z)
   {
     zoom = z;
-    this.setImageChanged(true);
   }
 
   public double getZoom()
@@ -112,9 +100,10 @@ public class MapImagePanel extends JPanel
   {
     super.paintComponent(g);
 		if (mapImage != null && g != null)
-		{
-			    g.drawImage(this.mapImage, 0, 0, this);
-		}
+      g.drawImage(this.mapImage, 0, 0, this);
+
+    if (this.layerToPaint != null)
+      layerToPaint.paint(g);
   }
   
   public String getMapMainParamString()
