@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.5 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.6 2004/11/22 12:02:51 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.util.Iterator;
  * состоит из последовательности атомарных действий
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/22 12:02:51 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -144,54 +144,6 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 				physicalLink.setStartNode(leftNode);
 			}
 
-/* see MapActionBundleCommand
-			// получить все фрагменты первой филической линии
-			java.util.List nodelinks = physicalLink.getNodeLinks();
-		
-			// определить начальный узел и начальный фрагмент физической линии
-			MapNodeLinkElement startNodeLink = physicalLink.getStartNodeLink();
-			MapNodeElement startNode = physicalLink.getStartNode();
-		
-			// неявный цикл по фракментам линии - перекидывать фрагменты в новую 
-			// физическую линию. движемся по фрагментам от первого пока не
-			// наткнемся на фрагмент, соседний с удаленным
-			for(;;)
-			{
-				// перекинуть фрагмент в новую линию
-				physicalLink.removeNodeLink(startNodeLink);
-				newPhysicalLink.addNodeLink(startNodeLink);
-				
-				MapElementState nls = startNodeLink.getState();
-				
-				startNodeLink.setPhysicalLinkId(newPhysicalLink.getId());
-				
-				super.registerStateChange(
-						startNodeLink, 
-						nls, 
-						startNodeLink.getState());
-				
-				// перейти к следующему узлу
-				startNode = startNodeLink.getOtherNode(startNode);
-				
-				// если наткнулись на разрыв линии связи, то обновить
-				// концевые узлы и закончить
-				if(startNode == leftNode)
-				{
-					newPhysicalLink.setEndNode(leftNode);
-					physicalLink.setStartNode(rightNode);
-					break;
-				}
-				else
-				if(startNode == rightNode)
-				{
-					newPhysicalLink.setEndNode(rightNode);
-					physicalLink.setStartNode(leftNode);
-					break;
-				}
-	
-				startNodeLink = startNode.getOtherNodeLink(startNodeLink);
-			}//for(;;)
-*/
 			super.registerStateChange(physicalLink, pls, physicalLink.getState());
 		}
 	}
