@@ -9,19 +9,18 @@ module AMFICOM {
 module administration {
 module corba {
 
-	struct ObjectPermissionAttributes_Transferable {
+	struct PermissionAttributes_Transferable {
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
 		long long created;
 		long long modified;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
-	  wstring rwx;
-	  com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable group_ids;
-	  com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable category_ids;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable owner_id;
 	  wstring name;
 	  wstring codename;
-	  wstring whyRejected;
+	  wstring rwx;
+	  wstring deny_message;
+	  com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable group_ids;
+	  com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable category_ids;
 	};
 
 	struct Domain_Transferable {
@@ -30,12 +29,12 @@ module corba {
 		long long modified;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
-		wstring name;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable owner_id;
-		wstring description;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+		wstring name;
+		wstring description;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable owner_id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable permission_attributes_id;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable domain_ids;
-		ObjectPermissionAttributes_Transferable permissions;
 	};
 
 	typedef sequence <Domain_Transferable> DomainSeq_Transferable;
