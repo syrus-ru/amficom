@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.16 2004/08/11 13:10:17 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.17 2004/08/11 13:18:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/11 13:10:17 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/11 13:18:53 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -123,7 +123,7 @@ public class MeasurementType extends ActionType {
 
 		Identifier_Transferable[] outParTypeIds = new Identifier_Transferable[this.outParameterTypeIds.size()];
 		i = 0;
-		for (Iterator iterator = this.inParameterTypeIds.iterator(); iterator.hasNext();)
+		for (Iterator iterator = this.outParameterTypeIds.iterator(); iterator.hasNext();)
 			outParTypeIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
 
 		return new MeasurementType_Transferable((Identifier_Transferable)super.id.getTransferable(),

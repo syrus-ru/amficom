@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.17 2004/08/11 10:59:55 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.18 2004/08/11 13:18:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/11 10:59:55 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/11 13:18:53 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -154,7 +154,7 @@ public class EvaluationType extends ActionType {
 
 		Identifier_Transferable[] outParTypeIds = new Identifier_Transferable[this.outParameterTypeIds.size()];
 		i = 0;
-		for (Iterator iterator = this.inParameterTypeIds.iterator(); iterator.hasNext();)
+		for (Iterator iterator = this.outParameterTypeIds.iterator(); iterator.hasNext();)
 			outParTypeIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
 
 		return new EvaluationType_Transferable((Identifier_Transferable)super.id.getTransferable(),
