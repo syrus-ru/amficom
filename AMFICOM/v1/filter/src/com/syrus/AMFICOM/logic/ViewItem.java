@@ -1,5 +1,5 @@
 /*
- * $Id: ViewItem.java,v 1.11 2005/03/25 16:35:02 bob Exp $
+ * $Id: ViewItem.java,v 1.12 2005/03/28 07:43:14 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/03/25 16:35:02 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/28 07:43:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -82,7 +82,7 @@ public class ViewItem extends AbstractItem implements Item {
 						viewItem = new ViewItem(item2);
 					}
 				}
-				this.addChild(viewItem, false);
+				this.addChild(viewItem);
 			}
 		}
 	}
@@ -150,10 +150,11 @@ public class ViewItem extends AbstractItem implements Item {
 	public int getChildrenCount() {
 		int count = 0;
 		if (this.children != null && !this.children.isEmpty()) {
-			for (Iterator it = this.children.iterator(); it.hasNext();) {
-				ViewItem viewItem = (ViewItem) it.next();
-				count += viewItem.isService() ? 0 : 1;
-			}
+			count = this.children.size();
+//			for (Iterator it = this.children.iterator(); it.hasNext();) {
+//				ViewItem viewItem = (ViewItem) it.next();
+//				count += viewItem.isService() ? 0 : 1;
+//			}
 		}
 		return count;
 	}
