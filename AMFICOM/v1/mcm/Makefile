@@ -13,7 +13,7 @@ TRANSCEIVER_DIR := ./transceiver
 
 include ../tools/Makefile.inc
 
-APPCLASSPATH := $(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/event.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/dadara.jar
+APPCLASSPATH := $(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/dadara.jar
 
 JAVAH := javah
 JAVAH_FLAGS := \
@@ -50,6 +50,8 @@ $(LIBNAME_INTERFACE):	.corba
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/util/KISConnectionLRUMap.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/DatabaseContextSetup.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMGeneralObjectLoader.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMAdministrationObjectLoader.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMConfigurationObjectLoader.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMMeasurementObjectLoader.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/TestProcessor.java \
