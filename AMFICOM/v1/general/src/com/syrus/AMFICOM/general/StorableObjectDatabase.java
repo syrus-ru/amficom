@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.108 2005/02/24 14:59:36 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.109 2005/02/28 11:12:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.108 $, $Date: 2005/02/24 14:59:36 $
+ * @version $Revision: 1.109 $, $Date: 2005/02/28 11:12:34 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -134,26 +134,19 @@ public abstract class StorableObjectDatabase {
 		return columns;
 	}
 
-	protected String getUpdateMultiplySQLValues(int mode) {
+	protected String getInsertMultiplySQLValues() {
+		return QUESTION + COMMA + this.getUpdateMultiplySQLValues();
+	}
+
+	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null) {
-			String s = new String();
-			switch(mode) {
-				case MODE_INSERT:
-					s = QUESTION + COMMA;
-					break;
-				case MODE_UPDATE:
-					break;
-				default:
-					Log.errorMessage(this.getEnityName() + "Database.getUpdateMultiplySQLValues | Unknown mode " + mode);
-			}
-			updateMultiplySQLValues = s
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION;			
+			updateMultiplySQLValues = QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION;
 		}
-		return updateMultiplySQLValues; 
+		return updateMultiplySQLValues;
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
@@ -187,33 +180,29 @@ public abstract class StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException/*, UpdateObjectException*/, SQLException {
+			throws IllegalDataException, SQLException {
 		int i = 0;
-//		try {		
-			switch(mode) {
-				case MODE_INSERT:
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i , storableObject.getId());
-					break;
-				case MODE_UPDATE:
-					break;
-				default:
-					throw new IllegalDataException(this.getEnityName() + "Database.setEntityForPreparedStatement | Unknown mode " + mode);
-			}
-			preparedStatement.setTimestamp(++i, new Timestamp(storableObject.getCreated().getTime()));
-			preparedStatement.setTimestamp(++i, new Timestamp(storableObject.getModified().getTime()));
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i , storableObject.getCreatorId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i , storableObject.getModifierId());
-			preparedStatement.setLong(++i, storableObject.getVersion());
-//		}
-//		catch (SQLException sqle) {
-//			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-//		}
+		switch (mode) {
+			case MODE_INSERT:
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getId());
+				break;
+			case MODE_UPDATE:
+				break;
+			default:
+				throw new IllegalDataException(this.getEnityName() + "Database.setEntityForPreparedStatement | Unknown mode " + mode);
+		}
+		preparedStatement.setTimestamp(++i, new Timestamp(storableObject.getCreated().getTime()));
+		preparedStatement.setTimestamp(++i, new Timestamp(storableObject.getModified().getTime()));
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getCreatorId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getModifierId());
+		preparedStatement.setLong(++i, storableObject.getVersion());
 		return i;
 	}
 
 	/**
-	 * If <code>storableObject</code> is <code>null</code> creates new StorableObject
-	 * Else - fills it fields from <code>resultSet</code>
+	 * If <code>storableObject</code> is <code>null</code> creates new
+	 * StorableObject Else - fills it fields from <code>resultSet</code>
+	 * 
 	 * @param storableObject
 	 * @param resultSet
 	 * @return Storable Object with filled fields
@@ -636,7 +625,7 @@ public abstract class StorableObjectDatabase {
 
 		String sql = SQL_INSERT_INTO + this.getEnityName() + OPEN_BRACKET
 			+ this.getColumns(MODE_INSERT)
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + this.getUpdateMultiplySQLValues(MODE_INSERT)
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + this.getInsertMultiplySQLValues()
 			+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
 		String storableObjectIdCode = null;
@@ -1043,7 +1032,7 @@ public abstract class StorableObjectDatabase {
 		String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
 		// String[] values = this.parseInsertStringValues(this.getUpdateMultiplySQLValues(), cols.length);		
 		// here we can split multyply sql values by COMMA because of it is only QUESTIONS separeted by COMMA
-		String[] values = this.getUpdateMultiplySQLValues(MODE_INSERT).split(COMMA);
+		String[] values = this.getUpdateMultiplySQLValues().split(COMMA);
 		if (cols.length != values.length)
 			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+cols.length+"') is not equals count of values ('"+values.length+"')");
 
