@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.82 2005/02/16 21:30:49 arseniy Exp $
+ * $Id: configuration.idl,v 1.83 2005/03/04 13:30:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -173,7 +173,7 @@ module corba {
 
 		general::corba::Identifier_Transferable domain_id;
 
-		general::corba::IdentifierSeq_Transferable monitored_element_ids;
+//		general::corba::IdentifierSeq_Transferable monitored_element_ids;
 
 		general::corba::Identifier_Transferable type_id;
 
@@ -209,7 +209,7 @@ module corba {
 
 		general::corba::Identifier_Transferable domain_id;
 
-		general::corba::IdentifierSeq_Transferable monitored_element_ids;
+//		general::corba::IdentifierSeq_Transferable monitored_element_ids;
 
 		general::corba::WString128 name;
 		general::corba::WString256 description;
