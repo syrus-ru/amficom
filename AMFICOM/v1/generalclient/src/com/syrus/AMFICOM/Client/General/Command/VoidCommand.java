@@ -1,5 +1,5 @@
 /**
- * $Id: VoidCommand.java,v 1.7 2004/08/23 11:57:02 krupenn Exp $
+ * $Id: VoidCommand.java,v 1.8 2004/08/23 12:11:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/08/23 11:57:02 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/23 12:11:45 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -95,7 +95,7 @@ public class VoidCommand implements Command, Cloneable
 		}
 		catch(Exception e)
 		{
-			System.out.println("current execution point with call stack:");
+			System.out.println("current execution point with call stack: " + this);
 			e.printStackTrace();
 		}
 	}
@@ -110,7 +110,7 @@ public class VoidCommand implements Command, Cloneable
 		}
 		catch(Exception e)
 		{
-			System.out.println("current execution point with call stack:");
+			System.out.println("current execution point with call stack: " + this);
 			e.printStackTrace();
 		}
 		execute();
