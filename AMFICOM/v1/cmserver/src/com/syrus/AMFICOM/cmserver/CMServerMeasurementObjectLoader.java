@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.24 2005/02/15 09:53:40 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.25 2005/02/15 15:04:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,10 +56,11 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.24 $, $Date: 2005/02/15 09:53:40 $
+ * @version $Revision: 1.25 $, $Date: 2005/02/15 15:04:44 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
+//TODO For one-objects loads do 'update' instead of 'insert'
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
     protected static Identifier mcmId;
     protected static Object lock;
