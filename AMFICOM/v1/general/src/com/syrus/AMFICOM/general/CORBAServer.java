@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.6 2004/11/22 12:41:26 bass Exp $
+ * $Id: CORBAServer.java,v 1.7 2004/12/21 17:08:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.Policy;
@@ -32,8 +35,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/11/22 12:41:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2004/12/21 17:08:29 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -137,12 +140,26 @@ public class CORBAServer /*extends Thread */{
 		this.poa.the_POAManager().activate();
 	}
 
-	private void initNamingContext() {
+	private void initNamingContext() throws CommunicationException {
 		try {
-			this.namingContext = NamingContextExtHelper.narrow(this.orb.resolve_initial_references("NameService"));
+			String localHostName = InetAddress.getLocalHost().getCanonicalHostName().replaceAll("\\.", "_");
+
+			NamingContextExt rootNamingContext = NamingContextExtHelper.narrow(this.orb.resolve_initial_references("NameService"));
+
+			NameComponent[] contextName = rootNamingContext.to_name(localHostName);
+			try {
+				Log.debugMessage("Creating naming context: '" + localHostName + "'", Log.DEBUGLEVEL08);
+				this.namingContext = NamingContextExtHelper.narrow(rootNamingContext.bind_new_context(contextName));
+			}
+			catch (org.omg.CosNaming.NamingContextPackage.AlreadyBound ab) {
+				this.namingContext = NamingContextExtHelper.narrow(rootNamingContext.resolve_str(localHostName));
+			}
 		}
-		catch (org.omg.CORBA.ORBPackage.InvalidName in) {
-			Log.errorException(in);
+		catch (UnknownHostException uhe) {
+			throw new CommunicationException("Cannot get local host", uhe);
+		}
+		catch (org.omg.CORBA.UserException ue) {
+			throw new CommunicationException("Cannot create context", ue);
 		}
 	}
 
