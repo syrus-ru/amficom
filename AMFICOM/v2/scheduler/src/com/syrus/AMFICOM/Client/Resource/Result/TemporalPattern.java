@@ -4,6 +4,10 @@ import java.util.*;
 import java.util.regex.*;
 
 import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.TransferableObject;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 
 /*
  * 
@@ -26,7 +30,7 @@ import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
  *  
  */
 
-public class TemporalPattern {
+public class TemporalPattern implements TransferableObject {
 
 	public class TimeLine {
 
@@ -56,17 +60,21 @@ public class TemporalPattern {
 
 		public void fillAllData() {
 			if (this.minutes == null)
-				this.minutes = parseExpression(I18N.getString("min"), "*", 0, 59); //$NON-NLS-1$ //$NON-NLS-2$
+					this.minutes = parseExpression(
+							I18N.getString("min"), "*", 0, 59); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.hours == null)
-				this.hours = parseExpression(I18N.getString("hour"), "*", 0, 23); //$NON-NLS-1$ //$NON-NLS-2$
+					this.hours = parseExpression(
+							I18N.getString("hour"), "*", 0, 23); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.dayOfMonth == null)
-				this.dayOfMonth = parseExpression(
-							I18N.getString("day_of_month"), "*", 1, 31); //$NON-NLS-1$ //$NON-NLS-2$
+					this.dayOfMonth = parseExpression(I18N
+							.getString("day_of_month"), "*", 1, 31); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.month == null)
-				this.month = parseExpression(I18N.getString("month"), "*", 0, 11); //$NON-NLS-1$ //$NON-NLS-2$
+					this.month = parseExpression(
+							I18N.getString("month"), "*", 0, 11); //$NON-NLS-1$ //$NON-NLS-2$
 			this.month.names = MONTH_NAMES;
 			if (this.dayOfWeek == null)
-				this.dayOfWeek = parseExpression(I18N.getString("day_of_week"), //$NON-NLS-1$
+					this.dayOfWeek = parseExpression(I18N
+							.getString("day_of_week"), //$NON-NLS-1$
 							"*", 0, 6); //$NON-NLS-1$ //$NON-NLS-2$
 			this.dayOfWeek.names = DAY_OF_WEEK_NAMES;
 		}
@@ -110,7 +118,8 @@ public class TemporalPattern {
 					for (int h = 0; h < this.hours.host.length; h++) {
 						for (int m = 0; m < this.minutes.host.length; m++) {
 							list.add((this.hours.host[h] < 10 ? "0" : "") //$NON-NLS-1$ //$NON-NLS-2$
-									+ Integer.toString(this.hours.host[h]) + ":" //$NON-NLS-1$
+									+ Integer.toString(this.hours.host[h])
+									+ ":" //$NON-NLS-1$
 									+ (this.minutes.host[m] < 10 ? "0" : "") //$NON-NLS-1$ //$NON-NLS-2$
 									+ Integer.toString(this.minutes.host[m]));
 						}
@@ -201,19 +210,20 @@ public class TemporalPattern {
 					int begin = matcher.start(i);
 					int end = matcher.end(i);
 					if ((begin >= 0) && (end <= this.template.length())) {
-						String subString = this.template.substring(matcher.start(i),
-								matcher.end(i));
+						String subString = this.template.substring(matcher
+								.start(i), matcher.end(i));
 						if (DEBUG) System.out.println(i + "\t" + subString); //$NON-NLS-1$
 						switch (i) {
 							case 1:
 								//minute
-								this.minutes = parseExpression(
-										I18N.getString("min"), subString, 0, //$NON-NLS-1$
+								this.minutes = parseExpression(I18N
+										.getString("min"), subString, 0, //$NON-NLS-1$
 										59);
 								break;
 							case 2:
 								//hour
-								this.hours = parseExpression(I18N.getString("hour"), //$NON-NLS-1$
+								this.hours = parseExpression(I18N
+										.getString("hour"), //$NON-NLS-1$
 										subString, 0, //$NON-NLS-1$
 										23);
 								break;
@@ -225,8 +235,8 @@ public class TemporalPattern {
 								break;
 							case 4:
 								//month
-								this.month = parseExpression(
-										I18N.getString("month"), subString, 0, //$NON-NLS-1$
+								this.month = parseExpression(I18N
+										.getString("month"), subString, 0, //$NON-NLS-1$
 										11);
 								break;
 							case 5:
@@ -278,7 +288,8 @@ public class TemporalPattern {
 										weekNumber[this.dayOfWeek.host[dw]]);
 								mTime = c.getTimeInMillis();
 								if ((this.startPeriod - DAY_LONG / 2 <= mTime)
-										&& (mTime <= this.endPeriod + DAY_LONG / 2)) {
+										&& (mTime <= this.endPeriod + DAY_LONG
+												/ 2)) {
 									if (DEBUG) System.out.println("dayOfWeek\t" //$NON-NLS-1$
 											+ c.getTime().toString());
 									long backDWTime = c.getTimeInMillis();
@@ -311,15 +322,16 @@ public class TemporalPattern {
 												c.set(Calendar.MINUTE,
 														this.minutes.host[mm]);
 												mTime = c.getTimeInMillis();
-												if ((this.startPeriod - MINUTE_LONG
-														/ 2 <= mTime)
+												if ((this.startPeriod
+														- MINUTE_LONG / 2 <= mTime)
 														&& (mTime <= this.endPeriod
 																+ MINUTE_LONG
 																/ 2)) {
 													c.set(Calendar.SECOND, 0);
 													if (this.dateList == null)
-														this.dateList = new ArrayList();
-													this.dateList.add(c.getTime());
+															this.dateList = new ArrayList();
+													this.dateList.add(c
+															.getTime());
 													if (DEBUG)
 															System.out
 																	.println("minutes\t" //$NON-NLS-1$
@@ -495,7 +507,8 @@ public class TemporalPattern {
 				for (int i = 0; i < timeValue.starts.length; i++) {
 					timeValue.starts[i] = ((Integer) this.startsList.get(i))
 							.intValue();
-					timeValue.ends[i] = ((Integer) this.endsList.get(i)).intValue();
+					timeValue.ends[i] = ((Integer) this.endsList.get(i))
+							.intValue();
 				}
 			}
 
@@ -605,9 +618,7 @@ public class TemporalPattern {
 			I18N.getString("Sunday"), I18N.getString("Monday"), //$NON-NLS-1$ //$NON-NLS-2$
 			I18N.getString("Tuesday"), I18N.getString("Wednesday"), //$NON-NLS-1$ //$NON-NLS-2$
 			I18N.getString("Thursday"), I18N.getString("Friday"), //$NON-NLS-1$ //$NON-NLS-2$
-			I18N.getString("Saturday"),						}; //$NON-NLS-1$
-
-	final static boolean			DEBUG					= false;
+			I18N.getString("Saturday"),						};							//$NON-NLS-1$
 
 	public static final String[]	MONTH_NAMES				= new String[] {
 			I18N.getString("January"), I18N.getString("February"), //$NON-NLS-1$ //$NON-NLS-2$
@@ -621,13 +632,22 @@ public class TemporalPattern {
 	public static final int			TIMESTAMPTYPE_ONETIME	= 1;
 	public static final int			TIMESTAMPTYPE_PERIODIC	= 3;
 
-	public static final String		TYPE					= "TemporalPattern"; //$NON-NLS-1$
+	public static final String		TYPE					= "TemporalPattern";		//$NON-NLS-1$
 
 	public static final int[]		weekNumber				= new int[] {
 			Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY,
 			Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY,
 			Calendar.SATURDAY								};
+
+	final static boolean			DEBUG					= false;
+	private Date					created;
+	private Identifier				creator_id;
+	//private ArrayList cron_strings;
+	private String					description;
 	private long					endPeriod;
+	private Identifier				id;
+	private Date					modified;
+	private Identifier				modifier_id;
 
 	private long					startPeriod;
 	private HashMap					templates;
@@ -635,26 +655,44 @@ public class TemporalPattern {
 
 	private int						type					= TIMESTAMPTYPE_ONETIME;
 
-	public TemporalPattern() {
-		// nothing
+	public TemporalPattern(Identifier id) {
+		/* retrieve */
 	}
 
-	public static void main(String[] args) {
-		//String template = ;
-		//String template = "*/2,3,5";
-		TemporalPattern ts = new TemporalPattern();
-		Calendar c = Calendar.getInstance();
-		ts.setStartPeriod(c.getTimeInMillis() - 1000 * 60 * 30);
-		ts.setEndPeriod(c.getTimeInMillis() + 1000 * 60 * 60 * 1);
+	public TemporalPattern(TemporalPattern_Transferable tpt) {
+		this.id = new Identifier(tpt.id);
+		this.created = new Date(tpt.created);
+		this.modified = new Date(tpt.modified);
+		this.creator_id = new Identifier(tpt.creator_id);
+		this.modifier_id = new Identifier(tpt.modifier_id);
+		this.description = new String(tpt.description);
+		//this.cron_strings = new ArrayList(tpt.cron_strings.length);
+		for (int i = 0; i < tpt.cron_strings.length; i++) {
+			//this.cron_strings.add(new String(tpt.cron_strings[i]));
+			addTemplate(new String(tpt.cron_strings[i]));
+		}
+	}
 
-		//ts.addTemplate("*/10 */2,13 * * *"); //$NON-NLS-1$
-		//ts.addTemplate("12,5-8 * * * *"); //$NON-NLS-1$
-		//ts.addTemplate("*/20 * * 0,4,5 */2,0,6"); //$NON-NLS-1$
-		//ts.addTemplate("*/20 0-9 */2 2,4,5 0,6");
-		ts.addTemplate("20 * * * *"); //$NON-NLS-1$
-		ts.addTemplate("*/3 * * * *"); //$NON-NLS-1$
-		ts.printTimes();
+	private TemporalPattern(Identifier id, Date created, Date modified,
+			Identifier creator_id, Identifier modifier_id, String description,
+			ArrayList cron_strings) {
+		this.id = id;
+		this.created = created;
+		this.modified = modified;
+		this.creator_id = creator_id;
+		this.modifier_id = modifier_id;
+		this.description = description;
+		//this.cron_strings = cron_strings;
+		for (Iterator it = cron_strings.iterator(); it.hasNext();) {
+			addTemplate((String) it.next());
+		}
+	}
 
+	public static TemporalPattern create(Identifier id, Date created,
+			Date modified, Identifier creator_id, Identifier modifier_id,
+			String description, ArrayList cron_strings) {
+		return new TemporalPattern(id, created, modified, creator_id,
+				modifier_id, description, cron_strings);
 	}
 
 	public void addTemplate(String template) {
@@ -669,10 +707,52 @@ public class TemporalPattern {
 	}
 
 	/**
+	 * @return Returns the created.
+	 */
+	public Date getCreated() {
+		return this.created;
+	}
+
+	/**
+	 * @return Returns the creatorId.
+	 */
+	public Identifier getCreatorId() {
+		return this.creator_id;
+	}
+
+	/**
+	 * @return Returns the description.
+	 */
+	public String getDescription() {
+		return this.description;
+	}
+
+	/**
 	 * @return Returns the endPeriod.
 	 */
 	public long getEndPeriod() {
 		return this.endPeriod;
+	}
+
+	/**
+	 * @return Returns the id.
+	 */
+	public Identifier getId() {
+		return this.id;
+	}
+
+	/**
+	 * @return Returns the modified.
+	 */
+	public Date getModified() {
+		return this.modified;
+	}
+
+	/**
+	 * @return Returns the modifierId.
+	 */
+	public Identifier getModifier_id() {
+		return this.modifier_id;
 	}
 
 	/**
@@ -702,11 +782,6 @@ public class TemporalPattern {
 			//System.out.println("collection.size():" + collection.size());
 		}
 		return collection;
-	}
-
-	public void removeAll() {
-		this.times = null;
-		this.templates.clear();
 	}
 
 	public long[] getTimes() {
@@ -754,6 +829,28 @@ public class TemporalPattern {
 		return this.times;
 	}
 
+	public Object getTransferable() {
+		//		String[] cr_strs = new String[this.cron_strings.size()];
+		//		for (Iterator iterator = this.cron_strings.iterator(); iterator
+		//				.hasNext();)
+		//			cr_strs[i++] = new String((String) iterator.next());
+		String[] cr_strs = new String[this.templates.size()];
+		{
+			int i = 0;
+			for (Iterator it = this.templates.keySet().iterator(); it.hasNext();) {
+				TimeLine line = (TimeLine) this.templates.get(it.next());
+				cr_strs[i++] = new String(line.getTemplate());
+			}
+		}
+
+		return new TemporalPattern_Transferable(
+				(Identifier_Transferable) this.id.getTransferable(),
+				this.created.getTime(), this.modified.getTime(),
+				(Identifier_Transferable) this.creator_id.getTransferable(),
+				(Identifier_Transferable) this.modifier_id.getTransferable(),
+				new String(this.description), cr_strs);
+	}
+
 	/**
 	 * @return Returns the type.
 	 */
@@ -775,6 +872,35 @@ public class TemporalPattern {
 		}
 	}
 
+	public void removeAll() {
+		this.times = null;
+		this.templates.clear();
+	}
+
+	/**
+	 * @param created
+	 *            The created to set.
+	 */
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+
+	/**
+	 * @param creatorId
+	 *            The creatorId to set.
+	 */
+	public void setCreator_id(Identifier creatorId) {
+		this.creator_id = creatorId;
+	}
+
+	/**
+	 * @param description
+	 *            The description to set.
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	/**
 	 * @param endPeriod
 	 *            The endPeriod to set.
@@ -782,6 +908,30 @@ public class TemporalPattern {
 	public void setEndPeriod(long endPeriod) {
 		this.times = null;
 		this.endPeriod = endPeriod;
+	}
+
+	/**
+	 * @param id
+	 *            The id to set.
+	 */
+	public void setId(Identifier id) {
+		this.id = id;
+	}
+
+	/**
+	 * @param modified
+	 *            The modified to set.
+	 */
+	public void setModified(Date modified) {
+		this.modified = modified;
+	}
+
+	/**
+	 * @param modifierId
+	 *            The modifierId to set.
+	 */
+	public void setModifier_id(Identifier modifierId) {
+		this.modifier_id = modifierId;
 	}
 
 	/**
