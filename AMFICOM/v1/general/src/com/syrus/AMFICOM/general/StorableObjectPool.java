@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.30 2005/02/18 15:19:28 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.31 2005/02/18 16:35:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/02/18 15:19:28 $
+ * @version $Revision: 1.31 $, $Date: 2005/02/18 16:35:32 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -489,8 +489,10 @@ public abstract class StorableObjectPool {
 		}
 
 		if (storableObject.isChanged()) {
-			Map levelSavingObjectsMap = (Map) this.savingObjects.get(dependencyLevel);
-			if (levelSavingObjectsMap == null) {
+			Map levelSavingObjectsMap;
+			if (this.savingObjects.size() > dependencyLevel)
+				levelSavingObjectsMap = (Map) this.savingObjects.get(dependencyLevel);
+			else {
 				levelSavingObjectsMap = new HashMap();
 				this.savingObjects.add(dependencyLevel, levelSavingObjectsMap);
 			}
