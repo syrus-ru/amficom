@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.13 2005/01/31 12:19:19 krupenn Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.14 2005/02/01 16:16:13 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,83 +11,86 @@
 
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveMarkCommand;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkController;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapState;
-import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.Client.Map.UI.MotionDescriptor;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.Mark;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.Client.Map.Controllers.MarkController;
-import com.syrus.AMFICOM.Client.Map.UI.MotionDescriptor;
 import com.syrus.AMFICOM.mapview.Selection;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
- * —тратеги€ управлени€ метки на физической линии
- * 
- * 
- * 
- * @version $Revision: 1.13 $, $Date: 2005/01/31 12:19:19 $
- * @module map_v2
+ * —тратеги€ управлени€ метки на физической линии.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.14 $, $Date: 2005/02/01 16:16:13 $
+ * @module mapviewclient_v1
  */
-public final class MapMarkElementStrategy implements  MapStrategy 
+public final class MapMarkElementStrategy extends MapStrategy 
 {
-	LogicalNetLayer logicalNetLayer;
-	Point point;
-	ApplicationContext aContext;
-	
+	/**
+	 * ћетка.
+	 */
 	Mark mark;
+	/**
+	 *  оманда перемещени€ метки вдоль линии.  оманда создаетс€ при начале
+	 * перемещени€ и исполн€етс€ при завершении перемещени€.
+	 */
 	MoveMarkCommand command;
 
+	/**
+	 * instance.
+	 */
 	private static MapMarkElementStrategy instance = new MapMarkElementStrategy();
 
+	/**
+	 * Private constructor.
+	 */
 	private MapMarkElementStrategy()
 	{
 	}
 
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapMarkElementStrategy getInstance()
 	{
 		return instance;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMapElement(MapElement me)
 	{
 		this.mark = (Mark)me;
 	}
 	
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-		this.logicalNetLayer = logicalNetLayer;
-		this.aContext = logicalNetLayer.getContext();
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public void doContextChanges(MouseEvent me)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");
 		
 		MapState mapState = logicalNetLayer.getMapState();
-		Map map = mark.getMap();
 		
 		MapCoordinatesConverter converter = logicalNetLayer;
 
 		int mouseMode = mapState.getMouseMode();
 		int actionMode = mapState.getActionMode();
 
-		point = me.getPoint();
+		Point point = me.getPoint();
 
 		if(SwingUtilities.isLeftMouseButton(me))
 		{

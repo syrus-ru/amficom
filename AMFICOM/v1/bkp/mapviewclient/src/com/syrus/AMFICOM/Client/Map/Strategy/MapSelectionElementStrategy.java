@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.9 2005/02/01 15:14:50 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.10 2005/02/01 16:16:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,11 +12,9 @@
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.Selection;
@@ -28,45 +26,55 @@ import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 
 /**
- * Стратегия управления топологическим узлом
- * 
- * 
- * 
- * @version $Revision: 1.9 $, $Date: 2005/02/01 15:14:50 $
- * @module map_v2
+ * Стратегия управления выделенными объектами.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.10 $, $Date: 2005/02/01 16:16:13 $
+ * @module mapviewclient_v1
  */
-public final class MapSelectionElementStrategy implements  MapStrategy 
+public final class MapSelectionElementStrategy extends MapStrategy 
 {
-	LogicalNetLayer logicalNetLayer;
-	ApplicationContext aContext;
-
-	Selection sel;
+	/**
+	 * Набор выделенных элементов.
+	 */
+	Selection selection;
+	/**
+	 * Команда, выполняемая в соответствии со стратегией действий над 
+	 * выделенными объектами.
+	 */
 	Command command;
 
+	/**
+	 * instance.
+	 */
 	private static MapSelectionElementStrategy instance = new MapSelectionElementStrategy();
 
+	/**
+	 * Private constructor.
+	 */
 	private MapSelectionElementStrategy()
 	{
 	}
 
+	/**
+	 * get instance.
+	 * @return instance
+	 */
 	public static MapSelectionElementStrategy getInstance()
 	{
 		return instance;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMapElement(MapElement me)
 	{
-		this.sel = (Selection)me;
+		this.selection = (Selection)me;
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-		this.logicalNetLayer = logicalNetLayer;
-		this.aContext = logicalNetLayer.getContext();
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public void doContextChanges(MouseEvent me)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");
@@ -96,24 +104,24 @@ public final class MapSelectionElementStrategy implements  MapStrategy
 						if(mel.isSelected())
 						{
 							mel.setSelected(false);
-							sel.remove(mel);
-							if(sel.getElements().size() == 0)
+							selection.remove(mel);
+							if(selection.getElements().size() == 0)
 							{
 								logicalNetLayer.setCurrentMapElement(
 										com.syrus.AMFICOM.mapview.VoidElement.getInstance(
 												logicalNetLayer.getMapView()));
 							}
 							else
-							if(sel.getElements().size() == 1)
+							if(selection.getElements().size() == 1)
 							{
 								logicalNetLayer.setCurrentMapElement(
-									(MapElement)sel.getElements().get(0));
+									(MapElement)selection.getElements().get(0));
 							}
 						}//if(mel.isSelected()
 						else
 						{
 							mel.setSelected(true);
-							sel.add(mel);
+							selection.add(mel);
 						}
 					}
 				}
@@ -126,7 +134,7 @@ public final class MapSelectionElementStrategy implements  MapStrategy
 					}
 					else
 					{
-						if(!sel.getElements().contains(mel))
+						if(!selection.getElements().contains(mel))
 						{
 							logicalNetLayer.deselectAll();
 							logicalNetLayer.setCurrentMapElement(mel);

@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElementStrategy.java,v 1.7 2005/01/31 12:19:19 krupenn Exp $
+ * $Id: MapNodeLinkElementStrategy.java,v 1.8 2005/02/01 16:16:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,11 +11,8 @@
 
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreatePhysicalNodeCommandBundle;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -26,46 +23,55 @@ import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 
 /**
- * Стратегия управления фрагментом линии
- * 
- * 
- * 
- * @version $Revision: 1.7 $, $Date: 2005/01/31 12:19:19 $
- * @module map_v2
+ * Стратегия управления фрагментом линии.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.8 $, $Date: 2005/02/01 16:16:13 $
+ * @module mapviewclient_v1
  */
-public final class MapNodeLinkElementStrategy implements  MapStrategy 
+public final class MapNodeLinkElementStrategy extends MapStrategy 
 {
-	LogicalNetLayer logicalNetLayer;
-	ApplicationContext aContext;
-	
+	/**
+	 * Фрагмент лниии.
+	 */
 	NodeLink nodeLink;
 
-	Command command;
+	/**
+	 * Команда вставки нового топологического узла.
+	 */
+	CreatePhysicalNodeCommandBundle command;
 
+	/**
+	 * Instance.
+	 */
 	private static MapNodeLinkElementStrategy instance = new MapNodeLinkElementStrategy();
 
+	/**
+	 * Private constructor.
+	 */
 	private MapNodeLinkElementStrategy()
 	{
 	}
 
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapNodeLinkElementStrategy getInstance()
 	{
 		return instance;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMapElement(MapElement me)
 	{
 		this.nodeLink = (NodeLink)me;
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-		this.logicalNetLayer = logicalNetLayer;
-		this.aContext = logicalNetLayer.getContext();
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public void doContextChanges(MouseEvent me)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");

@@ -1,5 +1,5 @@
 /**
- * $Id: VoidStrategy.java,v 1.2 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: VoidStrategy.java,v 1.3 2005/02/01 16:16:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,36 +15,46 @@ import com.syrus.AMFICOM.map.MapElement;
 
 import java.awt.event.MouseEvent;
 /**
- * Пустая стратегия. Ничего не делает
- * 
- * 
- * 
- * @version $Revision: 1.2 $, $Date: 2004/12/22 16:38:42 $
- * @module map_v2
+ * Пустая стратегия. Ничего не делает.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.3 $, $Date: 2005/02/01 16:16:13 $
+ * @module mapviewclient_v1
  */
-public final class VoidStrategy implements MapStrategy 
+public final class VoidStrategy extends MapStrategy 
 {
+	/**
+	 * Instance.
+	 */
 	private static VoidStrategy instance = new VoidStrategy();
 	
+	/**
+	 * Private constructor.
+	 */
 	private VoidStrategy()
 	{
 	}
 	
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static VoidStrategy getInstance()
 	{
 		return instance;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <br>Empty.
+	 */
 	public void doContextChanges(MouseEvent me)
 	{
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-	}
-	
+	/**
+	 * {@inheritDoc}
+	 * <br>Empty.
+	 */
 	public void setMapElement(MapElement me)
 	{
 	}

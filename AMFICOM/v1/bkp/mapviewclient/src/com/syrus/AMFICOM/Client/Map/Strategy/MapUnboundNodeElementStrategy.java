@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.10 2005/01/31 12:19:19 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.11 2005/02/01 16:16:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,16 +12,14 @@
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
@@ -31,49 +29,56 @@ import java.awt.event.MouseEvent;
 import java.util.Iterator;
 
 import javax.swing.SwingUtilities;
-import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
- * Стратегия управления узлом
- * 
- * 
- * 
- * @version $Revision: 1.10 $, $Date: 2005/01/31 12:19:19 $
- * @module map_v2
+ * Стратегия управления непривязанным узлом.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.11 $, $Date: 2005/02/01 16:16:13 $
+ * @module mapviewclient_v1
  */
-public final class MapUnboundNodeElementStrategy implements  MapStrategy 
+public final class MapUnboundNodeElementStrategy extends MapStrategy 
 {
-	LogicalNetLayer logicalNetLayer;
-	ApplicationContext aContext;
-
+	/**
+	 * Непривязанный узел.
+	 */
 	UnboundNode unbound;
+	/**
+	 * Команда, выполняемая в соответствии со стратегией действий на узлом.
+	 */
 	Command command;
 
+	/**
+	 * Instance.
+	 */
 	private static MapUnboundNodeElementStrategy instance = new MapUnboundNodeElementStrategy();
 
+	/**
+	 * Private constructor.
+	 */
 	private MapUnboundNodeElementStrategy()
 	{
 	}
 
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapUnboundNodeElementStrategy getInstance()
 	{
 		return instance;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMapElement(MapElement me)
 	{
 		this.unbound = (UnboundNode)me;
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-		this.logicalNetLayer = logicalNetLayer;
-		this.aContext = logicalNetLayer.getContext();
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public void doContextChanges(MouseEvent me)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");

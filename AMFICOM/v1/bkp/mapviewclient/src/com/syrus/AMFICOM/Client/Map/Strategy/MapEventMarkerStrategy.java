@@ -1,5 +1,5 @@
 /**
- * $Id: MapEventMarkerStrategy.java,v 1.6 2005/01/31 12:19:19 krupenn Exp $
+ * $Id: MapEventMarkerStrategy.java,v 1.7 2005/02/01 16:16:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,9 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.EventMarker;
@@ -24,20 +22,16 @@ import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 
 /**
- * Стратегия управления маркером события
- * 
- * 
- * 
- * @version $Revision: 1.6 $, $Date: 2005/01/31 12:19:19 $
- * @module map_v2
+ * Стратегия управления маркером события.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.7 $, $Date: 2005/02/01 16:16:13 $
+ * @module mapviewclient_v1
  */
-public final class MapEventMarkerStrategy implements  MapStrategy 
+public final class MapEventMarkerStrategy extends MapStrategy 
 {
-	LogicalNetLayer logicalNetLayer;
-	ApplicationContext aContext;
-
+	/**
+	 * Маркер события.
+	 */
 	EventMarker marker;
 
 	private static MapEventMarkerStrategy instance = new MapEventMarkerStrategy();
@@ -51,17 +45,17 @@ public final class MapEventMarkerStrategy implements  MapStrategy
 		return instance;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMapElement(MapElement me)
 	{
 		this.marker = (EventMarker)me;
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-		this.logicalNetLayer = logicalNetLayer;
-		this.aContext = logicalNetLayer.getContext();
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public void doContextChanges(MouseEvent me)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");

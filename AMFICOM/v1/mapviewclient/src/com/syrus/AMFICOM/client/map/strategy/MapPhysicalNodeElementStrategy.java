@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.11 2005/01/31 12:19:19 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.12 2005/02/01 16:16:13 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -12,21 +12,20 @@
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindPhysicalNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateNodeLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveFixedDistanceCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
+import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
@@ -37,32 +36,40 @@ import java.awt.event.MouseEvent;
 import java.util.Iterator;
 
 import javax.swing.SwingUtilities;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
- * —тратеги€ управлени€ топологическим узлом
- * 
- * 
- * 
- * @version $Revision: 1.11 $, $Date: 2005/01/31 12:19:19 $
- * @module map_v2
+ * —тратеги€ управлени€ топологическим узлом.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.12 $, $Date: 2005/02/01 16:16:13 $
+ * @module mapviewclient_v1
  */
-public final class MapPhysicalNodeElementStrategy implements  MapStrategy 
+public final class MapPhysicalNodeElementStrategy extends MapStrategy 
 {
-	LogicalNetLayer logicalNetLayer;
-	ApplicationContext aContext;
-
+	/**
+	 * “опологический узел.
+	 */
 	TopologicalNode node;
+	/**
+	 *  оманда, выполн€ема€ в соответствии со стратегией действий на узлом.
+	 */
 	Command command;
 
+	/**
+	 * Instance.
+	 */
 	private static MapPhysicalNodeElementStrategy instance = new MapPhysicalNodeElementStrategy();
 
+	/**
+	 * Private constructor.
+	 */
 	private MapPhysicalNodeElementStrategy()
 	{
 	}
 
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapPhysicalNodeElementStrategy getInstance()
 	{
 		return instance;
@@ -106,7 +113,7 @@ public final class MapPhysicalNodeElementStrategy implements  MapStrategy
 					}
 					else
 					{
-						Selection sel = new Selection(logicalNetLayer.getMapView().getMap());
+						Selection sel = new Selection(map);
 						sel.addAll(logicalNetLayer.getSelectedElements());
 						logicalNetLayer.setCurrentMapElement(sel);
 					}
@@ -148,7 +155,7 @@ public final class MapPhysicalNodeElementStrategy implements  MapStrategy
 					node.setCanBind(false);
 					
 
-					for(Iterator it = logicalNetLayer.getMapView().getMap().getSiteNodes().iterator(); it.hasNext();)
+					for(Iterator it = map.getSiteNodes().iterator(); it.hasNext();)
 					{
 						SiteNode sit = (SiteNode)it.next();
 
@@ -192,7 +199,7 @@ public final class MapPhysicalNodeElementStrategy implements  MapStrategy
 					{
 						if(node.isCanBind())
 						{
-							for(Iterator it = logicalNetLayer.getMapView().getMap().getSiteNodes().iterator(); it.hasNext();)
+							for(Iterator it = map.getSiteNodes().iterator(); it.hasNext();)
 							{
 								SiteNode site = (SiteNode)it.next();
 								SiteNodeController snc = (SiteNodeController)logicalNetLayer.getMapViewController().getController(site);

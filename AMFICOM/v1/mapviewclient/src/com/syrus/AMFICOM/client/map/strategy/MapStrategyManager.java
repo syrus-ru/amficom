@@ -1,28 +1,39 @@
+/**
+ * $Id: MapStrategyManager.java,v 1.9 2005/02/01 16:16:13 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
+
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.Mark;
-import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.mapview.AlarmMarker;
-import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.EventMarker;
-import com.syrus.AMFICOM.mapview.Marker;
-import com.syrus.AMFICOM.mapview.Selection;
-import com.syrus.AMFICOM.mapview.UnboundNode;
-import com.syrus.AMFICOM.mapview.VoidElement;
 
 import java.util.HashMap;
-import com.syrus.AMFICOM.mapview.MeasurementPath;
 
+/**
+ * Хранилище стратегий для элементов карты.
+ * @author $Author: krupenn $
+ * @version $Revision: 1.9 $, $Date: 2005/02/01 16:16:13 $
+ * @module mapviewclient_v1
+ */
 public final class MapStrategyManager 
 {
+	/**
+	 * Конструктор закрыт, так как в классе используются только статические
+	 * методы.
+	 */
 	private MapStrategyManager()
 	{
 	}
 
+	/**
+	 * Таблица стратегий.
+	 */
 	private static java.util.Map strategyMap = new HashMap();
 
 	static
@@ -55,11 +66,16 @@ public final class MapStrategyManager
 			MapSelectionElementStrategy.getInstance());
 	}
 	
-	public static MapStrategy getStrategy(MapElement me)
+	/**
+	 * Получить стратегию действий с элементом карты.
+	 * @param mapElement элемент карты
+	 * @return стратегия
+	 */
+	public static MapStrategy getStrategy(MapElement mapElement)
 	{
-		MapStrategy strategy = (MapStrategy )strategyMap.get(me.getClass());
+		MapStrategy strategy = (MapStrategy )strategyMap.get(mapElement.getClass());
 		if(strategy != null)
-			strategy.setMapElement(me);
+			strategy.setMapElement(mapElement);
 		return strategy;
 	}
 }

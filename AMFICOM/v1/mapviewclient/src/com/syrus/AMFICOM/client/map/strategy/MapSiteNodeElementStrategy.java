@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElementStrategy.java,v 1.8 2005/01/31 12:19:19 krupenn Exp $
+ * $Id: MapSiteNodeElementStrategy.java,v 1.9 2005/02/01 16:16:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,13 +12,11 @@
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateNodeLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveFixedDistanceCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -30,45 +28,54 @@ import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 
 /**
- * Стратегия управления узлом
- * 
- * 
- * 
- * @version $Revision: 1.8 $, $Date: 2005/01/31 12:19:19 $
- * @module map_v2
+ * Стратегия управления узлом.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.9 $, $Date: 2005/02/01 16:16:13 $
+ * @module mapviewclient_v1
  */
-public final class MapSiteNodeElementStrategy implements  MapStrategy 
+public final class MapSiteNodeElementStrategy extends MapStrategy 
 {
-	LogicalNetLayer logicalNetLayer;
-	ApplicationContext aContext;
-
+	/**
+	 * Сетевой узел.
+	 */
 	SiteNode site;
+	/**
+	 * Команда, выполняемая в соответствии со стратегией действий на узлом.
+	 */
 	Command command;
 
+	/**
+	 * Instance.
+	 */
 	private static MapSiteNodeElementStrategy instance = new MapSiteNodeElementStrategy();
 
+	/**
+	 * Private constructor.
+	 */
 	private MapSiteNodeElementStrategy()
 	{
 	}
 
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapSiteNodeElementStrategy getInstance()
 	{
 		return instance;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMapElement(MapElement me)
 	{
 		this.site = (SiteNode)me;
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-		this.logicalNetLayer = logicalNetLayer;
-		this.aContext = logicalNetLayer.getContext();
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public void doContextChanges(MouseEvent me)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");

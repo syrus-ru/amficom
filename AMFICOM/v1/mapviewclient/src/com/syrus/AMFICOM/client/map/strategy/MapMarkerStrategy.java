@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.13 2005/01/31 12:19:19 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.14 2005/02/01 16:16:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,62 +14,69 @@ package com.syrus.AMFICOM.Client.Map.Strategy;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapState;
+import com.syrus.AMFICOM.Client.Map.UI.MotionDescriptor;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.Client.Map.UI.MotionDescriptor;
 import com.syrus.AMFICOM.mapview.Marker;
-
 import com.syrus.AMFICOM.mapview.Selection;
-import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
+
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+
 import javax.swing.SwingUtilities;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
- * Стратегия управления маркером
+ * Стратегия управления маркером.
  * 
- * 
- * 
- * @version $Revision: 1.13 $, $Date: 2005/01/31 12:19:19 $
- * @module map_v2
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.14 $, $Date: 2005/02/01 16:16:13 $
+ * @module mapviewclient_v1
  */
-public final class MapMarkerStrategy implements  MapStrategy 
+public final class MapMarkerStrategy extends MapStrategy 
 {
-	LogicalNetLayer logicalNetLayer;
-	ApplicationContext aContext;
-
+	/**
+	 * Маркер.
+	 */
 	Marker marker;
 
+	/**
+	 * Instance.
+	 */
 	private static MapMarkerStrategy instance = new MapMarkerStrategy();
 
+	/**
+	 * Private constructor.
+	 */
 	private MapMarkerStrategy()
 	{
 	}
 
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapMarkerStrategy getInstance()
 	{
 		return instance;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMapElement(MapElement me)
 	{
 		this.marker = (Marker)me;
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-		this.logicalNetLayer = logicalNetLayer;
-		this.aContext = logicalNetLayer.getContext();
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public void doContextChanges(MouseEvent me)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");

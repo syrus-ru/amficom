@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.14 2005/01/31 12:19:19 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.15 2005/02/01 16:16:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,17 +11,15 @@
 
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 import java.awt.Point;
@@ -34,46 +32,55 @@ import java.util.Set;
 import javax.swing.SwingUtilities;
 
 /**
- * Стратегия управления элементами, когда нет выбранных элементов
- * 
- * 
- * 
- * @version $Revision: 1.14 $, $Date: 2005/01/31 12:19:19 $
- * @module map_v2
+ * Стратегия управления элементами, когда нет выбранных элементов.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.15 $, $Date: 2005/02/01 16:16:13 $
+ * @module mapviewclient_v1
  */
-public final class MapVoidElementStrategy implements  MapStrategy 
+public final class MapVoidElementStrategy extends MapStrategy 
 {
-	LogicalNetLayer logicalNetLayer;
-	ApplicationContext aContext;
-	
+	/**
+	 * Топологическая схема.
+	 */
 	Map map;
+	/**
+	 * Вид карты.
+	 */
 	MapView mapView;
 
+	/**
+	 * Instance.
+	 */
 	private static MapVoidElementStrategy instance = new MapVoidElementStrategy();
 
+	/**
+	 * Private constructor.
+	 */
 	private MapVoidElementStrategy()
 	{
 	}
 
+	/**
+	 * Get instance.
+	 * @return instance
+	 */
 	public static MapVoidElementStrategy getInstance()
 	{
 		return instance;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMapElement(MapElement me)
 	{
 		this.mapView = ((VoidElement)me).getMapView();
 		this.map = ((VoidElement)me).getMap();
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
-		this.logicalNetLayer = logicalNetLayer;
-		this.aContext = logicalNetLayer.getContext();
-	}
-
+	/**
+	 * {@inheritDoc}
+	 */
 	public void doContextChanges(MouseEvent me)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");
