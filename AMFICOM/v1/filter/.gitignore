@@ -11,3 +11,4 @@ test
 *.gz
 *.swp
 *~
+Makefile.inc

@@ -10,3 +10,4 @@ resources
 *.tar
 *.gz
 *.swp
+Makefile.inc

@@ -11,3 +11,4 @@ lib
 .mach
 .corba
 .client
+Makefile.inc
