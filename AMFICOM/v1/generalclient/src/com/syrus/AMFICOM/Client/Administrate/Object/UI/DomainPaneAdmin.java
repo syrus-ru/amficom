@@ -54,7 +54,7 @@ public class DomainPaneAdmin extends PropertiesPanel
     opap.enableExecutingEditing(false);
 
     jtp.add(dgp.getName(), dgp);
-//    jtp.add(ddp.getName(), ddp);
+    jtp.add(ddp.getName(), ddp);
     jtp.add(opap.getName(), opap);
 
   }
@@ -95,7 +95,7 @@ public class DomainPaneAdmin extends PropertiesPanel
       domain.opa.id = aContext.getDataSourceInterface().GetUId(ObjectPermissionAttributes.typ);
     }
     domain.updateLocalFromTransferable();
-//    ddp.setObjectResource(or);
+    ddp.setObjectResource(or);
     dgp.setObjectResource(or);
     opap.setPermissionObjectResource(domain);
     opap.setObjectResource(domain.opa);
@@ -111,7 +111,7 @@ public class DomainPaneAdmin extends PropertiesPanel
     this.showTheWindow(true);
 
     Date d = new Date();
-//    ddp.modify();
+    ddp.modify();
     dgp.modify();
     opap.modify();
 
