@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.82 2005/03/28 15:59:25 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.83 2005/03/31 09:04:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/03/28 15:59:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.83 $, $Date: 2005/03/31 09:04:27 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -511,6 +511,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	}
 
 	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+//		Log.debugMessage("ResultDatabase.retrieveByCondition | conditionQuery : " + conditionQuery , Log.FINEST);
 		Collection collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveResultParametersByOneQuery(collection);
 		return collection;
