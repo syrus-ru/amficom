@@ -65,6 +65,7 @@ module corba {
 ////////////////////// Characteristic /////////////////////
 
 	enum CharacteristicSort {
+		CHARACTERISTIC_SORT_DOMAIN,
 		CHARACTERISTIC_SORT_SERVER,
 		CHARACTERISTIC_SORT_MCM,
 		CHARACTERISTIC_SORT_TRANSMISSIONPATH,
@@ -176,6 +177,8 @@ module corba {
 		wstring local_address;
 	};
 
+	typedef sequence <MonitoredElement_Transferable> MonitoredElementSeq_Transferable;
+
 	struct KIS_Transferable	{
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
 	  long long created;
@@ -187,6 +190,7 @@ module corba {
 
 		wstring name;
 		wstring description;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable equipment_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable mcm_id;
 
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable measurement_port_ids;
@@ -217,11 +221,6 @@ module corba {
 
 ///////////////////////// Equipment ///////////////////////
 
-	enum EquipmentSort {
-		EQUIPMENT_SORT_KIS,
-		EQUIPMENT_SORT_HZ_CHO
-	};
-
 	struct Equipment_Transferable	{
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
 	  long long created;
@@ -230,8 +229,8 @@ module corba {
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
-		
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable monitored_element_ids;
+//
+//		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable monitored_element_ids;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 
@@ -239,13 +238,9 @@ module corba {
 		wstring description;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable image_id;
 
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable port_ids;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable cable_port_ids;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable special_port_ids;
 
-		EquipmentSort sort;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable kis_id;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
 
 	struct MCM_Transferable {
