@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.30 2004/11/16 11:00:35 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.31 2004/11/17 08:22:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/11/16 11:00:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2004/11/17 08:22:37 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -421,7 +421,7 @@ public class ConfigurationStorableObjectPool {
 			default:
 				Log
 						.errorMessage("ConfigurationStorableObjectPool.loadStorableObject | Unknown entity: "
-								+ objectId.getObjectEntity());
+								+ ObjectEntities.codeToString(objectId.getMajor()));
 				storableObject = null;
 		}
 		return storableObject;
@@ -565,7 +565,7 @@ public class ConfigurationStorableObjectPool {
 		if (objectPool != null) { return (StorableObject) objectPool.put(objectId, storableObject); }
 		throw new IllegalObjectEntityException(
 							"ConfigurationStorableObjectPool.putStorableObject | Illegal object entity: '"
-									+ objectId.getObjectEntity() + "'",
+									+ ObjectEntities.codeToString(objectId.getMajor()) + "'",
 							IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 	

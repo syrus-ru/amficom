@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.27 2004/11/16 12:33:17 bob Exp $
+ * $Id: PortDatabase.java,v 1.28 2004/11/17 08:22:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/16 12:33:17 $
+ * @version $Revision: 1.28 $, $Date: 2004/11/17 08:22:37 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -94,9 +94,9 @@ public class PortDatabase extends StorableObjectDatabase {
 		Identifier typeId = port.getType().getId();
 		Identifier equipmentId = port.getEquipmentId();
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ ((typeId != null) ? typeId.getCode(): SQL_NULL) + COMMA
+			+ DatabaseIdentifier.toSQLString(typeId) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(port.getDescription()) + APOSTOPHE	+ COMMA
-			+ ((equipmentId != null) ? equipmentId.getCode() : SQL_NULL) + COMMA 
+			+ DatabaseIdentifier.toSQLString(equipmentId) + COMMA 
 			+ port.getSort();
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.45 2004/11/12 12:24:05 max Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.46 2004/11/17 08:22:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2004/11/12 12:24:05 $
- * @author $Author: max $
+ * @version $Revision: 1.46 $, $Date: 2004/11/17 08:22:30 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -408,7 +408,7 @@ public class MeasurementStorableObjectPool {
 				break;
 			default:
 				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObject | Unknown entity: "
-						+ objectId.getObjectEntity());
+						+ ObjectEntities.codeToString(objectId.getMajor()));
 				storableObject = null;
 		}
 		return storableObject;
@@ -695,7 +695,7 @@ public class MeasurementStorableObjectPool {
 			} else {
 				throw new IllegalObjectEntityException(
 									"MeasurementStorableObjectPool.putStorableObject | Illegal object entity: '"
-											+ objectId.getObjectEntity()
+											+ ObjectEntities.codeToString(objectId.getMajor())
 											+ "'",
 									IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 			}

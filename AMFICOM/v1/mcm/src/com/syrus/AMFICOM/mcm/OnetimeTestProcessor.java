@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.15 2004/11/15 20:14:20 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.16 2004/11/17 08:22:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/11/15 20:14:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2004/11/17 08:22:23 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -106,7 +106,7 @@ public class OnetimeTestProcessor extends TestProcessor {
 				super.complete();
 			else if (super.lastMeasurementAcquisition && (time + super.forgetFrame < System.currentTimeMillis())){
 				Log.debugMessage("Past " + (super.forgetFrame/1000) + " sec since last measurement,"
-								 + " forget acquire results for '" + super.test.getId().getCode() + "'", Log.DEBUGLEVEL03);
+								 + " forget acquire results for '" + super.test.getId().getIdentifierString() + "'", Log.DEBUGLEVEL03);
 				super.abort();
 			}
 

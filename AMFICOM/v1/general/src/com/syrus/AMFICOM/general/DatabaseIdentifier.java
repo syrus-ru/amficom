@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseIdentifier.java,v 1.2 2004/11/16 10:57:10 bob Exp $
+ * $Id: DatabaseIdentifier.java,v 1.3 2004/11/17 08:22:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.sql.SQLException;
 /**
  * DB Identifier wrapper.
  * Main purpose is hide Identifier implementation and DB representation of it.
- * @version $Revision: 1.2 $, $Date: 2004/11/16 10:57:10 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/17 08:22:45 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -32,7 +32,7 @@ public class DatabaseIdentifier {
 		 * @todo when change DB Identifier model ,change setString() to
 		 *       setLong()
 		 */
-		preparedStatement.setString(parameterIndex, (id != null) ? id.getCode() : "");
+		preparedStatement.setString(parameterIndex, (id != null) ? id.getIdentifierString() : "");
 	}
 	
 	public static Identifier getIdentifier(ResultSet resultSet, String columnName) throws SQLException{
@@ -44,9 +44,13 @@ public class DatabaseIdentifier {
 	}
 	
 	public static String toSQLString(Identifier id) {
-		return "'" + id.getIdentifierString() + "'";
+		return "'" + ((id != null) ? id.getIdentifierString() : "") + "'";
 	}
 	
+	/**
+	 * @deprecated use {@link #toSQLString(null)}
+	 * @return
+	 */
 	public static String getNullSQLString() {
 		return "''";
 	}

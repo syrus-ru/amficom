@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.12 2004/11/16 10:33:32 bob Exp $
+ * $Id: Identifier.java,v 1.13 2004/11/17 08:22:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.io.Serializable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/11/16 10:33:32 $
+ * @version $Revision: 1.13 $, $Date: 2004/11/17 08:22:45 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -119,15 +119,14 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 		return this.major;
 	}
 
-//	/** @deprecated*/
-//	public String getMajorString() {
-//		return this.majorString;
-//	}
-
 	public long getMinor() {
 		return this.minor;
 	}
 	
+	/**
+	 * @deprecated use {@link #getMajor()} and {@link ObjectEntities#codeToString(short)}
+	 * @return
+	 */
 	public String getObjectEntity() {
 		return this.majorString;
 	}
@@ -139,24 +138,5 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 	public String toHexString() {
 		throw new UnsupportedOperationException();
 	}
-
-	/**
-	 * @deprecated use {@link com.syrus.AMFICOM.general.DatabaseIdentifier#toSQLString(Identifier)} 
-	 * @return
-	 */
-	public String toSQLString() {
-		return "'" + this.identifierString + "'";
-	}
-
-	public String getCode() {
-		return this.identifierString;
-	}
-
-	/**
-	 * @deprecated use {@link com.syrus.AMFICOM.general.DatabaseIdentifier#getNullSQLString()} 
-	 * @return
-	 */
-	public static String getNullSQLString() {
-		return "''";
-	}
+	
 }

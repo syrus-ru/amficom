@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.39 2004/11/17 08:13:30 bob Exp $
+ * $Id: ResultDatabase.java,v 1.40 2004/11/17 08:22:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/11/17 08:13:30 $
+ * @version $Revision: 1.40 $, $Date: 2004/11/17 08:22:30 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -164,7 +164,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				buffer.append(COMMA);				
 			default:
 				Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort
-						+ " of result '" + result.getId().getCode() + "'");
+						+ " of result '" + result.getId().getIdentifierString() + "'");
 		}
 		buffer.append(Integer.toString(resultSort));
 		buffer.append(COMMA);
@@ -205,7 +205,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 					break;
 				default:
 					Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort
-							+ " of result '" + result.getId().getCode() + "'");
+							+ " of result '" + result.getId().getIdentifierString() + "'");
 			}
 			preparedStatement.setInt(++i, result.getSort().value());
 			preparedStatement.setInt(++i, result.getAlarmLevel().value());
@@ -282,7 +282,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				break;
 			default:
 				Log.errorMessage("Unkown sort: " + resultSort + " of result "
-						+ result.getId().getCode());
+						+ result.getId().getIdentifierString());
 		}
 		result.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED), 
 							 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),

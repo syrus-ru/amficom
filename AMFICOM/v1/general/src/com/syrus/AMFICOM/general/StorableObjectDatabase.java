@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.49 2004/11/16 10:57:10 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.50 2004/11/17 08:22:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2004/11/16 10:57:10 $
+ * @version $Revision: 1.50 $, $Date: 2004/11/17 08:22:45 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -225,7 +225,7 @@ public abstract class StorableObjectDatabase {
 			StorableObject storableObject = (StorableObject)it.next();
 			Identifier localId = storableObject.getId();
 			if (idsList.contains(localId))
-				throw new CreateObjectException(getEnityName()+"Database.insertEntities | Input collection contains entity with the same id " + localId.getCode());
+				throw new CreateObjectException(getEnityName()+"Database.insertEntities | Input collection contains entity with the same id " + localId.getIdentifierString());
 			idsList.add(storableObject.getId());
 		}
 		idsList.clear();
@@ -245,7 +245,7 @@ public abstract class StorableObjectDatabase {
 			Log.debugMessage(this.getEnityName() + "Database.insertEntities | Trying: " + sql, Log.DEBUGLEVEL09);
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
-				storableObjectIdCode = storableObject.getId().getCode();
+				storableObjectIdCode = storableObject.getId().getIdentifierString();
 				this.setEntityForPreparedStatement(storableObject, preparedStatement);
 				Log.debugMessage(this.getEnityName() + "Database.insertEntities | Inserting  " + this.getEnityName() + " " + storableObjectIdCode, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
@@ -441,7 +441,7 @@ public abstract class StorableObjectDatabase {
 			StorableObject storableObject = (StorableObject)it.next();
 			Identifier localId = storableObject.getId();
 			if (idsList.contains(localId))
-				throw new UpdateObjectException(getEnityName()+"Database.checkAndUpdateEntities | Input collection contains entity with the same id " + localId.getCode());
+				throw new UpdateObjectException(getEnityName()+"Database.checkAndUpdateEntities | Input collection contains entity with the same id " + localId.getIdentifierString());
 			idsList.add(storableObject.getId());
 		}
 		
@@ -492,12 +492,12 @@ public abstract class StorableObjectDatabase {
 					if (versionCollisions == null){
 						versionCollisions = new StringBuffer();
 						versionCollisions.append(getEnityName() + "Database.checkAndUpdateEntity | conflict version for '");
-						versionCollisions.append(storableObject.getId().getCode());
+						versionCollisions.append(storableObject.getId().getIdentifierString());
 						versionCollisions.append('\'');
 					}
 					else{ 
 						versionCollisions.append(", '");
-						versionCollisions.append(storableObject.getId().getCode());	
+						versionCollisions.append(storableObject.getId().getIdentifierString());	
 						versionCollisions.append('\'');
 					}
 				}
@@ -871,7 +871,7 @@ public abstract class StorableObjectDatabase {
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 
 				StorableObject storableObject = (StorableObject) it.next();
-				storableObjectIdCode = storableObject.getId().getCode();
+				storableObjectIdCode = storableObject.getId().getIdentifierString();
 				int i = this.setEntityForPreparedStatement(storableObject, preparedStatement);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getId());
 				
