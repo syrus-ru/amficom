@@ -39,7 +39,7 @@ public final class UIStorage {
 	public static final Icon				CALENDAR_ICON			= UIStorage.getStringIcon("..");						//$NON-NLS-1$
 
 	public static final Icon				TIME_ICON				= UIStorage.getStringIcon("t");						//$NON-NLS-1$
-	
+
 	public static final Icon				FILTER_ICON				= UIStorage.getStringIcon("F");						//$NON-NLS-1$
 
 	public static final Icon				OPEN_FILE_ICON			= new ImageIcon(Toolkit.getDefaultToolkit()
@@ -65,7 +65,10 @@ public final class UIStorage {
 																			.getImage("images/refresh.gif"));				//$NON-NLS-1$
 	public static final Icon				SAVE_ICON				= new ImageIcon(Toolkit.getDefaultToolkit()
 																			.getImage("images/save.gif"));					//$NON-NLS-1$
-
+	public static final Icon				SESSION_OPEN_ICON		= new ImageIcon(Toolkit.getDefaultToolkit()
+																			.getImage("images/open_session.gif")
+																			.getScaledInstance(16, 16,
+																								Image.SCALE_SMOOTH));
 	public static final Icon				ZOOMIN_ICON				= new ImageIcon(Toolkit.getDefaultToolkit()
 																			.getImage("images/zoom_in.gif"));				//$NON-NLS-1$
 	public static final Icon				ZOOMOUT_ICON			= new ImageIcon(Toolkit.getDefaultToolkit()
