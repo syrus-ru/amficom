@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.60 2005/03/02 15:28:23 bass Exp $
+ * $Id: general.idl,v 1.61 2005/03/05 21:15:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -182,7 +182,7 @@ module corba {
 		WString256 description;
 		CharacteristicSort sort;
 		WString256 value;
-		Identifier_Transferable characterized_id;
+		Identifier_Transferable characterizable_id;
 		boolean is_editable;
 		boolean is_visible;
 		
@@ -238,8 +238,9 @@ module corba {
 	};
 
 	struct LinkedIdsCondition_Transferable {
-		short	entity_code;
-		IdentifierSeq_Transferable linked_ids;		
+		short entity_code;
+		short linked_entity_code;
+		IdentifierSeq_Transferable linked_ids;
 	};
 	
 		
