@@ -1,5 +1,5 @@
 /*
- * $Id: ImagePane.sqlj,v 1.1.2.4 2004/08/25 15:24:30 bass Exp $
+ * $Id: ImagePane.sqlj,v 1.1.2.5 2004/08/25 15:39:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,10 +13,11 @@ import com.syrus.AMFICOM.server.ResourcedbInterface;
 import com.syrus.util.database.*;
 import java.sql.*;
 import java.util.Vector;
+import oracle.sql.BLOB;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/08/25 15:24:30 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/08/25 15:39:45 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -191,5 +192,5 @@ final class ImagePane {
 		int y,
 		int width,
 		int height,
-		Blob img);
+		BLOB img);
 }

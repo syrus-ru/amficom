@@ -1,5 +1,5 @@
 /*
- * $Id: OracleAlarmReceiverMap.sqlj,v 1.1.2.2 2004/08/23 11:43:51 bass Exp $
+ * $Id: OracleAlarmReceiverMap.sqlj,v 1.1.2.3 2004/08/25 15:39:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,11 +14,12 @@ import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
 import com.syrus.util.corba.AuroraORBUtil;
 import java.io.UnsupportedEncodingException;
-import java.sql.*;
+import java.sql.SQLException;
+import oracle.sql.BLOB;
 import org.omg.CORBA.SystemException;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/23 11:43:51 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/25 15:39:45 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -132,7 +133,7 @@ final class OracleAlarmReceiverMap {
 			returnValue = null;
 
 			try {
-				Blob blob;
+				BLOB blob;
 				#sql {
 					SELECT ior INTO :blob FROM amficom.iors WHERE id = :(key.sess_id)
 				};
