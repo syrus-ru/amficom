@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.11 2004/08/03 17:15:58 arseniy Exp $
+ * $Id: Equipment.java,v 1.12 2004/08/04 08:59:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,12 +25,12 @@ import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/03 17:15:58 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/04 08:59:27 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
 
-public class Equipment extends MonitoredElement implements Characterized, TypedObject {
+public class Equipment extends MonitoredDomainMember implements Characterized, TypedObject {
 	private EquipmentType type;
 	private String name;
 	private String description;
@@ -64,8 +64,11 @@ public class Equipment extends MonitoredElement implements Characterized, TypedO
 					new Date(et.modified),
 					new Identifier(et.creator_id),
 					new Identifier(et.modifier_id),
-					new Identifier(et.domain_id),
-					new Identifier(et.monitored_element_id));
+					new Identifier(et.domain_id));
+		super.monitoredElementIds = new ArrayList(et.monitored_element_ids.length);
+		for (int i = 0; i < et.monitored_element_ids.length; i++)
+			super.monitoredElementIds.add(new Identifier(et.monitored_element_ids[i]));
+
 		this.type = (EquipmentType)ConfigurationObjectTypePool.getObjectType(new Identifier(et.type_id));
 		this.name = new String(et.name);
 		this.description = new String(et.description);
@@ -102,6 +105,10 @@ public class Equipment extends MonitoredElement implements Characterized, TypedO
 
 	public Equipment_Transferable getTransferable() {
 		int i = 0;
+		
+		Identifier_Transferable[] meIds = new Identifier_Transferable[super.monitoredElementIds.size()];
+		for (Iterator iterator = super.monitoredElementIds.iterator(); iterator.hasNext();)
+			meIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristicIds.size()];
 		for (Iterator iterator = this.characteristicIds.iterator(); iterator.hasNext();)
@@ -125,7 +132,7 @@ public class Equipment extends MonitoredElement implements Characterized, TypedO
 																			(Identifier_Transferable)super.creatorId.getTransferable(),
 																			(Identifier_Transferable)super.modifierId.getTransferable(),
 																			(Identifier_Transferable)super.domainId.getTransferable(),
-																			(Identifier_Transferable)super.monitoredElementId.getTransferable(),
+																			meIds,
 																			(Identifier_Transferable)this.type.getId().getTransferable(),
 																			new String(this.name),
 																			new String(this.description),
@@ -189,7 +196,6 @@ public class Equipment extends MonitoredElement implements Characterized, TypedO
 																						Identifier creatorId,
 																						Identifier modifierId,
 																						Identifier domainId,
-																						Identifier monitoredElementId,
 																						EquipmentType type,
 																						String name,
 																						String description,
@@ -200,8 +206,7 @@ public class Equipment extends MonitoredElement implements Characterized, TypedO
 												modified,
 												creatorId,
 												modifierId,
-												domainId,
-												monitoredElementId);
+												domainId);
 		this.type = type;
 		this.name = name;
 		this.description = description;
