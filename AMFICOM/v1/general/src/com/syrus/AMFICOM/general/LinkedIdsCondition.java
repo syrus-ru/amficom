@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.5 2004/12/24 10:01:22 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.6 2004/12/24 10:57:18 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * </ul>
  * 
  * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2004/12/24 10:01:22 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/24 10:57:18 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -140,7 +140,6 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 				ctor.setAccessible(true);
 				this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] { id, code});
 			}			
-			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] { linkIds, code});
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className //$NON-NLS-1$
 					+ " not found on the classpath" //$NON-NLS-1$
