@@ -1,5 +1,5 @@
 /*
- * $Id: FilterGUI.java,v 1.2 2005/03/16 13:26:42 max Exp $
+ * $Id: FilterGUI.java,v 1.3 2005/03/25 10:29:31 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -27,21 +25,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-
-import com.syrus.AMFICOM.general.ConditionWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/16 13:26:42 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/25 10:29:31 $
  * @author $Author: max $
  * @module misc
  */
-public class FilterGUI extends JFrame {
+public class FilterGUI extends JFrame implements FilterView {
 	
+	private static final long	serialVersionUID	= 3257291314054968631L;
 	private static final int HORISONTAL_GAP = 5;
 	private static final int VERTICAL_GAP = 5;
 	
@@ -49,43 +41,50 @@ public class FilterGUI extends JFrame {
 	private static final String KEYS_LABEL 				= "Choose type of condition";
 	private static final String ADD_BUTTON 				= "Add condition";
 	private static final String REMOVE_BUTTON 			= "Remove condition";
+	private static final String	LOGIC_SCHEME_BUTTON		= "Logic scheme";
 	private static final String STRING_CONDITION_LABEL 	= "Please, inter a string";
 	private static final String NUMBER_LABEL 			= "Please, inter a number";
-	public static final String EQUALS_LABEL 			= "Equals";
-	public static final String OR_LABEL 				= "Or";
-	public static final String FROM_LABEL 				= "From";
-	public static final String TO_LABEL 				= "To";
+	private static final String EQUALS_LABEL 			= "Equals";
+	private static final String OR_LABEL 				= "Or";
+	private static final String FROM_LABEL 				= "From";
+	private static final String TO_LABEL 				= "To";
 	private static final String INCLUDE_BOUNDS_LABEL 	= "Include boundary";
 	
 	private static final String NUMBER_CARD	= "number";
 	private static final String STRING_CARD	= "string";
 	private static final String LIST_CARD	= "list";
 	
-	JPanel panel;
-	JPanel conditionPanel;
-	JComboBox keysCombo;
-	Filter filter;
+	private Filter filter;
 	
-	JList conditionList;
-	public JList linkedConditionList;
+	private JPanel mainPanel;
+	private JPanel conditionPanel;
+	private JComboBox keysCombo;
+		
+	private JList filteredList;
+	private JList conditions;
+	private JList linkedConditionList;
 	
-	public JTextField conditionTextField = new JTextField();
-	public JTextField equalsField 	= 		new JTextField(5);
-	public JTextField fromField 	= 		new JTextField(5);
-	public JTextField toField 		= 		new JTextField(5);
-	public JCheckBox boundaryCheckBox = 	new JCheckBox();
+	private JTextField conditionTextField = new JTextField();
+	private JTextField equalsField 	= 		new JTextField(5);
+	private JTextField fromField 	= 		new JTextField(5);
+	private JTextField toField 		= 		new JTextField(5);
+	private JCheckBox boundaryCheckBox = 	new JCheckBox();
 	
-	FilterGUI(ConditionWrapper wrapper) {
-
-		super();
-		//this.filter = new Filter(wrapper);
+	private JButton addButton;  
+	private JButton removeButton; 
+	private JButton createSchemeButton;
+	
+	
+	private FilterController controller;
+	
+	public FilterGUI(Filter filter) {
+		this.filter = filter;
+		this.controller = new FilterController(filter, this);
 		createFrame();
-	
 	}
 	
 	private void createFrame() {
 		
-		//TODO: make gbc global variable
 		GridBagLayout gbl = 			new GridBagLayout();
 		GridBagConstraints gbc = 		new GridBagConstraints();
 		CardLayout cardLayout = 		new CardLayout();
@@ -101,10 +100,11 @@ public class FilterGUI extends JFrame {
 		JLabel boundaryLabel = 			new JLabel(INCLUDE_BOUNDS_LABEL);
 		JLabel stringConditionLabel = 	new JLabel(STRING_CONDITION_LABEL);
 		
-		JButton addButton = 			new JButton(ADD_BUTTON);
-		JButton removeButton = 			new JButton(REMOVE_BUTTON);
+		this.addButton = 				new JButton(ADD_BUTTON);
+		this.removeButton = 			new JButton(REMOVE_BUTTON);
+		this.createSchemeButton = 		new JButton(LOGIC_SCHEME_BUTTON);
 		
-		this.panel = 					new JPanel(gbl);
+		this.mainPanel = 				new JPanel(gbl);
 		this.conditionPanel = 			new JPanel(cardLayout);
 		JPanel edditPanel = 			new JPanel(gbl);
 		JPanel createPanel = 			new JPanel(gbl);
@@ -120,19 +120,17 @@ public class FilterGUI extends JFrame {
 		JSplitPane firstSplit = 		new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, createPanel, edditPanel);
 		JSplitPane secondSplit = 		new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, filterPanel, createConditionPanel);
 		
+		this.keysCombo = 				new JComboBox(this.filter.getKeyNames());
 		
+		this.filteredList = 			new JList(this.filter.getFilteredNames());
+		this.conditions = 				new JList();
+		this.linkedConditionList = 		new JList();
 		
-		this.keysCombo = 				new JComboBox(this.filter.getKeys());
+		JScrollPane filterScroller = 	new JScrollPane(this.filteredList);
+		JScrollPane conditionScroller =	new JScrollPane(this.conditions);
+		JScrollPane linkedConditionListScroller = new JScrollPane(this.linkedConditionList);
 		
-		JList filteredList = 			new JList(this.filter.getFilteredList());
-		this.conditionList = 			new JList();
-		this.linkedConditionList = 		new JList(this.filter.getLinkedConditionList());
-		
-		JScrollPane filterScroller = 	new JScrollPane(filteredList);
-		JScrollPane conditionScroller =	new JScrollPane(conditionList);
-		JScrollPane linkedConditionListScroller = new JScrollPane(linkedConditionList,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		
-		boundaryCheckBox.setSelected(true);
+		this.boundaryCheckBox.setSelected(true);
 		
 		filterScroller.setPreferredSize(new Dimension(0,0));
 		conditionScroller.setPreferredSize(new Dimension(0,0));
@@ -141,44 +139,13 @@ public class FilterGUI extends JFrame {
 		firstSplit.setResizeWeight(0.7);
 		secondSplit.setResizeWeight(0.4);
 		
-		this.keysCombo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				changeKey();
-			}
-		});
-		
-		this.keysCombo.addPopupMenuListener(new PopupMenuListener() {
-			
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-				filter.saveParameters();				
-			}
-			public void popupMenuCanceled(PopupMenuEvent e) {
-				//Do nothing				
-			}
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-				//Do nothing				
-			}
-		});
-		
-		addButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				filter.addCondition();			
-			}
-		});
-		
-		removeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//filter.removeCondition();
-			}			
-		});
-		
 		gbc.insets = new Insets(VERTICAL_GAP, HORISONTAL_GAP, VERTICAL_GAP, HORISONTAL_GAP);
 		
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.0;
 		filterPanel.add(filteredLabel, gbc);
-				
+		
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weighty = 1.0;
 		filterPanel.add(filterScroller, gbc);
@@ -195,7 +162,7 @@ public class FilterGUI extends JFrame {
 		
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.weighty = 0.0;
-		createConditionPanel.add(addButton, gbc);
+		createConditionPanel.add(this.addButton, gbc);
 						
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -205,7 +172,10 @@ public class FilterGUI extends JFrame {
 		
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.weighty = 0.0;
-		edditPanel.add(removeButton, gbc);
+		gbc.gridwidth = GridBagConstraints.RELATIVE;
+		edditPanel.add(this.removeButton, gbc);
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		edditPanel.add(this.createSchemeButton, gbc);
 		
 		gbc.insets = new Insets(0, 0, 0, 0);
 		gbc.fill = GridBagConstraints.BOTH;
@@ -213,7 +183,7 @@ public class FilterGUI extends JFrame {
 		gbc.weighty = 1.0;
 		createPanel.add(secondSplit, gbc);
 		
-		this.panel.add(firstSplit, gbc);
+		this.mainPanel.add(firstSplit, gbc);
 				
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.gridheight = 1;
@@ -224,7 +194,7 @@ public class FilterGUI extends JFrame {
 		gbc.gridwidth = 1;
 		gbc.weighty = 1.0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		stringPanel.add(conditionTextField, gbc);
+		stringPanel.add(this.conditionTextField, gbc);
 				
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 1.0;
@@ -238,20 +208,19 @@ public class FilterGUI extends JFrame {
 		numberPanel.add(numberLabel, gbc);
 				
 		firstSubPanel.add(equalsLabel);
-		firstSubPanel.add(equalsField);
+		firstSubPanel.add(this.equalsField);
 		numberPanel.add(firstSubPanel, gbc);
 		
 		numberPanel.add(orLabel, gbc);
 					
-		
 		secondSubPanel.add(fromLabel);
-		secondSubPanel.add(fromField);
+		secondSubPanel.add(this.fromField);
 		secondSubPanel.add(toLabel);
-		secondSubPanel.add(toField);
+		secondSubPanel.add(this.toField);
 		numberPanel.add(secondSubPanel, gbc);
 		
 		thirdSubPanel.add(boundaryLabel);
-		thirdSubPanel.add(boundaryCheckBox);
+		thirdSubPanel.add(this.boundaryCheckBox);
 		gbc.weighty = 1;
 		numberPanel.add(thirdSubPanel, gbc);
 		
@@ -259,16 +228,20 @@ public class FilterGUI extends JFrame {
 		this.conditionPanel.add(linkedPanel, LIST_CARD);
 		this.conditionPanel.add(stringPanel, STRING_CARD);
 		
-		changeKey();
+		this.keysCombo.addActionListener(this.controller);
+		this.keysCombo.addPopupMenuListener(this.controller);
+		this.keysCombo.setSelectedIndex(0);
 		
-		this.setSize(600,400);
+		this.createSchemeButton.addActionListener(this.controller);
+		this.addButton.addActionListener(this.controller);
+		this.removeButton.addActionListener(this.controller);
+		
+		this.getContentPane().add(this.mainPanel);
+		this.pack();
+		this.mainPanel.setMinimumSize(this.getSize());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.getContentPane().add(this.panel);
+		
 		this.setVisible(true);
-		JOptionPane.showMessageDialog(this,
-			    "qweqweqweqwe",
-			    "wazapp",
-			    JOptionPane.ERROR_MESSAGE);
 	}
 		
 	public void drawNumberCondition(NumberCondition numberCondition) {
@@ -288,23 +261,69 @@ public class FilterGUI extends JFrame {
 		cardLayout.show(this.conditionPanel, STRING_CARD);
 	}
 	
-	public void drawListCondition() {
+	public void drawLinkedCondition(ListCondition listCondition) {
+		this.linkedConditionList.setListData(listCondition.getSelectedNames());
+		this.linkedConditionList.setSelectedIndices(listCondition.getLinkedIndex());
+		
 		CardLayout cardLayout = (CardLayout) this.conditionPanel.getLayout();
 		cardLayout.show(this.conditionPanel, LIST_CARD);
 	}
 	
-	private void changeKey() {
-		this.filter.changeKey(getKey());
-	}
-	
-	public String getKey() {
-		return (String) this.keysCombo.getSelectedItem();		
-	}
-
-	public void errorMessage(String string) {
+	public void showErrorMessage(String string) {
 		JOptionPane.showMessageDialog(this,
 			    string,
 			    "Inane error",
 			    JOptionPane.ERROR_MESSAGE);		
-	}	
+	}
+	
+	public Object changeKeyRef() {
+		return this.keysCombo;
+	}
+
+	public Object removeConditionRef() {
+		return this.removeButton;
+	}
+
+	public Object addConditionRef() {
+		return this.addButton;
+	}
+	
+	public Object createLogicalSchemeRef() {
+		return this.createSchemeButton;
+	}
+
+	public int getSelectedKeyIndex() {
+		return this.keysCombo.getSelectedIndex();		
+	}
+
+	public Object[] getSelectedConditionNames() {
+		return this.conditions.getSelectedValues();
+	}
+	
+	public void createLogicalSchemeView(LogicalScheme logicalScheme, Filter filter) {
+		new LogicalSchemeGUI(logicalScheme, this, filter);
+	}
+	
+	public void setNumberCondition(NumberCondition intCondition) {
+		intCondition.setEquals(this.equalsField.getText());
+		intCondition.setFrom(this.fromField.getText());
+		intCondition.setTo(this.toField.getText());
+		intCondition.setIncludeBounds(this.boundaryCheckBox.isSelected());
+	}
+
+	public void setStringCondition(StringCondition stringCondition) {
+		stringCondition.setString(this.conditionTextField.getText());		
+	}
+
+	public void setListCondition(ListCondition listCondition) {
+		listCondition.setSelectedIndices(this.linkedConditionList.getSelectedIndices());		
+	}
+
+	public void refreshCreatedConditions(Object[] conditionNames) {
+		this.conditions.setListData(conditionNames);
+	}
+
+	public void refreshFilteredEntities(String[] filteredNames) {
+		this.filteredList.setListData(filteredNames);		
+	}
 }

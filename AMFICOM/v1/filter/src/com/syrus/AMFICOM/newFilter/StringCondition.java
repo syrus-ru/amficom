@@ -1,5 +1,5 @@
 /*
- * $Id: StringCondition.java,v 1.1 2005/03/15 16:11:44 max Exp $
+ * $Id: StringCondition.java,v 1.2 2005/03/25 10:29:31 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,17 @@
 package com.syrus.AMFICOM.newFilter;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/15 16:11:44 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/25 10:29:31 $
  * @author $Author: max $
  * @module misc
  */
 public class StringCondition {
 	
 	private String string;
+	
+	StringCondition() {
+		this.string = new String();
+	}
 	
 	StringCondition (String string) {
 		this.string = string;

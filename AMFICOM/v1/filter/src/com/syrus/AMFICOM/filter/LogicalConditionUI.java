@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalConditionUI.java,v 1.10 2005/03/21 15:04:23 bob Exp $
+ * $Id: LogicalConditionUI.java,v 1.11 2005/03/25 10:29:31 max Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.ServiceItem;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/03/21 15:04:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/03/25 10:29:31 $
+ * @author $Author: max $
  * @module filter_v1
  */
 public class LogicalConditionUI {
@@ -169,10 +169,10 @@ public class LogicalConditionUI {
 		LogicalItem andOperator3 = new LogicalItem(LogicalItem.AND);
 		andOperator1.addChild(andOperator2);
 		andOperator1.addChild(andOperator3);
-		LogicalItem condition1 = new LogicalItem(LogicalItem.CONDITION, "TectCondition1");
-		LogicalItem condition2 = new LogicalItem(LogicalItem.CONDITION, "TectCondition2");
-		andOperator0.addChild(condition1);
-		andOperator0.addChild(condition2);
+		//LogicalItem condition1 = new LogicalItem();
+		//LogicalItem condition2 = new LogicalItem(LogicalItem.CONDITION, "TectCondition2");
+		//andOperator0.addChild(condition1);
+		//andOperator0.addChild(condition2);
 		result.addChild(andOperator0);
 
 		LogicalItem andOperator4 = new LogicalItem(LogicalItem.AND);

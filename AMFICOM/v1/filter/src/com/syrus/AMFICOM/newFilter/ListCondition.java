@@ -1,5 +1,5 @@
 /*
- * $Id: ListCondition.java,v 1.1 2005/03/15 16:11:44 max Exp $
+ * $Id: ListCondition.java,v 1.2 2005/03/25 10:29:31 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,34 +8,34 @@
 package com.syrus.AMFICOM.newFilter;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/15 16:11:44 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/25 10:29:31 $
  * @author $Author: max $
  * @module misc
  */
 public class ListCondition {
 	
-	private int[] linkedIndex;
+	private int[] selectedIndices;
 	private String[] linkedNames;
 	
+	public ListCondition(String[] linkedNames) {
+		this.selectedIndices = new int[0];
+		this.linkedNames = linkedNames;
+	}
 	
-	public ListCondition(int[] linkedIndex, String[] linkedNames) {
-		this.linkedIndex = linkedIndex;
+	public ListCondition(int[] selectedIndices, String[] linkedNames) {
+		this.selectedIndices = selectedIndices;
 		this.linkedNames = linkedNames;
 	}
 	
 	public int[] getLinkedIndex() {
-		return this.linkedIndex;
+		return this.selectedIndices;
 	}
 	
-	public void setLinkedIndex(int[] linkedIndex) {
-		this.linkedIndex = linkedIndex;
+	public void setSelectedIndices(int[] indices) {
+		this.selectedIndices = indices;
 	}
 	
-	public String[] getLinkedNames() {
+	public String[] getSelectedNames() {
 		return this.linkedNames;
-	}
-	
-	public void setLinkedNames(String[] linkedNames) {
-		this.linkedNames = linkedNames;
 	}
 }

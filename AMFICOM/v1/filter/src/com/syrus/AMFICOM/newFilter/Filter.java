@@ -1,5 +1,5 @@
 /*
- * $Id: Filter.java,v 1.2 2005/03/16 13:26:42 max Exp $
+ * $Id: Filter.java,v 1.3 2005/03/25 10:29:31 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,294 +7,200 @@
  */
 package com.syrus.AMFICOM.newFilter;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
-import com.syrus.AMFICOM.general.ConditionWrapper;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ConditionWrapperTemp;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/16 13:26:42 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/25 10:29:31 $
  * @author $Author: max $
  * @module misc
  */
 public class Filter {
 	
-	private FilterGUI filterGUI;
+	private Map	keyNameCondition = new HashMap();
 	private Collection filterViews;
 	private String[] keys;
-	private Collection filteredEntities ;
-	private ConditionWrapper wrapper;
+	private String[] keyNames;
+	private byte[] keyTypes;
+	private Collection initialEntities;
+	private Collection filteredEntities;
+	private ConditionWrapperTemp wrapper;
 	private short entityCode;
-	private Map keyCondition = new HashMap(); 
-	private Map	keyTemporalCondition = new HashMap();
-	private static final String	WRONG_NUMBER_MESSAGE	= "you have intered wrong number type in field ";
-	private static final String	WRONG_STRING_MESSAGE	= "please, fill the field ";
-	private static final String	WRONG_LIST_MESSAGE		= "Select, from list ";
-		
+	private LogicalScheme logicalScheme;
+					
 	public Filter(ConditionWrapperTemp wrapper) {
-		this(wrapper, null);
-	}
-	
-	public Filter(ConditionWrapperTemp wrapper, FilterGUI filterGUI) {
 		
-		this.filterViews = new ArrayList();
-		this.keys = wrapper.getKeys();
-		//this.filteredEntities = wrapper.get
-		//entityCode = wrapper.getEntityCode();
-		//if (filterGUI != null)
-		//this.add(filterGUI);
+		this.wrapper 			= wrapper;
+		this.keys 				= wrapper.getKeys();
+		this.keyNames 			= wrapper.getKeyNames();
+		this.keyTypes 			= wrapper.getTypes();
+		this.entityCode 		= wrapper.getEntityCode();
+		this.initialEntities	= wrapper.getInitialEntities();
+		this.filteredEntities	= new LinkedList(this.initialEntities);
 		
-//		for (Iterator iter = wrapper.getKeys().iterator(); iter.hasNext();) {
-//			String key = (String) iter.next();
-//			byte type = wrapper			
-//		}
-	}
-	
-	
-	public void createTypicalCondition(final long firstLong,
-			final long secondLong,
-			final OperationSort operation,
-			final String key) {
-		this.keyCondition.put(key, new TypicalCondition(firstLong, secondLong, operation , this.entityCode, key));		
-	}
-	
-	public void createTypicalCondition(final Date firstDate,
-			final Date secondDate,
-			final OperationSort operation,
-			final String key) {
-		this.keyCondition.put(key, new TypicalCondition(firstDate, secondDate, operation , this.entityCode, key));
-	}
-	
-	public void createTypicalCondition(final double firstDouble,
-			final double secondDouble,
-			final OperationSort operation,
-			final String key) {
-		this.keyCondition.put(key, new TypicalCondition(firstDouble, secondDouble, operation , this.entityCode, key));
-	}
-	
-	public void createTypicalCondition(final int firstInt,
-			final int secondInt,
-			final OperationSort operation,
-			final String key) {
-		this.keyCondition.put(key, new TypicalCondition(firstInt, secondInt, operation , this.entityCode, key));
-	}
-	
-	public void addTypicalCondition(final String value, 
-			final OperationSort operation, 
-			final String key) {
-		this.keyCondition.put(key, new TypicalCondition(value, operation , this.entityCode, key));
-	}
-	
-	public void createLinkedIdsCondition(String key, final Identifier identifier) {
-		this.keyCondition.put(key, new LinkedIdsCondition(identifier, this.entityCode));
-	}
-
-	public void createLinkedIdsCondition(String key, final List linkedIds) {
-		this.keyCondition.put(key, new LinkedIdsCondition(linkedIds, this.entityCode));
-	}
-	
-	public Collection getCreatedConditions() {
-		return this.keyCondition.values();
-	}
-
-	public StorableObjectCondition getResultCondition() throws CreateObjectException, IllegalDataException {
-		//LogicalConditionScheme logicalConditionScheme = new LogicalConditionScheme(this.getCreatedConditions());
-		//return logicalConditionScheme.getResultCondition();
-		return null;
-	}
-
-	public void changeKey(String keyName) {
-		String key = this.wrapper.getKey(keyName);
-		byte type = this.wrapper.getType(key);
-		switch (type) {
-		case ConditionWrapper.INT:
-		case ConditionWrapper.FLOAT:
-		case ConditionWrapper.DOUBLE:
-			NumberCondition numberCondition = (NumberCondition) this.keyTemporalCondition.get(key);
-			if(numberCondition == null) {
-				numberCondition = new NumberCondition("", "", "", true);
-				this.keyTemporalCondition.put(key, numberCondition);				
-			}
-			this.filterGUI.drawNumberCondition(numberCondition);
-			break;
-		case ConditionWrapper.STRING:
-			StringCondition stringCondition = (StringCondition) this.keyTemporalCondition.get(key);
-			if(stringCondition == null) {
-				stringCondition = new StringCondition("");
-				this.keyTemporalCondition.put(key, stringCondition);
-			}
-			this.filterGUI.drawStringCondition(stringCondition);
-			break;
-		case ConditionWrapper.LIST:
-			String[] linkedNames = null;
-			try {
-				linkedNames = this.wrapper.getLinkedNames(key);
-			} catch (IllegalDataException e) {
-				Log.errorMessage(e.getMessage());
-			}
-			filterGUI.linkedConditionList.setListData(linkedNames);
-			ListCondition listCondition = (ListCondition) this.keyTemporalCondition.get(key);
-			if(listCondition == null) {
-				//listCondition = new ListCondition(new int[0],String[0]);
-				this.keyTemporalCondition.put(key, listCondition);
-			}
-			filterGUI.linkedConditionList.setListData(linkedNames);
-			if (listCondition.getLinkedIndex().length > 0)
-				filterGUI.linkedConditionList.setSelectedIndices(listCondition.getLinkedIndex());
-			this.filterGUI.drawListCondition();
-			break;
-		default:
-			Log.errorMessage("Filter.changeKey | Unsupported condition type");			
-		}
-	}
-
-	public void addCondition() {
-		String keyName = this.filterGUI.getKey();
-		String key = this.wrapper.getKey(keyName);
-		byte type = this.wrapper.getType(key);
-		switch (type) {
-		case ConditionWrapper.INT:
-			try {
-				int equalsInt = Integer.parseInt(filterGUI.equalsField.getText());
-			} catch (NumberFormatException e) {
-				Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
-				filterGUI.errorMessage(this.WRONG_NUMBER_MESSAGE + FilterGUI.EQUALS_LABEL);
-			}
-			try {
-				int fromInt = Integer.parseInt(filterGUI.fromField.getText());
-			} catch (NumberFormatException e) {
-				Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
-				filterGUI.errorMessage(this.WRONG_NUMBER_MESSAGE + FilterGUI.FROM_LABEL);
-			}
-			try {
-				int fromInt = Integer.parseInt(filterGUI.toField.getText());
-			} catch (NumberFormatException e) {
-				Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
-				filterGUI.errorMessage(this.WRONG_NUMBER_MESSAGE + FilterGUI.TO_LABEL);
-			}
-		case ConditionWrapper.FLOAT:
-			break;
-		case ConditionWrapper.DOUBLE:
-			break;
-		case ConditionWrapper.STRING:
-			String conditionString = filterGUI.conditionTextField.getText();
-			if(conditionString == null || conditionString.equals("")) {
-				filterGUI.errorMessage(Filter.WRONG_STRING_MESSAGE);
-				return;
-			}
-				
-			addTypicalCondition(conditionString, OperationSort.OPERATION_EQUALS, key);
-			break;
-		case ConditionWrapper.LIST:
-			LinkedList linkedObjects = new LinkedList(); 
-			int[] linkedIdsIndex = filterGUI.linkedConditionList.getSelectedIndices();
-			if(linkedIdsIndex.length == 0) {
-				filterGUI.errorMessage(Filter.WRONG_LIST_MESSAGE);
-				return;
-			}
-			for (int i = 0; i < linkedIdsIndex.length; i++) {
-				try {
-					linkedObjects.add(wrapper.getLinkedObject(key, linkedIdsIndex[i]));					
-				} catch (IllegalDataException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-			createLinkedIdsCondition(key, linkedObjects);
-			break;
-		default:
-			Log.errorMessage("Filter.changeKey | Unsupported condition type");			
-		}
-		
-		filterGUI.conditionList.setListData(getConditionNames());
+		this.filterViews = new LinkedList();
 		
 	}
-
-	private String[] getConditionNames() {
-		String[] conditionNames = new String[keyCondition.keySet().size()];
-		int i = 0;
-		for (Iterator it = wrapper.getKeyNames().iterator(); it.hasNext();) {
-			String keyName = (String) it.next();
-			String key = wrapper.getKey(keyName);
-			if (keyCondition.keySet().contains(key)) {
-				conditionNames[i] = keyName;
-				i++;
-			}
-		}
-		return conditionNames;
+	
+	public void addView (FilterView view) {
+		this.filterViews.add(view);
 	}
-
-
-	public Object[] getKeys() {
-		return wrapper.getKeyNames().toArray();		
+	
+	public void removeView (FilterView view) {
+		this.filterViews.remove(view);
 	}
-
-	public String[] getLinkedConditionList() {
-		String keyName = this.filterGUI.getKey();
-		String key = this.wrapper.getKey(keyName);
+	
+	public String[] getKeys() {
+		return this.keys;
+	}
+	
+	public String getKeyName(int index) {
+		return this.keyNames[index];
+	}
+	
+	public String[] getLinkedNames(String key) {
 		try {
 			return this.wrapper.getLinkedNames(key);
 		} catch (IllegalDataException e) {
-			// TODO Auto-generated catch block
+			Log.errorMessage(e.getMessage());
+		}
+		return new String[0];
+	}
+	
+	/*public String getKeyName(String key) {
+		return this.keyNames[getIndex(key)];
+	}*/
+	
+	/*public String getKey(String keyName) {
+		return this.keys[getIndex(keyName)];
+	}*/
+	
+	public byte getKeyType(int index) {
+		return this.keyTypes[index];
+	}
+	
+	/*private int getIndex(String key) {
+		for (int i = 0; i < this.keys.length; i++) {
+			String tempKey = this.keys[i];
+			if(tempKey.equals(key))
+				return i;
+		}
+		return -1;
+	}*/
+	
+	public String getKey(int index) {
+		return this.keys[index];
+	}
+
+	public void addCondition(String keyName, StorableObjectCondition condition) {
+		this.keyNameCondition.put(keyName, condition);
+		if (this.logicalScheme == null)
+			this.logicalScheme = new LogicalScheme(keyName, condition);
+		else
+			this.logicalScheme.addCondition(keyName, condition);
+		refreshCreatedConditions();
+		refreshFilteredEntities();		
+	}
+	
+	public void refreshFilteredEntities() {
+		if (this.logicalScheme == null)
+			this.filteredEntities = new LinkedList(this.initialEntities);
+		else {
+			StorableObjectCondition resultCondition = this.logicalScheme.getResultCondition();
+			this.filteredEntities = new LinkedList();
+			for (Iterator it = this.initialEntities.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();
+				try {
+					if (resultCondition.isConditionTrue(storableObject)) {
+						this.filteredEntities.add(storableObject);
+					}
+				} catch (ApplicationException e) {
+					Log.errorMessage(e.getMessage());
+				}
+			}
+		}		
+		String[] filteredNames = getFilteredNames();
+		for (Iterator it = this.filterViews.iterator(); it.hasNext();) {
+			FilterView view = (FilterView) it.next();
+			view.refreshFilteredEntities(filteredNames);
+		}
+	}
+	
+	/*public void removeCondition(StorableObjectCondition condition) {
+		this.conditions.remove(condition);
+	}*/
+
+	public short getEntityCode() {
+		return this.entityCode;
+	}
+	
+	public Object getLinkedObject(String key, int i) {
+		try {
+			return this.wrapper.getLinkedObject(key, i);
+		} catch (IllegalDataException e) {
+			Log.errorMessage(e.getMessage());
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public String[] getFilteredList() {
-		return this.wrapper.getInitialNames();
+	public void removeCondition(String keyName) {
+		this.keyNameCondition.remove(keyName);
+		if (this.keyNameCondition == null || this.keyNameCondition.size() == 0)
+			this.logicalScheme = null;
+		else
+			this.logicalScheme.removeCondition(keyName);
+		refreshCreatedConditions();
+		refreshFilteredEntities();
 	}
 
-	public void saveParameters() {
-		String keyName = (String) this.filterGUI.keysCombo.getSelectedItem();
-		String key = this.wrapper.getKey(keyName);
-		byte type = this.wrapper.getType(key); 
-		switch (type) {
-		case ConditionWrapper.INT:
-		case ConditionWrapper.FLOAT:
-		case ConditionWrapper.DOUBLE:
-			NumberCondition intCondition = (NumberCondition) this.keyTemporalCondition.get(key);
-			intCondition.setEquals(this.filterGUI.equalsField.getText());
-			intCondition.setFrom(this.filterGUI.fromField.getText());
-			intCondition.setTo(this.filterGUI.toField.getText());
-			intCondition.setIncludeBounds(this.filterGUI.boundaryCheckBox.isSelected());
-			break;
-		case ConditionWrapper.STRING:
-			StringCondition stringCondition = (StringCondition) this.keyTemporalCondition.get(key);
-			stringCondition.setString(this.filterGUI.conditionTextField.getText());
-			break;
-		case ConditionWrapper.LIST:
-			ListCondition listCondition = (ListCondition) this.keyTemporalCondition.get(key);
-			listCondition.setLinkedIndex(this.filterGUI.linkedConditionList.getSelectedIndices());
-			break;
-		default:
-			Log.errorMessage("Filter.changeKey | Unsupported condition type");			
+	public Map getKeyNameCondition() {
+		return this.keyNameCondition;
+	}
+	
+	public void refreshCreatedConditions() {
+		for (Iterator it = this.filterViews.iterator(); it.hasNext();) {
+			FilterView view = (FilterView) it.next();
+			view.refreshCreatedConditions(this.keyNameCondition.keySet().toArray());
 		}
-			
-		
 	}
-
-//	public void removeCondition() {
-//		int[] conditionIndex = filterGUI.conditionList.getSelectedIndices();
-//		for (int i = 0; i < conditionIndex.length; i++) {
-//			this.keyCondition.remove()
-//			
-//			filterGUI.conditionList.remove(conditionIndex[i]);
+	
+//	public void refreshFilteredList() {
+//		for (Iterator it = this.filterViews.iterator(); it.hasNext();) {
+//			FilterView view = (FilterView) it.next();
+//			view.refreshFilteredList(getFilteredNames());
 //		}
 //	}
+	
+	public String[] getFilteredNames() {
+		int i=0;
+		String[] filteredNames = new String[this.filteredEntities.size()];
+		for (Iterator iter = this.filteredEntities.iterator(); iter.hasNext();i++) {
+			StorableObject storableObject = (StorableObject) iter.next();
+			filteredNames[i] = this.wrapper.getInitialName(storableObject);			
+		}
+		return filteredNames;
+	}
+
+	public Object[] getKeyNames() {
+		return this.keyNames;
+	}
+
+	public StorableObjectCondition getCondition(String keyName) {
+		return (StorableObjectCondition) this.keyNameCondition.get(keyName);
+	}
+
+	public LogicalScheme getLogicalScheme() {
+		return this.logicalScheme;
+	}
 }
