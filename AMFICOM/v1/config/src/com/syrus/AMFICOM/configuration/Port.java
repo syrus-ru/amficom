@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.20 2004/11/30 14:44:04 bob Exp $
+ * $Id: Port.java,v 1.21 2004/12/06 12:54:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/11/30 14:44:04 $
+ * @version $Revision: 1.21 $, $Date: 2004/12/06 12:54:20 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -120,6 +120,10 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 									  String description,
 									  Identifier equipmentId,
 									  PortSort sort) {
+		if (creatorId == null || type == null || description == null || 
+				type == null || equipmentId == null || sort == null )
+			throw new IllegalArgumentException("Argument is 'null'");
+		
 		return new Port(IdentifierPool.generateId(ObjectEntities.PORT_ENTITY_CODE),
 					creatorId,
 					type,

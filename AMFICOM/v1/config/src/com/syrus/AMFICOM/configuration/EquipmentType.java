@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.20 2004/11/30 14:44:04 bob Exp $
+ * $Id: EquipmentType.java,v 1.21 2004/12/06 12:54:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/11/30 14:44:04 $
+ * @version $Revision: 1.21 $, $Date: 2004/12/06 12:54:20 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -99,6 +99,9 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 											 String codename,
 											 String description,
 											 String name){
+		if (creatorId == null || codename == null || description == null || name == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
 		return new EquipmentType(IdentifierPool.generateId(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE),
 							creatorId,
 							codename,

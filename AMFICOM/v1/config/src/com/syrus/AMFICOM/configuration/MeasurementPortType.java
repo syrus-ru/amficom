@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.17 2004/12/06 11:47:37 bob Exp $
+ * $Id: MeasurementPortType.java,v 1.18 2004/12/06 12:54:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/12/06 11:47:37 $
+ * @version $Revision: 1.18 $, $Date: 2004/12/06 12:54:20 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -97,6 +97,9 @@ public class MeasurementPortType extends StorableObjectType implements Character
 													 String codename,
 													 String description,
 													 String name){
+		if (creatorId == null || codename == null || name == null || description == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
 		return new MeasurementPortType(IdentifierPool.generateId(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE),
 									   creatorId,
 									   codename,

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.25 2004/11/30 14:44:05 bob Exp $
+ * $Id: TransmissionPath.java,v 1.26 2004/12/06 12:54:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.25 $, $Date: 2004/11/30 14:44:05 $
+ * @version $Revision: 1.26 $, $Date: 2004/12/06 12:54:20 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -105,6 +105,10 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 												  TransmissionPathType type,
 												  Identifier startPortId,
 												  Identifier finishPortId) {
+		if (creatorId == null || domainId == null || name == null || description == null || 
+				type == null || startPortId == null || finishPortId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
 				return new TransmissionPath(IdentifierPool.generateId(ObjectEntities.TRANSPATH_ENTITY_CODE),
 					 creatorId,					 
 					 domainId,

@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.13 2004/11/30 14:44:04 bob Exp $
+ * $Id: Link.java,v 1.14 2004/12/06 12:54:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/11/30 14:44:04 $
+ * @version $Revision: 1.14 $, $Date: 2004/12/06 12:54:20 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -156,6 +156,11 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 									  Identifier linkId,
 									  String color,
 									  String mark){
+		if (creatorId == null || domainId == null || name == null || description == null || 
+				type == null || inventoryNo == null || supplier == null || supplierCode == null ||
+				sort == null || linkId == null || color == null || mark == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
 		return new Link(IdentifierPool.generateId(ObjectEntities.LINK_ENTITY_CODE),
 				creatorId,
 				domainId,

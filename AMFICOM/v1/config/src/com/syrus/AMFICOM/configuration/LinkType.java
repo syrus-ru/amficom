@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.11 2004/11/30 14:44:04 bob Exp $
+ * $Id: LinkType.java,v 1.12 2004/12/06 12:54:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/11/30 14:44:04 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/06 12:54:20 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -108,6 +108,11 @@ public class LinkType extends AbstractLinkType implements Characterized {
 											String manufacturer,
 											String manufacturerCode,
 											Identifier imageId) {
+		if (creatorId == null || codename == null || description == null || name == null ||
+				sort == null || manufacturer == null || manufacturerCode == null || imageId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+
 		return new LinkType(IdentifierPool.generateId(ObjectEntities.LINKTYPE_ENTITY_CODE), creatorId, codename, description, name, sort.value(), manufacturer, manufacturerCode, imageId);
 	}
 

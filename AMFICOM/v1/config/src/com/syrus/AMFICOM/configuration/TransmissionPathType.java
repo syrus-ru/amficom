@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.9 2004/11/30 14:44:05 bob Exp $
+ * $Id: TransmissionPathType.java,v 1.10 2004/12/06 12:54:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/11/30 14:44:05 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/06 12:54:20 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -92,6 +92,9 @@ public class TransmissionPathType extends StorableObjectType implements Characte
             String codename,
             String description,
             String name){
+    	if (creatorId == null || codename == null || name == null || description == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
         return new TransmissionPathType(IdentifierPool.generateId(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE),
                 creatorId,
                 codename,

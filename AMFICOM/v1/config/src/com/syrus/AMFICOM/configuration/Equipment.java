@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.38 2004/12/03 18:57:14 max Exp $
+ * $Id: Equipment.java,v 1.39 2004/12/06 12:54:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/12/03 18:57:14 $
- * @author $Author: max $
+ * @version $Revision: 1.39 $, $Date: 2004/12/06 12:54:20 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -159,6 +159,9 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
                                            String supplier,
                                            double longitude,
                                            double latitude) {
+		if (creatorId == null || domainId == null || type == null || name == null || 
+				description == null || imageId == null || supplier == null)
+			throw new IllegalArgumentException("Argument is 'null'");
 		return new Equipment(IdentifierPool.generateId(ObjectEntities.EQUIPMENT_ENTITY_CODE),
 							creatorId,
 							domainId,

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.21 2004/11/30 14:44:04 bob Exp $
+ * $Id: MeasurementPort.java,v 1.22 2004/12/06 12:54:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/11/30 14:44:04 $
+ * @version $Revision: 1.22 $, $Date: 2004/12/06 12:54:20 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -122,6 +122,10 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 													String description,	
 													Identifier kisId,
 													Identifier portId){
+		if (creatorId == null || type == null || name == null || description == null || 
+				kisId == null || portId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
 		return new MeasurementPort(IdentifierPool.generateId(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE),
 								   creatorId,
 								   type,

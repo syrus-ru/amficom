@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.15 2004/11/30 14:44:05 bob Exp $
+ * $Id: User.java,v 1.16 2004/12/06 12:54:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.corba.UserSort;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/11/30 14:44:05 $
+ * @version $Revision: 1.16 $, $Date: 2004/12/06 12:54:20 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -137,6 +137,10 @@ public class User extends StorableObject {
 									  UserSort sort,
 									  String name,
 									  String description) {
+		if (creatorId == null || login == null || name == null || 
+				description == null || sort == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
 		return new User(IdentifierPool.generateId(ObjectEntities.USER_ENTITY_CODE),
 							creatorId,
 							login,
