@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorCategoryModel.java,v 1.2 2004/08/17 15:02:51 krupenn Exp $
+ * $Id: OperatorCategoryModel.java,v 1.3 2004/09/27 15:59:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,22 +8,19 @@
 
 package com.syrus.AMFICOM.Client.Resource.Object;
 
-import java.awt.*;
-import java.util.*;
-
-
-import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
+import com.syrus.AMFICOM.Client.Administrate.Object.UI.OperatorCategoryPanel;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import java.util.List;
+import java.awt.Component;
+import java.util.*;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 15:59:53 $
  * @module generalclient_v1
  */
 public class OperatorCategoryModel extends ObjectResourceModel
@@ -58,9 +55,10 @@ public class OperatorCategoryModel extends ObjectResourceModel
 	  return ObjectResource.class;
 	}
 
-	public PropertiesPanel getPropertyPane()
-	{
-		return new OperatorCategoryPanel(cat);
+	public ObjectResourcePropertiesPane getPropertyPane() {
+		OperatorCategoryPanel operatorCategoryPanel = OperatorCategoryPanel.getInstance();
+		operatorCategoryPanel.setObjectResource(cat);
+		return operatorCategoryPanel;
 	}
 
 	public String getColumnValue(String col_id)
@@ -105,43 +103,46 @@ public class OperatorCategoryModel extends ObjectResourceModel
 		return "leer";
 	}
 
-	public String getPropertyValue(String col_id)
+	/**
+	 * @todo Consider refactoring: for "user" takes the first arbitrary user
+	 *       (or even throws an exception).
+	 */
+	public String getPropertyValue(final String columnId)
 	{
-		if(col_id.equals("id"))
-			return cat.id;
-		if(col_id.equals("name"))
-			return cat.name;
-		if(col_id.equals("user"))
-		{
-			Hashtable h = Pool.getHash("user");
-			User user = (User )h.elements().nextElement();
-			return user.id;
-		}
+		if (columnId.equals("id"))
+			return cat.getId();
+		else if (columnId.equals("name"))
+			return cat.getName();
+		else if (columnId.equals("user"))
+			return ((User) (Pool.getMap("user").values().iterator().next())).getId();
 		return "val";
 	}
 
-	public Component getPropertyEditor(String col_id)
+	/**
+	 * @todo Consider refactoring: for "user" takes the first arbitrary user
+	 *       (or even throws an exception).
+	 */
+	public Component getPropertyEditor(final String columnId)
 	{
-		if(col_id.equals("user"))
-		{
-			Hashtable h = Pool.getHash("user");
-			User user = (User )h.elements().nextElement();
-			return new ObjectResourceComboBox("user", user);
-		}
-		return super.getPropertyEditor(col_id);
+		if (columnId.equals("user"))
+			return new ObjectResourceComboBox("user", Pool.getMap("user").values().iterator().next());
+		return super.getPropertyEditor(columnId);
 	}
 
-	public Component getPropertyRenderer(String col_id)
+	/**
+	 * @todo Consider refactoring: for "user" takes the first arbitrary
+	 *       user.
+	 */
+	public Component getPropertyRenderer(final String columnId)
 	{
-		if(col_id.equals("user"))
+		if (columnId.equals("user"))
 		{
-			Hashtable h = Pool.getHash("user");
-			if(h == null)
-				return null;
-			User user = (User )h.elements().nextElement();
-			return new JLabelRenderer(user.getName());
+			Map map = Pool.getMap("user");
+			if (map != null)
+				return new JLabelRenderer(((User) (map.values().iterator().next())).getName());
+			return null;
 		}
-		return super.getPropertyRenderer(col_id);
+		return super.getPropertyRenderer(columnId);
 	}
 
 	public boolean isPropertyEditable(String col_id)
@@ -158,5 +159,4 @@ public class OperatorCategoryModel extends ObjectResourceModel
 		if(col_id.equals("name"))
 			cat.name = (String )val;
 	}
-
 }
