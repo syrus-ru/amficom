@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.8 2005/04/01 14:41:33 bob Exp $
+ * $Id: DomainMember.java,v 1.9 2005/04/01 14:43:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,13 +12,13 @@ import java.util.Date;
 
 import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/01 14:41:33 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/01 14:43:07 $
  * @author $Author: bob $
  * @module administration_v1
  */
