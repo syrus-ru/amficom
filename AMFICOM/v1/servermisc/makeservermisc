@@ -19,17 +19,8 @@ CONNECTSTRING=shaitan
 CHECKSEMANTICSSTRING=
 #CHECKSEMANTICSSTRING=-u amficom/amficom -url=jdbc:oracle:thin:@$(SERVERHOSTNAME):1521:$(CONNECTSTRING)
 
-JAR_OBJECT=$(LIB)\ServerObjectInterface.jar
-JAR_ADMIN=$(LIB)\ServerInterface_Admin.jar
-JAR_ALARM=$(LIB)\ServerInterface_Alarm.jar
-JAR_GENERAL=$(LIB)\ServerInterface_General.jar
-JAR_ISM=$(LIB)\ServerInterface_ISM.jar
-JAR_MAP=$(LIB)\ServerInterface_Map.jar
-JAR_NETWORK=$(LIB)\ServerInterface_Network.jar
-JAR_REPORT=$(LIB)\ServerInterface_Report.jar
-JAR_SCHEME=$(LIB)\ServerInterface_Scheme.jar
-JAR_SURVEY=$(LIB)\ServerInterface_Survey.jar
-SERVERINTERFACECLASSPATH=$(JAR_OBJECT);$(JAR_ADMIN);$(JAR_ALARM);$(JAR_GENERAL);$(JAR_ISM);$(JAR_MAP);$(JAR_NETWORK);$(JAR_REPORT);$(JAR_SCHEME);$(JAR_SURVEY)
+JAR_OBJECT=$(LIB)\corba.jar
+SERVERINTERFACECLASSPATH=$(JAR_OBJECT)
 
 MYCLASSPATH=$(CLASSES);$(VBJCLASSPATH);$(SQLJCLASSPATH);$(JDBCCLASSPATH);$(SERVERINTERFACECLASSPATH);$(PROJECTCLASSPATH);$(LAYOUTCLASSPATH)
 
@@ -45,28 +36,23 @@ LIBNAME_SRC=$(LIBSRC)\servermiscsource.jar
 
 .PHONY:	$(LIBNAME)
 
-$(LIBNAME):	clean add jar
+$(LIBNAME):	clean misc jar
 
 jar:
 	$(JAR) -cf $(LIBNAME) \
-		-C $(CLASSES) com\syrus\AMFICOM\server\prefs\JDBCConnectionManager.class \
-		-C $(CLASSES) com\syrus\AMFICOM\server\ConnectionManager.class \
-		-C $(CLASSES) com\syrus\AMFICOM\server\LogWriter.class \
-		-C $(CLASSES) com\syrus\AMFICOM\server\QueryBuilder.class \
-		-C $(CLASSES) com\syrus\AMFICOM\server\ResourcedbInterface.class \
-		-C $(CLASSES) "com\syrus\AMFICOM\server\ResourcedbInterface$$ImageResourceIterator.class" \
-		-C $(CLASSES) "com\syrus\AMFICOM\server\ResourcedbInterface$$ResourceDescriptorIterator.class" \
-		-C $(CLASSES) "com\syrus\AMFICOM\server\ResourcedbInterface$$ResultDescriptorIterator.class" \
-		-C $(CLASSES) com\syrus\AMFICOM\server\StubLogWriter.class
+		-C $(CLASSES) com
 	$(JAR) -cf $(LIBNAME_SRC) -C $(SRC) com
 
-add:
+misc:
 	$(JAVAC) $(JAVACOPTIONS) \
 		$(SRC)\com\syrus\AMFICOM\server\prefs\JDBCConnectionManager.java \
+		$(SRC)\com\syrus\AMFICOM\server\security\PasswordVerifier.java \
 		$(SRC)\com\syrus\AMFICOM\server\ConnectionManager.java \
 		$(SRC)\com\syrus\AMFICOM\server\LogWriter.java \
 		$(SRC)\com\syrus\AMFICOM\server\QueryBuilder.java \
 		$(SRC)\com\syrus\AMFICOM\server\StubLogWriter.java
+
+#		$(SRC)\com\syrus\AMFICOM\general\IdentifierGenerator.java \
 
 	$(SQLJ) $(SQLJOPTIONS) \
 		$(SRC)\com\syrus\AMFICOM\server\ResourcedbInterface.sqlj
