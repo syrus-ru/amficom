@@ -4,8 +4,8 @@ import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Image;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
@@ -67,9 +67,9 @@ public class SurveyReportsTreeModel extends ObjectResourceTreeModel
 		return null;
 	}
 
-	public Vector getChildNodes(ObjectResourceTreeNode node)
+	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 
 		//для строки - общая часть для дерева отчётов + деревья топологоии и схемы
 		if (node.getObject()instanceof String)
@@ -99,10 +99,10 @@ public class SurveyReportsTreeModel extends ObjectResourceTreeModel
 					String curName =
 						(String) node.getObject();
 
-					Vector views = (Vector) curModel.getAvailableViewTypesforField(
+					List views = curModel.getAvailableViewTypesforField(
 						curName);
 					if (views == null)
-						return new Vector();
+						return new ArrayList();
 
 					for (int i = 0; i < views.size(); i++)
 					{
@@ -142,7 +142,7 @@ public class SurveyReportsTreeModel extends ObjectResourceTreeModel
 				String curName = (String) fieldNames.get(i);
 
 				//Поля для которых нет стат.отчётов не отображаем
-				Vector views = (Vector) orm.getAvailableViewTypesforField(curField);
+				List views = orm.getAvailableViewTypesforField(curField);
 				if (views.size() == 0)
 					continue;
 
@@ -161,7 +161,7 @@ public class SurveyReportsTreeModel extends ObjectResourceTreeModel
 				rt_objectsReport, toAskObjects(node));
 			try
 			{
-				or.setReserve(new Vector());
+				or.setReserve(new ArrayList());
 			}
 			catch (CreateReportException cre){
 				cre.printStackTrace();
@@ -193,7 +193,7 @@ public class SurveyReportsTreeModel extends ObjectResourceTreeModel
 				List fieldNames = orrm.getColumnNamesbyIDs(orrm.getAllColumnIDs());
 
 				if (fields == null)
-					return new Vector();
+					return new ArrayList();
 
 				for (int i = 0; i < fields.size(); i++)
 				{

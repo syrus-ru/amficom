@@ -14,9 +14,9 @@ import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 import com.syrus.AMFICOM.Client.Survey.Alarm.Filter.AlarmFilter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.Iterator;
 
 /**
@@ -30,11 +30,10 @@ import java.util.Iterator;
 
 public class AlarmReportModel extends ObjectResourceReportModel
 {
-	
 	private List objectColumnIDs;
 	private List objectColumnNames;
 	private List objectColumnSizes;
-	private Hashtable availableViews;
+	private Map availableViews;
 	
 	/**
 	 * Возвращает название модели
@@ -132,10 +131,10 @@ public class AlarmReportModel extends ObjectResourceReportModel
 		return this.objectColumnSizes;
 	}
 
-	public Hashtable getAvailableViews()
+	public Map getAvailableViews()
 	{
 		if (this.availableViews==null){
-			this.availableViews = new Hashtable();
+			this.availableViews = new HashMap();
 			
 			ArrayList typesForField = new ArrayList();
 			typesForField.add(ObjectResourceReportModel.rt_statistics);
@@ -260,7 +259,7 @@ public class AlarmReportModel extends ObjectResourceReportModel
     if (tableModel == null)
       return;
        
-    ObjectResourceReportModel.reportObjects = new Vector();
+    ObjectResourceReportModel.reportObjects = new ArrayList();
     for (int i = 0; i < tableModel.getRowCount(); i++)
     {
       Alarm cur_alarm = (Alarm)tableModel.getValueAt(i,0);
@@ -280,7 +279,7 @@ public class AlarmReportModel extends ObjectResourceReportModel
 			returnValue.append(":");
 			returnValue.append(LangModelReport.getString("label_byFields"));
 
-			Vector fieldList = (Vector) rp.getReserve();
+      List fieldList = (List) rp.getReserve();
 			int listRenderSize = (fieldList.size() > 2) ? 3 : fieldList.size();
 			for (int i = 0; i < listRenderSize; i++)
 			{
