@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.3 2004/12/15 13:10:37 max Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.4 2004/12/28 13:16:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/15 13:10:37 $
- * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2004/12/28 13:16:46 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class CableLinkTypeDatabase extends StorableObjectDatabase {
@@ -124,7 +124,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
             for (Iterator it = cableLinkTypeIdCableThreadTypeIds.keySet().iterator(); it.hasNext();) {
     			CableLinkType cableLinkType = (CableLinkType) it.next();
                 List cableLinkTypeIds = (List)cableLinkTypeIdCableThreadTypeIds.get(cableLinkType);
-    			cableLinkType.setCableThreadTypes(ConfigurationStorableObjectPool.getStorableObjects(cableLinkTypeIds, true));               
+    			cableLinkType.setCableThreadTypes0(ConfigurationStorableObjectPool.getStorableObjects(cableLinkTypeIds, true));               
     		}
         } catch (DatabaseException e) {
             throw new RetrieveObjectException("CableLikTypeDatabase.retreveCableThreadTypes | DatabaseException " + e);
