@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.128 2005/03/21 12:13:38 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.129 2005/03/21 15:10:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.128 $, $Date: 2005/03/21 12:13:38 $
+ * @version $Revision: 1.129 $, $Date: 2005/03/21 15:10:13 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -1082,7 +1082,7 @@ public abstract class StorableObjectDatabase {
 				}
 
 				Log.debugMessage(this.getEnityName()
-						+ "Database.updateEntities | Updating " + this.getEnityName() + " " + storableObjectIdCode, Log.DEBUGLEVEL09);
+						+ "Database.updateEntities | Updating " + this.getEnityName() + " '" + storableObjectIdCode + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 
