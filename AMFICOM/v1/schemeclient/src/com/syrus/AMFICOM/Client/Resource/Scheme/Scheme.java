@@ -891,8 +891,8 @@ public class Scheme extends ObjectResource implements Serializable
 		Vector ht = new Vector();
 		for (int i = 0; i < cablelinks.size(); i++)
 		{
-			SchemeElement el = (SchemeElement )elements.get(i);
-			ht.add(el);
+			SchemeCableLink scl = (SchemeCableLink )cablelinks.get(i);
+			ht.add(scl);
 		}
 		for (int i = 0; i < elements.size(); i++)
 		{
@@ -904,8 +904,8 @@ public class Scheme extends ObjectResource implements Serializable
 				{
 					for (Enumeration inner = scheme.getTopologicalCableLinks().elements(); inner.hasMoreElements();)
 					{
-						SchemeElement se = (SchemeElement)inner.nextElement();
-						ht.add(se);
+						SchemeCableLink scl = (SchemeCableLink)inner.nextElement();
+						ht.add(scl);
 					}
 				}
 			}
@@ -918,8 +918,8 @@ public class Scheme extends ObjectResource implements Serializable
 		Vector ht = new Vector();
 		for (int i = 0; i < paths.size(); i++)
 		{
-			SchemeElement el = (SchemeElement )elements.get(i);
-			ht.add(el);
+			SchemePath sp = (SchemePath)paths.get(i);
+			ht.add(sp);
 		}
 		for (int i = 0; i < elements.size(); i++)
 		{
@@ -931,8 +931,8 @@ public class Scheme extends ObjectResource implements Serializable
 				{
 					for (Enumeration inner = scheme.getTopologicalPaths().elements(); inner.hasMoreElements();)
 					{
-						SchemeElement se = (SchemeElement)inner.nextElement();
-						ht.add(se);
+						SchemePath sp = (SchemePath)inner.nextElement();
+						ht.add(sp);
 					}
 				}
 			}
