@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.25 2005/04/01 21:54:56 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.26 2005/04/04 14:11:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -61,7 +61,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/04/01 21:54:56 $
+ * @version $Revision: 1.26 $, $Date: 2005/04/04 14:11:22 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -555,6 +555,77 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 
 
+	public Set loadKISs(Set ids) throws RetrieveObjectException {
+		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
+		Set objects;
+		try {
+			objects = database.retrieveByIdsByCondition(ids, null);
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+			String mesg = "Cannot load objects from database: " + ide.getMessage();
+			throw new RetrieveObjectException(mesg, ide);
+		}
+
+		Identifier id;
+		Set loadIds = new HashSet(ids);
+		for (Iterator it = objects.iterator(); it.hasNext();) {
+			id = ((StorableObject) it.next()).getId();
+			loadIds.remove(id);
+		}
+
+		if (loadIds.isEmpty())
+			return objects;
+
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = Identifier.createTransferables(loadIds);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
+		Set loadedObjects = new HashSet();
+
+		try {
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			KIS_Transferable[] transferables = mServerRef.transmitKISs(loadIdsT);
+			for (int i = 0; i < transferables.length; i++) {
+				try {
+					loadedObjects.add(new KIS(transferables[i]));
+				}
+				catch (CreateObjectException coe) {
+					Log.errorException(coe);
+				}
+			}
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("MCMConfigurationObjectLoader.loadKISs | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
+
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+
+			try {
+				database.insert(loadedObjects);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+		}
+
+		return objects;
+	}
+
+
+
+
 
 
 	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws RetrieveObjectException {
@@ -710,10 +781,6 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 	public Set loadEquipmentsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
-	}
-
-	public Set loadKISs(Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
 	public Set loadLinks(Set ids) throws ApplicationException {
