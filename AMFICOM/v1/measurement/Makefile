@@ -72,10 +72,8 @@ SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java) \
 		com/syrus/AMFICOM/measurement/TemporalCondition.java \
 		com/syrus/AMFICOM/measurement/LinkedIdsConditionImpl.java \
 		com/syrus/AMFICOM/measurement/DomainCondition.java \
-		com/syrus/AMFICOM/measurement/StringFieldConditionImpl.java
-
-#		com/syrus/AMFICOM/measurement/ResultCondition.java
-#		com/syrus/AMFICOM/measurement/ResultSortCondition.java
+		com/syrus/AMFICOM/measurement/StringFieldConditionImpl.java \
+		com/syrus/AMFICOM/measurement/ActionCondition.java
 
 $(LIBNAME): .mach
 	cp \
