@@ -1,5 +1,5 @@
 /*
- * $Id: ISMDirectorydbInterfaceRemove.sqlj,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ * $Id: ISMDirectorydbInterfaceRemove.sqlj,v 1.1.2.2 2004/08/25 15:24:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,19 +12,15 @@ import com.syrus.AMFICOM.CORBA.Constants;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/25 15:24:30 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class ISMDirectorydbInterfaceRemove
-{
-	protected ISMDirectorydbInterfaceRemove()
-	{
+final class ISMDirectorydbInterfaceRemove {
+	private ISMDirectorydbInterfaceRemove() {
 	}
 
-	public static int removeAccessPortTypes(
-			String[] aporttype_ids)
-	{
+	static int removeAccessPortTypes(String[] aporttype_ids) {
 		int i;
 		int j;
 		int len;
@@ -58,9 +54,7 @@ public class ISMDirectorydbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeKISTypes(
-			String[] kistype_ids)
-	{
+	static int removeRTUTypes(String[] kistype_ids) {
 		int i;
 		int j;
 		int len;
@@ -92,9 +86,7 @@ public class ISMDirectorydbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removePathTypes(
-			String[] pathtype_ids)
-	{
+	static int removePathTypes(String[] pathtype_ids) {
 		int i;
 		int j;
 		int len;

@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMdbInterface.sqlj,v 1.1.2.3 2004/08/24 15:43:43 bass Exp $
+ * $Id: AMFICOMdbInterface.sqlj,v 1.1.2.4 2004/08/25 15:24:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import java.util.*;
 import org.omg.CORBA.StringHolder;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:43 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/08/25 15:24:29 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -1383,7 +1383,7 @@ final class AMFICOMdbInterface {
 
 	static int GetAlarmIdsForMonitoredElement(AccessIdentity_Transferable accessIdentity, String me_id, ResourceDescriptorSeq_TransferableHolder alarmids) throws AMFICOMRemoteException {
 		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
-		return MaintenancedbInterface.GetAlarmIdsForMonitoredElement(me_id, alarmids);
+		return MaintenancedbInterface.getAlarmIdsForMonitoredElement(me_id, alarmids);
 	}
 
 	static int LoadMaintenanceData(AccessIdentity_Transferable accessIdentity, EventSourceTypeSeq_TransferableHolder est, AlertingMessageSeq_TransferableHolder am, AlertingMessageUserSeq_TransferableHolder amu) throws AMFICOMRemoteException {
@@ -3634,12 +3634,12 @@ final class AMFICOMdbInterface {
 		kistypes.value = new EquipmentType_Transferable[0];
 		aporttypes.value = new AccessPortType_Transferable[0];
 		pathtypes.value = new TransmissionPathType_Transferable[0];
-		ret = ISMDirectorydbInterfaceLoad2.loadAccessPortTypes(aport_ids, aporttypes);
+		ret = ISMDirectorydbInterfaceLoad.loadAccessPortTypes(aport_ids, aporttypes);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = ISMDirectorydbInterfaceLoad2.loadPathTypes(path_ids, pathtypes);
+		ret = ISMDirectorydbInterfaceLoad.loadPathTypes(path_ids, pathtypes);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		return ret;
@@ -3686,7 +3686,7 @@ final class AMFICOMdbInterface {
 		ret = ISMDirectorydbInterfaceRemove.removeAccessPortTypes(apt_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = ISMDirectorydbInterfaceRemove.removeKISTypes(kst_ids);
+		ret = ISMDirectorydbInterfaceRemove.removeRTUTypes(kst_ids);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		ret = ISMDirectorydbInterfaceRemove.removePathTypes(tpt_ids);
@@ -3743,7 +3743,7 @@ final class AMFICOMdbInterface {
 		ret = ISMDirectorydbInterfaceSave.saveAccessPortTypes(aporttypes);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
-		ret = ISMDirectorydbInterfaceSave.saveKISTypes(kistypes);
+		ret = ISMDirectorydbInterfaceSave.saveRTUTypes(kistypes);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 		ret = ISMDirectorydbInterfaceSave.savePathTypes(pathtypes);
@@ -3932,15 +3932,15 @@ final class AMFICOMdbInterface {
 		mes.value = new MonitoredElement_Transferable[0];
 		paths.value = new TransmissionPath_Transferable[0];
 		accessports.value = new AccessPort_Transferable[0];
-		ret = ISMdbInterfaceLoad2.loadKISs(accessIdentity.domain_id, k_ids, kiss, port_vec, cport_vec, accessport_vec);
+		ret = ISMdbInterfaceLoad.loadKISs(accessIdentity.domain_id, k_ids, kiss, port_vec, cport_vec, accessport_vec);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 
-		ret = ISMdbInterfaceLoad2.loadTransmissionPaths(accessIdentity.domain_id, t_ids, paths);
+		ret = ISMdbInterfaceLoad.loadTransmissionPaths(accessIdentity.domain_id, t_ids, paths);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 
-		ret = ISMdbInterfaceLoad2.loadMonitoredElements(accessIdentity.domain_id, me_ids, mes);
+		ret = ISMdbInterfaceLoad.loadMonitoredElements(accessIdentity.domain_id, me_ids, mes);
 		if(ret != Constants.ERROR_NO_ERROR)
 			return ret;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ImagePane.sqlj,v 1.1.2.3 2004/08/24 15:43:43 bass Exp $
+ * $Id: ImagePane.sqlj,v 1.1.2.4 2004/08/25 15:24:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,20 +10,17 @@ package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Report.ImagePane_Transferable;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
-import com.syrus.util.database.ByteArrayDatabase;
-import java.sql.SQLException;
+import com.syrus.util.database.*;
+import java.sql.*;
 import java.util.Vector;
-import oracle.sql.BLOB;
-import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:43 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/08/25 15:24:30 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class ImagePane
-{
+final class ImagePane {
 	private String id;
   
 	private int x;
@@ -36,16 +33,14 @@ public class ImagePane
   
 	private String report_template_id;
 
-	public ImagePane(ImagePane_Transferable ip, String r_t_id)
-			throws SQLException  
-	{
+	ImagePane(ImagePane_Transferable ip, String r_t_id) throws SQLException {
 		this.id = ResourcedbInterface.getUId("reportimagepane");
 		this.x = ip.x;
-    this.y = ip.y;
+		this.y = ip.y;
 		this.width = ip.width;
-    this.height = ip.height;
-    
-    this.bytes = ip.bytes;
+		this.height = ip.height;
+
+		this.bytes = ip.bytes;
 
 		this.report_template_id = r_t_id;
 
@@ -54,7 +49,7 @@ public class ImagePane
 				REPORT_TEMPLATE_ID,
 				X,
 				Y,
-        WIDTH,
+				WIDTH,
 				HEIGHT,
 				IMG)
 			values(
@@ -63,8 +58,8 @@ public class ImagePane
 				:(this.x),
 				:(this.y),
 				:(this.width),
-        :(this.height),
-        empty_blob())
+				:(this.height),
+				empty_blob())
 		};
     
  		try
@@ -72,12 +67,10 @@ public class ImagePane
 			System.out.println("Saving " + bytes.length + " bytes as blob:");
 
 			ByteArrayDatabase bArr = new ByteArrayDatabase(this.bytes);
-      
-      ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
-      boolean autoc = connCtx2.getConnection().getAutoCommit();
-      
+			Connection conn = DefaultContext.getDefaultContext().getConnection(); 
+			boolean autoc = conn.getAutoCommit();
 			bArr.saveAsBlob(
-				connCtx2.getConnection(),
+				conn,
 				"AMFICOM.REPORTIMAGEPANES",
 				"IMG",
 				"id = '" + this.id + "'");
@@ -92,9 +85,7 @@ public class ImagePane
 		#sql { commit };
 	}
 
-	public ImagePane(String id)
-			throws SQLException
-	{
+	private ImagePane(String id) throws SQLException {
 		ImagePaneIterator ipIt = null;
 
 		try
@@ -130,8 +121,11 @@ public class ImagePane
         catch(SQLException e) { this.height = 0; }
         
       byte[] image_bytes = new byte[0];        
-			try { image_bytes = ByteArrayDatabase.toByteArray(ipIt.img()); }
-        catch(SQLException e) { e.printStackTrace(); }
+			try {
+				image_bytes = JdbcBlobManager.getData(ipIt.img());
+			} catch(SQLException sqle) {
+				sqle.printStackTrace();
+			}
       
 			try { this.report_template_id = ipIt.report_template_id(); }
         catch(SQLException e) { }
@@ -161,72 +155,7 @@ public class ImagePane
 			this.bytes);
 	}
 
-	public String getReportTemplateId()
-	{
-		return this.report_template_id;
-	}
-
-	public String getId()
-	{
-		return this.id;
-	}
-
-	public void delete() throws Exception
-	{
-		#sql { delete from AMFICOM.REPORTIMAGEPANES
-			where ID = :(this.id)
-		};
-		#sql { commit };
-	}
-
-	public void update(ImagePane_Transferable ip) throws Exception
-	{
-		this.x = ip.x;
-    this.y = ip.y;
-		this.width = ip.width;
-    this.height = ip.height;
-    
-    this.bytes = ip.bytes;
-
-		#sql{ update AMFICOM.REPORTIMAGEPANES set
-				ID = :(this.id),
-				REPORT_TEMPLATE_ID = :(this.report_template_id),
-				X = :(this.x),
-				Y = :(this.y),
-				WIDTH = :(this.width),
-        HEIGHT = :(this.height),
-				IMG = empty_blob()
-			where ID = :(this.id)
-		};
-
- 		try
-		{
-			System.out.println("Saving " + bytes.length + " bytes as blob:");
-
-			ByteArrayDatabase bArr = new ByteArrayDatabase(this.bytes);
-      
-      ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
-      boolean autoc = connCtx2.getConnection().getAutoCommit();
-      
-			bArr.saveAsBlob(
-				connCtx2.getConnection(),
-				"AMFICOM.REPORTIMAGEPANES",
-				"IMG",
-				"id = '" + this.id + "'");
-        
-		}
-		catch(Exception ioe)
-		{
-			System.out.println("error saving REPORTIMAGEPANES: " + ioe.getMessage());
-			ioe.printStackTrace();
-		}
-
-
-		#sql { commit };
-	}
-
-	public static ImagePane[] retrieveImages(String rt_id) throws SQLException
-	{
+	static ImagePane[] retrieveImages(String rt_id) throws SQLException {
 		IdIterator idIt = null;
 		Vector linkedlist = new Vector();
 
@@ -262,5 +191,5 @@ public class ImagePane
 		int y,
 		int width,
 		int height,
-		BLOB img);
+		Blob img);
 }

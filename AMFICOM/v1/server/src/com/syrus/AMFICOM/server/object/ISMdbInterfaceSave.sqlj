@@ -1,5 +1,5 @@
 /*
- * $Id: ISMdbInterfaceSave.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
+ * $Id: ISMdbInterfaceSave.sqlj,v 1.1.2.3 2004/08/25 15:24:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,18 +16,15 @@ import com.syrus.AMFICOM.server.event.EventSource;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/25 15:24:30 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class ISMdbInterfaceSave
-{
-	protected ISMdbInterfaceSave()
-	{
+final class ISMdbInterfaceSave {
+	private ISMdbInterfaceSave() {
 	}
 
-	public static int saveAccessPorts(AccessPort_Transferable[] accessports)
-	{
+	static int saveAccessPorts(AccessPort_Transferable[] accessports) {
 		int i;
 		int j;
 		int len;
@@ -128,8 +125,7 @@ public class ISMdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveKISs(Equipment_Transferable[] kiss)
-	{
+	static int saveKISs(Equipment_Transferable[] kiss) {
 		int i;
 		int j;
 		int len;
@@ -262,8 +258,7 @@ public class ISMdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int saveTransmissionPaths(TransmissionPath_Transferable[] paths)
-	{
+	static int saveTransmissionPaths(TransmissionPath_Transferable[] paths) {
 		int i;
 		int j;
 		int len;
@@ -453,8 +448,7 @@ public class ISMdbInterfaceSave
 
 	}
 
-	public static int saveMonitoredElements(MonitoredElement_Transferable[] mes)
-	{
+	static int saveMonitoredElements(MonitoredElement_Transferable[] mes) {
 		int i;
 		int j;
 		int len;

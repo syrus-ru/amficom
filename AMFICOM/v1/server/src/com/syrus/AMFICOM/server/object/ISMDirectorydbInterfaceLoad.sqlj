@@ -1,5 +1,5 @@
 /*
- * $Id: ISMDirectorydbInterfaceLoad.sqlj,v 1.1.2.2 2004/08/20 17:12:08 bass Exp $
+ * $Id: ISMDirectorydbInterfaceLoad.sqlj,v 1.1.2.3 2004/08/25 15:24:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,24 +11,20 @@ package com.syrus.AMFICOM.server.object;
 import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
 import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
 import java.sql.*;
 import java.util.Vector;
 import sqlj.runtime.SQLNullException;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:08 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/25 15:24:29 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class ISMDirectorydbInterfaceLoad
-{
-	protected ISMDirectorydbInterfaceLoad()
-	{
+final class ISMDirectorydbInterfaceLoad {
+	private ISMDirectorydbInterfaceLoad() {
 	}
 
-	public static Vector loadAccessPortTestTypes(String aport_id)
-	{
+	private static Vector loadAccessPortTestTypes(String aport_id) {
 		TestTypeIdIterator idIt = null;
 		Vector vector = new Vector();
 		try
@@ -62,7 +58,7 @@ public class ISMDirectorydbInterfaceLoad
 		return vector;
 	}
 
-	public static int loadAccessPortTypes(
+	static int loadAccessPortTypes(
 			AccessPortTypeSeq_TransferableHolder aporttypeseq)
 	{
 		String It_id = "";
@@ -157,122 +153,7 @@ public class ISMDirectorydbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int loadKISTypes(
-			EquipmentTypeSeq_TransferableHolder equipmenttypes)
-	{
-		int k;
-
-		String It_id = "";
-		String It_name = "";
-		String It_codename = "";
-		String It_description = "";
-		String It_manufacturer = "";
-		String It_eq_class = "";
-		boolean It_is_holder = false;
-		String It_image_id = "";
-		long It_modified = 0;
-
-		Characteristic_Transferable characteristics[];
-		String[] port_ids;
-		String[] slot_ids;
-
-		Vector vector = new Vector();
-
-		EquipmentType_Transferable e_t;
-		EquipmentType_Transferable[] e_ts;
-		EquipmentTypeIterator eIt = null;
-		Vector vector2;
-
-		try
-		{
-			#sql eIt = { select
-						ID,
-						NAME,
-						CODENAME,
-						DESCRIPTION,
-						MANUFACTURER,
-						EQ_CLASS,
-						IS_HOLDER,
-						IMAGE_ID,
-						MODIFIED
-					from AMFICOM.EQUIPMENTTYPES
-			};
-
-			while (eIt.next())
-			{
-				try { It_id = eIt.id(); }
-				catch(SQLException e) { }
-				if(It_id == null) It_id = "";
-				try { It_name = eIt.name(); }
-				catch(SQLException e) { }
-				if(It_name == null) It_name = "";
-				try { It_codename = eIt.codename(); }
-				catch(SQLException e) { }
-				if(It_codename == null) It_codename = "";
-				try { It_description = eIt.description(); }
-				catch(SQLException e) { }
-				if(It_description == null) It_description = "";
-				try { It_manufacturer = eIt.manufacturer(); }
-				catch(Exception e) { }
-				if(It_manufacturer == null) It_manufacturer = "";
-				try { It_eq_class = eIt.eq_class(); }
-				catch(SQLException e) { }
-				if(It_eq_class == null) It_eq_class = "";
-				try { It_is_holder = eIt.is_holder(); }
-				catch(SQLException e) { }
-				try { It_image_id = eIt.image_id(); }
-				catch(SQLException e) { }
-				if(It_image_id == null) It_image_id = "";
-				try { It_modified = eIt.modified().getTime(); }
-				catch(SQLException e) { }
-
-				vector2 = NetDirectorydbInterfaceLoad.loadCharacteristicLinks(
-						"EQUIPMENTTYPECHARACTERISTICLIN",
-						"EQUIPMENT_TYPE_ID",
-						It_id);
-				characteristics = new Characteristic_Transferable[vector2.size()];
-				vector2.copyInto(characteristics);
-
-				e_t = new EquipmentType_Transferable(
-					It_id,
-					It_name,
-					It_codename,
-					It_description,
-					It_manufacturer,
-					It_eq_class,
-					It_is_holder,
-					It_image_id,
-					It_modified,
-					characteristics);
-
-				vector.add(e_t);
-			}
-			eIt.close();
-			e_ts = new EquipmentType_Transferable[vector.size()];
-			vector.copyInto(e_ts);
-			equipmenttypes.value = e_ts;
-
-		}
-		catch(SQLException e)
-		{
-			if(eIt != null) try {
-			eIt.close();
-			}catch(Exception exe) {}
-			System.out.println("error loading equipment types: " + e.getMessage());
-			e.printStackTrace();
-			return Constants.ERROR_LOADING;
-		}
-		finally
-		{
-			try {
-				eIt.close();
-			}catch(Exception exe) {}
-		}
-		
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	public static int loadPathTypes(
+	static int loadPathTypes(
 			TransmissionPathTypeSeq_TransferableHolder pathtypeseq)
 	{
 		String It_id = "";
@@ -346,18 +227,190 @@ public class ISMDirectorydbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	#sql public static iterator TestTypeIdIterator ( String test_type_id );
+	static int loadAccessPortTypes(
+			String[] apt_ids,
+			AccessPortTypeSeq_TransferableHolder aporttypeseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_description = "";
+		String It_access_type = "";
+		long It_modified = 0;
 
-	#sql public static iterator EquipmentTypeIterator(
-		String id,
-		String name,
-		String codename,
-		String description,
-		String manufacturer,
-		String eq_class,
-		boolean is_holder,
-		String image_id,
-		Timestamp modified);
+		String[] test_type_ids;
+
+		Characteristic_Transferable characteristics[];
+
+		Vector vector = new Vector();
+
+		AccessPortType_Transferable apt_t;
+		AccessPortType_Transferable[] apt_ts;
+		AccessPortTypeIterator ptIt = null;
+		Vector vector2;
+
+		Vector loadvec = new Vector();
+		for(int i = 0; i < apt_ids.length; i++)
+			loadvec.add(apt_ids[i]);
+		try
+		{
+			#sql ptIt = { select
+						ID,
+						NAME,
+						DESCRIPTION,
+						ACCESS_TYPE,
+						MODIFIED
+					from AMFICOM.ACCESSPORTTYPEs
+			};
+
+			while (ptIt.next())
+			{
+				if(! loadvec.contains(ptIt.id()))
+					continue;
+
+				try { It_id = ptIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = ptIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_description = ptIt.description(); }
+				catch(SQLException e) { }
+				if(It_description == null) It_description = "";
+				try { It_access_type = ptIt.access_type(); }
+				catch(SQLException e) { }
+				if(It_access_type == null) It_access_type = "";
+				try { It_modified = ptIt.modified().getTime(); }
+				catch(SQLException e) { }
+
+				vector2 = NetDirectorydbInterfaceLoad.loadCharacteristicLinks(
+						"ACCESSPORTTYPECHARLINKS",
+						"ACCESS_PORT_TYPE_ID",
+						It_id);
+				characteristics = new Characteristic_Transferable[vector2.size()];
+				vector2.copyInto(characteristics);
+
+				vector2 = loadAccessPortTestTypes(It_id);
+				test_type_ids = new String[vector2.size()];
+				vector2.copyInto(test_type_ids);
+
+				apt_t = new AccessPortType_Transferable(
+					It_id,
+					It_name,
+					It_description,
+					It_access_type,
+					It_modified,
+					test_type_ids,
+					characteristics);
+
+				vector.add(apt_t);
+			}
+			ptIt.close();
+			apt_ts = new AccessPortType_Transferable[vector.size()];
+			vector.copyInto(apt_ts);
+			aporttypeseq.value = apt_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(ptIt != null) try {
+			ptIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading Access port types: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				ptIt.close();
+			}catch(Exception exe) {}
+		}
+		
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	static int loadPathTypes(
+			String[] path_ids,
+			TransmissionPathTypeSeq_TransferableHolder pathtypeseq)
+	{
+		String It_id = "";
+		String It_name = "";
+		String It_description = "";
+		long It_modified = 0;
+
+		Characteristic_Transferable characteristics[];
+
+		Vector vector = new Vector();
+
+		TransmissionPathType_Transferable pt_t;
+		TransmissionPathType_Transferable[] pt_ts;
+		TransmissionPathTypeIterator ptIt = null;
+		Vector vector2;
+
+		Vector loadvec = new Vector();
+		for(int i = 0; i < path_ids.length; i++)
+			loadvec.add(path_ids[i]);
+		try
+		{
+			#sql ptIt = { select
+						ID,
+						NAME,
+						DESCRIPTION,
+						MODIFIED
+					from AMFICOM.PATHTYPES
+			};
+
+			while (ptIt.next())
+			{
+				if(! loadvec.contains(ptIt.id()))
+					continue;
+
+				try { It_id = ptIt.id(); }
+				catch(SQLException e) { }
+				if(It_id == null) It_id = "";
+				try { It_name = ptIt.name(); }
+				catch(SQLException e) { }
+				if(It_name == null) It_name = "";
+				try { It_description = ptIt.description(); }
+				catch(SQLException e) { }
+				if(It_description == null) It_description = "";
+				try { It_modified = ptIt.modified().getTime(); }
+				catch(SQLException e) { }
+
+				pt_t = new TransmissionPathType_Transferable(
+					It_id,
+					It_name,
+					It_description,
+					It_modified);
+
+				vector.add(pt_t);
+			}
+			ptIt.close();
+			pt_ts = new TransmissionPathType_Transferable[vector.size()];
+			vector.copyInto(pt_ts);
+			pathtypeseq.value = pt_ts;
+
+		}
+		catch(SQLException e)
+		{
+			if(ptIt != null) try {
+			ptIt.close();
+			}catch(Exception exe) {}
+			System.out.println("error loading path types: " + e.getMessage());
+			e.printStackTrace();
+			return Constants.ERROR_LOADING;
+		}
+		finally
+		{
+			try {
+				ptIt.close();
+			}catch(Exception exe) {}
+		}
+		return Constants.ERROR_NO_ERROR;
+	}
+
+	#sql public static iterator TestTypeIdIterator (
+		String test_type_id);
 
 	#sql public static iterator AccessPortTypeIterator(
 		String id,

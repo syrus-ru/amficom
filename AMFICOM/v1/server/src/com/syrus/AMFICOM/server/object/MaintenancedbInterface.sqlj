@@ -1,5 +1,5 @@
 /*
- * $Id: MaintenancedbInterface.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
+ * $Id: MaintenancedbInterface.sqlj,v 1.1.2.3 2004/08/25 15:24:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,18 +19,15 @@ import java.util.*;
 import sqlj.runtime.SQLNullException;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/25 15:24:30 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class MaintenancedbInterface
-{
-	protected MaintenancedbInterface()
-	{
+final class MaintenancedbInterface {
+	private MaintenancedbInterface() {
 	}
 
-	public static Vector getEventSourceTypes()
-	{
+	static Vector getEventSourceTypes() {
 		EventSourceType_Transferable est;
 		Vector vec = new Vector();
 
@@ -100,27 +97,17 @@ public class MaintenancedbInterface
 									"",
 									(rIt.is_generated() == 0) ? false : true ));
 						}
-						catch (SQLNullException e)
-						{
+						catch (SQLNullException e) {
 						}
 					}
-				}
-				catch (SQLException e)
-				{
+				} catch (SQLException e) {
 					System.out.println("could not get rules for source type " + It_id + ": " + e.getMessage());
 					e.printStackTrace();
-				}
-				finally
-				{
-					try
-					{
+				} finally {
+					try {
 						rIt.close();
-					}
-					catch (NullPointerException npe)
-					{
-					}
-					catch (SQLException sqle)
-					{
+					} catch (NullPointerException npe) {
+					} catch (SQLException sqle) {
 					}
 				}
 				rules = new Rule_Transferable[arrayList.size()];
@@ -156,8 +143,7 @@ public class MaintenancedbInterface
 		return vec;
 	}
 
-	public static Vector getAlertingMessages()
-	{
+	static Vector getAlertingMessages() {
 		AlertingMessage_Transferable am;
 		Vector vec = new Vector();
 
@@ -225,8 +211,7 @@ public class MaintenancedbInterface
 		return vec;
 	}
 
-	public static Vector getAlertingMessageUsers()
-	{
+	static Vector getAlertingMessageUsers() {
 		AlertingMessageUser_Transferable amu;
 		Vector vec = new Vector();
 
@@ -294,8 +279,7 @@ public class MaintenancedbInterface
 		return vec;
 	}
 
-	public static void saveAlertingMessages(AlertingMessage_Transferable am)
-	{
+	static void saveAlertingMessages(AlertingMessage_Transferable am) {
 		try
 		{
 			System.out.println("save AlertingMessage ID: " + am.id + ", TEXT: " + am.text + ", MESSAGE_TYPE_ID: " + am.message_type_id + ", EVENT_TYPE_ID: " + am.event_type_id + "");
@@ -338,7 +322,7 @@ public class MaintenancedbInterface
 		}
 	}
 
-	public static void saveAlertingMessageUsers(AlertingMessageUser_Transferable amu)
+	static void saveAlertingMessageUsers(AlertingMessageUser_Transferable amu)
 	{
 		try
 		{
@@ -382,7 +366,7 @@ public class MaintenancedbInterface
 		}
 	}
 
-	public static void removeAlertingMessageUser(String amu_id)
+	static void removeAlertingMessageUser(String amu_id)
 	{
 		try
 		{
@@ -400,38 +384,8 @@ public class MaintenancedbInterface
 		}
 	}
 
-	#sql public static iterator EventSourceTypeIterator(
-		String id,
-		String name );
-
-	#sql public static iterator STETIterator(
-		int is_generated,
-		String default_reaction_substring,
-		String source_type_id,
-		String event_type_id );
-
-	#sql public static iterator AlertingMessageIterator(
-		String event_type_id,
-		String text,
-		String id,
-		String message_type_id );
-
-	#sql public static iterator AlertingMessageUserIterator(
-		String alerting_message_id,
-		String id,
-		String alerting_type_id,
-		String user_id );
-
-	public static int getAlarms(
-			AlarmSeq_TransferableHolder alarmseq)
-	{
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	public static String doEvent(String source_id, String event_type, String descriptor)
-	{
-	try
-	{
+	static String doEvent(String source_id, String event_type, String descriptor) {
+		try {
 		String id_v = ResourcedbInterface.getUId("systemevent");
 
 		String src_id = source_id;
@@ -451,18 +405,7 @@ public class MaintenancedbInterface
 	}
 	}
 
-	public static String getLastEvent(String source_id)
-	{
-		String ev_id = "";
-
-		return ev_id;
-	}
-
-	public static int GetAlarmIdsForMonitoredElement(
-			String me_id,
-			ResourceDescriptorSeq_TransferableHolder alarmids)
-		throws AMFICOMRemoteException
-	{
+	static int getAlarmIdsForMonitoredElement(String me_id, ResourceDescriptorSeq_TransferableHolder alarmids) throws AMFICOMRemoteException {
 		int ret = Constants.ERROR_NO_ERROR;
 		IdIterator idIt = null;
 		IdIterator residIt = null;
@@ -564,22 +507,32 @@ public class MaintenancedbInterface
 		return ret;
 	}
 
-	#sql public static iterator IdIterator( String id );
-	#sql public static iterator ResourceIdIterator( String id, Timestamp modified );
+	#sql private static iterator IdIterator(
+		String id);
 
-	#sql public static iterator AlarmIterator(
-		String source_id,
-		Timestamp fixed,
-		Timestamp appointed,
-		String comments,
-		Timestamp time_to_fix,
-		String alarm_type_id,
-		String fixed_by,
-		String alarm_rule_id,
-		int status,
-		int priority,
-		String appointed_to,
+	#sql private static iterator ResourceIdIterator(
 		String id,
-		Timestamp generated,
-		Timestamp reacted );
+		Timestamp modified);
+
+	#sql private static iterator EventSourceTypeIterator(
+		String id,
+		String name );
+
+	#sql private static iterator STETIterator(
+		int is_generated,
+		String default_reaction_substring,
+		String source_type_id,
+		String event_type_id );
+
+	#sql private static iterator AlertingMessageIterator(
+		String event_type_id,
+		String text,
+		String id,
+		String message_type_id );
+
+	#sql private static iterator AlertingMessageUserIterator(
+		String alerting_message_id,
+		String id,
+		String alerting_type_id,
+		String user_id );
 }

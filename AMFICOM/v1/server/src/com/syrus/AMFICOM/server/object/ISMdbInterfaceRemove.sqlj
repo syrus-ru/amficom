@@ -1,5 +1,5 @@
 /*
- * $Id: ISMdbInterfaceRemove.sqlj,v 1.1.2.2 2004/08/20 17:12:09 bass Exp $
+ * $Id: ISMdbInterfaceRemove.sqlj,v 1.1.2.3 2004/08/25 15:24:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,18 +13,15 @@ import com.syrus.AMFICOM.server.event.EventSource;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:09 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/25 15:24:30 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class ISMdbInterfaceRemove
-{
-	protected ISMdbInterfaceRemove()
-	{
+final class ISMdbInterfaceRemove {
+	private ISMdbInterfaceRemove() {
 	}
 
-	public static int removeAccessPorts(String[] accessport_ids)
-	{
+	static int removeAccessPorts(String[] accessport_ids) {
 		int len = accessport_ids.length;
 		for (int i = 0; i < len; i++)
 		{
@@ -50,8 +47,7 @@ public class ISMdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeKISs(String[] kis_ids)
-	{
+	static int removeKISs(String[] kis_ids) {
 		for(int i = 0; i < kis_ids.length; i++)
 		{
 			System.out.println("delete eventsource for kis " + kis_ids[i]);
@@ -70,8 +66,7 @@ public class ISMdbInterfaceRemove
 		return NetdbInterfaceRemove.removeEquipments(kis_ids);
 	}
 
-	public static int removeTransmissionPaths(String[] path_ids)
-	{
+	static int removeTransmissionPaths(String[] path_ids) {
 		String me_id;
 		int len = path_ids.length;
 		for (int i = 0; i < len; i++)
