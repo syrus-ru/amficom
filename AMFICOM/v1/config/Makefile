@@ -44,6 +44,7 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/KISDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MCM.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MCMDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/Server.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElementDatabase.java
 	touch $@

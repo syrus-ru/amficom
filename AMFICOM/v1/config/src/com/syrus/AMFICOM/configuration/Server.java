@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.8 2004/07/30 12:31:02 arseniy Exp $
+ * $Id: Server.java,v 1.1 2004/07/30 12:31:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,60 +19,58 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/07/30 12:31:02 $
+ * @version $Revision: 1.1 $, $Date: 2004/07/30 12:31:02 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
 
-public class MCM extends DomainMember implements Characterized {
+public class Server extends DomainMember implements Characterized {
 	private String name;
 	private String description;
 	private Identifier userId;
-	private Identifier serverId;
 	private String location;
 	private String hostname;
 	private List characteristicIds;
 
-	private List kiss;
+	private List mcms;
 
-	private StorableObjectDatabase mcmDatabase;
+	private StorableObjectDatabase serverDatabase;
 
-	public MCM(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	public Server(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.mcmDatabase = ConfigurationDatabaseContext.mcmDatabase;
+		this.serverDatabase = ConfigurationDatabaseContext.serverDatabase;
 		try {
-			this.mcmDatabase.retrieve(this);
+			this.serverDatabase.retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
 
-	public MCM(MCM_Transferable mt) throws CreateObjectException {
-		super(new Identifier(mt.id),
-					new Date(mt.created),
-					new Date(mt.modified),
-					new Identifier(mt.creator_id),
-					new Identifier(mt.modifier_id),
-					new Identifier(mt.domain_id));
-		this.name = new String(mt.name);
-		this.description = new String(mt.description);
-		this.userId = new Identifier(mt.user_id);
-		this.serverId = new Identifier(mt.server_id);
-		this.location = new String(mt.location);
-		this.hostname = new String(mt.hostname);
+	public Server(Server_Transferable st) throws CreateObjectException {
+		super(new Identifier(st.id),
+					new Date(st.created),
+					new Date(st.modified),
+					new Identifier(st.creator_id),
+					new Identifier(st.modifier_id),
+					new Identifier(st.domain_id));
+		this.name = new String(st.name);
+		this.description = new String(st.description);
+		this.userId = new Identifier(st.user_id);
+		this.location = new String(st.location);
+		this.hostname = new String(st.hostname);
 
-		this.characteristicIds = new ArrayList(mt.characteristic_ids.length);
-		for (int i = 0; i < mt.characteristic_ids.length; i++)
-			this.characteristicIds.add(new Identifier(mt.characteristic_ids[i]));
+		this.characteristicIds = new ArrayList(st.characteristic_ids.length);
+		for (int i = 0; i < st.characteristic_ids.length; i++)
+			this.characteristicIds.add(new Identifier(st.characteristic_ids[i]));
 
-		this.mcmDatabase = ConfigurationDatabaseContext.mcmDatabase;
+		this.serverDatabase = ConfigurationDatabaseContext.serverDatabase;
 		try {
-			this.mcmDatabase.insert(this);
+			this.serverDatabase.insert(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
@@ -86,26 +84,25 @@ public class MCM extends DomainMember implements Characterized {
 		for (Iterator iterator = this.characteristicIds.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
-		Identifier_Transferable[] kisIds = new Identifier_Transferable[this.kiss.size()];
-		for (Iterator iterator = this.kiss.iterator(); iterator.hasNext();)
-			kisIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		Identifier_Transferable[] mcmIds = new Identifier_Transferable[this.mcms.size()];
+		for (Iterator iterator = this.mcms.iterator(); iterator.hasNext();)
+			mcmIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
-		return new MCM_Transferable((Identifier_Transferable)super.getId().getTransferable(),
-																super.created.getTime(),
-																super.modified.getTime(),
-																(Identifier_Transferable)super.creatorId.getTransferable(),
-																(Identifier_Transferable)super.modifierId.getTransferable(),
-																(Identifier_Transferable)super.domainId.getTransferable(),
-																new String(this.name),
-																new String(this.description),
-																(Identifier_Transferable)this.userId.getTransferable(),
-																(Identifier_Transferable)this.serverId.getTransferable(),
-																new String(this.location),
-																new String(this.hostname),
-																charIds,
-																kisIds);
+		return new Server_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+																	 super.created.getTime(),
+																	 super.modified.getTime(),
+																	 (Identifier_Transferable)super.creatorId.getTransferable(),
+																	 (Identifier_Transferable)super.modifierId.getTransferable(),
+																	 (Identifier_Transferable)super.domainId.getTransferable(),
+																	 new String(this.name),
+																	 new String(this.description),
+																	 (Identifier_Transferable)this.userId.getTransferable(),
+																	 new String(this.location),
+																	 new String(this.hostname),
+																	 charIds,
+																	 mcmIds);
 	}
-
+	
 	public String getName() {
 		return this.name;
 	}
@@ -116,10 +113,6 @@ public class MCM extends DomainMember implements Characterized {
 
 	public Identifier getUserId() {
 		return this.userId;
-	}
-
-	public Identifier getServerId() {
-		return this.serverId;
 	}
 
 	public String getLocation() {
@@ -138,8 +131,8 @@ public class MCM extends DomainMember implements Characterized {
 		this.characteristicIds = characteristicIds;
 	}
 
-	public List getKISs() {
-		return this.kiss;
+	public List getMCMs() {
+		return this.mcms;
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -150,7 +143,6 @@ public class MCM extends DomainMember implements Characterized {
 																						String name,
 																						String description,
 																						Identifier userId,
-																						Identifier serverId,
 																						String location,
 																						String hostname) {
 		super.setAttributes(created,
@@ -161,12 +153,11 @@ public class MCM extends DomainMember implements Characterized {
 		this.name = name;
 		this.description = description;
 		this.userId = userId;
-		this.serverId = serverId;
 		this.location = location;
 		this.hostname = hostname;
 	}
 
-	protected synchronized void setKISs(List kiss) {
-		this.kiss = kiss;
+	protected synchronized void setMCMs(List mcms) {
+		this.mcms = mcms;
 	}
 }
