@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.2 2004/08/13 14:08:15 bob Exp $
+ * $Id: MeasurementPortType.java,v 1.3 2004/08/18 18:08:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/13 14:08:15 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2004/08/18 18:08:05 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -92,12 +92,12 @@ public class MeasurementPortType extends StorableObjectType {
 	
 	public Object getTransferable() {
 		return new MeasurementPortType_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																					super.created.getTime(),
-																					super.modified.getTime(),
-																					(Identifier_Transferable)super.creatorId.getTransferable(),
-																					(Identifier_Transferable)super.modifierId.getTransferable(),
-																					new String(super.codename),
-																					new String(super.description));
+																								super.created.getTime(),
+																								super.modified.getTime(),
+																								(Identifier_Transferable)super.creatorId.getTransferable(),
+																								(Identifier_Transferable)super.modifierId.getTransferable(),
+																								new String(super.codename),
+																								(super.description != null) ? (new String(super.description)) : "");
 	}
 	
 	protected synchronized void setAttributes(Date created,

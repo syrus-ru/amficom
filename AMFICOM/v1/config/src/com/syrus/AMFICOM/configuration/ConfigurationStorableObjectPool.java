@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.3 2004/08/16 08:17:26 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.4 2004/08/18 18:08:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/16 08:17:26 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/18 18:08:05 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -154,9 +154,9 @@ public class ConfigurationStorableObjectPool {
 			case ObjectEntities.KIS_ENTITY_CODE:
 				storableObject = cObjectLoader.loadKIS(objectId);
 				break;
-//			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-//				storableObject = cObjectLoader.loadMeasurementPort(objectId);
-//				break;
+			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+				storableObject = cObjectLoader.loadMeasurementPort(objectId);
+				break;
 			case ObjectEntities.ME_ENTITY_CODE:
 				storableObject = cObjectLoader.loadMonitoredElement(objectId);
 				break;

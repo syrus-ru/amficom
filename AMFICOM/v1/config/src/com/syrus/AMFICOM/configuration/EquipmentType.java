@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.5 2004/08/13 05:17:37 bob Exp $
+ * $Id: EquipmentType.java,v 1.6 2004/08/18 18:08:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/13 05:17:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2004/08/18 18:08:05 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -98,7 +98,7 @@ public class EquipmentType extends StorableObjectType {
 																					(Identifier_Transferable)super.creatorId.getTransferable(),
 																					(Identifier_Transferable)super.modifierId.getTransferable(),
 																					new String(super.codename),
-																					new String(super.description));
+																					(super.description != null) ? (new String(super.description)) : "");
 	}
 	
 	protected synchronized void setAttributes(Date created,

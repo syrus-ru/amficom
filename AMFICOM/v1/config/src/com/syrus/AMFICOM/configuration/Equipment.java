@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.21 2004/08/18 08:46:04 arseniy Exp $
+ * $Id: Equipment.java,v 1.22 2004/08/18 18:08:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,18 +22,17 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
-import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/08/18 08:46:04 $
+ * @version $Revision: 1.22 $, $Date: 2004/08/18 18:08:05 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
-
-public class Equipment extends MonitoredDomainMember implements Characterized, TypedObject {
+//extends MonitoredDomainMember 
+public class Equipment extends DomainMember implements Characterized, TypedObject {
 	
-	protected static final int		UPDATE_ATTACH_ME	= 1;
-	protected static final int		UPDATE_DETACH_ME	= 2;
+//	protected static final int		UPDATE_ATTACH_ME	= 1;
+//	protected static final int		UPDATE_DETACH_ME	= 2;
 	
 	private EquipmentType type;
 	private String name;
@@ -41,11 +40,6 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	private Identifier imageId;
 
 	private List portIds;
-	private List cablePortIds;
-	private List specialPortIds;
-
-	private int sort;
-	private Identifier kisId;
 
 	private List characteristics;
 
@@ -70,9 +64,10 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 					new Identifier(et.creator_id),
 					new Identifier(et.modifier_id),
 					new Identifier(et.domain_id));
-		super.monitoredElementIds = new ArrayList(et.monitored_element_ids.length);
-		for (int i = 0; i < et.monitored_element_ids.length; i++)
-			super.monitoredElementIds.add(new Identifier(et.monitored_element_ids[i]));
+
+//		super.monitoredElementIds = new ArrayList(et.monitored_element_ids.length);
+//		for (int i = 0; i < et.monitored_element_ids.length; i++)
+//			super.monitoredElementIds.add(new Identifier(et.monitored_element_ids[i]));
 
 		this.type = (EquipmentType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
 		this.name = new String(et.name);
@@ -82,18 +77,6 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		this.portIds = new ArrayList(et.port_ids.length);
 		for (int i = 0; i < et.port_ids.length; i++)
 			this.portIds.add(new Identifier(et.port_ids[i]));
-
-		this.cablePortIds = new ArrayList(et.cable_port_ids.length);
-		for (int i = 0; i < et.cable_port_ids.length; i++)
-			this.cablePortIds.add(new Identifier(et.cable_port_ids[i]));
-
-		this.specialPortIds = new ArrayList(et.special_port_ids.length);
-		for (int i = 0; i < et.special_port_ids.length; i++)
-			this.specialPortIds.add(new Identifier(et.special_port_ids[i]));
-		
-		this.sort = et.sort.value();
-		if (this.sort == EquipmentSort._EQUIPMENT_SORT_KIS)
-			this.kisId = new Identifier(et.kis_id);
 		
 		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
 		try {
@@ -114,26 +97,22 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 										EquipmentType type,
 										String name,
 										String description,
-										Identifier imageId,
-										int sort,
-										Identifier kisId) {
+										Identifier imageId) {
 				super(id,
 							new Date(System.currentTimeMillis()),
 							new Date(System.currentTimeMillis()),
 							creatorId,
 							creatorId,
 							domainId);
-							this.type = type;
+//
+//				super.monitoredElementIds = new ArrayList();
+
+				this.type = type;
 				this.name = name;
 				this.description = description;
 				this.imageId = imageId;
-				this.sort = sort;
-				this.kisId = kisId;
-				
-				super.monitoredElementIds = new ArrayList();
+
 				this.portIds = new ArrayList();
-				this.cablePortIds = new ArrayList();
-				this.specialPortIds = new ArrayList();
 
 				this.characteristics = new ArrayList();
 	}
@@ -157,26 +136,22 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 																				 EquipmentType type,
 																				 String name,
 																				 String description,
-																				 Identifier imageId,
-																				 int sort,
-																				 Identifier kisId) {
+																				 Identifier imageId) {
 		return new Equipment(id,
 												 creatorId,
 												 domainId,
 												 type,
 												 name,
 												 description,
-												 imageId,
-												 sort,
-												 kisId);
+												 imageId);
 	}
 
 	public Object getTransferable() {
 		int i = 0;
-
-		Identifier_Transferable[] meIds = new Identifier_Transferable[super.monitoredElementIds.size()];
-		for (Iterator iterator = super.monitoredElementIds.iterator(); iterator.hasNext();)
-			meIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+//
+//		Identifier_Transferable[] meIds = new Identifier_Transferable[super.monitoredElementIds.size()];
+//		for (Iterator iterator = super.monitoredElementIds.iterator(); iterator.hasNext();)
+//			meIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
 		i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
@@ -188,33 +163,19 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		for (Iterator iterator = this.portIds.iterator(); iterator.hasNext();)
 			pIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
-		i = 0;
-		Identifier_Transferable[] cportIds = new Identifier_Transferable[this.cablePortIds.size()];
-		for (Iterator iterator = this.cablePortIds.iterator(); iterator.hasNext();)
-			cportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
-		i = 0;
-		Identifier_Transferable[] sportIds = new Identifier_Transferable[this.specialPortIds.size()];
-		for (Iterator iterator = this.specialPortIds.iterator(); iterator.hasNext();)
-			sportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
 		return new Equipment_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																			super.created.getTime(),
 																			super.modified.getTime(),
 																			(Identifier_Transferable)super.creatorId.getTransferable(),
 																			(Identifier_Transferable)super.modifierId.getTransferable(),
 																			(Identifier_Transferable)super.domainId.getTransferable(),
-																			meIds,
+//																			meIds,
 																			(Identifier_Transferable)this.type.getId().getTransferable(),
 																			new String(this.name),
 																			new String(this.description),
 																			(Identifier_Transferable)this.imageId.getTransferable(),
-																			charIds,
 																			pIds,
-																			cportIds,
-																			sportIds,
-																			EquipmentSort.from_int(this.sort),
-																			(this.sort == EquipmentSort._EQUIPMENT_SORT_KIS) ? (Identifier_Transferable)this.kisId.getTransferable() : (new Identifier_Transferable("")));
+																			charIds);
 	}
 
 	public StorableObjectType getType() {
@@ -241,22 +202,6 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		return this.portIds;
 	}
 
-	public List getCablePortIds() {
-		return this.cablePortIds;
-	}
-
-	public List getSpecialPortIds() {
-		return this.specialPortIds;
-	}
-
-	public int getSort(){
-		return this.sort;
-	}
-
-	public Identifier getKISId() {
-		return this.kisId;
-	}
-
 	public void setCharacteristics(List characteristics) {
 		this.characteristics = characteristics;
 	}
@@ -269,9 +214,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 																						EquipmentType type,
 																						String name,
 																						String description,
-																						Identifier imageId,
-																						int sort,
-																						Identifier kisId) {
+																						Identifier imageId) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
@@ -281,12 +224,9 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		this.name = name;
 		this.description = description;
 		this.imageId = imageId;
-		this.sort = sort;
-		switch (this.sort) {
-			case EquipmentSort._EQUIPMENT_SORT_KIS:
-				this.kisId = kisId;
-				break;
-			default:
-		}
+	}
+
+	protected synchronized void setPortIds(List portIds) {
+		this.portIds = portIds;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.14 2004/08/18 12:37:48 arseniy Exp $
+ * $Id: KIS.java,v 1.15 2004/08/18 18:08:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,19 +22,20 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/18 12:37:48 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/18 18:08:05 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
 
 public class KIS extends DomainMember {
-	public static final int RETRIEVE_MONITORED_ELEMENTS = 1;
+	protected static final int RETRIEVE_MONITORED_ELEMENTS = 1;
 
+	private Identifier equipmentId;
 	private Identifier mcmId;
 	private String name;
 	private String description;
 	
-	private List measurementPortIds;
+	private List measurementPortIds;	//List <MeasurementPort>
 
 	private StorableObjectDatabase kisDatabase;
 
@@ -57,14 +58,14 @@ public class KIS extends DomainMember {
 					new Identifier(kt.creator_id),
 					new Identifier(kt.modifier_id),
 					new Identifier(kt.domain_id));
+		this.equipmentId = new Identifier(kt.equipment_id);
 		this.mcmId = new Identifier(kt.mcm_id);
 		this.name = kt.name;
 		this.description = kt.description;
-		
+
 		this.measurementPortIds = new ArrayList(kt.measurement_port_ids.length);
 		for (int i = 0; i < kt.measurement_port_ids.length; i++)
-			this.measurementPortIds.add(new Identifier(kt.measurement_port_ids[i]));		
-		
+			this.measurementPortIds.add(new Identifier(kt.measurement_port_ids[i]));
 
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 		try {
@@ -76,19 +77,21 @@ public class KIS extends DomainMember {
 	}
 	
 	private KIS(Identifier id,
-				Identifier creatorId,
-				Identifier domainId,
-				String name,
-				String description,																						
-				Identifier mcmId){
+							Identifier creatorId,
+							Identifier domainId,
+							String name,
+							String description,
+							Identifier equipmentId,
+							Identifier mcmId) {
 		super(id,
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
-				creatorId,
-				creatorId,
-				domainId);
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creatorId,
+					creatorId,
+					domainId);
 		this.name = name;
 		this.description = description;
+		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
 		this.measurementPortIds = new ArrayList();
 	}
@@ -104,22 +107,23 @@ public class KIS extends DomainMember {
 	 * @return
 	 */
 	public static KIS createInstance(Identifier id,
-										Identifier creatorId,
-										Identifier domainId,
-										String name,
-										String description,																						
-										Identifier mcmId){
+																	 Identifier creatorId,
+																	 Identifier domainId,
+																	 String name,
+																	 String description,
+																	 Identifier equipmentId,
+																	 Identifier mcmId){
 		return new KIS(id,
-					   creatorId,
-					   domainId,
-					   name,
-					   description,
-					   mcmId);
+									 creatorId,
+									 domainId,
+									 name,
+									 description,
+									 equipmentId,
+									 mcmId);
 	}
 
 	public Object getTransferable() {
 		int i = 0;
-
 		Identifier_Transferable[] mportIds = new Identifier_Transferable[this.measurementPortIds.size()];
 		for (Iterator iterator = this.measurementPortIds.iterator(); iterator.hasNext();)
 			mportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
@@ -132,12 +136,9 @@ public class KIS extends DomainMember {
 																(Identifier_Transferable)super.domainId.getTransferable(),
 																new String(this.name),
 																new String(this.description),
+																(Identifier_Transferable)this.equipmentId.getTransferable(),
 																(Identifier_Transferable)this.mcmId.getTransferable(),
 																mportIds);
-	}
-
-	public Identifier getMCMId() {
-		return this.mcmId;
 	}
 
 	public String getName() {
@@ -146,6 +147,18 @@ public class KIS extends DomainMember {
 
 	public String getDescription() {
 		return this.description;
+	}
+
+	public Identifier getEquipmentId() {
+		return this.equipmentId;
+	}
+
+	public Identifier getMCMId() {
+		return this.mcmId;
+	}
+
+	public List getMeasurementPortIds() {
+		return this.measurementPortIds;
 	}
 
 	public List retrieveMonitoredElements() throws RetrieveObjectException, ObjectNotFoundException {
@@ -163,7 +176,8 @@ public class KIS extends DomainMember {
 																						Identifier modifierId,
 																						Identifier domainId,
 																						String name,
-																						String description,																						
+																						String description,
+																						Identifier equipmentId,
 																						Identifier mcmId) {
 		super.setAttributes(created,
 												modified,
@@ -172,6 +186,11 @@ public class KIS extends DomainMember {
 												domainId);
 		this.name = name;
 		this.description = description;
+		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
+	}
+
+	protected synchronized void setMeasurementPortIds(List measurementPortIds) {
+		this.measurementPortIds = measurementPortIds;
 	}
 }
