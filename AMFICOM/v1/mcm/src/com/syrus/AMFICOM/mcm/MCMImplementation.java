@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.24 2005/03/18 18:25:58 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.25 2005/03/22 16:07:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -36,10 +37,8 @@ import com.syrus.AMFICOM.mcm.corba.MCMPOA;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
@@ -47,7 +46,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/03/18 18:25:58 $
+ * @version $Revision: 1.25 $, $Date: 2005/03/22 16:07:33 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -84,40 +83,20 @@ public class MCMImplementation extends MCMPOA {
 	public void receiveTests(Test_Transferable[] testsT) throws AMFICOMRemoteException {
 		try {
 			Log.debugMessage("Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
-			List testList = new ArrayList(testsT.length);
+			List tests = new LinkedList();
 			for (int i = 0; i < testsT.length; i++) {
 				try {
 					Test test = new Test(testsT[i]);
-					testList.add(test);
+					tests.add(test);
 				}
 
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
 					throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
 				}
-				catch (Exception e) {
-					Log.errorException(e);
-					throw new AMFICOMRemoteException();
-				}
 			}
 
-			TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
-			try {
-				testDatabase.insert(testList);
-			}
-			catch (CreateObjectException e) {
-				Log.errorException(e);
-				throw new AMFICOMRemoteException();
-			}
-			catch (IllegalDataException e) {
-				Log.errorException(e);
-				throw new AMFICOMRemoteException();
-			}
-
-			for (Iterator it = testList.iterator(); it.hasNext();) {
-				Test test = (Test) it.next();
-				MeasurementControlModule.addTest(test);
-			}
+			MeasurementControlModule.addTests(tests);
 		}
 		catch (Throwable throwable) {
 			Log.errorException(throwable);
