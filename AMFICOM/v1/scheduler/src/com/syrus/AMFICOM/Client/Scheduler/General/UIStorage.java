@@ -34,9 +34,9 @@ import javax.swing.UIManager;
  */
 public final class UIStorage {
 
-	public static final Dimension			BUTTON_SIZE				= new Dimension(30, 20);
+//	public static final Dimension			BUTTON_SIZE				= new Dimension(30, 20);
 
-	public static final Insets				INSETS1010				= new Insets(1, 0, 1, 0);
+//	public static final Insets				INSETS1010				= new Insets(1, 0, 1, 0);
 	public static final Image				SCHEDULING_ICON_MINI	= Toolkit.getDefaultToolkit().getImage(
 																		"images/main/scheduling_mini.gif");
 	
@@ -120,18 +120,18 @@ public final class UIStorage {
 		return icon;
 	}
 
-	/**
-	 * set rigid dimenstion (min,max,preferred) size for component
-	 * 
-	 * @param component
-	 * @param dimension
-	 */
-	public static void setRigidSize(JComponent component,
-									Dimension dimension) {
-		component.setPreferredSize(dimension);
-		component.setMaximumSize(dimension);
-		component.setMinimumSize(dimension);
-	}
+//	/**
+//	 * set rigid dimenstion (min,max,preferred) size for component
+//	 * 
+//	 * @param component
+//	 * @param dimension
+//	 */
+//	public static void setRigidSize(JComponent component,
+//									Dimension dimension) {
+//		component.setPreferredSize(dimension);
+//		component.setMaximumSize(dimension);
+//		component.setMinimumSize(dimension);
+//	}
 
 	/**
 	 * create JRadioButton with title and Action

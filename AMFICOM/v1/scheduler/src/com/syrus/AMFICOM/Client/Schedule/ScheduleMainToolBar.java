@@ -1,14 +1,18 @@
 package com.syrus.AMFICOM.Client.Schedule;
 
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JToolBar;
+import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class ScheduleMainToolBar extends JToolBar implements ApplicationModelListener {
 
@@ -21,9 +25,9 @@ public class ScheduleMainToolBar extends JToolBar implements ApplicationModelLis
 	public ScheduleMainToolBar() {
 		this.sessionOpen = new JButton();
 		this.sessionOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_SESSION));
-		UIStorage.setRigidSize(this.sessionOpen, UIStorage.BUTTON_SIZE);
 		this.sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
 		this.sessionOpen.setName(ScheduleMainMenuBar.MENU_SESSION_NEW);
+		this.sessionOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.sessionOpen.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {

@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.Client.General.UI.TimeSpinner;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.Schedule.TestEditor;
 import com.syrus.AMFICOM.Client.Schedule.TestTemporalStampsEditor;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
@@ -62,6 +63,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternController;
+import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TemporalPattern.TimeLine;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
@@ -70,7 +72,7 @@ public class TimeParametersFrame extends JInternalFrame {
 
 	private static final long	serialVersionUID	= 6562288896016470275L;
 
-	public class TimeParametersPanel extends JPanel implements TestTemporalStampsEditor {
+	public class TimeParametersPanel extends JPanel implements TestTemporalStampsEditor, TestEditor {
 
 		private static final long	serialVersionUID	= -7975294015403739057L;
 
@@ -112,6 +114,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.aContext = aContext;
 			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 			this.schedulerModel.setTestTemporalStampsEditor(this);
+			this.schedulerModel.addTestEditor(this);
 			init();
 		}
 
@@ -189,7 +192,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			}
 
 			JSeparator jsep2 = new JSeparator();
-			gbc.insets = UIStorage.INSETS1010;
+			gbc.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 			gbc.gridy++;
 			jsep2.setBorder(BorderFactory.createEtchedBorder());
 			add(jsep2, gbc);
@@ -382,7 +385,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			group.add(this.periodicalRadioButton);
 
 			JSeparator jsep3 = new JSeparator();
-			gbc.insets = UIStorage.INSETS1010;
+			gbc.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 			jsep3.setBorder(BorderFactory.createEtchedBorder());
 			gbc.gridy++;
 			add(jsep3, gbc);
@@ -405,7 +408,7 @@ public class TimeParametersFrame extends JInternalFrame {
 				add(this.alternateRadioButton, gbc);
 
 				JSeparator jsep4 = new JSeparator();
-				gbc.insets = UIStorage.INSETS1010;
+				gbc.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 				gbc.gridheight = GridBagConstraints.RELATIVE;
 				jsep4.setBorder(BorderFactory.createEtchedBorder());
 				gbc.gridy++;
@@ -562,7 +565,15 @@ public class TimeParametersFrame extends JInternalFrame {
 				model.addElement(pattern);
 			}
 			
-		}		
+		}
+		
+		public void updateTest() {
+			Test selectedTest = this.schedulerModel.getSelectedTest();
+			if (selectedTest != null) {
+				this.applyButton.setEnabled(selectedTest.isChanged());
+			}
+			
+		}
 
 		void showEndCalendar() {
 			Calendar cal = Calendar.getInstance();

@@ -199,7 +199,7 @@ class PlanToolBar extends JPanel {
 					PlanToolBar.this.dateSpinner.getModel().setValue(cal.getTime());
 			}
 		});
-		UIStorage.setRigidSize(this.zoomInButton, UIStorage.BUTTON_SIZE);
+		this.zoomInButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.zoomInButton.setFocusable(false);
 		this.zoomInButton.setIcon(UIStorage.ZOOMIN_ICON);
 		this.zoomInButton.setToolTipText(LangModelSchedule.getString("ZoomIn")); //$NON-NLS-1$
@@ -252,7 +252,7 @@ class PlanToolBar extends JPanel {
 //			}
 //		});
 
-		UIStorage.setRigidSize(this.zoomOutButton, UIStorage.BUTTON_SIZE);
+		this.zoomOutButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.zoomOutButton.setFocusable(false);
 		this.zoomOutButton.setIcon(UIStorage.ZOOMOUT_ICON);
 		this.zoomOutButton.setToolTipText(LangModelSchedule.getString("ZoomOut")); //$NON-NLS-1$
@@ -262,7 +262,7 @@ class PlanToolBar extends JPanel {
 				PlanToolBar.this.panel.updateScale(.8);
 			}
 		});
-		UIStorage.setRigidSize(this.zoomNoneButton, UIStorage.BUTTON_SIZE);
+		this.zoomNoneButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.zoomNoneButton.setFocusable(false);
 		this.zoomNoneButton.setIcon(UIStorage.NOZOOM_ICON);
 		this.zoomNoneButton.setToolTipText(LangModelSchedule.getString("ZoomNone")); //$NON-NLS-1$
@@ -281,8 +281,9 @@ class PlanToolBar extends JPanel {
 		box.add(new JLabel(LangModelSchedule.getString("Date"))); //$NON-NLS-1$
 		box.add(Box.createHorizontalStrut(4));
 		{
-			Dimension d = new Dimension(137, H);
-			UIStorage.setRigidSize(this.dateSpinner, d);
+//			Dimension d = new Dimension(137, H);
+			/* TODO */
+//			UIStorage.setRigidSize(this.dateSpinner, d);
 		}
 		box.add(this.dateSpinner);
 		box.add(this.dateButton);
@@ -290,8 +291,9 @@ class PlanToolBar extends JPanel {
 		box.add(new JLabel(LangModelSchedule.getString("Time"))); //$NON-NLS-1$
 		box.add(Box.createHorizontalStrut(4));
 		{
-			Dimension d = new Dimension(55, H);
-			UIStorage.setRigidSize(this.timeSpinner, d);
+			/* TODO */
+//			Dimension d = new Dimension(55, H);
+//			UIStorage.setRigidSize(this.timeSpinner, d);
 		}
 		box.add(this.timeSpinner);
 		this.nowButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));

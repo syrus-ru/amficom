@@ -60,15 +60,15 @@ public class TestParametersFrame extends JInternalFrame implements OperationList
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
 		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)) {
-			Identifier id = (Identifier) obj;
+			Identifier meId = (Identifier) obj;
 			try {
-				MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(id, true);
+				MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(meId, true);
 				MeasurementPort port = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(me
 						.getMeasurementPortId(), true);
 				if (((MeasurementPortType) port.getType()).getCodename().equals(
 					ElementsTreeFrame.ACCESSPORT_NAME_REFLECTOMETER)) {
 					if (!this.panel.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
-						this.dispatcher.notify(new OperationEvent(new ReflectometryTestPanel(this.aContext, port), 0,
+						this.dispatcher.notify(new OperationEvent(new ReflectometryTestPanel(this.aContext, meId), 0,
 																	SchedulerModel.COMMAND_ADD_PARAM_PANEL));
 					}
 				}

@@ -35,7 +35,9 @@ import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -168,16 +170,16 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		init();
 	}
 
-	public ReflectometryTestPanel(ApplicationContext aContext, MeasurementPort port) {
-		this(aContext, port, null);
+	public ReflectometryTestPanel(ApplicationContext aContext, Identifier meId) {
+		this(aContext, meId, null);
 	}
 
-	public ReflectometryTestPanel(ApplicationContext aContext, MeasurementPort port, Test test) {
+	public ReflectometryTestPanel(ApplicationContext aContext, Identifier meId, Test test) {
 		this.aContext = aContext;
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		initModule(aContext.getDispatcher());
 		init();
-		setPort(port);
+		setMonitoredElementId(meId);
 		setTest(test);
 	}
 
@@ -345,6 +347,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			params[5] = SetParameter.createInstance(scansParameterType, byteArray.getBytes());
 
 			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
+			if (this.meId == null)
+				throw new IllegalArgumentException(LangModelSchedule.getString("Have not choosen Measurement element"));
+			
 			set = Set.createInstance(sessionInterface.getUserIdentifier(), SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
 				"Set created by Scheduler", params, Collections.singleton(this.meId));
 			MeasurementStorableObjectPool.putStorableObject(set);
@@ -367,12 +372,18 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		// Object obj = ae.getSource();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)) {
-			this.meId = (Identifier) ae.getSource();
+			this.setMonitoredElementId((Identifier) ae.getSource());
 		}
 	}
 
-	public void setPort(MeasurementPort port) {
+	public void setMonitoredElementId(Identifier meId) {
+		if (meId.getMajor() != ObjectEntities.ME_ENTITY_CODE)
+			return;
+		this.meId = meId;		
 		try {
+			MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(meId, true);
+			MeasurementPort port = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(me
+					.getMeasurementPortId(), true);
 			LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(port.getType().getId(),
 																			ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
 			Collection characteristics = GeneralStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
@@ -643,16 +654,16 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		setLayout(new GridBagLayout());
 		// refractTextField.setText("1.467"); //$NON-NLS-1$
 		// maxDistanceComboBox
-		{
-			Dimension d = new Dimension(75, 20);
-			UIStorage.setRigidSize(this.refractTextField, d);
-			UIStorage.setRigidSize(this.waveLengthComboBox, d);
-			UIStorage.setRigidSize(this.averageQuantityComboBox, d);
-			UIStorage.setRigidSize(this.pulseWidthComboBox, d);
-			UIStorage.setRigidSize(this.resolutionComboBox, d);
-			UIStorage.setRigidSize(this.maxDistanceComboBox, d);
-
-		}
+//		{
+//			Dimension d = new Dimension(75, 20);
+//			UIStorage.setRigidSize(this.refractTextField, d);
+//			UIStorage.setRigidSize(this.waveLengthComboBox, d);
+//			UIStorage.setRigidSize(this.averageQuantityComboBox, d);
+//			UIStorage.setRigidSize(this.pulseWidthComboBox, d);
+//			UIStorage.setRigidSize(this.resolutionComboBox, d);
+//			UIStorage.setRigidSize(this.maxDistanceComboBox, d);
+//
+//		}
 
 		this.refractTextField.addActionListener(new ActionListener() {
 
