@@ -1,0 +1,8 @@
+#!/bin/bash
+
+JUNITCLASSPATH=/mnt/d/eclipse/3.1M4/plugins/org.junit_3.8.1/junit.jar
+JDBCCLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14.jar:$ORACLE_HOME/jdbc/lib/orai18n.jar
+LIB=../lib
+APPCLASSPATH=$LIB/util.jar
+
+java -classpath $APPCLASSPATH:$JDBCCLASSPATH:$JUNITCLASSPATH:./classes junit.textui.TestRunner com.syrus.AMFICOM.general.TestParameterType
