@@ -1,17 +1,17 @@
 /*
- * TestResourceTableTest.java
- * Created on 20.08.2004 11:39:04
- * 
+ * $Id: TestResourceTableTest.java,v 1.3 2004/09/25 18:39:50 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
  */
 
 package com.syrus.AMFICOM.client_.general.ui;
 
-import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,7 +22,9 @@ import com.syrus.AMFICOM.client_.resource.TestResource;
 import com.syrus.AMFICOM.client_.resource.TestResourceController;
 
 /**
- * @author Vladimir Dolzhenko
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/09/25 18:39:50 $
+ * @module general_v1
  */
 public class TestResourceTableTest {
 

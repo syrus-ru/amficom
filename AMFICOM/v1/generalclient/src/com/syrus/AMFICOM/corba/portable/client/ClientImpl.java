@@ -1,5 +1,5 @@
 /*
- * $Id: ClientImpl.java,v 1.4 2004/08/06 06:14:09 bass Exp $
+ * $Id: ClientImpl.java,v 1.5 2004/09/25 18:38:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,13 +11,13 @@ package com.syrus.AMFICOM.corba.portable.client;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Object.ui.JAlertingMessageDialog;
 import com.syrus.AMFICOM.corba.portable.alarm.Message;
-import com.syrus.AMFICOM.corba.portable.common.MessageDeliveryFailedException;
+import com.syrus.AMFICOM.corba.portable.common.*;
 import java.util.LinkedList;
 import org.omg.CORBA.LongHolder;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/06 06:14:09 $
  * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2004/09/25 18:38:34 $
  * @module general_v1
  */
 public class ClientImpl implements ClientOperations {
@@ -65,7 +65,7 @@ public class ClientImpl implements ClientOperations {
 			}
 		} catch (IllegalArgumentException iae) {
 			MessageDeliveryFailedException mdfe
-				= new MessageDeliveryFailedException(iae.getLocalizedMessage());
+				= new MessageDeliveryFailedException(iae.getLocalizedMessage(), new PortableStackTraceElement[0]);
 			mdfe.initCause(iae);
 			mdfe.setStackTrace(iae.getStackTrace());
 			throw mdfe;
