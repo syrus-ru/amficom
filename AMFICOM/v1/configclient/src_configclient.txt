@@ -64,3 +64,4 @@ src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\LinkTypeModel.java
 src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\PortType.java
 src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\PortTypeDisplayModel.java
 src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\PortTypeModel.java
+src\com\syrus\AMFICOM\Client\Resource\ResourceUtil.java
