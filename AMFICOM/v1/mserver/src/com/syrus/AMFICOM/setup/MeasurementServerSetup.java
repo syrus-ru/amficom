@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.10 2004/08/31 15:35:34 bob Exp $
+ * $Id: MeasurementServerSetup.java,v 1.11 2004/10/05 08:10:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/31 15:35:34 $
+ * @version $Revision: 1.11 $, $Date: 2004/10/05 08:10:43 $
  * @author $Author: bob $
  * @module mserver_v1
  */
@@ -304,7 +304,7 @@ public class MeasurementServerSetup {
 																			type,
 																			"Port",
 																			equipmentId,
-																			PortSort._PORT_SORT_PORT);
+																			PortSort.PORT_SORT_PORT);
 			Port port1 = Port.getInstance((Port_Transferable)port.getTransferable()); 
 			return id;
 		}
