@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.17 2004/12/03 19:13:29 bob Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.18 2004/12/06 11:47:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/12/03 19:13:29 $
+ * @version $Revision: 1.18 $, $Date: 2004/12/06 11:47:53 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -108,8 +108,8 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
 		super.retrieveEntity(measurementPortType);
-        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-        measurementPortType.setCharacteristics(characteristicDatabase.retrieveCharacteristics(measurementPortType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE));
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
+        measurementPortType.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(measurementPortType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE));
 	}
 	
 	protected StorableObject updateEntityFromResultSet(

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.16 2004/11/30 14:44:04 bob Exp $
+ * $Id: MeasurementPortType.java,v 1.17 2004/12/06 11:47:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/11/30 14:44:04 $
+ * @version $Revision: 1.17 $, $Date: 2004/12/06 11:47:37 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -156,17 +157,21 @@ public class MeasurementPortType extends StorableObjectType implements Character
 	}	
 
 	public List getDependencies() {        
-        return this.characteristics;
+        return Collections.unmodifiableList(this.characteristics);
     }
     
     public List getCharacteristics() {
-        return this.characteristics;
+        return Collections.unmodifiableList(this.characteristics);
     }
     
-    public void setCharacteristics(final List characteristics) {
+    protected void setCharacteristics0(final List characteristics) {
         this.characteristics.clear();
         if (characteristics != null)
                 this.characteristics.addAll(characteristics);
+    }
+    
+    public void setCharacteristics(final List characteristics) {
+        this.setCharacteristics0(characteristics);
         super.currentVersion = super.getNextVersion();
     }
 }
