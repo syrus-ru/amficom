@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.12 2005/03/31 09:37:41 bob Exp $
+ * $Id: LogicalTreeUI.java,v 1.13 2005/03/31 15:52:25 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -58,7 +57,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/03/31 09:37:41 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/31 15:52:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -69,7 +68,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 
 	protected static Hashtable	editors;
 	
-	public class ItemTreeCellRenderer  extends JComponent implements TreeCellRenderer {		
+	public class ItemTreeCellRenderer implements TreeCellRenderer {		
 		
 		private static final long	serialVersionUID	= 3762536732536615220L;
 
