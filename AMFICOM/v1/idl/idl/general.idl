@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.22 2004/10/21 10:35:06 bob Exp $
+ * $Id: general.idl,v 1.23 2004/10/27 10:20:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,20 @@ module corba {
 	};
 
 	typedef sequence <Identifier_Transferable> IdentifierSeq_Transferable;
+
+	valuetype Identifier {
+		private short major;
+		private long long minor;
+	};
+
+	typedef sequence<Identifier> IdentifierSeq;
+
+	abstract valuetype Identifiable {
+		Identifier getId();
+	};
+
+	abstract valuetype StorableObject: Identifiable {
+	};
 
 	enum DataType {
 		DATA_TYPE_INTEGER,
