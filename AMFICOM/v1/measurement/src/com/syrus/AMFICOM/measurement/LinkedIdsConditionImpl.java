@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.25 2005/03/24 10:56:47 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.26 2005/03/24 12:16:23 arseniy Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -9,7 +9,6 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -17,7 +16,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/03/24 10:56:47 $
+ * @version $Revision: 1.26 $, $Date: 2005/03/24 12:16:23 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
