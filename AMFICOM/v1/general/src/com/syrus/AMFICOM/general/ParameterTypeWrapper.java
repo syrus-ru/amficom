@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeWrapper.java,v 1.2 2005/01/31 13:53:19 bob Exp $
+ * $Id: ParameterTypeWrapper.java,v 1.3 2005/02/01 06:19:46 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/31 13:53:19 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/01 06:19:46 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -33,9 +33,7 @@ public class ParameterTypeWrapper implements Wrapper {
 
 	private ParameterTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_MODIFIED, StorableObjectDatabase.COLUMN_CREATOR_ID,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME,
+		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME,
 				COLUMN_DATA_TYPE};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
@@ -77,17 +75,7 @@ public class ParameterTypeWrapper implements Wrapper {
 	public Object getValue(Object object, String key) {
 		if (object instanceof ParameterType) {
 			ParameterType parameterType = (ParameterType) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return parameterType.getId();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return parameterType.getCreated();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return parameterType.getModified();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return parameterType.getCreatorId();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return parameterType.getModifierId();
-			else if (key.equals(COLUMN_CODENAME))
+			if (key.equals(COLUMN_CODENAME))
 				return parameterType.getCodename();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				return parameterType.getDescription();

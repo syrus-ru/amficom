@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadWrapper.java,v 1.3 2005/01/31 14:42:34 bob Exp $
+ * $Id: CableThreadWrapper.java,v 1.4 2005/02/01 06:15:29 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/31 14:42:34 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/01 06:15:29 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -39,9 +38,7 @@ public final class CableThreadWrapper implements Wrapper {
 
 	private CableThreadWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID};
+		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -63,17 +60,7 @@ public final class CableThreadWrapper implements Wrapper {
 
 	public Object getValue(final Object object, final String key) {
 		if (object instanceof CableThread) {
-			CableThread thread = (CableThread) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return thread.getId();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return thread.getCreated();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return thread.getCreatorId();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return thread.getModified();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return thread.getModifierId();
+			CableThread thread = (CableThread) object;		
 			if (key.equals(COLUMN_DESCRIPTION))
 				return thread.getDescription();
 			if (key.equals(COLUMN_NAME))

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeWrapper.java,v 1.3 2005/01/31 14:42:34 bob Exp $
+ * $Id: CableThreadTypeWrapper.java,v 1.4 2005/02/01 06:15:29 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/31 14:42:34 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/01 06:15:29 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -44,9 +43,7 @@ public final class CableThreadTypeWrapper implements Wrapper {
 
 	private CableThreadTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME,
+		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME,
 				COLUMN_COLOR, COLUMN_LINK_TYPE_ID};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
@@ -70,16 +67,6 @@ public final class CableThreadTypeWrapper implements Wrapper {
 	public Object getValue(final Object object, final String key) {
 		if (object instanceof CableThreadType) {
 			CableThreadType type = (CableThreadType) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return type.getId();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return type.getCreated();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return type.getCreatorId();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return type.getModified();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return type.getModifierId();
 			if (key.equals(COLUMN_CODENAME))
 				return type.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))

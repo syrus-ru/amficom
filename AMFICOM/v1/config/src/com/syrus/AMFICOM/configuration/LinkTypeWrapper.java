@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeWrapper.java,v 1.3 2005/01/31 14:42:34 bob Exp $
+ * $Id: LinkTypeWrapper.java,v 1.4 2005/02/01 06:15:29 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,35 +15,34 @@ import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/31 14:42:34 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/01 06:15:29 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 public final class LinkTypeWrapper implements Wrapper {
 
 	// codename VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_CODENAME = "codename";
+	public static final String		COLUMN_CODENAME				= "codename";
 
 	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String		COLUMN_DESCRIPTION			= "description";
 
-	public static final String COLUMN_NAME = "name";
+	public static final String		COLUMN_NAME					= "name";
 
 	// sort NUMBER(2,0),
-	public static final String COLUMN_SORT = "sort";
+	public static final String		COLUMN_SORT					= "sort";
 
 	// manufacturer VARCHAR2(64),
-	public static final String COLUMN_MANUFACTURER = "manufacturer";
+	public static final String		COLUMN_MANUFACTURER			= "manufacturer";
 
 	// manufacturer_code VARCHAR2(64),
-	public static final String COLUMN_MANUFACTURER_CODE = "manufacturer_code";
+	public static final String		COLUMN_MANUFACTURER_CODE	= "manufacturer_code";
 
 	// image_id VARCHAR2(32),
-	public static final String COLUMN_IMAGE_ID = "image_id";
+	public static final String		COLUMN_IMAGE_ID				= "image_id";
 
 	public static final String		COLUMN_CHARACTERISTICS		= "characteristics";
 
@@ -53,11 +52,8 @@ public final class LinkTypeWrapper implements Wrapper {
 
 	private LinkTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_CODENAME,
-				COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_SORT, COLUMN_MANUFACTURER,
-				COLUMN_MANUFACTURER_CODE, COLUMN_IMAGE_ID, COLUMN_CHARACTERISTICS};
+		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_SORT,
+				COLUMN_MANUFACTURER, COLUMN_MANUFACTURER_CODE, COLUMN_IMAGE_ID, COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -79,17 +75,7 @@ public final class LinkTypeWrapper implements Wrapper {
 
 	public Object getValue(final Object object, final String key) {
 		if (object instanceof LinkType) {
-			LinkType type = (LinkType) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return type.getId();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return type.getCreated();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return type.getCreatorId();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return type.getModified();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return type.getModifierId();
+			LinkType type = (LinkType) object;			
 			if (key.equals(COLUMN_CODENAME))
 				return type.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -104,7 +90,7 @@ public final class LinkTypeWrapper implements Wrapper {
 				return type.getManufacturerCode();
 			if (key.equals(COLUMN_IMAGE_ID))
 				return type.getImageId();
-			if (key.equals(COLUMN_CHARACTERISTICS)) 
+			if (key.equals(COLUMN_CHARACTERISTICS))
 				return type.getCharacteristics();
 		}
 		return null;
@@ -124,14 +110,14 @@ public final class LinkTypeWrapper implements Wrapper {
 			else if (key.equals(COLUMN_CODENAME))
 				type.setCodename((String) value);
 			else if (key.equals(COLUMN_SORT))
-				type.setSort(LinkTypeSort.from_int(((Integer)value).intValue()));
+				type.setSort(LinkTypeSort.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_MANUFACTURER))
 				type.setManufacturer((String) value);
 			else if (key.equals(COLUMN_MANUFACTURER_CODE))
 				type.setManufacturerCode((String) value);
 			else if (key.equals(COLUMN_IMAGE_ID))
 				type.setImageId((Identifier) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS)) 
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				type.setCharacteristics((List) value);
 		}
 	}

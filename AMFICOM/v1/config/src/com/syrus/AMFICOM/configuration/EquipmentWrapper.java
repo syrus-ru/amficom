@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.4 2005/01/31 14:42:34 bob Exp $
+ * $Id: EquipmentWrapper.java,v 1.5 2005/02/01 06:15:29 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,10 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/31 14:42:34 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/01 06:15:29 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -62,9 +61,7 @@ public final class EquipmentWrapper implements Wrapper {
 
 	private EquipmentWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_CREATOR_ID, StorableObjectDatabase.COLUMN_MODIFIED,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID,
+		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID,
 				COLUMN_IMAGE_ID, COLUMN_LONGITUDE, COLUMN_LATITUDE, COLUMN_SUPPLIER, COLUMN_SUPPLIER_CODE,
 				COLUMN_HW_SERIAL, COLUMN_HW_VERSION, COLUMN_SW_SERIAL, COLUMN_SW_VERSION, COLUMN_INVENTORY_NUMBER,
 				COLUMN_PORT_IDS, COLUMN_CHARACTERISTICS, ObjectEntities.EQUIPMENTMELINK_ENTITY};
@@ -90,16 +87,6 @@ public final class EquipmentWrapper implements Wrapper {
 	public Object getValue(final Object object, final String key) {
 		if (object instanceof Equipment) {
 			Equipment equipment = (Equipment) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return equipment.getId();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return equipment.getCreated();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return equipment.getCreatorId();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return equipment.getModified();
-			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return equipment.getModifierId();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return equipment.getDescription();
 			if (key.equals(COLUMN_NAME))
