@@ -1,5 +1,5 @@
 /*
- * $Id: WavetekReader.java,v 1.4 2004/12/08 12:46:17 bass Exp $
+ * $Id: WavetekReader.java,v 1.5 2004/12/08 12:49:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,9 +11,9 @@ package com.syrus.io;
 import java.io.*;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/08 12:46:17 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/08 12:49:51 $
  * @author $Author: bass $
- * @module general_v1
+ * @module util
  */
 public class WavetekReader extends DataReader
 {
