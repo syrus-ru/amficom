@@ -412,7 +412,7 @@ void RTUTransceiver::send_switch_command(const HANDLE com_port_handle,
 		if (bytes_received > reply_size)
 			printf ("RTUTransceiver | ERROR: Size of data, received from COM port, exceeds buffer size!\n");
 		else
-			printf ("RTUTransceiver | Received data from COM port:\n\n%s",reply,"\n\n");
+			printf ("RTUTransceiver | Received data from COM port:\n\n%s\n",reply);
 
 	reply_size = bytes_received;
 }
@@ -595,7 +595,7 @@ int RTUTransceiver::set_measurement_parameters(Parameter** parameters, unsigned 
 	int pulswd = -1;
 	double ior = -1;
 	double scans = -1;
-	int flags = -1;
+	int flags = 0;
 
 	unsigned int i;
 
@@ -611,7 +611,7 @@ int RTUTransceiver::set_measurement_parameters(Parameter** parameters, unsigned 
 		else
 			if (strcmp(par_name, PARAMETER_NAME_TRACE_LENGTH) == 0) {
 				bvalue = parameters[i]->getValue()->getReversed();
-				trclen = *(double*)(bvalue->getData()) / 1000.;
+				trclen = *(double*)(bvalue->getData());
 				delete bvalue;
 			}
 			else
@@ -670,7 +670,7 @@ int RTUTransceiver::set_measurement_parameters(Parameter** parameters, unsigned 
 	this->resolution = (float)res;
 
 	int pulse_width_index = get_pulse_width_index(pulswd, this->otdr_cards[otdr_card_index], this->wave_length);
-	if (point_spacing_index < 0) {
+	if (pulse_width_index < 0) {
 		printf("RTUTransceiver | ERROR: Pulse width %d not found in array of valid values\n", pulswd);
 		return 0;
 	}
