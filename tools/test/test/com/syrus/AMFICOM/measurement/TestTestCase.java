@@ -1,5 +1,5 @@
 /*
- * $Id: TestTestCase.java,v 1.8 2004/09/10 06:51:04 bob Exp $
+ * $Id: TestTestCase.java,v 1.9 2004/10/18 09:46:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
+import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Test;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/09/10 06:51:04 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/18 09:46:19 $
  * @author $Author: bob $
  * @module tools
  */
@@ -66,24 +67,27 @@ public class TestTestCase extends AbstractMesurementTestCase {
 	public void testCreationPeriodicalTest() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, ObjectNotFoundException, RetrieveObjectException, IllegalDataException {
 
-		TestDatabase testDatabase = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
-		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext.getMeasurementSetupDatabase();
-		MeasurementTypeDatabase measurementTypeDatabase = (MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase();		
-		TemporalPatternDatabase temporalPatternDatabase = (TemporalPatternDatabase) MeasurementDatabaseContext.getTemporalPatternDatabase();		
-		MonitoredElementDatabase monitoredElementDatabase = (MonitoredElementDatabase) ConfigurationDatabaseContext.getMonitoredElementDatabase();
-		
+		TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
+		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext
+				.getMeasurementSetupDatabase();
+		MeasurementTypeDatabase measurementTypeDatabase = (MeasurementTypeDatabase) MeasurementDatabaseContext
+				.getMeasurementTypeDatabase();
+		TemporalPatternDatabase temporalPatternDatabase = (TemporalPatternDatabase) MeasurementDatabaseContext
+				.getTemporalPatternDatabase();
+		MonitoredElementDatabase monitoredElementDatabase = (MonitoredElementDatabase) ConfigurationDatabaseContext
+				.getMonitoredElementDatabase();
+
 		TestTemporalType temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
-		List list = testDatabase.retrieveByIds(null, TestDatabase.COLUMN_TEMPORAL_TYPE + StorableObjectDatabase.EQUALS
-				+ temporalType.value());
 
 		List measurementSetupList = measurementSetupDatabase.retrieveAll();
 
-		if (measurementSetupList.isEmpty())
+		if (measurementSetupList.isEmpty()){
 			fail("must be at less one measurement setup at db");
+		}
 
 		List measurementSetupIds = new ArrayList();
 		measurementSetupIds.add(((MeasurementSetup) measurementSetupList.get(0)).getId());
-
+		
 		List measurementTypeList = measurementTypeDatabase.retrieveAll();
 
 		if (measurementTypeList.isEmpty())
@@ -112,10 +116,9 @@ public class TestTestCase extends AbstractMesurementTestCase {
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);
 
 		Test test = Test.createInstance(id, creatorId, new Date(System.currentTimeMillis()), new Date(System
-				.currentTimeMillis() + 1000 * 60 * 60 ), temporalPettern, temporalType, measurementType,
-						analysisType, evaluationType, me,
-						TestReturnType.TEST_RETURN_TYPE_WHOLE, "cretated by TestTestCase",
-						measurementSetupIds);
+				.currentTimeMillis() + 1000 * 60 * 60 * 24), temporalPettern, temporalType, measurementType, analysisType,
+										evaluationType, me, TestReturnType.TEST_RETURN_TYPE_WHOLE,
+										"cretated by TestTestCase", measurementSetupIds);
 
 		Test test2 = Test.getInstance((Test_Transferable) test.getTransferable());
 
@@ -123,17 +126,20 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		assertEquals(test2, test3);
 
-//		if (!list.isEmpty())
-//			TestDatabase.delete(test);
+		//		if (!list.isEmpty())
+		//			TestDatabase.delete(test);
 
 	}
 
 	public void _testCreationSimpleTest() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, ObjectNotFoundException, RetrieveObjectException, IllegalDataException {
-		TestDatabase testDatabase = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
-		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext.getMeasurementSetupDatabase();
-		MeasurementTypeDatabase measurementTypeDatabase = (MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase();		
-		MonitoredElementDatabase monitoredElementDatabase = (MonitoredElementDatabase) ConfigurationDatabaseContext.getMonitoredElementDatabase();
+		TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
+		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext
+				.getMeasurementSetupDatabase();
+		MeasurementTypeDatabase measurementTypeDatabase = (MeasurementTypeDatabase) MeasurementDatabaseContext
+				.getMeasurementTypeDatabase();
+		MonitoredElementDatabase monitoredElementDatabase = (MonitoredElementDatabase) ConfigurationDatabaseContext
+				.getMonitoredElementDatabase();
 
 		TestTemporalType temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME;
 		List list = testDatabase.retrieveByIds(null, TestDatabase.COLUMN_TEMPORAL_TYPE + StorableObjectDatabase.EQUALS
@@ -169,10 +175,10 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);
 
-		Test test = Test.createInstance(id, creatorId, new Date(System.currentTimeMillis()), null,
-						temporalPettern, temporalType, measurementType, analysisType,
-						evaluationType, me, TestReturnType.TEST_RETURN_TYPE_WHOLE,
-						"cretated by TestTestCase", measurementSetupIds);
+		Test test = Test.createInstance(id, creatorId, new Date(System.currentTimeMillis()), null, temporalPettern,
+										temporalType, measurementType, analysisType, evaluationType, me,
+										TestReturnType.TEST_RETURN_TYPE_WHOLE, "cretated by TestTestCase",
+										measurementSetupIds);
 
 		Test test2 = Test.getInstance((Test_Transferable) test.getTransferable());
 
@@ -187,11 +193,14 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 	public void _testCreationContinualTest() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, ObjectNotFoundException, RetrieveObjectException, IllegalDataException {
-		TestDatabase testDatabase = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
-		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext.getMeasurementSetupDatabase();
-		MeasurementTypeDatabase measurementTypeDatabase = (MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase();	
-	
-		MonitoredElementDatabase monitoredElementDatabase = (MonitoredElementDatabase) ConfigurationDatabaseContext.getMonitoredElementDatabase();
+		TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
+		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext
+				.getMeasurementSetupDatabase();
+		MeasurementTypeDatabase measurementTypeDatabase = (MeasurementTypeDatabase) MeasurementDatabaseContext
+				.getMeasurementTypeDatabase();
+
+		MonitoredElementDatabase monitoredElementDatabase = (MonitoredElementDatabase) ConfigurationDatabaseContext
+				.getMonitoredElementDatabase();
 
 		TestTemporalType temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS;
 		List list = testDatabase.retrieveByIds(null, TestDatabase.COLUMN_TEMPORAL_TYPE + StorableObjectDatabase.EQUALS
@@ -228,10 +237,10 @@ public class TestTestCase extends AbstractMesurementTestCase {
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);
 
 		Test test = Test.createInstance(id, creatorId, new Date(System.currentTimeMillis()), new Date(System
-				.currentTimeMillis() + 1000 * 60 * 60 * 14 ), temporalPettern, temporalType, measurementType,
-						analysisType, evaluationType, me,
-						TestReturnType.TEST_RETURN_TYPE_WHOLE, "cretated by TestTestCase",
-						measurementSetupIds);
+				.currentTimeMillis()
+				+ 1000 * 60 * 60 * 14), temporalPettern, temporalType, measurementType, analysisType, evaluationType,
+										me, TestReturnType.TEST_RETURN_TYPE_WHOLE, "cretated by TestTestCase",
+										measurementSetupIds);
 
 		Test test2 = Test.getInstance((Test_Transferable) test.getTransferable());
 
@@ -239,13 +248,13 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		assertEquals(test2, test3);
 
-//		if (!list.isEmpty())
-//			TestDatabase.delete(test);
+		//		if (!list.isEmpty())
+		//			TestDatabase.delete(test);
 
 	}
 
-	public void testRetriveAll() throws RetrieveObjectException, ObjectNotFoundException {
-		TestDatabase testDatabase = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
+	public void _testRetriveAll() throws RetrieveObjectException, ObjectNotFoundException {
+		TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
 		List list = testDatabase.retrieveAll();
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			Test test = (Test) it.next();
@@ -253,15 +262,14 @@ public class TestTestCase extends AbstractMesurementTestCase {
 			assertEquals(test.getId(), test2.getId());
 		}
 	}
-	
-	public void testRetriveByCondition() throws RetrieveObjectException, IllegalDataException {
 
+	public void _testRetriveByCondition() throws RetrieveObjectException, IllegalDataException {
 
-	TestDatabase testDatabase = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
-	
-	TestTemporalType temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
-	List list = testDatabase.retrieveByIds(null, TestDatabase.COLUMN_TEMPORAL_TYPE + StorableObjectDatabase.EQUALS
-			+ temporalType.value());
+		TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
+
+		TestTemporalType temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
+		List list = testDatabase.retrieveByIds(null, TestDatabase.COLUMN_TEMPORAL_TYPE + StorableObjectDatabase.EQUALS
+				+ temporalType.value());
 	}
 
 }

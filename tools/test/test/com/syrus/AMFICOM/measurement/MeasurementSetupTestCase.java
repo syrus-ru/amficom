@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupTestCase.java,v 1.4 2004/09/10 06:51:04 bob Exp $
+ * $Id: MeasurementSetupTestCase.java,v 1.5 2004/10/18 09:46:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/10 06:51:04 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/18 09:46:19 $
  * @author $Author: bob $
  * @module tools
  */
@@ -107,7 +107,7 @@ public class MeasurementSetupTestCase extends AbstractMesurementTestCase {
 
 	}
 
-	public void testMultipleCreationAndUpdate() throws IdentifierGenerationException, IllegalObjectEntityException,
+	public void _testMultipleCreationAndUpdate() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, IllegalDataException, UpdateObjectException, RetrieveObjectException,
 			ObjectNotFoundException {
 

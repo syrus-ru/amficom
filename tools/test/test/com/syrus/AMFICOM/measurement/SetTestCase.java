@@ -1,5 +1,5 @@
 /*
- * $Id: SetTestCase.java,v 1.4 2004/08/31 15:29:13 bob Exp $
+ * $Id: SetTestCase.java,v 1.5 2004/10/18 09:46:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/31 15:29:13 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/18 09:46:19 $
  * @author $Author: bob $
  * @module tools
  */
@@ -91,19 +91,20 @@ public class SetTestCase extends AbstractMesurementTestCase {
 		params[0] = new SetParameter(paramId, wvlenParam, new ByteArray((int) 1625).getBytes());
 
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-		params[1] = new SetParameter(paramId, trclenParam, new ByteArray((double) 131072).getBytes());
+		//params[1] = new SetParameter(paramId, trclenParam, new ByteArray((double) 131072).getBytes());
+		params[1] = new SetParameter(paramId, trclenParam, new ByteArray((double) 125000).getBytes());
 
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
 		params[2] = new SetParameter(paramId, resParam, new ByteArray((double) 8).getBytes());
 
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-		params[3] = new SetParameter(paramId, pulswdParam, new ByteArray((long) 5000).getBytes());
+		params[3] = new SetParameter(paramId, pulswdParam, new ByteArray((long) 1).getBytes());
 
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
 		params[4] = new SetParameter(paramId, iorParam, new ByteArray((double) 1.457).getBytes());
 
 		paramId = IdentifierGenerator.generateIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-		params[5] = new SetParameter(paramId, scansParam, new ByteArray((double) 4000).getBytes());
+		params[5] = new SetParameter(paramId, scansParam, new ByteArray((double) 4096).getBytes());
 
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.SET_ENTITY_CODE);
 		Set set = Set.createInstance(id, creatorId, SetSort.SET_SORT_MEASUREMENT_PARAMETERS, "testCaseSet",
@@ -116,7 +117,6 @@ public class SetTestCase extends AbstractMesurementTestCase {
 		Set set3 = new Set(set2.getId());
 
 		assertEquals(set2, set3);
-
 		System.out.println(set.toString());
 
 	}
