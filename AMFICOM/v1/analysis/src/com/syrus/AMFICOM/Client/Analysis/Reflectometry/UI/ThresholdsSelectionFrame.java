@@ -3,8 +3,12 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -19,6 +23,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
@@ -52,7 +58,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 	JPanel mainPanel = new JPanel();
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
-	JToolBar jToolBar1 = new JToolBar();
 	
 	private ThresholdTableModel tModelEmpty;
 
@@ -79,7 +84,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 	public TableModel getTableModel()
 	{
-		return jTable.getModel();
+		return this.jTable.getModel();
 	}
 
 	private void jbInit() throws Exception
@@ -101,7 +106,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			new int[] { },
 			null
 		);
-		jTable = new ATable(this.tModelEmpty);
+		this.jTable = new ATable(this.tModelEmpty);
 		
 		JButton alysisInitialButton = new JButton();
 		JButton analysisDefaultsButton = new JButton();
@@ -210,24 +215,25 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		this.setContentPane(mainPanel);
 
 		//jToolBar1.setBorderPainted(true);
-		jToolBar1.setFloatable(false);
-		jToolBar1.add(alysisInitialButton);
-		jToolBar1.add(analysisDefaultsButton);
-		jToolBar1.add(decreaseThreshButton);
-		jToolBar1.add(increaseThreshButton);
-		jToolBar1.add(Box.createRigidArea(UIManager.getDimension(ResourceKeys.SIZE_BUTTON)));
-		jToolBar1.add(previuosEventButton);
-		jToolBar1.add(nextEventButton);
+		JToolBar jToolBar = new JToolBar();
+		jToolBar.setFloatable(false);
+		jToolBar.add(alysisInitialButton);
+		jToolBar.add(analysisDefaultsButton);
+		jToolBar.add(decreaseThreshButton);
+		jToolBar.add(increaseThreshButton);
+		jToolBar.add(Box.createRigidArea(UIManager.getDimension(ResourceKeys.SIZE_BUTTON)));
+		jToolBar.add(previuosEventButton);
+		jToolBar.add(nextEventButton);
 
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
-		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		jTable.setMinimumSize(new Dimension(200, 213));
-		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
+		this.jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
+		this.jTable.setMinimumSize(new Dimension(200, 213));
+		this.jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		jTable.setColumnSelectionAllowed(true);
-		jTable.setRowSelectionAllowed(false);		
+		this.jTable.setColumnSelectionAllowed(true);
+		this.jTable.setRowSelectionAllowed(false);		
 		
-		jTable.setDefaultRenderer(Object.class, new ADefaultTableCellRenderer() {
+		this.jTable.setDefaultRenderer(Object.class, new ADefaultTableCellRenderer() {
 
 			// (1) hides 'focus' - just because its color overrides selection
 			// colot
@@ -246,9 +252,36 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
 			}
 		});
+		
+		this.jTable.getTableHeader().addMouseListener(new MouseAdapter() {
+
+			public void mouseClicked(MouseEvent evt) {
+				/* recipe get at http://www.javaalmanac.com/egs/javax.swing.table/ColHeadEvent.html */
+				JTable table = ((JTableHeader) evt.getSource()).getTable();
+				TableColumnModel colModel = table.getColumnModel();
+
+				// The index of the column whose header was clicked
+				int vColIndex = colModel.getColumnIndexAtX(evt.getX());
+				int mColIndex = table.convertColumnIndexToModel(vColIndex);
+
+				// Return if not clicked on any column header
+				if (vColIndex == -1) { return; }
+
+				// Determine if mouse was clicked between column heads
+				Rectangle headerRect = table.getTableHeader().getHeaderRect(vColIndex);
+				if (vColIndex == 0) {
+					headerRect.width -= 3; // Hard-coded constant
+				} else {
+					headerRect.grow(-3, 0); // Hard-coded constant
+				}
+				if (headerRect.contains(evt.getX(), evt.getY())) {
+					table.setColumnSelectionInterval(mColIndex, mColIndex);
+				}
+			}
+		});
 
 		scrollPane.setViewport(viewport);
-		scrollPane.getViewport().add(jTable);
+		scrollPane.getViewport().add(this.jTable);
 		scrollPane.setAutoscrolls(true);
 
 		JPanel northPanel = new JPanel(new BorderLayout());
@@ -256,11 +289,9 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 
 		mainPanel.add(northPanel,  BorderLayout.NORTH);
-		northPanel.add(jToolBar1,  BorderLayout.NORTH);
+		northPanel.add(jToolBar,  BorderLayout.NORTH);
 		//northPanel.add(jComboBox1,  BorderLayout.CENTER);
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
-
-		updColorModel();
 	}
 
 	protected ThreshEditor getCurrentTED()
@@ -269,19 +300,11 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		{
 			// XXX - getThreshEditor will generate few unnecessary objects
 			ModelTraceManager.ThreshEditor[] teds = mtm.getThreshEditor(current_ev);
-			int current_th = jTable.getSelectedColumn() - 1;
+			int current_th = this.jTable.getSelectedColumn() - 1;
 			if (current_th >= 0 && current_th < teds.length)
 				return teds[current_th];
 		}
 		return null;
-	}
-
-	private void updColorModel()
-	{
-//		scrollPane.getViewport().setBackground(SystemColor.window);
-//		jTable.setBackground(SystemColor.window);
-//		jTable.setForeground(ColorManager.getColor("textColor"));
-//		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
 	void init_module(Dispatcher dispatcher)
@@ -301,7 +324,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				String id = (String) (rce.getSource());
 				if (id.equals("all")) {
 					this.mtm = null;
-					/* TODO set empty model */
 					this.jTable.setModel(this.tModelEmpty);
 				}
 			}
@@ -359,7 +381,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		}
 	}
 
-	private void updateThresholds()
+	void updateThresholds()
 	{
 		if (mtm == null)
 			return;
@@ -411,26 +433,25 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			pData);
 
 		tModel.updateData(pData);
-		jTable.setModel(tModel);
+		this.jTable.setModel(tModel);
 	}
 
 	class ThresholdTableModel extends AbstractTableModel {
-		private String[] p_columns;
-		private Object[][] p_values;
-		private String[] p_rows;
+		private String[] columns;
+		private Object[][] values;
+		private String[] rows;
 		int[] editable;
-		public ThresholdTableModel(String[] p_columns,
-				String[] p_rows, int[] editable, Object[][] p_data) {
-			//super(p_columns, p_defaultv, p_rows, editable);
-			this.p_columns = p_columns;
-			this.p_values = p_data;
-			this.p_rows = p_rows;
+		public ThresholdTableModel(String[] columns,
+				String[] rows, int[] editable, Object[][] data) {
+			this.columns = columns;
+			this.values = data;
+			this.rows = rows;
 			this.editable = editable;
 		}
 
 		public void updateData(Object[][] pData)
 		{
-			p_values = pData;
+			values = pData;
 		}
 
 		public void setValueAt(Object value, int row, int col) {
@@ -454,24 +475,24 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 		public int getColumnCount()
 		{
-			return p_columns.length;
+			return columns.length;
 		}
 
 		public int getRowCount()
 		{
-			return p_rows.length;
+			return rows.length;
 		}
 
 		public Object getValueAt(int rowIndex, int columnIndex)
 		{
 			if (columnIndex == 0)
-				return p_rows[rowIndex];
+				return rows[rowIndex];
 			else
 			{
-				if (p_values == null)
+				if (values == null)
 					return ""; // XXX
 				else
-					return p_values[rowIndex][columnIndex - 1];
+					return values[rowIndex][columnIndex - 1];
 			}
 		}
 
@@ -482,7 +503,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 		public String getColumnName(int column)
 		{
-			return p_columns[column];
+			return columns[column];
 		}
 	}
 }
