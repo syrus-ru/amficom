@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreCreator.java,v 1.1 2005/02/28 13:56:43 saa Exp $
+ * $Id: BellcoreCreator.java,v 1.2 2005/03/01 14:40:10 saa Exp $
  * Very poor bellcore creator for development purposes
  * 
  * Copyright © Syrus Systems.
@@ -10,7 +10,7 @@ package com.syrus.io;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/02/28 13:56:43 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/01 14:40:10 $
  * @module
  */
 public class BellcoreCreator
@@ -33,9 +33,20 @@ public class BellcoreCreator
 		bs.fxdParams = bs.new FxdParams();
 		bs.fxdParams.TPW = 1;
 		bs.fxdParams.PWU = new short[] { 0 };
+		bs.fxdParams.DS = new int[] { 0 };
 		bs.fxdParams.NPPW = new int[] { y.length };
 		bs.fxdParams.AR = y.length * 1000 * bs.fxdParams.GI / 3;
 		bs.supParams = bs.new SupParams();
+		bs.map = bs.new Map();
+		bs.map.NB = 4;
+		bs.map.B_id = new String[] { "", "FxdParams", "SupParams", "DataPts" };
+		bs.map.B_rev = new int[] {0, 0, 0, 0};
+		bs.map.B_size = new int[] {
+				1,
+				bs.fxdParams.getSize(),
+				bs.supParams.getSize(),
+				bs.dataPts.getSize()
+		};
 	}
 
 	public BellcoreStructure getBS()
