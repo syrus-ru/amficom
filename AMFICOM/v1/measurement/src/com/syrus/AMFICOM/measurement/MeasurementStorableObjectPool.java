@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.8 2004/09/14 14:14:14 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.9 2004/09/14 14:25:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/09/14 14:14:14 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/14 14:25:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -117,34 +117,33 @@ public class MeasurementStorableObjectPool {
 		List list = null;
 		Map objectQueueMap = null;
 		if (objectIds != null) {
-			for (Iterator it = list.iterator(); it.hasNext();) {
+			for (Iterator it = objectIds.iterator(); it.hasNext();) {
 				Identifier objectId = (Identifier) it.next();
 				short objectEntityCode = objectId.getMajor();
 				Short entityCode = new Short(objectEntityCode);
 				LRUMap objectPool = (LRUMap)objectPoolMap.get(objectId);
+				StorableObject storableObject = null;
 				if (objectPool != null) {
-					StorableObject storableObject = (StorableObject)objectPool.get(objectId);
+					storableObject = (StorableObject)objectPool.get(objectId);
 					if (storableObject != null){
 						if (list == null)
 							list = new LinkedList();
 						list.add(storableObject);
-					}						
-					else {
-						if (useLoader) {
-							if (objectQueueMap == null)
-								objectQueueMap = new HashMap();
-							List objectQueue = (List)objectQueueMap.get(entityCode);
-							if (objectQueue == null){
-								objectQueue = new LinkedList();
-								objectQueueMap.put(entityCode, objectQueue);
-							}
-							objectQueue.add(objectId);
+					}
+				}
+				if (storableObject == null) {
+					Log.errorMessage("MeasurementStorableObjectPool.getStorableObjects | Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");
+					if (useLoader) {
+						if (objectQueueMap == null)
+							objectQueueMap = new HashMap();
+						List objectQueue = (List)objectQueueMap.get(entityCode);
+						if (objectQueue == null){
+							objectQueue = new LinkedList();
+							objectQueueMap.put(entityCode, objectQueue);
 						}
+						objectQueue.add(objectId);				
 					}
 				}			
-				else {
-					Log.errorMessage("MeasurementStorableObjectPool.getStorableObjects | Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");					
-				}
 			}
 			
 		}
