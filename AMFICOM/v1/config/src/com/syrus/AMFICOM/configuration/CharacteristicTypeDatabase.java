@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.13 2004/09/06 11:36:22 max Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.14 2004/09/08 12:46:18 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/09/06 11:36:22 $
+ * @version $Revision: 1.14 $, $Date: 2004/09/08 12:46:18 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -57,11 +57,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns  = COLUMN_ID + COMMA
-				+ COLUMN_CREATED + COMMA
-				+ COLUMN_MODIFIED + COMMA
-				+ COLUMN_CREATOR_ID + COMMA
-				+ COLUMN_MODIFIER_ID + COMMA
+			this.updateColumns  = super.getUpdateColumns()
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_DATA_TYPE + COMMA
@@ -73,11 +69,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues  = QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
+			this.updateMultiplySQLValues  = getUpdateMultiplySQLValues() 
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -90,12 +82,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		CharacteristicType characteristicType = fromStorableObject(storableObject); 
-		String ctIdStr = characteristicType.getId().toSQLString();
-		String sql = ctIdStr + COMMA
-			+ DatabaseDate.toUpdateSubString(characteristicType.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(characteristicType.getModified()) + COMMA
-			+ characteristicType.getCreatorId().toSQLString() + COMMA
-			+ characteristicType.getModifierId().toSQLString() + COMMA
+		String sql = getUpdateSingleSQLValues(storableObject) 
 			+ APOSTOPHE + characteristicType.getCodename() + APOSTOPHE + COMMA
 			+ APOSTOPHE + characteristicType.getDescription() + APOSTOPHE + COMMA
 			+ Integer.toString(characteristicType.getDataType().value()) + COMMA
@@ -110,11 +97,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		CharacteristicType characteristicType = fromStorableObject(storableObject); 
 		String ctIdStr = characteristicType.getId().getCode();
 		try {
-			preparedStatement.setString( 1, ctIdStr);
-			preparedStatement.setTimestamp( 2, new Timestamp(characteristicType.getCreated().getTime()));
-			preparedStatement.setTimestamp( 3, new Timestamp(characteristicType.getModified().getTime()));
-			preparedStatement.setString( 4, characteristicType.getCreatorId().getCode());
-			preparedStatement.setString( 5, characteristicType.getModifierId().getCode());
+			super.setEntityForPreparedStatement(storableObject, preparedStatement);
 			preparedStatement.setString( 6, characteristicType.getCodename());
 			preparedStatement.setString( 7, characteristicType.getDescription());
 			preparedStatement.setInt( 8, characteristicType.getDataType().value());
@@ -158,7 +141,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		CharacteristicType characteristicType = fromStorableObject(storableObject);
+		CharacteristicType characteristicType = storableObject == null ? null : fromStorableObject(storableObject);
 		
 		if (characteristicType == null){
 			/**

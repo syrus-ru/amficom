@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.19 2004/08/29 10:54:23 bob Exp $
+ * $Id: KISDatabase.java,v 1.20 2004/09/08 12:46:18 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/29 10:54:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2004/09/08 12:46:18 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -48,13 +48,74 @@ public class KISDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_MCM_ID = "mcm_id";
 	
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
-
+	
+	private String updateColumns;
+	private String updateMultiplySQLValues;
+	
 	private KIS fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof KIS)
 			return (KIS) storableObject;
 		throw new IllegalDataException("KISDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
+	protected String getEnityName() {
+		return "KIS";
+	}
+	
+	protected String getTableName() {
+		return ObjectEntities.KIS_ENTITY;
+	}
+	
+	protected String getUpdateColumns() {
+		if (this.updateColumns == null){
+			this.updateColumns = COLUMN_ID + COMMA
+				+ COLUMN_CREATED + COMMA
+				+ COLUMN_MODIFIED + COMMA
+				+ COLUMN_CREATOR_ID + COMMA
+				+ COLUMN_MODIFIER_ID + COMMA
+				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+				+ COLUMN_NAME + COMMA
+				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_EQUIPMENT_ID + COMMA
+				+ COLUMN_MCM_ID;
+		}
+		return this.updateColumns;
+	}
+	
+	protected String getUpdateMultiplySQLValues() {
+		if (this.updateMultiplySQLValues == null){
+			this.updateMultiplySQLValues = QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;
+		}
+		return this.updateMultiplySQLValues;
+	}
+	
+	protected String getUpdateSingleSQLValues(StorableObject storableObject)
+			throws IllegalDataException, UpdateObjectException {
+		// TODO Auto-generated method stub
+		KIS kis = fromStorableObject(storableObject);
+		String kisIdStr = kis.getId().toSQLString();
+		String sql = kisIdStr + COMMA
+		+ DatabaseDate.toUpdateSubString(kis.getCreated()) + COMMA
+		+ DatabaseDate.toUpdateSubString(kis.getModified()) + COMMA
+		+ kis.getCreatorId().toSQLString() + COMMA
+		+ kis.getModifierId().toSQLString() + COMMA
+		+ kis.getDomainId().toSQLString() + COMMA
+		+ APOSTOPHE + kis.getName() + APOSTOPHE + COMMA
+		+ APOSTOPHE + kis.getDescription() + APOSTOPHE + COMMA
+		+ kis.getEquipmentId().toSQLString() + COMMA
+		+ kis.getMCMId().toSQLString();
+		return sql;
+	}
+	
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		KIS kis = this.fromStorableObject(storableObject);
 		this.retrieveKIS(kis);
@@ -271,6 +332,8 @@ public class KISDatabase extends StorableObjectDatabase {
 		}
 	}
 
+	
+	
 	private void insertKIS(KIS kis) throws CreateObjectException {
 		String kisIdStr = kis.getId().toSQLString();
 

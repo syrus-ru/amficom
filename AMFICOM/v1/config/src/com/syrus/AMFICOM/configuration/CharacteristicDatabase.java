@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.22 2004/09/06 11:36:22 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.23 2004/09/08 12:46:18 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
@@ -32,7 +31,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/09/06 11:36:22 $
+ * @version $Revision: 1.23 $, $Date: 2004/09/08 12:46:18 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -76,78 +75,36 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     
     protected String getUpdateColumns() {
     	if (this.updateColumns == null){
-    		StringBuffer buffer = new StringBuffer();
-			buffer.append(COLUMN_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_CREATED);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_MODIFIED);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_CREATOR_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_MODIFIER_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_TYPE_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_NAME);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_DESCRIPTION);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_VALUE);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_SORT);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_DOMAIN_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_SERVER_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_MCM_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_EQUIPMENT_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_TRANSMISSION_PATH_ID);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_PORT_ID);
-			this.updateColumns = buffer.toString();
-    	}
+    		this.updateColumns = super.getUpdateColumns() 
+    			+ COLUMN_TYPE_ID + COMMA
+				+ COLUMN_NAME + COMMA
+				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_VALUE + COMMA
+				+ COLUMN_SORT +	COMMA
+				+ COLUMN_DOMAIN_ID + COMMA
+				+ COLUMN_SERVER_ID + COMMA
+				+ COLUMN_MCM_ID + COMMA
+				+ COLUMN_EQUIPMENT_ID + COMMA
+				+ COLUMN_TRANSMISSION_PATH_ID + COMMA
+				+ COLUMN_PORT_ID;
+		}
 		return this.updateColumns;
 	}
     
     protected String getUpdateMultiplySQLValues() {
     	if (this.updateMultiplySQLValues == null){
-    		StringBuffer buffer = new StringBuffer();
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			this.updateMultiplySQLValues = buffer.toString();
+    		this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() 
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;
     	}
 		return this.updateMultiplySQLValues;
 	}
@@ -156,117 +113,66 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		Characteristic characteristic = fromStorableObject(storableObject);
 		String cIdStr = characteristic.getId().toSQLString();
 		int sort = characteristic.getSort().value();
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(cIdStr);
-		buffer.append(COMMA);
-		buffer.append(DatabaseDate.toUpdateSubString(characteristic.getCreated()));
-		buffer.append(COMMA);
-		buffer.append(DatabaseDate.toUpdateSubString(characteristic.getModified()));
-		buffer.append(COMMA);
-		buffer.append(characteristic.getCreatorId().toSQLString());
-		buffer.append(COMMA);
-		buffer.append(characteristic.getModifierId().toSQLString());
-		buffer.append(COMMA);
-		buffer.append(characteristic.getType().getId().toSQLString());
-		buffer.append(COMMA);
-		buffer.append(APOSTOPHE);
-		buffer.append(characteristic.getName());
-		buffer.append(APOSTOPHE);
-		buffer.append(COMMA);
-		buffer.append(APOSTOPHE);
-		buffer.append(characteristic.getDescription());
-		buffer.append(APOSTOPHE);
-		buffer.append(COMMA);
-		buffer.append(APOSTOPHE);
-		buffer.append(characteristic.getValue());
-		buffer.append(APOSTOPHE);			
-		buffer.append(COMMA);
-		buffer.append(sort);
-		buffer.append(COMMA);
+		String sql = super.getUpdateSingleSQLValues(storableObject)
+			+ characteristic.getType().getId().toSQLString() + COMMA
+			+ APOSTOPHE + characteristic.getName() + APOSTOPHE + COMMA
+			+ APOSTOPHE + characteristic.getDescription() + APOSTOPHE  + COMMA
+			+ APOSTOPHE + characteristic.getValue() + APOSTOPHE + COMMA
+			+ sort + COMMA;
 		String characterizedIdStr = characteristic.getCharacterizedId().toSQLString();
 		switch (sort) {
 			case CharacteristicSort._CHARACTERISTIC_SORT_DOMAIN:
-				buffer.append(characterizedIdStr);
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
+				sql = sql + characterizedIdStr + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString();
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_SERVER:
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(characterizedIdStr);
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
+				sql = sql + Identifier.getNullSQLString() + COMMA
+					+ characterizedIdStr + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString();
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_MCM:
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(characterizedIdStr);
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
+				sql = sql + Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ characterizedIdStr + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString();
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_EQUIPMENT:
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(characterizedIdStr);
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
+				sql = sql + Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ characterizedIdStr + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString();
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_TRANSMISSIONPATH:
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(characterizedIdStr);			
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
+				sql = sql + Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ characterizedIdStr + COMMA
+					+ Identifier.getNullSQLString();
 				break;
 			case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(Identifier.getNullSQLString());
-				buffer.append(COMMA);
-				buffer.append(characterizedIdStr);
+				sql = sql + Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ Identifier.getNullSQLString() + COMMA
+					+ characterizedIdStr;
 				break;
 			default:
 				throw new UpdateObjectException("Unknown sort: " + sort + " for characteristic: " + cIdStr);
 		}
-		return buffer.toString();
+		return sql;
 	}
 	
 	protected void setEntityForPreparedStatement(StorableObject storableObject,
@@ -275,11 +181,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		String cIdStr = characteristic.getId().getCode();
 		int sort = characteristic.getSort().value();
 		try {
-			preparedStatement.setString( 1, cIdStr);
-			preparedStatement.setTimestamp( 2, new Timestamp(characteristic.getCreated().getTime()));
-			preparedStatement.setTimestamp( 3, new Timestamp(characteristic.getModified().getTime()));
-			preparedStatement.setString( 4, characteristic.getCreatorId().getCode());
-			preparedStatement.setString( 5, characteristic.getModifierId().getCode());
+			super.setEntityForPreparedStatement(storableObject , preparedStatement);
 			preparedStatement.setString( 6, characteristic.getType().getId().getCode());
 			preparedStatement.setString( 7, characteristic.getName());
 			preparedStatement.setString( 8, characteristic.getDescription());
@@ -381,12 +283,12 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	}
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws RetrieveObjectException, SQLException, IllegalDataException {
-		Characteristic characteristic1 = fromStorableObject(storableObject);
-		if (characteristic1 == null){
+		Characteristic characteristic = storableObject == null ? null : fromStorableObject(storableObject); 
+		if (characteristic == null){
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
-			characteristic1 = new Characteristic(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null,
+			characteristic = new Characteristic(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null,
 										   0, null, null);			
 		}
 		
@@ -439,7 +341,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				characterizedId = new Identifier(resultSet.getString(COLUMN_PORT_ID));
 				break;
 			default:
-				throw new RetrieveObjectException("Unknown sort: " + sort + " for characteristic: " + characteristic1.getId().toString());
+				throw new RetrieveObjectException("Unknown sort: " + sort + " for characteristic: " + characteristic.getId().toString());
 		}
 
 		CharacteristicType characteristicType;
@@ -449,7 +351,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-		characteristic1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+		characteristic.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 																 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 																 /**
 																	* @todo when change DB Identifier model ,change getString() to
@@ -471,7 +373,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 																 sort,
 																 resultSet.getString(COLUMN_VALUE),
 																 characterizedId);
-		return characteristic1;
+		return characteristic;
 	}
 	
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {

@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.7 2004/09/06 11:36:22 max Exp $
+ * $Id: DomainDatabase.java,v 1.8 2004/09/08 12:46:18 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/09/06 11:36:22 $
+ * @version $Revision: 1.8 $, $Date: 2004/09/08 12:46:18 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -58,11 +58,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
+			this.updateColumns = super.getUpdateColumns()
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_NAME + COMMA
 			+ COLUMN_DESCRIPTION;
@@ -72,11 +68,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues()
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION;
@@ -87,16 +79,9 @@ public class DomainDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		Domain domain = fromStorableObject(storableObject);
-		String domainIdStr = domain.getId().toSQLString();
-
 		Identifier domainId = domain.getDomainId();
 		String domainIdSubstr = (domainId != null) ? domainId.toSQLString() : Identifier.getNullSQLString();
-
-		String sql = domainIdStr + COMMA
-			+ DatabaseDate.toUpdateSubString(domain.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(domain.getModified()) + COMMA
-			+ domain.getCreatorId().toSQLString() + COMMA
-			+ domain.getModifierId().toSQLString() + COMMA
+		String sql = super.getUpdateSingleSQLValues(storableObject)
 			+ domainIdSubstr + COMMA
 			+ APOSTOPHE + domain.getName() + APOSTOPHE + COMMA
 			+ APOSTOPHE + domain.getDescription() + APOSTOPHE;
@@ -128,7 +113,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Domain domain = fromStorableObject(storableObject);
+		Domain domain = storableObject == null ? null : fromStorableObject(storableObject);
 		if (domain == null){
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
@@ -168,11 +153,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 		Identifier domainId = domain.getDomainId();
 		String domainIdSubstr = (domainId != null) ? domainId.getCode() : "";
 		try {
-			preparedStatement.setString( 1, domainIdStr);
-			preparedStatement.setTimestamp( 2, new Timestamp(domain.getCreated().getTime()));
-			preparedStatement.setTimestamp( 3, new Timestamp(domain.getModified().getTime()));
-			preparedStatement.setString( 4, domain.getCreatorId().getCode());
-			preparedStatement.setString( 5, domain.getModifierId().getCode());
+			super.setEntityForPreparedStatement(storableObject, preparedStatement);
 			preparedStatement.setString( 6, domainIdSubstr);
 			preparedStatement.setString( 7, domain.getName());
 			preparedStatement.setString( 8, domain.getDescription());

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.29 2004/09/06 11:36:22 max Exp $
+ * $Id: EquipmentDatabase.java,v 1.30 2004/09/08 12:46:18 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/09/06 11:36:22 $
+ * @version $Revision: 1.30 $, $Date: 2004/09/08 12:46:18 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -76,11 +76,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = COLUMN_ID + COMMA
-				+ COLUMN_CREATED + COMMA
-				+ COLUMN_MODIFIED + COMMA
-				+ COLUMN_CREATOR_ID + COMMA
-				+ COLUMN_MODIFIER_ID + COMMA
+			this.updateColumns = super.getUpdateColumns()
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
@@ -92,11 +88,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateColumns == null){
-			this.updateMultiplySQLValues = QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() 
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -109,13 +101,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		Equipment equipment = fromStorableObject(storableObject);
-		String eqIdStr = equipment.getId().toSQLString();
-
-		String sql = eqIdStr + COMMA
-			+ DatabaseDate.toUpdateSubString(equipment.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(equipment.getModified()) + COMMA
-			+ equipment.getCreatorId().toSQLString() + COMMA
-			+ equipment.getModifierId().toSQLString() + COMMA
+		String sql = super.getUpdateSingleSQLValues(storableObject)
 			+ equipment.getDomainId().toSQLString() + COMMA
 			+ equipment.getType().getId().toSQLString() + COMMA
 			+ APOSTOPHE + equipment.getName() + APOSTOPHE + COMMA
@@ -147,13 +133,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		Equipment equipment = fromStorableObject(storableObject);
 		String eqIdStr = equipment.getId().getCode();
 		try {
-			preparedStatement.setString( 1, eqIdStr);
-			preparedStatement.setTimestamp( 2, new Timestamp(equipment.
-					getCreated().getTime()));
-			preparedStatement.setTimestamp( 3, new Timestamp(equipment.
-					getModified().getTime()));
-			preparedStatement.setString( 4, equipment.getCreatorId().getCode());
-			preparedStatement.setString( 5, equipment.getModifierId().getCode());
+			super.setEntityForPreparedStatement(storableObject, preparedStatement);
 			preparedStatement.setString( 6 , equipment.getDomainId().getCode());
 			preparedStatement.setString( 7, equipment.getType().getId().getCode());
 			preparedStatement.setString( 8, equipment.getName());
@@ -169,7 +149,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Equipment equipment = fromStorableObject(storableObject);
+		Equipment equipment = storableObject == null ? null : fromStorableObject(storableObject);
 		if (equipment == null){
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
@@ -345,6 +325,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	
 	public void insert(List storableObjects) throws IllegalDataException,
 			CreateObjectException {
+		//TODO maybe wrong sequence of incerted items 
 		super.insertEntities(storableObjects);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
