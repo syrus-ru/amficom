@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.66 2005/02/11 16:02:55 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.67 2005/02/11 16:31:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/02/11 16:02:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.67 $, $Date: 2005/02/11 16:31:20 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -460,8 +460,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		this.updateEquipmentMELinks(storableObjects);
 		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
-
-	private void setModified(Equipment equipment) throws UpdateObjectException {		
+/*
+	private void setModified(Equipment equipment) throws UpdateObjectException {
 		String eqIdStr = DatabaseIdentifier.toSQLString(equipment.getId());
 		String sql = SQL_UPDATE
 			+ ObjectEntities.EQUIPMENT_ENTITY + SQL_SET
@@ -495,7 +495,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
-
+*/
 	public List retrieveAll() throws RetrieveObjectException {
 		List list = null;
 		try {
