@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.3 2004/09/14 14:14:14 bob Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.4 2004/09/27 12:24:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/09/14 14:14:14 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 12:24:10 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -33,6 +33,8 @@ public interface MeasurementObjectLoader {
 	Set loadSet(Identifier id) throws DatabaseException, CommunicationException;
 
 	MeasurementSetup loadMeasurementSetup(Identifier id) throws DatabaseException, CommunicationException;
+	
+	Modeling loadModeling(Identifier id) throws DatabaseException, CommunicationException;
 
 	Measurement loadMeasurement(Identifier id) throws DatabaseException, CommunicationException;
 
@@ -55,6 +57,8 @@ public interface MeasurementObjectLoader {
 	List loadEvaluationTypes(List ids) throws DatabaseException, CommunicationException;
 
 	List loadSets(List ids) throws DatabaseException, CommunicationException;
+	
+	List loadModelings(List ids) throws DatabaseException, CommunicationException;
 
 	List loadMeasurementSetups(List ids) throws DatabaseException, CommunicationException;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.4 2004/09/15 10:41:49 max Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.5 2004/09/27 12:24:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/15 10:41:49 $
- * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2004/09/27 12:24:10 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -46,7 +46,11 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	public Set loadSet(Identifier id) throws DatabaseException {
 		return new Set(id);
 	}
-
+	
+	public Modeling loadModeling(Identifier id) throws DatabaseException, CommunicationException {		
+		return new Modeling(id);
+	}
+	
 	public MeasurementSetup loadMeasurementSetup(Identifier id) throws DatabaseException {
 		return new MeasurementSetup(id);
 	}
@@ -127,6 +131,18 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
         return list;
 	}
     
+	public List loadModelings(List ids) throws DatabaseException, CommunicationException {
+		ModelingDatabase database = (ModelingDatabase)MeasurementDatabaseContext.getModelingDatabase();
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseMeasumentObjectLoader.loadModelings | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.loadModelings | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+	}
+	
 	public List loadMeasurements(List ids) throws DatabaseException,
 			CommunicationException {
 		MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
