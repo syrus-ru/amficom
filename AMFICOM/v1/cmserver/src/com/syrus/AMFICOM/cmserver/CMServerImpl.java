@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.35 2004/10/08 14:43:09 max Exp $
+ * $Id: CMServerImpl.java,v 1.36 2004/10/11 07:43:12 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -118,7 +118,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/10/08 14:43:09 $
+ * @version $Revision: 1.36 $, $Date: 2004/10/11 07:43:12 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -5475,5 +5475,215 @@ public class CMServerImpl implements CMServerOperations {
 		}
 		
 		return this.domainCondition;
-	}   
+	}
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveCharacteristic(com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveCharacteristic(Characteristic_Transferable characteristic_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveCharacteristics(com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveCharacteristics(Characteristic_Transferable[] characteristics_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveCharacteristicType(com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveCharacteristicType(CharacteristicType_Transferable characteristicType_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveCharacteristicTypes(com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveCharacteristicTypes(CharacteristicType_Transferable[] characteristicTypes_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveDomain(com.syrus.AMFICOM.configuration.corba.Domain_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveDomain(Domain_Transferable domain_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveDomains(com.syrus.AMFICOM.configuration.corba.Domain_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveDomains(Domain_Transferable[] domains_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveEquipment(com.syrus.AMFICOM.configuration.corba.Equipment_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveEquipment(Equipment_Transferable equipment_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveEquipments(com.syrus.AMFICOM.configuration.corba.Equipment_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveEquipments(Equipment_Transferable[] equipments_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveEquipmentType(com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveEquipmentType(EquipmentType_Transferable equipmentType_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveEquipmentTypes(com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveEquipmentTypes(EquipmentType_Transferable[] equipmentTypes_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveKIS(com.syrus.AMFICOM.configuration.corba.KIS_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveKIS(KIS_Transferable kis_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveKISs(com.syrus.AMFICOM.configuration.corba.KIS_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveKISs(KIS_Transferable[] kiss_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveMCM(com.syrus.AMFICOM.configuration.corba.MCM_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveMCM(MCM_Transferable mcm_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveMCMs(com.syrus.AMFICOM.configuration.corba.MCM_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveMCMs(MCM_Transferable[] mcms_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveMeasurementPort(com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveMeasurementPort(MeasurementPort_Transferable measurementPort_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveMeasurementPorts(com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveMeasurementPorts(MeasurementPort_Transferable[] measurementPorts_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveMeasurementPortType(com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveMeasurementPortType(MeasurementPortType_Transferable measurementPortType_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveMeasurementPortTypes(com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveMeasurementPortTypes(MeasurementPortType_Transferable[] measurementPortTypes_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveMonitoredElement(com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveMonitoredElement(MonitoredElement_Transferable monitoredElement_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveMonitoredElements(com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveMonitoredElements(MonitoredElement_Transferable[] monitoredElements_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receivePort(com.syrus.AMFICOM.configuration.corba.Port_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receivePort(Port_Transferable port_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receivePorts(com.syrus.AMFICOM.configuration.corba.Port_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receivePorts(Port_Transferable[] ports_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receivePortType(com.syrus.AMFICOM.configuration.corba.PortType_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receivePortType(PortType_Transferable portType_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receivePortTypes(com.syrus.AMFICOM.configuration.corba.PortType_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receivePortTypes(PortType_Transferable[] portTypes_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveServer(com.syrus.AMFICOM.configuration.corba.Server_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveServer(Server_Transferable server_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveServers(com.syrus.AMFICOM.configuration.corba.Server_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveServers(Server_Transferable[] servers_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveTransmissionPath(com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveTransmissionPath(TransmissionPath_Transferable transmissionPath_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveTransmissionPaths(com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveTransmissionPaths(TransmissionPath_Transferable[] transmissionPaths_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveUser(com.syrus.AMFICOM.configuration.corba.User_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveUser(User_Transferable User_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveUsers(com.syrus.AMFICOM.configuration.corba.User_Transferable[], boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+     */
+    public void receiveUsers(User_Transferable[] Users_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        // TODO Auto-generated method stub
+        
+    }   
 }
