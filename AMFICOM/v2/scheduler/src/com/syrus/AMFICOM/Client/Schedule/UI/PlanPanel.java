@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.Resource.Result.*;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 
 import oracle.jdeveloper.layout.*;
 
@@ -42,6 +43,12 @@ public class PlanPanel extends JPanel implements OperationListener {
 	}
 	public static final String[]	SCALES			= new String[] {
 			"10 min", "1 hour", "6 hours", "1 day", "1 week", "1 month"};					//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+
+	/**
+	 * SCALES in milliseconds
+	 */
+	public static final long[]		SCALES_MS		= new long[] { 1000 * 60 * 10, 1000 * 60 * 60, 1000 * 60 * 60 * 6,
+			1000 * 60 * 60 * 24, 1000 * 60 * 60 * 24 * 7, 1000 * 60 * 60 * 31};
 
 	protected static final Step[]	STEPS			= new Step[] { new Step(Calendar.MINUTE, 1, 10, 6, 1),
 			new Step(Calendar.MINUTE, 10, 60, 5, 5), new Step(Calendar.HOUR_OF_DAY, 1, 6, 6, 1),
@@ -237,10 +244,23 @@ public class PlanPanel extends JPanel implements OperationListener {
 				if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
 					this.test = test;
 					boolean found = false;
-					if (test!=null){
-						Date date = new Date(test.getStartTime());
+					if (test != null) {
+						long diff = 0;
+//						int scaleIndex = this.toolBar.scaleComboBox.getSelectedIndex();
+//						if ((scaleIndex > 0) && (scaleIndex < SCALES_MS.length))
+//							diff = SCALES_MS[scaleIndex] / 2;
+						Date date = new Date(test.getStartTime() - diff);
+//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(date));
+//
+//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(this.toolBar.timeSpinner.getModel()
+//								.getValue()));
+//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(this.toolBar.dateSpinner.getModel()
+//								.getValue()));
+
 						this.toolBar.timeSpinner.getModel().setValue(date);
-						this.toolBar.dateSpinner.getModel().setValue(date);						
+						this.toolBar.dateSpinner.getModel().setValue(date);
+						BoundedRangeModel model = this.parent.getHorizontalScrollBar().getModel();
+						model.setValue(model.getMinimum());
 					}
 					//				java.util.List tests = ((SchedulerModel)
 					// this.aContext.getApplicationModel()).getTests();
@@ -265,7 +285,8 @@ public class PlanPanel extends JPanel implements OperationListener {
 					if (found) {
 						TestLine testLine = (TestLine) this.testLines.get(test.getMonitoredElementId());
 						//System.out.println("testLine found");
-						//System.out.println("testLine.getTest(test.getId()):" + testLine.getTest(test.getId()));
+						//System.out.println("testLine.getTest(test.getId()):"
+						// + testLine.getTest(test.getId()));
 						found = testLine.getTest(test.getId()) != null;
 					}
 
@@ -327,7 +348,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 			updateTests();
 			repaint();
 			revalidate();
-			this.parent.repaint();			
+			this.parent.repaint();
 		}
 
 	}
@@ -598,10 +619,10 @@ public class PlanPanel extends JPanel implements OperationListener {
 			}
 		}
 	}
-	
-	private void updateTest(Test test){
+
+	private void updateTest(Test test) {
 		TestLine testLine;
-		//System.out.println(">>test:" + test.getId());
+		//System.out.println("updateTest:" + test.getId());
 		if (this.testLines.containsKey(test.getMonitoredElementId()))
 			testLine = (TestLine) this.testLines.get(test.getMonitoredElementId());
 		else {
@@ -617,9 +638,14 @@ public class PlanPanel extends JPanel implements OperationListener {
 	}
 
 	protected void updateTests() {
-		//Environment.log(Environment.LOG_LEVEL_INFO, "updateTests", getClass().getName()); //$NON-NLS-1$
+		//Environment.log(Environment.LOG_LEVEL_INFO, "updateTests",
+		// getClass().getName()); //$NON-NLS-1$
 		//		this.setCursor(UIStorage.WAIT_CURSOR);
 		// clear old tests
+		
+		/**
+		 * @TODO do testLine update without removing items
+		 */
 		if (this.testLines == null)
 			this.testLines = new HashMap();
 		else
@@ -632,26 +658,27 @@ public class PlanPanel extends JPanel implements OperationListener {
 		if (unsavedTests != null) {
 			if (tests == null)
 				tests = unsavedTests;
-//			else
-//				tests.addAll(unsavedTests);
+			//			else
+			//				tests.addAll(unsavedTests);
 		}
 
-		//System.out.println("tests:" + (tests == null ? " is null" : "" + tests.size()));
+		//System.out.println("tests:" + (tests == null ? " is null" : "" +
+		// tests.size()));
 
 		if (tests != null) {
-			for (Iterator it = tests.iterator(); it.hasNext();) {				
+			for (Iterator it = tests.iterator(); it.hasNext();) {
 				Test test = (Test) it.next();
 				updateTest(test);
 			}
 		}
-		
+
 		if (unsavedTests != null) {
-			for (Iterator it = unsavedTests.iterator(); it.hasNext();) {				
+			for (Iterator it = unsavedTests.iterator(); it.hasNext();) {
 				Test test = (Test) it.next();
 				updateTest(test);
 			}
 		}
-		
+
 		setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
 		updateRealScale();
 		revalidate();

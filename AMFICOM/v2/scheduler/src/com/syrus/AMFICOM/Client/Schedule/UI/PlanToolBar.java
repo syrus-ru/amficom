@@ -186,7 +186,11 @@ class PlanToolBar extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				ObjectResourceFilter filter = ((SchedulerModel) aContext.getApplicationModel()).getFilter();
 				TestFilter orf = (TestFilter) filter.clone();
-				if (PlanToolBar.this.filterDialog == null) {
+				
+				/**
+				 * FIXME recast without create new instance of FilterDialog
+				 */
+				//if (PlanToolBar.this.filterDialog == null) {
 					PlanToolBar.this.filterDialog = new FilterDialog(orf, aContext);
 					Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 					Dimension frameSize = PlanToolBar.this.filterDialog.getSize();
@@ -200,12 +204,13 @@ class PlanToolBar extends JPanel {
 						frameSize.width = screenSize.width;
 					PlanToolBar.this.filterDialog.setLocation((screenSize.width - frameSize.width) / 2,
 																(screenSize.height - frameSize.height) / 2);
-				}
+				//}
 				//else PlanToolBar.this.filterDialog.setF
 				PlanToolBar.this.filterDialog.pack();
 
 				PlanToolBar.this.filterDialog.setModal(true);
 				PlanToolBar.this.filterDialog.setVisible(true);
+				PlanToolBar.this.filterDialog.setFilter(orf);
 
 				if (PlanToolBar.this.filterDialog.retcode == FilterDialog.RETURN_CODE_OK) {					
 					((SchedulerModel) aContext.getApplicationModel()).setFilter(orf);

@@ -4,8 +4,13 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Schedule.ScheduleMainMenuBar;
+import com.syrus.AMFICOM.Client.Schedule.ScheduleMainToolBar;
+import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class PlanFrame extends JInternalFrame {
@@ -13,6 +18,7 @@ public class PlanFrame extends JInternalFrame {
 	//private ApplicationContext aContext;
 	private PlanToolBar	toolBar;
 	private PlanPanel	mainPanel;
+	private Command command;
 
 	public PlanFrame(ApplicationContext aContext) {
 		//this.aContext = aContext;
@@ -37,6 +43,14 @@ public class PlanFrame extends JInternalFrame {
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(this.toolBar, BorderLayout.NORTH);
 		getContentPane().add(scroll, BorderLayout.CENTER);
+		this.command = new WindowCommand(this);
 	}
+	
 
+	/**
+	 * @return Returns the command.
+	 */
+	public Command getCommand() {
+		return this.command;
+	}
 }

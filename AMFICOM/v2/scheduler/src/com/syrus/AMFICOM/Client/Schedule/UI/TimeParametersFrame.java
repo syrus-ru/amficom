@@ -4,21 +4,24 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
-public class TimeParametersFrame extends JInternalFrame implements
-		OperationListener {
+public class TimeParametersFrame extends JInternalFrame implements OperationListener {
 
 	//	private ApplicationContext aContext;
 
 	private Dispatcher			dispatcher;
 
 	private TimeParametersPanel	panel;
+
+	private Command				command;
 
 	public TimeParametersFrame(ApplicationContext aContext) {
 		//		this.aContext = aContext;
@@ -28,8 +31,9 @@ public class TimeParametersFrame extends JInternalFrame implements
 		setResizable(true);
 		setClosable(true);
 		setIconifiable(true);
-		panel = new TimeParametersPanel(aContext);
-		this.getContentPane().add(panel, BorderLayout.CENTER);
+		this.panel = new TimeParametersPanel(aContext);
+		this.getContentPane().add(this.panel, BorderLayout.CENTER);
+		this.command = new WindowCommand(this);
 	}
 
 	private void initModule(Dispatcher dispatcher) {
@@ -39,8 +43,7 @@ public class TimeParametersFrame extends JInternalFrame implements
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:"
-				+ commandName, getClass().getName());
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		//		int id = ae.getID();
 		//		Object obj = ae.getSource();
 
@@ -48,10 +51,9 @@ public class TimeParametersFrame extends JInternalFrame implements
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			Test test = tue.test;
 			if (tue.testSelected) {
-				TestRequest treq = (TestRequest) Pool.get(TestRequest.typ, test
-						.getRequestId());
+				TestRequest treq = (TestRequest) Pool.get(TestRequest.typ, test.getRequestId());
 				if (treq != null) {
-					panel.setTestRequest(treq);
+					this.panel.setTestRequest(treq);
 				}
 			} else {
 				// nothing
@@ -59,4 +61,10 @@ public class TimeParametersFrame extends JInternalFrame implements
 		}
 	}
 
+	/**
+	 * @return Returns the command.
+	 */
+	public Command getCommand() {
+		return this.command;
+	}
 }

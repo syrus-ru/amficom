@@ -5,6 +5,7 @@ import java.util.*;
 
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
@@ -12,6 +13,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class TestParametersFrame extends JInternalFrame implements
@@ -20,6 +22,7 @@ public class TestParametersFrame extends JInternalFrame implements
 	private ApplicationContext	aContext;
 	private Dispatcher			dispatcher;
 	private TestParametersPanel	panel;
+	private Command				command;
 
 	public TestParametersFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -32,6 +35,7 @@ public class TestParametersFrame extends JInternalFrame implements
 		this.panel = new TestParametersPanel(aContext);
 		this.getContentPane().add(this.panel, BorderLayout.CENTER);
 		initModule(aContext.getDispatcher());
+		this.command = new WindowCommand(this);
 	}
 
 	private void initModule(Dispatcher dispatcher) {
@@ -88,5 +92,11 @@ public class TestParametersFrame extends JInternalFrame implements
 			}
 
 		}
+	}
+	/**
+	 * @return Returns the command.
+	 */
+	public Command getCommand() {
+		return this.command;
 	}
 }

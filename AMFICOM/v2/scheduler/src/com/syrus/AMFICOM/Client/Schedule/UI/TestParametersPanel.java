@@ -407,7 +407,8 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 					Analysis analysis = this.test.getAnalysis();
 					if (analysis == null) {
 						analysis = (Analysis) Pool.get(Analysis.typ, this.test.getAnalysisId());
-						this.test.setAnalysis(analysis);
+						//this.test.setAnalysis(analysis);
+						selectComboBox(this.analysisComboBox, analysis.getTypeId());
 					}
 				}
 				if (this.test.getAnalysis() != null) {

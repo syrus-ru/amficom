@@ -56,7 +56,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	ElementsTreeFrame			treeFrame;
 	SaveParametersFrame			saveFrame;
 	TableFrame					tableFrame;
-	//TestFilterFrame				testFilterFrame;
+
+	//TestFilterFrame testFilterFrame;
 
 	public ScheduleMainFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -127,9 +128,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		tableFrame = new TableFrame(aContext);
 		desktopPane.add(tableFrame);
-		
-//		this.testFilterFrame = new TestFilterFrame(aContext);
-//		this.desktopPane.add(this.testFilterFrame);
+
+		//		this.testFilterFrame = new TestFilterFrame(aContext);
+		//		this.desktopPane.add(this.testFilterFrame);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = new Dimension(screenSize.width, screenSize.height - 24);
@@ -197,6 +198,16 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.the_dispatcher, this.aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
+		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PLAN, this.planFrame.getCommand());
+		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TREE, this.treeFrame.getCommand());
+		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, this.paramsFrame.getCommand());
+		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, this.saveFrame.getCommand());
+		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, this.propsFrame.getCommand());
+		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TIME, this.timeFrame.getCommand());
+		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TABLE, this.tableFrame.getCommand());
+		
+		aModel.setCommand(ScheduleMainMenuBar.MENU_HELP_ABOUT, new HelpAboutCommand(this));
+
 		setDefaultModel(aModel);
 
 		aModel.fireModelChanged("");
@@ -229,32 +240,43 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.setEnabled("menuSession", true);
 		aModel.setEnabled("menuSessionNew", true);
 		aModel.setEnabled("menuSessionConnection", true);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PLAN, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TREE, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TIME, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TABLE, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_HELP, true);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_HELP_ABOUT, true);		
+
 	}
 
 	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
-		aContext.setDispatcher(dispatcher);		
+		aContext.setDispatcher(dispatcher);
 		setModel(aContext.getApplicationModel());
 	}
 
 	public ApplicationContext getContext() {
-		return aContext;
+		return this.aContext;
 	}
 
 	public void setModel(ApplicationModel aModel) {
-		toolBar.setModel(aModel);
-		menuBar.setModel(aModel);
-		aModel.addListener(menuBar);
-		aModel.addListener(toolBar);
+		this.toolBar.setModel(aModel);
+		this.menuBar.setModel(aModel);
+		aModel.addListener(this.menuBar.getApplicationModelListener());
+		aModel.addListener(this.toolBar);
 		aModel.fireModelChanged("");
 	}
 
 	public ApplicationModel getModel() {
-		return aContext.getApplicationModel();
+		return this.aContext.getApplicationModel();
 	}
 
 	public Dispatcher getInternalDispatcher() {
-		return dispatcher;
+		return this.dispatcher;
 	}
 
 	public void operationPerformed(OperationEvent ae) {
@@ -263,7 +285,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE)) {
 			boolean value = ((Boolean) obj).booleanValue();
-			//Environment.log(Environment.LOG_LEVEL_INFO, "progressBar:" + value);
+			//Environment.log(Environment.LOG_LEVEL_INFO, "progressBar:" +
+			// value);
 			this.statusBar.setProgressBarEnable(value);
 		}
 		if (commandName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
@@ -339,11 +362,20 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	}
 
 	public void setConnectionOpened() {
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionNew", true);
 		aModel.setEnabled("menuSessionClose", false);
 		aModel.setEnabled("menuSessionConnection", true);
 		aModel.setEnabled("menuSessionChangePassword", false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW, true);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PLAN, true);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TREE, true);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, true);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, true);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, true);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TIME, true);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TABLE, true);
+
 		aModel.fireModelChanged("");
 	}
 
@@ -353,6 +385,14 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		aModel.setEnabled("menuSessionClose", false);
 		aModel.setEnabled("menuSessionOptions", false);
 		aModel.setEnabled("menuSessionChangePassword", false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PLAN, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TREE, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TIME, false);
+		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TABLE, false);
 		aModel.fireModelChanged("");
 	}
 
@@ -427,7 +467,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		planFrame.setVisible(true);
 		saveFrame.setVisible(true);
 		tableFrame.setVisible(true);
-//		testFilterFrame.setVisible(true);
+		//		testFilterFrame.setVisible(true);
 	}
 
 	public void setSessionOpened() {

@@ -5,10 +5,12 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class TestRequestFrame extends JInternalFrame implements OperationListener {
@@ -17,6 +19,7 @@ public class TestRequestFrame extends JInternalFrame implements OperationListene
 	private Dispatcher			dispatcher;
 	private Test				receivedTest;
 	private TestRequestPanel	panel;
+	private Command				command;
 
 	public TestRequestFrame(ApplicationContext aContext) {
 		//this.aContext = aContext;
@@ -30,6 +33,7 @@ public class TestRequestFrame extends JInternalFrame implements OperationListene
 		this.getContentPane().add(this.panel, BorderLayout.CENTER);
 		this.dispatcher = aContext.getDispatcher();
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
+		this.command = new WindowCommand(this);
 
 	}
 
@@ -155,4 +159,10 @@ public class TestRequestFrame extends JInternalFrame implements OperationListene
 	//		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 	//	}
 
+	/**
+	 * @return Returns the command.
+	 */
+	public Command getCommand() {
+		return this.command;
+	}
 }

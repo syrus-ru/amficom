@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.EmptySurveyDataSource;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -136,9 +135,33 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		add("menuSessionDomain");
 		add("menuExit");
 
+		add(ScheduleMainMenuBar.MENU_VIEW);
+		add(ScheduleMainMenuBar.MENU_VIEW_PLAN);
+		add(ScheduleMainMenuBar.MENU_VIEW_TREE);
+		add(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS);
+		add(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS);
+		add(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES);
+		add(ScheduleMainMenuBar.MENU_VIEW_TIME);
+		add(ScheduleMainMenuBar.MENU_VIEW_TABLE);
+
+		add(ScheduleMainMenuBar.MENU_HELP);
+		add(ScheduleMainMenuBar.MENU_HELP_ABOUT);
+
 		setVisible("menuSessionSave", false);
 		setVisible("menuSessionUndo", false);
 		setVisible("menuSessionOptions", false);
+
+		setVisible(ScheduleMainMenuBar.MENU_VIEW, true);
+		setVisible(ScheduleMainMenuBar.MENU_VIEW_PLAN, true);
+		setVisible(ScheduleMainMenuBar.MENU_VIEW_TREE, true);
+		setVisible(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, true);
+		setVisible(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, true);
+		setVisible(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, true);
+		setVisible(ScheduleMainMenuBar.MENU_VIEW_TIME, true);
+		setVisible(ScheduleMainMenuBar.MENU_VIEW_TABLE, true);
+
+		setVisible(ScheduleMainMenuBar.MENU_HELP, true);
+		setVisible(ScheduleMainMenuBar.MENU_HELP_ABOUT, true);
 
 	}
 
@@ -219,7 +242,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 						this.unsavedTests = new ArrayList();
 					this.unsavedTests.add(this.receivedTest);
 					if (this.allUnsavedTests == null)
-						this.allUnsavedTests = new ArrayList();					
+						this.allUnsavedTests = new ArrayList();
 					this.allUnsavedTests.add(this.receivedTest);
 				} else {
 					this.tests.add(this.receivedTest);
@@ -334,14 +357,16 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				this.flag = 0;
 			}
 		} else if (commandName.equals(COMMAND_CLEAN)) {
-			if (this.tests != null)
-				this.tests.clear();
-			if (this.unsavedTests != null)
-				this.unsavedTests.clear();
-			if (this.allTests != null)
-				this.allTests.clear();
-			if (this.allUnsavedTests != null)
-				this.allUnsavedTests.clear();
+			if (!obj.equals(this)) {
+				if (this.tests != null)
+					this.tests.clear();
+				if (this.unsavedTests != null)
+					this.unsavedTests.clear();
+				if (this.allTests != null)
+					this.allTests.clear();
+				if (this.allUnsavedTests != null)
+					this.allUnsavedTests.clear();
+			}
 
 		} else if (commandName.equals(COMMAND_REMOVE_TEST)) {
 			Test test = (Test) ae.getSource();
@@ -416,27 +441,29 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		ObjectResourceDomainFilter ordf = new ObjectResourceDomainFilter(this.aContext.getSessionInterface()
 				.getDomainId());
 
-		DataSet testSet = new DataSet(hash);
+		//DataSet testSet = new DataSet(hash);
 
-		testSet = ordf.filter(testSet);
+		//testSet = ordf.filter(testSet);
+		ordf.filtrate(hash);
 
 		if (this.allTests == null)
 			this.allTests = new ArrayList();
 		else
 			this.allTests.clear();
 
-		for (Iterator it = testSet.iterator(); it.hasNext();) {
-			Test test = (Test) it.next();
-			System.out.println("loaded tests:"+test.getId());
+		for (Iterator it = hash.keySet().iterator(); it.hasNext();) {
+			Test test = (Test) hash.get(it.next());
+			System.out.println("loaded tests:" + test.getId());
 			this.allTests.add(test);
 		}
 
-		testSet = this.filter.filter(testSet);
+		//testSet = this.filter.filter(testSet);
+		this.filter.filtrate(hash);
 
 		//подгружаем тестреквесты и недостающие тесты
 		HashSet treqs = new HashSet();
-		for (Iterator it = testSet.iterator(); it.hasNext();) {
-			Test test = (Test) it.next();			
+		for (Iterator it = hash.keySet().iterator(); it.hasNext();) {
+			Test test = (Test) hash.get(it.next());
 			treqs.add(test.getRequestId());
 		}
 		dsi.GetRequests();
@@ -449,7 +476,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					String testId = (String) it2.next();
 					//Environment.log(Environment.LOG_LEVEL_INFO, "test_id:" +
 					// testId); //$NON-NLS-1$
-					if (testSet.get(testId) == null)
+					if (hash.get(testId) == null)
 						loadTests.add(testId);
 				}
 			}
@@ -462,8 +489,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		else
 			this.tests.clear();
 
-		for (Iterator it = testSet.iterator(); it.hasNext();) {
-			Test test = (Test) it.next();			
+		for (Iterator it = hash.keySet().iterator(); it.hasNext();) {
+			Test test = (Test) hash.get(it.next());
 			this.tests.add(test);
 		}
 
@@ -733,18 +760,28 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	 */
 	public void setFilter(ObjectResourceFilter filter) {
 		this.filter = filter;
+//		Vector v = this.filter.getCriteria();
+//		for(Iterator it=v.iterator();it.hasNext();){
+//			FilterExpressionInterface fei = (FilterExpressionInterface)it.next();
+//			System.out.println("name:"+fei.getName()+"\tid:"+fei.getId());
+//			Vector v2= 	fei.getVec();
+//			for(Iterator it2=v2.iterator();it2.hasNext();){
+//				Object obj = it2.next();
+//				System.out.println("'"+obj+"'");
+//			}
+//		}
 		if (this.allTests != null && !this.allTests.isEmpty()) {
-
+			this.dispatcher.notify(new OperationEvent(this, 0, SchedulerModel.COMMAND_CLEAN));
 			for (Iterator it = this.tests.iterator(); it.hasNext();) {
 				Object obj = it.next();
 				if (!this.allTests.contains(obj))
 					this.allTests.add(obj);
 			}
-			
-			for (Iterator it = this.allTests.iterator(); it.hasNext();) {
-				Test test = (Test) it.next();
-				System.out.println("allTests > filter:"+test.getId());				
-			}
+
+//			for (Iterator it = this.allTests.iterator(); it.hasNext();) {
+//				Test test = (Test) it.next();
+//								System.out.println("allTests > filter:" + test.getId());
+//			}
 
 			if (this.unsavedTests != null) {
 				for (Iterator it = this.unsavedTests.iterator(); it.hasNext();) {
@@ -754,29 +791,30 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				}
 			}
 
-			DataSet testSet = new DataSet(this.allTests);
-			testSet = this.filter.filter(testSet);
-			this.tests.clear();
-			for (Iterator it = testSet.iterator(); it.hasNext();) {
-				Test test = (Test) it.next();
-				System.out.println("filtered test:"+test.getId());
-				this.tests.add(test);
-			}
+//			DataSet testSet = new DataSet(this.allTests);
+//			testSet = this.filter.filter(testSet);
+//			this.tests.clear();
+//			for (Iterator it = testSet.iterator(); it.hasNext();) {
+//				Test test = (Test) it.next();
+////				System.out.println("filtered test:" + test.getId());
+//				this.tests.add(test);
+//			}
+			this.filter.filtrate(this.allTests, this.tests);
 
 			if (this.allUnsavedTests != null) {
-				testSet = new DataSet(this.allUnsavedTests);
-				testSet = this.filter.filter(testSet);
-				this.unsavedTests.clear();
-				for (Iterator it = testSet.iterator(); it.hasNext();) {
-					Test test = (Test) it.next();
-					this.unsavedTests.add(test);
-				}
+//				testSet = new DataSet(this.allUnsavedTests);
+//				testSet = this.filter.filter(testSet);
+//				this.unsavedTests.clear();
+//				for (Iterator it = testSet.iterator(); it.hasNext();) {
+//					Test test = (Test) it.next();
+//					this.unsavedTests.add(test);
+//				}
+				this.filter.filtrate(this.allUnsavedTests, this.unsavedTests);
 			}
-			this.dispatcher.notify(new OperationEvent(this, 0, SchedulerModel.COMMAND_CLEAN));
-			for (Iterator it = this.tests.iterator(); it.hasNext();) {
-				Test test = (Test) it.next();
-				System.out.println("filtered test2send:"+test.getId());				
-			}
+			//						for (Iterator it = this.tests.iterator(); it.hasNext();) {
+			//							Test test = (Test) it.next();
+			//							System.out.println("filtered test2send:" + test.getId());
+			//						}
 			this.dispatcher.notify(new OperationEvent(this.tests, 0, COMMAND_NAME_ALL_TESTS));
 		}
 	}

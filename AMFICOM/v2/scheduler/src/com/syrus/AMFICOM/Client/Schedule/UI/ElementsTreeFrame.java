@@ -2,13 +2,17 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class ElementsTreeFrame extends JInternalFrame {
 
 	private ApplicationContext	aContext;
+	
+	private Command command;
 	
 	private ElementsTreePanel panel;
 
@@ -20,6 +24,13 @@ public class ElementsTreeFrame extends JInternalFrame {
 		setResizable(true);
 		setClosable(true);
 		setIconifiable(true);
+		this.command = new WindowCommand(this);
+	}
+	/**
+	 * @return Returns the command.
+	 */
+	public Command getCommand() {
+		return this.command;
 	}
 
 	public void init() {

@@ -10,11 +10,13 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.CORBA.General.TestReturnType;
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Result.Test;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 /**
@@ -30,6 +32,7 @@ public class SaveParametersFrame extends JInternalFrame implements OperationList
 	private JRadioButton	recognizedEventsButton;
 	private JRadioButton	measurementIdButton;
 	private Test			test;
+	private Command			command;
 
 	/**
 	 * @todo only for testing mode
@@ -55,6 +58,7 @@ public class SaveParametersFrame extends JInternalFrame implements OperationList
 		init();
 		if (aContext != null)
 			initModule(aContext.getDispatcher());
+		this.command = new WindowCommand(this);
 	}
 
 	private void init() {
@@ -133,7 +137,7 @@ public class SaveParametersFrame extends JInternalFrame implements OperationList
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 			TestReturnType returnType = this.getParameter();
 			this.dispatcher.notify(new OperationEvent(returnType, SchedulerModel.DATA_ID_RETURN_TYPE,
-													SchedulerModel.COMMAND_SEND_DATA));
+														SchedulerModel.COMMAND_SEND_DATA));
 		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			Test test = tue.test;
@@ -151,5 +155,12 @@ public class SaveParametersFrame extends JInternalFrame implements OperationList
 				}
 			}
 		}
+	}
+
+	/**
+	 * @return Returns the command.
+	 */
+	public Command getCommand() {
+		return this.command;
 	}
 }

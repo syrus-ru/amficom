@@ -206,8 +206,10 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 			System.out.println("test is changed");
 			if (this.unsavedTests == null) {
 				this.unsavedTests = new HashMap();
-				this.timer = new javax.swing.Timer(TIME_OUT, this);
-				this.timer.start();
+				if (this.timer == null) {
+					this.timer = new javax.swing.Timer(TIME_OUT, this);
+					this.timer.start();
+				}
 				System.out.println("timer created");
 			}
 			if (this.unsavedTests.containsValue(test)) {
@@ -466,24 +468,24 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				 */
 				if (testAlarms.length > 0) {
 					for (int j = 0; j < testAlarms.length; j++) {
-							Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[j].alarm_id);
-							if (alarm != null) {
-								//System.out.println("alarm.type_id:" +
-								// alarm.type_id);
-								if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
-									//System.out.println("ID_RTU_TEST_ALARM");
-									if ((this.test != null) && (this.test.getId().equals(test.getId())))
-										g.setColor(TestLine.COLOR_ALARM_SELECTED);
-									else
-										g.setColor(TestLine.COLOR_ALARM);
-								} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING)) {
-									//System.out.println("ID_RTU_TEST_WARNING");
-									if ((this.test != null) && (this.test.getId().equals(test.getId())))
-										g.setColor(TestLine.COLOR_WARNING_SELECTED);
-									else
-										g.setColor(TestLine.COLOR_WARNING);
-								}
+						Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[j].alarm_id);
+						if (alarm != null) {
+							//System.out.println("alarm.type_id:" +
+							// alarm.type_id);
+							if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
+								//System.out.println("ID_RTU_TEST_ALARM");
+								if ((this.test != null) && (this.test.getId().equals(test.getId())))
+									g.setColor(TestLine.COLOR_ALARM_SELECTED);
+								else
+									g.setColor(TestLine.COLOR_ALARM);
+							} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING)) {
+								//System.out.println("ID_RTU_TEST_WARNING");
+								if ((this.test != null) && (this.test.getId().equals(test.getId())))
+									g.setColor(TestLine.COLOR_WARNING_SELECTED);
+								else
+									g.setColor(TestLine.COLOR_WARNING);
 							}
+						}
 					}
 				}
 
@@ -492,7 +494,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				break;
 		}
 	}
-	
+
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);

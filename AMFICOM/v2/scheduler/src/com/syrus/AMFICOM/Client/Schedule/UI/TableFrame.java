@@ -18,6 +18,7 @@ import javax.swing.table.*;
 import com.syrus.AMFICOM.CORBA.Constant.AlarmTypeConstants;
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
 import com.syrus.AMFICOM.CORBA.Survey.ElementaryTestAlarm;
+import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
@@ -28,6 +29,7 @@ import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.TestType;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 /**
@@ -48,19 +50,20 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 				Color color = table.getBackground();
 				TestTableModel model = (TestTableModel) table.getModel();
 
-				ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();				
+				ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();
 				if (testAlarms.length != 0) {
 					//System.out.println("testAlarms.length:"+testAlarms.length);
 					for (int i = 0; i < testAlarms.length; i++) {
-						Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[i].alarm_id);						
+						Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[i].alarm_id);
 						//System.out.println("alarm:"+alarm.type_id);
 						if (alarm != null) {
-							//System.out.println("alarm.type_id:" + alarm.type_id);
+							//System.out.println("alarm.type_id:" +
+							// alarm.type_id);
 							if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
 								//System.out.println("ID_RTU_TEST_ALARM");
 								color = TestLine.COLOR_ALARM;
-							} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING)){
-								//System.out.println("ID_RTU_TEST_WARNING");								
+							} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING)) {
+								//System.out.println("ID_RTU_TEST_WARNING");
 								color = TestLine.COLOR_WARNING;
 							}
 						}
@@ -305,6 +308,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 	private JPanel		panel;
 	private Test		test;
 	java.util.List		rowToRemove;
+	private Command		command;
 
 	//ArrayList savedTests;
 	//boolean skipTestUpdate = false;
@@ -316,6 +320,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		if (aContext != null)
 			initModule(aContext.getDispatcher());
 		init();
+		this.command = new WindowCommand(this);
 	}
 
 	public void operationPerformed(OperationEvent ae) {
@@ -383,6 +388,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 				model.removeAll();
 				TableFrame.this.listTable.removeAll();
 				java.util.List tests = ((SchedulerModel) TableFrame.this.aContext.getApplicationModel()).getTests();
+				//System.out.println("tests.size:"+tests.size());
 				for (Iterator it = tests.iterator(); it.hasNext();) {
 					Test test = (Test) it.next();
 					if (model.getObjectResourceIndex(test) < 0) {
@@ -391,6 +397,20 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 						model.addRow(row);
 					}
 				}
+
+				java.util.List unsavedTests = ((SchedulerModel) TableFrame.this.aContext.getApplicationModel())
+						.getUnsavedTests();
+				if (unsavedTests != null) {
+					for (Iterator it = unsavedTests.iterator(); it.hasNext();) {
+						Test test = (Test) it.next();
+						if (model.getObjectResourceIndex(test) < 0) {
+							//System.out.println("add test:" + test.getId());
+							TestTableRow row = new TestTableRow(test);
+							model.addRow(row);
+						}
+					}
+				}
+
 				TableFrame.this.listTable.repaint();
 				TableFrame.this.listTable.revalidate();
 			}
@@ -539,4 +559,10 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 	}
 
+	/**
+	 * @return Returns the command.
+	 */
+	public Command getCommand() {
+		return this.command;
+	}
 }
