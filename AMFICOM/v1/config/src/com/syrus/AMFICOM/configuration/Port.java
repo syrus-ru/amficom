@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.30 2004/12/27 21:01:43 arseniy Exp $
+ * $Id: Port.java,v 1.31 2004/12/28 11:44:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/12/27 21:01:43 $
+ * @version $Revision: 1.31 $, $Date: 2004/12/28 11:44:23 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -129,7 +129,7 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 		if (creatorId == null || type == null || description == null || 
 				type == null || equipmentId == null || sort == null )
 			throw new IllegalArgumentException("Argument is 'null'");
-		
+
 		try {
 			return new Port(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORT_ENTITY_CODE),
 						creatorId,
@@ -137,7 +137,8 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 						description,
 						equipmentId,
 						sort.value());
-		} catch (IllegalObjectEntityException e) {
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Port.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -151,21 +152,6 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
-
-//	public static Port getInstance(Port_Transferable pt) throws CreateObjectException {
-//		Port port = new Port(pt);
-//		
-//		port.portDatabase = ConfigurationDatabaseContext.portDatabase;
-//		try {
-//			if (port.portDatabase != null)
-//				port.portDatabase.insert(port);
-//		}
-//		catch (IllegalDataException ide) {
-//			throw new CreateObjectException(ide.getMessage(), ide);
-//		}
-//		
-//		return port;
-//	}
 	
 	public Object getTransferable() {
 		int i = 0;
@@ -219,19 +205,19 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 	}
 
 	public List getCharacteristics() {
-        return Collections.unmodifiableList(this.characteristics);
-    }
-    
-    protected void setCharacteristics0(final List characteristics) {
-        this.characteristics.clear();
-        if (characteristics != null)
-                this.characteristics.addAll(characteristics);
-    }
-    
-    public void setCharacteristics(final List characteristics) {
-        this.setCharacteristics0(characteristics);
-        super.currentVersion = super.getNextVersion();
-    }
+		return Collections.unmodifiableList(this.characteristics);
+	}
+
+	protected void setCharacteristics0(final List characteristics) {
+		this.characteristics.clear();
+		if (characteristics != null)
+			this.characteristics.addAll(characteristics);
+	}
+
+	public void setCharacteristics(final List characteristics) {
+		this.setCharacteristics0(characteristics);
+		super.currentVersion = super.getNextVersion();
+	}
 
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
@@ -250,7 +236,7 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 		this.equipmentId = equipmentId;
 		this.sort = sort;
 	}
-	
+
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		dependencies.add(this.type);
