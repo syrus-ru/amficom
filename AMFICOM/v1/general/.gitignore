@@ -11,8 +11,8 @@ lib
 *.gz
 .corba
 .mach
+.all
+.idl
+.sqlj
 SQLChecker.cache
 sqlj.properties
-.classpath
-.project
-Makefile.inc
