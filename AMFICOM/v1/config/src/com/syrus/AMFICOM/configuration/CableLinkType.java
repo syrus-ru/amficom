@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.23 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.24 2005/03/15 14:33:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,15 +25,17 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/03/05 21:37:24 $
+ * @version $Revision: 1.24 $, $Date: 2005/03/15 14:33:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -237,6 +239,18 @@ public class CableLinkType extends AbstractLinkType implements Characterizable {
 	public void setName(String name) {
 		super.changed = true;
 		this.name = name;
+	}
+
+	public Collection getCableThreadTypes() {
+		LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CABLETHREADTYPE_ENTITY_CODE);
+		Collection cableThreadTypes = null;
+		try {
+			cableThreadTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(lic, true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+		return cableThreadTypes;
 	}
 
 	public List getDependencies() {
