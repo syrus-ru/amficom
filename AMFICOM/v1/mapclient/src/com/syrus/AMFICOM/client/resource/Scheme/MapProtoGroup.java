@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
@@ -18,7 +19,7 @@ import com.syrus.AMFICOM.Client.Resource.MyDataFlavor;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
 
-public class MapProtoGroup extends ObjectResource implements Serializable
+public class MapProtoGroup extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	MapProtoGroup_Transferable transferable;

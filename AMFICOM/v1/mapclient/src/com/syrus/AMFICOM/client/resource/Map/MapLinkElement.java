@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
 
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
@@ -16,7 +17,7 @@ import java.awt.Stroke;
 import java.util.Hashtable;
 
 //A0A
-public abstract class MapLinkElement extends ObjectResource implements MapElement 
+public abstract class MapLinkElement extends StubResource implements MapElement 
 {
 	public String id = "";
 	public String name = "";

@@ -68,6 +68,7 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePathDecompositor;
 
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -86,7 +87,7 @@ import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
-public class MapMarker extends ObjectResource implements MapElement
+public class MapMarker extends StubResource implements MapElement
 {
 	static final public String typ = "mapmarker";
 

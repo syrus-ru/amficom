@@ -1,5 +1,5 @@
 /*
- * $Id: MapContext.java,v 1.5 2004/06/29 11:21:11 krupenn Exp $
+ * $Id: MapContext.java,v 1.6 2004/08/17 11:09:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,12 +37,12 @@ import javax.swing.*;
  * топологической схемы сети (MapScheme)
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/06/29 11:21:11 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/17 11:09:02 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public class MapContext extends ObjectResource implements Serializable
+public class MapContext extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 02L;
 	public MapContext_Transferable transferable;

@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -28,7 +29,7 @@ import java.util.Hashtable;
 
 import javax.swing.ImageIcon;
 
-public abstract class MapNodeElement extends ObjectResource
+public abstract class MapNodeElement extends StubResource
     implements MapElement 
 {
 	protected MapContext mapContext;
