@@ -198,7 +198,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				measurementType = (MeasurementType) (MeasurementStorableObjectPool.getStorableObjectsByCondition(
 					typicalCondition, true).iterator().next());
 			} else {
-				measurementType = this.test.getMeasurementType();
+				measurementType = (MeasurementType) MeasurementStorableObjectPool
+				.getStorableObject(this.test.getMeasurementTypeId(), true);
 			}
 
 			// if (test_setup_id.equals(""))

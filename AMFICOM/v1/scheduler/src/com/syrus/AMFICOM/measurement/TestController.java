@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.3 2005/02/28 13:30:43 bob Exp $
+ * $Id: TestController.java,v 1.4 2005/03/14 15:11:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,9 +23,10 @@ import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/28 13:30:43 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/14 15:11:42 $
  * @author $Author: bob $
  * @module module
  */
@@ -157,7 +158,12 @@ public class TestController implements ObjectResourceController {
 				}				
 			}
 			else if (key.equals(KEY_MEASUREMENT_TYPE))
-				value = test.getMeasurementType().getDescription();
+				try {
+					value = ((MeasurementType)MeasurementStorableObjectPool.getStorableObject(test.getMeasurementTypeId(), true)).getDescription();
+				} catch (ApplicationException e) {
+					Log.errorMessage("TestController.getValue | key='" + key + "', cannot get " + test.getMeasurementTypeId() + " -- " + e.getMessage());
+					e.printStackTrace();
+				}
 			else if (key.equals(KEY_START_TIME))
 				value = SIMPLE_DATE_FORMAT.format(test.getStartTime()); //$NON-NLS-1$
 			else if (key.equals(KEY_STATUS))

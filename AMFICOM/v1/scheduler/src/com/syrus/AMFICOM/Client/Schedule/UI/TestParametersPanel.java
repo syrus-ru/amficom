@@ -183,9 +183,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 					try {
 						TestParametersPanel.this.analysisComboBox.removeAll();
 
-						LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(
-																						(List) null,
-																						ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+						LinkedIdsCondition linkedIdsCondition = null;
 						{
 							Set criteriaSet = measurementSetup.getCriteriaSet();
 							if (criteriaSet != null) {
@@ -193,7 +191,9 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 								List list = new ArrayList(setParameters.length);
 								for (int i = 0; i < setParameters.length; i++)
 									list.add(setParameters[i].getId());
-								linkedIdsCondition.setLinkedIds(list);
+								linkedIdsCondition = new LinkedIdsCondition(
+										list,
+										ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
 
 								Collection analysisTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 									linkedIdsCondition, true);
@@ -206,8 +206,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 							}
 						}
 
-						TestParametersPanel.this.evaluationComboBox.removeAll();
-						linkedIdsCondition.setEntityCode(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+						TestParametersPanel.this.evaluationComboBox.removeAll();					
 						{
 							Set thresholdSet = measurementSetup.getThresholdSet();
 							if (thresholdSet != null) {
@@ -215,7 +214,16 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 								List list = new ArrayList(setParameters.length);
 								for (int i = 0; i < setParameters.length; i++)
 									list.add(setParameters[i].getId());
-								linkedIdsCondition.setLinkedIds(list);
+								if (linkedIdsCondition == null)		{
+									linkedIdsCondition = new LinkedIdsCondition(
+										list,
+										ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+								}
+								
+								else {
+									linkedIdsCondition.setEntityCode(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+									linkedIdsCondition.setLinkedIds(list);
+								}
 								Collection evaluationTypes = MeasurementStorableObjectPool
 										.getStorableObjectsByCondition(linkedIdsCondition, true);
 								for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {

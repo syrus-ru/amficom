@@ -459,8 +459,9 @@ public class TimeParametersFrame extends JInternalFrame {
 			}
 
 			this.synchroRadioButton.doClick();
-			this.oneRadioButton.doClick();
 			this.periodicalRadioButton.doClick();
+			this.oneRadioButton.doClick();
+			
 		}
 		
 
@@ -506,7 +507,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			dateCal.set(Calendar.MILLISECOND, 0);
 			long end = dateCal.getTimeInMillis();
 			
-			if (end < start) {
+			if (!temporalType.equals(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME) && end < start) {
 				JOptionPane.showMessageDialog(this,
 					LangModelSchedule.getString("End time less than begin time"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 					JOptionPane.OK_OPTION);

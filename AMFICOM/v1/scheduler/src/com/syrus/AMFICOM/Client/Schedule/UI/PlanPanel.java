@@ -2,12 +2,13 @@
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -17,11 +18,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 
-import javax.swing.JPanel;
+import javax.swing.DefaultListModel;
+import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
+import javax.swing.Timer;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -30,12 +34,36 @@ import com.syrus.AMFICOM.Client.Schedule.TestsEditor;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.Test;
 
-public class PlanPanel extends JPanel implements TestsEditor {
+public class PlanPanel extends JList implements TestsEditor, ActionListener {
+	
+	public static final int		TIME_OUT					= 500;
 
-	private static final long	serialVersionUID	= 1032754807376863494L;
+
+	private Timer timer = new Timer(TIME_OUT, this);
+
+	class TestLinesCellRenderer implements ListCellRenderer {
+
+		public Component getListCellRendererComponent(	JList list,
+														Object value,
+														int index,
+														boolean isSelected,
+														boolean cellHasFocus) {
+			JComponent component = (JComponent) PlanPanel.this.testLines.get(value);
+			if (component == null) {
+				if (value instanceof MonitoredElement) {
+					MonitoredElement monitoredElement = (MonitoredElement) value;
+					TestLine testLine = new TestLine(PlanPanel.this.aContext, monitoredElement.getName(), monitoredElement.getId());
+					testLine.setPreferredSize(new Dimension(0, 25));
+					PlanPanel.this.testLines.put(value, testLine);
+					PlanPanel.this.updateTestLinesTimeRegion();
+					component = testLine;					
+				}
+			}
+			return component;
+		}
+	}
 
 	private static class Step {
 
@@ -94,15 +122,14 @@ public class PlanPanel extends JPanel implements TestsEditor {
 	protected Point					startpos		= new Point();
 
 	protected Point					tmppos;
-	private ApplicationContext		aContext;
+	ApplicationContext		aContext;
 	private SchedulerModel			schedulerModel;
 
 	private static final int		MAX_ZOOM		= 50;
-	private Map						testLines		= new HashMap();
-	private Collection				meLines			= new LinkedList();
+	Map						testLines		= new HashMap();
 
 	private PlanToolBar				toolBar;
-	private GridBagConstraints		gbc = new GridBagConstraints();
+	private DefaultListModel defaultListModel = new DefaultListModel();
 
 	// new tests, which haven't saved yet
 	// private ArrayList unsavedTests;
@@ -113,8 +140,11 @@ public class PlanPanel extends JPanel implements TestsEditor {
 		this.toolBar = new PlanToolBar(aContext, this);
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		this.schedulerModel.addTestsEditor(this);
+		this.setModel(this.defaultListModel);
+		this.setCellRenderer(new TestLinesCellRenderer());
+		this.timer.start();
 
-		setLayout(new GridBagLayout());
+//		setLayout(new VerticalFlowLayout());
 		setBackground(SystemColor.window);
 		setPreferredSize(new Dimension(600, 20));
 		// setCursor(UIStorage.DEFAULT_CURSOR);
@@ -244,6 +274,8 @@ public class PlanPanel extends JPanel implements TestsEditor {
 			// scroll calendar to start point
 			this.cal.setTime(this.startDate);
 		}
+		
+		this.updateTestLinesTimeRegion();
 	}
 
 	protected void paintComponent(Graphics g) {
@@ -265,13 +297,22 @@ public class PlanPanel extends JPanel implements TestsEditor {
 		paintScaleDigits(g, diff, delta, subDelta);
 
 	}
+	
+	
+	public void actionPerformed(ActionEvent e) {
+		
+		for (Iterator it = this.testLines.values().iterator(); it.hasNext();) {
+			TestLine testLine = (TestLine) it.next();
+			testLine.flashUnsavedTest();			
+		}		
+		this.revalidate();
+		this.repaint();
+	}
 
 	protected void paintScaleDigits(Graphics g,
 									long diff,
 									double delta,
-									double subDelta) // ,
-	// double
-	// sub_sub_delta)
+									double subDelta)
 	{
 		int h = getHeight() - 1;
 		// int w = getWidth();
@@ -367,13 +408,13 @@ public class PlanPanel extends JPanel implements TestsEditor {
 		SchedulerModel model = (SchedulerModel) this.aContext.getApplicationModel();
 		try {
 			model.updateTests(this.scaleStart.getTime(), this.scaleEnd.getTime());
-			updateTestLines();
-			this.setCursor(UIStorage.DEFAULT_CURSOR);
+			updateTestLines();			
 
 		} catch (ApplicationException e) {
 			SchedulerModel.showErrorMessage(this, e);
 		}
 
+		this.setCursor(UIStorage.DEFAULT_CURSOR);
 	}
 
 	void updateTestLinesTimeRegion() {
@@ -485,10 +526,8 @@ public class PlanPanel extends JPanel implements TestsEditor {
 					this.cal.set(Calendar.SECOND, 0);
 			}
 		}
-		revalidate();
-		repaint();
-		this.parent.revalidate();
-		this.parent.repaint();
+		this.revalidate();
+		this.repaint();
 	}
 
 	public void updateTests() {
@@ -500,47 +539,13 @@ public class PlanPanel extends JPanel implements TestsEditor {
 
 	protected void updateTestLines() {
 		Collection tests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
-		this.meLines.clear();
+		this.removeAll();
+		this.defaultListModel.removeAllElements();
 		for (Iterator it = tests.iterator(); it.hasNext();) {
 			Test test = (Test) it.next();
 			MonitoredElement monitoredElement = test.getMonitoredElement();
-			Identifier monitoredElementId = monitoredElement.getId();
-			TestLine testLine;
-			if (this.testLines.containsKey(monitoredElementId))
-				testLine = (TestLine) this.testLines.get(monitoredElementId);
-			else {
-				testLine = new TestLine(this.aContext, monitoredElement.getName(), this.scaleStart.getTime(),
-										this.scaleEnd.getTime(), MARGIN / 2, monitoredElement.getId());
-				testLine.setPreferredSize(new Dimension(0, 25));
-
-				this.testLines.put(monitoredElementId, testLine);
-				this.meLines.add(monitoredElementId);
-			}
-		}
-
-		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
-			Identifier monitoredElementId = (Identifier) it.next();
-			if (this.meLines.contains(monitoredElementId)) {
-				this.meLines.remove(monitoredElementId);
-			}
-		}
-
-		for (Iterator it = this.meLines.iterator(); it.hasNext();) {
-			Identifier monitoredElementId = (Identifier) it.next();
-			TestLine testLine = (TestLine) this.testLines.get(monitoredElementId);
-			if (testLine != null) {
-				super.remove(testLine);
-				this.testLines.remove(monitoredElementId);
-			}
-
-		}
-
-		this.gbc.gridwidth = GridBagConstraints.REMAINDER;
-		
-		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
-			Identifier monitoredElementId = (Identifier) it.next();
-			System.out.println("testLine for " + monitoredElementId);
-			super.add((TestLine) this.testLines.get(monitoredElementId), this.gbc);
+			if (!this.defaultListModel.contains(monitoredElement))
+				this.defaultListModel.addElement(monitoredElement);
 		}
 
 		super.setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));

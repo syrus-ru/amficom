@@ -310,7 +310,7 @@ class PlanToolBar extends JPanel {
 			final FlashIcon flashIcon = new FlashIcon();
 			final JLabel flashLabel = new JLabel(LangModelSchedule.getString("Not_saved"), flashIcon,
 													SwingConstants.LEFT);
-			javax.swing.Timer timer = new javax.swing.Timer(TestLine.TIME_OUT, new ActionListener() {
+			javax.swing.Timer timer = new javax.swing.Timer(PlanPanel.TIME_OUT, new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 					flashIcon.flash();

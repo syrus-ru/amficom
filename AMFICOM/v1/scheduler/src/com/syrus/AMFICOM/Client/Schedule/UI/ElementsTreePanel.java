@@ -68,19 +68,29 @@ public class ElementsTreePanel extends JPanel implements OperationListener, KISE
 			this.root = new ObjectResourceTreeNode(ROOT_NODE_NAME, LangModelSchedule.getString("TestType"), true, //$NON-NLS-1$ //$NON-NLS-2$
 													(ImageIcon) UIStorage.FOLDER_ICON);
 
-			for (Iterator measurementTypeIt = ElementsTreePanel.this.measurementTypes.iterator(); measurementTypeIt.hasNext();) {
+			for (Iterator measurementTypeIt = ElementsTreePanel.this.measurementTypes.iterator(); measurementTypeIt
+					.hasNext();) {
 				MeasurementType measurementType = (MeasurementType) measurementTypeIt.next();
 
 				ObjectResourceTreeNode testTypeNode = new ObjectResourceTreeNode(measurementType, measurementType
 						.getDescription(), true, (ImageIcon) UIStorage.FOLDER_ICON);
 				this.root.add(testTypeNode);
+				LinkedIdsCondition measurementPortCondition = null;
 				if (ElementsTreePanel.this.kiss != null) {
 					List measurementPortTypeIds = new LinkedList();
 					for (Iterator kisTypeIt = ElementsTreePanel.this.kiss.iterator(); kisTypeIt.hasNext();) {
 						KIS kis = (KIS) kisTypeIt.next();
-						for (Iterator it = kis.getMeasurementPortIds().iterator(); it.hasNext();) {
-							MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool
-									.getStorableObject((Identifier) it.next(), true);
+						if (measurementPortCondition == null)
+							measurementPortCondition = new LinkedIdsCondition(
+																				kis.getId(),
+																				ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
+						else
+							measurementPortCondition.setLinkedId(kis.getId());
+
+						Collection measurementPorts = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+							measurementPortCondition, true);
+						for (Iterator it = measurementPorts.iterator(); it.hasNext();) {
+							MeasurementPort measurementPort = (MeasurementPort) it.next();
 
 							MeasurementPortType measurementPortType = (MeasurementPortType) measurementPort.getType();
 							measurementPortTypeIds.add(measurementPortType.getId());
@@ -96,9 +106,17 @@ public class ElementsTreePanel extends JPanel implements OperationListener, KISE
 							.getStorableObjectsByCondition(linkedIdsCondition, true);
 					for (Iterator kisTypeIt = ElementsTreePanel.this.kiss.iterator(); kisTypeIt.hasNext();) {
 						KIS kis = (KIS) kisTypeIt.next();
-						for (Iterator it = kis.getMeasurementPortIds().iterator(); it.hasNext();) {
-							MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool
-									.getStorableObject((Identifier) it.next(), true);
+						if (measurementPortCondition == null)
+							measurementPortCondition = new LinkedIdsCondition(
+																				kis.getId(),
+																				ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
+						else
+							measurementPortCondition.setLinkedId(kis.getId());
+
+						Collection measurementPorts = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+							measurementPortCondition, true);
+						for (Iterator it = measurementPorts.iterator(); it.hasNext();) {
+							MeasurementPort measurementPort = (MeasurementPort) it.next();
 							for (Iterator mtIter = measurementTypesFormeasurementPortType.iterator(); mtIter.hasNext();) {
 								MeasurementType mt = (MeasurementType) mtIter.next();
 								if (mt.getId().equals(measurementType.getId())) {
@@ -118,7 +136,8 @@ public class ElementsTreePanel extends JPanel implements OperationListener, KISE
 																										(ImageIcon) UIStorage.PORT_ICON,
 																										false);
 									kisNode.add(accessPortNode);
-									for (Iterator meIt = ElementsTreePanel.this.monitoredElements.iterator(); meIt.hasNext();) {
+									for (Iterator meIt = ElementsTreePanel.this.monitoredElements.iterator(); meIt
+											.hasNext();) {
 										MonitoredElement me = (MonitoredElement) meIt.next();
 										/**
 										 * FIXME load somewhere else
@@ -267,14 +286,14 @@ public class ElementsTreePanel extends JPanel implements OperationListener, KISE
 
 	private JButton				delMapGroupButton;
 	Dispatcher					dispatcher;
-	private JButton				loadButton;	
-	private Map					paramMap						= new HashMap();	
+	private JButton				loadButton;
+	private Map					paramMap						= new HashMap();
 	private JScrollPane			scrollPane						= new JScrollPane();
 	private UniTreePanel		utp;
-	
-	Collection monitoredElements;
-	Collection measurementTypes;
-	Collection kiss;
+
+	Collection					monitoredElements;
+	Collection					measurementTypes;
+	Collection					kiss;
 
 	public ElementsTreePanel(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -355,7 +374,6 @@ public class ElementsTreePanel extends JPanel implements OperationListener, KISE
 	public MonitoredElement getMonitoredElement() {
 		return (MonitoredElement) this.getObject(MonitoredElement.class);
 	}
-	
 
 	public void setKIS(KIS kis) {
 		this.paramMap.put(ObjectEntities.KIS_ENTITY, kis);
@@ -364,20 +382,19 @@ public class ElementsTreePanel extends JPanel implements OperationListener, KISE
 
 	public void setKISs(Collection kiss) {
 		this.kiss = kiss;
-		this.regenerateTree();		
+		this.regenerateTree();
 	}
-	
+
 	public void setMeasurementType(MeasurementType measurementType) {
 		this.paramMap.put(ObjectEntities.MEASUREMENTTYPE_ENTITY, measurementType);
 		this.expandAll(true);
 
 	}
-	
+
 	public void setMeasurementTypes(Collection measurementTypes) {
 		this.measurementTypes = measurementTypes;
-		this.regenerateTree();			
+		this.regenerateTree();
 	}
-	
 
 	public void setMonitoredElement(MonitoredElement monitoredElement) {
 		try {
@@ -391,12 +408,11 @@ public class ElementsTreePanel extends JPanel implements OperationListener, KISE
 			SchedulerModel.showErrorMessage(this, e);
 		}
 	}
-	
 
 	public void setMonitoredElementEditors(Collection monitoredElements) {
 		this.monitoredElements = monitoredElements;
-		this.regenerateTree();	
-		
+		this.regenerateTree();
+
 	}
 
 	private Object getObject(Class clazz) {
@@ -449,20 +465,21 @@ public class ElementsTreePanel extends JPanel implements OperationListener, KISE
 			} else
 				this.loadButton.setEnabled(false);
 
-		} 
-//		else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
-//			try {
-//				this.paramMap.clear();
-//				ObjectResourceTreeModel model = new TestsTreeModel(this.aContext);
-//				((SchedulerModel) this.aContext.getApplicationModel()).setTreeModel(model);
-//				this.utp.setModel(model);
-//				this.utp.revalidate();
-//			} catch (ApplicationException ae) {
-//				SchedulerModel.showErrorMessage(this, ae);
-//			}
-//		}
+		}
+		// else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
+		// try {
+		// this.paramMap.clear();
+		// ObjectResourceTreeModel model = new TestsTreeModel(this.aContext);
+		// ((SchedulerModel)
+		// this.aContext.getApplicationModel()).setTreeModel(model);
+		// this.utp.setModel(model);
+		// this.utp.revalidate();
+		// } catch (ApplicationException ae) {
+		// SchedulerModel.showErrorMessage(this, ae);
+		// }
+		// }
 	}
-	
+
 	private void regenerateTree() {
 		if (this.kiss == null || this.measurementTypes == null || this.monitoredElements == null)
 			return;
@@ -512,7 +529,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener, KISE
 				}
 			} else if (obj instanceof KIS) {
 				KIS kis = (KIS) obj;
-				KIS paramKis = (KIS) this.paramMap.get(ObjectEntities.KIS_ENTITY);				
+				KIS paramKis = (KIS) this.paramMap.get(ObjectEntities.KIS_ENTITY);
 				if (paramKis != null && kis.getId().equals(paramKis.getId())) {
 					// System.out.println("+kis:" + kis.id);
 					found = true;
@@ -553,11 +570,11 @@ public class ElementsTreePanel extends JPanel implements OperationListener, KISE
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TreeDataSelectionEvent.type);
-//		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
+		// this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 	}
 
 	public void unregisterDispatcher() {
 		this.dispatcher.unregister(this, TreeDataSelectionEvent.type);
-//		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
+		// this.dispatcher.unregister(this, SchedulerModel.COMMAND_CLEAN);
 	}
 }

@@ -235,40 +235,40 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		Collection temporalPatterns = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 			new EquivalentCondition(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), true);
 		this.testTemporalStampsEditor.setTemporalPatterns(temporalPatterns);
-		
 
 		{
+			if (!monitoredElements.isEmpty()) {
 				LinkedIdsCondition linkedIdsCondition;
 				{
 					List meIdList = new ArrayList(monitoredElements.size());
 					for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
 						MonitoredElement me = (MonitoredElement) it.next();
 						meIdList.add(me.getId());
-
 					}
 					linkedIdsCondition = new LinkedIdsCondition(meIdList, ObjectEntities.MS_ENTITY_CODE);
 				}
-				Collection measurementSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
-					true);				
-				
-				this.measurementSetupEditor.setMeasurementSetups(measurementSetups);
+				Collection measurementSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+					linkedIdsCondition, true);
 
+				this.measurementSetupEditor.setMeasurementSetups(measurementSetups);
 			}
-			
-		
-	
+		}
+
 	}
 
 	private void refreshTest() throws ApplicationException {
-		this.measurementTypeEditor.setMeasurementType(this.selectedTest.getMeasurementType());
+		this.measurementTypeEditor.setMeasurementType((MeasurementType) MeasurementStorableObjectPool
+				.getStorableObject(this.selectedTest.getMeasurementTypeId(), true));
 		MonitoredElement monitoredElement = this.selectedTest.getMonitoredElement();
 		MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(
 			monitoredElement.getMeasurementPortId(), true);
 		this.kisEditor
 				.setKIS((KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true));
 		this.monitoredElementEditor.setMonitoredElement(monitoredElement);
-		this.analysisTypeEditor.setAnalysisType(this.selectedTest.getAnalysisType());
-		this.evaluationTypeEditor.setEvaluationType(this.selectedTest.getEvaluationType());
+		this.analysisTypeEditor.setAnalysisType((AnalysisType) MeasurementStorableObjectPool.getStorableObject(
+			this.selectedTest.getAnalysisTypeId(), true));
+		this.evaluationTypeEditor.setEvaluationType((EvaluationType) MeasurementStorableObjectPool.getStorableObject(
+			this.selectedTest.getEvaluationTypeId(), true));
 		Collection measurementSetupIds = this.selectedTest.getMeasurementSetupIds();
 		if (!measurementSetupIds.isEmpty()) {
 			Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
@@ -282,8 +282,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		{
 			TestTemporalStamps timeStamps = new TestTemporalStamps(this.selectedTest.getTemporalType(),
 																	this.selectedTest.getStartTime(), this.selectedTest
-																			.getEndTime(), this.selectedTest
-																			.getTemporalPattern());
+																			.getEndTime(),
+																	(TemporalPattern) MeasurementStorableObjectPool
+																			.getStorableObject(this.selectedTest
+																					.getTemporalPatternId(), true));
 			this.testTemporalStampsEditor.setTestTemporalStamps(timeStamps);
 		}
 
@@ -430,9 +432,11 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 			if (test == null) {
 				try {
-					test = Test.createInstance(modifierId, startTime, endTime, temporalPattern, temporalType,
-						this.measurementType, this.analysisType, this.evaluationType, this.monitoredElement,
-						this.returnType, ConstStorage.SIMPLE_DATE_FORMAT.format(startTime), measurementSetupIds);
+					test = Test.createInstance(modifierId, startTime, endTime, temporalPattern == null ? null
+							: temporalPattern.getId(), temporalType, this.measurementType.getId(),
+						this.analysisType == null ? null : this.analysisType.getId(), this.evaluationType == null
+								? null : this.evaluationType.getId(), this.monitoredElement, this.returnType,
+						ConstStorage.SIMPLE_DATE_FORMAT.format(startTime), measurementSetupIds);
 
 					MeasurementStorableObjectPool.putStorableObject(test);
 				} catch (IllegalObjectEntityException e) {
@@ -443,9 +447,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				this.tests.add(test);
 			} else {
 				test.setAttributes(test.getCreated(), new Date(System.currentTimeMillis()), test.getCreatorId(),
-					modifierId, test.getVersion(), temporalType.value(), startTime, endTime, temporalPattern,
-					this.measurementType, this.analysisType, this.evaluationType, test.getStatus().value(),
-					this.monitoredElement, this.returnType.value(), ConstStorage.SIMPLE_DATE_FORMAT.format(startTime));
+					modifierId, test.getVersion(), temporalType.value(), startTime, endTime, temporalPattern.getId(),
+					this.measurementType.getId(), this.analysisType.getId(), this.evaluationType.getId(), test
+							.getStatus().value(), this.monitoredElement, this.returnType.value(),
+					ConstStorage.SIMPLE_DATE_FORMAT.format(startTime));
 			}
 			try {
 				MeasurementStorableObjectPool.putStorableObject(test);
