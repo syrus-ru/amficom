@@ -264,7 +264,6 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable user_id;
 
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable mcm_ids;
 	};
 
 	struct Domain_Transferable {
