@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.9 2004/10/19 13:45:52 bass Exp $
+ * $Id: RISDSessionInfo.java,v 1.10 2004/10/19 15:40:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Ќаучно-технический центр.
@@ -11,10 +11,14 @@ package com.syrus.AMFICOM.Client.General;
 import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.corba.portable.client.*;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.Rewriter;
+import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
 import org.omg.CORBA.*;
@@ -25,7 +29,7 @@ import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2004/10/19 13:45:52 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/19 15:40:43 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -184,6 +188,10 @@ public final class RISDSessionInfo extends SessionInterface {
 
 				new Identifier_Transferable("Null_0"));
 
+			MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(cmServer), ClientLRUMap.class, 200);
+			ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(cmServer), ClientLRUMap.class, 200);
+			IdentifierPool.init(cmServer);
+
 
 			add(this);
 			setActiveSession(this);
@@ -216,6 +224,19 @@ public final class RISDSessionInfo extends SessionInterface {
 		 * если сесси€ открыта, то закрыть
 		 */
 		if (contains(this)) {
+			/**
+			 * @todo Later, show a confirmation dialog.
+			 */
+			try {
+				MeasurementStorableObjectPool.flush(true);
+			} catch (ApplicationException ae) {
+				ae.printStackTrace();
+			}
+			try {
+				ConfigurationStorableObjectPool.flush(true);
+			} catch (ApplicationException ae) {
+				ae.printStackTrace();
+			}
 			try {
 				ci.getServer().Logoff(accessIdentity);
 			} catch (Exception e) {
@@ -232,9 +253,8 @@ public final class RISDSessionInfo extends SessionInterface {
 		 * удалить из списка открытых сессий
 		 */
 		remove(this);
-		if (isEmpty()) {
+		if (isEmpty())
 			setActiveSession(null);
-		}
 	}
 
 	/**
