@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.12 2004/12/24 12:25:41 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.13 2004/12/24 13:03:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.12 $, $Date: 2004/12/24 12:25:41 $
+ * @version $Revision: 1.13 $, $Date: 2004/12/24 13:03:33 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -419,11 +419,14 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
 					com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)ClientMeasurementServer.mcmRefs.get(kis.getMCMId());
 					measurementTransferables = mcmRef.transmitMeasurementsButIds(  linkedIdsConditionTransferable , identifierTransferables);
-					list.add(measurementTransferables);
-	
+					for (int j = 0; j < measurementTransferables.length; j++) {
+						Measurement measurement = new Measurement(measurementTransferables[j]);
+						list.add(measurement);
+					}
 				}
 			} else {
-				Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | unsupported condition class: " + condition.getClass().getName());			
+				Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | unsupported condition class: " + condition.getClass().getName());
+				list = Collections.EMPTY_LIST;
 			}
 			return list;
 		}
