@@ -1,5 +1,5 @@
 /*
- * $Id: SessionOpenCommand.java,v 1.9 2004/09/27 12:08:55 bass Exp $
+ * $Id: SessionOpenCommand.java,v 1.10 2004/09/27 12:17:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import java.awt.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2004/09/27 12:08:55 $
+ * @version $Revision: 1.10 $, $Date: 2004/09/27 12:17:28 $
  * @module generalclient_v1
  */
 public class SessionOpenCommand extends VoidCommand
@@ -66,7 +66,8 @@ public class SessionOpenCommand extends VoidCommand
 	public void execute()
 	{
 		ConnectionInterface connection = ConnectionInterface.getInstance();
-		if(!connection.isConnected()) {
+		if(!connection.isConnected())
+		{
 			new CheckConnectionCommand(dispatcher, aContext).execute();
 			if (!connection.isConnected())
 			{
