@@ -5,7 +5,6 @@ import com.syrus.AMFICOM.general.*;
 
 public class EquipmentDatabase {
 
-	public static final String	COLUMN_DOMAIN_ID	= "domain_id";
 //	 description VARCHAR2(256),
 	public static final String COLUMN_DESCRIPTION	= "description";
 	public static final String COLUMN_EQCLASS	= "eq_class";
@@ -60,7 +59,7 @@ public class EquipmentDatabase {
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(StorableObjectDatabase.COLUMN_MODIFIER_ID);
 		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(COLUMN_DOMAIN_ID);
+		buffer.append(DomainMember.COLUMN_DOMAIN_ID);
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(COLUMN_TYPE_ID);
 		buffer.append(StorableObjectDatabase.COMMA);
@@ -132,7 +131,7 @@ public class EquipmentDatabase {
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(StorableObjectDatabase.COLUMN_MODIFIER_ID);
 		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(COLUMN_DOMAIN_ID);
+		buffer.append(DomainMember.COLUMN_DOMAIN_ID);
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(COLUMN_TYPE_ID);
 		buffer.append(StorableObjectDatabase.COMMA);

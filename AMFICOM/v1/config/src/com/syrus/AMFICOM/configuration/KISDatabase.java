@@ -66,7 +66,7 @@ public class KISDatabase extends StorableObjectDatabase {
 				 * @todo when change DB Identifier model ,change getString() to
 				 *       getLong()
 				 */
-				new Identifier(resultSet.getString(EquipmentDatabase.COLUMN_DOMAIN_ID)),
+				new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
 				new Identifier(resultSet.getString(EquipmentDatabase.COLUMN_TYPE_ID)),
 				resultSet.getString(EquipmentDatabase.COLUMN_NAME),
 				resultSet.getString(EquipmentDatabase.COLUMN_DESCRIPTION),

@@ -17,19 +17,14 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 
 public class MCMDatabase extends StorableObjectDatabase {
 
-	public static final String	COLUMN_DOMAIN_ID	= "domain_id";	
 	public static final String	COLUMN_NAME			= "name";
 	public static final String	COLUMN_DESCRIPTION	= "description";
 	public static final String	COLUMN_TYPE_ID		= "type_id";
 	
-	public static final String	LINK_COLUMN_SORT		= "sort";
-	public static final String	LINK_COLUMN_MCM_ID		= "mcm_id";
-
 	private MCM fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MCM)
 			return (MCM) storableObject;
@@ -51,7 +46,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 				+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
 				+ COLUMN_CREATOR_ID + COMMA
 				+ COLUMN_MODIFIER_ID + COMMA 
-				+ COLUMN_DOMAIN_ID + COMMA
+				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA 
 				+ COLUMN_DESCRIPTION + COMMA 
@@ -79,7 +74,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 				 * @todo when change DB Identifier model ,change getString() to
 				 *       getLong()
 				 */
-				new Identifier(resultSet.getString(COLUMN_DOMAIN_ID)),
+				new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
 				new Identifier(resultSet.getString(COLUMN_TYPE_ID)),
 				resultSet.getString(COLUMN_NAME),
 				resultSet.getString(COLUMN_DESCRIPTION));
@@ -108,9 +103,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 				+ COLUMN_ID
 				+ SQL_FROM 
 				+ ObjectEntities.EQUIPMENT_ENTITY + SQL_WHERE 
-				+ LINK_COLUMN_SORT + EQUALS + EquipmentSort._EQUIPMENT_SORT_KIS
+				+ EquipmentDatabase.COLUMN_SORT + EQUALS + EquipmentSort._EQUIPMENT_SORT_KIS
 				+ SQL_AND
-				+ LINK_COLUMN_MCM_ID + EQUALS + mIdStr;
+				+ KISDatabase.COLUMN_MCM_ID + EQUALS + mIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -186,7 +181,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 			buffer.append(COMMA);
 			buffer.append(COLUMN_MODIFIER_ID);
 			buffer.append(COMMA);
-			buffer.append(COLUMN_DOMAIN_ID);
+			buffer.append(DomainMember.COLUMN_DOMAIN_ID);
 			buffer.append(COMMA);
 			buffer.append(COLUMN_TYPE_ID);
 			buffer.append(COMMA);
