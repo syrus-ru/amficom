@@ -15,7 +15,7 @@ public class ModelMainToolBar extends JToolBar implements ApplicationModelListen
 	JButton sessionOpen = new JButton();
 //  JButton sessionClose= new JButton();
 
-	JButton menuViewMapOpen = new JButton();
+	JButton menuViewMapViewOpen = new JButton();
 	JButton menuViewSchemeOpen = new JButton();
 	JButton menuViewModelLoad = new JButton();
 
@@ -64,13 +64,13 @@ public class ModelMainToolBar extends JToolBar implements ApplicationModelListen
 //    sessionClose.setName("menuSessionClose");
 //    sessionClose.addActionListener(actionAdapter);
 
-		menuViewMapOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif")
+		menuViewMapViewOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif")
 				.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		menuViewMapOpen.setMaximumSize(buttonSize);
-		menuViewMapOpen.setPreferredSize(buttonSize);
-		menuViewMapOpen.setToolTipText(LangModelModel.getString("menuViewMapOpen"));
-		menuViewMapOpen.setName("menuViewMapOpen");
-		menuViewMapOpen.addActionListener(actionAdapter);
+		menuViewMapViewOpen.setMaximumSize(buttonSize);
+		menuViewMapViewOpen.setPreferredSize(buttonSize);
+		menuViewMapViewOpen.setToolTipText(LangModelModel.getString("menuViewMapViewOpen"));
+		menuViewMapViewOpen.setName("menuViewMapViewOpen");
+		menuViewMapViewOpen.addActionListener(actionAdapter);
 
 		menuViewModelLoad.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/download_model.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		menuViewModelLoad.setMaximumSize(buttonSize);
@@ -138,7 +138,7 @@ public class ModelMainToolBar extends JToolBar implements ApplicationModelListen
 		add(sessionOpen);
 //    add(sessionClose);
 		addSeparator();
-		add(menuViewMapOpen);
+		add(menuViewMapViewOpen);
 		add(menuViewSchemeOpen);
 		addSeparator();
 		add(buttonFileOpen);
@@ -170,8 +170,8 @@ public class ModelMainToolBar extends JToolBar implements ApplicationModelListen
 		sessionOpen.setEnabled(aModel.isEnabled("menuSessionOpen"));
 //    sessionClose.setVisible(aModel.isVisible("menuSessionClose"));
 //    sessionClose.setEnabled(aModel.isEnabled("menuSessionClose"));
-		menuViewMapOpen.setVisible(aModel.isVisible("menuViewMapOpen"));
-		menuViewMapOpen.setEnabled(aModel.isEnabled("menuViewMapOpen"));
+		menuViewMapViewOpen.setVisible(aModel.isVisible("menuViewMapViewOpen"));
+		menuViewMapViewOpen.setEnabled(aModel.isEnabled("menuViewMapViewOpen"));
 		menuViewSchemeOpen.setVisible(aModel.isVisible("menuViewSchemeOpen"));
 		menuViewSchemeOpen.setEnabled(aModel.isEnabled("menuViewSchemeOpen"));
 		menuViewModelLoad.setVisible(aModel.isVisible("menuViewModelLoad"));

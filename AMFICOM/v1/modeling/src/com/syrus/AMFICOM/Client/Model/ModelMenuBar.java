@@ -22,9 +22,9 @@ public class ModelMenuBar extends JMenuBar
 	JMenuItem menuExit = new JMenuItem();
 
 	JMenu menuView = new JMenu();
-	JMenuItem menuViewMapOpen = new JMenuItem();
-	JMenuItem menuViewMapEdit = new JMenuItem();
-	JMenuItem menuViewMapClose = new JMenuItem();
+	JMenuItem menuViewMapViewOpen = new JMenuItem();
+	JMenuItem menuViewMapViewEdit = new JMenuItem();
+	JMenuItem menuViewMapViewClose = new JMenuItem();
 	JMenuItem menuViewSchemeOpen = new JMenuItem();
 	JMenuItem menuViewSchemeEdit = new JMenuItem();
 	JMenuItem menuViewSchemeClose = new JMenuItem();
@@ -127,15 +127,15 @@ public class ModelMenuBar extends JMenuBar
 
 		menuView.setText(LangModelModel.getString("menuView"));
 		menuView.setName("menuView");
-		menuViewMapOpen.setText(LangModelModel.getString("menuViewMapOpen"));
-		menuViewMapOpen.setName("menuViewMapOpen");
-		menuViewMapOpen.addActionListener(actionAdapter);
-		menuViewMapEdit.setText(LangModelModel.getString("menuViewMapEdit"));
-		menuViewMapEdit.setName("menuViewMapEdit");
-		menuViewMapEdit.addActionListener(actionAdapter);
-		menuViewMapClose.setText(LangModelModel.getString("menuViewMapClose"));
-		menuViewMapClose.setName("menuViewMapClose");
-		menuViewMapClose.addActionListener(actionAdapter);
+		menuViewMapViewOpen.setText(LangModelModel.getString("menuViewMapViewOpen"));
+		menuViewMapViewOpen.setName("menuViewMapViewOpen");
+		menuViewMapViewOpen.addActionListener(actionAdapter);
+		menuViewMapViewEdit.setText(LangModelModel.getString("menuViewMapViewEdit"));
+		menuViewMapViewEdit.setName("menuViewMapViewEdit");
+		menuViewMapViewEdit.addActionListener(actionAdapter);
+		menuViewMapViewClose.setText(LangModelModel.getString("menuViewMapViewClose"));
+		menuViewMapViewClose.setName("menuViewMapViewClose");
+		menuViewMapViewClose.addActionListener(actionAdapter);
 		menuViewModelSave.setText(LangModelModel.getString("menuViewModelSave"));
 		menuViewModelSave.setName("menuViewModelSave");
 		menuViewModelSave.addActionListener(actionAdapter);
@@ -244,9 +244,9 @@ public class ModelMenuBar extends JMenuBar
 		menuSession.addSeparator();
 		menuSession.add(menuExit);
 
-		menuView.add(menuViewMapOpen);
-		menuView.add(menuViewMapEdit);
-		menuView.add(menuViewMapClose);
+		menuView.add(menuViewMapViewOpen);
+		menuView.add(menuViewMapViewEdit);
+		menuView.add(menuViewMapViewClose);
 		menuView.addSeparator();
 		menuView.add(menuViewSchemeOpen);
 		menuView.add(menuViewSchemeEdit);
@@ -328,12 +328,12 @@ public class ModelMenuBar extends JMenuBar
 
 		menuView.setVisible(aModel.isVisible("menuView"));
 		menuView.setEnabled(aModel.isEnabled("menuView"));
-		menuViewMapOpen.setVisible(aModel.isVisible("menuViewMapOpen"));
-		menuViewMapOpen.setEnabled(aModel.isEnabled("menuViewMapOpen"));
-		menuViewMapEdit.setVisible(aModel.isVisible("menuViewMapEdit"));
-		menuViewMapEdit.setEnabled(aModel.isEnabled("menuViewMapEdit"));
-		menuViewMapClose.setVisible(aModel.isVisible("menuViewMapClose"));
-		menuViewMapClose.setEnabled(aModel.isEnabled("menuViewMapClose"));
+		menuViewMapViewOpen.setVisible(aModel.isVisible("menuViewMapViewOpen"));
+		menuViewMapViewOpen.setEnabled(aModel.isEnabled("menuViewMapViewOpen"));
+		menuViewMapViewEdit.setVisible(aModel.isVisible("menuViewMapViewEdit"));
+		menuViewMapViewEdit.setEnabled(aModel.isEnabled("menuViewMapViewEdit"));
+		menuViewMapViewClose.setVisible(aModel.isVisible("menuViewMapViewClose"));
+		menuViewMapViewClose.setEnabled(aModel.isEnabled("menuViewMapViewClose"));
 		menuViewSchemeOpen.setVisible(aModel.isVisible("menuViewSchemeOpen"));
 		menuViewSchemeOpen.setEnabled(aModel.isEnabled("menuViewSchemeOpen"));
 		menuViewSchemeEdit.setVisible(aModel.isVisible("menuViewSchemeEdit"));

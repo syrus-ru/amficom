@@ -2,43 +2,110 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Model;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.List;
-
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.InternalFrameEvent;
-
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.*;
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.*;
-import com.syrus.AMFICOM.Client.General.Command.Model.*;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MapMarkersLayeredPanel;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MapMarkersPanel;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.PrimaryParametersFrame;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ScalableFrame;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleGraphPanel;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.TraceSelectorFrame;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileAddCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileCloseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsBellcoreCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsWavetekCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.InitialAnalysisCommand;
+import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
+import com.syrus.AMFICOM.Client.General.Command.HelpAboutCommand;
+import com.syrus.AMFICOM.Client.General.Command.Model.LoadModelingCommand;
 import com.syrus.AMFICOM.Client.General.Command.Model.MapCloseCommand;
-import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Command.Session.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Command.Model.MapModelOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Model.PerformModelingCommand;
+import com.syrus.AMFICOM.Client.General.Command.Model.SaveModelingCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeCloseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
+import com.syrus.AMFICOM.Client.General.ConnectionInterface;
+import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.Module;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
+import com.syrus.AMFICOM.Client.General.Scheme.SchemeTabbedPane;
+import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewOpenCommand;
-import com.syrus.AMFICOM.Client.Map.UI.*;
+import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Schematics.Elements.*;
+import com.syrus.AMFICOM.Client.Schematics.Elements.ElementsListFrame;
+import com.syrus.AMFICOM.Client.Schematics.Elements.PropsFrame;
 import com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeViewerFrame;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import com.syrus.io.BellcoreStructure;
 
-public class ModelMDIMain extends JFrame implements OperationListener
+import java.awt.AWTEvent;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowEvent;
+
+import java.text.SimpleDateFormat;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.event.InternalFrameEvent;
+
+public class ModelMDIMain extends JFrame implements OperationListener, Module
 {
-	private Dispatcher internal_dispatcher = new Dispatcher();
+	private Dispatcher internalDispatcher = new Dispatcher();
+
 	public ApplicationContext aContext = new ApplicationContext();
 
 	static SimpleDateFormat sdf =
@@ -82,7 +149,6 @@ public class ModelMDIMain extends JFrame implements OperationListener
 	public ModelMDIMain(ApplicationContext aContext)
 	{
 		super();
-		setContext(aContext);
 		try
 		{
 			jbInit();
@@ -92,6 +158,9 @@ public class ModelMDIMain extends JFrame implements OperationListener
 			e.printStackTrace();
 		}
 		Environment.addWindow(this);
+
+		aContext.setDispatcher(internalDispatcher);
+		setContext(aContext);
 	}
 
 	public ModelMDIMain()
@@ -104,14 +173,13 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 		setContentPane(mainPanel);
 		this.setTitle(LangModelModel.getString("AppTitle"));
-		this.addComponentListener(new ModelMDIMain_this_componentAdapter(this));
-		this.addWindowListener(new java.awt.event.WindowAdapter()
-		{
-			public void windowClosing(WindowEvent e)
+		this.addComponentListener(new ComponentAdapter()
 			{
-				this_windowClosing(e);
-			}
-		});
+				public void componentShown(ComponentEvent e)
+				{
+					thisComponentShown(e);
+				}
+			});
 
 		//Center the window
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -126,12 +194,12 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		statusBarPanel.setLayout(new BorderLayout());
 		statusBarPanel.add(statusBar, BorderLayout.CENTER);
 
-		statusBar.add("status");
-		statusBar.add("server");
-		statusBar.add("domain");
-		statusBar.add("session");
-		statusBar.add("user");
-		statusBar.add("time");
+		statusBar.add(StatusBarModel.FIELD_STATUS);
+		statusBar.add(StatusBarModel.FIELD_SERVER);
+		statusBar.add(StatusBarModel.FIELD_SESSION);
+		statusBar.add(StatusBarModel.FIELD_USER);
+		statusBar.add(StatusBarModel.FIELD_DOMAIN);
+		statusBar.add(StatusBarModel.FIELD_TIME);
 
 		viewport.setView(desktopPane);
 		scrollPane.setViewport(viewport);
@@ -147,17 +215,17 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		desktopPane.add(paramsFrame);
 		tables.add(paramsFrame);
 
-		selectorFrame = new TraceSelectorFrame(internal_dispatcher);
+		selectorFrame = new TraceSelectorFrame(internalDispatcher);
 		desktopPane.add(selectorFrame);
 
-		paramFrame = new PrimaryParametersFrame(internal_dispatcher);
+		paramFrame = new PrimaryParametersFrame(internalDispatcher);
 		desktopPane.add(paramFrame);
 		tables.add(paramFrame);
 
 		transData = new TransData ();
 		desktopPane.add(transData);
 
-		mmlp = new MapMarkersLayeredPanel(internal_dispatcher);
+		mmlp = new MapMarkersLayeredPanel(internalDispatcher);
 		analysisFrame = new ScalableFrame(mmlp)
 		{
 			public String getReportTitle()
@@ -170,36 +238,101 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		desktopPane.add(analysisFrame);
 	}
 
-	public void init_module()
+	void setDefaultModel (ApplicationModel aModel)
+	{
+		aModel.setEnabled("menuSession", false);
+		aModel.setEnabled("menuSessionNew", false);
+		aModel.setEnabled("menuSessionClose", false);
+		aModel.setEnabled("menuSessionOptions", false);
+		aModel.setEnabled("menuSessionConnection", false);
+		aModel.setEnabled("menuSessionChangePassword", false);
+		aModel.setEnabled("menuSessionDomain", false);
+		aModel.setEnabled("menuExit", false);
+
+		aModel.setEnabled("menuView", false);
+		aModel.setEnabled("menuViewMapViewOpen", false);
+		aModel.setEnabled("menuViewMapViewEdit", false);
+		aModel.setEnabled("menuViewMapViewClose", false);
+		aModel.setEnabled("menuViewSchemeOpen", false);
+		aModel.setEnabled("menuViewSchemeEdit", false);
+		aModel.setEnabled("menuViewSchemeClose", false);
+		aModel.setEnabled("menuViewPerformModeling", false);
+		aModel.setEnabled("menuViewModelSave", false);
+		aModel.setEnabled("menuViewModelLoad", false);
+
+		aModel.setEnabled("menuFileOpen", false);
+		aModel.setEnabled("menuFileOpenAs", false);
+		aModel.setEnabled("menuFileOpenAsBellcore", false);
+		aModel.setEnabled("menuFileOpenAsWavetek", false);
+		aModel.setEnabled("menuFileSave", false);
+		aModel.setEnabled("menuFileSaveAll", false);
+		aModel.setEnabled("menuFileSaveAs", false);
+		aModel.setEnabled("menuFileSaveAsText", false);
+		aModel.setEnabled("menuFileClose", false);
+		aModel.setEnabled("menuFileAddCompare", false);
+		aModel.setEnabled("menuFileRemoveCompare", false);
+
+		aModel.setEnabled("menuTrace", false);
+		aModel.setEnabled("menuTraceAddCompare", false);
+		aModel.setEnabled("menuTraceRemoveCompare", false);
+		aModel.setEnabled("menuTraceClose", false);
+
+		aModel.setEnabled("menuReport", false);
+		aModel.setEnabled("menuReportCreate", false);
+
+		aModel.setEnabled("menuHelp", false);
+		aModel.setEnabled("menuHelpContents", false);
+		aModel.setEnabled("menuHelpFind", false);
+		aModel.setEnabled("menuHelpTips", false);
+		aModel.setEnabled("menuHelpStart", false);
+		aModel.setEnabled("menuHelpCourse", false);
+		aModel.setEnabled("menuHelpHelp", false);
+		aModel.setEnabled("menuHelpSupport", false);
+		aModel.setEnabled("menuHelpLicense", false);
+		aModel.setEnabled("menuHelpAbout", false);
+
+		aModel.setEnabled("menuSession", true);
+		aModel.setEnabled("menuSessionOpen", true);
+		aModel.setEnabled("menuSessionConnection", true);
+		aModel.setEnabled("menuExit", true);
+		aModel.setEnabled("menuView", true);
+		aModel.setEnabled("menuHelp", true);
+		aModel.setEnabled("menuHelpAbout", true);
+		aModel.setEnabled("menuReport", true);
+	}
+
+	public void finalizeModule()
+	{
+		setContext(null);
+		Environment.getDispatcher().unregister(this, ContextChangeEvent.type);
+		statusBar.removeDispatcher(Environment.getDispatcher());
+	}
+
+	public void initModule()
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
 
 		statusBar.distribute();
-		statusBar.setWidth("status", 100);
-		statusBar.setWidth("server", 250);
-		statusBar.setWidth("domain", 200);
-		statusBar.setWidth("session", 200);
-		statusBar.setWidth("user", 100);
-		statusBar.setWidth("time", 50);
+		statusBar.setWidth(StatusBarModel.FIELD_STATUS, 200);
+		statusBar.setWidth(StatusBarModel.FIELD_SERVER, 250);
+		statusBar.setWidth(StatusBarModel.FIELD_SESSION, 200);
+		statusBar.setWidth(StatusBarModel.FIELD_USER, 100);
+		statusBar.setWidth(StatusBarModel.FIELD_DOMAIN, 150);
+		statusBar.setWidth(StatusBarModel.FIELD_TIME, 50);
 
-		statusBar.setText("status", LangModel.getString("statusReady"));
-		statusBar.setText("server", LangModel.getString("statusNoConnection"));
-		statusBar.setText("session", LangModel.getString("statusNoSession"));
-		statusBar.setText("user", LangModel.getString("statusNoUser"));
-		statusBar.setText("time", " ");
+		statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+		statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusNoConnection"));
+		statusBar.setText(StatusBarModel.FIELD_SESSION, LangModel.getString("statusNoSession"));
+		statusBar.setText(StatusBarModel.FIELD_USER, LangModel.getString("statusNoUser"));
+		statusBar.setText(StatusBarModel.FIELD_DOMAIN, LangModel.getString("statusNoDomain"));
+		statusBar.setText(StatusBarModel.FIELD_TIME, " ");
 		statusBar.organize();
+		statusBar.addDispatcher(Environment.getDispatcher());
+		statusBar.addDispatcher(internalDispatcher);
 
-		aContext.setDispatcher(internal_dispatcher);
-		internal_dispatcher.register(this, "mapopenevent");
-		internal_dispatcher.register(this, "mapcloseevent");
-		internal_dispatcher.register(this, "contextchange");
-		internal_dispatcher.register(this, SchemeElementsEvent.type);
-		internal_dispatcher.register(this, RefChangeEvent.typ);
-		internal_dispatcher.register(this, "addschemeelementevent");
-		internal_dispatcher.register(this, "addschemeevent");
+		Environment.getDispatcher().register(this, ContextChangeEvent.type);
 
-		Environment.getDispatcher().register(this, "contextchange");
-
+		setDefaultModel(aModel);
 
 		aModel.setCommand("menuSessionOpen", new SessionOpenCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.getDispatcher(), aContext));
@@ -209,28 +342,28 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
-		aModel.setCommand("menuViewMapOpen", new MapModelOpenCommand(internal_dispatcher, aContext, this));
-		aModel.setCommand("menuViewMapEdit", new MapViewOpenCommand(desktopPane, mapframe, aContext));
-		aModel.setCommand("menuViewMapClose", new MapCloseCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuViewPerformModeling", new PerformModelingCommand(internal_dispatcher, this, aContext));
-		aModel.setCommand("menuViewModelSave", new SaveModelingCommand(internal_dispatcher, aContext, "primarytrace"));
-		aModel.setCommand("menuViewModelLoad", new LoadModelingCommand(internal_dispatcher, aContext));
+		aModel.setCommand("menuViewMapOpen", new MapModelOpenCommand(this.desktopPane, aContext));
+		aModel.setCommand("menuViewMapEdit", new MapViewOpenCommand(desktopPane, aContext));
+		aModel.setCommand("menuViewMapClose", new MapCloseCommand(internalDispatcher, aContext));
+		aModel.setCommand("menuViewPerformModeling", new PerformModelingCommand(internalDispatcher, this, aContext));
+		aModel.setCommand("menuViewModelSave", new SaveModelingCommand(internalDispatcher, aContext, "primarytrace"));
+		aModel.setCommand("menuViewModelLoad", new LoadModelingCommand(internalDispatcher, aContext));
 		aModel.setCommand("menuViewSchemeOpen", new SchemeOpenCommand(aContext));
 		aModel.setCommand("menuViewSchemeEdit", new SchemeOpenCommand(aContext));
 		aModel.setCommand("menuViewSchemeClose", new SchemeCloseCommand(aContext, graph));
 
-		aModel.setCommand("menuFileOpen", new FileOpenCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileOpenAsBellcore", new FileOpenAsBellcoreCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileOpenAsWavetek", new FileOpenAsWavetekCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileSave", new FileSaveCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileClose", new FileCloseCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileAddCompare",new FileAddCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(internal_dispatcher, null, aContext));
+		aModel.setCommand("menuFileOpen", new FileOpenCommand(internalDispatcher, aContext));
+		aModel.setCommand("menuFileOpenAsBellcore", new FileOpenAsBellcoreCommand(internalDispatcher, aContext));
+		aModel.setCommand("menuFileOpenAsWavetek", new FileOpenAsWavetekCommand(internalDispatcher, aContext));
+		aModel.setCommand("menuFileSave", new FileSaveCommand(internalDispatcher, aContext));
+		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(internalDispatcher, aContext));
+		aModel.setCommand("menuFileClose", new FileCloseCommand(internalDispatcher, aContext));
+		aModel.setCommand("menuFileAddCompare",new FileAddCommand(internalDispatcher, aContext));
+		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(internalDispatcher, null, aContext));
 
-		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(internal_dispatcher, null, aContext));
-		aModel.setCommand("menuTraceClose", new FileCloseCommand(internal_dispatcher, aContext));
+		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(internalDispatcher, aContext));
+		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(internalDispatcher, null, aContext));
+		aModel.setCommand("menuTraceClose", new FileCloseCommand(internalDispatcher, aContext));
 
 		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(aContext);
 		for (Iterator it = tables.iterator(); it.hasNext();)
@@ -238,34 +371,17 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		for (Iterator it = graphs.iterator(); it.hasNext();)
 			rc.setParameter(CreateAnalysisReportCommand.PANEL, it.next());
 		rc.setParameter(CreateAnalysisReportCommand.TYPE, ReportTemplate.rtt_Modeling);
+
 		aModel.setCommand("menuReportCreate", rc);
 
 		aModel.add("menuHelpAbout", new HelpAboutCommand(this));
-
-		aModel.setAllItemsEnabled(false);
-		aModel.setEnabled("menuSession", true);
-		aModel.setEnabled("menuSessionOpen", true);
-		aModel.setEnabled("menuSessionConnection", true);
-		aModel.setEnabled("menuExit", true);
-		aModel.setEnabled("menuView", true);
-		aModel.setEnabled("menuHelp", true);
-		aModel.setEnabled("menuHelpAbout", true);
-		aModel.setEnabled("menuReport", true);
-
-//    aModel.setEnabled("menuViewMapOpen", false);
-//    aModel.setEnabled("menuViewMapEdit", false);
-//    aModel.setEnabled("menuViewMapClose", false);
-//    aModel.setEnabled("menuViewModelLoad", false);
-//    aModel.setEnabled("menuViewModelSave", false);
-//    aModel.setEnabled("menuViewSchemeOpen", false);
-//    aModel.setEnabled("menuViewMapOpen", false);
 
 		aModel.fireModelChanged("");
 
 		if(ConnectionInterface.getInstance() != null)
 		{
 			if(ConnectionInterface.getInstance().isConnected())
-				internal_dispatcher.notify(new ContextChangeEvent(
+				internalDispatcher.notify(new ContextChangeEvent(
 						ConnectionInterface.getInstance(),
 						ContextChangeEvent.CONNECTION_OPENED_EVENT));
 		}
@@ -273,7 +389,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		{
 			aContext.setSessionInterface(SessionInterface.getActiveSession());
 			if(aContext.getSessionInterface().isOpened())
-				internal_dispatcher.notify(new ContextChangeEvent(
+				internalDispatcher.notify(new ContextChangeEvent(
 						aContext.getSessionInterface(),
 						ContextChangeEvent.SESSION_OPENED_EVENT));
 		}
@@ -284,15 +400,41 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		}
 	}
 
-
-
 	public void setContext(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
-		aContext.setDispatcher(internal_dispatcher);
-		if(aContext.getApplicationModel() == null)
-			aContext.setApplicationModel(ApplicationModel.getInstance());
-		setModel(aContext.getApplicationModel());
+		if(this.aContext != null)
+			if(this.aContext.getDispatcher() != null)
+			{
+				this.aContext.getDispatcher().unregister(this, ContextChangeEvent.type);
+				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_FRAME_SHOWN);
+				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_SELECTED);
+				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_CLOSED);
+				this.aContext.getDispatcher().unregister(this, SchemeElementsEvent.type);
+				this.aContext.getDispatcher().unregister(this, RefChangeEvent.typ);
+				this.aContext.getDispatcher().unregister(this, "addschemeelementevent");
+				this.aContext.getDispatcher().unregister(this, "addschemeevent");
+
+				statusBar.removeDispatcher(this.aContext.getDispatcher());
+			}
+
+		if(aContext != null)
+		{
+			this.aContext = aContext;
+			if(aContext.getApplicationModel() == null)
+				aContext.setApplicationModel(ApplicationModel.getInstance());
+			setModel(aContext.getApplicationModel());
+
+			aContext.getDispatcher().register(this, ContextChangeEvent.type);
+			aContext.getDispatcher().register(this, MapEvent.MAP_FRAME_SHOWN);
+			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_SELECTED);
+			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_CLOSED);
+			aContext.getDispatcher().register(this, SchemeElementsEvent.type);
+			aContext.getDispatcher().register(this, RefChangeEvent.typ);
+			aContext.getDispatcher().register(this, "addschemeelementevent");
+			aContext.getDispatcher().register(this, "addschemeevent");
+	
+			statusBar.addDispatcher(this.aContext.getDispatcher());
+		}
 	}
 
 	public ApplicationContext getContext()
@@ -306,7 +448,8 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		menuBar.setModel(aModel);
 		aModel.addListener(menuBar);
 		aModel.addListener(toolBar);
-		aModel.fireModelChanged("");
+
+		aModel.fireModelChanged();
 	}
 
 	void addTrace (String id)
@@ -328,7 +471,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 			}
 			else
 			{
-				mmp = new MapMarkersPanel(mmlp, internal_dispatcher, y, delta_x);
+				mmp = new MapMarkersPanel(mmlp, internalDispatcher, y, delta_x);
 				analysisFrame.setGraph(mmp, true, "primarytrace");
 			}
 			com.syrus.AMFICOM.general.corba.Identifier path_id =
@@ -397,13 +540,13 @@ public class ModelMDIMain extends JFrame implements OperationListener
 					aModel.setEnabled("menuViewPerformModeling", true);
 					updTraceFrames();
 
-					aModel.fireModelChanged("");
+					aModel.fireModelChanged();
 				}
 				else
 				{
 					aModel.setEnabled("menuTraceRemoveCompare", true);
 					aModel.setEnabled("menuFileRemoveCompare", true);
-					aModel.fireModelChanged("");
+					aModel.fireModelChanged();
 				}
 				addTrace(id);
 			}
@@ -431,7 +574,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 					aModel.setEnabled("menuTraceRemoveCompare", false);
 //          aModel.setEnabled("menuTraceReference", false);
  //         aModel.setEnabled("menuTraceCurrent", false);
-					aModel.fireModelChanged("");
+					aModel.fireModelChanged();
 
 					paramsFrame.setVisible(false);
 					analysisFrame.setVisible(false);
@@ -449,12 +592,12 @@ public class ModelMDIMain extends JFrame implements OperationListener
 						{
 							aModel.setEnabled("menuFileRemoveCompare", false);
 							aModel.setEnabled("menuTraceRemoveCompare", false);
-							aModel.fireModelChanged("");
+							aModel.fireModelChanged();
 						}
 						else
 							nextId = (String)it.next();
 					}
-					internal_dispatcher.notify(new RefChangeEvent(nextId, RefChangeEvent.SELECT_EVENT));
+					internalDispatcher.notify(new RefChangeEvent(nextId, RefChangeEvent.SELECT_EVENT));
 				}
 				removeTrace(id);
 			}
@@ -472,7 +615,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 					else
 						aModel.setEnabled("menuViewModelSave", false);
 
-					aModel.fireModelChanged("");
+					aModel.fireModelChanged();
 				}
 				else
 				{
@@ -480,12 +623,16 @@ public class ModelMDIMain extends JFrame implements OperationListener
 
 					aModel.setEnabled("menuFileRemoveCompare", true);
 					aModel.setEnabled("menuTraceRemoveCompare", true);
-					aModel.fireModelChanged("");
+					aModel.fireModelChanged();
 					setActiveRefId(id);
 				}
 			}
 		}
-		if(ae.getActionCommand().equals("mapopenevent"))
+		if(ae.getActionCommand().equals(MapEvent.MAP_FRAME_SHOWN))
+		{
+			mapframe = (MapFrame)ae.getSource();
+		}
+		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SELECTED))
 		{
 			aModel.setEnabled("menuViewPerformModeling", true);
 
@@ -498,46 +645,34 @@ public class ModelMDIMain extends JFrame implements OperationListener
 			mapPropertyFrame.toFront();
 			mapframe.toFront();
 
-			aModel.setEnabled("menuViewMapClose", true);
-			aModel.setEnabled("menuViewMapEdit", true);
+			aModel.setEnabled("menuViewMapViewClose", true);
+			aModel.setEnabled("menuViewMapViewEdit", true);
 			aModel.setEnabled("menuViewModelLoad", true);
-			aModel.fireModelChanged("");
+			aModel.fireModelChanged();
 
-			List schemes = (List)ae.getSource();
+			MapView mapView = (MapView )ae.getSource();
+			List schemes = mapView.getSchemes();
 			paramsFrame.setModelingSchemes(schemes);
 		}
-		if(ae.getActionCommand().equals("mapcloseevent"))
+		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CLOSED))
 		{
-
-//			if (mapframe != null)
-//				mapframe.setVisible(false);
-//			if (mapPropertyFrame != null)
-//				mapPropertyFrame.setVisible(false);
-//			if (mapElementsFrame != null)
-//				mapElementsFrame.setVisible(false);
 			for(int i = 0; i < desktopPane.getComponents().length; i++)
 			{
-							Component comp = desktopPane.getComponent(i);
-							if (comp instanceof MapFrame)
-							{
-											((MapFrame)comp).setVisible(false);
-//											((MapMainFrame)comp).dispose();
-											((MapFrame)comp).setMapView(null);
-											((MapFrame)comp).setContext(null);
-							}
-							else
-							if (comp instanceof MapPropertyFrame)
-											((MapPropertyFrame)comp).setVisible(false);
-//												((MapPropertyFrame)comp).dispose();
-							else
-							if (comp instanceof MapElementsFrame)
-											((MapElementsFrame)comp).setVisible(false);
-//												((MapElementsFrame)comp).dispose();
+				Component comp = desktopPane.getComponent(i);
+				if (comp instanceof MapFrame)
+				{
+					((MapFrame)comp).setVisible(false);
+					((MapFrame)comp).setContext(null);
+				}
+				else if (comp instanceof MapPropertyFrame)
+					((MapPropertyFrame)comp).setVisible(false);
+				else if (comp instanceof MapElementsFrame)
+					((MapElementsFrame)comp).setVisible(false);
 			}
 
-			aModel.setEnabled("menuViewMapClose", false);
-			aModel.setEnabled("menuViewMapEdit", false);
-			aModel.fireModelChanged("");
+			aModel.setEnabled("menuViewMapViewClose", false);
+			aModel.setEnabled("menuViewMapViewEdit", false);
+			aModel.fireModelChanged();
 		}
 		if(ae.getActionCommand().equals(SchemeElementsEvent.type))
 		{
@@ -611,7 +746,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				aModel.setEnabled("menuViewSchemeClose", true);
 				aModel.setEnabled("menuViewSchemeEdit", true);
 				aModel.setEnabled("menuViewModelLoad", true);
-				aModel.fireModelChanged("");
+				aModel.fireModelChanged();
 
 				Scheme scheme = (Scheme)see.obj;
 				paramsFrame.setModelingScheme(scheme);
@@ -624,7 +759,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 
 				aModel.setEnabled("menuViewSchemeClose", false);
 				aModel.setEnabled("menuViewSchemeEdit", false);
-				aModel.fireModelChanged("");
+				aModel.fireModelChanged();
 			}
 		}
 /**/
@@ -654,7 +789,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 			}
 		}
 /**/
-		if(ae.getActionCommand().equals("contextchange"))
+		if(ae.getActionCommand().equals(ContextChangeEvent.type))
 		{
 			ContextChangeEvent cce = (ContextChangeEvent)ae;
 			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at " + this.getTitle());
@@ -669,9 +804,9 @@ public class ModelMDIMain extends JFrame implements OperationListener
 
 					setSessionOpened();
 
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
-					statusBar.setText("user", aContext.getSessionInterface().getUser());
+					statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+					statusBar.setText(StatusBarModel.FIELD_SESSION, sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
+					statusBar.setText(StatusBarModel.FIELD_USER, aContext.getSessionInterface().getUser());
 				}
 			}
 			if(cce.SESSION_CLOSED)
@@ -681,9 +816,9 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				{
 					setSessionClosed();
 
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("session", LangModel.getString("statusNoSession"));
-					statusBar.setText("user", LangModel.getString("statusNoUser"));
+					statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+					statusBar.setText(StatusBarModel.FIELD_SESSION, LangModel.getString("statusNoSession"));
+					statusBar.setText(StatusBarModel.FIELD_USER, LangModel.getString("statusNoUser"));
 				}
 			}
 			if(cce.CONNECTION_OPENED)
@@ -693,8 +828,8 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				{
 					setConnectionOpened();
 
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
+					statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusReady"));
+					statusBar.setText(StatusBarModel.FIELD_SERVER, ConnectionInterface.getInstance().getServerName());
 				}
 			}
 			if(cce.CONNECTION_CLOSED)
@@ -702,11 +837,11 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(ConnectionInterface.getInstance().equals(cci))
 				{
-					statusBar.setText("status", LangModel.getString("statusError"));
-					statusBar.setText("server", LangModel.getString("statusConnectionError"));
+					statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusError"));
+					statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusConnectionError"));
 
-					statusBar.setText("status", LangModel.getString("statusDisconnected"));
-					statusBar.setText("server", LangModel.getString("statusNoConnection"));
+					statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusDisconnected"));
+					statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusNoConnection"));
 
 					setConnectionClosed();
 				}
@@ -716,8 +851,8 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if (ConnectionInterface.getInstance().equals(cci))
 				{
-					statusBar.setText("status", LangModel.getString("statusError"));
-					statusBar.setText("server", LangModel.getString("statusConnectionError"));
+					statusBar.setText(StatusBarModel.FIELD_STATUS, LangModel.getString("statusError"));
+					statusBar.setText(StatusBarModel.FIELD_SERVER, LangModel.getString("statusConnectionError"));
 
 					setConnectionFailed();
 				}
@@ -727,10 +862,10 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				setDomainSelected();
 				try
 				{
-					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
-							domain_id, true);
-					statusBar.setText("domain", domain.getName());
+					Identifier domainId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
+							domainId, true);
+					statusBar.setText(StatusBarModel.FIELD_DOMAIN, domain.getName());
 				}
 				catch(ApplicationException ex)
 				{
@@ -785,7 +920,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		aModel.setEnabled("menuSessionConnection", true);
 		aModel.setEnabled("menuSessionChangePassword", false);
 
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 	}
 
 	public void setConnectionClosed()
@@ -801,7 +936,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		aModel.setEnabled("menuHelp", true);
 		aModel.setEnabled("menuHelpAbout", true);
 
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 	}
 
 	public void setConnectionFailed()
@@ -813,7 +948,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		aModel.setEnabled("menuSessionOptions", false);
 		aModel.setEnabled("menuSessionChangePassword", false);
 
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 	}
 
 	public void setSessionOpened()
@@ -842,10 +977,10 @@ public class ModelMDIMain extends JFrame implements OperationListener
 
 		aModel.setEnabled("menuSessionOpen", false);
 
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 
 		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-		internal_dispatcher.notify(new ContextChangeEvent(domain_id, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+		internalDispatcher.notify(new ContextChangeEvent(domain_id, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 	}
 
 	public void setDomainSelected()
@@ -861,7 +996,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		aModel.setEnabled("menuSessionOptions", true);
 		aModel.setEnabled("menuSessionChangePassword", true);
 
-		aModel.setEnabled("menuViewMapOpen", true);
+		aModel.setEnabled("menuViewMapViewOpen", true);
 		aModel.setEnabled("menuViewSchemeOpen", true);
 
 		aModel.setEnabled("menuFileOpen", true);
@@ -870,7 +1005,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		aModel.setEnabled("menuFileOpenAsWavetek", true);
 		aModel.setEnabled("menuViewModelLoad", true);
 
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 	}
 
 	public void setSessionClosed()
@@ -883,7 +1018,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		aModel.setEnabled("menuSessionOptions", false);
 		aModel.setEnabled("menuSessionChangePassword", false);
 
-		aModel.setEnabled("menuViewMapOpen", false);
+		aModel.setEnabled("menuViewMapViewOpen", false);
 		aModel.setEnabled("menuViewSchemeOpen", false);
 		aModel.setEnabled("menuViewModelSave", false);
 		aModel.setEnabled("menuViewPerformModeling", false);
@@ -903,22 +1038,21 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		aModel.fireModelChanged("menuFileSave");
 	}
 
-
 	public Dispatcher getInternalDispatcher()
 	{
-		return internal_dispatcher;
+		return internalDispatcher;
 	}
 
-	void this_componentShown(ComponentEvent e)
+	void thisComponentShown(ComponentEvent e)
 	{
-		init_module();
+		initModule();
 		desktopPane.setPreferredSize(desktopPane.getSize());
 	}
 
 	void this_windowClosing(WindowEvent e)
 	{
-		internal_dispatcher.notify(new OperationEvent(this, 0, "mapcloseevent"));
-		internal_dispatcher.unregister(this, "contextchange");
+		internalDispatcher.notify(new OperationEvent(this, 0, "mapcloseevent"));
+		internalDispatcher.unregister(this, "contextchange");
 		Environment.getDispatcher().unregister(this, "contextchange");
 		aContext.getApplicationModel().getCommand("menuExit").execute();
 	}
@@ -928,34 +1062,16 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		if (e.getID() == WindowEvent.WINDOW_ACTIVATED)
 		{
 			Environment.setActiveWindow(this);
-			//ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-			//SessionInterface.setActiveSession(aContext.getSessionInterface());
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING)
 		{
-			internal_dispatcher.notify(new OperationEvent(this, 0, "mapcloseevent"));
+			Command closeCommand = aContext.getApplicationModel().getCommand("menuExit");
+			this.setContext(null);
+			closeCommand.execute();
 
-			internal_dispatcher.unregister(this, "contextchange");
-			Environment.getDispatcher().unregister(this, "contextchange");
-			aContext.getApplicationModel().getCommand("menuExit").execute();
 			return;
 		}
 		super.processWindowEvent(e);
-	}
-}
-
-class ModelMDIMain_this_componentAdapter extends java.awt.event.ComponentAdapter
-{
-	ModelMDIMain adaptee;
-
-	ModelMDIMain_this_componentAdapter(ModelMDIMain adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void componentShown(ComponentEvent e)
-	{
-		adaptee.this_componentShown(e);
 	}
 }
 
