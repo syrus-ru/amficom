@@ -4,8 +4,6 @@ import java.awt.Toolkit;
 
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -30,10 +28,6 @@ public class AnalyseExt
 
 	public static void main(String[] args)
 	{
-		Environment.initialize();
-//		LangModelAnalyse.initialize();
-//		LangModelReport.initialize();
-
 		try {
 			UIManager.setLookAndFeel(Environment.getLookAndFeel());
 		}
