@@ -118,6 +118,8 @@ connjdbc_v1	AMFICOM/v1/connjdbc
 corbaportable_v1	AMFICOM/v1/corbaportable
 #M	importmif_v1	Patch for SpatialFX libraries which allows for TEXT spatial objects
 importmif_v1	AMFICOM/v1/importmif
+#M	scheduler_v1	Scheduler
+scheduler_v1	AMFICOM/v1/scheduler
 #M	agent_v1	Agent
 agent_v1	AMFICOM/v1/agent
 #M	mcm_v1		Measurement Control Module
