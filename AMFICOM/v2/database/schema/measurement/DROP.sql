@@ -1,3 +1,3 @@
-@@./dictionary/DROP.sql
-@@./type/DROP.sql
 @@./object/DROP.sql
+@@./type/DROP.sql
+@@./dictionary/DROP.sql

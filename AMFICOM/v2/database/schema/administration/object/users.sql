@@ -6,7 +6,7 @@ CREATE TABLE Users(
  modifier_id NUMBER(20, 0) NOT NULL,
 
  login VARCHAR2(32) NOT NULL,
- type_id VARCHAR2(8) NOT NULL,
+ sort VARCHAR2(8) NOT NULL,
  last_logged DATE NOT NULL,
  logged DATE NOT NULL,
  sessions NUMBER(10, 0),
@@ -16,7 +16,7 @@ CREATE TABLE Users(
   REFERENCES Users (id) ON DELETE CASCADE ENABLE,
  CONSTRAINT users_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES Users (id) ON DELETE CASCADE ENABLE,
- CONSTRAINT users_utype_fk FOREIGN KEY (type_id)
+ CONSTRAINT users_usort_fk FOREIGN KEY (sort)
   REFERENCES UserType (id) ON DELETE CASCADE ENABLE
 );
 
