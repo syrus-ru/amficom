@@ -168,7 +168,7 @@ public class AddPropFrame extends JDialog
 		}
 		else
 		{
-			/*h = Pool.getHash(CharacteristicType.typ);
+			/*h = Pool.getMap(CharacteristicType.typ);
 			for (Enumeration enum = h.elements(); enum.hasMoreElements();)
 			{
 				CharacteristicType type = (CharacteristicType)enum.nextElement();
@@ -209,7 +209,7 @@ public class AddPropFrame extends JDialog
 	public int showDialog(String ch_class, List chars)
 	{
 		this.ch_class = ch_class;
-		Map h = Pool.getHash(CharacteristicType.typ);
+		Map h = Pool.getMap(CharacteristicType.typ);
 
 		if (h != null)
 		{

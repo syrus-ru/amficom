@@ -102,11 +102,11 @@ public class OpenCatalogCommand extends ViewNavigatorCommand
 			frame2.setSize(dim.width * 7 / 10, dim.height);
 			desktop.add(frame2);
 		}
-		Map dSet = Pool.getHash(typ);
+		Map dSet = Pool.getMap(typ);
 		ObjectResourceFilter filter = new ObjectResourceDomainFilter(dataSource.getSession().getDomainId());
 		dSet = filter.filter(dSet);
 
-		frame2.setContents(new DataSet(dSet.values().iterator()));
+		frame2.setContents(MiscUtil.convert(dSet));
 		frame2.setDisplayModel(new StubDisplayModel(new String[] { "id", "name" },new String[] { "Идентификатор", "Название" }));
 		frame2.setObjectResourceClass(cl);
 		frame2.panel.setButtonPanelVisible(false);

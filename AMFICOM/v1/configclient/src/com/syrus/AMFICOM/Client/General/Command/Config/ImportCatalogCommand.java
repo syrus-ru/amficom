@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.Client.Resource.Network.Link;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 
 public class ImportCatalogCommand extends VoidCommand
 {
@@ -41,59 +41,58 @@ public class ImportCatalogCommand extends VoidCommand
 
 		Dispatcher disp = aContext.getDispatcher();
 
-		Enumeration enum;
 		String[] ids;
-		Hashtable ht;
+		Map ht;
 
-		ht = Pool.getHash(Equipment.typ);
+		ht = Pool.getMap(Equipment.typ);
 		if(ht != null)
-			for(enum = ht.elements(); enum.hasMoreElements();)
+			for(Iterator it = ht.values().iterator(); it.hasNext();)
 			{
-				Equipment or = (Equipment )enum.nextElement();
+				Equipment or = (Equipment)it.next();
 				System.out.println("Saving " + or.getName() + " (" + or.getId() + ")...");
 				if(disp != null)
 					disp.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Saving " + or.getName() + " (" + or.getId() + ")..."));
 				dataSource.SaveEquipment(or.getId());
 			}
 
-		ht = Pool.getHash(KIS.typ);
+		ht = Pool.getMap(KIS.typ);
 		if(ht != null)
-			for(enum = ht.elements(); enum.hasMoreElements();)
+			for(Iterator it = ht.values().iterator(); it.hasNext();)
 			{
-				KIS or = (KIS )enum.nextElement();
+				KIS or = (KIS)it.next();
 				System.out.println("Saving " + or.getName() + " (" + or.getId() + ")...");
 				if(disp != null)
 					disp.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Saving " + or.getName() + " (" + or.getId() + ")..."));
 				dataSource.SaveKIS(or.getId());
 			}
 
-		ht = Pool.getHash(Link.typ);
+		ht = Pool.getMap(Link.typ);
 		if(ht != null)
-			for(enum = ht.elements(); enum.hasMoreElements();)
+			for(Iterator it = ht.values().iterator(); it.hasNext();)
 			{
-				Link or = (Link )enum.nextElement();
+				Link or = (Link)it.next();
 				System.out.println("Saving " + or.getName() + " (" + or.getId() + ")...");
 				if(disp != null)
 					disp.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Saving " + or.getName() + " (" + or.getId() + ")..."));
 				dataSource.SaveLink(or.getId());
 			}
 
-		ht = Pool.getHash(CableLink.typ);
+		ht = Pool.getMap(CableLink.typ);
 		if(ht != null)
-			for(enum = ht.elements(); enum.hasMoreElements();)
+			for(Iterator it = ht.values().iterator(); it.hasNext();)
 			{
-				CableLink or = (CableLink )enum.nextElement();
+				CableLink or = (CableLink)it.next();
 				System.out.println("Saving " + or.getName() + " (" + or.getId() + ")...");
 				if(disp != null)
 					disp.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Saving " + or.getName() + " (" + or.getId() + ")..."));
 				dataSource.SaveCableLink(or.getId());
 			}
 
-		ht = Pool.getHash(TransmissionPath.typ);
+		ht = Pool.getMap(TransmissionPath.typ);
 		if(ht != null)
-			for(enum = ht.elements(); enum.hasMoreElements();)
+			for(Iterator it = ht.values().iterator(); it.hasNext();)
 			{
-				TransmissionPath or = (TransmissionPath )enum.nextElement();
+				TransmissionPath or = (TransmissionPath)it.next();
 				System.out.println("Saving " + or.getName() + " (" + or.getId() + ")...");
 				if(disp != null)
 					disp.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Saving " + or.getName() + " (" + or.getId() + ")..."));

@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.util.*;
+import java.util.List;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -488,7 +489,7 @@ class PropsTreeModel extends ObjectResourceTreeModel
 
 	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		List vec = new ArrayList();
+		List vec = new ArrayList(4);
 
 		if(node.getObject() instanceof String)
 		{

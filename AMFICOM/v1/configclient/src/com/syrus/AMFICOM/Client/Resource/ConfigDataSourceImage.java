@@ -152,12 +152,12 @@ public class ConfigDataSourceImage extends DataSourceImage
 		super.load(type);
 		if(type.equals(KIS.typ) || type.equals(Equipment.typ))
 		{
-			Hashtable ht = Pool.getHash(type);
+			Map ht = Pool.getMap(type);
 			if(ht == null)
 				return;
-			for(Enumeration e = ht.elements(); e.hasMoreElements();)
+			for(Iterator it = ht.values().iterator(); it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )e.nextElement();;
+				ObjectResource or = (ObjectResource)it.next();;
 				Pool.put("kisequipment", or.getId(), or);
 			}
 		}

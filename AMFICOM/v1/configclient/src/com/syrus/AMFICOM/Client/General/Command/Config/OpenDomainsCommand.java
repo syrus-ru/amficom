@@ -18,7 +18,7 @@ public class OpenDomainsCommand extends ViewNavigatorCommand
 	String parameter;
 	JDesktopPane desktop;
 	ApplicationContext aContext;
-	
+
 	public OpenDomainsCommand(JDesktopPane desktop, ApplicationContext aContext, String parameter)
 	{
 		super(aContext.getDispatcher(), desktop, "Навигатор объектов");
@@ -89,7 +89,7 @@ public class OpenDomainsCommand extends ViewNavigatorCommand
 			frame2.setSize(dim.width * 7 / 10, dim.height);
 		}
 
-		frame2.setContents(new DataSet(Pool.getHash("domain")));
+		frame2.setContents(MiscUtil.convert(Pool.getMap("domain")));
 //		frame2.setDisplayModel(new StubDisplayModel(new String[] { "id", "name" },new String[] { "Идентификатор", "Название" }));
 		frame2.setObjectResourceClass(Domain.class);
 		frame2.panel.setListState();

@@ -1,40 +1,20 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceDomainFilter;
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
-import com.syrus.AMFICOM.Client.Resource.ConfigDataSourceImage;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
-import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
-import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.KISType;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-import com.syrus.AMFICOM.Client.Resource.Network.CablePort;
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-import com.syrus.AMFICOM.Client.Resource.Network.Link;
-import com.syrus.AMFICOM.Client.Resource.Network.Port;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.Resource.ObjectDataSourceImage;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import java.util.*;
+import java.util.List;
 
 import java.awt.Color;
-
-import java.util.List;
-import java.util.ArrayList;
-
 import javax.swing.ImageIcon;
+
+import com.syrus.AMFICOM.Client.General.Filter.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 
 public class ConfigTreeModel extends ObjectResourceTreeModel
 {
@@ -274,9 +254,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();
 				if(parent.getObject().equals("root"))
 				{
-					if (Pool.getHash(Domain.typ) != null)
+					if (Pool.getMap(Domain.typ) != null)
 					{
-						Map dSet = Pool.getHash(Domain.typ);
+						Map dSet = Pool.getMap(Domain.typ);
 
 						ObjectResourceSorter sorter = Domain.getDefaultSorter();
 						sorter.setDataSet(dSet);
@@ -354,9 +334,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 			else
 			if(s.equals(Equipment.typ))
 			{
-				if (Pool.getHash(Equipment.typ) != null)
+				if (Pool.getMap(Equipment.typ) != null)
 				{
-					Map dSet = Pool.getHash(Equipment.typ);
+					Map dSet = Pool.getMap(Equipment.typ);
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
@@ -374,9 +354,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 			else
 			if(s.equals(Link.typ))
 			{
-				if (Pool.getHash(Link.typ) != null)
+				if (Pool.getMap(Link.typ) != null)
 				{
-					Map dSet = Pool.getHash(Link.typ);
+					Map dSet = Pool.getMap(Link.typ);
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
@@ -395,9 +375,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 			else
 			if(s.equals(CableLink.typ))
 			{
-				if (Pool.getHash(CableLink.typ) != null)
+				if (Pool.getMap(CableLink.typ) != null)
 				{
-					Map dSet = Pool.getHash(CableLink.typ);
+					Map dSet = Pool.getMap(CableLink.typ);
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
@@ -451,9 +431,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 			else
 			if(s.equals(KIS.typ))
 			{
-				if (Pool.getHash(KIS.typ) != null)
+				if (Pool.getMap(KIS.typ) != null)
 				{
-					Map dSet = Pool.getHash(KIS.typ);
+					Map dSet = Pool.getMap(KIS.typ);
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
@@ -471,9 +451,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 			else
 			if(s.equals(TransmissionPath.typ))
 			{
-				if (Pool.getHash(TransmissionPath.typ) != null)
+				if (Pool.getMap(TransmissionPath.typ) != null)
 				{
-					Map dSet = Pool.getHash(TransmissionPath.typ);
+					Map dSet = Pool.getMap(TransmissionPath.typ);
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
@@ -491,9 +471,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 		else
 		if(s.equals(EquipmentType.typ))
 		{
-			if (Pool.getHash(EquipmentType.typ) != null)
+			if (Pool.getMap(EquipmentType.typ) != null)
 			{
-			 Map dSet = Pool.getHash(EquipmentType.typ);
+			 Map dSet = Pool.getMap(EquipmentType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
@@ -511,9 +491,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 		else
 		if(s.equals(LinkType.typ))
 		{
-			if (Pool.getHash(LinkType.typ) != null)
+			if (Pool.getMap(LinkType.typ) != null)
 			{
-			 Map dSet = Pool.getHash(LinkType.typ);
+			 Map dSet = Pool.getMap(LinkType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
@@ -531,9 +511,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 		else
 		if(s.equals(CableLinkType.typ))
 		{
-			if (Pool.getHash(CableLinkType.typ) != null)
+			if (Pool.getMap(CableLinkType.typ) != null)
 			{
-			 Map dSet = Pool.getHash(CableLinkType.typ);
+			 Map dSet = Pool.getMap(CableLinkType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
@@ -551,9 +531,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 		else
 		if(s.equals(PortType.typ))
 		{
-			if (Pool.getHash(PortType.typ) != null)
+			if (Pool.getMap(PortType.typ) != null)
 			{
-			 Map dSet = Pool.getHash(PortType.typ);
+			 Map dSet = Pool.getMap(PortType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
@@ -571,9 +551,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 		else
 		if(s.equals(CablePortType.typ))
 		{
-			if (Pool.getHash(CablePortType.typ) != null)
+			if (Pool.getMap(CablePortType.typ) != null)
 			{
-			 Map dSet = Pool.getHash(CablePortType.typ);
+			 Map dSet = Pool.getMap(CablePortType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
@@ -591,9 +571,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 		else
 		if(s.equals(KISType.typ))
 		{
-			if (Pool.getHash(EquipmentType.typ) != null)
+			if (Pool.getMap(EquipmentType.typ) != null)
 			{
-			 Map dSet = Pool.getHash(EquipmentType.typ);
+			 Map dSet = Pool.getMap(EquipmentType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
@@ -613,9 +593,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 		else
 		if(s.equals(TransmissionPathType.typ))
 		{
-			if (Pool.getHash(TransmissionPathType.typ) != null)
+			if (Pool.getMap(TransmissionPathType.typ) != null)
 			{
-			 Map dSet = Pool.getHash(TransmissionPathType.typ);
+			 Map dSet = Pool.getMap(TransmissionPathType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
@@ -633,9 +613,9 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 		else
 		if(s.equals(AccessPortType.typ))
 		{
-			if (Pool.getHash(AccessPortType.typ) != null)
+			if (Pool.getMap(AccessPortType.typ) != null)
 			{
-			 Map dSet = Pool.getHash(AccessPortType.typ);
+			 Map dSet = Pool.getMap(AccessPortType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);

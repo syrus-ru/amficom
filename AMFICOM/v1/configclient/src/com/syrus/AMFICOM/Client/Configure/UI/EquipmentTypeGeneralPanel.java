@@ -178,14 +178,13 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 			int portsNumber = 0;
 			int cablePortsNumber = 0;
 
-			Hashtable protoHash = Pool.getHash(ProtoElement.typ);
+			Map protoHash = Pool.getMap(ProtoElement.typ);
 			if  (protoHash == null)
 				return;
 
-			Enumeration protoEnum = protoHash.elements();
-			for (; protoEnum.hasMoreElements();)
+			for (Iterator it = protoHash.values().iterator(); it.hasNext();)
 			{
-				ProtoElement curProto = (ProtoElement) protoEnum.nextElement();
+				ProtoElement curProto = (ProtoElement)it.next();
 				EquipmentType itsEqType = (EquipmentType) Pool.get(EquipmentType.typ,curProto.equipment_type_id);
 				if (itsEqType == this.equipmentType)
 				{
