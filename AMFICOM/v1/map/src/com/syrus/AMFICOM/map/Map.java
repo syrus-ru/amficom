@@ -1,5 +1,5 @@
 /*
- * $Id: Map.java,v 1.10 2005/01/18 06:22:21 bob Exp $
+ * $Id: Map.java,v 1.11 2005/01/19 06:43:33 krupenn Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Ó¡’ﬁŒœ-‘≈»Œ…ﬁ≈”À…  √≈Œ‘“.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -32,8 +33,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/01/18 06:22:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/01/19 06:43:33 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class Map extends StorableObject {
@@ -56,6 +57,8 @@ public class Map extends StorableObject {
 	 * ÌÂÓ·ıÓ‰ËÏÓÒÚË ˝ÍÒÔÓÚ‡
 	 */
 	public static Object[][] exportColumns = null;
+
+	private static java.util.Map exportMap = null;
 
 	private Identifier				domainId;
 
@@ -693,6 +696,18 @@ public class Map extends StorableObject {
 		return exportColumns;
 	}
 
+	public java.util.Map getExportMap() {
+		if(exportMap == null)
+			exportMap = new HashMap();		
+		synchronized(exportMap) {
+			exportMap.clear();
+			exportMap.put(COLUMN_ID, this.id);
+			exportMap.put(COLUMN_NAME, this.name);
+			exportMap.put(COLUMN_DESCRIPTION, this.description);
+			return Collections.unmodifiableMap(exportMap);
+		}		
+	}
+	
 	public static Map createInstance(
 			Identifier creatorId,
 			Identifier domainId,
@@ -741,5 +756,32 @@ public class Map extends StorableObject {
 		}
 	}
 
+	public static Map createInstance(
+			Identifier creatorId,
+			Identifier domainId,
+			java.util.Map exportMap) 
+		throws CreateObjectException 
+	{
+		Identifier id = (Identifier) exportMap.get(COLUMN_ID);
+		String name = (String) exportMap.get(COLUMN_NAME);
+		String description = (String) exportMap.get(COLUMN_DESCRIPTION);
+
+		if (id == null || name == null || description == null
+			|| creatorId == null || domainId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
+		try 
+		{
+			return new Map(
+				id,
+				creatorId,
+				domainId,
+				name,
+				description);
+		} catch (Exception e) 
+		{
+			throw new CreateObjectException("Map.createInstance |  ", e);
+		}
+	}
 }
 
