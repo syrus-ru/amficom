@@ -1,5 +1,5 @@
 /*
- * $Id: ServerPane.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
+ * $Id: ServerPane.java,v 1.3 2004/09/27 12:57:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,29 +7,29 @@
  */
 
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
-import java.awt.*;
-import java.util.*;
 
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
-import com.syrus.AMFICOM.Client.Resource.System.*;
+import com.syrus.AMFICOM.Client.Resource.Object.User;
+import com.syrus.AMFICOM.Client.Resource.System.Server;
+import java.awt.*;
+import java.util.Date;
+import javax.swing.*;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 12:57:48 $
  * @module generalclient_v1
  */
-public class ServerPane  extends PropertiesPanel
-{
+public final class ServerPane extends JPanel implements ObjectResourcePropertiesPane {
+	private static ServerPane instance = null;
+
   Server server;
 
   ApplicationContext aContext = new ApplicationContext();
@@ -40,35 +40,27 @@ public class ServerPane  extends PropertiesPanel
 
   ServerPanel serverPanel = new ServerPanel();
 
-  public ServerPane()
-  {
-    try
-    {
-      jbInit();
-    }
-    catch(Exception ex) {
-      ex.printStackTrace();
-    }
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public ServerPane() {
+		jbInit();
+	}
 
-  public ServerPane(ObjectResource or)
-  {
-    this();
-    setObjectResource(or);
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public ServerPane(ObjectResource or) {
+		this();
+		setObjectResource(or);
+	}
 
-  void jbInit() throws Exception
-  {
-    this.setPreferredSize(new Dimension(500, 500));
-    this.setLayout(borderLayout1);
-
-    this.setBorder(BorderFactory.createRaisedBevelBorder());
-
-    this.add(serverPanel, BorderLayout.CENTER);
-//    this.add(pac, BorderLayout.SOUTH);
-  }
-
-
+	private void jbInit() {
+		this.setPreferredSize(new Dimension(500, 500));
+		this.setLayout(borderLayout1);
+		this.setBorder(BorderFactory.createRaisedBevelBorder());
+		this.add(serverPanel, BorderLayout.CENTER);
+	}
 
   public void setContext(ApplicationContext aContext)
   {
@@ -77,7 +69,6 @@ public class ServerPane  extends PropertiesPanel
     user = (User)Pool.get(User.typ, userId);
     checker = new Checker(user);
   }
-
 
   public void setObjectResource(ObjectResource or)
   {
@@ -107,7 +98,7 @@ public class ServerPane  extends PropertiesPanel
       return false;
 
     Pool.put(Server.typ, server.id, server);
-    aContext.getDataSourceInterface().SaveServer(server.id);
+    aContext.getDataSource().SaveServer(server.id);
     return true;
   }
 
@@ -124,7 +115,7 @@ public class ServerPane  extends PropertiesPanel
     if(!checker.checkCommand(Checker.createServer))
       return false;
 
-    String id = aContext.getDataSourceInterface().GetUId(Server.typ);
+    String id = aContext.getDataSource().GetUId(Server.typ);
 
     server = new Server();
     server.id = id;
@@ -164,7 +155,7 @@ public class ServerPane  extends PropertiesPanel
     String []s = new String[1];
 
     s[0] = server.id;
-    aContext.getDataSourceInterface().RemoveServer(s);
+    aContext.getDataSource().RemoveServer(s);
     Pool.remove(Server.typ, server.id);
     return true;
   }
@@ -173,4 +164,17 @@ public class ServerPane  extends PropertiesPanel
   {
     return save();
   }
+
+	public boolean cancel() {
+		return false;
+	}
+
+	public static ServerPane getInstance() {
+		if (instance == null)
+			synchronized (ServerPane.class) {
+				if (instance == null)
+					instance = new ServerPane();
+			}
+		return instance;
+	}
 }
