@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.79 2004/12/27 14:38:23 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.80 2004/12/27 15:07:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -122,8 +122,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2004/12/27 14:38:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.80 $, $Date: 2004/12/27 15:07:11 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -4829,6 +4829,9 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
 						Measurement measurement = (Measurement) it.next();
 						transferables[i] = (Measurement_Transferable) measurement.getTransferable();
 					}
+					
+					Log.debugMessage("CMServerImpl.transmitMeasurementsButIdsLinkedCondition | transferables size "
+						+ transferables.length + ", count:" + i, Log.DEBUGLEVEL07);
 
 				return transferables;
 
