@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.31 2004/10/05 11:41:29 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.32 2004/10/19 11:37:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/10/05 11:41:29 $
+ * @version $Revision: 1.32 $, $Date: 2004/10/19 11:37:14 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -98,14 +98,14 @@ public class MeasurementStorableObjectPool {
 	 * @param size
 	 */
 	public static void init(MeasurementObjectLoader mObjectLoader1, Class cacheClass, final int size) {
-		Class clazz = null;
 		try {
-			clazz = Class.forName(cacheClass.getName());
-		} catch (ClassNotFoundException e) {
-			// empty
-		}
-		if (clazz != null)
+			Class clazz = Class.forName(cacheClass.getName());
 			cacheMapClass = clazz;
+		} catch (ClassNotFoundException e) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default '" 
+							 + cacheMapClass.getName() + "'");
+		}
+		
 		init(mObjectLoader1, size);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultSortCondition.java,v 1.2 2004/10/11 13:46:57 bob Exp $
+ * $Id: ResultSortCondition.java,v 1.3 2004/10/19 11:37:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.ResultSortCondition_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/10/11 13:46:57 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 11:37:14 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -72,9 +72,9 @@ public class ResultSortCondition implements StorableObjectCondition {
 		boolean condition = false;
 		if (object instanceof Result) {
 			Result result = (Result) object;
-			Identifier measurementId = result.getMeasurement().getId();
+			Identifier id = result.getMeasurement().getId();
 			ResultSort sort = result.getSort();
-			if ((measurementId.equals(this.measurementId)) && (this.resultSort.value() == sort.value())) {
+			if ((id.equals(this.measurementId)) && (this.resultSort.value() == sort.value())) {
 				condition = true;
 			}
 		}

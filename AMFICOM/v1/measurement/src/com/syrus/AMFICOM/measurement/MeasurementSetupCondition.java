@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupCondition.java,v 1.5 2004/10/13 10:35:52 max Exp $
+ * $Id: MeasurementSetupCondition.java,v 1.6 2004/10/19 11:37:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementSetupCondition_Transferabl
 /**
  * @deprecated use {@link com.syrus.AMFICOM.measurement.LinkedIdsCondition}
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/13 10:35:52 $
- * @author $Author: max $
+ * @version $Revision: 1.6 $, $Date: 2004/10/19 11:37:14 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class MeasurementSetupCondition implements StorableObjectCondition {
@@ -98,8 +98,8 @@ public class MeasurementSetupCondition implements StorableObjectCondition {
 			} else if (this.monitoredElement != null){
 				Identifier meId = this.monitoredElement.getId();
 				for (Iterator it=measurementSetup.getMonitoredElementIds().iterator();it.hasNext();){
-					MonitoredElement monitoredElement = (MonitoredElement)it.next();
-					if (monitoredElement.getId().equals(meId)){
+					MonitoredElement me = (MonitoredElement)it.next();
+					if (me.getId().equals(meId)){
 						condition = true;
 						break;
 					}

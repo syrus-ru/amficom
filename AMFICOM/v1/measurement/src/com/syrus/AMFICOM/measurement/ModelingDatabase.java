@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.6 2004/10/19 07:48:21 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.7 2004/10/19 11:37:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/10/19 07:48:21 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/19 11:37:14 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -217,8 +217,8 @@ public class ModelingDatabase extends StorableObjectDatabase {
     }
 
     public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-        Modeling Modeling = this.fromStorableObject(storableObject);
-        this.insertEntity(Modeling);
+        Modeling modeling = this.fromStorableObject(storableObject);
+        this.insertEntity(modeling);
     }
     
     
