@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.Survey.Report;
 
+import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
+import com.syrus.AMFICOM.Client.Schematics.Report.SchemeReportModel;
 import javax.swing.JComponent;
 import java.util.Vector;
 import java.util.Iterator;
@@ -108,20 +110,43 @@ public class ObserveReportModel extends APOReportModel
 
 		JComponent returnValue = null;
     
-    ReportData rd = null;
 		if (rp.field.equals(ObserveReportModel.alarms_list))
-			rd = new AlarmsList(rp, divisionsNumber);
-    else if (rp.field.equals(ObserveReportModel.alarm_info))
-			rd = new AlarmsList(rp, divisionsNumber);    
-    else if (rp.field.equals(ObserveReportModel.alarm_reflectogramm))
-			rd = new AlarmsList(rp, divisionsNumber);    
-    else if (rp.field.equals(ObserveReportModel.alarm_scheme))
-			rd = new AlarmsList(rp, divisionsNumber);    
+		{
+			AlarmsList er = new AlarmsList(rp, divisionsNumber);
+			returnValue = new ReportResultsTablePanel(
+				er.columnModel,
+				er.tableModel,
+				rt.findROforReport(rp));
+		}
+		else if (rp.field.equals(ObserveReportModel.alarm_info))
+		{
+			returnValue = new TextPanel(rp);
+		}
+		else if (rp.field.equals(ObserveReportModel.alarm_reflectogramm))
+		{
+      rp.field = AnalysisReportModel.reflectogram;
+      
+			returnValue = new AnalysisReportModel().createReport(
+        rp,divisionsNumber,
+        rt,
+        aContext,
+        fromAnotherModule);
+        
+      rp.field = ObserveReportModel.alarm_reflectogramm;
+		}
+		else if (rp.field.equals(ObserveReportModel.alarm_scheme))
+		{
+      rp.field = SchemeReportModel.scheme;
+      
+			returnValue = new SchemeReportModel().createReport(
+        rp,divisionsNumber,
+        rt,
+        aContext,
+        fromAnotherModule);
+        
+      rp.field = ObserveReportModel.alarm_scheme;
+		}
     
-    returnValue = new ReportResultsTablePanel(
-      rd.columnModel,
-      rd.tableModel,
-      rt.findROforReport(rp));
 		return returnValue;
 	}
 
