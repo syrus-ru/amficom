@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.5 2004/09/29 06:12:51 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.6 2004/10/07 14:27:08 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,13 +36,15 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.Analysis;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/09/29 06:12:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2004/10/07 14:27:08 $
+ * @author $Author: max $
  * @module cmserver_v1
  */
 
@@ -60,12 +62,22 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 		accessIdentifierTransferable = accessIdentifier_Transferable;
 	}
 
-	public CharacteristicType loadCharacteristicType(Identifier id) throws RetrieveObjectException,
+	
+    
+    public CharacteristicType loadCharacteristicType(Identifier id) throws RetrieveObjectException,
 			CommunicationException {
-		/**
-		 * FIXME method is not complete !
-		 */
-		throw new UnsupportedOperationException();
+        try {
+            return new CharacteristicType(this.server.transmitCharacteristicType((Identifier_Transferable) id
+                    .getTransferable(), accessIdentifierTransferable));
+        } catch (CreateObjectException e) {
+            String msg = "ClientMeasurementObjectLoader.loadAnalysis | new Analysis(" + id.toString()
+                    + ")";
+            throw new RetrieveObjectException(msg, e);
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientMeasurementObjectLoader.loadAnalysis | server.transmitAnalysis("
+                    + id.toString() + ")";
+            throw new CommunicationException(msg, e);
+        }
 	}
 
 	public EquipmentType loadEquipmentType(Identifier id) throws RetrieveObjectException, CommunicationException {
@@ -423,6 +435,126 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
      public void saveMonitoredElements(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub
      }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadCharacteristicTypesButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadCharacteristicTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadEquipmentTypesButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadEquipmentTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadPortTypesButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadMeasurementPortTypesButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadMeasurementPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadCharacteristicsButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadCharacteristicsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadUsersButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadUsersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadDomainsButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadDomainsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadServersButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadServersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadMCMsButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadMCMsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadEquipmentsButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadEquipmentsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadPortsButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadTransmissionPathsButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadTransmissionPathsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadKISsButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadKISsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadMeasurementPortsButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadMeasurementPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadMonitoredElementsButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.List)
+     */
+    public List loadMonitoredElementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.16 2004/09/30 13:52:59 max Exp $
+ * $Id: CMServerTestCase.java,v 1.17 2004/10/07 14:27:08 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -63,7 +63,7 @@ import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/09/30 13:52:59 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/07 14:27:08 $
  * @author $Author: max $
  * @module module
  */
@@ -653,7 +653,7 @@ public class CMServerTestCase extends TestCase {
 
 	public void _testTransmitTestsAndMeasurements() throws AMFICOMRemoteException, CreateObjectException {
 
-		long time0 = System.currentTimeMillis();
+		/*long time0 = System.currentTimeMillis();
 		// 2 month ago
 		long diff = 1000L * 60L * 60L * 24L * 31L * 2L;
 		Date start = new Date(System.currentTimeMillis() - diff);
@@ -679,7 +679,7 @@ public class CMServerTestCase extends TestCase {
 				.transmitMeasurementForTests(identifier_Transferables, accessIdentifier_Transferable);
 		long time3 = System.currentTimeMillis();
 		System.out.println("transmit " + measurement_Transferables.length + " measuremen(s) for "
-				+ (time3 - time2) + " ms");
+				+ (time3 - time2) + " ms");*/
 
 	}
 

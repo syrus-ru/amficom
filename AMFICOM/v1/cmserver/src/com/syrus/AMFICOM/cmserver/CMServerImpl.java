@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.33 2004/10/07 11:12:17 max Exp $
+ * $Id: CMServerImpl.java,v 1.34 2004/10/07 14:27:08 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,15 +14,39 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServerOperations;
+import com.syrus.AMFICOM.configuration.Characteristic;
+import com.syrus.AMFICOM.configuration.CharacteristicType;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.Equipment;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.MCM;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.Port;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.Server;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.configuration.User;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
+import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
+import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
+import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
+import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -94,7 +118,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/10/07 11:12:17 $
+ * @version $Revision: 1.34 $, $Date: 2004/10/07 14:27:08 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -1194,7 +1218,345 @@ public class CMServerImpl implements CMServerOperations {
 	}
 
 	///////////// Configuration Transmit /////////////
-	public Domain_Transferable transmitDomain(	Identifier_Transferable identifier_Transferable,
+    public Characteristic_Transferable transmitCharacteristic(
+            Identifier_Transferable id_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.Characteristic | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            Characteristic characteristic = (Characteristic) MeasurementStorableObjectPool.getStorableObject(id, true);
+            return (Characteristic_Transferable) characteristic.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+    }
+    
+    public CharacteristicType_Transferable transmitCharacteristicType(
+            Identifier_Transferable id_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.CharacteristicType | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            CharacteristicType characteristicType = (CharacteristicType) MeasurementStorableObjectPool.getStorableObject(id, true);
+            return (CharacteristicType_Transferable) characteristicType.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+    }
+    
+    public Equipment_Transferable transmitEquipment(
+            Identifier_Transferable id_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.Equipment | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            Equipment equipment = (Equipment) MeasurementStorableObjectPool.getStorableObject(id, true);
+            return (Equipment_Transferable) equipment.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+    }
+    
+    public EquipmentType_Transferable transmitEquipmentType(
+            Identifier_Transferable id_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.EquipmentType | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            EquipmentType equipmentType = (EquipmentType) MeasurementStorableObjectPool.getStorableObject(id, true);
+            return (EquipmentType_Transferable) equipmentType.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+    }
+   
+    public KIS_Transferable transmitKIS(
+            Identifier_Transferable id_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.KIS | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            KIS kis = (KIS) MeasurementStorableObjectPool.getStorableObject(id, true);
+            return (KIS_Transferable) kis.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+    }
+
+    public MCM_Transferable transmitMCM(
+            Identifier_Transferable id_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.MCM | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            MCM mcm = (MCM) MeasurementStorableObjectPool.getStorableObject(id, true);
+            return (MCM_Transferable) mcm.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+    }
+    
+    public MeasurementPort_Transferable transmitMeasurementPort(
+            Identifier_Transferable id_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.MeasurementPort | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            MeasurementPort measurementPort = (MeasurementPort) MeasurementStorableObjectPool.getStorableObject(id, true);
+            return (MeasurementPort_Transferable) measurementPort.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+    }
+
+    public MeasurementPortType_Transferable transmitMeasurementPortType(
+            Identifier_Transferable id_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.MeasurementPortType | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            MeasurementPortType measurementPortType = (MeasurementPortType) MeasurementStorableObjectPool.getStorableObject(id, true);
+            return (MeasurementPortType_Transferable) measurementPortType.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+    }
+    	
+    public Port_Transferable transmitPort(
+            Identifier_Transferable id_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.Port | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            Port port = (Port) MeasurementStorableObjectPool.getStorableObject(id, true);
+            return (Port_Transferable) port.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+    }
+    
+    public PortType_Transferable transmitPortType(
+            Identifier_Transferable id_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.PortType | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            PortType portType = (PortType) MeasurementStorableObjectPool.getStorableObject(id, true);
+            return (PortType_Transferable) portType.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+    }
+
+    public Server_Transferable transmitServer(
+            Identifier_Transferable id_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.Server | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            Server server = (Server) MeasurementStorableObjectPool.getStorableObject(id, true);
+            return (Server_Transferable) server.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+    }
+  
+    public User_Transferable transmitUser(
+            Identifier_Transferable id_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        Identifier id = new Identifier(id_Transferable);
+        Log.debugMessage("CMServerImpl.User | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            User user = (User) MeasurementStorableObjectPool.getStorableObject(id, true);
+            return (User_Transferable) user.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+            Log.errorException(onfe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+    }
+    
+    
+    
+    public Domain_Transferable transmitDomain(	Identifier_Transferable identifier_Transferable,
 							AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(identifier_Transferable);
@@ -1278,7 +1640,6 @@ public class CMServerImpl implements CMServerOperations {
 	}
 
 	///////////// Measurement Transmit /////////////
-
 	public AnalysisType_Transferable transmitAnalysisType(	Identifier_Transferable identifier_Transferable,
 								AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
@@ -2318,7 +2679,7 @@ public class CMServerImpl implements CMServerOperations {
         }
     }
 
-	public Analysis_Transferable[] transmitAnalyses(Identifier_Transferable[] identifier_Transferables,
+    public Analysis_Transferable[] transmitAnalyses(Identifier_Transferable[] identifier_Transferables,
 							AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 
