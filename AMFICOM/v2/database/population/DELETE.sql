@@ -1,1 +1,0 @@
-@@./measurement/DELETE.sql
