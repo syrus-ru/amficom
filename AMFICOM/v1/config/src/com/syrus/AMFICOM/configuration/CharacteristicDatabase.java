@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.50 2004/12/10 15:39:32 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.51 2004/12/10 16:07:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2004/12/10 15:39:32 $
+ * @version $Revision: 1.51 $, $Date: 2004/12/10 16:07:30 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -62,6 +62,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     //  characterized_id VARCHAR2(32),
     public static final String COLUMN_CHARACTERIZED_ID	= "characterized_id";
     
+    
+    private static final int SIZE_VALUE_COLUMN 			= 256;
     
     private static String columns;
     private static String updateMultiplySQLValues;
@@ -105,9 +107,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		int sort = characteristic.getSort().value();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(characteristic.getType().getId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getName(), 64) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getDescription(), 256) + APOSTOPHE  + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getValue(), 256) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE  + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getValue(), SIZE_VALUE_COLUMN) + APOSTOPHE + COMMA
 			+ (characteristic.isEditable()?"1":"0") + COMMA
 			+ (characteristic.isVisible()?"1":"0") + COMMA
 			+ sort + COMMA
@@ -126,9 +128,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, characteristic.getType().getId());
-			DatabaseString.setString(preparedStatement, ++i, characteristic.getName(), 64);
-			DatabaseString.setString(preparedStatement, ++i, characteristic.getDescription(), 256);
-			DatabaseString.setString(preparedStatement, ++i, characteristic.getValue(), 256);
+			DatabaseString.setString(preparedStatement, ++i, characteristic.getName(), SIZE_NAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, characteristic.getDescription(), SIZE_DESCRIPTION_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, characteristic.getValue(), SIZE_VALUE_COLUMN);
 			preparedStatement.setInt( ++i, characteristic.isEditable()? 1:0);
 			preparedStatement.setInt( ++i, characteristic.isVisible()? 1:0);
 			preparedStatement.setInt( ++i, sort);

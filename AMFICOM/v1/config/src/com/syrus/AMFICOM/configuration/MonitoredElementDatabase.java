@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.32 2004/12/10 15:39:32 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.33 2004/12/10 16:07:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/12/10 15:39:32 $
+ * @version $Revision: 1.33 $, $Date: 2004/12/10 16:07:30 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -59,6 +59,8 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
     
     private static String columns;
 	private static String updateMultiplySQLValues;
+	
+	private static final int SIZE_LOCAL_ADDRESS_COLUMN = 64;
 	
 	private MonitoredElement fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MonitoredElement)
@@ -99,10 +101,10 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		MonitoredElement monitoredElement = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 				+ DatabaseIdentifier.toSQLString(monitoredElement.getDomainId()) + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getName(), 64) + APOSTOPHE + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(monitoredElement.getMeasurementPortId()) + COMMA
 				+ monitoredElement.getSort().value() + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getLocalAddress(), 64) + APOSTOPHE;
+				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN) + APOSTOPHE;
 		return sql;
 	}
 	
@@ -114,10 +116,10 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElement.getDomainId());
-			DatabaseString.setString(preparedStatement, ++i, monitoredElement.getName(), 64);
+			DatabaseString.setString(preparedStatement, ++i, monitoredElement.getName(), SIZE_NAME_COLUMN);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElement.getMeasurementPortId());
 			preparedStatement.setInt( ++i, monitoredElement.getSort().value());
-			DatabaseString.setString(preparedStatement, ++i, monitoredElement.getLocalAddress(), 64);
+			DatabaseString.setString(preparedStatement, ++i, monitoredElement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN);
 		}catch (SQLException sqle) {
 			throw new UpdateObjectException("MeasurmentPortTypeDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);

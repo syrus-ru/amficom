@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.26 2004/12/10 15:39:32 bob Exp $
+ * $Id: UserDatabase.java,v 1.27 2004/12/10 16:07:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/12/10 15:39:32 $
+ * @version $Revision: 1.27 $, $Date: 2004/12/10 16:07:30 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -48,6 +48,7 @@ public class UserDatabase extends StorableObjectDatabase {
     
     private static String columns;
     private static String updateMultiplySQLValues;
+    private static final int SIZE_LOGIN_COLUMN = 32; 
     
 	private User fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof User)
@@ -85,10 +86,10 @@ public class UserDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		User user = fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getLogin(), 32) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getLogin(), SIZE_LOGIN_COLUMN) + APOSTOPHE + COMMA
 			+ Integer.toString(user.getSort().value()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getName(), 64) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getDescription(), 256) + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -127,10 +128,10 @@ public class UserDatabase extends StorableObjectDatabase {
 		User user = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {			
-			DatabaseString.setString(preparedStatement, ++i, user.getLogin(), 32);
+			DatabaseString.setString(preparedStatement, ++i, user.getLogin(), SIZE_LOGIN_COLUMN);
 			preparedStatement.setInt(++i, user.getSort().value());
-			DatabaseString.setString(preparedStatement, ++i, user.getName(), 64);
-			DatabaseString.setString(preparedStatement, ++i, user.getDescription(), 256);
+			DatabaseString.setString(preparedStatement, ++i, user.getName(), SIZE_NAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, user.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}

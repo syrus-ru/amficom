@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.52 2004/12/10 15:39:32 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.53 2004/12/10 16:07:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2004/12/10 15:39:32 $
+ * @version $Revision: 1.53 $, $Date: 2004/12/10 16:07:30 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -108,8 +108,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(equipment.getDomainId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(equipment.getType().getId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getName(), 64) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getDescription(), 256) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(equipment.getImageId());
 		return sql;
 	}
@@ -123,8 +123,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getDomainId());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getType().getId());
-			DatabaseString.setString(preparedStatement, ++i, equipment.getName(), 64);
-			DatabaseString.setString(preparedStatement, ++i, equipment.getDescription(), 256);
+			DatabaseString.setString(preparedStatement, ++i, equipment.getName(), SIZE_NAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, equipment.getDescription(), SIZE_DESCRIPTION_COLUMN);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getImageId());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("EquipmentDatabase." +

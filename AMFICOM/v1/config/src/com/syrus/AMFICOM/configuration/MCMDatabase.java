@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.38 2004/12/10 15:39:32 bob Exp $
+ * $Id: MCMDatabase.java,v 1.39 2004/12/10 16:07:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/12/10 15:39:32 $
+ * @version $Revision: 1.39 $, $Date: 2004/12/10 16:07:30 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -100,8 +100,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 		MCM mcm = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(mcm.getDomainId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getName(), 64) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getDescription(), 256) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(mcm.getUserId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(mcm.getServerId()); 
 		return sql;
@@ -114,8 +114,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 		try {
 			i  = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getDomainId());
-			DatabaseString.setString(preparedStatement, ++i, mcm.getName(), 64);
-			DatabaseString.setString(preparedStatement, ++i, mcm.getDescription(), 256);
+			DatabaseString.setString(preparedStatement, ++i, mcm.getName(), SIZE_NAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, mcm.getDescription(), SIZE_DESCRIPTION_COLUMN);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getUserId());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getServerId());
 		}

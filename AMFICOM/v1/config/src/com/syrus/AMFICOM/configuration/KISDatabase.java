@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.47 2004/12/10 15:39:32 bob Exp $
+ * $Id: KISDatabase.java,v 1.48 2004/12/10 16:07:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2004/12/10 15:39:32 $
+ * @version $Revision: 1.48 $, $Date: 2004/12/10 16:07:30 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -62,6 +62,7 @@ public class KISDatabase extends StorableObjectDatabase {
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
+	private static final int SIZE_HOSTNAME_COLUMN = 256;
 	private static String columns;
 	private static String updateMultiplySQLValues;
 
@@ -108,9 +109,9 @@ public class KISDatabase extends StorableObjectDatabase {
 		KIS kis = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(kis.getDomainId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getName(), 64) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getDescription(), 256) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getHostName(), 64) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTOPHE + COMMA
 			+ kis.getTCPPort() + COMMA
 			+ DatabaseIdentifier.toSQLString(kis.getEquipmentId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(kis.getMCMId());
@@ -134,9 +135,9 @@ public class KISDatabase extends StorableObjectDatabase {
 			Identifier mcmId = kis.getMCMId();
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, kis.getDomainId());
-			DatabaseString.setString(preparedStatement, ++i, kis.getName(), 32);
-			DatabaseString.setString(preparedStatement, ++i, kis.getDescription(), 256);
-			DatabaseString.setString(preparedStatement, ++i, kis.getHostName(), 64);
+			DatabaseString.setString(preparedStatement, ++i, kis.getName(), SIZE_NAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, kis.getDescription(), SIZE_DESCRIPTION_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, kis.getHostName(), SIZE_HOSTNAME_COLUMN);
 			preparedStatement.setInt( ++i, kis.getTCPPort());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipmentId);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcmId);

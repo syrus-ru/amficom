@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.28 2004/12/10 15:39:32 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.29 2004/12/10 16:07:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/12/10 15:39:32 $
+ * @version $Revision: 1.29 $, $Date: 2004/12/10 16:07:30 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -94,8 +94,8 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		Identifier portId = measurementPort.getPortId();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 				+ DatabaseIdentifier.toSQLString(typeId) + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPort.getName(), 64) + APOSTOPHE	+ COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPort.getDescription(), 256) + APOSTOPHE + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPort.getName(), SIZE_NAME_COLUMN) + APOSTOPHE	+ COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPort.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(kisId)	+ COMMA
 				+ DatabaseIdentifier.toSQLString(portId);
 		return sql;
@@ -112,8 +112,8 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, typeId);
-			DatabaseString.setString(preparedStatement, ++i, measurementPort.getName(), 64);
-			DatabaseString.setString(preparedStatement, ++i, measurementPort.getDescription(), 256);
+			DatabaseString.setString(preparedStatement, ++i, measurementPort.getName(), SIZE_NAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, measurementPort.getDescription(), SIZE_DESCRIPTION_COLUMN);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, kisId);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, portId);
 		}catch (SQLException sqle) {

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.27 2004/12/10 15:39:32 bob Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.28 2004/12/10 16:07:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/12/10 15:39:32 $
+ * @version $Revision: 1.28 $, $Date: 2004/12/10 16:07:30 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -75,8 +75,8 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, UpdateObjectException {
 		CharacteristicType characteristicType = fromStorableObject(storableObject); 
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA 
-			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getCodename(), 32) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getDescription(), 256) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ Integer.toString(characteristicType.getDataType().value()) + COMMA
 			+ Integer.toString(characteristicType.getSort().value());
 		return sql;
@@ -89,8 +89,8 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			DatabaseString.setString(preparedStatement, ++i, characteristicType.getCodename(), 32);
-			DatabaseString.setString(preparedStatement, ++i, characteristicType.getDescription(), 256);
+			DatabaseString.setString(preparedStatement, ++i, characteristicType.getCodename(), SIZE_CODENAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, characteristicType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 			preparedStatement.setInt( ++i, characteristicType.getDataType().value());
 			preparedStatement.setInt( ++i, characteristicType.getSort().value());
 		} catch (SQLException sqle) {
@@ -136,9 +136,9 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	
 	
 
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
-		switch (retrieve_kind) {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+//		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
+		switch (retrieveKind) {
 			default:
 				return null;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.25 2004/12/10 15:39:32 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.26 2004/12/10 16:07:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/12/10 15:39:32 $
+ * @version $Revision: 1.26 $, $Date: 2004/12/10 16:07:30 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -86,9 +86,9 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		PortType portType = fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getCodename(), 32) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getDescription(), 256) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getName(), 64) + APOSTOPHE
+			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE
             + portType.getSort().value() + COMMA;
 	}
 	
@@ -210,9 +210,9 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		PortType portType = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {			
-			DatabaseString.setString(preparedStatement, ++i, portType.getCodename(), 32);
-			DatabaseString.setString(preparedStatement, ++i, portType.getDescription(), 256);
-			DatabaseString.setString(preparedStatement, ++i, portType.getName(), 64);
+			DatabaseString.setString(preparedStatement, ++i, portType.getCodename(), SIZE_CODENAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, portType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, portType.getName(), SIZE_NAME_COLUMN);
             preparedStatement.setInt( ++i, portType.getSort().value());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);

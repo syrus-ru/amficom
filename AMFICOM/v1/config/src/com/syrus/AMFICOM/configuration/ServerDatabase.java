@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.34 2004/12/10 15:39:32 bob Exp $
+ * $Id: ServerDatabase.java,v 1.35 2004/12/10 16:07:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/12/10 15:39:32 $
+ * @version $Revision: 1.35 $, $Date: 2004/12/10 16:07:30 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -93,8 +93,8 @@ public class ServerDatabase extends StorableObjectDatabase {
 		Server server = fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(server.getDomainId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getName(), 64) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getDescription(), 256) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(server.getUserId());
 	}
 
@@ -128,8 +128,8 @@ public class ServerDatabase extends StorableObjectDatabase {
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, server.getDomainId());
-			DatabaseString.setString(preparedStatement, ++i, server.getName(), 64);
-			DatabaseString.setString(preparedStatement, ++i, server.getDescription(), 256);
+			DatabaseString.setString(preparedStatement, ++i, server.getName(), SIZE_NAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, server.getDescription(), SIZE_DESCRIPTION_COLUMN);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, server.getUserId());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
