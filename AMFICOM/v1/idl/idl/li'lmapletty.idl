@@ -1,5 +1,5 @@
 /*
- * $Id: li'lmapletty.idl,v 1.9 2004/12/08 08:48:42 bass Exp $
+ * $Id: li'lmapletty.idl,v 1.10 2004/12/09 15:40:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ module com {
 							boolean topological;
 							general::corba::IdentifierSeq_Transferable characteristicIds;
 					};
+					typedef sequence<SiteNodeType_Transferable> SiteNodeTypeSeq_Transferable;
 				
 					// was MapLinkProtoElement
 					// MapLinkProtoElement is physical line type such as tunnel, subway
@@ -57,6 +58,7 @@ module com {
 							
 							general::corba::IdentifierSeq_Transferable characteristicIds;
 					};
+					typedef sequence<PhysicalLinkType_Transferable> PhysicalLinkTypeSeq_Transferable;
 					
 					enum AbstractNodeSort {
 							NODE_SORT_SITE,
@@ -199,7 +201,7 @@ module com {
 							general::corba::IdentifierSeq_Transferable characteristicIds;
 					};					
 					
-					typedef sequence<PhysicalLink_Transferable> PhysicalLinkSeq;
+					typedef sequence<PhysicalLink_Transferable> PhysicalLinkSeq_Transferable;
 					
 					// was MapPipePathElement
 					// MapPipePathElement is collector
@@ -238,6 +240,8 @@ module com {
 							general::corba::IdentifierSeq_Transferable collectorIds;
 							//CollectorSeq collectors;
 					};
+					
+					typedef sequence<Map_Transferable> MapSeq_Transferable;
 
 					struct MapView_Transferable {
 							general::corba::StorableObject_Transferable header;
