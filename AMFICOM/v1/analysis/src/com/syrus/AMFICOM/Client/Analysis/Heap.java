@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.6 2005/03/31 18:41:17 saa Exp $
+ * $Id: Heap.java,v 1.7 2005/04/01 09:22:31 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/03/31 18:41:17 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/01 09:22:31 $
  * @module
  */
 public class Heap
@@ -99,25 +99,24 @@ public class Heap
 	{
 		bsHash.put(key, bs);
 	}
-	public static BellcoreStructure getBSPrimaryTrace()
-	{
+	public static BellcoreStructure getBSPrimaryTrace() {
 		return (BellcoreStructure )bsHash.get(PRIMARY_TRACE_KEY);
 	}
-	public static void setBSPrimaryTrace(BellcoreStructure primaryTrace)
-	{
+	public static void setBSPrimaryTrace(BellcoreStructure primaryTrace) {
 		bsHash.put(PRIMARY_TRACE_KEY, primaryTrace);
 	}
-	public static BellcoreStructure getBSReferenceTrace()
-	{
+	public static BellcoreStructure getBSEtalonTrace() {
+		return (BellcoreStructure )bsHash.get(ETALON_TRACE_KEY);
+	}
+	public static void setBSEtalonTrace(BellcoreStructure etalonTrace) {
+		bsHash.put(ETALON_TRACE_KEY, etalonTrace);
+	}
+	public static BellcoreStructure getBSReferenceTrace() {
 		return (BellcoreStructure )bsHash.get(REFERENCE_TRACE_KEY);
 	}
 	public static void setBSReferenceTrace(BellcoreStructure primaryTrace)
 	{
 		bsHash.put(REFERENCE_TRACE_KEY, primaryTrace);
-	}
-	public static void setBSEtalonTrace(BellcoreStructure etalonTrace)
-	{
-		bsHash.put(ETALON_TRACE_KEY, etalonTrace);
 	}
 	public static Map getAllBSMap()
 	{
