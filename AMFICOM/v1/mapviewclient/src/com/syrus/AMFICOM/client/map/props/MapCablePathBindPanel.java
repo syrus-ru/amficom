@@ -255,8 +255,8 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		endLinkComboBox.setContents(emnelinks, true);
 		endLinkComboBox.setSelected(null);
 		
-		startLinkComboBox.setEditable(startNode.equals(path.getEndNode()));
-		endLinkComboBox.setEditable(endNode.equals(path.getStartNode()));
+		startLinkComboBox.setEnabled(startNode.equals(path.getEndNode()));
+		endLinkComboBox.setEnabled(endNode.equals(path.getStartNode()));
 	}
 
 	private void addBinding()
