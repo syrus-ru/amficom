@@ -116,7 +116,12 @@ public class AlarmDescriptorEvent extends StubResource {
 			Map paths = Pool.getMap(SchemePath.typ);
 			for (Iterator it = paths.values().iterator(); it.hasNext(); ) {
 				SchemePath path = (SchemePath) it.next();
-				if (path.path.equals(tp)) {
+				/**
+				 * @todo remove comment when SchemePath moves to new TransmissionPath
+				 */
+
+//				if (path.path.equals(tp))
+				{
 					decompositor = new PathDecompositor(path);
 					break;
 				}
