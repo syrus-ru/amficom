@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServerTest.java,v 1.7 2004/09/23 11:27:20 max Exp $
+ * $Id: ClientMeasurementServerTest.java,v 1.8 2004/09/24 09:39:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,25 +8,22 @@
 
 package com.syrus.AMFICOM.cmserver.test;
 
-import java.util.Date;
-
 import com.syrus.AMFICOM.cmserver.CMServerImpl;
 import com.syrus.AMFICOM.cmserver.DatabaseContextSetup;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/09/23 11:27:20 $
- * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2004/09/24 09:39:22 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 public class ClientMeasurementServerTest {
@@ -58,14 +55,18 @@ public class ClientMeasurementServerTest {
 			Identifier id = new Identifier("Null_0");
 
 			Identifier domainId = new Identifier("Domain_19");
-			this.accessIdentifier_Transferable.domain_id = (Identifier_Transferable) domainId.getTransferable();
+			this.accessIdentifier_Transferable.domain_id = (Identifier_Transferable) domainId
+					.getTransferable();
 			this.accessIdentifier_Transferable.user_id = (Identifier_Transferable) id.getTransferable();
 			this.accessIdentifier_Transferable.session_id = (Identifier_Transferable) id.getTransferable();
 
-            
-            
-            testTransmitMeasurementX();
-			testTransmitMeasurementX();
+			Identifier_Transferable identifier_Transferable = this.server
+					.getGeneratedIdentifier(ObjectEntities.TEST_ENTITY_CODE);
+			Identifier identifier = new Identifier(identifier_Transferable);
+			System.out.println("fetch " + identifier.toString());
+
+			//testTransmitMeasurementX();
+			//testTransmitMeasurementX();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -73,14 +74,14 @@ public class ClientMeasurementServerTest {
 
 	public void testTransmitMeasurementX() throws AMFICOMRemoteException {
 		//      Checking method transmitMeasurements(null , acc)
-        System.out.println("Checking method transmitMeasurementTypeX");
-        Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
-        long time0 = System.currentTimeMillis();
-        MeasurementType_Transferable[] measurementType_Transferables = server
-                .transmitMeasurementTypes(identifier_Transferables, accessIdentifier_Transferable);
-        long time1 = System.currentTimeMillis();
-        System.out.println("1. transmit " + measurementType_Transferables.length
-                + " identifier_Transferabl(es) for " + (time1 - time0) + " ms");
+		System.out.println("Checking method transmitMeasurementTypeX");
+		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
+		long time0 = System.currentTimeMillis();
+		MeasurementType_Transferable[] measurementType_Transferables = server
+				.transmitMeasurementTypes(identifier_Transferables, accessIdentifier_Transferable);
+		long time1 = System.currentTimeMillis();
+		System.out.println("1. transmit " + measurementType_Transferables.length
+				+ " identifier_Transferabl(es) for " + (time1 - time0) + " ms");
 	}
 
 	public static void main(String[] args) {
