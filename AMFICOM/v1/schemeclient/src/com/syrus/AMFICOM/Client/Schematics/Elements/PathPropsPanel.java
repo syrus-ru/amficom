@@ -11,6 +11,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,8 +65,8 @@ public class PathPropsPanel extends JPanel
 
 	private String undoCompName;
 	private TransmissionPathType undoTypeId;
-	private List undoPathLinks;
-	private Map undoPeOrder;
+	private SortedSet undoPathElements;
+
 	boolean skip_change = false;
 
 //	public ArrayList elements_to_add = new ArrayList();
@@ -231,13 +232,15 @@ public class PathPropsPanel extends JPanel
 		undoCompName = path.getName();
 		undoTypeId = (TransmissionPathType) path.getTransmissionPath().getType();
 
-		undoPathLinks = new ArrayList();
-		undoPeOrder = new HashMap();
-		for (int i = 0 ; i < path.getPathElementsAsArray().length; i++)
-		{
-			PathElement pe = path.getPathElementsAsArray()[i];
-			undoPeOrder.put(pe.getAbstractSchemeElement(), new Integer(pe.getSequentialNumber()));
-			undoPathLinks.add(pe);
+		final SortedSet pathElements = path.getPathElements();
+		/*
+		 * Save a backup copy.
+		 */
+		if (this.undoPathElements == null)
+			this.undoPathElements = new TreeSet(pathElements);
+		else {
+			this.undoPathElements.clear();
+			this.undoPathElements.addAll(pathElements);
 		}
 		updateUI();
 		skip_change = false;
@@ -351,19 +354,10 @@ public class PathPropsPanel extends JPanel
 		}
 	}
 
-	public void undo()
-	{
-		path.getTransmissionPath().setType(undoTypeId);
-		path.setName(undoCompName);
-
-		PathElement[] pes = new PathElement[undoPathLinks.size()];
-		Iterator it = undoPathLinks.iterator();
-		for (int i = 0; i < pes.length; i++ )
-		{
-			pes[i] = (PathElement)it.next();
-			pes[i].setSequentialNumber(((Integer)undoPeOrder.get(pes[i].getAbstractSchemeElement())).intValue());
-		}
-		path.setPathElementsAsArray(pes);
+	public void undo() {
+		this.path.getTransmissionPath().setType(this.undoTypeId);
+		this.path.setName(this.undoCompName);
+		this.path.setPathElements(this.undoPathElements);
 	}
 
 	public String getCompName()

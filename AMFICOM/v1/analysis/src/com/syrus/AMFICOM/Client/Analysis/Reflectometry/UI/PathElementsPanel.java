@@ -18,9 +18,9 @@ public final class PathElementsPanel extends AnalysisPanel
 
 	SchemePath path;
 	private PathDecomposer decomposer;
-	PathElement startPE;
-	PathElement endPE;
-	PathElement activePE;
+	private PathElement startPathElement;
+	private PathElement endPathElement;
+	private PathElement activePathElement;
 
 	public PathElementsPanel(PathElementsLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
@@ -37,33 +37,26 @@ public final class PathElementsPanel extends AnalysisPanel
 //			decompositor.setTotalOpticalLength(ep[ep.length - 1].end * deltaX);
 	}
 
-	protected void setGraphBounds(int start, int end)
-	{
+	protected void setGraphBounds(final int start, final int end) {
 		super.setGraphBounds(start, end);
-
-		if (path != null)
-		{
-			startPE = decomposer.getPathElementByOpticalDistance(start * deltaX);
-			if (decomposer.hasPreviousPathElement(startPE))
-				startPE = decomposer.getPreviousPathElement(startPE);
-			endPE = decomposer.getPathElementByOpticalDistance(end * deltaX);
-			if (decomposer.hasNextPathElement(endPE))
-				endPE = decomposer.getNextPathElement(endPE);
+		if (this.path != null) {
+			this.startPathElement = this.path.getPathElementByOpticalDistance(start * this.deltaX);
+			if (this.path.hasPreviousPathElement(this.startPathElement))
+				this.startPathElement = this.path.getPreviousPathElement(this.startPathElement);
+			this.endPathElement = this.path.getPathElementByOpticalDistance(end * this.deltaX);
+			if (this.path.hasNextPathElement(this.endPathElement))
+				this.endPathElement = this.path.getNextPathElement(this.endPathElement);
 		}
 	}
 
-	protected void this_mousePressed(MouseEvent e)
-	{
-		startpos = e.getPoint();
-		currpos = e.getPoint();
+	protected void this_mousePressed(MouseEvent e) {
+		this.startpos = e.getPoint();
+		this.currpos = e.getPoint();
 
-		if (paint_path_elements && path != null)
-		{
-			if (currpos.y < 10)
-			{
-				setting_active_pe = true;
-				double optd = deltaX * coord2index(currpos.x);
-				activePE = decomposer.getPathElementByOpticalDistance(optd);
+		if (this.paint_path_elements && this.path != null) {
+			if (this.currpos.y < 10) {
+				this.setting_active_pe = true;
+				this.activePathElement = this.path.getPathElementByOpticalDistance(this.deltaX * coord2index(this.currpos.x));
 				return;
 			}
 		}
@@ -88,33 +81,26 @@ public final class PathElementsPanel extends AnalysisPanel
 		super.this_mouseReleased(e);
 	}
 
-
-	public void paint(Graphics g)
-	{
+	public void paint(final Graphics g) {
 		super.paint(g);
 
-		if (paint_path_elements && path != null)
-		{
-			if (startPE == null || endPE == null)
-				setGraphBounds(start, end);
+		if (this.paint_path_elements && this.path != null) {
+			if (this.startPathElement == null || this.endPathElement == null)
+				setGraphBounds(this.start, this.end);
 
-			List links = Arrays.asList(path.getPathElementsAsArray());
-			for (Iterator it = links.listIterator(links.indexOf(startPE)); it.hasNext();)
-			{
-				PathElement pe = (PathElement)it.next();
-				if (pe.equals(endPE))
+			for (final Iterator pathElementIterator = this.path.getPathElements().tailSet(this.startPathElement).iterator(); pathElementIterator.hasNext();) {
+				final PathElement pathElement = (PathElement) pathElementIterator.next();
+				if (pathElement == this.endPathElement)
 					break;
 
-				if (pe.equals(activePE))
+				if (pathElement == this.activePathElement)
 					g.setColor(Color.RED);
-				else if (pe.getPathElementKind().value() == PathElementKind._SCHEME_CABLE_LINK)
+				else if (pathElement.getPathElementKind().value() == PathElementKind._SCHEME_CABLE_LINK)
 					g.setColor(Color.GREEN);
 				else
 					g.setColor(Color.BLUE);
 
-				double[] d = this.decomposer.getOpticalDistanceFromStart(pe);
-				if (d.length != 2)
-					continue;
+				double d[] = this.path.getOpticalDistanceFromStart(pathElement);
 				final int start1 = index2coord((int)Math.round(d[0] / this.deltaX));
 				final int end1 = index2coord((int)Math.round(d[1] / this.deltaX));
 				g.drawLine(start1, 3, start1, 5);
