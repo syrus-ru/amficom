@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.75 2005/03/23 18:18:10 arseniy Exp $
+ * $Id: Equipment.java,v 1.76 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,11 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
@@ -38,8 +37,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/03/23 18:18:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.76 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -61,14 +60,14 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	private String                 swVersion;
 	private String                 inventoryNumber;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private StorableObjectDatabase equipmentDatabase;
 
 	public Equipment(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 
 		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
 		try {
@@ -104,7 +103,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.inventoryNumber = new String(et.inventoryNumber);
 
 		try {
-			this.characteristics = new ArrayList(et.characteristic_ids.length);
+			this.characteristics = new HashSet(et.characteristic_ids.length);
 			for (int i = 0; i < et.characteristic_ids.length; i++)
 				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(et.characteristic_ids[i]), true));
 		}
@@ -154,7 +153,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.swVersion = swVersion;
 		this.inventoryNumber = inventoryNumber;
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 
 		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
 	}
@@ -285,17 +284,17 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		}
 	}
 
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableCollection(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
 	}
@@ -335,8 +334,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.inventoryNumber = inventoryNumber;
 	}
 
-	public List getDependencies() {
-		return Collections.EMPTY_LIST;
+	public Set getDependencies() {
+		return Collections.EMPTY_SET;
 	}
 
 	public String getSupplier() {
@@ -444,7 +443,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	/**
 	 * @see com.syrus.AMFICOM.configuration.MonitoredDomainMember#getMonitoredElementIds()
 	 */
-	public Collection getMonitoredElementIds() {
+	public Set getMonitoredElementIds() {
 		// TODO Implement
 		throw new UnsupportedOperationException("Not implemented yet");
 	}
@@ -456,7 +455,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	/**
 	 * @return <code>Collection&lt;Port&gt;</code>
 	 */
-	public Collection getPorts() {
+	public Set getPorts() {
 		try {
 			return ConfigurationStorableObjectPool
 					.getStorableObjectsByCondition(
@@ -466,7 +465,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 							true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
-			return Collections.EMPTY_LIST;
+			return Collections.EMPTY_SET;
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.70 2005/03/21 16:18:18 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.71 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Set;
@@ -25,8 +24,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/03/21 16:18:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.71 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -155,16 +154,16 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws ApplicationException {
+	public static Set getStorableObjects(Set objectIds, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
-	public static Collection getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
+	public static Set getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
 			throws ApplicationException {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static Collection getStorableObjectsByConditionButIds(Collection ids,
+	public static Set getStorableObjectsByConditionButIds(Set ids,
 								StorableObjectCondition condition,
 								boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
@@ -222,8 +221,8 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws ApplicationException {
-		Collection loadedList = null;
+	protected Set loadStorableObjects(Short entityCode, Set ids) throws ApplicationException {
+		Set loadedList = null;
 		switch (entityCode.shortValue()) {
 				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadCableThreadTypes(ids);
@@ -274,8 +273,8 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		return loadedList;
 	}
 
-	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
-		Collection loadedCollection = null;
+	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+		Set loadedCollection = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
@@ -329,7 +328,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 	//public static void save()
 
-	protected void saveStorableObjects(short code, Collection collection, boolean force) throws ApplicationException {
+	protected void saveStorableObjects(short code, Set collection, boolean force) throws ApplicationException {
 		if (!collection.isEmpty()) {
 			boolean alone = (collection.size() == 1);
 			switch (code) {
@@ -445,7 +444,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(Collection objects) throws IllegalDataException {
+	public static void delete(Set objects) throws IllegalDataException {
 		instance.deleteImpl(objects);
 	}
 
@@ -453,7 +452,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		cObjectLoader.delete(id);
 	}
 
-	protected void deleteStorableObjects(Collection objects) throws IllegalDataException {
+	protected void deleteStorableObjects(Set objects) throws IllegalDataException {
 		cObjectLoader.delete(objects);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeWrapper.java,v 1.6 2005/03/03 13:55:20 bob Exp $
+ * $Id: PortTypeWrapper.java,v 1.7 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/03 13:55:20 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/01 07:57:28 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -84,7 +85,7 @@ public final class PortTypeWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_SORT))
 				type.setSort(PortTypeSort.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_CHARACTERISTICS))
-				type.setCharacteristics((List) value);
+				type.setCharacteristics((Set) value);
 		}
 	}
 
@@ -103,7 +104,7 @@ public final class PortTypeWrapper implements StorableObjectWrapper {
 
 	public Class getPropertyClass(String key) {
 		if (key.equals(COLUMN_CHARACTERISTICS))
-			return List.class;
+			return Set.class;
 		return String.class;
 	}
 }

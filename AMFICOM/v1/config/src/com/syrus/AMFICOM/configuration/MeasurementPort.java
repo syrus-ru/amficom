@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.40 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.41 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,11 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -37,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class MeasurementPort extends StorableObject implements Characterizable, TypedObject {
@@ -52,7 +50,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 	private Identifier kisId;
 	private Identifier portId;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private StorableObjectDatabase measurementPortDatabase;
 
@@ -60,7 +58,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		super(id);
 
 		this.measurementPortDatabase = ConfigurationDatabaseContext.measurementPortDatabase;
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 		try {
 			this.measurementPortDatabase.retrieve(this);
 		}
@@ -85,7 +83,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		this.kisId = new Identifier(mpt.kis_id);
 		this.portId = new Identifier(mpt.port_id);	
 		try {
-			this.characteristics = new ArrayList(mpt.characteristic_ids.length);
+			this.characteristics = new HashSet(mpt.characteristic_ids.length);
 			for (int i = 0; i < mpt.characteristic_ids.length; i++)
 				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(mpt.characteristic_ids[i]), true));
 		}
@@ -115,7 +113,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		this.description = description;
 		this.kisId = kisId;
 		this.portId = portId;
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 
 		this.measurementPortDatabase = ConfigurationDatabaseContext.measurementPortDatabase;
 	}
@@ -219,8 +217,8 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		this.portId = portId;
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public Set getDependencies() {
+		Set dependencies = new HashSet();
 		dependencies.add(this.type);
 		dependencies.add(this.kisId);
 		dependencies.add(this.portId);
@@ -251,17 +249,17 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		}
 	}
 
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableCollection(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
 	}

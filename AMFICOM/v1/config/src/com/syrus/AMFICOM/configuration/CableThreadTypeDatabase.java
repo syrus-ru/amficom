@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.28 2005/03/16 16:36:09 bass Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.29 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -28,8 +28,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/03/16 16:36:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -143,7 +143,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 		super.insertEntity(cableThreadType);		
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException,
+	public void insert(Set storableObjects) throws IllegalDataException,
 			CreateObjectException {
 		super.insertEntities(storableObjects);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.22 2005/03/16 16:36:09 bass Exp $
+ * $Id: CableThreadType.java,v 1.23 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,19 +8,19 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.*;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.22 $, $Date: 2005/03/16 16:36:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -221,10 +221,10 @@ public final class CableThreadType extends StorableObjectType {
 		super.changed = true;
 	}
 
-	public List getDependencies() {
-		final List dependencies = new ArrayList(2);
+	public Set getDependencies() {
+		final Set dependencies = new HashSet(2);
 		dependencies.add(this.linkType);
 		dependencies.add(this.cableLinkType);
-		return Collections.unmodifiableList(dependencies);
+		return Collections.unmodifiableSet(dependencies);
 	}
 }

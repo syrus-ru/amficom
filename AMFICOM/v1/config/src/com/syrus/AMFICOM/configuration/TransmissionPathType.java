@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.33 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: TransmissionPathType.java,v 1.34 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,11 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -34,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -45,13 +44,13 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 
 	private String					name;
 
-	private Collection					characteristics;
+	private Set					characteristics;
 
 	private StorableObjectDatabase	transmissionPathTypeDatabase;
 
 	public TransmissionPathType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 		this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.transmissionPathTypeDatabase;
 		try {
 			this.transmissionPathTypeDatabase.retrieve(this);
@@ -64,7 +63,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 		super(tptt.header, new String(tptt.codename), new String(tptt.description));
 		this.name = tptt.name;
 		try {
-			this.characteristics = new ArrayList(tptt.characteristic_ids.length);
+			this.characteristics = new HashSet(tptt.characteristic_ids.length);
 			for (int i = 0; i < tptt.characteristic_ids.length; i++)
 				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(
 					new Identifier(tptt.characteristic_ids[i]), true));
@@ -84,7 +83,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId,
 				version, codename, description);
 		this.name = name;
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 
 		this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.transmissionPathTypeDatabase;
 	}
@@ -148,8 +147,8 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 		this.name = name;
 	}
 
-	public List getDependencies() {
-		return Collections.EMPTY_LIST;
+	public Set getDependencies() {
+		return Collections.EMPTY_SET;
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
@@ -166,17 +165,17 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 		}
 	}
 
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableCollection(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
 	}

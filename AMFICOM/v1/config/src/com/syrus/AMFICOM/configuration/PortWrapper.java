@@ -1,5 +1,5 @@
 /*
- * $Id: PortWrapper.java,v 1.5 2005/02/03 08:37:01 bob Exp $
+ * $Id: PortWrapper.java,v 1.6 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.corba.PortSort;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 08:37:01 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 07:57:28 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -92,7 +93,7 @@ public final class PortWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_EQUIPMENT_ID))
 				port.setEquipmentId((Identifier) value);
 			else if (key.equals(COLUMN_CHARACTERISTICS))
-				port.setCharacteristics((List) value);
+				port.setCharacteristics((Set) value);
 		}
 	}
 
@@ -111,7 +112,7 @@ public final class PortWrapper implements StorableObjectWrapper {
 
 	public Class getPropertyClass(String key) {
 		if (key.equals(COLUMN_CHARACTERISTICS))
-			return List.class;
+			return Set.class;
 		return String.class;
 	}
 }

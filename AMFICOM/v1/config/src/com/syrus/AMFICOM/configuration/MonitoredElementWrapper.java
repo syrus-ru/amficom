@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementWrapper.java,v 1.6 2005/02/03 08:37:01 bob Exp $
+ * $Id: MonitoredElementWrapper.java,v 1.7 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,15 +11,17 @@ package com.syrus.AMFICOM.configuration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/03 08:37:01 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/01 07:57:28 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -97,7 +99,7 @@ public final class MonitoredElementWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_LOCAL_ADDRESS))
 				me.setLocalAddress((String) value);
 			if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER)) {
-				List meDomainMemeberIds = new ArrayList(((List) value).size());
+				Set meDomainMemeberIds = new HashSet(((Set) value).size());
 				for (Iterator it = ((List) value).iterator(); it.hasNext();)
 					meDomainMemeberIds.add(new Identifier((String) it.next()));
 				me.setMonitoredDomainMemberIds(meDomainMemeberIds);
@@ -120,7 +122,7 @@ public final class MonitoredElementWrapper implements StorableObjectWrapper {
 
 	public Class getPropertyClass(String key) {
 		if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER))
-			return List.class;
+			return Set.class;
 		return String.class;
 	}
 }

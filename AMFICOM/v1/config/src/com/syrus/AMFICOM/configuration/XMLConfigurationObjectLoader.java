@@ -1,5 +1,5 @@
 /*
- * $Id: XMLConfigurationObjectLoader.java,v 1.9 2005/02/25 07:02:44 bob Exp $
+ * $Id: XMLConfigurationObjectLoader.java,v 1.10 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -24,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/25 07:02:44 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 07:57:28 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -43,7 +42,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void delete(Collection ids) throws IllegalDataException {
+	public void delete(Set ids) throws IllegalDataException {
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			this.configurationXML.delete(id);
@@ -55,8 +54,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (CableLinkType) this.loadStorableObject(id);
 	}
 
-	public Collection loadCableLinkTypes(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadCableLinkTypes(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -64,7 +63,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadCableLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadCableLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -72,8 +71,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (CableThread) this.loadStorableObject(id);
 	}
 
-	public Collection loadCableThreads(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadCableThreads(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -81,7 +80,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadCableThreadsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadCableThreadsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -89,8 +88,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (CableThreadType) this.loadStorableObject(id);
 	}
 
-	public Collection loadCableThreadTypes(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadCableThreadTypes(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -98,7 +97,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadCableThreadTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadCableThreadTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -106,8 +105,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (Equipment) this.loadStorableObject(id);
 	}
 
-	public Collection loadEquipments(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadEquipments(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -115,7 +114,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadEquipmentsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadEquipmentsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -123,8 +122,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (EquipmentType) this.loadStorableObject(id);
 	}
 
-	public Collection loadEquipmentTypes(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadEquipmentTypes(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -132,7 +131,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadEquipmentTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadEquipmentTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -140,8 +139,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (KIS) this.loadStorableObject(id);
 	}
 
-	public Collection loadKISs(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadKISs(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -149,7 +148,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadKISsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -157,8 +156,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (Link) this.loadStorableObject(id);
 	}
 
-	public Collection loadLinks(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadLinks(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -166,7 +165,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadLinksButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadLinksButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -174,8 +173,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (LinkType) this.loadStorableObject(id);
 	}
 
-	public Collection loadLinkTypes(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadLinkTypes(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -183,7 +182,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -191,8 +190,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (MeasurementPort) this.loadStorableObject(id);
 	}
 
-	public Collection loadMeasurementPorts(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadMeasurementPorts(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -200,7 +199,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadMeasurementPortsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadMeasurementPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -208,8 +207,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (MeasurementPortType) this.loadStorableObject(id);
 	}
 
-	public Collection loadMeasurementPortTypes(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadMeasurementPortTypes(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -217,7 +216,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadMeasurementPortTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -225,8 +224,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (MonitoredElement) this.loadStorableObject(id);
 	}
 
-	public Collection loadMonitoredElements(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadMonitoredElements(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -234,7 +233,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadMonitoredElementsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -242,8 +241,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (Port) this.loadStorableObject(id);
 	}
 
-	public Collection loadPorts(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadPorts(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -251,7 +250,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadPortsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -259,8 +258,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (PortType) this.loadStorableObject(id);
 	}
 
-	public Collection loadPortTypes(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadPortTypes(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -268,7 +267,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadPortTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -276,8 +275,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (TransmissionPath) this.loadStorableObject(id);
 	}
 
-	public Collection loadTransmissionPaths(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadTransmissionPaths(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -285,7 +284,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadTransmissionPathsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadTransmissionPathsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -293,8 +292,8 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return (TransmissionPathType) this.loadStorableObject(id);
 	}
 
-	public Collection loadTransmissionPathTypes(Collection ids) throws ApplicationException {
-		Collection list = new ArrayList(ids.size());
+	public Set loadTransmissionPathTypes(Set ids) throws ApplicationException {
+		Set list = new HashSet(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			list.add(this.loadStorableObject(id));
@@ -302,7 +301,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return list;
 	}
 
-	public Collection loadTransmissionPathTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadTransmissionPathTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
@@ -317,7 +316,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 
 	}
 
-	public void saveCableLinkTypes(Collection list, boolean force) throws ApplicationException {
+	public void saveCableLinkTypes(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 
 	}
@@ -327,7 +326,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveCableThreads(Collection list, boolean force) throws ApplicationException {
+	public void saveCableThreads(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 
@@ -336,7 +335,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveCableThreadTypes(Collection list, boolean force) throws ApplicationException {
+	public void saveCableThreadTypes(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 
@@ -345,7 +344,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveEquipments(Collection list, boolean force) throws ApplicationException {
+	public void saveEquipments(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 
@@ -354,7 +353,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveEquipmentTypes(Collection list, boolean force) throws ApplicationException {
+	public void saveEquipmentTypes(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 
@@ -363,7 +362,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveKISs(Collection list, boolean force) throws ApplicationException {
+	public void saveKISs(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 
@@ -372,7 +371,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveLinks(Collection list, boolean force) throws ApplicationException {
+	public void saveLinks(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 
@@ -381,7 +380,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveLinkTypes(Collection list, boolean force) throws ApplicationException {
+	public void saveLinkTypes(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 
@@ -390,7 +389,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveMeasurementPorts(Collection list, boolean force) throws ApplicationException {
+	public void saveMeasurementPorts(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 
@@ -400,7 +399,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveMeasurementPortTypes(Collection list, boolean force) throws ApplicationException {
+	public void saveMeasurementPortTypes(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 
@@ -410,7 +409,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveMonitoredElements(Collection list, boolean force) throws ApplicationException {
+	public void saveMonitoredElements(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 
@@ -419,7 +418,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void savePorts(Collection list, boolean force) throws ApplicationException {
+	public void savePorts(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 
@@ -428,7 +427,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void savePortTypes(Collection list, boolean force) throws ApplicationException {
+	public void savePortTypes(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 
@@ -438,7 +437,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveTransmissionPaths(Collection list, boolean force) throws ApplicationException {
+	public void saveTransmissionPaths(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 
@@ -448,7 +447,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveTransmissionPathTypes(Collection list, boolean force) throws ApplicationException {
+	public void saveTransmissionPathTypes(Set list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 
@@ -456,7 +455,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return this.configurationXML.retrieve(id);
 	}
 
-	private Collection loadStorableObjectButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	private Set loadStorableObjectButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		return this.configurationXML.retrieveByCondition(ids, condition);
 	}
 
@@ -464,7 +463,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.updateObject(storableObject, force, SessionContext.getAccessIdentity().getUserId());
 	}
 
-	private void saveStorableObjects(Collection storableObjects, boolean force) throws ApplicationException {
+	private void saveStorableObjects(Set storableObjects, boolean force) throws ApplicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			this.saveStorableObject(storableObject, force);

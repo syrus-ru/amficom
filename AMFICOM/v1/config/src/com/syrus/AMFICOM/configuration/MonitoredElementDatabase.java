@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.62 2005/03/31 10:00:09 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.63 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,13 +13,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
@@ -41,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/03/31 10:00:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.63 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -140,7 +139,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveMonitoredDomainMemberIds(MonitoredElement monitoredElement) throws RetrieveObjectException {
-		Collection mdmIds = new ArrayList();
+		Set mdmIds = new HashSet();
 		String meIdStr = DatabaseIdentifier.toSQLString(monitoredElement.getId());
 		int meSort = monitoredElement.getSort().value();
 		String column;
@@ -211,18 +210,18 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		monitoredElement.setMonitoredDomainMemberIds0(mdmIds);
 	}
 
-	private void retrieveMonitoredDomainMemberIdsByOneQuery(Collection monitoredElements) throws RetrieveObjectException {
+	private void retrieveMonitoredDomainMemberIdsByOneQuery(Set monitoredElements) throws RetrieveObjectException {
 		Map sortedMonitoredElements = new HashMap();
-		Collection monitoredElementsOneSort;
+		Set monitoredElementsOneSort;
 		Integer meSort;
 
 		MonitoredElement monitoredElement;
 		for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
 			monitoredElement = (MonitoredElement) it.next();
 			meSort = new Integer(monitoredElement.getSort().value());
-			monitoredElementsOneSort = (Collection) sortedMonitoredElements.get(meSort);
+			monitoredElementsOneSort = (Set) sortedMonitoredElements.get(meSort);
 			if (monitoredElementsOneSort == null) {
-				monitoredElementsOneSort = new LinkedList();
+				monitoredElementsOneSort = new HashSet();
 				sortedMonitoredElements.put(meSort, monitoredElementsOneSort);
 			}
 			monitoredElementsOneSort.add(monitoredElement);
@@ -230,7 +229,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 
 		for (Iterator it = sortedMonitoredElements.keySet().iterator(); it.hasNext();) {
 			meSort = (Integer) it.next();
-			monitoredElementsOneSort = (Collection) sortedMonitoredElements.get(meSort);
+			monitoredElementsOneSort = (Set) sortedMonitoredElements.get(meSort);
 			switch (meSort.intValue()) {
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
 					this.retrieveMDMIdsByOneQuery(monitoredElementsOneSort,
@@ -249,7 +248,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void retrieveMDMIdsByOneQuery(Collection monitoredElements, String linkTable, String linkColumn)
+	private void retrieveMDMIdsByOneQuery(Set monitoredElements, String linkTable, String linkColumn)
 			throws RetrieveObjectException {
 		if (monitoredElements == null || monitoredElements.isEmpty())
 			return;
@@ -263,12 +262,12 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 
 		Identifier meId;
-		Collection mdmIds;
+		Set mdmIds;
 		MonitoredElement monitoredElement;
 		for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
 			monitoredElement = (MonitoredElement) it.next();
 			meId = monitoredElement.getId();
-			mdmIds = (Collection) mdmIdsMap.get(meId);
+			mdmIds = (Set) mdmIdsMap.get(meId);
 
 			monitoredElement.setMonitoredDomainMemberIds0(mdmIds);
 		}
@@ -296,7 +295,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
 			MonitoredElement monitoredElement = (MonitoredElement) iter.next();
@@ -305,7 +304,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	private void insertMonitoredDomainMemberIds(MonitoredElement monitoredElement) throws CreateObjectException {
-		Collection mdmIds = monitoredElement.getMonitoredDomainMemberIds();
+		Set mdmIds = monitoredElement.getMonitoredDomainMemberIds();
 		Identifier meId = monitoredElement.getId();
 		int meSort = monitoredElement.getSort().value();
 		
@@ -389,30 +388,30 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
-		this.updateMonitoredDomainMemberIds(Collections.singletonList(storableObject));
+		this.updateMonitoredDomainMemberIds(Collections.singleton(storableObject));
 	}
 
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
+	public void update(Set storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		this.updateMonitoredDomainMemberIds(storableObjects);
 	}
 
-	private void updateMonitoredDomainMemberIds(Collection monitoredElements) throws UpdateObjectException {
+	private void updateMonitoredDomainMemberIds(Set monitoredElements) throws UpdateObjectException {
 		if (monitoredElements == null || monitoredElements.isEmpty())
 			return;
 
 		Map sortedMonitoredElements = new HashMap();
-		Collection monitoredElementsOneSort;
+		Set monitoredElementsOneSort;
 		Integer meSort;
 
 		MonitoredElement monitoredElement;
 		for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
 			monitoredElement = (MonitoredElement) it.next();
 			meSort = new Integer(monitoredElement.getSort().value());
-			monitoredElementsOneSort = (Collection) sortedMonitoredElements.get(meSort);
+			monitoredElementsOneSort = (Set) sortedMonitoredElements.get(meSort);
 			if (monitoredElementsOneSort == null) {
-				monitoredElementsOneSort = new LinkedList();
+				monitoredElementsOneSort = new HashSet();
 				sortedMonitoredElements.put(meSort, monitoredElementsOneSort);
 			}
 			monitoredElementsOneSort.add(monitoredElement);
@@ -420,7 +419,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 
 		for (Iterator it = sortedMonitoredElements.keySet().iterator(); it.hasNext();) {
 			meSort = (Integer) it.next();
-			monitoredElementsOneSort = (Collection) sortedMonitoredElements.get(meSort);
+			monitoredElementsOneSort = (Set) sortedMonitoredElements.get(meSort);
 			switch (meSort.intValue()) {
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
 					this.updateMDMIds(monitoredElementsOneSort,
@@ -439,7 +438,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void updateMDMIds(Collection monitoredElements, String linkTable, String linkColumn) throws UpdateObjectException {
+	private void updateMDMIds(Set monitoredElements, String linkTable, String linkColumn) throws UpdateObjectException {
 		if (monitoredElements == null || monitoredElements.isEmpty())
 			return;
 
@@ -447,7 +446,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		try {
 			for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
 				MonitoredElement monitoredElement = this.fromStorableObject((StorableObject) it.next());
-				Collection mdmIds = monitoredElement.getMonitoredDomainMemberIds();
+				Set mdmIds = monitoredElement.getMonitoredDomainMemberIds();
 				mdmIdsMap.put(monitoredElement.getId(), mdmIds);
 			}
 
@@ -524,8 +523,8 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Collection collection = super.retrieveByCondition(conditionQuery);
+	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveMonitoredDomainMemberIdsByOneQuery(collection);
 		return collection;
 	}

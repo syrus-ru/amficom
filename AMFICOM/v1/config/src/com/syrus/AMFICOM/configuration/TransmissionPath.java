@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.51 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.52 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,11 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
@@ -36,8 +34,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 /**
- * @version $Revision: 1.51 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -51,14 +49,14 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 	private Identifier startPortId;
 	private Identifier finishPortId;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private StorableObjectDatabase transmissionPathDatabase;
 
 	public TransmissionPath(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 
 		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
 		try {
@@ -79,7 +77,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		this.finishPortId = new Identifier(tpt.finish_port_id);
 
 		try {
-			this.characteristics = new ArrayList(tpt.characteristic_ids.length);
+			this.characteristics = new HashSet(tpt.characteristic_ids.length);
 			for (int i = 0; i < tpt.characteristic_ids.length; i++)
 				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(tpt.characteristic_ids[i]), true));
 
@@ -108,7 +106,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		this.startPortId = startPortId;
 		this.finishPortId = finishPortId;
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 
 		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
 	}
@@ -218,8 +216,8 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		this.finishPortId = finishPortId;
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public Set getDependencies() {
+		Set dependencies = new HashSet();
 		dependencies.add(this.startPortId);
 		dependencies.add(this.finishPortId);
 		return dependencies;
@@ -239,17 +237,17 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		}
 	}
 
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableCollection(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
 	}	
@@ -286,7 +284,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 	/**
 	 * @see com.syrus.AMFICOM.configuration.MonitoredDomainMember#getMonitoredElementIds()
 	 */
-	public Collection getMonitoredElementIds() {
+	public Set getMonitoredElementIds() {
 		//TODO Implement
 		throw new UnsupportedOperationException("Not implemented yet");
 	}

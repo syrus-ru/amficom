@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.8 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: EquipmentWrapper.java,v 1.9 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,14 +12,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public final class EquipmentWrapper implements StorableObjectWrapper {
@@ -151,7 +152,7 @@ public final class EquipmentWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_INVENTORY_NUMBER))
 				equipment.setInventoryNumber((String) value);
 			else if (key.equals(COLUMN_CHARACTERISTICS))
-				equipment.setCharacteristics((List)value);
+				equipment.setCharacteristics((Set)value);
 		}
 	}
 
@@ -170,7 +171,7 @@ public final class EquipmentWrapper implements StorableObjectWrapper {
 
 	public Class getPropertyClass(String key) {
 		if (key.equals(COLUMN_CHARACTERISTICS) || key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY))
-			return List.class;
+			return Set.class;
 		return String.class;
 	}
 }

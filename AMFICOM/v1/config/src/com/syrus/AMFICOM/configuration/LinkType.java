@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.35 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: LinkType.java,v 1.36 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,11 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
@@ -34,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -52,14 +51,14 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 	private String manufacturerCode;
 	private Identifier imageId;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private StorableObjectDatabase linkTypeDatabase;
 
 	public LinkType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 		this.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
 		try {
 			this.linkTypeDatabase.retrieve(this);
@@ -78,7 +77,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		this.imageId = new Identifier(ltt.image_id);
 		this.name = ltt.name;
 		try {
-			this.characteristics = new ArrayList(ltt.characteristic_ids.length);
+			this.characteristics = new HashSet(ltt.characteristic_ids.length);
 			for (int i = 0; i < ltt.characteristic_ids.length; i++)
 				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(ltt.characteristic_ids[i]), true));
 		}
@@ -112,7 +111,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
 		this.imageId = imageId;
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 
 		this.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
 	}
@@ -226,8 +225,8 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		this.name = name;
 	}
 
-	public List getDependencies() {
-		return Collections.EMPTY_LIST;
+	public Set getDependencies() {
+		return Collections.EMPTY_SET;
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
@@ -244,17 +243,17 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		}
 	}
 
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableCollection(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.47 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.48 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,11 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -35,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.48 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -47,14 +45,14 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 	private String                     manufacturer;
 	private String                     manufacturerCode;
 
-	private Collection                       characteristics;
+	private Set                       characteristics;
 
 	private StorableObjectDatabase     equipmentTypeDatabase;
 
 	public EquipmentType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 		this.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
 		try {
 			this.equipmentTypeDatabase.retrieve(this);
@@ -72,7 +70,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		this.manufacturer = ett.manufacturer;
 		this.manufacturerCode = ett.manufacturerCode;
 		try {
-			this.characteristics = new ArrayList(ett.characteristic_ids.length);
+			this.characteristics = new HashSet(ett.characteristic_ids.length);
 			for (int i = 0; i < ett.characteristic_ids.length; i++)
 				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(ett.characteristic_ids[i]), true));
 		}
@@ -102,7 +100,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		this.name = name;
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
-		this.characteristics = new LinkedList();
+		this.characteristics = new HashSet();
 
 		this.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
 	}
@@ -188,8 +186,8 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		this.name = name;
 	}
 
-	public List getDependencies() {
-		return Collections.EMPTY_LIST;
+	public Set getDependencies() {
+		return Collections.EMPTY_SET;
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
@@ -206,17 +204,17 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		}
 	}
 
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableCollection(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
 	}

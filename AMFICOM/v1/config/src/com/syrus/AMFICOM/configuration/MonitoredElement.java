@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.39 2005/02/16 21:26:05 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.40 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,11 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
@@ -31,8 +29,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/02/16 21:26:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -44,14 +42,14 @@ public class MonitoredElement extends DomainMember {
 	private String name;
 	private String localAddress;
 
-	private Collection monitoredDomainMemberIds;
+	private Set monitoredDomainMemberIds;
 
 	private StorableObjectDatabase monitoredElementDatabase;
 
 	public MonitoredElement(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.monitoredDomainMemberIds = new ArrayList();
+		this.monitoredDomainMemberIds = new HashSet();
 		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
 		try {
 			this.monitoredElementDatabase.retrieve(this);
@@ -68,7 +66,7 @@ public class MonitoredElement extends DomainMember {
 		this.sort = met.sort.value();
 		this.localAddress = new String(met.local_address);
 
-		this.monitoredDomainMemberIds = new ArrayList(met.monitored_domain_member_ids.length);
+		this.monitoredDomainMemberIds = new HashSet(met.monitored_domain_member_ids.length);
 		this.name = met.name;
 
 		for (int i= 0; i < met.monitored_domain_member_ids.length; i++)
@@ -85,7 +83,7 @@ public class MonitoredElement extends DomainMember {
 								 Identifier measurementPortId,
 								 int sort,
 								 String localAddress,
-								 Collection monitoredDomainMemberIds) {
+								 Set monitoredDomainMemberIds) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -98,7 +96,7 @@ public class MonitoredElement extends DomainMember {
 		this.sort = sort;
 		this.localAddress = localAddress;
 
-		this.monitoredDomainMemberIds = new ArrayList();
+		this.monitoredDomainMemberIds = new HashSet();
 		this.setMonitoredDomainMemberIds0(monitoredDomainMemberIds);
 
 		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
@@ -119,7 +117,7 @@ public class MonitoredElement extends DomainMember {
 												  Identifier measurementPortId,
 												  MonitoredElementSort sort,
 												  String localAddress,
-												  Collection monitoredDomainMemberIds) throws CreateObjectException {
+												  Set monitoredDomainMemberIds) throws CreateObjectException {
 		if (creatorId == null || domainId == null || name == null || measurementPortId == null || 
 				localAddress == null || monitoredDomainMemberIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -173,17 +171,17 @@ public class MonitoredElement extends DomainMember {
 		this.localAddress = localAddress;
 	}
 
-	public Collection getMonitoredDomainMemberIds() {
-		return Collections.unmodifiableCollection(this.monitoredDomainMemberIds);
+	public Set getMonitoredDomainMemberIds() {
+		return Collections.unmodifiableSet(this.monitoredDomainMemberIds);
 	}
 
-	protected synchronized void setMonitoredDomainMemberIds0(Collection monitoredDomainMemberIds) {
+	protected synchronized void setMonitoredDomainMemberIds0(Set monitoredDomainMemberIds) {
 		this.monitoredDomainMemberIds.clear();
 		if (monitoredDomainMemberIds != null)
 			this.monitoredDomainMemberIds.addAll(monitoredDomainMemberIds);
 	}
 
-	protected synchronized void setMonitoredDomainMemberIds(Collection monitoredDomainMemberIds) {
+	protected synchronized void setMonitoredDomainMemberIds(Set monitoredDomainMemberIds) {
 		this.setMonitoredDomainMemberIds0(monitoredDomainMemberIds);
 		super.changed = true;
 	}
@@ -219,8 +217,8 @@ public class MonitoredElement extends DomainMember {
 		super.changed = true;
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public Set getDependencies() {
+		Set dependencies = new HashSet();
 		dependencies.addAll(this.monitoredDomainMemberIds);
 		dependencies.add(this.measurementPortId);
 		return dependencies;

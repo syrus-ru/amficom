@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.25 2005/03/16 12:47:56 bass Exp $
+ * $Id: CableLinkType.java,v 1.26 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,12 +7,11 @@
  */
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
@@ -35,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/03/16 12:47:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public final class CableLinkType extends AbstractLinkType implements Characterizable {
@@ -49,14 +48,14 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	private String manufacturerCode;
 	private Identifier imageId;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private StorableObjectDatabase cableLinkTypeDatabase;
 
 	public CableLinkType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 
 		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.cableLinkTypeDatabase;
 		try {
@@ -75,8 +74,8 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		this.imageId = new Identifier(cltt.image_id);
 		this.name = cltt.name;
 		try {
-			this.characteristics = new ArrayList(cltt.characteristic_ids.length);
-			List characteristicIds = new ArrayList(cltt.characteristic_ids.length);
+			this.characteristics = new HashSet(cltt.characteristic_ids.length);
+			Set characteristicIds = new HashSet(cltt.characteristic_ids.length);
 			for (int i = 0; i < cltt.characteristic_ids.length; i++)
 				characteristicIds.add(new Identifier(cltt.characteristic_ids[i]));
 			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
@@ -112,7 +111,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		this.manufacturerCode = manufacturerCode;
 		this.imageId = imageId;
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 
 		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.cableLinkTypeDatabase;
 	}
@@ -241,21 +240,21 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		this.name = name;
 	}
 
-	public Collection getCableThreadTypes() {
+	public Set getCableThreadTypes() {
 		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CABLETHREADTYPE_ENTITY_CODE);
-		Collection cableThreadTypes;
+		Set cableThreadTypes;
 		try {
 			cableThreadTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(lic, true);
 		}
 		catch (final ApplicationException ae) {
 			Log.errorException(ae);
-			cableThreadTypes = Collections.EMPTY_LIST;
+			cableThreadTypes = Collections.EMPTY_SET;
 		}
 		return cableThreadTypes;
 	}
 
-	public List getDependencies() {
-		return Collections.EMPTY_LIST;
+	public Set getDependencies() {
+		return Collections.EMPTY_SET;
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
@@ -272,17 +271,17 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		}
 	}
 
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableCollection(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.65 2005/03/23 19:05:02 arseniy Exp $
+ * $Id: KIS.java,v 1.66 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,11 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
@@ -37,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/03/23 19:05:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.66 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -56,14 +54,14 @@ public final class KIS extends DomainMember implements Characterizable {
 	private String hostname;
 	private short tcpPort;
 
-	private Collection characteristics;
+	private Set characteristics;
 
 	private StorableObjectDatabase kisDatabase;
 
 	public KIS(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 		try {
 			this.kisDatabase.retrieve(this);
@@ -84,7 +82,7 @@ public final class KIS extends DomainMember implements Characterizable {
 		this.tcpPort = kt.tcp_port;
 
 		try {
-			this.characteristics = new ArrayList(kt.characteristic_ids.length);
+			this.characteristics = new HashSet(kt.characteristic_ids.length);
 			for (int i = 0; i < kt.characteristic_ids.length; i++)
 				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(kt.characteristic_ids[i]), true));
 		}
@@ -119,7 +117,7 @@ public final class KIS extends DomainMember implements Characterizable {
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
 
-		this.characteristics = new ArrayList();
+		this.characteristics = new HashSet();
 
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 	}
@@ -241,8 +239,8 @@ public final class KIS extends DomainMember implements Characterizable {
 		this.mcmId = mcmId;
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public Set getDependencies() {
+		Set dependencies = new HashSet();
 		dependencies.add(this.equipmentId);
 		dependencies.add(this.mcmId);
 		return dependencies;
@@ -262,17 +260,17 @@ public final class KIS extends DomainMember implements Characterizable {
 		}
 	}
 
-	public Collection getCharacteristics() {
-		return Collections.unmodifiableCollection(this.characteristics);
+	public Set getCharacteristics() {
+		return Collections.unmodifiableSet(this.characteristics);
 	}
 
-	public void setCharacteristics0(final Collection characteristics) {
+	public void setCharacteristics0(final Set characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final Collection characteristics) {
+	public void setCharacteristics(final Set characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
 	}
@@ -311,9 +309,9 @@ public final class KIS extends DomainMember implements Characterizable {
 	}
 
 	/**
-	 * @return <code>Collection&lt;MeasurementPort&gt;</code>
+	 * @return <code>Set&lt;MeasurementPort&gt;</code>
 	 */
-	public Collection getMeasurementPorts() {
+	public Set getMeasurementPorts() {
 		try {
 			return ConfigurationStorableObjectPool
 					.getStorableObjectsByCondition(
@@ -323,7 +321,7 @@ public final class KIS extends DomainMember implements Characterizable {
 							true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
-			return Collections.EMPTY_LIST;
+			return Collections.EMPTY_SET;
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.13 2005/02/14 09:15:45 arseniy Exp $
+ * $Id: CableThread.java,v 1.14 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,9 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
+import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.CableThread_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -25,11 +26,10 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/14 09:15:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class CableThread extends DomainMember implements TypedObject {
@@ -155,8 +155,8 @@ public class CableThread extends DomainMember implements TypedObject {
 		return this.type;
 	}
 
-	public List getDependencies() {
-		return Collections.singletonList(this.type);
+	public Set getDependencies() {
+		return Collections.singleton(this.type);
 	}
 	/**
 	 * @param name The name to set.

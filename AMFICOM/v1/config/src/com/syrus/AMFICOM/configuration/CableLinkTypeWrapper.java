@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeWrapper.java,v 1.9 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: CableLinkTypeWrapper.java,v 1.10 2005/04/01 07:57:28 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,14 +12,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 07:57:28 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public final class CableLinkTypeWrapper implements StorableObjectWrapper {
@@ -110,7 +111,7 @@ public final class CableLinkTypeWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_IMAGE_ID))
 				type.setImageId((Identifier) value);
 			else if (key.equals(COLUMN_CHARACTERISTICS)) 
-				type.setCharacteristics((List) value);
+				type.setCharacteristics((Set) value);
 		}
 	}
 
@@ -129,7 +130,7 @@ public final class CableLinkTypeWrapper implements StorableObjectWrapper {
 
 	public Class getPropertyClass(String key) {
 		if (key.equals(StorableObjectWrapper.COLUMN_CHARACTERISTICS))
-			return List.class;
+			return Set.class;
 		return String.class;
 	}
 }
