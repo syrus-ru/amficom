@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.3 2005/02/08 11:55:12 max Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.4 2005/02/08 11:56:21 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,11 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/08 11:55:12 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/08 11:56:21 $
  * @author $Author: max $
  * @module general_v1
  */

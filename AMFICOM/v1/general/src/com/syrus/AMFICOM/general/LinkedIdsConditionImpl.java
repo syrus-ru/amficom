@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.1 2005/01/14 18:04:32 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.2 2005/02/08 11:55:48 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/14 18:04:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/02/08 11:55:48 $
+ * @author $Author: max $
  * @module general_v1
  */
 class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
@@ -30,7 +31,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 	}
 
 	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
-		this.identifier = identifier;
+		this.linkedIds = Collections.singletonList(identifier);
 		this.entityCode = entityCode;
 	}
 
@@ -48,19 +49,11 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 				if (object instanceof Characteristic) {
 					Characteristic characteristic = (Characteristic) object;
 					Identifier id = characteristic.getCharacterizedId();
-					if (this.linkedIds == null) {
-						Identifier characterizedId = this.identifier;
+					for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+						Identifier characterizedId = (Identifier) it.next();
 						if (characterizedId.equals(id)) {
 							condition = true;
 							break;
-						}
-					} else {
-						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-							Identifier characterizedId = (Identifier) it.next();
-							if (characterizedId.equals(id)) {
-								condition = true;
-								break;
-							}
 						}
 					}
 				}
