@@ -1,5 +1,5 @@
 /*
- * $Id: JPreferencesManagerFrame.java,v 1.3 2004/06/01 14:09:15 bass Exp $
+ * $Id: JPreferencesManagerFrame.java,v 1.4 2004/07/07 14:41:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,11 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/06/01 14:09:15 $
+ * @version $Revision: 1.4 $, $Date: 2004/07/07 14:41:59 $
  * @author $Author: bass $
  * @module util
  */
-public class JPreferencesManagerFrame extends javax.swing.JFrame {
+public class JPreferencesManagerFrame extends JFrame {
 	static {
 		try {
 			Class.forName(PreferencesManager.class.getName());
