@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.26 2004/09/21 14:28:14 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.27 2004/10/05 13:02:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/09/21 14:28:14 $
+ * @version $Revision: 1.27 $, $Date: 2004/10/05 13:02:17 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -420,7 +420,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
         try {
             list = retrieveButIds(ids, buffer.toString());
         }  catch (IllegalDataException ide) {           
-            Log.debugMessage("MeasurementDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+            Log.debugMessage("MeasurementDatabase.retrieveButIdsByTest | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
         }
         
         return list;

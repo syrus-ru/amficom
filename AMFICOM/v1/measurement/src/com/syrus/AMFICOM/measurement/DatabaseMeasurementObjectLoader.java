@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.11 2004/10/04 13:17:12 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.12 2004/10/05 13:02:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/10/04 13:17:12 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/05 13:02:17 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -336,9 +336,9 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
 		List list = null;
 		try {
-			if (condition instanceof MeasurementCondition){
-				MeasurementCondition measurementCondition = (MeasurementCondition)condition;
-				list = database.retrieveButIdsByTest(ids, measurementCondition.getTestIds());
+			if (condition instanceof LinkedIdsCondition){
+				LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+				list = database.retrieveButIdsByTest(ids, linkedIdsCondition.getTestIds());
 			} else if (condition instanceof DomainCondition){
 				DomainCondition domainCondition = (DomainCondition)condition;
 				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain()); 
@@ -409,7 +409,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		ResultDatabase database = (ResultDatabase)MeasurementDatabaseContext.getResultDatabase();
 		List list = null;
 		try {
-			if (condition instanceof DomainCondition){
+			if (condition instanceof LinkedIdsCondition){
+				LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+				list = database.retrieveButIdsByMeasurement(ids, linkedIdsCondition.getMeasurementIds());
+			} else if (condition instanceof DomainCondition){
 				DomainCondition domainCondition = (DomainCondition)condition;
 				list = database.retrieveButIdsByDomain(ids, domainCondition.getDomain());
 			} else {
