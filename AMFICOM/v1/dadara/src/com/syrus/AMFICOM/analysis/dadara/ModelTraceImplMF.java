@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceImplMF.java,v 1.1 2005/02/08 11:46:27 saa Exp $
+ * $Id: ModelTraceImplMF.java,v 1.2 2005/02/15 06:51:48 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/02/08 11:46:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/15 06:51:48 $
  * @module
  */
 public class ModelTraceImplMF extends ModelTrace
@@ -39,7 +39,4 @@ public class ModelTraceImplMF extends ModelTrace
 		this.mf = mf;
 		this.length = length;
 	}
-
-	//@todo: cannot easily implement this method now due to strange contract of ModelTrace.getYArray 
-	//public double[] getYArray(int x0, int N);
 }

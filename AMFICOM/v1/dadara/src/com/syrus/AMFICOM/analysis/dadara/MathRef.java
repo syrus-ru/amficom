@@ -294,4 +294,3 @@ public class MathRef
 		return 1;
 	}
 }
-
