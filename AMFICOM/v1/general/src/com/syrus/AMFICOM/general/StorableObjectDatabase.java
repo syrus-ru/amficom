@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.15 2004/09/03 08:04:03 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.16 2004/09/03 08:06:51 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/09/03 08:04:03 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2004/09/03 08:06:51 $
+ * @author $Author: max $
  * @module general_v1
  */
 
@@ -178,7 +178,10 @@ public abstract class StorableObjectDatabase {
 			String mesg = this.getEnityName() + "Database.insertEntities | Cannot insert "
 					+ this.getEnityName() + " '" + storableObjectIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
-		} finally {
+		} catch(UpdateObjectException uoe){
+			throw new CreateObjectException(uoe);
+		}
+		finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
@@ -229,7 +232,7 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract void setEntityForPreparedStatement(	StorableObject storableObject,
 								PreparedStatement preparedStatement)
-			throws IllegalDataException, SQLException;
+			throws IllegalDataException, UpdateObjectException;
 
 	protected void checkAndUpdateEntity(StorableObject localStorableObject) throws IllegalDataException, UpdateObjectException {
 		/**
