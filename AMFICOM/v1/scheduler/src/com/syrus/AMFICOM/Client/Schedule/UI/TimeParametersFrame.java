@@ -11,8 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Calendar;
@@ -112,21 +112,13 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 		private Test				test;
 
 		public TimeParametersPanel() {
-			try {
-				init();
-			} catch (ApplicationException e) {
-				SchedulerModel.showErrorMessage(this, e);
-			}
+			init();
 		}
 
 		public TimeParametersPanel(ApplicationContext aContext) {
 			this.aContext = aContext;
 			initModule(aContext.getDispatcher());
-			try {
-				init();
-			} catch (ApplicationException e) {
-				SchedulerModel.showErrorMessage(this, e);
-			}
+			init();
 		}
 
 		private void initModule(Dispatcher dispatcher) {
@@ -142,7 +134,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 			this.dispatcher.unregister(this, SchedulerModel.COMMAND_DATA_REQUEST);
 		}
 
-		private void init() throws ApplicationException {
+		private void init() {
 			final GridBagConstraints gbc = new GridBagConstraints();
 			gbc.weightx = 1.0;
 			gbc.weighty = 0.0;
@@ -232,7 +224,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 						endDateButton.setEnabled(true);
 
 						//extraParamPanel.setVisible(false);
-						revalidate();
+						TimeParametersPanel.this.revalidate();
 					}
 				}
 			});
@@ -243,7 +235,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 
 			this.timeStamps = new ObjList(TemporalPatternController.getInstance(), TemporalPatternController.KEY_NAME);
 
-			this.timeStamps.addMouseListener(new MouseListener() {
+			this.timeStamps.addMouseListener(new MouseAdapter() {
 
 				public void mouseClicked(MouseEvent e) {
 					if (e.getClickCount() == 2) {
@@ -259,10 +251,8 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 																		JOptionPane.OK_CANCEL_OPTION,
 																		JOptionPane.PLAIN_MESSAGE);
 							if (result == JOptionPane.OK_OPTION) {
-								System.out.println("was:" + template);
 								temporalPattern.removeTemplate(template);
 								String template2 = demo.getTemplate();
-								System.out.println("now:" + template2);
 								temporalPattern.addTemplate(template2);
 								DefaultListModel model = (DefaultListModel) jlist.getModel();
 								model.removeAllElements();
@@ -277,24 +267,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 
 				}
 
-				public void mouseEntered(MouseEvent e) {
-					// TODO Auto-generated method stub
-
-				}
-
-				public void mouseExited(MouseEvent e) {
-					// TODO Auto-generated method stub
-
-				}
-
-				public void mousePressed(MouseEvent e) {
-					this.mouseClicked(e);
-
-				}
-
-				public void mouseReleased(MouseEvent e) {
-					this.mouseClicked(e);
-				}
+				
 			});
 
 			final JScrollPane timeStampPane = new JScrollPane(this.timeStamps);
@@ -313,9 +286,6 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 						//							timeStamp.removeTemplate(template);
 						String template = demo.getTemplate();
 						System.out.println("now:" + template);
-						/**
-						 * FIXME !!! create id and so on
-						 */
 						try {
 							RISDSessionInfo sessionInterface = (RISDSessionInfo) TimeParametersPanel.this.aContext.getSessionInterface();							
 							TemporalPattern temporalPattern = TemporalPattern.createInstance(sessionInterface.getUserIdentifier(), null,
@@ -624,7 +594,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 
 		void showStartCalendar() {
 			Calendar cal = Calendar.getInstance();
-			Date date = (Date) startDateSpinner.getModel().getValue();
+			Date date = (Date) this.startDateSpinner.getModel().getValue();
 			cal.setTime(date);
 
 			JDialog calendarDialog = CalendarUI.createDialogInstance(Environment.getActiveWindow(), cal, true, true);

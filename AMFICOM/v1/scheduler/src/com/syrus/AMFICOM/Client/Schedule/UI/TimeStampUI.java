@@ -1,18 +1,29 @@
 
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.awt.CardLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JSplitPane;
+import javax.swing.JToggleButton;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
-import com.syrus.AMFICOM.measurement.TemporalPattern.TimeLine;
 
 /*
  * 
@@ -394,99 +405,6 @@ public class TimeStampUI {
 		return splitPane;
 	}
 
-	public static void main(String[] args) {
-
-		final TemporalPattern timeStamp;
-		//Calendar c = Calendar.getInstance();
-		try {
-			timeStamp = TemporalPattern.createInstance(null, null, new LinkedList());
-		
-			// 5);
-			timeStamp.addTemplate("*/20 0-9 */2 2,5 0,6"); //$NON-NLS-1$
-			timeStamp.addTemplate("*/20 * * * *");
-			//timeStamp.addTemplate("*/10 * * * *");
-	
-			final JFrame frame = new JFrame();
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			//		java.util.List descriptions = new LinkedList();
-			JList list = new JList(new DefaultListModel());
-			DefaultListModel model = (DefaultListModel) list.getModel();
-			for (Iterator it = timeStamp.getTimeLines().iterator(); it.hasNext();) {
-				TimeLine timeLine = (TimeLine) it.next();
-				//			descriptions.add(timeLine.getDescription());
-				model.addElement(timeLine);
-			}
-			
-			//		JList list = new JList(descriptions.toArray());
-			JScrollPane scrollPane = new JScrollPane(list);
-	
-			final TimeStampUI demo = new TimeStampUI();
-			list.addMouseListener(new MouseListener() {
-	
-				public void mouseClicked(MouseEvent e) {
-					final JList jlist = (JList) e.getSource();
-					TimeLine timeLine = (TimeLine) jlist.getSelectedValue();
-					//JFrame mainFrame = demo.getTimeLineEditor();
-					final String template = timeLine.getTemplate();
-					JSplitPane pane = demo.getPane();
-					demo.setTimeLine(timeLine);
-					int result = JOptionPane.showConfirmDialog(frame, pane, "Time Line", JOptionPane.OK_CANCEL_OPTION);
-					if (result == JOptionPane.OK_OPTION) {
-						System.out.println("was:" + template);
-						timeStamp.removeTemplate(template);
-						String template2 = demo.getTemplate();
-						System.out.println("now:" + template2);
-						timeStamp.addTemplate(template2);
-						DefaultListModel model = (DefaultListModel) jlist.getModel();
-						model.removeAllElements();
-						for (Iterator it = timeStamp.getTimeLines().iterator(); it.hasNext();) {
-							TimeLine timeLine2 = (TimeLine) it.next();
-							model.addElement(timeLine2);
-						}
-	
-					}
-	
-				}
-	
-				public void mouseEntered(MouseEvent e) {
-					// TODO Auto-generated method stub
-	
-				}
-	
-				public void mouseExited(MouseEvent e) {
-					// TODO Auto-generated method stub
-	
-				}
-	
-				public void mousePressed(MouseEvent e) {
-					this.mouseClicked(e);
-	
-				}
-	
-				public void mouseReleased(MouseEvent e) {
-					this.mouseClicked(e);
-				}
-			});
-			frame.getContentPane().add(scrollPane);
-			frame.pack();
-			frame.setVisible(true);
-	
-			//		TimeStampUI demo = new TimeStampUI();
-			//		JFrame mainFrame = demo.getTimeLineEditor();
-			//		demo.setTimeLine((TimeLine)
-			// timeStamp.getTimeLines().iterator().next());
-			//		mainFrame.addWindowListener(new WindowAdapter() {
-			//
-			//			public void windowClosing(WindowEvent e) {
-			//				System.exit(0);
-			//			}
-			//		});
-		} catch (CreateObjectException e1) {
-			e1.printStackTrace();
-		}
-
-	}
-
 	public JFrame getTimeLineEditor() {
 		if (this.mainFrame == null) {
 			this.mainFrame = new JFrame(this.timeLine == null ? "TimeLine" : this.timeLine //$NON-NLS-1$
@@ -721,7 +639,7 @@ public class TimeStampUI {
 		this.timeLine = timeLine;
 		if (timeLine.getDateList() == null)
 			timeLine.parseTemplate();
-		String description = timeLine.getDescription();
+//		String description = timeLine.getDescription();
 		//this.mainFrame.setTitle(description);
 		TemporalPattern.TimeValue minute = timeLine.getMinutes();
 		TemporalPattern.TimeValue hour = timeLine.getHours();

@@ -251,6 +251,10 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				this.unsavedTests.put(test.getId(), test);
 			}
 			this.timer.restart();
+			
+			if (this.measurements == null)
+				this.measurements = new HashMap();
+			
 		} else {
 			// System.out.println("selectedTest is NOT changed");
 			this.tests.put(test.getId(), test);

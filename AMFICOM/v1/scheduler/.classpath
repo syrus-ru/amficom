@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path=""/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/map.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/analysis.jar"/>
@@ -25,5 +25,5 @@
 	<classpathentry kind="src" path="/util"/>
 	<classpathentry kind="src" path="/idl_v1"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/mapview.jar"/>
-	<classpathentry kind="output" path=""/>
+	<classpathentry kind="output" path="classes"/>
 </classpath>
