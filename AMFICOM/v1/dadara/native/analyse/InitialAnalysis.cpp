@@ -50,9 +50,9 @@ InitialAnalysis::InitialAnalysis(
 	double minimalWeld,			//минимальный уровень неотражательного события
 	double minimalConnector,	//минимальный уровень отражательного события
 	double minimalEndingSplash,	//минимальный уровень последнего отражения
-	double maximalNoise,		//максимальный уровень шума
-	int waveletType,			//номер используемого вейвлета
-	double formFactor,			//формфактор отражательного события
+	double maximalNoise,		// <unused>
+	int waveletType,			// <unused>
+	double formFactor,			// <unused>
 	int reflectiveSize,			//характерная длина отражательного события
 	int nonReflectiveSize,		//характерная длина неотражательного события
 	int lengthTillZero,			//вычисленная заранее длина ( ==0 -> найти самим)
@@ -67,9 +67,6 @@ InitialAnalysis::InitialAnalysis(
 	this->minimalWeld			= minimalWeld;
 	this->minimalConnector		= minimalConnector;
 	this->minimalEndingSplash	= minimalEndingSplash;
-	this->maximalNoise			= maximalNoise;
-	this->waveletType			= waveletType;
-	this->formFactor			= formFactor;
 	this->data_length			= data_length;
 	this->data					= data;
     this->reflectiveSize		= reflectiveSize;
@@ -125,12 +122,12 @@ InitialAnalysis::~InitialAnalysis()
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::performAnalysis()
 {
-    wn = getWLetNorma(wlet_width, waveletType);
-
 	// выполняем вейвлет-преобразование
 	// f_wlet - вейвлет-образ функции, wlet_width - ширина вейвлета, wn - норма вейвлета
-    performTransformation(data, 0, lastNonZeroPoint, f_wlet, wlet_width, wn);
-	centerWletImage(f_wlet);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
+    wn = getWLetNorma(wlet_width);
+    performTransformationOnly(data, 0, lastNonZeroPoint, f_wlet, wlet_width, wn);
+	calcAverageFactor(f_wlet, wlet_width);
+	centerWletImageOnly(f_wlet, wlet_width, 0, lastNonZeroPoint);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
     { // ищём все всплески вейвлет-образа
       ArrList splashes; // создаем пустой ArrList
       findAllWletSplashes(f_wlet, splashes); // заполняем массив splashes объектами
@@ -236,11 +233,10 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
 #endif
 }
 // -------------------------------------------------------------------------------------------------
-void InitialAnalysis::centerWletImage(double* fw)
-{	f_wlet_avrg = calcWletMeanValue(fw, -0.5, 0, 500);
-	for(int i=0; i<lastNonZeroPoint; i++)
-    {	f_wlet[i] -= f_wlet_avrg;
-    }
+void InitialAnalysis::calcAverageFactor(double* fw, int scale)
+{
+	double f_wlet_avrg = calcWletMeanValue(fw, -0.5, 0, 500);
+	average_factor = f_wlet_avrg / getWLetNorma2(scale);
 }
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::fillNoiseArray(double *y, int data_length, int N, double Neff, double *outNoise)
@@ -266,13 +262,31 @@ int InitialAnalysis::getLastPoint()
 //------------------------------------------------------------------------------------------------------------
 // f- исходная ф-ция,
 // f_wlet - вейвлет-образ
-void InitialAnalysis::performTransformation(double* f, int begin, int end, double* f_wlet, int freq, double norma)
+void InitialAnalysis::performTransformationAndCenter(double* f, int begin, int end, double* f_wlet, int scale, double norma)
+{
+	// transform
+	performTransformationOnly(f, begin, end, f_wlet, scale, norma);
+	centerWletImageOnly(f_wlet, scale, begin, end);
+}
+
+void InitialAnalysis::centerWletImageOnly(double* f_wlet, int scale, int begin, int end)
+{
+	// shift (calcAverageFactor must be performed by now!)
+	double f_wlet_avrg = average_factor * getWLetNorma2(scale);
+	for(int i=begin; i<end; i++)
+    {	f_wlet[i] -= f_wlet_avrg;
+    }
+}
+//------------------------------------------------------------------------------------------------------------
+// f- исходная ф-ция,
+// f_wlet - вейвлет-образ
+void InitialAnalysis::performTransformationOnly(double* f, int begin, int end, double* f_wlet, int freq, double norma)
 {	double tmp;
 	int i;
 	double *wLetData = new double[freq * 2 + 1];
 	assert(wLetData);
 	for (i = -freq; i <= freq; i++)
-	{	wLetData[i+freq] = wLet(i, freq, norma, waveletType);
+	{	wLetData[i+freq] = wLet(i, freq, norma);
     }
 	for (i=begin; i<end; i++)
 	{	tmp = 0;
@@ -290,10 +304,10 @@ void InitialAnalysis::performTransformation(double* f, int begin, int end, doubl
 }
 //------------------------------------------------------------------------------------------------------------
 // вычислить среднее значение вейвлет-образа 
-double InitialAnalysis::calcWletMeanValue(double *f, double from, double to, int columns)
+double InitialAnalysis::calcWletMeanValue(double *fw, double from, double to, int columns)
 {   //возможное затухание находится в пределах [0; -0.5] дБ
 	Histogramm* histo = new Histogramm(from, to, columns);
-	histo->init(f, 0, lastNonZeroPoint-1);
+	histo->init(fw, 0, lastNonZeroPoint-1);
 	double mean_att = histo->getMaximumValue();
 	delete histo;
 	return mean_att;
@@ -375,7 +389,7 @@ void InitialAnalysis::correctSpliceCoords(int n)
 return;
 	//prf_b("correctSpliceCoords: enter");
 	const double noise_factor = 0;  // 0 , если мы не учитываем шум в пределах событий
-    const double angle_factor = 1.5; // расширения светового конуса для защиты от низкочастотных помех на больших масштабах
+    const double angle_factor = 1.8; // расширения светового конуса для защиты от низкочастотных помех на больших масштабах
 	const double factor = 1.1; // множитель геометрической прогрессии
 	const int nscale = 20; // количество разных масштабов
 	int width = wlet_width; // frame-width: ширина окна (относительно границы события), в котором мы проводим дополнительный анализ
@@ -392,11 +406,9 @@ return;
     	if(width<=1)
     break;
 		//prf_b("correctSpliceCoords: getWLetNorma");
-	    wn = getWLetNorma(width, waveletType);
-		//prf_b("correctSpliceCoords: performTransformation");
-	   	performTransformation(data, w_l, w_r+1, f_wlet, width, wn);
-		//prf_b("correctSpliceCoords: centerWletImage");
-        centerWletImage(f_wlet);
+	    wn = getWLetNorma(width);
+		//prf_b("correctSpliceCoords: performTransformationAndCenter");
+	   	performTransformationAndCenter(data, w_l, w_r+1, f_wlet, width, wn);
 		//prf_b("correctSpliceCoords: processing");
 		// считаем добавку к шуму ( степень немонотонности от пересечения порога до максимума )
 		// сначала ищём положение экстремума при данном масштабе
@@ -462,9 +474,8 @@ return;
         }
     }
 #ifdef debug_VCL
-    wn = getWLetNorma(wlet_width, waveletType);
-  	performTransformation(data, 0, lastNonZeroPoint, f_wlet, wlet_width, wn);
-    centerWletImage(f_wlet);
+    wn = getWLetNorma(wlet_width);
+  	performTransformationAndCenter(data, 0, lastNonZeroPoint, f_wlet, wlet_width, wn);
 #endif
 	//prf_b("correctSpliceCoords: return");
 }

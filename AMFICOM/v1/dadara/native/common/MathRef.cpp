@@ -28,10 +28,8 @@ void linearize2point (double* y, int begin, int end, double *res)
 	res[1] = y[begin] - res[0] * (double)begin;
 }
 //------------------------------------------------------------------------------------------------------------
-// waveletType ПЕРЕПИСТЬ как function* !!!
-double getWLetNorma(int freq, int waveletType)
-{   assert(waveletType == 0 );// для другого ещё не прописано function*
-	double n = 0;
+double getWLetNorma(int freq)
+{	double n = 0;
 	for(int i = -freq; i <= freq; i++)
     {	n = n + fabs(wLet1(i, freq, 1.));
     }
@@ -39,8 +37,17 @@ double getWLetNorma(int freq, int waveletType)
 	return n;
 }
 //------------------------------------------------------------------------------------------------------------
+double getWLetNorma2(int freq)
+{	double s = 0;
+	for(int i = -freq; i <= freq; i++)
+    {	s = s + wLet1(i, freq, 1.) * i;
+    }
+	s /= 2.;
+	return s;
+}
+//------------------------------------------------------------------------------------------------------------
 // waveletType ПЕРЕПИСТЬ как function* !!!
-double wLet(int arg, int width, double norma, int waveletType)
+double wLet(int arg, int width, double norma)
 {	return  wLet1(arg, width, norma);//!!! от waveletType НИЧЕГО НЕ ЗАВИСИТ 
 }
 //------------------------------------------------------------------------------------------------------------

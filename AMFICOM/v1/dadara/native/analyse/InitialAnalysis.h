@@ -49,7 +49,7 @@ private:
 	double *noise;
 
     double* f_wlet;
-    double f_wlet_avrg; // среднее значение вейвлет-образа (по идее, от масштаба вейвлета не зависит)
+    double average_factor;
 #ifdef debug_VCL
     double* f_tmp; //!!! массив дл€ временного хранени€ обработанной рефлектограммы ( исользуетс€ при отладке )
 #endif
@@ -59,9 +59,6 @@ private:
 	double minimalWeld;
 	double minimalConnector;
 	double minimalEndingSplash;
-	double maximalNoise;
-	int	   waveletType;
-	double formFactor;
 
     int wlet_width; // ширина вейвлета
     int reflectiveSize;// максимальна€ ширина коннектора
@@ -79,9 +76,16 @@ private:
 	void fillNoiseArray(double *y, int data_length, int N, double Neff, double *outNoise);
 	void getNoise(double *noise, int freq);
 
-	void performTransformation(double *y, int begin, int end, double *trans, int freq, double norma);
-	double calcWletMeanValue(double* f, double from, double to, int columns);// вычислить самое попул€рное значение ф-ции
-	void centerWletImage(double* f_wlet);
+	// подготовка среднего значени€
+	double calcWletMeanValue(double* fw, double from, double to, int columns);// вычислить самое попул€рное значение ф-ции fw
+	void calcAverageFactor(double* fw, int scale);
+
+	// выполнение вейвлет-преобразовани€
+	void performTransformationOnly(double *y, int begin, int end, double *trans, int freq, double norma);
+	void performTransformationAndCenter(double *y, int begin, int end, double *trans, int freq, double norma);
+	void centerWletImageOnly(double* f_wlet, int scale, int begin, int end);
+
+	// анализ
     void findAllWletSplashes(double* f_wlet, ArrList& splashes);
     void findEventsBySplashes(ArrList&  splashes);
     void deleteAllEventsAfterLastConnector();
