@@ -2,13 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/util.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/map.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/analysis.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/configureclient.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/corba.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/scheme.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/corbaportable-common.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/activation.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/junit.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/mail.jar"/>
@@ -25,5 +22,9 @@
 	<classpathentry kind="src" path="/config_v1"/>
 	<classpathentry kind="src" path="/measurement_v1"/>
 	<classpathentry kind="src" path="/surveyresource_v1"/>
+	<classpathentry kind="src" path="/corbaportable_v1"/>
+	<classpathentry kind="src" path="/util"/>
+	<classpathentry kind="src" path="/idl_v1"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/mapview.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

@@ -30,6 +30,12 @@ import com.syrus.AMFICOM.Client.General.UI.TimeSpinner;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.measurement.DomainCondition;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TemporalPattern.TimeLine;
@@ -37,13 +43,14 @@ import com.syrus.AMFICOM.measurement.TemporalPattern.TimeLine;
 public class TimeParametersFrame extends JInternalFrame implements OperationListener {
 
 	private static final long	serialVersionUID	= 6562288896016470275L;
-
-	//	private ApplicationContext aContext;
+	
 
 	public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		private static final long	serialVersionUID	= -7975294015403739057L;
 
+		private ApplicationContext aContext;
+		
 		Dispatcher					dispatcher;
 
 		private TimeSpinner			startTimeSpinner;
@@ -69,31 +76,42 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 		JButton						createButton;
 
 		JButton						applyButton;
+		List temporalPatterns;
 
 		private Test				test;
 
 		public TimeParametersPanel() {
-			init();
+			try {
+				init();
+			} catch (ApplicationException e) {
+				SchedulerModel.showErrorMessage(this, e);
+			}
 		}
 
 		public TimeParametersPanel(ApplicationContext aContext) {
-			//		this.aContext = aContext;
+			this.aContext = aContext;
 			initModule(aContext.getDispatcher());
-			init();
+			try {
+				init();
+			} catch (ApplicationException e) {
+				SchedulerModel.showErrorMessage(this, e);
+			}
 		}
 
 		private void initModule(Dispatcher dispatcher) {
 			this.dispatcher = dispatcher;
+			this.dispatcher.register(this, ContextChangeEvent.type);
 			this.dispatcher.register(this, TestUpdateEvent.TYPE);
 			this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 		}
 
 		public void unregisterDispatcher() {
+			this.dispatcher.unregister(this, ContextChangeEvent.type);
 			this.dispatcher.unregister(this, TestUpdateEvent.TYPE);
 			this.dispatcher.unregister(this, SchedulerModel.COMMAND_DATA_REQUEST);
 		}
 
-		private void init() {
+		private void init() throws ApplicationException {
 			final GridBagConstraints gbc = new GridBagConstraints();
 			gbc.weightx = 1.0;
 			gbc.weighty = 0.0;
@@ -190,18 +208,6 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 
 			this.periodicalRadioButton = new JRadioButton(LangModelSchedule.getString("Periodical"));
 
-			final List temporalPatterns = new LinkedList();
-
-			/**
-			 * FIXME !!! remove
-			 */
-			TemporalPattern timeStamp = TemporalPattern.createInstance(null, null, null, new LinkedList());
-			timeStamp.addTemplate("*/20 0-9 */2 2,5 0,6"); //$NON-NLS-1$
-			temporalPatterns.add(timeStamp);
-			TemporalPattern timeStamp2 = TemporalPattern.createInstance(null, null, null, new LinkedList());
-			timeStamp2.addTemplate("*/10 * * * *");
-			temporalPatterns.add(timeStamp2);
-
 			final TimeStampUI demo = new TimeStampUI();
 
 			this.timeStamps = new JList(new DefaultListModel());
@@ -229,7 +235,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 								temporalPattern.addTemplate(template2);
 								DefaultListModel model = (DefaultListModel) jlist.getModel();
 								model.removeAllElements();
-								for (Iterator it = temporalPatterns.iterator(); it.hasNext();) {
+								for (Iterator it = TimeParametersPanel.this.temporalPatterns.iterator(); it.hasNext();) {
 									TemporalPattern pattern = (TemporalPattern) it.next();
 									model.addElement(pattern);
 								}
@@ -260,13 +266,6 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 				}
 			});
 
-			DefaultListModel model = (DefaultListModel) this.timeStamps.getModel();
-			for (Iterator it = temporalPatterns.iterator(); it.hasNext();) {
-				TemporalPattern pattern = (TemporalPattern) it.next();
-				System.out.println(pattern);
-				model.addElement(pattern);
-			}
-
 			final JScrollPane timeStampPane = new JScrollPane(this.timeStamps);
 			timeStampPane.setBorder(BorderFactory.createEtchedBorder());
 
@@ -289,12 +288,12 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 						TemporalPattern temporalPattern = TemporalPattern.createInstance(null, null, null,
 																							new LinkedList());
 						temporalPattern.addTemplate(template);
-						temporalPatterns.add(temporalPattern);
+						TimeParametersPanel.this.temporalPatterns.add(temporalPattern);
 
 						//							timeStamp.addTemplate(template2);
 						DefaultListModel model = (DefaultListModel) TimeParametersPanel.this.timeStamps.getModel();
 						model.removeAllElements();
-						for (Iterator it = temporalPatterns.iterator(); it.hasNext();) {
+						for (Iterator it = TimeParametersPanel.this.temporalPatterns.iterator(); it.hasNext();) {
 							TemporalPattern timeLine2 = (TemporalPattern) it.next();
 							model.addElement(timeLine2);
 						}
@@ -317,10 +316,10 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 					TemporalPattern temporalPattern = (TemporalPattern) TimeParametersPanel.this.timeStamps
 							.getSelectedValue();
 					if (temporalPattern != null) {
-						temporalPatterns.remove(temporalPattern);
+						TimeParametersPanel.this.temporalPatterns.remove(temporalPattern);
 						DefaultListModel model = (DefaultListModel) TimeParametersPanel.this.timeStamps.getModel();
 						model.removeAllElements();
-						for (Iterator it = temporalPatterns.iterator(); it.hasNext();) {
+						for (Iterator it = TimeParametersPanel.this.temporalPatterns.iterator(); it.hasNext();) {
 							TemporalPattern timeLine2 = (TemporalPattern) it.next();
 							model.addElement(timeLine2);
 						}
@@ -492,7 +491,27 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 				if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
 					this.test = tue.test;
 				}
+			} else if (ae instanceof ContextChangeEvent){
+				try {
+					refreshTemporalPatterns();
+				} catch (ApplicationException e) {
+					SchedulerModel.showErrorMessage(this, e);
+				}
 			}
+		}
+		
+		private void refreshTemporalPatterns() throws ApplicationException{
+			DomainCondition domainCondition = ((SchedulerModel) this.aContext.getApplicationModel())
+			.getDomainCondition(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE);
+			
+			this.temporalPatterns = MeasurementStorableObjectPool.getStorableObjectsByCondition(domainCondition, true);
+			DefaultListModel model = (DefaultListModel) this.timeStamps.getModel();
+			for (Iterator it = this.temporalPatterns.iterator(); it.hasNext();) {
+				TemporalPattern pattern = (TemporalPattern) it.next();
+				model.addElement(pattern);
+			}
+
+
 		}
 
 		void showEndCalendar() {

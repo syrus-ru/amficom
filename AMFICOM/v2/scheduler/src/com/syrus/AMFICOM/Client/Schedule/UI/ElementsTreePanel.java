@@ -4,23 +4,44 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.tree.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.border.EtchedBorder;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
+import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -70,7 +91,6 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			domainCondition = ((SchedulerModel) aContext.getApplicationModel())
 					.getDomainCondition(ObjectEntities.ME_ENTITY_CODE);
 			List meList = ConfigurationStorableObjectPool.getStorableObjectsByCondition(domainCondition, true);
-			Map aptMap = Pool.getMap(AccessPortType.typ);
 
 			List measurementTypeList = MeasurementStorableObjectPool
 					.getStorableObjectsByCondition(((SchedulerModel) aContext.getApplicationModel())
@@ -82,12 +102,14 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				//ElementsTreePanel.this.surveyDsi.getTestSetupByTestType(testType.getId());
 
 				LinkedIdsCondition condition = LinkedIdsCondition.getInstance();
+				RISDSessionInfo sessionInterface = (RISDSessionInfo) aContext.getSessionInterface();
+				Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(sessionInterface
+						.getDomainIdentifier(), true);
+				condition.setDomain(domain);
 				condition.setEntityCode(ObjectEntities.MS_ENTITY_CODE);
 				condition.setIdentifier(measurementType.getId());
-				
-				MeasurementStorableObjectPool
-						.getStorableObjectsByCondition(condition, true);
 
+				MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				ObjectResourceTreeNode testTypeNode = new ObjectResourceTreeNode(measurementType, measurementType
 						.getDescription(), true, (ImageIcon) UIStorage.FOLDER_ICON);
 				this.root.add(testTypeNode);
@@ -96,9 +118,10 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 					for (Iterator kisTypeIt = kisList.iterator(); kisTypeIt.hasNext();) {
 						KIS kis = (KIS) kisTypeIt.next();
 						for (Iterator it = kis.getMeasurementPortIds().iterator(); it.hasNext();) {
-							MeasurementPort acessPort = (MeasurementPort) ConfigurationStorableObjectPool
+							MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool
 									.getStorableObject((Identifier) it.next(), true);
-							MeasurementPortType measurementPortType = (MeasurementPortType) acessPort.getType();
+
+							MeasurementPortType measurementPortType = (MeasurementPortType) measurementPort.getType();
 							measurementPortTypeIds.add(measurementPortType.getId());
 						}
 					}
@@ -108,41 +131,46 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 					linkedIdsCondition.setEntityCode(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 					List measurementTypesFormeasurementPortType = MeasurementStorableObjectPool
 							.getStorableObjectsByCondition(linkedIdsCondition, true);
-
 					for (Iterator kisTypeIt = kisList.iterator(); kisTypeIt.hasNext();) {
 						KIS kis = (KIS) kisTypeIt.next();
 						for (Iterator it = kis.getMeasurementPortIds().iterator(); it.hasNext();) {
-							MeasurementPort acessPort = (MeasurementPort) ConfigurationStorableObjectPool
+							MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool
 									.getStorableObject((Identifier) it.next(), true);
-							MeasurementPortType measurementPortType = (MeasurementPortType) acessPort.getType();
+							for (Iterator mtIter = measurementTypesFormeasurementPortType.iterator(); mtIter.hasNext();) {
+								MeasurementType mt = (MeasurementType) mtIter.next();
+								if (mt.getId().equals(measurementType.getId())) {
+									ObjectResourceTreeNode kisNode = new ObjectResourceTreeNode(
+																								kis,
+																								kis.getName(),
+																								true,
+																								(ImageIcon) UIStorage.TESTING_ICON,
+																								false);
+									testTypeNode.add(kisNode);
 
-							if (measurementTypesFormeasurementPortType.contains(measurementType)) {
-								ObjectResourceTreeNode kisNode = new ObjectResourceTreeNode(
-																							kis,
-																							kis.getName(),
-																							true,
-																							(ImageIcon) UIStorage.TESTING_ICON,
-																							false);
-								testTypeNode.add(kisNode);
-
-								ObjectResourceTreeNode accessPortNode = new ObjectResourceTreeNode(acessPort, acessPort
-										.getName(), true, (ImageIcon) UIStorage.PORT_ICON, false);
-								kisNode.add(accessPortNode);
-								for (Iterator meIt = meList.iterator(); meIt.hasNext();) {
-									MonitoredElement me = (MonitoredElement) meIt.next();
-									/**
-									 * FIXME load somewhere else
-									 */
-									// ElementsTreePanel.this.surveyDsi.getTestSetupByME(me.getId());
-									if (me.getMeasurementPortId().equals(acessPort.getId())) {
-										meList.add(me);
-										ObjectResourceTreeNode meNode = new ObjectResourceTreeNode(
-																									me,
-																									me.getName(),
-																									true,
-																									(ImageIcon) UIStorage.PATHMODE_ICON,
-																									true);
-										accessPortNode.add(meNode);
+									ObjectResourceTreeNode accessPortNode = new ObjectResourceTreeNode(
+																										measurementPort,
+																										measurementPort
+																												.getName(),
+																										true,
+																										(ImageIcon) UIStorage.PORT_ICON,
+																										false);
+									kisNode.add(accessPortNode);
+									for (Iterator meIt = meList.iterator(); meIt.hasNext();) {
+										MonitoredElement me = (MonitoredElement) meIt.next();
+										/**
+										 * FIXME load somewhere else
+										 */
+										// ElementsTreePanel.this.surveyDsi.getTestSetupByME(me.getId());
+										if (me.getMeasurementPortId().equals(measurementPort.getId())) {
+											//meList.add(me);
+											ObjectResourceTreeNode meNode = new ObjectResourceTreeNode(
+																										me,
+																										me.getName(),
+																										true,
+																										(ImageIcon) UIStorage.PATHMODE_ICON,
+																										true);
+											accessPortNode.add(meNode);
+										}
 									}
 								}
 							}
@@ -176,10 +204,10 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 		public Class getNodeChildClass(ObjectResourceTreeNode node) {
 			Object obj = node.getObject();
-			Class ret = null;
+			Class clazz = null;
 			if (obj instanceof String) {
 				if (node.getObject().equals(ROOT_NODE_NAME))
-					ret = MeasurementType.class; //$NON-NLS-1$
+					clazz = MeasurementType.class; //$NON-NLS-1$
 			} else if (obj instanceof MeasurementType) {
 				//				//System.out.println("testType:" +
 				// ((TestType) obj).name);
@@ -189,7 +217,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				ElementsTreePanel.this.dispatcher.notify(new OperationEvent(measurementType.getId(), 0,
 																			SchedulerModel.COMMAND_CHANGE_TEST_TYPE));
 				ElementsTreePanel.this.skipTestUpdate = false;
-				ret = KIS.class;
+				clazz = KIS.class;
 			} else if (obj instanceof KIS) {
 				//KIS kis = (KIS) obj;
 				//System.out.println("KIS:" + kis.type_id);
@@ -209,14 +237,14 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				// TestParametersPanel.COMMAND_CHANGE_PORT_TYPE));
 				//				// }
 				//				skipTestUpdate = false;
-				ret = MeasurementPort.class;
+				clazz = MeasurementPort.class;
 			} else if (obj instanceof MeasurementPort) {
 				//System.out.println("AccessPort:" +
 				// ((AccessPort)
 				// obj).type_id);
 				ElementsTreePanel.this.skipTestUpdate = true;
 				MeasurementPort port = (MeasurementPort) obj;
-				ret = MonitoredElement.class;
+				clazz = MonitoredElement.class;
 				ElementsTreePanel.this.dispatcher.notify(new OperationEvent(port, 0,
 																			SchedulerModel.COMMAND_CHANGE_PORT_TYPE));
 
@@ -230,8 +258,17 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 				}
 				ElementsTreePanel.this.skipTestUpdate = false;
+			} else if (obj instanceof MonitoredElement) {
+				MonitoredElement me = (MonitoredElement) obj;
+				clazz = me.getClass();
+				ElementsTreePanel.this.skipTestUpdate = true;
+				ElementsTreePanel.this.dispatcher.notify(new OperationEvent(me.getId(), 0,
+																			SchedulerModel.COMMAND_CHANGE_ME_TYPE));
+				ElementsTreePanel.this.skipTestUpdate = false;
+
 			}
-			return ret;
+
+			return clazz;
 		}
 
 		public ImageIcon getNodeIcon(ObjectResourceTreeNode node) {
@@ -401,12 +438,14 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				//(MonitoredElement)
 				// col.get(dse.getSelectedObject());
 				{
-					Object obj = dse.getSelectedObject();
-					if ((col.contains(obj)) && (obj instanceof MonitoredElement)) {
-						MonitoredElement me = (MonitoredElement) obj;
-						this.dispatcher
-								.notify(new OperationEvent(me.getId(), 0, SchedulerModel.COMMAND_CHANGE_ME_TYPE));
-					}
+					//					Object obj = dse.getSelectedObject();
+					//					if ((col.contains(obj)) && (obj instanceof
+					// MonitoredElement)) {
+					//						MonitoredElement me = (MonitoredElement) obj;
+					//						this.dispatcher
+					//								.notify(new OperationEvent(me.getId(), 0,
+					// SchedulerModel.COMMAND_CHANGE_ME_TYPE));
+					//					}
 
 				}
 			} else

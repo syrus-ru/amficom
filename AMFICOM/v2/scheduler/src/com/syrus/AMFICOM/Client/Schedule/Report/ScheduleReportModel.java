@@ -77,28 +77,31 @@ public class ScheduleReportModel extends APOReportModel
       rt.resourcesLoaded.put("ismLoaded","true");
     }
   
-		SurveyDataSourceImage sdsi = new SurveyDataSourceImage(dsi);
-    
-    curValue = (String) rt.resourcesLoaded.get("testTypesLoaded");
-    if (curValue.equals("false"))
-    {
-      sdsi.LoadTestTypes();
-      rt.resourcesLoaded.put("testTypesLoaded","true");
-    }
-
-    curValue = (String) rt.resourcesLoaded.get("analysisTypesLoaded");
-    if (curValue.equals("false"))
-    {
-      sdsi.LoadAnalysisTypes();
-      rt.resourcesLoaded.put("analysisTypesLoaded","true");
-    }
-
-    curValue = (String) rt.resourcesLoaded.get("evaluationTypesLoaded");
-    if (curValue.equals("false"))
-    {
-      sdsi.LoadEvaluationTypes();
-      rt.resourcesLoaded.put("evaluationTypesLoaded","true");
-    }
+    /**
+	 * TODO remove when will enable again
+	 */
+//		SurveyDataSourceImage sdsi = new SurveyDataSourceImage(dsi);
+//    
+//    curValue = (String) rt.resourcesLoaded.get("testTypesLoaded");
+//    if (curValue.equals("false"))
+//    {
+//      sdsi.LoadTestTypes();
+//      rt.resourcesLoaded.put("testTypesLoaded","true");
+//    }
+//
+//    curValue = (String) rt.resourcesLoaded.get("analysisTypesLoaded");
+//    if (curValue.equals("false"))
+//    {
+//      sdsi.LoadAnalysisTypes();
+//      rt.resourcesLoaded.put("analysisTypesLoaded","true");
+//    }
+//
+//    curValue = (String) rt.resourcesLoaded.get("evaluationTypesLoaded");
+//    if (curValue.equals("false"))
+//    {
+//      sdsi.LoadEvaluationTypes();
+//      rt.resourcesLoaded.put("evaluationTypesLoaded","true");
+//    }
   }
 
 	public int getReportKind(ObjectsReport rp)

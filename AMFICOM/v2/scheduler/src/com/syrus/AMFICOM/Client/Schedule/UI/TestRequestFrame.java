@@ -1,14 +1,17 @@
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import java.awt.*;
+import java.awt.BorderLayout;
 
-import javax.swing.*;
+import javax.swing.JInternalFrame;
 
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.measurement.Test;
@@ -55,15 +58,17 @@ public class TestRequestFrame extends JInternalFrame implements OperationListene
 
 			if (tue.testSelected) {
 
-				TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE, this.receivedTest.getRequestId());
-				if (treq == null)
-					Environment.log(Environment.LOG_LEVEL_WARNING,
-									"TestRequestFrame.operationPerformed() treq not found id " //$NON-NLS-1$
-											+ this.receivedTest.getRequestId());
-				else {
-					//					System.out.println(this.getClass().getName()
-					//							+ " > treq.id: " + treq.getId()); //$NON-NLS-1$
-					this.panel.setTestRequest(treq);
+				/**
+				 * TODO remove when testRequest'll enable again
+				 */
+//				TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE, this.receivedTest.getRequestId());
+//				if (treq == null)
+//					Environment.log(Environment.LOG_LEVEL_WARNING,
+//									"TestRequestFrame.operationPerformed() treq not found id " //$NON-NLS-1$
+//											+ this.receivedTest.getRequestId());
+//				else 
+				{
+//					this.panel.setTestRequest(treq);
 					this.panel.setTest(this.receivedTest);
 				}
 

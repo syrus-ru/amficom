@@ -1,23 +1,23 @@
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.BorderLayout;
 
-import javax.swing.*;
+import javax.swing.JInternalFrame;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 
 public class TestParametersFrame extends JInternalFrame implements OperationListener {
@@ -64,7 +64,7 @@ public class TestParametersFrame extends JInternalFrame implements OperationList
 			Test test = tue.test;
 			if (tue.testSelected) {				
 				try{
-					MeasurementPort port = (MeasurementPort) MeasurementStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
+					MeasurementPort port = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
 					if (((MeasurementPortType)port.getType()).getCodename().equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
 						if (!this.panel.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
 							this.dispatcher.notify(new OperationEvent(new ReflectometryTestPanel(this.aContext, port,

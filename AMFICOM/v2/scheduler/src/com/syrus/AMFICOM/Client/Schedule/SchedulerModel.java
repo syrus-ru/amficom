@@ -16,100 +16,112 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.RISDSurveyDataSource;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.TemporalCondition;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TemporalCondition;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
+import com.syrus.util.Log;
 
 /**
  * @author Vladimir Dolzhenko
  */
 public class SchedulerModel extends ApplicationModel implements OperationListener {
 
-	public static final String	COMMAND_ADD_PARAM_PANEL		= "AddParamPanel";		//$NON-NLS-1$
-	public static final String	COMMAND_APPLY_TEST		= "ApplyTest";			//$NON-NLS-1$
-	public static final String	COMMAND_AVAILABLE_ME		= "AvailableMe";
-	public static final String	COMMAND_CHANGE_KIS		= "ChangeKIS";			//$NON-NLS-1$
-	public static final String	COMMAND_CHANGE_ME_TYPE		= "ChangeMEType";		//$NON-NLS-1$
-	public static final String	COMMAND_CHANGE_PARAM_PANEL	= "ChangeParamPanel";		//$NON-NLS-1$
-	public static final String	COMMAND_CHANGE_PORT_TYPE	= "ChangePortType";		//$NON-NLS-1$
-	public static final String	COMMAND_CHANGE_STATUSBAR_STATE	= "ChangeStatusBarState";
-	public static final String	COMMAND_CHANGE_TEST_TYPE	= "ChangeTestType";		//$NON-NLS-1$
-	public static final String	COMMAND_CLEAN			= "Clean";
-	public static final String	COMMAND_COMMIT_CHANGES		= "CommitChanges";
-	public static final String	COMMAND_CREATE_TEST		= "CreateTest";		//$NON-NLS-1$
-	public static final String	COMMAND_DATA_REQUEST		= "DataRequest";		//$NON-NLS-1$
-	public static final String	COMMAND_NAME_ALL_TESTS		= "AllTests";			//$NON-NLS-1$
-	public static final String	COMMAND_REMOVE_TEST		= "RemoveTest";
-	public static final String	COMMAND_SEND_DATA		= "SendData";			//$NON-NLS-1$
-	public static final String	COMMAND_TEST_SAVED_OK		= "TestSavedOk";		//$NON-NLS-1$
+	public static final String		COMMAND_ADD_PARAM_PANEL			= "AddParamPanel";			//$NON-NLS-1$
+	public static final String		COMMAND_APPLY_TEST				= "ApplyTest";				//$NON-NLS-1$
+	public static final String		COMMAND_AVAILABLE_ME			= "AvailableMe";
+	public static final String		COMMAND_CHANGE_KIS				= "ChangeKIS";				//$NON-NLS-1$
+	public static final String		COMMAND_CHANGE_ME_TYPE			= "ChangeMEType";			//$NON-NLS-1$
+	public static final String		COMMAND_CHANGE_PARAM_PANEL		= "ChangeParamPanel";		//$NON-NLS-1$
+	public static final String		COMMAND_CHANGE_PORT_TYPE		= "ChangePortType";		//$NON-NLS-1$
+	public static final String		COMMAND_CHANGE_STATUSBAR_STATE	= "ChangeStatusBarState";
+	public static final String		COMMAND_CHANGE_TEST_TYPE		= "ChangeTestType";		//$NON-NLS-1$
+	public static final String		COMMAND_CLEAN					= "Clean";
+	public static final String		COMMAND_COMMIT_CHANGES			= "CommitChanges";
+	public static final String		COMMAND_CREATE_TEST				= "CreateTest";			//$NON-NLS-1$
+	public static final String		COMMAND_DATA_REQUEST			= "DataRequest";			//$NON-NLS-1$
+	public static final String		COMMAND_NAME_ALL_TESTS			= "AllTests";				//$NON-NLS-1$
+	public static final String		COMMAND_REMOVE_TEST				= "RemoveTest";
+	public static final String		COMMAND_SEND_DATA				= "SendData";				//$NON-NLS-1$
+	public static final String		COMMAND_TEST_SAVED_OK			= "TestSavedOk";			//$NON-NLS-1$
 
-	public static final int		DATA_ID_ELEMENTS		= 5;
-	public static final int		DATA_ID_PARAMETERS		= 1;
-	public static final int		DATA_ID_PARAMETERS_ANALYSIS	= 6;
-	public static final int		DATA_ID_PARAMETERS_EVALUATION	= 7;
-	public static final int		DATA_ID_PARAMETERS_PATTERN	= 2;
-	public static final int		DATA_ID_RETURN_TYPE		= 8;
-	public static final int		DATA_ID_TIMESTAMP		= 3;
-	public static final int		DATA_ID_TYPE			= 4;
+	public static final int			DATA_ID_ELEMENTS				= 5;
+	public static final int			DATA_ID_PARAMETERS				= 1;
+	public static final int			DATA_ID_PARAMETERS_ANALYSIS		= 6;
+	public static final int			DATA_ID_PARAMETERS_EVALUATION	= 7;
+	public static final int			DATA_ID_PARAMETERS_PATTERN		= 2;
+	public static final int			DATA_ID_RETURN_TYPE				= 8;
+	public static final int			DATA_ID_TIMESTAMP				= 3;
+	public static final int			DATA_ID_TYPE					= 4;
 
-	private static final boolean	CREATE_ALLOW			= true;
+	private static final boolean	CREATE_ALLOW					= true;
 
 	//public static final int DEBUG_LEVEL = 3;
 
-	private static final int	FLAG_APPLY			= 1 << 1;
-	private static final int	FLAG_CREATE			= 1 << 0;
+	private static final int		FLAG_APPLY						= 1 << 1;
+	private static final int		FLAG_CREATE						= 1 << 0;
 	// new
 	// Dispatcher();
-	private ApplicationContext	aContext;
-	private Dispatcher		dispatcher;							//						=
+	private ApplicationContext		aContext;
+	private Dispatcher				dispatcher;												//						=
 
-	private ObjectResourceFilter	filter				= new TestFilter();
-	private int			flag				= 0;
-	private HashMap			receiveData;
+	/**
+	 * TODO remove when will enable again
+	 */
+	//private ObjectResourceFilter filter = new TestFilter();
+	private int						flag							= 0;
+	private HashMap					receiveData;
 
 	//private int receiveDataCount = 0;
-	private Test			receivedTest;
-	private HashMap			receiveTreeElements;
-	private TestReturnType		returnType;
-	private Test.TestTimeStamps	receiveTestTimeStamps;
+	private Test					receivedTest;
+	private HashMap					receiveTreeElements;
+	private TestReturnType			returnType;
+	private Test.TestTimeStamps		receiveTestTimeStamps;
 
-	private List			tests;
-	private List			allTests;
+	private List					tests;
+	private List					allTests;
 
 	private ObjectResourceTreeModel	treeModel;
-	private List			unsavedTests;
-	private List			allUnsavedTests;
+	private List					unsavedTests;
+	private List					allUnsavedTests;
+
+	private DomainCondition			domainCondition;
 	
-	private DomainCondition domainCondition;
+	private DataSourceInterface		dataSourceInterface;
 
 	public SchedulerModel(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -169,12 +181,17 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	}
 
 	public DataSourceInterface getDataSource(SessionInterface si) {
-		String connection = Environment.getConnectionType();
-		if (connection.equals("RISD"))
-			return new RISDSurveyDataSource(si);
-		else if (connection.equals("Empty"))
-			return new EmptySurveyDataSource(si);
-		return null;
+		/**
+		 * TODO remove when will enable again
+		 */
+		//		String connection = Environment.getConnectionType();
+		//		if (connection.equals("RISD"))
+		//			return new RISDSurveyDataSource(si);
+		//		else if (connection.equals("Empty"))
+		//			return new EmptySurveyDataSource(si);
+		if (this.dataSourceInterface == null)
+			this.dataSourceInterface = new RISDSurveyDataSource(si); 
+		return this.dataSourceInterface;
 	}
 
 	public List getTests() {
@@ -265,9 +282,20 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			this.receiveTreeElements = null;
 
 			this.dispatcher.notify(new OperationEvent("", 0, //$NON-NLS-1$
-									COMMAND_DATA_REQUEST));
+														COMMAND_DATA_REQUEST));
 		} else if (commandName.equals(COMMAND_COMMIT_CHANGES)) {
-			commitChanges();
+			try {
+				commitChanges();
+			} catch (VersionCollisionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CommunicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else if (commandName.equalsIgnoreCase(COMMAND_APPLY_TEST)) {
 			// apply test
 			//if (flag == 0) {
@@ -279,7 +307,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				this.receiveData.clear();
 			//receiveDataCount = 0;
 			this.dispatcher.notify(new OperationEvent("", 0, //$NON-NLS-1$
-									COMMAND_DATA_REQUEST));
+														COMMAND_DATA_REQUEST));
 			//}
 		} else if (commandName.equalsIgnoreCase(COMMAND_SEND_DATA)) {
 			//receiveDataCount++;
@@ -390,7 +418,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 	/**
 	 * @param treeModel
-	 *                The treeModel to set.
+	 *            The treeModel to set.
 	 */
 	public void setTreeModel(ObjectResourceTreeModel treeModel) {
 		this.treeModel = treeModel;
@@ -405,85 +433,86 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	//	}
 
 	public void updateTests(long startTime, long endTime) {
-		//Environment.log(Environment.LOG_LEVEL_INFO, "updateTests",
-		// getClass().getName()); //$NON-NLS-1$
-		//		this.setCursor(UIStorage.WAIT_CURSOR);
-		this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
-				.getString("Updating_tests_from_BD"))); //$NON-NLS-1$
-		DataSourceInterface dsi = this.aContext.getDataSource();
-		if (dsi == null)
-			return;
+		try {
+			//Environment.log(Environment.LOG_LEVEL_INFO, "updateTests",
+			// getClass().getName()); //$NON-NLS-1$
+			//		this.setCursor(UIStorage.WAIT_CURSOR);
+			this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
+					.getString("Updating_tests_from_BD"))); //$NON-NLS-1$
+			DataSourceInterface dsi = this.aContext.getDataSource();
+			if (dsi == null)
+				return;
 
-		if (this.allTests == null)
-			this.allTests = new ArrayList();
-		else
-			this.allTests.clear();
+			if (this.allTests == null)
+				this.allTests = new ArrayList();
+			else
+				this.allTests.clear();
 
-		this.allTests = MeasurementStorableObjectPool
-				.getStorableObjectsByCondition(
-								new TemporalCondition(
-											(Domain) ConfigurationStorableObjectPool
-													.getStorableObject(
-																this.aContext
-																		.getSessionInterface()
-																		.getDomainId(),
-																true),
-											new Date(startTime),
-											new Date(endTime)), true);
+			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 
-		if (this.tests == null)
-			this.tests = new ArrayList();
-		else
-			this.tests.clear();
+			this.allTests = MeasurementStorableObjectPool
+					.getStorableObjectsByCondition(new TemporalCondition((Domain) ConfigurationStorableObjectPool
+							.getStorableObject(sessionInterface.getDomainIdentifier(), true), new Date(startTime),
+																			new Date(endTime)), true);
 
-		this.filter.filtrate(this.allTests, this.tests);
+			if (this.tests == null)
+				this.tests = new LinkedList();
+			else
+				this.tests.clear();
+			/**
+			 * TODO remove when will enable again
+			 */
+			// this.filter.filtrate(this.allTests, this.tests);
+			this.tests.addAll(this.allTests);
+			{
+				List alarmsIds = null;
+				List testArgumentSetIds = null;
+				if (alarmsIds != null)
+					dsi.GetAlarms((String[]) alarmsIds.toArray(new String[alarmsIds.size()]));
+				if (testArgumentSetIds != null)
+					dsi.LoadTestArgumentSets((String[]) testArgumentSetIds
+							.toArray(new String[testArgumentSetIds.size()]));
+			}
 
-		{
-			List alarmsIds = null;
-			List testArgumentSetIds = null;
-			if (alarmsIds != null)
-				dsi.GetAlarms((String[]) alarmsIds.toArray(new String[alarmsIds.size()]));
-			if (testArgumentSetIds != null)
-				dsi.LoadTestArgumentSets((String[]) testArgumentSetIds
-						.toArray(new String[testArgumentSetIds.size()]));
+			this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
+					.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
+			this.dispatcher.notify(new OperationEvent(this.tests, 0, COMMAND_NAME_ALL_TESTS));
+		} catch (ApplicationException ae) {
+			Log.errorException(ae);
 		}
-
-		this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
-				.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
-		this.dispatcher.notify(new OperationEvent(this.tests, 0, COMMAND_NAME_ALL_TESTS));
 	}
 
-	private void commitChanges() {
+	private void commitChanges() throws VersionCollisionException, DatabaseException, CommunicationException {
 
 		/**
 		 * FIXME remove deleted tests
 		 */
 		// remove tests
-//		if (unsavedTest != null) {
-//			java.util.List deleteTests = new ArrayList();
-//			for (Iterator it = unsavedTest.keySet().iterator(); it.hasNext();) {
-//				Object key = it.next();
-//				Test test = (Test) unsavedTest.get(key);
-//				if (test.getDeleted() != 0) {
-//					Identifier testId = test.getId();
-//					if (test.getStatus().value() != TestStatus._TEST_STATUS_SCHEDULED)
-//						deleteTests.add(testId);
-//					TestRequest treq = (TestRequest) Pool
-//							.get(TestRequest.TYPE, test.getRequestId());
-//					//System.out.println("removing test:" +
-//					// testId + " from
-//					// testRequest:" + treq.getId());
-//					treq.removeTest(test);
-//					Pool.remove(Test.TYPE, testId);
-//					it.remove();
-//				}
-//
-//			}
-//			String[] deleteTestIds = (String[]) deleteTests.toArray(new String[deleteTests.size()]);
-//			this.dataSource.RemoveTests(deleteTestIds);
-//
-//		}
-
+		//		if (unsavedTest != null) {
+		//			java.util.List deleteTests = new ArrayList();
+		//			for (Iterator it = unsavedTest.keySet().iterator(); it.hasNext();) {
+		//				Object key = it.next();
+		//				Test test = (Test) unsavedTest.get(key);
+		//				if (test.getDeleted() != 0) {
+		//					Identifier testId = test.getId();
+		//					if (test.getStatus().value() != TestStatus._TEST_STATUS_SCHEDULED)
+		//						deleteTests.add(testId);
+		//					TestRequest treq = (TestRequest) Pool
+		//							.get(TestRequest.TYPE, test.getRequestId());
+		//					//System.out.println("removing test:" +
+		//					// testId + " from
+		//					// testRequest:" + treq.getId());
+		//					treq.removeTest(test);
+		//					Pool.remove(Test.TYPE, testId);
+		//					it.remove();
+		//				}
+		//
+		//			}
+		//			String[] deleteTestIds = (String[]) deleteTests.toArray(new
+		// String[deleteTests.size()]);
+		//			this.dataSource.RemoveTests(deleteTestIds);
+		//
+		//		}
 		MeasurementStorableObjectPool.flush(true);
 		this.aContext.getDispatcher().notify(new OperationEvent("", 0, SchedulerModel.COMMAND_TEST_SAVED_OK));
 	}
@@ -501,14 +530,13 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 		KIS kis = (KIS) this.receiveTreeElements.get(ObjectEntities.KIS_ENTITY);
 		MonitoredElement me = (MonitoredElement) this.receiveTreeElements.get(ObjectEntities.ME_ENTITY);
-		EvaluationType evaluationType = (EvaluationType) this.receiveData
-				.get(ObjectEntities.EVALUATIONTYPE_ENTITY);
+		EvaluationType evaluationType = (EvaluationType) this.receiveData.get(ObjectEntities.EVALUATIONTYPE_ENTITY);
 		AnalysisType analysisType = (AnalysisType) this.receiveData.get(ObjectEntities.ANALYSISTYPE_ENTITY);
 		List measurementSetupIds = (List) this.receiveData.get(ObjectEntities.MS_ENTITY);
 
 		//		test.setChanged(true);
 
-		Identifier modifierId = this.aContext.getSessionInterface().getUserId();
+		Identifier modifierId = ((RISDSessionInfo)this.aContext.getSessionInterface()).getUserIdentifier();
 
 		Date startTime = this.receiveTestTimeStamps.getStartTime();
 		Date endTime = this.receiveTestTimeStamps.getEndTime();
@@ -518,18 +546,20 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		if (test == null) {
 			Identifier id = IdentifierPool.generateId(ObjectEntities.TEST_ENTITY_CODE);
 			test = Test.createInstance(id, modifierId, startTime, endTime, temporalPattern, temporalType,
-							measurementType, analysisType, evaluationType, me,
-							this.returnType, ConstStorage.SIMPLE_DATE_FORMAT
-									.format(startTime), measurementSetupIds);
+										measurementType, analysisType, evaluationType, me, this.returnType,
+										ConstStorage.SIMPLE_DATE_FORMAT.format(startTime), measurementSetupIds);
 
-			MeasurementStorableObjectPool.putStorableObject(test);
+			try {
+				MeasurementStorableObjectPool.putStorableObject(test);
+			} catch (IllegalObjectEntityException e) {
+				Log.errorException(e);
+			}
 
 		} else {
-			test.setAttributes(test.getCreated(), new Date(System.currentTimeMillis()),
-						test.getCreatorId(), modifierId, temporalType.value(), startTime,
-						endTime, temporalPattern, measurementType, analysisType,
-						evaluationType, test.getStatus().value(), me, this.returnType.value(),
-						ConstStorage.SIMPLE_DATE_FORMAT.format(startTime));
+			test.setAttributes(test.getCreated(), new Date(System.currentTimeMillis()), test.getCreatorId(),
+								modifierId, temporalType.value(), startTime, endTime, temporalPattern, measurementType,
+								analysisType, evaluationType, test.getStatus().value(), me, this.returnType.value(),
+								ConstStorage.SIMPLE_DATE_FORMAT.format(startTime));
 		}
 
 		//testRequest.setName(test.getName());
@@ -539,99 +569,104 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	/**
 	 * @return Returns the filter.
 	 */
-	public ObjectResourceFilter getFilter() {
-		return this.filter;
-	}
-
+	//public ObjectResourceFilter getFilter() {
 	/**
-	 * @param filter
-	 *                The filter to set.
+	 * TODO remove when will enable again
 	 */
-	public void setFilter(ObjectResourceFilter filter) {
-		this.filter = filter;
-		//		Vector v = this.filter.getCriteria();
-		//		for(Iterator it=v.iterator();it.hasNext();){
-		//			FilterExpressionInterface fei =
-		// (FilterExpressionInterface)it.next();
-		//			System.out.println("name:"+fei.getName()+"\tid:"+fei.getId());
-		//			Vector v2= fei.getVec();
-		//			for(Iterator it2=v2.iterator();it2.hasNext();){
-		//				Object obj = it2.next();
-		//				System.out.println("'"+obj+"'");
-		//			}
-		//		}
-		if (this.allTests != null && !this.allTests.isEmpty()) {
-			this.dispatcher.notify(new OperationEvent(this, 0, SchedulerModel.COMMAND_CLEAN));
-			for (Iterator it = this.tests.iterator(); it.hasNext();) {
-				Object obj = it.next();
-				if (!this.allTests.contains(obj))
-					this.allTests.add(obj);
-			}
-
-			//			for (Iterator it = this.allTests.iterator();
-			// it.hasNext();) {
-			//				Test test = (Test) it.next();
-			//								System.out.println("allTests > filter:" +
-			// test.getId());
-			//			}
-
-			if (this.unsavedTests != null) {
-				for (Iterator it = this.unsavedTests.iterator(); it.hasNext();) {
-					Object obj = it.next();
-					if (!this.allUnsavedTests.contains(obj))
-						this.allUnsavedTests.add(obj);
-				}
-			}
-
-			//			DataSet testSet = new DataSet(this.allTests);
-			//			testSet = this.filter.filter(testSet);
-			//			this.tests.clear();
-			//			for (Iterator it = testSet.iterator(); it.hasNext();)
-			// {
-			//				Test test = (Test) it.next();
-			//// System.out.println("filtered test:" +
-			// test.getId());
-			//				this.tests.add(test);
-			//			}
-			this.filter.filtrate(this.allTests, this.tests);
-
-			if (this.allUnsavedTests != null) {
-				//				testSet = new DataSet(this.allUnsavedTests);
-				//				testSet = this.filter.filter(testSet);
-				//				this.unsavedTests.clear();
-				//				for (Iterator it = testSet.iterator();
-				// it.hasNext();) {
-				//					Test test = (Test) it.next();
-				//					this.unsavedTests.add(test);
-				//				}
-				this.filter.filtrate(this.allUnsavedTests, this.unsavedTests);
-			}
-			//						for (Iterator it = this.tests.iterator();
-			// it.hasNext();) {
-			//							Test test = (Test) it.next();
-			//							System.out.println("filtered test2send:" +
-			// test.getId());
-			//						}
-			this.dispatcher.notify(new OperationEvent(this.tests, 0, COMMAND_NAME_ALL_TESTS));
-		}
-	}
-	
-	public DomainCondition getDomainCondition(short entityCode){
-		Domain domain = (Domain) ConfigurationStorableObjectPool
-		.getStorableObject(
-					this.aContext
-							.getSessionInterface()
-							.getDomainId(), true);
+	//	return this.filter;
+	//}
+	/**
+	 * TODO remove when will enable again
+	 * @throws CommunicationException
+	 * @throws DatabaseException
+	 */
+	//	/**
+	//	 * @param filter
+	//	 * The filter to set.
+	//	 */
+	//	public void setFilter(ObjectResourceFilter filter) {
+	//		this.filter = filter;
+	//		// Vector v = this.filter.getCriteria();
+	//		// for(Iterator it=v.iterator();it.hasNext();){
+	//		// FilterExpressionInterface fei =
+	//		// (FilterExpressionInterface)it.next();
+	//		// System.out.println("name:"+fei.getName()+"\tid:"+fei.getId());
+	//		// Vector v2= fei.getVec();
+	//		// for(Iterator it2=v2.iterator();it2.hasNext();){
+	//		// Object obj = it2.next();
+	//		// System.out.println("'"+obj+"'");
+	//		// }
+	//		// }
+	//		if (this.allTests != null && !this.allTests.isEmpty()) {
+	//			this.dispatcher.notify(new OperationEvent(this, 0,
+	// SchedulerModel.COMMAND_CLEAN));
+	//			for (Iterator it = this.tests.iterator(); it.hasNext();) {
+	//				Object obj = it.next();
+	//				if (!this.allTests.contains(obj))
+	//					this.allTests.add(obj);
+	//			}
+	//
+	//			// for (Iterator it = this.allTests.iterator();
+	//			// it.hasNext();) {
+	//			// Test test = (Test) it.next();
+	//			// System.out.println("allTests > filter:" +
+	//			// test.getId());
+	//			// }
+	//
+	//			if (this.unsavedTests != null) {
+	//				for (Iterator it = this.unsavedTests.iterator(); it.hasNext();) {
+	//					Object obj = it.next();
+	//					if (!this.allUnsavedTests.contains(obj))
+	//						this.allUnsavedTests.add(obj);
+	//				}
+	//			}
+	//
+	//			// DataSet testSet = new DataSet(this.allTests);
+	//			// testSet = this.filter.filter(testSet);
+	//			// this.tests.clear();
+	//			// for (Iterator it = testSet.iterator(); it.hasNext();)
+	//			// {
+	//			// Test test = (Test) it.next();
+	//			//// System.out.println("filtered test:" +
+	//			// test.getId());
+	//			// this.tests.add(test);
+	//			// }
+	//			this.filter.filtrate(this.allTests, this.tests);
+	//
+	//			if (this.allUnsavedTests != null) {
+	//				// testSet = new DataSet(this.allUnsavedTests);
+	//				// testSet = this.filter.filter(testSet);
+	//				// this.unsavedTests.clear();
+	//				// for (Iterator it = testSet.iterator();
+	//				// it.hasNext();) {
+	//				// Test test = (Test) it.next();
+	//				// this.unsavedTests.add(test);
+	//				// }
+	//				this.filter.filtrate(this.allUnsavedTests, this.unsavedTests);
+	//			}
+	//			// for (Iterator it = this.tests.iterator();
+	//			// it.hasNext();) {
+	//			// Test test = (Test) it.next();
+	//			// System.out.println("filtered test2send:" +
+	//			// test.getId());
+	//			// }
+	//			this.dispatcher.notify(new OperationEvent(this.tests, 0,
+	// COMMAND_NAME_ALL_TESTS));
+	//		}
+	//	}
+	public DomainCondition getDomainCondition(short entityCode) throws DatabaseException, CommunicationException {
+		RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
+		Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(sessionInterface.getDomainIdentifier(), true);
 		if (this.domainCondition == null)
 			this.domainCondition = new DomainCondition(domain, entityCode);
-		else{
+		else {
 			this.domainCondition.setDomain(domain);
 			this.domainCondition.setEntityCode(new Short(entityCode));
 		}
 		return this.domainCondition;
 	}
-	
-	public static void showErrorMessage(Component component, Exception exc){
+
+	public static void showErrorMessage(Component component, Exception exc) {
 		JOptionPane.showMessageDialog(component, exc.getMessage(), LangModelSchedule.getString("Error"),
 										JOptionPane.OK_OPTION);
 	}

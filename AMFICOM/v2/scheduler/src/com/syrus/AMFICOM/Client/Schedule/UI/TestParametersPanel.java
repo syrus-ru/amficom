@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -52,6 +53,7 @@ import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.Test;
 
 public class TestParametersPanel extends JPanel implements OperationListener {
@@ -67,12 +69,12 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 	JCheckBox			useAnalysisBox;
 	ObjComboBox			analysisComboBox	= new ObjComboBox(AnalysisTypeController.getInstance(),
-											null,
+											Collections.EMPTY_LIST,
 											AnalysisTypeController.KEY_NAME);
 	ObjComboBox			evaluationComboBox	= new ObjComboBox(
 											EvaluationTypeController
 													.getInstance(),
-											null,
+											Collections.EMPTY_LIST,
 											EvaluationTypeController.KEY_NAME);
 
 	final JPanel			switchPanel		= new JPanel(new CardLayout());
@@ -148,9 +150,15 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		patternPanel.add(this.useAnalysisBox, gbc);
 		final JLabel analysisLabel = new JLabel(LangModelSchedule.getString("Analysis")); //$NON-NLS-1$
 		patternPanel.add(analysisLabel, gbc);
+		/**
+		 * FIXME return back !!! fix gui
+		 */
 		patternPanel.add(this.analysisComboBox, gbc);
 		final JLabel evaluationLabel = new JLabel(LangModelSchedule.getString("EvaluationAnalysis")); //$NON-NLS-1$
 		patternPanel.add(evaluationLabel, gbc);
+		/**
+		 * FIXME return back !!! fix gui
+		 */
 		patternPanel.add(this.evaluationComboBox, gbc);
 		this.testMap = new HashMap();
 		patternPanel.add(new JLabel(LangModelSchedule.getString("Patterns")), gbc);
@@ -180,8 +188,15 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 						LinkedIdsCondition linkedIdsCondition = LinkedIdsCondition
 								.getInstance();
-						linkedIdsCondition.setEntityCode(ObjectEntities.ANALYSIS_ENTITY_CODE);
-						linkedIdsCondition.setIdentifier(ts.getCriteriaSet().getId());
+						linkedIdsCondition.setEntityCode(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+						{
+							SetParameter[] setParameters = ts.getCriteriaSet().getParameters();
+							List list = new ArrayList(setParameters.length);
+							for(int i=0;i<setParameters.length;i++)
+								list.add(setParameters[i].getId());
+							linkedIdsCondition.setLinkedIds(list);
+						}
+						
 
 						List analysisTypes = MeasurementStorableObjectPool
 								.getStorableObjectsByCondition(linkedIdsCondition, true);
@@ -193,8 +208,14 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 						}
 
 						TestParametersPanel.this.evaluationComboBox.removeAll();
-						linkedIdsCondition.setEntityCode(ObjectEntities.EVALUATION_ENTITY_CODE);
-						linkedIdsCondition.setIdentifier(ts.getThresholdSet().getId());
+						linkedIdsCondition.setEntityCode(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+						{
+							SetParameter[] setParameters = ts.getThresholdSet().getParameters();
+							List list = new ArrayList(setParameters.length);
+							for(int i=0;i<setParameters.length;i++)
+								list.add(setParameters[i].getId());
+							linkedIdsCondition.setLinkedIds(list);
+						}						
 						List evaluationTypes = MeasurementStorableObjectPool
 								.getStorableObjectsByCondition(linkedIdsCondition, true);
 						for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {

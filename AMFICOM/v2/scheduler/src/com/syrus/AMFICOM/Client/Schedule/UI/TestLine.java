@@ -465,7 +465,11 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		int h = this.height - (this.titleHeight / 2 + 4) - 2;
 		//System.out.println(">>"+timeStamp.getType());
 
-		ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();
+		/**
+		 * TODO remove when will enable again
+		 */
+		//ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();
+		ElementaryTestAlarm[] testAlarms = new ElementaryTestAlarm[0];
 
 		switch (temporalType.value()) {
 			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
