@@ -12,17 +12,13 @@ public abstract class StorableObject implements TransferableObject {
 
 	public StorableObject(Identifier id) {
 		this.id = id;
-		this.created = null;
-		this.modified = null;
-		this.creator_id = null;
-		this.modifier_id = null;
 	}
 
-	public StorableObject(Identifier id,
-												Date created,
-												Date modified,
-												Identifier creator_id,
-												Identifier modifier_id) {
+	protected StorableObject(Identifier id,
+													 Date created,
+													 Date modified,
+													 Identifier creator_id,
+													 Identifier modifier_id) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
