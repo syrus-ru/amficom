@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.11 2005/02/11 07:50:02 bob Exp $
+ * $Id: DomainDatabase.java,v 1.12 2005/02/11 10:34:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/11 07:50:02 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/11 10:34:58 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -158,8 +158,9 @@ public class DomainDatabase extends StorableObjectDatabase {
 
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
+		
 		try {
+			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 			characteristicDatabase.updateCharacteristics(storableObjects);
 		}
 		catch (UpdateObjectException e) {
