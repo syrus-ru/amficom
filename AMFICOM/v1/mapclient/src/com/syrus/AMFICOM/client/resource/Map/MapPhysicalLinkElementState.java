@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElementState.java,v 1.2 2004/10/26 13:25:36 krupenn Exp $
+ * $Id: MapPhysicalLinkElementState.java,v 1.3 2004/11/02 17:00:53 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,14 +11,14 @@
 
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * состо€ние линии 
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/26 13:25:36 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/02 17:00:53 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class MapPhysicalLinkElementState extends MapLinkElementState
 {
 	
-	ArrayList nodeLinks = new ArrayList();
+	LinkedList nodeLinks = new LinkedList();
 	String mapProtoId;
 
 	public MapPhysicalLinkElementState(MapPhysicalLinkElement mple)

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.26 2004/10/27 15:45:58 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.27 2004/11/02 17:00:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.26 $, $Date: 2004/10/27 15:45:58 $
+ * @version $Revision: 1.27 $, $Date: 2004/11/02 17:00:53 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -69,19 +69,19 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	public static final String COLUMN_STREET = "street";	
 	public static final String COLUMN_BUILDING = "building";	
 
-	protected ArrayList nodeLinkIds = new ArrayList();
+	protected List nodeLinkIds = new ArrayList();
 
 	protected String mapProtoId = "";
 
 	//Вектор NodeLink из которых состоит path
-	protected ArrayList nodeLinks = new ArrayList();
+	protected List nodeLinks = new LinkedList();
 	protected MapLinkProtoElement proto;
 
 	protected String city = "";
 	protected String street = "";
 	protected String building = "";
 
-	protected ArrayList sortedNodes = new ArrayList();
+	protected List sortedNodes = new LinkedList();
 	protected boolean nodeLinksSorted = false;
 
 	protected MapPhysicalLinkBinding binding;
@@ -265,7 +265,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 			this.endNode = (MapNodeElement )Pool.get(MapPhysicalNodeElement.typ, endNodeId);
 		this.map = (Map )Pool.get(Map.typ, this.mapId);
 
-		this.nodeLinks = new ArrayList();
+		this.nodeLinks = new LinkedList();
 		for (int i = 0; i < nodeLinkIds.size(); i++)
 		{
 			MapNodeLinkElement mnle = getMap().getNodeLink((String )nodeLinkIds.get(i));
@@ -572,8 +572,8 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		{
 			MapNodeElement smne = this.getStartNode();
 			MapNodeLinkElement nl = null;
-			ArrayList vec = new ArrayList();
-			ArrayList nodevec = new ArrayList();
+			LinkedList vec = new LinkedList();
+			List nodevec = new LinkedList();
 			int count = getNodeLinks().size();
 			for (int i = 0; i < count; i++) 
 			{
@@ -647,7 +647,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		
 		MapPhysicalLinkElementState mples = (MapPhysicalLinkElementState )state;
 
-		this.nodeLinks = new ArrayList();
+		this.nodeLinks = new LinkedList();
 		for(Iterator it = mples.nodeLinks.iterator(); it.hasNext();)
 		{
 			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
