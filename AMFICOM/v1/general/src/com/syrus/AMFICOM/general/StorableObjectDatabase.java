@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.103 2005/02/19 20:34:37 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.104 2005/02/19 20:37:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/02/19 20:34:37 $
+ * @version $Revision: 1.104 $, $Date: 2005/02/19 20:37:21 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -1099,170 +1099,6 @@ public abstract class StorableObjectDatabase {
 			}
 		}
 
-	}
-
-//	protected void updateEntity1(StorableObject storableObject, Identifier modifierId) throws IllegalDataException, UpdateObjectException {
-//		String storableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
-//
-//		Date savedModified = storableObject.modified;
-//		Identifier savedModifierId = storableObject.modifierId;
-//		long savedVersion = storableObject.version;
-//		storableObject.setUpdated(modifierId);
-//
-//		String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
-//		String[] values = null;
-//		try {
-//			values = this.parseInsertStringValues(this.getUpdateSingleSQLValues(storableObject), cols.length);
-//			if (cols.length != values.length)
-//				throw new UpdateObjectException("StorableObjectDatabase.updateEntities | Count of columns ('"
-//						+ cols.length + "') is not equals count of values ('" + values.length + "')");
-//		}
-//		finally {
-//			this.setStorableObjectRollbacked(storableObject, savedModified, savedModifierId, savedVersion);
-//		}
-//
-//		StringBuffer sql = new StringBuffer(SQL_UPDATE + this.getEnityName() + SQL_SET);
-//		for (int i = 0; i < cols.length; i++) {
-//			sql.append(cols[i]);
-//			sql.append(EQUALS);
-//			sql.append(values[i]);
-//			if (i < cols.length - 1)
-//				sql.append(COMMA);
-//		}
-//		sql.append(SQL_WHERE);
-//		sql.append(StorableObjectWrapper.COLUMN_ID);
-//		sql.append(EQUALS);
-//		sql.append(storableObjectIdStr);
-//
-//		Statement statement = null;
-//		Connection connection = DatabaseConnection.getConnection();
-//		try {
-//			statement = connection.createStatement();
-//			Log.debugMessage("StorableObjectDatabase.updateEntity | Trying: " + sql, Log.DEBUGLEVEL09);
-//			statement.executeUpdate(sql.toString());
-//			connection.commit();
-//		}
-//		catch (SQLException sqle) {
-//			try {
-//				connection.rollback();
-//			}
-//			catch (SQLException sqle1) {
-//				Log.errorException(sqle1);
-//			}
-//			String mesg = "StorableObjectDatabase.updateEntity | Cannot update "
-//					+ this.getEnityName()
-//					+ " '"
-//					+ storableObjectIdStr
-//					+ "' -- "
-//					+ sqle.getMessage();
-//			throw new UpdateObjectException(mesg, sqle);
-//		}
-//		finally {
-//			try {
-//				if (statement != null)
-//					statement.close();
-//				statement = null;
-//			}
-//			catch (SQLException sqle1) {
-//				Log.errorException(sqle1);
-//			}
-//			finally {
-//				DatabaseConnection.releaseConnection(connection);
-//			}
-//		}
-//	}
-
-//	protected void updateEntities1(Collection storableObjects, Identifier modifierId) throws IllegalDataException, UpdateObjectException {
-//
-//		if ((storableObjects == null) || (storableObjects.size() == 0))
-//			return;
-//
-//		if (storableObjects.size() == 1) {
-//			this.updateEntity((StorableObject) storableObjects.iterator().next(), modifierId);
-//			return;
-//		}
-//
-//		String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
-//		// String[] values = this.parseInsertStringValues(this.getUpdateMultiplySQLValues(), cols.length);		
-//		// here we can split multyply sql values by COMMA because of it is only QUESTIONS separeted by COMMA
-//		String[] values = this.getUpdateMultiplySQLValues(MODE_INSERT).split(COMMA);
-//		if (cols.length != values.length)
-//			throw new UpdateObjectException("StorableObjectDatabase.updateEntities | Count of columns ('"+cols.length+"') is not equals count of values ('"+values.length+"')");
-//
-//		StringBuffer sql = new StringBuffer(SQL_UPDATE + this.getEnityName() + SQL_SET);
-//		for(int i = 0; i < cols.length; i++) {
-//			if(cols[i].equals(StorableObjectWrapper.COLUMN_ID))
-//				continue;
-//			sql.append(cols[i]);
-//			sql.append(EQUALS);
-//			sql.append(values[i]);
-//			if (i < cols.length - 1)
-//				sql.append(COMMA);
-//		}
-//		sql.append(SQL_WHERE);
-//		sql.append(StorableObjectWrapper.COLUMN_ID);
-//		sql.append(EQUALS);
-//		sql.append(QUESTION);
-//
-//		PreparedStatement preparedStatement = null;
-//		String storableObjectIdCode = null;
-//		Connection connection = DatabaseConnection.getConnection();
-//		StorableObject storableObject = null;
-//		Date savedModified = null;
-//		Identifier savedModifierId = null;
-//		long savedVersion = 0;
-//		try {
-//			preparedStatement = connection.prepareStatement(sql.toString());
-//			Log.debugMessage("StorableObjectDatabase.updateEntities | Trying: " + sql, Log.DEBUGLEVEL09);
-//			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-//
-//				storableObject = (StorableObject) it.next();
-//				storableObjectIdCode = storableObject.getId().getIdentifierString();
-//
-//				savedModified = storableObject.modified;
-//				savedModifierId = storableObject.modifierId;
-//				savedVersion = storableObject.version;
-//				storableObject.setUpdated(modifierId);
-//
-//				try {
-//					int i = this.setEntityForPreparedStatement(storableObject, preparedStatement, MODE_UPDATE);
-//					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getId());
-//
-//					Log.debugMessage("StorableObjectDatabase.updateEntities | Updating " + this.getEnityName() + " " + storableObjectIdCode,
-//							Log.DEBUGLEVEL09);
-//					preparedStatement.executeUpdate();
-//				}
-//				finally {
-//					this.setStorableObjectRollbacked(storableObject, savedModified, savedModifierId, savedVersion);
-//				}
-//			}
-//			connection.commit();
-//		}
-//		catch (SQLException sqle) {
-//			String mesg = "StorableObjectDatabase.updateEntities | Cannot update "
-//					+ this.getEnityName() + " '" + storableObjectIdCode + "' -- " + sqle.getMessage();
-//			throw new UpdateObjectException(mesg, sqle);
-//		}
-//		finally {
-//			try {
-//				if (preparedStatement != null)
-//					preparedStatement.close();
-//				preparedStatement = null;
-//			}
-//			catch (SQLException sqle1) {
-//				Log.errorException(sqle1);
-//			}
-//			finally {
-//				DatabaseConnection.releaseConnection(connection);
-//			}
-//		}
-//	}
-
-	private void setStorableObjectRollbacked(StorableObject storableObject, Date previousModified, Identifier previousModifierId, long previousVersion) {
-		storableObject.modified = previousModified;
-		storableObject.modifierId = previousModifierId;
-		storableObject.version = previousVersion;
-		storableObject.changed = true;
 	}
 
 	/**
