@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
+ * $Id: ReportTemplate.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,15 @@
 
 package com.syrus.AMFICOM.server.object;
 
+import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
 import com.syrus.AMFICOM.CORBA.Report.*;
 import com.syrus.AMFICOM.CORBA.Resource.Filter_Transferable;
 import java.sql.*;
 import java.util.Vector;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -30,7 +32,9 @@ final class ReportTemplate {
 	private ImagePane[] images;
 	private FilterTemplate[] filters;  
 
-	ReportTemplate(ReportTemplate_Transferable rt) throws SQLException {
+	ReportTemplate(final Connection conn, ReportTemplate_Transferable rt) throws SQLException, AMFICOMRemoteException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		this.id = rt.id;
 		this.name = rt.name;
 		this.description = rt.description;
@@ -40,7 +44,7 @@ final class ReportTemplate {
 
 		try 
 		{
-			#sql{ insert into REPORTTEMPLATES (
+			#sql [connCtx]{ insert into REPORTTEMPLATES (
 					ID, 
 					NAME, 
 					MODIFIED, 
@@ -53,7 +57,7 @@ final class ReportTemplate {
 					:(this.description),
 					:(this.template_type))
 			};
-			#sql { commit };
+			conn.commit();
 		} 
 		catch (SQLException ex) 
 		{
@@ -65,50 +69,52 @@ final class ReportTemplate {
 		int len = rt.renderingObjects.length;
 		this.ros = new RenderingObject[len];
 		for(int i = 0; i < len; i++)
-			ros[i] = new RenderingObject(rt.renderingObjects[i], this.id);
+			ros[i] = new RenderingObject(conn, rt.renderingObjects[i], this.id);
 
 		int len2 = rt.firmedTextPanes.length;
 		this.boxes = new FirmedTextPane[len2];
 		for(int i = 0; i < len2; i++)
-			boxes[i] = new FirmedTextPane(rt.firmedTextPanes[i], this.id);
+			boxes[i] = new FirmedTextPane(conn, rt.firmedTextPanes[i], this.id);
       
 		int len3 = rt.imagePanes.length;
 		this.images = new ImagePane[len3];
 		for(int i = 0; i < len3; i++)
-			images[i] = new ImagePane(rt.imagePanes[i], this.id);
+			images[i] = new ImagePane(conn, rt.imagePanes[i], this.id);
       
 		int len4 = rt.filters.length;
 		this.filters = new FilterTemplate[len4];
 		for(int i = 0; i < len4; i++)
     {
-			filters[i] = new FilterTemplate(rt.filters[i]);
+			filters[i] = new FilterTemplate(conn, rt.filters[i]);
       try 
       {
-        #sql{ insert into REPORTTEMPLATEFILTERS (
-            REPORT_TEMPLATE_ID, 
-            FILTER_ID)
-          values(
-            :(this.id), 
-            :(filters[i].getId()))
-        };
-        #sql { commit };
+	#sql [connCtx]{ insert into REPORTTEMPLATEFILTERS (
+	    REPORT_TEMPLATE_ID, 
+	    FILTER_ID)
+	  values(
+	    :(this.id), 
+	    :(filters[i].getId()))
+	};
+	conn.commit();
       } 
       catch (SQLException ex) 
       {
-        System.out.println("error saving new report template: " + ex.getMessage());
-        ex.printStackTrace();
-        throw ex;
+	System.out.println("error saving new report template: " + ex.getMessage());
+	ex.printStackTrace();
+	throw ex;
       } 
       
     }
 	}
 
-	ReportTemplate(String id) throws SQLException {
+	ReportTemplate(final Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		ReportTemplateIterator rtIt = null;
 
 		try
 		{
-			#sql rtIt = { select
+			#sql [connCtx] rtIt = { select
 					ID,
 					NAME,
 					MODIFIED,
@@ -138,11 +144,11 @@ final class ReportTemplate {
 
 			rtIt.close();
 
-			ros = RenderingObject.retrieveRenderingObjects(this.id);
-			boxes = FirmedTextPane.retrieveBoxes(this.id);
-			images = ImagePane.retrieveImages(this.id);
+			ros = RenderingObject.retrieveRenderingObjects(conn, this.id);
+			boxes = FirmedTextPane.retrieveBoxes(conn, this.id);
+			images = ImagePane.retrieveImages(conn, this.id);
 			
-			filters = getFilters();
+			filters = getFilters(conn);
 
 		}
 		catch(SQLException e)
@@ -154,13 +160,14 @@ final class ReportTemplate {
 		}
 	}
 
-	private FilterTemplate[] getFilters()
-	{
+	private FilterTemplate[] getFilters(final Connection conn) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		try
 		{
 			ReportFilterIterator rfIt = null;
 				
-			#sql rfIt = { select
+			#sql [connCtx] rfIt = { select
 					REPORT_TEMPLATE_ID,
 					FILTER_ID
 				from AMFICOM.REPORTTEMPLATEFILTERS
@@ -168,9 +175,8 @@ final class ReportTemplate {
 			};
 	
 			Vector rep_filters = new Vector();
-			while(rfIt.next())
-			{
-				FilterTemplate ft = new FilterTemplate(rfIt.filter_id());
+			while(rfIt.next()) {
+				FilterTemplate ft = new FilterTemplate(conn, rfIt.filter_id());
 				rep_filters.add(ft);
 			}
 			return (FilterTemplate[] )rep_filters.toArray(new FilterTemplate[0]);
@@ -182,9 +188,7 @@ final class ReportTemplate {
 		return new FilterTemplate[0];
 	}
 
-	ReportTemplate_Transferable getTransferable()
-			throws SQLException
-	{
+	ReportTemplate_Transferable getTransferable() throws SQLException {
 		RenderingObject_Transferable[] ros_t = new RenderingObject_Transferable[this.ros.length];
 		for (int i = 0; i < ros.length; i++)
 			ros_t[i] = this.ros[i].getTransferable();
@@ -217,31 +221,34 @@ final class ReportTemplate {
 		return this.id;
 	}
 	
-	void delete() throws SQLException {
-		#sql { delete from AMFICOM.REPORTTEMPLATEFIELDS
+	void delete(final Connection conn) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
+		#sql [connCtx] { delete from AMFICOM.REPORTTEMPLATEFIELDS
 			where REPORT_TEMPLATE_ID = :(this.id)
 		};
-		#sql { delete from AMFICOM.REPORTTEMPLATEBOXES
+		#sql [connCtx] { delete from AMFICOM.REPORTTEMPLATEBOXES
 			where REPORT_TEMPLATE_ID = :(this.id)
 		};
-		#sql { delete from AMFICOM.REPORTIMAGEPANES
+		#sql [connCtx] { delete from AMFICOM.REPORTIMAGEPANES
 			where REPORT_TEMPLATE_ID = :(this.id)
 		};
 
-		removeFilters();
+		removeFilters(conn);
   
-		#sql { delete from AMFICOM.REPORTTEMPLATES
+		#sql [connCtx] { delete from AMFICOM.REPORTTEMPLATES
 			where ID = :(this.id)
 		};
-		#sql { commit };
+		conn.commit();
 	}
 
-	private void removeFilters()
-	{
+	private void removeFilters(final Connection conn) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		try
 		{
 			ReportFilterIterator rfIt = null;
-			#sql rfIt = { select
+			#sql [connCtx] rfIt = { select
 					REPORT_TEMPLATE_ID,
 					FILTER_ID
 				from AMFICOM.REPORTTEMPLATEFILTERS
@@ -249,11 +256,11 @@ final class ReportTemplate {
 			};
 			while(rfIt.next())
 			{
-				#sql { delete from AMFICOM.FILTERS
+				#sql [connCtx] { delete from AMFICOM.FILTERS
 					where ID = :(rfIt.filter_id())
 				};
 			}
-			#sql { delete from AMFICOM.REPORTTEMPLATEFILTERS
+			#sql [connCtx] { delete from AMFICOM.REPORTTEMPLATEFILTERS
 				where REPORT_TEMPLATE_ID = :(this.id)
 			};
 		}
@@ -262,99 +269,81 @@ final class ReportTemplate {
 		}
 	}
 
-	void update(ReportTemplate_Transferable rt) throws SQLException
-	{
+	void update(final Connection conn, ReportTemplate_Transferable rt) throws SQLException, AMFICOMRemoteException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		if(!this.id.equals(rt.id))
 			return;
-
 		this.name = rt.name;
 		this.description = rt.description;
 		this.template_type = rt.template_type;
 		this.modified = System.currentTimeMillis();
 		Timestamp mod = new Timestamp(this.modified);
-
-		try
-		{
-			#sql{ update REPORTTEMPLATES set
-					NAME = :(this.name),
-					MODIFIED = :mod,
-					DESCRIPTION = :(this.description),
-					TEMPLATE_TYPE = :(this.template_type)
-				where ID =:(this.id)
-			};
-			#sql { commit };
-		} 
-		catch (SQLException ex) 
-		{
-			System.out.println("error updating report template: " + ex.getMessage());
-			ex.printStackTrace();
-			throw ex;
-		} 
-
-		this.setReportTemplateFields(rt.renderingObjects);
-
-		this.setReportTemplateBoxes(rt.firmedTextPanes);
-    
-		this.setReportTemplateImages(rt.imagePanes);    
-    
-		this.setReportTemplateFilters(rt.filters);    
+		#sql [connCtx] {
+			update REPORTTEMPLATES set NAME = :(this.name), MODIFIED = :mod, DESCRIPTION = :(this.description), TEMPLATE_TYPE = :(this.template_type) where ID =:(this.id)
+		};
+		conn.commit();
+		this.setReportTemplateFields(conn, rt.renderingObjects);
+		this.setReportTemplateBoxes(conn, rt.firmedTextPanes);
+		this.setReportTemplateImages(conn, rt.imagePanes);    
+		this.setReportTemplateFilters(conn, rt.filters);    
 	}
 
-	void setReportTemplateFields(RenderingObject_Transferable[] renderingObjects) throws SQLException
-	{
+	void setReportTemplateFields(final Connection conn, RenderingObject_Transferable[] renderingObjects) throws SQLException, AMFICOMRemoteException {
 		int len = renderingObjects.length;
 		this.ros = new RenderingObject[len];
 		for(int i = 0; i < len; i++)
 		{
 			try
 			{
-				ros[i] = new RenderingObject(renderingObjects[i].roID);
-				ros[i].update(renderingObjects[i]);
+				ros[i] = new RenderingObject(conn, renderingObjects[i].roID);
+				ros[i].update(conn, renderingObjects[i]);
 			}
 			catch(SQLException e)
 			{
-				ros[i] = new RenderingObject(renderingObjects[i], this.id);
+				ros[i] = new RenderingObject(conn, renderingObjects[i], this.id);
 			}
 		}
 	}
 
-	void setReportTemplateBoxes(FirmedTextPane_Transferable[] firmedTextPanes) throws SQLException
-	{
+	void setReportTemplateBoxes(final Connection conn, FirmedTextPane_Transferable[] firmedTextPanes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int len = firmedTextPanes.length;
 		this.boxes = new FirmedTextPane[len];
 
-		#sql{ delete from AMFICOM.REPORTTEMPLATEBOXES
+		#sql [connCtx]{ delete from AMFICOM.REPORTTEMPLATEBOXES
 			where REPORT_TEMPLATE_ID =:(this.id)
 		};
-		#sql { commit };
+		conn.commit();
 
 		for(int i = 0; i < len; i++)
-			boxes[i] = new FirmedTextPane(firmedTextPanes[i], this.id);
+			boxes[i] = new FirmedTextPane(conn, firmedTextPanes[i], this.id);
 	}
 
-	private void setReportTemplateImages(ImagePane_Transferable[] imagePanes) throws SQLException
-	{
+	private void setReportTemplateImages(final Connection conn, ImagePane_Transferable[] imagePanes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int len = imagePanes.length;
 		this.images = new ImagePane[len];
 
-		#sql{ delete from AMFICOM.REPORTIMAGEPANES
+		#sql [connCtx]{ delete from AMFICOM.REPORTIMAGEPANES
 			where REPORT_TEMPLATE_ID =:(this.id)
 		};
-		#sql { commit };
+		conn.commit();
 
 		for(int i = 0; i < len; i++)
-			images[i] = new ImagePane(imagePanes[i], this.id);
+			images[i] = new ImagePane(conn, imagePanes[i], this.id);
 	}
 
-	private void setReportTemplateFilters(Filter_Transferable[] new_filters) throws SQLException
-	{
+	private void setReportTemplateFilters(final Connection conn, Filter_Transferable[] new_filters) throws SQLException {
 		int len = new_filters.length;
 		this.filters = new FilterTemplate[len];
 
-		removeFilters();
+		removeFilters(conn);
 
 		for(int i = 0; i < len; i++)
-			filters[i] = new FilterTemplate(new_filters[i]);
+			filters[i] = new FilterTemplate(conn, new_filters[i]);
 	}
 
 	#sql public static iterator ReportTemplateIterator(

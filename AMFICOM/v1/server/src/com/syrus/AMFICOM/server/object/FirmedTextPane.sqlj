@@ -1,5 +1,5 @@
 /*
- * $Id: FirmedTextPane.sqlj,v 1.1.2.4 2004/08/27 08:09:21 bass Exp $
+ * $Id: FirmedTextPane.sqlj,v 1.1.2.5 2004/09/09 11:35:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,11 +10,12 @@ package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Report.FirmedTextPane_Transferable;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Vector;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/08/27 08:09:21 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/09/09 11:35:20 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -33,8 +34,10 @@ final class FirmedTextPane {
 
 	private String report_template_id;
 
-	FirmedTextPane(FirmedTextPane_Transferable ftp, String r_t_id) throws SQLException {
-		this.id = ResourcedbInterface.getUId("reporttemplatebox");
+	FirmedTextPane(final Connection conn, FirmedTextPane_Transferable ftp, String r_t_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
+		this.id = ResourcedbInterface.getUid(conn, "reporttemplatebox");
 		this.labelX = ftp.labelX;
 		this.labelY = ftp.labelY;
 		this.strings_contained = ftp.strings_contained;
@@ -47,7 +50,7 @@ final class FirmedTextPane {
 		this.distanceY = ftp.distanceY;
 		this.report_template_id = r_t_id;
 
-		#sql{ insert into AMFICOM.REPORTTEMPLATEBOXES(
+		#sql [connCtx]{ insert into AMFICOM.REPORTTEMPLATEBOXES(
 				ID,
 				REPORT_TEMPLATE_ID,
 				LABEL_X,
@@ -75,15 +78,17 @@ final class FirmedTextPane {
 				:(this.distanceY))
 		};
 
-		#sql { commit };
+		conn.commit();
 	}
 
-	private FirmedTextPane(String id) throws SQLException {
+	private FirmedTextPane(final Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		FirmedTextPaneIterator ftpIt = null;
 
 		try
 		{
-			#sql ftpIt = { select
+			#sql [connCtx] ftpIt = { select
 					ID,
 					REPORT_TEMPLATE_ID,
 					LABEL_X,
@@ -117,7 +122,7 @@ final class FirmedTextPane {
 			catch(SQLException e) { this.distanceX = 0; }
 			try { this.distanceY = ftpIt.distance_y(); }
 			catch(SQLException e) { this.distanceY = 0; }
-        
+	
 			try { this.strings_contained = ftpIt.strings_contained(); }
 			catch(SQLException e) { }
 			if(this.strings_contained == null) this.strings_contained = "";
@@ -172,18 +177,20 @@ final class FirmedTextPane {
 			this.distanceY);
 	}
 
-	static FirmedTextPane[] retrieveBoxes(String rt_id) throws SQLException {
+	static FirmedTextPane[] retrieveBoxes(final Connection conn, String rt_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 		Vector linkedlist = new Vector();
 
 		try
 		{
-			#sql idIt = { select ID
+			#sql [connCtx] idIt = { select ID
 					from AMFICOM.REPORTTEMPLATEBOXES
 					where report_template_id = :rt_id  };
 	
 			while (idIt.next())
-				linkedlist.add(new FirmedTextPane(idIt.id()));
+				linkedlist.add(new FirmedTextPane(conn, idIt.id()));
 			idIt.close();
 		}
 		catch(SQLException ex)

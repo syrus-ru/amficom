@@ -1,5 +1,5 @@
 /*
- * $Id: NetDirectorydbInterfaceLoad.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
+ * $Id: NetDirectorydbInterfaceLoad.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,10 @@ import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
 import java.sql.*;
 import java.util.Vector;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -23,11 +24,9 @@ final class NetDirectorydbInterfaceLoad {
 	private NetDirectorydbInterfaceLoad() {
 	}
 
-	static Vector loadCharacteristicLinks(
-			String charLinkTable,
-			String charLinkField,
-			String element_id)
-	{
+	static Vector loadCharacteristicLinks(final Connection conn, String charLinkTable, String charLinkField, String element_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_characteristic_id = "";
 		String It_characteristic_type_id = "";
 		String It_characteristic_value = "";
@@ -45,7 +44,7 @@ final class NetDirectorydbInterfaceLoad {
 
 		try
 		{
-			#sql
+			#sql [connCtx]
 			{
 				BEGIN
 					open :OUT chIt for :qry;
@@ -66,7 +65,7 @@ final class NetDirectorydbInterfaceLoad {
 
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						select NAME, VALUE_TYPE_ID, CH_CLASS
 						into
 							:It_characteristic_name,
@@ -119,9 +118,9 @@ final class NetDirectorydbInterfaceLoad {
 		return vector2;
 	}
 
-	static int loadCharacteristicTypes(
-			CharacteristicTypeSeq_TransferableHolder characteristictypeseq)
-	{
+	static int loadCharacteristicTypes(final Connection conn, CharacteristicTypeSeq_TransferableHolder characteristictypeseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_ch_class = "";
 		String It_name = "";
@@ -142,7 +141,7 @@ final class NetDirectorydbInterfaceLoad {
 
 		try
 		{
-			#sql chIt = { select
+			#sql [connCtx] chIt = { select
 						ID,
 						CH_CLASS,
 						NAME,
@@ -211,9 +210,9 @@ final class NetDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadPortTypes(
-			PortTypeSeq_TransferableHolder porttypeseq)
-	{
+	static int loadPortTypes(final Connection conn, PortTypeSeq_TransferableHolder porttypeseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_codename = "";
@@ -236,7 +235,7 @@ final class NetDirectorydbInterfaceLoad {
 
 		try
 		{
-			#sql ptIt = { select
+			#sql [connCtx] ptIt = { select
 						ID,
 						NAME,
 						CODENAME,
@@ -282,10 +281,7 @@ final class NetDirectorydbInterfaceLoad {
 				try { It_modified = ptIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-				vector2 = loadCharacteristicLinks(
-						"PORTTYPECHARACTERISTICLINKS",
-						"PORT_TYPE_ID",
-						It_id);
+				vector2 = loadCharacteristicLinks(conn, "PORTTYPECHARACTERISTICLINKS", "PORT_TYPE_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
@@ -329,9 +325,9 @@ final class NetDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadCablePortTypes(
-			CablePortTypeSeq_TransferableHolder porttypeseq)
-	{
+	static int loadCablePortTypes(final Connection conn, CablePortTypeSeq_TransferableHolder porttypeseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_codename = "";
@@ -350,7 +346,7 @@ final class NetDirectorydbInterfaceLoad {
 
 		try
 		{
-			#sql ptIt = { select
+			#sql [connCtx] ptIt = { select
 						ID,
 						NAME,
 						CODENAME,
@@ -380,10 +376,7 @@ final class NetDirectorydbInterfaceLoad {
 				try { It_modified = ptIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-				vector2 = loadCharacteristicLinks(
-						"CABLEPORTTYPECHARACTERISTICLINKS",
-						"CABLE_PORT_TYPE_ID",
-						It_id);
+				vector2 = loadCharacteristicLinks(conn, "CABLEPORTTYPECHARACTERISTICLINKS", "CABLE_PORT_TYPE_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
@@ -427,9 +420,9 @@ final class NetDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadEquipmentTypes(
-			EquipmentTypeSeq_TransferableHolder equipmenttypes)
-	{
+	static int loadEquipmentTypes(final Connection conn, EquipmentTypeSeq_TransferableHolder equipmenttypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int k;
 
 		String It_id = "";
@@ -455,7 +448,7 @@ final class NetDirectorydbInterfaceLoad {
 
 		try
 		{
-			#sql eIt = { select
+			#sql [connCtx] eIt = { select
 						ID,
 						NAME,
 						CODENAME,
@@ -496,10 +489,7 @@ final class NetDirectorydbInterfaceLoad {
 				try { It_modified = eIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-				vector2 = loadCharacteristicLinks(
-						"EQUIPMENTTYPECHARACTERISTICLIN",
-						"EQUIPMENT_TYPE_ID",
-						It_id);
+				vector2 = loadCharacteristicLinks(conn, "EQUIPMENTTYPECHARACTERISTICLIN", "EQUIPMENT_TYPE_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
@@ -542,9 +532,9 @@ final class NetDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadLinkTypes(
-			LinkTypeSeq_TransferableHolder linktypes)
-	{
+	static int loadLinkTypes(final Connection conn, LinkTypeSeq_TransferableHolder linktypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int k;
 
 		String It_id = "";
@@ -573,7 +563,7 @@ final class NetDirectorydbInterfaceLoad {
 
 		try
 		{
-			#sql lIt = { select
+			#sql [connCtx] lIt = { select
 						ID,
 						NAME,
 						CODENAME,
@@ -626,10 +616,7 @@ final class NetDirectorydbInterfaceLoad {
 				try { It_modified = lIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-				vector2 = loadCharacteristicLinks(
-						"LINKTYPECHARACTERISTICLINKS",
-						"LINK_TYPE_ID",
-						It_id);
+				vector2 = loadCharacteristicLinks(conn, "LINKTYPECHARACTERISTICLINKS", "LINK_TYPE_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
@@ -675,9 +662,9 @@ final class NetDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadCableTypes(
-			CableLinkTypeSeq_TransferableHolder linktypes)
-	{
+	static int loadCableTypes(final Connection conn, CableLinkTypeSeq_TransferableHolder linktypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int k;
 
 		String It_id = "";
@@ -706,7 +693,7 @@ final class NetDirectorydbInterfaceLoad {
 
 		try
 		{
-			#sql lIt = { select
+			#sql [connCtx] lIt = { select
 						ID,
 						NAME,
 						CODENAME,
@@ -744,10 +731,7 @@ final class NetDirectorydbInterfaceLoad {
 				try { It_modified = lIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-				vector2 = loadCharacteristicLinks(
-						"CABLETYPECHARACTERISTICLINKS",
-						"CABLE_LINK_TYPE_ID",
-						It_id);
+				vector2 = loadCharacteristicLinks(conn, "CABLETYPECHARACTERISTICLINKS", "CABLE_LINK_TYPE_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
@@ -777,9 +761,9 @@ final class NetDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadTestPortTypes(
-			TestPortTypeSeq_TransferableHolder tporttypeseq)
-	{
+	static int loadTestPortTypes(final Connection conn, TestPortTypeSeq_TransferableHolder tporttypeseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_description = "";
@@ -796,7 +780,7 @@ final class NetDirectorydbInterfaceLoad {
 
 		try
 		{
-			#sql ptIt = { select
+			#sql [connCtx] ptIt = { select
 						ID,
 						NAME,
 						DESCRIPTION,
@@ -819,10 +803,7 @@ final class NetDirectorydbInterfaceLoad {
 				catch(SQLException e) { }
 				if(It_port_type_id == null) It_port_type_id = "";
 
-				vector2 = loadCharacteristicLinks(
-						"TESTPORTTYPECHARACTERISTICLINK",
-						"TEST_PORT_TYPE_ID",
-						It_id);
+				vector2 = loadCharacteristicLinks(conn, "TESTPORTTYPECHARACTERISTICLINK", "TEST_PORT_TYPE_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
@@ -860,10 +841,9 @@ final class NetDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadCharacteristicTypes(
-			String[] ids,
-			CharacteristicTypeSeq_TransferableHolder characteristictypeseq)
-	{
+	static int loadCharacteristicTypes(final Connection conn, String[] ids, CharacteristicTypeSeq_TransferableHolder characteristictypeseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_ch_class = "";
 		String It_name = "";
@@ -887,7 +867,7 @@ final class NetDirectorydbInterfaceLoad {
 			loadvec.add(ids[i]);
 		try
 		{
-			#sql chIt = { select
+			#sql [connCtx] chIt = { select
 						ID,
 						CH_CLASS,
 						NAME,
@@ -959,10 +939,9 @@ final class NetDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadPortTypes(
-			String[] ids,
-			PortTypeSeq_TransferableHolder porttypeseq)
-	{
+	static int loadPortTypes(final Connection conn, String[] ids, PortTypeSeq_TransferableHolder porttypeseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_codename = "";
@@ -988,7 +967,7 @@ final class NetDirectorydbInterfaceLoad {
 			loadvec.add(ids[i]);
 		try
 		{
-			#sql ptIt = { select
+			#sql [connCtx] ptIt = { select
 						ID,
 						NAME,
 						CODENAME,
@@ -1037,10 +1016,7 @@ final class NetDirectorydbInterfaceLoad {
 				try { It_modified = ptIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-				vector2 = loadCharacteristicLinks(
-						"PORTTYPECHARACTERISTICLINKS",
-						"PORT_TYPE_ID",
-						It_id);
+				vector2 = loadCharacteristicLinks(conn, "PORTTYPECHARACTERISTICLINKS", "PORT_TYPE_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
@@ -1084,10 +1060,9 @@ final class NetDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadCablePortTypes(
-			String[] ids,
-			CablePortTypeSeq_TransferableHolder porttypeseq)
-	{
+	static int loadCablePortTypes(final Connection conn, String[] ids, CablePortTypeSeq_TransferableHolder porttypeseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_codename = "";
@@ -1109,7 +1084,7 @@ final class NetDirectorydbInterfaceLoad {
 			loadvec.add(ids[i]);
 		try
 		{
-			#sql ptIt = { select
+			#sql [connCtx] ptIt = { select
 						ID,
 						NAME,
 						CODENAME,
@@ -1142,10 +1117,7 @@ final class NetDirectorydbInterfaceLoad {
 				try { It_modified = ptIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-				vector2 = loadCharacteristicLinks(
-						"CABLEPORTTYPECHARACTERISTICS",
-						"CABLE_PORT_TYPE_ID",
-						It_id);
+				vector2 = loadCharacteristicLinks(conn, "CABLEPORTTYPECHARACTERISTICS", "CABLE_PORT_TYPE_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
@@ -1189,10 +1161,9 @@ final class NetDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadEquipmentTypes(
-			String[] ids,
-			EquipmentTypeSeq_TransferableHolder equipmenttypes)
-	{
+	static int loadEquipmentTypes(final Connection conn, String[] ids, EquipmentTypeSeq_TransferableHolder equipmenttypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int k;
 
 		String It_id = "";
@@ -1221,7 +1192,7 @@ final class NetDirectorydbInterfaceLoad {
 			loadvec.add(ids[i]);
 		try
 		{
-			#sql eIt = { select
+			#sql [connCtx] eIt = { select
 						ID,
 						NAME,
 						CODENAME,
@@ -1265,10 +1236,7 @@ final class NetDirectorydbInterfaceLoad {
 				try { It_modified = eIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-				vector2 = loadCharacteristicLinks(
-						"EQUIPMENTTYPECHARACTERISTICLIN",
-						"EQUIPMENT_TYPE_ID",
-						It_id);
+				vector2 = loadCharacteristicLinks(conn, "EQUIPMENTTYPECHARACTERISTICLIN", "EQUIPMENT_TYPE_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
@@ -1308,10 +1276,9 @@ final class NetDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadLinkTypes(
-			String[] ids,
-			LinkTypeSeq_TransferableHolder linktypes)
-	{
+	static int loadLinkTypes(final Connection conn, String[] ids, LinkTypeSeq_TransferableHolder linktypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int k;
 
 		String It_id = "";
@@ -1343,7 +1310,7 @@ final class NetDirectorydbInterfaceLoad {
 			loadvec.add(ids[i]);
 		try
 		{
-			#sql lIt = { select
+			#sql [connCtx] lIt = { select
 						ID,
 						NAME,
 						CODENAME,
@@ -1399,10 +1366,7 @@ final class NetDirectorydbInterfaceLoad {
 				try { It_modified = lIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-				vector2 = loadCharacteristicLinks(
-						"LINKTYPECHARACTERISTICLINKS",
-						"LINK_TYPE_ID",
-						It_id);
+				vector2 = loadCharacteristicLinks(conn, "LINKTYPECHARACTERISTICLINKS", "LINK_TYPE_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
@@ -1448,8 +1412,9 @@ final class NetDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static Vector loadCableTypeThreads(String cable_id)
-	{
+	private static Vector loadCableTypeThreads(final Connection conn, String cable_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_color = "";
@@ -1464,7 +1429,7 @@ final class NetDirectorydbInterfaceLoad {
 		Vector vector2 = new Vector();
 		try
 		{
-			#sql thIt = {
+			#sql [connCtx] thIt = {
 				select
 					ID,
 					NAME,
@@ -1526,10 +1491,9 @@ final class NetDirectorydbInterfaceLoad {
 		return vector;
 	}
 
-	static int loadCableTypes(
-			String[] ids,
-			CableLinkTypeSeq_TransferableHolder linktypes)
-	{
+	static int loadCableTypes(final Connection conn, String[] ids, CableLinkTypeSeq_TransferableHolder linktypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int k;
 
 		String It_id = "";
@@ -1561,7 +1525,7 @@ final class NetDirectorydbInterfaceLoad {
 			loadvec.add(ids[i]);
 		try
 		{
-			#sql lIt = { select
+			#sql [connCtx] lIt = { select
 						ID,
 						NAME,
 						CODENAME,
@@ -1602,14 +1566,11 @@ final class NetDirectorydbInterfaceLoad {
 				try { It_modified = lIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-				vector2 = loadCharacteristicLinks(
-						"CABLETYPECHARACTERISTICLINKS",
-						"CABLE_TYPE_ID",
-						It_id);
+				vector2 = loadCharacteristicLinks(conn, "CABLETYPECHARACTERISTICLINKS", "CABLE_TYPE_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
-				vector2 = loadCableTypeThreads(It_id);
+				vector2 = loadCableTypeThreads(conn, It_id);
 				threads = new CableTypeThread_Transferable[vector2.size()];
 				vector2.copyInto(threads);
 

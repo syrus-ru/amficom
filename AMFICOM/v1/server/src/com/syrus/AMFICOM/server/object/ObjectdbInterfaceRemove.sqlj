@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectdbInterfaceRemove.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
+ * $Id: ObjectdbInterfaceRemove.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,10 +9,11 @@
 package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Constants;
-import java.sql.SQLException;
+import java.sql.*;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -20,16 +21,18 @@ final class ObjectdbInterfaceRemove {
 	private ObjectdbInterfaceRemove() {
 	}
 
-	private static int removeObjectPermissions(String id) {
+	private static int removeObjectPermissions(final Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		try
 		{
-			#sql { delete from AMFICOM.OBJECTPERMISSIONCATEGORIES
+			#sql [connCtx] { delete from AMFICOM.OBJECTPERMISSIONCATEGORIES
 				where OBJECT_PERMISSION_ID = :id };
-			#sql { delete from AMFICOM.OBJECTPERMISSIONGROUPS
+			#sql [connCtx] { delete from AMFICOM.OBJECTPERMISSIONGROUPS
 				where OBJECT_PERMISSION_ID = :id };
-				#sql { delete from AMFICOM.OBJECTPERMISSIONS
+				#sql [connCtx] { delete from AMFICOM.OBJECTPERMISSIONS
 				where ID = :id };
-				#sql { commit };
+				conn.commit();
 		}
 		catch(SQLException e)
 		{
@@ -40,35 +43,36 @@ final class ObjectdbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeDomains(String[] domainseq)
-	{
+	static int removeDomains(final Connection conn, String[] domainseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		String opi;
 		for(i = domainseq.length - 1; i >= 0; i--)
 		{
 			try
 			{
-				#sql { delete from AMFICOM.DOMAINLINKS
+				#sql [connCtx] { delete from AMFICOM.DOMAINLINKS
 					where DOMAIN_ID = :(domainseq[i]) };
 
-				#sql { delete from AMFICOM.DOMAINLINKS
+				#sql [connCtx] { delete from AMFICOM.DOMAINLINKS
 					where INNER_DOMAIN_ID = :(domainseq[i]) };
 
 				try
 				{
-					#sql { select OBJECT_PERMISSION_ID into :opi
+					#sql [connCtx] { select OBJECT_PERMISSION_ID into :opi
 						from AMFICOM.DOMAINS
 						where ID = :(domainseq[i]) };
-					removeObjectPermissions(opi);
+					removeObjectPermissions(conn, opi);
 				}
 				catch(Exception exx)
 				{
 				}
 
-				#sql { delete from AMFICOM.DOMAINS
+				#sql [connCtx] { delete from AMFICOM.DOMAINS
 					where ID = :(domainseq[i]) };
 
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -80,23 +84,24 @@ final class ObjectdbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeCategories(String[] categoryseq)
-	{
+	static int removeCategories(final Connection conn, String[] categoryseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		for(i = categoryseq.length - 1; i >= 0; i--)
 		{
 			try
 			{
-				#sql { delete from AMFICOM.USERCATEGORIES
+				#sql [connCtx] { delete from AMFICOM.USERCATEGORIES
 					where CATEGORY_ID = :(categoryseq[i]) };
 
-				#sql { delete from AMFICOM.EXECCATEGORIES
+				#sql [connCtx] { delete from AMFICOM.EXECCATEGORIES
 					where CATEGORY_ID = :(categoryseq[i]) };
 
-				#sql { delete from AMFICOM.CATEGORIES
+				#sql [connCtx] { delete from AMFICOM.CATEGORIES
 					where ID = :(categoryseq[i]) };
 
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -108,22 +113,23 @@ final class ObjectdbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeGroups(String[] groupseq)
-	{
+	static int removeGroups(final Connection conn, String[] groupseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		for(i = groupseq.length - 1; i >= 0; i--)
 		{
 			try
 			{
-				#sql { delete from AMFICOM.USERGROUPS
+				#sql [connCtx] { delete from AMFICOM.USERGROUPS
 					where GROUP_ID = :(groupseq[i]) };
-				#sql { delete from AMFICOM.EXECGROUPS
+				#sql [connCtx] { delete from AMFICOM.EXECGROUPS
 					where GROUP_ID = :(groupseq[i]) };
 
-				#sql { delete from AMFICOM.GROUPS
+				#sql [connCtx] { delete from AMFICOM.GROUPS
 					where ID = :(groupseq[i]) };
 
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -135,17 +141,18 @@ final class ObjectdbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeProfiles(String[] profileseq)
-	{
+	static int removeProfiles(final Connection conn, String[] profileseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		for(i = profileseq.length - 1; i >= 0; i--)
 		{
 			try
 			{
-				#sql { delete from AMFICOM.OPERATORPROFILES
+				#sql [connCtx] { delete from AMFICOM.OPERATORPROFILES
 					where ID = :(profileseq[i]) };
 
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -157,22 +164,23 @@ final class ObjectdbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeExecs(String[] execseq)
-	{
+	static int removeExecs(final Connection conn, String[] execseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		for(i = execseq.length - 1; i >= 0; i--)
 		{
 			try
 			{
-				#sql { delete from AMFICOM.EXECCATEGORIES
+				#sql [connCtx] { delete from AMFICOM.EXECCATEGORIES
 					where EXEC_ID = :(execseq[i]) };
-				#sql { delete from AMFICOM.EXECGROUPS
+				#sql [connCtx] { delete from AMFICOM.EXECGROUPS
 					where EXEC_ID = :(execseq[i]) };
 
-				#sql { delete from AMFICOM.EXECS
+				#sql [connCtx] { delete from AMFICOM.EXECS
 					where ID = :(execseq[i]) };
 
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -184,22 +192,23 @@ final class ObjectdbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeUsers(String[] userseq)
-	{
+	static int removeUsers(final Connection conn, String[] userseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		for(i = userseq.length - 1; i >= 0; i--)
 		{
 			try
 			{
-				#sql { delete from AMFICOM.USERCATEGORIES
+				#sql [connCtx] { delete from AMFICOM.USERCATEGORIES
 					where USER_ID = :(userseq[i]) };
-				#sql { delete from AMFICOM.USERGROUPS
+				#sql [connCtx] { delete from AMFICOM.USERGROUPS
 					where USER_ID = :(userseq[i]) };
 
-				#sql { delete from AMFICOM.USERS
+				#sql [connCtx] { delete from AMFICOM.USERS
 					where ID = :(userseq[i]) };
 
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{

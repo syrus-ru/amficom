@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectdbInterfaceSave.sqlj,v 1.1.2.2 2004/08/24 15:43:44 bass Exp $
+ * $Id: ObjectdbInterfaceSave.sqlj,v 1.1.2.3 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,12 +11,12 @@ package com.syrus.AMFICOM.server.object;
 import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
-import com.syrus.util.database.ByteArrayDatabase;
+import com.syrus.util.database.JdbcBlobManager;
 import java.sql.*;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -24,10 +24,12 @@ final class ObjectdbInterfaceSave {
 	private  ObjectdbInterfaceSave() {
 	}
 
-	private static int saveObjectPermission(ObjectPermissionAttributes_Transferable opa) {
+	private static int saveObjectPermission(final Connection conn, ObjectPermissionAttributes_Transferable opa) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		try
 		{
-			#sql
+			#sql [connCtx]
 			{
 				insert into AMFICOM.OBJECTPERMISSIONS(
 						ID,
@@ -56,14 +58,14 @@ final class ObjectdbInterfaceSave {
 
 						:(opa.whyRejected) )
 			};
-			#sql { commit };
+			conn.commit();
 		}
 		catch(SQLException e)
 		{
 			System.out.println("exec exists - updating...");
 			try
 			{
-				#sql
+				#sql [connCtx]
 				{
 					update AMFICOM.OBJECTPERMISSIONS set
 						RWX = :(opa.rwx),
@@ -77,7 +79,7 @@ final class ObjectdbInterfaceSave {
 						WHYREJECTED = :(opa.whyRejected)
 					where ID = :(opa.id)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -88,19 +90,19 @@ final class ObjectdbInterfaceSave {
 		}
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				delete from AMFICOM.OBJECTPERMISSIONGROUPS
 					where OBJECT_PERMISSION_ID = :(opa.id)
 			};
 			for(int j = opa.group_ids.length - 1; j >= 0; j--)
 			{
-				String id_v = ResourcedbInterface.getUId("operatorgrouplink");
-				#sql
+				String id_v = ResourcedbInterface.getUid(conn, "operatorgrouplink");
+				#sql [connCtx]
 				{ insert into AMFICOM.OBJECTPERMISSIONGROUPS(ID, OBJECT_PERMISSION_ID, GROUP_ID)
 					values(:id_v, :(opa.id), :(opa.group_ids[j]) )
 				};
 			}
-			#sql { commit };
+			conn.commit();
 		}
 		catch(SQLException e)
 		{
@@ -113,19 +115,19 @@ final class ObjectdbInterfaceSave {
 		}
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				delete from AMFICOM.OBJECTPERMISSIONCATEGORIES
 					where OBJECT_PERMISSION_ID = :(opa.id)
 			};
 			for(int j = opa.category_ids.length - 1; j >= 0; j--)
 			{
-				String id_v = ResourcedbInterface.getUId("operatorcategorylink");
-				#sql
+				String id_v = ResourcedbInterface.getUid(conn, "operatorcategorylink");
+				#sql [connCtx]
 				{ insert into AMFICOM.OBJECTPERMISSIONCATEGORIES(ID, OBJECT_PERMISSION_ID, CATEGORY_ID)
 					values(:id_v, :(opa.id), :(opa.category_ids[j]) )
 				};
 			}
-			#sql { commit };
+			conn.commit();
 		}
 		catch(SQLException e)
 		{
@@ -139,21 +141,23 @@ final class ObjectdbInterfaceSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static int saveDomainLinks(String domain_id, String[] ids) {
+	private static int saveDomainLinks(final Connection conn, String domain_id, String[] ids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				delete from AMFICOM.DOMAINLINKS
 					where DOMAIN_ID = :domain_id
 			};
 			for(int j = ids.length - 1; j >= 0; j--)
 			{
-				#sql
+				#sql [connCtx]
 				{ insert into AMFICOM.DOMAINLINKS(DOMAIN_ID, INNER_DOMAIN_ID)
 					values(:domain_id, :(ids[j]) )
 				};
 			}
-			#sql { commit };
+			conn.commit();
 		}
 		catch(SQLException e)
 		{
@@ -167,8 +171,9 @@ final class ObjectdbInterfaceSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveDomains(Domain_Transferable[] domainseq)
-	{
+	static int saveDomains(final Connection conn, Domain_Transferable[] domainseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int len;
 
@@ -183,7 +188,7 @@ final class ObjectdbInterfaceSave {
 					" owner " + domainseq[i].owner_id);
 			try
 			{
-				#sql
+				#sql [connCtx]
 				{
 					insert into AMFICOM.DOMAINS(
 							ID,
@@ -208,15 +213,15 @@ final class ObjectdbInterfaceSave {
 						:(domainseq[i].owner_id),
 						:(domainseq[i].domain_id) )
 				};
-				#sql { commit };
+				conn.commit();
 
-				String id2 = ResourcedbInterface.getUId("resultset");
+				String id2 = ResourcedbInterface.getUid(conn, "resultset");
 				Timestamp active_start_time = new Timestamp(System.currentTimeMillis());
 
 				long active_period = 2592000000L;
 				Timestamp active_end_time = new Timestamp(active_start_time.getTime() + active_period);
 
-				#sql { insert into resultsets(
+				#sql [connCtx] { insert into resultsets(
 						ID,
 						NAME,
 						COMMENTS,
@@ -239,14 +244,14 @@ final class ObjectdbInterfaceSave {
 						:active_start_time,
 						:active_end_time)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("domain exists - updating...");
 				try
 				{
-					#sql
+					#sql [connCtx]
 					{
 						update AMFICOM.DOMAINS set
 								NAME = :(domainseq[i].name),
@@ -258,7 +263,7 @@ final class ObjectdbInterfaceSave {
 								DOMAIN_ID = :(domainseq[i].domain_id)
 							where ID = :(domainseq[i].id)
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -267,15 +272,15 @@ final class ObjectdbInterfaceSave {
 					return Constants.ERROR_SAVING;
 				}
 			}
-			saveDomainLinks(domainseq[i].id, domainseq[i].domain_ids);
-			saveObjectPermission(domainseq[i].permissions);
+			saveDomainLinks(conn, domainseq[i].id, domainseq[i].domain_ids);
+			saveObjectPermission(conn, domainseq[i].permissions);
 			try
 			{
-				#sql { update AMFICOM.DOMAINS
+				#sql [connCtx] { update AMFICOM.DOMAINS
 					set OBJECT_PERMISSION_ID = :(domainseq[i].permissions.id)
 					where ID = :(domainseq[i].id)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -284,8 +289,9 @@ final class ObjectdbInterfaceSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveExecs(CommandPermissionAttributes_Transferable[] execseq)
-	{
+	static int saveExecs(final Connection conn, CommandPermissionAttributes_Transferable[] execseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int len;
 
@@ -294,7 +300,7 @@ final class ObjectdbInterfaceSave {
 		{
 			try
 			{
-				#sql
+				#sql [connCtx]
 				{
 					insert into AMFICOM.EXECS(
 							ID,
@@ -323,14 +329,14 @@ final class ObjectdbInterfaceSave {
 
 							:(execseq[i].whyRejected) )
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("exec exists - updating...");
 				try
 				{
-					#sql
+					#sql [connCtx]
 					{
 						update AMFICOM.EXECS set
 							RWX = :(execseq[i].rwx),
@@ -344,7 +350,7 @@ final class ObjectdbInterfaceSave {
 							WHYREJECTED = :(execseq[i].whyRejected)
 						where ID = :(execseq[i].id)
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -355,19 +361,19 @@ final class ObjectdbInterfaceSave {
 			}
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.EXECGROUPS
 						where EXEC_ID = :(execseq[i].id)
 				};
 				for(int j = execseq[i].group_ids.length - 1; j >= 0; j--)
 				{
-					String id_v = ResourcedbInterface.getUId("operatorgrouplink");
-					#sql
+					String id_v = ResourcedbInterface.getUid(conn, "operatorgrouplink");
+					#sql [connCtx]
 					{ insert into AMFICOM.EXECGROUPS(ID, EXEC_ID, GROUP_ID)
 						values(:id_v, :(execseq[i].id), :(execseq[i].group_ids[j]) )
 					};
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -380,19 +386,19 @@ final class ObjectdbInterfaceSave {
 			}
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.EXECCATEGORIES
 						where EXEC_ID = :(execseq[i].id)
 				};
 				for(int j = execseq[i].category_ids.length - 1; j >= 0; j--)
 				{
-					String id_v = ResourcedbInterface.getUId("operatorcategorylink");
-					#sql
+					String id_v = ResourcedbInterface.getUid(conn, "operatorcategorylink");
+					#sql [connCtx]
 					{ insert into AMFICOM.EXECCATEGORIES(ID, EXEC_ID, CATEGORY_ID)
 						values(:id_v, :(execseq[i].id), :(execseq[i].category_ids[j]) )
 					};
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -407,8 +413,9 @@ final class ObjectdbInterfaceSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveUsers(User_Transferable[] userseq)
-	{
+	static int saveUsers(final Connection conn, User_Transferable[] userseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int len;
 
@@ -420,7 +427,7 @@ final class ObjectdbInterfaceSave {
 			{
 				try
 				{
-					#sql
+					#sql [connCtx]
 					{
 						insert into AMFICOM.USERS(
 								ID,
@@ -433,21 +440,21 @@ final class ObjectdbInterfaceSave {
 							:(userseq[i].type),
 							:(userseq[i].object_id) )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(Exception e)
 				{
 					System.out.println("user exists - updating...");
 					try
 					{
-						#sql
+						#sql [connCtx]
 						{ update AMFICOM.USERS set
 								LOGIN = :(userseq[i].login),
 								TYPE = :(userseq[i].type),
 								OPERATOR_ID = :(userseq[i].object_id)
 							where Id = :(userseq[i].id)
 						};
-						#sql { commit };
+						conn.commit();
 					}
 					catch(SQLException ex)
 					{
@@ -461,8 +468,9 @@ final class ObjectdbInterfaceSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveCategories(OperatorCategory_Transferable[] categoryseq)
-	{
+	static int saveCategories(final Connection conn, OperatorCategory_Transferable[] categoryseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int len;
 
@@ -471,7 +479,7 @@ final class ObjectdbInterfaceSave {
 		{
 			try
 			{
-				#sql
+				#sql [connCtx]
 				{
 					insert into AMFICOM.CATEGORIES(
 							ID,
@@ -486,14 +494,14 @@ final class ObjectdbInterfaceSave {
 						:(categoryseq[i].description),
 						SYSDATE )
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("category exists - updating...");
 				try
 				{
-					#sql
+					#sql [connCtx]
 					{ update AMFICOM.CATEGORIES set
 							NAME = :(categoryseq[i].name),
 							CODENAME = :(categoryseq[i].codename),
@@ -501,7 +509,7 @@ final class ObjectdbInterfaceSave {
 							MODIFIED = SYSDATE
 						where Id = :(categoryseq[i].id)
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -514,8 +522,9 @@ final class ObjectdbInterfaceSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveGroups(OperatorGroup_Transferable[] groupseq)
-	{
+	static int saveGroups(final Connection conn, OperatorGroup_Transferable[] groupseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int len;
 
@@ -524,7 +533,7 @@ final class ObjectdbInterfaceSave {
 		{
 			try
 			{
-				#sql
+				#sql [connCtx]
 				{
 					insert into AMFICOM.GROUPS(
 							ID,
@@ -547,14 +556,14 @@ final class ObjectdbInterfaceSave {
 						SYSDATE,
 						:(groupseq[i].owner_id) )
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("group exists - updating...");
 				try
 				{
-					#sql
+					#sql [connCtx]
 					{ update AMFICOM.GROUPS set
 							NAME = :(groupseq[i].name),
 							CODENAME = :(groupseq[i].codename),
@@ -564,7 +573,7 @@ final class ObjectdbInterfaceSave {
 							MODIFIED_BY = :(groupseq[i].modified_by)
 						where ID = :(groupseq[i].id)
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -575,19 +584,19 @@ final class ObjectdbInterfaceSave {
 			}
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.USERGROUPS
 						where GROUP_ID = :(groupseq[i].id)
 				};
 				for(int j = groupseq[i].user_ids.length - 1; j >= 0; j--)
 				{
-					String id_v = ResourcedbInterface.getUId("operatorgrouplink");
-					#sql
+					String id_v = ResourcedbInterface.getUid(conn, "operatorgrouplink");
+					#sql [connCtx]
 					{ insert into AMFICOM.USERGROUPS(ID, USER_ID, GROUP_ID)
 						values(:id_v, :(groupseq[i].user_ids[j]), :(groupseq[i].id) )
 					};
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -600,19 +609,19 @@ final class ObjectdbInterfaceSave {
 			}
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.EXECGROUPS
 						where GROUP_ID = :(groupseq[i].id)
 				};
 				for(int j = groupseq[i].exec_ids.length - 1; j >= 0; j--)
 				{
-					String id_v = ResourcedbInterface.getUId("operatorgrouplink");
-					#sql
+					String id_v = ResourcedbInterface.getUid(conn, "operatorgrouplink");
+					#sql [connCtx]
 					{ insert into AMFICOM.EXECGROUPS(ID, EXEC_ID, GROUP_ID)
 						values(:id_v, :(groupseq[i].exec_ids[j]), :(groupseq[i].id) )
 					};
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -627,20 +636,20 @@ final class ObjectdbInterfaceSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveProfiles(OperatorProfile_Transferable[] profileseq)
-	{
+	static int saveProfiles(final Connection conn, OperatorProfile_Transferable[] profileseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int len;
 		int count = 0;
 
-		Connection conn = DefaultContext.getDefaultContext().getConnection();
 
 		len = profileseq.length;
 		for (i = 0; i < len; i++)
 		{
 			try
 			{
-				#sql
+				#sql [connCtx]
 				{
 					select count(*) into :count from AMFICOM.OPERATORPROFILES
 						where ID = :(profileseq[i].id)
@@ -648,7 +657,7 @@ final class ObjectdbInterfaceSave {
 				if(count == 0)
 				{
 					System.out.println("insert profile " + profileseq[i].id);
-					#sql
+					#sql [connCtx]
 					{
 						insert into AMFICOM.OPERATORPROFILES(
 								ID,
@@ -664,7 +673,7 @@ final class ObjectdbInterfaceSave {
 								USER_ID,
 								OWNER_ID,
 								LOGIN,
-                                PASSWORD,
+				PASSWORD,
 								PASSWORD_EXPIRY,
 
 								STATUS,
@@ -700,7 +709,7 @@ final class ObjectdbInterfaceSave {
 								:(profileseq[i].user_id),
 								:(profileseq[i].owner_id),
 								:(profileseq[i].login),
-                                empty_blob(),
+				empty_blob(),
 								:(profileseq[i].disabled),
 
 								:(profileseq[i].status),
@@ -728,24 +737,18 @@ final class ObjectdbInterfaceSave {
 								:(profileseq[i].organization),
 								:(profileseq[i].e_mail) )
 					};
-					ByteArrayDatabase pwdArr = new ByteArrayDatabase(profileseq[i].password);
-
-					pwdArr.saveAsBlob(
-							conn,
-							"AMFICOM.OPERATORPROFILES",
-							"PASSWORD",
-							"id = '" + profileseq[i].id + "'");
-					#sql { commit };
+					JdbcBlobManager.setData(conn, "password", "amficom.operatorprofiles", "id = '" + profileseq[i].id + '\'', false, profileseq[i].password);
+					conn.commit();
 				}
 				else
 				{
 					System.out.println("profile exists - updating...");
 					boolean do_save = true;
 					while(do_save)
-                    {
-                    try
-                    {
-					#sql
+		    {
+		    try
+		    {
+					#sql [connCtx]
 					{
 						update AMFICOM.OPERATORPROFILES set
 							NAME = :(profileseq[i].name),
@@ -778,28 +781,22 @@ final class ObjectdbInterfaceSave {
 							E_MAIL = :(profileseq[i].e_mail)
 						where ID = :(profileseq[i].id)
 					};
-					ByteArrayDatabase pwdArr = new ByteArrayDatabase(profileseq[i].password);
-
-					pwdArr.saveAsBlob(
-							conn,
-							"AMFICOM.OPERATORPROFILES",
-							"PASSWORD",
-							"id = '" + profileseq[i].id + "'");
-					#sql { commit };
-                    do_save = false;
+					JdbcBlobManager.setData(conn, "password", "amficom.operatorprofiles", "id = '" + profileseq[i].id + '\'', false, profileseq[i].password);
+					conn.commit();
+		    do_save = false;
 					}
-                    catch(Exception sqlex)
-                    {
-                    	sqlex.printStackTrace();
-                    	System.out.println("insert empty blob...");
-						#sql
+		    catch(Exception sqlex)
+		    {
+		    	sqlex.printStackTrace();
+		    	System.out.println("insert empty blob...");
+						#sql [connCtx]
 						{
 							update AMFICOM.OPERATORPROFILES set
 								PASSWORD = empty_blob()
 							where ID = :(profileseq[i].id)
     	                };
-                    }
-                    }
+		    }
+		    }
 				}
 			}
 			catch(Exception e)
@@ -810,19 +807,19 @@ final class ObjectdbInterfaceSave {
 			}
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.USERGROUPS
 						where USER_ID = :(profileseq[i].user_id)
 				};
 				for(int j = profileseq[i].group_ids.length - 1; j >= 0; j--)
 				{
-					String id_v = ResourcedbInterface.getUId("operatorgrouplink");
-					#sql
+					String id_v = ResourcedbInterface.getUid(conn, "operatorgrouplink");
+					#sql [connCtx]
 					{ insert into AMFICOM.USERGROUPS(ID, USER_ID, GROUP_ID)
 						values(:id_v, :(profileseq[i].user_id), :(profileseq[i].group_ids[j]) )
 					};
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -835,19 +832,19 @@ final class ObjectdbInterfaceSave {
 			}
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.USERCATEGORIES
 						where USER_ID = :(profileseq[i].user_id)
 				};
 				for(int j = profileseq[i].category_ids.length - 1; j >= 0; j--)
 				{
-					String id_v = ResourcedbInterface.getUId("operatorcategorylink");
-					#sql
+					String id_v = ResourcedbInterface.getUid(conn, "operatorcategorylink");
+					#sql [connCtx]
 					{ insert into AMFICOM.USERCATEGORIES(ID, USER_ID, CATEGORY_ID)
 						values(:id_v, :(profileseq[i].user_id), :(profileseq[i].category_ids[j]) )
 					};
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{

@@ -1,5 +1,5 @@
 /*
- * $Id: MapdbInterfaceProto.sqlj,v 1.1.2.3 2004/08/24 15:43:43 bass Exp $
+ * $Id: MapdbInterfaceProto.sqlj,v 1.1.2.4 2004/09/09 11:35:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,11 +12,12 @@ import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Map.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import java.sql.*;
-import java.util.Vector;
+import java.util.*;
 import sqlj.runtime.SQLNullException;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:43 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:20 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -24,7 +25,9 @@ final class MapdbInterfaceProto {
 	private MapdbInterfaceProto() {
 	}
 
-	static int loadProtoElements(String domain_id, MapProtoElementSeq_TransferableHolder protoseq, Vector images) {
+	static int loadProtoElements(final Connection conn, String domain_id, MapProtoElementSeq_TransferableHolder protoseq, Collection imageResourceIds) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count;
 		MapProtoElement_Transferable pr_t;
 		Vector vector = new Vector();
@@ -59,7 +62,7 @@ final class MapdbInterfaceProto {
 
 		try
 		{
-			#sql prIt = { select
+			#sql [connCtx] prIt = { select
 					ID,
 					NAME,
 					CODENAME,
@@ -111,16 +114,13 @@ final class MapdbInterfaceProto {
 				catch(SQLException e) { }
 				if(It_domain_id == null) It_domain_id = "";
 
-				vector2 = MapdbInterfaceLoad.loadAttributes(
-						"MAPPROTOELEMENTATTRIBUTES",
-						"MAP_PROTO_ELEMENT_ID",
-						It_id);
+				vector2 = MapdbInterfaceLoad.loadAttributes(conn, "MAPPROTOELEMENTATTRIBUTES", "MAP_PROTO_ELEMENT_ID", It_id);
 				attributes = new ElementAttribute_Transferable[vector2.size()];
 				vector2.copyInto(attributes);
 				try
 				{
 					vector3 = new Vector();
-					#sql mppeIt =
+					#sql [connCtx] mppeIt =
 					{
 						select ID, MAP_PROTO_ELEMENT_ID, PROTO_ELEMENT_ID
 							from MAPPROTOELEMENTPELINKS
@@ -158,7 +158,7 @@ final class MapdbInterfaceProto {
 						It_domain_id,
 						attributes,
 						pe_ids);
-				images.add(It_symbol_id);
+				imageResourceIds.add(It_symbol_id);
 
 				vector.addElement(pr_t);
 			}
@@ -188,7 +188,9 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadProtoElements(String domain_id, String[] ids, MapProtoElementSeq_TransferableHolder protoseq, Vector images) {
+	static int loadProtoElements(final Connection conn, String domain_id, String[] ids, MapProtoElementSeq_TransferableHolder protoseq, Collection imageResourceIds) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count;
 		MapProtoElement_Transferable pr_t;
 		Vector vector = new Vector();
@@ -227,7 +229,7 @@ final class MapdbInterfaceProto {
 
 		try
 		{
-			#sql prIt = { select
+			#sql [connCtx] prIt = { select
 					ID,
 					NAME,
 					CODENAME,
@@ -282,17 +284,14 @@ final class MapdbInterfaceProto {
 				catch(SQLException e) { }
 				if(It_domain_id == null) It_domain_id = "";
 
-				vector2 = MapdbInterfaceLoad.loadAttributes(
-						"MAPPROTOELEMENTATTRIBUTES",
-						"MAP_PROTO_ELEMENT_ID",
-						It_id);
+				vector2 = MapdbInterfaceLoad.loadAttributes(conn, "MAPPROTOELEMENTATTRIBUTES", "MAP_PROTO_ELEMENT_ID", It_id);
 				attributes = new ElementAttribute_Transferable[vector2.size()];
 				vector2.copyInto(attributes);
 
 				try
 				{
 					vector3 = new Vector();
-					#sql mppeIt =
+					#sql [connCtx] mppeIt =
 					{
 						select ID, MAP_PROTO_ELEMENT_ID, PROTO_ELEMENT_ID
 							from MAPPROTOELEMENTPELINKS
@@ -330,7 +329,7 @@ final class MapdbInterfaceProto {
 						It_domain_id,
 						attributes,
 						pe_ids);
-				images.add(It_symbol_id);
+				imageResourceIds.add(It_symbol_id);
 
 				vector.addElement(pr_t);
 			}
@@ -360,7 +359,9 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveProtoElements(String domain_id, MapProtoElement_Transferable[] protos) {
+	static int saveProtoElements(final Connection conn, String domain_id, MapProtoElement_Transferable[] protos) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		for(int i = 0; i < protos.length; i++)
 		{
 			int is_kis = (protos[i].pe_is_kis) ? 1 : 0;
@@ -368,7 +369,7 @@ final class MapdbInterfaceProto {
 			int is_topological = (protos[i].is_topological) ? 1 : 0;
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					insert into AMFICOM.MAPPROTOELEMENTS(
 							ID,
 							NAME,
@@ -396,13 +397,13 @@ final class MapdbInterfaceProto {
 							:is_topological,
 							:(protos[i].domain_id) )
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MAPPROTOELEMENTS set
 								NAME = :(protos[i].name),
 								CODENAME = :(protos[i].codename),
@@ -417,7 +418,7 @@ final class MapdbInterfaceProto {
 								DOMAIN_ID = :(protos[i].domain_id)
 							where ID = :(protos[i].id)
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException exx)
 				{
@@ -425,18 +426,14 @@ final class MapdbInterfaceProto {
 				}
 			}
 
-			MapdbInterfaceSave.saveAttributes(
-					"MAPPROTOELEMENTATTRIBUTES",
-					"MAP_PROTO_ELEMENT_ID",
-					protos[i].id,
-					protos[i].attributes);
+			MapdbInterfaceSave.saveAttributes(conn, "MAPPROTOELEMENTATTRIBUTES", "MAP_PROTO_ELEMENT_ID", protos[i].id, protos[i].attributes);
 
 			for(int j = 0; j < protos[i].pe_ids.length; j++)
 			{
 				try
 				{
 					int count;
-					#sql
+					#sql [connCtx]
 					{
 						select count(*) into :count from AMFICOM.MAPPROTOELEMENTPELINKS
 							where MAP_PROTO_ELEMENT_ID = :(protos[i].id)
@@ -446,14 +443,14 @@ final class MapdbInterfaceProto {
 						continue;
 					int id;
 					String id_v = "mapppel";
-					#sql { select AMFICOM.MAPPPEL_SEQ.NEXTVAL into :id from SYS.DUAL };
+					#sql [connCtx] { select AMFICOM.MAPPPEL_SEQ.NEXTVAL into :id from SYS.DUAL };
 					id_v = id_v + String.valueOf(id);
-					#sql
+					#sql [connCtx]
 					{
 						insert into AMFICOM.MAPPROTOELEMENTPELINKS(ID, MAP_PROTO_ELEMENT_ID, PROTO_ELEMENT_ID)
 						values(:id_v, :(protos[i].id), :(protos[i].pe_ids[j]))
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -464,29 +461,31 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeProtoElements(String[] proto_ids) {
+	static int removeProtoElements(final Connection conn, String[] proto_ids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		for(int i = 0; i < proto_ids.length; i++)
 		{
 			try
 			{
-				#sql
+				#sql [connCtx]
 				{
 					delete from AMFICOM.MAPPROTOELEMENTPELINKS
 						where MAP_PROTO_ELEMENT_ID = :(proto_ids[i])
 				};
 
-				#sql
+				#sql [connCtx]
 				{
 					delete from AMFICOM.MAPPROTOELEMENTATTRIBUTES
 						where MAP_PROTO_ELEMENT_ID = :(proto_ids[i])
 				};
 
-				#sql
+				#sql [connCtx]
 				{
 					delete from AMFICOM.MAPPROTOELEMENTS
 						where ID = :(proto_ids[i])
 				};
-					#sql { commit };
+					conn.commit();
 			}
 			catch(SQLException exx)
 			{
@@ -496,8 +495,9 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadProtoGroups(String domain_id, MapProtoGroupSeq_TransferableHolder groupseq)
-	{
+	static int loadProtoGroups(final Connection conn, String domain_id, MapProtoGroupSeq_TransferableHolder groupseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count;
 		MapProtoGroup_Transferable pr_t;
 		Vector vector = new Vector();
@@ -519,7 +519,7 @@ final class MapdbInterfaceProto {
 
 		try
 		{
-			#sql prIt = { select
+			#sql [connCtx] prIt = { select
 					ID,
 					NAME,
 					MODIFIED
@@ -541,7 +541,7 @@ final class MapdbInterfaceProto {
 				try
 				{
 					vector2 = new Vector();
-					#sql peIt =
+					#sql [connCtx] peIt =
 					{
 						select PROTO_ID
 							from MAPPROTOGROUPLINKS
@@ -566,7 +566,7 @@ final class MapdbInterfaceProto {
 				try
 				{
 					vector2 = new Vector();
-					#sql chIt =
+					#sql [connCtx] chIt =
 					{
 						select CHILD_ID
 							from MAPPROTOGROUPNESTINGS
@@ -590,7 +590,7 @@ final class MapdbInterfaceProto {
 
 				try
 				{
-					#sql
+					#sql [connCtx]
 					{
 						select PARENT_ID into :It_parent_id
 							from MAPPROTOGROUPNESTINGS
@@ -640,7 +640,9 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadProtoGroups(String domain_id, String[] group_ids, MapProtoGroupSeq_TransferableHolder groupseq) {
+	static int loadProtoGroups(final Connection conn, String domain_id, String[] group_ids, MapProtoGroupSeq_TransferableHolder groupseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count;
 		MapProtoGroup_Transferable pr_t;
 		Vector vector = new Vector();
@@ -669,7 +671,7 @@ final class MapdbInterfaceProto {
 
 		try
 		{
-			#sql prIt = { select
+			#sql [connCtx] prIt = { select
 					ID,
 					NAME,
 					MODIFIED
@@ -696,7 +698,7 @@ final class MapdbInterfaceProto {
 				try
 				{
 					vector2 = new Vector();
-					#sql peIt =
+					#sql [connCtx] peIt =
 					{
 						select PROTO_ID
 							from MAPPROTOGROUPLINKS
@@ -721,7 +723,7 @@ final class MapdbInterfaceProto {
 				try
 				{
 					vector2 = new Vector();
-					#sql chIt =
+					#sql [connCtx] chIt =
 					{
 						select CHILD_ID
 							from MAPPROTOGROUPNESTINGS
@@ -745,7 +747,7 @@ final class MapdbInterfaceProto {
 
 				try
 				{
-					#sql
+					#sql [connCtx]
 					{
 						select PARENT_ID into :It_parent_id
 							from MAPPROTOGROUPNESTINGS
@@ -797,12 +799,14 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveProtoGroups(String domain_id, MapProtoGroup_Transferable[] groups) {
+	static int saveProtoGroups(final Connection conn, String domain_id, MapProtoGroup_Transferable[] groups) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		for(int i = 0; i < groups.length; i++)
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					insert into AMFICOM.MAPPROTOGROUPS(
 							ID,
 							NAME,
@@ -812,19 +816,19 @@ final class MapdbInterfaceProto {
 							:(groups[i].name),
 							SYSDATE)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MAPPROTOGROUPS set
 								NAME = :(groups[i].name),
 								MODIFIED = SYSDATE
 							where ID = :(groups[i].id)
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException exx)
 				{
@@ -834,12 +838,12 @@ final class MapdbInterfaceProto {
 
 			try
 			{
-				#sql
+				#sql [connCtx]
 				{
 					delete from AMFICOM.MAPPROTOGROUPLINKS
 						where GROUP_ID = :(groups[i].id)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -850,12 +854,12 @@ final class MapdbInterfaceProto {
 			{
 				try
 				{
-					#sql
+					#sql [connCtx]
 					{
 						insert into AMFICOM.MAPPROTOGROUPLINKS(GROUP_ID, PROTO_ID)
 						values(:(groups[i].id), :(groups[i].mapproto_ids[j]))
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -865,13 +869,13 @@ final class MapdbInterfaceProto {
 
 			try
 			{
-				#sql
+				#sql [connCtx]
 				{
 					delete from AMFICOM.MAPPROTOGROUPNESTINGS
 						where PARENT_ID = :(groups[i].id)
 						or CHILD_ID = :(groups[i].id)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -882,12 +886,12 @@ final class MapdbInterfaceProto {
 			{
 				try
 				{
-					#sql
+					#sql [connCtx]
 					{
 						insert into AMFICOM.MAPPROTOGROUPNESTINGS(PARENT_ID, CHILD_ID)
 						values(:(groups[i].parent_id), :(groups[i].id))
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -899,12 +903,12 @@ final class MapdbInterfaceProto {
 			{
 				try
 				{
-					#sql
+					#sql [connCtx]
 					{
 						insert into AMFICOM.MAPPROTOGROUPNESTINGS(PARENT_ID, CHILD_ID)
 						values(:(groups[i].id), :(groups[i].group_ids[j]))
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -915,30 +919,32 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeProtoGroups(String[] group_ids) {
+	static int removeProtoGroups(final Connection conn, String[] group_ids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		for(int i = 0; i < group_ids.length; i++)
 		{
 			try
 			{
-				#sql
+				#sql [connCtx]
 				{
 					delete from AMFICOM.MAPPROTOGROUPLINKS
 						where GROUP_ID = :(group_ids[i])
 				};
 
-				#sql
+				#sql [connCtx]
 				{
 					delete from AMFICOM.MAPPROTOGROUPNESTINGS
 						where PARENT_ID = :(group_ids[i])
 						or CHILD_ID = :(group_ids[i])
 				};
 
-				#sql
+				#sql [connCtx]
 				{
 					delete from AMFICOM.MAPPROTOGROUPS
 						where ID = :(group_ids[i])
 				};
-					#sql { commit };
+					conn.commit();
 			}
 			catch(SQLException exx)
 			{
@@ -948,7 +954,9 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadLinkProto(String domain_id, MapLinkProtoElementSeq_TransferableHolder linkseq, Vector images) {
+	static int loadLinkProto(final Connection conn, String domain_id, MapLinkProtoElementSeq_TransferableHolder linkseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count;
 		Vector vector = new Vector();
 		MapLinkProtoElement_Transferable link_t;
@@ -970,7 +978,7 @@ final class MapdbInterfaceProto {
 
 		try
 		{
-			#sql linkIt = { select
+			#sql [connCtx] linkIt = { select
 					ID,
 					NAME,
 					DESCRIPTION,
@@ -1000,17 +1008,14 @@ final class MapdbInterfaceProto {
 				catch(SQLException e) { }
 				if(It_domain_id == null) It_domain_id = "";
 
-				vector2 = MapdbInterfaceLoad.loadAttributes(
-						"MAPLINKPROTOELEMENTATTRIBUTES",
-						"MAP_LINK_PROTO_ELEMENT_ID",
-						It_id);
+				vector2 = MapdbInterfaceLoad.loadAttributes(conn, "MAPLINKPROTOELEMENTATTRIBUTES", "MAP_LINK_PROTO_ELEMENT_ID", It_id);
 				attributes = new ElementAttribute_Transferable[vector2.size()];
 				vector2.copyInto(attributes);
 
 				vector2 = new Vector();
 				try
 				{
-					#sql idIt = { select CABLE_TYPE_ID from AMFICOM.MAPLINKPROTOCABLETYPES
+					#sql [connCtx] idIt = { select CABLE_TYPE_ID from AMFICOM.MAPLINKPROTOCABLETYPES
 						where MAP_LINK_ID = :It_id };
 					while (idIt.next())
 					{
@@ -1064,7 +1069,9 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadLinkProto(String domain_id, String[] ids, MapLinkProtoElementSeq_TransferableHolder linkseq, Vector images) {
+	static int loadLinkProto(final Connection conn, String domain_id, String[] ids, MapLinkProtoElementSeq_TransferableHolder linkseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count;
 		Vector vector = new Vector();
 		MapLinkProtoElement_Transferable link_t;
@@ -1090,7 +1097,7 @@ final class MapdbInterfaceProto {
 
 		try
 		{
-			#sql linkIt = { select
+			#sql [connCtx] linkIt = { select
 					ID,
 					NAME,
 					DESCRIPTION,
@@ -1123,17 +1130,14 @@ final class MapdbInterfaceProto {
 				catch(SQLException e) { }
 				if(It_domain_id == null) It_domain_id = "";
 
-				vector2 = MapdbInterfaceLoad.loadAttributes(
-						"MAPLINKPROTOELEMENTATTRIBUTES",
-						"MAP_LINK_PROTO_ELEMENT_ID",
-						It_id);
+				vector2 = MapdbInterfaceLoad.loadAttributes(conn, "MAPLINKPROTOELEMENTATTRIBUTES", "MAP_LINK_PROTO_ELEMENT_ID", It_id);
 				attributes = new ElementAttribute_Transferable[vector2.size()];
 				vector2.copyInto(attributes);
 
 				vector2 = new Vector();
 				try
 				{
-					#sql idIt = { select CABLE_TYPE_ID from AMFICOM.MAPLINKPROTOCABLETYPES
+					#sql [connCtx] idIt = { select CABLE_TYPE_ID from AMFICOM.MAPLINKPROTOCABLETYPES
 						where MAP_LINK_ID = :It_id };
 					while (idIt.next())
 					{
@@ -1187,7 +1191,9 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadPathProto(String domain_id, MapPathProtoElementSeq_TransferableHolder pathseq, Vector images) {
+	static int loadPathProto(final Connection conn, String domain_id, MapPathProtoElementSeq_TransferableHolder pathseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count;
 		MapPathProtoElement_Transferable path_t;
 		Vector vector = new Vector();
@@ -1209,7 +1215,7 @@ final class MapdbInterfaceProto {
 
 		try
 		{
-			#sql pathIt = { select
+			#sql [connCtx] pathIt = { select
 					ID,
 					NAME,
 					DESCRIPTION,
@@ -1242,17 +1248,14 @@ final class MapdbInterfaceProto {
 				catch(SQLException e) { }
 				if(It_domain_id == null) It_domain_id = "";
 
-				vector2 = MapdbInterfaceLoad.loadAttributes(
-						"MAPPATHPROTOELEMENTATTRIBUTES",
-						"MAP_PATH_PROTO_ELEMENT_ID",
-						It_id);
+				vector2 = MapdbInterfaceLoad.loadAttributes(conn, "MAPPATHPROTOELEMENTATTRIBUTES", "MAP_PATH_PROTO_ELEMENT_ID", It_id);
 				attributes = new ElementAttribute_Transferable[vector2.size()];
 				vector2.copyInto(attributes);
 
 				vector2 = new Vector();
 				try
 				{
-					#sql idIt = { select PATH_TYPE_ID from AMFICOM.MAPPATHPROTOPATHTYPES
+					#sql [connCtx] idIt = { select PATH_TYPE_ID from AMFICOM.MAPPATHPROTOPATHTYPES
 						where MAP_PATH_PROTO_ID = :It_id };
 					while (idIt.next())
 					{
@@ -1308,7 +1311,9 @@ final class MapdbInterfaceProto {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadPathProto(String domain_id, String[] ids, MapPathProtoElementSeq_TransferableHolder pathseq, Vector images) {
+	static int loadPathProto(final Connection conn, String domain_id, String[] ids, MapPathProtoElementSeq_TransferableHolder pathseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count;
 		MapPathProtoElement_Transferable path_t;
 		Vector vector = new Vector();
@@ -1334,7 +1339,7 @@ final class MapdbInterfaceProto {
 
 		try
 		{
-			#sql pathIt = { select
+			#sql [connCtx] pathIt = { select
 					ID,
 					NAME,
 					DESCRIPTION,
@@ -1370,17 +1375,14 @@ final class MapdbInterfaceProto {
 				catch(SQLException e) { }
 				if(It_domain_id == null) It_domain_id = "";
 
-				vector2 = MapdbInterfaceLoad.loadAttributes(
-						"MAPPATHPROTOELEMENTATTRIBUTES",
-						"MAP_PATH_PROTO_ELEMENT_ID",
-						It_id);
+				vector2 = MapdbInterfaceLoad.loadAttributes(conn, "MAPPATHPROTOELEMENTATTRIBUTES", "MAP_PATH_PROTO_ELEMENT_ID", It_id);
 				attributes = new ElementAttribute_Transferable[vector2.size()];
 				vector2.copyInto(attributes);
 
 				vector2 = new Vector();
 				try
 				{
-					#sql idIt = { select PATH_TYPE_ID from AMFICOM.MAPPATHPROTOPATHTYPES
+					#sql [connCtx] idIt = { select PATH_TYPE_ID from AMFICOM.MAPPATHPROTOPATHTYPES
 						where MAP_PATH_PROTO_ID = :It_id };
 					while (idIt.next())
 					{

@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMdbGeneral.sqlj,v 1.1.2.4 2004/08/27 08:09:21 bass Exp $
+ * $Id: AMFICOMdbGeneral.sqlj,v 1.1.2.5 2004/09/09 11:35:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,11 +16,10 @@ import com.syrus.io.Rewriter;
 import com.syrus.util.database.JdbcBlobManager;
 import java.sql.*;
 import java.util.*;
-import oracle.sql.BLOB;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/08/27 08:09:21 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/09/09 11:35:20 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -28,21 +27,21 @@ final class AMFICOMdbGeneral {
 	private AMFICOMdbGeneral() {
 	}
 
-	static void checkUserPrivileges(AccessIdentity_Transferable accessIdentity) throws AMFICOMRemoteException {
+	static void checkUserPrivileges(final Connection conn, AccessIdentity_Transferable accessIdentity) throws SQLException, AMFICOMRemoteException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		try {
-			#sql {
+			#sql [connCtx] {
 				UPDATE amficom.loggedusers SET accessed = SYSDATE WHERE id = :(accessIdentity.sess_id)
 			};
-			#sql {
-				COMMIT
-			};
+			conn.commit();
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
 			throw new AMFICOMRemoteException(Constants.ERROR_INSUFFICIENT_PRIVILEGES, "Ошибка пользователя: " + sqle.getMessage());
 		}
 	}
 
-	static void login(Connection conn, String username, byte password[], String ior, AccessIdentity_TransferableHolder accessIdentity) throws SQLException, AMFICOMRemoteException {
+	static void login(final Connection conn, String username, byte password[], String ior, AccessIdentity_TransferableHolder accessIdentity) throws SQLException, AMFICOMRemoteException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String id;
@@ -56,7 +55,7 @@ final class AMFICOMdbGeneral {
 				SELECT operator_id INTO :op_id FROM amficom.users WHERE login = :username
 			};
 
-			BLOB pwd_blob;
+			Blob pwd_blob;
 			long pwd_exp;
 			#sql [connCtx] {
 				SELECT password, password_expiry INTO :pwd_blob, :pwd_exp FROM amficom.operatorprofiles WHERE id = :op_id
@@ -84,7 +83,7 @@ final class AMFICOMdbGeneral {
 		accessIdentity.value = new AccessIdentity_Transferable(System.currentTimeMillis(), username, id, sess, "sysdomain");
 	}
 
-	static void logout(Connection conn, AccessIdentity_Transferable accessIdentity) throws SQLException {
+	static void logout(final Connection conn, AccessIdentity_Transferable accessIdentity) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String sessid = accessIdentity.sess_id;
@@ -97,11 +96,11 @@ final class AMFICOMdbGeneral {
 		conn.commit();
 	}
 
-	static void getLoggedUserIds(Connection conn, AccessIdentity_Transferable accessIdentity, wstringSeqHolder userids) throws SQLException {
+	static void getLoggedUserIds(final Connection conn, AccessIdentity_Transferable accessIdentity, wstringSeqHolder userids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		UserIdIterator uIt = null;
 		try {
-			DefaultContext connCtx = new DefaultContext(conn);
-
 			#sql [connCtx] uIt = {
 				SELECT user_id FROM amficom.loggedusers
 			};
@@ -115,7 +114,7 @@ final class AMFICOMdbGeneral {
 		}
 	}
 
-	static void changePassword(Connection conn, AccessIdentity_Transferable accessIdentity, byte[] oldpassword, byte[] newpassword) throws SQLException, AMFICOMRemoteException {
+	static void changePassword(final Connection conn, AccessIdentity_Transferable accessIdentity, byte[] oldpassword, byte[] newpassword) throws SQLException, AMFICOMRemoteException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String user_id;
@@ -133,7 +132,7 @@ final class AMFICOMdbGeneral {
 				SELECT operator_id INTO :op_id FROM amficom.users WHERE id = :user_id
 			};
 
-			BLOB pwd_blob;
+			Blob pwd_blob;
 			long pwd_exp;
 			#sql [connCtx] {
 				SELECT password, password_expiry INTO :pwd_blob, :pwd_exp FROM amficom.operatorprofiles WHERE id = :op_id

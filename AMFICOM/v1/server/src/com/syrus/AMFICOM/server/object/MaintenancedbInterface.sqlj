@@ -1,5 +1,5 @@
 /*
- * $Id: MaintenancedbInterface.sqlj,v 1.1.2.3 2004/08/25 15:24:30 bass Exp $
+ * $Id: MaintenancedbInterface.sqlj,v 1.1.2.4 2004/09/09 11:35:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,13 +13,13 @@ import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.CORBA.Resource.*;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.*;
 import sqlj.runtime.SQLNullException;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/25 15:24:30 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:20 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -27,7 +27,9 @@ final class MaintenancedbInterface {
 	private MaintenancedbInterface() {
 	}
 
-	static Vector getEventSourceTypes() {
+	static Vector getEventSourceTypes(final Connection conn) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		EventSourceType_Transferable est;
 		Vector vec = new Vector();
 
@@ -43,7 +45,7 @@ final class MaintenancedbInterface {
 
 		try
 		{
-			#sql estIt = {
+			#sql [connCtx] estIt = {
 				select
 					ID,
 					NAME
@@ -62,7 +64,7 @@ final class MaintenancedbInterface {
 				arrayList = new ArrayList();
 				try
 				{
-					#sql rIt = {
+					#sql [connCtx] rIt = {
 						select
 							IS_GENERATED,
 							DEFAULT_REACTION_SUBSTRING,
@@ -143,7 +145,9 @@ final class MaintenancedbInterface {
 		return vec;
 	}
 
-	static Vector getAlertingMessages() {
+	static Vector getAlertingMessages(final Connection conn) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		AlertingMessage_Transferable am;
 		Vector vec = new Vector();
 
@@ -156,7 +160,7 @@ final class MaintenancedbInterface {
 
 		try
 		{
-			#sql amIt = {
+			#sql [connCtx] amIt = {
 				select
 					EVENT_TYPE_ID,
 					TEXT,
@@ -211,7 +215,9 @@ final class MaintenancedbInterface {
 		return vec;
 	}
 
-	static Vector getAlertingMessageUsers() {
+	static Vector getAlertingMessageUsers(final Connection conn) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		AlertingMessageUser_Transferable amu;
 		Vector vec = new Vector();
 
@@ -224,7 +230,7 @@ final class MaintenancedbInterface {
 
 		try
 		{
-			#sql amuIt = {
+			#sql [connCtx] amuIt = {
 				select
 					ALERTING_MESSAGE_ID,
 					ID,
@@ -279,11 +285,13 @@ final class MaintenancedbInterface {
 		return vec;
 	}
 
-	static void saveAlertingMessages(AlertingMessage_Transferable am) {
+	static void saveAlertingMessages(final Connection conn, AlertingMessage_Transferable am) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		try
 		{
 			System.out.println("save AlertingMessage ID: " + am.id + ", TEXT: " + am.text + ", MESSAGE_TYPE_ID: " + am.message_type_id + ", EVENT_TYPE_ID: " + am.event_type_id + "");
-			#sql
+			#sql [connCtx]
 			{
 				insert into AMFICOM.ALERTINGMESSAGETEXTS(
 						ID,
@@ -296,14 +304,14 @@ final class MaintenancedbInterface {
 						:(am.message_type_id),
 						:(am.event_type_id) )
 			};
-			#sql { commit };
+			conn.commit();
 		}
 		catch (SQLException e)
 		{
 			System.out.println("AlertingMessage exists - updating...");
 			try
 			{
-				#sql
+				#sql [connCtx]
 				{
 					update AMFICOM.ALERTINGMESSAGETEXTS set
 							TEXT = :(am.text),
@@ -311,7 +319,7 @@ final class MaintenancedbInterface {
 							EVENT_TYPE_ID = :(am.event_type_id)
 						where ID = :(am.id)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch (SQLException ex)
 			{
@@ -322,12 +330,13 @@ final class MaintenancedbInterface {
 		}
 	}
 
-	static void saveAlertingMessageUsers(AlertingMessageUser_Transferable amu)
-	{
+	static void saveAlertingMessageUsers(final Connection conn, AlertingMessageUser_Transferable amu) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		try
 		{
 			System.out.println("save AlertingMessageUser ID: " + amu.id + ", USER_ID: " + amu.user_id + ", ALERTING_MESSAGE_ID: " + amu.alerting_message_id + ", ALERTING_TYPE_ID: " + amu.alerting_type_id + "");
-			#sql
+			#sql [connCtx]
 			{
 				insert into AMFICOM.ALERTINGMESSAGEUSERLINKS(
 						ID,
@@ -340,14 +349,14 @@ final class MaintenancedbInterface {
 						:(amu.alerting_message_id),
 						:(amu.alerting_type_id) )
 			};
-			#sql { commit };
+			conn.commit();
 		}
 		catch (SQLException e)
 		{
 			System.out.println("AlertingMessageUser exists - updating...");
 			try
 			{
-				#sql
+				#sql [connCtx]
 				{
 					update AMFICOM.ALERTINGMESSAGEUSERLINKS set
 							USER_ID = :(amu.user_id),
@@ -355,7 +364,7 @@ final class MaintenancedbInterface {
 							ALERTING_TYPE_ID = :(amu.alerting_type_id)
 						where ID = :(amu.id)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch (SQLException ex)
 			{
@@ -366,16 +375,17 @@ final class MaintenancedbInterface {
 		}
 	}
 
-	static void removeAlertingMessageUser(String amu_id)
-	{
+	static void removeAlertingMessageUser(final Connection conn, String amu_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		try
 		{
-			#sql
+			#sql [connCtx]
 			{
 				delete from AMFICOM.ALERTINGMESSAGEUSERLINKS
 					where ID = :amu_id
 			};
-			#sql { commit };
+			conn.commit();
 		}
 		catch (SQLException e)
 		{
@@ -384,13 +394,15 @@ final class MaintenancedbInterface {
 		}
 	}
 
-	static String doEvent(String source_id, String event_type, String descriptor) {
+	static String doEvent(final Connection conn, String source_id, String event_type, String descriptor) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		try {
-		String id_v = ResourcedbInterface.getUId("systemevent");
+		String id_v = ResourcedbInterface.getUid(conn, "systemevent");
 
 		String src_id = source_id;
 		System.out.println("Regevent: " + id_v + " on " + src_id + " type " + event_type);
-		#sql {
+		#sql [connCtx] {
 			insert into EVENTS(ID, CREATED, SOURCE_ID, TYPE_ID, DESCRIPTOR, STATUS)
 				values(:id_v, SYSDATE, :src_id, :event_type, :descriptor, 0)
 		};
@@ -405,7 +417,9 @@ final class MaintenancedbInterface {
 	}
 	}
 
-	static int getAlarmIdsForMonitoredElement(String me_id, ResourceDescriptorSeq_TransferableHolder alarmids) throws AMFICOMRemoteException {
+	static int getAlarmIdsForMonitoredElement(final Connection conn, String me_id, ResourceDescriptorSeq_TransferableHolder alarmids) throws SQLException, AMFICOMRemoteException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int ret = Constants.ERROR_NO_ERROR;
 		IdIterator idIt = null;
 		IdIterator residIt = null;
@@ -416,7 +430,7 @@ final class MaintenancedbInterface {
 		{
 			ArrayList arrayList = new ArrayList();
 
-			#sql idIt = { select ID from AMFICOM.EVALUATIONS
+			#sql [connCtx] idIt = { select ID from AMFICOM.EVALUATIONS
 				where MONITORED_ELEMENT_ID = :me_id
 				and USER_ID IS NULL
 				and DELETED IS NULL
@@ -427,7 +441,7 @@ final class MaintenancedbInterface {
 				{
 					String eval_id = idIt.id();
 					String res_id;
-					#sql residIt = { select ID from AMFICOM.RESULTS
+					#sql [connCtx] residIt = { select ID from AMFICOM.RESULTS
 						where EVALUATION_ID = :eval_id
 					};
 					while(residIt.next())
@@ -436,11 +450,11 @@ final class MaintenancedbInterface {
 						{
 							res_id = residIt.id();
 							String ev_id;
-							#sql { select ID into :ev_id from AMFICOM.EVENTS
+							#sql [connCtx] { select ID into :ev_id from AMFICOM.EVENTS
 								where DESCRIPTOR = :res_id
 							};
 
-							#sql idIt2 = { select ID, MODIFIED from AMFICOM.ALARMS
+							#sql [connCtx] idIt2 = { select ID, MODIFIED from AMFICOM.ALARMS
 								where EVENT_ID = :ev_id
 								and STATUS != :(AlarmStatus._ALARM_STATUS_DELETED)
 							};

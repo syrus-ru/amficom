@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeMonitoringSolution.sqlj,v 1.1.2.2 2004/08/24 15:43:44 bass Exp $
+ * $Id: SchemeMonitoringSolution.sqlj,v 1.1.2.3 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,11 +10,12 @@ package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -29,7 +30,9 @@ final class SchemeMonitoringSolution {
 
 	private ArrayList paths = new ArrayList();
 
-	SchemeMonitoringSolution(SchemeMonitoringSolution_Transferable sms) throws SQLException {
+	SchemeMonitoringSolution(final Connection conn, SchemeMonitoringSolution_Transferable sms) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
     	this.sms = sms;
 
 		this.id = sms.id;
@@ -38,59 +41,61 @@ final class SchemeMonitoringSolution {
 
 		this.price = sms.price;
 
-        this.paths = new ArrayList();
-        for(int i = 0; i < sms.paths.length; i++)
+	this.paths = new ArrayList();
+	for(int i = 0; i < sms.paths.length; i++)
 			paths.add(sms.paths[i]);
 
 		System.out.println(
 				"	\n id = " + id +
 				"	\n name = " + name +
 		    	"	\n scheme_id = " + scheme_id +
-                "	\n price = " + price);
+		"	\n price = " + price);
 		
-		#sql { insert into SCHEMEMONITORINGSOLUTION(
+		#sql [connCtx] { insert into SCHEMEMONITORINGSOLUTION(
 				id,
 				name,
 		    	scheme_id,
-                price)
-        	values(
+		price)
+		values(
 				:id,
 				:name,
 		    	:scheme_id,
-                :price)
-        };
+		:price)
+	};
 
-		savePaths();
-
-    	#sql { commit };
+		savePaths(conn);
+	    	conn.commit();
 	}
 
-	SchemeMonitoringSolution(String sms_id) throws SQLException {
-		#sql { select
+	SchemeMonitoringSolution(final Connection conn, String sms_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
+		#sql [connCtx] { select
 				id,
 				name,
 		    	scheme_id,
-                price
-        	into
+		price
+		into
 				:id,
 				:name,
 		    	:scheme_id,
-                :price
-            from SCHEMEMONITORINGSOLUTION
-            where id = :sms_id
-        };
-
-		loadPaths();
+		:price
+	    from SCHEMEMONITORINGSOLUTION
+	    where id = :sms_id
+		};
+		loadPaths(conn);
     }
 
-    void delete() throws SQLException {
-		deletePaths();
+    void delete(final Connection conn) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
+		deletePaths(conn);
 		
-    	#sql { delete
-            from SCHEMEMONITORINGSOLUTION
-            where id = :id
-        };
-    	#sql { commit };
+    	#sql [connCtx] { delete
+	    from SCHEMEMONITORINGSOLUTION
+	    where id = :id
+	};
+    	conn.commit();
     }
 
     private SchemeMonitoringSolution_Transferable getTransferable() {
@@ -98,24 +103,24 @@ final class SchemeMonitoringSolution {
 				id,
 				name,
 		    	scheme_id,
-                price,
-                (SchemePath_Transferable[] )paths.toArray(new SchemePath_Transferable[0]));
-        return sms;
+		price,
+		(SchemePath_Transferable[] )paths.toArray(new SchemePath_Transferable[0]));
+	return sms;
     }
 
-	private void savePaths() throws SQLException {
-    	#sql { delete
-            from PATHSINSOLUTION
-            where solution_id = :id
-        };
+	private void savePaths(final Connection conn) throws SQLException {
+ 		DefaultContext connCtx = new DefaultContext(conn);
 
-		SchemedbInterfaceSave.saveSchemePaths((SchemePath_Transferable[] )paths.toArray(new SchemePath_Transferable[0]));
-        for(int i = 0; i < paths.size(); i++)
-		{
+		#sql [connCtx] {
+			delete from PATHSINSOLUTION where solution_id = :id
+		};
+
+		SchemedbInterfaceSave.saveSchemePaths(conn, (SchemePath_Transferable[] )paths.toArray(new SchemePath_Transferable[0]));
+		for(int i = 0; i < paths.size(); i++) {
 			SchemePath_Transferable pt = (SchemePath_Transferable )paths.get(i);
-			String uid = ResourcedbInterface.getUId("sm_solution");
+			String uid = ResourcedbInterface.getUid(conn, "sm_solution");
 			
-			#sql { insert into PATHSINSOLUTION(
+			#sql [connCtx] { insert into PATHSINSOLUTION(
 					id,
 					scheme_path_id,
 					solution_id)
@@ -128,19 +133,21 @@ final class SchemeMonitoringSolution {
 
 	}
 
-	private void loadPaths() throws SQLException {
+	private void loadPaths(final Connection conn) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		PathIdIterator pIt = null;
 
 		try
 		{
-		#sql pIt = { select scheme_path_id from PATHSINSOLUTION
+		#sql [connCtx] pIt = { select scheme_path_id from PATHSINSOLUTION
 			where SOLUTION_ID = :id
 		};
 
 		paths = new ArrayList();
 		while(pIt.next())
 		{
-			paths.add(SchemedbInterfaceLoad.loadSchemePath(pIt.scheme_path_id()));
+			paths.add(SchemedbInterfaceLoad.loadSchemePath(conn, pIt.scheme_path_id()));
 		}
 		pIt.close();
 		}
@@ -157,31 +164,35 @@ final class SchemeMonitoringSolution {
 		
 	}
 
-	private void deletePaths() throws SQLException {
-        for(int i = 0; i < paths.size(); i++)
+	private void deletePaths(final Connection conn) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
+	for(int i = 0; i < paths.size(); i++)
 		{
 			SchemePath_Transferable pt = (SchemePath_Transferable )paths.get(i);
-			SchemedbInterfaceSave.removeSchemePath(pt.id);
+			SchemedbInterfaceSave.removeSchemePath(conn, pt.id);
 		}
 
-    	#sql { delete
-            from PATHSINSOLUTION
-            where solution_id = :id
-        };
+    	#sql [connCtx] { delete
+	    from PATHSINSOLUTION
+	    where solution_id = :id
+	};
 	}
 
-	static SchemeMonitoringSolution_Transferable[] getSMSs() throws SQLException {
-    	Vector vec = new Vector();
+	static SchemeMonitoringSolution_Transferable[] getSMSs(final Connection conn) throws SQLException {
+ 		DefaultContext connCtx = new DefaultContext(conn);
+
+   	Vector vec = new Vector();
 
     	IdIterator idIt = null;
 
 		try
 		{
-		#sql idIt = { select id
-            from SCHEMEMONITORINGSOLUTION
-        };
-        while(idIt.next())
-        	vec.add(new SchemeMonitoringSolution(idIt.id()).getTransferable());
+		#sql [connCtx] idIt = { select id
+	    from SCHEMEMONITORINGSOLUTION
+	};
+	while(idIt.next())
+		vec.add(new SchemeMonitoringSolution(conn, idIt.id()).getTransferable());
 		}
 		catch(SQLException e)
 		{
@@ -191,14 +202,14 @@ final class SchemeMonitoringSolution {
 		{
 			try {
 				idIt.close();
-			}catch(Exception exe) {}
+			} catch(Exception exe) {}
 		}
 		
 
-        return (SchemeMonitoringSolution_Transferable [])vec.toArray(new SchemeMonitoringSolution_Transferable[vec.size()]);
+	return (SchemeMonitoringSolution_Transferable [])vec.toArray(new SchemeMonitoringSolution_Transferable[vec.size()]);
     }
 
-	#sql public static iterator IdIterator( String id );
+	#sql public static iterator IdIterator(String id);
 
-	#sql public static iterator PathIdIterator( String scheme_path_id );
+	#sql public static iterator PathIdIterator(String scheme_path_id);
 }

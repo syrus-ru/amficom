@@ -1,5 +1,5 @@
 /*
- * $Id: ISMdbInterfaceLoad.sqlj,v 1.1.2.3 2004/08/25 15:24:30 bass Exp $
+ * $Id: ISMdbInterfaceLoad.sqlj,v 1.1.2.4 2004/09/09 11:35:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,10 @@ import com.syrus.AMFICOM.CORBA.Network.*;
 import java.sql.*;
 import java.util.Vector;
 import sqlj.runtime.SQLNullException;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/25 15:24:30 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:20 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -24,12 +25,14 @@ final class ISMdbInterfaceLoad {
 	private ISMdbInterfaceLoad() {
 	}
 
-	private static Vector loadKISAccessPorts(String element_id) {
+	private static Vector loadKISAccessPorts(final Connection conn, String element_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 		Vector vector = new Vector();
 		try
 		{
-			#sql idIt = { select ID
+			#sql [connCtx] idIt = { select ID
 				from AMFICOM.ACCESSPORTS
 					where KIS_ID = :element_id };
 
@@ -51,7 +54,9 @@ final class ISMdbInterfaceLoad {
 		return vector;
 	}
 
-	private static Object loadAccessPort(String aport_id) {
+	private static Object loadAccessPort(final Connection conn, String aport_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_type_id = "";
@@ -70,7 +75,7 @@ final class ISMdbInterfaceLoad {
 
 		try
 		{
-			#sql ptIt = { select
+			#sql [connCtx] ptIt = { select
 						ID,
 						NAME,
 						TYPE_ID,
@@ -108,10 +113,7 @@ final class ISMdbInterfaceLoad {
 
 			ptIt.close();
 
-			vector2 = NetdbInterfaceLoad.loadCharacteristics(
-					"ACCESSPORTCHARACTERISTICS",
-					"ACCESS_PORT_ID",
-					It_id);
+			vector2 = NetdbInterfaceLoad.loadCharacteristics(conn, "ACCESSPORTCHARACTERISTICS", "ACCESS_PORT_ID", It_id);
 			characteristics = new Characteristic_Transferable[vector2.size()];
 			vector2.copyInto(characteristics);
 
@@ -138,7 +140,9 @@ final class ISMdbInterfaceLoad {
 		}
 	}
 
-	static int loadKISs(String domain_id, EquipmentSeq_TransferableHolder kiss, Vector port_vec, Vector cport_vec, Vector access_port_vec) {
+	static int loadKISs(final Connection conn, String domain_id, EquipmentSeq_TransferableHolder kiss, Vector port_vec, Vector cport_vec, Vector access_port_vec) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int k;
 
 		String It_id = "";
@@ -180,7 +184,7 @@ final class ISMdbInterfaceLoad {
 
 		try
 		{
-			#sql eIt = { select
+			#sql [connCtx] eIt = { select
 						ID,
 						NAME,
 						DESCRIPTION,
@@ -271,30 +275,27 @@ final class ISMdbInterfaceLoad {
 				try { It_modified = eIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-				vector2 = NetdbInterfaceLoad.loadCharacteristics(
-						"EQUIPMENTCHARACTERISTICS",
-						"EQUIPMENT_ID",
-						It_id);
+				vector2 = NetdbInterfaceLoad.loadCharacteristics(conn, "EQUIPMENTCHARACTERISTICS", "EQUIPMENT_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
-				vector2 = NetdbInterfaceLoad.loadElementPorts(It_id);
+				vector2 = NetdbInterfaceLoad.loadElementPorts(conn, It_id);
 				port_ids = new String[vector2.size()];
 				vector2.copyInto(port_ids);
 				for(k = 0; k < port_ids.length; k++)
-					port_vec.add(NetdbInterfaceLoad.loadPort(port_ids[k]));
+					port_vec.add(NetdbInterfaceLoad.loadPort(conn, port_ids[k]));
 
-				vector2 = NetdbInterfaceLoad.loadElementCablePorts(It_id);
+				vector2 = NetdbInterfaceLoad.loadElementCablePorts(conn, It_id);
 				cport_ids = new String[vector2.size()];
 				vector2.copyInto(cport_ids);
 				for(k = 0; k < cport_ids.length; k++)
-					cport_vec.add(NetdbInterfaceLoad.loadCablePort(cport_ids[k]));
+					cport_vec.add(NetdbInterfaceLoad.loadCablePort(conn, cport_ids[k]));
 
-				vector2 = loadKISAccessPorts(It_id);
+				vector2 = loadKISAccessPorts(conn, It_id);
 				access_port_ids = new String[vector2.size()];
 				vector2.copyInto(access_port_ids);
 				for(k = 0; k < access_port_ids.length; k++)
-					access_port_vec.add(loadAccessPort(access_port_ids[k]));
+					access_port_vec.add(loadAccessPort(conn, access_port_ids[k]));
 
 				e_t = new Equipment_Transferable(
 					It_id,
@@ -349,7 +350,9 @@ final class ISMdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadTransmissionPaths(String domain_id, TransmissionPathSeq_TransferableHolder pathseq) {
+	static int loadTransmissionPaths(final Connection conn, String domain_id, TransmissionPathSeq_TransferableHolder pathseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_description = "";
@@ -384,7 +387,7 @@ final class ISMdbInterfaceLoad {
 
 		try
 		{
-			#sql tpIt = { select
+			#sql [connCtx] tpIt = { select
 						ID,
 						NAME,
 						DESCRIPTION,
@@ -421,7 +424,7 @@ final class ISMdbInterfaceLoad {
 					vector2 = new Vector();
 					try
 					{
-						#sql lidIt = { select N, IS_CABLE, LINK_ID, THREAD_ID
+						#sql [connCtx] lidIt = { select N, IS_CABLE, LINK_ID, THREAD_ID
 								from AMFICOM.PATHLINKS
 								where PATH_ID = :It_id
 						};
@@ -457,7 +460,7 @@ final class ISMdbInterfaceLoad {
 					vector2.copyInto(links);
 					try
 					{
-						#sql { select ID, LOCAL_ADDRESS
+						#sql [connCtx] { select ID, LOCAL_ADDRESS
 							into :It_me_id, :It_local_address
 							from AMFICOM.MONITOREDELEMENTS
 							where PATH_ID = :It_id };
@@ -472,7 +475,7 @@ final class ISMdbInterfaceLoad {
 
 					try
 					{
-						#sql {select ACCESS_PORT_ID into :It_access_port_id
+						#sql [connCtx] {select ACCESS_PORT_ID into :It_access_port_id
 								from AMFICOM.MONITOREDELEMENTATTACHMENTS
 								where MONITORED_ELEMENT_ID = :It_me_id };
 					}
@@ -482,10 +485,7 @@ final class ISMdbInterfaceLoad {
 					}
 					if(It_access_port_id == null) It_access_port_id = "";
 
-					vector2 = NetdbInterfaceLoad.loadCharacteristics(
-							"TRANSMISSIONPATHCHARS",
-							"PATH_ID",
-							It_id);
+					vector2 = NetdbInterfaceLoad.loadCharacteristics(conn, "TRANSMISSIONPATHCHARS", "PATH_ID", It_id);
 					characteristics = new Characteristic_Transferable[vector2.size()];
 					vector2.copyInto(characteristics);
 
@@ -536,7 +536,9 @@ final class ISMdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadMonitoredElements(String domain_id, MonitoredElementSeq_TransferableHolder meseq) {
+	static int loadMonitoredElements(final Connection conn, String domain_id, MonitoredElementSeq_TransferableHolder meseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_element_id = "";
 		String It_element_name = "";
@@ -554,7 +556,7 @@ final class ISMdbInterfaceLoad {
 
 		try
 		{
-			#sql meIt = { select
+			#sql [connCtx] meIt = { select
 						ID,
 						PATH_ID,
 						EQUIPMENT_ID,
@@ -582,7 +584,7 @@ final class ISMdbInterfaceLoad {
 					try
 					{
 						It_element_id = meIt.path_id();
-						#sql {
+						#sql [connCtx] {
 							select NAME into :It_element_name
 							from AMFICOM.TRANSMISSIONPATHS
 							where ID = :It_element_id
@@ -598,7 +600,7 @@ final class ISMdbInterfaceLoad {
 					try
 					{
 						It_element_id = meIt.equipment_id();
-						#sql {
+						#sql [connCtx] {
 							select NAME into :It_element_name
 							from AMFICOM.EQUIPMENTS
 							where ID = :It_element_id
@@ -619,7 +621,7 @@ final class ISMdbInterfaceLoad {
 
 				try
 				{
-					#sql {select ACCESS_PORT_ID into :It_access_port_id
+					#sql [connCtx] {select ACCESS_PORT_ID into :It_access_port_id
 							from AMFICOM.MONITOREDELEMENTATTACHMENTS
 							where MONITORED_ELEMENT_ID = :It_id };
 				}
@@ -658,7 +660,9 @@ final class ISMdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadKISs(String domain_id, String ids[], EquipmentSeq_TransferableHolder kiss, Vector port_vec, Vector cport_vec, Vector access_port_vec) {
+	static int loadKISs(final Connection conn, String domain_id, String ids[], EquipmentSeq_TransferableHolder kiss, Vector port_vec, Vector cport_vec, Vector access_port_vec) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int k;
 
 		String It_id = "";
@@ -703,7 +707,7 @@ final class ISMdbInterfaceLoad {
 			loadvec.add(ids[i]);
 		try
 		{
-			#sql eIt = { select
+			#sql [connCtx] eIt = { select
 						ID,
 						NAME,
 						DESCRIPTION,
@@ -797,30 +801,27 @@ final class ISMdbInterfaceLoad {
 				try { It_modified = eIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-				vector2 = NetdbInterfaceLoad.loadCharacteristics(
-						"EQUIPMENTCHARACTERISTICS",
-						"EQUIPMENT_ID",
-						It_id);
+				vector2 = NetdbInterfaceLoad.loadCharacteristics(conn, "EQUIPMENTCHARACTERISTICS", "EQUIPMENT_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
-				vector2 = NetdbInterfaceLoad.loadElementPorts(It_id);
+				vector2 = NetdbInterfaceLoad.loadElementPorts(conn, It_id);
 				port_ids = new String[vector2.size()];
 				vector2.copyInto(port_ids);
 				for(k = 0; k < port_ids.length; k++)
-					port_vec.add(NetdbInterfaceLoad.loadPort(port_ids[k]));
+					port_vec.add(NetdbInterfaceLoad.loadPort(conn, port_ids[k]));
 
-				vector2 = NetdbInterfaceLoad.loadElementCablePorts(It_id);
+				vector2 = NetdbInterfaceLoad.loadElementCablePorts(conn, It_id);
 				cport_ids = new String[vector2.size()];
 				vector2.copyInto(cport_ids);
 				for(k = 0; k < cport_ids.length; k++)
-					cport_vec.add(NetdbInterfaceLoad.loadCablePort(cport_ids[k]));
+					cport_vec.add(NetdbInterfaceLoad.loadCablePort(conn, cport_ids[k]));
 
-				vector2 = loadKISAccessPorts(It_id);
+				vector2 = loadKISAccessPorts(conn, It_id);
 				access_port_ids = new String[vector2.size()];
 				vector2.copyInto(access_port_ids);
 				for(k = 0; k < access_port_ids.length; k++)
-					access_port_vec.add(loadAccessPort(access_port_ids[k]));
+					access_port_vec.add(loadAccessPort(conn, access_port_ids[k]));
 
 				e_t = new Equipment_Transferable(
 					It_id,
@@ -874,7 +875,9 @@ final class ISMdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadTransmissionPaths(String domain_id, String ids[], TransmissionPathSeq_TransferableHolder pathseq) {
+	static int loadTransmissionPaths(final Connection conn, String domain_id, String ids[], TransmissionPathSeq_TransferableHolder pathseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_description = "";
@@ -912,7 +915,7 @@ final class ISMdbInterfaceLoad {
 			loadvec.add(ids[i]);
 		try
 		{
-			#sql tpIt = { select
+			#sql [connCtx] tpIt = { select
 						ID,
 						NAME,
 						DESCRIPTION,
@@ -952,7 +955,7 @@ final class ISMdbInterfaceLoad {
 					vector2 = new Vector();
 					try
 					{
-						#sql lidIt = { select N, IS_CABLE, LINK_ID, THREAD_ID
+						#sql [connCtx] lidIt = { select N, IS_CABLE, LINK_ID, THREAD_ID
 								from AMFICOM.PATHLINKS
 								where PATH_ID = :It_id
 						};
@@ -988,7 +991,7 @@ final class ISMdbInterfaceLoad {
 					vector2.copyInto(links);
 					try
 					{
-						#sql { select ID, LOCAL_ADDRESS
+						#sql [connCtx] { select ID, LOCAL_ADDRESS
 							into :It_me_id, :It_local_address
 							from AMFICOM.MONITOREDELEMENTS
 							where PATH_ID = :It_id };
@@ -1003,7 +1006,7 @@ final class ISMdbInterfaceLoad {
 
 					try
 					{
-						#sql {select ACCESS_PORT_ID into :It_access_port_id
+						#sql [connCtx] {select ACCESS_PORT_ID into :It_access_port_id
 								from AMFICOM.MONITOREDELEMENTATTACHMENTS
 								where MONITORED_ELEMENT_ID = :It_me_id };
 					}
@@ -1013,10 +1016,7 @@ final class ISMdbInterfaceLoad {
 					}
 					if(It_access_port_id == null) It_access_port_id = "";
 
-					vector2 = NetdbInterfaceLoad.loadCharacteristics(
-							"TRANSMISSIONPATHCHARS",
-							"PATH_ID",
-							It_id);
+					vector2 = NetdbInterfaceLoad.loadCharacteristics(conn, "TRANSMISSIONPATHCHARS", "PATH_ID", It_id);
 					characteristics = new Characteristic_Transferable[vector2.size()];
 					vector2.copyInto(characteristics);
 
@@ -1067,7 +1067,9 @@ final class ISMdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadMonitoredElements(String domain_id, String ids[], MonitoredElementSeq_TransferableHolder meseq) {
+	static int loadMonitoredElements(final Connection conn, String domain_id, String ids[], MonitoredElementSeq_TransferableHolder meseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_element_id = "";
 		String It_element_name = "";
@@ -1089,7 +1091,7 @@ final class ISMdbInterfaceLoad {
 			loadvec.add(ids[i]);
 		try
 		{
-			#sql meIt = { select
+			#sql [connCtx] meIt = { select
 						ID,
 						PATH_ID,
 						EQUIPMENT_ID,
@@ -1120,7 +1122,7 @@ final class ISMdbInterfaceLoad {
 					try
 					{
 						It_element_id = meIt.path_id();
-						#sql {
+						#sql [connCtx] {
 							select NAME into :It_element_name
 							from AMFICOM.TRANSMISSIONPATHS
 							where ID = :It_element_id
@@ -1136,7 +1138,7 @@ final class ISMdbInterfaceLoad {
 					try
 					{
 						It_element_id = meIt.equipment_id();
-						#sql {
+						#sql [connCtx] {
 							select NAME into :It_element_name
 							from AMFICOM.EQUIPMENTS
 							where ID = :It_element_id
@@ -1157,7 +1159,7 @@ final class ISMdbInterfaceLoad {
 
 				try
 				{
-					#sql {select ACCESS_PORT_ID into :It_access_port_id
+					#sql [connCtx] {select ACCESS_PORT_ID into :It_access_port_id
 							from AMFICOM.MONITOREDELEMENTATTACHMENTS
 							where MONITORED_ELEMENT_ID = :It_id };
 				}

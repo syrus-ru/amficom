@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.sqlj,v 1.1.2.1 2004/08/20 17:12:09 bass Exp $
+ * $Id: MonitoredElement.sqlj,v 1.1.2.2 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,9 +10,10 @@ package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.ISM.MonitoredElement_Transferable;
 import java.sql.*;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 17:12:09 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -31,8 +32,10 @@ final class MonitoredElement {
 
 	private MonitoredElement_Transferable transferable;
 
-	MonitoredElement(String me_id) throws SQLException {
-		#sql {
+	MonitoredElement(final Connection conn, String me_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
+		#sql [connCtx] {
 			select
 				ID,
 				PATH_ID,
@@ -52,14 +55,16 @@ final class MonitoredElement {
 			from AMFICOM.MONITOREDELEMENTS
 			where ID = :me_id
 		};
-		element_id = getElementId();
-		access_port_id = getAccessPortId();
+		element_id = getElementId(conn);
+		access_port_id = getAccessPortId(conn);
 	}
 
-	private String getAccessPortId() {
+	private String getAccessPortId(final Connection conn) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_access_port_id = "";
 		try {
-			#sql {
+			#sql [connCtx] {
 				select ACCESS_PORT_ID into :It_access_port_id
 					from AMFICOM.MONITOREDELEMENTATTACHMENTS
 					where MONITORED_ELEMENT_ID = :id
@@ -72,11 +77,13 @@ final class MonitoredElement {
 		return It_access_port_id;
 	}
 
-	private String getElementId() {
+	private String getElementId(final Connection conn) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_element_name = "";
 		if(element_type.equals("path")) {
 			try {
-				#sql {
+				#sql [connCtx] {
 					select NAME into :It_element_name
 					from AMFICOM.TRANSMISSIONPATHS
 					where ID = :element_id
@@ -88,7 +95,7 @@ final class MonitoredElement {
 				It_element_name = "";
 		} else if(element_type.equals("equipment")) {
 			try {
-				#sql {
+				#sql [connCtx] {
 					select NAME into :It_element_name
 					from AMFICOM.EQUIPMENTS
 					where ID = :element_id

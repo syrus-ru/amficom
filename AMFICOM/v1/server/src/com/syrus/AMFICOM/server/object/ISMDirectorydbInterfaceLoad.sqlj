@@ -1,5 +1,5 @@
 /*
- * $Id: ISMDirectorydbInterfaceLoad.sqlj,v 1.1.2.3 2004/08/25 15:24:29 bass Exp $
+ * $Id: ISMDirectorydbInterfaceLoad.sqlj,v 1.1.2.4 2004/09/09 11:35:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,10 @@ import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
 import java.sql.*;
 import java.util.Vector;
 import sqlj.runtime.SQLNullException;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/25 15:24:29 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:20 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -24,12 +25,14 @@ final class ISMDirectorydbInterfaceLoad {
 	private ISMDirectorydbInterfaceLoad() {
 	}
 
-	private static Vector loadAccessPortTestTypes(String aport_id) {
+	private static Vector loadAccessPortTestTypes(final Connection conn, String aport_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		TestTypeIdIterator idIt = null;
 		Vector vector = new Vector();
 		try
 		{
-			#sql idIt = { select TEST_TYPE_ID
+			#sql [connCtx] idIt = { select TEST_TYPE_ID
 				from AMFICOM.ACCESSPORTTYPETESTTYPES
 					where ACCESS_PORT_TYPE_ID = :aport_id };
 
@@ -58,9 +61,9 @@ final class ISMDirectorydbInterfaceLoad {
 		return vector;
 	}
 
-	static int loadAccessPortTypes(
-			AccessPortTypeSeq_TransferableHolder aporttypeseq)
-	{
+	static int loadAccessPortTypes(final Connection conn, AccessPortTypeSeq_TransferableHolder aporttypeseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_description = "";
@@ -80,7 +83,7 @@ final class ISMDirectorydbInterfaceLoad {
 
 		try
 		{
-			#sql ptIt = { select
+			#sql [connCtx] ptIt = { select
 						ID,
 						NAME,
 						DESCRIPTION,
@@ -106,14 +109,11 @@ final class ISMDirectorydbInterfaceLoad {
 				try { It_modified = ptIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-				vector2 = NetDirectorydbInterfaceLoad.loadCharacteristicLinks(
-						"ACCESSPORTTYPECHARLINKS",
-						"ACCESS_PORT_TYPE_ID",
-						It_id);
+				vector2 = NetDirectorydbInterfaceLoad.loadCharacteristicLinks(conn, "ACCESSPORTTYPECHARLINKS", "ACCESS_PORT_TYPE_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
-				vector2 = loadAccessPortTestTypes(It_id);
+				vector2 = loadAccessPortTestTypes(conn, It_id);
 				test_type_ids = new String[vector2.size()];
 				vector2.copyInto(test_type_ids);
 
@@ -153,9 +153,9 @@ final class ISMDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadPathTypes(
-			TransmissionPathTypeSeq_TransferableHolder pathtypeseq)
-	{
+	static int loadPathTypes(final Connection conn, TransmissionPathTypeSeq_TransferableHolder pathtypeseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_description = "";
@@ -172,7 +172,7 @@ final class ISMDirectorydbInterfaceLoad {
 
 		try
 		{
-			#sql ptIt = { select
+			#sql [connCtx] ptIt = { select
 						ID,
 						NAME,
 						DESCRIPTION,
@@ -227,10 +227,9 @@ final class ISMDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadAccessPortTypes(
-			String[] apt_ids,
-			AccessPortTypeSeq_TransferableHolder aporttypeseq)
-	{
+	static int loadAccessPortTypes(final Connection conn, String[] apt_ids, AccessPortTypeSeq_TransferableHolder aporttypeseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_description = "";
@@ -253,7 +252,7 @@ final class ISMDirectorydbInterfaceLoad {
 			loadvec.add(apt_ids[i]);
 		try
 		{
-			#sql ptIt = { select
+			#sql [connCtx] ptIt = { select
 						ID,
 						NAME,
 						DESCRIPTION,
@@ -282,14 +281,11 @@ final class ISMDirectorydbInterfaceLoad {
 				try { It_modified = ptIt.modified().getTime(); }
 				catch(SQLException e) { }
 
-				vector2 = NetDirectorydbInterfaceLoad.loadCharacteristicLinks(
-						"ACCESSPORTTYPECHARLINKS",
-						"ACCESS_PORT_TYPE_ID",
-						It_id);
+				vector2 = NetDirectorydbInterfaceLoad.loadCharacteristicLinks(conn, "ACCESSPORTTYPECHARLINKS", "ACCESS_PORT_TYPE_ID", It_id);
 				characteristics = new Characteristic_Transferable[vector2.size()];
 				vector2.copyInto(characteristics);
 
-				vector2 = loadAccessPortTestTypes(It_id);
+				vector2 = loadAccessPortTestTypes(conn, It_id);
 				test_type_ids = new String[vector2.size()];
 				vector2.copyInto(test_type_ids);
 
@@ -329,10 +325,9 @@ final class ISMDirectorydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadPathTypes(
-			String[] path_ids,
-			TransmissionPathTypeSeq_TransferableHolder pathtypeseq)
-	{
+	static int loadPathTypes(final Connection conn, String[] path_ids, TransmissionPathTypeSeq_TransferableHolder pathtypeseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_description = "";
@@ -352,7 +347,7 @@ final class ISMDirectorydbInterfaceLoad {
 			loadvec.add(path_ids[i]);
 		try
 		{
-			#sql ptIt = { select
+			#sql [connCtx] ptIt = { select
 						ID,
 						NAME,
 						DESCRIPTION,

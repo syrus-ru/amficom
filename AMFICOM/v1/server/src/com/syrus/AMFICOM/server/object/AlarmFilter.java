@@ -1,5 +1,5 @@
 /*
- * $Id: AlarmFilter.java,v 1.1.2.2 2004/08/24 15:43:43 bass Exp $
+ * $Id: AlarmFilter.java,v 1.1.2.3 2004/09/09 11:35:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,77 +12,88 @@ import com.syrus.AMFICOM.CORBA.General.AlarmStatus;
 import com.syrus.AMFICOM.filter.*;
 import com.syrus.AMFICOM.server.event.*;
 import com.syrus.AMFICOM.server.measurement.*;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/24 15:43:43 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/09/09 11:35:20 $
  * @author $Author: bass $
  * @module server_v1
  */
 final class AlarmFilter implements Filter {
 	public boolean expression(FilterExpressionInterface filterExpressionInterface, Object obj) {
 		try {
-			FilterExpressionBase expr = (FilterExpressionBase) filterExpressionInterface;
 			boolean result = false;
-			Alarm a = (Alarm) obj;
-			List list = expr.getVec();
+
+			FilterExpressionBase filterExpressionBase = (FilterExpressionBase) filterExpressionInterface;
+			String filterExpressionBaseId = filterExpressionBase.getId();
+			List list = filterExpressionBase.getVec();
 			String type = (String) list.get(0);
+
+			Alarm alarm = (Alarm) obj;
+			long alarmGeneratedTime = alarm.getGenerated().getTime();
+
 			if (type.equals("numeric")) {
-				if (expr.getId().equals("time")) {
-					if (((String)list.get(1)).equals("=")) {
-						if (a.getGenerated().getTime() == Long.parseLong((String)list.get(2)))
+				if (filterExpressionBaseId.equals("time")) {
+					String operator = (String) list.get(1);
+					long operand = Long.parseLong((String) (list.get(2)));
+					if ((operator.equals("=") && (alarmGeneratedTime == operand))
+						|| (operator.equals(">") && (alarmGeneratedTime > operand))
+						|| (operator.equals("<") && (alarmGeneratedTime < operand)))
 							result = true;
-					} else if (((String)list.get(1)).equals(">")) {
-						if (a.getGenerated().getTime() > Long.parseLong((String)list.get(2)))
-							result = true;
-					} else if (((String)list.get(1)).equals("<")) {
-						if (a.getGenerated().getTime() < Long.parseLong((String)list.get(2)))
-							result = true;
-					}
 				}
-			} else if (type.equals("time")) {
-				if (expr.getId().equals("time")) {
-					if ( a.getGenerated().getTime() > Long.parseLong((String)list.get(1)) &&  a.getGenerated().getTime() < Long.parseLong((String)list.get(2))) {
-						result = true;
-					}
-				}
-			} else if (type.equals("range")) {
-				if (expr.getId().equals("time")) {
-					if ( a.getGenerated().getTime() > Long.parseLong((String)list.get(1)) &&  a.getGenerated().getTime() < Long.parseLong((String)list.get(2)))
-						result = true;
-				}
+			} else if (type.equals("time") || type.equals("range")) {
+				if (filterExpressionBaseId.equals("time")
+						&& (alarmGeneratedTime > Long.parseLong((String)list.get(1)))
+						&& (alarmGeneratedTime < Long.parseLong((String)list.get(2))))
+					result = true;
 			} else if (type.equals("string")) {
 				String substring = (String)list.get(1);
-				if (expr.getId().equals("source"))
-					return ((new EventSource((new Event(a.getEventId())).getSourceId())).getTransferable().object_source_name.indexOf(substring) != -1);
-				else if (expr.getId().equals("monitoredelement"))
-					return ((new MonitoredElement(Test.retrieveTestForEvaluation(((Evaluation) (new Result((new Event(a.getEventId())).getDescriptor())).getAction()).getId()).getTransferable().monitored_element_id)).getName().indexOf(substring) != -1);
+				String eventId = alarm.getEventId();
+				if (filterExpressionBaseId.equals("source"))
+					return ((new EventSource((new Event(eventId)).getSourceId())).getTransferable().object_source_name.indexOf(substring) != -1);
+				else if (filterExpressionBaseId.equals("monitoredelement")) {
+					/**
+					 * @todo A kindda tricky block of code.
+					 *       Do I actually need a new
+					 *       instance of MonitoredElement
+					 *       in order to evaluate a boolean
+					 *       expression?!
+					 */
+					Connection conn = null;
+					try {
+						conn = AMFICOMImpl.DATA_SOURCE.getConnection();
+						return ((new MonitoredElement(conn, Test.retrieveTestForEvaluation(((Evaluation) (new Result((new Event(eventId)).getDescriptor())).getAction()).getId()).getTransferable().monitored_element_id)).getName().indexOf(substring) != -1);
+					} finally {
+						if (conn != null)
+							conn.close();
+					}
+				}
 			} else if (type.equals("list")) {
 				Hashtable tree = (Hashtable )list.get(1);
-				if (expr.getId().equals("monitoredelement")) {
-					Event ev = new Event(a.getEventId());
-					Result res = new Result(ev.getDescriptor());
-					Evaluation eval = (Evaluation )res.getAction();
-					Test test = Test.retrieveTestForEvaluation(eval.getId());
-					MonitoredElement me = new MonitoredElement(test.getTransferable().monitored_element_id);
-					FilterTreeNodeHolder mmtn = (FilterTreeNodeHolder )tree.get("root");
+				if (filterExpressionBaseId.equals("monitoredelement")) {
+					FilterTreeNodeHolder mmtn = (FilterTreeNodeHolder) tree.get("root");
 					if (mmtn.state == 2) {
 						result = true;
 					} else if (mmtn.state == 1) {
 						for(int i = 0; i < mmtn.children_ids.length; i++) {
 							FilterTreeNodeHolder down_mte = (FilterTreeNodeHolder )tree.get(mmtn.children_ids[i]);
 							for(int j = 0; j < down_mte.children_ids.length; j++) {
-								FilterTreeNodeHolder down_mte2 = (FilterTreeNodeHolder )tree.get(down_mte.children_ids[j]);
-								if (me.getId().equals(down_mte2.id) && (down_mte2.state == 2))
+								FilterTreeNodeHolder down_mte2 = (FilterTreeNodeHolder) tree.get(down_mte.children_ids[j]);
+								
+								/**
+								 * @todo See comment above.
+								 */
+								Connection conn = AMFICOMImpl.DATA_SOURCE.getConnection();
+								if ((new MonitoredElement(conn, Test.retrieveTestForEvaluation(((Evaluation) ((new Result((new Event(alarm.getEventId())).getDescriptor())).getAction())).getId()).getTransferable().monitored_element_id)).getId().equals(down_mte2.id) && (down_mte2.state == 2))
 									result = true;
+								conn.close();
 							}
 						}
 					}
-				}
-				if (expr.getId().equals("source")) {
-					Event ev = new Event(a.getEventId());
-					FilterTreeNodeHolder mmtn = (FilterTreeNodeHolder )tree.get("root");
+				} else if (filterExpressionBaseId.equals("source")) {
+					Event ev = new Event(alarm.getEventId());
+					FilterTreeNodeHolder mmtn = (FilterTreeNodeHolder) tree.get("root");
 					if (mmtn.state == 2) {
 						result = true;
 					} else if (mmtn.state == 1) {
@@ -92,32 +103,30 @@ final class AlarmFilter implements Filter {
 								result = true;
 						}
 					}
-				}
-				if (expr.getId().equals("type")) {
+				} else if (filterExpressionBaseId.equals("type")) {
 					FilterTreeNodeHolder mmtn = (FilterTreeNodeHolder )tree.get("root");
 					if (mmtn.state == 2) {
 						result = true;
 					} else if (mmtn.state == 1) {
-						for(int i = 0; i < mmtn.children_ids.length; i++) {
+						for (int i = 0; i < mmtn.children_ids.length; i++) {
 							FilterTreeNodeHolder down_mte = (FilterTreeNodeHolder )tree.get(mmtn.children_ids[i]);
-							if (a.getTypeId().equals(down_mte.id) && (down_mte.state == 2))
+							if (alarm.getTypeId().equals(down_mte.id) && (down_mte.state == 2))
 								result = true;
 						}
 					}
-				}
-				if (expr.getId().equals("status")) {
+				} else if (filterExpressionBaseId.equals("status")) {
 					FilterTreeNodeHolder mmtn = (FilterTreeNodeHolder )tree.get("root");
 					if (mmtn.state == 2) {
 						result = true;
 					} else if (mmtn.state == 1) {
-						for(int i = 0; i < mmtn.children_ids.length; i++) {
+						for (int i = 0; i < mmtn.children_ids.length; i++) {
 							FilterTreeNodeHolder down_mte = (FilterTreeNodeHolder )tree.get(mmtn.children_ids[i]);
 							String stat = "";
-							if (a.getStatus() == AlarmStatus._ALARM_STATUS_GENERATED)
+							if (alarm.getStatus() == AlarmStatus._ALARM_STATUS_GENERATED)
 								stat = "GENERATED";
-							else if (a.getStatus() == AlarmStatus._ALARM_STATUS_ASSIGNED)
+							else if (alarm.getStatus() == AlarmStatus._ALARM_STATUS_ASSIGNED)
 								stat = "ASSIGNED";
-							else if (a.getStatus() == AlarmStatus._ALARM_STATUS_FIXED)
+							else if (alarm.getStatus() == AlarmStatus._ALARM_STATUS_FIXED)
 								stat = "FIXED";
 							if (down_mte.id.equals(stat) && (down_mte.state == 2))
 								result = true;

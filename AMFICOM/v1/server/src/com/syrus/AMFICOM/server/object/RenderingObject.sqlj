@@ -1,5 +1,5 @@
 /*
- * $Id: RenderingObject.sqlj,v 1.1.2.4 2004/08/27 08:09:21 bass Exp $
+ * $Id: RenderingObject.sqlj,v 1.1.2.5 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,17 +8,18 @@
 
 package com.syrus.AMFICOM.server.object;
 
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
 import com.syrus.AMFICOM.CORBA.Report.RenderingObject_Transferable;
 import com.syrus.util.ByteArray;
-import com.syrus.util.database.ByteArrayDatabase;
+import com.syrus.util.database.JdbcBlobManager;
 import java.io.*;
 import java.sql.*;
 import java.util.Vector;
-import oracle.sql.BLOB;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/08/27 08:09:21 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -34,94 +35,45 @@ final class RenderingObject {
 
 	private String report_template_id;
 
-	RenderingObject(RenderingObject_Transferable ro, String r_t_id)
-			throws SQLException
-	{
-    this.report_template_id = r_t_id; 
-		this.roID = ro.roID;
-		this.objectX = ro.objectX;
-		this.objectY = ro.objectY;
-		this.width = ro.width;
-		this.height = ro.height;
-		this.incapsulated_report = ro.incapsulated_report;
-		this.column_widths = ro.column_widths;
-		this.tableDivisionsNumber = ro.tableDivisionsNumber;
-		
-		Connection conn = DefaultContext.getDefaultContext().getConnection();
-		boolean autoc = conn.getAutoCommit();
-
-
-		#sql{ insert into AMFICOM.REPORTTEMPLATEFIELDS(
-				REPORT_TEMPLATE_ID,
-				ID,
-				OBJECT_X,
-				OBJECT_Y,
-				WIDTH,
-				HEIGHT,
-				IN_REPORT,
-				COL_WIDTHS,
-				TDN)
-			values(
-				:(this.report_template_id),
-				:(this.roID),
-				:(this.objectX),
-				:(this.objectY),
-				:(this.width),
-				:(this.height),
-				empty_blob(),
-				empty_blob(),
-				:(this.tableDivisionsNumber))
-		};
-
-		#sql { commit };
-
-		try
-		{
+	RenderingObject(final Connection conn, RenderingObject_Transferable ro, String r_t_id) throws SQLException, AMFICOMRemoteException {
+		try {
+			this.report_template_id = r_t_id; 
+			this.roID = ro.roID;
+			this.objectX = ro.objectX;
+			this.objectY = ro.objectY;
+			this.width = ro.width;
+			this.height = ro.height;
+			this.incapsulated_report = ro.incapsulated_report;
+			this.column_widths = ro.column_widths;
+			this.tableDivisionsNumber = ro.tableDivisionsNumber;
+			#sql [new DefaultContext(conn)] {
+				INSERT INTO amficom.reporttemplatefields (report_template_id, id, object_x, object_y, width, height, in_report, col_widths, tdn) VALUES (:(this.report_template_id), :(this.roID), :(this.objectX), :(this.objectY), :(this.width), :(this.height), EMPTY_BLOB(), EMPTY_BLOB(), :(this.tableDivisionsNumber))
+			};
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			DataOutputStream oos = new DataOutputStream(baos);
-			for(int i = 0; i < this.column_widths.length; i++)
+			for (int i = 0; i < this.column_widths.length; i++)
 				oos.writeInt(this.column_widths[i]);
-			byte[] bytes = baos.toByteArray();
-
-			System.out.println("Saving " + bytes.length + " bytes as blob:");
-			ByteArrayDatabase bArr = new ByteArrayDatabase(bytes);
-			bArr.saveAsBlob(
-				conn,
-				"AMFICOM.REPORTTEMPLATEFIELDS",
-				"COL_WIDTHS",
-				"id = '" + this.roID + "'");
-        
-			bytes = this.incapsulated_report;
-
-			System.out.println("Saving " + bytes.length + " bytes as blob:");
-			bArr = new ByteArrayDatabase(bytes);
-			bArr.saveAsBlob(
-				conn,
-				"AMFICOM.REPORTTEMPLATEFIELDS",
-				"IN_REPORT",
-				"id = '" + this.roID + "'");
-        
-		}
-		catch(Exception ioe)
-		{
-			System.out.println("error saving REPORTTEMPLATEFIELDS: " + ioe.getMessage());
+			JdbcBlobManager.setData(conn, "col_widths", "amficom.reporttemplatefields", "id = '" + this.roID + '\'', false, baos.toByteArray());
+			JdbcBlobManager.setData(conn, "in_report", "amficom.reporttemplatefields", "id = '" + this.roID + '\'', false, this.incapsulated_report);
+		} catch (IOException ioe) {
 			ioe.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, ioe.toString());
+		} finally {
+			conn.commit();
 		}
-		#sql { commit };
-		conn.setAutoCommit(autoc);
 	}
 
-	RenderingObject(String id)
-			throws SQLException
-	{
+	RenderingObject(final Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		RenderingObjectIterator roIt = null;
 
 		byte[] width_bytes = new byte[0];
-    byte[] report_bytes = new byte[0];
+		byte[] report_bytes = new byte[0];
 
 		try
 		{
-			#sql roIt = { select
+			#sql [connCtx] roIt = { select
 					ID,
 					REPORT_TEMPLATE_ID,
 					OBJECT_X,
@@ -138,31 +90,34 @@ final class RenderingObject {
 			roIt.next();
 
 			try { this.roID = roIt.id(); }
-        catch(SQLException e) { }
+	catch(SQLException e) { }
 			if(this.roID == null) 
-        this.roID = "";
+	this.roID = "";
 			try { this.objectX = roIt.object_x(); }
-        catch(SQLException e) { this.objectX = 0; }
+	catch(SQLException e) { this.objectX = 0; }
 			try { this.objectY = roIt.object_y(); }
-        catch(SQLException e) { this.objectY = 0; }
+	catch(SQLException e) { this.objectY = 0; }
 			try { this.width = roIt.width(); }
-        catch(SQLException e) { this.width = 0; }
+	catch(SQLException e) { this.width = 0; }
 			try { this.height = roIt.height(); }
-        catch(SQLException e) { this.height = 0; }
+	catch(SQLException e) { this.height = 0; }
 
-			try { report_bytes = ByteArrayDatabase.toByteArray(roIt.in_report()); }
-        catch(SQLException e) { e.printStackTrace(); }
+			try {
+				report_bytes = JdbcBlobManager.getData(roIt.in_report());
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
 
 			try { this.tableDivisionsNumber = roIt.tdn(); }
-        catch(SQLException e) { this.tableDivisionsNumber = 0; }
-        
-			try { width_bytes = ByteArrayDatabase.toByteArray(roIt.col_widths()); }
-        catch(SQLException e) { e.printStackTrace(); }
-        
+	catch(SQLException e) { this.tableDivisionsNumber = 0; }
+	
+			try { width_bytes = JdbcBlobManager.getData(roIt.col_widths()); }
+	catch(SQLException e) { e.printStackTrace(); }
+	
 			try { this.report_template_id = roIt.report_template_id(); }
-        catch(SQLException e) { }
+	catch(SQLException e) { }
 			if(this.report_template_id == null)
-        this.report_template_id = "";
+	this.report_template_id = "";
 
 			roIt.close();
 
@@ -196,70 +151,47 @@ final class RenderingObject {
 			this.tableDivisionsNumber);
 	}
 
-	void update(RenderingObject_Transferable ro) throws SQLException
-	{
-		this.objectX = ro.objectX;
-		this.objectY = ro.objectY;
-		this.width = ro.width;
-		this.height = ro.height;
-		this.incapsulated_report = ro.incapsulated_report;
-		this.column_widths = ro.column_widths;
-		this.tableDivisionsNumber = ro.tableDivisionsNumber;
-
-		#sql{ update AMFICOM.REPORTTEMPLATEFIELDS set
-				OBJECT_X = :(this.objectX),
-				OBJECT_Y = :(this.objectY),
-				WIDTH = :(this.width),
-				HEIGHT = :(this.height),
-				TDN = :(this.tableDivisionsNumber)
-			where ID = :(this.roID)
-		};
-
-		try
-		{
+	void update(final Connection conn, RenderingObject_Transferable ro) throws SQLException, AMFICOMRemoteException {
+		try {
+			this.objectX = ro.objectX;
+			this.objectY = ro.objectY;
+			this.width = ro.width;
+			this.height = ro.height;
+			this.incapsulated_report = ro.incapsulated_report;
+			this.column_widths = ro.column_widths;
+			this.tableDivisionsNumber = ro.tableDivisionsNumber;
+			#sql [new DefaultContext(conn)] {
+				UPDATE amficom.reporttemplatefields SET object_x = :(this.objectX), object_y = :(this.objectY), width = :(this.width), height = :(this.height), tdn = :(this.tableDivisionsNumber) WHERE id = :(this.roID)
+			};
 			ByteArrayOutputStream baos = new ByteArrayOutputStream(this.column_widths.length * 4);
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
-			for(int i = 0; i < this.column_widths.length; i++)
+			for (int i = 0; i < this.column_widths.length; i++)
 				oos.writeInt(this.column_widths[i]);
-			byte[] bytes = baos.toByteArray();
-
-			Connection conn = DefaultContext.getDefaultContext().getConnection();
-			ByteArrayDatabase bArr = new ByteArrayDatabase(bytes);
-			bArr.saveAsBlob(
-				conn,
-				"AMFICOM.REPORTTEMPLATEFIELDS",
-				"COL_WIDTHS",
-				"id = '" + this.roID + "'");
-		}
-		catch(Exception ioe)
-		{
-			System.out.println("error saving report template: " + ioe.getMessage());
+			JdbcBlobManager.setData(conn, "col_widths", "amficom.reporttemplatefields", "id = '" + this.roID + '\'', false, baos.toByteArray());
+		} catch(IOException ioe) {
 			ioe.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, ioe.toString());
+		} finally {
+			conn.commit();
 		}
-		#sql { commit };
 	}
 
-	static RenderingObject[] retrieveRenderingObjects(String rt_id) throws SQLException
-	{
+	static RenderingObject[] retrieveRenderingObjects(final Connection conn, String rt_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 		Vector linkedlist = new Vector();
 
-		try
-		{
-			#sql idIt = { select ID
+		try {
+			#sql [connCtx] idIt = { select ID
 					from AMFICOM.REPORTTEMPLATEFIELDS
 					where report_template_id = :rt_id  };
 
 			while (idIt.next())
-				linkedlist.add(new RenderingObject(idIt.id()));
-			idIt.close();
-		}
-		catch(SQLException ex)
-		{
-			if(idIt != null) try {
-			idIt.close();
-			}catch(SQLException exe) {}
-			throw ex;
+				linkedlist.add(new RenderingObject(conn, idIt.id()));
+		} finally {
+			if (idIt != null)
+				idIt.close();
 		}
 		RenderingObject[] ros = new RenderingObject[linkedlist.size()];
 		linkedlist.copyInto(ros);
@@ -276,7 +208,7 @@ final class RenderingObject {
 		int object_y,
 		int width,
 		int height,
-		BLOB in_report,
-		BLOB col_widths,
+		Blob in_report,
+		Blob col_widths,
 		int tdn);
 }

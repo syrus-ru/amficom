@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectdbInterfaceLoad.sqlj,v 1.1.2.5 2004/08/27 10:14:37 bass Exp $
+ * $Id: ObjectdbInterfaceLoad.sqlj,v 1.1.2.6 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,15 +10,14 @@ package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.util.database.ByteArrayDatabase;
+import com.syrus.util.database.JdbcBlobManager;
 import java.sql.*;
 import java.util.*;
-import oracle.sql.BLOB;
 import sqlj.runtime.SQLNullException;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.5 $, $Date: 2004/08/27 10:14:37 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -26,7 +25,7 @@ final class ObjectdbInterfaceLoad {
 	private ObjectdbInterfaceLoad() {
 	}
 
-	private static ObjectPermissionAttributes_Transferable loadPermissionAttributes(Connection conn, String id) throws SQLException {
+	private static ObjectPermissionAttributes_Transferable loadPermissionAttributes(final Connection conn, String id) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String It_id = "";
@@ -190,7 +189,7 @@ final class ObjectdbInterfaceLoad {
 		return opa;
 	}
 
-	private static String[] loadDomainLinks(Connection conn, String id) throws SQLException {
+	private static String[] loadDomainLinks(final Connection conn, String id) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String It_id = "";
@@ -233,7 +232,7 @@ final class ObjectdbInterfaceLoad {
 
 	}
 
-	static int loadDomains(Connection conn, DomainSeq_TransferableHolder domainseq) throws SQLException {
+	static int loadDomains(final Connection conn, DomainSeq_TransferableHolder domainseq) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String It_id = "";
@@ -370,7 +369,7 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadCategories(Connection conn, OperatorCategorySeq_TransferableHolder categoryseq, String category_ids[]) throws SQLException {
+	static int loadCategories(final Connection conn, OperatorCategorySeq_TransferableHolder categoryseq, String category_ids[]) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		Vector vec = new Vector();
@@ -386,7 +385,7 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static OperatorCategory_Transferable loadCategory(Connection conn, String id) throws SQLException {
+	private static OperatorCategory_Transferable loadCategory(final Connection conn, String id) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String It_id = "";
@@ -473,7 +472,7 @@ final class ObjectdbInterfaceLoad {
 		}
 	}
 
-	static int loadCategories(Connection conn, OperatorCategorySeq_TransferableHolder categoryseq) throws SQLException {
+	static int loadCategories(final Connection conn, OperatorCategorySeq_TransferableHolder categoryseq) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String It_id = "";
@@ -585,7 +584,7 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadGroups(Connection conn, OperatorGroupSeq_TransferableHolder groupseq, String group_ids[]) throws SQLException {
+	static int loadGroups(final Connection conn, OperatorGroupSeq_TransferableHolder groupseq, String group_ids[]) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		Vector vec = new Vector();
@@ -601,7 +600,7 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static OperatorGroup_Transferable loadGroup(Connection conn, String id) throws SQLException {
+	private static OperatorGroup_Transferable loadGroup(final Connection conn, String id) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String It_id = "";
@@ -739,7 +738,7 @@ final class ObjectdbInterfaceLoad {
 		}
 	}
 
-	static int loadGroups(Connection conn, OperatorGroupSeq_TransferableHolder groupseq) throws SQLException {
+	static int loadGroups(final Connection conn, OperatorGroupSeq_TransferableHolder groupseq) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String It_id = "";
@@ -905,7 +904,7 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadProfiles(Connection conn, OperatorProfileSeq_TransferableHolder profileseq, String profile_ids[]) throws SQLException {
+	static int loadProfiles(final Connection conn, OperatorProfileSeq_TransferableHolder profileseq, String profile_ids[]) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		Vector vec = new Vector();
@@ -921,7 +920,7 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static OperatorProfile_Transferable loadProfile(Connection conn, String id) throws SQLException {
+	private static OperatorProfile_Transferable loadProfile(final Connection conn, String id) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String It_id = "";
@@ -938,7 +937,7 @@ final class ObjectdbInterfaceLoad {
 		String It_owner_id = "";
 
 		String It_login = "";
-		BLOB It_password_blob = null;
+		Blob It_password_blob = null;
 		byte[] It_password = new byte[0];
 		long It_password_expiry = 0L;
 
@@ -1079,9 +1078,9 @@ final class ObjectdbInterfaceLoad {
 			if(It_login == null) It_login = "";
 
 			if(It_password_blob == null)
-            	It_password = new byte[0];
-            else
-            	It_password = ByteArrayDatabase.toByteArray(It_password_blob);
+	    	It_password = new byte[0];
+	    else
+			It_password = JdbcBlobManager.getData(It_password_blob);
 
 			if(It_last_login == null)
 				It_last_login = new Timestamp(System.currentTimeMillis());
@@ -1220,7 +1219,7 @@ final class ObjectdbInterfaceLoad {
 		}
 	}
 
-	static int loadProfiles(Connection conn, OperatorProfileSeq_TransferableHolder profileseq) throws SQLException {
+	static int loadProfiles(final Connection conn, OperatorProfileSeq_TransferableHolder profileseq) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String It_id = "";
@@ -1237,7 +1236,7 @@ final class ObjectdbInterfaceLoad {
 		String It_owner_id = "";
 
 		String It_login = "";
-		BLOB It_password_blob = null;
+		Blob It_password_blob = null;
 		byte[] It_password = new byte[0];
 		long It_password_expiry = 0;
 
@@ -1359,8 +1358,11 @@ final class ObjectdbInterfaceLoad {
 				try { It_login = opIt.login(); }
 				catch(SQLException e) { }
 				if(It_login == null) It_login = "";
-				try { It_password = ByteArrayDatabase.toByteArray(opIt.password()); }
-				catch(SQLException e) { It_password = new byte[0]; }
+				try {
+					It_password = JdbcBlobManager.getData(opIt.password());
+				} catch (SQLException sqle) {
+					It_password = new byte[0];
+				}
 				if(It_password == null) It_password = new byte[0];
 				try { It_password_expiry = opIt.password_expiry(); }
 				catch(Exception e) { }
@@ -1557,7 +1559,7 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadExecs(Connection conn, CommandPermissionAttributesSeq_TransferableHolder execseq) throws SQLException {
+	static int loadExecs(final Connection conn, CommandPermissionAttributesSeq_TransferableHolder execseq) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		String It_id = "";
@@ -1737,7 +1739,7 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static void loadUserDescriptors(Connection conn, UserSeq_TransferableHolder userseq) throws SQLException {
+	static void loadUserDescriptors(final Connection conn, UserSeq_TransferableHolder userseq) throws SQLException {
 		DefaultContext connCtx = new DefaultContext(conn);
 
 		UserIterator uIt = null;
@@ -1818,19 +1820,19 @@ final class ObjectdbInterfaceLoad {
 	}
 
 	#sql public static iterator CategoryIdIterator(
-		String category_id );
+		String category_id);
 
 	#sql public static iterator GroupIdIterator(
-		String group_id );
+		String group_id);
 
 	#sql public static iterator UserIdIterator(
-		String user_id );
+		String user_id);
 
 	#sql public static iterator ExecIdIterator(
-		String exec_id );
+		String exec_id);
 
 	#sql public static iterator InnerIdIterator(
-		String inner_domain_id );
+		String inner_domain_id);
 
 	#sql public static iterator DomainIterator(
 		String id,
@@ -1854,14 +1856,14 @@ final class ObjectdbInterfaceLoad {
 		Timestamp created,
 		String created_by,
 		Timestamp modified,
-		String modified_by );
+		String modified_by);
 
 	#sql public static iterator CategoryIterator(
 		String id,
 		String name,
 		String codename,
 		String description,
-		Timestamp modified );
+		Timestamp modified);
 
 	#sql public static iterator UserIterator(
 		String id,
@@ -1870,7 +1872,7 @@ final class ObjectdbInterfaceLoad {
 		String operator_id,
 		String operational_id,
 		String subscriber_id,
-		String organization_id );
+		String organization_id);
 
 	#sql public static iterator ExecIterator(
 		String id,
@@ -1882,7 +1884,7 @@ final class ObjectdbInterfaceLoad {
 		String created_by,
 		Timestamp modified,
 		String modified_by,
-		String whyrejected );
+		String whyrejected);
 
 	#sql public static iterator OperatorProfileIterator(
 		String id,
@@ -1896,7 +1898,7 @@ final class ObjectdbInterfaceLoad {
 		String user_id,
 		String owner_id,
 		String login,
-		BLOB password,
+		Blob password,
 		long password_expiry,
 		Timestamp last_login,
 		String status,

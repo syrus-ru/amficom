@@ -1,5 +1,5 @@
 /*
- * $Id: SchemedbInterfaceProtoSave.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
+ * $Id: SchemedbInterfaceProtoSave.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,10 @@ import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import java.sql.*;
 import java.util.*;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -23,8 +24,9 @@ final class SchemedbInterfaceProtoSave {
 	private SchemedbInterfaceProtoSave() {
 	}
 
-	private static int saveDevicePorts(String device_id, SchemePort_Transferable[] ports)
-	{
+	private static int saveDevicePorts(final Connection conn, String device_id, SchemePort_Transferable[] ports) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		PortIdIterator idIt = null;
 
 		int i;
@@ -43,7 +45,7 @@ final class SchemedbInterfaceProtoSave {
 
 		try
 		{
-			#sql idIt = { select SCHEME_PORT_ID
+			#sql [connCtx] idIt = { select SCHEME_PORT_ID
 				from AMFICOM.SCHEMEDEVICEPORTS
 					where SCHEME_DEVICE_ID = :device_id };
 
@@ -56,7 +58,7 @@ final class SchemedbInterfaceProtoSave {
 					int is_a_p = (ports[index].is_access_port)? 1 : 0;
 					try
 					{
-						#sql {
+						#sql [connCtx] {
 							update AMFICOM.SCHEMEPORTS
 								set
 									NAME = :(ports[index].name),
@@ -68,13 +70,8 @@ final class SchemedbInterfaceProtoSave {
 									DIRECTION_TYPE = :(ports[index].direction_type)
 								where ID = :(ports[index].id)
 						};
-						MapdbInterfaceSave.saveAttributes(
-							"SCHEMEPORTATTRIBUTES",
-							"SCHEME_PORT_ID",
-							ports[index].id,
-							ports[index].attributes);
-
-						CatalogSchemeMapUpdater.schemePortUpdated(ports[index]);
+						MapdbInterfaceSave.saveAttributes(conn, "SCHEMEPORTATTRIBUTES", "SCHEME_PORT_ID", ports[index].id, ports[index].attributes);
+						CatalogSchemeMapUpdater.schemePortUpdated(conn, ports[index]);
 					}
 					catch(SQLException e)
 					{
@@ -82,7 +79,7 @@ final class SchemedbInterfaceProtoSave {
 						e.printStackTrace();
 						return Constants.ERROR_UPDATING;
 					}
-					#sql { commit };
+					conn.commit();
 					vec.remove(ports[index]);
 				}
 				else
@@ -105,7 +102,7 @@ final class SchemedbInterfaceProtoSave {
 			int is_a_p = (port.is_access_port)? 1 : 0;
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					insert into AMFICOM.SCHEMEPORTS(
 							ID,
 							NAME,
@@ -126,13 +123,9 @@ final class SchemedbInterfaceProtoSave {
 							 :(port.direction_type) )
 				};
 
-				MapdbInterfaceSave.saveAttributes(
-					"SCHEMEPORTATTRIBUTES",
-					"SCHEME_PORT_ID",
-					port.id,
-					port.attributes);
-				String at_s = ResourcedbInterface.getUId("deviceport");
-				#sql {
+				MapdbInterfaceSave.saveAttributes(conn, "SCHEMEPORTATTRIBUTES", "SCHEME_PORT_ID", port.id, port.attributes);
+				String at_s = ResourcedbInterface.getUid(conn, "deviceport");
+				#sql [connCtx] {
 					insert into AMFICOM.SCHEMEDEVICEPORTS(
 							ID,
 							SCHEME_DEVICE_ID,
@@ -142,7 +135,7 @@ final class SchemedbInterfaceProtoSave {
 							:(device_id),
 							:(port.id) )
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -163,15 +156,15 @@ final class SchemedbInterfaceProtoSave {
 			try
 			{
 				String s = (String )del_vec.get(i);
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.SCHEMEDEVICEPORTS
 						where SCHEME_PORT_ID = :s
 				};
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.SCHEMEPORTS
 						where ID = :s
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -183,8 +176,9 @@ final class SchemedbInterfaceProtoSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static int saveDeviceCablePorts(String device_id, SchemeCablePort_Transferable[] ports)
-	{
+	private static int saveDeviceCablePorts(final Connection conn, String device_id, SchemeCablePort_Transferable[] ports) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		CablePortIdIterator idIt = null;
 
 		int i;
@@ -203,7 +197,7 @@ final class SchemedbInterfaceProtoSave {
 
 		try
 		{
-			#sql idIt = { select SCHEME_CABLE_PORT_ID
+			#sql [connCtx] idIt = { select SCHEME_CABLE_PORT_ID
 				from AMFICOM.SCHEMEDEVICECABLEPORTS
 					where SCHEME_DEVICE_ID = :device_id };
 
@@ -216,7 +210,7 @@ final class SchemedbInterfaceProtoSave {
 					int is_a_p = (ports[index].is_access_port)? 1 : 0;
 					try
 					{
-						#sql {
+						#sql [connCtx] {
 							update AMFICOM.SCHEMECABLEPORTS
 								set
 									NAME = :(ports[index].name),
@@ -228,13 +222,8 @@ final class SchemedbInterfaceProtoSave {
 									DIRECTION_TYPE = :(ports[index].direction_type)
 								where ID = :(ports[index].id)
 						};
-						MapdbInterfaceSave.saveAttributes(
-							"SCHEMECABLEPORTATTRIBUTES",
-							"SCHEME_CABLE_PORT_ID",
-							ports[index].id,
-							ports[index].attributes);
-
-						CatalogSchemeMapUpdater.schemeCablePortUpdated(ports[index]);
+						MapdbInterfaceSave.saveAttributes(conn, "SCHEMECABLEPORTATTRIBUTES", "SCHEME_CABLE_PORT_ID", ports[index].id, ports[index].attributes);
+						CatalogSchemeMapUpdater.schemeCablePortUpdated(conn, ports[index]);
 					}
 					catch(SQLException e)
 					{
@@ -242,7 +231,7 @@ final class SchemedbInterfaceProtoSave {
 						e.printStackTrace();
 						return Constants.ERROR_UPDATING;
 					}
-					#sql { commit };
+					conn.commit();
 					vec.remove(ports[index]);
 				}
 				else
@@ -265,7 +254,7 @@ final class SchemedbInterfaceProtoSave {
 			int is_a_p = (port.is_access_port)? 1 : 0;
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					insert into AMFICOM.SCHEMECABLEPORTS(
 							ID,
 							NAME,
@@ -286,14 +275,9 @@ final class SchemedbInterfaceProtoSave {
 							 :(port.direction_type) )
 				};
 
-				MapdbInterfaceSave.saveAttributes(
-					"SCHEMECABLEPORTATTRIBUTES",
-					"SCHEME_CABLE_PORT_ID",
-					port.id,
-					port.attributes);
-
-				String at_s = ResourcedbInterface.getUId("schemecableport");
-				#sql {
+				MapdbInterfaceSave.saveAttributes(conn, "SCHEMECABLEPORTATTRIBUTES", "SCHEME_CABLE_PORT_ID", port.id, port.attributes);
+				String at_s = ResourcedbInterface.getUid(conn, "schemecableport");
+				#sql [connCtx] {
 					insert into AMFICOM.SCHEMEDEVICECABLEPORTS(
 							ID,
 							SCHEME_DEVICE_ID,
@@ -303,7 +287,7 @@ final class SchemedbInterfaceProtoSave {
 							:(device_id),
 							:(port.id) )
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -324,15 +308,15 @@ final class SchemedbInterfaceProtoSave {
 			try
 			{
 				String s = (String )del_vec.get(i);
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.SCHEMEDEVICECABLEPORTS
 						where SCHEME_CABLE_PORT_ID = :s
 				};
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.SCHEMECABLEPORTS
 						where ID = :s
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -344,8 +328,9 @@ final class SchemedbInterfaceProtoSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveLinks(SchemeLink_Transferable[] links)
-	{
+	static int saveLinks(final Connection conn, SchemeLink_Transferable[] links) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int len;
 		int count = 0;
@@ -355,7 +340,7 @@ final class SchemedbInterfaceProtoSave {
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.SCHEMELINKS
 						where ID = :(links[i].id)
 				};
@@ -366,7 +351,7 @@ final class SchemedbInterfaceProtoSave {
 				System.out.println("update link " + links[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.SCHEMELINKS
 							set
 								NAME = :(links[i].name),
@@ -385,14 +370,14 @@ final class SchemedbInterfaceProtoSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new link " + links[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.SCHEMELINKS(
 								ID,
 								NAME,
@@ -412,7 +397,7 @@ final class SchemedbInterfaceProtoSave {
 								:(links[i].physical_length),
 								:(links[i].optical_length) )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -421,19 +406,15 @@ final class SchemedbInterfaceProtoSave {
 					return Constants.ERROR_SAVING;
 				}
 			}
-			MapdbInterfaceSave.saveAttributes(
-				"SCHEMELINKATTRIBUTES",
-				"SCHEME_LINK_ID",
-				links[i].id,
-				links[i].attributes);
-
-			CatalogSchemeMapUpdater.schemeLinkUpdated(links[i]);
+			MapdbInterfaceSave.saveAttributes(conn, "SCHEMELINKATTRIBUTES", "SCHEME_LINK_ID", links[i].id, links[i].attributes);
+			CatalogSchemeMapUpdater.schemeLinkUpdated(conn, links[i]);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveSchemeDevices(SchemeDevice_Transferable[] devices)
-	{
+	static int saveSchemeDevices(final Connection conn, SchemeDevice_Transferable[] devices) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -445,7 +426,7 @@ final class SchemedbInterfaceProtoSave {
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.SCHEMEDEVICES
 						where ID = :(devices[i].id)
 				};
@@ -456,7 +437,7 @@ final class SchemedbInterfaceProtoSave {
 				System.out.println("update device " + devices[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.SCHEMEDEVICES
 							set
 								NAME = :(devices[i].name)
@@ -469,18 +450,18 @@ final class SchemedbInterfaceProtoSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new device " + devices[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.SCHEMEDEVICES(ID, NAME)
 							values(:(devices[i].id), :(devices[i].name) )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -490,23 +471,17 @@ final class SchemedbInterfaceProtoSave {
 				}
 			}
 
-			MapdbInterfaceSave.saveAttributes(
-				"SCHEMEDEVICEATTRIBUTES",
-				"SCHEME_DEVICE_ID",
-				devices[i].id,
-				devices[i].attributes);
+			MapdbInterfaceSave.saveAttributes(conn, "SCHEMEDEVICEATTRIBUTES", "SCHEME_DEVICE_ID", devices[i].id, devices[i].attributes);
 
-			saveDevicePorts(devices[i].id, devices[i].ports);
-			saveDeviceCablePorts(devices[i].id, devices[i].cableports);
+			saveDevicePorts(conn, devices[i].id, devices[i].ports);
+			saveDeviceCablePorts(conn, devices[i].id, devices[i].cableports);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static int saveProtoElement(
-			String domain_id,
-			SchemeProtoElement_Transferable proto,
-			Hashtable other_protos)
-	{
+	private static int saveProtoElement(final Connection conn, String domain_id, SchemeProtoElement_Transferable proto, Hashtable other_protos) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -517,7 +492,7 @@ final class SchemedbInterfaceProtoSave {
 		String ugo_cell_id = "";
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select count(*) into :count from AMFICOM.SCHEMEPROTOELEMENTS
 					where ID = :(proto.id)
 			};
@@ -529,7 +504,7 @@ final class SchemedbInterfaceProtoSave {
 			try
 			{
 				Timestamp ts = new Timestamp(proto.modified);
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.SCHEMEPROTOELEMENTS
 						set
 							NAME = :(proto.name),
@@ -541,18 +516,18 @@ final class SchemedbInterfaceProtoSave {
 							DOMAIN_ID = :domain_id
 						where ID = :(proto.id)
 				};
-				#sql {
+				#sql [connCtx] {
 					select SCHEME_CELL_ID into :scheme_cell_id
 						from AMFICOM.SCHEMEPROTOELEMENTS
 						where ID = :(proto.id)
 				};
-				ResourcedbInterface.updateImage(scheme_cell_id, proto.schemecell);
-				#sql {
+				ResourcedbInterface.setImage(conn, scheme_cell_id, proto.schemecell);
+				#sql [connCtx] {
 					select UGO_CELL_ID into :ugo_cell_id
 						from AMFICOM.SCHEMEPROTOELEMENTS
 						where ID = :(proto.id)
 				};
-				ResourcedbInterface.updateImage(ugo_cell_id, proto.ugocell);
+				ResourcedbInterface.setImage(conn, ugo_cell_id, proto.ugocell);
 			}
 			catch(SQLException e)
 			{
@@ -560,26 +535,26 @@ final class SchemedbInterfaceProtoSave {
 				e.printStackTrace();
 				return Constants.ERROR_UPDATING;
 			}
-			#sql { commit };
+			conn.commit();
 		}
 		catch(SQLException e)
 		{
 			System.out.println("insert new proto " + proto.id);
 			try
 			{
-				scheme_cell_id = ResourcedbInterface.saveImage(proto.schemecell);
-				#sql {
+				scheme_cell_id = ResourcedbInterface.setImage(conn, proto.schemecell);
+				#sql [connCtx] {
 					update AMFICOM.IMAGERESOURCES
 						set SOURCE_STRING = 'scheme'
 						where ID = :scheme_cell_id
 				};
-				ugo_cell_id = ResourcedbInterface.saveImage(proto.ugocell);
-				#sql {
+				ugo_cell_id = ResourcedbInterface.setImage(conn, proto.ugocell);
+				#sql [connCtx] {
 					update AMFICOM.IMAGERESOURCES
 						set SOURCE_STRING = 'scheme'
 						where ID = :ugo_cell_id
 				};
-				#sql {
+				#sql [connCtx] {
 					insert into AMFICOM.SCHEMEPROTOELEMENTS(
 							ID,
 							NAME,
@@ -603,7 +578,7 @@ final class SchemedbInterfaceProtoSave {
 							SYSDATE,
 							:domain_id )
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -612,29 +587,22 @@ final class SchemedbInterfaceProtoSave {
 				return Constants.ERROR_SAVING;
 			}
 		}
-
-		MapdbInterfaceSave.saveAttributes(
-			"SCHEMEPROTOELEMENTATTRIBUTES",
-			"SCHEME_PROTO_ELEMENT_ID",
-			proto.id,
-			proto.attributes);
-
-		saveSchemeDevices(proto.devices);
-
+		MapdbInterfaceSave.saveAttributes(conn, "SCHEMEPROTOELEMENTATTRIBUTES", "SCHEME_PROTO_ELEMENT_ID", proto.id, proto.attributes);
+		saveSchemeDevices(conn, proto.devices);
 		try
 		{
-			#sql { delete from SCHEMEPROTOELEMENTDEVICES
+			#sql [connCtx] { delete from SCHEMEPROTOELEMENTDEVICES
 				where SCHEME_PROTO_ELEMENT_ID = :(proto.id)
 			};
 
 			for (i = 0; i < proto.devices.length; i++)
 			{
-				String a_id = ResourcedbInterface.getUId("schemedevice");
-				#sql { insert into SCHEMEPROTOELEMENTDEVICES(ID, SCHEME_PROTO_ELEMENT_ID, SCHEME_DEVICE_ID)
+				String a_id = ResourcedbInterface.getUid(conn, "schemedevice");
+				#sql [connCtx] { insert into SCHEMEPROTOELEMENTDEVICES(ID, SCHEME_PROTO_ELEMENT_ID, SCHEME_DEVICE_ID)
 					values(:a_id, :(proto.id), :(proto.devices[i].id) )
 				};
 			}
-			#sql { commit };
+			conn.commit();
 		}
 		catch(SQLException ex)
 		{
@@ -643,21 +611,21 @@ final class SchemedbInterfaceProtoSave {
 			return Constants.ERROR_SAVING;
 		}
 
-		saveLinks(proto.links);
+		saveLinks(conn, proto.links);
 		try
 		{
-			#sql { delete from SCHEMEPROTOELEMENTLINKS
+			#sql [connCtx] { delete from SCHEMEPROTOELEMENTLINKS
 				where SCHEME_PROTO_ELEMENT_ID = :(proto.id)
 			};
 
 			for (i = 0; i < proto.links.length; i++)
 			{
-				String a_id = ResourcedbInterface.getUId("schemelink");
-				#sql { insert into SCHEMEPROTOELEMENTLINKS(ID, SCHEME_PROTO_ELEMENT_ID, SCHEME_LINK_ID)
+				String a_id = ResourcedbInterface.getUid(conn, "schemelink");
+				#sql [connCtx] { insert into SCHEMEPROTOELEMENTLINKS(ID, SCHEME_PROTO_ELEMENT_ID, SCHEME_LINK_ID)
 					values(:a_id, :(proto.id), :(proto.links[i].id) )
 				};
 			}
-			#sql { commit };
+			conn.commit();
 		}
 		catch(SQLException ex)
 		{
@@ -668,18 +636,18 @@ final class SchemedbInterfaceProtoSave {
 
 		try
 		{
-			#sql { delete from SCHEMEPROTOELEMENTPES
+			#sql [connCtx] { delete from SCHEMEPROTOELEMENTPES
 				where SCHEME_PROTO_ELEMENT_ID = :(proto.id)
 			};
 
 			for (i = 0; i < proto.proto_element_ids.length; i++)
 			{
-				String a_id = ResourcedbInterface.getUId("proto");
-				#sql { insert into SCHEMEPROTOELEMENTPES(ID, SCHEME_PROTO_ELEMENT_ID, SCHEME_PE_ID)
+				String a_id = ResourcedbInterface.getUid(conn, "proto");
+				#sql [connCtx] { insert into SCHEMEPROTOELEMENTPES(ID, SCHEME_PROTO_ELEMENT_ID, SCHEME_PE_ID)
 					values(:a_id, :(proto.id), :(proto.proto_element_ids[i]) )
 				};
 			}
-			#sql { commit };
+			conn.commit();
 		}
 		catch(SQLException ex)
 		{
@@ -690,43 +658,28 @@ final class SchemedbInterfaceProtoSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveProtoElements(
-			String domain_id,
-			SchemeProtoElement_Transferable[] protos)
-	{
-		int i;
-		int j;
-		int len;
-		int count = 0;
-
-		String id = "";
-		len = protos.length;
-		for (i = 0; i < len; i++)
-		{
-			saveProtoElement(domain_id, protos[i], new Hashtable());
-		}
+	static int saveProtoElements(final Connection conn, String domain_id, SchemeProtoElement_Transferable[] protos) throws SQLException {
+		for (int i = 0; i < protos.length; i++)
+			saveProtoElement(conn, domain_id, protos[i], new Hashtable());
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static int removeSchemePort(String id)
-	{
-		PortIdIterator pidIt = null;
-		try
-		{
-			MapdbInterfaceRemove.removeElementAttributes(
-					"SCHEMEPORTATTRIBUTES",
-					"SCHEME_PORT_ID",
-					id);
+	private static int removeSchemePort(final Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
 
-			#sql { delete from SCHEMEDEVICEPORTS
+		PortIdIterator pidIt = null;
+		try {
+			MapdbInterfaceRemove.removeElementAttributes(conn, "SCHEMEPORTATTRIBUTES", "SCHEME_PORT_ID", id);
+
+			#sql [connCtx] { delete from SCHEMEDEVICEPORTS
 					where SCHEME_PORT_ID = :id
 			};
 
-			#sql {
+			#sql [connCtx] {
 				delete from AMFICOM.SCHEMEPORTS
 					where ID = :id
 			};
-			#sql { commit };
+			conn.commit();
 		}
 		catch (Exception e)
 		{
@@ -736,25 +689,23 @@ final class SchemedbInterfaceProtoSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static int removeSchemeCablePort(String id)
-	{
+	private static int removeSchemeCablePort(final Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		CablePortIdIterator pidIt = null;
 		try
 		{
-			MapdbInterfaceRemove.removeElementAttributes(
-					"SCHEMECABLEPORTATTRIBUTES",
-					"SCHEME_CABLE_PORT_ID",
-					id);
+			MapdbInterfaceRemove.removeElementAttributes(conn, "SCHEMECABLEPORTATTRIBUTES", "SCHEME_CABLE_PORT_ID", id);
 
-			#sql { delete from SCHEMEDEVICECABLEPORTS
+			#sql [connCtx] { delete from SCHEMEDEVICECABLEPORTS
 					where SCHEME_CABLE_PORT_ID = :id
 			};
 
-			#sql {
+			#sql [connCtx] {
 				delete from AMFICOM.SCHEMECABLEPORTS
 					where ID = :id
 			};
-			#sql { commit };
+			conn.commit();
 		}
 		catch (Exception e)
 		{
@@ -764,42 +715,40 @@ final class SchemedbInterfaceProtoSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeSchemeDevice(String id)
-	{
+	static int removeSchemeDevice(final Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		PortIdIterator pidIt = null;
 		CablePortIdIterator cpidIt = null;
 		try
 		{
-			MapdbInterfaceRemove.removeElementAttributes(
-					"SCHEMEDEVICEATTRIBUTES",
-					"SCHEME_DEVICE_ID",
-					id);
+			MapdbInterfaceRemove.removeElementAttributes(conn, "SCHEMEDEVICEATTRIBUTES", "SCHEME_DEVICE_ID", id);
 
-			#sql pidIt = { select SCHEME_PORT_ID
+			#sql [connCtx] pidIt = { select SCHEME_PORT_ID
 					from SCHEMEDEVICEPORTS
 					where SCHEME_DEVICE_ID = :id
 			};
 			while(pidIt.next())
 			{
-				removeSchemePort(pidIt.scheme_port_id());
+				removeSchemePort(conn, pidIt.scheme_port_id());
 			}
 			pidIt.close();
 
-			#sql cpidIt = { select SCHEME_CABLE_PORT_ID
+			#sql [connCtx] cpidIt = { select SCHEME_CABLE_PORT_ID
 					from SCHEMEDEVICECABLEPORTS
 					where SCHEME_DEVICE_ID = :id
 			};
 			while(cpidIt.next())
 			{
-				removeSchemeCablePort(cpidIt.scheme_cable_port_id());
+				removeSchemeCablePort(conn, cpidIt.scheme_cable_port_id());
 			}
 			cpidIt.close();
 
-			#sql {
+			#sql [connCtx] {
 				delete from AMFICOM.SCHEMEDEVICES
 					where ID = :id
 			};
-			#sql { commit };
+			conn.commit();
 		}
 		catch (Exception e)
 		{
@@ -815,21 +764,19 @@ final class SchemedbInterfaceProtoSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeSchemeLink(String id)
-	{
+	static int removeSchemeLink(final Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		PortIdIterator pidIt = null;
 		try
 		{
-			MapdbInterfaceRemove.removeElementAttributes(
-					"SCHEMELINKATTRIBUTES",
-					"SCHEME_LINK_ID",
-					id);
+			MapdbInterfaceRemove.removeElementAttributes(conn, "SCHEMELINKATTRIBUTES", "SCHEME_LINK_ID", id);
 
-			#sql {
+			#sql [connCtx] {
 				delete from AMFICOM.SCHEMELINKS
 					where ID = :id
 			};
-			#sql { commit };
+			conn.commit();
 		}
 		catch (Exception e)
 		{
@@ -839,8 +786,9 @@ final class SchemedbInterfaceProtoSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeProtoElements(String[] proto_ids)
-	{
+	static int removeProtoElements(final Connection conn, String[] proto_ids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String scheme_cell_id = "";
 		String ugo_cell_id = "";
 		DeviceIdIterator didIt = null;
@@ -851,45 +799,45 @@ final class SchemedbInterfaceProtoSave {
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select SCHEME_CELL_ID into :scheme_cell_id
 						from AMFICOM.SCHEMEPROTOELEMENTS
 						where ID = :(proto_ids[i])
 				};
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.IMAGERESOURCES
 						where ID = :scheme_cell_id
 				};
 
-				#sql {
+				#sql [connCtx] {
 					select UGO_CELL_ID into :ugo_cell_id
 						from AMFICOM.SCHEMEPROTOELEMENTS
 						where ID = :(proto_ids[i])
 				};
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.IMAGERESOURCES
 						where ID = :ugo_cell_id
 				};
 
-				#sql { delete from SCHEMEPROTOELEMENTPES
+				#sql [connCtx] { delete from SCHEMEPROTOELEMENTPES
 					where SCHEME_PROTO_ELEMENT_ID = :(proto_ids[i])
 				};
 
 				try
 				{
-					#sql didIt = { select SCHEME_DEVICE_ID
+					#sql [connCtx] didIt = { select SCHEME_DEVICE_ID
 							from SCHEMEPROTOELEMENTDEVICES
 							where SCHEME_PROTO_ELEMENT_ID = :(proto_ids[i])
 					};
-					#sql { delete from SCHEMEPROTOELEMENTDEVICES
+					#sql [connCtx] { delete from SCHEMEPROTOELEMENTDEVICES
 							where SCHEME_PROTO_ELEMENT_ID = :(proto_ids[i])
 					};
 					while(didIt.next())
 					{
-						removeSchemeDevice(didIt.scheme_device_id());
+						removeSchemeDevice(conn, didIt.scheme_device_id());
 					}
 					didIt.close();
-					#sql { commit };
+					conn.commit();
 				}
 				catch (Exception e)
 				{
@@ -900,19 +848,19 @@ final class SchemedbInterfaceProtoSave {
 
 				try
 				{
-					#sql lidIt = { select SCHEME_LINK_ID
+					#sql [connCtx] lidIt = { select SCHEME_LINK_ID
 							from SCHEMEPROTOELEMENTLINKS
 							where SCHEME_PROTO_ELEMENT_ID = :(proto_ids[i])
 					};
-					#sql { delete from SCHEMEPROTOELEMENTLINKS
+					#sql [connCtx] { delete from SCHEMEPROTOELEMENTLINKS
 							where SCHEME_PROTO_ELEMENT_ID = :(proto_ids[i])
 					};
 					while(lidIt.next())
 					{
-						removeSchemeLink(lidIt.scheme_link_id());
+						removeSchemeLink(conn, lidIt.scheme_link_id());
 					}
 					lidIt.close();
-					#sql { commit };
+					conn.commit();
 				}
 				catch (Exception e)
 				{
@@ -923,23 +871,23 @@ final class SchemedbInterfaceProtoSave {
 
 				try
 				{
-					#sql mpIt = { select MAP_PROTO_ELEMENT_ID
+					#sql [connCtx] mpIt = { select MAP_PROTO_ELEMENT_ID
 							from AMFICOM.MAPPROTOELEMENTPELINKS
 							where PROTO_ELEMENT_ID = :(proto_ids[i])
 					};
-					#sql { delete from AMFICOM.MAPPROTOELEMENTPELINKS
+					#sql [connCtx] { delete from AMFICOM.MAPPROTOELEMENTPELINKS
 							where PROTO_ELEMENT_ID = :(proto_ids[i])
 					};
 					while(mpIt.next())
 					{
 						String mp_id = mpIt.map_proto_element_id();
-						#sql { update AMFICOM.MAPPROTOELEMENTS
+						#sql [connCtx] { update AMFICOM.MAPPROTOELEMENTS
 							set MODIFIED = SYSDATE
 							where ID = :mp_id
 						};
 					}
 					mpIt.close();
-					#sql { commit };
+					conn.commit();
 				}
 				catch (Exception e)
 				{
@@ -948,17 +896,13 @@ final class SchemedbInterfaceProtoSave {
 					e.printStackTrace();
 				}
 
-				MapdbInterfaceRemove.removeElementAttributes(
-					"SCHEMEPROTOELEMENTATTRIBUTES",
-					"SCHEME_PROTO_ELEMENT_ID",
-					proto_ids[i]);
+				MapdbInterfaceRemove.removeElementAttributes(conn, "SCHEMEPROTOELEMENTATTRIBUTES", "SCHEME_PROTO_ELEMENT_ID", proto_ids[i]);
 
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.SCHEMEPROTOELEMENTS
 						where ID = :(proto_ids[i])
 				};
-
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -970,9 +914,9 @@ final class SchemedbInterfaceProtoSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	#sql private static iterator DeviceIdIterator ( String scheme_device_id );
-	#sql private static iterator LinkIdIterator ( String scheme_link_id );
-	#sql private static iterator PortIdIterator ( String scheme_port_id );
-	#sql private static iterator CablePortIdIterator ( String scheme_cable_port_id );
-	#sql private static iterator MapProtoIdIterator ( String map_proto_element_id );
+	#sql private static iterator DeviceIdIterator(String scheme_device_id);
+	#sql private static iterator LinkIdIterator(String scheme_link_id);
+	#sql private static iterator PortIdIterator(String scheme_port_id);
+	#sql private static iterator CablePortIdIterator(String scheme_cable_port_id);
+	#sql private static iterator MapProtoIdIterator(String map_proto_element_id);
 }

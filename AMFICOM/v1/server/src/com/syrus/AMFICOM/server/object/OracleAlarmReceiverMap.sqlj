@@ -1,5 +1,5 @@
 /*
- * $Id: OracleAlarmReceiverMap.sqlj,v 1.1.2.3 2004/08/25 15:39:45 bass Exp $
+ * $Id: OracleAlarmReceiverMap.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,12 +14,12 @@ import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
 import com.syrus.util.corba.AuroraORBUtil;
 import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
-import oracle.sql.BLOB;
+import java.sql.*;
 import org.omg.CORBA.SystemException;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/25 15:39:45 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -41,19 +41,19 @@ final class OracleAlarmReceiverMap {
 	 * @throws AMFICOMRemoteException
 	 * @see java.util.Map#containsKey(java.lang.Object)
 	 */
-	static boolean containsKey(AccessIdentity_Transferable key) throws AMFICOMRemoteException {
+	static boolean containsKey(final Connection conn, AccessIdentity_Transferable key) throws SQLException, AMFICOMRemoteException {
 		if (key == null)
 			throw new NullPointerException();
 
-		AMFICOMdbGeneral.checkUserPrivileges(key);
+		AMFICOMdbGeneral.checkUserPrivileges(conn, key);
 
 		int alarmReceiver = 0; 
 		try {
-			#sql {
+			#sql [new DefaultContext(conn)] {
 				SELECT alarm_receiver INTO :alarmReceiver FROM amficom.loggedusers WHERE id = :(key.sess_id)
 			};
 		} catch (SQLException sqle) {
-			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, sqle.getLocalizedMessage());
+			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, sqle.toString());
 		}
 
 		return (alarmReceiver == 1);
@@ -77,14 +77,12 @@ final class OracleAlarmReceiverMap {
 	 * @throws AMFICOMRemoteException
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
-	static AMFICOMClient put(AccessIdentity_Transferable key, AMFICOMClient value) throws AMFICOMRemoteException {
+	static AMFICOMClient put(final Connection conn, AccessIdentity_Transferable key, AMFICOMClient value) throws SQLException, AMFICOMRemoteException {
 		if ((key == null) || (value == null))
 			throw new NullPointerException();
 
-		AMFICOMdbGeneral.checkUserPrivileges(key);
-
 		AMFICOMClient returnValue;
-		if (containsKey(key)) {
+		if (containsKey(conn, key)) {
 			/*
 			 * Pop the previous value from the underlying database.
 			 * 
@@ -96,7 +94,7 @@ final class OracleAlarmReceiverMap {
 		} else
 			returnValue = null;
 
-		update(key, 1);
+		update(conn, key, 1);
 
 		return returnValue;
 	}
@@ -119,22 +117,20 @@ final class OracleAlarmReceiverMap {
 	 * @throws AMFICOMRemoteException
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
-	static AMFICOMClient remove(AccessIdentity_Transferable key) throws AMFICOMRemoteException {
+	static AMFICOMClient remove(final Connection conn, AccessIdentity_Transferable key) throws SQLException, AMFICOMRemoteException {
 		if (key == null)
 			throw new NullPointerException();
 
-		AMFICOMdbGeneral.checkUserPrivileges(key);
-
 		AMFICOMClient returnValue;
-		if (containsKey(key)) {
+		if (containsKey(conn, key)) {
 			/*
 			 * Pop the previous value from the underlying database.
 			 */
 			returnValue = null;
 
 			try {
-				BLOB blob;
-				#sql {
+				Blob blob;
+				#sql [new DefaultContext(conn)] {
 					SELECT ior INTO :blob FROM amficom.iors WHERE id = :(key.sess_id)
 				};
 
@@ -172,21 +168,19 @@ final class OracleAlarmReceiverMap {
 		} else
 			returnValue = null;
 
-		update(key, 0);
+		update(conn, key, 0);
 
 		return returnValue;
 	}
 
-	private static void update(AccessIdentity_Transferable key, int alarmReceiver) throws AMFICOMRemoteException {
+	private static void update(final Connection conn, AccessIdentity_Transferable key, int alarmReceiver) throws SQLException, AMFICOMRemoteException {
 		try {
-			#sql {
+			#sql [new DefaultContext(conn)] {
 				UPDATE amficom.loggedusers SET alarm_receiver = :alarmReceiver WHERE id = :(key.sess_id)
 			};
-			#sql {
-				COMMIT
-			};
+			conn.commit();
 		} catch (SQLException sqle) {
-			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, sqle.getLocalizedMessage());
+			throw new AMFICOMRemoteException(Constants.ERROR_SAVING, sqle.toString());
 		}
 	}
 }

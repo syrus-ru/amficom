@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatadbInterfaceSave.sqlj,v 1.1.2.3 2004/08/23 11:43:51 bass Exp $
+ * $Id: TestDatadbInterfaceSave.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,10 +13,11 @@ import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.CORBA.Survey.*;
 import com.syrus.AMFICOM.server.measurement.Test;
-import java.sql.SQLException;
+import java.sql.*;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/23 11:43:51 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -24,16 +25,16 @@ final class TestDatadbInterfaceSave {
 	private TestDatadbInterfaceSave() {
 	}
 
-	static void requestTest(AccessIdentity_Transferable accessIdentity, ClientTestRequest_Transferable clientTestRequest, ClientTest_Transferable[] clientTestSeq) throws AMFICOMRemoteException {
-		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
+	static void requestTest(final Connection conn, AccessIdentity_Transferable accessIdentity, ClientTestRequest_Transferable clientTestRequest, ClientTest_Transferable[] clientTestSeq) throws SQLException, AMFICOMRemoteException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
+		AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 
 		try {
-			#sql {
+			#sql [connCtx] {
 				INSERT INTO amficom.testrequests(id, name, status, created, user_id, domain_id) VALUES (:(clientTestRequest.id), :(clientTestRequest.name), :(TestRequestStatus._TEST_REQUEST_STATUS_SHEDULED), SYSDATE, :(clientTestRequest.user_id), :(accessIdentity.domain_id))
 			};
-			#sql {
-				COMMIT
-			};
+			conn.commit();
 			for (int i = 0; i < clientTestSeq.length; i++)
 				new Test(clientTestSeq[i]);
 		} catch (SQLException sqle) {

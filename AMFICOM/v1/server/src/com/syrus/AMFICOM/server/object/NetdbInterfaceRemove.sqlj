@@ -1,5 +1,5 @@
 /*
- * $Id: NetdbInterfaceRemove.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
+ * $Id: NetdbInterfaceRemove.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,11 +9,12 @@
 package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Constants;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Vector;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -21,7 +22,9 @@ final class NetdbInterfaceRemove {
 	private NetdbInterfaceRemove() {
 	}
 
-	static int removePorts(String[] port_ids) {
+	static int removePorts(final Connection conn, String[] port_ids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String ap_id;
 		int len = port_ids.length;
 		for (int i = 0; i < len; i++)
@@ -30,50 +33,50 @@ final class NetdbInterfaceRemove {
 			{
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						select id into :ap_id from AMFICOM.ACCESSPORTS
 							where PORT_ID = :(port_ids[i])
 					};
-					#sql {
+					#sql [connCtx] {
 						delete from AMFICOM.ACCESSPORTCHARACTERISTICS
 							where ACCESS_PORT_ID = :ap_id
 					};
-					#sql {
+					#sql [connCtx] {
 						delete from AMFICOM.MONITOREDELEMENTATTACHMENTS
 							where ACCESS_PORT_ID = :(port_ids[i])
 					};
-					#sql {
+					#sql [connCtx] {
 						delete from AMFICOM.ACCESSPORTS
 							where PORT_ID = :(port_ids[i])
 					};
-					#sql { commit; };
+					conn.commit();
 				}
 				catch(Exception e)
 				{
 				}
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.LINKS
 						set
 							END_PORT_ID = '',
 							END_EQUIPMENT_ID = ''
 						where END_PORT_ID = :(port_ids[i])
 				};
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.LINKS
 						set
 							START_PORT_ID = '',
 							START_EQUIPMENT_ID = ''
 						where START_PORT_ID = :(port_ids[i])
 				};
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.PORTCHARACTERISTICS
 						where PORT_ID = :(port_ids[i])
 				};
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.PORTS
 						where ID = :(port_ids[i])
 				};
-				#sql { commit; };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -85,7 +88,9 @@ final class NetdbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeCablePorts(String[] cport_ids) {
+	static int removeCablePorts(final Connection conn, String[] cport_ids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String ap_id;
 		int len = cport_ids.length;
 		for (int i = 0; i < len; i++)
@@ -94,50 +99,50 @@ final class NetdbInterfaceRemove {
 			{
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						select id into :ap_id from AMFICOM.ACCESSPORTS
 							where PORT_ID = :(cport_ids[i])
 					};
-					#sql {
+					#sql [connCtx] {
 						delete from AMFICOM.ACCESSPORTCHARACTERISTICS
 							where ACCESS_PORT_ID = :ap_id
 					};
-					#sql {
+					#sql [connCtx] {
 						delete from AMFICOM.MONITOREDELEMENTATTACHMENTS
 							where ACCESS_PORT_ID = :(cport_ids[i])
 					};
-					#sql {
+					#sql [connCtx] {
 						delete from AMFICOM.ACCESSPORTS
 							where PORT_ID = :(cport_ids[i])
 					};
-					#sql { commit; };
+					conn.commit();
 				}
 				catch(Exception e)
 				{
 				}
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.CABLELINKS
 						set
 							END_PORT_ID = '',
 							END_EQUIPMENT_ID = ''
 						where END_PORT_ID = :(cport_ids[i])
 				};
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.CABLELINKS
 						set
 							START_PORT_ID = '',
 							START_EQUIPMENT_ID = ''
 						where START_PORT_ID = :(cport_ids[i])
 				};
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.CABLEPORTCHARACTERISTICS
 						where CABLE_PORT_ID = :(cport_ids[i])
 				};
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.CABLEPORTS
 						where ID = :(cport_ids[i])
 				};
-				#sql { commit; };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -149,21 +154,23 @@ final class NetdbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeLinks(String[] link_ids) {
+	static int removeLinks(final Connection conn, String[] link_ids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int len = link_ids.length;
 		for (int i = 0; i < len; i++)
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.LINKCHARACTERISTICS
 						where LINK_ID = :(link_ids[i])
 				};
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.LINKS
 						where ID = :(link_ids[i])
 				};
-				#sql { commit; };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -175,25 +182,27 @@ final class NetdbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeCableLinks(String[] link_ids) {
+	static int removeCableLinks(final Connection conn, String[] link_ids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int len = link_ids.length;
 		for (int i = 0; i < len; i++)
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.CABLELINKCHARACTERISTICS
 						where CABLE_LINK_ID = :(link_ids[i])
 				};
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.CABLELINKTHREADS
 						where CABLE_ID = :(link_ids[i])
 				};
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.CABLELINKS
 						where ID = :(link_ids[i])
 				};
-				#sql { commit; };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -205,7 +214,9 @@ final class NetdbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeEquipments(String[] equipment_ids) {
+	static int removeEquipments(final Connection conn, String[] equipment_ids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int len;
 
@@ -219,7 +230,7 @@ final class NetdbInterfaceRemove {
 			try
 			{
 				vec = new Vector();
-				#sql idIt = {
+				#sql [connCtx] idIt = {
 					select ID from AMFICOM.PORTS
 						where EQUIPMENT_ID = :(equipment_ids[i])
 				};
@@ -227,10 +238,10 @@ final class NetdbInterfaceRemove {
 					vec.add(idIt.id());
 				idIt.close();
 				ids = new String[vec.size()];
-				removePorts(ids);
+				removePorts(conn, ids);
 
 				vec = new Vector();
-				#sql idIt = {
+				#sql [connCtx] idIt = {
 					select ID from AMFICOM.CABLEPORTS
 						where EQUIPMENT_ID = :(equipment_ids[i])
 				};
@@ -238,17 +249,17 @@ final class NetdbInterfaceRemove {
 					vec.add(idIt.id());
 				idIt.close();
 				ids = new String[vec.size()];
-				removeCablePorts(ids);
+				removeCablePorts(conn, ids);
 
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.EQUIPMENTCHARACTERISTICS
 						where EQUIPMENT_ID = :(equipment_ids[i])
 				};
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.EQUIPMENTS
 						where ID = :(equipment_ids[i])
 				};
-				#sql { commit; };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -270,5 +281,6 @@ final class NetdbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	#sql public static iterator IdIterator ( String id );
+	#sql public static iterator IdIterator(
+		String id);
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CatalogSchemeMapUpdater.sqlj,v 1.1.2.3 2004/08/27 08:09:21 bass Exp $
+ * $Id: CatalogSchemeMapUpdater.sqlj,v 1.1.2.4 2004/09/09 11:35:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,9 +12,11 @@ import com.syrus.AMFICOM.CORBA.ISM.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.*;
 import com.syrus.AMFICOM.CORBA.Network.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
+import java.sql.*;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/27 08:09:21 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:20 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -22,14 +24,15 @@ final class CatalogSchemeMapUpdater {
 	private CatalogSchemeMapUpdater() {
 	}
 
-	private static String getElementScheme(String element_id)
-	{
+	private static String getElementScheme(final Connection conn, String element_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 		String s2;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select SCHEME_ID into :s1
 				from AMFICOM.ELEMENTSONSCHEME
 				where SCHEME_ELEMENT_ID = :element_id
@@ -42,12 +45,12 @@ final class CatalogSchemeMapUpdater {
 		}
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select SCHEME_ELEMENT_ID into :s2
 				from AMFICOM.SCHEMEELEMENTELEMENTS
 				where SCHEME_EL_ID = :element_id
 			};
-			return getElementScheme(s2);
+			return getElementScheme(conn, s2);
 		}
 		catch(Exception ex)
 		{
@@ -56,13 +59,14 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	private static String getElementMap(String element_id)
-	{
+	private static String getElementMap(final Connection conn, String element_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select MAP_ID into :s1
 				from AMFICOM.MAPELEMENTLINKS
 				where MAP_ELEMENT_ID = :element_id
@@ -76,20 +80,22 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	static void equipmentUpdated(Equipment_Transferable eq) {
+	static void equipmentUpdated(final Connection conn, Equipment_Transferable eq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 		IdIterator idIt2 = null;
 
 		try
 		{
-			#sql idIt = {
+			#sql [connCtx] idIt = {
 				select ID from AMFICOM.SCHEMEELEMENTS
 				where EQUIPMENT_ID = :(eq.id)
 				and NAME != :(eq.name)
 				and DESCRIPTION != :(eq.description)
 			};
 
-			#sql {
+			#sql [connCtx] {
 				update AMFICOM.SCHEMEELEMENTS
 				set
 					NAME = :(eq.name),
@@ -98,48 +104,48 @@ final class CatalogSchemeMapUpdater {
 				and NAME != :(eq.name)
 				and DESCRIPTION != :(eq.description)
 			};
-			#sql { commit };
+			conn.commit();
 
 			while(idIt.next())
 			{
 				String s = idIt.id();
-				String s1 = getElementScheme(s);
+				String s1 = getElementScheme(conn, s);
 				if(s1 != null)
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.SCHEMES
 						set MODIFIED = SYSDATE
 						where ID = :s1
 					};
-					#sql { commit };
+					conn.commit();
 				}
 
-				#sql idIt2 = {
+				#sql [connCtx] idIt2 = {
 					select ID from AMFICOM.MAPELEMENTS
 					where ELEMENT_ID = :s
 				};
 				while(idIt2.next())
 				{
 					String s2 = idIt2.id();
-					String s3 = getElementMap(s2);
+					String s3 = getElementMap(conn, s2);
 
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MAPELEMENTS
 						set
 							NAME = :(eq.name),
 							DESCRIPTION = :(eq.description)
 						where ID = :s2
 					};
-					#sql { commit };
+					conn.commit();
 
 					if(s3 != null)
 					{
-						#sql {
+						#sql [connCtx] {
 							update AMFICOM.MAPCONTEXTS
 							set MODIFIED = SYSDATE
 							where ID = :s3
 						};
-						#sql { commit };
+						conn.commit();
 					}
 				}
 				idIt2.close();
@@ -161,7 +167,9 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	static void schemeElementUpdated(SchemeElement_Transferable se) {
+	static void schemeElementUpdated(final Connection conn, SchemeElement_Transferable se) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 
 		try
@@ -169,7 +177,7 @@ final class CatalogSchemeMapUpdater {
 			if(se.equipment_id == null || se.equipment_id.equals(""))
 				return;
 
-			#sql {
+			#sql [connCtx] {
 				update AMFICOM.EQUIPMENTS
 				set
 					NAME = :(se.name),
@@ -179,9 +187,9 @@ final class CatalogSchemeMapUpdater {
 				and NAME != :(se.name)
 				and DESCRIPTION != :(se.description)
 			};
-			#sql { commit };
+			conn.commit();
 
-			#sql idIt = {
+			#sql [connCtx] idIt = {
 				select ID from AMFICOM.MAPELEMENTS
 				where ELEMENT_ID = :(se.id)
 				and NAME != :(se.name)
@@ -190,25 +198,25 @@ final class CatalogSchemeMapUpdater {
 			while(idIt.next())
 			{
 				String s2 = idIt.id();
-				String s3 = getElementMap(s2);
+				String s3 = getElementMap(conn, s2);
 
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.MAPELEMENTS
 					set
 						NAME = :(se.name),
 						DESCRIPTION = :(se.description)
 					where ID = :s2
 				};
-				#sql { commit };
+				conn.commit();
 
 				if(s3 != null)
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MAPCONTEXTS
 						set MODIFIED = SYSDATE
 						where ID = :s3
 					};
-					#sql { commit };
+					conn.commit();
 				}
 			}
 			idIt.close();
@@ -223,14 +231,16 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	static void mapElementUpdated(MapElement_Transferable me) {
+	static void mapElementUpdated(final Connection conn, MapElement_Transferable me) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 
 		try
 		{
 			if(me.element_id != null && !me.element_id.equals(""))
 			{
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.SCHEMEELEMENTS
 					set
 						NAME = :(me.name),
@@ -239,9 +249,9 @@ final class CatalogSchemeMapUpdater {
 					and NAME != :(me.name)
 					and DESCRIPTION != :(me.description)
 				};
-				#sql { commit };
+				conn.commit();
 
-				#sql {
+				#sql [connCtx] {
 					select EQUIPMENT_ID into :s1
 						from AMFICOM.SCHEMEELEMENTS
 						where ID = :(me.element_id)
@@ -249,7 +259,7 @@ final class CatalogSchemeMapUpdater {
 
 				if(s1 != null && !s1.equals(""))
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.EQUIPMENTS
 						set
 							NAME = :(me.name),
@@ -263,7 +273,7 @@ final class CatalogSchemeMapUpdater {
 						and LONGITUDE != :(me.longitude)
 						and LATITUDE != :(me.latitude)
 					};
-					#sql { commit };
+					conn.commit();
 				}
 			}
 		}
@@ -274,14 +284,15 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	private static String getPathScheme(String path_id)
-	{
+	private static String getPathScheme(final Connection conn, String path_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 		String s2;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select SCHEME_ID into :s1
 				from AMFICOM.PATHSONSCHEME
 				where SCHEME_PATH_ID = :path_id
@@ -295,13 +306,14 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	private static String getPathMap(String path_id)
-	{
+	private static String getPathMap(final Connection conn, String path_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select MAP_ID into :s1
 				from AMFICOM.MAPPATHSLINKS
 				where MAP_PATH_ID = :path_id
@@ -315,74 +327,76 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	static void pathUpdated(TransmissionPath_Transferable tp) {
+	static void pathUpdated(final Connection conn, TransmissionPath_Transferable tp) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 		IdIterator idIt2 = null;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				update AMFICOM.MONITOREDELEMENTS
 				set
 					MODIFIED = SYSDATE
 				where PATH_ID = :(tp.id)
 			};
-			#sql { commit };
+			conn.commit();
 
-			#sql idIt = {
+			#sql [connCtx] idIt = {
 				select ID from AMFICOM.SCHEMEPATHS
 				where PATH_ID = :(tp.id)
 				and NAME != :(tp.name)
 			};
 
-			#sql {
+			#sql [connCtx] {
 				update AMFICOM.SCHEMEPATHS
 				set NAME = :(tp.name)
 				where PATH_ID = :(tp.id)
 				and NAME != :(tp.name)
 			};
-			#sql { commit };
+			conn.commit();
 
 			while(idIt.next())
 			{
 				String s = idIt.id();
-				String s1 = getPathScheme(s);
+				String s1 = getPathScheme(conn, s);
 				if(s1 != null)
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.SCHEMES
 						set MODIFIED = SYSDATE
 						where ID = :s1
 					};
-					#sql { commit };
+					conn.commit();
 				}
 
-				#sql idIt2 = {
+				#sql [connCtx] idIt2 = {
 					select ID from AMFICOM.MAPPATHELEMENTS
 					where PATH_ID = :s
 				};
 				while(idIt2.next())
 				{
 					String s2 = idIt2.id();
-					String s3 = getPathMap(s2);
+					String s3 = getPathMap(conn, s2);
 
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MAPPATHELEMENTS
 						set
 							NAME = :(tp.name),
 							DESCRIPTION = :(tp.description)
 						where ID = :s2
 					};
-					#sql { commit };
+					conn.commit();
 
 					if(s3 != null)
 					{
-						#sql {
+						#sql [connCtx] {
 							update AMFICOM.MAPCONTEXTS
 							set MODIFIED = SYSDATE
 							where ID = :s3
 						};
-						#sql { commit };
+						conn.commit();
 					}
 				}
 				idIt2.close();
@@ -404,14 +418,16 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	static void schemePathUpdated(SchemePath_Transferable sp) {
+	static void schemePathUpdated(final Connection conn, SchemePath_Transferable sp) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 
 		try
 		{
 			if(sp.path_id != null && !sp.path_id.equals(""))
 			{
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.TRANSMISSIONPATHS
 					set
 						NAME = :(sp.name),
@@ -419,20 +435,20 @@ final class CatalogSchemeMapUpdater {
 					where ID = :(sp.path_id)
 					and NAME != :(sp.name)
 				};
-				#sql { commit };
+				conn.commit();
 
 
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.MONITOREDELEMENTS
 					set
 						MODIFIED = SYSDATE
 					where PATH_ID = :(sp.path_id)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 
 
-			#sql idIt = {
+			#sql [connCtx] idIt = {
 				select ID from AMFICOM.MAPPATHELEMENTS
 				where PATH_ID = :(sp.id)
 				and NAME != :(sp.name)
@@ -440,24 +456,24 @@ final class CatalogSchemeMapUpdater {
 			while(idIt.next())
 			{
 				String s2 = idIt.id();
-				String s3 = getPathMap(s2);
+				String s3 = getPathMap(conn, s2);
 
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.MAPPATHELEMENTS
 					set
 						NAME = :(sp.name)
 					where ID = :s2
 				};
-				#sql { commit };
+				conn.commit();
 
 				if(s3 != null)
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MAPCONTEXTS
 						set MODIFIED = SYSDATE
 						where ID = :s3
 					};
-					#sql { commit };
+					conn.commit();
 				}
 			}
 			idIt.close();
@@ -472,23 +488,25 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	static void mapPathUpdated(MapPathElement_Transferable mp) {
+	static void mapPathUpdated(final Connection conn, MapPathElement_Transferable mp) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 
 		try
 		{
 			if(mp.path_id != null && !mp.path_id.equals(""))
 			{
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.SCHEMEPATHS
 					set
 						NAME = :(mp.name)
 					where ID = :(mp.path_id)
 					and NAME != :(mp.name)
 				};
-				#sql { commit };
+				conn.commit();
 
-				#sql {
+				#sql [connCtx] {
 					select PATH_ID into :s1
 						from AMFICOM.SCHEMEPATHS
 						where ID = :(mp.path_id)
@@ -496,7 +514,7 @@ final class CatalogSchemeMapUpdater {
 
 				if(s1 != null && !s1.equals(""))
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.TRANSMISSIONPATHS
 						set
 							NAME = :(mp.name),
@@ -506,15 +524,15 @@ final class CatalogSchemeMapUpdater {
 						and NAME != :(mp.name)
 						and DESCRIPTION != :(mp.description)
 					};
-					#sql { commit };
+					conn.commit();
 
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MONITOREDELEMENTS
 						set
 							MODIFIED = SYSDATE
 						where PATH_ID = :s1
 					};
-					#sql { commit };
+					conn.commit();
 				}
 			}
 		}
@@ -525,13 +543,14 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	private static String getDeviceElement(String device_id)
-	{
+	private static String getDeviceElement(final Connection conn, String device_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select SCHEME_ELEMENT_ID into :s1
 				from AMFICOM.SCHEMEELEMENTDEVICES
 				where SCHEME_DEVICE_ID = :device_id
@@ -545,13 +564,14 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	private static String getSchemePort(String port_id)
-	{
+	private static String getSchemePort(final Connection conn, String port_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select ID into :s1
 				from AMFICOM.SCHEMEPORTS
 				where PORT_ID = :port_id
@@ -565,13 +585,14 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	private static String getPort(String port_id)
-	{
+	private static String getPort(final Connection conn, String port_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select PORT_ID into :s1
 				from AMFICOM.SCHEMEPORTS
 				where ID = :port_id
@@ -584,7 +605,7 @@ final class CatalogSchemeMapUpdater {
 		}
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select CABLE_PORT_ID into :s1
 				from AMFICOM.SCHEMECABLEPORTS
 				where ID = :port_id
@@ -598,13 +619,14 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	private static String getPortEquipment(String port_id)
-	{
+	private static String getPortEquipment(final Connection conn, String port_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select EQUIPMENT_ID into :s1
 				from AMFICOM.PORTS
 				where ID = :port_id
@@ -617,7 +639,7 @@ final class CatalogSchemeMapUpdater {
 		}
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select EQUIPMENT_ID into :s1
 				from AMFICOM.CABLEPORTS
 				where ID = :port_id
@@ -631,14 +653,15 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	private static String getLinkScheme(String link_id)
-	{
+	private static String getLinkScheme(final Connection conn, String link_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 		String s2;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select SCHEME_ID into :s1
 				from AMFICOM.LINKSONSCHEME
 				where SCHEME_LINK_ID = :link_id
@@ -651,12 +674,12 @@ final class CatalogSchemeMapUpdater {
 		}
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select SCHEME_ELEMENT_ID into :s2
 				from AMFICOM.SCHEMEELEMENTLINKS
 				where SCHEME_LINK_ID = :link_id
 			};
-			return getElementScheme(s2);
+			return getElementScheme(conn, s2);
 		}
 		catch(Exception ex)
 		{
@@ -665,20 +688,22 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	static void linkUpdated(Link_Transferable l) {
+	static void linkUpdated(final Connection conn, Link_Transferable l) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 		IdIterator idIt2 = null;
 
 		try
 		{
-			String s_p_id = getSchemePort(l.start_port_id);
+			String s_p_id = getSchemePort(conn, l.start_port_id);
 			if(s_p_id == null)
 				s_p_id = "";
-			String t_p_id = getSchemePort(l.end_port_id);
+			String t_p_id = getSchemePort(conn, l.end_port_id);
 			if(t_p_id == null)
 				t_p_id = "";
 
-			#sql idIt = {
+			#sql [connCtx] idIt = {
 				select ID from AMFICOM.SCHEMELINKS
 				where LINK_ID = :(l.id)
 				and NAME != :(l.name)
@@ -686,7 +711,7 @@ final class CatalogSchemeMapUpdater {
 				and OPTICAL_LENGTH != :(l.optical_length)
 			};
 
-			#sql {
+			#sql [connCtx] {
 				update AMFICOM.SCHEMELINKS
 				set
 					NAME = :(l.name),
@@ -697,20 +722,20 @@ final class CatalogSchemeMapUpdater {
 				and PHYSICAL_LENGTH != :(l.physical_length)
 				and OPTICAL_LENGTH != :(l.optical_length)
 			};
-			#sql { commit };
+			conn.commit();
 
 			while(idIt.next())
 			{
 				String s = idIt.id();
-				String s1 = getLinkScheme(s);
+				String s1 = getLinkScheme(conn, s);
 				if(s1 != null)
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.SCHEMES
 						set MODIFIED = SYSDATE
 						where ID = :s1
 					};
-					#sql { commit };
+					conn.commit();
 				}
 			}
 			idIt.close();
@@ -726,27 +751,29 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	static void schemeLinkUpdated(SchemeLink_Transferable sl) {
+	static void schemeLinkUpdated(final Connection conn, SchemeLink_Transferable sl) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 
 		try
 		{
 			if(sl.link_id != null && !sl.link_id.equals(""))
 			{
-				String s_p_id = getPort(sl.source_port_id);
+				String s_p_id = getPort(conn, sl.source_port_id);
 				if(s_p_id == null)
 					s_p_id = "";
-				String t_p_id = getPort(sl.target_port_id);
+				String t_p_id = getPort(conn, sl.target_port_id);
 				if(t_p_id == null)
 					t_p_id = "";
-				String s_e_id = getPortEquipment(s_p_id);
+				String s_e_id = getPortEquipment(conn, s_p_id);
 				if(s_e_id == null)
 					s_e_id = "";
-				String t_e_id = getPortEquipment(t_p_id);
+				String t_e_id = getPortEquipment(conn, t_p_id);
 				if(t_e_id == null)
 					t_e_id = "";
 
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.LINKS
 					set
 						NAME = :(sl.name),
@@ -758,7 +785,7 @@ final class CatalogSchemeMapUpdater {
 					and PHYSICAL_LENGTH != :(sl.physical_length)
 					and OPTICAL_LENGTH != :(sl.optical_length)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 		}
 		catch(Exception ex)
@@ -768,14 +795,15 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	private static String getCableLinkScheme(String link_id)
-	{
+	private static String getCableLinkScheme(final Connection conn, String link_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 		String s2;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select SCHEME_ID into :s1
 				from AMFICOM.CABLELINKSONSCHEME
 				where SCHEME_CABLE_LINK_ID = :link_id
@@ -789,12 +817,14 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	private static String getCableLinkMap(String link_id) {
+	private static String getCableLinkMap(final Connection conn, String link_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select MAP_ID into :s1
 				from AMFICOM.MAPLINKLINKS
 				where MAP_LINK_ID = :link_id
@@ -808,13 +838,14 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	private static String getSchemeCablePort(String port_id)
-	{
+	private static String getSchemeCablePort(final Connection conn, String port_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select ID into :s1
 				from AMFICOM.SCHEMECABLEPORTS
 				where CABLE_PORT_ID = :port_id
@@ -828,13 +859,14 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	private static String getMapElement(String element_id)
-	{
+	private static String getMapElement(final Connection conn, String element_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select ID into :s1
 				from AMFICOM.MAPELEMENTS
 				where ELEMENT_ID = :element_id
@@ -848,19 +880,20 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	private static String getSchemePortElement(String port_id)
-	{
+	private static String getSchemePortElement(final Connection conn, String port_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 		String s2;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select SCHEME_DEVICE_ID into :s1
 				from AMFICOM.SCHEMEDEVICEPORTS
 				where SCHEME_PORT_ID = :port_id
 			};
-			#sql {
+			#sql [connCtx] {
 				select SCHEME_ELEMENT_ID into :s2
 				from AMFICOM.SCHEMEELEMENTDEVICES
 				where SCHEME_DEVICE_ID = :s1
@@ -873,12 +906,12 @@ final class CatalogSchemeMapUpdater {
 		}
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select SCHEME_DEVICE_ID into :s1
 				from AMFICOM.SCHEMEDEVICECABLEPORTS
 				where SCHEME_CABLE_PORT_ID = :port_id
 			};
-			#sql {
+			#sql [connCtx] {
 				select SCHEME_ELEMENT_ID into :s2
 				from AMFICOM.SCHEMEELEMENTDEVICES
 				where SCHEME_DEVICe_ID = :s1
@@ -892,20 +925,22 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	static void cableLinkUpdated(CableLink_Transferable l) {
+	static void cableLinkUpdated(final Connection conn, CableLink_Transferable l) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 		IdIterator idIt2 = null;
 
 		try
 		{
-			String s_p_id = getSchemeCablePort(l.start_port_id);
+			String s_p_id = getSchemeCablePort(conn, l.start_port_id);
 			if(s_p_id == null)
 				s_p_id = "";
-			String t_p_id = getSchemeCablePort(l.end_port_id);
+			String t_p_id = getSchemeCablePort(conn, l.end_port_id);
 			if(t_p_id == null)
 				t_p_id = "";
 
-			#sql idIt = {
+			#sql [connCtx] idIt = {
 				select ID from AMFICOM.SCHEMECABLELINKS
 				where CABLE_LINK_ID = :(l.id)
 				and NAME != :(l.name)
@@ -913,7 +948,7 @@ final class CatalogSchemeMapUpdater {
 				and OPTICAL_LENGTH != :(l.optical_length)
 			};
 
-			#sql {
+			#sql [connCtx] {
 				update AMFICOM.SCHEMECABLELINKS
 				set
 					NAME = :(l.name),
@@ -925,23 +960,23 @@ final class CatalogSchemeMapUpdater {
 				and OPTICAL_LENGTH != :(l.optical_length)
 			};
 
-			#sql { commit };
+			conn.commit();
 
 			while(idIt.next())
 			{
 				String s = idIt.id();
-				String s1 = getCableLinkScheme(s);
+				String s1 = getCableLinkScheme(conn, s);
 				if(s1 != null)
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.SCHEMES
 						set MODIFIED = SYSDATE
 						where ID = :s1
 					};
-					#sql { commit };
+					conn.commit();
 				}
 
-				#sql idIt2 = {
+				#sql [connCtx] idIt2 = {
 					select ID from AMFICOM.MAPPHYSICALLINKELEMENTS
 					where LINK_ID = :s
 					and NAME != :(l.name)
@@ -950,28 +985,28 @@ final class CatalogSchemeMapUpdater {
 				while(idIt2.next())
 				{
 					String s2 = idIt2.id();
-					String s3 = getCableLinkMap(s2);
+					String s3 = getCableLinkMap(conn, s2);
 
-					String s_n_id = getMapElement(getSchemePortElement(s_p_id));
-					String e_n_id = getMapElement(getSchemePortElement(t_p_id));
+					String s_n_id = getMapElement(conn, getSchemePortElement(conn, s_p_id));
+					String e_n_id = getMapElement(conn, getSchemePortElement(conn, t_p_id));
 
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MAPPHYSICALLINKELEMENTS
 						set
 							NAME = :(l.name),
 							DESCRIPTION = :(l.description)
 						where ID = :s2
 					};
-					#sql { commit };
+					conn.commit();
 
 					if(s3 != null)
 					{
-						#sql {
+						#sql [connCtx] {
 							update AMFICOM.MAPCONTEXTS
 							set MODIFIED = SYSDATE
 							where ID = :s3
 						};
-						#sql { commit };
+						conn.commit();
 					}
 				}
 				idIt2.close();
@@ -992,27 +1027,29 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	static void schemeCableLinkUpdated(SchemeCableLink_Transferable scl) {
+	static void schemeCableLinkUpdated(final Connection conn, SchemeCableLink_Transferable scl) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 
 		try
 		{
 			if(scl.cable_link_id != null && !scl.cable_link_id.equals(""))
 			{
-				String s_p_id = getPort(scl.source_port_id);
+				String s_p_id = getPort(conn, scl.source_port_id);
 				if(s_p_id == null)
 					s_p_id = "";
-				String t_p_id = getPort(scl.target_port_id);
+				String t_p_id = getPort(conn, scl.target_port_id);
 				if(t_p_id == null)
 					t_p_id = "";
-				String s_e_id = getPortEquipment(s_p_id);
+				String s_e_id = getPortEquipment(conn, s_p_id);
 				if(s_e_id == null)
 					s_e_id = "";
-				String t_e_id = getPortEquipment(t_p_id);
+				String t_e_id = getPortEquipment(conn, t_p_id);
 				if(t_e_id == null)
 					t_e_id = "";
 
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.CABLELINKS
 					set
 						NAME = :(scl.name),
@@ -1024,9 +1061,9 @@ final class CatalogSchemeMapUpdater {
 					and PHYSICAL_LENGTH != :(scl.physical_length)
 					and OPTICAL_LENGTH != :(scl.optical_length)
 				};
-				#sql { commit };
+				conn.commit();
 
-				#sql idIt = {
+				#sql [connCtx] idIt = {
 					select ID from AMFICOM.MAPPHYSICALLINKELEMENTS
 					where LINK_ID = :(scl.id)
 					and NAME != :(scl.name)
@@ -1034,27 +1071,27 @@ final class CatalogSchemeMapUpdater {
 				while(idIt.next())
 				{
 					String s2 = idIt.id();
-					String s3 = getCableLinkMap(s2);
+					String s3 = getCableLinkMap(conn, s2);
 
-					String s_n_id = getMapElement(getSchemePortElement(s_p_id));
-					String e_n_id = getMapElement(getSchemePortElement(t_p_id));
+					String s_n_id = getMapElement(conn, getSchemePortElement(conn, s_p_id));
+					String e_n_id = getMapElement(conn, getSchemePortElement(conn, t_p_id));
 
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MAPPHYSICALLINKELEMENTS
 						set
 							NAME = :(scl.name)
 						where ID = :s2
 					};
-					#sql { commit };
+					conn.commit();
 
 					if(s3 != null)
 					{
-						#sql {
+						#sql [connCtx] {
 							update AMFICOM.MAPCONTEXTS
 							set MODIFIED = SYSDATE
 							where ID = :s3
 						};
-						#sql { commit };
+						conn.commit();
 					}
 				}
 				idIt.close();
@@ -1070,23 +1107,25 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	static void mapLinkUpdated(MapPhysicalLinkElement_Transferable ml) {
+	static void mapLinkUpdated(final Connection conn, MapPhysicalLinkElement_Transferable ml) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 
 		try
 		{
 			if(ml.link_id != null && !ml.link_id.equals(""))
 			{
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.SCHEMECABLELINKS
 					set
 						NAME = :(ml.name)
 					where ID = :(ml.link_id)
 					and NAME != :(ml.name)
 				};
-				#sql { commit };
+				conn.commit();
 
-				#sql {
+				#sql [connCtx] {
 					select CABLE_LINK_ID into :s1
 						from AMFICOM.SCHEMECABLELINKS
 						where ID = :(ml.link_id)
@@ -1094,7 +1133,7 @@ final class CatalogSchemeMapUpdater {
 
 				if(s1 != null && !s1.equals(""))
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.CABLELINKS
 						set
 							NAME = :(ml.name),
@@ -1104,7 +1143,7 @@ final class CatalogSchemeMapUpdater {
 						and NAME != :(ml.name)
 						and DESCRIPTION != :(ml.description)
 					};
-					#sql { commit };
+					conn.commit();
 				}
 			}
 		}
@@ -1115,13 +1154,14 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	private static String getThreadSchemeCable(String thread_id)
-	{
+	private static String getThreadSchemeCable(final Connection conn, String thread_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select SCHEME_CABLE_LINK_ID into :s1
 				from AMFICOM.SCHEMECABLELINKTHREADS
 				where SCHEME_CABLE_THREAD_ID = :thread_id
@@ -1136,13 +1176,14 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	private static String getThreadCableLink(String thread_id)
-	{
+	private static String getThreadCableLink(final Connection conn, String thread_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select CABLE_ID into :s1
 				from AMFICOM.CABLELINKTHREADS
 				where ID = :thread_id
@@ -1156,7 +1197,9 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	static void cableThreadUpdated(CableLinkThread_Transferable t) {
+	static void cableThreadUpdated(final Connection conn, CableLinkThread_Transferable t) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 		IdIterator idIt2 = null;
 
@@ -1164,7 +1207,7 @@ final class CatalogSchemeMapUpdater {
 		{
 			int count = 0;
 				
-			#sql {
+			#sql [connCtx] {
 				select count(*) into :count from AMFICOM.SCHEMECABLETHREADS
 				where THREAD_ID = :(t.id)
 				and NAME != :(t.name)
@@ -1174,34 +1217,34 @@ final class CatalogSchemeMapUpdater {
 			if(count == 0)
 				return;
 
-			#sql {
+			#sql [connCtx] {
 				update AMFICOM.SCHEMECABLETHREADS
 				set
 					NAME = :(t.name),
 					LINK_TYPE_ID = :(t.link_type_id)
 				where THREAD_ID = :(t.id)
 			};
-			#sql { commit };
+			conn.commit();
 
-			#sql idIt = {
+			#sql [connCtx] idIt = {
 				select ID from AMFICOM.SCHEMELINKS
 				where LINK_ID = :(t.id)
 			};
 			while(idIt.next())
 			{
 				String s = idIt.id();
-				String s2 = getThreadSchemeCable(s);
+				String s2 = getThreadSchemeCable(conn, s);
 				if(s2 == null)
 					continue;
-				String s1 = getCableLinkScheme(s2);
+				String s1 = getCableLinkScheme(conn, s2);
 				if(s1 != null)
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.SCHEMES
 						set MODIFIED = SYSDATE
 						where ID = :s1
 					};
-					#sql { commit };
+					conn.commit();
 				}
 			}
 			idIt.close();
@@ -1217,7 +1260,9 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	static void schemeCableLinkThreadUpdated(SchemeCableThread_Transferable st) {
+	static void schemeCableLinkThreadUpdated(final Connection conn, SchemeCableThread_Transferable st) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 
 		try
@@ -1226,7 +1271,7 @@ final class CatalogSchemeMapUpdater {
 			{
 				int count = 0;
 				
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.CABLELINKTHREADS
 					where ID = :(st.thread_id)
 					and NAME != :(st.name)
@@ -1236,25 +1281,25 @@ final class CatalogSchemeMapUpdater {
 				if(count == 0)
 					return;
 
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.CABLELINKTHREADS
 					set
 						NAME = :(st.name),
 						LINK_TYPE_ID = :(st.link_type_id)
 					where ID = :(st.thread_id)
 				};
-				#sql { commit };
+				conn.commit();
 
-				String s1 = getThreadCableLink(st.thread_id);
+				String s1 = getThreadCableLink(conn, st.thread_id);
 				if(s1 != null)
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.CABLELINKS
 						set
 							MODIFIED = SYSDATE
 						where ID = :s1
 					};
-					#sql { commit };
+					conn.commit();
 				}
 			}
 		}
@@ -1265,19 +1310,20 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	private static String getPortElement(String port_id)
-	{
+	private static String getPortElement(final Connection conn, String port_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 		String s2;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select SCHEME_DEVICE_ID into :s1
 				from AMFICOM.SCHEMEDEVICEPORTS
 				where SCHEME_PORT_ID = :port_id
 			};
-			return getDeviceElement(s1);
+			return getDeviceElement(conn, s1);
 		}
 		catch(Exception ex)
 		{
@@ -1286,39 +1332,41 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	static void portUpdated(Port_Transferable p) {
+	static void portUpdated(final Connection conn, Port_Transferable p) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 		IdIterator idIt2 = null;
 
 		try
 		{
-			#sql idIt = {
+			#sql [connCtx] idIt = {
 				select ID from AMFICOM.SCHEMEPORTS
 				where PORT_ID = :(p.id)
 				and NAME != :(p.name)
 			};
 
-			#sql {
+			#sql [connCtx] {
 				update AMFICOM.SCHEMEPORTS
 				set NAME = :(p.name)
 				where PORT_ID = :(p.id)
 				and NAME != :(p.name)
 			};
-			#sql { commit };
+			conn.commit();
 
 			while(idIt.next())
 			{
 				String s = idIt.id();
-				String s2 = getPortElement(s);
-				String s1 = getElementScheme(s2);
+				String s2 = getPortElement(conn, s);
+				String s1 = getElementScheme(conn, s2);
 				if(s1 != null)
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.SCHEMES
 						set MODIFIED = SYSDATE
 						where ID = :s1
 					};
-					#sql { commit };
+					conn.commit();
 				}
 
 			}
@@ -1335,7 +1383,9 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	static void schemePortUpdated(SchemePort_Transferable sp) {
+	static void schemePortUpdated(final Connection conn, SchemePort_Transferable sp) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 
 		try
@@ -1344,7 +1394,7 @@ final class CatalogSchemeMapUpdater {
 			{
 				int count = 0;
 				
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.PORTS
 					where ID = :(sp.port_id)
 					and NAME != :(sp.name)
@@ -1353,24 +1403,24 @@ final class CatalogSchemeMapUpdater {
 				if(count == 0)
 					return;
 
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.PORTS
 					set NAME = :(sp.name)
 					where ID = :(sp.port_id)
 					and NAME != :(sp.name)
 				};
-				#sql { commit };
+				conn.commit();
 
-				String s1 = getPortEquipment(sp.port_id);
+				String s1 = getPortEquipment(conn, sp.port_id);
 				if(s1 != null)
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.EQUIPMENTS
 						set
 							MODIFIED = SYSDATE
 						where ID = :s1
 					};
-					#sql { commit };
+					conn.commit();
 				}
 			}
 		}
@@ -1381,19 +1431,20 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	private static String getCablePortElement(String port_id)
-	{
+	private static String getCablePortElement(final Connection conn, String port_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String s1;
 		String s2;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select SCHEME_DEVICE_ID into :s1
 				from AMFICOM.SCHEMEDEVICECABLEPORTS
 				where SCHEME_CABLE_PORT_ID = :port_id
 			};
-			return getDeviceElement(s1);
+			return getDeviceElement(conn, s1);
 		}
 		catch(Exception ex)
 		{
@@ -1402,39 +1453,41 @@ final class CatalogSchemeMapUpdater {
 		return null;
 	}
 
-	static void cablePortUpdated(CablePort_Transferable p) {
+	static void cablePortUpdated(final Connection conn, CablePort_Transferable p) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 		IdIterator idIt2 = null;
 
 		try
 		{
-			#sql idIt = {
+			#sql [connCtx] idIt = {
 				select ID from AMFICOM.SCHEMECABLEPORTS
 				where CABLE_PORT_ID = :(p.id)
 				and NAME != :(p.name)
 			};
 
-			#sql {
+			#sql [connCtx] {
 				update AMFICOM.SCHEMECABLEPORTS
 				set NAME = :(p.name)
 				where CABLE_PORT_ID = :(p.id)
 				and NAME != :(p.name)
 			};
-			#sql { commit };
+			conn.commit();
 
 			while(idIt.next())
 			{
 				String s = idIt.id();
-				String s2 = getCablePortElement(s);
-				String s1 = getElementScheme(s2);
+				String s2 = getCablePortElement(conn, s);
+				String s1 = getElementScheme(conn, s2);
 				if(s1 != null)
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.SCHEMES
 						set MODIFIED = SYSDATE
 						where ID = :s1
 					};
-					#sql { commit };
+					conn.commit();
 				}
 
 			}
@@ -1451,7 +1504,9 @@ final class CatalogSchemeMapUpdater {
 		}
 	}
 
-	static void schemeCablePortUpdated(SchemeCablePort_Transferable sp) {
+	static void schemeCablePortUpdated(final Connection conn, SchemeCablePort_Transferable sp) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		IdIterator idIt = null;
 
 		try
@@ -1460,7 +1515,7 @@ final class CatalogSchemeMapUpdater {
 			{
 				int count = 0;
 				
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.CABLEPORTS
 					where ID = :(sp.cable_port_id)
 					and NAME != :(sp.name)
@@ -1469,24 +1524,24 @@ final class CatalogSchemeMapUpdater {
 				if(count == 0)
 					return;
 
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.CABLEPORTS
 					set NAME = :(sp.name)
 					where ID = :(sp.cable_port_id)
 					and NAME != :(sp.name)
 				};
-				#sql { commit };
+				conn.commit();
 
-				String s1 = getPortEquipment(sp.cable_port_id);
+				String s1 = getPortEquipment(conn, sp.cable_port_id);
 				if(s1 != null)
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.EQUIPMENTS
 						set
 							MODIFIED = SYSDATE
 						where ID = :s1
 					};
-					#sql { commit };
+					conn.commit();
 				}
 			}
 		}

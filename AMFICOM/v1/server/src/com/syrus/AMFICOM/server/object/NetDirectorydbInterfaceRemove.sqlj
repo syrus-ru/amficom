@@ -1,5 +1,5 @@
 /*
- * $Id: NetDirectorydbInterfaceRemove.sqlj,v 1.1.2.2 2004/08/24 15:43:44 bass Exp $
+ * $Id: NetDirectorydbInterfaceRemove.sqlj,v 1.1.2.3 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,10 +9,11 @@
 package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Constants;
-import java.sql.SQLException;
+import java.sql.*;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -20,11 +21,9 @@ final class NetDirectorydbInterfaceRemove {
 	private NetDirectorydbInterfaceRemove() {
 	}
 
-	static void removeCharacteristicLinks(
-			String charLinkTable,
-			String charLinkField,
-			String element_id)
-	{
+	static void removeCharacteristicLinks(final Connection conn, String charLinkTable, String charLinkField, String element_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count;
 		int len2;
 		int j;
@@ -33,7 +32,7 @@ final class NetDirectorydbInterfaceRemove {
 		{
 			String qry = "delete from AMFICOM." + charLinkTable +
 						" where " + charLinkField + " = '" + element_id + "'";
-			#sql {
+			#sql [connCtx] {
 				BEGIN
 					execute immediate :qry;
 				END;
@@ -47,9 +46,9 @@ final class NetDirectorydbInterfaceRemove {
 		}
 	}
 
-	static int removePortTypes(
-			String[] porttype_ids)
-	{
+	static int removePortTypes(final Connection conn, String[] porttype_ids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -59,17 +58,14 @@ final class NetDirectorydbInterfaceRemove {
 		len = porttype_ids.length;
 		for (i = 0; i < len; i++)
 		{
-			removeCharacteristicLinks(
-					"PORTTYPECHARACTERISTICLINKS",
-					"PORT_TYPE_ID",
-					porttype_ids[i]);
+			removeCharacteristicLinks(conn, "PORTTYPECHARACTERISTICLINKS", "PORT_TYPE_ID", porttype_ids[i]);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.PORTTYPES
 						where ID = :(porttype_ids[i])
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(Exception exx)
 			{
@@ -80,9 +76,9 @@ final class NetDirectorydbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeCablePortTypes(
-			String[] porttype_ids)
-	{
+	static int removeCablePortTypes(final Connection conn, String[] porttype_ids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -92,17 +88,14 @@ final class NetDirectorydbInterfaceRemove {
 		len = porttype_ids.length;
 		for (i = 0; i < len; i++)
 		{
-			removeCharacteristicLinks(
-					"CABLEPORTTYPECHARACTERISTICS",
-					"CABLE_PORT_TYPE_ID",
-					porttype_ids[i]);
+			removeCharacteristicLinks(conn, "CABLEPORTTYPECHARACTERISTICS", "CABLE_PORT_TYPE_ID", porttype_ids[i]);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.CABLEPORTTYPES
 						where ID = :(porttype_ids[i])
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(Exception exx)
 			{
@@ -113,9 +106,9 @@ final class NetDirectorydbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeLinkTypes(
-			String[] linktype_ids)
-	{
+	static int removeLinkTypes(final Connection conn, String[] linktype_ids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -125,17 +118,14 @@ final class NetDirectorydbInterfaceRemove {
 		len = linktype_ids.length;
 		for (i = 0; i < len; i++)
 		{
-			removeCharacteristicLinks(
-					"LINKTYPECHARACTERISTICLINKS",
-					"LINK_TYPE_ID",
-					linktype_ids[i]);
+			removeCharacteristicLinks(conn, "LINKTYPECHARACTERISTICLINKS", "LINK_TYPE_ID", linktype_ids[i]);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.LINKTYPES
 						where ID = :(linktype_ids[i])
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(Exception exx)
 			{
@@ -146,13 +136,14 @@ final class NetDirectorydbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static int removeCableTypeThreads(String cabletype_id)
-	{
+	private static int removeCableTypeThreads(final Connection conn, String cabletype_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		try
 		{
-			#sql { delete from AMFICOM.CABLETYPETHREADS
+			#sql [connCtx] { delete from AMFICOM.CABLETYPETHREADS
 					where CABLE_TYPE_ID = :cabletype_id };
-			#sql { commit };
+			conn.commit();
 		}
 		catch(Exception exx)
 		{
@@ -162,9 +153,9 @@ final class NetDirectorydbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeCableLinkTypes(
-			String[] linktype_ids)
-	{
+	static int removeCableLinkTypes(final Connection conn, String[] linktype_ids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -174,19 +165,15 @@ final class NetDirectorydbInterfaceRemove {
 		len = linktype_ids.length;
 		for (i = 0; i < len; i++)
 		{
-			removeCableTypeThreads(linktype_ids[i]);
-
-			removeCharacteristicLinks(
-					"CABLETYPECHARACTERISTICLINKS",
-					"CABLE_TYPE_ID",
-					linktype_ids[i]);
+			removeCableTypeThreads(conn, linktype_ids[i]);
+			removeCharacteristicLinks(conn, "CABLETYPECHARACTERISTICLINKS", "CABLE_TYPE_ID", linktype_ids[i]);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.LINKTYPES
 						where ID = :(linktype_ids[i])
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(Exception exx)
 			{
@@ -197,9 +184,9 @@ final class NetDirectorydbInterfaceRemove {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int removeEquipmentTypes(
-			String[] equipmenttype_ids)
-	{
+	static int removeEquipmentTypes(final Connection conn, String[] equipmenttype_ids) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -209,17 +196,14 @@ final class NetDirectorydbInterfaceRemove {
 		len = equipmenttype_ids.length;
 		for (i = 0; i < len; i++)
 		{
-			removeCharacteristicLinks(
-					"EQUIPMENTTYPECHARACTERISTICLIN",
-					"EQUIPMENT_TYPE_ID",
-					equipmenttype_ids[i]);
+			removeCharacteristicLinks(conn, "EQUIPMENTTYPECHARACTERISTICLIN", "EQUIPMENT_TYPE_ID", equipmenttype_ids[i]);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.EQUIPMENTTYPES
 						where ID = :(equipmenttype_ids[i])
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{

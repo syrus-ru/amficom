@@ -1,5 +1,5 @@
 /*
- * $Id: SchemedbInterfaceProtoLoad.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
+ * $Id: SchemedbInterfaceProtoLoad.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,10 @@ import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import java.sql.*;
 import java.util.Vector;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -23,8 +24,9 @@ final class SchemedbInterfaceProtoLoad {
 	private SchemedbInterfaceProtoLoad() {
 	}
 
-	private static Vector loadDevicePorts(String device_id)
-	{
+	private static Vector loadDevicePorts(final Connection conn, String device_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		PortIdIterator idIt = null;
 		String sp_id;
 
@@ -47,7 +49,7 @@ final class SchemedbInterfaceProtoLoad {
 		Vector vector = new Vector();
 		try
 		{
-			#sql idIt = { select SCHEME_PORT_ID
+			#sql [connCtx] idIt = { select SCHEME_PORT_ID
 				from AMFICOM.SCHEMEDEVICEPORTS
 					where SCHEME_DEVICE_ID = :device_id };
 
@@ -56,7 +58,7 @@ final class SchemedbInterfaceProtoLoad {
 				try
 				{
 					sp_id = idIt.scheme_port_id();
-					#sql { select
+					#sql [connCtx] { select
 							ID,
 							NAME,
 							PORT_TYPE_ID,
@@ -94,7 +96,7 @@ final class SchemedbInterfaceProtoLoad {
 
 					try
 					{
-						#sql { select ID into :link_id
+						#sql [connCtx] { select ID into :link_id
 							from AMFICOM.SCHEMELINKS
 							where SOURCE_PORT_ID = :sp_id
 								or TARGET_PORT_ID = :sp_id
@@ -105,10 +107,7 @@ final class SchemedbInterfaceProtoLoad {
 						link_id = "";
 					}
 
-					vector2 = MapdbInterfaceLoad.loadAttributes(
-							"SCHEMEPORTATTRIBUTES",
-							"SCHEME_PORT_ID",
-							id);
+					vector2 = MapdbInterfaceLoad.loadAttributes(conn, "SCHEMEPORTATTRIBUTES", "SCHEME_PORT_ID", id);
 					attributes = new ElementAttribute_Transferable[vector2.size()];
 					vector2.copyInto(attributes);
 
@@ -152,8 +151,9 @@ final class SchemedbInterfaceProtoLoad {
 		return vector;
 	}
 
-	private static Vector loadDeviceCablePorts(String device_id)
-	{
+	private static Vector loadDeviceCablePorts(final Connection conn, String device_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		CablePortIdIterator idIt = null;
 		String sp_id;
 
@@ -176,7 +176,7 @@ final class SchemedbInterfaceProtoLoad {
 		Vector vector = new Vector();
 		try
 		{
-			#sql idIt = { select SCHEME_CABLE_PORT_ID
+			#sql [connCtx] idIt = { select SCHEME_CABLE_PORT_ID
 				from AMFICOM.SCHEMEDEVICECABLEPORTS
 					where SCHEME_DEVICE_ID = :device_id };
 
@@ -185,7 +185,7 @@ final class SchemedbInterfaceProtoLoad {
 				try
 				{
 					sp_id = idIt.scheme_cable_port_id();
-					#sql { select
+					#sql [connCtx] { select
 							ID,
 							NAME,
 							CABLE_PORT_TYPE_ID,
@@ -223,7 +223,7 @@ final class SchemedbInterfaceProtoLoad {
 
 					try
 					{
-						#sql { select ID into :link_id
+						#sql [connCtx] { select ID into :link_id
 							from AMFICOM.SCHEMECABLELINKS
 							where SOURCE_PORT_ID = :sp_id
 								or TARGET_PORT_ID = :sp_id
@@ -234,10 +234,7 @@ final class SchemedbInterfaceProtoLoad {
 						link_id = "";
 					}
 
-					vector2 = MapdbInterfaceLoad.loadAttributes(
-							"SCHEMECABLEPORTATTRIBUTES",
-							"SCHEME_CABLE_PORT_ID",
-							id);
+					vector2 = MapdbInterfaceLoad.loadAttributes(conn, "SCHEMECABLEPORTATTRIBUTES", "SCHEME_CABLE_PORT_ID", id);
 					attributes = new ElementAttribute_Transferable[vector2.size()];
 					vector2.copyInto(attributes);
 
@@ -281,8 +278,9 @@ final class SchemedbInterfaceProtoLoad {
 		return vector;
 	}
 
-	static Object loadSchemeLink(String link_id)
-	{
+	static Object loadSchemeLink(final Connection conn, String link_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_source_port_id = "";
@@ -302,7 +300,7 @@ final class SchemedbInterfaceProtoLoad {
 
 		try
 		{
-			#sql lIt = { select
+			#sql [connCtx] lIt = { select
 						ID,
 						NAME,
 						LINK_TYPE_ID,
@@ -344,10 +342,7 @@ final class SchemedbInterfaceProtoLoad {
 
 			lIt.close();
 
-			vector2 = MapdbInterfaceLoad.loadAttributes(
-					"SCHEMELINKATTRIBUTES",
-					"SCHEME_LINK_ID",
-					It_id);
+			vector2 = MapdbInterfaceLoad.loadAttributes(conn, "SCHEMELINKATTRIBUTES", "SCHEME_LINK_ID", It_id);
 			attributes = new ElementAttribute_Transferable[vector2.size()];
 			vector2.copyInto(attributes);
 
@@ -382,8 +377,9 @@ final class SchemedbInterfaceProtoLoad {
 		
 	}
 
-	static Object loadSchemeDevice(String device_id)
-	{
+	static Object loadSchemeDevice(final Connection conn, String device_id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 
@@ -397,7 +393,7 @@ final class SchemedbInterfaceProtoLoad {
 
 		try
 		{
-			#sql dIt = { select
+			#sql [connCtx] dIt = { select
 						ID,
 						NAME
 					from AMFICOM.SCHEMEDEVICES
@@ -415,18 +411,15 @@ final class SchemedbInterfaceProtoLoad {
 
 			dIt.close();
 
-			vector2 = loadDevicePorts(It_id);
+			vector2 = loadDevicePorts(conn, It_id);
 			ports = new SchemePort_Transferable[vector2.size()];
 			vector2.copyInto(ports);
 
-			vector2 = loadDeviceCablePorts(It_id);
+			vector2 = loadDeviceCablePorts(conn, It_id);
 			cable_ports = new SchemeCablePort_Transferable[vector2.size()];
 			vector2.copyInto(cable_ports);
 
-			vector2 = MapdbInterfaceLoad.loadAttributes(
-					"SCHEMEDEVICEATTRIBUTES",
-					"SCHEME_DEVICE_ID",
-					It_id);
+			vector2 = MapdbInterfaceLoad.loadAttributes(conn, "SCHEMEDEVICEATTRIBUTES", "SCHEME_DEVICE_ID", It_id);
 			attributes = new ElementAttribute_Transferable[vector2.size()];
 			vector2.copyInto(attributes);
 
@@ -456,8 +449,9 @@ final class SchemedbInterfaceProtoLoad {
 		
 	}
 
-	private static void loadProtoElement(String element_id, Vector protoelements)
-	{
+	private static void loadProtoElement(final Connection conn, String element_id, Vector protoelements) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_equipment_type_id = "";
@@ -488,7 +482,7 @@ final class SchemedbInterfaceProtoLoad {
 
 		try
 		{
-			#sql eIt = { select
+			#sql [connCtx] eIt = { select
 					ID,
 					NAME,
 					EQUIPMENT_TYPE_ID,
@@ -539,13 +533,13 @@ final class SchemedbInterfaceProtoLoad {
 			vector2 = new Vector();
 			try
 			{
-				#sql didIt = { select SCHEME_DEVICE_ID
+				#sql [connCtx] didIt = { select SCHEME_DEVICE_ID
 						from AMFICOM.SCHEMEPROTOELEMENTDEVICES
 						where SCHEME_PROTO_ELEMENT_ID = :It_id
 				};
 				while(didIt.next())
 				{
-					vector2.add(loadSchemeDevice(didIt.scheme_device_id()));
+					vector2.add(loadSchemeDevice(conn, didIt.scheme_device_id()));
 				}
 				didIt.close();
 			}
@@ -561,13 +555,13 @@ final class SchemedbInterfaceProtoLoad {
 			vector2 = new Vector();
 			try
 			{
-				#sql lidIt = { select SCHEME_LINK_ID
+				#sql [connCtx] lidIt = { select SCHEME_LINK_ID
 						from AMFICOM.SCHEMEPROTOELEMENTLINKS
 						where SCHEME_PROTO_ELEMENT_ID = :It_id
 				};
 				while(lidIt.next())
 				{
-					vector2.add(loadSchemeLink(lidIt.scheme_link_id()));
+					vector2.add(loadSchemeLink(conn, lidIt.scheme_link_id()));
 				}
 				lidIt.close();
 			}
@@ -583,14 +577,14 @@ final class SchemedbInterfaceProtoLoad {
 			vector2 = new Vector();
 			try
 			{
-				#sql pidIt = { select SCHEME_PE_ID
+				#sql [connCtx] pidIt = { select SCHEME_PE_ID
 						from AMFICOM.SCHEMEPROTOELEMENTPES
 						where SCHEME_PROTO_ELEMENT_ID = :It_id
 				};
 				while(pidIt.next())
 				{
 					vector2.add(pidIt.scheme_pe_id());
-					loadProtoElement(pidIt.scheme_pe_id(), protoelements);
+					loadProtoElement(conn, pidIt.scheme_pe_id(), protoelements);
 				}
 				pidIt.close();
 			}
@@ -605,7 +599,7 @@ final class SchemedbInterfaceProtoLoad {
 
 			try
 			{
-				ImageResource_Transferable im_r = ResourcedbInterface.loadImage(It_scheme_cell_id);
+				ImageResource_Transferable im_r = ResourcedbInterface.getImage(conn, It_scheme_cell_id);
 				if(im_r != null)
 					It_img = im_r.image;
 				else
@@ -620,7 +614,7 @@ final class SchemedbInterfaceProtoLoad {
 
 			try
 			{
-				ImageResource_Transferable im_r = ResourcedbInterface.loadImage(It_ugo_cell_id);
+				ImageResource_Transferable im_r = ResourcedbInterface.getImage(conn, It_ugo_cell_id);
 				if(im_r != null)
 					It_img2 = im_r.image;
 				else
@@ -633,10 +627,7 @@ final class SchemedbInterfaceProtoLoad {
 				It_img2 = new byte[0];
 			}
 
-			vector2 = MapdbInterfaceLoad.loadAttributes(
-					"SCHEMEPROTOELEMENTATTRIBUTES",
-					"SCHEME_PROTO_ELEMENT_ID",
-					It_id);
+			vector2 = MapdbInterfaceLoad.loadAttributes(conn, "SCHEMEPROTOELEMENTATTRIBUTES", "SCHEME_PROTO_ELEMENT_ID", It_id);
 			attributes = new ElementAttribute_Transferable[vector2.size()];
 			vector2.copyInto(attributes);
 
@@ -674,10 +665,9 @@ final class SchemedbInterfaceProtoLoad {
 		
 	}
 
-	static void getProtoElements(
-			String domain_id,
-			SchemeProtoElementSeq_TransferableHolder protos)
-	{
+	static void getProtoElements(final Connection conn, String domain_id, SchemeProtoElementSeq_TransferableHolder protos) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		SchemeProtoElement_Transferable e_t;
 		SchemeProtoElement_Transferable[] e_ts;
 		IdIterator eIt = null;
@@ -685,14 +675,14 @@ final class SchemedbInterfaceProtoLoad {
 
 		try
 		{
-			#sql eIt = { select ID
+			#sql [connCtx] eIt = { select ID
 					from AMFICOM.SCHEMEPROTOELEMENTS
 					where IS_TOP_LEVEL = 1
 			};
 
 			while (eIt.next())
 			{
-				loadProtoElement(eIt.id(), vector);
+				loadProtoElement(conn, eIt.id(), vector);
 			}
 			eIt.close();
 		}
@@ -708,11 +698,9 @@ final class SchemedbInterfaceProtoLoad {
 		vector.copyInto(protos.value);
 	}
 
-	static void getProtoElements(
-			String domain_id,
-			String[] ids,
-			SchemeProtoElementSeq_TransferableHolder protos)
-	{
+	static void getProtoElements(final Connection conn, String domain_id, String[] ids, SchemeProtoElementSeq_TransferableHolder protos) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		SchemeProtoElement_Transferable e_t;
 		SchemeProtoElement_Transferable[] e_ts;
 		IdIterator eIt = null;
@@ -723,12 +711,12 @@ final class SchemedbInterfaceProtoLoad {
 		{
 			for(int i = 0; i < ids.length; i++)
 			{
-				#sql { select IS_TOP_LEVEL into :is_top_level
+				#sql [connCtx] { select IS_TOP_LEVEL into :is_top_level
 						from AMFICOM.SCHEMEPROTOELEMENTS
 						where ID = :(ids[i])
 				};
-				if(is_top_level != 0)
-					loadProtoElement(ids[i], vector);
+				if (is_top_level != 0)
+					loadProtoElement(conn, ids[i], vector);
 			}
 		}
 		catch(Exception e)
@@ -740,12 +728,23 @@ final class SchemedbInterfaceProtoLoad {
 		vector.copyInto(protos.value);
 	}
 
-	#sql private static iterator IdIterator ( String id );
-	#sql private static iterator PortIdIterator ( String scheme_port_id );
-	#sql private static iterator CablePortIdIterator ( String scheme_cable_port_id );
-	#sql private static iterator DeviceIdIterator ( String scheme_device_id );
-	#sql private static iterator LinkIdIterator ( String scheme_link_id );
-	#sql private static iterator PEIdIterator ( String scheme_pe_id );
+	#sql private static iterator IdIterator
+		(String id);
+
+	#sql private static iterator PortIdIterator(
+		String scheme_port_id);
+
+	#sql private static iterator CablePortIdIterator(
+		String scheme_cable_port_id);
+
+	#sql private static iterator DeviceIdIterator(
+		String scheme_device_id);
+
+	#sql private static iterator LinkIdIterator(
+		String scheme_link_id);
+
+	#sql private static iterator PEIdIterator(
+		String scheme_pe_id);
 
 	#sql private static iterator SchemeLinkIterator(
 		String id,

@@ -1,5 +1,5 @@
 /*
- * $Id: ISMdbInterfaceSave.sqlj,v 1.1.2.3 2004/08/25 15:24:30 bass Exp $
+ * $Id: ISMdbInterfaceSave.sqlj,v 1.1.2.4 2004/09/09 11:35:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,10 +13,11 @@ import com.syrus.AMFICOM.CORBA.ISM.*;
 import com.syrus.AMFICOM.CORBA.Network.Equipment_Transferable;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import com.syrus.AMFICOM.server.event.EventSource;
-import java.sql.SQLException;
+import java.sql.*;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/25 15:24:30 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:20 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -24,7 +25,9 @@ final class ISMdbInterfaceSave {
 	private ISMdbInterfaceSave() {
 	}
 
-	static int saveAccessPorts(AccessPort_Transferable[] accessports) {
+	static int saveAccessPorts(final Connection conn, AccessPort_Transferable[] accessports) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -36,7 +39,7 @@ final class ISMdbInterfaceSave {
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.ACCESSPORTS
 						where ID = :(accessports[i].id)
 				};
@@ -47,7 +50,7 @@ final class ISMdbInterfaceSave {
 				System.out.println("update accessport " + accessports[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.ACCESSPORTS
 							set
 								NAME = :(accessports[i].name),
@@ -65,14 +68,14 @@ final class ISMdbInterfaceSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new accessport " + accessports[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.ACCESSPORTS(
 								ID,
 								NAME,
@@ -91,8 +94,8 @@ final class ISMdbInterfaceSave {
 								 :(accessports[i].domain_id) )
 					};
 
-					String at_s = ResourcedbInterface.getUId("accessport");
-					#sql {
+					String at_s = ResourcedbInterface.getUid(conn, "accessport");
+					#sql [connCtx] {
 						insert into AMFICOM.KISACCESSPORTS(
 								ID,
 								KIS_ID,
@@ -102,7 +105,7 @@ final class ISMdbInterfaceSave {
 								:(accessports[i].KIS_id),
 								:(accessports[i].id) )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -116,16 +119,14 @@ final class ISMdbInterfaceSave {
 					return Constants.ERROR_SAVING;
 				}
 			}
-			NetdbInterfaceSave.saveCharacteristics(
-					"ACCESSPORTCHARACTERISTICS",
-					"ACCESS_PORT_ID",
-					accessports[i].id,
-					accessports[i].characteristics);
+			NetdbInterfaceSave.saveCharacteristics(conn, "ACCESSPORTCHARACTERISTICS", "ACCESS_PORT_ID", accessports[i].id, accessports[i].characteristics);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveKISs(Equipment_Transferable[] kiss) {
+	static int saveKISs(final Connection conn, Equipment_Transferable[] kiss) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -137,7 +138,7 @@ final class ISMdbInterfaceSave {
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.EQUIPMENTS
 						where ID = :(kiss[i].id)
 				};
@@ -148,7 +149,7 @@ final class ISMdbInterfaceSave {
 				System.out.println("update equipment " + kiss[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.EQUIPMENTS
 							set
 								NAME = :(kiss[i].name),
@@ -180,14 +181,14 @@ final class ISMdbInterfaceSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new equipment " + kiss[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.EQUIPMENTS(
 								ID,
 								NAME,
@@ -236,7 +237,7 @@ final class ISMdbInterfaceSave {
 								 :(kiss[i].domain_id),
 								 SYSDATE )
 					};
-					#sql { commit };
+					conn.commit();
 
 					EventSource es = new EventSource("KISsource", kiss[i].id, kiss[i].id);
 				}
@@ -247,18 +248,16 @@ final class ISMdbInterfaceSave {
 					return Constants.ERROR_SAVING;
 				}
 			}
-			NetdbInterfaceSave.saveCharacteristics(
-					"EQUIPMENTCHARACTERISTICS",
-					"EQUIPMENT_ID",
-					kiss[i].id,
-					kiss[i].characteristics);
+			NetdbInterfaceSave.saveCharacteristics(conn, "EQUIPMENTCHARACTERISTICS", "EQUIPMENT_ID", kiss[i].id, kiss[i].characteristics);
 
-			CatalogSchemeMapUpdater.equipmentUpdated(kiss[i]);
+			CatalogSchemeMapUpdater.equipmentUpdated(conn, kiss[i]);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveTransmissionPaths(TransmissionPath_Transferable[] paths) {
+	static int saveTransmissionPaths(final Connection conn, TransmissionPath_Transferable[] paths) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -271,7 +270,7 @@ final class ISMdbInterfaceSave {
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.TRANSMISSIONPATHS
 						where ID = :(paths[i].id)
 				};
@@ -282,7 +281,7 @@ final class ISMdbInterfaceSave {
 				System.out.println("update path " + paths[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.TRANSMISSIONPATHS
 							set
 								NAME = :(paths[i].name),
@@ -295,7 +294,7 @@ final class ISMdbInterfaceSave {
 
 					try
 					{
-						#sql {
+						#sql [connCtx] {
 							update AMFICOM.MONITOREDELEMENTATTACHMENTS
 								set ACCESS_PORT_ID = :(paths[i].access_port_id)
 								where MONITORED_ELEMENT_ID = :(paths[i].monitored_element_id)
@@ -307,7 +306,7 @@ final class ISMdbInterfaceSave {
 					}
 
 					System.out.println("update ME " + paths[i].monitored_element_id + " set local addr = " + paths[i].local_address);
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MONITOREDELEMENTS
 							set
 								MODIFIED = SYSDATE,
@@ -322,14 +321,14 @@ final class ISMdbInterfaceSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new path " + paths[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.TRANSMISSIONPATHS(
 								ID,
 								NAME,
@@ -346,8 +345,8 @@ final class ISMdbInterfaceSave {
 								 :(paths[i].domain_id) )
 					};
 
-					String id_v = ResourcedbInterface.getUId("monitoredelement");
-					#sql {
+					String id_v = ResourcedbInterface.getUid(conn, "monitoredelement");
+					#sql [connCtx] {
 						insert into AMFICOM.MONITOREDELEMENTS(
 								ID,
 								PATH_ID,
@@ -363,12 +362,12 @@ final class ISMdbInterfaceSave {
 								 SYSDATE,
 								 :(paths[i].domain_id) )
 					};
-					#sql { commit };
+					conn.commit();
 
 					try
 					{
-						String id_v2 = ResourcedbInterface.getUId("monitoredelementattachment");
-						#sql {
+						String id_v2 = ResourcedbInterface.getUid(conn, "monitoredelementattachment");
+						#sql [connCtx] {
 							insert into AMFICOM.MONITOREDELEMENTATTACHMENTS(
 									ID,
 									MONITORED_ELEMENT_ID,
@@ -378,7 +377,7 @@ final class ISMdbInterfaceSave {
 									 :id_v,
 									 :(paths[i].access_port_id) )
 						};
-						#sql { commit };
+						conn.commit();
 					}
 					catch(SQLException ex)
 					{
@@ -401,7 +400,7 @@ final class ISMdbInterfaceSave {
 
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					delete from AMFICOM.PATHLINKS
 						where PATH_ID = :(paths[i].id)
 				};
@@ -410,8 +409,8 @@ final class ISMdbInterfaceSave {
 				for(j = 0; j < len2; j++)
 				{
 					int is_cable = (paths[i].links[j].is_cable)? 1 : 0;
-					String at_s = ResourcedbInterface.getUId("pathlink");
-					#sql {
+					String at_s = ResourcedbInterface.getUid(conn, "pathlink");
+					#sql [connCtx] {
 						insert into AMFICOM.PATHLINKS(
 								ID,
 								PATH_ID,
@@ -427,7 +426,7 @@ final class ISMdbInterfaceSave {
 								:(paths[i].links[j].link_id),
 								:(paths[i].links[j].thread_id) )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 			}
 			catch(Exception exx)
@@ -436,19 +435,16 @@ final class ISMdbInterfaceSave {
 				return Constants.ERROR_SAVING;
 			}
 
-			NetdbInterfaceSave.saveCharacteristics(
-					"TRANSMISSIONPATHCHARS",
-					"PATH_ID",
-					paths[i].id,
-					paths[i].characteristics);
-
-			CatalogSchemeMapUpdater.pathUpdated(paths[i]);
+			NetdbInterfaceSave.saveCharacteristics(conn, "TRANSMISSIONPATHCHARS", "PATH_ID", paths[i].id, paths[i].characteristics);
+			CatalogSchemeMapUpdater.pathUpdated(conn, paths[i]);
 		}
 		return Constants.ERROR_NO_ERROR;
 
 	}
 
-	static int saveMonitoredElements(MonitoredElement_Transferable[] mes) {
+	static int saveMonitoredElements(final Connection conn, MonitoredElement_Transferable[] mes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -460,7 +456,7 @@ final class ISMdbInterfaceSave {
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.MONITOREDELEMENTS
 						where ID = :(mes[i].id)
 				};
@@ -471,7 +467,7 @@ final class ISMdbInterfaceSave {
 				}
 				System.out.println("update me " + mes[i].id);
 
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.MONITOREDELEMENTS
 						set
 							LOCAL_ADDRESS = :(mes[i].local_address),
@@ -481,7 +477,7 @@ final class ISMdbInterfaceSave {
 
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MONITOREDELEMENTATTACHMENTS
 							set ACCESS_PORT_ID = :(mes[i].access_port_id)
 							where MONITORED_ELEMENT_ID = :(mes[i].id)
@@ -491,9 +487,7 @@ final class ISMdbInterfaceSave {
 				{
 					System.out.println("me attachment not saved: " + e.getMessage());
 				}
-
-
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{

@@ -1,5 +1,5 @@
 /*
- * $Id: AdmindbInterfaceLoad.sqlj,v 1.1.2.3 2004/08/27 08:09:21 bass Exp $
+ * $Id: AdmindbInterfaceLoad.sqlj,v 1.1.2.4 2004/09/09 11:35:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,9 +12,10 @@ import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.CORBA.Constants;
 import java.sql.*;
 import java.util.Vector;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/27 08:09:21 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:20 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -22,12 +23,12 @@ final class AdmindbInterfaceLoad {
 	private AdmindbInterfaceLoad() {
 	}
 
-	static int loadServers(ServerSeq_TransferableHolder serverseq, String []server_ids) {
+	static int loadServers(final Connection conn, ServerSeq_TransferableHolder serverseq, String []server_ids) throws SQLException {
 		Vector vec = new Vector();
 		Server_Transferable server;
 		for(int i = 0; i < server_ids.length; i++)
 		{
-			server = loadServer(server_ids[i]);
+			server = loadServer(conn, server_ids[i]);
 			if(server != null)
 				vec.add(server);
 		}
@@ -36,7 +37,9 @@ final class AdmindbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static Server_Transferable loadServer(String id) {
+	private static Server_Transferable loadServer(final Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_version = "";
@@ -52,29 +55,8 @@ final class AdmindbInterfaceLoad {
 
 		try
 		{
-			#sql {
-				select
-					ID,
-					NAME,
-					CONTACT,
-					LICENCE_ID,
-					VERSION,
-					LOCATION,
-					HOSTNAME,
-					CREATED,
-					MODIFIED
-				into
-					:It_id,
-					:It_name,
-					:It_contact,
-					:It_licence_id,
-					:It_version,
-					:It_location,
-					:It_hostname,
-					:It_created,
-					:It_modified
-				from AMFICOM.SERVERS
-				where ID = :id
+			#sql [connCtx] {
+				select ID, NAME, CONTACT, LICENCE_ID, VERSION, LOCATION, HOSTNAME, CREATED, MODIFIED into :It_id, :It_name, :It_contact, :It_licence_id, :It_version, :It_location, :It_hostname, :It_created, :It_modified from AMFICOM.SERVERS where ID = :id
 			};
 
 			if(It_id == null) It_id = "";
@@ -111,7 +93,9 @@ final class AdmindbInterfaceLoad {
 		}
 	}
 
-	static int loadServers(ServerSeq_TransferableHolder serverseq) {
+	static int loadServers(final Connection conn, ServerSeq_TransferableHolder serverseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_version = "";
@@ -127,23 +111,13 @@ final class AdmindbInterfaceLoad {
 
 		Server_Transferable d_t;
 		Server_Transferable[] d_ts;
-		ServerIterator dIt = null;
+		Iterator dIt = null;
 		Vector vector2;
 
 		try
 		{
-			#sql dIt = {
-				select
-					ID,
-					NAME,
-					CONTACT,
-					LICENCE_ID,
-					VERSION,
-					LOCATION,
-					HOSTNAME,
-					CREATED,
-					MODIFIED
-				from AMFICOM.SERVERS
+			#sql [connCtx] dIt = {
+				select ID, NAME, CONTACT, LICENCE_ID, VERSION, LOCATION, HOSTNAME, CREATED, MODIFIED from AMFICOM.SERVERS
 			};
 
 			while (dIt.next())
@@ -206,12 +180,12 @@ final class AdmindbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadClients(ClientSeq_TransferableHolder clientseq, String []client_ids) {
+	static int loadClients(final Connection conn, ClientSeq_TransferableHolder clientseq, String []client_ids) throws SQLException {
 		Vector vec = new Vector();
 		Client_Transferable client;
 		for(int i = 0; i < client_ids.length; i++)
 		{
-			client = loadClient(client_ids[i]);
+			client = loadClient(conn, client_ids[i]);
 			if(client != null)
 				vec.add(client);
 		}
@@ -220,7 +194,9 @@ final class AdmindbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static Client_Transferable loadClient(String id) {
+	private static Client_Transferable loadClient(final Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_version = "";
@@ -235,34 +211,13 @@ final class AdmindbInterfaceLoad {
 
 		Client_Transferable d_t;
 		Client_Transferable[] d_ts;
-		ClientIterator dIt = null;
+		Iterator dIt = null;
 		Vector vector2;
 
 		try
 		{
-			#sql {
-				select
-					ID,
-					NAME,
-					CONTACT,
-					LICENCE_ID,
-					VERSION,
-					LOCATION,
-					HOSTNAME,
-					CREATED,
-					MODIFIED
-				into
-					:It_id,
-					:It_name,
-					:It_contact,
-					:It_licence_id,
-					:It_version,
-					:It_location,
-					:It_hostname,
-					:It_created,
-					:It_modified
-				from AMFICOM.CLIENTS
-				where ID = :id
+			#sql [connCtx] {
+				select ID, NAME, CONTACT, LICENCE_ID, VERSION, LOCATION, HOSTNAME, CREATED, MODIFIED into :It_id, :It_name, :It_contact, :It_licence_id, :It_version, :It_location, :It_hostname, :It_created, :It_modified from AMFICOM.CLIENTS where ID = :id
 			};
 
 			if(It_id == null) It_id = "";
@@ -297,7 +252,9 @@ final class AdmindbInterfaceLoad {
 		}
 	}
 
-	static int loadClients(ClientSeq_TransferableHolder clientseq) {
+	static int loadClients(final Connection conn, ClientSeq_TransferableHolder clientseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_version = "";
@@ -312,12 +269,12 @@ final class AdmindbInterfaceLoad {
 
 		Client_Transferable d_t;
 		Client_Transferable[] d_ts;
-		ClientIterator dIt = null;
+		Iterator dIt = null;
 		Vector vector2;
 
 		try
 		{
-			#sql dIt = {
+			#sql [connCtx] dIt = {
 				select
 					ID,
 					NAME,
@@ -390,12 +347,12 @@ final class AdmindbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadAgents(AgentSeq_TransferableHolder agentseq, String []agent_ids) {
+	static int loadAgents(final Connection conn, AgentSeq_TransferableHolder agentseq, String []agent_ids) throws SQLException {
 		Vector vec = new Vector();
 		Agent_Transferable agent;
 		for(int i = 0; i < agent_ids.length; i++)
 		{
-			agent = loadAgent(agent_ids[i]);
+			agent = loadAgent(conn, agent_ids[i]);
 			if(agent != null)
 				vec.add(agent);
 		}
@@ -404,7 +361,9 @@ final class AdmindbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static Agent_Transferable loadAgent(String id) {
+	private static Agent_Transferable loadAgent(final Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_version = "";
@@ -419,12 +378,12 @@ final class AdmindbInterfaceLoad {
 
 		Agent_Transferable d_t;
 		Agent_Transferable[] d_ts;
-		AgentIterator dIt = null;
+		Iterator dIt = null;
 		Vector vector2;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select
 					ID,
 					NAME,
@@ -481,7 +440,9 @@ final class AdmindbInterfaceLoad {
 		}
 	}
 
-	static int loadAgents(AgentSeq_TransferableHolder agentseq) {
+	static int loadAgents(final Connection conn, AgentSeq_TransferableHolder agentseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_version = "";
@@ -496,12 +457,12 @@ final class AdmindbInterfaceLoad {
 
 		Agent_Transferable d_t;
 		Agent_Transferable[] d_ts;
-		AgentIterator dIt = null;
+		Iterator dIt = null;
 		Vector vector2;
 
 		try
 		{
-			#sql dIt = {
+			#sql [connCtx] dIt = {
 				select
 					ID,
 					NAME,
@@ -574,29 +535,7 @@ final class AdmindbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	#sql public static iterator ServerIterator(
-		String id,
-		String name,
-		String contact,
-		String licence_id,
-		String version,
-		String location,
-		String hostname,
-		Timestamp created,
-		Timestamp modified);
-
-	#sql public static iterator ClientIterator(
-		String id,
-		String name,
-		String contact,
-		String licence_id,
-		String version,
-		String location,
-		String hostname,
-		Timestamp created,
-		Timestamp modified);
-
-	#sql public static iterator AgentIterator(
+	#sql public static iterator Iterator(
 		String id,
 		String name,
 		String contact,

@@ -1,5 +1,5 @@
 /*
- * $Id: ISMDirectorydbInterfaceSave.sqlj,v 1.1.2.3 2004/08/25 15:24:30 bass Exp $
+ * $Id: ISMDirectorydbInterfaceSave.sqlj,v 1.1.2.4 2004/09/09 11:35:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,11 +12,11 @@ import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.EquipmentType_Transferable;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/25 15:24:30 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:20 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -24,7 +24,9 @@ final class ISMDirectorydbInterfaceSave {
 	private ISMDirectorydbInterfaceSave() {
 	}
 
-	static int saveAccessPortTypes(AccessPortType_Transferable[] aporttypes) {
+	static int saveAccessPortTypes(final Connection conn, AccessPortType_Transferable[] aporttypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -37,9 +39,8 @@ final class ISMDirectorydbInterfaceSave {
 			Timestamp ts = new Timestamp(aporttypes[i].modified);
 			try
 			{
-				#sql {
-					select count(*) into :count from AMFICOM.ACCESSPORTTYPES
-						where ID = :(aporttypes[i].id)
+				#sql [connCtx] {
+					SELECT count(*) INTO :count FROM amficom.accessporttypes WHERE id = :(aporttypes[i].id)
 				};
 				if(count == 0)
 				{
@@ -48,7 +49,7 @@ final class ISMDirectorydbInterfaceSave {
 				System.out.println("update Access port type " + aporttypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.ACCESSPORTTYPES
 							set
 								NAME = :(aporttypes[i].name),
@@ -64,14 +65,14 @@ final class ISMDirectorydbInterfaceSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new Access port type " + aporttypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.ACCESSPORTTYPES(
 								ID,
 								NAME,
@@ -85,7 +86,7 @@ final class ISMDirectorydbInterfaceSave {
 								 :(aporttypes[i].access_type),
 								 :ts )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -99,21 +100,17 @@ final class ISMDirectorydbInterfaceSave {
 					return Constants.ERROR_SAVING;
 				}
 			}
-			NetDirectorydbInterfaceSave.saveCharacteristicLinks(
-					"ACCESSPORTTYPECHARACTERISTICS",
-					"ACCESS_PORT_TYPE_ID",
-					aporttypes[i].id,
-					aporttypes[i].characteristics);
+			NetDirectorydbInterfaceSave.saveCharacteristicLinks(conn, "ACCESSPORTTYPECHARACTERISTICS", "ACCESS_PORT_TYPE_ID", aporttypes[i].id, aporttypes[i].characteristics);
 			try
 			{
-				#sql { delete from AMFICOM.ACCESSPORTTYPETESTTYPES
+				#sql [connCtx] { delete from AMFICOM.ACCESSPORTTYPETESTTYPES
 					where ACCESS_PORT_TYPE_ID = :(aporttypes[i].id)
 				};
 
 				for (j = 0; j < aporttypes[i].test_type_ids.length; j++)
 				{
-					String a_id = ResourcedbInterface.getUId("accessport");
-					#sql { insert into AMFICOM.ACCESSPORTTYPETESTTYPES(ID, ACCESS_PORT_TYPE_ID, TEST_TYPE_ID)
+					String a_id = ResourcedbInterface.getUid(conn, "accessport");
+					#sql [connCtx] { insert into AMFICOM.ACCESSPORTTYPETESTTYPES(ID, ACCESS_PORT_TYPE_ID, TEST_TYPE_ID)
 						values(:a_id, :(aporttypes[i].id), :(aporttypes[i].test_type_ids[j]) )
 					};
 				}
@@ -128,7 +125,9 @@ final class ISMDirectorydbInterfaceSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveRTUTypes(EquipmentType_Transferable[] kistypes) {
+	static int saveRTUTypes(final Connection conn, EquipmentType_Transferable[] kistypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -141,7 +140,7 @@ final class ISMDirectorydbInterfaceSave {
 			Timestamp ts = new Timestamp(kistypes[i].modified);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.EQUIPMENTTYPES
 						where ID = :(kistypes[i].id)
 				};
@@ -152,7 +151,7 @@ final class ISMDirectorydbInterfaceSave {
 				System.out.println("update equipment type " + kistypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.EQUIPMENTTYPES
 							set
 								NAME = :(kistypes[i].name),
@@ -172,14 +171,14 @@ final class ISMDirectorydbInterfaceSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new equipment type " + kistypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.EQUIPMENTTYPES(
 								ID,
 								NAME,
@@ -201,7 +200,7 @@ final class ISMDirectorydbInterfaceSave {
 								 :(kistypes[i].image_id),
 								 :ts )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -210,16 +209,14 @@ final class ISMDirectorydbInterfaceSave {
 					return Constants.ERROR_SAVING;
 				}
 			}
-			NetDirectorydbInterfaceSave.saveCharacteristicLinks(
-					"EQUIPMENTTYPECHARACTERISTICLIN",
-					"EQUIPMENT_TYPE_ID",
-					kistypes[i].id,
-					kistypes[i].characteristics);
+			NetDirectorydbInterfaceSave.saveCharacteristicLinks(conn, "EQUIPMENTTYPECHARACTERISTICLIN", "EQUIPMENT_TYPE_ID", kistypes[i].id, kistypes[i].characteristics);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int savePathTypes(TransmissionPathType_Transferable[] pathtypes) {
+	static int savePathTypes(final Connection conn, TransmissionPathType_Transferable[] pathtypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -232,7 +229,7 @@ final class ISMDirectorydbInterfaceSave {
 			Timestamp ts = new Timestamp(pathtypes[i].modified);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.PATHTYPES
 						where ID = :(pathtypes[i].id)
 				};
@@ -243,7 +240,7 @@ final class ISMDirectorydbInterfaceSave {
 				System.out.println("update Access path type " + pathtypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.PATHTYPES
 							set
 								NAME = :(pathtypes[i].name),
@@ -258,14 +255,14 @@ final class ISMDirectorydbInterfaceSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new Access port type " + pathtypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.PATHTYPES(
 								ID,
 								NAME,
@@ -277,7 +274,7 @@ final class ISMDirectorydbInterfaceSave {
 								 :(pathtypes[i].description),
 								 SYSDATE )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{

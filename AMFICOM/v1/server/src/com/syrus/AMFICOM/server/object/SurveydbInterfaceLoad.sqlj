@@ -1,5 +1,5 @@
 /*
- * $Id: SurveydbInterfaceLoad.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
+ * $Id: SurveydbInterfaceLoad.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,9 +15,10 @@ import com.syrus.AMFICOM.CORBA.Survey.*;
 import java.sql.*;
 import java.util.Vector;
 import sqlj.runtime.SQLNullException;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -25,11 +26,9 @@ final class SurveydbInterfaceLoad {
 	private SurveydbInterfaceLoad() {
 	}
 
-	static int getTestIdsForMonitoredElement(
-			String me_id,
-			ResourceDescriptorSeq_TransferableHolder testids)
-		throws AMFICOMRemoteException
-	{
+	static int getTestIdsForMonitoredElement(final Connection conn, String me_id, ResourceDescriptorSeq_TransferableHolder testids) throws SQLException, AMFICOMRemoteException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int ret = Constants.ERROR_NO_ERROR;
 
 		ResourceIdIterator idIt = null;
@@ -39,9 +38,8 @@ final class SurveydbInterfaceLoad {
 		{
 			Vector vec = new Vector();
 
-			#sql idIt = { select ID, MODIFIED from AMFICOM.TESTS
-				where MONITORED_ELEMENT_ID = :me_id
-				and DELETED IS NULL
+			#sql [connCtx] idIt = {
+				SELECT id, modified FROM amficom.tests WHERE monitored_element_id = :me_id AND deleted IS NULL
 			};
 			while(idIt.next())
 				vec.add(new ResourceDescriptor_Transferable(idIt.id(), idIt.modified().getTime()));
@@ -68,10 +66,9 @@ final class SurveydbInterfaceLoad {
 		return ret;
 	}
 
-	static int loadRequests(
-			String domain_id,
-			ClientTestRequestSeq_TransferableHolder treqseq)
-	{
+	static int loadRequests(final Connection conn, String domain_id, ClientTestRequestSeq_TransferableHolder treqseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		long It_created = 0;
@@ -90,15 +87,8 @@ final class SurveydbInterfaceLoad {
 
 		try
 		{
-			#sql trIt = { select
-					ID,
-					NAME,
-					CREATED,
-					STATUS,
-					USER_ID
-				from AMFICOM.TESTREQUESTS
-				where DELETED IS NULL
-				and DOMAIN_ID = :domain_id
+			#sql [connCtx] trIt = {
+				SELECT id, name, created, status, user_id FROM amficom.testrequests WHERE deleted IS NULL AND domain_id = :domain_id
 			};
 			while (trIt.next())
 			{
@@ -120,10 +110,9 @@ final class SurveydbInterfaceLoad {
 				test_ids = new String[0];
 				vector2 = new Vector();
 
-				#sql idIt = {
-						select Id from TESTS
-						where REQUEST_ID = :It_id
-							and DELETED IS NULL };
+				#sql [connCtx] idIt = {
+					select Id from TESTS where REQUEST_ID = :It_id and DELETED IS NULL
+				};
 				while (idIt.next())
 				{
 					vector2.add(idIt.id());
@@ -174,7 +163,9 @@ final class SurveydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadGlobalParameterTypes(GlobalParameterTypeSeq_TransferableHolder paramtypeseq) {
+	static int loadGlobalParameterTypes(final Connection conn, GlobalParameterTypeSeq_TransferableHolder paramtypeseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_codename = "";
@@ -197,20 +188,8 @@ final class SurveydbInterfaceLoad {
 
 		try
 		{
-			#sql chIt = { select
-						ID,
-						NAME,
-						CODENAME,
-						DESCRIPTION,
-						NORM,
-						TYPE_ID,
-						UNIT,
-						GRANULARITY,
-						RANGEHI,
-						RANGELO,
-						FORMULA,
-						MODIFIED
-					from AMFICOM.PARAMETERTYPES
+			#sql [connCtx] chIt = {
+				select ID, NAME, CODENAME, DESCRIPTION, NORM, TYPE_ID, UNIT, GRANULARITY, RANGEHI, RANGELO, FORMULA, MODIFIED from AMFICOM.PARAMETERTYPES
 			};
 
 			while (chIt.next())
@@ -269,10 +248,9 @@ final class SurveydbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadGlobalParameterTypes(
-			String[] ids,
-			GlobalParameterTypeSeq_TransferableHolder paramtypeseq)
-	{
+	static int loadGlobalParameterTypes(final Connection conn, String[] ids, GlobalParameterTypeSeq_TransferableHolder paramtypeseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_codename = "";
@@ -298,7 +276,7 @@ final class SurveydbInterfaceLoad {
 			loadvec.add(ids[i]);
 		try
 		{
-			#sql chIt = { select
+			#sql [connCtx] chIt = { select
 						ID,
 						NAME,
 						CODENAME,

@@ -1,5 +1,5 @@
 /*
- * $Id: MapdbInterfaceSave.sqlj,v 1.1.2.1 2004/08/24 15:43:44 bass Exp $
+ * $Id: MapdbInterfaceSave.sqlj,v 1.1.2.2 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,10 +12,11 @@ import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Map.*;
 import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
-import java.sql.SQLException;
+import java.sql.*;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -23,8 +24,9 @@ final class MapdbInterfaceSave {
 	private MapdbInterfaceSave() {
 	}
 
-	static int saveMaps(MapContext_Transferable[] mapseq)
-	{
+	static int saveMaps(final Connection conn, MapContext_Transferable[] mapseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -39,7 +41,7 @@ final class MapdbInterfaceSave {
 			int show_nodes = (mapseq[i].showPhysicalNodeElement)? 1 : 0;
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.MAPCONTEXTS
 						where ID = :(mapseq[i].id)
 				};
@@ -50,7 +52,7 @@ final class MapdbInterfaceSave {
 				System.out.println("update map " + mapseq[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MAPCONTEXTS
 							set
 								NAME = :(mapseq[i].name),
@@ -76,14 +78,14 @@ final class MapdbInterfaceSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new map " + mapseq[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.MAPCONTEXTS(
 								ID,
 								NAME,
@@ -121,7 +123,7 @@ final class MapdbInterfaceSave {
 								 :(mapseq[i].latitude),
 								 :(mapseq[i].scheme_id) )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -133,14 +135,14 @@ final class MapdbInterfaceSave {
 
 			try
 			{
-				#sql { delete from MAPMARKLINKS
+				#sql [connCtx] { delete from MAPMARKLINKS
 					where MAP_ID = :(mapseq[i].id)
 				};
 
 				for (j = 0; j < mapseq[i].mark_ids.length; j++)
 				{
-					String a_id = ResourcedbInterface.getUId("mapelementlink");
-					#sql { insert into MAPMARKLINKS(ID, MAP_ID, MAP_MARK_ID)
+					String a_id = ResourcedbInterface.getUid(conn, "mapelementlink");
+					#sql [connCtx] { insert into MAPMARKLINKS(ID, MAP_ID, MAP_MARK_ID)
 						values(:a_id, :(mapseq[i].id), :(mapseq[i].mark_ids[j]) )
 					};
 				}
@@ -154,14 +156,14 @@ final class MapdbInterfaceSave {
 
 			try
 			{
-				#sql { delete from MAPELEMENTLINKS
+				#sql [connCtx] { delete from MAPELEMENTLINKS
 					where MAP_ID = :(mapseq[i].id)
 				};
 
 				for (j = 0; j < mapseq[i].equipment_ids.length; j++)
 				{
-					String a_id = ResourcedbInterface.getUId("mapelementlink");
-					#sql { insert into MAPELEMENTLINKS(ID, MAP_ID, MAP_ELEMENT_ID)
+					String a_id = ResourcedbInterface.getUid(conn, "mapelementlink");
+					#sql [connCtx] { insert into MAPELEMENTLINKS(ID, MAP_ID, MAP_ELEMENT_ID)
 						values(:a_id, :(mapseq[i].id), :(mapseq[i].equipment_ids[j]) )
 					};
 				}
@@ -175,14 +177,14 @@ final class MapdbInterfaceSave {
 
 			try
 			{
-				#sql { delete from MAPNODELINKS
+				#sql [connCtx] { delete from MAPNODELINKS
 					where MAP_ID = :(mapseq[i].id)
 				};
 
 				for (j = 0; j < mapseq[i].node_ids.length; j++)
 				{
-					String a_id = ResourcedbInterface.getUId("mapelementlink");
-					#sql { insert into MAPNODELINKS(ID, MAP_ID, MAP_NODE_ID)
+					String a_id = ResourcedbInterface.getUid(conn, "mapelementlink");
+					#sql [connCtx] { insert into MAPNODELINKS(ID, MAP_ID, MAP_NODE_ID)
 						values(:a_id, :(mapseq[i].id), :(mapseq[i].node_ids[j]) )
 					};
 				}
@@ -196,14 +198,14 @@ final class MapdbInterfaceSave {
 
 			try
 			{
-				#sql { delete from MAPNODELINKLINKS
+				#sql [connCtx] { delete from MAPNODELINKLINKS
 					where MAP_ID = :(mapseq[i].id)
 				};
 
 				for (j = 0; j < mapseq[i].nodeLink_ids.length; j++)
 				{
-					String a_id = ResourcedbInterface.getUId("mapelementlink");
-					#sql { insert into MAPNODELINKLINKS(ID, MAP_ID, MAP_NODE_LINK_ID)
+					String a_id = ResourcedbInterface.getUid(conn, "mapelementlink");
+					#sql [connCtx] { insert into MAPNODELINKLINKS(ID, MAP_ID, MAP_NODE_LINK_ID)
 						values(:a_id, :(mapseq[i].id), :(mapseq[i].nodeLink_ids[j]) )
 					};
 				}
@@ -217,14 +219,14 @@ final class MapdbInterfaceSave {
 
 			try
 			{
-				#sql { delete from MAPLINKLINKS
+				#sql [connCtx] { delete from MAPLINKLINKS
 					where MAP_ID = :(mapseq[i].id)
 				};
 
 				for (j = 0; j < mapseq[i].physicalLink_ids.length; j++)
 				{
-					String a_id = ResourcedbInterface.getUId("mapelementlink");
-					#sql { insert into MAPLINKLINKS(ID, MAP_ID, MAP_LINK_ID)
+					String a_id = ResourcedbInterface.getUid(conn, "mapelementlink");
+					#sql [connCtx] { insert into MAPLINKLINKS(ID, MAP_ID, MAP_LINK_ID)
 						values(:a_id, :(mapseq[i].id), :(mapseq[i].physicalLink_ids[j]) )
 					};
 				}
@@ -238,14 +240,14 @@ final class MapdbInterfaceSave {
 
 			try
 			{
-				#sql { delete from MAPKISLINKS
+				#sql [connCtx] { delete from MAPKISLINKS
 					where MAP_ID = :(mapseq[i].id)
 				};
 
 				for (j = 0; j < mapseq[i].kis_ids.length; j++)
 				{
-					String a_id = ResourcedbInterface.getUId("mapelementlink");
-					#sql { insert into MAPKISLINKS(ID, MAP_ID, MAP_KIS_ID)
+					String a_id = ResourcedbInterface.getUid(conn, "mapelementlink");
+					#sql [connCtx] { insert into MAPKISLINKS(ID, MAP_ID, MAP_KIS_ID)
 						values(:a_id, :(mapseq[i].id), :(mapseq[i].kis_ids[j]) )
 					};
 				}
@@ -259,14 +261,14 @@ final class MapdbInterfaceSave {
 
 			try
 			{
-				#sql { delete from MAPPATHSLINKS
+				#sql [connCtx] { delete from MAPPATHSLINKS
 					where MAP_ID = :(mapseq[i].id)
 				};
 
 				for (j = 0; j < mapseq[i].path_ids.length; j++)
 				{
-					String a_id = ResourcedbInterface.getUId("mapelementlink");
-					#sql { insert into MAPPATHSLINKS(ID, MAP_ID, MAP_PATH_ID)
+					String a_id = ResourcedbInterface.getUid(conn, "mapelementlink");
+					#sql [connCtx] { insert into MAPPATHSLINKS(ID, MAP_ID, MAP_PATH_ID)
 						values(:a_id, :(mapseq[i].id), :(mapseq[i].path_ids[j]) )
 					};
 				}
@@ -282,8 +284,9 @@ final class MapdbInterfaceSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static int saveMapElement(MapElement_Transferable equipment)
-	{
+	private static int saveMapElement(final Connection conn, MapElement_Transferable equipment) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -293,7 +296,7 @@ final class MapdbInterfaceSave {
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select count(*) into :count from AMFICOM.MAPELEMENTS
 					where ID = :(equipment.id)
 			};
@@ -304,7 +307,7 @@ final class MapdbInterfaceSave {
 			System.out.println("update equipment element " + equipment.id);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.MAPELEMENTS
 						set
 							OWNER_ID = :(equipment.owner_id),
@@ -328,14 +331,14 @@ final class MapdbInterfaceSave {
 				e.printStackTrace();
 				return Constants.ERROR_UPDATING;
 			}
-			#sql { commit };
+			conn.commit();
 		}
 		catch(SQLException e)
 		{
 			System.out.println("insert new equipment element " + equipment.id);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					insert into AMFICOM.MAPELEMENTS(
 							OWNER_ID,
 							LATITUDE,
@@ -363,7 +366,7 @@ final class MapdbInterfaceSave {
 							:(equipment.element_id),
 							:(equipment.element_type_id) )
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -372,32 +375,22 @@ final class MapdbInterfaceSave {
 				return Constants.ERROR_SAVING;
 			}
 		}
-		saveAttributes(
-				"MAPEQUIPMENTELEMENTATTRIBUTES",
-				"MAP_EQUIPMENT_ELEMENT_ID",
-				equipment.id,
-				equipment.attributes);
+		saveAttributes(conn, "MAPEQUIPMENTELEMENTATTRIBUTES", "MAP_EQUIPMENT_ELEMENT_ID", equipment.id, equipment.attributes);
 
-		CatalogSchemeMapUpdater.mapElementUpdated(equipment);
+		CatalogSchemeMapUpdater.mapElementUpdated(conn, equipment);
 
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveMapElements(MapElement_Transferable[] equipmentseq)
-	{
-		int i;
-		int len;
-
-		len = equipmentseq.length;
-		for (i = 0; i < len; i++)
-		{
-			saveMapElement(equipmentseq[i]);
-		}
+	static int saveMapElements(final Connection conn, MapElement_Transferable[] equipmentseq) throws SQLException {
+		for (int i = 0; i < equipmentseq.length; i++)
+			saveMapElement(conn, equipmentseq[i]);
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static int saveMapMark(MapMarkElement_Transferable mark)
-	{
+	private static int saveMapMark(final Connection conn, MapMarkElement_Transferable mark) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count = 0;
 
 		String dist = "";
@@ -405,7 +398,7 @@ final class MapdbInterfaceSave {
 		dist = String.valueOf(mark.distance);
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select count(*) into :count from AMFICOM.MAPMARKELEMENTS
 					where ID = :(mark.id)
 			};
@@ -416,7 +409,7 @@ final class MapdbInterfaceSave {
 			System.out.println("update mark element " + mark.id);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.MAPMARKELEMENTS
 						set
 							OWNER_ID = :(mark.owner_id),
@@ -438,14 +431,14 @@ final class MapdbInterfaceSave {
 				e.printStackTrace();
 				return Constants.ERROR_UPDATING;
 			}
-			#sql { commit };
+			conn.commit();
 		}
 		catch(SQLException e)
 		{
 			System.out.println("insert new mark element " + mark.id);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					insert into AMFICOM.MAPMARKELEMENTS(
 							OWNER_ID,
 							LATITUDE,
@@ -469,7 +462,7 @@ final class MapdbInterfaceSave {
 							:(mark.link_id),
 							:dist )
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -478,34 +471,24 @@ final class MapdbInterfaceSave {
 				return Constants.ERROR_SAVING;
 			}
 		}
-		saveAttributes(
-				"MAPMARKELEMENTATTRIBUTES",
-				"MAP_MARK_ELEMENT_ID",
-				mark.id,
-				mark.attributes);
+		saveAttributes(conn, "MAPMARKELEMENTATTRIBUTES", "MAP_MARK_ELEMENT_ID", mark.id, mark.attributes);
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveMapMarks(MapMarkElement_Transferable[] markseq)
-	{
-		int i;
-		int len;
-
-		len = markseq.length;
-		for (i = 0; i < len; i++)
-		{
-			saveMapMark(markseq[i]);
-		}
+	static int saveMapMarks(final Connection conn, MapMarkElement_Transferable[] markseq) throws SQLException {
+		for (int i = 0; i < markseq.length; i++)
+			saveMapMark(conn, markseq[i]);
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static int saveMapKIS(MapElement_Transferable kis)
-	{
+	private static int saveMapKIS(final Connection conn, MapElement_Transferable kis) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count = 0;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select count(*) into :count from AMFICOM.MAPKISELEMENTS
 					where ID = :(kis.id)
 			};
@@ -516,7 +499,7 @@ final class MapdbInterfaceSave {
 			System.out.println("update KIS element " + kis.id);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.MAPKISELEMENTS
 						set
 							MAP_ELEMENT_ID = :(kis.id),
@@ -525,7 +508,7 @@ final class MapdbInterfaceSave {
 							KIS_TYPE_ID = :(kis.kis_element_type_id)
 						where ID = :(kis.map_kis_id)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -539,7 +522,7 @@ final class MapdbInterfaceSave {
 			System.out.println("insert new KIS element " + kis.id);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					insert into AMFICOM.MAPKISELEMENTS(
 							MAP_ELEMENT_ID,
 							ISM_MAP_ID,
@@ -553,7 +536,7 @@ final class MapdbInterfaceSave {
 							:(kis.map_id),
 							:(kis.map_kis_id) )
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -562,32 +545,20 @@ final class MapdbInterfaceSave {
 				return Constants.ERROR_SAVING;
 			}
 		}
-		saveAttributes(
-				"MAPKISELEMENTATTRIBUTES",
-				"MAP_KIS_ELEMENT_ID",
-				kis.id,
-				kis.attributes);
-
-		saveMapElement(kis);
-
+		saveAttributes(conn, "MAPKISELEMENTATTRIBUTES", "MAP_KIS_ELEMENT_ID", kis.id, kis.attributes);
+		saveMapElement(conn, kis);
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveMapKISs(MapElement_Transferable[] kisseq)
-	{
-		int i;
-		int len;
-
-		len = kisseq.length;
-		for (i = 0; i < len; i++)
-		{
-			saveMapKIS(kisseq[i]);
-		}
+	static int saveMapKISs(final Connection conn, MapElement_Transferable[] kisseq) throws SQLException {
+		for (int i = 0; i < kisseq.length; i++)
+			saveMapKIS(conn, kisseq[i]);
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static int saveMapNode(MapPhysicalNodeElement_Transferable node)
-	{
+	private static int saveMapNode(final Connection conn, MapPhysicalNodeElement_Transferable node) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int count = 0;
 		int active = 0;
@@ -595,7 +566,7 @@ final class MapdbInterfaceSave {
 		active = (node.active)? 1 : 0;
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select count(*) into :count from AMFICOM.MAPPHYSICALNODEELEMENTS
 					where ID = :(node.id)
 			};
@@ -606,7 +577,7 @@ final class MapdbInterfaceSave {
 			System.out.println("update node " + node.id);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.MAPPHYSICALNODEELEMENTS
 						set
 							SYMBOL_ID = :(node.symbol_id),
@@ -620,7 +591,7 @@ final class MapdbInterfaceSave {
 							LATITUDE = :(node.latitude)
 						where ID = :(node.id)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -634,7 +605,7 @@ final class MapdbInterfaceSave {
 			System.out.println("insert new node " + node.id);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					insert into AMFICOM.MAPPHYSICALNODEELEMENTS(
 							SYMBOL_ID,
 							LATITUDE,
@@ -658,7 +629,7 @@ final class MapdbInterfaceSave {
 							:(node.physicalLinkID),
 							:(node.longitude) )
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -667,34 +638,24 @@ final class MapdbInterfaceSave {
 				return Constants.ERROR_SAVING;
 			}
 		}
-		saveAttributes(
-				"MAPPHYSICALNODEELEMENTATTRIBUT",
-				"MAP_PHYSICAL_NODE_ELEMENT_ID",
-				node.id,
-				node.attributes);
+		saveAttributes(conn, "MAPPHYSICALNODEELEMENTATTRIBUT", "MAP_PHYSICAL_NODE_ELEMENT_ID", node.id, node.attributes);
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveMapNodes(MapPhysicalNodeElement_Transferable[] nodeseq)
-	{
-		int i;
-		int len;
-
-		len = nodeseq.length;
-		for (i = 0; i < len; i++)
-		{
-			saveMapNode(nodeseq[i]);
-		}
+	static int saveMapNodes(final Connection conn, MapPhysicalNodeElement_Transferable[] nodeseq) throws SQLException {
+		for (int i = 0; i < nodeseq.length; i++)
+			saveMapNode(conn, nodeseq[i]);
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static int saveMapNodeLink(MapNodeLinkElement_Transferable nodelink)
-	{
+	private static int saveMapNodeLink(final Connection conn, MapNodeLinkElement_Transferable nodelink) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count = 0;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select count(*) into :count from AMFICOM.MAPNODELINKELEMENTS
 					where ID = :(nodelink.id)
 			};
@@ -705,7 +666,7 @@ final class MapdbInterfaceSave {
 			System.out.println("update node link " + nodelink.id);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.MAPNODELINKELEMENTS
 						set
 							PHYSICAL_LINK_ID = :(nodelink.physicalLinkID),
@@ -716,7 +677,7 @@ final class MapdbInterfaceSave {
 							MAP_ID = :(nodelink.map_id)
 						where ID = :(nodelink.id)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -730,7 +691,7 @@ final class MapdbInterfaceSave {
 			System.out.println("insert new node link " + nodelink.id);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					insert into AMFICOM.MAPNODELINKELEMENTS(
 							PHYSICAL_LINK_ID,
 							ID,
@@ -748,7 +709,7 @@ final class MapdbInterfaceSave {
 							:(nodelink.owner_id),
 							:(nodelink.map_id) )
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -757,35 +718,25 @@ final class MapdbInterfaceSave {
 				return Constants.ERROR_SAVING;
 			}
 		}
-		saveAttributes(
-				"MAPNODELINKELEMENTATTRIBUTES",
-				"MAP_NODE_LINK_ID",
-				nodelink.id,
-				nodelink.attributes);
+		saveAttributes(conn, "MAPNODELINKELEMENTATTRIBUTES", "MAP_NODE_LINK_ID", nodelink.id, nodelink.attributes);
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveMapNodeLinks(MapNodeLinkElement_Transferable[] nodelinkseq)
-	{
-		int i;
-		int len;
-
-		len = nodelinkseq.length;
-		for (i = 0; i < len; i++)
-		{
-			saveMapNodeLink(nodelinkseq[i]);
-		}
+	static int saveMapNodeLinks(final Connection conn, MapNodeLinkElement_Transferable[] nodelinkseq) throws SQLException {
+		for (int i = 0; i < nodelinkseq.length; i++)
+			saveMapNodeLink(conn, nodelinkseq[i]);
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static int saveMapLink(MapPhysicalLinkElement_Transferable link)
-	{
+	private static int saveMapLink(final Connection conn, MapPhysicalLinkElement_Transferable link) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int count = 0;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select count(*) into :count from AMFICOM.MAPPHYSICALLINKELEMENTS
 					where ID = :(link.id)
 			};
@@ -796,7 +747,7 @@ final class MapdbInterfaceSave {
 			System.out.println("update physical link " + link.id);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.MAPPHYSICALLINKELEMENTS
 						set
 							DESCRIPTION = :(link.description),
@@ -810,7 +761,7 @@ final class MapdbInterfaceSave {
 							LINK_TYPE_ID = :(link.link_type_id)
 						where ID = :(link.id)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
@@ -824,7 +775,7 @@ final class MapdbInterfaceSave {
 			System.out.println("insert new physical link " + link.id);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					insert into AMFICOM.MAPPHYSICALLINKELEMENTS(
 							DESCRIPTION,
 							ID,
@@ -848,7 +799,7 @@ final class MapdbInterfaceSave {
 							:(link.link_id),
 							:(link.link_type_id) )
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException ex)
 			{
@@ -857,36 +808,20 @@ final class MapdbInterfaceSave {
 				return Constants.ERROR_SAVING;
 			}
 		}
-		saveAttributes(
-				"MAPPHYSICALLINKELEMENTATTRIBUT",
-				"MAP_PHYSICAL_LINK_ELEMENT_ID",
-				link.id,
-				link.attributes);
-
-		CatalogSchemeMapUpdater.mapLinkUpdated(link);
-
+		saveAttributes(conn, "MAPPHYSICALLINKELEMENTATTRIBUT", "MAP_PHYSICAL_LINK_ELEMENT_ID", link.id, link.attributes);
+		CatalogSchemeMapUpdater.mapLinkUpdated(conn, link);
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveMapLinks(MapPhysicalLinkElement_Transferable[] linkseq)
-	{
-		int i;
-		int len;
-
-		len = linkseq.length;
-		for (i = 0; i < len; i++)
-		{
-			saveMapLink(linkseq[i]);
-		}
+	static int saveMapLinks(final Connection conn, MapPhysicalLinkElement_Transferable[] linkseq) throws SQLException {
+		for (int i = 0; i < linkseq.length; i++)
+			saveMapLink(conn, linkseq[i]);
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static void saveAttributes(
-			String attrTable,
-			String attrField,
-			String element_id,
-			ElementAttribute_Transferable[] attributes)
-	{
+	static void saveAttributes(final Connection conn, String attrTable, String attrField, String element_id, ElementAttribute_Transferable[] attributes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count;
 		int len2;
 		int j;
@@ -895,7 +830,7 @@ final class MapdbInterfaceSave {
 		{
 			String qry = "delete from AMFICOM." + attrTable +
 						" where " + attrField + " = '" + element_id + "'";
-			#sql {
+			#sql [connCtx] {
 				BEGIN
 					execute immediate :qry;
 				END;
@@ -907,7 +842,7 @@ final class MapdbInterfaceSave {
 				try
 				{
 					System.out.println("insert  attribute: type " + attributes[j].type_id + " value " + attributes[j].value + " for element " + element_id);
-					attributes[j].id = ResourcedbInterface.getUId("attribute");
+					attributes[j].id = ResourcedbInterface.getUid(conn, "attribute");
 					String qry2 = "insert into AMFICOM." + attrTable +
 						"(ID, ATTRIBUTE_TYPE_ID, VALUE, IS_EDITABLE, IS_VISIBLE, " +
 						attrField + ") values ('" +
@@ -918,13 +853,12 @@ final class MapdbInterfaceSave {
 						((attributes[j].visible)? "1" : "0") + "', '" +
 						element_id + "')";
 
-					#sql {
+					#sql [connCtx] {
 						BEGIN
 							execute immediate :qry2;
 						END;
 					};
-
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException exx)
 				{
@@ -944,15 +878,16 @@ final class MapdbInterfaceSave {
 		}
 	}
 
-	private static int saveMapPath(MapPathElement_Transferable path)
-	{
+	private static int saveMapPath(final Connection conn, MapPathElement_Transferable path) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int j;
 		int len2;
 		int count = 0;
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select count(*) into :count from AMFICOM.MAPPATHELEMENTS
 					where ID = :(path.id)
 			};
@@ -963,7 +898,7 @@ final class MapdbInterfaceSave {
 			System.out.println("update path " + path.id);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					update AMFICOM.MAPPATHELEMENTS
 						set
 							DESCRIPTION = :(path.description),
@@ -976,7 +911,7 @@ final class MapdbInterfaceSave {
 							PATH_ID = :(path.path_id)
 						where ID = :(path.id)
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(Exception e)
 			{
@@ -990,7 +925,7 @@ final class MapdbInterfaceSave {
 			System.out.println("insert new path " + path.id);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					insert into AMFICOM.MAPPATHELEMENTS(
 							DESCRIPTION,
 							ID,
@@ -1012,7 +947,7 @@ final class MapdbInterfaceSave {
 							:(path.map_id),
 							:(path.path_id) )
 				};
-				#sql { commit };
+				conn.commit();
 			}
 			catch(Exception ex)
 			{
@@ -1021,13 +956,8 @@ final class MapdbInterfaceSave {
 				return Constants.ERROR_SAVING;
 			}
 		}
-		saveAttributes(
-				"MAPPATHELEMENTATTRIBUTES",
-				"MAP_PATH_ELEMENT_ID",
-				path.id,
-				path.attributes);
-
-		CatalogSchemeMapUpdater.mapPathUpdated(path);
+		saveAttributes(conn, "MAPPATHELEMENTATTRIBUTES", "MAP_PATH_ELEMENT_ID", path.id, path.attributes);
+		CatalogSchemeMapUpdater.mapPathUpdated(conn, path);
 
 		len2 = path.physicalLink_ids.length;
 		for(j = 0; j < len2; j++)
@@ -1035,7 +965,7 @@ final class MapdbInterfaceSave {
 			String pl_id;
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select ID into :pl_id from AMFICOM.MAPPATHLINKS
 						where PATH_ID = :(path.id)
 							and PHYSICAL_LINK_ID = :(path.physicalLink_ids[j])
@@ -1043,13 +973,13 @@ final class MapdbInterfaceSave {
 				System.out.println("update path link " + path.id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MAPPATHLINKS
 							set
 								PHYSICAL_LINK_ID = :(path.physicalLink_ids[j])
 							where ID = :pl_id
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(Exception exx)
 				{
@@ -1062,8 +992,8 @@ final class MapdbInterfaceSave {
 				System.out.println("insert path link: " + ex.getMessage());
 				try
 				{
-					String mpl_s = ResourcedbInterface.getUId("mappathlink");
-					#sql {
+					String mpl_s = ResourcedbInterface.getUid(conn, "mappathlink");
+					#sql [connCtx] {
 						insert into AMFICOM.MAPPATHLINKS(
 								ID,
 								PATH_ID,
@@ -1073,7 +1003,7 @@ final class MapdbInterfaceSave {
 								:(path.id),
 								:(path.physicalLink_ids[j]) )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException exx)
 				{
@@ -1090,21 +1020,15 @@ final class MapdbInterfaceSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveMapPaths(MapPathElement_Transferable[] pathseq)
-	{
-		int i;
-		int len;
-
-		len = pathseq.length;
-		for (i = 0; i < len; i++)
-		{
-			saveMapPath(pathseq[i]);
-		}
+	static int saveMapPaths(final Connection conn, MapPathElement_Transferable[] pathseq) throws SQLException {
+		for (int i = 0; i < pathseq.length; i++)
+			saveMapPath(conn, pathseq[i]);
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveJMaps(ISMMapContext_Transferable[] mapseq)
-	{
+	static int saveJMaps(final Connection conn, ISMMapContext_Transferable[] mapseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -1116,7 +1040,7 @@ final class MapdbInterfaceSave {
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.ISMMAPCONTEXTS
 						where ID = :(mapseq[i].id)
 				};
@@ -1127,7 +1051,7 @@ final class MapdbInterfaceSave {
 				System.out.println("update ism map " + mapseq[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.ISMMAPCONTEXTS
 							set
 								NAME = :(mapseq[i].name),
@@ -1147,14 +1071,14 @@ final class MapdbInterfaceSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new ISM map " + mapseq[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.ISMMAPCONTEXTS(
 								ID,
 								NAME,
@@ -1180,7 +1104,7 @@ final class MapdbInterfaceSave {
 								 :(mapseq[i].user_id),
 								 :(mapseq[i].map_id) )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -1193,8 +1117,9 @@ final class MapdbInterfaceSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveJMapKISs(MapKISElement_Transferable[] kisseq)
-	{
+	static int saveJMapKISs(final Connection conn, MapKISElement_Transferable[] kisseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -1207,7 +1132,7 @@ final class MapdbInterfaceSave {
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.MAPKISELEMENTS
 						where ID = :(kisseq[i].id)
 				};
@@ -1221,17 +1146,14 @@ final class MapdbInterfaceSave {
 			{
 				System.out.println("insert new KIS element " + kisseq[i].id);
 			}
-			saveAttributes(
-					"MAPKISELEMENTATTRIBUTES",
-					"MAP_KIS_ELEMENT_ID",
-					kisseq[i].id,
-					kisseq[i].attributes);
+			saveAttributes(conn, "MAPKISELEMENTATTRIBUTES", "MAP_KIS_ELEMENT_ID", kisseq[i].id, kisseq[i].attributes);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveJMapPaths(MapPathElement_Transferable[] pathseq)
-	{
+	static int saveJMapPaths(final Connection conn, MapPathElement_Transferable[] pathseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -1244,7 +1166,7 @@ final class MapdbInterfaceSave {
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.MAPPATHELEMENTS
 						where ID = :(pathseq[i].id)
 				};
@@ -1255,7 +1177,7 @@ final class MapdbInterfaceSave {
 				System.out.println("update path " + pathseq[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MAPPATHELEMENTS
 							set
 								DESCRIPTION = :(pathseq[i].description),
@@ -1269,7 +1191,7 @@ final class MapdbInterfaceSave {
 								PATH_ID = :(pathseq[i].path_id)
 							where ID = :(pathseq[i].id)
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException e)
 				{
@@ -1283,7 +1205,7 @@ final class MapdbInterfaceSave {
 				System.out.println("insert new path " + pathseq[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.MAPPATHELEMENTS(
 								DESCRIPTION,
 								ID,
@@ -1307,7 +1229,7 @@ final class MapdbInterfaceSave {
 								:(pathseq[i].ism_map_id),
 								:(pathseq[i].path_id) )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -1316,11 +1238,7 @@ final class MapdbInterfaceSave {
 					return Constants.ERROR_SAVING;
 				}
 			}
-			saveAttributes(
-					"MAPPATHELEMENTATTRIBUTES",
-					"MAP_PATH_ELEMENT_ID",
-					pathseq[i].id,
-					pathseq[i].attributes);
+			saveAttributes(conn, "MAPPATHELEMENTATTRIBUTES", "MAP_PATH_ELEMENT_ID", pathseq[i].id, pathseq[i].attributes);
 
 			len2 = pathseq[i].physicalLink_ids.length;
 			for(j = 0; j < len2; j++)
@@ -1328,7 +1246,7 @@ final class MapdbInterfaceSave {
 				String pl_id;
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						select ID into :pl_id from AMFICOM.MAPPATHLINKS
 							where PATH_ID = :(pathseq[i].id)
 								and PHYSICAL_LINK_ID = :(pathseq[i].physicalLink_ids[j])
@@ -1336,13 +1254,13 @@ final class MapdbInterfaceSave {
 					System.out.println("update path link " + pathseq[i].id);
 					try
 					{
-						#sql {
+						#sql [connCtx] {
 							update AMFICOM.MAPPATHLINKS
 								set
 									PHYSICAL_LINK_ID = :(pathseq[i].physicalLink_ids[j])
 								where ID = :pl_id
 						};
-						#sql { commit };
+						conn.commit();
 					}
 					catch(SQLException exx)
 					{
@@ -1355,8 +1273,8 @@ final class MapdbInterfaceSave {
 					System.out.println("insert path link: " + ex.getMessage());
 					try
 					{
-						String mpl_s = ResourcedbInterface.getUId("mappathlink");
-						#sql {
+						String mpl_s = ResourcedbInterface.getUid(conn, "mappathlink");
+						#sql [connCtx] {
 							insert into AMFICOM.MAPPATHLINKS(
 									ID,
 									PATH_ID,
@@ -1366,7 +1284,7 @@ final class MapdbInterfaceSave {
 									:(pathseq[i].id),
 									:(pathseq[i].physicalLink_ids[j]) )
 						};
-						#sql { commit };
+						conn.commit();
 					}
 					catch(SQLException exx)
 					{
@@ -1383,8 +1301,9 @@ final class MapdbInterfaceSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveJMapNodes(MapPhysicalNodeElement_Transferable[] nodeseq)
-	{
+	static int saveJMapNodes(final Connection conn, MapPhysicalNodeElement_Transferable[] nodeseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -1399,7 +1318,7 @@ final class MapdbInterfaceSave {
 			active = (nodeseq[i].active)? 1 : 0;
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.MAPPHYSICALNODEELEMENTS
 						where ID = :(nodeseq[i].id)
 				};
@@ -1410,7 +1329,7 @@ final class MapdbInterfaceSave {
 				System.out.println("update node " + nodeseq[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MAPPHYSICALNODEELEMENTS
 							set
 								SYMBOL_ID = :(nodeseq[i].symbol_id),
@@ -1425,7 +1344,7 @@ final class MapdbInterfaceSave {
 								LATITUDE = :(nodeseq[i].latitude)
 							where ID = :(nodeseq[i].id)
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException e)
 				{
@@ -1439,7 +1358,7 @@ final class MapdbInterfaceSave {
 				System.out.println("insert new node " + nodeseq[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.MAPPHYSICALNODEELEMENTS(
 								SYMBOL_ID,
 								LATITUDE,
@@ -1465,7 +1384,7 @@ final class MapdbInterfaceSave {
 								:(nodeseq[i].physicalLinkID),
 								:(nodeseq[i].longitude) )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -1474,17 +1393,14 @@ final class MapdbInterfaceSave {
 					return Constants.ERROR_SAVING;
 				}
 			}
-			saveAttributes(
-					"MAPPHYSICALNODEELEMENTATTRIBUT",
-					"MAP_PHYSICAL_NODE_ELEMENT_ID",
-					nodeseq[i].id,
-					nodeseq[i].attributes);
+			saveAttributes(conn, "MAPPHYSICALNODEELEMENTATTRIBUT", "MAP_PHYSICAL_NODE_ELEMENT_ID", nodeseq[i].id, nodeseq[i].attributes);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveJMapNodeLinks(MapNodeLinkElement_Transferable[] nodelinkseq)
-	{
+	static int saveJMapNodeLinks(final Connection conn, MapNodeLinkElement_Transferable[] nodelinkseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -1497,7 +1413,7 @@ final class MapdbInterfaceSave {
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.MAPNODELINKELEMENTS
 						where ID = :(nodelinkseq[i].id)
 				};
@@ -1508,7 +1424,7 @@ final class MapdbInterfaceSave {
 				System.out.println("update node link " + nodelinkseq[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MAPNODELINKELEMENTS
 							set
 								PHYSICAL_LINK_ID = :(nodelinkseq[i].physicalLinkID),
@@ -1520,7 +1436,7 @@ final class MapdbInterfaceSave {
 								ISM_MAP_ID = :(nodelinkseq[i].ism_map_id)
 							where ID = :(nodelinkseq[i].id)
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException e)
 				{
@@ -1534,7 +1450,7 @@ final class MapdbInterfaceSave {
 				System.out.println("insert new node link " + nodelinkseq[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.MAPNODELINKELEMENTS(
 								PHYSICAL_LINK_ID,
 								ID,
@@ -1554,7 +1470,7 @@ final class MapdbInterfaceSave {
 								:(nodelinkseq[i].map_id),
 								:(nodelinkseq[i].ism_map_id) )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -1563,17 +1479,14 @@ final class MapdbInterfaceSave {
 					return Constants.ERROR_SAVING;
 				}
 			}
-			saveAttributes(
-					"MAPNODELINKELEMENTATTRIBUTES",
-					"MAP_NODE_LINK_ID",
-					nodelinkseq[i].id,
-					nodelinkseq[i].attributes);
+			saveAttributes(conn, "MAPNODELINKELEMENTATTRIBUTES", "MAP_NODE_LINK_ID", nodelinkseq[i].id, nodelinkseq[i].attributes);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveJMapLinks(MapPhysicalLinkElement_Transferable[] linkseq)
-	{
+	static int saveJMapLinks(final Connection conn, MapPhysicalLinkElement_Transferable[] linkseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -1586,7 +1499,7 @@ final class MapdbInterfaceSave {
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.MAPPHYSICALLINKELEMENTS
 						where ID = :(linkseq[i].id)
 				};
@@ -1597,7 +1510,7 @@ final class MapdbInterfaceSave {
 				System.out.println("update physical link " + linkseq[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.MAPPHYSICALLINKELEMENTS
 							set
 								DESCRIPTION = :(linkseq[i].description),
@@ -1612,7 +1525,7 @@ final class MapdbInterfaceSave {
 								LINK_TYPE_ID = :(linkseq[i].link_type_id)
 							where ID = :(linkseq[i].id)
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException e)
 				{
@@ -1626,7 +1539,7 @@ final class MapdbInterfaceSave {
 				System.out.println("insert new physical link " + linkseq[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.MAPPHYSICALLINKELEMENTS(
 								DESCRIPTION,
 								ID,
@@ -1652,7 +1565,7 @@ final class MapdbInterfaceSave {
 								:(linkseq[i].link_id),
 								:(linkseq[i].link_type_id) )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -1661,11 +1574,7 @@ final class MapdbInterfaceSave {
 					return Constants.ERROR_SAVING;
 				}
 			}
-			saveAttributes(
-					"MAPPHYSICALLINKELEMENTATTRIBUT",
-					"MAP_PHYSICAL_LINK_ELEMENT_ID",
-					linkseq[i].id,
-					linkseq[i].attributes);
+			saveAttributes(conn, "MAPPHYSICALLINKELEMENTATTRIBUT", "MAP_PHYSICAL_LINK_ELEMENT_ID", linkseq[i].id, linkseq[i].attributes);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}

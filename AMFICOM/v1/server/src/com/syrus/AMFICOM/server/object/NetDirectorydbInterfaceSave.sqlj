@@ -1,5 +1,5 @@
 /*
- * $Id: NetDirectorydbInterfaceSave.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
+ * $Id: NetDirectorydbInterfaceSave.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,10 @@ import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import java.sql.*;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -23,12 +24,9 @@ final class NetDirectorydbInterfaceSave {
 	private NetDirectorydbInterfaceSave() {
 	}
 
-	static void saveCharacteristicLinks(
-			String charLinkTable,
-			String charLinkField,
-			String element_id,
-			Characteristic_Transferable[] characteristics)
-	{
+	static void saveCharacteristicLinks(final Connection conn, String charLinkTable, String charLinkField, String element_id, Characteristic_Transferable[] characteristics) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count;
 		int len2;
 		int j;
@@ -37,7 +35,7 @@ final class NetDirectorydbInterfaceSave {
 		{
 			String qry = "delete from AMFICOM." + charLinkTable +
 						" where " + charLinkField + " = '" + element_id + "'";
-			#sql {
+			#sql [connCtx] {
 				BEGIN
 					execute immediate :qry;
 				END;
@@ -50,7 +48,7 @@ final class NetDirectorydbInterfaceSave {
 				{
 					System.out.println("insert type characteristic: " + characteristics[j].id + " type " + characteristics[j].type_id + " value " + characteristics[j].value + " for element " + element_id);
 
-					characteristics[j].id = ResourcedbInterface.getUId("characteristic");
+					characteristics[j].id = ResourcedbInterface.getUid(conn, "characteristic");
 					String qry2 = "insert into AMFICOM." + charLinkTable +
 						"(ID, CHARACTERISTIC_TYPE_ID, DEFAULT_VALUE, " +
 						charLinkField + ") values ('" +
@@ -60,13 +58,13 @@ final class NetDirectorydbInterfaceSave {
 						element_id + "')";
 
 
-					#sql {
+					#sql [connCtx] {
 						BEGIN
 							execute immediate :qry2;
 						END;
 					};
 
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException exx)
 				{
@@ -86,9 +84,9 @@ final class NetDirectorydbInterfaceSave {
 		}
 	}
 
-	static int saveCharacteristicTypes(
-			CharacteristicType_Transferable[] characteristictypes)
-	{
+	static int saveCharacteristicTypes(final Connection conn, CharacteristicType_Transferable[] characteristictypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int count;
 		int len2;
 		int j;
@@ -98,7 +96,7 @@ final class NetDirectorydbInterfaceSave {
 		{
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.CHARACTERISTICTYPES
 						where ID = :(characteristictypes[j].id)
 				};
@@ -108,7 +106,7 @@ final class NetDirectorydbInterfaceSave {
 				}
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.CHARACTERISTICTYPES
 							set
 								NAME = :(characteristictypes[j].name),
@@ -119,7 +117,7 @@ final class NetDirectorydbInterfaceSave {
 								MODIFIED = SYSDATE
 							where ID = :(characteristictypes[j].id)
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException exx)
 				{
@@ -132,7 +130,7 @@ final class NetDirectorydbInterfaceSave {
 				System.out.println("insert new characteristic type: " + characteristictypes[j].id + " value type " + characteristictypes[j].value_type_id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.CHARACTERISTICTYPES(
 								ID,
 								VALUE_TYPE_ID,
@@ -150,7 +148,7 @@ final class NetDirectorydbInterfaceSave {
 								:(characteristictypes[j].visible),
 								SYSDATE )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException exx)
 				{
@@ -166,9 +164,9 @@ final class NetDirectorydbInterfaceSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int savePortTypes(
-			PortType_Transferable[] porttypes)
-	{
+	static int savePortTypes(final Connection conn, PortType_Transferable[] porttypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -181,7 +179,7 @@ final class NetDirectorydbInterfaceSave {
 			Timestamp ts = new Timestamp(porttypes[i].modified);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.PORTTYPES
 						where ID = :(porttypes[i].id)
 				};
@@ -192,7 +190,7 @@ final class NetDirectorydbInterfaceSave {
 				System.out.println("update port type " + porttypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.PORTTYPES
 							set
 								NAME = :(porttypes[i].name),
@@ -213,14 +211,14 @@ final class NetDirectorydbInterfaceSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new port type " + porttypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.PORTTYPES(
 								ID,
 								NAME,
@@ -244,7 +242,7 @@ final class NetDirectorydbInterfaceSave {
 								 :(porttypes[i].p_class),
 								 SYSDATE )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -258,18 +256,14 @@ final class NetDirectorydbInterfaceSave {
 					return Constants.ERROR_SAVING;
 				}
 			}
-			saveCharacteristicLinks(
-					"PORTTYPECHARACTERISTICLINKS",
-					"PORT_TYPE_ID",
-					porttypes[i].id,
-					porttypes[i].characteristics);
+			saveCharacteristicLinks(conn, "PORTTYPECHARACTERISTICLINKS", "PORT_TYPE_ID", porttypes[i].id, porttypes[i].characteristics);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveCablePortTypes(
-			CablePortType_Transferable[] porttypes)
-	{
+	static int saveCablePortTypes(final Connection conn, CablePortType_Transferable[] porttypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -282,7 +276,7 @@ final class NetDirectorydbInterfaceSave {
 			Timestamp ts = new Timestamp(porttypes[i].modified);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.CABLEPORTTYPES
 						where ID = :(porttypes[i].id)
 				};
@@ -293,7 +287,7 @@ final class NetDirectorydbInterfaceSave {
 				System.out.println("update cable port type " + porttypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.CABLEPORTTYPES
 							set
 								NAME = :(porttypes[i].name),
@@ -310,14 +304,14 @@ final class NetDirectorydbInterfaceSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new cable port type " + porttypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.CABLEPORTTYPES(
 								ID,
 								NAME,
@@ -333,7 +327,7 @@ final class NetDirectorydbInterfaceSave {
 								 :(porttypes[i].p_class),
 								 SYSDATE )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -347,18 +341,14 @@ final class NetDirectorydbInterfaceSave {
 					return Constants.ERROR_SAVING;
 				}
 			}
-			saveCharacteristicLinks(
-					"CABLEPORTTYPECHARACTERISTICS",
-					"CABLE_PORT_TYPE_ID",
-					porttypes[i].id,
-					porttypes[i].characteristics);
+			saveCharacteristicLinks(conn, "CABLEPORTTYPECHARACTERISTICS", "CABLE_PORT_TYPE_ID", porttypes[i].id, porttypes[i].characteristics);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveLinkTypes(
-			LinkType_Transferable[] linktypes)
-	{
+	static int saveLinkTypes(final Connection conn, LinkType_Transferable[] linktypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -371,7 +361,7 @@ final class NetDirectorydbInterfaceSave {
 			Timestamp ts = new Timestamp(linktypes[i].modified);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.LINKTYPES
 						where ID = :(linktypes[i].id)
 				};
@@ -382,7 +372,7 @@ final class NetDirectorydbInterfaceSave {
 				System.out.println("update link type " + linktypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.LINKTYPES
 							set
 								NAME = :(linktypes[i].name),
@@ -405,14 +395,14 @@ final class NetDirectorydbInterfaceSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new link type " + linktypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.LINKTYPES(
 								ID,
 								NAME,
@@ -440,7 +430,7 @@ final class NetDirectorydbInterfaceSave {
 								 :(linktypes[i].image_id),
 								 SYSDATE )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -449,27 +439,24 @@ final class NetDirectorydbInterfaceSave {
 					return Constants.ERROR_SAVING;
 				}
 			}
-			saveCharacteristicLinks(
-					"LINKTYPECHARACTERISTICLINKS",
-					"LINK_TYPE_ID",
-					linktypes[i].id,
-					linktypes[i].characteristics);
+			saveCharacteristicLinks(conn, "LINKTYPECHARACTERISTICLINKS", "LINK_TYPE_ID", linktypes[i].id, linktypes[i].characteristics);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static int saveCableTypeThreads(String cable_id, CableTypeThread_Transferable[] threads)
-	{
+	private static int saveCableTypeThreads(final Connection conn, String cable_id, CableTypeThread_Transferable[] threads) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		try
 		{
-			#sql { delete from AMFICOM.CABLETYPETHREADS
+			#sql [connCtx] { delete from AMFICOM.CABLETYPETHREADS
 					where CABLE_TYPE_ID = :cable_id };
 
 			for (int i = 0; i < threads.length; i++)
 			{
 				System.out.println("insert set thread " + threads[i].id + " for cable type " + cable_id);
 
-				#sql {
+				#sql [connCtx] {
 					insert into AMFICOM.CABLETYPETHREADS(
 							ID,
 							NAME,
@@ -486,7 +473,7 @@ final class NetDirectorydbInterfaceSave {
 							 :cable_id )
 				};
 			}
-			#sql { commit };
+			conn.commit();
 		}
 		catch(SQLException ex)
 		{
@@ -502,9 +489,9 @@ final class NetDirectorydbInterfaceSave {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveCableLinkTypes(
-			CableLinkType_Transferable[] linktypes)
-	{
+	static int saveCableLinkTypes(final Connection conn, CableLinkType_Transferable[] linktypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -517,7 +504,7 @@ final class NetDirectorydbInterfaceSave {
 			Timestamp ts = new Timestamp(linktypes[i].modified);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.CABLETYPES
 						where ID = :(linktypes[i].id)
 				};
@@ -528,7 +515,7 @@ final class NetDirectorydbInterfaceSave {
 				System.out.println("update cable link type " + linktypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.CABLETYPES
 							set
 								NAME = :(linktypes[i].name),
@@ -547,14 +534,14 @@ final class NetDirectorydbInterfaceSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new cable type " + linktypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.CABLETYPES(
 								ID,
 								NAME,
@@ -574,7 +561,7 @@ final class NetDirectorydbInterfaceSave {
 								 :(linktypes[i].image_id),
 								 SYSDATE )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -584,20 +571,15 @@ final class NetDirectorydbInterfaceSave {
 				}
 			}
 
-			saveCableTypeThreads(linktypes[i].id, linktypes[i].cable_threads);
-
-			saveCharacteristicLinks(
-					"CABLETYPECHARACTERISTICLINKS",
-					"CABLE_TYPE_ID",
-					linktypes[i].id,
-					linktypes[i].characteristics);
+			saveCableTypeThreads(conn, linktypes[i].id, linktypes[i].cable_threads);
+			saveCharacteristicLinks(conn, "CABLETYPECHARACTERISTICLINKS", "CABLE_TYPE_ID", linktypes[i].id, linktypes[i].characteristics);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int saveEquipmentTypes(
-			EquipmentType_Transferable[] equipmenttypes)
-	{
+	static int saveEquipmentTypes(final Connection conn, EquipmentType_Transferable[] equipmenttypes) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		int i;
 		int j;
 		int len;
@@ -610,7 +592,7 @@ final class NetDirectorydbInterfaceSave {
 			Timestamp ts = new Timestamp(equipmenttypes[i].modified);
 			try
 			{
-				#sql {
+				#sql [connCtx] {
 					select count(*) into :count from AMFICOM.EQUIPMENTTYPES
 						where ID = :(equipmenttypes[i].id)
 				};
@@ -621,7 +603,7 @@ final class NetDirectorydbInterfaceSave {
 				System.out.println("update equipment type " + equipmenttypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						update AMFICOM.EQUIPMENTTYPES
 							set
 								NAME = :(equipmenttypes[i].name),
@@ -641,14 +623,14 @@ final class NetDirectorydbInterfaceSave {
 					e.printStackTrace();
 					return Constants.ERROR_UPDATING;
 				}
-				#sql { commit };
+				conn.commit();
 			}
 			catch(SQLException e)
 			{
 				System.out.println("insert new equipment type " + equipmenttypes[i].id);
 				try
 				{
-					#sql {
+					#sql [connCtx] {
 						insert into AMFICOM.EQUIPMENTTYPES(
 								ID,
 								NAME,
@@ -670,7 +652,7 @@ final class NetDirectorydbInterfaceSave {
 								 :(equipmenttypes[i].image_id),
 								 SYSDATE )
 					};
-					#sql { commit };
+					conn.commit();
 				}
 				catch(SQLException ex)
 				{
@@ -679,11 +661,7 @@ final class NetDirectorydbInterfaceSave {
 					return Constants.ERROR_SAVING;
 				}
 			}
-			saveCharacteristicLinks(
-					"EQUIPMENTTYPECHARACTERISTICLIN",
-					"EQUIPMENT_TYPE_ID",
-					equipmenttypes[i].id,
-					equipmenttypes[i].characteristics);
+			saveCharacteristicLinks(conn, "EQUIPMENTTYPECHARACTERISTICLIN", "EQUIPMENT_TYPE_ID", equipmenttypes[i].id, equipmenttypes[i].characteristics);
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
