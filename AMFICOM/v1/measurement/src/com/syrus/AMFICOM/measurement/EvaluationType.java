@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.44 2005/01/28 07:40:36 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.45 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/01/28 07:40:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -108,6 +108,7 @@ public class EvaluationType extends ActionType {
 	
 	protected EvaluationType(Identifier id,
 							 Identifier creatorId,
+							 long version,
 							 String codename,
 							 String description,
 							 List inParameterTypes,
@@ -115,12 +116,13 @@ public class EvaluationType extends ActionType {
 							 List etalonParameterTypes,
 							 List outParameterTypes) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					codename,
-					description);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				codename,
+				description);
 
 		this.inParameterTypes = new ArrayList();
 		this.setInParameterTypes0(inParameterTypes);
@@ -159,14 +161,17 @@ public class EvaluationType extends ActionType {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new EvaluationType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
+			EvaluationType evaluationType = new EvaluationType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
 										creatorId,
+										0L,
 										codename,
 										description,
 										inParameterTypes,
 										thresholdParameterTypes,
 										etalonParameterTypes,
 										outParameterTypes);
+			evaluationType.changed = true;
+			return evaluationType;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("EvaluationType.createInstance | cannot generate identifier ", e);
@@ -239,12 +244,14 @@ public class EvaluationType extends ActionType {
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
+											  long version,
 											  String codename,
 											  String description) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
 			modifierId,
+			version,
 			codename,
 			description);
 	}
@@ -276,7 +283,7 @@ public class EvaluationType extends ActionType {
 	 */
 	public void setInParameterTypes(List inParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
-		super.currentVersion = super.getNextVersion();		
+		super.changed = true;		
 	}
 
 	protected void setThresholdParameterTypes0(List thresholdParameterTypes) {
@@ -296,7 +303,7 @@ public class EvaluationType extends ActionType {
 	 */
 	public void setThresholdParameterTypes(List thresholdParameterTypes) {
 		this.setThresholdParameterTypes0(thresholdParameterTypes);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	protected void setEtalonParameterTypes0(List etalonParameterTypes) {
@@ -316,7 +323,7 @@ public class EvaluationType extends ActionType {
 	 */
 	public void setEtalonParameterTypes(List etalonParameterTypes) {
 		this.setEtalonParameterTypes0(etalonParameterTypes);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	protected void setOutParameterTypes0(List outParameterTypes) {
@@ -336,7 +343,7 @@ public class EvaluationType extends ActionType {
 	 */
 	public void setOutParameterTypes(List outParameterTypes) {
 		this.setOutParameterTypes0(outParameterTypes);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public List getDependencies() {

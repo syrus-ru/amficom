@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.63 2005/02/08 20:06:08 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.64 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/02/08 20:06:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.64 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -104,6 +104,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		MeasurementType measurementType = (storableObject == null) ? 
 				new MeasurementType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 														null,
+														0L,
 														null,
 														null,
 														null,
@@ -114,6 +115,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 									  DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 									  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 									  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+									  resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 									  DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 									  DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return measurementType;
@@ -588,7 +590,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		MeasurementType measurementType = this.fromStorableObject(storableObject);
+//		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, false);

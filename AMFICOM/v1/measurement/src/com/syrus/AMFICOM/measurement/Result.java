@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.40 2005/02/03 15:28:07 arseniy Exp $
+ * $Id: Result.java,v 1.41 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/02/03 15:28:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -112,20 +112,20 @@ public class Result extends StorableObject {
 	}
 
 	protected Result(Identifier id,
-								 Identifier creatorId,
-								 Action action,
-								 int sort,
-								 SetParameter[] parameters) {
+					 Identifier creatorId,
+					 long version,
+					 Action action,
+					 int sort,
+					 SetParameter[] parameters) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
-				creatorId);
+				creatorId,
+				version);
 		this.action = action;
 		this.sort = sort;
 		this.parameters = parameters;
-
-		super.currentVersion = super.getNextVersion();
 
 		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
 	}
@@ -163,7 +163,7 @@ public class Result extends StorableObject {
 	
 	public void setAction(Action action) {
 		this.action = action;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public ResultSort getSort() {
@@ -172,7 +172,7 @@ public class Result extends StorableObject {
 	
 	public void setSort(ResultSort sort) {
 		this.sort = sort.value();
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public SetParameter[] getParameters() {
@@ -183,12 +183,14 @@ public class Result extends StorableObject {
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
+											  long version,
 											  Action action,
 											  int sort) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
-			modifierId);
+			modifierId,
+			version);
 		this.action = action;
 		this.sort = sort;
 	}
@@ -202,11 +204,14 @@ public class Result extends StorableObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE),
+			Result result = new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE),
 				creatorId,
+				0L,
 				action,
 				sort.value(),
 				parameters);
+			result.changed = true;
+			return result;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Result.createInstance | cannot generate identifier ", e);
@@ -219,7 +224,7 @@ public class Result extends StorableObject {
 
 	public void setParameters(SetParameter[] parameters) {
 		this.setParameters0(parameters);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public List getDependencies() {

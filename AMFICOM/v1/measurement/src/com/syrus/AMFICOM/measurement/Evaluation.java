@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.41 2005/01/27 11:54:50 bob Exp $
+ * $Id: Evaluation.java,v 1.42 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/01/27 11:54:50 $
+ * @version $Revision: 1.42 $, $Date: 2005/02/10 14:54:43 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -75,18 +75,20 @@ public class Evaluation extends Action {
 
 	protected Evaluation(Identifier id,
 						 Identifier creatorId,
+						 long version,
 						 EvaluationType type,
 						 Identifier monitoredElementId,
 						 Measurement measurement,
 						 Set thresholdSet) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					type,
-					monitoredElementId,
-					measurement);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				type,
+				monitoredElementId,
+				measurement);
 
 		this.thresholdSet = thresholdSet;
 
@@ -121,7 +123,7 @@ public class Evaluation extends Action {
 	
 	public void setMeasurement(Measurement measurement) {
 		super.parentAction = measurement;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public Set getThresholdSet() {
@@ -130,13 +132,14 @@ public class Evaluation extends Action {
 	
 	public void setThresholdSet(Set thresholdSet) {
 		this.thresholdSet = thresholdSet;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
+											  long version,
 											  EvaluationType type,
 											  Identifier monitoredElementId,
 											  Measurement measurement,
@@ -145,6 +148,7 @@ public class Evaluation extends Action {
 			modified,
 			creatorId,
 			modifierId,
+			version,
 			type,
 			monitoredElementId,
 			measurement);
@@ -170,12 +174,15 @@ public class Evaluation extends Action {
 			throw new IllegalArgumentException("Argument is 'null'");		
 
 		try {
-			return new Evaluation(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_ENTITY_CODE),
+			Evaluation evaluation = new Evaluation(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_ENTITY_CODE),
 				creatorId,
+				0L,
 				type,
 				monitoredElementId,
 				measurement,
 				thresholdSet);
+			evaluation.changed = true;
+			return evaluation;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Evaluation.createInstance | cannot generate identifier ", e);

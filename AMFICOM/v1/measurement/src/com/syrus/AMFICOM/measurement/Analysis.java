@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.41 2005/01/27 11:54:50 bob Exp $
+ * $Id: Analysis.java,v 1.42 2005/02/10 14:54:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/01/27 11:54:50 $
+ * @version $Revision: 1.42 $, $Date: 2005/02/10 14:54:42 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -75,6 +75,7 @@ public class Analysis extends Action {
 
 	protected Analysis(Identifier id,
 					   Identifier creatorId,
+					   long version,
 					   AnalysisType type,
 					   Identifier monitoredElementId,
 					   Measurement measurement,
@@ -84,6 +85,7 @@ public class Analysis extends Action {
 					new Date(System.currentTimeMillis()),
 					creatorId,
 					creatorId,
+					version,
 					type,
 					monitoredElementId,
 					measurement);
@@ -122,12 +124,12 @@ public class Analysis extends Action {
 	
 	public void setMeasurement(Measurement measurement) {
 		super.parentAction = measurement;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public void setCriteriaSet(Set criteriaSet) {
 		this.criteriaSet = criteriaSet;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public Set getCriteriaSet() {
@@ -135,20 +137,22 @@ public class Analysis extends Action {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																	Date modified,
-																	Identifier creatorId,
-																	Identifier modifierId,
-																	AnalysisType type,
-																	Identifier monitoredElementId,
-																	Measurement measurement,
-																	Set criteriaSet) {
+												Date modified,
+												Identifier creatorId,
+												Identifier modifierId,
+												long version,
+												AnalysisType type,
+												Identifier monitoredElementId,
+												Measurement measurement,
+												Set criteriaSet) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												type,
-												monitoredElementId,
-												measurement);
+							modified,
+							creatorId,
+							modifierId,
+							version,
+							type,
+							monitoredElementId,
+							measurement);
 		this.criteriaSet = criteriaSet;
 	}
 
@@ -171,12 +175,15 @@ public class Analysis extends Action {
 			throw new IllegalArgumentException("Argument is 'null'");		
 
 		try {
-			return new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_ENTITY_CODE),
+			Analysis analysis = new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_ENTITY_CODE),
 				creatorId,
+				0L,
 				type,
 				monitoredElementId,
 				measurement,
 				criteriaSet);
+			analysis.changed = true;
+			return analysis;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Analysis.createInstance | cannot generate identifier ", e);

@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.77 2005/02/08 19:43:26 arseniy Exp $
+ * $Id: Test.java,v 1.78 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/02/08 19:43:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.78 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -89,16 +89,16 @@ public class Test extends StorableObject {
 
 	public Measurement createMeasurement(Identifier measurementCreatorId, Date startTime) throws CreateObjectException {
 			Measurement measurement = Measurement.createInstance(measurementCreatorId,
-																								this.measurementType,
-																								this.monitoredElement.getId(),
-																								"created by Test:'"
-																									+ this.getDescription()
-																									+ "' at "
-																									+ DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
-																								this.mainMeasurementSetup,
-																								startTime,
-																								this.monitoredElement.getLocalAddress(),
-																								this.id);
+																this.measurementType,
+																this.monitoredElement.getId(),
+																"created by Test:'"
+																	+ this.getDescription()
+																	+ "' at "
+																	+ DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
+																this.mainMeasurementSetup,
+																startTime,
+																this.monitoredElement.getLocalAddress(),
+																this.id);
 		measurement.insert();
 		super.modified = new Date(System.currentTimeMillis());
 		super.modifierId = (Identifier) measurementCreatorId.clone();
@@ -112,25 +112,26 @@ public class Test extends StorableObject {
 	}	
 	
 	protected Test(Identifier id,
-							 Identifier creatorId,
-							 Date startTime,
-							 Date endTime,
-							 TemporalPattern temporalPattern,
-							 int temporalType,
-							 MeasurementType measurementType,
-							 AnalysisType analysisType,
-							 EvaluationType evaluationType,
-							 MonitoredElement monitoredElement,
-							 int returnType,
-							 String description,
-							 List measurementSetupIds) {
-		super(id);
+					 Identifier creatorId,
+					 long version,
+					 Date startTime,
+					 Date endTime,
+					 TemporalPattern temporalPattern,
+					 int temporalType,
+					 MeasurementType measurementType,
+					 AnalysisType analysisType,
+					 EvaluationType evaluationType,
+					 MonitoredElement monitoredElement,
+					 int returnType,
+					 String description,
+					 List measurementSetupIds) {
+		super(id,
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version);
 
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
 		this.temporalType = temporalType;
 		if (startTime != null)
 				this.timeStamps = new TestTimeStamps(this.temporalType,
@@ -149,8 +150,6 @@ public class Test extends StorableObject {
 		this.status = TestStatus._TEST_STATUS_NEW;
 		
 		this.testDatabase = MeasurementDatabaseContext.testDatabase;
-
-		super.currentVersion = super.getNextVersion();
 	}
 	
 	/**
@@ -188,8 +187,9 @@ public class Test extends StorableObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			return new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_ENTITY_CODE),
+			Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_ENTITY_CODE),
 				creatorId,
+				0L,
 				startTime,
 				endTime,
 				temporalPattern,
@@ -201,6 +201,8 @@ public class Test extends StorableObject {
 				returnType.value(),
 				description,
 				measurementSetupIds);
+			test.changed = true;
+			return test;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Test.createInstance | cannot generate identifier ", e);
 		}
@@ -286,7 +288,7 @@ public class Test extends StorableObject {
 	
 	public void setEndTime(Date endTime) {
 		this.timeStamps.endTime = endTime;
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public EvaluationType getEvaluationType() {
@@ -319,7 +321,7 @@ public class Test extends StorableObject {
 	
 	public void setStartTime(Date startTime) {
 		this.timeStamps.startTime = startTime;
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public TestStatus getStatus() {
@@ -389,56 +391,56 @@ public class Test extends StorableObject {
 	 * @param analysisType The analysisTypeId to set.
 	 */
 	public void setAnalysisType(AnalysisType analysisType) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.analysisType = analysisType;
 	}
 	/**
 	 * @param description The description to set.
 	 */
 	public void setDescription(String description) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.description = description;
 	}
 	/**
 	 * @param evaluationType The evaluationTypeId to set.
 	 */
 	public void setEvaluationType(EvaluationType evaluationType) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.evaluationType = evaluationType;
 	}
 //	/**
 //	 * @param measurementSetupIds The measurementSetupIds to set.
 //	 */
 //	public void setMeasurementSetupIds(List measurementSetupIds) {
-//		this.currentVersion = super.getNextVersion();
+//		super.changed = true;
 //		this.measurementSetupIds = measurementSetupIds;
 //	}
 	/**
 	 * @param measurementType The measurementTypeId to set.
 	 */
 	public void setMeasurementType(MeasurementType measurementType) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.measurementType = measurementType;
 	}
 	/**
 	 * @param monitoredElement The monitoredElement to set.
 	 */
 	public void setMonitoredElement(MonitoredElement monitoredElement) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.monitoredElement = monitoredElement;
 	}
 	/**
 	 * @param returnType The returnType to set.
 	 */
 	public void setReturnType(TestReturnType returnType) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.returnType = returnType.value();
 	}
 	/**
 	 * @param status The status to set.
 	 */
 	public void setStatus(TestStatus status) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.status = status.value();
 	}
 
@@ -465,14 +467,14 @@ public class Test extends StorableObject {
 	 * @param temporalPattern The temporalPatternId to set.
 	 */
 	public void setTemporalPattern(TemporalPattern temporalPattern) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.timeStamps.temporalPattern = temporalPattern;
 	}
 	/**
 	 * @param temporalType The temporalType to set.
 	 */
 	public void setTemporalType(TestTemporalType temporalType) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.temporalType = temporalType.value();
 	}
 
@@ -480,6 +482,7 @@ public class Test extends StorableObject {
 										   Date modified,
 										   Identifier creatorId,
 										   Identifier modifierId,
+										   long version,
 										   int temporalType,
 										   Date startTime,
 										   Date endTime,
@@ -494,7 +497,8 @@ public class Test extends StorableObject {
 		super.setAttributes(created,
 			modified,
 			creatorId,
-			modifierId);
+			modifierId,
+			version);
 		this.temporalType = temporalType;
 		this.timeStamps = new TestTimeStamps(temporalType,
 			startTime,
@@ -523,7 +527,7 @@ public class Test extends StorableObject {
 	
 	public void setMeasurementSetupIds(List measurementSetupIds) {
 		this.setMeasurementSetupIds0(measurementSetupIds);
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public int hashCode() {

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.60 2005/02/08 20:04:49 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.61 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/02/08 20:04:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.61 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -99,12 +99,14 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws IllegalDataException, RetrieveObjectException, SQLException{
 		AnalysisType analysisType = storableObject == null ? 
-				new AnalysisType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null,null,null,null,null,null,null) : 
+				new AnalysisType(DatabaseIdentifier.getIdentifier(
+			resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null, null) : 
 					this.fromStorableObject(storableObject);
 		analysisType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 								   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 								   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 								   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+								   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 								   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 								   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return analysisType;

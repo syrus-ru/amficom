@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.20 2005/01/27 15:54:08 arseniy Exp $
+ * $Id: Action.java,v 1.21 2005/02/10 14:54:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/01/27 15:54:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/02/10 14:54:42 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -45,24 +45,24 @@ public abstract class Action extends StorableObject implements TypedObject {
 	}
 
 	Action(Identifier id,
-				  Date created,
-				  Date modified,
-				  Identifier creatorId,
-				  Identifier modifierId,
-				  ActionType type,
-				  Identifier monitoredElementId,
-				  Action parentAction) {
+			  Date created,
+			  Date modified,
+			  Identifier creatorId,
+			  Identifier modifierId,
+			  long version,
+			  ActionType type,
+			  Identifier monitoredElementId,
+			  Action parentAction) {
 		super(id,
-					created,
-					modified,
-					creatorId,
-					modifierId);
+				created,
+				modified,
+				creatorId,
+				modifierId,
+				version);
 		this.type = type;
 		this.monitoredElementId = monitoredElementId;
 
 		this.parentAction = parentAction;
-
-		super.currentVersion = super.getNextVersion();
 	}
 
 	public StorableObjectType getType() {
@@ -71,7 +71,7 @@ public abstract class Action extends StorableObject implements TypedObject {
 	
 	public void setType(ActionType type) {
 		this.type = type;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public Identifier getMonitoredElementId() {
@@ -80,20 +80,22 @@ public abstract class Action extends StorableObject implements TypedObject {
 	
 	public void setMonitoredElementId(Identifier monitoredElementId) {
 		this.monitoredElementId = monitoredElementId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
+											  long version,
 											  ActionType type,
 											  Identifier monitoredElementId,
 											  Action parentAction) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
-			modifierId);
+			modifierId,
+			version);
 		this.type = type;
 		this.monitoredElementId = monitoredElementId;
 

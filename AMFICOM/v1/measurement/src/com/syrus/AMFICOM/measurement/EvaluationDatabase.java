@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.35 2005/02/08 20:04:49 arseniy Exp $
+ * $Id: EvaluationDatabase.java,v 1.36 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/02/08 20:04:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -110,6 +110,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		Evaluation evaluation = (storableObject == null) ? 
 				new Evaluation(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
+								0L,
 								null,
 								null,
 								null,
@@ -132,6 +133,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 								 DatabaseDate.fromQuerySubString(resultSet,StorableObjectWrapper.COLUMN_MODIFIED),
 								 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 								 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+								 resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 								 evaluationType,
 								 DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_MONITORED_ELEMENT_ID),
 								 measurement,
@@ -140,7 +142,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Evaluation evaluation = this.fromStorableObject(storableObject);
+//		Evaluation evaluation = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -158,7 +160,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		Evaluation evaluation = this.fromStorableObject(storableObject);
+//		Evaluation evaluation = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, false);

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.63 2005/02/08 20:04:49 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.64 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/02/08 20:04:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.64 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -69,7 +69,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
+//		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -328,7 +328,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		MeasurementSetup measurementSetup = (storableObject == null) ? 
-				new MeasurementSetup(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, 
+				new MeasurementSetup(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, 
 									   null, null, null, 0, null) : 
 					this.fromStorableObject(storableObject);	
 		Set parameterSet;
@@ -354,6 +354,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 									   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 									   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 									   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+									   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 									   parameterSet,
 									   criteriaSet,
 									   thresholdSet,

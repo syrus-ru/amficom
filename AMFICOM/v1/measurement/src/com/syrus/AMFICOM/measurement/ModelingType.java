@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.7 2005/01/28 07:40:36 arseniy Exp $
+ * $Id: ModelingType.java,v 1.8 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/01/28 07:40:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -94,17 +94,19 @@ public class ModelingType extends ActionType {
 
 	protected ModelingType(Identifier id,
 							 Identifier creatorId,
+							 long version,
 							 String codename,
 							 String description,
 							 List inParameterTypes,
 							 List outParameterTypes) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					codename,
-					description);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				codename,
+				description);
 
 		this.inParameterTypes = new ArrayList();
 		this.setInParameterTypes0(inParameterTypes);
@@ -133,12 +135,15 @@ public class ModelingType extends ActionType {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new ModelingType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELINGTYPE_ENTITY_CODE),
+			ModelingType modelingType = new ModelingType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELINGTYPE_ENTITY_CODE),
 										creatorId,
+										0L,
 										codename,
 										description,
 										inParameterTypes,
 										outParameterTypes);
+			modelingType.changed = true;
+			return modelingType;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("ModelingType.createInstance | cannot generate identifier ", e);
@@ -191,12 +196,14 @@ public class ModelingType extends ActionType {
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
+											  long version,
 											  String codename,
 											  String description) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
 			modifierId,
+			version,
 			codename,
 			description);
 	}
@@ -224,7 +231,7 @@ public class ModelingType extends ActionType {
 	 */
 	public void setInParameterTypes(List inParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
-		super.currentVersion = super.getNextVersion();		
+		super.changed = true;		
 	}
 
 	protected void setOutParameterTypes0(List outParameterTypes) {
@@ -244,7 +251,7 @@ public class ModelingType extends ActionType {
 	 */
 	public void setOutParameterTypes(List outParameterTypes) {
 		this.setOutParameterTypes0(outParameterTypes);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public List getDependencies() {

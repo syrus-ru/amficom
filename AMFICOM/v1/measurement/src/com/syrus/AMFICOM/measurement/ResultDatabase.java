@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.61 2005/02/08 20:04:49 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.62 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/02/08 20:04:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.62 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -209,6 +209,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		Result result = (storableObject == null)
 				? new Result(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 									null,
+									0L,
 									null,
 									0,
 									null)
@@ -255,6 +256,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 							 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 							 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 							 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+							 resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 							 action,
 							 resultSort);
 
@@ -403,7 +405,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Result result = this.fromStorableObject(storableObject);
+//		Result result = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;

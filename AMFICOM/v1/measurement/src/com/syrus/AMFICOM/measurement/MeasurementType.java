@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.48 2005/01/26 15:38:40 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.49 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/01/26 15:38:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.49 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -109,18 +109,20 @@ public class MeasurementType extends ActionType {
 
 	protected MeasurementType(Identifier id,
 							  Identifier creatorId,
+							  long version,
 							  String codename,
 							  String description,
 							  List inParameterTypes,
 							  List outParameterTypes,
 							  List measurementPortTypes) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					codename,
-					description);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				codename,
+				description);
 
 		this.inParameterTypes = new ArrayList(); 
 		this.setInParameterTypes0(inParameterTypes);
@@ -153,13 +155,16 @@ public class MeasurementType extends ActionType {
 			throw new IllegalArgumentException("Argument is 'null'");		
 
 		try {
-			return new MeasurementType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE),
+			MeasurementType measurementType = new MeasurementType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE),
 										creatorId,
+										0L,
 										codename,
 										description,
 										inParameterTypes,
 										outParameterTypes,
 										measurementPortTypes);
+			measurementType.changed = true;
+			return measurementType;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("MeasurementType.createInstance | cannot generate identifier ", e);
@@ -217,12 +222,14 @@ public class MeasurementType extends ActionType {
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
+											  long version,
 											  String codename,
 											  String description) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
 			modifierId,
+			version,
 			codename,
 			description);
 	}
@@ -250,7 +257,7 @@ public class MeasurementType extends ActionType {
 	 */
 	public void setInParameterTypes(List inParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
-		super.currentVersion = super.getNextVersion();		
+		super.changed = true;		
 	}
 
 	protected void setOutParameterTypes0(List outParameterTypes) {
@@ -270,7 +277,7 @@ public class MeasurementType extends ActionType {
 	 */
 	public void setOutParameterTypes(List outParameterTypes) {
 		this.setOutParameterTypes0(outParameterTypes);
-		super.currentVersion = super.getNextVersion();		
+		super.changed = true;		
 	}
 
 	protected void setMeasurementPortTypes0(List measurementPortTypes) {
@@ -286,7 +293,7 @@ public class MeasurementType extends ActionType {
 	 */
 	public void setMeasurementPortTypes(List measurementPortTypes) {
 		this.setMeasurementPortTypes0(measurementPortTypes);
-		super.currentVersion = super.getNextVersion();		
+		super.changed = true;		
 	}
 
 	public List getMeasurementPortTypes() {

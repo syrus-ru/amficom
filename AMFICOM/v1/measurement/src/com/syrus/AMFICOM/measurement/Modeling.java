@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.24 2005/01/28 10:28:46 bob Exp $
+ * $Id: Modeling.java,v 1.25 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/01/28 10:28:46 $
+ * @version $Revision: 1.25 $, $Date: 2005/02/10 14:54:43 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -84,18 +84,20 @@ public class Modeling extends Action {
 
 	protected Modeling(Identifier id,
 					   Identifier creatorId,
-						 ModelingType type,
+					   long version,
+					   ModelingType type,
 					   Identifier monitoredElementId,
 					   String name,
 					   Set argumentSet) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					type,
-					monitoredElementId,
-					null);
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version,
+			type,
+			monitoredElementId,
+			null);
 		this.name = name;
 		this.argumentSet = argumentSet;
 
@@ -134,20 +136,22 @@ public class Modeling extends Action {
 	}
 
 	protected synchronized void setAttributes(Date created,
-																	Date modified,
-																	Identifier creatorId,
-																	Identifier modifierId,
-																	ModelingType type,
-																	Identifier monitoredElementId,
-																	String name,
-																	Set argumentSet) {
+												Date modified,
+												Identifier creatorId,
+												Identifier modifierId,
+												long version,
+												ModelingType type,
+												Identifier monitoredElementId,
+												String name,
+												Set argumentSet) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												type,
-												monitoredElementId,
-												null);
+							modified,
+							creatorId,
+							modifierId,
+							version,
+							type,
+							monitoredElementId,
+							null);
 		this.name = name;
 		this.argumentSet = argumentSet;
 	}
@@ -172,12 +176,15 @@ public class Modeling extends Action {
 			throw new IllegalArgumentException("Argument is null'");
 
 		try {
-			return new Modeling(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_ENTITY_CODE),
+			Modeling modeling = new Modeling(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_ENTITY_CODE),
 										creatorId,
+										0L,
 										type,
 										monitoredElementId,
 										name,
 										argumentSet);
+			modeling.changed = true;
+			return modeling;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Modeling.createInstance | cannot generate identifier ", e);
@@ -200,13 +207,13 @@ public class Modeling extends Action {
 	 */
 	public void setArgumentSet(Set argumentSet) {
 		this.argumentSet = argumentSet;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param name The name to set.
 	 */
 	public void setName(String name) {
 		this.name = name;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 }

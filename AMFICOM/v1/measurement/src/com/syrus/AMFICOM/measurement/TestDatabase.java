@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.64 2005/02/04 14:23:06 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.65 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -50,8 +50,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/02/04 14:23:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.65 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -177,7 +177,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Test test = (storableObject == null)?
-				new Test(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, null, TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME, 
+				new Test(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME, 
 						 null, null, null, null, 0, null, null) :
 					this.fromStorableObject(storableObject);
 		TemporalPattern temporalPattern;
@@ -205,6 +205,7 @@ public class TestDatabase extends StorableObjectDatabase {
 						   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 						   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 						   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+						   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 						   resultSet.getInt(TestWrapper.COLUMN_TEMPORAL_TYPE),
 						   DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_START_TIME),
 						   DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_END_TIME),

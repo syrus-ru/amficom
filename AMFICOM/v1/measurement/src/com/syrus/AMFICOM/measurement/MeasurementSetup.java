@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.43 2005/02/03 14:58:34 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.44 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/02/03 14:58:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -104,6 +104,7 @@ public class MeasurementSetup extends StorableObject {
 
 	protected MeasurementSetup(Identifier id,
 							   Identifier creatorId,
+							   long version,
 							   Set parameterSet,
 							   Set criteriaSet,
 							   Set thresholdSet,
@@ -112,10 +113,11 @@ public class MeasurementSetup extends StorableObject {
 							   long measurementDuration,
 							   List monitoredElementIds) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version);
 		this.parameterSet = parameterSet;
 		this.criteriaSet = criteriaSet;
 		this.thresholdSet = thresholdSet;
@@ -126,8 +128,6 @@ public class MeasurementSetup extends StorableObject {
 		this.setMonitoredElementIds0(monitoredElementIds);
 		
 		this.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
-
-		super.currentVersion = super.getNextVersion();
 	}
 	
 	/**
@@ -155,8 +155,9 @@ public class MeasurementSetup extends StorableObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 	
 		try {
-			return new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MS_ENTITY_CODE),
+			MeasurementSetup measurementSetup = new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MS_ENTITY_CODE),
 				creatorId,
+				0L,
 				parameterSet,
 				criteriaSet,
 				thresholdSet,
@@ -164,6 +165,8 @@ public class MeasurementSetup extends StorableObject {
 				description,
 				measurementDuration,
 				monitoredElementIds);
+			measurementSetup.changed = true;
+			return measurementSetup;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("MeasurementSetup.createInstance | cannot generate identifier ", e);
 		}
@@ -301,6 +304,7 @@ public class MeasurementSetup extends StorableObject {
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
+											  long version,
 											  Set parameterSet,
 											  Set criteriaSet,
 											  Set thresholdSet,
@@ -310,7 +314,8 @@ public class MeasurementSetup extends StorableObject {
 		super.setAttributes(created,
 			modified,
 			creatorId,
-			modifierId);
+			modifierId,
+			version);
 		this.parameterSet = parameterSet;
 		this.criteriaSet = criteriaSet;
 		this.thresholdSet = thresholdSet;
@@ -327,7 +332,7 @@ public class MeasurementSetup extends StorableObject {
 	
 	public void setMonitoredElementIds(List monitoredElementIds) {
 		this.setMonitoredElementIds0(monitoredElementIds);
-	    super.currentVersion = super.getNextVersion();
+	    super.changed = true;
 	}
 
 	/**
@@ -337,7 +342,7 @@ public class MeasurementSetup extends StorableObject {
 	 *            The criteriaSet to set.
 	 */
 	public void setCriteriaSet(Set criteriaSet) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.criteriaSet = criteriaSet;
 	}
 
@@ -348,7 +353,7 @@ public class MeasurementSetup extends StorableObject {
 	 *            The description to set.
 	 */
 	public void setDescription(String description) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.description = description;
 	}
 
@@ -359,7 +364,7 @@ public class MeasurementSetup extends StorableObject {
 	 *            The etalon to set.
 	 */
 	public void setEtalon(Set etalon) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.etalon = etalon;
 	}
 
@@ -370,7 +375,7 @@ public class MeasurementSetup extends StorableObject {
 	 *            The measurementDuration to set.
 	 */
 	public void setMeasurementDuration(long measurementDuration) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.measurementDuration = measurementDuration;
 	}
 
@@ -381,7 +386,7 @@ public class MeasurementSetup extends StorableObject {
 	 *            The parameterSet to set.
 	 */
 	public void setParameterSet(Set parameterSet) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.parameterSet = parameterSet;
 	}
 
@@ -392,7 +397,7 @@ public class MeasurementSetup extends StorableObject {
 	 *            The thresholdSet to set.
 	 */
 	public void setThresholdSet(Set thresholdSet) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.thresholdSet = thresholdSet;
 	}
 	

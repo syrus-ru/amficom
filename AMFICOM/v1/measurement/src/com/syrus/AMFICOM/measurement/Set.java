@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.42 2005/02/03 15:27:50 arseniy Exp $
+ * $Id: Set.java,v 1.43 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/02/03 15:27:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -94,23 +94,22 @@ public class Set extends StorableObject {
 	
 	protected Set(Identifier id,
 				  Identifier creatorId,
+				  long version,
 				  int sort,
 				  String description,
 				  SetParameter[] parameters,
 				  List monitoredElementIds) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
+		super(id,
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version);
 		this.sort = sort;
 		this.description = description;
 		this.parameters = parameters;
 		this.monitoredElementIds = new LinkedList();
 		this.setMonitoredElementIds0(monitoredElementIds);
-
-		super.currentVersion = super.getNextVersion();
 		
 		this.setDatabase = MeasurementDatabaseContext.setDatabase;
 	}
@@ -133,12 +132,15 @@ public class Set extends StorableObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			return new Set(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SET_ENTITY_CODE),
+			Set set =  new Set(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SET_ENTITY_CODE),
 				creatorId,
+				0L,
 				sort.value(),
 				description,
 				parameters,
 				monitoredElementIds);
+			set.changed = true;
+			return set;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Set.createInstance | cannot generate identifier ", e);
 		}
@@ -233,12 +235,14 @@ public class Set extends StorableObject {
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
+											  long version,
 											  int sort,
 											  String description) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
-			modifierId);
+			modifierId,
+			version);
 		this.sort = sort;
 		this.description = description;
 	}
@@ -249,7 +253,7 @@ public class Set extends StorableObject {
 
 	public void setParameters(SetParameter[] parameters) {
 		this.setParameters0(parameters);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	protected synchronized void setMonitoredElementIds0(List monitoredElementIds) {
@@ -266,14 +270,14 @@ public class Set extends StorableObject {
 	 * @param description The description to set.
 	 */
 	public void setDescription(String description) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.description = description;
 	}
 	/**
 	 * @param sort The sort to set.
 	 */
 	public void setSort(SetSort sort) {
-		this.currentVersion = super.getNextVersion();
+		super.changed = true;
 		this.sort = sort.value();
 	}
 	

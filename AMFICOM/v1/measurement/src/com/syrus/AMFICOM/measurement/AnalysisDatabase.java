@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.39 2005/02/08 20:04:49 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.40 2005/02/10 14:54:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/02/08 20:04:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/02/10 14:54:42 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -111,6 +111,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		Analysis analysis = (storableObject == null) ? 
 				new Analysis(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
+								0L,
 								null,
 								null,
 								null,
@@ -133,6 +134,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+							   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 							   analysisType,
 							   DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID),
 							   measurement,
@@ -141,7 +143,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Analysis analysis = this.fromStorableObject(storableObject);
+//		Analysis analysis = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -158,7 +160,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		Analysis analysis = this.fromStorableObject(storableObject);
+//		Analysis analysis = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, false);

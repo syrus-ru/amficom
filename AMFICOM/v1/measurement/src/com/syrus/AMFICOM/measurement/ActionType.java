@@ -1,5 +1,5 @@
 /*
- * $Id: ActionType.java,v 1.8 2004/12/27 21:00:01 arseniy Exp $
+ * $Id: ActionType.java,v 1.9 2005/02/10 14:54:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/27 21:00:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/02/10 14:54:42 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -40,6 +40,7 @@ public abstract class ActionType extends StorableObjectType {
 					  Date modified,
 					  Identifier creatorId,
 					  Identifier modifierId,
+					  long version,
 					  String codename,
 					  String description) {
 		super(id,
@@ -47,23 +48,24 @@ public abstract class ActionType extends StorableObjectType {
 			  modified,
 			  creatorId,
 			  modifierId,
+			  version,
 			  codename,
 			  description);
-
-		super.currentVersion = super.getNextVersion();
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						String codename,
-																						String description) {
+											Date modified,
+											Identifier creatorId,
+											Identifier modifierId,
+											long version,
+											String codename,
+											String description) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												codename,
-												description);
+							modified,
+							creatorId,
+							modifierId,
+							version,
+							codename,
+							description);
 	}
 }

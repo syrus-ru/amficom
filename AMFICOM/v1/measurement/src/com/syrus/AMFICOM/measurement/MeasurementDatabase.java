@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.58 2005/02/03 15:00:40 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.59 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/02/03 15:00:40 $
+ * @version $Revision: 1.59 $, $Date: 2005/02/10 14:54:43 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -139,6 +139,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		Measurement measurement = (storableObject == null) ?
 				new Measurement(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
+								0L,
 								null,
 								null,
 								null,
@@ -163,6 +164,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 											DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 											DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 											DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+											resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 											measurementType,
 											DatabaseIdentifier.getIdentifier(resultSet, MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID),
 											name,

@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.35 2005/02/08 14:51:53 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.36 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/02/08 14:51:53 $
+ * @version $Revision: 1.36 $, $Date: 2005/02/10 14:54:43 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -88,13 +88,14 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		TemporalPattern temporalPattern = (storableObject == null) ?
-				new TemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null):
+				new TemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null):
 				this.fromStorableObject(storableObject);
 		String[] cronStrings = ((CronStringArray)(((OracleResultSet)resultSet).getORAData(TemporalPatternWrapper.COLUMN_VALUE, CronStringArray.getORADataFactory()))).getArray();
 		temporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 									  DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 									  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 									  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+									  resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 									  DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 									  cronStrings);
 		return temporalPattern;

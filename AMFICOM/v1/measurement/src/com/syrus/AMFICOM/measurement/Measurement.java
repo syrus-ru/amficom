@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.48 2005/02/03 14:58:34 arseniy Exp $
+ * $Id: Measurement.java,v 1.49 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/02/03 14:58:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.49 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -91,22 +91,24 @@ public class Measurement extends Action {
 	}
 
 	protected Measurement(Identifier id,
-											Identifier creatorId,
-											MeasurementType type,
-											Identifier monitoredElementId,
-											String name,
-											MeasurementSetup setup,
-											Date startTime,
-											String localAddress,
-											Identifier testId) {
+							Identifier creatorId,
+							long version,
+							MeasurementType type,
+							Identifier monitoredElementId,
+							String name,
+							MeasurementSetup setup,
+							Date startTime,
+							String localAddress,
+							Identifier testId) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					type,
-					monitoredElementId,
-					null);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				type,
+				monitoredElementId,
+				null);
 		this.name = name;
 		this.setup = setup;
 		this.startTime = startTime;
@@ -152,7 +154,7 @@ public class Measurement extends Action {
 	
 	public void setSetup(MeasurementSetup setup) {
 		this.setup = setup;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public Date getStartTime() {
@@ -161,7 +163,7 @@ public class Measurement extends Action {
 	
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public long getDuration() {
@@ -199,6 +201,7 @@ public class Measurement extends Action {
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
+											  long version,
 											  MeasurementType type,
 											  Identifier monitoredElementId,
 											  String name,
@@ -212,6 +215,7 @@ public class Measurement extends Action {
 			modified,
 			creatorId,
 			modifierId,
+			version,
 			type,
 			monitoredElementId,
 			null);
@@ -250,8 +254,9 @@ public class Measurement extends Action {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new Measurement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE),
+			Measurement measurement = new Measurement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE),
 										creatorId,
+										0L,
 										type,
 										monitoredElementId,
 										name,
@@ -259,6 +264,8 @@ public class Measurement extends Action {
 										startTime,
 										localAddress,
 										testId);
+			measurement.changed = true;
+			return measurement;
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Measurement.createInstance | cannot generate identifier ", e);
@@ -278,7 +285,7 @@ public class Measurement extends Action {
 
 	public void setName(String name) {
 		this.name = name;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	public List getDependencies() {
@@ -292,20 +299,20 @@ public class Measurement extends Action {
 	 */
 	public void setLocalAddress(String localAddress) {
 		this.localAddress = localAddress;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param status The status to set.
 	 */
 	public void setStatus(MeasurementStatus status) {
 		this.status = status.value();
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	/**
 	 * @param testId The testId to set.
 	 */
 	public void setTestId(Identifier testId) {
 		this.testId = testId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 }

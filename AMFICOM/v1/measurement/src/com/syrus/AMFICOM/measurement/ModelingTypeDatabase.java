@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.11 2005/02/03 14:57:22 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.12 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/03 14:57:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -120,6 +120,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 		ModelingType modelingType = (storableObject == null) ?
 				new ModelingType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 												 null,
+												 0L,
 												 null,
 												 null,
 												 null,
@@ -129,6 +130,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 									 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 									 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 									 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+									 resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 									 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 									 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return modelingType;
@@ -303,7 +305,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		ModelingType modelingType = this.fromStorableObject(storableObject);
+//		ModelingType modelingType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;

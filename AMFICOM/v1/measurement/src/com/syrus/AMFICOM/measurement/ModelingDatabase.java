@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.23 2005/02/08 11:41:14 max Exp $
+ * $Id: ModelingDatabase.java,v 1.24 2005/02/10 14:54:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/02/08 11:41:14 $
- * @author $Author: max $
+ * @version $Revision: 1.24 $, $Date: 2005/02/10 14:54:43 $
+ * @author $Author: bob $
  * @module module_name
  */
 
@@ -110,7 +110,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
   protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Modeling modeling = (storableObject == null) ? 
-                new Modeling(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, null, null) : 
+                new Modeling(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null) : 
                     this.fromStorableObject(storableObject);
 		ModelingType modelingType;
 		Set argumentSet;
@@ -126,6 +126,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 													DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 													DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 													DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+													resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 													modelingType,
 													DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID),
 													DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
@@ -134,7 +135,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 	}
 
   public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-  	Modeling modeling = this.fromStorableObject(storableObject);
+//  	Modeling modeling = this.fromStorableObject(storableObject);
     switch (retrieveKind) {
 			default:
 				return null;
@@ -151,7 +152,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 	}
 
   public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		Modeling modeling = this.fromStorableObject(storableObject);
+//		Modeling modeling = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, false);
