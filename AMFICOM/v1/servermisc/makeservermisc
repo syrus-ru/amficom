@@ -40,12 +40,12 @@ JAVACOPTIONS=-d $(CLASSES) -sourcepath $(SRC) -classpath $(MYCLASSPATH)
 SQLJOPTIONS=-compiler-executable=$(JAVAC) -warn=none -codegen=oraclejdbc -ser2class -status $(CHECKSEMANTICSSTRING) -d $(CLASSES) -dir $(SRC) -classpath $(MYCLASSPATH)
 JAR=jar
 
-LIBNAME=$(LIB)\server\serveradd.jar
-LIBNAME_SRC=$(LIBSRC)\serveraddsource.jar
+LIBNAME=$(LIB)\server\servermisc.jar
+LIBNAME_SRC=$(LIBSRC)\servermiscsource.jar
 
 .PHONY:	$(LIBNAME)
 
-$(LIBNAME):	add jar
+$(LIBNAME):	clean add jar
 
 jar:
 	$(JAR) -cf $(LIBNAME) \
@@ -73,5 +73,5 @@ add:
 
 
 clean:
-	rd /s /q $(CLASSES)\com\syrus\AMFICOM\server
-	del /f /q $(LIBNAME)
+	rm -rf $(CLASSES)\com\syrus\AMFICOM\server
+	rm -f $(LIBNAME) $(LIBNAME_SRC)

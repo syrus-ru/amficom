@@ -1,1 +1,1 @@
-nmake /f makeserveradd %1
+nmake /f makeservermisc %1

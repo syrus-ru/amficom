@@ -11,7 +11,7 @@ VBJCLASSPATH=$(ORACLE_HOME)\lib\vbjorb.jar;$(ORACLE_HOME)\lib\vbjapp.jar;$(ORACL
 SQLJCLASSPATH=$(ORACLE_HOME)\sqlj\lib\runtime12.jar;$(ORACLE_HOME)\sqlj\lib\translator.jar
 JDBCCLASSPATH=$(ORACLE_HOME)\jdbc\lib\classes12.jar
 
-PROJECTCLASSPATH=$(LIB)\server\kisserver.jar;$(LIB)\server\utilserver.jar;$(LIB)\util.jar;$(LIB)\io.jar;$(LIB)\corba_portable.jar;$(LIB)\server\server.jar;$(LIB)\server\serveradd.jar;$(LIB)\server\serverprocess.jar
+PROJECTCLASSPATH=$(LIB)\server\kisserver.jar;$(LIB)\server\utilserver.jar;$(LIB)\util.jar;$(LIB)\io.jar;$(LIB)\corba_portable.jar;$(LIB)\server\server.jar;$(LIB)\server\servermisc.jar;$(LIB)\server\serverprocess.jar
 
 SERVERHOSTNAME=research
 CONNECTSTRING=shaitan
@@ -47,7 +47,7 @@ LIBNAME_SRC=$(LIBSRC)\serverloadsource.jar
 
 .PHONY:	$(LIBNAME)
 
-$(LIBNAME):	load jar
+$(LIBNAME):	clean load jar
 
 jar:
 	$(JAR) -cf $(LIBNAME) \
@@ -71,5 +71,5 @@ load:
 		$(SRC)\com\syrus\AMFICOM\server\load\LoadMessageFrame_AboutBoxPanel1.java
 
 clean:
-	rd /s /q $(CLASSES)\com\syrus\AMFICOM\server
-	del /f /q $(LIBNAME)
+	rm -rf $(CLASSES)\com\syrus\AMFICOM\server
+	rm -f $(LIBNAME) $(LIBNAME_SRC)

@@ -11,7 +11,7 @@ VBJCLASSPATH=$(ORACLE_HOME)\lib\vbjorb.jar;$(ORACLE_HOME)\lib\vbjapp.jar;$(ORACL
 SQLJCLASSPATH=$(ORACLE_HOME)\sqlj\lib\runtime12.jar;$(ORACLE_HOME)\sqlj\lib\translator.jar
 JDBCCLASSPATH=$(ORACLE_HOME)\jdbc\lib\classes12.jar
 
-PROJECTCLASSPATH=$(LIB)\server\kisserver.jar;$(LIB)\server\utilserver.jar;$(LIB)\util.jar;$(LIB)\corbaportable.jar;$(LIB)\filter.jar;$(LIB)\server\serveradd.jar
+PROJECTCLASSPATH=$(LIB)\server\kisserver.jar;$(LIB)\server\utilserver.jar;$(LIB)\util.jar;$(LIB)\corbaportable.jar;$(LIB)\filter.jar;$(LIB)\server\servermisc.jar
 
 SERVERHOSTNAME=research
 CONNECTSTRING=shaitan
@@ -47,7 +47,7 @@ LIBNAME_SRC=$(LIBSRC)\serversource.jar
 
 .PHONY:	$(LIBNAME)
 
-$(LIBNAME):	impl jar
+$(LIBNAME):	clean impl jar
 
 jar:
 	$(JAR) -cf $(LIBNAME) \
@@ -81,5 +81,5 @@ cl:
 		$(SRC)\com\syrus\AMFICOM\server\Object\ReportObjectManager.java
 
 clean:
-	rd /s /q $(CLASSES)\com\syrus\AMFICOM\server
-	del /f /q $(LIBNAME)
+	rm -rf $(CLASSES)\com\syrus\AMFICOM\server
+	rm -f $(LIBNAME) $(LIBNAME_SRC)
