@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.46 2005/02/22 14:12:56 arseniy Exp $
+ * $Id: Set.java,v 1.47 2005/02/24 12:30:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,33 +8,35 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/02/22 14:12:56 $
+ * @version $Revision: 1.47 $, $Date: 2005/02/24 12:30:31 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -56,7 +58,7 @@ public class Set extends StorableObject {
 	private int sort;
 	private String description;
 	private SetParameter[] parameters;
-	private List monitoredElementIds;
+	private Collection monitoredElementIds;
 
 	private StorableObjectDatabase setDatabase;
 	
@@ -67,7 +69,7 @@ public class Set extends StorableObject {
 	public Set(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.monitoredElementIds = new LinkedList();
+		this.monitoredElementIds = new HashSet();
 		
 		this.setDatabase = MeasurementDatabaseContext.setDatabase;
 		try {
@@ -92,7 +94,7 @@ public class Set extends StorableObject {
 			throw new CreateObjectException(ae);
 		}
 
-		this.monitoredElementIds = new ArrayList(st.monitored_element_ids.length);
+		this.monitoredElementIds = new HashSet(st.monitored_element_ids.length);
 		for (int i = 0; i < st.monitored_element_ids.length; i++)
 			this.monitoredElementIds.add(new Identifier(st.monitored_element_ids[i]));
 		
@@ -104,7 +106,7 @@ public class Set extends StorableObject {
 				  int sort,
 				  String description,
 				  SetParameter[] parameters,
-				  List monitoredElementIds) {
+				  Collection monitoredElementIds) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -114,7 +116,7 @@ public class Set extends StorableObject {
 		this.sort = sort;
 		this.description = description;
 		this.parameters = parameters;
-		this.monitoredElementIds = new LinkedList();
+		this.monitoredElementIds = new HashSet();
 		this.setMonitoredElementIds0(monitoredElementIds);
 		
 		this.setDatabase = MeasurementDatabaseContext.setDatabase;
@@ -133,7 +135,7 @@ public class Set extends StorableObject {
 									 SetSort sort,
 									 String description,
 									 SetParameter[] parameters,
-									 List monitoredElementIds) throws CreateObjectException {
+									 Collection monitoredElementIds) throws CreateObjectException {
 		if (creatorId == null || sort == null || description == null || parameters == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
@@ -225,8 +227,8 @@ public class Set extends StorableObject {
 		return this.parameters;
 	}
 
-	public List getMonitoredElementIds() {
-		return Collections.unmodifiableList(this.monitoredElementIds);
+	public Collection getMonitoredElementIds() {
+		return Collections.unmodifiableCollection(this.monitoredElementIds);
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -254,13 +256,13 @@ public class Set extends StorableObject {
 		super.changed = true;
 	}
 
-	protected synchronized void setMonitoredElementIds0(List monitoredElementIds) {
+	protected synchronized void setMonitoredElementIds0(Collection monitoredElementIds) {
 		this.monitoredElementIds.clear();
 		if (monitoredElementIds != null)
 	     	this.monitoredElementIds.addAll(monitoredElementIds);
 	}
 	
-	protected synchronized void setMonitoredElementIds(List monitoredElementIds) {
+	protected synchronized void setMonitoredElementIds(Collection monitoredElementIds) {
 		this.setMonitoredElementIds0(monitoredElementIds);
 	}
 	
@@ -329,7 +331,6 @@ public class Set extends StorableObject {
 			buffer.append(NULL);
 			buffer.append(EOSL);
 		}else{
-			Collections.sort(this.monitoredElementIds);
 			for(Iterator it=this.monitoredElementIds.iterator();it.hasNext();){
 				Identifier id1 = (Identifier)it.next();
 				buffer.append(ID_MONITORED_ELEMENTS_IDS);
