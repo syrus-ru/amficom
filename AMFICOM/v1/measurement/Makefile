@@ -70,6 +70,8 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/SetDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/Result.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ResultDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Modeling.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ModelingDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetup.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetupDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/Action.java \
