@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.17 2005/04/05 12:48:52 max Exp $
+ * $Id: MeasurementPath.java,v 1.18 2005/04/06 16:06:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,13 @@
  */
 
 package com.syrus.AMFICOM.mapview;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -26,22 +33,20 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.PathElementKind;
-
-import java.util.*;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
 
 /**
  * Элемент пути.
  * 
- * @author $Author: max $
- * @version $Revision: 1.17 $, $Date: 2005/04/05 12:48:52 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/04/06 16:06:35 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement

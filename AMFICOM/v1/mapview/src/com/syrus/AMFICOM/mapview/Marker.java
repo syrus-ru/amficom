@@ -1,5 +1,5 @@
 /**
- * $Id: Marker.java,v 1.10 2005/04/05 12:48:52 max Exp $
+ * $Id: Marker.java,v 1.11 2005/04/06 16:06:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,9 +52,9 @@ import org.omg.CORBA.portable.IDLEntity;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2005/04/05 12:48:52 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/06 16:06:35 $
  * @module mapview_v1
- * @author $Author: max $
+ * @author $Author: krupenn $
  */
 
 public class Marker extends AbstractNode
@@ -336,30 +336,31 @@ public class Marker extends AbstractNode
 
 	public SiteNode getLeft()
 	{
-		SortedSet nodes = this.cpath.getSortedNodes();
-		SortedSet leftSubNodes = nodes.headSet(this.startNode);
-		AbstractNode previous = null;
-		for (Iterator it = leftSubNodes.iterator(); it.hasNext();) {
+		List nodes = this.cpath.getSortedNodes();
+		SiteNode previous = null;
+		for (Iterator it = nodes.iterator(); it.hasNext();) {
 			AbstractNode node = (AbstractNode) it.next();
-			if (node instanceof SiteNode) {
+			if (node instanceof SiteNode)
 				previous = (SiteNode) node;
-			}			
+			if(node.equals(this.startNode))
+				break;
 		}
-		return (SiteNode) previous;
+		return previous;
 	}
 
 	public SiteNode getRight()
 	{
-		SortedSet nodes = this.cpath.getSortedNodes();
-		SortedSet rightSubNodes = nodes.tailSet(this.endNode);
-		AbstractNode node = null;
-		for (Iterator it = rightSubNodes.iterator(); it.hasNext();) {
-			node = (AbstractNode) it.next();
+		List nodes = this.cpath.getSortedNodes();
+		SiteNode found = null;
+		
+		for (ListIterator it = nodes.listIterator(nodes.size()); it.hasPrevious();) {
+			AbstractNode node = (AbstractNode) it.previous();
 			if (node instanceof SiteNode)
+				found = (SiteNode )node;
+			if(node.equals(this.endNode))
 				break;
-			node = null;
 		}
-		return (SiteNode) node;
+		return found;
 	}
 
 	public void setMeasurementPath(MeasurementPath measurementPath)

@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.11 2005/04/01 13:08:48 bob Exp $
+ * $Id: CablePath.java,v 1.12 2005/04/06 16:06:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * Элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
- * @author $Author: bob $
- * @version $Revision: 1.11 $, $Date: 2005/04/01 13:08:48 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2005/04/06 16:06:35 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
@@ -51,17 +51,17 @@ public class CablePath implements MapElement
 	/**
 	 * Идентификатор.
 	 */
-	protected Identifier id;
+	protected transient Identifier id = null;
 
 	/**
 	 * Название.
 	 */
-	protected String name;
+	protected transient String name = null;
 
 	/**
 	 * Описание.
 	 */
-	protected String description;
+	protected transient String description = null;
 
 	/**
 	 * Флаг выделения.
@@ -86,51 +86,51 @@ public class CablePath implements MapElement
 	/**
 	 * Узел карты, к которому привязан начальный узел кабеля.
 	 */
-	private AbstractNode startNode;
+	private transient AbstractNode startNode = null;
 
 	/**
 	 * Узел карты, к которому привязан конечный узел кабеля.
 	 */
-	private AbstractNode endNode;
+	private transient AbstractNode endNode = null;
 
 	/**
 	 * Сортированный список узлов, по которым проходит кабель.
 	 */
-	protected SortedSet sortedNodes = new TreeSet();
+	protected transient List sortedNodes = new LinkedList();
 	/**
 	 * Сортированный список фрагментов линий, по которым проходит кабель.
 	 */
-	protected SortedSet sortedNodeLinks = new TreeSet();
+	protected transient List sortedNodeLinks = new LinkedList();
 	/**
 	 * Флаг сортировки фрагментов.
 	 */
-	protected boolean nodeLinksSorted = false;
+	protected transient boolean nodeLinksSorted = false;
 
 	/**
 	 * Список линий, по которым проходит кабель.
 	 */
-	protected SortedSet links = new TreeSet();
+	protected transient SortedSet links = new TreeSet();
 	/**
 	 * Флаг сортировки линий.
 	 */
-	protected boolean linksSorted = false;
+	protected transient boolean linksSorted = false;
 	
 	/**
 	 * Схемный кабель.
 	 */
-	protected SchemeCableLink schemeCableLink;
+	protected transient SchemeCableLink schemeCableLink = null;
 
 	/**
 	 * Вид.
 	 */
-	protected MapView mapView;
+	protected transient MapView mapView = null;
 	
 	/**
 	 * Объект привязки кабеля к линиям.
 	 */
-	protected CablePathBinding binding;
+	protected transient CablePathBinding binding = null;
 
-	protected static final SortedSet EMPTY_SORTED_SET = new TreeSet();
+	protected static final List EMPTY_SORTED_LIST = new LinkedList();
 	
 	/**
 	 * Конструктор.
@@ -389,7 +389,7 @@ public class CablePath implements MapElement
 			DoublePoint an = link.getLocation();
 			x += an.getX();
 			y += an.getY();
-			count ++;
+			count++;
 		}
 		x /= count;
 		y /= count;
@@ -450,10 +450,10 @@ public class CablePath implements MapElement
 	 */
 	public AbstractNode getOtherNode(AbstractNode node)
 	{
-		if ( this.getEndNode().equals(node) )
-			return this.getStartNode();
-		if ( this.getStartNode().equals(node) )
-			return this.getEndNode();
+		if ( this.endNode.equals(node) )
+			return this.startNode;
+		if ( this.startNode.equals(node) )
+			return this.endNode;
 		return null;
 	}
 
@@ -604,7 +604,7 @@ public class CablePath implements MapElement
 			List origList = new LinkedList();
 			origList.addAll(this.getLinks());
 			List list = new LinkedList();
-			int count = this.getLinks().size();
+			int count = origList.size();
 			for (int i = 0; i < count; i++) 
 //			while(!smne.equals(this.getEndNode()))
 			{
@@ -718,11 +718,11 @@ public class CablePath implements MapElement
 	 * @return список отсортированных узлов, или <code>Collections.EMPTY_LIST</code>, если
 	 * узлы не отсортированы
 	 */
-	public SortedSet getSortedNodes()
+	public List getSortedNodes()
 	{
 		if(!this.nodeLinksSorted)
-			return EMPTY_SORTED_SET;
-		return Collections.unmodifiableSortedSet(this.sortedNodes);
+			return EMPTY_SORTED_LIST;
+		return Collections.unmodifiableList(this.sortedNodes);
 	}
 
 	/**
@@ -732,11 +732,11 @@ public class CablePath implements MapElement
 	 * @return список отсортированных фрагментов линий, или 
 	 * <code>Collections.EMPTY_LIST</code>, если узлы не отсортированы
 	 */
-	public SortedSet getSortedNodeLinks()
+	public List getSortedNodeLinks()
 	{
 		if(!this.nodeLinksSorted)
-			return EMPTY_SORTED_SET;
-		return Collections.unmodifiableSortedSet(this.sortedNodeLinks);
+			return EMPTY_SORTED_LIST;
+		return Collections.unmodifiableList(this.sortedNodeLinks);
 	}
 
 	/**
@@ -761,7 +761,7 @@ public class CablePath implements MapElement
 					list.addAll(link.getNodeLinks());
 					nodeList.addAll(link.getSortedNodes());
 				} else {
-					SortedSet nodeLinks = link.getNodeLinks();
+					List nodeLinks = link.getNodeLinks();
 					List nodeLinksList = new ArrayList(nodeLinks);
 					for (ListIterator listIterator = nodeLinksList.listIterator(nodeLinksList.size()); listIterator
 							.hasPrevious();) {
