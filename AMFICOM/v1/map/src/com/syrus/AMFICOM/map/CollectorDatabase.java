@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.3 2004/12/03 17:55:34 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.4 2004/12/03 19:21:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,9 +18,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
+import com.syrus.AMFICOM.configuration.Equipment;
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -42,7 +45,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/03 17:55:34 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/03 19:21:55 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -75,6 +78,8 @@ public class CollectorDatabase extends StorableObjectDatabase {
 		Collector collector = this.fromStorableObject(storableObject);
 		this.retrieveEntity(collector);
 		this.retrievePhysicalLinks(Collections.singletonList(collector));
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
+		collector.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(collector.getId(), CharacteristicSort.CHARACTERISTIC_SORT_COLLECTOR));
 	}
 	
 	private void retrievePhysicalLinks(List collectors) throws RetrieveObjectException, IllegalDataException{
@@ -614,6 +619,16 @@ public class CollectorDatabase extends StorableObjectDatabase {
 		else 
 			collectors = retrieveByIdsOneQuery(ids, conditions);
 		this.retrievePhysicalLinks(collectors);
+		
+
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
+        Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(collectors, CharacteristicSort.CHARACTERISTIC_SORT_COLLECTOR);
+        for (Iterator iter = collectors.iterator(); iter.hasNext();) {
+            Collector collector = (Collector) iter.next();
+            List characteristics = (List)characteristicMap.get(collector);
+            collector.setCharacteristics0(characteristics);
+        }
+		
 		return collectors;
 		//return retriveByIdsPreparedStatement(ids, conditions);
 	}	

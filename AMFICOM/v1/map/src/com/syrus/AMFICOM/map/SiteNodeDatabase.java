@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.2 2004/12/01 16:16:03 bob Exp $
+ * $Id: SiteNodeDatabase.java,v 1.3 2004/12/03 19:21:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,10 +10,13 @@ package com.syrus.AMFICOM.map;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -32,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/01 16:16:03 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/03 19:21:55 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -70,6 +73,9 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		SiteNode siteNode = this.fromStorableObject(storableObject);
 		this.retrieveEntity(siteNode);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
+		siteNode.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(siteNode.getId(), 
+			CharacteristicSort.CHARACTERISTIC_SORT_SITE_NODE));
 	}	
 	
 	protected String getEnityName() {		
@@ -244,9 +250,19 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 	
 
 	public List retrieveByIds(List ids, String conditions) throws IllegalDataException, RetrieveObjectException {
+		List siteNodes;
 		if ((ids == null) || (ids.isEmpty()))
-			return retrieveByIdsOneQuery(null, conditions);
-		return retrieveByIdsOneQuery(ids, conditions);	
+			siteNodes = retrieveByIdsOneQuery(null, conditions);
+		else
+			siteNodes = retrieveByIdsOneQuery(ids, conditions);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
+        Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(siteNodes, CharacteristicSort.CHARACTERISTIC_SORT_SITE_NODE);
+        for (Iterator iter = siteNodes.iterator(); iter.hasNext();) {
+            Collector collector = (Collector) iter.next();
+            List characteristics = (List)characteristicMap.get(collector);
+            collector.setCharacteristics0(characteristics);
+        }
+        return siteNodes;
 		//return retriveByIdsPreparedStatement(ids, conditions);
 	}	
 	
