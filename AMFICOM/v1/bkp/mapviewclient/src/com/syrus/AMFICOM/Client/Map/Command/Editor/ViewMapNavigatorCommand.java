@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapNavigatorCommand.java,v 1.7 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: ViewMapNavigatorCommand.java,v 1.8 2005/02/28 16:19:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import javax.swing.JDesktopPane;
 /**
  * отобразить окно привязки схем к карте 
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/28 16:19:41 $
  * @module mapviewclient_v1
  */
 public class ViewMapNavigatorCommand extends ViewNavigatorCommand
@@ -50,7 +50,7 @@ public class ViewMapNavigatorCommand extends ViewNavigatorCommand
 		if(this.schemeTreeFrame == null)
 		{
 			this.schemeTreeFrame = new MapSchemeTreeFrame();
-			MapSchemeTreePanel panel = new MapSchemeTreePanel("", this.aContext);
+			MapSchemeTreePanel panel = new MapSchemeTreePanel(this.aContext);
 
 			this.schemeTreeFrame.setTitle(this.title);
 			this.schemeTreeFrame.setClosable(true);
