@@ -256,7 +256,6 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 			this.tests.put(test.getId(), test);
 			LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_ENTITY_CODE);
 			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
-			linkedIdsCondition.setDomainId(sessionInterface.getDomainIdentifier());
 			try {
 				List measurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
 					true);

@@ -41,7 +41,6 @@ import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -104,8 +103,8 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				
 				RISDSessionInfo sessionInterface = (RISDSessionInfo) aContext.getSessionInterface();
 				LinkedIdsCondition condition = new LinkedIdsCondition(measurementType.getId(), ObjectEntities.MS_ENTITY_CODE);
-				condition.setDomainId(sessionInterface
-					.getDomainIdentifier());
+//				condition.setDomainId(sessionInterface
+//					.getDomainIdentifier());
 
 				MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				ObjectResourceTreeNode testTypeNode = new ObjectResourceTreeNode(measurementType, measurementType
@@ -125,7 +124,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 					}
 
 					LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(measurementPortTypeIds, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-					linkedIdsCondition.setDomainId(sessionInterface.getDomainIdentifier());
+//					linkedIdsCondition.setDomainId(sessionInterface.getDomainIdentifier());
 
 					List measurementTypesFormeasurementPortType = MeasurementStorableObjectPool
 							.getStorableObjectsByCondition(linkedIdsCondition, true);

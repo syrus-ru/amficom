@@ -10,8 +10,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,10 +35,10 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -335,10 +333,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		try {
 			LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(port.getId(),
 																			ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
-			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
-			linkedIdsCondition.setDomainId(sessionInterface.getDomainIdentifier());
-
-			List characteristics = ConfigurationStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
+			List characteristics = GeneralStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
 				true);
 
 			if (this.traceLength == null)

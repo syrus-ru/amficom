@@ -51,8 +51,8 @@ import com.syrus.AMFICOM.Client.Schedule.UI.TestParametersFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestRequestFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TimeParametersFrame;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -338,7 +338,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		
 		try {
 			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
-			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(sessionInterface
+			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(sessionInterface
 					.getDomainIdentifier(), true);
 			this.statusBar.setText("domain", domain.getName());
 		} catch (DatabaseException e) {

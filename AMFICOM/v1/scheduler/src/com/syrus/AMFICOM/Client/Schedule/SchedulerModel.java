@@ -32,8 +32,9 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.RISDSurveyDataSource;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -465,7 +466,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 
 			this.allTests = MeasurementStorableObjectPool
-					.getStorableObjectsByCondition(new TemporalCondition((Domain) ConfigurationStorableObjectPool
+					.getStorableObjectsByCondition(new TemporalCondition((Domain) AdministrationStorableObjectPool
 							.getStorableObject(sessionInterface.getDomainIdentifier(), true), new Date(startTime),
 																			new Date(endTime)), true);
 
@@ -701,7 +702,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	//	}
 	public DomainCondition getDomainCondition(short entityCode) throws DatabaseException, CommunicationException {
 		RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
-		Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(sessionInterface
+		Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(sessionInterface
 				.getDomainIdentifier(), true);
 		if (this.domainCondition == null)
 			this.domainCondition = new DomainCondition(domain, entityCode);

@@ -27,7 +27,6 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -196,9 +195,6 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 						TestParametersPanel.this.analysisComboBox.removeAll();
 
 						LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition((List)null, ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
-						RISDSessionInfo sessionInterface = (RISDSessionInfo) aContext.getSessionInterface();
-						linkedIdsCondition.setDomainId(sessionInterface.getDomainIdentifier());
-
 						{
 							Set criteriaSet = ts.getCriteriaSet();
 							if (criteriaSet != null) {
@@ -463,8 +459,6 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 					}
 					linkedIdsCondition = new LinkedIdsCondition(meIdList, ObjectEntities.MS_ENTITY_CODE);
-					RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
-					linkedIdsCondition.setDomainId(sessionInterface.getDomainIdentifier());
 				}
 				List msList = MeasurementStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
 				for (Iterator it = msList.iterator(); it.hasNext();) {
