@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.27 2005/02/11 10:52:50 bob Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.28 2005/02/11 12:47:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/02/11 10:52:50 $
+ * @version $Revision: 1.28 $, $Date: 2005/02/11 12:47:59 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -139,90 +139,90 @@ public interface ConfigurationObjectLoader {
 
 	Set refresh(Set storableObjects) throws CommunicationException, DatabaseException;
 
-	void saveCableLinkType(CableLinkType cableLinkType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	void saveCableLinkType(CableLinkType cableLinkType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException;
 
-	void saveCableLinkTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveCableLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveCableThread(CableThread cableThread, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveCableThread(CableThread cableThread, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveCableThreads(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveCableThreads(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveCableThreadType(CableThreadType cableThreadType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	void saveCableThreadType(CableThreadType cableThreadType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException;
 
-	void saveCableThreadTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveCableThreadTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveEquipment(Equipment equipment, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveEquipment(Equipment equipment, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveEquipments(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveEquipments(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveEquipmentType(EquipmentType equipmentType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	void saveEquipmentType(EquipmentType equipmentType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException;
 
-	void saveEquipmentTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveEquipmentTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveKIS(KIS kis, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveKIS(KIS kis, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveKISs(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveKISs(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveLink(Link link, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveLink(Link link, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveLinks(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveLinks(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveLinkType(LinkType linkType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveLinkType(LinkType linkType, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveLinkTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveMeasurementPort(MeasurementPort measurementPort, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException;
 
-	void saveMeasurementPorts(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveMeasurementPorts(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveMeasurementPortType(MeasurementPortType measurementPortType, AccessIdentity accessIdentity, boolean force)
+	void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force)
 			throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveMeasurementPortTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveMeasurementPortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveMonitoredElement(MonitoredElement monitoredElement, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException;
 
-	void saveMonitoredElements(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveMonitoredElements(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void savePort(Port port, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void savePort(Port port, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void savePorts(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void savePorts(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void savePortType(PortType portType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void savePortType(PortType portType, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void savePortTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void savePortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveTransmissionPath(TransmissionPath transmissionPath, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException;
 
-	void saveTransmissionPaths(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveTransmissionPaths(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveTransmissionPathType(TransmissionPathType transmissionPathType, AccessIdentity accessIdentity, boolean force)
+	void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force)
 			throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveTransmissionPathTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveTransmissionPathTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
 }

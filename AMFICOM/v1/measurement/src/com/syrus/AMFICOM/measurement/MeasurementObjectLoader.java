@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.18 2005/02/11 11:04:55 bob Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.19 2005/02/11 12:48:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/02/11 11:04:55 $
+ * @version $Revision: 1.19 $, $Date: 2005/02/11 12:48:17 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -123,79 +123,79 @@ public interface MeasurementObjectLoader {
 
 	java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException, DatabaseException;
 
-	void saveAnalyses(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveAnalyses(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveAnalysis(Analysis analysis, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveAnalysis(Analysis analysis, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveAnalysisType(AnalysisType analysisType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	void saveAnalysisType(AnalysisType analysisType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException;
 
-	void saveAnalysisTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveAnalysisTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveEvaluation(Evaluation evaluation, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveEvaluation(Evaluation evaluation, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveEvaluations(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveEvaluations(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveEvaluationType(EvaluationType evaluationType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	void saveEvaluationType(EvaluationType evaluationType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException;
 
-	void saveEvaluationTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveEvaluationTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveMeasurement(Measurement measurement, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveMeasurement(Measurement measurement, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveMeasurements(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveMeasurements(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveMeasurementSetup(MeasurementSetup measurementSetup, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException;
 
-	void saveMeasurementSetups(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveMeasurementSetups(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveMeasurementType(MeasurementType measurementType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	void saveMeasurementType(MeasurementType measurementType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException;
 
-	void saveMeasurementTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveMeasurementTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveModeling(Modeling modeling, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveModeling(Modeling modeling, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveModelings(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveModelings(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveModelingType(ModelingType modelingType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	void saveModelingType(ModelingType modelingType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException;
 
-	void saveModelingTypes(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveModelingTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveResult(Result result, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveResult(Result result, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveResults(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveResults(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveSet(Set set, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveSet(Set set, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveSets(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveSets(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveTemporalPattern(TemporalPattern temporalPattern, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException;
 
-	void saveTemporalPatterns(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveTemporalPatterns(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
-	void saveTest(Test test, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveTest(Test test, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveTests(List list, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException, DatabaseException,
+	void saveTests(List list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException;
 
 }
