@@ -65,8 +65,6 @@ src\com\syrus\AMFICOM\Client\General\Event\AlarmReceivedEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\CatalogNavigateEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\ContextChangeEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\Dispatcher.java
-src\com\syrus\AMFICOM\Client\General\Event\MapEvent.java
-src\com\syrus\AMFICOM\Client\General\Event\MapNavigateEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\MyActionEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\OpenModuleEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\OperationEvent.java
@@ -148,7 +146,6 @@ src\com\syrus\AMFICOM\Client\General\UI\CalendarUI.java
 src\com\syrus\AMFICOM\Client\General\UI\ChoosableFileFilter.java
 src\com\syrus\AMFICOM\Client\General\UI\ColorComboBox.java
 src\com\syrus\AMFICOM\Client\General\UI\DateSpinner.java
-src\com\syrus\AMFICOM\Client\General\UI\DEF.java
 src\com\syrus\AMFICOM\Client\General\UI\FixedSizeEditableTableModel.java
 src\com\syrus\AMFICOM\Client\General\UI\GeneralPanel.java
 src\com\syrus\AMFICOM\Client\General\UI\GeneralTableModel.java
