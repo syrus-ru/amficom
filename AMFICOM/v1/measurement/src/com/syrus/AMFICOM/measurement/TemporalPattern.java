@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.23 2004/07/28 06:45:40 bob Exp $
+ * $Id: TemporalPattern.java,v 1.24 2004/07/28 08:21:31 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/07/28 06:45:40 $
+ * @version $Revision: 1.24 $, $Date: 2004/07/28 08:21:31 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -638,6 +638,9 @@ public class TemporalPattern extends StorableObject {
 
 	private HashMap					templates;
 	private List					times;	
+	
+	private Date					startTime;
+	private Date					endTime;
 
 	public TemporalPattern(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -813,6 +816,18 @@ public class TemporalPattern extends StorableObject {
 	public List getTimes(Date start, Date end) {
 		if (this.times == null)
 			this.times = new ArrayList();
+		if (this.startTime==null)
+			this.times.clear();
+		else if (!this.startTime.equals(start))
+			this.times.clear();
+		this.startTime = start;
+
+		if (this.endTime==null)
+			this.times.clear();
+		else if (!this.endTime.equals(end))
+			this.times.clear();
+		this.endTime = end;
+
 		if (this.times.isEmpty()){
 			//int count = 0;
 			Collection list = this.templates.values();
