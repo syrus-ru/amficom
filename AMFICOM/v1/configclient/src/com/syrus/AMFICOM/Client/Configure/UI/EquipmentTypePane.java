@@ -1,20 +1,16 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.BorderLayout;
-import javax.swing.JTabbedPane;
+import java.awt.*;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.General.UI.MessageBox;
-import com.syrus.AMFICOM.Client.General.Checker;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.Client.General.*;
+import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
 
 public class EquipmentTypePane extends PropertiesPanel
 {
@@ -64,7 +60,10 @@ public class EquipmentTypePane extends PropertiesPanel
 
 	public boolean setObjectResource(ObjectResource or)
 	{
-		this.eq = (EquipmentType)or;
+		if (or instanceof EquipmentType)
+			this.eq = (EquipmentType)or;
+		else if (or instanceof ProtoElement)
+			this.eq = (EquipmentType)Pool.get(EquipmentType.typ, ((ProtoElement)or).equipment_type_id);
 
 		gPanel.setObjectResource(eq);
 		chPanel.setObjectResource(eq);
