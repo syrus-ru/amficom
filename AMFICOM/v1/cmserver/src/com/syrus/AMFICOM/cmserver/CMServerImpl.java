@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.43 2004/10/15 10:43:54 max Exp $
+ * $Id: CMServerImpl.java,v 1.44 2004/10/15 11:00:08 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,8 @@ package com.syrus.AMFICOM.cmserver;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.swing.text.StringContent;
 
 import com.syrus.AMFICOM.configuration.LinkedIdsCondition;
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
@@ -63,6 +65,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
+import com.syrus.AMFICOM.configuration.corba.StringFieldCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -110,6 +113,7 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetDatabase;
+import com.syrus.AMFICOM.measurement.StringFieldCondition;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.Test;
@@ -136,7 +140,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/10/15 10:43:54 $
+ * @version $Revision: 1.44 $, $Date: 2004/10/15 11:00:08 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -5375,7 +5379,7 @@ public class CMServerImpl implements CMServerOperations {
                 list = MeasurementStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE), idsList, true);
 
             } else 
-                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.PARAMETERTYPE_ENTITY_CODE), true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new StringFieldCondition(stringFieldCondition_Transferable), true);
 
             ParameterType_Transferable[] transferables = new ParameterType_Transferable[list.size()];
             int i = 0;
