@@ -14,7 +14,8 @@ import com.syrus.AMFICOM.Client.Resource.Result.*;
  * i.g. ReflectometryTestPanel
  */
 public interface ParametersTest {
-	//String COMMAND_SEND_TEST = "SendTest";  
+	//String COMMAND_SEND_TEST = "SendTest";
+	String PARAMETER_ID_NAME = "testargument";
 	public TestArgumentSet getParameters();	
 	public String getPanelName();
 	public void setTest(Test test);
