@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.9 2004/10/20 13:21:10 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.10 2004/10/21 10:07:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/10/20 13:21:10 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/21 10:07:34 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -81,7 +81,7 @@ public class StringFieldCondition extends com.syrus.AMFICOM.configuration.String
 				break;
 			}
 		} else{
-			super.isConditionTrue(object);
+			condition = super.isConditionTrue(object);
 		}
 		return condition;
 	}

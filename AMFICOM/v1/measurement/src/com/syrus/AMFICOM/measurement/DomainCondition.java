@@ -1,5 +1,5 @@
 /*
- * $Id: DomainCondition.java,v 1.7 2004/10/04 06:41:07 bob Exp $
+ * $Id: DomainCondition.java,v 1.8 2004/10/21 10:07:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/10/04 06:41:07 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/21 10:07:34 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -179,7 +179,7 @@ public class DomainCondition extends com.syrus.AMFICOM.configuration.DomainCondi
 					}
 					break;
 				default:
-					super.isConditionTrue(object);
+					condition = super.isConditionTrue(object);
 					break;
 
 			}
