@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.10 2005/02/11 16:11:01 bob Exp $
+ * $Id: TypicalCondition.java,v 1.11 2005/02/24 15:14:37 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -119,7 +119,7 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.10 $, $Date: 2005/02/11 16:11:01 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/24 15:14:37 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -846,34 +846,34 @@ public class TypicalCondition implements StorableObjectCondition {
 		TypicalCondition_Transferable transferable = new TypicalCondition_Transferable();
 		switch (this.delegate.type) {
 			case TypicalSort._TYPE_NUMBER_INT:
-				transferable.value = Integer.toString(this.firstInt);
-				transferable.otherValue = Integer.toString(this.secondInt);
+				transferable.value = Integer.toString(this.delegate.firstInt);
+				transferable.otherValue = Integer.toString(this.delegate.secondInt);
 				break;
 			case TypicalSort._TYPE_NUMBER_DOUBLE:
-				transferable.value = Double.toString(this.firstDouble);
-				transferable.otherValue = Double.toString(this.secondDouble);
+				transferable.value = Double.toString(this.delegate.firstDouble);
+				transferable.otherValue = Double.toString(this.delegate.secondDouble);
 				break;
 			case TypicalSort._TYPE_NUMBER_LONG:
-				transferable.value = Long.toString(this.firstLong);
-				transferable.otherValue = Long.toString(this.secondLong);
+				transferable.value = Long.toString(this.delegate.firstLong);
+				transferable.otherValue = Long.toString(this.delegate.secondLong);
 				break;
 			case TypicalSort._TYPE_STRING:
-				transferable.value = this.value.toString();
+				transferable.value = this.delegate.value.toString();
 				transferable.otherValue = "";
 				break;
 			case TypicalSort._TYPE_DATE:
-				transferable.value = Long.toString(((Date) this.value).getTime());
-				transferable.otherValue = Long.toString(((Date) this.otherValue).getTime());
+				transferable.value = Long.toString(((Date) this.delegate.value).getTime());
+				transferable.otherValue = Long.toString(((Date) this.delegate.otherValue).getTime());
 				break;
 			default:
-				Log.errorMessage("TypicalCondition.parseCondition | unknown type code " + this.delegate.type);
+				Log.errorMessage("TypicalCondition.parseCondition | unknown type code " + this.delegate.delegate.type);
 				break;
 
 		}
-		transferable.key = this.key;
-		transferable.entity_code = this.entityCode.shortValue();
-		transferable.type = TypicalSort.from_int(this.type);
-		transferable.operation = OperationSort.from_int(this.operation);
+		transferable.key = this.delegate.key;
+		transferable.entity_code = this.delegate.entityCode.shortValue();
+		transferable.type = TypicalSort.from_int(this.delegate.type);
+		transferable.operation = OperationSort.from_int(this.delegate.operation);
 		return transferable;
 	}
 
