@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.5 2005/03/10 15:22:50 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.6 2005/03/11 12:07:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/10 15:22:50 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/11 12:07:32 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -66,6 +66,8 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 	private ViewItem			newItem;
 	private ViewItem			selectedItem;
 	private ViewItem			linkItem;
+
+	private ViewItem			preSelectedItem;
 
 	private Collection			selectedItems;
 
@@ -304,7 +306,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			int componentWidth = this.getWidth();
 			int componentHeight = this.getHeight();
 			{
-				
+
 				for (Iterator it = deepItems.iterator(); it.hasNext();) {
 					ViewItem viewItem = (ViewItem) it.next();
 					int width = viewItem.getHierarchicalWidth();
@@ -331,6 +333,9 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 			for (Iterator it = rootItems.iterator(); it.hasNext();) {
 				ViewItem viewItem = (ViewItem) it.next();
+				viewItem.separateChildrenY();
+				viewItem.separateChildrenX(w);
+
 				int minX2 = viewItem.getMinX();
 				minX = minX < minX2 ? minX : minX2;
 
@@ -339,20 +344,11 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 				int maxY2 = viewItem.getMaxY();
 				maxY = maxY > maxY2 ? maxY : maxY2;
-
-				
-				viewItem.separateChildrenY();
-				viewItem.separateChildrenX(null, w);
 			}
 
 			for (Iterator it = rootItems.iterator(); it.hasNext();) {
 				ViewItem viewItem = (ViewItem) it.next();
-				int dy1 = (componentHeight - maxY + minY) / 2;
-				System.out.println("minY:" + minY);
-				System.out.println("maxY:" + maxY);
-				System.out.println("componentHeight:" + componentHeight);
-				dy1 = (maxY - minY)/2 + minY > componentHeight/2 ? -dy1 : dy1;  
-				System.out.println(dy1);
+				int dy1 = (componentHeight - maxY - minY) / 2;
 				viewItem.move(-minX + w / 2, dy1);
 			}
 
@@ -680,6 +676,9 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 	public void mousePressed(MouseEvent e) {
 		// System.out.println("mousePressed");
 		// this.mouseClicked(e);
+		int mouseX = e.getX();
+		int mouseY = e.getY();
+		this.preSelectedItem = this.getItem(mouseX, mouseY);
 	}
 
 	public void mouseDragged(MouseEvent e) {
@@ -687,25 +686,35 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		int mouseY = e.getY();
 
 		if (this.selectedItem != null) {
-			if (!this.mouseDragging) {
-				this.dx = this.selectedItem.x - mouseX;
-				this.dy = this.selectedItem.y - mouseY;
+			if (this.preSelectedItem != null
+					&& (this.preSelectedItem.equals(this.selectedItem) || this.selectedItems
+							.contains(this.preSelectedItem))) {
+				if (!this.mouseDragging) {
+					this.dx = this.selectedItem.x - mouseX;
+					this.dy = this.selectedItem.y - mouseY;
+				}
+
+				int sDx = (mouseX + this.dx) - this.selectedItem.x;
+				int sDy = (mouseY + this.dy) - this.selectedItem.y;
+				this.selectedItem.x += sDx;
+				this.selectedItem.y += sDy;
+				if (!this.selectedItems.isEmpty()) {
+					for (Iterator it = this.selectedItems.iterator(); it.hasNext();) {
+						ViewItem item = (ViewItem) it.next();
+						if (item.equals(this.selectedItem))
+							continue;
+						item.x += sDx;
+						item.y += sDy;
+					}
+				}
+				this.mouseDragging = true;
+			} else {
+				this.selectedItem = null;
+				this.selectedItems.clear();
+				this.mouseDragging = false;
+				this.mouseMoving = false;
 			}
 
-			int sDx = (mouseX + this.dx) - this.selectedItem.x;
-			int sDy = (mouseY + this.dy) - this.selectedItem.y;
-			this.selectedItem.x += sDx;
-			this.selectedItem.y += sDy;
-			if (!this.selectedItems.isEmpty()) {
-				for (Iterator it = this.selectedItems.iterator(); it.hasNext();) {
-					ViewItem item = (ViewItem) it.next();
-					if (item.equals(this.selectedItem))
-						continue;
-					item.x += sDx;
-					item.y += sDy;
-				}
-			}
-			this.mouseDragging = true;
 			this.repaint();
 
 		} else {
@@ -813,7 +822,8 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 			this.selectedItems.add(viewItem);
 		}
+		if (!this.selectedItems.isEmpty())
+			this.selectedItem = (ViewItem) this.selectedItems.iterator().next();
 		this.repaint();
 	}
 }
-

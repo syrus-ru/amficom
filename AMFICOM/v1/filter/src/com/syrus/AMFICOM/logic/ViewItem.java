@@ -1,5 +1,5 @@
 /*
- * $Id: ViewItem.java,v 1.2 2005/03/10 15:17:48 bob Exp $
+ * $Id: ViewItem.java,v 1.3 2005/03/11 12:07:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/10 15:17:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/11 12:07:32 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -364,13 +364,12 @@ public class ViewItem extends AbstractItem implements Item, ItemListener {
 		}
 	}
 	
-	public void separateChildrenX(ViewItem rootItem, int width1) {
-		if (rootItem != null)
-			this.x = rootItem.x - width1 - rootItem.getWidth();
+	public void separateChildrenX(int width1) {			
 		if (this.children != null && !this.children.isEmpty()) {
 			for (Iterator it = this.children.iterator(); it.hasNext();) {
 				ViewItem viewItem = (ViewItem) it.next();
-				viewItem.separateChildrenX(this, width1);
+				viewItem.x = this.x - width1 - this.getWidth();
+				viewItem.separateChildrenX(width1);
 			}
 		}
 	}
