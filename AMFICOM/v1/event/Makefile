@@ -29,6 +29,8 @@ SOURCES := com/syrus/AMFICOM/event/EventDatabaseContext.java \
 	com/syrus/AMFICOM/event/EventWrapper.java \
 	com/syrus/AMFICOM/event/EventParameter.java \
 	com/syrus/AMFICOM/event/EventSource.java \
+	com/syrus/AMFICOM/event/EventSourceWrapper.java \
+	com/syrus/AMFICOM/event/EventSourceDatabase.java \
 	com/syrus/AMFICOM/event/TypicalConditionImpl.java \
 	com/syrus/AMFICOM/event/DatabaseTypicalConditionImpl.java
 
