@@ -418,6 +418,13 @@ public class PlanPanel extends JPanel implements OperationListener {
 		for (int i = 0; i < ids.length; i++) {
 			System.out.println("get test#" + ids[i]);
 			Test test = (Test) Pool.get(Test.typ, ids[i]);
+			//			DataSourceInterface dsi = aContext.getDataSourceInterface();
+			dsi.GetAnalysis(test.analysis_id);
+			dsi.GetEvaluation(test.evaluation_id);
+			test.analysis = (Analysis) Pool.get(Analysis.typ, test.analysis_id);
+			test.evalution = (Evaluation) Pool.get(Evaluation.typ,
+					test.evaluation_id);
+
 			/**
 			 * todo fix problem due to null test
 			 */
@@ -568,7 +575,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 			double sub_delta) //, double sub_sub_delta)
 	{
 		int h = getHeight() - 1;
-//		int w = getWidth();
+		//		int w = getWidth();
 
 		long _diff = diff;
 		double _delta = delta;
