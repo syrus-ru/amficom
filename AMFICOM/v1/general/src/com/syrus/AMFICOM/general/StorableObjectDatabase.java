@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.29 2004/09/20 13:01:30 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.30 2004/09/20 13:16:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/09/20 13:01:30 $
+ * @version $Revision: 1.30 $, $Date: 2004/09/20 13:16:08 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -175,6 +175,13 @@ public abstract class StorableObjectDatabase {
 				String mesg = this.getEnityName() + "Database.insertEntity | Cannot insert "
 						+ this.getEnityName() + " '" + storableObjectIdStr + "' -- "
 						+ sqle.getMessage();
+				try {
+					connection.rollback();
+				}
+				catch (SQLException sqle2) {
+					Log.errorMessage("Exception in rolling back");
+					Log.errorException(sqle2);
+				}
 				throw new CreateObjectException(mesg, sqle);
 			} finally {
 				try {
@@ -187,6 +194,7 @@ public abstract class StorableObjectDatabase {
 					DatabaseConnection.closeConnection(connection);
 				}
 			}
+			
 		} catch(UpdateObjectException uoe){
 			throw new CreateObjectException(uoe);
 		}
@@ -388,9 +396,15 @@ public abstract class StorableObjectDatabase {
 						+ getEnityName() + " '" + atIdStr + "' -- " + roe.getMessage();
 				throw new UpdateObjectException(mesg, roe);
 			}
-		} catch (SQLException sqle) {
+		} catch (SQLException sqle) {			
 			String mesg = getEnityName() + "Database.checkAndUpdateEntity | Cannot update " + getEnityName() + " '"
 					+ atIdStr + "' -- " + sqle.getMessage();
+			try {
+				connection.rollback();
+			} catch (SQLException sqle2) {
+				Log.errorMessage("Exception in rolling back");
+				Log.errorException(sqle2);
+			}
 			throw new UpdateObjectException(mesg, sqle);
 		} finally {
 			try {				
@@ -399,10 +413,11 @@ public abstract class StorableObjectDatabase {
 				if (resultSet != null)
 					resultSet.close();
 				statement = null;
-				resultSet = null;
-				DatabaseConnection.closeConnection(connection);
+				resultSet = null;				
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally {
+				DatabaseConnection.closeConnection(connection);
 			}
 		}
 	}
