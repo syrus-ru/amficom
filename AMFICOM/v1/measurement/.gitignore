@@ -1,4 +1,5 @@
 classes
+test
 *.deploy
 *.jar
 *.jpr
@@ -9,3 +10,6 @@ classes
 .corba
 .ora
 .mach
+.classpath
+.project
+.settings
