@@ -84,7 +84,7 @@ server_misc_v1	AMFICOM/v1/servermisc
 #M	load_v1		Initial data server load
 load_v1		AMFICOM/v1/load
 #M	conn_jdbc_v1	Client-side JDBC connection stub
-conn_jdbc_v1	AMFICOM/v1/conn_jdbc
+conn_jdbc_v1	AMFICOM/v1/connjdbc
 #M	importmif_v1	Patch for SpatialFX libraries which allows for TEXT spatial objects
 importmif_v1	AMFICOM/v1/importmif
 
