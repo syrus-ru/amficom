@@ -36,7 +36,8 @@ public class ObjectResourcePropertiesDialog extends JDialog
 
 		this.or = or;
 		mainPanel = panel;
-		mainPanel.setObjectResource(or);
+		if(mainPanel != null)
+			mainPanel.setObjectResource(or);
 
 		try
 		{
@@ -53,7 +54,8 @@ public class ObjectResourcePropertiesDialog extends JDialog
 	{
 		this.setResizable(false);
 		this.setSize(new Dimension(590, 300));
-		mainPanel.setPreferredSize(new Dimension(590, 300));
+		if(mainPanel != null)
+			mainPanel.setPreferredSize(new Dimension(590, 300));
 		buttonPanel.setBorder(BorderFactory.createEtchedBorder());
 		this.getContentPane().setLayout(borderLayout1);
 		buttonPanel.setLayout(flowLayout1);
@@ -92,7 +94,7 @@ public class ObjectResourcePropertiesDialog extends JDialog
 
 	void acceptButton_actionPerformed(ActionEvent e)
 	{
-		if(mainPanel.modify())
+		if(mainPanel == null || mainPanel.modify())
 		{
 			accept = true;
 			this.dispose();
