@@ -1,38 +1,57 @@
+/*
+ * $Id: arserver.idl,v 1.2 2005/01/18 07:48:33 max Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 #ifndef ARSERVER_IDL
 #define ARSERVER_IDL
 
-#include <general.idl>
-#include <general.idl>
+//#include <general.idl>
+#include <configuration.idl>
+#include <resource.idl>
 
 module com {
 	module syrus {
 		module AMFICOM {
 			module arserver {
 				module corba {
+					interface ARServer {
 /////////////////////////////////////////// Delete Resources ////////////////////////////////////////////
-					void delete(in general::corba::Identifier_Transferable id_Transferable)
-						raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-		
-					void deleteList(in general::corba::IdentifierSeq_Transferable id_Transferables)
-						raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+						void delete(in general::corba::Identifier_Transferable id_Transferable,
+								in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+							raises (general::corba::AMFICOMRemoteException);
+			
+						void deleteList(in general::corba::IdentifierSeq_Transferable id_Transferables,
+								in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+							raises (general::corba::AMFICOMRemoteException);
 /////////////////////////////////////////// Recieve Resources ////////////////////////////////////////////
-					void receiveImage(in resource::corba::ImageResource_Transferable imageResource_Transferable,
-							in boolean force)						 		   
-						raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-					
-					void receiveImages(in resource::corba::ImageResourceSeq_Transferable imageResources_Transferable,
-							in boolean force)						 		   
-						raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+						void receiveImageResource(in resource::corba::ImageResource_Transferable imageResource_Transferable,
+								in boolean force,
+								in configuration::corba::AccessIdentifier_Transferable accessIdentifier)						 		   
+							raises (general::corba::AMFICOMRemoteException);
+						
+						void receiveImageResources(in resource::corba::ImageResourceSeq_Transferable imageResources_Transferable,
+								in boolean force,
+								in configuration::corba::AccessIdentifier_Transferable accessIdentifier)						 		   
+							raises (general::corba::AMFICOMRemoteException);
 /////////////////////////////////////////// Transmit Resources ////////////////////////////////////////////
-					resource::corba::ImageResource_Transferable transmitImageResource(
-							in general::corba::Identifier_Transferable id_Transferable)
-						raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+						resource::corba::ImageResource_Transferable transmitImageResource(
+								in general::corba::Identifier_Transferable id_Transferable,
+								in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+							raises (general::corba::AMFICOMRemoteException);
+	
+						resource::corba::ImageResourceSeq_Transferable transmitImageResources(
+								in general::corba::IdentifierSeq_Transferable id_Transferables,
+								in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+							raises (general::corba::AMFICOMRemoteException);
+					};
+				};
+			};
+		};
+	};
+};
 
-					resource::corba::ImageResourceSeq_Transferable transmitImageResources(
-							in general::corba::IdentifierSeq_Transferable id_Transferables)
-						raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-				}
-			}
-		}
-	}
-}	
+#endif // ARSERVER_IDL
