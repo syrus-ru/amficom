@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.10 2004/08/06 16:07:06 arseniy Exp $
+ * $Id: SetParameter.java,v 1.11 2004/08/17 14:35:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,16 +8,18 @@
 
 package com.syrus.AMFICOM.measurement;
 
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
+import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/06 16:07:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2004/08/17 14:35:48 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -25,6 +27,8 @@ public class SetParameter implements TransferableObject, TypedObject {
 	private Identifier id;
 	private ParameterType type;
 	private byte[] value;	
+	
+	public static final String ID_TYPE = "type";
 
 	public SetParameter(Parameter_Transferable pt) {
 		this.id = new Identifier(pt.id);
@@ -71,4 +75,41 @@ public class SetParameter implements TransferableObject, TypedObject {
 	public byte[] getValue() {
 		return this.value;
 	}
+	
+	public boolean equals(Object obj) {
+		boolean equals = (obj==this);
+		if ((!equals)&&(obj instanceof SetParameter)){
+			SetParameter setParameter = (SetParameter)obj;
+			if ((this.id.equals(setParameter.id))&&
+				(this.type.equals(setParameter.type)) &&
+				HashCodeGenerator.equalsArray(this.value, setParameter.value))
+				 equals = true;
+		}
+		return equals;
+	}
+	
+	
+	public int hashCode() {
+		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
+		hashCodeGenerator.addObject(this.id);
+		hashCodeGenerator.addObject(this.type);
+		hashCodeGenerator.addByteArray(this.value);
+		int result = hashCodeGenerator.getResult();
+		hashCodeGenerator = null;
+		return result;
+
+	}	
+	
+	
+	public String toString() {
+		String str = getClass().getName() + EOSL
+					+ ID + this.id.toString() + EOSL
+					+ ID_TYPE + KEY_VALUE_SEPERATOR 
+					+ OPEN_BLOCK
+					+ this.type.toString()
+					+ CLOSE_BLOCK;				
+					
+		return str;
+	}
+	
 }

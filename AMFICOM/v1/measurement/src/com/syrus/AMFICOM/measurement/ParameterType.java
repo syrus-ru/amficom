@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.13 2004/07/27 15:52:26 arseniy Exp $
+ * $Id: ParameterType.java,v 1.14 2004/08/17 14:35:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,12 +16,14 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
+import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/07/27 15:52:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2004/08/17 14:35:48 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -29,6 +31,8 @@ public class ParameterType extends StorableObjectType {
 	private String name;
 
 	private StorableObjectDatabase parameterTypeDatabase;
+	
+	protected static final String ID_NAME = "name"+KEY_VALUE_SEPERATOR;
 
 	public ParameterType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -137,5 +141,54 @@ public class ParameterType extends StorableObjectType {
 	public void setName(String name) {
 		this.currentVersion = super.getNextVersion();
 		this.name = name;
+	}
+	
+	
+	public boolean equals(Object obj) {
+		boolean equals = (obj==this);
+		if ((!equals)&&(obj instanceof ParameterType)){
+			ParameterType type = (ParameterType)obj;
+			if ((this.id.equals(type.id))&&
+				 HashCodeGenerator.equalsDate(this.created,type.created) &&
+				 (this.creatorId.equals(type.creatorId))&&
+				 HashCodeGenerator.equalsDate(this.modified,type.modified) &&
+				 (this.modifierId.equals(type.modifierId))&&
+				 (this.codename.equals(type.codename))&&
+				 (this.description.equals(type.description))&&
+				 (this.name.equals(type.name)))
+				 equals = true;
+		}
+		return equals;
+	}
+	
+	
+	public int hashCode() {
+		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
+		hashCodeGenerator.addObject(this.id);
+		hashCodeGenerator.addObject(this.created);
+		hashCodeGenerator.addObject(this.creatorId);
+		hashCodeGenerator.addObject(this.modified);
+		hashCodeGenerator.addObject(this.modifierId);
+		hashCodeGenerator.addObject(this.codename);
+		hashCodeGenerator.addObject(this.description);
+		hashCodeGenerator.addObject(this.name);
+		int result = hashCodeGenerator.getResult();
+		hashCodeGenerator = null;
+		return result;
+
+	}
+	
+	
+	public String toString() {
+		String str = getClass().getName()+EOSL
+					 + ID+this.id + EOSL
+					 + ID_CREATED + this.created.toString()+ EOSL		
+					 + ID_CREATOR_ID + this.creatorId.toString()+ EOSL
+					 + ID_MODIFIED + this.modified.toString() + EOSL
+					 + ID_MODIFIER_ID + this.modifierId.toString() + EOSL
+					 + TypedObject.ID_CODENAME + this.codename+ EOSL
+					 + TypedObject.ID_DESCRIPTION + this.description + EOSL
+					 + ID_NAME + this.name;			
+		return str;
 	}
 }

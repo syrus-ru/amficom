@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.16 2004/08/10 19:05:19 arseniy Exp $
+ * $Id: Set.java,v 1.17 2004/08/17 14:35:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,10 +25,11 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
+import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/10 19:05:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2004/08/17 14:35:48 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -41,6 +43,10 @@ public class Set extends StorableObject {
 	private List monitoredElementIds;
 
 	private StorableObjectDatabase setDatabase;
+	
+	protected static final String ID_MONITORED_ELEMENTS_IDS = "monitoredElementId"+KEY_VALUE_SEPERATOR;
+	protected static final String ID_SORT = "sort"+KEY_VALUE_SEPERATOR;
+	protected static final String ID_PARAMETERS = "parameter"+KEY_VALUE_SEPERATOR;
 
 	public Set(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -228,4 +234,82 @@ public class Set extends StorableObject {
 		this.currentVersion = super.getNextVersion();
 		this.sort = sort;
 	}
+	
+	public boolean equals(Object obj) {
+		boolean equals = (obj==this);
+		if ((!equals)&&(obj instanceof Set)){
+			Set set = (Set)obj;
+			if ((this.id.equals(set.id))&&
+				 HashCodeGenerator.equalsDate(this.created,set.created) &&
+				 (this.creatorId.equals(set.creatorId))&&
+				 HashCodeGenerator.equalsDate(this.modified,set.modified) &&
+				 (this.modifierId.equals(set.modifierId))&&
+				 (this.monitoredElementIds.equals(set.monitoredElementIds))&&
+				 (this.description.equals(set.description))&&
+				 (this.sort==set.sort)&&
+				 (HashCodeGenerator.equalsArray(this.parameters,set.parameters)))
+				 equals = true;
+		}
+		return equals;
+	}
+	
+	
+	public int hashCode() {
+		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
+		hashCodeGenerator.addObject(this.id);
+		hashCodeGenerator.addObject(this.created);
+		hashCodeGenerator.addObject(this.creatorId);
+		hashCodeGenerator.addObject(this.modified);
+		hashCodeGenerator.addObject(this.modifierId);
+		hashCodeGenerator.addObject(this.monitoredElementIds);
+		hashCodeGenerator.addObject(this.description);
+		hashCodeGenerator.addInt(this.sort);
+		hashCodeGenerator.addObjectArray(this.parameters);
+		int result = hashCodeGenerator.getResult();
+		hashCodeGenerator = null;
+		return result;
+
+	}
+	
+	
+	public String toString() {
+		StringBuffer buffer = new StringBuffer(getClass().getName());
+		buffer.append(EOSL);
+		buffer.append(ID+this.id+EOSL
+					 + ID_CREATED + this.created.toString()+EOSL	
+					 + ID_CREATOR_ID + this.creatorId.toString()+EOSL
+					 + ID_MODIFIED + this.modified.toString()+EOSL		
+					 + ID_MODIFIER_ID + this.modifierId.toString()+EOSL);
+		if (this.monitoredElementIds==null){
+			buffer.append(ID_MONITORED_ELEMENTS_IDS);
+			buffer.append(NULL);
+			buffer.append(EOSL);
+		}else{
+			Collections.sort(this.monitoredElementIds);
+			for(Iterator it=this.monitoredElementIds.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next();
+				buffer.append(ID_MONITORED_ELEMENTS_IDS);
+				buffer.append(id.toString());
+				buffer.append(EOSL);
+			}
+		}
+		buffer.append(ID_SORT);
+		buffer.append(this.sort);
+		buffer.append(EOSL);
+		if (this.parameters==null){
+			buffer.append(ID_PARAMETERS);
+			buffer.append(NULL);
+			buffer.append(EOSL);
+		}else{
+			for(int i=0;i<this.parameters.length;i++){
+				SetParameter param = this.parameters[i];
+				buffer.append(ID_PARAMETERS);
+				buffer.append(OPEN_BLOCK);
+				buffer.append(param.toString());
+				buffer.append(CLOSE_BLOCK);			
+			}
+		}
+					 			
+		return buffer.toString();
+	}	
 }

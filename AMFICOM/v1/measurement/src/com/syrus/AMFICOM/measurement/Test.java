@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.33 2004/08/17 10:13:09 bob Exp $
+ * $Id: Test.java,v 1.34 2004/08/17 14:35:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/08/17 10:13:09 $
+ * @version $Revision: 1.34 $, $Date: 2004/08/17 14:35:48 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -573,10 +573,10 @@ public class Test extends StorableObject {
 			System.out.println(sdf.format(test.getStartTime()));
 			System.out.println(sdf.format(getStartTime()));
 			if (	(test.id.equals(this.id)) &&
-					(this.created.equals(test.created))&&
+					HashCodeGenerator.equalsDate(this.created,test.created) &&
 					(this.creatorId.equals(test.creatorId))&&
-					(this.modified.equals(test.modified))&&
-					(this.modifierId.equals(test.modifierId))&&
+					HashCodeGenerator.equalsDate(this.modified,test.modified) &&
+					(this.modifierId.equals(test.modifierId))&&					
 					( ((test.getStartTime() == null) && (getStartTime() == null) ) 
 							|| (test.getStartTime().getTime()==getStartTime().getTime()) ) &&
 					( ((test.getEndTime() == null) && (getEndTime() == null) ) 

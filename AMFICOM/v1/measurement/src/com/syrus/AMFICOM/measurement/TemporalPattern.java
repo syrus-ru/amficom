@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.28 2004/08/17 10:09:19 arseniy Exp $
+ * $Id: TemporalPattern.java,v 1.29 2004/08/17 14:35:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/08/17 10:09:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2004/08/17 14:35:48 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -968,7 +968,12 @@ public class TemporalPattern extends StorableObject {
 		boolean equals = (obj == this);
 		if ((!equals)&&(obj instanceof TemporalPattern)){
 			TemporalPattern pattern = (TemporalPattern)obj;
-			if ((pattern.getId().equals(getId()))&&
+			if ((pattern.id.equals(super.id))&&
+				HashCodeGenerator.equalsDate(this.created,pattern.created) &&
+				(this.creatorId.equals(pattern.creatorId))&&
+				HashCodeGenerator.equalsDate(this.modified,pattern.modified) &&
+				(this.modifierId.equals(pattern.modifierId))&&			
+				(this.modifierId.equals(pattern.modifierId))&&
 				(HashCodeGenerator.equalsArray(pattern.getTimeLines().toArray(),getTimeLines().toArray())))
 				equals = true;
 		}
@@ -978,7 +983,11 @@ public class TemporalPattern extends StorableObject {
 	
 	public int hashCode() {
 		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
-		hashCodeGenerator.addObject(this.getId());
+		hashCodeGenerator.addObject(this.id);
+		hashCodeGenerator.addObject(this.created);
+		hashCodeGenerator.addObject(this.creatorId);
+		hashCodeGenerator.addObject(this.modified);
+		hashCodeGenerator.addObject(this.modifierId);
 		hashCodeGenerator.addObjectArray(this.cronStrings);
 		hashCodeGenerator.addObject(this.getTimeLines());
 		int result = hashCodeGenerator.getResult();
