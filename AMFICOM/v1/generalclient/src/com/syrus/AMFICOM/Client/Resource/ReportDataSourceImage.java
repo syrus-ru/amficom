@@ -42,12 +42,7 @@ package com.syrus.AMFICOM.Client.Resource;
 
 
 import java.util.*;
-import java.util.zip.*;
-import java.io.*;
 
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.CORBA.Resource.*;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 

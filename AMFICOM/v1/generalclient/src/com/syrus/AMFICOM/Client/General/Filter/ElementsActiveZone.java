@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.General.Filter;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.Vector;
 
 import com.syrus.AMFICOM.filter.*;
 

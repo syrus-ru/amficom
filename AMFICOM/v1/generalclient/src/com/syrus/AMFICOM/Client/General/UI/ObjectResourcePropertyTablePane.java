@@ -36,22 +36,10 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertyTableEditor;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertyTableModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertyTableRenderer;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import java.awt.Dimension;
-
-import java.lang.reflect.Field;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.awt.*;
 import java.util.Vector;
-
-import java.awt.SystemColor;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 
 public class ObjectResourcePropertyTablePane extends JScrollPane
@@ -83,7 +71,7 @@ public class ObjectResourcePropertyTablePane extends JScrollPane
 	{
 		setName(LangModel.getString("labelTabbedList"));
 
-		jTable.setSelectionMode(jTable.getSelectionModel().SINGLE_SELECTION);
+		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 //		jTable.setSelectionMode(
 //				ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);

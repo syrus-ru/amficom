@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Resource.Object;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import java.util.Vector;
-import java.util.Enumeration;
 /**
  * <p>Title: </p>
  * <p>Description: </p>

@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.General.Command.Admin;
 
 import java.awt.*;
 import javax.swing.*;
-import java.util.Vector;
 
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;

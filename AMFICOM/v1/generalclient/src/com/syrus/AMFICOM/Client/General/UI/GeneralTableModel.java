@@ -72,14 +72,10 @@
 
 package com.syrus.AMFICOM.Client.General.UI;
 
-import java.awt.*;
 import java.sql.*;
-import java.awt.event.*;
 import java.util.*;
 
 /** Use the following import statements with SWING version 1.1**/
-import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.table.*;
 
 public class GeneralTableModel extends AbstractTableModel

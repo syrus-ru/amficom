@@ -45,7 +45,6 @@ import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import java.awt.Component;
 
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
 
 public class ObjectResourceModel extends Object

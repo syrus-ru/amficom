@@ -4,7 +4,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import oracle.jdeveloper.layout.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;

@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Filter;
 
 import java.awt.*;
-import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 
 import com.syrus.AMFICOM.filter.*;
@@ -26,9 +25,9 @@ public class LogicSchemeElement extends LogicSchemeElementBase
 		else
 			g.setColor(Color.black);
 
-		g.drawRect(this.x, this.y, this.width, this.height);
+		g.drawRect(this.x, this.y, width, height);
 		g.setColor(Color.pink);
-		g.fillRect(this.x + 1, this.y + 1, this.width - 1, this.height - 1);
+		g.fillRect(this.x + 1, this.y + 1, width - 1, height - 1);
 
 		g.setColor(Color.black);
 		int titleX = this.x + 15;

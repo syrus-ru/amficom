@@ -41,12 +41,9 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
-import java.text.SimpleDateFormat;
 
-import java.util.Date;
 
-public class GeneralPanel
-		extends PropertiesPanel
+public class GeneralPanel extends PropertiesPanel
 {
 	XYLayout xYLayout1 = new XYLayout();
 

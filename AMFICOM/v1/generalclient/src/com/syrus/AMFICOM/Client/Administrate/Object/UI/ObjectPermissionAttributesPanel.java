@@ -10,7 +10,6 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
-import oracle.jdeveloper.layout.*;
 import javax.swing.border.*;
 import java.awt.event.*;
 import java.awt.GridBagLayout;

@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Filter;
 
 import java.awt.*;
-import java.util.Vector;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;

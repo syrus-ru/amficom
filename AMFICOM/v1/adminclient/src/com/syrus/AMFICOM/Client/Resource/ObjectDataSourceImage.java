@@ -41,12 +41,8 @@
 package com.syrus.AMFICOM.Client.Resource;
 
 import java.util.*;
-import java.util.zip.*;
-import java.io.*;
 
 import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptor_Transferable;
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.AMFICOM.Client.Resource.System.*;
 

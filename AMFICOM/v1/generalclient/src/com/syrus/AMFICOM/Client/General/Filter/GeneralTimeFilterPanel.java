@@ -5,7 +5,6 @@ import com.syrus.AMFICOM.Client.General.UI.DateSpinner;
 import com.syrus.AMFICOM.Client.General.UI.TimeSpinner;
 
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 
 import java.text.SimpleDateFormat;
 
@@ -15,10 +14,7 @@ import java.util.Vector;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
-import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
-import javax.swing.text.DateFormatter;
-import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.JSpinner.DateEditor;
 
 import com.syrus.AMFICOM.Client.General.Filter.FilterPanel;
@@ -132,8 +128,8 @@ public class GeneralTimeFilterPanel extends FilterPanel
 		cal2 = Calendar.getInstance();
 		cal2.setTime((Date)hiTimeSpin.getValue());
 
-		cal1.set(Calendar.HOUR_OF_DAY,cal2.get(Calendar.HOUR_OF_DAY));
-		cal1.set(Calendar.MINUTE,cal2.MINUTE);
+		cal1.set(Calendar.HOUR_OF_DAY, cal2.get(Calendar.HOUR_OF_DAY));
+		cal1.set(Calendar.MINUTE, cal2.get(Calendar.MINUTE));
 
 		String toDate = String.valueOf(cal1.getTime().getTime());
 

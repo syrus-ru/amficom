@@ -60,11 +60,11 @@ public final class FirmedTextPane extends JTextPane
 	/**
 	 * Тип привязки по вертикали
 	 */
-	public String verticalFirmTo = this.toFieldsTop;
+	public String verticalFirmTo = toFieldsTop;
 	/**
 	 * Тип привязки по горизонтали
 	 */
-	public String horizontalFirmTo = this.toFieldsLeft;
+	public String horizontalFirmTo = toFieldsLeft;
 	/**
 	 * Разница между x надписи и x объекта, к которому она привязана.
 	 */
@@ -188,11 +188,11 @@ public final class FirmedTextPane extends JTextPane
 			else
 				height = vertFirmer.rendererPanel.getHeight();
 
-			if (verticalFirmTo.equals(this.toFieldsTop))
+			if (verticalFirmTo.equals(toFieldsTop))
 				distanceY = this.getY();
-			if (verticalFirmTo.equals(this.toTop))
+			if (verticalFirmTo.equals(toTop))
 				distanceY = this.getY() - vertFirmer.y;
-			if (verticalFirmTo.equals(this.toBottom))
+			if (verticalFirmTo.equals(toBottom))
 				distanceY = this.getY() - vertFirmer.y - height;
 		}
 
@@ -203,11 +203,11 @@ public final class FirmedTextPane extends JTextPane
 			else
 				width = horizFirmer.rendererPanel.getWidth();
 
-			if (horizontalFirmTo.equals(this.toFieldsLeft))
+			if (horizontalFirmTo.equals(toFieldsLeft))
 				distanceX = this.getX();
-			if (horizontalFirmTo.equals(this.toLeft))
+			if (horizontalFirmTo.equals(toLeft))
 				distanceX = this.getX() - horizFirmer.x;
-			if (horizontalFirmTo.equals(this.toRight))
+			if (horizontalFirmTo.equals(toRight))
 				distanceX = this.getX() - horizFirmer.x - width;
 		}
 	}
@@ -243,10 +243,10 @@ public final class FirmedTextPane extends JTextPane
 				vertFirmerY = vertFirmer.rendererPanel.getY();
 			}
 
-			if (verticalFirmTo.equals(this.toTop))
+			if (verticalFirmTo.equals(toTop))
 				newY = vertFirmerY + distanceY;
 
-			if (verticalFirmTo.equals(this.toBottom))
+			if (verticalFirmTo.equals(toBottom))
 				newY = vertFirmerY + height + distanceY;
 
 			if (imagableRect != null)
@@ -276,10 +276,10 @@ public final class FirmedTextPane extends JTextPane
 				horizFirmerX = horizFirmer.rendererPanel.getX();
 			}
 
-			if (horizontalFirmTo.equals(this.toLeft))
+			if (horizontalFirmTo.equals(toLeft))
 				newX = horizFirmerX + distanceX;
 
-			if (horizontalFirmTo.equals(this.toRight))
+			if (horizontalFirmTo.equals(toRight))
 				newX = horizFirmerX + width + distanceX;
 
 			if (imagableRect != null)

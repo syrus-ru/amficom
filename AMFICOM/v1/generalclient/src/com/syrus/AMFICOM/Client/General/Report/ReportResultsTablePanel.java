@@ -1,21 +1,13 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
 import java.awt.Dimension;
-import java.awt.BorderLayout;
 
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
-import java.util.Vector;
 
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import javax.swing.table.JTableHeader;
 
 import oracle.jdeveloper.layout.XYLayout;
-import oracle.jdeveloper.layout.XYConstraints;
 
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 

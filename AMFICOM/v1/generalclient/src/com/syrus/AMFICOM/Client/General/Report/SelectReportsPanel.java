@@ -5,46 +5,26 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.Cursor;
-import java.awt.BorderLayout;
 
-import java.awt.List;
-import java.awt.Point;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 
-import java.awt.dnd.*;
-import java.awt.datatransfer.Transferable;
 
 import java.util.Vector;
 import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Date;
 
 import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
 import javax.swing.JDesktopPane;
-import javax.swing.JOptionPane;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JButton;
 import javax.swing.JScrollPane;
-import javax.swing.JToggleButton;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeCellRenderer;
-import javax.swing.tree.DefaultTreeCellRenderer;
 
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
-import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
 
 /*import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
@@ -54,17 +34,14 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.InitialAnalysisCommand;*/
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceElementLabel;
 import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilterPane;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 import com.syrus.AMFICOM.Client.General.Filter.SetRestrictionsWindow;
-import com.syrus.AMFICOM.Client.General.Filter.LogicScheme;
 
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
@@ -72,9 +49,7 @@ import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 /*import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;*/
 
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.DataSet;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 //import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
 //import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 //import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
@@ -94,8 +69,6 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
-import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
-import com.syrus.AMFICOM.Client.General.Report.ReportBuilder;
 
 /**
  * <p>Description: Панель для отображения дерева доступных отчётов</p>

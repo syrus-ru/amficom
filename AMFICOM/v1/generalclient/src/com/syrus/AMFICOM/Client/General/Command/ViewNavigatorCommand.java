@@ -7,7 +7,6 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 public class ViewNavigatorCommand extends VoidCommand
 {

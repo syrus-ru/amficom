@@ -1,8 +1,6 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
 import java.awt.Font;
-import java.awt.Color;
-import javax.swing.plaf.*;
 import javax.swing.*;
 
 import javax.swing.plaf.FontUIResource;

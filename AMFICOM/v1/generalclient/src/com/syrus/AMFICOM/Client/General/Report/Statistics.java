@@ -33,7 +33,7 @@ public class Statistics
 			String id,
 			ObjectResourceReportModel orrm)
 	{
-		this.field = orrm.getObjectsName() + " : " + orrm.getColumnNamebyID(id);
+		field = orrm.getObjectsName() + " : " + orrm.getColumnNamebyID(id);
 
 		for (int i = 0; i < objects.size(); i++)
 		{

@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
-import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 import javax.swing.JScrollPane;
@@ -10,10 +9,8 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Dimension;
 import java.util.Vector;
-import java.util.Enumeration;
 
 import com.syrus.AMFICOM.CORBA.Report.RenderingObject_Transferable;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;

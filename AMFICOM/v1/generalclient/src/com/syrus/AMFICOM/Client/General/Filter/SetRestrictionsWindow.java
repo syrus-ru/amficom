@@ -1,19 +1,14 @@
 package com.syrus.AMFICOM.Client.General.Filter;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JFrame;
-import javax.swing.JDesktopPane;
 import javax.swing.ImageIcon;
 import javax.swing.event.InternalFrameEvent;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilterPane;

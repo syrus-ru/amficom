@@ -2,12 +2,10 @@ package com.syrus.AMFICOM.Client.General.UI;
 import java.awt.Frame;
 import java.awt.Dimension;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.ImageResource;
 

@@ -44,8 +44,6 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.awt.Color;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
 
 public class StubDisplayModel implements ObjectResourceDisplayModel

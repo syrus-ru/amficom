@@ -9,9 +9,7 @@ import com.syrus.AMFICOM.Client.General.UI.Session.SessionDomainDialog;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.text.SimpleDateFormat;
 
-import java.util.Date;
 
 public class SessionDomainCommand extends VoidCommand
 {

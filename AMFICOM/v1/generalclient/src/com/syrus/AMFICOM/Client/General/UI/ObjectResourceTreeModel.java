@@ -1,11 +1,9 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import java.util.Vector;
 import java.util.Hashtable;
 import java.awt.*;
-import javax.swing.*;
 
 public abstract class ObjectResourceTreeModel
 {

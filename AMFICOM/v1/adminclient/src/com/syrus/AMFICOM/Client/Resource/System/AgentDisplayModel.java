@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.Resource.System;
 
-import java.awt.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;

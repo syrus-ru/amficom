@@ -1,16 +1,12 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
 import java.awt.*;
-import java.awt.Component;
-import java.awt.Rectangle;
 import java.awt.SystemColor;
 
-import java.io.Serializable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.TableCellRenderer;
 
 public class JLabelRenderer extends JLabel
 		implements PropertyRenderer

@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Command;
 
-import java.awt.*;
 
 import javax.swing.*;
 

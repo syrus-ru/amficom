@@ -5,13 +5,9 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.Font;
 import java.awt.Color;
-import java.awt.Canvas;
 
-import java.awt.event.ActionEvent;
 
 import javax.swing.JPanel;
-import javax.swing.Timer;
-import javax.swing.SwingUtilities;
 
 /**
  * <p>Title: </p>

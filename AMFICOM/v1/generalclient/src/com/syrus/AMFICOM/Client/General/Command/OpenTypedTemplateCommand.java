@@ -2,8 +2,6 @@ package com.syrus.AMFICOM.Client.General.Command;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.Vector;
-import javax.swing.JDesktopPane;
 
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;

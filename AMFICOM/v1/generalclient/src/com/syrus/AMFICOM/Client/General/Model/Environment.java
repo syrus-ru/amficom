@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.11 2004/07/29 13:26:14 krupenn Exp $
+ * $Id: Environment.java,v 1.12 2004/08/05 12:07:03 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,8 +58,8 @@ import javax.swing.plaf.metal.MetalTheme;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/07/29 13:26:14 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2004/08/05 12:07:03 $
+ * @author $Author: bass $
  * @see
  */
 public class Environment extends Singleton
@@ -373,7 +373,7 @@ public class Environment extends Singleton
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated Method body is empty, do not use anymore.
 	 */
 	public static void initialize()
 	{

@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Event;
 
-import java.awt.event.ActionEvent;
 
 public interface OperationListener 
 {

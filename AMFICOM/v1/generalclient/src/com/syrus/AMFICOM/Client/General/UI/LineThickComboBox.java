@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.General.UI;
 
 import java.awt.event.ItemEvent;
 
-import javax.swing.JComboBox;
 
 public class LineThickComboBox extends AComboBox
 		implements PropertyRenderer, PropertyEditor

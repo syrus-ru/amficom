@@ -1,17 +1,13 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
-import java.awt.Insets;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.GridBagConstraints;
 import java.util.Date;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JDialog;
 
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;

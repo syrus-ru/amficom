@@ -6,13 +6,9 @@ import javax.swing.JFileChooser;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Color;
-import java.awt.Rectangle;
 import java.awt.Image;
-import java.awt.image.ImageObserver;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
 import java.io.FileOutputStream;
 
 /*import com.sun.image.codec.jpeg.JPEGImageDecoder;

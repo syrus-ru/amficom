@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.Resource.Object;
 import java.util.*;
 
 
-import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 
 

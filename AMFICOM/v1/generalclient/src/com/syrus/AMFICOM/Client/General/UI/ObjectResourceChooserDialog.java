@@ -1,5 +1,5 @@
 /**
- * $Id: ObjectResourceChooserDialog.java,v 1.1 2004/07/08 10:11:38 krupenn Exp $
+ * $Id: ObjectResourceChooserDialog.java,v 1.2 2004/08/05 12:07:03 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTablePane;
 import com.syrus.AMFICOM.Client.Resource.DataSet;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -34,8 +33,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import oracle.jdeveloper.layout.VerticalFlowLayout;
-import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
 
 /**
@@ -49,9 +46,9 @@ import oracle.jdeveloper.layout.XYLayout;
  * setCanDelete(boolean bool)
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/07/08 10:11:38 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/05 12:07:03 $
  * @module
- * @author $Author: krupenn $
+ * @author $Author: bass $
  * @see
  */
 public class ObjectResourceChooserDialog extends JDialog 

@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 
 import javax.swing.BorderFactory;
@@ -16,9 +15,6 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
-
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
 
 public class ObjectResourcePropertiesDialog extends JDialog
 {

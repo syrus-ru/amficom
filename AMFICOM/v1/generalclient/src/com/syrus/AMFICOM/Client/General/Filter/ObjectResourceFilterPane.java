@@ -46,14 +46,11 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 
 import java.util.Vector;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 import javax.swing.border.EtchedBorder;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Filter.*;
 import java.awt.*;
 import java.awt.GridBagConstraints;
 import java.awt.Dimension;

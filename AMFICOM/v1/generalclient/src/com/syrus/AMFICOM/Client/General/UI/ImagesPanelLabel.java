@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
 import javax.swing.*;
-import java.util.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;

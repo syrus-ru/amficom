@@ -48,7 +48,6 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceNameSorter;
 
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 

@@ -1,17 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
-import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
-import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import javax.swing.BorderFactory;
 import javax.swing.JTable;
 import javax.swing.JFileChooser;
-import javax.swing.JEditorPane;
-import javax.swing.JDialog;
 
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import com.sun.image.codec.jpeg.JPEGCodec;
@@ -27,10 +20,6 @@ import java.awt.Rectangle;
 import java.awt.Graphics;
 import java.awt.font.FontRenderContext;
 import java.awt.event.MouseEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 
 import java.io.FileOutputStream;

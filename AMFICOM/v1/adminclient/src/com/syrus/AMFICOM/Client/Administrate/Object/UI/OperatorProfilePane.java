@@ -8,7 +8,6 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
@@ -26,7 +25,7 @@ public class OperatorProfilePane extends PropertiesPanel
 //  OperatorProfileGroupsPanel gPanel = new OperatorProfileGroupsPanel();
   TwoListsPanel groupsPanel = new TwoListsPanel("Подключенные группы", "Неподключенные группы", OperatorGroup.typ);
   OperatorProfileOtherPanel othPanel = new OperatorProfileOtherPanel();
-  OperatorProfilePasswordPanel passPanel = new OperatorProfilePasswordPanel();
+	OperatorProfilePasswordPanel passPanel = new OperatorProfilePasswordPanel();
 
 
   JTabbedPane jtp = new JTabbedPane();
@@ -65,7 +64,7 @@ public class OperatorProfilePane extends PropertiesPanel
     });
     this.add(jtp, BorderLayout.CENTER);
     jtp.add(genPanel.getName(), genPanel);
-    jtp.add(passPanel, passPanel.getName());
+		jtp.add(passPanel, passPanel.getName());
     jtp.add("Группы", groupsPanel);
     jtp.add(othPanel.getName(), othPanel);
 
@@ -109,7 +108,7 @@ public class OperatorProfilePane extends PropertiesPanel
     genPanel.setObjectResource(profile);
     groupsPanel.setObjectResource(profile);
     othPanel.setObjectResource(profile);
-    passPanel.setObjectResource(profile);
+		passPanel.setObjectResource(profile);
   }
 
 
@@ -119,7 +118,7 @@ public class OperatorProfilePane extends PropertiesPanel
     genPanel.setContext(aContext);
     groupsPanel.setContext(aContext);
     othPanel.setContext(aContext);
-    passPanel.setContext(aContext);
+		passPanel.setContext(aContext);
     this.user = (User)(Pool.get(User.typ,
                                 aContext.getSessionInterface().getUserId()));
     updater = new NewUpDater(this.aContext);
@@ -143,7 +142,7 @@ public class OperatorProfilePane extends PropertiesPanel
     groupsPanel.modify(profile.group_ids);
 
     othPanel.modify();
-    passPanel.modify();
+		passPanel.modify();
 
     if(profile.password == null || profile.password.equals(""))
     {
@@ -214,20 +213,19 @@ public class OperatorProfilePane extends PropertiesPanel
     this.showTheWindow(true);
     if(user == null)
       return false;
-//    System.out.println("Creation of the operator profile");
     DataSourceInterface dataSource = aContext.getDataSourceInterface();
 
     profile = new OperatorProfile();
     profile.id = dataSource.GetUId(OperatorProfile.typ);
     profile.login = profile.id;
     profile.name = profile.id;
-    profile.created_by  = this.user.getId();
-    profile.owner_id     = this.user.getId();
+    profile.created_by = this.user.getId();
+    profile.owner_id = this.user.getId();
     profile.modified_by = this.user.getId();
     Date d = new Date(); // Setting of the creation time
     profile.created = d.getTime();
     profile.modified= d.getTime();
-    d.setYear(d.getYear()+1);
+    d.setYear(d.getYear() + 1);
     profile.disabled= d.getTime();
 
 
@@ -329,12 +327,10 @@ public class OperatorProfilePane extends PropertiesPanel
     return true;
   }
 
-
-  void jtp_stateChanged(ChangeEvent e)
-  {
-    this.passPanel.jTextFieldLogin.setText
-    (this.genPanel.profileLogin.getText());
-  }
+	void jtp_stateChanged(ChangeEvent e)
+	{
+		this.passPanel.setLogin(this.genPanel.profileLogin.getText());
+	}
 
   void showTheWindow(boolean key)
   {

@@ -6,7 +6,6 @@ import java.awt.dnd.*;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.Resource.*;
 
 public class ObjectResourceElementLabel extends JLabel
 		implements

@@ -1,19 +1,11 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.io.MyStringTokenizer;
 
-import java.util.Vector;
 
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import javax.swing.BorderFactory;
-import javax.swing.border.Border;
-import javax.swing.plaf.ToolTipUI;
 import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.UIResource;
 import javax.swing.text.View;
 
 import javax.swing.plaf.basic.*;

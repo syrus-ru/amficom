@@ -39,9 +39,6 @@
 
 package com.syrus.AMFICOM.Client.Resource;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
 
 public class StubResource extends ObjectResource
 {

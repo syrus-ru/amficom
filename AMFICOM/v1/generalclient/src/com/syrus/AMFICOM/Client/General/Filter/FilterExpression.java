@@ -1,11 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Filter;
 
 import java.util.Vector;
-import java.util.Hashtable;
 
-import java.io.Serializable;
-import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
 import java.io.IOException;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
 

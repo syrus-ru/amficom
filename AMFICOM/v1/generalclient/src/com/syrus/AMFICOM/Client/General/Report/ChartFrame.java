@@ -27,7 +27,7 @@
  * Original Author:  David Gilbert (for Object Refinery Limited);
  * Contributor(s):   -;
  *
- * $Id: ChartFrame.java,v 1.3 2004/07/09 09:42:38 peskovsky Exp $
+ * $Id: ChartFrame.java,v 1.4 2004/08/05 12:07:03 bass Exp $
  *
  * Changes
  * -------
@@ -45,7 +45,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.Pie3DPlot;
 import org.jfree.data.DefaultPieDataset;
 import org.jfree.data.PieDataset;
-import org.jfree.ui.RefineryUtilities;
 import org.jfree.util.Rotation;
 
 import org.jfree.data.CategoryDataset;
@@ -86,27 +85,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import java.text.SimpleDateFormat;
-import java.awt.geom.Rectangle2D;
 
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 
 import org.jfree.chart.plot.PiePlot;
 
-import org.jfree.chart.ClipPath;
-import org.jfree.chart.annotations.XYTextAnnotation;
-import org.jfree.chart.axis.ColorBar;
-import org.jfree.chart.axis.LogarithmicAxis;
-import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.plot.ContourPlot;
-import org.jfree.data.ContourDataset;
-import org.jfree.data.DefaultContourDataset;
-import org.jfree.data.NonGridContourDataset;
-import org.jfree.ui.ApplicationFrame;
-import java.awt.Font;
 
 import com.syrus.AMFICOM.Client.General.Report.Statistics;
 import com.syrus.AMFICOM.Client.General.Report.ObjectResourceReportModel;
@@ -202,7 +188,7 @@ public class ChartFrame extends JInternalFrame
 			return null;
 
 		JFreeChart chart = ChartFactory.createPieChart3D(
-			stat.field, // chart title
+			Statistics.field, // chart title
 			dataset, // data
 			true, // include legend
 			true,
@@ -231,7 +217,7 @@ public class ChartFrame extends JInternalFrame
 		// create the chart...
 
 		JFreeChart chart = ChartFactory.createPieChart(
-			stat.field, // chart title
+			Statistics.field, // chart title
 			dataset, // data
 			PiePlot.PER_COLUMN,
 			true, // include legend
@@ -259,7 +245,7 @@ public class ChartFrame extends JInternalFrame
 				dataset.addValue(
 					((Integer) stats[i].timesFound.get(j)).doubleValue(),
 					(String) stats[i].fieldValues.get(j),
-					stats[i].field);
+					Statistics.field);
 		}
 
 		return dataset;
@@ -272,7 +258,7 @@ public class ChartFrame extends JInternalFrame
 
 		// create the chart...
 		JFreeChart chart = ChartFactory.createBarChart3D(
-			stat.field, // chart title
+			Statistics.field, // chart title
 			"", //LangModelReport.String("label_field"), // domain axis label
 			LangModelReport.getString("label_value"), // range axis label
 			dataset, // data
@@ -313,7 +299,7 @@ public class ChartFrame extends JInternalFrame
 
 		// create the chart...
 		JFreeChart chart = ChartFactory.createBarChart(
-			stat.field, // chart title
+			Statistics.field, // chart title
 			"", //LangModelReport.String("label_field"), // domain axis label
 			LangModelReport.getString("label_number"), // range axis label
 			dataset, // data

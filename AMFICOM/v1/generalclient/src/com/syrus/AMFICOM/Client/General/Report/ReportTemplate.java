@@ -4,11 +4,9 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
-import com.syrus.AMFICOM.Client.General.Filter.LogicScheme;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import com.syrus.AMFICOM.CORBA.Report.FirmedTextPane_Transferable;
 import com.syrus.AMFICOM.CORBA.Report.ImagePane_Transferable;
@@ -28,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.Vector;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Date;
 
@@ -180,7 +177,7 @@ public class ReportTemplate extends ObjectResource implements Serializable
 
 		System.out.println(new Date(System.currentTimeMillis()).toString() +
 											 " " + "Creating ReportTemplate...");
-		this.id = dsi.GetUId(this.typ);
+		this.id = dsi.GetUId(typ);
 
 		System.out.println(new Date(System.currentTimeMillis()).toString() +
 											 " " + "...done!");

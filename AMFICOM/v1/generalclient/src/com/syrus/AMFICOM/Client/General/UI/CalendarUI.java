@@ -214,7 +214,7 @@ public class CalendarUI extends JPanel
 		todayPanel.add(
 			new JLabel(
 				LangModel.getString("Today") + ": " +
-				new SimpleDateFormat("dd.MM.yyyy").format(mCanvas.todayCal.getTime()) +
+				new SimpleDateFormat("dd.MM.yyyy").format(MonthCanvas.todayCal.getTime()) +
 				LangModel.getString("YearPostfix")),
 			BorderLayout.SOUTH);
 
@@ -316,8 +316,8 @@ class MonthCanvas extends Container
 
 	void reinit()
 	{
-		if (this.todayCal.get(Calendar.MONTH) == cal.get(Calendar.MONTH) &&
-				this.todayCal.get(Calendar.YEAR) == cal.get(Calendar.YEAR))
+		if (todayCal.get(Calendar.MONTH) == cal.get(Calendar.MONTH)
+			&& todayCal.get(Calendar.YEAR) == cal.get(Calendar.YEAR))
 			today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		else
 			today = 0;
@@ -462,7 +462,7 @@ class MonthCanvas extends Container
 				g.setColor(Color.black);
 			g.drawString("" + day, x, y + fm.getAscent());
 
-			if (day == parent.today)
+			if (day == MonthCanvas.today)
 			{
 				g.setColor(Color.red);
 				g.drawImage(
