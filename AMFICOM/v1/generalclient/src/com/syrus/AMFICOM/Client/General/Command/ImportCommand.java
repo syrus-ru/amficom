@@ -1,5 +1,5 @@
 /*
- * $Id: ImportCommand.java,v 1.3 2005/01/14 07:34:15 krupenn Exp $
+ * $Id: ImportCommand.java,v 1.4 2005/01/14 09:33:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.JOptionPane;
  * Класс $RCSfile: ImportCommand.java,v $ 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/01/14 07:34:15 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/14 09:33:42 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -101,11 +101,13 @@ public abstract class ImportCommand extends VoidCommand
 				return null;
 			if(s[0].indexOf("@") != 0)
 				return null;
+
 			s[0] = s[0].substring(1, s[0].length());
 			o[0] = s[0];
 
-			if(s[1].length() == 0)
+			if(s[0].indexOf("[") == 0)
 			{
+				s[0] = s[0].substring(1, s[0].length());
 				List arg = new LinkedList();
 				while(true)
 				{
@@ -114,8 +116,12 @@ public abstract class ImportCommand extends VoidCommand
 						return null;
 					if(s2[0].length() == 0)
 						return null;
-					if(s2[0].indexOf("@\\") != -1)
+					if(s2[0].indexOf("@]") != -1)
+					{
+						if(s2[0].indexOf(s[0]) == -1)
+							return null;
 						break;
+					}
 					if(s2[0].indexOf("@") != -1)
 						return null;
 					arg.add(s2[0]);

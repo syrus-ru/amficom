@@ -1,5 +1,5 @@
 /*
- * $Id: ExportCommand.java,v 1.2 2005/01/13 15:13:35 krupenn Exp $
+ * $Id: ExportCommand.java,v 1.3 2005/01/14 09:33:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import java.util.Iterator;
  * Класс $RCSfile: ExportCommand.java,v $ 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/01/13 15:13:35 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/14 09:33:42 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -49,12 +49,12 @@ public abstract class ExportCommand extends VoidCommand
 		if(value instanceof List)
 		{
 			List list = (List )value;
-			pw.println ("@" + field);
+			pw.println ("@[" + field);
 			for(Iterator it = list.iterator(); it.hasNext();)
 			{
 				pw.println (it.next().toString());
 			}
-			pw.println ("@\\" + field);
+			pw.println ("@]" + field);
 		}
 		else
 			pw.println ("@" + field + " " + value);
