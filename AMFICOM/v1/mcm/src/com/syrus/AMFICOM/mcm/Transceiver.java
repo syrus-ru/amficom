@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.mcm;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -81,7 +82,36 @@ public class Transceiver extends SleepButWorkThread {
 	}
 
 	protected void abortMeasurementsForTestProcessor(TestProcessor testProcessor) {
-		// TODO Implement
+		Identifier measurementId;
+		Measurement measurement = null;
+		TestProcessor tp;
+		synchronized (this.testProcessors) {
+			for (Iterator it = this.testProcessors.keySet().iterator(); it.hasNext();) {
+				measurementId = (Identifier) it.next();
+				tp = (TestProcessor) this.testProcessors.get(measurementId);
+				if (tp.getTestId().equals(testProcessor.getTestId())) {
+					try {
+						measurement = (Measurement) MeasurementStorableObjectPool.getStorableObject(measurementId, true);
+
+						it.remove();
+						this.scheduledMeasurements.remove(measurement);
+
+						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
+						MeasurementStorableObjectPool.putStorableObject(measurement);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+				}
+			}
+		}
+
+		try {
+			MeasurementStorableObjectPool.flush(true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
 	}
 
 	public void run() {
