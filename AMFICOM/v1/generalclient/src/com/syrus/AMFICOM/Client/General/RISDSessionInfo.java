@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.20 2005/01/31 09:07:42 stas Exp $
+ * $Id: RISDSessionInfo.java,v 1.21 2005/01/31 15:03:04 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,7 +57,7 @@ import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2005/01/31 09:07:42 $
+ * @version $Revision: 1.21 $, $Date: 2005/01/31 15:03:04 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -236,7 +236,7 @@ public final class RISDSessionInfo extends SessionInterface {
 
 			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 //			ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(cmServer), clazz, size);
-			File configPath = new File("\\catalog");
+			File configPath = new File("/catalog");
 			ConfigurationStorableObjectPool.init(new XMLConfigurationObjectLoader(configPath), clazz, size);
 
 			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
@@ -254,8 +254,8 @@ public final class RISDSessionInfo extends SessionInterface {
 
 			ResourceStorableObjectPool.init(new EmptyClientResourceObjectLoader(), clazz, size);
 
-			IdentifierPool.init(cmServer);
-//			IdentifierPool.init(new LocalIdentifierGeneratorServer());
+//			IdentifierPool.init(cmServer);
+			IdentifierPool.init(new LocalIdentifierGeneratorServer());
 
 			System.err.println("domainId: " + this.accessIdentifier.domain_id.identifier_string);
 			System.err.println("sessionId: " + this.accessIdentifier.session_id.identifier_string);

@@ -62,8 +62,8 @@ public class ViewNavigatorCommand extends VoidCommand
 			}
 		}
 		UniTreePanel panel = new UniTreePanel(
-					dispatcher, 
-					aContext, 
+					dispatcher,
+					aContext,
 					ortm);
 		if (frame == null)
 		{

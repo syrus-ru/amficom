@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogPanel.java,v 1.2 2005/01/31 09:22:29 stas Exp $
+ * $Id: ObjectResourceCatalogPanel.java,v 1.3 2005/01/31 15:03:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,10 +25,11 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.general.CharacteristicTypeController;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import oracle.jdeveloper.layout.XYConstraints;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/01/31 09:22:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/31 15:03:06 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogPanel extends JPanel implements OperationListener
@@ -38,7 +39,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 	/**
 	 * @deprecated Use {@link #getContext()} instead.
 	 */
-	public ApplicationContext aContext;
+	private ApplicationContext aContext;
 
 	private Dispatcher dispatcher = new Dispatcher();
 
@@ -157,13 +158,77 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 			buttonsPanel.add(buttonCancel);
 	}
 
-	public void setObjectResourceController(Class cl, ObjectResourceCatalogController orcc)
+	public void setObjectResourceController(ObjectResourceController controller)
 	{
-		ObjectResourcePropertiesPane pane = orcc.getPropertiesPane(cl);
-		ObjectResourceController controller = orcc.getController(cl);
+		if (controller == null)
+			return;
+		ObjectResourcePropertiesPane pane = getPropertiesPane(controller);
 		setProp(pane);
 		setController(controller);
 	}
+
+	private ObjectResourcePropertiesPane getPropertiesPane(ObjectResourceController controller)
+	{
+		ObjectResourcePropertiesPane pane;
+		try
+		{
+			final String methodName1 = "getPropertyPaneClassName";
+			try
+			{
+				Class clazz = Class.forName((String) (controller.getClass().getMethod(methodName1, new Class[0]).invoke(controller.getClass(), new Object[0])));
+				final String methodName2 = "getInstance";
+				try
+				{
+					pane = (ObjectResourcePropertiesPane) (clazz.getMethod(methodName2, new Class[0]).invoke(clazz, new Object[0]));
+//					pane.setContext(aContext);
+				}
+				catch (NoSuchMethodException nsme)
+				{
+					if (true)
+						System.err.println("WARNING: " + clazz.getName() + '.' + methodName2 + "() not found.");
+					pane = new GeneralPanel();
+				}
+			}
+			catch (NoSuchMethodException nsme)
+			{
+				if (true)
+					System.err.println("WARNING: " + controller.getClass().getName() + '.' + methodName1 + "() not found.");
+				pane = new GeneralPanel();
+			}
+		}
+		catch (InvocationTargetException ite)
+		{
+			ite.printStackTrace();
+			ite.getTargetException().printStackTrace();
+			pane = new GeneralPanel();
+		}
+		catch (Throwable t)
+		{
+			t.printStackTrace();
+			pane = new GeneralPanel();
+		}
+		return pane;
+	}
+
+	private ObjectResourceFilter getFilter(Class orclass)
+	{
+		ObjectResourceFilter fil = null;
+		try {
+			java.lang.reflect.Method filMethod = orclass.getMethod("getFilter", new Class[0]);
+			fil = (ObjectResourceFilter)filMethod.invoke(orclass, new Object[0]);
+		}
+		catch (IllegalAccessException iae) {
+			System.out.println("getFilter method not found in class " + orclass.getName());
+			fil = null;
+		}
+		catch (Exception e) {
+			System.out.println("Метод getFilter не определен для " + orclass.getName());
+			fil = null;
+		}
+		return fil;
+	}
+
+
 
 	private void jbInit()
 	{
@@ -180,7 +245,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 				dataSet.add(res);
 				model.fireTableDataChanged();
 				sendEvent = true;
-				dispatcher.notify(new TreeListSelectionEvent(res, TreeListSelectionEvent.REFRESH_EVENT));
+				dispatcher.notify(new TreeListSelectionEvent("", TreeListSelectionEvent.REFRESH_EVENT));
 				dispatcher.notify(new TreeListSelectionEvent(res, TreeListSelectionEvent.SELECT_EVENT));
 				sendEvent = false;
 				int selected = model.getIndexOfObject(res);
@@ -430,7 +495,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 			List data = tdse.getList();
 			int n = tdse.getSelectionNumber();
 			Class cl = tdse.getDataClass();
-			ObjectResourceCatalogController orcc = (ObjectResourceCatalogController)tdse.orcc;
+			ObjectResourceController controller = (ObjectResourceController)tdse.orcc;
 			ObjectResourceCatalogActionModel orcam = (ObjectResourceCatalogActionModel )tdse.getParam();
 
 			if (n != -1)
@@ -442,7 +507,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 					setContents(data);
 //					setObjectResourceClass(cl);
 					setActionModel(orcam);
-					setObjectResourceController(cl, orcc);
+					setObjectResourceController(controller);
 				}
 				int selected = model.getIndexOfObject(res);
 				table.getSelectionModel().setSelectionInterval(selected, selected);
@@ -452,7 +517,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 				setContents(data);
 //				setObjectResourceClass(cl);
 				setActionModel(orcam);
-				setObjectResourceController(cl, orcc);
+				setObjectResourceController(controller);
 				jTabbedPane.setDisabledIconAt(1, new TextIcon(LangModel.getString("Properties"), jTabbedPane, false));
 				jTabbedPane.setEnabledAt(1, false);
 				jTabbedPane.setSelectedComponent(table);

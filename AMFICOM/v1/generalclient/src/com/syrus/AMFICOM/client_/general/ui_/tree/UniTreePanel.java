@@ -1,5 +1,5 @@
 /*
- * $Id: UniTreePanel.java,v 1.1 2004/11/10 15:07:37 stas Exp $
+ * $Id: UniTreePanel.java,v 1.2 2005/01/31 15:03:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import javax.swing.tree.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceCatalogController;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * для оптимизации работы дерева вводится следующая схема разворачивания ветви
@@ -48,7 +48,7 @@ registerSearchableNode(String criteria, ObjectResourceTreeNode tn).
 зарегистрированная ветвь станет выделенной.
  *
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2004/11/10 15:07:37 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/31 15:03:10 $
  * @module generalclient_v1
  */
 public class UniTreePanel extends JPanel
@@ -344,6 +344,7 @@ public class UniTreePanel extends JPanel
 
 		List res = new ArrayList();
 		Class cl = null;
+		ObjectResourceController controller = null;
 		//DataSet data = new DataSet();
 		ObjectResourceCatalogActionModel orcam = null;
 		int n = 0;
@@ -395,6 +396,7 @@ public class UniTreePanel extends JPanel
 			}
 			cl = otm.getNodeChildClass(node);
 			orcam = otm.getNodeActionModel(node);
+			controller = otm.getNodeChildController(node);
 			n = -1;
 		}
 		else
@@ -413,13 +415,14 @@ public class UniTreePanel extends JPanel
 			}
 			cl = otm.getNodeChildClass(parent);
 			orcam = otm.getNodeActionModel(parent);
+			controller = otm.getNodeChildController(parent);
 //					cl = node.getClass();
 			selectedObject = node.getObject();
 			n =	res.indexOf(selectedObject);
 		}
 
-	ObjectResourceCatalogController orcc = otm.getCatalogController();
-		TreeDataSelectionEvent event = new TreeDataSelectionEvent(this, res, cl, n, selectedObject, orcc);
+
+		TreeDataSelectionEvent event = new TreeDataSelectionEvent(this, res, cl, n, selectedObject, controller);
 		event.setParam(orcam);
 
 //				System.out.println("ORTreePanel notify " + dispatcher + " with event " + event);

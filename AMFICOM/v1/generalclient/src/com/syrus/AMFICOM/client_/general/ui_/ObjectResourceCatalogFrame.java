@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogFrame.java,v 1.1 2005/01/31 09:22:28 stas Exp $
+ * $Id: ObjectResourceCatalogFrame.java,v 1.2 2005/01/31 15:03:06 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,10 +17,11 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/01/31 09:22:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/31 15:03:06 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogFrame
@@ -65,9 +66,9 @@ public class ObjectResourceCatalogFrame
 		panel.setContents(dataSet);
 	}
 
-	public void setObjectResourceController(Class cl, ObjectResourceCatalogController orcc)
+	public void setObjectResourceController(ObjectResourceController controller)
 	{
-		panel.setObjectResourceController(cl, orcc);
+		panel.setObjectResourceController(controller);
 	}
 
 	public void setActionModel(ObjectResourceCatalogActionModel orcam)

@@ -1,5 +1,5 @@
 /*
- * $Id: UniTreePanel.java,v 1.10 2004/10/26 08:18:33 stas Exp $
+ * $Id: UniTreePanel.java,v 1.11 2005/01/31 15:03:07 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * для оптимизации работы дерева вводится следующая схема разворачивания ветви
@@ -46,7 +47,7 @@ registerSearchableNode(String criteria, ObjectResourceTreeNode tn).
 зарегистрированная ветвь станет выделенной.
  *
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2004/10/26 08:18:33 $
+ * @version $Revision: 1.11 $, $Date: 2005/01/31 15:03:07 $
  * @module generalclient_v1
  */
 public class UniTreePanel extends JPanel
@@ -350,6 +351,7 @@ public class UniTreePanel extends JPanel
 
 		List res = new ArrayList();
 		Class cl = null;
+		ObjectResourceController controller = null;
 		//DataSet data = new DataSet();
 		ObjectResourceCatalogActionModel orcam = null;
 		int n = 0;
@@ -439,13 +441,13 @@ public class UniTreePanel extends JPanel
 			//data = new DataSet (res);
 			cl = otm.getNodeChildClass(parent);
 			orcam = otm.getNodeActionModel(parent);
+
 //					cl = node.getClass();
 			selectedObject = node.getObject();
 			n =	res.indexOf(selectedObject);
 		}
 
-	ObjectResourceCatalogController orcc = otm.getCatalogController();
-		TreeDataSelectionEvent event = new TreeDataSelectionEvent(this, res, cl, n, selectedObject, orcc);
+		TreeDataSelectionEvent event = new TreeDataSelectionEvent(this, res, cl, n, selectedObject, controller);
 		event.setParam(orcam);
 
 //				System.out.println("ORTreePanel notify " + dispatcher + " with event " + event);

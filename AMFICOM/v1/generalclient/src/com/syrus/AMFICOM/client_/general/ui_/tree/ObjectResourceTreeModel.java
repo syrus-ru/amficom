@@ -22,15 +22,6 @@ public abstract class ObjectResourceTreeModel
 	public abstract void nodeAfterSelected(ObjectResourceTreeNode node);
 	public abstract void nodeBeforeExpanded(ObjectResourceTreeNode node);
 
-	protected ObjectResourceCatalogController defaultController = null;
-
-	public ObjectResourceCatalogController getCatalogController()
-	{
-		if(defaultController == null)
-			defaultController = new DefaultCatalogController();
-		return defaultController;
-	}
-
 	public ObjectResourceCatalogActionModel getNodeActionModel(ObjectResourceTreeNode node)
 	{
 		return new ObjectResourceCatalogActionModel(
