@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.21 2004/11/24 08:59:45 max Exp $
+ * $Id: MServerImplementation.java,v 1.22 2004/12/20 08:55:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -63,11 +63,13 @@ import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
@@ -88,16 +90,12 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/11/24 08:59:45 $
- * @author $Author: max $
+ * @version $Revision: 1.22 $, $Date: 2004/12/20 08:55:01 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 
 public class MServerImplementation extends MServerPOA {
-
-	public MServerImplementation() {
-		
-	}
 
 /////////////////////////////////////////	Identifier Generator ////////////////////////////////////////////////
 	public Identifier_Transferable getGeneratedIdentifier(short entityCode) throws AMFICOMRemoteException {
@@ -149,9 +147,11 @@ public class MServerImplementation extends MServerPOA {
 		synchronized (MServerMeasurementObjectLoader.lock) {
 			MServerMeasurementObjectLoader.mcmId = mcmId;
 			Result result;
+			List results = new ArrayList(resultsT.length);
 			for (int i = 0; i < resultsT.length; i++) {
 				try {
-					result = Result.getInstance(resultsT[i]);
+					result = new Result(resultsT[i]);
+					results.add(result);
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
@@ -160,6 +160,16 @@ public class MServerImplementation extends MServerPOA {
                     Log.errorException(t);
                     throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
                 }
+			}
+			ResultDatabase resultDatabase = (ResultDatabase) MeasurementDatabaseContext.getResultDatabase();
+			try {
+				resultDatabase.insert(results);
+			} catch (CreateObjectException e) {
+				Log.errorException(e);
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+			} catch (IllegalDataException e) {
+				Log.errorException(e);
+				throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.22 2004/12/10 12:44:46 bob Exp $
+ * $Id: MeasurementServerSetup.java,v 1.23 2004/12/20 08:55:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/12/10 12:44:46 $
+ * @version $Revision: 1.23 $, $Date: 2004/12/20 08:55:01 $
  * @author $Author: bob $
  * @module mserver_v1
  */
@@ -149,6 +149,8 @@ public final class MeasurementServerSetup {
 		try {
 			EquipmentType eqType = EquipmentType.createInstance(creatorId,
 					"EqTypeKIS",
+					"",
+					"",
 					"",
 					"");
 			eqType.insert();
@@ -296,8 +298,14 @@ public final class MeasurementServerSetup {
 					"equipment",
 					new Identifier("Image_1"),
 					"default supplier",
-					0.0,
-					0.0);
+					"default supplierCode",
+					0.0f,
+					0.0f,
+					"",
+                    "",
+                    "",
+                    "",
+                    "");
 			eq.insert();			
 			return eq.getId();
 		}

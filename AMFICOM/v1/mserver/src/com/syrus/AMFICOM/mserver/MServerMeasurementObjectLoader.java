@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.15 2004/12/10 09:10:39 bob Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.16 2004/12/20 08:55:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/12/10 09:10:39 $
+ * @version $Revision: 1.16 $, $Date: 2004/12/20 08:55:01 $
  * @author $Author: bob $
  * @module mserver_v1
  */
@@ -65,7 +65,8 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
 			if (mcmRef != null) {
 				try {
-					measurement = Measurement.getInstance(mcmRef.transmitMeasurement((Identifier_Transferable)id.getTransferable()));
+					measurement = new Measurement(mcmRef.transmitMeasurement((Identifier_Transferable)id.getTransferable()));
+					measurement.insert();
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -100,7 +101,8 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
 			if (mcmRef != null) {
 				try {
-					analysis = Analysis.getInstance(mcmRef.transmitAnalysis((Identifier_Transferable)id.getTransferable()));
+					analysis = new Analysis(mcmRef.transmitAnalysis((Identifier_Transferable)id.getTransferable()));
+					analysis.insert();
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -135,7 +137,8 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 			com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
 			if (mcmRef != null) {
 				try {
-					evaluation = Evaluation.getInstance(mcmRef.transmitEvaluation((Identifier_Transferable)id.getTransferable()));
+					evaluation = new Evaluation(mcmRef.transmitEvaluation((Identifier_Transferable)id.getTransferable()));
+					evaluation.insert();
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -179,7 +182,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 				com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
 				if (mcmRef != null) {
 					try {
-						analysis = Analysis.getInstance(mcmRef.transmitAnalysis((Identifier_Transferable)id.getTransferable()));
+						analysis = new Analysis(mcmRef.transmitAnalysis((Identifier_Transferable)id.getTransferable()));						
 						list.add(analysis);
 					}
 					catch (org.omg.CORBA.SystemException se) {
@@ -202,6 +205,8 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 					MeasurementServer.activateMCMReferenceWithId(mcmId);
 				}
 			}
+			AnalysisDatabase analysisDatabase = (AnalysisDatabase) MeasurementDatabaseContext.getAnalysisDatabase();
+			analysisDatabase.insert(list);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("MServerMeasumentObjectLoader.loadAnalyses | Illegal Storable Object: " + e.getMessage());
@@ -229,7 +234,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 				com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
 				if (mcmRef != null) {
 					try {
-						evaluation = Evaluation.getInstance(mcmRef.transmitEvaluation((Identifier_Transferable)id.getTransferable()));
+						evaluation = new Evaluation(mcmRef.transmitEvaluation((Identifier_Transferable)id.getTransferable()));
 						list.add(evaluation);
 					}
 					catch (org.omg.CORBA.SystemException se) {
@@ -252,7 +257,9 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 					MeasurementServer.activateMCMReferenceWithId(mcmId);
 				}
 			}
-		}
+			EvaluationDatabase evaluationDatabase = (EvaluationDatabase) MeasurementDatabaseContext.getEvaluationDatabase();
+			evaluationDatabase.insert(list);
+		}		
 		catch (IllegalDataException e) {
 			Log.errorMessage("MServerMeasumentObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("MServerMeasumentObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
@@ -279,7 +286,7 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 				com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)MeasurementServer.mcmRefs.get(mcmId);
 				if (mcmRef != null) {
 					try {
-						measurement = Measurement.getInstance(mcmRef.transmitMeasurement((Identifier_Transferable)id.getTransferable()));
+						measurement = new Measurement(mcmRef.transmitMeasurement((Identifier_Transferable)id.getTransferable()));
 						list.add(measurement);
 					}
 					catch (org.omg.CORBA.SystemException se) {
@@ -302,6 +309,8 @@ public final class MServerMeasurementObjectLoader extends DatabaseMeasurementObj
 						MeasurementServer.activateMCMReferenceWithId(mcmId);
 				}
 			}
+			MeasurementDatabase measurementDatabase = (MeasurementDatabase) MeasurementDatabaseContext.getMeasurementDatabase();
+			measurementDatabase.insert(list);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("MServerMeasumentObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
