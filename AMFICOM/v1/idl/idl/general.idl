@@ -1,9 +1,9 @@
 /*
- * $Id: general.idl,v 1.42 2004/12/24 09:57:43 arseniy Exp $
+ * $Id: general.idl,v 1.43 2004/12/24 12:51:45 arseniy Exp $
  *
- * Copyright ╘ 2004 Syrus Systems.
- * Dept. of Science & Technology.
- * Project: AMFICOM.
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
  */
 
 #ifndef GENERAL_IDL
