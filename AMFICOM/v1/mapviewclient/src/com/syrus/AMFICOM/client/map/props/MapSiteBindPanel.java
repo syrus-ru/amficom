@@ -56,11 +56,14 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 	private JLabel titleLabel = new JLabel();
 	private JTree elementsTree;
 
-	private JPanel jPanel1 = new JPanel();
+	private JPanel buttonsPanel = new JPanel();
 	private JButton bindButton = new JButton();
 	private JButton unbindButton = new JButton();
 
 	private UgoPanel schemePanel = new UgoPanel(null);
+	
+	private SiteCrossingPanel crossingPanel = new SiteCrossingPanel();
+	private JScrollPane crossingScrollPane = new JScrollPane();
 	
 	private List unboundElements = new LinkedList();
 
@@ -123,18 +126,24 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 				}
 			});
 //		jPanel1.add(bindButton, null);
-		jPanel1.add(unbindButton, null);
+		buttonsPanel.add(unbindButton, null);
 
 		schemePanel.getGraph().setGraphEditable(false);
 		
 		JScrollPane treeView = new JScrollPane(elementsTree);
+		
+		crossingScrollPane.getViewport().add(crossingPanel);
 
 		this.add(titleLabel, ReusedGridBagConstraints.get(0, 0, 3, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
 		this.add(treeView, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 150, 150));
 		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
 		this.add(schemePanel, ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(crossingScrollPane, ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
 //		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
-		this.add(jPanel1, ReusedGridBagConstraints.get(0, 2, 3, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(buttonsPanel, ReusedGridBagConstraints.get(0, 2, 3, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		
+		schemePanel.setVisible(false);
+		crossingScrollPane.setVisible(true);
 	}
 
 	public ObjectResource getObjectResource()
@@ -278,17 +287,39 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 		{
 			if(element instanceof SchemeElement)
 			{
-//				schemePanel.openSchemeElement(se);
+				SchemeElement se = (SchemeElement )element;
+				schemePanel.getGraph().setSchemeElement(se);
+				crossingScrollPane.setVisible(false);
+				schemePanel.setVisible(true);
 				sen = true;
 			}
 			else
 			if(element instanceof SchemeCableLink)
 			{
 				SchemeCableLink scl = (SchemeCableLink )element;
+
+				schemePanel.setVisible(false);
+				crossingScrollPane.setVisible(true);
+				
 				MapView mapView = ((LogicalNetLayer )(site.getMap().getConverter())).getMapView();
+
+				crossingPanel.setCable(mapView.findCablePath(scl));
+
 				MapNodeElement mne[] = mapView.getSideNodes(scl);
 				sen = !(mne[0].equals(site)) && !(mne[1].equals(site));
 			}
+			else
+			{
+				schemePanel.setVisible(false);
+				crossingPanel.setCable(null);
+				crossingScrollPane.setVisible(true);
+			}
+		}
+		else
+		{
+			schemePanel.setVisible(false);
+			crossingPanel.setCable(null);
+			crossingScrollPane.setVisible(true);
 		}
 		unbindButton.setEnabled(sen);
 	}
@@ -297,13 +328,20 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 	{
 		site = (MapSiteNodeElement )objectResource;
 		createTree(site);
+		schemePanel.getGraph().removeAll();
+		crossingPanel.setSite(site);
+
+		schemePanel.setVisible(false);
+		crossingPanel.setCable(null);
+		crossingScrollPane.setVisible(true);
+
 		if(site == null)
 		{
-			schemePanel.getGraph().removeAll();
 		}
 		else
 		{
 		}
+
 		elementsTree.updateUI();
 	}
 
