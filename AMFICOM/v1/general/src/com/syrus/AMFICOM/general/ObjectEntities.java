@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.36 2004/12/09 16:41:29 max Exp $
+ * $Id: ObjectEntities.java,v 1.37 2004/12/10 10:15:42 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/12/09 16:41:29 $
+ * @version $Revision: 1.37 $, $Date: 2004/12/10 10:15:42 $
  * @author $Author: max $
  * @module general_v1
  */
@@ -20,7 +20,8 @@ public final class ObjectEntities {
 	public static final String PORTTYPE_ENTITY = "PortType";
 	public static final String MEASUREMENTPORTTYPE_ENTITY = "MeasurementPortType";
 	public static final String LINKTYPE_ENTITY = "LinkType";
-	public static final String CABLETHREADTYPE_ENTITY = "CableThreadType";
+	public static final String CABLE_LINKTYPE_ENTITY = "CableLinkType";
+    public static final String CABLETHREADTYPE_ENTITY = "CableThreadType";
 
 	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
 	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";
@@ -108,7 +109,7 @@ public final class ObjectEntities {
 	public static final String UPDIKE_ENTITY = "8========================D";
 
 
-	public static final short UNKNOWN_ENTITY_CODE = 0x0000;
+	public static final short UNKNOWN_ENTITY_CODE = 0x0000;	
 
 	/*
 	 * Здесь могла бы быть ваша реклама: 001-128 (0x0001-0x0080)
@@ -148,10 +149,11 @@ public final class ObjectEntities {
 	public static final short PORTTYPE_ENTITY_CODE = 0x0143;
 	public static final short MEASUREMENTPORTTYPE_ENTITY_CODE = 0x0144;
 	public static final short LINKTYPE_ENTITY_CODE = 0x0145;
-//	public static final short KISTYPE_ENTITY_CODE = 0x0146;
+    //	public static final short KISTYPE_ENTITY_CODE = 0x0146;
 	public static final short TRANSPATHTYPE_ENTITY_CODE = 0x0147;
 	public static final short CABLETHREADTYPE_ENTITY_CODE = 0x0148;
-
+	public static final short CABLE_LINKTYPE_ENTITY_CODE = 0x0149;
+    
 	public static final short CONFIGURATION_MAX_ENTITY_CODE = 0x0180;
 
 	/*
@@ -251,6 +253,7 @@ public final class ObjectEntities {
 		else if (entity.equals(MEASUREMENTPORTTYPE_ENTITY)) return MEASUREMENTPORTTYPE_ENTITY_CODE;
 		else if (entity.equals(LINKTYPE_ENTITY)) return LINKTYPE_ENTITY_CODE;
 		else if (entity.equals(CABLETHREADTYPE_ENTITY)) return CABLETHREADTYPE_ENTITY_CODE;
+        else if (entity.equals(CABLE_LINKTYPE_ENTITY)) return CABLE_LINKTYPE_ENTITY_CODE;
 		
 		else if (entity.equals(PARAMETERTYPE_ENTITY)) return PARAMETERTYPE_ENTITY_CODE;
 		else if (entity.equals(MEASUREMENTTYPE_ENTITY)) return MEASUREMENTTYPE_ENTITY_CODE;
@@ -336,6 +339,8 @@ public final class ObjectEntities {
 				return LINKTYPE_ENTITY;
 			case CABLETHREADTYPE_ENTITY_CODE:
 				return CABLETHREADTYPE_ENTITY;
+            case CABLE_LINKTYPE_ENTITY_CODE:
+                return CABLE_LINKTYPE_ENTITY;
 				
 			case PARAMETERTYPE_ENTITY_CODE:
 				return PARAMETERTYPE_ENTITY;
