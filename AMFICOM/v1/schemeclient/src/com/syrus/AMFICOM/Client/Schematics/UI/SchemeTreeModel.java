@@ -22,6 +22,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 public class SchemeTreeModel implements TreeDataModel
 {
 	ApplicationContext aContext;
+	StorableObjectTreeNode root = new StorableObjectTreeNode("root", "Сеть",
+			new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
 
 	private static Type[] schemeTypes = new Type[] {
 		Type.NETWORK,
@@ -36,10 +38,7 @@ public class SchemeTreeModel implements TreeDataModel
 
 	public StorableObjectTreeNode getRoot()
 	{
-		return new StorableObjectTreeNode(
-				"root",
-				"Сеть",
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
+		return root;
 	}
 
 	public Color getNodeTextColor(StorableObjectTreeNode node)
