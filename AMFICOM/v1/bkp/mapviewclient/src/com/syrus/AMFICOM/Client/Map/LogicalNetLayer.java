@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.16 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.17 2004/10/26 14:17:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -83,7 +83,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/26 14:17:39 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -677,27 +677,20 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
 
+		boolean showNodes = MapPropertiesManager.isShowPhysicalNodes();
 		Iterator e = getMapView().getMap().getNodes().iterator();
 		while (e.hasNext())
 		{
 			MapNodeElement curNode = (MapNodeElement )e.next();
-			if ( curNode instanceof MapSiteNodeElement)
+			if(curNode instanceof MapPhysicalNodeElement)
 			{
-				curNode.paint(pg, visibleBounds);
-			}
-			if ( curNode instanceof MapPhysicalNodeElement)
-			{
-				if ( MapPropertiesManager.isShowPhysicalNodes())
+				if(showNodes)
 				{
 					curNode.paint(pg, visibleBounds);
 				}
 			}
-			if ( curNode instanceof MapMarkElement)
-			{
-//					MapMarkElement mme = (MapMarkElement )curNode;
-//					mme.moveToFromStartLt(mme.getDistance());
+			else
 				curNode.paint(pg, visibleBounds);
-			}
 		}
 
 		e = getMapView().getMarkers().iterator();

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.13 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapMarker.java,v 1.14 2004/10/26 14:17:39 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -64,7 +64,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.14 $, $Date: 2004/10/26 14:17:39 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -692,9 +692,7 @@ public class MapMarker extends MapNodeElement
 		if(spd == null)
 			return getFromStartLengthLf();
 		else
-			return spd.getOpticalDistanceFromStart(
-					spd.getPathElementByPhysicalDistance(
-						getFromStartLengthLf()));
+			return spd.getOpticalDistanceByPhysical(getFromStartLengthLf());
 	}
 
 	public void moveToFromStartLo(double dist)
@@ -702,9 +700,7 @@ public class MapMarker extends MapNodeElement
 		if(spd == null)
 			moveToFromStartLf(dist);
 		else
-			moveToFromStartLf(spd.getPhysicalDistanceFromStart(
-					spd.getPathElementByOpticalDistance(
-						dist)));
+			moveToFromStartLf(spd.getPhysicalDistanceByOptical(dist));
 	}
 
 	//ѕередвинуть в точку на заданном рассто€нии от начала (физ)
