@@ -1,5 +1,5 @@
 /*
- * $Id: SetWrapper.java,v 1.4 2005/02/03 08:36:47 bob Exp $
+ * $Id: SetWrapper.java,v 1.5 2005/02/03 15:01:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,20 +20,19 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/03 08:36:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 15:01:00 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class SetWrapper implements StorableObjectWrapper {
 
 	public static final String	COLUMN_SORT						= "sort";
+
 	public static final String	LINK_COLUMN_SET_ID				= "set_id";
 	public static final String	LINK_COLUMN_ME_ID				= "monitored_element_id";
 
-	public static final String	LINK_COLUMN_SET_PARAMETERS		= "set_parameters";
-
-	public static final String	LINK_COLUMN_SET_PARAMETER_ID	= "set_parameter_id";
-	public static final String	LINK_COLUMN_TYPE_ID				= "type_id";
+	public static final String	LINK_FIELD_SET_PARAMETERS		= "set_parameters";
+	public static final String	LINK_FIELD_SET_PARAMETER_ID	= "set_parameter_id";
 	public static final String	LINK_COLUMN_PARAMETER_VALUE		= "value";
 
 	private static SetWrapper	instance;
@@ -43,7 +42,7 @@ public class SetWrapper implements StorableObjectWrapper {
 	private SetWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_SORT, COLUMN_DESCRIPTION, LINK_COLUMN_ME_ID,
-				LINK_COLUMN_SET_PARAMETERS};
+				LINK_FIELD_SET_PARAMETERS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -72,14 +71,13 @@ public class SetWrapper implements StorableObjectWrapper {
 				return set.getDescription();
 			if (key.equals(LINK_COLUMN_ME_ID))
 				return set.getMonitoredElementIds();
-			if (key.equals(LINK_COLUMN_SET_PARAMETERS)) {
+			if (key.equals(LINK_FIELD_SET_PARAMETERS)) {
 				SetParameter[] parameters = set.getParameters();
-				Map values = new HashMap();
+				Map values = new HashMap(parameters.length * 3);
 				for (int i = 0; i < parameters.length; i++) {
-					values.put(LINK_COLUMN_SET_PARAMETER_ID + i, parameters[i].getId());
-					values.put(LINK_COLUMN_TYPE_ID + i, parameters[i].getType());
+					values.put(LINK_FIELD_SET_PARAMETER_ID + i, parameters[i].getId());
+					values.put(COLUMN_TYPE_ID + i, parameters[i].getType());
 					values.put(LINK_COLUMN_PARAMETER_VALUE + i, parameters[i].getValue());
-
 				}
 				return values;
 			}
@@ -96,23 +94,27 @@ public class SetWrapper implements StorableObjectWrapper {
 			Set set = (Set) object;
 			if (key.equals(COLUMN_SORT))
 				set.setSort(((Integer) value).intValue());
-			else if (key.equals(COLUMN_DESCRIPTION))
-				set.setDescription((String) value);
-			else if (key.equals(LINK_COLUMN_ME_ID)) {
-				set.setMonitoredElementIds((List) value);
-			} else if (key.equals(LINK_COLUMN_SET_PARAMETERS)) {
-				Map setParameterMap = (Map) value;
-				/* there is 3*N keys for N SetParameter */
-				SetParameter[] setParameters = new SetParameter[setParameterMap.size() / 3];
-				for (int i = 0; i < setParameters.length; i++) {
-					Identifier parameterId = (Identifier) setParameterMap.get(LINK_COLUMN_SET_PARAMETER_ID + i);
-					ParameterType parameterType = (ParameterType) setParameterMap.get(LINK_COLUMN_TYPE_ID + i);
-					byte[] setParameterValue = (byte[]) setParameterMap.get(LINK_COLUMN_PARAMETER_VALUE + i);
-					setParameters[i] = new SetParameter(parameterId, parameterType, setParameterValue);
+			else
+				if (key.equals(COLUMN_DESCRIPTION))
+					set.setDescription((String) value);
+				else
+					if (key.equals(LINK_COLUMN_ME_ID)) {
+						set.setMonitoredElementIds((List) value);
+					}
+					else
+						if (key.equals(LINK_FIELD_SET_PARAMETERS)) {
+							Map setParameterMap = (Map) value;
+							/* there are 3*N keys for N SetParameter */
+							SetParameter[] setParameters = new SetParameter[setParameterMap.size() / 3];
+							for (int i = 0; i < setParameters.length; i++) {
+								Identifier parameterId = (Identifier) setParameterMap.get(LINK_FIELD_SET_PARAMETER_ID + i);
+								ParameterType parameterType = (ParameterType) setParameterMap.get(COLUMN_TYPE_ID + i);
+								byte[] setParameterValue = (byte[]) setParameterMap.get(LINK_COLUMN_PARAMETER_VALUE + i);
+								setParameters[i] = new SetParameter(parameterId, parameterType, setParameterValue);
 
-				}
-				set.setParameters(setParameters);
-			}
+							}
+							set.setParameters(setParameters);
+						}
 		}
 	}
 
@@ -130,9 +132,11 @@ public class SetWrapper implements StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
+		if (key.equals(COLUMN_SORT))
+			return Integer.class;
 		if (key.equals(LINK_COLUMN_ME_ID))
 			return List.class;
-		if (key.equals(LINK_COLUMN_SET_PARAMETERS))
+		if (key.equals(LINK_FIELD_SET_PARAMETERS))
 			return Map.class;
 		return String.class;
 	}
