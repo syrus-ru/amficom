@@ -5,12 +5,13 @@ import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.Resource.Object.User;
 
-import java.util.Vector;
+import java.util.*;
 
-public class EmptyDataSource implements DataSourceInterface 
+public class EmptyDataSource implements DataSourceInterface
 {
 	SessionInterface si;
-	
+	static Random rand = new Random();
+
 	protected EmptyDataSource()
 	{
 	}
@@ -34,7 +35,7 @@ public class EmptyDataSource implements DataSourceInterface
 	{
 		return true;
 	}
-	
+
 	public void LoadMapProtoElements()
 	{
 	}
@@ -46,23 +47,23 @@ public class EmptyDataSource implements DataSourceInterface
 	public void SaveMapProtoElements(String[] ids)
 	{
 	}
-	
+
 	public void RemoveMapProtoElements(String[] ids)
 	{
 	}
-	
+
 	public void SaveMapProtoGroups(String[] ids)
 	{
 	}
-	
+
 	public void RemoveMapProtoGroups(String[] ids)
 	{
 	}
-	
+
 	public void LoadSchemeProto()
 	{
 	}
-	
+
 	public void LoadSchemeProto(Vector ids)
 	{
 	}
@@ -134,7 +135,7 @@ public class EmptyDataSource implements DataSourceInterface
 	public void SaveMaps()
 	{
 	}
-	
+
 	public void LoadMapViews()
 	{
 	}
@@ -161,13 +162,13 @@ public class EmptyDataSource implements DataSourceInterface
 
 	public String GetUId(String type)
 	{
-		return type + Pool.rand.nextLong();
+		return type + rand.nextLong();
 	}
 
 	public void LoadImages(String[] id)
 	{
 	}
-	
+
 	public void LoadAttributeTypes()
 	{
 	}
@@ -175,7 +176,7 @@ public class EmptyDataSource implements DataSourceInterface
 	public void LoadAttributeTypes(String[] ids)
 	{
 	}
-	
+
 	public void ReloadAttributes(String mc_id)
 	{
 	}
@@ -196,11 +197,11 @@ public class EmptyDataSource implements DataSourceInterface
 	public void GetObjects(String[] cat_ids, String[] grp_ids, String[] prof_ids)
 	{
 	}
-	
+
 	public void LoadExecs()
 	{
 	}
-	
+
 	public void SaveObjects()
 	{
 	}
@@ -232,19 +233,19 @@ public class EmptyDataSource implements DataSourceInterface
 	public void RemoveDomain(String[] domain_ids)
 	{
 	}
-	
+
 	public void RemoveUser(String[] user_ids)
 	{
 	}
-	
+
 	public void RemoveGroup(String[] group_ids)
 	{
 	}
-	
+
 	public void RemoveOperatorProfile(String[] operator_profile_ids)
 	{
 	}
-	
+
 	public void RemoveExec(String[] exec_ids)
 	{
 	}
@@ -282,7 +283,7 @@ public class EmptyDataSource implements DataSourceInterface
 		Pool.put("user", user.getId(), user);
 //		Pool.putName("user", user.getId(), user.getName());
 	}
-	
+
 	public void RemoveMap(String mc_id)
 	{
 	}
@@ -302,7 +303,7 @@ public class EmptyDataSource implements DataSourceInterface
 	public void LoadMaintenanceData()
 	{
 	}
-	
+
 	public void SaveMaintenanceData(String []am_id, String []amu_id)
 	{
 	}
@@ -322,11 +323,11 @@ public class EmptyDataSource implements DataSourceInterface
 	public void GetAlarms(String[] ids)
 	{
 	}
-	
+
 	public void GetAlarms(String[] ids, String filter_id)
 	{
 	}
-	
+
 	public void SetAlarm(String alarm_id)
 	{
 	}
@@ -355,7 +356,7 @@ public class EmptyDataSource implements DataSourceInterface
 	public void GetResults(String[] ids)
 	{
 	}
-	
+
 	public void GetTests()
 	{
 	}
@@ -363,7 +364,7 @@ public class EmptyDataSource implements DataSourceInterface
 	public void GetTests(String[] ids)
 	{
 	}
-	
+
 	public void GetRequests()
 	{
 	}
@@ -375,7 +376,7 @@ public class EmptyDataSource implements DataSourceInterface
 	public void GetAnalysis(String[] ids)
 	{
 	}
-	
+
 	public void GetModelings()
 	{
 	}
@@ -435,25 +436,25 @@ public class EmptyDataSource implements DataSourceInterface
 	public void GetAnalysis(String id)
 	{
 	}
-	
+
 	public void GetEvaluation(String id)
 	{
 	}
-	
+
 	public void GetModeling(String id)
 	{
 	}
-	
+
 	public String GetTestForAnalysis(String id)
 	{
 		return "";
 	}
-	
+
 	public String GetTestForEvaluation(String id)
 	{
 		return "";
 	}
-	
+
 	public void GetRequestTests(String request_id)
 	{
 	}
@@ -475,12 +476,12 @@ public class EmptyDataSource implements DataSourceInterface
 	{
 		return "";
 	}
-	
+
 	public String GetAnalysisResult(String analysis_id)
 	{
 		return "";
 	}
-	
+
 	public String[] GetAnalysisResultsForStatistics(
 			String monitored_element_id,
 			long from,
@@ -536,7 +537,7 @@ public class EmptyDataSource implements DataSourceInterface
 	public void RemoveTests(String[] test_ids)
 	{
 	}
-	
+
 	public void UpdateTests(String[] test_ids)
 	{
 	}
@@ -565,11 +566,11 @@ public class EmptyDataSource implements DataSourceInterface
 	public void createAnalysis(String analysis_id)
 	{
 	}
-	
+
 	public void createEvaluation(String evaluation_id)
 	{
 	}
-	
+
 	public void LoadResultSets()
 	{
 	}
@@ -582,7 +583,7 @@ public class EmptyDataSource implements DataSourceInterface
 	{
 		return new ResourceDescriptor_Transferable[0];
 	}
-	
+
 	public ResourceDescriptor_Transferable[] LoadResultSetResultIds(String result_set_id, String me_id)
 	{
 		return new ResourceDescriptor_Transferable[0];
@@ -601,14 +602,14 @@ public class EmptyDataSource implements DataSourceInterface
 	}
 
 	public void LoadNet(
-			Vector p_ids, 
+			Vector p_ids,
 			Vector cp_ids,
 			Vector eq_ids,
 			Vector l_ids,
 			Vector cl_ids)
 	{
 	}
-	
+
 	public void LoadISM(
 		Vector k_ids,
 		Vector ap_ids,
@@ -696,7 +697,7 @@ public class EmptyDataSource implements DataSourceInterface
 	public void LoadTestArgumentSets(String[] ids)
 	{
 	}
-	
+
 	public void saveCriteriaSet(String cs_id)
 	{
 	}
@@ -736,7 +737,7 @@ public class EmptyDataSource implements DataSourceInterface
 	{
 		return "";
 	}
-	
+
 	public void attachEtalonToME(String e_id, String me_id)
 	{
 	}
@@ -789,7 +790,7 @@ public class EmptyDataSource implements DataSourceInterface
 	public void loadTestSetup(String ts_id)
 	{
 	}
-	
+
 	public void LoadNetDirectory()
 	{
 	}
@@ -799,7 +800,7 @@ public class EmptyDataSource implements DataSourceInterface
 	}
 
 	public void LoadNetDirectory(
-			Vector pt_ids, 
+			Vector pt_ids,
 			Vector eqt_ids,
 			Vector lt_ids,
 			Vector cht_ids,
@@ -807,7 +808,7 @@ public class EmptyDataSource implements DataSourceInterface
 			Vector clt_ids)
 	{
 	}
-	
+
 	public void LoadISMDirectory(
 		Vector kt_ids,
 		Vector apt_ids,
@@ -947,26 +948,26 @@ public class EmptyDataSource implements DataSourceInterface
 	public void SaveSchemeOptimizeInfo(String soi_id)
 	{
 	}
-	
+
 	public void LoadSchemeOptimizeInfo()
 	{
 	}
-	
+
 	public void RemoveSchemeOptimizeInfo(String soi_id)
 	{
 	}
-	
+
 	public void SaveSchemeMonitoringSolutions(String sol_id)
 	{
 	}
-	
+
 	public void LoadSchemeMonitoringSolutions()
 	{
 	}
-	
+
 	public void RemoveSchemeMonitoringSolution(String sol_id)
 	{
 	}
-	
+
 
 }

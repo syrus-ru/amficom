@@ -38,7 +38,7 @@ package com.syrus.AMFICOM.Client.General.UI.Session;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
@@ -127,7 +127,7 @@ public class SessionInfoDialog extends JDialog
 		String s1 = String.valueOf(st2) + sdf2.format(new Date(st));
 //		labelSessionTotal.setText(sdf2.format(new Date(System.currentTimeMillis() - si.getLogonTime())));
 		labelSessionTotal.setText(s1);
-		labelConnectPeriod.setText(Pool.getName(Domain.typ, si.getDomainId()));
+		labelConnectPeriod.setText(((ObjectResource)Pool.get(Domain.typ, si.getDomainId())).getName());
 		labelConnectLast.setText("");
 	}
 

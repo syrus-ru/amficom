@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfileModel.java,v 1.2 2004/08/17 15:02:51 krupenn Exp $
+ * $Id: OperatorProfileModel.java,v 1.3 2004/08/19 10:47:23 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.Client.Resource.*;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:51 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2004/08/19 10:47:23 $
  * @module generalclient_v1
  */
 public class OperatorProfileModel extends ObjectResourceModel
@@ -49,26 +49,26 @@ public class OperatorProfileModel extends ObjectResourceModel
 
 	Vector childrenTypes = new Vector();
 	{
-	         childrenTypes.add(OperatorCategory.typ);
-	         childrenTypes.add(OperatorGroup.typ);
+					 childrenTypes.add(OperatorCategory.typ);
+					 childrenTypes.add(OperatorGroup.typ);
 	}
 
 	public Enumeration getChildTypes()
 	{
-  	         return childrenTypes.elements();
+						 return childrenTypes.elements();
 	}
 
 	public Class getChildClass(String type)
 	{
-	  if(type.equals(OperatorCategory.typ))
-	  {
-	    return OperatorCategory.class;
-	  }
-	  if(type.equals(OperatorGroup.typ))
-	  {
-	    return OperatorGroup.class;
-	  }
-	    return ObjectResource.class;
+		if(type.equals(OperatorCategory.typ))
+		{
+			return OperatorCategory.class;
+		}
+		if(type.equals(OperatorGroup.typ))
+		{
+			return OperatorGroup.class;
+		}
+			return ObjectResource.class;
 	}
 
 
@@ -85,12 +85,12 @@ public class OperatorProfileModel extends ObjectResourceModel
 		{
 //      if(col_id.equals("id"))
 //        s = prof.id;
-      if(col_id.equals("name"))
-        s = prof.name;
-      if(col_id.equals("owner_id"))
-        s = Pool.getName("user", prof.owner_id);
-      if(col_id.equals("modified"))
-        s = sdf.format(new Date(prof.modified));
+			if(col_id.equals("name"))
+				s = prof.name;
+			if(col_id.equals("owner_id"))
+				s = ((ObjectResource )Pool.get("user", prof.owner_id)).getName();
+			if(col_id.equals("modified"))
+				s = sdf.format(new Date(prof.modified));
 		}
 		catch(Exception e)
 		{
