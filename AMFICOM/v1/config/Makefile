@@ -82,13 +82,14 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characteristic.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Equipment.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/EquipmentDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/KIS.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/KISDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MCM.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MCMDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElementDatabase.java
 	touch $@
-#		$(SRCDIR)/com/syrus/AMFICOM/configuration/KISDatabase.java 
 
 .corba:	$(CLASSDIR)
 	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
