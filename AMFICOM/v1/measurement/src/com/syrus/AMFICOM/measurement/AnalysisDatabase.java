@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.28 2004/11/16 15:48:44 bob Exp $
+ * $Id: AnalysisDatabase.java,v 1.29 2004/12/08 09:11:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/11/16 15:48:44 $
+ * @version $Revision: 1.29 $, $Date: 2004/12/08 09:11:37 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -61,9 +61,9 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		return ObjectEntities.ANALYSIS_ENTITY;
 	}	
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
 				+ COLUMN_CRITERIA_SET_ID;
@@ -71,9 +71,9 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		return columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
@@ -82,10 +82,10 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		Analysis analysis = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getType().getId()); 
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getMonitoredElementId()); 

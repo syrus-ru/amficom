@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.38 2004/12/01 10:10:43 max Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.39 2004/12/08 09:11:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/12/01 10:10:43 $
- * @author $Author: max $
+ * @version $Revision: 1.39 $, $Date: 2004/12/08 09:11:37 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -75,9 +75,9 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		return ObjectEntities.EVALUATIONTYPE_ENTITY;
 	}	
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION;
 		}
@@ -85,9 +85,9 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		return columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}		
@@ -95,10 +95,10 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	}	
 
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		EvaluationType evaluationType = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			preparedStatement.setString(++i, evaluationType.getCodename()); 
 			preparedStatement.setString(++i, evaluationType.getDescription()); 
@@ -341,7 +341,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
     }
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		EvaluationType evaluationType = this.fromStorableObject(storableObject);
+//		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -464,7 +464,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 
 	public void update(StorableObject storableObject, int updateKind, Object obj)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		EvaluationType evaluationType = this.fromStorableObject(storableObject);
+//		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, false);

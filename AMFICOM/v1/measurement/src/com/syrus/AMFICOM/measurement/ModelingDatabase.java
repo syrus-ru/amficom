@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.12 2004/11/19 12:25:34 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.13 2004/12/08 09:11:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/11/19 12:25:34 $
+ * @version $Revision: 1.13 $, $Date: 2004/12/08 09:11:37 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -72,9 +72,9 @@ public class ModelingDatabase extends StorableObjectDatabase {
         return ObjectEntities.MODELING_ENTITY;
     }
     
-    protected String getColumns() {
+    protected String getColumns(int mode) {
         if (columns == null){
-            columns = super.getColumns() + COMMA
+            columns = super.getColumns(mode) + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_ME_ID + COMMA
 				+ COLUMN_SCHEME_PATH_ID + COMMA
@@ -85,9 +85,9 @@ public class ModelingDatabase extends StorableObjectDatabase {
         return columns;
     }   
     
-    protected String getUpdateMultiplySQLValues() {
+    protected String getUpdateMultiplySQLValues(int mode) {
         if (updateMultiplySQLValues == null){
-            updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+            updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
                 + QUESTION + COMMA
                 + QUESTION + COMMA
                 + QUESTION + COMMA
@@ -99,10 +99,10 @@ public class ModelingDatabase extends StorableObjectDatabase {
     }
     
     
-    protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+    protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
             throws IllegalDataException, UpdateObjectException {
         Modeling modeling = fromStorableObject(storableObject);
-        int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+        int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
         try {
             preparedStatement.setString(++i, modeling.getName());            
             DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getMonitoredElementId());     

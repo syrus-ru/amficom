@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.40 2004/11/22 13:49:36 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.41 2004/12/08 09:11:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/11/22 13:49:36 $
+ * @version $Revision: 1.41 $, $Date: 2004/12/08 09:11:37 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -73,9 +73,9 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		throw new IllegalDataException("MeasurementDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}	
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
@@ -89,9 +89,9 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		return columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -122,10 +122,10 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		Measurement measurement = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {			
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getType().getId()); 
 			preparedStatement.setString(++i, measurement.getName());

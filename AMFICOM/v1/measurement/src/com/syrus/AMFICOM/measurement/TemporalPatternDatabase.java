@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.27 2004/11/22 13:49:36 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.28 2004/12/08 09:11:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/22 13:49:36 $
+ * @version $Revision: 1.28 $, $Date: 2004/12/08 09:11:37 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -59,18 +59,18 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		return ObjectEntities.TEMPORALPATTERN_ENTITY;
 	}
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_VALUE;
 		}
 		return columns;
 	}	
 
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){	
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
@@ -105,7 +105,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 
 	
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws ObjectNotFoundException, RetrieveObjectException, IllegalDataException {
-		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
+//		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -128,9 +128,9 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		try{
 			String sql = SQL_INSERT_INTO + ObjectEntities.TEMPORALPATTERN_ENTITY 
 			+ OPEN_BRACKET
-			+ this.getColumns()
+			+ this.getColumns(MODE_INSERT)
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ getUpdateMultiplySQLValues()
+			+ getUpdateMultiplySQLValues(MODE_INSERT)
 			+ CLOSE_BRACKET;
 			preparedStatement = connection.prepareStatement(sql);
 		} finally {
@@ -139,10 +139,10 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		return preparedStatement;
 	}
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		TemporalPattern temporalPattern = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			preparedStatement.setString(++i, temporalPattern.getDescription());
 			((OraclePreparedStatement)preparedStatement).setORAData(++i, new CronStringArray(temporalPattern.getCronStrings()));
@@ -158,7 +158,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		PreparedStatement preparedStatement = null;
 		try {			
 			preparedStatement = insertTemporalPatternPreparedStatement();
-			setEntityForPreparedStatement(temporalPattern, preparedStatement);
+			setEntityForPreparedStatement(temporalPattern, preparedStatement, MODE_INSERT);
 			Log.debugMessage("TemporalPatternDatabase.insertTemporalPattern | Inserting temporal pattern " + tpIdCode, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
 		}
@@ -188,7 +188,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 
 	
 	public void update(StorableObject storableObject, int updateKind, Object arg) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
+//		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, false);

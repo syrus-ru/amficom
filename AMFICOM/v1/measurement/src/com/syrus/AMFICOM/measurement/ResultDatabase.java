@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.43 2004/12/01 10:09:58 max Exp $
+ * $Id: ResultDatabase.java,v 1.44 2004/12/08 09:11:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/12/01 10:09:58 $
- * @author $Author: max $
+ * @version $Revision: 1.44 $, $Date: 2004/12/08 09:11:37 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -76,9 +76,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return ObjectEntities.RESULT_ENTITY;
 	}
 
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null) {
-			StringBuffer buffer = new StringBuffer(super.getColumns());
+			StringBuffer buffer = new StringBuffer(super.getColumns(mode));
 			buffer.append(COMMA);
 			buffer.append(COLUMN_MEASUREMENT_ID);
 			buffer.append(COMMA);
@@ -96,9 +96,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null) {
-			StringBuffer buffer = new StringBuffer(super.getUpdateMultiplySQLValues());
+			StringBuffer buffer = new StringBuffer(super.getUpdateMultiplySQLValues(mode));
 			buffer.append(COMMA);
 			buffer.append(QUESTION);
 			buffer.append(COMMA);
@@ -172,10 +172,10 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return buffer.toString();
 	}
 
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		Result result = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			int resultSort = result.getSort().value();
 			switch (resultSort) {

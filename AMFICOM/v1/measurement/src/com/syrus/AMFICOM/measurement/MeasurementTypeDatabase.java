@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.43 2004/12/01 10:09:58 max Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.44 2004/12/08 09:11:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/12/01 10:09:58 $
- * @author $Author: max $
+ * @version $Revision: 1.44 $, $Date: 2004/12/08 09:11:37 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -74,18 +74,18 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		return ObjectEntities.MEASUREMENTTYPE_ENTITY;
 	}	
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_CODENAME + COMMA 
 				+ COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}	
 
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA 
 				+ QUESTION;
 		}
@@ -681,10 +681,10 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		return list;
 	}
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 		throws IllegalDataException, UpdateObjectException {
 		MeasurementType measurementType = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			try {				
 				preparedStatement.setString(++i, measurementType.getCodename());
 				preparedStatement.setString(++i, measurementType.getDescription());

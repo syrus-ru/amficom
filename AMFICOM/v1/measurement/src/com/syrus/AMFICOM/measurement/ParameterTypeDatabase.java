@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.35 2004/11/16 15:48:45 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.36 2004/12/08 09:11:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.36 $, $Date: 2004/12/08 09:11:37 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -52,9 +52,9 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		return ObjectEntities.PARAMETERTYPE_ENTITY;
 	}
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_NAME + COMMA
@@ -63,9 +63,9 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		return columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -114,7 +114,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 
 	
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		ParameterType parameterType = this.fromStorableObject(storableObject);
+//		ParameterType parameterType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -133,7 +133,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}	
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		ParameterType parameterType = this.fromStorableObject(storableObject);
+//		ParameterType parameterType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, false);
@@ -189,10 +189,10 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}
 	
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		ParameterType parameterType = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {			
 			preparedStatement.setString(++i, parameterType.getCodename());
 			preparedStatement.setString(++i, parameterType.getDescription());

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.41 2004/12/01 10:09:58 max Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.42 2004/12/08 09:11:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/12/01 10:09:58 $
- * @author $Author: max $
+ * @version $Revision: 1.42 $, $Date: 2004/12/08 09:11:37 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -75,18 +75,18 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		return ObjectEntities.ANALYSISTYPE_ENTITY;
 	}	
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_CODENAME + COMMA 
 				+ COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}	
 
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA 
 				+ QUESTION;
 		}
@@ -326,7 +326,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
     }
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		AnalysisType analysisType = this.fromStorableObject(storableObject);
+//		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -438,7 +438,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		AnalysisType analysisType = this.fromStorableObject(storableObject);
+//		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, false);
@@ -533,10 +533,10 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}	
 	
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		AnalysisType analysisType = fromStorableObject(storableObject);
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			preparedStatement.setString(++i, analysisType.getCodename());
 			preparedStatement.setString(++i, analysisType.getDescription());

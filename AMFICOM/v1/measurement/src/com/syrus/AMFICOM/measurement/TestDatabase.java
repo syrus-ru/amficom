@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.52 2004/12/07 10:59:48 bass Exp $
+ * $Id: TestDatabase.java,v 1.53 2004/12/08 09:11:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2004/12/07 10:59:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.53 $, $Date: 2004/12/08 09:11:37 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -82,9 +82,9 @@ public class TestDatabase extends StorableObjectDatabase {
 		return ObjectEntities.TEST_ENTITY;
 	}	
 	
-	protected String getColumns() {
+	protected String getColumns(int mode) {
 		if (columns == null){
-			columns = super.getColumns() + COMMA
+			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_TEMPORAL_TYPE + COMMA
 				+ COLUMN_START_TIME + COMMA
 				+ COLUMN_END_TIME + COMMA
@@ -100,9 +100,9 @@ public class TestDatabase extends StorableObjectDatabase {
 		return columns;
 	}	
 
-	protected String getUpdateMultiplySQLValues() {
+	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -149,7 +149,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		return query;
 	}
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		
 		Test test = fromStorableObject(storableObject);
@@ -158,7 +158,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		TemporalPattern temporalPattern = test.getTemporalPattern();		
 		AnalysisType analysisType = test.getAnalysisType();
 		EvaluationType evaluationType = test.getEvaluationType();
-		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {			
 			preparedStatement.setInt(++i, test.getTemporalType().value());
 			preparedStatement.setTimestamp(++i, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
