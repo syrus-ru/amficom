@@ -1,5 +1,5 @@
 /*
- * Название: $Id: OfxControlsFrame.java,v 1.3 2004/07/14 07:25:04 krupenn Exp $
+ * Название: $Id: OfxControlsFrame.java,v 1.4 2004/07/15 10:44:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Map.*;
 import javax.swing.JTabbedPane;
 
@@ -37,7 +38,7 @@ import javax.swing.JTabbedPane;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/07/14 07:25:04 $
+ * @version $Revision: 1.4 $, $Date: 2004/07/15 10:44:44 $
  * @author $Author: krupenn $
  * @see
  */
@@ -75,14 +76,38 @@ import javax.swing.JTabbedPane;
 
 	public void setContext(ApplicationContext aContext)
 	{
+		Dispatcher disp;
+		if(this.aContext != null)
+		{
+			disp = this.aContext.getDispatcher();
+			if(disp != null)
+			{
+				disp.unregister(this, "mapselectevent");
+				disp.unregister(this, "mapdeselectevent");
+			}
+		}
 		this.aContext = aContext;
 		if(aContext == null)
 			return;
-		Dispatcher disp = aContext.getDispatcher();
-		if(disp == null)
+		disp = this.aContext.getDispatcher();
+		if(disp != null)
+		{
+			disp.register(this, "mapselectevent");
+			disp.register(this, "mapdeselectevent");
+		}
+	}
+	
+	public void setVisible(boolean isVisible)
+	{
+		super.setVisible(isVisible);
+		if(!isVisible)
 			return;
-		disp.register(this, "mapselectevent");
-		disp.register(this, "mapdeselectevent");
+		
+		MapMainFrame mmf = (MapMainFrame )Pool.get("environment", "mapmainframe");
+		if(mmf != null)
+			if(mmf.isVisible())
+				if(mmf.getParent().equals(this.getParent()))
+					setMapMainFrame(mmf);
 	}
 
 	public void operationPerformed(OperationEvent ae)

@@ -20,6 +20,8 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 
+import com.syrus.AMFICOM.Client.Map.*;
+
 public class MapSchemeTreePanel extends JPanel 
 		implements 
 			OperationListener,
@@ -91,17 +93,48 @@ public class MapSchemeTreePanel extends JPanel
 
 	public void setContext(ApplicationContext aContext)
 	{
+		Dispatcher disp;
+		if(this.aContext != null)
+		{
+			disp = this.aContext.getDispatcher();
+			if(disp != null)
+			{
+				disp.unregister(this, MapNavigateEvent.type);
+				disp.unregister(this, "mapselectevent");
+				disp.unregister(this, "mapdeselectevent");
+			}
+		}
+
 		this.aContext = aContext;
 		if(aContext == null)
 			return;
-		Dispatcher disp = aContext.getDispatcher();
-		if(disp == null)
+
+		disp = this.aContext.getDispatcher();
+		if(disp != null)
+		{
+			disp.register(this, MapNavigateEvent.type);
+			disp.register(this, "mapselectevent");
+			disp.register(this, "mapdeselectevent");
+//			disp.register(this, "mapchangeevent");
+//			disp.register(this, "mapselectionchangeevent");
+		}
+	}
+	
+	public void setVisible(boolean isVisible)
+	{
+		super.setVisible(isVisible);
+		if(!isVisible)
 			return;
-		disp.register(this, MapNavigateEvent.type);
-		disp.register(this, "mapselectevent");
-		disp.register(this, "mapdeselectevent");
-//		disp.register(this, "mapchangeevent");
-//		disp.register(this, "mapselectionchangeevent");
+		
+		MapMainFrame mmf = (MapMainFrame )Pool.get("environment", "mapmainframe");
+		if(mmf != null)
+			if(mmf.isVisible())
+				if(mmf.getParent().equals(this.getParent()))
+				{
+					MapContext mc = mmf.getMapContext();
+					scheme = (Scheme )Pool.get(Scheme.typ, mc.scheme_id);
+					updateTree();
+				}
 	}
 
 	public void operationPerformed(OperationEvent oe )

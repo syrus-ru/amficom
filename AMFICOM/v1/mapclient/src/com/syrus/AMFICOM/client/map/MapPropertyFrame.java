@@ -77,14 +77,26 @@ public class MapPropertyFrame extends ObjectResourcePropertyFrame
 
 	public void setContext(ApplicationContext aContext)
 	{
+		Dispatcher disp;
+		if(this.aContext != null)
+		{
+			disp = this.aContext.getDispatcher();
+			if(disp != null)
+			{
+				disp.unregister(this, MapNavigateEvent.type);
+				disp.unregister(this, "mapdeselectevent");
+			}
+		}
+
 		super.setContext(aContext);
 		if(aContext == null)
 			return;
-		Dispatcher disp = aContext.getDispatcher();
-		if(disp == null)
-			return;
-		disp.register(this, MapNavigateEvent.type);
-		disp.register(this, "mapdeselectevent");
+		disp = this.aContext.getDispatcher();
+		if(disp != null)
+		{
+			disp.register(this, MapNavigateEvent.type);
+			disp.register(this, "mapdeselectevent");
+		}
 	}
 
 	public void initialize()

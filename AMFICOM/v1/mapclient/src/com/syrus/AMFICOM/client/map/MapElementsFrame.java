@@ -37,17 +37,44 @@ public class MapElementsFrame extends JInternalFrame
 
 	public void setContext(ApplicationContext aContext)
 	{
+		Dispatcher disp;
+		if(this.aContext != null)
+		{
+			disp = this.aContext.getDispatcher();
+			if(disp != null)
+			{
+				disp.unregister(this, "mapselectevent");
+				disp.unregister(this, "mapdeselectevent");
+				disp.unregister(this, "mapchangeevent");
+				disp.unregister(this, "mapselectionchangeevent");
+			}
+		}
 		this.aContext = aContext;
 		panel.setContext(aContext);
 		if(aContext == null)
 			return;
-		Dispatcher disp = aContext.getDispatcher();
-		if(disp == null)
+		
+		disp = this.aContext.getDispatcher();
+		if(disp != null)
+		{
+			disp.register(this, "mapselectevent");
+			disp.register(this, "mapdeselectevent");
+			disp.register(this, "mapchangeevent");
+			disp.register(this, "mapselectionchangeevent");
+		}
+	}
+	
+	public void setVisible(boolean isVisible)
+	{
+		super.setVisible(isVisible);
+		if(!isVisible)
 			return;
-		disp.register(this, "mapselectevent");
-		disp.register(this, "mapdeselectevent");
-		disp.register(this, "mapchangeevent");
-		disp.register(this, "mapselectionchangeevent");
+		
+		MapMainFrame mmf = (MapMainFrame )Pool.get("environment", "mapmainframe");
+		if(mmf != null)
+			if(mmf.isVisible())
+				if(mmf.getParent().equals(this.getParent()))
+					setMapContext(mmf.getMapContext());
 	}
 
 	private void jbInit() throws Exception
