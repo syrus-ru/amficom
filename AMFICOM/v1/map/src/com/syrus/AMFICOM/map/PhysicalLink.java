@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLink.java,v 1.18 2005/01/24 16:48:55 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.19 2005/01/25 14:36:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/01/24 16:48:55 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2005/01/25 14:36:58 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -352,8 +352,12 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return this.building;
 	}
 	
-	public void setBuilding(String building) {
+	protected void setBuilding0(String building) {
 		this.building = building;
+	}
+	
+	public void setBuilding(String building) {
+		this.setBuilding0(building);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -361,17 +365,26 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return this.city;
 	}
 	
-	public void setCity(String city) {
+	protected void setCity0(String city) {
 		this.city = city;
-		super.currentVersion = super.getNextVersion();
 	}
+	
+	public void setCity(String city) {
+		this.setCity0(city);
+		super.currentVersion = super.getNextVersion();
+	}	
+	
 	
 	public String getDescription() {
 		return this.description;		
 	}
 	
-	public void setDescription(String description) {
+	protected void setDescription0(String description) {
 		this.description = description;
+	}
+	
+	public void setDescription(String description) {
+		this.setDescription0(description);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -391,15 +404,19 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	public void setDimensionY(int dimensionY) {
 		this.dimensionY = dimensionY;
 		super.currentVersion = super.getNextVersion();
-	}
+	}	
 	
 	public AbstractNode getEndNode() {
 		return this.endNode;
 	}
 	
-	public void setEndNode(AbstractNode endNode) {
+	protected void setEndNode0(AbstractNode endNode) {
 		this.endNode = endNode;
 		this.nodeLinksSorted = false;
+	}
+	
+	public void setEndNode(AbstractNode endNode) {
+		this.setEndNode0(endNode);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -407,8 +424,12 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return this.leftToRight;
 	}
 	
-	public void setLeftToRight(boolean leftToRight) {
+	protected void setLeftToRight0(boolean leftToRight) {
 		this.leftToRight = leftToRight;
+	}
+	
+	public void setLeftToRight(boolean leftToRight) {
+		this.setLeftToRight0(leftToRight);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -416,8 +437,16 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return this.name;
 	}
 	
-	public void setName(String name) {
+	protected void setPhysicalLinkType0(PhysicalLinkType physicalLinkType) {
+		this.physicalLinkType = physicalLinkType;
+	}
+	
+	protected void setName0(String name) {
 		this.name = name;
+	}
+	
+	public void setName(String name) {
+		this.setName0(name);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -437,18 +466,27 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return this.startNode;
 	}
 	
-	public void setStartNode(AbstractNode startNode) {
+	protected void setStartNode0(AbstractNode startNode) {
 		this.startNode = startNode;
 		this.nodeLinksSorted = false;
+
+	}
+	
+	public void setStartNode(AbstractNode startNode) {
+		this.setStartNode0(startNode);
 		super.currentVersion = super.getNextVersion();
 	}
 	
 	public String getStreet() {
 		return this.street;
+	}	
+	
+	protected void setStreet0(String street) {
+		this.street = street;
 	}
 	
 	public void setStreet(String street) {
-		this.street = street;
+		this.setStreet0(street);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -456,8 +494,12 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return this.topToBottom;
 	}
 	
-	public void setTopToBottom(boolean topToBottom) {
+	protected void setTopToBottom0(boolean topToBottom) {
 		this.topToBottom = topToBottom;
+	}
+	
+	public void setTopToBottom(boolean topToBottom) {
+		this.setTopToBottom0(topToBottom);
 		super.currentVersion = super.getNextVersion();
 	}
 	
