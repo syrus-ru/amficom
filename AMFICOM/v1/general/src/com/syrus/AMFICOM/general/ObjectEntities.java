@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.40 2004/12/27 21:02:53 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.41 2005/01/13 11:08:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/12/27 21:02:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2005/01/13 11:08:52 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public final class ObjectEntities {
@@ -263,9 +263,10 @@ public final class ObjectEntities {
 	public static final short RESOURCE_MAX_ENTITY_CODE = 0x0380;
 	
 	/*
-	 * MapView:			(0x0380 - 0x0400)
+	 * MapView:        897-960 (0x0381-0x03C0)
+	 * MapView Types:  961-1024(0x03C1-0x0400)
 	 */
-	public static final short MAPVIEW_MIN_ENTITY_CODE = 0x380;
+	public static final short MAPVIEW_MIN_ENTITY_CODE = 0x381;
 	
 	public static final short MAPVIEW_ENTITY_CODE = MAPVIEW_MIN_ENTITY_CODE;
 	
@@ -531,7 +532,12 @@ public final class ObjectEntities {
 				return null;
 		}
 	}
-	
+
+	public static String codeToString(final Short code) {
+		assert code != null;
+		return codeToString(code.shortValue());
+	}
+
 	public static boolean codeIsValid(final short code) {
 		return (codeToString(code) != null);
 	}
