@@ -116,7 +116,17 @@ module corba {
 		configuration::corba::KISSeq_Transferable transmitKISsButIdsByCondition(
 						in general::corba::IdentifierSeq_Transferable ids_Transferable,
 						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
-			raises (general::corba::AMFICOMRemoteException);		
+			raises (general::corba::AMFICOMRemoteException);
+
+		configuration::corba::PortSeq_Transferable transmitPortsButIdsByCondition(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
+		configuration::corba::MeasurementPortSeq_Transferable transmitMeasurementPortsButIdsByCondition(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
 
 
 /////////////////////////////////////////	Measurement //////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.34 2005/03/23 15:08:43 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.35 2005/03/23 18:32:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -99,7 +99,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/03/23 15:08:43 $
+ * @version $Revision: 1.35 $, $Date: 2005/03/23 18:32:30 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -585,6 +585,76 @@ public class MServerImplementation extends MServerPOA {
 			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				KIS kis = (KIS) it.next();
 				transferables[i] = (KIS_Transferable) kis.getTransferable();
+			}
+			return transferables;
+
+		}
+
+		catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public Port_Transferable[] transmitPortsButIdsByCondition(Identifier_Transferable[] ids_Transferable,
+			StorableObjectCondition_Transferable condition_Transferable)
+			throws AMFICOMRemoteException {
+		try {
+			Collection collection;
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
+			if (ids_Transferable.length > 0) {
+				List idsList = new ArrayList(ids_Transferable.length);
+				for (int i = 0; i < ids_Transferable.length; i++)
+					idsList.add(new Identifier(ids_Transferable[i]));
+				collection = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+			}
+			else
+				collection = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+			Port_Transferable[] transferables = new Port_Transferable[collection.size()];
+			int i = 0;
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
+				Port port = (Port) it.next();
+				transferables[i] = (Port_Transferable) port.getTransferable();
+			}
+			return transferables;
+
+		}
+
+		catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public MeasurementPort_Transferable[] transmitMeasurementPortsButIdsByCondition(Identifier_Transferable[] ids_Transferable,
+			StorableObjectCondition_Transferable condition_Transferable)
+			throws AMFICOMRemoteException {
+		try {
+			Collection collection;
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
+			if (ids_Transferable.length > 0) {
+				List idsList = new ArrayList(ids_Transferable.length);
+				for (int i = 0; i < ids_Transferable.length; i++)
+					idsList.add(new Identifier(ids_Transferable[i]));
+				collection = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+			}
+			else
+				collection = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+			MeasurementPort_Transferable[] transferables = new MeasurementPort_Transferable[collection.size()];
+			int i = 0;
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
+				MeasurementPort measurementPort = (MeasurementPort) it.next();
+				transferables[i] = (MeasurementPort_Transferable) measurementPort.getTransferable();
 			}
 			return transferables;
 
