@@ -191,6 +191,7 @@ module corba {
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
     TestTemporalType temporal_type;
 		TestTimeStamps_Transferable time_stamps;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable temporal_pattern_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable measurement_type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable analysis_type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable evaluation_type_id;
