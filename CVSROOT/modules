@@ -70,7 +70,9 @@ AMFICOM_v1	&idl_v1\
 		&importmif_v1\
 		&tools\
 		&mapview_v1\
-		&dbscheme_v1
+		&dbscheme_v1 \
+		&mapinfo_v1 \
+		&spatialfx_v1
 
 #M	idl_v1		Client-side AMFICOM CORBA object & interface
 idl_v1		AMFICOM/v1/idl
@@ -146,6 +148,10 @@ mapview_v1	AMFICOM/v1/mapview
 database_v1	AMFICOM/v1/database
 #M	dbscheme_v1	Database Scheme (old)
 dbscheme_v1	AMFICOM/v1/dbscheme
+#M	mapinfo_v1	MapInfo-dependent Implementation
+mapinfo_v1	AMFICOM/v1/mapinfo
+#M	spatialfx_v1	SpatialFX-dependent Implementation
+spatialfx_v1	AMFICOM/v1/spatialfx
 
 akp		hw/akp
 trc		hw/trc
