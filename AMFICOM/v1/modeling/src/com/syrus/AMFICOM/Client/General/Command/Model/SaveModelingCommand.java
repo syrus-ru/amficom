@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class SaveModelingCommand extends VoidCommand
 
 		try
 		{
-			List aTypes =
+			Collection aTypes =
 				MeasurementStorableObjectPool.getStorableObjectsByCondition(aTypeCondition, true);
 			for (Iterator it = aTypes.iterator(); it.hasNext();)
 			{

@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Model;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -141,7 +142,7 @@ public class LoadModelingCommand extends VoidCommand
 						getStorableObject(m.getMonitoredElementId(), true);
 
 				if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
-					List tpathIds = me.getMonitoredDomainMemberIds();
+					Collection tpathIds = me.getMonitoredDomainMemberIds();
 					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
 							getAccessIdentifier().domain_id);
 					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
