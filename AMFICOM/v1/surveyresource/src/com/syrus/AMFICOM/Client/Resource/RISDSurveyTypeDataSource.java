@@ -7,7 +7,7 @@ import com.syrus.AMFICOM.Client.Resource.Test.*;
 import com.syrus.AMFICOM.Client.General.*;
 
 public class RISDSurveyTypeDataSource
-		extends RISDMapDataSource
+		extends RISDMapViewDataSource
 		implements DataSourceInterface
 {
 	protected RISDSurveyTypeDataSource(){
