@@ -28,8 +28,8 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_mcm_TCPServer_getConnectedSocket(
 	jcharArray socket_kis_id)
 {
 	sockaddr_in peer;
-	int peerlen = sizeof(peer);
-	SOCKET accepted_socket = accept(listening_socket,(sockaddr *)&peer,&peerlen);
+	socklen_t peerlen = sizeof(peer);
+	SOCKET accepted_socket = accept(listening_socket,(sockaddr *)&peer,(socklen_t *)&peerlen);
 	if (accepted_socket == INVALID_SOCKET)
 		return -1;
 
@@ -54,10 +54,10 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_mcm_TCPServer_getConnectedSocket(
 JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_mcm_TCPServer_shutdown_1server
   (JNIEnv * env, jobject obj, jintArray socketsToClose)
 {
-	long * socketsToCloseInts = env->GetIntArrayElements(socketsToClose,NULL);
+	jint * socketsToCloseInts = env->GetIntArrayElements(socketsToClose,NULL);
 	jsize l = env->GetArrayLength(socketsToClose);
 
-	long * lcSocketsToClose = new long[l];
+	jint * lcSocketsToClose = new jint[l];
 
 	memcpy(lcSocketsToClose, socketsToCloseInts,l);
 
