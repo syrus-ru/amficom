@@ -14,5 +14,6 @@
 	<classpathentry kind="src" path="/cmserver_v1"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/administrate.jar"/>
 	<classpathentry kind="src" path="/map_v1"/>
+	<classpathentry kind="src" path="/admin_v1"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
