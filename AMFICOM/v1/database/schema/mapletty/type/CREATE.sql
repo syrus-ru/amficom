@@ -1,2 +1,0 @@
-@@physicallinktype
-@@sitenodetype
