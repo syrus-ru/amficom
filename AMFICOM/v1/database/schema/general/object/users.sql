@@ -1,6 +1,6 @@
--- $Id: users.sql,v 1.5 2004/10/13 15:57:51 bass Exp $
+-- $Id: users.sql,v 1.6 2004/10/13 15:59:11 bass Exp $
 
-CREATE TABLE users(
+CREATE TABLE mcm.users(
  id VARCHAR2(32),
  created DATE NOT NULL,
  modified DATE NOT NULL,
