@@ -264,12 +264,12 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 //			MapNodeElement smne = (MapNodeElement )getMapContext().getNode(startNode_id);
 			MapNodeLinkElement snle = (MapNodeLinkElement )getMapContext().getNodeLinksInPhysicalLink(getId()).get(0);
 			MapNodeElement smne = snle.startNode;
-			s2 =  ":\n" + "   от " + smne.getName() + " [" + LangModel.String("node" + smne.getTyp()) + "]";
+			s2 =  ":\n" + "   от " + smne.getName() + " [" + LangModel.getString("node" + smne.getTyp()) + "]";
 //			MapNodeElement emne = (MapNodeElement )getMapContext().getNode(endNode_id);
 			MapNodeLinkElement enle = (MapNodeLinkElement )getMapContext().getNodeLinksInPhysicalLink(getId()).get(
 					getMapContext().getNodeLinksInPhysicalLink(getId()).size() - 1);
 			MapNodeElement emne = enle.endNode;
-			s3 = "\n" + "   до " + emne.getName() + " [" + LangModel.String("node" + emne.getTyp()) + "]";
+			s3 = "\n" + "   до " + emne.getName() + " [" + LangModel.getString("node" + emne.getTyp()) + "]";
 		}
 		catch(Exception e)
 		{

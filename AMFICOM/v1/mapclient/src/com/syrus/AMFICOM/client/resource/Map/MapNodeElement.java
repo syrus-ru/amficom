@@ -303,7 +303,7 @@ public abstract class MapNodeElement extends ObjectResource
 	{
 		String s1 = getName();
 
-		return s1 + " [" + LangModel.String("node" + getTyp()) + "]";
+		return s1 + " [" + LangModel.getString("node" + getTyp()) + "]";
 	}
 
 //¬озвращ€ет длинну линий внутри данного узла,

@@ -72,7 +72,7 @@ public class MapPropertyFrame extends ObjectResourcePropertyFrame
 	{
 		this.setIconifiable(true);
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setTitle(LangModelMap.String("propertiesTitle"));
+		this.setTitle(LangModelMap.getString("propertiesTitle"));
 	}
 
 	public void setContext(ApplicationContext aContext)

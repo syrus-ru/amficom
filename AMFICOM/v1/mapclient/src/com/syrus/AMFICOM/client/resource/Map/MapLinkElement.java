@@ -98,10 +98,10 @@ public abstract class MapLinkElement extends ObjectResource implements MapElemen
 		{
 //			MapNodeElement smne = (MapNodeElement )getMapContext().getNode(startNode_id);
 			MapNodeElement smne = startNode;
-			s2 =  ":\n" + "   от " + smne.getName() + " [" + LangModel.String("node" + smne.getTyp()) + "]";
+			s2 =  ":\n" + "   от " + smne.getName() + " [" + LangModel.getString("node" + smne.getTyp()) + "]";
 //			MapNodeElement emne = (MapNodeElement )getMapContext().getNode(endNode_id);
 			MapNodeElement emne = endNode;
-			s3 = "\n" + "   до " + emne.getName() + " [" + LangModel.String("node" + emne.getTyp()) + "]";
+			s3 = "\n" + "   до " + emne.getName() + " [" + LangModel.getString("node" + emne.getTyp()) + "]";
 		}
 		catch(Exception e)
 		{

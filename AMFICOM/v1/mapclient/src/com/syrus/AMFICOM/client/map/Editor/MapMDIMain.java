@@ -130,7 +130,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 		setSize(frameSize);
 		setLocation(0, 0);
 
-		this.setTitle(LangModelConfig.String("MapTitle"));
+		this.setTitle(LangModelConfig.getString("MapTitle"));
 		this.addComponentListener(new MapMDIMain_this_componentAdapter(this));
 		this.addWindowListener(new java.awt.event.WindowAdapter()
 		{
@@ -241,11 +241,11 @@ public class MapMDIMain extends JFrame implements OperationListener
 		statusBar.setWidth("domain", 150);
 		statusBar.setWidth("time", 50);
 
-		statusBar.setText("status", LangModel.String("statusReady"));
-		statusBar.setText("server", LangModel.String("statusNoConnection"));
-		statusBar.setText("session", LangModel.String("statusNoSession"));
-		statusBar.setText("user", LangModel.String("statusNoUser"));
-		statusBar.setText("domain", LangModel.String("statusNoDomain"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
+		statusBar.setText("server", LangModel.getString("statusNoConnection"));
+		statusBar.setText("session", LangModel.getString("statusNoSession"));
+		statusBar.setText("user", LangModel.getString("statusNoUser"));
+		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 		statusBar.setText("time", " ");
 		statusBar.organize();
 		statusBar.setDispatcher(Environment.the_dispatcher);
@@ -386,7 +386,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 			aModel.setEnabled("menuMapClose", true);
 
 			aModel.fireModelChanged("");
-			setTitle(LangModelConfig.String("MapTitle") + ": " + ((MapContext)ae.getSource()).getName());
+			setTitle(LangModelConfig.getString("MapTitle") + ": " + ((MapContext )ae.getSource()).getName());
 		}
 		else
 		if(ae.getActionCommand().equals("mapcloseevent"))
@@ -412,7 +412,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 			aModel.setEnabled("menuMapSaveAs", false);
 			aModel.setEnabled("menuMapClose", false);
 			aModel.fireModelChanged("");
-			setTitle(LangModelConfig.String("MapTitle"));
+			setTitle(LangModelConfig.getString("MapTitle"));
 		}
 		else 
 		if(ae.getActionCommand().equals("contextchange"))
@@ -448,7 +448,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 			}
 			if(cce.SESSION_CHANGING)
 			{
-				statusBar.setText("status", LangModel.String("statusSettingSession"));
+				statusBar.setText("status", LangModel.getString("statusSettingSession"));
 			}
 			if(cce.SESSION_CHANGED)
 			{
@@ -486,7 +486,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 			}
 			if(cce.CONNECTION_CHANGING)
 			{
-				statusBar.setText("status", LangModel.String("statusConnecting"));
+				statusBar.setText("status", LangModel.getString("statusConnecting"));
 			}
 			if(cce.CONNECTION_CHANGED)
 			{
@@ -505,7 +505,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 
 		aModel.fireModelChanged("");
 
-		statusBar.setText("status", LangModel.String("statusReady"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
 		statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
 	}
 
@@ -524,8 +524,8 @@ public class MapMDIMain extends JFrame implements OperationListener
 
 		aModel.fireModelChanged("");
 
-		statusBar.setText("status", LangModel.String("statusDisconnected"));
-		statusBar.setText("server", LangModel.String("statusNoConnection"));
+		statusBar.setText("status", LangModel.getString("statusDisconnected"));
+		statusBar.setText("server", LangModel.getString("statusNoConnection"));
 	}
 
 	public void setConnectionFailed()
@@ -543,8 +543,8 @@ public class MapMDIMain extends JFrame implements OperationListener
 
 		aModel.fireModelChanged("");
 
-		statusBar.setText("status", LangModel.String("statusError"));
-		statusBar.setText("server", LangModel.String("statusConnectionError"));
+		statusBar.setText("status", LangModel.getString("statusError"));
+		statusBar.setText("server", LangModel.getString("statusConnectionError"));
 	}
 
 	public void setSessionOpened()
@@ -562,7 +562,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 			statusBar.setText("domain", Pool.getName("domain", domain_id));
 			setDomainSelected();
 		}
-		statusBar.setText("status", LangModel.String("statusReady"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
 		statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
 		statusBar.setText("user", aContext.getSessionInterface().getUser());
 	}
@@ -626,10 +626,10 @@ public class MapMDIMain extends JFrame implements OperationListener
 
 		new CloseAllInternalCommand(desktopPane).execute();
 
-		statusBar.setText("status", LangModel.String("statusReady"));
-		statusBar.setText("session", LangModel.String("statusNoSession"));
-		statusBar.setText("user", LangModel.String("statusNoUser"));
-		statusBar.setText("domain", LangModel.String("statusNoDomain"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
+		statusBar.setText("session", LangModel.getString("statusNoSession"));
+		statusBar.setText("user", LangModel.getString("statusNoUser"));
+		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 	}
 
 	public Dispatcher getInternalDispatcher()

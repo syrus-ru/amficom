@@ -48,7 +48,7 @@ public class MapToolBar extends JToolBar implements ApplicationModelListener
 				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
 		sessionOpen.setMaximumSize(buttonSize);
 		sessionOpen.setPreferredSize(buttonSize);
-		sessionOpen.setToolTipText(LangModel.ToolTip("menuSessionNew"));
+		sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
 		sessionOpen.setName("menuSessionNew");
 		sessionOpen.addActionListener(actionAdapter);
 
@@ -56,7 +56,7 @@ public class MapToolBar extends JToolBar implements ApplicationModelListener
 				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
 		buttonCloseSession.setMaximumSize(buttonSize);
 		buttonCloseSession.setPreferredSize(buttonSize);
-		buttonCloseSession.setToolTipText(LangModel.ToolTip("menuSessionClose"));
+		buttonCloseSession.setToolTipText(LangModel.getString("menuSessionClose"));
 		buttonCloseSession.setName("menuSessionClose");
 //		buttonCloseSession.addActionListener(actionAdapter);
 
@@ -64,7 +64,7 @@ public class MapToolBar extends JToolBar implements ApplicationModelListener
 				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
 		menuSessionDomain.setMaximumSize(buttonSize);
 		menuSessionDomain.setPreferredSize(buttonSize);
-		menuSessionDomain.setToolTipText(LangModel.ToolTip("menuSessionDomain"));
+		menuSessionDomain.setToolTipText(LangModel.getString("menuSessionDomain"));
 		menuSessionDomain.setName("menuSessionDomain");
 //		menuSessionDomain.addActionListener(actionAdapter);
 
@@ -72,7 +72,7 @@ public class MapToolBar extends JToolBar implements ApplicationModelListener
 				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
 		menuMapNew.setMaximumSize(buttonSize);
 		menuMapNew.setPreferredSize(buttonSize);
-		menuMapNew.setToolTipText(LangModelMap.ToolTip("menuMapNew"));
+		menuMapNew.setToolTipText(LangModelMap.getString("menuMapNew"));
 		menuMapNew.setName("menuMapNew");
 		menuMapNew.addActionListener(actionAdapter);
 
@@ -80,7 +80,7 @@ public class MapToolBar extends JToolBar implements ApplicationModelListener
 				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
 		menuMapOpen.setMaximumSize(buttonSize);
 		menuMapOpen.setPreferredSize(buttonSize);
-		menuMapOpen.setToolTipText(LangModelMap.ToolTip("menuMapOpen"));
+		menuMapOpen.setToolTipText(LangModelMap.getString("menuMapOpen"));
 		menuMapOpen.setName("menuMapOpen");
 		menuMapOpen.addActionListener(actionAdapter);
 
@@ -88,7 +88,7 @@ public class MapToolBar extends JToolBar implements ApplicationModelListener
 				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
 		menuMapSave.setMaximumSize(buttonSize);
 		menuMapSave.setPreferredSize(buttonSize);
-		menuMapSave.setToolTipText(LangModelMap.ToolTip("menuMapSave"));
+		menuMapSave.setToolTipText(LangModelMap.getString("menuMapSave"));
 		menuMapSave.setName("menuMapSave");
 		menuMapSave.addActionListener(actionAdapter);
 

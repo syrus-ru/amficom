@@ -100,7 +100,7 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 		this.setMaximizable(true);
 		this.setResizable(true);
 
-		this.setTitle(LangModelMap.String("AppTitle"));
+		this.setTitle(LangModelMap.getString("AppTitle"));
 		this.addComponentListener(new MapMain_this_componentAdapter(this));
 
 		myMapViewer = NetMapViewer.createNetMapViewer(this);

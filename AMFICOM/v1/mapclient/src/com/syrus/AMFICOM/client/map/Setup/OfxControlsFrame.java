@@ -1,5 +1,5 @@
 /*
- * Название: $Id: OfxControlsFrame.java,v 1.2 2004/06/22 09:54:32 krupenn Exp $
+ * Название: $Id: OfxControlsFrame.java,v 1.3 2004/07/14 07:25:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.JTabbedPane;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/06/22 09:54:32 $
+ * @version $Revision: 1.3 $, $Date: 2004/07/14 07:25:04 $
  * @author $Author: krupenn $
  * @see
  */
@@ -120,7 +120,7 @@ import javax.swing.JTabbedPane;
 
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 
-		this.setTitle(LangModelConfig.Text("menuViewSetup"));
+		this.setTitle(LangModelConfig.getString("menuViewSetup"));
 		this.getContentPane().setLayout(borderLayout1);
 		this.setSize(new Dimension(370, 629));
 		

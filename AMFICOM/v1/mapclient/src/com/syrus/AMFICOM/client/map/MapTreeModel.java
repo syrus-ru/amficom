@@ -43,7 +43,7 @@ public class MapTreeModel extends ObjectResourceTreeModel
 
 	public ObjectResourceTreeNode getRoot()
 	{
-		return new ObjectResourceTreeNode("root", LangModelConfig.String("label_schemeStructure"), true);
+		return new ObjectResourceTreeNode("root", LangModelConfig.getString("label_schemeStructure"), true);
 	}
 
 	public ImageIcon getNodeIcon(ObjectResourceTreeNode node)
@@ -120,10 +120,10 @@ public class MapTreeModel extends ObjectResourceTreeModel
 			if(s.equals("root"))
 			{
 				ObjectResourceTreeNode ortn;
-				ortn = new ObjectResourceTreeNode(Scheme.typ, LangModelConfig.String("menuSchemeText"), true);
+				ortn = new ObjectResourceTreeNode(Scheme.typ, LangModelConfig.getString("menuSchemeText"), true);
 				vec.add(ortn);
 				registerSearchableNode(Scheme.typ, ortn);
-				ortn = new ObjectResourceTreeNode(MapContext.typ, LangModelConfig.String("label_topologicalScheme"), true);
+				ortn = new ObjectResourceTreeNode(MapContext.typ, LangModelConfig.getString("label_topologicalScheme"), true);
 				vec.add(ortn);
 				registerSearchableNode(MapContext.typ, ortn);
 			}
@@ -313,30 +313,30 @@ public class MapTreeModel extends ObjectResourceTreeModel
 			if(node.getObject() instanceof MapContext)
 			{
 				ObjectResourceTreeNode ortn;
-				ortn = new ObjectResourceTreeNode(MapEquipmentNodeElement.typ, LangModelConfig.String("label_nodes"), true);
+				ortn = new ObjectResourceTreeNode(MapEquipmentNodeElement.typ, LangModelConfig.getString("label_nodes"), true);
 				vec.add(ortn);
 				registerSearchableNode(MapEquipmentNodeElement.typ, ortn);
 
 //				vec.add(new ObjectResourceTreeNode(MapKISNodeElement.typ, "Óçëû ñ ÊÈÑ", true));
-				ortn = new ObjectResourceTreeNode(MapPhysicalLinkElement.typ, LangModelConfig.String("label_links"), true);
+				ortn = new ObjectResourceTreeNode(MapPhysicalLinkElement.typ, LangModelConfig.getString("label_links"), true);
 				vec.add(ortn);
 				registerSearchableNode(MapPhysicalLinkElement.typ, ortn);
-				ortn = new ObjectResourceTreeNode(MapPhysicalNodeElement.typ, LangModelConfig.String("label_topologicalNodes"), true);
+				ortn = new ObjectResourceTreeNode(MapPhysicalNodeElement.typ, LangModelConfig.getString("label_topologicalNodes"), true);
 				vec.add(ortn);
 				registerSearchableNode(MapPhysicalNodeElement.typ, ortn);
-				ortn = new ObjectResourceTreeNode(MapTransmissionPathElement.typ, LangModelConfig.String("menuJCatPathText"), true);
+				ortn = new ObjectResourceTreeNode(MapTransmissionPathElement.typ, LangModelConfig.getString("menuJCatPathText"), true);
 				vec.add(ortn);
 				registerSearchableNode(MapTransmissionPathElement.typ, ortn);
 			}
 			else
 			if(node.getObject() instanceof MapEquipmentNodeElement)
 			{
-				vec.add(new ObjectResourceTreeNode(MapPhysicalLinkElement.typ, LangModelConfig.String("label_inputLinks"), true));
+				vec.add(new ObjectResourceTreeNode(MapPhysicalLinkElement.typ, LangModelConfig.getString("label_inputLinks"), true));
 			}
 			else
 			if(node.getObject() instanceof MapPhysicalLinkElement)
 			{
-				vec.add(new ObjectResourceTreeNode(MapMarkElement.typ, LangModelConfig.String("label_marks"), true));
+				vec.add(new ObjectResourceTreeNode(MapMarkElement.typ, LangModelConfig.getString("label_marks"), true));
 			}
 			else
 			if(node.getObject() instanceof MapTransmissionPathElement)
@@ -346,10 +346,10 @@ public class MapTreeModel extends ObjectResourceTreeModel
 			else
 			if(node.getObject() instanceof Scheme)
 			{
-				vec.add(new ObjectResourceTreeNode(SchemeElement.typ, LangModelConfig.String("label_nodes"), true));
-				vec.add(new ObjectResourceTreeNode(SchemeLink.typ, LangModelConfig.String("label_links"), true));
-				vec.add(new ObjectResourceTreeNode(SchemeCableLink.typ, LangModelConfig.String("label_cablelinks"), true));
-				vec.add(new ObjectResourceTreeNode(SchemePath.typ, LangModelConfig.String("menuJCatPathText"), true));
+				vec.add(new ObjectResourceTreeNode(SchemeElement.typ, LangModelConfig.getString("label_nodes"), true));
+				vec.add(new ObjectResourceTreeNode(SchemeLink.typ, LangModelConfig.getString("label_links"), true));
+				vec.add(new ObjectResourceTreeNode(SchemeCableLink.typ, LangModelConfig.getString("label_cablelinks"), true));
+				vec.add(new ObjectResourceTreeNode(SchemePath.typ, LangModelConfig.getString("menuJCatPathText"), true));
 			}
 		}
 		return vec;

@@ -72,7 +72,7 @@ public class MapCatalogueCommand extends VoidCommand
 		if(dataSource == null)
 			return;
 			
-		ObjectResourceCatalogFrame frame = new ObjectResourceCatalogFrame(LangModelConfig.String("titleMapsCatalog"), aContext);
+		ObjectResourceCatalogFrame frame = new ObjectResourceCatalogFrame(LangModelConfig.getString("titleMapsCatalog"), aContext);
 		frame.setContents(new DataSet(Pool.getHash("mapcontext")));
 		frame.setDisplayModel(new MapContextDisplayModel());
 		frame.setObjectResourceClass(MapContext.class);

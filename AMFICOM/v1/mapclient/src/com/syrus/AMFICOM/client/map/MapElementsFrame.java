@@ -59,7 +59,7 @@ public class MapElementsFrame extends JInternalFrame
 
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 
-		this.setTitle(LangModelMap.String("elementsTitle"));
+		this.setTitle(LangModelMap.getString("elementsTitle"));
 
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(panel, BorderLayout.CENTER);

@@ -71,7 +71,7 @@ public class MapNewCommand extends VoidCommand
 			if (mapFrame != null)
 			{
 				mapFrame.setMapContext(mc);
-				mapFrame.setTitle( LangModelMap.String("AppTitle") + " - "
+				mapFrame.setTitle( LangModelMap.getString("AppTitle") + " - "
 												 + mapFrame.lnl().getMapContext().name);
 			}
 			aContext.getDispatcher().notify(new StatusMessageEvent("Операция завершена"));

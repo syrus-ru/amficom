@@ -110,7 +110,7 @@ public class MapMarkerModel extends ObjectResourceModel
 			if(col_id.equals("typ"))
 				return marker.getTyp();
 			if(col_id.equals("type_id"))
-				return LangModel.String("node" + marker.getTyp());
+				return LangModel.getString("node" + marker.getTyp());
 			if(col_id.equals("path"))
 				return marker.path_id;
 			if(col_id.equals("longitude"))
