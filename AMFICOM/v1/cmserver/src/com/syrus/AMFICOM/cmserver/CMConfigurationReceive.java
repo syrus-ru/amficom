@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationReceive.java,v 1.11 2005/01/28 12:19:16 arseniy Exp $
+ * $Id: CMConfigurationReceive.java,v 1.12 2005/02/02 11:36:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
@@ -45,6 +46,7 @@ import com.syrus.AMFICOM.configuration.corba.AbstractLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.CableThread_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
@@ -71,8 +73,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/01/28 12:19:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/02/02 11:36:45 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 public abstract class CMConfigurationReceive extends CMAdministrationReceive {
@@ -111,7 +113,78 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
 	}
+	
+	
+	public void receiveCableLinkTypes(	CableLinkType_Transferable[] cableLinkType_Transferables,
+										boolean force,
+										AccessIdentifier_Transferable accessIdentifier_Transferable)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("CMConfigurationReceive.receiveCableThreadTypes | Received "
+				+ cableLinkType_Transferables.length + " cableThreadTypes", Log.DEBUGLEVEL07);
+		List cableThreadTypeList = new ArrayList(cableLinkType_Transferables.length);
+		try {
+			for (int i = 0; i < cableLinkType_Transferables.length; i++) {
+				cableLinkType_Transferables[i].header.modifier_id = accessIdentifier_Transferable.user_id;
+				CableLinkType cableLinkType = new CableLinkType(cableLinkType_Transferables[i]);
+				ConfigurationStorableObjectPool.putStorableObject(cableLinkType);
+				cableThreadTypeList.add(cableLinkType);
+			}
+			CableLinkTypeDatabase database = (CableLinkTypeDatabase) ConfigurationDatabaseContext
+					.getCableLinkTypeDatabase();
+			database.update(cableThreadTypeList, force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (UpdateObjectException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (IllegalDataException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
+		} catch (IllegalObjectEntityException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
+		} catch (VersionCollisionException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION, CompletionStatus.COMPLETED_NO, e
+					.getMessage());
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+	
+	
+	public void receiveCableThreads(CableThread_Transferable[] cableThreads_Transferable,
+									boolean force,
+									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		// TODO Auto-generated method stub
 
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveCableLinkType(com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+	 */
+	public void receiveCableLinkType(	CableLinkType_Transferable cableLinkType_Transferable,
+										boolean force,
+										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		// TODO Auto-generated method stub
+
+	}
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#receiveCableThread(com.syrus.AMFICOM.configuration.corba.CableThread_Transferable, boolean, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+	 */
+	public void receiveCableThread(	CableThread_Transferable cableThread_Transferable,
+									boolean force,
+									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		// TODO Auto-generated method stub
+
+	}
+	
 	public void receiveCableThreadTypes(CableThreadType_Transferable[] cableThreadType_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {

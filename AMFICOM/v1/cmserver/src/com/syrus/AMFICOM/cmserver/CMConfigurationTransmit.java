@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationTransmit.java,v 1.2 2005/01/28 12:18:19 arseniy Exp $
+ * $Id: CMConfigurationTransmit.java,v 1.3 2005/02/02 11:36:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
+import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Equipment;
@@ -33,7 +34,9 @@ import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.TransmissionPathType;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.CableThread_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
@@ -57,17 +60,19 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/28 12:18:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/02/02 11:36:45 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -83,6 +88,37 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 		try {
 			CableThreadType cableThreadType = (CableThreadType) ConfigurationStorableObjectPool.getStorableObject(id, true);
 			return (CableThreadType_Transferable) cableThreadType.getTransferable();
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce.getMessage());
+		}
+		catch (DatabaseException de) {
+			Log.errorException(de);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+	
+	public CableLinkType_Transferable transmitCableLinkType(Identifier_Transferable id_Transferable,
+															AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Identifier id = new Identifier(id_Transferable);
+		Log.debugMessage("CMConfigurationTransmit.transmitCableLinkType | require " + id.toString(), Log.DEBUGLEVEL07);
+		try {
+			CableLinkType cableLinkType = (CableLinkType) ConfigurationStorableObjectPool.getStorableObject(id, true);
+			return (CableLinkType_Transferable) cableLinkType.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -459,14 +495,56 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
 	}
-
-	public CableThreadType_Transferable[] transmitCableThreadTypesButIds(
-			Identifier_Transferable[] ids_Transferable,
-			AccessIdentifier_Transferable accessIdentifier)
+	
+	
+	public CableLinkType_Transferable[] transmitCableLinkTypes(	Identifier_Transferable[] ids_Transferable,
+																AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		try {
 			Identifier domainId = new Identifier(accessIdentifier.domain_id);
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainId, true);
+			Log.debugMessage("CMConfigurationTransmit.transmitCableLinkTypes | require "
+					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
+					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
+			List list;
+			if (ids_Transferable.length > 0) {
+				List idsList = new ArrayList(ids_Transferable.length);
+				for (int i = 0; i < ids_Transferable.length; i++)
+					idsList.add(new Identifier(ids_Transferable[i]));
+				list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
+			} else
+				// TODO Maybe change to another condition
+				list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+					new EquivalentCondition(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), true);
+
+			CableLinkType_Transferable[] transferables = new CableLinkType_Transferable[list.size()];
+			int i = 0;
+			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+				CableLinkType cableLinkType = (CableLinkType) it.next();
+				transferables[i] = (CableLinkType_Transferable) cableLinkType.getTransferable();
+			}
+			return transferables;
+
+		} catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public CableThreadType_Transferable[] transmitCableThreadTypesButIds(
+			Identifier_Transferable[] ids_Transferable,
+			StorableObjectCondition_Transferable condition_Transferable,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		try {
+			Identifier domainId = new Identifier(accessIdentifier.domain_id);
+			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
 			Log.debugMessage("CMConfigurationTransmit.transmitCableThreadTypesButIds | require "
 					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
 					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
@@ -475,12 +553,10 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
-//			TODO Maybe change to another condition
-				list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, new EquivalentCondition(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), true);
+				list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 			}
 			else
-//			TODO Maybe change to another condition
-				list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), true);
+				list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			CableThreadType_Transferable[] transferables = new CableThreadType_Transferable[list.size()];
 			int i = 0;
@@ -511,9 +587,143 @@ public abstract class CMConfigurationTransmit extends CMAdministrationTransmit {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
+	}	
+	
+	public CableLinkType_Transferable[] transmitCableLinkTypesButIdsCondition(	Identifier_Transferable[] ids_Transferable,
+																		StorableObjectCondition_Transferable condition_Transferable,
+																		AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		try {
+			Identifier domainId = new Identifier(accessIdentifier.domain_id);
+			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			Log.debugMessage("CMConfigurationTransmit.transmitCableLinkTypesButIdsCondition | require "
+					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
+					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
+			List list;
+			if (ids_Transferable.length > 0) {
+				List idsList = new ArrayList(ids_Transferable.length);
+				for (int i = 0; i < ids_Transferable.length; i++)
+					idsList.add(new Identifier(ids_Transferable[i]));
+				list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+			} else
+				list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+			CableLinkType_Transferable[] transferables = new CableLinkType_Transferable[list.size()];
+			int i = 0;
+			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+				CableLinkType cableLinkType = (CableLinkType) it.next();
+				transferables[i] = (CableLinkType_Transferable) cableLinkType.getTransferable();
+			}
+			return transferables;
+
+		} catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		} catch (IllegalDataException ide) {
+			Log.errorException(ide);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
+		} catch (IllegalObjectEntityException ioee) {
+			Log.errorException(ioee);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
+	
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#transmitCableThread(com.syrus.AMFICOM.general.corba.Identifier_Transferable, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+	 */
+	public CableThread_Transferable transmitCableThread(Identifier_Transferable id_Transferable,
+														AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#transmitCableThreads(com.syrus.AMFICOM.general.corba.Identifier_Transferable[], com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+	 */
+	public CableThread_Transferable[] transmitCableThreads(	Identifier_Transferable[] ids_Transferable,
+															AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#transmitCableThreadButIdsCondition(com.syrus.AMFICOM.general.corba.Identifier_Transferable[], com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable, com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+	 */
+	public CableThread_Transferable[] transmitCableThreadButIdsCondition(	Identifier_Transferable[] ids_Transferable,
+																			StorableObjectCondition_Transferable condition_Transferable,
+																			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.cmserver.corba.CMServerOperations#transmitCableThreadTypesButIds(com.syrus.AMFICOM.general.corba.Identifier_Transferable[], com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable)
+	 */
+	public CableThreadType_Transferable[] transmitCableThreadTypesButIds(	Identifier_Transferable[] ids_Transferable,
+																			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public CableThreadType_Transferable[] transmitCableThreadTypesButIdsCondition(	Identifier_Transferable[] ids_Transferable,
+																					StorableObjectCondition_Transferable condition_Transferable,
+																					AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		try {
+			Identifier domainId = new Identifier(accessIdentifier.domain_id);
+			StorableObjectCondition condition = this.restoreCondition(condition_Transferable);
+			Log.debugMessage("CMConfigurationTransmit.transmitCableThreadTypesButIdsCondition | require "
+					+ (ids_Transferable.length == 0 ? "all" : Integer.toString(ids_Transferable.length))
+					+ " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
+			List list;
+			if (ids_Transferable.length > 0) {
+				List idsList = new ArrayList(ids_Transferable.length);
+				for (int i = 0; i < ids_Transferable.length; i++)
+					idsList.add(new Identifier(ids_Transferable[i]));
+				list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+			} else
+				list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
+			CableThreadType_Transferable[] transferables = new CableThreadType_Transferable[list.size()];
+			int i = 0;
+			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+				CableThreadType cableThreadType = (CableThreadType) it.next();
+				transferables[i] = (CableThreadType_Transferable) cableThreadType.getTransferable();
+			}
+			return transferables;
 
+		} catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		} catch (IllegalDataException ide) {
+			Log.errorException(ide);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
+		} catch (IllegalObjectEntityException ioee) {
+			Log.errorException(ioee);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
 
 	public Equipment_Transferable[] transmitEquipments(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		try {
