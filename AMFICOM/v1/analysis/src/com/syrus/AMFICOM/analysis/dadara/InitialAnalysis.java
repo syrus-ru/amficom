@@ -215,7 +215,7 @@ public class InitialAnalysis
 		}
 
 		//Excluding of the exidental zero points;
-		for(int i = start; i < end; i++)
+		for(int i = start; i < Math.min(end, trans.length - 2); i++)
 		{
 			if(Math.abs(trans[i]) < threshold)
 			{

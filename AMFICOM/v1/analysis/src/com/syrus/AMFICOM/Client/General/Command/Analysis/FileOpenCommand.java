@@ -120,6 +120,7 @@ public class FileOpenCommand extends VoidCommand
 			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
 			new InitialAnalysisCommand().execute();
+			//new MinuitAnalyseCommand(dispatcher, "primarytrace", aContext).execute();
 
 /*
 

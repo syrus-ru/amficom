@@ -35,6 +35,7 @@ public class InitialAnalysisCommand extends VoidCommand
 			if (pars[6] > 1)  //убрать фитировку
 				pars[6] = 1;
 
+
 			int reflSize = ReflectogramMath.getReflectiveEventSize(y, 0.5);
 			int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
 					y,
@@ -44,7 +45,7 @@ public class InitialAnalysisCommand extends VoidCommand
 			if (nReflSize > 3 * reflSize / 5)
 				nReflSize = 3 * reflSize / 5;
 
-			InitialAnalysis ia = new InitialAnalysis(
+	/*		InitialAnalysis ia = new InitialAnalysis(
 					y,
 					delta_x,
 					pars[0],
@@ -62,9 +63,9 @@ public class InitialAnalysisCommand extends VoidCommand
 					delta_x,
 					ep,
 					(int)pars[6],
-					ia.getMeanAttenuation());
+					ia.getMeanAttenuation());*/
 //
-//		 ReflectogramEvent[] ep = AnalysisManager.analyseTrace(y, delta_x, pars);
+		 ReflectogramEvent[] ep = AnalysisManager.analyseTrace(y, delta_x, pars, reflSize, nReflSize);
 
 			RefAnalysis a = new RefAnalysis();
 			a.decode(y, ep);
