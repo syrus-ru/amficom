@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.28 2004/10/29 15:03:39 max Exp $
+ * $Id: KISDatabase.java,v 1.29 2004/11/02 11:53:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/10/29 15:03:39 $
- * @author $Author: max $
+ * @version $Revision: 1.29 $, $Date: 2004/11/02 11:53:45 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -65,7 +65,7 @@ public class KISDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getEnityName() {
-		return "KIS";
+		return ObjectEntities.KIS_ENTITY;
 	}
 	
 	protected String getTableName() {
@@ -74,7 +74,7 @@ public class KISDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns()
+			this.updateColumns = super.getUpdateColumns() + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
                 + COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
@@ -87,7 +87,7 @@ public class KISDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues()
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
                 + QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -101,13 +101,13 @@ public class KISDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		KIS kis = fromStorableObject(storableObject);
-		String sql = super.getUpdateSingleSQLValues(storableObject)
-		+ kis.getDomainId().toSQLString() + COMMA
-        + kis.getType().getId().toSQLString() + COMMA
-		+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getName()) + APOSTOPHE + COMMA
-		+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getDescription()) + APOSTOPHE + COMMA
-		+ kis.getEquipmentId().toSQLString() + COMMA
-		+ kis.getMCMId().toSQLString();
+		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
+			+ kis.getDomainId().toSQLString() + COMMA
+	        + kis.getType().getId().toSQLString() + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getName()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getDescription()) + APOSTOPHE + COMMA
+			+ kis.getEquipmentId().toSQLString() + COMMA
+			+ kis.getMCMId().toSQLString();
 		return sql;
 	}
 	
@@ -119,15 +119,15 @@ public class KISDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition)
-		+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-        + COLUMN_TYPE_ID + COMMA
-		+ COLUMN_NAME + COMMA
-		+ COLUMN_DESCRIPTION + COMMA
-		+ COLUMN_EQUIPMENT_ID + COMMA
-		+ COLUMN_MCM_ID
-		+ SQL_FROM + ObjectEntities.KIS_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+		return super.retrieveQuery(condition) + COMMA
+			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+	        + COLUMN_TYPE_ID + COMMA
+			+ COLUMN_NAME + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_EQUIPMENT_ID + COMMA
+			+ COLUMN_MCM_ID
+			+ SQL_FROM + ObjectEntities.KIS_ENTITY
+			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
 	}
 
