@@ -636,7 +636,7 @@ module corba {
 						in general::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 			
-		configuration::corba::CableThreadSeq_Transferable transmitCableThreadButIdsCondition(
+		configuration::corba::CableThreadSeq_Transferable transmitCableThreadsButIdsCondition(
 						in general::corba::IdentifierSeq_Transferable ids_Transferable,
 						in general::corba::AccessIdentifier_Transferable accessIdentifier,
 						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
