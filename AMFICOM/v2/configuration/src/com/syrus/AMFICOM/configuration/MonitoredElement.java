@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Date;
 import java.util.ArrayList;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -29,7 +30,11 @@ public class MonitoredElement extends StorableObject {
 	}
 
 	public MonitoredElement(MonitoredElement_Transferable met) throws CreateObjectException {
-		super(new Identifier(met.id));
+		super(new Identifier(met.id),
+					new Date(met.created),
+					new Date(met.modified),
+					new Identifier(met.creator_id),
+					new Identifier(met.modifier_id));
 		this.kis_id = new Identifier(met.kis_id);
 		this.local_address = new String(met.local_address);
 
@@ -44,6 +49,10 @@ public class MonitoredElement extends StorableObject {
 
 	public Object getTransferable() {
 		return new MonitoredElement_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+																						 super.created.getTime(),
+																						 super.modified.getTime(),
+																						 (Identifier_Transferable)super.creator_id.getTransferable(),
+																						 (Identifier_Transferable)super.modifier_id.getTransferable(),
 																						 (Identifier_Transferable)this.kis_id.getTransferable(),
 																						 new String(this.local_address));
 	}
@@ -56,8 +65,16 @@ public class MonitoredElement extends StorableObject {
 		return this.local_address;
 	}
 
-	protected synchronized void setAttributes(Identifier kis_id,
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creator_id,
+																						Identifier modifier_id,
+																						Identifier kis_id,
 																						String local_address) {
+		super.setAttributes(created,
+												modified,
+												creator_id,
+												modifier_id);
 		this.kis_id = kis_id;
 		this.local_address = local_address;
 	}

@@ -14,15 +14,25 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 
 public class MonitoredElement_Database extends StorableObject_Database {
 
-	public void retrieve(StorableObject storableObject) throws Exception {
-		MonitoredElement monitoredElement = null;
+	private MonitoredElement fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof MonitoredElement)
-			monitoredElement = (MonitoredElement)storableObject;
+			return (MonitoredElement)storableObject;
 		else
-			throw new Exception("MonitoredElement_Database.retrieve | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new Exception("MonitoredElement_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
 
+	public void retrieve(StorableObject storableObject) throws Exception {
+		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		String me_id_str = monitoredElement.getId().toString();
-		String sql = "SELECT kis_id, local_address FROM " + ObjectEntities.ME_ENTITY + " WHERE id = " + me_id_str;
+		String sql = "SELECT "
+			+ DatabaseDate.toQuerySubString("created") + ", "
+			+ DatabaseDate.toQuerySubString("modified") + ", "
+			+ "creator_id, "
+			+ "modifier_id, "
+			+ "kis_id, "
+			+ "local_address"
+			+ " FROM " + ObjectEntities.ME_ENTITY
+			+ " WHERE id = " + me_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -30,7 +40,11 @@ public class MonitoredElement_Database extends StorableObject_Database {
 			Log.debugMessage("MonitoredElement_Database.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				monitoredElement.setAttributes(new Identifier(resultSet.getLong("kis_id")),
+				monitoredElement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
+																			 DatabaseDate.fromQuerySubString(resultSet, "modified"),
+																			 new Identifier(resultSet.getLong("creator_id")),
+																			 new Identifier(resultSet.getLong("modifier_id")),
+																			 new Identifier(resultSet.getLong("kis_id")),
 																			 resultSet.getString("local_address"));
 			else
 				throw new Exception("No such monitored element: " + me_id_str);
@@ -53,12 +67,7 @@ public class MonitoredElement_Database extends StorableObject_Database {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
-		MonitoredElement monitoredElement = null;
-		if (storableObject instanceof MonitoredElement)
-			monitoredElement = (MonitoredElement)storableObject;
-		else
-			throw new Exception("MonitoredElement_Database.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -66,14 +75,19 @@ public class MonitoredElement_Database extends StorableObject_Database {
 	}
 
 	public void insert(StorableObject storableObject) throws Exception {
-		MonitoredElement monitoredElement = null;
-		if (storableObject instanceof MonitoredElement)
-			monitoredElement = (MonitoredElement)storableObject;
-		else
-			throw new Exception("MonitoredElement_Database.insert | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		String me_id_str = monitoredElement.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.ME_ENTITY + " (id, kis_id, local_address) VALUES (" + me_id_str + ", " + monitoredElement.getKISId().toString() + ", '" + monitoredElement.getLocalAddress() + "')";
+		String sql = "INSERT INTO " + ObjectEntities.ME_ENTITY
+			+ " (id, created, modified, creator_id, modifier_id, kis_id, local_address)"
+			+ " VALUES ("
+			+ me_id_str + ", "
+			+ DatabaseDate.toUpdateSubString(monitoredElement.getCreated()) + ", "
+			+ DatabaseDate.toUpdateSubString(monitoredElement.getModified()) + ", "
+			+ monitoredElement.getCreatorId().toString() + ", "
+			+ monitoredElement.getModifierId().toString() + ", "
+			+ monitoredElement.getKISId().toString() + ", '"
+			+ monitoredElement.getLocalAddress()
+			+ "')";
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -96,10 +110,10 @@ public class MonitoredElement_Database extends StorableObject_Database {
 	}
 
 	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
-		MonitoredElement monitoredElement = null;
-		if (storableObject instanceof MonitoredElement)
-			monitoredElement = (MonitoredElement)storableObject;
-		else
-			throw new Exception("MonitoredElement_Database.update | Illegal Storable Object: " + storableObject.getClass().getName());
+		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
+		switch (update_kind) {
+			default:
+				return;
+		}
 	}
 }

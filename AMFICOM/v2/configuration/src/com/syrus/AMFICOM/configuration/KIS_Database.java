@@ -14,15 +14,26 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 
 public class KIS_Database extends StorableObject_Database {
 
-	public void retrieve(StorableObject storableObject) throws Exception {
-		KIS kis = null;
+	private KIS fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof KIS)
-			kis = (KIS)storableObject;
+			return (KIS)storableObject;
 		else
-			throw new Exception("KIS_Database.retrieve | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new Exception("KIS_Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}
 
+	public void retrieve(StorableObject storableObject) throws Exception {
+		KIS kis = this.fromStorableObject(storableObject);
 		String kis_id_str = kis.getId().toString();
-		String sql = "SELECT mcm_id, name, description FROM " + ObjectEntities.KIS_ENTITY + " WHERE id = " + kis_id_str;
+		String sql = "SELECT "
+			+ DatabaseDate.toQuerySubString("created") + ", " 
+			+ DatabaseDate.toQuerySubString("modified") + ", "
+			+ "creator_id, "
+			+ "modifier_id, "
+			+ "mcm_id, "
+			+ "name, "
+			+ "description"
+			+ " FROM " + ObjectEntities.KIS_ENTITY
+			+ " WHERE id = " + kis_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -30,7 +41,11 @@ public class KIS_Database extends StorableObject_Database {
 			Log.debugMessage("KIS_Database.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				kis.setAttributes(new Identifier(resultSet.getLong("mcm_id")),
+				kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
+													DatabaseDate.fromQuerySubString(resultSet, "modified"),
+													new Identifier(resultSet.getLong("creator_id")),
+													new Identifier(resultSet.getLong("modifier_id")),
+													new Identifier(resultSet.getLong("mcm_id")),
 													resultSet.getString("name"),
 													resultSet.getString("description"));
 			else
@@ -54,18 +69,24 @@ public class KIS_Database extends StorableObject_Database {
 	}
 
 	public void insert(StorableObject storableObject) throws Exception {
-		KIS kis = null;
-		if (storableObject instanceof KIS)
-			kis = (KIS)storableObject;
-		else
-			throw new Exception("KIS_Database.insert | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		KIS kis = this.fromStorableObject(storableObject);
 		this.insertKIS(kis);
 	}
 
 	public void insertKIS(KIS kis) throws Exception {
 		String kis_id_str = kis.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.KIS_ENTITY + " (id, mcm_id, name, description) VALUES (" + kis_id_str + ", " + kis.getMCMId().toString() + ", '" + kis.getName() + "', '" + kis.getDescription() + "')";
+		String sql = "INSERT INTO " + ObjectEntities.KIS_ENTITY
+			+ " (id, created, modified, creator_id, modifier_id, mcm_id, name, description)"
+			+ " VALUES ("
+			+ kis_id_str + ", "
+			+ DatabaseDate.toUpdateSubString(kis.getCreated()) + ", "
+			+ DatabaseDate.toUpdateSubString(kis.getModified()) + ", "
+			+ kis.getCreatorId().toString() + ", "
+			+ kis.getModifierId().toString() + ", "
+			+ kis.getMCMId().toString() + ", '"
+			+ kis.getName() + "', '"
+			+ kis.getDescription()
+			+ "')";
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -119,12 +140,7 @@ public class KIS_Database extends StorableObject_Database {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
-		KIS kis = null;
-		if (storableObject instanceof KIS)
-			kis = (KIS)storableObject;
-		else
-			throw new Exception("KIS_Database.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		KIS kis = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -132,10 +148,10 @@ public class KIS_Database extends StorableObject_Database {
 	}
 
 	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
-		KIS kis = null;
-		if (storableObject instanceof KIS)
-			kis = (KIS)storableObject;
-		else
-			throw new Exception("KIS_Database.update | Illegal Storable Object: " + storableObject.getClass().getName());
+		KIS kis = this.fromStorableObject(storableObject);
+		switch (update_kind) {
+			default:
+				return;
+		}
 	}
 }
