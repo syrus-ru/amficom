@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.4 2005/02/08 19:54:37 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.5 2005/02/09 15:44:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.administration;
 
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -16,13 +18,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/08 19:54:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/02/09 15:44:23 $
+ * @author $Author: bob $
  * @module admin_v1
  */
-class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
-
-	protected static final Short MCM_SHORT= new Short(ObjectEntities.MCM_ENTITY_CODE);
+final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 
 	private LinkedIdsConditionImpl(List linkedIds, Short entityCode) {
 		this.linkedIds = linkedIds;
@@ -34,33 +34,55 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		this.entityCode = entityCode;
 	}
 
+	private boolean checkDomain(DomainMember domainMember) throws ApplicationException {
+		Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
+		boolean condition = false;
+		/* if linked ids is domain id */
+		for (Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
+			Identifier id = (Identifier) it.next();
+			if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE) {
+				Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(id, true);
+				if (dmDomain.isChild(domain))
+					condition = true;
+
+			}
+
+		}
+		return condition;
+	}
+
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.MCM_ENTITY_CODE:
-				if (object instanceof MCM) {
-					MCM mcm = (MCM) object;
-					condition = super.conditionTest(mcm.getKISIds());
-				}
+				MCM mcm = (MCM) object;
+				/* if linked ids is kiss id */
+				List list = new LinkedList(mcm.getKISIds());
+				condition = super.conditionTest(list);
+				if (!condition)
+					condition = this.checkDomain(mcm);
+				break;
+			case ObjectEntities.DOMAIN_ENTITY_CODE:
+				Domain domain = (Domain) object;
+				condition = this.checkDomain(domain);
+				break;
+			case ObjectEntities.SERVER_ENTITY_CODE:
+				Server server = (Server) object;
+				condition = this.checkDomain(server);
 				break;
 			default:
-				throw new UnsupportedOperationException("entityCode " + ObjectEntities.codeToString(this.entityCode.shortValue()) + " is unknown for this condition");
+				throw new UnsupportedOperationException("entityCode "
+						+ ObjectEntities.codeToString(this.entityCode.shortValue()) + " is unknown for this condition");
 		}
 
 		return condition;
 	}
 
 	public void setEntityCode(Short entityCode) {
-		switch (entityCode.shortValue()) {
-			case ObjectEntities.MCM_ENTITY_CODE:
-				this.entityCode = MCM_SHORT;
-				break;
-			default:
-				throw new UnsupportedOperationException("entityCode " + ObjectEntities.codeToString(entityCode.shortValue()) + " is unknown for this condition");
-		}
+		this.entityCode = entityCode;
 	}
 
-	public boolean isNeedMore(List list) {		
+	public boolean isNeedMore(List list) {
 		return true;
-	}	
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.2 2005/02/09 11:50:45 bob Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.3 2005/02/09 15:44:39 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,22 +15,29 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/09 11:50:45 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/09 15:44:39 $
  * @author $Author: bob $
  * @module admin_v1
  */
-public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
+final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
 
-	public DatabaseLinkedIdsConditionImpl(LinkedIdsCondition condition) {
+	private DatabaseLinkedIdsConditionImpl(LinkedIdsCondition condition) {
 		super(condition);
 	}
 
 	public String getSQLQuery() throws IllegalDataException {
 		String query = null;
+		StringBuffer buffer = new StringBuffer();
 		switch (super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.MCM_ENTITY_CODE:
-				query = super.getLinkedQuery(MCMWrapper.LINK_COLUMN_MCM_ID, ObjectEntities.KIS_ENTITY,
-					StorableObjectWrapper.COLUMN_ID);
+				buffer.append(super.getLinkedQuery(MCMWrapper.LINK_COLUMN_MCM_ID, ObjectEntities.KIS_ENTITY,
+					StorableObjectWrapper.COLUMN_ID));
+				/* break commenting is ok, append domain condition too */
+//				break; 				
+			case ObjectEntities.DOMAIN_ENTITY_CODE:
+			case ObjectEntities.SERVER_ENTITY_CODE:
+				buffer.append(super.getQuery(DomainMember.COLUMN_DOMAIN_ID));
+				query = buffer.toString();
 				break;
 		}
 		return query;
