@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceSelectionDialog.java,v 1.2 2004/09/27 05:53:30 bass Exp $
+ * $Id: ObjectResourceSelectionDialog.java,v 1.3 2004/10/06 08:20:30 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,12 +18,14 @@ import java.util.Collection;
 import javax.swing.*;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/09/27 05:53:30 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.3 $, $Date: 2004/10/06 08:20:30 $
  * @module generalclient_v1
  */
 public class ObjectResourceSelectionDialog extends JDialog
 {
+	private static Insets insets = new Insets(10, 10, 10, 10);
+
 	private JPanel jPanel1 = new JPanel();
 	private JLabel jLabel = new JLabel();
 
@@ -92,17 +94,17 @@ public class ObjectResourceSelectionDialog extends JDialog
 				}
 			});
 
-		jLabel.setPreferredSize(new Dimension(100, 20));
-//		comboBox.setPreferredSize(new Dimension(200, 20));
+		jLabel.setPreferredSize(new Dimension(130, 20));
+		comboBox.setPreferredSize(new Dimension(200, 20));
 		
 //		getContentPane().setLayout(new BorderLayout());
 //		getContentPane().add(jPanel1, BorderLayout.CENTER);
 
-		getContentPane().add(jLabel, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 10, 10), 0, 0));
-		getContentPane().add(comboBox, new GridBagConstraints(2, 0, 2, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 10, 10, 10), 0, 0));
+		getContentPane().add(jLabel, ReusedGridBagConstraints.get(0, 0, 2, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, insets, 0, 0));
+		getContentPane().add(comboBox, ReusedGridBagConstraints.get(2, 0, 2, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, insets, 0, 0));
 
-		getContentPane().add(buttonOk, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(10, 10, 10, 10), 0, 0));
-		getContentPane().add(buttonCancel, new GridBagConstraints(3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(10, 10, 10, 10), 0, 0));
+		getContentPane().add(buttonOk, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, insets, 0, 0));
+		getContentPane().add(buttonCancel, ReusedGridBagConstraints.get(3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, insets, 0, 0));
 
 //		jPanel1.add(Box.createVerticalGlue(), new GridBagConstraints(1, 1, 2, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 	}

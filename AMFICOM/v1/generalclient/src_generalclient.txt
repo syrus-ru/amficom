@@ -191,6 +191,7 @@ src\com\syrus\AMFICOM\Client\General\UI\PropertiesPanel.java
 src\com\syrus\AMFICOM\Client\General\UI\PropertyEditor.java
 src\com\syrus\AMFICOM\Client\General\UI\PropertyRenderer.java
 src\com\syrus\AMFICOM\Client\General\UI\RejectDialog.java
+src\com\syrus\AMFICOM\Client\General\UI\ReusedGridBagConstraints.java
 src\com\syrus\AMFICOM\Client\General\UI\StatusBarModel.java
 src\com\syrus\AMFICOM\Client\General\UI\StubDisplayModel.java
 src\com\syrus\AMFICOM\Client\General\UI\StubPropertyDisplayModel.java

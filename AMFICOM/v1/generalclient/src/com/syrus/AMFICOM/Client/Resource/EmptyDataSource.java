@@ -256,7 +256,7 @@ public class EmptyDataSource implements DataSourceInterface
 		User user;
 
 		domain = new Domain();
-		domain.id = "domain1";
+		domain.id = "domain-1";
 		domain.name = "Домен";
 		domain.codename = "domain";
 		domain.owner_id = "sys";
