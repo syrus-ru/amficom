@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNode.java,v 1.16 2005/02/02 14:48:45 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.17 2005/02/03 08:38:02 bob Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 
@@ -41,8 +42,8 @@ import java.util.List;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
- * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/02/02 14:48:45 $
+ * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/02/03 08:38:02 $
  * @module map_v1
  */
 public class TopologicalNode extends AbstractNode {
@@ -396,7 +397,7 @@ public class TopologicalNode extends AbstractNode {
 			exportMap = new HashMap();		
 		synchronized(exportMap) {
 			exportMap.clear();
-			exportMap.put(StorableObjectDatabase.COLUMN_ID, this.id);
+			exportMap.put(StorableObjectWrapper.COLUMN_ID, this.id);
 			exportMap.put(TopologicalNodeWrapper.COLUMN_NAME, this.name);
 			exportMap.put(TopologicalNodeWrapper.COLUMN_DESCRIPTION, this.description);
 			exportMap.put(TopologicalNodeWrapper.COLUMN_PHYSICAL_LINK_ID, this.physicalLink.getId());
@@ -409,7 +410,7 @@ public class TopologicalNode extends AbstractNode {
 
 	public static TopologicalNode createInstance(Identifier creatorId,
 		                      			java.util.Map exportMap) throws CreateObjectException {
-		Identifier id = (Identifier) exportMap.get(StorableObjectDatabase.COLUMN_ID);
+		Identifier id = (Identifier) exportMap.get(StorableObjectWrapper.COLUMN_ID);
 		String name = (String) exportMap.get(TopologicalNodeWrapper.COLUMN_NAME);
 		String description = (String) exportMap.get(TopologicalNodeWrapper.COLUMN_DESCRIPTION);
   		Identifier physicalLinkId = (Identifier) exportMap.get(TopologicalNodeWrapper.COLUMN_PHYSICAL_LINK_ID);

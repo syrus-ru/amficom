@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.59 2005/01/31 11:28:12 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.60 2005/02/03 08:36:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
@@ -43,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/01/31 11:28:12 $
+ * @version $Revision: 1.60 $, $Date: 2005/02/03 08:36:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -332,7 +333,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		MeasurementSetup measurementSetup = (storableObject == null) ? 
-				new MeasurementSetup(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, 
+				new MeasurementSetup(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, 
 									   null, null, null, 0, null) : 
 					this.fromStorableObject(storableObject);	
 		Set parameterSet;
@@ -354,10 +355,10 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(MeasurementSetupWrapper.COLUMN_DESCRIPTION));
-		measurementSetup.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-									   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-									   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-									   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		measurementSetup.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+									   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+									   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+									   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 									   parameterSet,
 									   criteriaSet,
 									   thresholdSet,
@@ -499,9 +500,9 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		String sql = SQL_UPDATE
 				+ ObjectEntities.MS_ENTITY
 				+ SQL_SET
-				+ COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(measurementSetup.getModified()) + COMMA
-				+ COLUMN_MODIFIER_ID + EQUALS + measurementSetup.getModifierId().toString()
-				+ SQL_WHERE + COLUMN_ID + msIdStr;
+				+ StorableObjectWrapper.COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(measurementSetup.getModified()) + COMMA
+				+ StorableObjectWrapper.COLUMN_MODIFIER_ID + EQUALS + measurementSetup.getModifierId().toString()
+				+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + msIdStr;
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
@@ -552,10 +553,10 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 		List list = null;
 		
-		String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
+		String condition = StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET
 				+ SQL_SELECT + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
 				+ SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET
-					+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
+					+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
 					+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
 					+ CLOSE_BRACKET
 				+ CLOSE_BRACKET;		
@@ -591,9 +592,9 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
        	}
 		
 		String condition = MeasurementSetupWrapper.COLUMN_PARAMETER_SET_ID + SQL_IN + OPEN_BRACKET		
-							+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+							+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
 							+ SQL_WHERE + SetWrapper.LINK_COLUMN_TYPE_ID + SQL_IN + OPEN_BRACKET			
-								+ SQL_SELECT + StorableObjectDatabase.LINK_COLUMN_PARAMETER_TYPE_ID
+								+ SQL_SELECT + StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID
 								+ SQL_FROM + ObjectEntities.MNTTYPPARTYPLINK_ENTITY + SQL_WHERE
 								+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID 
 								+ SQL_IN
@@ -637,7 +638,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
        		 }
        	}
         
-		String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
+		String condition = StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET
 					+ SQL_SELECT + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
 					+ SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_ME_ID + SQL_IN 
 					+ OPEN_BRACKET
@@ -678,7 +679,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	       		 }
 	       	}
 	        
-	        String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET	
+	        String condition = StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET	
 	                        + SQL_SELECT + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
 	                        + SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_ME_ID + NOT + SQL_IN + OPEN_BRACKET + measurementIdsStr.toString() 
 	                        + CLOSE_BRACKET

@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.4 2005/02/01 11:37:01 bob Exp $
+ * $Id: UserDatabase.java,v 1.5 2005/02/03 08:36:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -31,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/01 11:37:01 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 08:36:54 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -91,12 +92,12 @@ public class UserDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		User user = (storableObject == null)?
-				new User(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, 0, null, null) :
+				new User(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, 0, null, null) :
 					this.fromStorableObject(storableObject);
-		user.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-							DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-							DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-							DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),							
+		user.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+							DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+							DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+							DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),							
 							DatabaseString.fromQuerySubString(resultSet.getString(UserWrapper.COLUMN_LOGIN)),
 							resultSet.getInt(UserWrapper.COLUMN_SORT),				
 							DatabaseString.fromQuerySubString(resultSet.getString(UserWrapper.COLUMN_NAME)),

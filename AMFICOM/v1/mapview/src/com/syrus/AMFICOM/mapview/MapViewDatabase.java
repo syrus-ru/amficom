@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.3 2005/01/18 06:57:18 bob Exp $
+* $Id: MapViewDatabase.java,v 1.4 2005/02/03 08:39:01 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
@@ -46,7 +47,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/18 06:57:18 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/03 08:39:01 $
  * @author $Author: bob $
  * @module mapview_v1
  */
@@ -181,14 +182,14 @@ public class MapViewDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
 		MapView map = (storableObject == null) ? 
-				new MapView(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, 0.0, 0.0, 0.0, 0.0, null) : 
+				new MapView(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, null, 0.0, 0.0, 0.0, 0.0, null) : 
 					fromStorableObject(storableObject);				
 		
 		try{
-		map.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		map.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),

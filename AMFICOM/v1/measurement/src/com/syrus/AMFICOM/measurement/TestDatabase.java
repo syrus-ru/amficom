@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.60 2005/01/28 08:20:35 bob Exp $
+ * $Id: TestDatabase.java,v 1.61 2005/02/03 08:36:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,6 +40,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
@@ -52,7 +53,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/01/28 08:20:35 $
+ * @version $Revision: 1.61 $, $Date: 2005/02/03 08:36:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -179,7 +180,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Test test = (storableObject == null)?
-				new Test(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME, 
+				new Test(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, null, TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME, 
 						 null, null, null, null, 0, null, null) :
 					this.fromStorableObject(storableObject);
 		TemporalPattern temporalPattern;
@@ -203,10 +204,10 @@ public class TestDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException(ae);
 		}
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(TestWrapper.COLUMN_DESCRIPTION));
-		test.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-						   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-						   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-						   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		test.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+						   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+						   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+						   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 						   resultSet.getInt(TestWrapper.COLUMN_TEMPORAL_TYPE),
 						   DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_START_TIME),
 						   DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_END_TIME),
@@ -372,7 +373,7 @@ public class TestDatabase extends StorableObjectDatabase {
 
 		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		String sql = SQL_SELECT
-			+ COLUMN_ID
+			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
 			+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
 				+ SQL_AND + MeasurementWrapper.COLUMN_STATUS + EQUALS + Integer.toString(measurementStatus.value())
@@ -387,7 +388,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()){
 				measurements.add(MeasurementStorableObjectPool.getStorableObject(
-								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), true));
+								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), true));
 			}
 		}
 		catch (SQLException sqle) {
@@ -419,7 +420,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	private Measurement retrieveLastMeasurement(Test test) throws RetrieveObjectException, ObjectNotFoundException {
 		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		String sql = SQL_SELECT
-			+ COLUMN_ID
+			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM
 			+ ObjectEntities.MEASUREMENT_ENTITY
 			+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
@@ -439,7 +440,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				try {
-					return (Measurement)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), true);
+					return (Measurement)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), true);
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
@@ -514,7 +515,7 @@ public class TestDatabase extends StorableObjectDatabase {
 				+ SQL_AND + ResultWrapper.COLUMN_MEASUREMENT_ID + SQL_IN
 					+ OPEN_BRACKET
 						+ SQL_SELECT
-						+ COLUMN_ID
+						+ StorableObjectWrapper.COLUMN_ID
 						+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
 						+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
 					+ CLOSE_BRACKET;
@@ -670,9 +671,9 @@ public class TestDatabase extends StorableObjectDatabase {
 		String sql = SQL_UPDATE + ObjectEntities.TEST_ENTITY
 			+ SQL_SET
 			+ TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(test.getStatus().value()) + COMMA
-			+ COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(test.getModified()) + COMMA
-			+ COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(test.getModifierId())
-			+ SQL_WHERE + COLUMN_ID + EQUALS + testIdStr;
+			+ StorableObjectWrapper.COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(test.getModified()) + COMMA
+			+ StorableObjectWrapper.COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(test.getModifierId())
+			+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + testIdStr;
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
@@ -703,9 +704,9 @@ public class TestDatabase extends StorableObjectDatabase {
 		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		String sql = SQL_UPDATE + ObjectEntities.TEST_ENTITY
 			+ SQL_SET
-			+ COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(test.getModified()) + COMMA
-			+ COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(test.getModifierId())
-			+ SQL_WHERE + COLUMN_ID + EQUALS + testIdStr;
+			+ StorableObjectWrapper.COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(test.getModified()) + COMMA
+			+ StorableObjectWrapper.COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(test.getModifierId())
+			+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + testIdStr;
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
@@ -749,15 +750,15 @@ public class TestDatabase extends StorableObjectDatabase {
 		String mcmIdStr = DatabaseIdentifier.toSQLString(mcmId);
 		String condition = TestWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
 				+ SQL_SELECT
-				+ COLUMN_ID
+				+ StorableObjectWrapper.COLUMN_ID
 				+ SQL_FROM + ObjectEntities.ME_ENTITY
 				+ SQL_WHERE + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
 					+ SQL_SELECT
-					+ COLUMN_ID
+					+ StorableObjectWrapper.COLUMN_ID
 					+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
 					+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET
 						+ SQL_SELECT
-						+ COLUMN_ID
+						+ StorableObjectWrapper.COLUMN_ID
 						+ SQL_FROM + ObjectEntities.KIS_ENTITY
 						+ SQL_WHERE + KISWrapper.COLUMN_MCM_ID + EQUALS + mcmIdStr
 					+ CLOSE_BRACKET
@@ -798,7 +799,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			+ SQL_AND + TestWrapper.COLUMN_END_TIME + " >= " + DatabaseDate.toUpdateSubString(start)
 			+ SQL_AND 
 			+ TestWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
-				+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
+				+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
 				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
 			+ CLOSE_BRACKET;
 		

@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.6 2005/01/25 13:13:51 bob Exp $
+ * $Id: MarkDatabase.java,v 1.7 2005/02/03 08:38:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
@@ -32,7 +33,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/01/25 13:13:51 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/03 08:38:02 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -133,7 +134,7 @@ public class MarkDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
 		Mark mark = (storableObject == null) ? 
-				new Mark(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, 0.0, 0.0, null, 0.0, null, null, null) : 
+				new Mark(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, 0.0, 0.0, null, 0.0, null, null, null) : 
 					fromStorableObject(storableObject);
 				
 		PhysicalLink physicalLink;
@@ -146,10 +147,10 @@ public class MarkDatabase extends StorableObjectDatabase {
 			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
 			throw new RetrieveObjectException(msg, sqle);
 		}
-		mark.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-							   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		mark.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 							   DatabaseString.fromQuerySubString(resultSet.getString(MarkWrapper.COLUMN_NAME)),
 							   DatabaseString.fromQuerySubString(resultSet.getString(MarkWrapper.COLUMN_DESCRIPTION)),
 							   resultSet.getDouble(MarkWrapper.COLUMN_LONGITUDE),

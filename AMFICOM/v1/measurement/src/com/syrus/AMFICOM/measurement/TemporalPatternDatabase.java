@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.32 2005/01/27 16:24:51 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.33 2005/02/03 08:36:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
@@ -35,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/01/27 16:24:51 $
+ * @version $Revision: 1.33 $, $Date: 2005/02/03 08:36:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -88,13 +89,13 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		TemporalPattern temporalPattern = (storableObject == null) ?
-				new TemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null):
+				new TemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null):
 				this.fromStorableObject(storableObject);
 		String[] cronStrings = ((CronStringArray)(((OracleResultSet)resultSet).getORAData(TemporalPatternWrapper.COLUMN_VALUE, CronStringArray.getORADataFactory()))).getArray();
-		temporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-									  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-									  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-									  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		temporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+									  DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+									  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+									  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 									  DatabaseString.fromQuerySubString(resultSet.getString(TemporalPatternWrapper.COLUMN_DESCRIPTION)),
 									  cronStrings);
 		return temporalPattern;

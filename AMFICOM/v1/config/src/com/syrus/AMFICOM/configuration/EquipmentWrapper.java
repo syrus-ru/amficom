@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.5 2005/02/01 06:15:29 bob Exp $
+ * $Id: EquipmentWrapper.java,v 1.6 2005/02/03 08:37:00 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,24 +15,21 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/01 06:15:29 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/03 08:37:00 $
  * @author $Author: bob $
  * @module configuration_v1
  */
-public final class EquipmentWrapper implements Wrapper {
+public final class EquipmentWrapper implements StorableObjectWrapper {
 
 	// table :: Equipment
 	// description VARCHAR2(256),
-	public static final String		COLUMN_DESCRIPTION		= "description";
 	// image_id Identifier,
 	public static final String		COLUMN_IMAGE_ID			= "image_id";
 	// name VARCHAR2(64) NOT NULL,
-	public static final String		COLUMN_NAME				= "name";
 	// type_id Identifier NOT NULL,
-	public static final String		COLUMN_TYPE_ID			= "type_id";
 	// supplier VARCHAR2(128)
 	public static final String		COLUMN_SUPPLIER			= "supplier";
 	// supplier_code VARCHAR2(128)
@@ -53,7 +50,6 @@ public final class EquipmentWrapper implements Wrapper {
 	public static final String		COLUMN_INVENTORY_NUMBER	= "inventory_number";
 
 	public static final String		COLUMN_PORT_IDS			= "portIds";
-	public static final String		COLUMN_CHARACTERISTICS	= "characteristics";
 
 	private static EquipmentWrapper	instance;
 

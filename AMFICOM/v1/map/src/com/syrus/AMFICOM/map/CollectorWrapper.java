@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorWrapper.java,v 1.4 2005/02/01 07:25:22 bob Exp $
+ * $Id: CollectorWrapper.java,v 1.5 2005/02/03 08:38:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,21 +13,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/01 07:25:22 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 08:38:02 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class CollectorWrapper implements Wrapper {
+public class CollectorWrapper implements StorableObjectWrapper {
 
 	// name VARCHAR2(128),
-	public static final String			COLUMN_NAME						= "name";
 	// description VARCHAR2(256),
-	public static final String			COLUMN_DESCRIPTION				= "description";
-
-	public static final String			COLUMN_CHARACTERISTIC_ID		= "collector_id";
 
 	// collector_id VARCHAR2(32),
 	public static final String			LINK_COLUMN_COLLECTOR_ID		= "collector_id";
@@ -40,7 +36,7 @@ public class CollectorWrapper implements Wrapper {
 
 	private CollectorWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_CHARACTERISTIC_ID,
+		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_CHARACTERISTICS,
 				LINK_COLUMN_PHYSICAL_LINK_ID};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
@@ -67,7 +63,7 @@ public class CollectorWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTIC_ID) || key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
+		if (key.equals(COLUMN_CHARACTERISTICS) || key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
 			return List.class;
 		return String.class;
 	}
@@ -84,7 +80,7 @@ public class CollectorWrapper implements Wrapper {
 				return collector.getName();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				return collector.getDescription();
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				return collector.getCharacteristics();
 			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
 				return collector.getPhysicalLinks();
@@ -108,7 +104,7 @@ public class CollectorWrapper implements Wrapper {
 				collector.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				collector.setDescription((String) value);
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				collector.setCharacteristics((List) value);
 			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
 				collector.setPhysicalLinks((List) value);

@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeWrapper.java,v 1.3 2005/02/01 07:25:22 bob Exp $
+ * $Id: SiteNodeTypeWrapper.java,v 1.4 2005/02/03 08:38:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,27 +14,22 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/01 07:25:22 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/03 08:38:02 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class SiteNodeTypeWrapper implements Wrapper {
+public class SiteNodeTypeWrapper implements StorableObjectWrapper {
 
 	// codename VARCHAR2(32) NOT NULL,
-	public static final String				COLUMN_CODENAME				= "codename";
 	// name VARCHAR2(128),
-	public static final String				COLUMN_NAME					= "name";
 	// description VARCHAR2(256),
-	public static final String				COLUMN_DESCRIPTION			= "description";
 	// image_id VARCHAR2(32) NOT NULL,
 	public static final String				COLUMN_IMAGE_ID				= "image_id";
 	// topological NUMBER(1),
 	public static final String				COLUMN_TOPOLOGICAL			= "topological";
-
-	public static final String				COLUMN_CHARACTERISTIC_ID	= "collector_id";
 
 	protected static SiteNodeTypeWrapper	instance;
 
@@ -43,7 +38,7 @@ public class SiteNodeTypeWrapper implements Wrapper {
 	private SiteNodeTypeWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_IMAGE_ID,
-				COLUMN_TOPOLOGICAL, COLUMN_CHARACTERISTIC_ID};
+				COLUMN_TOPOLOGICAL, COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 
@@ -69,7 +64,7 @@ public class SiteNodeTypeWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTIC_ID))
+		if (key.equals(COLUMN_CHARACTERISTICS))
 			return List.class;
 		return String.class;
 	}
@@ -92,7 +87,7 @@ public class SiteNodeTypeWrapper implements Wrapper {
 				return siteNodeType.getImageId();
 			else if (key.equals(COLUMN_TOPOLOGICAL))
 				return Boolean.valueOf(siteNodeType.isTopological());
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				return siteNodeType.getCharacteristics();
 		}
 		return null;
@@ -119,7 +114,7 @@ public class SiteNodeTypeWrapper implements Wrapper {
 				siteNodeType.setImageId((Identifier) value);
 			else if (key.equals(COLUMN_TOPOLOGICAL))
 				siteNodeType.setTopological(((Boolean) value).booleanValue());
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				siteNodeType.setCharacteristics((List) value);
 		}
 	}

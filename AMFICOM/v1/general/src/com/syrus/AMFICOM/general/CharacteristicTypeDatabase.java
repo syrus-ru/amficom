@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.3 2005/01/24 15:29:27 bob Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.4 2005/02/03 08:37:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/24 15:29:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/03 08:37:25 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -102,17 +102,17 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		CharacteristicType characteristicType = storableObject == null ? null : this.fromStorableObject(storableObject);
 
 		if (characteristicType == null) {
-			characteristicType = new CharacteristicType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+			characteristicType = new CharacteristicType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 																	null,
 																	null,
 																	null,
 																	0,
 																	0);			
 		}
-		characteristicType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-										 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-										 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-										 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		characteristicType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+										 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+										 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+										 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 										 DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicTypeWrapper.COLUMN_CODENAME)),
 										 DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicTypeWrapper.COLUMN_DESCRIPTION)),
 										 resultSet.getInt(CharacteristicTypeWrapper.COLUMN_DATA_TYPE),

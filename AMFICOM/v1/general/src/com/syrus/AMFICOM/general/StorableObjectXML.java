@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.8 2005/02/01 06:04:01 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.9 2005/02/03 08:37:26 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import java.util.Map;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  * 
- * @version $Revision: 1.8 $, $Date: 2005/02/01 06:04:01 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/03 08:37:26 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -42,14 +42,14 @@ public class StorableObjectXML {
 		this.driver = driver;
 	}
 
-	private Wrapper getWrapper(final short entityCode) throws IllegalDataException {
-		Wrapper wrapper = null;
+	private StorableObjectWrapper getWrapper(final short entityCode) throws IllegalDataException {
+		StorableObjectWrapper wrapper = null;
 		String className = ObjectGroupEntities.getPackageName(entityCode) + "."
-				+ ObjectEntities.codeToString(entityCode) + "Wrapper";
+				+ ObjectEntities.codeToString(entityCode) + "StorableObjectWrapper";
 		try {
 			Class clazz = Class.forName(className);
 			Method method = clazz.getMethod("getInstance", new Class[0]);
-			wrapper = (Wrapper) method.invoke(null, new Object[0]);
+			wrapper = (StorableObjectWrapper) method.invoke(null, new Object[0]);
 
 		} catch (ClassNotFoundException e) {
 			throw new IllegalDataException("StorableObjectXML.getWrapper | Class " + className //$NON-NLS-1$
@@ -74,16 +74,16 @@ public class StorableObjectXML {
 		Map objectMap = this.driver.getObjectMap(identifier);
 		short entityCode = identifier.getMajor();
 		StorableObject storableObject = getStorableObject(identifier);
-		Wrapper wrapper = this.getWrapper(entityCode);
-		storableObject.setAttributes((Date) objectMap.get(StorableObjectDatabase.COLUMN_CREATED), (Date) objectMap
-				.get(StorableObjectDatabase.COLUMN_MODIFIED), (Identifier) objectMap
-				.get(StorableObjectDatabase.COLUMN_CREATOR_ID), (Identifier) objectMap
-				.get(StorableObjectDatabase.COLUMN_MODIFIER_ID));
-		objectMap.remove(StorableObjectDatabase.COLUMN_ID);
-		objectMap.remove(StorableObjectDatabase.COLUMN_CREATED);
-		objectMap.remove(StorableObjectDatabase.COLUMN_MODIFIED);
-		objectMap.remove(StorableObjectDatabase.COLUMN_CREATOR_ID);
-		objectMap.remove(StorableObjectDatabase.COLUMN_MODIFIER_ID);
+		StorableObjectWrapper wrapper = this.getWrapper(entityCode);
+		storableObject.setAttributes((Date) objectMap.get(StorableObjectWrapper.COLUMN_CREATED), (Date) objectMap
+				.get(StorableObjectWrapper.COLUMN_MODIFIED), (Identifier) objectMap
+				.get(StorableObjectWrapper.COLUMN_CREATOR_ID), (Identifier) objectMap
+				.get(StorableObjectWrapper.COLUMN_MODIFIER_ID));
+		objectMap.remove(StorableObjectWrapper.COLUMN_ID);
+		objectMap.remove(StorableObjectWrapper.COLUMN_CREATED);
+		objectMap.remove(StorableObjectWrapper.COLUMN_MODIFIED);
+		objectMap.remove(StorableObjectWrapper.COLUMN_CREATOR_ID);
+		objectMap.remove(StorableObjectWrapper.COLUMN_MODIFIER_ID);
 		for (Iterator it = objectMap.keySet().iterator(); it.hasNext();) {
 			String key = (String) it.next();
 			wrapper.setValue(storableObject, key, objectMap.get(key));
@@ -125,18 +125,18 @@ public class StorableObjectXML {
 
 	public void updateObject(final StorableObject storableObject) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {
-		Wrapper wrapper = this.getWrapper(storableObject.getId().getMajor());
+		StorableObjectWrapper wrapper = this.getWrapper(storableObject.getId().getMajor());
 		List keys = wrapper.getKeys();
 		Map objectMap = new HashMap();
 		for (Iterator it = keys.iterator(); it.hasNext();) {
 			String key = (String) it.next();
 			objectMap.put(key, wrapper.getValue(storableObject, key));
 		}
-		objectMap.put(StorableObjectDatabase.COLUMN_ID, storableObject.getId());
-		objectMap.put(StorableObjectDatabase.COLUMN_CREATED, storableObject.getCreated());
-		objectMap.put(StorableObjectDatabase.COLUMN_MODIFIED, storableObject.getModified());
-		objectMap.put(StorableObjectDatabase.COLUMN_CREATOR_ID, storableObject.getCreatorId());
-		objectMap.put(StorableObjectDatabase.COLUMN_MODIFIER_ID, storableObject.getModifierId());
+		objectMap.put(StorableObjectWrapper.COLUMN_ID, storableObject.getId());
+		objectMap.put(StorableObjectWrapper.COLUMN_CREATED, storableObject.getCreated());
+		objectMap.put(StorableObjectWrapper.COLUMN_MODIFIED, storableObject.getModified());
+		objectMap.put(StorableObjectWrapper.COLUMN_CREATOR_ID, storableObject.getCreatorId());
+		objectMap.put(StorableObjectWrapper.COLUMN_MODIFIER_ID, storableObject.getModifierId());
 		this.driver.putObjectMap(storableObject.getId(), objectMap);
 	}
 

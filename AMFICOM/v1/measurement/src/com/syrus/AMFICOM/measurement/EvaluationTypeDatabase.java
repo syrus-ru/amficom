@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.51 2005/01/31 11:28:12 bob Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.52 2005/02/03 08:36:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -42,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/01/31 11:28:12 $
+ * @version $Revision: 1.52 $, $Date: 2005/02/03 08:36:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -119,12 +120,12 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
 		EvaluationType evaluationType = (storableObject == null) ?
-				new EvaluationType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null,null,null,null,null,null,null) : 
+				new EvaluationType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null,null,null,null,null,null,null) : 
 					this.fromStorableObject(storableObject);
-		evaluationType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-									 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-									 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-									 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		evaluationType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+									 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+									 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+									 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 									 DatabaseString.fromQuerySubString(resultSet.getString(EvaluationTypeWrapper.COLUMN_CODENAME)),
 									 DatabaseString.fromQuerySubString(resultSet.getString(EvaluationTypeWrapper.COLUMN_DESCRIPTION)));
 		return evaluationType;
@@ -138,8 +139,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 
 		String evaluationTypeIdStr = DatabaseIdentifier.toSQLString(evaluationType.getId());
 		String sql = SQL_SELECT
-			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-			+ LINK_COLUMN_PARAMETER_MODE
+			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
+			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE
 			+ SQL_FROM + ObjectEntities.EVATYPPARTYPLINK_ENTITY
 			+ SQL_WHERE + LINK_COLUMN_EVALUATION_TYPE_ID + EQUALS + evaluationTypeIdStr;
 		Statement statement = null;
@@ -152,8 +153,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			String parameterMode;			
 			Identifier parameterTypeId;
 			while (resultSet.next()) {
-				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
-				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
+				parameterMode = resultSet.getString(StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE);
+				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 				if (parameterMode.equals(EvaluationTypeWrapper.MODE_IN))
 					inParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				else
@@ -208,8 +209,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			return;
 
     StringBuffer sql = new StringBuffer(SQL_SELECT
-				+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-				+ LINK_COLUMN_PARAMETER_MODE + COMMA
+				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
+				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE + COMMA
 				+ LINK_COLUMN_EVALUATION_TYPE_ID
 				+ SQL_FROM + ObjectEntities.EVATYPPARTYPLINK_ENTITY
 				+ SQL_WHERE + LINK_COLUMN_EVALUATION_TYPE_ID + SQL_IN + OPEN_BRACKET);
@@ -253,8 +254,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 			List etalonParameterTypes;
 			List outParameterTypes;
 			while (resultSet.next()) {
-				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
-				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
+				parameterMode = resultSet.getString(StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE);
+				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 				evaluationTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_EVALUATION_TYPE_ID);
 
 				if (parameterMode.equals(EvaluationTypeWrapper.MODE_IN)) {
@@ -366,8 +367,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		String sql = SQL_INSERT_INTO
 			+ ObjectEntities.EVATYPPARTYPLINK_ENTITY + OPEN_BRACKET
 			+ LINK_COLUMN_EVALUATION_TYPE_ID + COMMA
-			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-			+ LINK_COLUMN_PARAMETER_MODE
+			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
+			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
@@ -494,7 +495,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 					+ SQL_WHERE + LINK_COLUMN_EVALUATION_TYPE_ID + EQUALS + evaluationTypeIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.EVALUATIONTYPE_ENTITY
-					+ SQL_WHERE + COLUMN_ID + EQUALS + evaluationTypeIdStr);
+					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + evaluationTypeIdStr);
 			connection.commit();
 		}
 		catch (SQLException sqle1) {

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.35 2005/01/27 11:55:07 bob Exp $
+ * $Id: AnalysisDatabase.java,v 1.36 2005/02/03 08:36:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,13 +27,14 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/01/27 11:55:07 $
+ * @version $Revision: 1.36 $, $Date: 2005/02/03 08:36:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -113,7 +114,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Analysis analysis = (storableObject == null) ? 
-				new Analysis(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+				new Analysis(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
 								null,
 								null,
@@ -133,10 +134,10 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-		analysis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-							   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		analysis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 							   analysisType,
 							   DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID),
 							   measurement,
@@ -198,7 +199,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		List list = null;
 		
 		String condition = AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
-				+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
+				+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
 				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
 			+ CLOSE_BRACKET;
 

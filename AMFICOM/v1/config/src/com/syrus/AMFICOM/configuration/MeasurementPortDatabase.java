@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.33 2005/01/28 10:23:01 arseniy Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.34 2005/02/03 08:37:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
@@ -40,8 +41,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/01/28 10:23:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/02/03 08:37:00 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -157,7 +158,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		MeasurementPort measurementPort = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (measurementPort == null){
-			measurementPort = new MeasurementPort(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+			measurementPort = new MeasurementPort(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 															null,
 															null,
 															null,
@@ -177,10 +178,10 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		String name = DatabaseString.fromQuerySubString(resultSet.getString(MeasurementPortWrapper.COLUMN_NAME));
 
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(MeasurementPortWrapper.COLUMN_DESCRIPTION));
-		measurementPort.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),								  
-											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),						  
+		measurementPort.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+											DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),								  
+											DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+											DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),						  
 											measurementPortType,
 											(name != null) ? name : "",
 											(description != null) ? description : "",
@@ -268,7 +269,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		List list = null;
 
 		String condition = MeasurementPortWrapper.COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET
-			+ SQL_SELECT + COLUMN_ID
+			+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM + ObjectEntities.KIS_ENTITY
 			+ SQL_WHERE + DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
 			+ CLOSE_BRACKET;

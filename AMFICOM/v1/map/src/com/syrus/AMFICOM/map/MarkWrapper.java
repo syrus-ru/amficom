@@ -1,5 +1,5 @@
 /*
- * $Id: MarkWrapper.java,v 1.4 2005/02/01 07:25:22 bob Exp $
+ * $Id: MarkWrapper.java,v 1.5 2005/02/03 08:38:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,19 +13,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/01 07:25:22 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 08:38:02 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class MarkWrapper implements Wrapper {
+public class MarkWrapper implements StorableObjectWrapper {
 
 	// name VARCHAR2(128),
-	public static final String		COLUMN_NAME					= "name";
 	// description VARCHAR2(256),
-	public static final String		COLUMN_DESCRIPTION			= "description";
 	// longitude NUMBER(12,6),
 	public static final String		COLUMN_LONGITUDE			= "longitude";
 	// latiude NUMBER(12,6),
@@ -41,8 +39,6 @@ public class MarkWrapper implements Wrapper {
 	// building VARCHAR2(128),
 	public static final String		COLUMN_BUILDING				= "building";
 
-	public static final String		COLUMN_CHARACTERISTIC_ID	= "collector_id";
-
 	protected static MarkWrapper	instance;
 
 	protected List					keys;
@@ -50,7 +46,8 @@ public class MarkWrapper implements Wrapper {
 	private MarkWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_LONGITUDE, COLUMN_LATIUDE,
-				COLUMN_PHYSICAL_LINK_ID, COLUMN_DISTANCE, COLUMN_CITY, COLUMN_STREET, COLUMN_BUILDING};
+				COLUMN_PHYSICAL_LINK_ID, COLUMN_DISTANCE, COLUMN_CITY, COLUMN_STREET, COLUMN_BUILDING,
+				COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 
@@ -76,7 +73,7 @@ public class MarkWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTIC_ID))
+		if (key.equals(COLUMN_CHARACTERISTICS))
 			return List.class;
 		return String.class;
 	}
@@ -107,7 +104,7 @@ public class MarkWrapper implements Wrapper {
 				return mark.getStreet();
 			else if (key.equals(COLUMN_BUILDING))
 				return mark.getBuilding();
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				return mark.getCharacteristics();
 
 		}
@@ -143,7 +140,7 @@ public class MarkWrapper implements Wrapper {
 				mark.setStreet((String) value);
 			else if (key.equals(COLUMN_BUILDING))
 				mark.setBuilding((String) value);
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				mark.setCharacteristics((List) value);
 		}
 	}

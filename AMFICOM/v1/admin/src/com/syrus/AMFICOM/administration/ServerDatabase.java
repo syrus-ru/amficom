@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.4 2005/02/01 11:37:01 bob Exp $
+ * $Id: ServerDatabase.java,v 1.5 2005/02/03 08:36:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
@@ -38,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/01 11:37:01 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 08:36:54 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -105,7 +106,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Server server = (storableObject==null)?
-				new Server(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+				new Server(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
 								null,
 								null,
@@ -113,10 +114,10 @@ public class ServerDatabase extends StorableObjectDatabase {
 								null,
 								null) :
 					this.fromStorableObject(storableObject);
-		server.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-								DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		server.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+								DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 								DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),													
 								DatabaseString.fromQuerySubString(resultSet.getString(ServerWrapper.COLUMN_NAME)),
 								DatabaseString.fromQuerySubString(resultSet.getString(ServerWrapper.COLUMN_DESCRIPTION)),
@@ -158,7 +159,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 
 		String serverIdStr = DatabaseIdentifier.toSQLString(server.getId());
 		String sql = SQL_SELECT
-			+ COLUMN_ID
+			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM + ObjectEntities.MCM_ENTITY
 			+ SQL_WHERE + MCMWrapper.COLUMN_SERVER_ID + EQUALS + serverIdStr;
 
@@ -170,7 +171,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 			Log.debugMessage("ServerDatabase.retrieveServer | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
-				mcmIds.add(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID));
+				mcmIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
 			}
 		}
 		catch (SQLException sqle) {

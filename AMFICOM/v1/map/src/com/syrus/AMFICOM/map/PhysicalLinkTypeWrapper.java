@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeWrapper.java,v 1.3 2005/02/01 07:25:22 bob Exp $
+ * $Id: PhysicalLinkTypeWrapper.java,v 1.4 2005/02/03 08:38:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,27 +13,22 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/01 07:25:22 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/03 08:38:02 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class PhysicalLinkTypeWrapper implements Wrapper {
+public class PhysicalLinkTypeWrapper implements StorableObjectWrapper {
 
 	// codename VARCHAR2(32) NOT NULL,
-	public static final String					COLUMN_CODENAME				= "codename";
 	// name VARCHAR2(128),
-	public static final String					COLUMN_NAME					= "name";
 	// description VARCHAR2(256),
-	public static final String					COLUMN_DESCRIPTION			= "description";
 	// dimension_x NUMBER(12),
 	public static final String					COLUMN_DIMENSION_X			= "dimension_x";
 	// dimension_y NUMBER(12),
 	public static final String					COLUMN_DIMENSION_Y			= "dimension_y";
-
-	public static final String					COLUMN_CHARACTERISTIC_ID	= "collector_id";
 
 	protected static PhysicalLinkTypeWrapper	instance;
 
@@ -42,7 +37,7 @@ public class PhysicalLinkTypeWrapper implements Wrapper {
 	private PhysicalLinkTypeWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_DIMENSION_X,
-				COLUMN_DIMENSION_Y, COLUMN_CHARACTERISTIC_ID};
+				COLUMN_DIMENSION_Y, COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 
@@ -68,7 +63,7 @@ public class PhysicalLinkTypeWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTIC_ID))
+		if (key.equals(COLUMN_CHARACTERISTICS))
 			return List.class;
 		return String.class;
 	}
@@ -91,7 +86,7 @@ public class PhysicalLinkTypeWrapper implements Wrapper {
 				return new Integer(physicalLinkType.getBindingDimension().getWidth());
 			else if (key.equals(COLUMN_DIMENSION_Y))
 				return new Integer(physicalLinkType.getBindingDimension().getHeight());
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				return physicalLinkType.getCharacteristics();
 		}
 		return null;
@@ -122,7 +117,7 @@ public class PhysicalLinkTypeWrapper implements Wrapper {
 																		physicalLinkType.getBindingDimension()
 																				.getWidth(), ((Integer) value)
 																				.intValue()));
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				physicalLinkType.setCharacteristics((List) value);
 		}
 	}

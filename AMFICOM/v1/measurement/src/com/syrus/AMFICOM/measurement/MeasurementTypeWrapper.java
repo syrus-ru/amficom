@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeWrapper.java,v 1.2 2005/02/01 06:38:49 bob Exp $
+ * $Id: MeasurementTypeWrapper.java,v 1.3 2005/02/03 08:36:47 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,19 +13,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/01 06:38:49 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/03 08:36:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
-public class MeasurementTypeWrapper implements Wrapper {
+public class MeasurementTypeWrapper implements StorableObjectWrapper {
 
 	public static final String				MODE_IN									= "IN";
 	public static final String				MODE_OUT								= "OUT";
-	public static final String				COLUMN_CODENAME							= "codename";
-	public static final String				COLUMN_DESCRIPTION						= "description";
 	public static final String				LINK_COLUMN_MEASUREMENT_TYPE_ID			= "measurement_type_id";
 	public static final String				LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID	= "measurement_port_type_id";
 

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathWrapper.java,v 1.5 2005/02/01 06:15:29 bob Exp $
+ * $Id: TransmissionPathWrapper.java,v 1.6 2005/02/03 08:37:01 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,31 +15,23 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/01 06:15:29 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/03 08:37:01 $
  * @author $Author: bob $
  * @module configuration_v1
  */
-public final class TransmissionPathWrapper implements Wrapper {
+public final class TransmissionPathWrapper implements StorableObjectWrapper {
 
 	// table :: TransmissionPath
 	// description VARCHAR2(256),
-	public static final String				COLUMN_DESCRIPTION		= "description";
-
 	// name VARCHAR2(64) NOT NULL,
-	public static final String				COLUMN_NAME				= "name";
-
 	// start_port_id VARCHAR2(32),
 	public static final String				COLUMN_START_PORT_ID	= "start_port_id";
 
 	// finish_port_id VARCHAR2(32),
 	public static final String				COLUMN_FINISH_PORT_ID	= "finish_port_id";
-
-	public static final String				COLUMN_TYPE_ID			= "type_id";
-
-	public static final String				COLUMN_CHARACTERISTICS	= "characteristics";
 	
 	private static TransmissionPathWrapper	instance;
 

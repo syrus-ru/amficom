@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.11 2005/01/26 15:09:21 bob Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.12 2005/02/03 08:37:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
@@ -30,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/01/26 15:09:21 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/03 08:37:00 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -114,7 +115,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		CableThreadType cableThreadType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (cableThreadType == null){
-			cableThreadType = new CableThreadType(DatabaseIdentifier.getIdentifier(resultSet,COLUMN_ID), null, null, null, 
+			cableThreadType = new CableThreadType(DatabaseIdentifier.getIdentifier(resultSet,StorableObjectWrapper.COLUMN_ID), null, null, null, 
 												  null, 0, null);			
 		}
         LinkType linkType;
@@ -125,10 +126,10 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
             throw new RetrieveObjectException(ae);
         }
         
-		cableThreadType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),									
-									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		cableThreadType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+									DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),									
+									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 									DatabaseString.fromQuerySubString(resultSet.getString(CableThreadTypeWrapper.COLUMN_CODENAME)),
 									DatabaseString.fromQuerySubString(resultSet.getString(CableThreadTypeWrapper.COLUMN_DESCRIPTION)),
                                     DatabaseString.fromQuerySubString(resultSet.getString(CableThreadTypeWrapper.COLUMN_NAME)),

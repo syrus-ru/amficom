@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.37 2005/01/27 07:02:41 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.38 2005/02/03 08:37:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -42,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/01/27 07:02:41 $
+ * @version $Revision: 1.38 $, $Date: 2005/02/03 08:37:01 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -132,7 +133,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		MonitoredElement monitoredElement = (storableObject == null) ? null : this.fromStorableObject(storableObject);
 		if (monitoredElement == null) {
-			monitoredElement = new MonitoredElement(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+			monitoredElement = new MonitoredElement(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 																null,
 																null,
 																null,
@@ -141,10 +142,10 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 																null,
 																null);			
 		}
-		monitoredElement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-											 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-											 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-											 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		monitoredElement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+											 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+											 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+											 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 											 DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 											 DatabaseString.fromQuerySubString(resultSet.getString(MonitoredElementWrapper.COLUMN_NAME)),
 											 DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID),
@@ -597,7 +598,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 
 		String sql2 = SQL_DELETE_FROM
 			+ ObjectEntities.ME_ENTITY
-			+ SQL_WHERE + COLUMN_ID + EQUALS + meIdStr;
+			+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + meIdStr;
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();

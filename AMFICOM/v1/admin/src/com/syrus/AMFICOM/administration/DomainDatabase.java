@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.5 2005/02/01 11:37:00 bob Exp $
+ * $Id: DomainDatabase.java,v 1.6 2005/02/03 08:36:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -37,7 +38,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/01 11:37:00 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/03 08:36:54 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -99,17 +100,17 @@ public class DomainDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Domain domain = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (domain == null) {
-			domain = new Domain(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+			domain = new Domain(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 											null,
 											null,
 											null,
 											null);			
 		}
 		Identifier domainId = DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID);
-		domain.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-							 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-							 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-							 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		domain.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+							 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+							 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+							 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 							 domainId,
 							 DatabaseString.fromQuerySubString(resultSet.getString(DomainWrapper.COLUMN_NAME)),
 							 DatabaseString.fromQuerySubString(resultSet.getString(DomainWrapper.COLUMN_DESCRIPTION)));		
@@ -225,7 +226,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 		List list = null;
 
-		String condition = COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
+		String condition = StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
 
 		try {
 			list = retrieveButIds(ids, condition);

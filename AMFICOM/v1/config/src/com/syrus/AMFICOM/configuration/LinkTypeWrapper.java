@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeWrapper.java,v 1.4 2005/02/01 06:15:29 bob Exp $
+ * $Id: LinkTypeWrapper.java,v 1.5 2005/02/03 08:37:00 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,23 +15,17 @@ import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/01 06:15:29 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 08:37:00 $
  * @author $Author: bob $
  * @module configuration_v1
  */
-public final class LinkTypeWrapper implements Wrapper {
+public final class LinkTypeWrapper implements StorableObjectWrapper {
 
 	// codename VARCHAR2(32) NOT NULL,
-	public static final String		COLUMN_CODENAME				= "codename";
-
 	// description VARCHAR2(256),
-	public static final String		COLUMN_DESCRIPTION			= "description";
-
-	public static final String		COLUMN_NAME					= "name";
-
 	// sort NUMBER(2,0),
 	public static final String		COLUMN_SORT					= "sort";
 
@@ -43,8 +37,6 @@ public final class LinkTypeWrapper implements Wrapper {
 
 	// image_id VARCHAR2(32),
 	public static final String		COLUMN_IMAGE_ID				= "image_id";
-
-	public static final String		COLUMN_CHARACTERISTICS		= "characteristics";
 
 	private static LinkTypeWrapper	instance;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.57 2005/01/28 06:51:27 bob Exp $
+ * $Id: ResultDatabase.java,v 1.58 2005/02/03 08:36:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -45,7 +46,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/01/28 06:51:27 $
+ * @version $Revision: 1.58 $, $Date: 2005/02/03 08:36:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -214,7 +215,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Result result = (storableObject == null)
-				? new Result(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+				? new Result(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 									null,
 									null,
 									0,
@@ -258,10 +259,10 @@ public class ResultDatabase extends StorableObjectDatabase {
 			default:
 				Log.errorMessage("Unkown sort: " + resultSort + " of result " + result.getId().getIdentifierString());
 		}
-		result.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED), 
-							 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-							 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-							 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		result.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED), 
+							 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+							 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+							 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 							 action,
 							 resultSort);
 
@@ -329,7 +330,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		if ((results == null) || (results.isEmpty()))
 			return;		
 		
-		StringBuffer sql = new StringBuffer(SQL_SELECT + COLUMN_ID + COMMA 
+		StringBuffer sql = new StringBuffer(SQL_SELECT + StorableObjectWrapper.COLUMN_ID + COMMA 
 											+ LINK_COLUMN_TYPE_ID + COMMA 
 											+ LINK_COLUMN_VALUE + COMMA
 											+ LINK_COLUMN_RESULT_ID 
@@ -373,7 +374,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
-				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 														parameterType,
 														ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_VALUE)));
 				resultId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_RESULT_ID);
@@ -509,7 +510,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	private void insertResultParameters(Result result) throws CreateObjectException {
 		Identifier resultId = result.getId();
 		SetParameter[] setParameters = result.getParameters();
-		String sql = SQL_INSERT_INTO + ObjectEntities.RESULTPARAMETER_ENTITY + OPEN_BRACKET + COLUMN_ID + COMMA
+		String sql = SQL_INSERT_INTO + ObjectEntities.RESULTPARAMETER_ENTITY + OPEN_BRACKET + StorableObjectWrapper.COLUMN_ID + COMMA
 				+ LINK_COLUMN_TYPE_ID + COMMA + LINK_COLUMN_RESULT_ID + COMMA + LINK_COLUMN_VALUE
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + QUESTION + COMMA + QUESTION + COMMA
 				+ QUESTION + COMMA + APOSTOPHE + SQL_EMPTY_BLOB + APOSTOPHE + CLOSE_BRACKET;
@@ -533,7 +534,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				preparedStatement.executeUpdate();
 				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(), connection,
 								ObjectEntities.RESULTPARAMETER_ENTITY,
-								LINK_COLUMN_VALUE, COLUMN_ID + EQUALS
+								LINK_COLUMN_VALUE, StorableObjectWrapper.COLUMN_ID + EQUALS
 										+ DatabaseIdentifier.toSQLString(parameterId));
 			}
 			connection.commit();
@@ -595,7 +596,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULTPARAMETER_ENTITY + SQL_WHERE
 					+ LINK_COLUMN_RESULT_ID + EQUALS + resultIdStr);
-			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULT_ENTITY + SQL_WHERE + COLUMN_ID
+			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULT_ENTITY + SQL_WHERE + StorableObjectWrapper.COLUMN_ID
 					+ EQUALS + resultIdStr);
 			connection.commit();
 		}
@@ -632,10 +633,10 @@ public class ResultDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 		List list = null;
 
-		String condition = ResultWrapper.COLUMN_MEASUREMENT_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT + COLUMN_ID + SQL_FROM
+		String condition = ResultWrapper.COLUMN_MEASUREMENT_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM
 				+ ObjectEntities.MEASUREMENT_ENTITY + SQL_WHERE
 				+ MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
-				+ COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
+				+ StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
 				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId()) + CLOSE_BRACKET
 				+ CLOSE_BRACKET;
 

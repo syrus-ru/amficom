@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadWrapper.java,v 1.4 2005/02/01 06:15:29 bob Exp $
+ * $Id: CableThreadWrapper.java,v 1.5 2005/02/03 08:37:00 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,32 +13,23 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/01 06:15:29 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 08:37:00 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
-public final class CableThreadWrapper implements Wrapper {
+public final class CableThreadWrapper implements StorableObjectWrapper {
 
 	private static CableThreadWrapper	instance;
 
 	private List						keys;
 
-	// table :: CableThread
-	public static final String			COLUMN_TYPE_ID		= "type_id";
-
-	// name VARCHAR2(64) NOT NULL,
-	public static final String			COLUMN_NAME			= "name";
-
-	// description VARCHAR2(256),
-	public static final String			COLUMN_DESCRIPTION	= "description";
-
 	private CableThreadWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID};
+		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, StorableObjectWrapper.COLUMN_TYPE_ID};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -65,7 +56,7 @@ public final class CableThreadWrapper implements Wrapper {
 				return thread.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return thread.getName();
-			if (key.equals(COLUMN_TYPE_ID))
+			if (key.equals(StorableObjectWrapper.COLUMN_TYPE_ID))
 				return thread.getType();
 		}
 		return null;
@@ -82,7 +73,7 @@ public final class CableThreadWrapper implements Wrapper {
 				thread.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				thread.setDescription((String) value);
-			else if (key.equals(COLUMN_TYPE_ID)) 
+			else if (key.equals(StorableObjectWrapper.COLUMN_TYPE_ID)) 
 				thread.setType((CableThreadType)value);
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: UserWrapper.java,v 1.1 2005/02/01 11:36:30 bob Exp $
+ * $Id: UserWrapper.java,v 1.2 2005/02/03 08:36:54 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,22 +14,20 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.administration.corba.UserSort;
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/01 11:36:30 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/03 08:36:54 $
  * @author $Author: bob $
  * @module admin_v1
  */
-public class UserWrapper implements Wrapper {
+public class UserWrapper implements StorableObjectWrapper {
 
 	// table :: users
 	// description VARCHAR2(256),
-	public static final String	COLUMN_DESCRIPTION	= "description";
 	// login VARCHAR2(32) NOT NULL,
 	public static final String	COLUMN_LOGIN		= "login";
 	// name VARCHAR2(64) not NULL,
-	public static final String	COLUMN_NAME			= "name";
 	// sort NUMBER(2, 0) NOT NULL,
 	public static final String	COLUMN_SORT			= "sort";
 

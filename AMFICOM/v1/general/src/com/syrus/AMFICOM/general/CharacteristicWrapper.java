@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.4 2005/02/01 06:19:46 bob Exp $
+ * $Id: CharacteristicWrapper.java,v 1.5 2005/02/03 08:37:25 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,19 +16,16 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/01 06:19:46 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 08:37:25 $
  * @author $Author: bob $
  * @module general_v1
  */
-public class CharacteristicWrapper implements Wrapper {
+public class CharacteristicWrapper implements StorableObjectWrapper {
 
 	// table :: Characteristic
 	// type_id VARCHAR2(32) NOT NULL,
-	public static final String				COLUMN_TYPE_ID			= "type_id";
 	// name VARCHAR2(64) NOT NULL,
-	public static final String				COLUMN_NAME				= "name";
 	// description VARCHAR2(256),
-	public static final String				COLUMN_DESCRIPTION		= "description";
 	// sort NUMBER(2) NOT NULL,
 	public static final String				COLUMN_SORT				= "sort";
 	// value VARCHAR2(256),

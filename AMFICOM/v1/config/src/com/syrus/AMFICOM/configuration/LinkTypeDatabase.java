@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.17 2005/01/28 10:23:01 arseniy Exp $
+ * $Id: LinkTypeDatabase.java,v 1.18 2005/02/03 08:37:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
@@ -34,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/01/28 10:23:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/02/03 08:37:00 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -132,7 +133,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		LinkType linkType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (linkType == null) {
-			linkType = new LinkType(DatabaseIdentifier.getIdentifier(resultSet,COLUMN_ID),
+			linkType = new LinkType(DatabaseIdentifier.getIdentifier(resultSet,StorableObjectWrapper.COLUMN_ID),
 												null,
 												null,
 												null,
@@ -142,10 +143,10 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 												null,
 												null);			
 		}
-		linkType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),									
-									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		linkType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+									DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),									
+									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_CODENAME)),
 									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_DESCRIPTION)),
 									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_NAME)),

@@ -1,5 +1,5 @@
 /*
- * $Id: KISWrapper.java,v 1.4 2005/02/01 06:15:29 bob Exp $
+ * $Id: KISWrapper.java,v 1.5 2005/02/03 08:37:00 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,20 +14,18 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/01 06:15:29 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 08:37:00 $
  * @author $Author: bob $
  * @module configuration_v1
  */
-public final class KISWrapper implements Wrapper {
+public final class KISWrapper implements StorableObjectWrapper {
 
 	// table :: kis
 	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION   = "description";
 	// name VARCHAR2(64) NOT NULL,
-	public static final String COLUMN_NAME  		= "name";
 	// hostname VARCHAR2(64),
 	public static final String COLUMN_HOSTNAME  	= "hostname";
 	// tcp_port NUMBER(5,0),
@@ -38,7 +36,6 @@ public final class KISWrapper implements Wrapper {
 	public static final String COLUMN_MCM_ID 		= "mcm_id";
 	
 	public static final String	COLUMN_MEASUREMENT_PORT_IDS	= "measurementPortIds";
-	public static final String	COLUMN_CHARACTERISTICS		= "characteristics";
 
 	private static KISWrapper	instance;
 

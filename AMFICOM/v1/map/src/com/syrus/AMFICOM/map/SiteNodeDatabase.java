@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.8 2005/01/26 07:19:34 bob Exp $
+ * $Id: SiteNodeDatabase.java,v 1.9 2005/02/03 08:38:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
@@ -35,7 +36,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/01/26 07:19:34 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/03 08:38:02 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -136,7 +137,7 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
 		SiteNode siteNode = (storableObject == null) ? 
-				new SiteNode(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, null, 0.0, 0.0, null, null, null) : 
+				new SiteNode(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, null, null, 0.0, 0.0, null, null, null) : 
 					fromStorableObject(storableObject);
 				
 		SiteNodeType type;
@@ -149,10 +150,10 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
 			throw new RetrieveObjectException(msg, sqle);
 		}
-		siteNode.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-							   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		siteNode.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_NAME)),
 							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_DESCRIPTION)),
 							   resultSet.getDouble(SiteNodeWrapper.COLUMN_LONGITUDE),

@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.8 2005/01/28 10:15:55 arseniy Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.9 2005/02/03 08:37:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
@@ -38,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/01/28 10:15:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/02/03 08:37:00 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class CableLinkTypeDatabase extends StorableObjectDatabase {
@@ -179,7 +180,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		CableLinkType cableLinkType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (cableLinkType == null) {
-			cableLinkType = new CableLinkType(DatabaseIdentifier.getIdentifier(resultSet,COLUMN_ID),
+			cableLinkType = new CableLinkType(DatabaseIdentifier.getIdentifier(resultSet,StorableObjectWrapper.COLUMN_ID),
 															null,
 															null,
 															null,
@@ -189,10 +190,10 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 															null,
 															null);         
 			}
-			cableLinkType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-																	DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),                                    
-																	DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-																	DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+			cableLinkType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+																	DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),                                    
+																	DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+																	DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_CODENAME)),
 																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_DESCRIPTION)),
 																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_NAME)),

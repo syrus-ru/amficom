@@ -1,5 +1,5 @@
 /*
- * $Id: SetWrapper.java,v 1.3 2005/02/01 15:09:21 arseniy Exp $
+ * $Id: SetWrapper.java,v 1.4 2005/02/03 08:36:47 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,25 +17,24 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/01 15:09:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/02/03 08:36:47 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
-public class SetWrapper implements Wrapper {
+public class SetWrapper implements StorableObjectWrapper {
 
 	public static final String	COLUMN_SORT						= "sort";
-	public static final String	COLUMN_DESCRIPTION				= "description";
 	public static final String	LINK_COLUMN_SET_ID				= "set_id";
 	public static final String	LINK_COLUMN_ME_ID				= "monitored_element_id";
 
 	public static final String	LINK_COLUMN_SET_PARAMETERS		= "set_parameters";
 
 	public static final String	LINK_COLUMN_SET_PARAMETER_ID	= "set_parameter_id";
-	public static final String	LINK_COLUMN_TYPE_ID = "type_id";
-	public static final String	LINK_COLUMN_PARAMETER_VALUE				= "value";
+	public static final String	LINK_COLUMN_TYPE_ID				= "type_id";
+	public static final String	LINK_COLUMN_PARAMETER_VALUE		= "value";
 
 	private static SetWrapper	instance;
 

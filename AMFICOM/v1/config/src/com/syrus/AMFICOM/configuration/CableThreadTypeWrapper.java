@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeWrapper.java,v 1.4 2005/02/01 06:15:29 bob Exp $
+ * $Id: CableThreadTypeWrapper.java,v 1.5 2005/02/03 08:37:00 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,24 +13,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/01 06:15:29 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 08:37:00 $
  * @author $Author: bob $
  * @module configuration_v1
  */
-public final class CableThreadTypeWrapper implements Wrapper {
+public final class CableThreadTypeWrapper implements StorableObjectWrapper {
 
 	// codename VARCHAR2(32) NOT NULL,
-	public static final String				COLUMN_CODENAME		= "codename";
-
 	// description VARCHAR2(256),
-	public static final String				COLUMN_DESCRIPTION	= "description";
-
 	// name VARCHAR2(64),
-	public static final String				COLUMN_NAME			= "name";
-
 	// color NUMBER(38),
 	public static final String				COLUMN_COLOR		= "color";
 

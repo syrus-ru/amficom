@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.53 2005/01/28 10:26:14 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.54 2005/02/03 08:37:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -45,8 +46,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/01/28 10:26:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.54 $, $Date: 2005/02/03 08:37:00 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -145,7 +146,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		KIS kis = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (kis == null) {
-			kis = new KIS(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+			kis = new KIS(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 										null,
 										null,
 										null,
@@ -156,10 +157,10 @@ public class KISDatabase extends StorableObjectDatabase {
 										null);			
 		}
 
-		kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+											DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+											DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+											DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 											DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 											DatabaseString.fromQuerySubString(resultSet.getString(KISWrapper.COLUMN_NAME)),
 											DatabaseString.fromQuerySubString(resultSet.getString(KISWrapper.COLUMN_DESCRIPTION)),
@@ -176,7 +177,7 @@ public class KISDatabase extends StorableObjectDatabase {
 
 		String kisIdStr = DatabaseIdentifier.toSQLString(kis.getId());
 		String sql = SQL_SELECT
-			+ COLUMN_ID
+			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
 			+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID + EQUALS + kisIdStr;
 
@@ -188,7 +189,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			Log.debugMessage("KISDatabase.retrieveKISMeasurementPortIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
-				measurementPortIds.add(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID));
+				measurementPortIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
 			}
 		}
 		catch (SQLException sqle) {
@@ -229,7 +230,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			return;     
 
     StringBuffer sql = new StringBuffer(SQL_SELECT
-			+ COLUMN_ID + COMMA
+			+ StorableObjectWrapper.COLUMN_ID + COMMA
 			+ MeasurementPortWrapper.COLUMN_KIS_ID
 			+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
 			+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID
@@ -270,7 +271,7 @@ public class KISDatabase extends StorableObjectDatabase {
 					mpIds = new LinkedList();
 					mpIdMap.put(kisId, mpIds);
 				}
-				mpIds.add(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID));
+				mpIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
 			}
 
 			KIS kis;
@@ -308,11 +309,11 @@ public class KISDatabase extends StorableObjectDatabase {
 
 		String kisIdStr = DatabaseIdentifier.toSQLString(kis.getId());
 		String sql = SQL_SELECT
-			+ COLUMN_ID
+			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM + ObjectEntities.ME_ENTITY
 			+ SQL_WHERE + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
 				+ SQL_SELECT
-				+ COLUMN_ID
+				+ StorableObjectWrapper.COLUMN_ID
 				+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
 				+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID + EQUALS + kisIdStr
 			+ CLOSE_BRACKET;
@@ -326,7 +327,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				try {
-					monitoredElements.add(ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), true));
+					monitoredElements.add(ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), true));
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
@@ -360,13 +361,13 @@ public class KISDatabase extends StorableObjectDatabase {
 			return null;     
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT
-		+ ObjectEntities.ME_ENTITY + DOT + COLUMN_ID + COMMA
+		+ ObjectEntities.ME_ENTITY + DOT + StorableObjectWrapper.COLUMN_ID + COMMA
 		+ ObjectEntities.MEASUREMENTPORT_ENTITY + DOT + MeasurementPortWrapper.COLUMN_KIS_ID
 		+ SQL_FROM + ObjectEntities.ME_ENTITY + COMMA + ObjectEntities.MEASUREMENTPORT_ENTITY
 		+ SQL_WHERE + ObjectEntities.ME_ENTITY + DOT + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN
 		+ OPEN_BRACKET
 			+ SQL_SELECT
-			+ COLUMN_ID
+			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
 			+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET);
 
@@ -407,7 +408,7 @@ public class KISDatabase extends StorableObjectDatabase {
 					meIds = new LinkedList();
 					meIdMap.put(kisId, meIds);
 				}
-				meIds.add(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID));
+				meIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
 			}
 
 			return meIdMap;

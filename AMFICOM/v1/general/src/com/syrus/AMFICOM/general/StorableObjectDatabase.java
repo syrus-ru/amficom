@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.73 2005/01/31 13:48:53 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.74 2005/02/03 08:37:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/01/31 13:48:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.74 $, $Date: 2005/02/03 08:37:26 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -41,19 +41,11 @@ public abstract class StorableObjectDatabase {
 	public static final String APOSTOPHE			= "'";
 	public static final String CLOSE_BRACKET			= " ) ";
 
-	public static final String COLUMN_CREATED			= "created";
-	public static final String COLUMN_CREATOR_ID		= "creator_id";
-	public static final String COLUMN_ID			= "id";
-	public static final String COLUMN_MODIFIED			= "modified";
-	public static final String COLUMN_MODIFIER_ID		= "modifier_id";
 	public static final String DOT				= " . ";
 	public static final String COMMA				= " , ";
 	public static final String EQUALS				= " = ";
 	public static final String NOT_EQUALS			= " <> ";
 	public static final String NOT					= " NOT ";
-	public static final String LINK_COLUMN_PARAMETER_MODE	= "parameter_mode";
-
-	public static final String LINK_COLUMN_PARAMETER_TYPE_ID	= "parameter_type_id";
 	public static final String OPEN_BRACKET			= " ( ";
 	public static final String QUESTION			= "?";
 
@@ -111,7 +103,7 @@ public abstract class StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {			
 			statement = connection.createStatement();
-			String sql = SQL_DELETE_FROM + this.getEnityName() + SQL_WHERE + COLUMN_ID + EQUALS
+			String sql = SQL_DELETE_FROM + this.getEnityName() + SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS
 			+ storableObjectIdStr;
 			Log.debugMessage(this.getEnityName() + "Database.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);			
@@ -147,7 +139,7 @@ public abstract class StorableObjectDatabase {
 			buffer.append(this.getEnityName());
 			buffer.append(SQL_WHERE);
 			buffer.append(OPEN_BRACKET);
-			buffer.append(COLUMN_ID);
+			buffer.append(StorableObjectWrapper.COLUMN_ID);
 			int idsLength = ids.size();
 			if (idsLength == 1) {
 				buffer.append(EQUALS);
@@ -184,7 +176,7 @@ public abstract class StorableObjectDatabase {
 						else {
 							buffer.append(CLOSE_BRACKET);
 							buffer.append(SQL_OR);
-							buffer.append(COLUMN_ID);
+							buffer.append(StorableObjectWrapper.COLUMN_ID);
 							buffer.append(SQL_IN);
 							buffer.append(OPEN_BRACKET);
 						}
@@ -245,7 +237,7 @@ public abstract class StorableObjectDatabase {
 			String s = new String();
 			switch (mode) {
 				case MODE_INSERT:
-					s = COLUMN_ID + COMMA;
+					s = StorableObjectWrapper.COLUMN_ID + COMMA;
 					break;
 				case MODE_UPDATE:
 					break;
@@ -253,10 +245,10 @@ public abstract class StorableObjectDatabase {
 					Log.errorMessage("StorableObjectDatabase.getColumns | Unknown mode: " + mode);
 			}
 			columns = s
-				+ COLUMN_CREATED + COMMA
-				+ COLUMN_MODIFIED + COMMA
-				+ COLUMN_CREATOR_ID + COMMA
-				+ COLUMN_MODIFIER_ID;
+				+ StorableObjectWrapper.COLUMN_CREATED + COMMA
+				+ StorableObjectWrapper.COLUMN_MODIFIED + COMMA
+				+ StorableObjectWrapper.COLUMN_CREATOR_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_MODIFIER_ID;
 		}
 		return columns;
 	}
@@ -401,7 +393,7 @@ public abstract class StorableObjectDatabase {
 
 	protected void retrieveEntity(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		String strorableObjectTypeIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
-		String sql = retrieveQuery(COLUMN_ID + EQUALS + strorableObjectTypeIdStr);
+		String sql = retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + strorableObjectTypeIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -445,8 +437,8 @@ public abstract class StorableObjectDatabase {
 		if (this.retrieveQuery == null) {
 			buffer = new StringBuffer(SQL_SELECT);
 			String cols = this.getColumns(MODE_INSERT);
-			cols = cols.replaceFirst(COLUMN_CREATED, DatabaseDate.toQuerySubString(COLUMN_CREATED));
-			cols = cols.replaceFirst(COLUMN_MODIFIED, DatabaseDate.toQuerySubString(COLUMN_MODIFIED));
+			cols = cols.replaceFirst(StorableObjectWrapper.COLUMN_CREATED, DatabaseDate.toQuerySubString(StorableObjectWrapper.COLUMN_CREATED));
+			cols = cols.replaceFirst(StorableObjectWrapper.COLUMN_MODIFIED, DatabaseDate.toQuerySubString(StorableObjectWrapper.COLUMN_MODIFIED));
 			buffer.append(cols);
 			buffer.append(SQL_FROM);
 			buffer.append(this.getEnityName());
@@ -489,7 +481,7 @@ public abstract class StorableObjectDatabase {
 					throws IllegalDataException, UpdateObjectException, VersionCollisionException {
 
 		String atIdStr = DatabaseIdentifier.toSQLString(localStorableObject.getId());
-		String sql = retrieveQuery(COLUMN_ID + EQUALS + atIdStr);
+		String sql = retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + atIdStr);
 
 		StorableObject storableObject = null;
 
@@ -683,7 +675,7 @@ public abstract class StorableObjectDatabase {
 		String sql;
 		{
 			StringBuffer buffer = new StringBuffer(SQL_SELECT);
-			buffer.append(COLUMN_ID);
+			buffer.append(StorableObjectWrapper.COLUMN_ID);
 			buffer.append(SQL_FROM);
 			buffer.append(this.getEnityName());
 			buffer.append(SQL_WHERE);
@@ -692,13 +684,13 @@ public abstract class StorableObjectDatabase {
 				StorableObject storableObject = (StorableObject) it.next();
 				buffer.append(SQL_AND);
 				buffer.append(OPEN_BRACKET);
-				buffer.append(COLUMN_ID);
+				buffer.append(StorableObjectWrapper.COLUMN_ID);
 				buffer.append(EQUALS);
 				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getId()));
 				buffer.append(SQL_AND);
 				buffer.append(NOT);
 				buffer.append(OPEN_BRACKET);
-				buffer.append(COLUMN_MODIFIED);
+				buffer.append(StorableObjectWrapper.COLUMN_MODIFIED);
 				buffer.append(EQUALS);
 				buffer.append(DatabaseDate.toUpdateSubString(storableObject.getModified()));
 //				buffer.append(SQL_AND);
@@ -721,7 +713,7 @@ public abstract class StorableObjectDatabase {
 						Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
-				Identifier identifier = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
+				Identifier identifier = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
 				ids.add(identifier);
 			}
 		} catch (SQLException sqle) {
@@ -771,7 +763,7 @@ public abstract class StorableObjectDatabase {
 			if (ids != null) {
 				int idsLength = ids.size();
 				if (idsLength > 0){					
-					buffer.append(COLUMN_ID);				
+					buffer.append(StorableObjectWrapper.COLUMN_ID);				
 					buffer.append(NOT);
 					buffer.append(SQL_IN);
 					buffer.append(OPEN_BRACKET);
@@ -796,7 +788,7 @@ public abstract class StorableObjectDatabase {
 								else {
 									buffer.append(CLOSE_BRACKET);
 									buffer.append(SQL_AND);
-									buffer.append(COLUMN_ID);				
+									buffer.append(StorableObjectWrapper.COLUMN_ID);				
 									buffer.append(NOT);
 									buffer.append(SQL_IN);
 									buffer.append(OPEN_BRACKET);
@@ -837,7 +829,7 @@ public abstract class StorableObjectDatabase {
 			if ( (ids != null) && (!ids.isEmpty())) {
 				buffer.append(SQL_AND);
 				buffer.append(OPEN_BRACKET);
-				buffer.append(COLUMN_ID);
+				buffer.append(StorableObjectWrapper.COLUMN_ID);
 				int idsLength = ids.size();
 				if (idsLength == 1) {
 					buffer.append(EQUALS);
@@ -878,7 +870,7 @@ public abstract class StorableObjectDatabase {
 							else {
 								buffer.append(CLOSE_BRACKET);
 								buffer.append(SQL_OR);
-								buffer.append(COLUMN_ID);
+								buffer.append(StorableObjectWrapper.COLUMN_ID);
 								buffer.append(SQL_IN);
 								buffer.append(OPEN_BRACKET);
 							}
@@ -941,7 +933,7 @@ public abstract class StorableObjectDatabase {
 			int idsLength = ids.size();
 			if (idsLength == 1)
 				return retrieveByIdsOneQuery(ids, null);
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			StringBuffer buffer = new StringBuffer(StorableObjectWrapper.COLUMN_ID);
 			buffer.append(EQUALS);
 			buffer.append(QUESTION);
 			if ((condition != null) && (condition.trim().length() > 0)) {
@@ -1021,7 +1013,7 @@ public abstract class StorableObjectDatabase {
 					buffer.append(COMMA);
 			}
 			buffer.append(SQL_WHERE);
-			buffer.append(COLUMN_ID);
+			buffer.append(StorableObjectWrapper.COLUMN_ID);
 			buffer.append(EQUALS);
 			buffer.append(storableObjectIdStr);
 			sql = buffer.toString();
@@ -1075,7 +1067,7 @@ public abstract class StorableObjectDatabase {
 			buffer.append(this.getEnityName());
 			buffer.append(SQL_SET);
 			for(int i = 0; i < cols.length; i++) {
-				if(cols[i].equals(COLUMN_ID))
+				if(cols[i].equals(StorableObjectWrapper.COLUMN_ID))
 					continue;
 				buffer.append(cols[i]);
 				buffer.append(EQUALS);
@@ -1084,7 +1076,7 @@ public abstract class StorableObjectDatabase {
 					buffer.append(COMMA);
 			}
 			buffer.append(SQL_WHERE);
-			buffer.append(COLUMN_ID);
+			buffer.append(StorableObjectWrapper.COLUMN_ID);
 			buffer.append(EQUALS);
 			buffer.append(QUESTION);
 			sql = buffer.toString();

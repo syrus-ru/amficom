@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeWrapper.java,v 1.4 2005/02/01 07:25:22 bob Exp $
+ * $Id: SiteNodeWrapper.java,v 1.5 2005/02/03 08:38:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,19 +14,17 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/01 07:25:22 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 08:38:02 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class SiteNodeWrapper implements Wrapper {
+public class SiteNodeWrapper implements StorableObjectWrapper {
 
 	// name VARCHAR2(128),
-	public static final String			COLUMN_NAME					= "name";
 	// description VARCHAR2(256),
-	public static final String			COLUMN_DESCRIPTION			= "description";
 	// longitude NUMBER(12,6),
 	public static final String			COLUMN_LONGITUDE			= "longitude";
 	// latiude NUMBER(12,6),
@@ -42,8 +40,6 @@ public class SiteNodeWrapper implements Wrapper {
 	// building VARCHAR2(128),
 	public static final String			COLUMN_BUILDING				= "building";
 
-	public static final String			COLUMN_CHARACTERISTIC_ID	= "collector_id";
-
 	protected static SiteNodeWrapper	instance;
 
 	protected List						keys;
@@ -52,7 +48,7 @@ public class SiteNodeWrapper implements Wrapper {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_LONGITUDE, COLUMN_LATIUDE,
 				COLUMN_IMAGE_ID, COLUMN_SITE_NODE_TYPE_ID, COLUMN_CITY, COLUMN_STREET, COLUMN_BUILDING,
-				COLUMN_CHARACTERISTIC_ID};
+				COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 
@@ -78,7 +74,7 @@ public class SiteNodeWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTIC_ID))
+		if (key.equals(COLUMN_CHARACTERISTICS))
 			return List.class;
 		return String.class;
 	}
@@ -109,7 +105,7 @@ public class SiteNodeWrapper implements Wrapper {
 				return siteNode.getStreet();
 			else if (key.equals(COLUMN_BUILDING))
 				return siteNode.getBuilding();
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				return siteNode.getCharacteristics();
 		}
 		return null;
@@ -144,7 +140,7 @@ public class SiteNodeWrapper implements Wrapper {
 				siteNode.setStreet((String) value);
 			else if (key.equals(COLUMN_BUILDING))
 				siteNode.setBuilding((String) value);
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				siteNode.setCharacteristics((List) value);
 		}
 	}

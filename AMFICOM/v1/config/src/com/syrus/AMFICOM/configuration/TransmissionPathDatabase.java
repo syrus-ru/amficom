@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.39 2005/01/28 10:23:01 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.40 2005/02/03 08:37:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -45,8 +46,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/01/28 10:23:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/02/03 08:37:01 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -145,7 +146,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		TransmissionPath transmissionPath = (storableObject == null) ?
-				new TransmissionPath(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+				new TransmissionPath(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
 								null,
 								null,
@@ -164,10 +165,10 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-		transmissionPath.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-												DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-												DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-												DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		transmissionPath.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+												DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+												DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+												DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 												DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 												(name != null) ? name : "",
 												(description != null) ? description : "",
@@ -377,9 +378,9 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		String sql = SQL_UPDATE
 			+ ObjectEntities.TRANSPATH_ENTITY
 			+ SQL_SET
-			+ COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(transmissionPath.getModified()) + COMMA
-			+ COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(transmissionPath.getModifierId())
-			+ SQL_WHERE + COLUMN_ID + EQUALS + tpIdStr;
+			+ StorableObjectWrapper.COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(transmissionPath.getModified()) + COMMA
+			+ StorableObjectWrapper.COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(transmissionPath.getModifierId())
+			+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + tpIdStr;
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();

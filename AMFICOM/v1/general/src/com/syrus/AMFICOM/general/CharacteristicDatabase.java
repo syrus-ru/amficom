@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.7 2005/01/31 13:48:53 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.8 2005/02/03 08:37:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/01/31 13:48:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/02/03 08:37:25 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -126,7 +126,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws RetrieveObjectException, SQLException, IllegalDataException {
 		Characteristic characteristic = (storableObject == null) ? null : this.fromStorableObject(storableObject); 
 		if (characteristic == null) {
-			characteristic = new Characteristic(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+			characteristic = new Characteristic(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 																null,
 																null,
 																null,
@@ -148,10 +148,10 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-		characteristic.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-									 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-									 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-									 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		characteristic.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+									 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+									 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+									 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 									 characteristicType,
 									 DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicWrapper.COLUMN_NAME)),
 									 DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicWrapper.COLUMN_DESCRIPTION)),

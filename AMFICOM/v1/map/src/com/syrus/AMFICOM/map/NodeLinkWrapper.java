@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkWrapper.java,v 1.4 2005/02/01 07:25:22 bob Exp $
+ * $Id: NodeLinkWrapper.java,v 1.5 2005/02/03 08:38:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,17 +13,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/01 07:25:22 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 08:38:02 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class NodeLinkWrapper implements Wrapper {
+public class NodeLinkWrapper implements StorableObjectWrapper {
 
 	// name VARCHAR2(128),
-	public static final String			COLUMN_NAME					= "name";
 	// physical_link_id VARCHAR2(32),
 	public static final String			COLUMN_PHYSICAL_LINK_ID		= "physical_link_id";
 	// start_node_id VARCHAR2(32),
@@ -32,8 +31,6 @@ public class NodeLinkWrapper implements Wrapper {
 	public static final String			COLUMN_END_NODE_ID			= "end_node_id";
 	// length NUMBER(12,6),
 	public static final String			COLUMN_LENGTH				= "length";
-
-	public static final String			COLUMN_CHARACTERISTIC_ID	= "collector_id";
 
 	protected static NodeLinkWrapper	instance;
 
@@ -68,7 +65,7 @@ public class NodeLinkWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTIC_ID))
+		if (key.equals(COLUMN_CHARACTERISTICS))
 			return List.class;
 		return String.class;
 	}
@@ -91,7 +88,7 @@ public class NodeLinkWrapper implements Wrapper {
 				return nodeLink.getEndNode();
 			else if (key.equals(COLUMN_LENGTH))
 				return new Double(nodeLink.getLength());
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				return nodeLink.getCharacteristics();
 		}
 		return null;
@@ -118,7 +115,7 @@ public class NodeLinkWrapper implements Wrapper {
 				nodeLink.setEndNode((AbstractNode) value);
 			else if (key.equals(COLUMN_LENGTH))
 				nodeLink.setLength(((Double) value).doubleValue());
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				nodeLink.setCharacteristics((List) value);
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.6 2005/01/26 15:09:21 bob Exp $
+ * $Id: CableThreadDatabase.java,v 1.7 2005/02/03 08:37:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -30,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/01/26 15:09:21 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/03 08:37:00 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -53,7 +54,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
         if (columns == null){
             columns = super.getColumns(mode) + COMMA
                 + DomainMember.COLUMN_DOMAIN_ID + COMMA
-                + CableThreadWrapper.COLUMN_TYPE_ID + COMMA
+                + StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
                 + CableThreadWrapper.COLUMN_NAME + COMMA
                 + CableThreadWrapper.COLUMN_DESCRIPTION;
         }
@@ -106,22 +107,22 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
             throws IllegalDataException, RetrieveObjectException, SQLException {
         CableThread cableThread = this.fromStorableObject(storableObject);
         if (cableThread == null){          
-            cableThread = new CableThread(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null,
+            cableThread = new CableThread(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null,
                                        null, null);            
         }
         String name = DatabaseString.fromQuerySubString(resultSet.getString(CableThreadWrapper.COLUMN_NAME));
         String description = DatabaseString.fromQuerySubString(resultSet.getString(CableThreadWrapper.COLUMN_DESCRIPTION));        
         CableThreadType cableThreadType;
         try {
-            cableThreadType = (CableThreadType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, CableThreadWrapper.COLUMN_TYPE_ID), true);
+            cableThreadType = (CableThreadType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
         }
         catch (ApplicationException ae) {
             throw new RetrieveObjectException(ae);
         }
-        cableThread.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-                                                        DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-                                                        DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-                                                        DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+        cableThread.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+                                                        DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+                                                        DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+                                                        DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
                                                         DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
                                                         (name != null) ? name : "",
                                                         (description != null) ? description : "",

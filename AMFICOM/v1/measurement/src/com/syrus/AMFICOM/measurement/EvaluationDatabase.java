@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.31 2005/01/27 11:55:07 bob Exp $
+ * $Id: EvaluationDatabase.java,v 1.32 2005/02/03 08:36:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,13 +27,14 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/01/27 11:55:07 $
+ * @version $Revision: 1.32 $, $Date: 2005/02/03 08:36:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -112,7 +113,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Evaluation evaluation = (storableObject == null) ? 
-				new Evaluation(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+				new Evaluation(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
 								null,
 								null,
@@ -132,10 +133,10 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-		evaluation.setAttributes(DatabaseDate.fromQuerySubString(resultSet,COLUMN_CREATED),
-								 DatabaseDate.fromQuerySubString(resultSet,COLUMN_MODIFIED),
-								 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-								 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		evaluation.setAttributes(DatabaseDate.fromQuerySubString(resultSet,StorableObjectWrapper.COLUMN_CREATED),
+								 DatabaseDate.fromQuerySubString(resultSet,StorableObjectWrapper.COLUMN_MODIFIED),
+								 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+								 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 								 evaluationType,
 								 DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_MONITORED_ELEMENT_ID),
 								 measurement,
@@ -200,7 +201,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		String condition = EvaluationWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN
 				+ OPEN_BRACKET
 					+ SQL_SELECT
-					+ COLUMN_ID
+					+ StorableObjectWrapper.COLUMN_ID
 					+ SQL_FROM + ObjectEntities.ME_ENTITY
 					+ SQL_WHERE + DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
 				+ CLOSE_BRACKET;

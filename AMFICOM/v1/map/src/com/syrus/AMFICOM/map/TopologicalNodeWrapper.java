@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeWrapper.java,v 1.3 2005/02/01 07:25:22 bob Exp $
+ * $Id: TopologicalNodeWrapper.java,v 1.4 2005/02/03 08:38:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,31 +13,27 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/01 07:25:22 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/03 08:38:02 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class TopologicalNodeWrapper implements Wrapper {
+public class TopologicalNodeWrapper implements StorableObjectWrapper {
 
 	public static final String				COLUMN_PHYSICAL_LINK_ID		= "physical_link_id";
 	public static final String				COLUMN_X					= "x";
 	public static final String				COLUMN_Y					= "y";
 
 	// name VARCHAR2(128),
-	public static final String				COLUMN_NAME					= "name";
 	// description VARCHAR2(256),
-	public static final String				COLUMN_DESCRIPTION			= "description";
 	// longitude NUMBER(12,6),
 	public static final String				COLUMN_LONGITUDE			= "longitude";
 	// latiude NUMBER(12,6),
 	public static final String				COLUMN_LATIUDE				= "latiude";
 	// active NUMBER(1),
 	public static final String				COLUMN_ACTIVE				= "active";
-
-	public static final String				COLUMN_CHARACTERISTIC_ID	= "collector_id";
 
 	protected static TopologicalNodeWrapper	instance;
 
@@ -46,7 +42,7 @@ public class TopologicalNodeWrapper implements Wrapper {
 	private TopologicalNodeWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_LONGITUDE, COLUMN_LATIUDE,
-				COLUMN_ACTIVE, NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID, COLUMN_CHARACTERISTIC_ID};
+				COLUMN_ACTIVE, NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID, COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 
@@ -72,7 +68,7 @@ public class TopologicalNodeWrapper implements Wrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTIC_ID))
+		if (key.equals(COLUMN_CHARACTERISTICS))
 			return List.class;
 		return String.class;
 	}
@@ -97,7 +93,7 @@ public class TopologicalNodeWrapper implements Wrapper {
 				return Boolean.valueOf(topologicalNode.isActive());
 			else if (key.equals(NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID))
 				return topologicalNode.getPhysicalLink();
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				return topologicalNode.getCharacteristics();
 		}
 		return null;
@@ -126,7 +122,7 @@ public class TopologicalNodeWrapper implements Wrapper {
 				topologicalNode.setActive(((Boolean) value).booleanValue());
 			else if (key.equals(NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID))
 				topologicalNode.setPhysicalLink((PhysicalLink) value);
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+			else if (key.equals(COLUMN_CHARACTERISTICS))
 				topologicalNode.setCharacteristics((List) value);
 		}
 	}

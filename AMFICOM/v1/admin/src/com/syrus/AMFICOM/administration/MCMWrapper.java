@@ -1,5 +1,5 @@
 /*
- * $Id: MCMWrapper.java,v 1.1 2005/02/01 11:36:30 bob Exp $
+ * $Id: MCMWrapper.java,v 1.2 2005/02/03 08:36:54 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,23 +14,20 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/01 11:36:30 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/03 08:36:54 $
  * @author $Author: bob $
  * @module admin_v1
  */
-public class MCMWrapper implements Wrapper {
+public class MCMWrapper implements StorableObjectWrapper {
 
-	public static final String	COLUMN_NAME				= "name";
-	public static final String	COLUMN_DESCRIPTION		= "description";
 	public static final String	COLUMN_USER_ID			= "user_id";
 	public static final String	COLUMN_SERVER_ID		= "server_id";
 	// public static final String COLUMN_LOCATION = "location";
 	public static final String	COLUMN_HOSTNAME			= "hostname";
 
-	public static final String	COLUMN_CHARACTERISTICS	= "characteristics";
 	public static final String	COLUMN_KIS_IDS			= "kis_ids";
 
 	private static MCMWrapper	instance;

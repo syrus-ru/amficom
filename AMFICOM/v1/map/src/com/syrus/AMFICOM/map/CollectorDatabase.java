@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.10 2005/01/25 11:10:33 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.11 2005/02/03 08:38:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
@@ -43,7 +44,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/01/25 11:10:33 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/03 08:38:02 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -134,13 +135,13 @@ public class CollectorDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
 		Collector collector = (storableObject == null) ? 
-				new Collector(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null) : 
+				new Collector(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null) : 
 					fromStorableObject(storableObject);				
 		
-		collector.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-							   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		collector.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 							   DatabaseString.fromQuerySubString(resultSet.getString(CollectorWrapper.COLUMN_NAME)),
 							   DatabaseString.fromQuerySubString(resultSet.getString(CollectorWrapper.COLUMN_DESCRIPTION)));		
 		return collector;
@@ -238,7 +239,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
 	
 	public void delete(List ids) throws IllegalDataException {	
 		StringBuffer linkBuffer = new StringBuffer(CollectorWrapper.LINK_COLUMN_COLLECTOR_ID);
-		StringBuffer buffer = new StringBuffer(COLUMN_ID);
+		StringBuffer buffer = new StringBuffer(StorableObjectWrapper.COLUMN_ID);
 		
 		linkBuffer.append(SQL_IN);
 		linkBuffer.append(OPEN_BRACKET);
@@ -266,7 +267,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
 					
 					buffer.append(CLOSE_BRACKET);
 					buffer.append(SQL_AND);
-					buffer.append(COLUMN_ID);				
+					buffer.append(StorableObjectWrapper.COLUMN_ID);				
 					buffer.append(SQL_IN);
 					buffer.append(OPEN_BRACKET);
 				}
@@ -283,7 +284,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM + COLLECTOR_PHYSICAL_LINK + SQL_WHERE
 					+ linkBuffer.toString());
-			statement.executeUpdate(SQL_DELETE_FROM + this.getEnityName() + SQL_WHERE + COLUMN_ID
+			statement.executeUpdate(SQL_DELETE_FROM + this.getEnityName() + SQL_WHERE + StorableObjectWrapper.COLUMN_ID
 					+ buffer.toString());
 			connection.commit();
 		} catch (SQLException sqle1) {

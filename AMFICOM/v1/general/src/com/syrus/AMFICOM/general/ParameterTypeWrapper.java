@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeWrapper.java,v 1.3 2005/02/01 06:19:46 bob Exp $
+ * $Id: ParameterTypeWrapper.java,v 1.4 2005/02/03 08:37:26 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,15 +16,12 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/01 06:19:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/03 08:37:26 $
  * @author $Author: bob $
  * @module general_v1
  */
-public class ParameterTypeWrapper implements Wrapper {
+public class ParameterTypeWrapper implements StorableObjectWrapper {
 
-	public static final String				COLUMN_CODENAME		= "codename";
-	public static final String				COLUMN_DESCRIPTION	= "description";
-	public static final String				COLUMN_NAME			= "name";
 	public static final String				COLUMN_DATA_TYPE	= "data_type";
 
 	protected static ParameterTypeWrapper	instance;
@@ -33,8 +30,8 @@ public class ParameterTypeWrapper implements Wrapper {
 
 	private ParameterTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME,
-				COLUMN_DATA_TYPE};
+		String[] keysArray = new String[] { StorableObjectWrapper.COLUMN_CODENAME,
+				StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_NAME, COLUMN_DATA_TYPE};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 
@@ -75,11 +72,11 @@ public class ParameterTypeWrapper implements Wrapper {
 	public Object getValue(Object object, String key) {
 		if (object instanceof ParameterType) {
 			ParameterType parameterType = (ParameterType) object;
-			if (key.equals(COLUMN_CODENAME))
+			if (key.equals(StorableObjectWrapper.COLUMN_CODENAME))
 				return parameterType.getCodename();
-			else if (key.equals(COLUMN_DESCRIPTION))
+			else if (key.equals(StorableObjectWrapper.COLUMN_DESCRIPTION))
 				return parameterType.getDescription();
-			else if (key.equals(COLUMN_NAME))
+			else if (key.equals(StorableObjectWrapper.COLUMN_NAME))
 				return parameterType.getName();
 			else if (key.equals(COLUMN_DATA_TYPE))
 				return new Integer(parameterType.getDataType().value());
@@ -94,14 +91,14 @@ public class ParameterTypeWrapper implements Wrapper {
 	public void setValue(Object object, String key, Object value) {
 		if (object instanceof ParameterType) {
 			ParameterType parameterType = (ParameterType) object;
-			if (key.equals(COLUMN_CODENAME))
+			if (key.equals(StorableObjectWrapper.COLUMN_CODENAME))
 				parameterType.setCodename((String) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
+			else if (key.equals(StorableObjectWrapper.COLUMN_DESCRIPTION))
 				parameterType.setDescription((String) value);
-			else if (key.equals(COLUMN_NAME))
+			else if (key.equals(StorableObjectWrapper.COLUMN_NAME))
 				parameterType.setName((String) value);
 			else if (key.equals(COLUMN_DATA_TYPE))
-				parameterType.setDataType(DataType.from_int(((Integer)value).intValue()));
+				parameterType.setDataType(DataType.from_int(((Integer) value).intValue()));
 		}
 	}
 

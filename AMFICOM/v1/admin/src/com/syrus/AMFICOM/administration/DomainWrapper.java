@@ -1,5 +1,5 @@
 /*
- * $Id: DomainWrapper.java,v 1.1 2005/02/01 11:36:30 bob Exp $
+ * $Id: DomainWrapper.java,v 1.2 2005/02/03 08:36:54 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,19 +13,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.Wrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/01 11:36:30 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/03 08:36:54 $
  * @author $Author: bob $
  * @module admin_v1
  */
-public class DomainWrapper implements Wrapper {
-
-	public static final String		COLUMN_NAME				= "name";
-	public static final String		COLUMN_DESCRIPTION		= "description";
-
-	public static final String		COLUMN_CHARACTERISTICS	= "characteristics";
+public class DomainWrapper implements StorableObjectWrapper {
 
 	private static DomainWrapper	instance;
 

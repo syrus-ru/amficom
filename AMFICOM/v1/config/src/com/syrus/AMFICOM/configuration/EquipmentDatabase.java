@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.59 2005/01/28 10:18:43 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.60 2005/02/03 08:37:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
@@ -46,8 +47,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/01/28 10:18:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.60 $, $Date: 2005/02/03 08:37:00 $
+ * @author $Author: bob $
  * @module config_v1
  */
 
@@ -184,7 +185,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Equipment equipment = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (equipment == null){
-			equipment = new Equipment(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+			equipment = new Equipment(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 													null,
 													null,
 													null,
@@ -210,10 +211,10 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-		equipment.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),		
+		equipment.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+									DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),		
 									DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 									equipmentType,
 									(name != null) ? name : "",
@@ -246,7 +247,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		String eqIdStr = DatabaseIdentifier.toSQLString(equipment.getId());
 
 		String sql = SQL_SELECT
-			+ COLUMN_ID
+			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM + ObjectEntities.PORT_ENTITY
 			+ SQL_WHERE + PortWrapper.COLUMN_EQUIPMENT_ID + EQUALS + eqIdStr;
 
@@ -258,7 +259,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			Log.debugMessage("EquipmentDatabase.retrieveEquipmentPortIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {				
-				portIds.add(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID));				
+				portIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));				
 			}
 		}
 		catch (SQLException sqle) {
@@ -289,7 +290,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			return;     
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT
-															+ COLUMN_ID + COMMA
+															+ StorableObjectWrapper.COLUMN_ID + COMMA
 															+ PortWrapper.COLUMN_EQUIPMENT_ID
 															+ SQL_FROM + ObjectEntities.PORT_ENTITY
 															+ SQL_WHERE + PortWrapper.COLUMN_EQUIPMENT_ID
@@ -330,7 +331,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 					epIds = new LinkedList();
 					epIdMap.put(equipmentId, epIds);
 				}
-				epIds.add(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID));
+				epIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
 			}
 
 			Equipment equipment;
@@ -458,9 +459,9 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		String eqIdStr = DatabaseIdentifier.toSQLString(equipment.getId());
 		String sql = SQL_UPDATE
 			+ ObjectEntities.EQUIPMENT_ENTITY + SQL_SET
-			+ COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(equipment.getModified()) + COMMA
-			+ COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(equipment.getModifierId())
-			+ SQL_WHERE + COLUMN_ID + EQUALS + eqIdStr;
+			+ StorableObjectWrapper.COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(equipment.getModified()) + COMMA
+			+ StorableObjectWrapper.COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(equipment.getModifierId())
+			+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + eqIdStr;
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();

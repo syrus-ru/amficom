@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.7 2005/01/25 14:36:58 bob Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.8 2005/02/03 08:38:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
@@ -31,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/01/25 14:36:58 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/03 08:38:02 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -139,7 +140,7 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
 		PhysicalLink physicalLink = (storableObject == null) ? 
-				new PhysicalLink(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, null, null, 
+				new PhysicalLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, null, null, null, 
 						null, null, null, 0, 0, false, false) : 
 					fromStorableObject(storableObject);
 				
@@ -158,10 +159,10 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException(msg, sqle);
 		}
 		int topLeft = resultSet.getInt(PhysicalLinkWrapper.COLUMN_TOPLEFT);
-		physicalLink.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-							   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		physicalLink.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 							   DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkWrapper.COLUMN_NAME)),
 							   DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkWrapper.COLUMN_DESCRIPTION)),							   
 							   type,

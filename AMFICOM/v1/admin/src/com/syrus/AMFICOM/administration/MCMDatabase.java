@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.3 2005/02/01 11:37:01 bob Exp $
+ * $Id: MCMDatabase.java,v 1.4 2005/02/03 08:36:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -44,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/01 11:37:01 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/03 08:36:54 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -137,7 +138,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		MCM mcm = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (mcm == null){
-			mcm = new MCM(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+			mcm = new MCM(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 																	 null,
 																	 null,
 																	 null,
@@ -146,10 +147,10 @@ public class MCMDatabase extends StorableObjectDatabase {
 																	 null,
 																	 null);			
 		}
-		mcm.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+		mcm.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+						  DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+						  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+						  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 						  DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 						  DatabaseString.fromQuerySubString(resultSet.getString(MCMWrapper.COLUMN_NAME)),
 						  DatabaseString.fromQuerySubString(resultSet.getString(MCMWrapper.COLUMN_DESCRIPTION)),
@@ -165,7 +166,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		List kisIds = new ArrayList();
 		String mcmIdStr = DatabaseIdentifier.toSQLString(mcm.getId());
 		String sql = SQL_SELECT 
-			+ COLUMN_ID
+			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM + ObjectEntities.KIS_ENTITY
 			+ SQL_WHERE + LINK_COLUMN_MCM_ID + EQUALS + mcmIdStr;
 		Statement statement = null;
@@ -176,7 +177,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 			Log.debugMessage("MCMDatabase.retrieveKISIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
-				kisIds.add(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID));
+				kisIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
 		}
 		catch (SQLException sqle) {
 			String mesg = "MCMDatabase.retrieveKISIds | Cannot retrieve kis ids for mcm " + mcmIdStr;
@@ -207,7 +208,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 			return;     
 
     StringBuffer sql = new StringBuffer(SQL_SELECT
-                + COLUMN_ID + COMMA
+                + StorableObjectWrapper.COLUMN_ID + COMMA
                 + LINK_COLUMN_MCM_ID
                 + SQL_FROM + ObjectEntities.KIS_ENTITY
                 + SQL_WHERE + LINK_COLUMN_MCM_ID
@@ -246,7 +247,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 					kisIds = new LinkedList();
 					kisMap.put(mcmId, kisIds);
 				}
-				kisIds.add(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID));
+				kisIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
 			}
 			
 			for (Iterator it = mcms.iterator(); it.hasNext();) {
@@ -385,9 +386,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 			return Collections.EMPTY_LIST;
 
 		StringBuffer sql = new StringBuffer(
-			COLUMN_ID + SQL_IN + OPEN_BRACKET + 
+			StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET + 
 				SQL_SELECT + LINK_COLUMN_MCM_ID + SQL_FROM
-				+ ObjectEntities.KIS_ENTITY + SQL_WHERE	+ COLUMN_ID + SQL_IN + OPEN_BRACKET);
+				+ ObjectEntities.KIS_ENTITY + SQL_WHERE	+ StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET);
 		int i = 1;
 		for (Iterator it = kisIds.iterator(); it.hasNext(); i++) {
 			Identifier kidId = (Identifier) it.next();
@@ -398,7 +399,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 				else {
 					sql.append(CLOSE_BRACKET);
 					sql.append(SQL_OR);
-					sql.append(COLUMN_ID);
+					sql.append(StorableObjectWrapper.COLUMN_ID);
 					sql.append(SQL_IN);
 					sql.append(OPEN_BRACKET);
 				}

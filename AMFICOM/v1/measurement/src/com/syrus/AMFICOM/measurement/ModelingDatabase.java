@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.20 2005/01/28 10:28:31 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.21 2005/02/03 08:36:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,12 +28,13 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/01/28 10:28:31 $
+ * @version $Revision: 1.21 $, $Date: 2005/02/03 08:36:47 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -111,7 +112,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
   protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Modeling modeling = (storableObject == null) ? 
-                new Modeling(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, null) : 
+                new Modeling(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null, null, null) : 
                     this.fromStorableObject(storableObject);
 		ModelingType modelingType;
 		Set argumentSet;
@@ -123,10 +124,10 @@ public class ModelingDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException(ae);
 		}
 
-    modeling.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-													DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-													DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
-													DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+    modeling.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+													DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+													DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+													DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 													modelingType,
 													DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID),
 													DatabaseString.fromQuerySubString(resultSet.getString(ModelingWrapper.COLUMN_NAME)),
@@ -190,7 +191,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
     String condition = ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN
 				+ OPEN_BRACKET
 					+ SQL_SELECT
-					+ COLUMN_ID
+					+ StorableObjectWrapper.COLUMN_ID
 					+ SQL_FROM + ObjectEntities.ME_ENTITY
 					+ SQL_WHERE + DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
 				+ CLOSE_BRACKET;
