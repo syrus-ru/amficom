@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.27 2004/09/17 11:36:12 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.28 2004/09/17 12:46:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/09/17 11:36:12 $
+ * @version $Revision: 1.28 $, $Date: 2004/09/17 12:46:43 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -468,13 +468,20 @@ public abstract class StorableObjectDatabase {
 	protected abstract StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException;
 	
+	/**
+	 * retrive storable objects by identifiers not in ids
+	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identified}&gt;
+	 * @return
+	 * @throws IllegalDataException
+	 * @throws RetrieveObjectException
+	 */
 	public List retrieveButIds(List ids) throws IllegalDataException, RetrieveObjectException {
 		return retrieveButIds(ids, null);
 	}
 	
 	/**
-	 * retrive storable objects by additional condition and identifiers not in ids  
-	 * @param ids
+	 * retrive storable objects by additional condition and identifiers not in ids   
+	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identified}&gt;
 	 * @param condition
 	 * @return
 	 * @throws IllegalDataException
@@ -498,9 +505,12 @@ public abstract class StorableObjectDatabase {
 					Identifier id = null;
 					if (object instanceof Identifier)
 						id = (Identifier) object;
-					else if (object instanceof StorableObject){
-						id = ((StorableObject)object).getId();
-					}
+					else if (object instanceof Identified)
+						id = ((Identified)object).getId();
+					else throw new IllegalDataException("StorableObjectDatabase.retrieveButIds | Object " +
+														object.getClass().getName()
+														+ " isn't Identifier or Identified");
+
 					if (id != null){
 						buffer.append(id.toSQLString());
 						if (i < idsLength)
@@ -525,7 +535,7 @@ public abstract class StorableObjectDatabase {
 
 	/**
 	 * retrive storable objects by identifiers and additional condition
-	 * @param ids
+	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identified}&gt;
 	 * @param condition
 	 * @return
 	 * @throws IllegalDataException
@@ -542,14 +552,31 @@ public abstract class StorableObjectDatabase {
 				int idsLength = ids.size();
 				if (idsLength == 1) {
 					buffer.append(EQUALS);
-					buffer.append(((Identifier) ids.iterator().next()).toSQLString());
+					Object object = ids.iterator().next();
+					Identifier identifier = null;
+					if (object instanceof Identifier)
+						identifier = (Identifier)object;
+					else if (object instanceof Identified)
+						identifier = ((Identified)object).getId();
+					else throw new IllegalDataException("StorableObjectDatabase.retrieveByIdsOneQuery | Object " + 
+														object.getClass().getName() 
+														+ " isn't Identifier or Identified");
+					buffer.append(identifier.toSQLString());
 				} else {
 					buffer.append(SQL_IN);
 					buffer.append(OPEN_BRACKET);
 
 					int i = 1;
-					for (Iterator it = ids.iterator(); it.hasNext(); i++) {
-						Identifier id = (Identifier) it.next();
+					for (Iterator it = ids.iterator(); it.hasNext(); i++) {						
+						Object object = it.next();
+						Identifier id = null;
+						if (object instanceof Identifier)
+							id = (Identifier)object;
+						else if (object instanceof Identified)
+							id = ((Identified)object).getId();
+						else throw new IllegalDataException("StorableObjectDatabase.retrieveByIdsOneQuery | Object " + 
+															object.getClass().getName() 
+															+ " isn't Identifier or Identified");
 						buffer.append(id.toSQLString());
 						if (i < idsLength)
 							buffer.append(COMMA);
@@ -620,7 +647,15 @@ public abstract class StorableObjectDatabase {
 		try {
 			stmt = connection.prepareStatement(sql.toString());
 			for (Iterator it = ids.iterator(); it.hasNext();) {
-				Identifier id = (Identifier) it.next();
+				Object object = it.next();
+				Identifier id = null;
+				if (object instanceof Identifier)
+					id = (Identifier)object;
+				else if (object instanceof Identified)
+					id = ((Identified)object).getId();
+				else throw new IllegalDataException("StorableObjectDatabase.retriveByIdsPreparedStatement | Object " + 
+													object.getClass().getName() 
+													+ " isn't Identifier or Identified");
 				String idStr = id.getIdentifierString();
 				/**
 				 * @todo when change DB Identifier model ,change
