@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.5 2004/10/27 08:17:50 max Exp $
+ * $Id: DatabaseContextSetup.java,v 1.6 2004/11/01 15:26:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,14 +47,18 @@ import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
+import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/10/27 08:17:50 $
- * @author $Author: max $
+ * @version $Revision: 1.6 $, $Date: 2004/11/01 15:26:04 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 
 public abstract class DatabaseContextSetup {
+	
+	public static final String CONFIGURATION_POOL_SIZE_KEY = "ConfigurationPoolSize";
+	public static final String MEASUREMENT_POOL_SIZE_KEY = "MeasurementPoolSize";
 
 	private DatabaseContextSetup() {
 		// empty
@@ -96,7 +100,7 @@ public abstract class DatabaseContextSetup {
 	}
 
 	public static void initObjectPools() {
-		MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(), 200);
-		ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader(), 200);
+		MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(), ApplicationProperties.getInt(MEASUREMENT_POOL_SIZE_KEY, 1000));
+		ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader(), ApplicationProperties.getInt(CONFIGURATION_POOL_SIZE_KEY, 1000));
 	}
 }

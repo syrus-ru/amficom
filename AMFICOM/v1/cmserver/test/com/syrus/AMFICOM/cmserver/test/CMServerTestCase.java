@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.21 2004/10/19 15:12:26 bass Exp $
+ * $Id: CMServerTestCase.java,v 1.22 2004/11/01 15:26:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -55,8 +55,8 @@ import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/10/19 15:12:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2004/11/01 15:26:04 $
+ * @author $Author: bob $
  * @module module
  */
 public class CMServerTestCase extends TestCase {
@@ -128,10 +128,8 @@ public class CMServerTestCase extends TestCase {
 
 			Identifier id = new Identifier("Null_0");
 
-			Identifier domainId = new Identifier("Domain_19");
-            
-			accessIdentifier_Transferable.domain_id = (Identifier_Transferable) domainId.getTransferable();
-			accessIdentifier_Transferable.user_id = (Identifier_Transferable) userId.getTransferable();
+			accessIdentifier_Transferable.domain_id = server.reverseLookupDomainName("Системный домен");
+			accessIdentifier_Transferable.user_id = server.reverseLookupUserLogin("sys");
 			accessIdentifier_Transferable.session_id = (Identifier_Transferable) id.getTransferable();
 
 			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(accessIdentifier_Transferable);
@@ -155,6 +153,10 @@ public class CMServerTestCase extends TestCase {
         // empty;
 	}
 
+	public void testEmpty(){
+		
+	}
+	
 	public void _testRecieveAnalyses() throws AMFICOMRemoteException, CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
         
         //      Checking recieveAnalysiss and transmitAnalysiss methods
@@ -337,7 +339,7 @@ public class CMServerTestCase extends TestCase {
 				+ " identifier_Transferables  for " + (time5 - time4) + " ms");
 	}
 
-	public void testTransmitAnalysisTypeX() throws AMFICOMRemoteException {
+	public void _testTransmitAnalysisTypeX() throws AMFICOMRemoteException {
 		//      Checking method transmitAnalysisTypes(null , acc)
 		System.out.println("Checking method transmitAnalysisTypeX");
 		Identifier_Transferable identifier_Transferables[] = new Identifier_Transferable[0];
