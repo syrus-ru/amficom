@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessHelperTestCase.java,v 1.1 2004/06/22 09:57:10 bass Exp $
+ * $Id: ServerProcessHelperTestCase.java,v 1.2 2004/09/14 14:01:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,17 +10,21 @@ package com.syrus.AMFICOM.server.process;
 
 import com.syrus.AMFICOM.corba.portable.alarm.MessageImpl;
 import com.syrus.AMFICOM.corba.portable.common.*;
-import com.syrus.AMFICOM.server.prefs.JDBCConnectionManager;
+import com.syrus.AMFICOM.server.prefs.JdbcConnectionManager;
 import java.io.PrintWriter;
 import java.sql.*;
+import javax.sql.DataSource;
 import junit.framework.*;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/22 09:57:10 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/14 14:01:22 $
  * @author $Author: bass $
  * @module serverprocess-test
  */
 public class ServerProcessHelperTestCase extends TestCase {
+	private static final DataSource DATA_SOURCE = JdbcConnectionManager.getDataSource();
+
 	private static final String SYS_USER = "sys";
 
 	public ServerProcessHelperTestCase(String testName) {
@@ -62,10 +66,9 @@ public class ServerProcessHelperTestCase extends TestCase {
 	}
 
 	public void testLoadMessages() throws SQLException {
-		Connection conn = JDBCConnectionManager.getConn();
-		boolean autoCommit = conn.getAutoCommit();
-		conn.setAutoCommit(true);
+		Connection conn = DefaultContext.getDefaultContext().getConnection();
 		conn.createStatement().executeUpdate("UPDATE amficom.alertings SET alerted = NULL");
+		conn.commit();
 		AlertingMessageHolder alertingMessageHolders[];
 		System.out.println("LOADING MESSAGES FOR ALL USERS");
 		alertingMessageHolders = ServerProcessHelper.loadMessages(null);
@@ -88,14 +91,13 @@ public class ServerProcessHelperTestCase extends TestCase {
 			System.out.println("Alerting Type Id: " + alertingMessageHolders[i].getAlertingTypeId());
 			System.out.println("User Id: " + alertingMessageHolders[i].getUserId());
 		}
-		conn.setAutoCommit(autoCommit);
 	}
 
 	public void testSetAlerted() throws SQLException {
 		ResultSet resultSet = null;
 		Statement stmt = null;
 		try {
-			stmt = JDBCConnectionManager.getConn().createStatement();
+			stmt = DefaultContext.getDefaultContext().getConnection().createStatement();
 			resultSet = stmt.executeQuery("SELECT id AS alertingId FROM amficom.alertings WHERE alerted IS NULL");
 			while (resultSet.next()) {
 				ServerProcessHelper.setAlerted(new IdentifierImpl(resultSet.getString("alertingId")), new PrintWriter(System.out));

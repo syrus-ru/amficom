@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessHelper.java,v 1.1 2004/06/22 09:57:10 bass Exp $
+ * $Id: ServerProcessHelper.java,v 1.2 2004/09/14 14:01:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,20 +10,24 @@ package com.syrus.AMFICOM.server.process;
 
 import com.syrus.AMFICOM.corba.portable.alarm.*;
 import com.syrus.AMFICOM.corba.portable.common.*;
-import com.syrus.AMFICOM.server.prefs.JDBCConnectionManager;
+import com.syrus.AMFICOM.server.prefs.JdbcConnectionManager;
 import com.syrus.AMFICOM.server.process.mail.*;
 import com.syrus.AMFICOM.server.process.sms.SMSProviderFactory;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
+import javax.sql.DataSource;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/22 09:57:10 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/14 14:01:22 $
  * @author $Author: bass $
  * @module serverprocess
  */
 final class ServerProcessHelper {
+	private static final DataSource DATA_SOURCE = JdbcConnectionManager.getDataSource();
+
 	private static Connection conn;
 	private static PreparedStatement alertingStmt1;
 	private static PreparedStatement alertingStmt2;
@@ -50,7 +54,7 @@ final class ServerProcessHelper {
 	 */
 	static {
 		try {
-			conn = JDBCConnectionManager.getConn();
+			conn = DefaultContext.getDefaultContext().getConnection();
 
 			alertingStmt1 = conn.prepareStatement("SELECT id AS alertingId, alerting_message_user_id AS alertingMessageUserLinkId, event_id AS eventId FROM amficom.alertings WHERE alerted IS NULL", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			alertingStmt2 = conn.prepareStatement("UPDATE amficom.alertings SET alerted = SYSDATE WHERE id = ?");
