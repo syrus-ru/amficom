@@ -85,7 +85,8 @@ public class ProtoElement extends ObjectResource implements Serializable
 
 	public static ObjectResourceDisplayModel getDefaultDisplayModel()
 	{
-		return new StubDisplayModel(new String[] { "name" }, new String[] { "name" });
+		//return new StubDisplayModel(new String[] { "name" }, new String[] { "name" });
+		return new ProtoElementDisplayModel();
 	}
 
 	public static PropertiesPanel getPropertyPane()

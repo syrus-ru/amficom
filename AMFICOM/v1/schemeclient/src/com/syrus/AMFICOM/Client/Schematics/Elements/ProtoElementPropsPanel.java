@@ -260,7 +260,7 @@ public class ProtoElementPropsPanel extends JPanel
 		mapProtoTextField.setCaretPosition(0);
 		mapProtoTextField.setEnabled(false);
 
-		nameTextField.setText(eqt.getName());
+		nameTextField.setText(proto.getName());
 		descriptionTextArea.setText(eqt.description);
 		manufacturerTextField.setText(eqt.manufacturer);
 		ugoNameTextField.setText(proto.label);
