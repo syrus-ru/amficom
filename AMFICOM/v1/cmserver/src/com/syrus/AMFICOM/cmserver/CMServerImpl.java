@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.64 2004/11/03 17:15:37 bob Exp $
+ * $Id: CMServerImpl.java,v 1.65 2004/11/11 11:50:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -116,7 +116,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2004/11/03 17:15:37 $
+ * @version $Revision: 1.65 $, $Date: 2004/11/11 11:50:01 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -837,7 +837,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.CHARACTERISTIC_ENTITY_CODE), idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.CHARACTERISTIC_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.CHARACTERISTIC_ENTITY_CODE), true);
 
@@ -977,7 +977,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE), idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.CHARACTERISTIC_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE), true);
 
@@ -1023,7 +1023,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.DOMAIN_ENTITY_CODE), idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.DOMAIN_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.DOMAIN_ENTITY_CODE), true);
 
@@ -1159,7 +1159,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.EQUIPMENT_ENTITY_CODE), idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.EQUIPMENT_ENTITY_CODE), true);
 
@@ -1299,7 +1299,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE), idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.ANALYSIS_ENTITY_CODE), true);
 
@@ -1391,7 +1391,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds( new Short(ObjectEntities.KIS_ENTITY_CODE), idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
 
@@ -1527,7 +1527,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.KISTYPE_ENTITY_CODE), idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
 
@@ -1656,7 +1656,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.LINK_ENTITY_CODE), idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
 
@@ -1785,7 +1785,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.LINKTYPE_ENTITY_CODE), idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
 
@@ -1877,7 +1877,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.MCM_ENTITY_CODE), idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.MCM_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.MCM_ENTITY_CODE), true);
 
@@ -2012,7 +2012,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE), idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.MEASUREMENTPORT_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.MEASUREMENTPORT_ENTITY_CODE), true);
 
@@ -2148,7 +2148,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE), idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE), true);
 
@@ -2330,7 +2330,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.PORT_ENTITY_CODE), idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.PORT_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.PORT_ENTITY_CODE), true);
 
@@ -2466,7 +2466,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.PORTTYPE_ENTITY_CODE), idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.PORTTYPE_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.PORTTYPE_ENTITY_CODE), true);
 
@@ -2558,7 +2558,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.SERVER_ENTITY_CODE), idsList , true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList , getDomainCondition(domain, ObjectEntities.SERVER_ENTITY_CODE), true);
             } else
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.SERVER_ENTITY_CODE), true);
 
@@ -2832,13 +2832,14 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                             .toString(ids_Transferable.length))
                     + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
             List list;
+            StringFieldCondition stringFieldCondition = new StringFieldCondition(stringFieldCondition_Transferable);
             if (ids_Transferable.length > 0) {
                 List idsList = new ArrayList(ids_Transferable.length);
                 for (int i = 0; i < ids_Transferable.length; i++)
                     idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.USER_ENTITY_CODE),idsList, true);
+                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, stringFieldCondition, true);
             } else{
-            	StringFieldCondition stringFieldCondition = new StringFieldCondition(stringFieldCondition_Transferable);
+            	
                 list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(stringFieldCondition, true);
             }
 
@@ -3004,7 +3005,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
-                list = MeasurementStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.EVALUATION_ENTITY_CODE), idsList, true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.EVALUATION_ENTITY_CODE), true);
 
             } else
                 list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.EVALUATION_ENTITY_CODE), true);
@@ -3927,7 +3928,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
-                list = MeasurementStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE), idsList, true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.EVALUATIONTYPE_ENTITY_CODE), true);
 
             } else
                 list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.EVALUATIONTYPE_ENTITY_CODE), true);
@@ -4286,7 +4287,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
-                list = MeasurementStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE), idsList, true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.PARAMETERTYPE_ENTITY_CODE), true);
 
             } else
                 list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.PARAMETERTYPE_ENTITY_CODE), true);
@@ -4442,7 +4443,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(identifier_Transferables.length);
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
-                list = MeasurementStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.ANALYSIS_ENTITY_CODE), idsList, true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.ANALYSIS_ENTITY_CODE), true);
             } else
                 list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.ANALYSIS_ENTITY_CODE), true);
 
@@ -4594,7 +4595,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
-                list = MeasurementStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.MODELING_ENTITY_CODE), idsList, true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.MODELING_ENTITY_CODE), true);
 
             } else
                 list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.MODELING_ENTITY_CODE), true);
@@ -4745,7 +4746,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
-                list = MeasurementStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE), idsList, true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.MEASUREMENT_ENTITY_CODE), true);
 
             } else
                 list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.MEASUREMENT_ENTITY_CODE), true);
@@ -4946,7 +4947,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 List idsList = new ArrayList(identifier_Transferables.length);
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
-                list = MeasurementStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.MS_ENTITY_CODE),idsList, true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.MS_ENTITY_CODE), true);
             } else
                 list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.MS_ENTITY_CODE), true);
 
@@ -5143,7 +5144,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
-                list = MeasurementStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.RESULT_ENTITY_CODE), idsList, true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.RESULT_ENTITY_CODE), true);
 
             } else
                 list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.RESULT_ENTITY_CODE), true);
@@ -5449,7 +5450,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
-                list = MeasurementStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.SET_ENTITY_CODE), idsList, true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.SET_ENTITY_CODE), true);
 
             } else
                 list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.SET_ENTITY_CODE), true);
@@ -5603,7 +5604,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
-                list = MeasurementStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), idsList, true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), true);
 
             } else
                 list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), true);
@@ -5706,7 +5707,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
-                list = MeasurementStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.TEST_ENTITY_CODE), idsList, true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.TEST_ENTITY_CODE), true);
 
             } else
                 list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.TEST_ENTITY_CODE), true);
