@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -50,7 +50,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
-import com.syrus.AMFICOM.logic.ServiceItem;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -252,7 +251,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			if (!monitoredElements.isEmpty()) {
 				LinkedIdsCondition linkedIdsCondition;
 				{
-					List meIdList = new ArrayList(monitoredElements.size());
+					java.util.Set meIdList = new HashSet(monitoredElements.size());
 					for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
 						MonitoredElement me = (MonitoredElement) it.next();
 						meIdList.add(me.getId());
@@ -443,7 +442,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 			Test test = (this.flag == FLAG_APPLY) ? this.selectedTest : null;
 
-			Collection measurementSetupIds;
+			java.util.Set measurementSetupIds;
 			if (this.measurementSetup == null) {
 				if (this.set == null)
 					return;
@@ -451,7 +450,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				try {
 					this.measurementSetup = MeasurementSetup.createInstance(sessionInterface.getUserIdentifier(),
 						this.set, null, null, null, "created by Scheduler", 1000 * 60 * 10, Collections
-								.singletonList(this.monitoredElement.getId()));
+								.singleton(this.monitoredElement.getId()));
 					MeasurementStorableObjectPool.putStorableObject(this.measurementSetup);
 				} catch (IllegalObjectEntityException e) {
 					Log.debugException(e, Log.DEBUGLEVEL05);
@@ -459,7 +458,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					Log.debugException(e, Log.DEBUGLEVEL05);
 				}
 			}
-			measurementSetupIds = Collections.singletonList(this.measurementSetup.getId());
+			measurementSetupIds = Collections.singleton(this.measurementSetup.getId());
 			Identifier modifierId = ((RISDSessionInfo) this.aContext.getSessionInterface()).getUserIdentifier();
 
 			Date startTime = this.testTimeStamps.getStartTime();

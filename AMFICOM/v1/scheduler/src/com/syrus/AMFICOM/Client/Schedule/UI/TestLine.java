@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JLabel;
 import javax.swing.UIManager;
@@ -152,7 +153,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 								boolean condition = false;
 								switch (temporalType.value()) {
 									case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-										List times = ((TemporalPattern) MeasurementStorableObjectPool
+										Set times = ((TemporalPattern) MeasurementStorableObjectPool
 												.getStorableObject(test.getTemporalPatternId(), true)).getTimes(test
 												.getStartTime(), test.getEndTime());
 										for (Iterator timeIt = times.iterator(); timeIt.hasNext();) {
@@ -389,7 +390,7 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 							.getStorableObject((Identifier) test.getMeasurementSetupIds().iterator().next(), true);
 					switch (test.getTemporalType().value()) {
 						case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-							List times = ((TemporalPattern)MeasurementStorableObjectPool
+							Set times = ((TemporalPattern)MeasurementStorableObjectPool
 									.getStorableObject(test.getTemporalPatternId(), true)).getTimes(test.getStartTime(), test.getEndTime());
 							List addMeasurementTestList = new LinkedList();
 							for (Iterator timeIt = times.iterator(); timeIt.hasNext();) {

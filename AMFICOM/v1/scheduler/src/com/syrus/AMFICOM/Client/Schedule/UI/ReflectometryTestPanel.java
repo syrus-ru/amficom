@@ -11,11 +11,11 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -220,7 +220,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 																			ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 																			StorableObjectWrapper.COLUMN_CODENAME);
 
-			Collection conditions = new ArrayList(6);
+			java.util.Set conditions = new HashSet(6);
 			conditions.add(waveLengthCondition);
 			conditions.add(traceLengthCondition);
 			conditions.add(resolutionCondition);
@@ -346,7 +346,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 			set = Set.createInstance(sessionInterface.getUserIdentifier(), SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
-				"Set created by Scheduler", params, Collections.singletonList(this.meId));
+				"Set created by Scheduler", params, Collections.singleton(this.meId));
 			MeasurementStorableObjectPool.putStorableObject(set);
 
 		}  catch (IllegalArgumentException e) {

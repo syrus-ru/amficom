@@ -7,10 +7,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -188,11 +188,11 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 							Set criteriaSet = measurementSetup.getCriteriaSet();
 							if (criteriaSet != null) {
 								SetParameter[] setParameters = criteriaSet.getParameters();
-								List list = new ArrayList(setParameters.length);
+								java.util.Set set = new HashSet(setParameters.length);
 								for (int i = 0; i < setParameters.length; i++)
-									list.add(setParameters[i].getId());
+									set.add(setParameters[i].getId());
 								linkedIdsCondition = new LinkedIdsCondition(
-										list,
+										set,
 										ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
 
 								Collection analysisTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
@@ -211,18 +211,18 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 							Set thresholdSet = measurementSetup.getThresholdSet();
 							if (thresholdSet != null) {
 								SetParameter[] setParameters = thresholdSet.getParameters();
-								List list = new ArrayList(setParameters.length);
+								java.util.Set set = new HashSet(setParameters.length);
 								for (int i = 0; i < setParameters.length; i++)
-									list.add(setParameters[i].getId());
+									set.add(setParameters[i].getId());
 								if (linkedIdsCondition == null)		{
 									linkedIdsCondition = new LinkedIdsCondition(
-										list,
+										set,
 										ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
 								}
 								
 								else {
 									linkedIdsCondition.setEntityCode(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
-									linkedIdsCondition.setLinkedIds(list);
+									linkedIdsCondition.setLinkedIds(set);
 								}
 								Collection evaluationTypes = MeasurementStorableObjectPool
 										.getStorableObjectsByCondition(linkedIdsCondition, true);

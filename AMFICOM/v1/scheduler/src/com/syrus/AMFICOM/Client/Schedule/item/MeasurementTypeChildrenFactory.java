@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.1 2005/03/31 06:32:36 bob Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.2 2005/04/04 07:13:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
@@ -33,7 +34,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/31 06:32:36 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/04 07:13:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -54,7 +55,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 	public void populate(Item item) {
 			LinkedIdsCondition domainCondition = new LinkedIdsCondition(this.domainId,
 				ObjectEntities.KIS_ENTITY_CODE);
-			List measurementPortTypeIds = new LinkedList();
+			Set measurementPortTypeIds = new LinkedHashSet();
 			Map kisMeasurementTypes = new HashMap();
 			Map kisMeasurementPorts = new HashMap();
 			LinkedIdsCondition measurementPortCondition = null;

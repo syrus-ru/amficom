@@ -16,8 +16,8 @@ import java.awt.event.MouseEvent;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -268,7 +268,7 @@ public class TimeParametersFrame extends JInternalFrame {
 							RISDSessionInfo sessionInterface = (RISDSessionInfo) TimeParametersPanel.this.aContext
 									.getSessionInterface();
 							TemporalPattern temporalPattern = TemporalPattern.createInstance(sessionInterface
-									.getUserIdentifier(), template, new LinkedList());
+									.getUserIdentifier(), template, new HashSet());
 							temporalPattern.addTemplate(template);
 							TimeParametersPanel.this.temporalPatterns.add(temporalPattern);
 							MeasurementStorableObjectPool.putStorableObject(temporalPattern);
