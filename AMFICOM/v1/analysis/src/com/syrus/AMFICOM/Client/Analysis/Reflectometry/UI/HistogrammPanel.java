@@ -186,7 +186,6 @@ public class HistogrammPanel extends ScaledGraphPanel
 		super.this_mouseReleased(e);
 	}
 
-
 	public void updateHistogrammData(int start, int end)
 	{
 		Histogramm histo = new Histogramm(down_limit, up_limit, nBins);
@@ -194,7 +193,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 		int max_index = histo.getMaximumIndex();
 
 		init(y, deltaX);
-		gauss = CoreAnalysisManager.calcGaussian(y, max_index);
+		gauss = CoreAnalysisManager.calcGaussian(y, max_index); // XXX: takes about 98% of updateHistogrammData execution time
 		threshold = CoreAnalysisManager.calcThresholdCurve(y, max_index);
 
 		for (int i = 0; i < y.length; i++)
