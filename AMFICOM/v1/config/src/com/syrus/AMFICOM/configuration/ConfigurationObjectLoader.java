@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.21 2004/11/19 23:08:28 arseniy Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.22 2004/11/23 15:24:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/11/19 23:08:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2004/11/23 15:24:41 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -34,8 +34,6 @@ public interface ConfigurationObjectLoader {
 	PortType loadPortType(Identifier id) throws DatabaseException, CommunicationException;
 
 	MeasurementPortType loadMeasurementPortType(Identifier id) throws DatabaseException, CommunicationException;
-
-	KISType loadKISType(Identifier id) throws DatabaseException, CommunicationException;
 
 	Characteristic loadCharacteristic(Identifier id) throws DatabaseException, CommunicationException;
 
@@ -81,8 +79,6 @@ public interface ConfigurationObjectLoader {
 
 	List loadCharacteristics(List ids) throws DatabaseException, CommunicationException;
 
-	List loadKISTypes(List ids) throws DatabaseException, CommunicationException;
-
 	List loadLinkTypes(List ids) throws DatabaseException, CommunicationException;
 
 	List loadTransmissionPathTypes(List ids) throws DatabaseException, CommunicationException;
@@ -125,8 +121,6 @@ public interface ConfigurationObjectLoader {
 
 	List loadCharacteristicsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	List loadKISTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
-
 	List loadLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 	List loadTransmissionPathTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
@@ -167,8 +161,6 @@ public interface ConfigurationObjectLoader {
 
 	void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveKISType(KISType kisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
 	void saveLinkType(LinkType linkType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
@@ -208,8 +200,6 @@ public interface ConfigurationObjectLoader {
 	void saveCableThreadTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveCharacteristics(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-	void saveKISTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 

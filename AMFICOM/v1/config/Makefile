@@ -60,8 +60,6 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/TransmissionPathTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/KIS.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/KISDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/KISType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/KISTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MeasurementPort.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MeasurementPortDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java \

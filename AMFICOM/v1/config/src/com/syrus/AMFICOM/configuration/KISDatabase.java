@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.39 2004/11/22 13:49:24 bob Exp $
+ * $Id: KISDatabase.java,v 1.40 2004/11/23 15:24:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/11/22 13:49:24 $
+ * @version $Revision: 1.40 $, $Date: 2004/11/23 15:24:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -58,8 +58,6 @@ public class KISDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_EQUIPMENT_ID 	= "equipment_id";
 	// mcm_id Identifier NOT NULL
 	public static final String COLUMN_MCM_ID 		= "mcm_id";
-
-  public static final String COLUMN_TYPE_ID       = "type_id";
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
@@ -80,7 +78,6 @@ public class KISDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			columns = super.getColumns() + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ COLUMN_TYPE_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_HOSTNAME + COMMA
@@ -100,7 +97,6 @@ public class KISDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
-				+ QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultiplySQLValues;
@@ -111,7 +107,6 @@ public class KISDatabase extends StorableObjectDatabase {
 		KIS kis = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(kis.getDomainId()) + COMMA
-	        + DatabaseIdentifier.toSQLString(kis.getType().getId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getName()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getDescription()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + kis.getHostName() + APOSTOPHE + COMMA
@@ -136,7 +131,6 @@ public class KISDatabase extends StorableObjectDatabase {
 			Identifier mcmId = kis.getMCMId();
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, kis.getDomainId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, kis.getType().getId());
 			preparedStatement.setString( ++i, kis.getName());
 			preparedStatement.setString( ++i, kis.getDescription());
 			preparedStatement.setString( ++i, kis.getHostName());
@@ -162,16 +156,9 @@ public class KISDatabase extends StorableObjectDatabase {
 										null,
 										(short)0,
 										null,
-										null,
 										null);			
 		}
-		KISType kisType;
-		try {
-			kisType = (KISType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
-		}
-		catch (ApplicationException ae) {
-			throw new RetrieveObjectException(ae);
-		}
+
 		kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
@@ -181,7 +168,6 @@ public class KISDatabase extends StorableObjectDatabase {
 											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 											resultSet.getString(COLUMN_HOSTNAME),
 											resultSet.getShort(COLUMN_TCP_PORT),
-											kisType,
 											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_EQUIPMENT_ID),
 											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MCM_ID));
 		

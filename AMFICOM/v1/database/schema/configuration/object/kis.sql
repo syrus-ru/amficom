@@ -6,7 +6,6 @@ CREATE TABLE KIS (
  modifier_id VARCHAR2(32) NOT NULL,
 --
  domain_id VARCHAR2(32),
- type_id VARCHAR2(32) NOT NULL,
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
  hostname VARCHAR2(64),
@@ -23,8 +22,6 @@ CREATE TABLE KIS (
  CONSTRAINT kis_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE,
 --
- CONSTRAINT kis_ktp_fk FOREIGN KEY (type_id)
-  REFERENCES KISType (id) ON DELETE CASCADE,
  CONSTRAINT kis_eqp_fk FOREIGN KEY (equipment_id)
   REFERENCES Equipment (id) ON DELETE CASCADE,
  CONSTRAINT kis_mcm_fk FOREIGN KEY (mcm_id)

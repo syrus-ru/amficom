@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.27 2004/11/19 23:08:28 arseniy Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.28 2004/11/23 15:24:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/19 23:08:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2004/11/23 15:24:41 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -23,7 +23,6 @@ public class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase measurementPortTypeDatabase;
 	protected static StorableObjectDatabase linkTypeDatabase;
 	protected static StorableObjectDatabase cableThreadTypeDatabase;
-	protected static StorableObjectDatabase kisTypeDatabase;
 	protected static StorableObjectDatabase transmissionPathTypeDatabase;
 
 	protected static StorableObjectDatabase characteristicDatabase;
@@ -49,7 +48,6 @@ public class ConfigurationDatabaseContext {
 													StorableObjectDatabase measurementPortTypeDatabase1,
 													StorableObjectDatabase linkTypeDatabase1,
 													StorableObjectDatabase cableThreadTypeDatabase1,
-													StorableObjectDatabase kisTypeDatabase1,
 													StorableObjectDatabase characteristicDatabase1,
 													StorableObjectDatabase userDatabase1,
 													StorableObjectDatabase domainDatabase1,
@@ -69,7 +67,6 @@ public class ConfigurationDatabaseContext {
 		measurementPortTypeDatabase = measurementPortTypeDatabase1;
 		linkTypeDatabase = linkTypeDatabase1;
 		cableThreadTypeDatabase = cableThreadTypeDatabase1;
-		kisTypeDatabase = kisTypeDatabase1;
 		
 		characteristicDatabase = characteristicDatabase1;
 		userDatabase = userDatabase1;
@@ -103,10 +100,7 @@ public class ConfigurationDatabaseContext {
 	public static StorableObjectDatabase getKISDatabase() {
 		return kisDatabase;
 	}
-    public static StorableObjectDatabase getKISTypeDatabase() {
-        return kisTypeDatabase;
-    }
-    public static StorableObjectDatabase getLinkDatabase() {
+	public static StorableObjectDatabase getLinkDatabase() {
         return linkDatabase;
     }
     public static StorableObjectDatabase getCableThreadTypeDatabase(){
