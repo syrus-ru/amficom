@@ -1,0 +1,35 @@
+HOME=.
+
+include ..\make.inc
+
+TARGET=$(LIB)\mapview.jar
+TARGET_SRC=$(LIBSRC)\mapviewsource.zip
+TARGET_DOC=$(LIBDOC)\mapviewdoc.zip
+
+SERVERCP=$(LIB)\corba.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\admin.jar;$(LIB)\resource.jar;$(LIB)\config.jar;$(LIB)\map.jar;$(LIB)\scheme.jar
+
+CLASSPATH=$(SERVERCP);$(CLIENTCP)
+
+.PHONY:	$(TARGET)
+
+$(TARGET):	clean impl javadoc jar
+
+jar:
+	$(ARCHIVER) -cf $(TARGET) -C $(CLASSES) com
+	$(ARCHIVER) -cf $(TARGET_SRC) -C $(SRC) com
+	$(ARCHIVER) -cf $(TARGET_DOC) -C $(DOCS) .
+
+impl:
+	$(COMPILER) \
+		-d $(CLASSES) \
+		-classpath $(CLASSPATH) \
+		-sourcepath $(SRC) \
+		$(SRC)\com\syrus\AMFICOM\mapview\*.java
+
+javadoc:
+	$(JAVADOCGENERATOR) com
+
+clean:
+	rm -rf $(CLASSES)\com
+	rm -f $(TARGET) $(TARGET_SRC)
