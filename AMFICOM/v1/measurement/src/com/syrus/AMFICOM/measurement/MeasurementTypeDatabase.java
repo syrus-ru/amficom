@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.82 2005/03/11 09:08:23 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.83 2005/03/24 15:45:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/03/11 09:08:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.83 $, $Date: 2005/03/24 15:45:27 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -50,18 +50,17 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
-	private static String measurementPortTypesByOneQuery;
 
 	private MeasurementType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementType)
 			return (MeasurementType)storableObject;
 		throw new IllegalDataException("MeasurementTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}	
-	
+
 	protected String getEnityName() {
 		return ObjectEntities.MEASUREMENTTYPE_ENTITY;
 	}
-	
+
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA 
@@ -276,7 +275,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		String measurementTypeIdStr = DatabaseIdentifier.toSQLString(measurementType.getId());
 		String sql = SQL_SELECT
 			+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID
-			+ SQL_FROM + ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY
+			+ SQL_FROM + ObjectEntities.MNTTYPEMEASPORTTYPELINK_ENTITY
 			+ SQL_WHERE + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -321,41 +320,16 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		if ((measurementTypes == null) || (measurementTypes.isEmpty()))
 			return;
 
-    String sql;
-		{
-			if (measurementPortTypesByOneQuery == null) {
-				StringBuffer buffer = new StringBuffer();
-				buffer.append(SQL_SELECT);
-				buffer.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
-				buffer.append(COMMA);
-				buffer.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
-				buffer.append(SQL_FROM);
-				buffer.append(ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY);
-				buffer.append(SQL_WHERE);
-				buffer.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
-				buffer.append(SQL_IN);
-				buffer.append(OPEN_BRACKET);
-				measurementPortTypesByOneQuery = buffer.toString();
-			}
-			StringBuffer buffer = new StringBuffer(measurementPortTypesByOneQuery);
-			int i = 1;
-			for (Iterator it = measurementTypes.iterator(); it.hasNext();i++) {
-				MeasurementType measurementType = (MeasurementType)it.next();
-				buffer.append(DatabaseIdentifier.toSQLString(measurementType.getId()));
-				if (it.hasNext()) {
-					if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-						buffer.append(COMMA);
-					else {
-						buffer.append(CLOSE_BRACKET);
-						buffer.append(SQL_OR);
-						buffer.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
-						buffer.append(SQL_IN);
-						buffer.append(OPEN_BRACKET);
-					}
-				}
-			}
-			buffer.append(CLOSE_BRACKET);
-			sql = buffer.toString();
+		StringBuffer sql = new StringBuffer(SQL_SELECT
+				+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID + COMMA
+				+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID
+				+ SQL_FROM + ObjectEntities.MNTTYPEMEASPORTTYPELINK_ENTITY
+				+ SQL_WHERE);
+		try {
+			sql.append(idsEnumerationString(measurementTypes, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID, true));
+		}
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e);
 		}
 
     Statement statement = null;
@@ -364,7 +338,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementDatabase.retrieveMeasurementPortTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
+			resultSet = statement.executeQuery(sql.toString());
 
 			Map measurementPortTypesMap = new HashMap();
 			Identifier measurementPortTypeId;
@@ -470,7 +444,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			String sql = SQL_INSERT_INTO
-				+ ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY + OPEN_BRACKET
+				+ ObjectEntities.MNTTYPEMEASPORTTYPELINK_ENTITY + OPEN_BRACKET
 				+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + COMMA
 				+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
@@ -583,7 +557,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY
+					+ ObjectEntities.MNTTYPEMEASPORTTYPELINK_ENTITY
 					+ SQL_WHERE + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY
