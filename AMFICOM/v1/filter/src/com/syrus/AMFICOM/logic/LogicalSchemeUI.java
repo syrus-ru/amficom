@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.15 2005/03/24 11:40:57 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.16 2005/03/25 09:45:51 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/03/24 11:40:57 $
+ * @version $Revision: 1.16 $, $Date: 2005/03/25 09:45:51 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -661,11 +661,13 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			} else {
 				if (SwingUtilities.isLeftMouseButton(e) && this.preSelectedItem != null
 						&& this.preSelectedItem.equals(this.selectedItem)) {
-					this.linkItem = this.selectedItem;
-					this.x = mouseX;
-					this.y = mouseY;
-					this.dx = this.linkItem.x - mouseX;
-					this.dy = this.linkItem.y - mouseY;
+					if (this.selectedItem.canHaveChildren()) {
+						this.linkItem = this.selectedItem;
+						this.x = mouseX;
+						this.y = mouseY;
+						this.dx = this.linkItem.x - mouseX;
+						this.dy = this.linkItem.y - mouseY;
+					}
 				} else {
 					this.selectedItem = null;
 					this.selectedItems.clear();
