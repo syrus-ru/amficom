@@ -139,6 +139,7 @@ src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorMainFrame.java
 src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorMenuBar.java
 src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorRun.java
 src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorToolBar.java
+src\com\syrus\AMFICOM\Client\Map\Editor\MapEditorWindowArranger.java
 src\com\syrus\AMFICOM\Client\Map\Operations\AMFICOMSearchPanel.java
 src\com\syrus\AMFICOM\Client\Map\Operations\ControlsFrame.java
 src\com\syrus\AMFICOM\Client\Map\Operations\LayersPanel.java

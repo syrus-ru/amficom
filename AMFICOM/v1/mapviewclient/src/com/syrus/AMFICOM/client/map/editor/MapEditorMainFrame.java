@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.25 2005/03/05 16:00:06 peskovsky Exp $
+ * $Id: MapEditorMainFrame.java,v 1.26 2005/03/11 10:43:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Editor;
 
+import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapViewNavigatorCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapAddMapCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapRemoveMapCommand;
 import java.awt.AWTEvent;
@@ -95,9 +96,9 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.25 $, $Date: 2005/03/05 16:00:06 $
+ * @version $Revision: 1.26 $, $Date: 2005/03/11 10:43:37 $
  * @module mapviewclient_v1
- * @author $Author: peskovsky $
+ * @author $Author: krupenn $
  */
 public class MapEditorMainFrame extends JFrame 
 	implements OperationListener, Module
@@ -425,8 +426,8 @@ public class MapEditorMainFrame extends JFrame
 					this.aContext, 
 					new MapMapEditorApplicationModelFactory()));
 		aModel.setCommand("menuViewMapScheme", 
-				new ViewMapNavigatorCommand(
-						this.desktopPane, 
+				new ViewMapViewNavigatorCommand(
+					this.desktopPane, 
 					this.aContext ));
 		aModel.setCommand("menuViewAll", 
 				new ViewMapAllCommand(

@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorWindowArranger.java,v 1.1 2005/03/05 16:00:06 peskovsky Exp $
+ * $Id: MapEditorWindowArranger.java,v 1.2 2005/03/11 10:43:37 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.Client.Map.Editor;
 
+import com.syrus.AMFICOM.Client.Map.UI.MapViewTreeFrame;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
@@ -22,8 +23,8 @@ import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/03/05 16:00:06 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2005/03/11 10:43:37 $
  * @module mapviewclient_v1
  */
 
@@ -56,7 +57,7 @@ public class MapEditorWindowArranger extends WindowArranger
 		if (mapFrame != null)
 		{
 			normalize(mapFrame);		
-			mapFrame.setSize(3 * w/5, 15 * h/12);
+			mapFrame.setSize(3 * w/5, 11 * h/12);
 			mapFrame.setLocation(w/5, 0);
 		}
 
@@ -73,47 +74,33 @@ public class MapEditorWindowArranger extends WindowArranger
 		if (propFrame != null)
 		{
 			normalize(propFrame);		
-			propFrame.setSize(w/5, 3 * h/5);
+			propFrame.setSize(w/5, h/2);
 			propFrame.setLocation(4 * w/5, 0);
 		}
-	
-		//Левая сторона
-		ControlsFrame controlsFrame = MapDesktopCommand.findControlsFrame(this.desktop);
-		if (controlsFrame != null)		
-		{
-			normalize(controlsFrame);		
-			controlsFrame.setSize(w/5, 2 * h/5);
-			controlsFrame.setLocation(0, 3 * h/5);
-		}
-		
+
 		MapSchemeTreeFrame schemeTreeFrame = MapDesktopCommand.findMapSchemeTreeFrame(this.desktop);
 		if (schemeTreeFrame != null)
 		{
 			normalize(schemeTreeFrame);
-			
-			if (controlsFrame != null)
-				schemeTreeFrame.setSize(w/5, 3 * h/10);
-			else
-				schemeTreeFrame.setSize(w/5, h/2);
-			
-			schemeTreeFrame.setLocation(0, 0);
+			schemeTreeFrame.setSize(w/5, h/2);
+			schemeTreeFrame.setLocation(4 * w/5, h/2);
+		}
+	
+		//Левая сторона
+		MapViewTreeFrame mapViewTreeFrame = MapDesktopCommand.findMapViewTreeFrame(this.desktop);
+		if (mapViewTreeFrame != null)
+		{
+			normalize(mapViewTreeFrame);
+			mapViewTreeFrame.setSize(w/5, h/2);
+			mapViewTreeFrame.setLocation(0, 0);
 		}
 
-		MapElementsFrame mapElemsFrame = MapDesktopCommand.findMapElementsFrame(this.desktop);
-		if (mapElemsFrame != null)
+		ControlsFrame controlsFrame = MapDesktopCommand.findControlsFrame(this.desktop);
+		if (controlsFrame != null)		
 		{
-			normalize(mapElemsFrame);
-			
-			if (controlsFrame != null)
-			{
-				mapElemsFrame.setSize(w/5, 3 * h/10);
-				mapElemsFrame.setLocation(0, 3 * h/10);				
-			}
-			else
-			{
-				mapElemsFrame.setSize(w/5, h/2);
-				mapElemsFrame.setLocation(0, h/2);				
-			}
+			normalize(controlsFrame);		
+			controlsFrame.setSize(w/5, h/2);
+			controlsFrame.setLocation(0, h/2);
 		}
 	}
 	
