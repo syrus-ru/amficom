@@ -1,0 +1,1 @@
+nmake /f makejdbc %1
