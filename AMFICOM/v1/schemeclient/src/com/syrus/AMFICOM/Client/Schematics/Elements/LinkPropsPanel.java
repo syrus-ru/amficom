@@ -23,7 +23,7 @@ public class LinkPropsPanel extends JPanel
 	AComboBox sortComboBox = new AComboBox();
 	ObjComboBox typeComboBox = new ObjComboBox(
 			 LinkTypeController.getInstance(),
-			 LinkTypeController.COLUMN_NAME);
+			 StorableObjectWrapper.COLUMN_NAME);
 	JButton addTypeButton = new JButton("...");
 	JTextField nameText = new JTextField();
 	JTextArea descriptionTextArea = new JTextArea();
