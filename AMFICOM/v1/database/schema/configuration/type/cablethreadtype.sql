@@ -8,6 +8,7 @@ CREATE TABLE CableThreadType (
 --
  codename VARCHAR2(32) NOT NULL,
  description VARCHAR2(256),
+ name VARCHAR2(128),
 --
  mark VARCHAR2(64),
  color VARCHAR2(32),
