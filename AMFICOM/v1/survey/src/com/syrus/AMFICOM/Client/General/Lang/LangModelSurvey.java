@@ -31,8 +31,8 @@ public class LangModelSurvey {
 	 */
 	static public DateFormatSymbols		symbols;
 
-	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.Client.Survey.General.survey";
-	private static final String			OLDBUNDLE_NAME		= "com.syrus.AMFICOM.Client.Survey.General.oldsurveykey";
+	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.Client.General.Lang.survey";
+	private static final String			OLDBUNDLE_NAME		= "com.syrus.AMFICOM.Client.General.Lang.oldsurveykey";
 	private static final ResourceBundle	OLDRESOURCE_BUNDLE	= ResourceBundle
 																	.getBundle(OLDBUNDLE_NAME);
 
