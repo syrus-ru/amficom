@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.41 2005/04/01 11:02:30 bass Exp $
+ * $Id: MonitoredElement.java,v 1.42 2005/04/01 16:00:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
@@ -29,8 +31,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/04/01 11:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2005/04/01 16:00:37 $
+ * @author $Author: max $
  * @module config_v1
  */
 
@@ -59,20 +61,9 @@ public class MonitoredElement extends DomainMember {
 		}
 	}
 
-	public MonitoredElement(MonitoredElement_Transferable met) {
-		super(met.header,
-			  new Identifier(met.domain_id));
-		this.measurementPortId = new Identifier(met.measurement_port_id);
-		this.sort = met.sort.value();
-		this.localAddress = new String(met.local_address);
-
-		this.monitoredDomainMemberIds = new HashSet(met.monitored_domain_member_ids.length);
-		this.name = met.name;
-
-		for (int i= 0; i < met.monitored_domain_member_ids.length; i++)
-			this.monitoredDomainMemberIds.add(new Identifier(met.monitored_domain_member_ids[i]));
-
+	public MonitoredElement(MonitoredElement_Transferable met) throws CreateObjectException {
 		this.monitoredElementDatabase = ConfigurationDatabaseContext.getMonitoredElementDatabase();
+		fromTransferable(met);
 	}
 	
 	protected MonitoredElement(Identifier id,
@@ -138,6 +129,22 @@ public class MonitoredElement extends DomainMember {
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("MonitoredElement.createInstance | cannot generate identifier ", e);
 		}
+	}
+	
+	protected void fromTransferable(IDLEntity transferable)
+			throws CreateObjectException {
+		MonitoredElement_Transferable met = (MonitoredElement_Transferable) transferable;
+		super.fromTransferable(met.header,
+				  new Identifier(met.domain_id));
+		this.measurementPortId = new Identifier(met.measurement_port_id);
+		this.sort = met.sort.value();
+		this.localAddress = new String(met.local_address);
+		this.monitoredDomainMemberIds = new HashSet(met.monitored_domain_member_ids.length);
+
+		this.name = met.name;
+		for (int i= 0; i < met.monitored_domain_member_ids.length; i++)
+			this.monitoredDomainMemberIds.add(new Identifier(met.monitored_domain_member_ids[i]));
+			
 	}
 
 	public Object getTransferable() {

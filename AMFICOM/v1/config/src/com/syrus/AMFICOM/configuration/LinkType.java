@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.37 2005/04/01 11:02:30 bass Exp $
+ * $Id: LinkType.java,v 1.38 2005/04/01 16:00:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
@@ -33,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/04/01 11:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/04/01 16:00:37 $
+ * @author $Author: max $
  * @module config_v1
  */
 
@@ -69,23 +71,8 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 	}
 
 	public LinkType(LinkType_Transferable ltt) throws CreateObjectException {
-		super(ltt.header, new String(ltt.codename), new String(ltt.description));
-
-		this.sort = ltt.sort.value();
-		this.manufacturer = ltt.manufacturer;
-		this.manufacturerCode = ltt.manufacturerCode;
-		this.imageId = new Identifier(ltt.image_id);
-		this.name = ltt.name;
-		try {
-			this.characteristics = new HashSet(ltt.characteristic_ids.length);
-			for (int i = 0; i < ltt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(ltt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.linkTypeDatabase = ConfigurationDatabaseContext.getLinkTypeDatabase();
+		fromTransferable(ltt);
 	}
 
 	protected LinkType(Identifier id,
@@ -148,6 +135,26 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("LinkType.createInstance | cannot generate identifier ", e);
+		}
+	}
+	
+	protected void fromTransferable(IDLEntity transferable, String codename,
+			String description) throws CreateObjectException {
+		LinkType_Transferable ltt = (LinkType_Transferable) transferable; 
+		super.fromTransferable(ltt.header, new String(ltt.codename), new String(ltt.description));
+
+		this.sort = ltt.sort.value();
+		this.manufacturer = ltt.manufacturer;
+		this.manufacturerCode = ltt.manufacturerCode;
+		this.imageId = new Identifier(ltt.image_id);
+		this.name = ltt.name;
+		try {
+			this.characteristics = new HashSet(ltt.characteristic_ids.length);
+			for (int i = 0; i < ltt.characteristic_ids.length; i++)
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(ltt.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

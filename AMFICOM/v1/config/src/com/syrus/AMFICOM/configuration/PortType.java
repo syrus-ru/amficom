@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.43 2005/04/01 11:02:30 bass Exp $
+ * $Id: PortType.java,v 1.44 2005/04/01 16:00:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
@@ -34,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/04/01 11:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/04/01 16:00:37 $
+ * @author $Author: max $
  * @module config_v1
  */
 
@@ -63,21 +65,8 @@ public class PortType extends StorableObjectType implements Characterizable {
 	}
 
 	public PortType(PortType_Transferable ptt) throws CreateObjectException {
-		super(ptt.header,
-				new String(ptt.codename),
-				new String(ptt.description));
-		this.name = ptt.name;
-		this.sort = ptt.sort.value();
-		try {
-			this.characteristics = new HashSet(ptt.characteristic_ids.length);
-			for (int i = 0; i < ptt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(ptt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.portTypeDatabase = ConfigurationDatabaseContext.getPortTypeDatabase();
+		fromTransferable(ptt);
 	}
 
 	protected PortType(Identifier id,
@@ -132,6 +121,24 @@ public class PortType extends StorableObjectType implements Characterizable {
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("PortType.createInstance | cannot generate identifier ", e);
+		}
+	}
+	
+	protected void fromTransferable(IDLEntity transferable)
+			throws CreateObjectException {
+		PortType_Transferable ptt = (PortType_Transferable) transferable;
+		super.fromTransferable(ptt.header,
+				new String(ptt.codename),
+				new String(ptt.description));
+		this.name = ptt.name;
+		this.sort = ptt.sort.value();
+		try {
+			this.characteristics = new HashSet(ptt.characteristic_ids.length);
+			for (int i = 0; i < ptt.characteristic_ids.length; i++)
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(ptt.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.77 2005/04/01 11:02:30 bass Exp $
+ * $Id: Equipment.java,v 1.78 2005/04/01 16:00:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
@@ -37,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/04/01 11:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.78 $, $Date: 2005/04/01 16:00:37 $
+ * @author $Author: max $
  * @module config_v1
  */
 
@@ -79,39 +81,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	}
 
 	public Equipment(Equipment_Transferable et) throws CreateObjectException {
-		super(et.header,
-				new Identifier(et.domain_id));
-
-		try {
-			this.type = (EquipmentType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
-		this.name = new String(et.name);
-		this.description = new String(et.description);
-		this.imageId = new Identifier(et.image_id);
-		this.supplier = new String(et.supplier);
-		this.supplier = new String(et.supplierCode);
-		this.longitude = et.longitude;
-		this.latitude = et.latitude;
-		this.hwSerial = new String(et.hwSerial);
-		this.hwVersion = new String(et.hwVersion);
-		this.swSerial = new String(et.swSerial);
-		this.swVersion = new String(et.swVersion);
-		this.inventoryNumber = new String(et.inventoryNumber);
-
-		try {
-			this.characteristics = new HashSet(et.characteristic_ids.length);
-			for (int i = 0; i < et.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(et.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.equipmentDatabase = ConfigurationDatabaseContext.getEquipmentDatabase();
+		fromTransferable(et);
 	}
 
 	protected Equipment(Identifier id,
@@ -222,6 +193,42 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Equipment.createInstance | cannot generate identifier ", e);
+		}
+	}
+	
+	protected void fromTransferable(IDLEntity transferable)
+			throws CreateObjectException {
+		Equipment_Transferable et = (Equipment_Transferable) transferable;
+		super.fromTransferable(et.header,
+				new Identifier(et.domain_id));
+		
+		try {
+			this.type = (EquipmentType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+		this.name = new String(et.name);
+		this.description = new String(et.description);
+		this.imageId = new Identifier(et.image_id);
+		this.supplier = new String(et.supplier);
+		this.supplier = new String(et.supplierCode);
+		this.longitude = et.longitude;
+		this.latitude = et.latitude;
+		this.hwSerial = new String(et.hwSerial);
+		this.hwVersion = new String(et.hwVersion);
+		this.swSerial = new String(et.swSerial);
+		this.swVersion = new String(et.swVersion);
+		this.inventoryNumber = new String(et.inventoryNumber);
+
+		try {
+			this.characteristics = new HashSet(et.characteristic_ids.length);
+			for (int i = 0; i < et.characteristic_ids.length; i++)
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(et.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

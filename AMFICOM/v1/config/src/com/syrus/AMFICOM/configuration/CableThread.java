@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.15 2005/04/01 11:02:30 bass Exp $
+ * $Id: CableThread.java,v 1.16 2005/04/01 16:00:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.CableThread_Transferable;
@@ -28,8 +30,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/01 11:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/04/01 16:00:37 $
+ * @author $Author: max $
  * @module config_v1
  */
 public class CableThread extends DomainMember implements TypedObject {
@@ -55,19 +57,8 @@ public class CableThread extends DomainMember implements TypedObject {
 	}
 
 	public CableThread(CableThread_Transferable ctt) throws CreateObjectException {
-		super(ctt.header,
-					new Identifier(ctt.domain_id));
-
-		this.name = ctt.name;
-		this.description = ctt.description;
-		try {
-			this.type = (CableThreadType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(ctt.type_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.cableThreadDatabase = ConfigurationDatabaseContext.getCableThreadDatabase();
+		fromTransferable(ctt);
 	}
 
 	protected CableThread(Identifier id,
@@ -112,6 +103,21 @@ public class CableThread extends DomainMember implements TypedObject {
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("CableThread.createInstance | cannot generate identifier ", e);
+		}
+	}
+	
+	protected void fromTransferable(IDLEntity transferable)
+			throws CreateObjectException {
+		CableThread_Transferable ctt = (CableThread_Transferable) transferable;
+		super.fromTransferable(ctt.header,new Identifier(ctt.domain_id));
+	
+		this.name = ctt.name;
+		this.description = ctt.description;
+		try {
+			this.type = (CableThreadType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(ctt.type_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

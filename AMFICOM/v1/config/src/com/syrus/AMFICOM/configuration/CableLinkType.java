@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.27 2005/04/01 11:02:30 bass Exp $
+ * $Id: CableLinkType.java,v 1.28 2005/04/01 16:00:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
@@ -34,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/04/01 11:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/04/01 16:00:37 $
+ * @author $Author: max $
  * @module config_v1
  */
 public final class CableLinkType extends AbstractLinkType implements Characterizable {
@@ -67,24 +69,8 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	}
 
 	public CableLinkType(CableLinkType_Transferable cltt) throws CreateObjectException {
-		super(cltt.header, new String(cltt.codename), new String(cltt.description));
-		this.sort = cltt.sort.value();
-		this.manufacturer = cltt.manufacturer;
-		this.manufacturerCode = cltt.manufacturerCode;
-		this.imageId = new Identifier(cltt.image_id);
-		this.name = cltt.name;
-		try {
-			this.characteristics = new HashSet(cltt.characteristic_ids.length);
-			Set characteristicIds = new HashSet(cltt.characteristic_ids.length);
-			for (int i = 0; i < cltt.characteristic_ids.length; i++)
-				characteristicIds.add(new Identifier(cltt.characteristic_ids[i]));
-			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
+		this.fromTransferable(cltt);
 	}
 
 	protected CableLinkType(Identifier id,
@@ -157,6 +143,27 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		}
 	}
 
+	protected void fromTransferable(IDLEntity transferable)
+			throws CreateObjectException {
+		CableLinkType_Transferable cltt = (CableLinkType_Transferable)transferable;
+		super.fromTransferable(cltt.header, cltt.codename, cltt.description);
+		this.sort = cltt.sort.value();
+		this.manufacturer = cltt.manufacturer;
+		this.manufacturerCode = cltt.manufacturerCode;
+		this.imageId = new Identifier(cltt.image_id);
+		this.name = cltt.name;
+		try {
+			this.characteristics = new HashSet(cltt.characteristic_ids.length);
+			Set characteristicIds = new HashSet(cltt.characteristic_ids.length);
+			for (int i = 0; i < cltt.characteristic_ids.length; i++)
+				characteristicIds.add(new Identifier(cltt.characteristic_ids[i]));
+			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+	}
+	
 	public Object getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];

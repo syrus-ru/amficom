@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.67 2005/04/01 11:02:30 bass Exp $
+ * $Id: KIS.java,v 1.68 2005/04/01 16:00:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
@@ -35,8 +37,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/04/01 11:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.68 $, $Date: 2005/04/01 16:00:37 $
+ * @author $Author: max $
  * @module config_v1
  */
 
@@ -72,25 +74,8 @@ public final class KIS extends DomainMember implements Characterizable {
 	}
 
 	public KIS(KIS_Transferable kt) throws CreateObjectException {
-		super(kt.header, new Identifier(kt.domain_id));
-
-		this.equipmentId = new Identifier(kt.equipment_id);
-		this.mcmId = new Identifier(kt.mcm_id);
-		this.name = kt.name;
-		this.description = kt.description;
-		this.hostname = kt.hostname;
-		this.tcpPort = kt.tcp_port;
-
-		try {
-			this.characteristics = new HashSet(kt.characteristic_ids.length);
-			for (int i = 0; i < kt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(kt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.kisDatabase = ConfigurationDatabaseContext.getKISDatabase();
+		fromTransferable(kt);
 	}
 
 	protected KIS(Identifier id,
@@ -159,6 +144,28 @@ public final class KIS extends DomainMember implements Characterizable {
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("KIS.createInstance | cannot generate identifier ", e);
+		}
+	}
+	
+	protected void fromTransferable(IDLEntity transferable)
+			throws CreateObjectException {
+		KIS_Transferable kt = (KIS_Transferable) transferable;
+		super.fromTransferable(kt.header, new Identifier(kt.domain_id));
+
+		this.equipmentId = new Identifier(kt.equipment_id);
+		this.mcmId = new Identifier(kt.mcm_id);
+		this.name = kt.name;
+		this.description = kt.description;
+		this.hostname = kt.hostname;
+		this.tcpPort = kt.tcp_port;
+
+		try {
+			this.characteristics = new HashSet(kt.characteristic_ids.length);
+			for (int i = 0; i < kt.characteristic_ids.length; i++)
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(kt.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

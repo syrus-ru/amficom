@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.40 2005/04/01 11:02:30 bass Exp $
+ * $Id: Link.java,v 1.41 2005/04/01 16:00:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.LinkSort;
@@ -35,8 +37,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/04/01 11:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/04/01 16:00:37 $
+ * @author $Author: max $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterizable, TypedObject {
@@ -73,33 +75,8 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 	}
 
 	public Link(Link_Transferable lt) throws CreateObjectException  {
-		super(lt.header,
-				new Identifier(lt.domain_id));
-
-		this.name = lt.name;
-		this.description = lt.description;
-		this.inventoryNo = lt.inventoryNo;
-		this.supplier = lt.supplier;
-		this.supplierCode = lt.supplierCode;
-		this.sort = lt.sort.value();
-
-		try {
-			this.characteristics = new HashSet(lt.characteristic_ids.length);
-			for (int i = 0; i < lt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(lt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
-		try {
-			this.type = (AbstractLinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(lt.type_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.linkDatabase = ConfigurationDatabaseContext.getLinkDatabase();
+		fromTransferable(lt);
 	}
 
 	protected Link(Identifier id,
@@ -176,6 +153,36 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 			return link;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Link.createInstance | cannot generate identifier ", e);
+		}
+	}
+	
+	protected void fromTransferable(IDLEntity transferable)
+			throws CreateObjectException {
+		Link_Transferable lt = (Link_Transferable) transferable;
+		super.fromTransferable(lt.header,
+				new Identifier(lt.domain_id));
+
+		this.name = lt.name;
+		this.description = lt.description;
+		this.inventoryNo = lt.inventoryNo;
+		this.supplier = lt.supplier;
+		this.supplierCode = lt.supplierCode;
+		this.sort = lt.sort.value();
+
+		try {
+			this.characteristics = new HashSet(lt.characteristic_ids.length);
+			for (int i = 0; i < lt.characteristic_ids.length; i++)
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(lt.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+		try {
+			this.type = (AbstractLinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(lt.type_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

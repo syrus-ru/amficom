@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.36 2005/04/01 11:02:30 bass Exp $
+ * $Id: MeasurementPortType.java,v 1.37 2005/04/01 16:00:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -33,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/04/01 11:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/04/01 16:00:37 $
+ * @author $Author: max $
  * @module config_v1
  */
 
@@ -61,20 +63,8 @@ public class MeasurementPortType extends StorableObjectType implements Character
 	}
 
 	public MeasurementPortType(MeasurementPortType_Transferable mptt) throws CreateObjectException {
-		super(mptt.header,
-			  new String(mptt.codename),
-			  new String(mptt.description));		
-		this.name = mptt.name;
-		try {
-			this.characteristics = new HashSet(mptt.characteristic_ids.length);
-			for (int i = 0; i < mptt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(mptt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.measurementPortTypeDatabase = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
+		fromTransferable(mptt);
 	}
 
 	protected MeasurementPortType(Identifier id,
@@ -123,6 +113,23 @@ public class MeasurementPortType extends StorableObjectType implements Character
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("MeasurementPortType.createInstance | cannot generate identifier ", e);
+		}
+	}
+	
+	protected void fromTransferable(IDLEntity transferable)
+			throws CreateObjectException {
+		MeasurementPortType_Transferable mptt = (MeasurementPortType_Transferable) transferable;
+		super.fromTransferable(mptt.header,
+				  new String(mptt.codename),
+				  new String(mptt.description));		
+		this.name = mptt.name;
+		try {
+			this.characteristics = new HashSet(mptt.characteristic_ids.length);
+			for (int i = 0; i < mptt.characteristic_ids.length; i++)
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(mptt.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

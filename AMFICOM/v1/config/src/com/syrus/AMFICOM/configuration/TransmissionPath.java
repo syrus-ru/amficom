@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.53 2005/04/01 11:02:30 bass Exp $
+ * $Id: TransmissionPath.java,v 1.54 2005/04/01 16:00:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
@@ -34,8 +36,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 /**
- * @version $Revision: 1.53 $, $Date: 2005/04/01 11:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.54 $, $Date: 2005/04/01 16:00:37 $
+ * @author $Author: max $
  * @module config_v1
  */
 
@@ -68,26 +70,8 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 	}
 
 	public TransmissionPath(TransmissionPath_Transferable tpt) throws CreateObjectException {
-		super(tpt.header,
-				new Identifier(tpt.domain_id));
-
-		this.name = new String(tpt.name);
-		this.description = new String(tpt.description);
-		this.startPortId = new Identifier(tpt.start_port_id);
-		this.finishPortId = new Identifier(tpt.finish_port_id);
-
-		try {
-			this.characteristics = new HashSet(tpt.characteristic_ids.length);
-			for (int i = 0; i < tpt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(tpt.characteristic_ids[i]), true));
-
-			this.type = (TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.type_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.transmissionPathDatabase = ConfigurationDatabaseContext.getTransmissionPathDatabase();
+		fromTransferable(tpt);
 	}
 
 	protected TransmissionPath(Identifier id,
@@ -148,6 +132,29 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("TransmissionPath.createInstance | cannot generate identifier ", e);
+		}
+	}
+	
+	protected void fromTransferable(IDLEntity transferable)
+			throws CreateObjectException {
+		TransmissionPath_Transferable tpt = (TransmissionPath_Transferable) transferable;
+		super.fromTransferable(tpt.header,
+				new Identifier(tpt.domain_id));
+
+		this.name = new String(tpt.name);
+		this.description = new String(tpt.description);
+		this.startPortId = new Identifier(tpt.start_port_id);
+		this.finishPortId = new Identifier(tpt.finish_port_id);
+
+		try {
+			this.characteristics = new HashSet(tpt.characteristic_ids.length);
+			for (int i = 0; i < tpt.characteristic_ids.length; i++)
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(tpt.characteristic_ids[i]), true));
+
+			this.type = (TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.type_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.35 2005/04/01 11:02:30 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.36 2005/04/01 16:00:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -33,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/04/01 11:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/04/01 16:00:37 $
+ * @author $Author: max $
  * @module config_v1
  */
 
@@ -60,18 +62,8 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 	}
 
 	public TransmissionPathType(TransmissionPathType_Transferable tptt) throws CreateObjectException {
-		super(tptt.header, new String(tptt.codename), new String(tptt.description));
-		this.name = tptt.name;
-		try {
-			this.characteristics = new HashSet(tptt.characteristic_ids.length);
-			for (int i = 0; i < tptt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(
-					new Identifier(tptt.characteristic_ids[i]), true));
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
+		fromTransferable(tptt);
 	}
 
 	protected TransmissionPathType(Identifier id,
@@ -111,6 +103,21 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 			return transmissionPathType;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("TransmissionPathType.createInstance | cannot generate identifier ", e);
+		}
+	}
+	
+	protected void fromTransferable(IDLEntity transferable)
+			throws CreateObjectException {
+		TransmissionPathType_Transferable tptt = (TransmissionPathType_Transferable) transferable;
+		super.fromTransferable(tptt.header, new String(tptt.codename), new String(tptt.description));
+		this.name = tptt.name;
+		try {
+			this.characteristics = new HashSet(tptt.characteristic_ids.length);
+			for (int i = 0; i < tptt.characteristic_ids.length; i++)
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(
+					new Identifier(tptt.characteristic_ids[i]), true));
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

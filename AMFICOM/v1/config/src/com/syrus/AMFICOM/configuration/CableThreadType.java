@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.24 2005/04/01 11:02:30 bass Exp $
+ * $Id: CableThreadType.java,v 1.25 2005/04/01 16:00:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.CableThread_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -33,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.24 $, $Date: 2005/04/01 11:02:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/04/01 16:00:37 $
+ * @author $Author: max $
  * @module config_v1
  */
 
@@ -66,26 +69,8 @@ public final class CableThreadType extends StorableObjectType {
 
 	public CableThreadType(final CableThreadType_Transferable transferable)
 			throws CreateObjectException {
-		super(transferable.header, transferable.codename,
-				transferable.description);
-		this.name = transferable.name;
-		this.color = transferable.color;
-		try {
-			this.linkType = (LinkType) ConfigurationStorableObjectPool
-					.getStorableObject(
-							new Identifier(
-									transferable.linkTypeId),
-							true);
-			this.cableLinkType = (CableLinkType) ConfigurationStorableObjectPool
-					.getStorableObject(
-							new Identifier(
-									transferable.cableLinkTypeId),
-							true);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.cableThreadTypeDatabase = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
+		fromTransferable(transferable);
 	}
 
 	protected CableThreadType(final Identifier id,
@@ -145,6 +130,29 @@ public final class CableThreadType extends StorableObjectType {
 			throw new CreateObjectException(
 					"CableThreadType.createInstance | cannot generate identifier ",
 					ioee);
+		}
+	}
+	
+	protected void fromTransferable(IDLEntity transferable)
+			throws CreateObjectException {
+		CableThreadType_Transferable cttt = (CableThreadType_Transferable) transferable;
+		super.fromTransferable(cttt.header, cttt.codename,
+				cttt.description);
+		this.name = cttt.name;
+		this.color = cttt.color;
+		try {
+			this.linkType = (LinkType) ConfigurationStorableObjectPool
+					.getStorableObject(
+							new Identifier(
+									cttt.linkTypeId),
+							true);
+			this.cableLinkType = (CableLinkType) ConfigurationStorableObjectPool
+					.getStorableObject(
+							new Identifier(
+									cttt.cableLinkTypeId),
+							true);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
