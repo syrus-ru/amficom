@@ -1,0 +1,9 @@
+CREATE TABLE MapMark (
+ map_id VARCHAR2(32),
+ mark_id VARCHAR2(32),
+--
+ CONSTRAINT mapm_map_fk FOREIGN KEY (map_id)
+  REFERENCES Map (id) ON DELETE CASCADE,
+ CONSTRAINT mapm_mark_fk FOREIGN KEY (mark_id)
+  REFERENCES Mark (id) ON DELETE CASCADE
+);
