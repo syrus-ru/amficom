@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogPanel.java,v 1.3 2005/01/31 15:03:06 stas Exp $
+ * $Id: ObjectResourceCatalogPanel.java,v 1.4 2005/02/01 09:24:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/01/31 15:03:06 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/01 09:24:57 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogPanel extends JPanel implements OperationListener
@@ -500,7 +500,7 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 
 			if (n != -1)
 			{
-				ObjectResource res = (ObjectResource)data.get(n);
+				Object res = data.get(n);
 
 				if (dataSet.indexOf(res) == -1)
 				{
