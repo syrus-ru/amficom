@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.40 2004/12/24 14:06:56 bob Exp $
+ * $Id: measurement.idl,v 1.41 2004/12/24 14:09:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,8 @@ module corba {
 
 		wstring name;
 		com::syrus::AMFICOM::general::corba::DataType data_type;
-	};	
+	};
+
 	typedef sequence <ParameterType_Transferable> ParameterTypeSeq_Transferable;
 
 	struct MeasurementType_Transferable {
@@ -41,7 +42,7 @@ module corba {
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable out_parameter_type_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable measurement_port_type_ids;
 	};
-	
+
 	typedef sequence <MeasurementType_Transferable> MeasurementTypeSeq_Transferable;
 
 	struct AnalysisType_Transferable {
@@ -237,12 +238,12 @@ module corba {
 //////////////////// Analysis ///////////////////////
 
 	struct Analysis_Transferable {
-	    com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
+	  com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
-    	com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
+  	com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
-		
-    	com::syrus::AMFICOM::general::corba::Identifier_Transferable criteria_set_id;
+
+    com::syrus::AMFICOM::general::corba::Identifier_Transferable criteria_set_id;
   };
   
 	typedef sequence <Analysis_Transferable> AnalysisSeq_Transferable;
@@ -250,14 +251,14 @@ module corba {
 //////////////////// Evaluation /////////////////////
 
   struct Evaluation_Transferable {
-	    com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
+	  com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
-    	com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
+  	com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
 		
     com::syrus::AMFICOM::general::corba::Identifier_Transferable threshold_set_id;
   };
-  
+
   typedef sequence <Evaluation_Transferable> EvaluationSeq_Transferable;
 
 ////////////////////// Result ///////////////////////
