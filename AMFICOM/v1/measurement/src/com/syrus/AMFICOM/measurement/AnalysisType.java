@@ -32,8 +32,13 @@ public class AnalysisType extends ActionType {
 	}
 
 	public AnalysisType(AnalysisType_Transferable att) throws CreateObjectException {
-		super(new Identifier(att.id), new Date(att.created), new Date(att.modified), new Identifier(att.creator_id),
-				new Identifier(att.modifier_id), new String(att.codename), new String(att.description));
+		super(new Identifier(att.id),
+					new Date(att.created),
+					new Date(att.modified),
+					new Identifier(att.creator_id),
+					new Identifier(att.modifier_id),
+					new String(att.codename),
+					new String(att.description));
 
 		this.inParameterTypes = new ArrayList(att.in_parameter_types.length);
 		for (int i = 0; i < att.in_parameter_types.length; i++)
@@ -71,11 +76,16 @@ public class AnalysisType extends ActionType {
 		for (Iterator iterator = this.inParameterTypes.iterator(); iterator.hasNext();)
 			inParTypes[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
 
-		return new AnalysisType_Transferable((Identifier_Transferable) super.id.getTransferable(), super.created
-				.getTime(), super.modified.getTime(), (Identifier_Transferable) super.creator_id.getTransferable(),
-												(Identifier_Transferable) super.modifier_id.getTransferable(),
-												new String(super.codename), new String(super.description), inParTypes,
-												criteriaParTypes, outParTypes);
+		return new AnalysisType_Transferable((Identifier_Transferable)super.id.getTransferable(),
+																				 super.created.getTime(),
+																				 super.modified.getTime(),
+																				 (Identifier_Transferable)super.creatorId.getTransferable(),
+																				 (Identifier_Transferable)super.modifierId.getTransferable(),
+																				 new String(super.codename),
+																				 new String(super.description),
+																				 inParTypes,
+																				 criteriaParTypes,
+																				 outParTypes);
 	}
 
 	public List getInParameterTypes() {
@@ -90,18 +100,23 @@ public class AnalysisType extends ActionType {
 		return this.outParameterTypes;
 	}
 
-	protected synchronized void setAttributes(	Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												String codename,
-												String description) {
-		super.setAttributes(created, modified, creatorId, modifierId, codename, description);
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						String codename,
+																						String description) {
+		super.setAttributes(created,
+												modified,
+												creatorId,
+												modifierId,
+												codename,
+												description);
 	}
 
-	protected synchronized void setParameterTypes(	List inParameterTypes,
-													List criteriaParameterTypes,
-													List outParameterTypes) {
+	protected synchronized void setParameterTypes(List inParameterTypes,
+																								List criteriaParameterTypes,
+																								List outParameterTypes) {
 		this.inParameterTypes = inParameterTypes;
 		this.criteriaParameterTypes = criteriaParameterTypes;
 		this.outParameterTypes = outParameterTypes;

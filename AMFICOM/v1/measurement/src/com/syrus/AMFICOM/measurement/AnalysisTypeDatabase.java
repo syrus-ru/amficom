@@ -24,8 +24,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	private AnalysisType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof AnalysisType)
 			return (AnalysisType) storableObject;
-		throw new IllegalDataException("AnalysisTypeDatabase.fromStorableObject | Illegal Storable Object: "
-					+ storableObject.getClass().getName());
+		throw new IllegalDataException("AnalysisTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -75,17 +74,20 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 						resultSet.getString(COLUMN_CODENAME), resultSet.getString(COLUMN_DESCRIPTION));
 			else
 				throw new ObjectNotFoundException("No such analysis type: " + analysisTypeIdStr);
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "AnalysisTypeDatabase.retrieveAnalysisType | Cannot retrieve analysis type "
 					+ analysisTypeIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null) statement.close();
 				if (resultSet != null) resultSet.close();
 				statement = null;
 				resultSet = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 			}
 		}
 	}
@@ -135,17 +137,20 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 							.errorMessage("AnalysisTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode for parameterTypeId "
 									+ parameterTypeIdCode);
 			}
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "AnalysisTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter types for analysis type "
 					+ analysisTypeIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null) statement.close();
 				if (resultSet != null) resultSet.close();
 				statement = null;
 				resultSet = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				// nothing yet.
 			}
 		}
@@ -168,10 +173,12 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		try {
 			this.insertAnalysisType(analysisType);
 			this.insertParameterTypes(analysisType);
-		} catch (CreateObjectException e) {
+		}
+		catch (CreateObjectException e) {
 			try {
 				connection.rollback();
-			} catch (SQLException sqle) {
+			}
+			catch (SQLException sqle) {
 				Log.errorMessage("Exception in rolling back");
 				Log.errorException(sqle);
 			}
@@ -179,7 +186,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 		try {
 			connection.commit();
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			Log.errorMessage("Exception in commiting");
 			Log.errorException(sqle);
 		}
@@ -209,15 +217,18 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("AnalysisTypeDatabase.insertAnalysisType | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "AnalysisTypeDatabase.insertAnalysisType | Cannot insert analysis type "
 					+ analysisTypeIdStr;
 			throw new CreateObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null) statement.close();
 				statement = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 			}
 		}
 	}
@@ -279,16 +290,19 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 						+ analysisTypeIdCode, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 			}
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "AnalysisTypeDatabase.insertParameterTypes | Cannot insert parameter type "
 					+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
 					+ analysisTypeIdCode;
 			throw new CreateObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (preparedStatement != null) preparedStatement.close();
 				preparedStatement = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				// nothing yet.
 			}
 		}
@@ -312,13 +326,16 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.ANALYSISTYPE_ENTITY + SQL_WHERE + COLUMN_ID + EQUALS
 					+ analysisTypeIdStr);
 			connection.commit();
-		} catch (SQLException sqle1) {
+		}
+		catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null) statement.close();
 				statement = null;
-			} catch (SQLException Ex) {
+			}
+			catch (SQLException Ex) {
 			}
 		}
 	}
@@ -335,17 +352,20 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			if (resultSet.next())
 				return new AnalysisType(new Identifier(resultSet.getString(COLUMN_ID)));
 			throw new ObjectNotFoundException("No analysis type with codename: '" + codename + "'");
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "AnalysisTypeDatabase.retrieveForCodename | Cannot retrieve analysis type with codename: '"
 					+ codename + "'";
 			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null) statement.close();
 				if (resultSet != null) resultSet.close();
 				statement = null;
 				resultSet = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 			}
 		}
 	}
