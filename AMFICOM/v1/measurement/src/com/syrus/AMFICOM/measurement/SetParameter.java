@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.23 2005/03/10 11:45:23 arseniy Exp $
+ * $Id: SetParameter.java,v 1.24 2005/03/30 09:39:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,16 +17,16 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
-import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/03/10 11:45:23 $
+ * @version $Revision: 1.24 $, $Date: 2005/03/30 09:39:45 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -94,41 +94,49 @@ public class SetParameter implements TransferableObject, TypedObject, Identifiab
 	public byte[] getValue() {
 		return this.value;
 	}
-	
-	public boolean equals(Object obj) {
-		boolean equals = (obj == this);
-		if ((!equals) && (obj instanceof SetParameter)) {
-			SetParameter setParameter = (SetParameter) obj;
-			if ((this.id.equals(setParameter.id))
-					&& (this.type.equals(setParameter.type))
-					&& HashCodeGenerator.equalsArray(this.value, setParameter.value))
-				equals = true;
-		}
-		return equals;
-	}
-	
-	
-	public int hashCode() {
-		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
-		hashCodeGenerator.addObject(this.id);
-		hashCodeGenerator.addObject(this.type);
-		hashCodeGenerator.addByteArray(this.value);
-		int result = hashCodeGenerator.getResult();
-		hashCodeGenerator = null;
-		return result;
+//	
+//	public boolean equals(Object obj) {
+//		boolean equals = (obj == this);
+//		if ((!equals) && (obj instanceof SetParameter)) {
+//			SetParameter setParameter = (SetParameter) obj;
+//			if ((this.id.equals(setParameter.id))
+//					&& (this.type.equals(setParameter.type))
+//					&& HashCodeGenerator.equalsArray(this.value, setParameter.value))
+//				equals = true;
+//		}
+//		return equals;
+//	}
+//	
+//	
+//	public int hashCode() {
+//		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
+//		hashCodeGenerator.addObject(this.id);
+//		hashCodeGenerator.addObject(this.type);
+//		hashCodeGenerator.addByteArray(this.value);
+//		int result = hashCodeGenerator.getResult();
+//		hashCodeGenerator = null;
+//		return result;
+//
+//	}	
+//
+//	public String toString() {
+//		String str = getClass().getName() + EOSL
+//					+ ID + this.id.toString() + EOSL
+//					+ ID_TYPE + KEY_VALUE_SEPERATOR 
+//					+ OPEN_BLOCK
+//					+ this.type.toString()
+//					+ CLOSE_BLOCK;				
+//					
+//		return str;
+//	}
 
-	}	
-	
-	
-	public String toString() {
-		String str = getClass().getName() + EOSL
-					+ ID + this.id.toString() + EOSL
-					+ ID_TYPE + KEY_VALUE_SEPERATOR 
-					+ OPEN_BLOCK
-					+ this.type.toString()
-					+ CLOSE_BLOCK;				
-					
-		return str;
+	public static byte[] getValueByTypeCodename(SetParameter[] params, String keyCodename) throws ObjectNotFoundException {
+		for (int i = 0; i < params.length; i++) {
+			ParameterType p = (ParameterType) params[i].getType();
+			if (p.getCodename().equals(keyCodename))
+				return params[i].getValue();
+		}
+		throw new ObjectNotFoundException("SetParameter.getValueByTypeCodename | cannot find set parameter for type codename '"
+				+ keyCodename + '\'');
 	}
-	
 }
