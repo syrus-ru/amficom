@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.77 2004/12/22 13:57:26 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.78 2004/12/23 12:37:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.Characteristic;
@@ -62,6 +61,7 @@ import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -76,6 +76,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
@@ -84,7 +85,6 @@ import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationType;
-import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupCondition;
@@ -122,8 +122,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2004/12/22 13:57:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.78 $, $Date: 2004/12/23 12:37:03 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 

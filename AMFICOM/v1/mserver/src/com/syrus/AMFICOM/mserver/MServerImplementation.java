@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.22 2004/12/20 08:55:01 bob Exp $
+ * $Id: MServerImplementation.java,v 1.23 2004/12/23 12:32:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.LinkedIdsCondition;
 import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -34,7 +33,6 @@ import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
-import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
@@ -51,6 +49,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -58,6 +57,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Evaluation;
@@ -90,7 +90,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/12/20 08:55:01 $
+ * @version $Revision: 1.23 $, $Date: 2004/12/23 12:32:57 $
  * @author $Author: bob $
  * @module mserver_v1
  */

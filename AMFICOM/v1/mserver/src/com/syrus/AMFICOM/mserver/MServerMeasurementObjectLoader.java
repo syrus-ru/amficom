@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.16 2004/12/20 08:55:01 bob Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.17 2004/12/23 12:32:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,12 +14,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -27,12 +27,12 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
-import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/12/20 08:55:01 $
+ * @version $Revision: 1.17 $, $Date: 2004/12/23 12:32:57 $
  * @author $Author: bob $
  * @module mserver_v1
  */

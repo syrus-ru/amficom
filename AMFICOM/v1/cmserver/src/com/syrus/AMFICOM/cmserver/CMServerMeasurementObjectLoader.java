@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.9 2004/12/22 14:23:01 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.10 2004/12/23 12:37:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,12 +17,12 @@ import java.util.Set;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -32,12 +32,12 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
-import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.9 $, $Date: 2004/12/22 14:23:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2004/12/23 12:37:03 $
+ * @author $Author: bob $
  * @module module_name
  */
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -409,8 +409,8 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition) condition;
 			LinkedIdsCondition_Transferable linkedIdsConditionTransferable = (LinkedIdsCondition_Transferable)linkedIdsCondition.getTransferable();
 			List tests;
-			if (linkedIdsCondition.getTestIds() != null)
-				tests = MeasurementStorableObjectPool.getStorableObjects(linkedIdsCondition.getTestIds(), true);
+			if (linkedIdsCondition.getLinkedIds() != null)
+				tests = MeasurementStorableObjectPool.getStorableObjects(linkedIdsCondition.getLinkedIds(), true);
 			else tests = Collections.singletonList(MeasurementStorableObjectPool.getStorableObject(linkedIdsCondition.getIdentifier(), true));
 			for (Iterator it = tests.iterator(); it.hasNext();) {
 				Test test = (Test) it.next();				
