@@ -26,14 +26,15 @@ import java.io.FileInputStream;
 import java.io.File;
 import java.io.IOException;
 
-import java.util.Hashtable;
-import java.util.Date;
-
 import java.awt.Dimension;
 import java.awt.Font;
 
-import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -98,7 +99,7 @@ public class ReportTemplate extends StubResource implements Serializable
 	/**
 	 * <p>Шаблон по планированию</p>
 	 */
-	static final public String rtt_Scheduler = "rtt_Sheduler";
+	static final public String rtt_Scheduler = "rtt_Scheduler";
 	/**
 	 * <p>Все шаблоны</p>
 	 */
@@ -121,25 +122,25 @@ public class ReportTemplate extends StubResource implements Serializable
 	/**
 	 * Список всех элементов шаблона
 	 */
-	public List objectRenderers = new LinkedList();
+	public List objectRenderers = new ArrayList();
 	/**
 	 * Список фильтров использующихся в шаблоне
 	 */
-	public List objectResourceFilters = new LinkedList();
+	public List objectResourceFilters = new ArrayList();
 	/**
 	 * Список надписей из шаблона
 	 */
-	public List labels = new LinkedList();
+	public List labels = new ArrayList();
 	/**
 	 * Список картинок из шаблона
 	 */
-	public List images = new LinkedList();
+	public List images = new ArrayList();
 
 	/**
 	 * В таблице хранится информация о том, какие ресурсы были подгружены,
 	 * а какие - нет.
 	 */
-	public Hashtable resourcesLoaded = new Hashtable();
+	public Map resourcesLoaded = new HashMap();
 
 	ReportTemplate_Transferable transferable = new ReportTemplate_Transferable();
 
@@ -268,10 +269,10 @@ public class ReportTemplate extends StubResource implements Serializable
 		this.modified = transferable.modified;
 		this.curModified = transferable.modified;
 
-		this.objectRenderers = new LinkedList();
-		this.labels = new LinkedList();
-		this.images = new LinkedList();
-		this.objectResourceFilters = new LinkedList();
+		this.objectRenderers = new ArrayList();
+		this.labels = new ArrayList();
+		this.images = new ArrayList();
+		this.objectResourceFilters = new ArrayList();
 
 		for (int i = 0; i < this.transferable.renderingObjects.length; i++)
 		{
@@ -565,7 +566,7 @@ public class ReportTemplate extends StubResource implements Serializable
 		this.description = (String)in.readObject();
 
 		// Перекачиваем объекты
-		this.objectRenderers = new LinkedList();
+		this.objectRenderers = new ArrayList();
 
 		int orCount = in.readInt();
 		for (int i = 0; i < orCount; i++)
@@ -597,7 +598,7 @@ public class ReportTemplate extends StubResource implements Serializable
 		}
 
 		// Перекачиваем надписи
-		this.labels = new LinkedList();
+		this.labels = new ArrayList();
 
 		int labelCount = in.readInt();
 		for (int i = 0; i < labelCount; i++)
@@ -637,7 +638,7 @@ public class ReportTemplate extends StubResource implements Serializable
 		}
 
 		// Перекачиваем картинки
-		this.images = new LinkedList();
+		this.images = new ArrayList();
 
 		int imagesCount = in.readInt();
 		for (int i = 0; i < imagesCount; i++)
@@ -665,7 +666,7 @@ public class ReportTemplate extends StubResource implements Serializable
 		}
 
 		// Перекачиваем фильтры
-		this.objectResourceFilters = new LinkedList();
+		this.objectResourceFilters = new ArrayList();
 
 		int filtersCount = in.readInt();
 		for (int i = 0; i < filtersCount; i++)

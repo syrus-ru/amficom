@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
@@ -202,7 +202,7 @@ public class RenderingObject
 
 		JScrollPane sp = (JScrollPane) this.rendererPanel.getComponent(0);
 
-		this.columnWidths = new LinkedList();
+		this.columnWidths = new ArrayList();
 		JTable itsTable = (JTable)sp.getViewport().getView();
 		int colNumber = itsTable.getColumnModel().getColumnCount();
 		for (int i = 0; i < colNumber / this.getTableDivisionsNumber(); i ++)
@@ -256,7 +256,7 @@ public class RenderingObject
 			this.columnWidths = null;
 			return;
 		}
-		this.columnWidths = new LinkedList();
+		this.columnWidths = new ArrayList();
 		for (int i = 0; i < widths.length; i++)
 			this.columnWidths.add(new Integer(widths[i]));
 	}

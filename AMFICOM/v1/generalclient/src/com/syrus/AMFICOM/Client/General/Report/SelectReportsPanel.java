@@ -9,7 +9,7 @@ import java.awt.Toolkit;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Enumeration;
 
@@ -237,7 +237,7 @@ public class SelectReportsPanel extends JInternalFrame implements
 					ObjectResourceReportModel orrm =
 						(ObjectResourceReportModel) curReport.model;
 
-					List columns = (LinkedList) curReport.getReserve();
+					List columns = (List) curReport.getReserve();
 					if (columns.contains((String) lastElem.getObject()))
 						columns.remove((String) lastElem.getObject());
 					else
@@ -379,7 +379,7 @@ public class SelectReportsPanel extends JInternalFrame implements
 			return;
 		}
 
-		List dataset = new LinkedList();
+		List dataset = new ArrayList();
 
 		additionalPanel = new SetRestrictionsWindow(
 			(ObjectResourceFilter) curFilterChanging.clone(),
@@ -484,7 +484,7 @@ class AvailableReportsTreeRenderer implements TreeCellRenderer
 			if (curReport.view_type.equals(ObjectResourceReportModel.
 													 rt_objectsReport))
 			{
-				List columns = (LinkedList) curReport.getReserve();
+				List columns = (List) curReport.getReserve();
 				if (!columns.contains((String) node.getObject()))
 					node.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 															 getImage(

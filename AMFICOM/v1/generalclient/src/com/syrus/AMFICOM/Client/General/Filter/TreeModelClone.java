@@ -2,9 +2,11 @@ package com.syrus.AMFICOM.Client.General.Filter;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Enumeration;
 
 import javax.swing.tree.DefaultTreeModel;
 import com.syrus.AMFICOM.Client.General.Filter.FilterTreeNode;
@@ -67,9 +69,9 @@ public class TreeModelClone extends DefaultTreeModel
 		return mtm;
 	}
 
-	public Hashtable getHash ()
+	public Map getHash ()
 	{
-		Hashtable result = new Hashtable();
+		Map result = new HashMap();
 
 		FilterTreeNode node = (FilterTreeNode )this.getRoot();
 
@@ -78,11 +80,11 @@ public class TreeModelClone extends DefaultTreeModel
 		return result;
 	}
 
-	private void getTreeHash(FilterTreeNode node, Hashtable volume)
+	private void getTreeHash(FilterTreeNode node, Map volume)
 	{
 		FilterTreeNode parent = (FilterTreeNode )node.getParent();
 
-		ArrayList childList = new ArrayList();
+		List childList = new ArrayList();
 		for(Enumeration enum1 = node.children(); enum1.hasMoreElements();)
 			childList.add(((FilterTreeNode )enum1.nextElement()).id);
 

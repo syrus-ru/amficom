@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.TableColumn;
 
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 public class Statistics
 		extends ReportData
 {
-	public List fieldValues = new LinkedList();
-	public List timesFound = new LinkedList();
+	public List fieldValues = new ArrayList();
+	public List timesFound = new ArrayList();
 
 	public static String field = "";
 

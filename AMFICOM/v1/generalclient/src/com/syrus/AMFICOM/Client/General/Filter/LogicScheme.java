@@ -4,12 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.awt.Dimension;
 
+import java.util.ListIterator;
 import javax.swing.JFrame;
 import javax.swing.JDialog;
 import javax.swing.JButton;
 
-import java.util.Vector;
-import java.util.LinkedList;
+import java.util.List;
+import java.util.ArrayList;
 
 import java.io.ObjectInputStream;
 import java.io.IOException;
@@ -32,13 +33,18 @@ public class LogicScheme extends LogicSchemeBase
 	{
 		LogicScheme ls = new LogicScheme(orf);
 
-		ls.schemeElements = (Vector) this.schemeElements.clone();
-		ls.finishedLinks = (Vector) this.finishedLinks.clone();
-		ls.activeZones = (Vector) this.activeZones.clone();
+		ls.schemeElements = new ArrayList();
+    ls.schemeElements.addAll(this.schemeElements);
 
-		for (int i = 0; i < ls.schemeElements.size(); i++)
+		ls.finishedLinks = new ArrayList();
+    ls.finishedLinks.addAll(this.finishedLinks);
+
+		ls.activeZones = new ArrayList();
+    ls.activeZones.addAll(this.activeZones);
+    
+		for (ListIterator lIt = ls.schemeElements.listIterator();lIt.hasNext();)
 		{
-			LogicSchemeElement curLSE = (LogicSchemeElement) ls.schemeElements.get(i);
+			LogicSchemeElement curLSE = (LogicSchemeElement) lIt.next();
 			if (curLSE.type.equals(LogicSchemeElement.t_result))
 			{
 				ls.treeResult = curLSE;
@@ -107,7 +113,7 @@ public class LogicScheme extends LogicSchemeBase
 		if (top.type.equals(LogicSchemeElement.t_condition))
 			return "\"" + LangModel.getString(LogicSchemeElement.t_condition) + " " + top.filterExpression.getListID() + "\"";
 
-		LinkedList allTopLinks = top.input.getLinks();
+		List allTopLinks = top.input.getLinks();
 
 		String result = "";
 

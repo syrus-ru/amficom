@@ -8,7 +8,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JTree;
@@ -91,7 +92,7 @@ public class GeneralTreeFilterPanel extends FilterPanel
 
 	public FilterExpressionInterface getExpression(String col_id, String col_name, boolean conditionsRequested)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		vec.add("list");
 		TreeModelClone tm = (TreeModelClone)tree.getModel();
 		TreeModelClone new_tm = tm.myclone();
@@ -108,8 +109,8 @@ public class GeneralTreeFilterPanel extends FilterPanel
 
 	public void setExpression(FilterExpression expr)
 	{
-		Vector vec = expr.getVec();
-		TreeModelClone tm = (TreeModelClone)vec.elementAt(1);
+		List vec = expr.getVec();
+		TreeModelClone tm = (TreeModelClone)vec.get(1);
 		TreeModelClone new_tm = tm.myclone();
 		tree.setModel(new_tm);
 	}

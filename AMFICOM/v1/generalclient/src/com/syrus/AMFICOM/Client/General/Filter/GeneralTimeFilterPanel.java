@@ -10,7 +10,8 @@ import java.text.SimpleDateFormat;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -143,7 +144,7 @@ public class GeneralTimeFilterPanel extends FilterPanel
 		fexp.setName(expName);
 		fexp.setColumnName(col_name);
 
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		vec.add("time");
 		vec.add(fromDate);
 		vec.add(toDate);
@@ -155,11 +156,11 @@ public class GeneralTimeFilterPanel extends FilterPanel
 
 	public void setExpression(FilterExpression expr)
 	{
-		Vector vec = expr.getVec();
-		loDateSpin.setValue(new Date(Long.parseLong ((String) vec.elementAt(1))));
-		loTimeSpin.setValue(new Date(Long.parseLong ((String) vec.elementAt(1))));
-		hiDateSpin.setValue(new Date(Long.parseLong ((String) vec.elementAt(2))));
-		hiTimeSpin.setValue(new Date(Long.parseLong ((String) vec.elementAt(2))));
+		List vec = expr.getVec();
+		loDateSpin.setValue(new Date(Long.parseLong ((String) vec.get(1))));
+		loTimeSpin.setValue(new Date(Long.parseLong ((String) vec.get(1))));
+		hiDateSpin.setValue(new Date(Long.parseLong ((String) vec.get(2))));
+		hiTimeSpin.setValue(new Date(Long.parseLong ((String) vec.get(2))));
 	}
 
 	void spinDate_mousePressed(MouseEvent e, TimeSpinner spin)

@@ -1,11 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
-import java.util.LinkedList;
-import java.util.List;
 import javax.swing.JComponent;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -78,7 +79,7 @@ abstract public class ObjectResourceReportModel extends ReportModel
 
 	abstract public List getAllObjectColumnSizes();
 
-	abstract public Hashtable getAvailableViews();
+	abstract public Map getAvailableViews();
 
 	private List allColumnNames = null;
 
@@ -86,7 +87,7 @@ abstract public class ObjectResourceReportModel extends ReportModel
 
 	private List allColumnSizes = null;
 
-	private Hashtable availableViews = null;
+	private Map availableViews = null;
 
 	public ObjectResourceReportModel()
 	{
@@ -104,7 +105,7 @@ abstract public class ObjectResourceReportModel extends ReportModel
 
 	public final List getColumnNamesbyIDs(List IDs)
 	{
-		List result = new LinkedList();
+		List result = new ArrayList();
 
 		for (int j = 0; j < IDs.size(); j++)
 			result.add(this.getColumnNamebyID((String) IDs.get(j)));
@@ -132,9 +133,10 @@ abstract public class ObjectResourceReportModel extends ReportModel
 
 	public final String getColumnIDbyName(String name)
 	{
-		for (int i = 0; i < allColumnNames.size(); i++)
-			if (((String) allColumnNames.get(i)).equals(name))
-				return (String) allColumnIDs.get(i);
+    int index = 0;
+		for (ListIterator lIt = allColumnNames.listIterator(); lIt.hasNext(); index++)
+			if (((String) lIt.next()).equals(name))
+				return (String) allColumnIDs.get(index);
 
 		return null;
 	}
@@ -142,20 +144,21 @@ abstract public class ObjectResourceReportModel extends ReportModel
 	public final List getAvailableViewTypesforField(String ID)
 	{
 		if (ID == null)
-			return new LinkedList();
+			return new ArrayList();
 
 		List result = (List) availableViews.get(ID);
 		if (result == null)
-			return new LinkedList();
+			return new ArrayList();
 
 		return result;
 	}
 
 	private static final List getReports(List reports)
 	{
-		List result = new LinkedList();
-		for (int i = 0; i < reports.size(); i++)
-			result.add((ObjectsReport) reports.get(i));
+		List result = new ArrayList();
+		for (ListIterator lIt = reports.listIterator(); lIt.hasNext();)
+			result.add(lIt.next());
+      
 		return result;
 	}
 
@@ -173,7 +176,7 @@ abstract public class ObjectResourceReportModel extends ReportModel
 		ObjectResource obj = (ObjectResource) Pool.get(type, id);
 		if (obj != null)
 			return ":" + obj.getName();
-else
+    else
 			throw new CreateReportException("",
 				CreateReportException.poolObjNotExists);
 	}
@@ -186,20 +189,19 @@ else
     if (ObjectResourceReportModel.reportObjects != null)
       return ObjectResourceReportModel.reportObjects;
 
-    List reportObjects = new LinkedList();
+    List reportObjects = new ArrayList();
 		if (or.model instanceof ObjectResourceReportModel)
 		{
 			ObjectResourceReportModel orrm = (ObjectResourceReportModel) or.model;
-			Hashtable hash = Pool.getHash(orrm.getObjectsType());
+			Map hash = Pool.getMap(orrm.getObjectsType());
 			if (hash == null)
-				return new LinkedList();
+				return new ArrayList();
 
 			ObjectResourceFilter filter = this.findORFilterforModel(rt,dsi);
 
-			Enumeration allObjects = hash.elements();
-			while (allObjects.hasMoreElements())
+			for (Iterator it = hash.values().iterator(); it.hasNext();)
 			{
-				ObjectResource curObject = (ObjectResource) allObjects.nextElement();
+				ObjectResource curObject = (ObjectResource) it.next();
 				if (filter == null)
 					reportObjects.add(curObject);
 				else if (filter.logicScheme.passesAllConstraints(curObject))
@@ -290,7 +292,7 @@ else
 			Long[] minDate = new Long[1];
 			Long[] maxDate = new Long[1];
 
-			List periodsBounds = new LinkedList();
+			List periodsBounds = new ArrayList();
 
 			getMinMaxDates(minDate, maxDate, reportObjects, rp, model);
 
@@ -337,9 +339,10 @@ else
 		minDate[0] = new Long(Long.MAX_VALUE);
 		maxDate[0] = new Long(Long.MIN_VALUE);
 
-		for (int i = 1; i < objects.size(); i++)
+//		for (int i = 1; i < objects.size(); i++)
+    for (ListIterator lIt = objects.listIterator(); lIt.hasNext();)
 		{
-			ObjectResource curObject = (ObjectResource) objects.get(i);
+			ObjectResource curObject = (ObjectResource) lIt.next();
 
 			String objectsDate = curObject.getModel().getColumnValue(rp.field);
 
@@ -424,9 +427,9 @@ else
 		for (int k = 0; k < objectsNumberAtInterval.length; k++)
 			objectsNumberAtInterval[k] = 0;
 
-		for (int k = 0; k < repObjects.size(); k++)
+		for (ListIterator lIt = repObjects.listIterator(); lIt.hasNext();)
 		{
-			ObjectResource or = (ObjectResource) repObjects.get(k);
+			ObjectResource or = (ObjectResource) lIt.next();
 			String curFieldValue = or.getModel().getColumnValue(rp.field);
 
 			SimpleDateFormat formatter
@@ -436,13 +439,14 @@ else
 			Date tempDate = formatter.parse(curFieldValue, pos);
 			long time = tempDate.getTime();
 
-			for (int m = 0; m < allBounds.size(); m++)
+      int curIndex = 0;
+      for (ListIterator bIt = allBounds.listIterator(); bIt.hasNext(); curIndex++)
 			{
-				Long[] curBounds = (Long[]) allBounds.get(m);
+				Long[] curBounds = (Long[]) bIt.next();
 				if ((curBounds[0].longValue() <= time) &&
 					(time <= curBounds[1].longValue()))
 				{
-					objectsNumberAtInterval[m]++;
+					objectsNumberAtInterval[curIndex]++;
 					break;
 				}
 			}

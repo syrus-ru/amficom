@@ -45,8 +45,7 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 
 import java.util.List;
-import java.util.LinkedList;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
@@ -69,7 +68,7 @@ public class ObjectResourceFilterPane extends JScrollPane
 
 	ObjectResourceFilter filter = null;
 
-	List dataSet = new LinkedList();
+	List dataSet = new ArrayList();
 
 	private JInternalFrame ownerWindow = null;
 
@@ -194,8 +193,8 @@ public class ObjectResourceFilterPane extends JScrollPane
 			return;
 
 		columnComboBox.setSelectedItem(criteriaListEditObject.getId());
-		Vector vec = criteriaListEditObject.getVec();
-		String type = (String) vec.elementAt(0);
+		List vec = criteriaListEditObject.getVec();
+		String type = (String) vec.get(0);
 
 		if (type.equals("numeric"))
 		{
@@ -267,7 +266,7 @@ repaint();
 
 	private void updateExpressionIDs(int removedIndex)
 	{
-		Vector schemeEls = this.filter.logicScheme.schemeElements;
+		List schemeEls = this.filter.logicScheme.schemeElements;
 		for (int i = 0; i < schemeEls.size(); i++)
 		{
 			LogicSchemeElement se = (LogicSchemeElement) schemeEls.get(i);
@@ -523,7 +522,7 @@ repaint();
 
 		generalExpressionTextField.setText("");
 
-		columnComboBox.setModel(new DefaultComboBoxModel(new Vector()));
+		columnComboBox.setModel(new DefaultComboBoxModel(new ArrayList().toArray()));
 
 		if (filter != null)
 		{
@@ -534,7 +533,7 @@ repaint();
 			columnComboBox.setModel(new DefaultComboBoxModel(list.toArray()));
 			String col_id = (String) columnComboBox.getSelectedItem();
 			String types[] = filter.getColumnFilterTypes(col_id);
-			list = new Vector();
+			list = new ArrayList();
 			MiscUtil.addToCollection(list, types);
 			eqRadioButton.setEnabled(list.contains("numeric"));
 			timeRadioButton.setEnabled(list.contains("time"));
@@ -567,7 +566,7 @@ repaint();
 		}
 
 		String types[] = filter.getColumnFilterTypes(col_id);
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		MiscUtil.addToCollection(vec, types);
 		eqRadioButton.setEnabled(vec.contains("numeric"));
 		timeRadioButton.setEnabled(vec.contains("time"));

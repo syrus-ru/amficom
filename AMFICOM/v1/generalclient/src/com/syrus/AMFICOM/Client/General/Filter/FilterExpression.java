@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Filter;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 import java.io.IOException;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
@@ -41,7 +42,7 @@ public class FilterExpression extends StubResource implements FilterExpressionIn
 		return fe.getId();
 	}
 
-	public Vector getVec()
+	public List getVec()
 	{
 		return fe.getVec();
 	}
@@ -66,7 +67,7 @@ public class FilterExpression extends StubResource implements FilterExpressionIn
 		fe.setId(i);
 	}
 
-	public void setVec(Vector v)
+	public void setVec(List v)
 	{
 		fe.setVec(v);
 	}
@@ -97,7 +98,10 @@ public class FilterExpression extends StubResource implements FilterExpressionIn
 		FilterExpression fe = new FilterExpression();
 		fe.setName(getName());
 		fe.setId(getId());
-		fe.setVec((Vector )getVec().clone());
+    
+    List cloneList = new ArrayList();
+    cloneList.addAll(getVec());
+		fe.setVec(cloneList);
 
 		fe.setListID(getListID());
 
@@ -107,13 +111,14 @@ public class FilterExpression extends StubResource implements FilterExpressionIn
 	public void writeObject(java.io.ObjectOutputStream out)
 		throws IOException
 	{
-		Vector vec1 = getVec();
-		Vector vec = (Vector )vec1.clone();
+		List vec1 = getVec();
+		List vec = new ArrayList();
+    vec.addAll(vec1);
 		String type = (String )vec.get(0);
 		if(type.equals(LIST_EXPRESSION))
 		{
 			TreeModelClone tree = (TreeModelClone )vec.get(1);
-			vec.setElementAt(tree.getHash(), 1);
+			vec.set(1,tree.getHash());
 		}
 		fe.setVec(vec);
 		fe.writeObject(out);

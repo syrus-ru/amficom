@@ -3,7 +3,8 @@ package com.syrus.AMFICOM.Client.General.Filter;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.filter.FilterExpressionInterface;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -55,7 +56,7 @@ public class GeneralRangeFilterPanel extends FilterPanel
 
 	public FilterExpressionInterface getExpression(String col_id, String col_name, boolean conditionsRequested)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		vec.add("range");
 		vec.add(loField.getText());
 		vec.add(hiField.getText());
@@ -74,8 +75,8 @@ public class GeneralRangeFilterPanel extends FilterPanel
 
 	public void setExpression(FilterExpression expr)
 	{
-		Vector vec = expr.getVec();
-		loField.setText((String) vec.elementAt(1));
-		hiField.setText((String) vec.elementAt(2));
+		List vec = expr.getVec();
+		loField.setText((String) vec.get(1));
+		hiField.setText((String) vec.get(2));
 	}
 }

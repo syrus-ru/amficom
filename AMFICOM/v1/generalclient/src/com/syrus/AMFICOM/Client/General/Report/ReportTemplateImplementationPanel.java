@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -337,7 +337,7 @@ public class ReportTemplateImplementationPanel extends JPanel
 		}
 
 		if (images == null)
-			images = new LinkedList();
+			images = new ArrayList();
 
 		for (int i = 0; i < images.size(); i++)
 		{
@@ -376,8 +376,8 @@ public class ReportTemplateImplementationPanel extends JPanel
 			 распечатать те, которые е и ниже его)
 			 */
 
-		List xs = new LinkedList(); //строим карту уже распечатанных элементов
-		List ys = new LinkedList();
+		List xs = new ArrayList(); //строим карту уже распечатанных элементов
+		List ys = new ArrayList();
 		getAxisValuesMatrices(xs, ys);
 
 		boolean toBreak = false;
@@ -1086,8 +1086,8 @@ public class ReportTemplateImplementationPanel extends JPanel
 
 	public int saveToHTML(String fileName, boolean beforePrinting)
 	{
-		List xs = new LinkedList();
-		List ys = new LinkedList();
+		List xs = new ArrayList();
+		List ys = new ArrayList();
 
 		this.getHTMLAxisValuesMatrices(xs, ys);
 

@@ -3,7 +3,8 @@ package com.syrus.AMFICOM.Client.General.Filter;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.filter.FilterExpressionInterface;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
@@ -72,7 +73,7 @@ public class GeneralEquationFilterPanel extends FilterPanel
 
 	public FilterExpressionInterface getExpression(String col_id, String col_name, boolean conditionsRequested)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		String temp = "";
 		vec.add("numeric");
 		if(eqButton.isSelected())
@@ -99,13 +100,13 @@ public class GeneralEquationFilterPanel extends FilterPanel
 
 	public void setExpression(FilterExpression expr)
 	{
-		Vector vec = expr.getVec();
-		if(((String )vec.elementAt(1)).equals("="))
+		List vec = expr.getVec();
+		if(((String )vec.get(1)).equals("="))
 			eqButton.setSelected(true);
-		else if(((String )vec.elementAt(1)).equals("<"))
+		else if(((String )vec.get(1)).equals("<"))
 			lessButton.setSelected(true);
-		else if(((String )vec.elementAt(1)).equals(">"))
+		else if(((String )vec.get(1)).equals(">"))
 			moreButton.setSelected(true);
-		textField.setText((String) vec.elementAt(2));
+		textField.setText((String) vec.get(2));
 	}
 }

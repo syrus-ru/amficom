@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.MyDataFlavor;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -61,8 +61,11 @@ public class ObjectsReport extends StubResource
 		}
 
 		else if (reserve instanceof List)
-			newReport.reserve = ((LinkedList)reserve).clone();
-
+    {
+      List cloneList = new ArrayList();
+      cloneList.addAll((List)reserve);
+			newReport.reserve = cloneList;
+    }
 		return newReport;
 	}
 

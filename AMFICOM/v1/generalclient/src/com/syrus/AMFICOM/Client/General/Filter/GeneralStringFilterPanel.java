@@ -4,7 +4,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 
 import com.syrus.AMFICOM.filter.FilterExpressionInterface;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -44,7 +45,7 @@ public class GeneralStringFilterPanel extends FilterPanel
 
 	public FilterExpressionInterface getExpression(String col_id, String col_name, boolean conditionsRequested)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		vec.add("string");
 		vec.add(textField.getText());
 		FilterExpression fexp = new FilterExpression();
@@ -62,7 +63,7 @@ public class GeneralStringFilterPanel extends FilterPanel
 
 	public void setExpression(FilterExpression expr)
 	{
-		Vector vec = expr.getVec();
-		textField.setText((String) vec.elementAt(1));
+		List vec = expr.getVec();
+		textField.setText((String) vec.get(1));
 	}
 }
