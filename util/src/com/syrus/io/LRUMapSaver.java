@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.6 2004/12/20 13:45:45 arseniy Exp $
+ * $Id: LRUMapSaver.java,v 1.7 2005/01/14 11:26:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/20 13:45:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/01/14 11:26:28 $
+ * @author $Author: bass $
  * @module module_name
  */
 public class LRUMapSaver {
@@ -33,14 +33,14 @@ public class LRUMapSaver {
 	private static final String DEFAULT_HOME = System.getProperty("user.home");
 	private static final String DEFAULT_CACHE_PATH = DEFAULT_HOME + "/cache";
 
-  private static String pathNameOfSaveDir;
+	private static String pathNameOfSaveDir;
 	private static File saveDir;   
 
 	private LRUMapSaver() {
 			// empty
 	}
 
-  public static void save(LRUMap lruMap, String objectEntityName) {
+	public static void save(LRUMap lruMap, String objectEntityName) {
 		File tempFile = null;
 		try {
 			if (pathNameOfSaveDir == null)
@@ -80,7 +80,13 @@ public class LRUMapSaver {
 		}
 	}
 
-	public static List load(String objectEntityName) {
+	
+	/**
+	 * @param objectEntityName
+	 * @todo Consider returning an empty list instead of null. Check all
+	 *       dependent code (within workspace).
+	 */
+	public static List load(final String objectEntityName) {
 		try {
 			if (pathNameOfSaveDir == null)
 				pathNameOfSaveDir = ApplicationProperties.getString(KEY_CACHE_PATH, DEFAULT_CACHE_PATH);
