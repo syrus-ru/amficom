@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.63 2005/02/03 15:01:56 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.64 2005/02/08 09:29:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/02/03 15:01:56 $
+ * @version $Revision: 1.64 $, $Date: 2005/02/08 09:29:57 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -405,8 +405,8 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(List ids) throws DatabaseException, CommunicationException {
-		instance.deleteImpl(ids);
+	public static void delete(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+		instance.deleteImpl(objects);
 	}
 
 	protected void deleteStorableObject(Identifier id) throws DatabaseException, CommunicationException {
@@ -423,9 +423,9 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	protected void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException {
+	protected void deleteStorableObjects(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		try {
-			mObjectLoader.delete(ids);
+			mObjectLoader.delete(objects);
 		}
 		catch (DatabaseException e) {
 			Log.errorMessage("MeasurementStorableObjectPool.deleteStorableObjects | DatabaseException: " + e.getMessage());

@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.3 2005/02/07 11:59:04 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.4 2005/02/08 09:33:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/07 11:59:04 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/08 09:33:48 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -250,8 +250,8 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(List ids) throws DatabaseException, CommunicationException {
-		instance.deleteImpl(ids);
+	public static void delete(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+		instance.deleteImpl(objects);
 	}
 
 	protected void deleteStorableObject(Identifier id) throws DatabaseException, CommunicationException {
@@ -268,9 +268,9 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	protected void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException {
+	protected void deleteStorableObjects(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		try {
-			eObjectLoader.delete(ids);
+			eObjectLoader.delete(objects);
 		}
 		catch (DatabaseException e) {
 			Log.errorMessage("EventStorableObjectPool.deleteStorableObjects | DatabaseException: " + e.getMessage());
