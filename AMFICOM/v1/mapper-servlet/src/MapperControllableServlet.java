@@ -14,24 +14,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.servlet.ServletOutputStream;
 
 import java.awt.Color;
-import java.awt.Point;
-import java.awt.Image;
-import java.awt.geom.Rectangle2D;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Date;
-
-// Needed in this servlet for MapJ support
-import java.net.Socket;
 
 // MapInfo classes
 import com.mapinfo.mapj.MapJ;
@@ -282,6 +272,9 @@ public class MapperControllableServlet
 			log("MCS - Can't load geoset: " + m_fileToLoad);
 			throw e;
 		}
+		
+		myMap.setDistanceUnits(LinearUnit.meter);
+		
 		return myMap;
 	}
 
