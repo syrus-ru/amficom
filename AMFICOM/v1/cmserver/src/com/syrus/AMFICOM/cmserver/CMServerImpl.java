@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.45 2004/10/15 11:10:10 max Exp $
+ * $Id: CMServerImpl.java,v 1.46 2004/10/15 15:46:14 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -78,6 +78,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -138,7 +139,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2004/10/15 11:10:10 $
+ * @version $Revision: 1.46 $, $Date: 2004/10/15 15:46:14 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -148,7 +149,100 @@ public class CMServerImpl implements CMServerOperations {
 	private DomainCondition domainCondition;
 	
     private MServer mServer;
+    //////////////////////////////////Name Resolver/////////////////////////////////////////////////
     
+    public String lookupDomainName(Identifier_Transferable idTransferable)
+            throws AMFICOMRemoteException {
+        try {
+            Identifier id = new Identifier(idTransferable);
+            return ( (Domain)ConfigurationStorableObjectPool.getStorableObject(id, true) ).getName();            
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        }      
+    }
+    
+    public String lookupUserLogin(Identifier_Transferable identifier_Transferable)
+            throws AMFICOMRemoteException {
+        try {            
+            Identifier id = new Identifier(identifier_Transferable);
+            return ( (User)ConfigurationStorableObjectPool.getStorableObject(id, true) ).getLogin();
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } 
+    }
+    
+    public String lookupUserName(Identifier_Transferable identifier_Transferable)
+            throws AMFICOMRemoteException {
+        try {
+            Identifier id = new Identifier(identifier_Transferable);
+            return ( (User)ConfigurationStorableObjectPool.getStorableObject(id, true) ).getName();
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } 
+    }
+    
+    public Identifier_Transferable reverseLookupDomainName(String domainName)
+            throws AMFICOMRemoteException {
+        try {
+        List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(new StringFieldCondition(domainName, ObjectEntities.DOMAIN_ENTITY_CODE), true);
+        Identifier  id = ( (Domain)list.get(0) ).getId();
+        return (Identifier_Transferable)id.getTransferable();
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        }
+    }
+    
+    public Identifier_Transferable reverseLookupUserLogin(String userLogin)
+            throws AMFICOMRemoteException {
+        try {
+            List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(new StringFieldCondition(userLogin, ObjectEntities.USER_ENTITY_CODE), true);
+            Identifier  id = ( (User)list.get(0) ).getId();
+            return (Identifier_Transferable)id.getTransferable();
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        }       
+    }
+
+    public Identifier_Transferable reverseLookupUserName(String userName)
+            throws AMFICOMRemoteException {
+        try {
+            List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(new StringFieldCondition(userName, ObjectEntities.USER_ENTITY_CODE), true);
+            Identifier  id = ( (User)list.get(0) ).getId();
+            return (Identifier_Transferable)id.getTransferable();
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        }
+    }
 	//////////////////////////////////Measurement Receive/////////////////////////////////////////////
     public void receiveAnalysis( Analysis_Transferable analysis_Transferable, boolean force,
             AccessIdentifier_Transferable accessIdentifier)
