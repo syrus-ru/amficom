@@ -174,6 +174,17 @@ public class ImagesPanel extends JPanel
 		  {
 			try
 			{
+				/* 
+				 * Fuck, whoever did this, we're tired of your
+				 * irresponsibility!!! As was previosly mentioned
+				 * (multiple times!), this constructor should
+				 * never be used client-side. Use
+				 * #createInstance(...) instead.
+				 * 
+				 * --
+				 * Yours sincerely,
+				 *         Bass.
+				 */
 				ir = new FileImageResource(
 					IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE));
 			}
