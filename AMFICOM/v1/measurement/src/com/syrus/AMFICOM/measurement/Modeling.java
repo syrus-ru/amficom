@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.21 2004/12/27 21:00:01 arseniy Exp $
+ * $Id: Modeling.java,v 1.22 2005/01/12 13:34:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Collections;
 
-import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -28,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/12/27 21:00:01 $
+ * @version $Revision: 1.22 $, $Date: 2005/01/12 13:34:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -136,13 +135,11 @@ public class Modeling extends Action {
 
 	public Result createResult(Identifier creatorId,
 								Measurement measurement,
-								AlarmLevel alarmLevel,
 								SetParameter[] parameters) throws CreateObjectException {
 		return Result.createInstance(creatorId,
 											null,
 											this,
 											ResultSort.RESULT_SORT_MODELING,
-											AlarmLevel.ALARM_LEVEL_NONE,
 											parameters);
 	}
 
@@ -152,7 +149,6 @@ public class Modeling extends Action {
 											null,
 											this,
 											ResultSort.RESULT_SORT_MODELING,
-											AlarmLevel.ALARM_LEVEL_NONE,
 											parameters);
 	}
 

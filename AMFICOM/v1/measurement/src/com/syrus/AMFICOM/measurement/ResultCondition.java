@@ -1,5 +1,5 @@
 /*
- * $Id: ResultCondition.java,v 1.5 2004/10/21 08:01:35 bob Exp $
+ * $Id: ResultCondition.java,v 1.6 2005/01/12 13:34:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.List;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -24,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultCondition_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/10/21 08:01:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/01/12 13:34:13 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class ResultCondition implements StorableObjectCondition {
@@ -33,25 +32,22 @@ public class ResultCondition implements StorableObjectCondition {
 	private Domain	domain;
 	private Date	start;
 	private Date	end;
-	private int alarmLevel;
 	private Short	entityCode	= new Short(ObjectEntities.RESULT_ENTITY_CODE);
-	
-	
+
+
 	public ResultCondition(ResultCondition_Transferable transferable) throws DatabaseException, CommunicationException {
 		this.domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(new Identifier(transferable.domain_id), true);
 		this.start = new Date(transferable.start);
 		this.end = new Date(transferable.end);
-		this.alarmLevel = transferable.level.value();
 		setEntityCode(new Short(transferable.entity_code));
 	}
 
-	public ResultCondition(Domain domain, Date start, Date end, AlarmLevel alarmLevel) {
+	public ResultCondition(Domain domain, Date start, Date end) {
 		this.domain = domain;
 		this.start = start;
 		this.end = end;
-		this.alarmLevel = alarmLevel.value();
 	}
-	
+
 	public Domain getDomain() {
 		return this.domain;
 	}
@@ -69,14 +65,13 @@ public class ResultCondition implements StorableObjectCondition {
 					&& (test.getEndTime().getTime() <= this.end.getTime())
 					&& ((this.domain == null) || ((this.domain != null) && test
 							.getMonitoredElement().getDomainId()
-							.equals(this.domain.getId()))) && 
-							(result.getAlarmLevel().value() == this.alarmLevel)) {
+							.equals(this.domain.getId()))) ) {
 				condition = true;
 			}
 		}
 		return condition;
 	}
-	
+
 	public boolean isNeedMore(List list) throws ApplicationException {
 		return true;
 	}
@@ -95,30 +90,23 @@ public class ResultCondition implements StorableObjectCondition {
 														.getId()
 														.getTransferable(),												
 												this.start.getTime(),
-												this.end.getTime(),
-												getAlarmLevel()
-												);
+												this.end.getTime());
 
 	}
-	
+
 	public Date getEnd() {
 		return this.end;
 	}
+
 	public void setEnd(Date end) {
 		this.end = end;
 	}
+
 	public Date getStart() {
 		return this.start;
 	}
+
 	public void setStart(Date start) {
 		this.start = start;
-	}
-	
-	public AlarmLevel getAlarmLevel() {
-		return AlarmLevel.from_int(this.alarmLevel);
-	}
-	
-	public void setAlarmLevel(AlarmLevel alarmLevel) {
-		this.alarmLevel = alarmLevel.value();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.30 2004/12/09 15:52:53 arseniy Exp $
+al * $Id: Result.java,v 1.31 2005/01/12 13:34:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
@@ -31,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/12/09 15:52:53 $
+ * @version $Revision: 1.31 $, $Date: 2005/01/12 13:34:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -44,7 +43,6 @@ public class Result extends StorableObject {
 	private Measurement measurement;
 	private Action action;
 	private int sort;
-	private int alarmLevel;
 	private SetParameter[] parameters;
 
 	private StorableObjectDatabase resultDatabase;
@@ -65,7 +63,6 @@ public class Result extends StorableObject {
 		super(rt.header);
 
 		this.sort = rt.sort.value();
-		this.alarmLevel = rt.alarm_level.value();
 		switch (this.sort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
 				try {
@@ -108,9 +105,9 @@ public class Result extends StorableObject {
 		}
 
 		try {
-		this.parameters = new SetParameter[rt.parameters.length];
-		for (int i = 0; i < this.parameters.length; i++)
-			this.parameters[i] = new SetParameter(rt.parameters[i]);
+			this.parameters = new SetParameter[rt.parameters.length];
+			for (int i = 0; i < this.parameters.length; i++)
+				this.parameters[i] = new SetParameter(rt.parameters[i]);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -123,7 +120,6 @@ public class Result extends StorableObject {
 								 Measurement measurement,
 								 Action action,
 								 int sort,
-								 int alarmLevel,
 								 SetParameter[] parameters) {
 		super(id);
 		long time = System.currentTimeMillis();
@@ -134,7 +130,6 @@ public class Result extends StorableObject {
 		this.measurement = measurement;
 		this.action = action;
 		this.sort = sort;
-		this.alarmLevel = alarmLevel;
 		this.parameters = parameters;
 
 		super.currentVersion = super.getNextVersion();
@@ -152,21 +147,6 @@ public class Result extends StorableObject {
 		}
 	}
 
-//	public static Result getInstance(Result_Transferable rt) throws CreateObjectException {
-//		Result result = new Result(rt);
-//		
-//		result.resultDatabase = MeasurementDatabaseContext.resultDatabase;
-//		try {
-//			if (result.resultDatabase != null)
-//				result.resultDatabase.insert(result);
-//		}
-//		catch (IllegalDataException e) {
-//			throw new CreateObjectException(e.getMessage(), e);
-//		}
-//		
-//		return result;
-//	}
-
 	public Object getTransferable() {
 		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)
@@ -177,8 +157,7 @@ public class Result extends StorableObject {
 									   (this.sort == ResultSort._RESULT_SORT_EVALUATION)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
 									   (this.sort == ResultSort._RESULT_SORT_MODELING)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
 									   ResultSort.from_int(this.sort),
-									   pts,
-									   AlarmLevel.from_int(this.alarmLevel));
+									   pts);
 	}
 
     public short getEntityCode() {
@@ -201,18 +180,13 @@ public class Result extends StorableObject {
 		return this.parameters;
 	}
 
-	public AlarmLevel getAlarmLevel() {
-		return AlarmLevel.from_int(this.alarmLevel);
-	}
-
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
 											  Identifier modifierId,
 											  Measurement measurement,
 											  Action action,
-											  int sort,
-											  int alarmLevel) {
+											  int sort) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -220,7 +194,6 @@ public class Result extends StorableObject {
 		this.measurement = measurement;
 		this.action = action;
 		this.sort = sort;
-		this.alarmLevel = alarmLevel;
 	}
 
 	protected synchronized void setParameters(SetParameter[] parameters) {
@@ -231,10 +204,9 @@ public class Result extends StorableObject {
 										   Measurement measurement,
 										   Action action,
 										   ResultSort sort,
-										   AlarmLevel alarmLevel,
 										   SetParameter[] parameters) throws CreateObjectException {
 		if (creatorId == null || measurement == null || action == null || sort == null ||
-				alarmLevel == null || parameters == null || parameters.length == 0)
+				parameters == null || parameters.length == 0)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
@@ -243,33 +215,11 @@ public class Result extends StorableObject {
 				measurement,
 				action,
 				sort.value(),
-				alarmLevel.value(),
 				parameters);
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Result.createInstance | cannot generate identifier ", e);
 		}
 	}
-//
-//	protected static Result createInstance(Identifier creatorId,
-//										   Modeling modeling,
-//										   ResultSort sort,					
-//										   SetParameter[] parameters) throws CreateObjectException {
-//		if (creatorId == null || modeling == null || sort == null ||
-//				parameters == null)
-//			throw new IllegalArgumentException("Argument is 'null'");
-//		
-//		try {
-//			return new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE),
-//					creatorId,
-//					null,
-//					modeling,
-//					sort.value(),
-//					AlarmLevel._ALARM_LEVEL_NONE,
-//					parameters);
-//		} catch (IllegalObjectEntityException e) {
-//			throw new CreateObjectException("Result.createInstance | cannot generate identifier ", e);
-//		}
-//	}
 	
 	public List getDependencies() {		
 		return Collections.singletonList(this.measurement);

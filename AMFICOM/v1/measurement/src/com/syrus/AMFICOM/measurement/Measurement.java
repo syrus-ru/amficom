@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.42 2004/12/27 21:00:01 arseniy Exp $
+ * $Id: Measurement.java,v 1.43 2005/01/12 13:34:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,10 +28,9 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/12/27 21:00:01 $
+ * @version $Revision: 1.43 $, $Date: 2005/01/12 13:34:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -242,13 +241,11 @@ public class Measurement extends Action {
 
 	public Result createResult(Identifier creatorId,
 							   Measurement measurement,
-							   AlarmLevel alarmLevel,
 							   SetParameter[] parameters) throws CreateObjectException {
 		return Result.createInstance(creatorId,
 			this,
 			this,
 			ResultSort.RESULT_SORT_MEASUREMENT,
-			alarmLevel,
 			parameters);						
 	}
 	

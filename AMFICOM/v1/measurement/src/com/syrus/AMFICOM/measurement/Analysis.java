@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.38 2004/12/27 21:00:01 arseniy Exp $
+ * $Id: Analysis.java,v 1.39 2005/01/12 13:34:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,10 +25,9 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/12/27 21:00:01 $
+ * @version $Revision: 1.39 $, $Date: 2005/01/12 13:34:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -124,13 +123,11 @@ public class Analysis extends Action {
 
 	public Result createResult(Identifier creatorId,
 							   Measurement measurement,
-							   AlarmLevel alarmLevel,
 							   SetParameter[] parameters) throws CreateObjectException {
 		return Result.createInstance(creatorId,
 			measurement,
 			this,
 			ResultSort.RESULT_SORT_ANALYSIS,
-			alarmLevel,
 			parameters);
 	}
 	

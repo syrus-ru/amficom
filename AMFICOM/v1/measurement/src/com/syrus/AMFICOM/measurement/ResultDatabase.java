@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.51 2004/12/29 15:19:02 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.52 2005/01/12 13:34:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2004/12/29 15:19:02 $
+ * @version $Revision: 1.52 $, $Date: 2005/01/12 13:34:13 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -62,8 +62,6 @@ public class ResultDatabase extends StorableObjectDatabase {
 	
 	//	 sort NUMBER(2, 0) NOT NULL,
 	public static final String	COLUMN_SORT		= "sort";
-	//	 alarmLevel NUMBER(2, 0) NOT NULL,
-	public static final String	COLUMN_ALARM_LEVEL	= "alarm_level";
 
 	public static final String	LINK_COLUMN_TYPE_ID	= "type_id";
 	public static final String	LINK_COLUMN_RESULT_ID	= "result_id";
@@ -89,8 +87,6 @@ public class ResultDatabase extends StorableObjectDatabase {
 			buffer.append(COLUMN_MODELING_ID);
 			buffer.append(COMMA);
 			buffer.append(COLUMN_SORT);
-			buffer.append(COMMA);
-			buffer.append(COLUMN_ALARM_LEVEL);
 			columns = buffer.toString();
 		}
 		return columns;
@@ -107,8 +103,6 @@ public class ResultDatabase extends StorableObjectDatabase {
 			buffer.append(QUESTION);
 			buffer.append(COMMA);
 			buffer.append(QUESTION);
-			buffer.append(COMMA);			
-			buffer.append(QUESTION);
 			buffer.append(COMMA);
 			buffer.append(QUESTION);
 			updateMultiplySQLValues = buffer.toString();
@@ -116,8 +110,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject)
+			throws IllegalDataException, UpdateObjectException {
 		Result result = this.fromStorableObject(storableObject);
 		StringBuffer buffer = new StringBuffer(super.getUpdateSingleSQLValues(storableObject));
 		buffer.append(COMMA);
@@ -167,8 +161,6 @@ public class ResultDatabase extends StorableObjectDatabase {
 						+ " of result '" + result.getId().getIdentifierString() + "'");
 		}
 		buffer.append(Integer.toString(resultSort));
-		buffer.append(COMMA);
-		buffer.append(Integer.toString(result.getAlarmLevel().value()));
 		return buffer.toString();
 	}
 
@@ -208,8 +200,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 							+ " of result '" + result.getId().getIdentifierString() + "'");
 			}
 			preparedStatement.setInt(++i, result.getSort().value());
-			preparedStatement.setInt(++i, result.getAlarmLevel().value());
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName()
 					+ "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -223,8 +215,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 				+ storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
+	public void retrieve(StorableObject storableObject)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Result result = this.fromStorableObject(storableObject);
 		this.retrieveEntity(result);
 		this.retrieveResultParametersByOneQuery(Collections.singletonList(result));
@@ -232,8 +224,13 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Result result = (storableObject == null) ? new Result(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
-									null, null, null, 0, 0, null)
+		Result result = (storableObject == null)
+				? new Result(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+									null,
+									null,
+									null,
+									0,
+									null)
 				: this.fromStorableObject(storableObject);
 		Measurement measurement = null;		
 		int resultSort = resultSet.getInt(COLUMN_SORT);
@@ -244,7 +241,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 					measurement = (Measurement) MeasurementStorableObjectPool
 							.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_ID),
 										true);
-				} catch (ApplicationException ae) {
+				}
+				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 				action = measurement;
@@ -290,8 +288,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 							 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 							 measurement,
 							 action,
-							 resultSort,
-							 resultSet.getInt(COLUMN_ALARM_LEVEL));
+							 resultSort);
 
 		return result;
 	}
@@ -316,7 +313,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 				try {
 					parameterType = (ParameterType) MeasurementStorableObjectPool
 							.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TYPE_ID), true);
-				} catch (ApplicationException ae) {
+				}
+				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
@@ -324,11 +322,13 @@ public class ResultDatabase extends StorableObjectDatabase {
 											 ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_VALUE)));
 				parameters.add(parameter);
 			}
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for result '"
 					+ resultIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -336,9 +336,11 @@ public class ResultDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -408,7 +410,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 				try {
 					parameterType = (ParameterType) MeasurementStorableObjectPool
 							.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TYPE_ID), true);
-				} catch (ApplicationException ae) {
+				}
+				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
@@ -427,10 +430,12 @@ public class ResultDatabase extends StorableObjectDatabase {
 				result.setParameters((SetParameter[]) parameters.toArray(new SetParameter[parameters.size()]));
 			}
 			
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for result -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -438,9 +443,11 @@ public class ResultDatabase extends StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}		
@@ -454,7 +461,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 							+ LINK_COLUMN_TYPE_ID + COMMA + LINK_COLUMN_VALUE
 							+ SQL_FROM + ObjectEntities.RESULTPARAMETER_ENTITY + SQL_WHERE 
 							+ LINK_COLUMN_RESULT_ID + EQUALS + QUESTION;
-        if ((results != null) && (!results.isEmpty())){		
+    if ((results != null) && (!results.isEmpty())) {		
 			PreparedStatement preparedStatement = null;
 			Connection connection = DatabaseConnection.getConnection();
 			try {
@@ -471,7 +478,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 						try {
 							parameterType = (ParameterType) MeasurementStorableObjectPool
 									.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TYPE_ID), true);
-						} catch (ApplicationException ae) {
+						}
+						catch (ApplicationException ae) {
 							throw new RetrieveObjectException(ae);
 						}
 						parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
@@ -482,21 +490,25 @@ public class ResultDatabase extends StorableObjectDatabase {
 					result.setParameters((SetParameter[]) parameters.toArray(new SetParameter[parameters.size()]));
 				}
 
-			} catch (SQLException sqle) {
+			}
+			catch (SQLException sqle) {
 				String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for results -- " + sqle.getMessage();
 				throw new RetrieveObjectException(mesg, sqle);
-			} finally {
+			}
+			finally {
 				try {
 					if (preparedStatement != null)
 						preparedStatement.close();
 					preparedStatement = null;
-				} catch (SQLException sqle1) {
+				}
+				catch (SQLException sqle1) {
 					Log.errorException(sqle1);
-				} finally {
+				}
+				finally {
 					DatabaseConnection.releaseConnection(connection);
 				}
 			}			
-        }
+		}
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
@@ -513,7 +525,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 		try {
 			this.insertEntity(result);
 			this.insertResultParameters(result);
-		} catch (CreateObjectException e) {
+		}
+		catch (CreateObjectException e) {
 			this.delete(result);
 			throw e;
 		}
@@ -562,19 +575,23 @@ public class ResultDatabase extends StorableObjectDatabase {
 										+ DatabaseIdentifier.toSQLString(parameterId));
 			}
 			connection.commit();
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter '"
 					+ parameterId.toString() + "' of type '" + parameterTypeId.toString()
 					+ "' for result '" + resultId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -619,16 +636,20 @@ public class ResultDatabase extends StorableObjectDatabase {
 			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULT_ENTITY + SQL_WHERE + COLUMN_ID
 					+ EQUALS + resultIdStr);
 			connection.commit();
-		} catch (SQLException sqle1) {
+		}
+		catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -658,7 +679,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 		try {
 			list = retrieveButIds(ids, condition);
-		} catch (IllegalDataException ide) {
+		}
+		catch (IllegalDataException ide) {
 			Log.debugMessage("ResultDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(),
 						Log.DEBUGLEVEL09);
 		}
@@ -680,10 +702,11 @@ public class ResultDatabase extends StorableObjectDatabase {
 				Identifier id = null;
 				if (object instanceof Identifier)
 					id = (Identifier) object;
-				else if (object instanceof Identified)
-					id = ((Identified) object).getId();
 				else
-					throw new RetrieveObjectException(
+					if (object instanceof Identified)
+						id = ((Identified) object).getId();
+					else
+						throw new RetrieveObjectException(
 										"ResultDatabase.retrieveButIdsByMeasurement | Object "
 												+ object
 														.getClass()
@@ -711,12 +734,14 @@ public class ResultDatabase extends StorableObjectDatabase {
 				Log.debugMessage("ResultDatabase.retrieveButIdsByMeasurement | Try additional condition: " + buffer.toString(),
 									Log.DEBUGLEVEL09);
 				list = retrieveButIds(ids, buffer.toString());
-			} catch (IllegalDataException ide) {
+			}
+			catch (IllegalDataException ide) {
 				Log.debugMessage("ResultDatabase.retrieveButIdsByMeasurement | Error: " + ide.getMessage(),
 							Log.DEBUGLEVEL09);
 			}
 			
-		} else 
+		}
+		else 
 			list = Collections.EMPTY_LIST;
 
 		return list;
@@ -728,9 +753,10 @@ public class ResultDatabase extends StorableObjectDatabase {
 		String sql = COLUMN_MEASUREMENT_ID + EQUALS + DatabaseIdentifier.toSQLString(measurementId)
 			+ SQL_AND + COLUMN_SORT + EQUALS + resultSort.value();
 		
-		try{
+		try {
 			list = retrieveButIds(ids, sql);
-		} catch (IllegalDataException ide) {
+		}
+		catch (IllegalDataException ide) {
 			Log.debugMessage("ResultDatabase.retrieveButIdsByMeasurement | Error: " + ide.getMessage(),
 						Log.DEBUGLEVEL09);
 		}
@@ -738,25 +764,30 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return list;
 	}	
 
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
+	public List retrieveByCondition(List ids, StorableObjectCondition condition)
+			throws RetrieveObjectException, IllegalDataException {
 		List list;
-		if (condition instanceof LinkedIdsCondition){
+		if (condition instanceof LinkedIdsCondition) {
 			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
 			List measurementIds = linkedIdsCondition.getLinkedIds();
 			if (measurementIds == null)
 				measurementIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
 			list = this.retrieveButIdsByMeasurement(ids, measurementIds);
-		} else if (condition instanceof DomainCondition){
-			DomainCondition domainCondition = (DomainCondition)condition;
-			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-		} else if (condition instanceof ResultSortCondition){
-			ResultSortCondition resultSortCondition = (ResultSortCondition) condition;
-			list = this.retrieveButIdsByMeasurementAndSort(ids, resultSortCondition.getMeasurementId(), resultSortCondition.getResultSort());
-		} else {
-			Log.errorMessage("ResultDatabase.retrieveByCondition | Unknown condition class: " + condition);
-			list = this.retrieveButIds(ids);
 		}
+		else
+			if (condition instanceof DomainCondition) {
+				DomainCondition domainCondition = (DomainCondition)condition;
+				list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
+			}
+			else
+				if (condition instanceof ResultSortCondition) {
+					ResultSortCondition resultSortCondition = (ResultSortCondition) condition;
+					list = this.retrieveButIdsByMeasurementAndSort(ids, resultSortCondition.getMeasurementId(), resultSortCondition.getResultSort());
+				}
+				else {
+					Log.errorMessage("ResultDatabase.retrieveByCondition | Unknown condition class: " + condition);
+					list = this.retrieveButIds(ids);
+				}
 		return list;
 	}
 
