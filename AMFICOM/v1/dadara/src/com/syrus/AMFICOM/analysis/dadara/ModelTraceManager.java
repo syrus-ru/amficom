@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.25 2005/03/21 18:15:22 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.26 2005/03/24 14:27:11 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.25 $, $Date: 2005/03/21 18:15:22 $
+ * @version $Revision: 1.26 $, $Date: 2005/03/24 14:27:11 $
  * @module
  */
 public class ModelTraceManager
@@ -62,6 +62,7 @@ public class ModelTraceManager
 		return thMTCache != null && thMTCache[key] != null;
 	}
 
+	// создать пороги
 	private void createTH()
 	{
 		LinkedList thresholds = new LinkedList();
