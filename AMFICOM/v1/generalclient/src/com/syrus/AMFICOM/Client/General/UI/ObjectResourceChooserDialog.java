@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceChooserDialog.java,v 1.7 2004/10/11 14:20:07 bob Exp $
+ * $Id: ObjectResourceChooserDialog.java,v 1.8 2004/10/12 14:39:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,12 +16,10 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Collection;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.*;
-import oracle.jdeveloper.layout.XYLayout;
 
 /**
  * Класс $RCSfile: ObjectResourceChooserDialog.java,v $ используется для отображения окна со списком объектов с тем,
@@ -33,8 +31,8 @@ import oracle.jdeveloper.layout.XYLayout;
  * чтобы включить эту возможность, необходимо вызвать метод 
  * setCanDelete(boolean bool)
  *
- * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2004/10/11 14:20:07 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2004/10/12 14:39:27 $
  * @module generalclient_v1
  */
 public class ObjectResourceChooserDialog extends JDialog 

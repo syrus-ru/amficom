@@ -2,15 +2,14 @@ package com.syrus.AMFICOM.client_.general.ui_;
 
 import javax.swing.JTable;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * Simple stub of AbstractComboBoxCellRenderer.
  * see {@link com.syrus.AMFICOM.client.general.ui_.AbstractComboBoxCellRenderer}
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/07 06:07:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2004/10/12 14:39:26 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public class StubComboBoxCellRenderer extends AbstractComboBoxCellRenderer {
@@ -29,7 +28,7 @@ public class StubComboBoxCellRenderer extends AbstractComboBoxCellRenderer {
 	}
 	
 	protected void customRendering(	JTable table,
-					ObjectResource objectResource,
+					Object object,
 					ObjectResourceController objectResourceController,
 					String key) {
 		// nothing

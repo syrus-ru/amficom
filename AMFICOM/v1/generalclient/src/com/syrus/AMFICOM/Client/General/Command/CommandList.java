@@ -1,5 +1,5 @@
 /*
- * $Id: CommandList.java,v 1.8 2004/10/08 10:37:41 krupenn Exp $
+ * $Id: CommandList.java,v 1.9 2004/10/12 14:39:24 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,9 @@
 
 package com.syrus.AMFICOM.Client.General.Command;
 
-import java.util.LinkedList;
-
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2004/10/08 10:37:41 $
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2004/10/12 14:39:24 $
  * @module generalclient_v1
  */
 public class CommandList extends VoidCommand

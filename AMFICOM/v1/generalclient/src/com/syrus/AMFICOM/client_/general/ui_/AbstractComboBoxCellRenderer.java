@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 /**
  * Abstract class for JComboBox rendering at JTable
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/11 14:20:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2004/10/12 14:39:26 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public abstract class AbstractComboBoxCellRenderer extends JComboBox implements TableCellRenderer {
@@ -36,7 +36,7 @@ public abstract class AbstractComboBoxCellRenderer extends JComboBox implements 
 	 *                see {@link ObjectResourceController#getKeys()}
 	 */
 	protected abstract void customRendering(JTable table,
-						ObjectResource objectResource,
+						Object object,
 						ObjectResourceController objectResourceController,
 						String key);
 
@@ -54,13 +54,13 @@ public abstract class AbstractComboBoxCellRenderer extends JComboBox implements 
 		// (rowIndex, vColIndex)
 		//
 		ObjectResourceTableModel model = (ObjectResourceTableModel) table.getModel();
-		ObjectResource objectResource = model.getObject(rowIndex);
+		Object object = model.getObject(rowIndex);
 
 		int mColIndex = table.convertColumnIndexToModel(vColIndex);
 		String key = model.controller.getKey(mColIndex);
 
 		super.setBackground(table.getBackground());
-		customRendering(table, objectResource, model.controller, key);
+		customRendering(table, object, model.controller, key);
 		Color color = super.getBackground();
 
 		if (isSelected) {

@@ -1,5 +1,5 @@
 /*
- * $Id: TestResourceListTest.java,v 1.2 2004/10/07 06:00:41 bob Exp $
+ * $Id: TestResourceListTest.java,v 1.3 2004/10/12 14:39:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,21 +15,16 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
-import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.client_.general.ui_.LabelCheckBoxRenderer;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjList;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.resource.TestResource;
 import com.syrus.AMFICOM.client_.resource.TestResourceController;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2004/10/07 06:00:41 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/10/12 14:39:25 $
  * @module general_v1
  */
 public class TestResourceListTest {
