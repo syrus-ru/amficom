@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.2 2004/09/14 14:48:51 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.3 2004/09/18 13:57:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import javax.swing.JToolBar;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/14 14:48:51 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/18 13:57:52 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -51,8 +51,6 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 	JButton menuMapViewNew = new JButton();
 	JButton menuMapViewOpen = new JButton();
 	JButton menuMapViewSave = new JButton();
-	JButton menuSchemeAddToView = new JButton();
-	JButton menuSchemeRemoveFromView = new JButton();
 
 	public final static int img_siz = 16;
 	public final static int btn_siz = 24;
@@ -150,22 +148,6 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapViewSave.setName("menuMapViewSave");
 		menuMapViewSave.addActionListener(actionAdapter);
 
-		menuSchemeAddToView.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addtoview.gif").
-				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
-		menuSchemeAddToView.setMaximumSize(buttonSize);
-		menuSchemeAddToView.setPreferredSize(buttonSize);
-		menuSchemeAddToView.setToolTipText(LangModelMap.getString("menuSchemeAddToView"));
-		menuSchemeAddToView.setName("menuSchemeAddToView");
-		menuSchemeAddToView.addActionListener(actionAdapter);
-
-		menuSchemeRemoveFromView.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefromview.gif").
-				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
-		menuSchemeRemoveFromView.setMaximumSize(buttonSize);
-		menuSchemeRemoveFromView.setPreferredSize(buttonSize);
-		menuSchemeRemoveFromView.setToolTipText(LangModelMap.getString("menuSchemeRemoveFromView"));
-		menuSchemeRemoveFromView.setName("menuSchemeRemoveFromView");
-		menuSchemeRemoveFromView.addActionListener(actionAdapter);
-
 		add(sessionOpen);
 //		add(buttonCloseSession);
 //		addSeparator();
@@ -179,8 +161,6 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		add(menuMapViewOpen);
 		add(menuMapViewSave);
 		addSeparator();
-		add(menuSchemeAddToView);
-		add(menuSchemeRemoveFromView);
 	}
 
 	public void setModel(ApplicationModel a)
@@ -215,11 +195,6 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapViewOpen.setEnabled(aModel.isEnabled("menuMapViewOpen"));
 		menuMapViewSave.setVisible(aModel.isVisible("menuMapViewSave"));
 		menuMapViewSave.setEnabled(aModel.isEnabled("menuMapViewSave"));
-
-		menuSchemeAddToView.setVisible(aModel.isVisible("menuSchemeAddToView"));
-		menuSchemeAddToView.setEnabled(aModel.isEnabled("menuSchemeAddToView"));
-		menuSchemeRemoveFromView.setVisible(aModel.isVisible("menuSchemeRemoveFromView"));
-		menuSchemeRemoveFromView.setEnabled(aModel.isEnabled("menuSchemeRemoveFromView"));
 	}
 
 	public void this_actionPerformed(ActionEvent e)

@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.3 2004/09/17 11:39:25 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.4 2004/09/18 13:57:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,7 +51,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/17 11:39:25 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/18 13:57:52 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -394,91 +394,6 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		Color color = this.getColor();
 
 		paint(g, str, color, isSelectionVisible());
-	}
-
-	public void paint1(Graphics g)
-	{
-		MapCoordinatesConverter converter = getMapView().getMap().getConverter();
-	
-		Graphics2D p = (Graphics2D )g;
-
-		BasicStroke stroke = (BasicStroke )this.getStroke();
-		Stroke str = new BasicStroke(
-				this.getLineSize(), 
-				stroke.getEndCap(), 
-				stroke.getLineJoin(), 
-				stroke.getMiterLimit(), 
-				stroke.getDashArray(), 
-				stroke.getDashPhase());
-
-		Iterator e = getSortedNodeLinks().iterator();
-
-		while ( e.hasNext())
-		{
-			MapNodeLinkElement nodeLinkElement = (MapNodeLinkElement )e.next();
-
-			Point from = converter.convertMapToScreen(
-					nodeLinkElement.getStartNode().getAnchor());
-			Point to = converter.convertMapToScreen(
-					nodeLinkElement.getEndNode().getAnchor());
-
-			p.setStroke(str);
-			p.setColor(this.getColor());
-
-			if (this.getAlarmState())
-			{
-				if ( MapPropertiesManager.isShowAlarmState() )
-					p.setColor(this.getAlarmedColor());
-				else
-					p.setColor(this.getColor());
-			}
-			else
-				p.setColor( this.getColor());
-
-			p.drawLine(from.x, from.y, to.x, to.y);
-
-			if (isSelected())
-			{
-				p.setStroke(MapPropertiesManager.getSelectionStroke());
-
-				double l = 4;
-				double l1 = 6;
-				double cos_a = (from.y - to.y) /
-					Math.sqrt( 
-							(from.x - to.x) * (from.x - to.x) 
-							+ (from.y - to.y) * (from.y - to.y) );
-
-				double sin_a = (from.x - to.x) /
-					Math.sqrt( 
-							(from.x - to.x) * (from.x - to.x) 
-							+ (from.y - to.y) * (from.y - to.y) );
-
-				p.setColor(MapPropertiesManager.getFirstSelectionColor());
-				p.drawLine(
-						from.x + (int )(l * cos_a), 
-						from.y  - (int )(l * sin_a), 
-						to.x + (int )(l * cos_a), 
-						to.y - (int )(l * sin_a));
-				p.drawLine(
-						from.x - (int )(l * cos_a), 
-						from.y  + (int )(l * sin_a), 
-						to.x - (int )(l * cos_a), 
-						to.y + (int )(l * sin_a));
-
-				p.setColor(MapPropertiesManager.getSecondSelectionColor());
-				p.drawLine(
-						from.x + (int )(l1 * cos_a), 
-						from.y  - (int )(l1 * sin_a), 
-						to.x + (int )(l1 * cos_a), 
-						to.y - (int )(l1 * sin_a));
-				p.drawLine(
-						from.x - (int )(l1 * cos_a), 
-						from.y  + (int )(l1 * sin_a), 
-						to.x - (int )(l1 * cos_a), 
-						to.y + (int )(l1 * sin_a));
-			}
-
-		}
 	}
 
 	public boolean isMouseOnThisObject(Point currentMousePoint)

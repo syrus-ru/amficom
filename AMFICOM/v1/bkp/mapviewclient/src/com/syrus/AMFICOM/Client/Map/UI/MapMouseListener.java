@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.3 2004/09/17 11:39:25 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.4 2004/09/18 13:57:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,7 +51,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/17 11:39:25 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/18 13:57:52 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -72,7 +72,7 @@ public final class MapMouseListener implements MouseListener
 		if(me.getClickCount() == 2
 			&& SwingUtilities.isLeftMouseButton(me))
 		{
-			// show properties
+			// show properties on double click
 			if ( logicalNetLayer.getMapView() != null)
 			{
 				MapElement mapElement = logicalNetLayer.getCurrentMapElement();
@@ -149,11 +149,11 @@ public final class MapMouseListener implements MouseListener
 					if (SwingUtilities.isLeftMouseButton(me))
 					{
 						MapStrategy strategy = MapStrategyManager.getStrategy(mapElement);
-						strategy.setMapElement(mapElement);
-//						MapStrategy strategy = mapElement.getMapStrategy();
-						strategy.setLogicalNetLayer(logicalNetLayer);
-						strategy.doContextChanges(me);
-	//					System.out.println("selected " + mapElement.getId());
+						if(strategy != null)
+						{
+							strategy.setLogicalNetLayer(logicalNetLayer);
+							strategy.doContextChanges(me);
+						}
 	
 						mapElement = logicalNetLayer.getCurrentMapElement();
 
@@ -164,16 +164,12 @@ public final class MapMouseListener implements MouseListener
 					{
 						MapPopupMenu contextMenu;
 						
-//						logicalNetLayer.deselectAll();
-//						mapElement.setSelected(true);
-
 						List selection = logicalNetLayer.getSelectedElements();
 						//Выводим контекстное меню
 						if(selection.size() > 1)
 							mapElement = new MapSelection(logicalNetLayer);
 
 						contextMenu = MapPopupMenuManager.getPopupMenu(mapElement);
-//							contextMenu = mapElement.getContextMenu();
 						if(contextMenu != null)
 						{
 							contextMenu.setLogicalNetLayer(logicalNetLayer);
@@ -231,8 +227,8 @@ public final class MapMouseListener implements MouseListener
 
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelMap.getString("Distane") + " = " + String.valueOf(MiscUtil.fourdigits(distance)),
-							LangModelMap.getString("MeasureDistane"),
+							LangModelMap.getString("Distance") + " = " + String.valueOf(MiscUtil.fourdigits(distance)),
+							LangModelMap.getString("MeasureDistance"),
 							JOptionPane.PLAIN_MESSAGE);
 
 //					Command com = logicalNetLayer.getContext().getApplicationModel().getCommand("mapActionMeasureDistance");
@@ -350,10 +346,11 @@ public final class MapMouseListener implements MouseListener
 						MapElement mapElement = logicalNetLayer.getCurrentMapElement();
 		
 						MapStrategy strategy = MapStrategyManager.getStrategy(mapElement);
-						strategy.setMapElement(mapElement);
-//						MapStrategy strategy = mapElement.getMapStrategy();
-						strategy.setLogicalNetLayer(logicalNetLayer);
-						strategy.doContextChanges(me);
+						if(strategy != null)
+						{
+							strategy.setLogicalNetLayer(logicalNetLayer);
+							strategy.doContextChanges(me);
+						}
 		
 						logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.SELECTION_CHANGED));
 					}

@@ -1,8 +1,6 @@
-src\com\syrus\AMFICOM\Client\General\UI\AvailableColor.java
-src\com\syrus\AMFICOM\Client\General\UI\ColorComboBox.java
-src\com\syrus\AMFICOM\Client\General\UI\ColorLabel.java
-src\com\syrus\AMFICOM\Client\General\UI\LineComboBox.java
-src\com\syrus\AMFICOM\Client\General\UI\LineThickComboBox.java
+src\com\syrus\AMFICOM\Client\General\Model\DefaultMapEditorApplicationModelFactory.java
+src\com\syrus\AMFICOM\Client\General\Model\MapEditorApplicationModel.java
+src\com\syrus\AMFICOM\Client\General\Model\MapEditorApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\Map\AnimateThread.java
 src\com\syrus\AMFICOM\Client\Map\LogicalNetLayer.java
 src\com\syrus\AMFICOM\Client\Map\MapConnection.java

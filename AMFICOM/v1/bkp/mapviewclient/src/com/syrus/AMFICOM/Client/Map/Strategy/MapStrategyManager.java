@@ -55,7 +55,8 @@ public final class MapStrategyManager
 	public static MapStrategy getStrategy(MapElement me)
 	{
 		MapStrategy strategy = (MapStrategy )strategyMap.get(me.getClass());
-		strategy.setMapElement(me);
+		if(strategy != null)
+			strategy.setMapElement(me);
 		return strategy;
 	}
 	/*

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.1 2004/09/18 11:27:04 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.2 2004/09/18 13:57:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.EmptyMapViewDataSource;
 import com.syrus.AMFICOM.Client.Resource.RISDMapDataSource;
 
 import com.syrus.AMFICOM.Client.Resource.EmptyMapDataSource;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.Client.Resource.EmptyMapDataSource;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/18 11:27:04 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/18 13:57:52 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -104,7 +105,7 @@ public class MapEditorApplicationModel extends ApplicationModel
 		if(connection.equalsIgnoreCase(Environment.CONNECTION_EMPTY))
 		{
 			if(dataSource == null)
-				dataSource = new EmptyMapDataSource(si);
+				dataSource = new EmptyMapViewDataSource(si);
 			else
 				dataSource.setSession(si);
 		}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.10 2004/09/17 11:38:44 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.11 2004/09/18 13:57:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/09/17 11:38:44 $
+ * @version $Revision: 1.11 $, $Date: 2004/09/18 13:57:23 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -294,11 +294,11 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	{
 		BasicStroke stroke = (BasicStroke )this.getStroke();
 		Stroke str = new BasicStroke(
-				this.getLineSize(), 
-				stroke.getEndCap(), 
-				stroke.getLineJoin(), 
-				stroke.getMiterLimit(), 
-				stroke.getDashArray(), 
+				this.getLineSize(),
+				stroke.getEndCap(),
+				stroke.getLineJoin(),
+				stroke.getMiterLimit(),
+				stroke.getDashArray(),
 				stroke.getDashPhase());
 		Color color = getColor();
 

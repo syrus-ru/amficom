@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundLinkElement.java,v 1.1 2004/09/13 12:33:43 krupenn Exp $
+ * $Id: MapUnboundLinkElement.java,v 1.2 2004/09/18 13:57:52 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -39,7 +39,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/18 13:57:52 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -75,18 +75,19 @@ public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Ser
 		return null;//new MapLinkPane();
 	}
 
+	boolean isSelectionVisible()
+	{
+		return isSelected() || cablePath.isSelected();
+	}
+
 	/**
 	 * –исуем NodeLink взависимости от того выбрана она или нет
 	 * а так же если она выбрана выводим еЄ рамер
 	 */
-	public void paint (Graphics g)
+	public void paint(Graphics g)
 	{
-		super.paint(g);
+//		super.paint(g);
 
-		MapCoordinatesConverter converter = getMap().getConverter();
-
-		Graphics2D p = (Graphics2D )g;
-		
 		BasicStroke stroke = (BasicStroke )this.getStroke();
 		Stroke str = new BasicStroke(
 				MapPropertiesManager.getUnboundThickness(), 
@@ -96,58 +97,6 @@ public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Ser
 				stroke.getDashArray(), 
 				stroke.getDashPhase());
 
-		p.setStroke(str );
-		p.setColor(MapPropertiesManager.getUnboundLinkColor());
-
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
-		{
-			MapNodeLinkElement nodelink = (MapNodeLinkElement )it.next();
-
-			Point from = converter.convertMapToScreen( nodelink.getStartNode().getAnchor());
-			Point to = converter.convertMapToScreen( nodelink.getEndNode().getAnchor());
-
-			p.drawLine( from.x, from.y, to.x, to.y);
-			if ( isSelected())
-			{
-				p.setStroke(MapPropertiesManager.getSelectionStroke());
-
-				double l = 4;
-				double l1 = 6;
-				double cos_a = (from.y - to.y) 
-					/ Math.sqrt( 
-							(from.x - to.x) * (from.x - to.x) 
-							+ (from.y - to.y) * (from.y - to.y) );
-
-				double sin_a = (from.x - to.x) 
-					/ Math.sqrt( 
-							(from.x - to.x) * (from.x - to.x) 
-							+ (from.y - to.y) * (from.y - to.y) );
-
-				p.setColor(MapPropertiesManager.getFirstSelectionColor());
-				p.drawLine(
-						from.x + (int)(l * cos_a), 
-						from.y  - (int)(l * sin_a), 
-						to.x + (int)(l * cos_a), 
-						to.y - (int)(l * sin_a));
-				p.drawLine(
-						from.x - (int)(l * cos_a), 
-						from.y  + (int)(l * sin_a), 
-						to.x - (int)(l * cos_a), 
-						to.y + (int)(l * sin_a));
-
-				p.setColor(MapPropertiesManager.getSecondSelectionColor());
-				p.drawLine(
-						from.x + (int)(l1 * cos_a), 
-						from.y  - (int)(l1 * sin_a), 
-						to.x + (int)(l1 * cos_a), 
-						to.y - (int)(l1 * sin_a));
-				p.drawLine(
-						from.x - (int)(l1 * cos_a), 
-						from.y  + (int)(l1 * sin_a), 
-						to.x - (int)(l1 * cos_a), 
-						to.y + (int)(l1 * sin_a));
-			}
-		}
+		paint(g, str, MapPropertiesManager.getUnboundLinkColor(), isSelectionVisible());
 	}
-
 }

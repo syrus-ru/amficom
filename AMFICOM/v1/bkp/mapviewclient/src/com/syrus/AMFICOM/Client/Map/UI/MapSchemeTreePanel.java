@@ -3,9 +3,15 @@ package com.syrus.AMFICOM.Client.Map.UI;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
@@ -14,12 +20,20 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeModel;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.util.Enumeration;
 
+import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,7 +42,7 @@ import javax.swing.tree.TreePath;
 public final class MapSchemeTreePanel extends JPanel 
 		implements OperationListener
 {
-	UniTreePanel panel = null;
+	UniTreePanel treePanel = null;
 	MapSchemeTreeModel model = null;
 
 	ApplicationContext aContext;
@@ -36,11 +50,22 @@ public final class MapSchemeTreePanel extends JPanel
 	public boolean performProcessing = true;
 
 	private JScrollPane scroll = new JScrollPane();
-	private JPanel jPanel1 = new JPanel();
 	private BorderLayout borderLayout1 = new BorderLayout();
 	private BorderLayout borderLayout2 = new BorderLayout();
+
+	private JPanel bindButtonsPanel = new JPanel();
 	private JButton placeButton = new JButton();
 	private JButton placeAllButton = new JButton();
+
+	private JPanel schemeButtonsPanel = new JPanel();
+
+	JButton menuSchemeAddToView = new JButton();
+	JButton menuSchemeRemoveFromView = new JButton();
+
+	public final static int img_siz = 16;
+	public final static int btn_siz = 24;
+
+	static final Dimension buttonSize = new Dimension(btn_siz, btn_siz);
 
 	public MapSchemeTreePanel()
 	{
@@ -64,13 +89,13 @@ public final class MapSchemeTreePanel extends JPanel
 	{
 		this.setLayout(borderLayout1);
 
-		jPanel1.setLayout(borderLayout2);
+		bindButtonsPanel.setLayout(borderLayout2);
 		placeButton.setText(LangModelMap.getString("Place"));
 		placeButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					placeButton_actionPerformed(e);
+					placeSelection();
 				}
 			});
 		placeAllButton.setText(LangModelMap.getString("PlaceAll"));
@@ -78,17 +103,48 @@ public final class MapSchemeTreePanel extends JPanel
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					placeAllButton_actionPerformed(e);
+					placeAll();
 				}
 			});
-		jPanel1.add(placeButton, BorderLayout.WEST);
-		jPanel1.add(placeAllButton, BorderLayout.EAST);
+		bindButtonsPanel.add(placeButton, BorderLayout.WEST);
+		bindButtonsPanel.add(placeAllButton, BorderLayout.EAST);
+
+		menuSchemeAddToView.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addtoview.gif").
+				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
+		menuSchemeAddToView.setMaximumSize(buttonSize);
+		menuSchemeAddToView.setPreferredSize(buttonSize);
+		menuSchemeAddToView.setToolTipText(LangModelMap.getString("menuSchemeAddToView"));
+		menuSchemeAddToView.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					addToView();
+				}
+			});
+
+		menuSchemeRemoveFromView.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefromview.gif").
+				getScaledInstance(img_siz, img_siz, Image.SCALE_DEFAULT)));
+		menuSchemeRemoveFromView.setMaximumSize(buttonSize);
+		menuSchemeRemoveFromView.setPreferredSize(buttonSize);
+		menuSchemeRemoveFromView.setToolTipText(LangModelMap.getString("menuSchemeRemoveFromView"));
+		menuSchemeRemoveFromView.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					removeFromView();
+				}
+			});
+
+		schemeButtonsPanel.add(menuSchemeAddToView);
+		schemeButtonsPanel.add(menuSchemeRemoveFromView);
+
 
 		scroll.setWheelScrollingEnabled(true);
 		scroll.setAutoscrolls(true);
 
 		this.add(scroll, BorderLayout.CENTER);
-		this.add(jPanel1, BorderLayout.SOUTH);
+		this.add(bindButtonsPanel, BorderLayout.SOUTH);
+		this.add(schemeButtonsPanel, BorderLayout.NORTH);
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -134,11 +190,11 @@ public final class MapSchemeTreePanel extends JPanel
 	
 	public void setPanel(UniTreePanel utp)
 	{
-		if(panel != null)
-			scroll.getViewport().remove(panel);
-		panel = utp;
-		if(panel != null)
-			scroll.getViewport().add(panel);
+		if(treePanel != null)
+			scroll.getViewport().remove(treePanel);
+		treePanel = utp;
+		if(treePanel != null)
+			scroll.getViewport().add(treePanel);
 	}
 
 	protected void initTree()
@@ -150,12 +206,12 @@ public final class MapSchemeTreePanel extends JPanel
 	public void updateTree(MapView mv)
 	{
 		model.setMapView(mv);
-		panel.setModel(model);
+		treePanel.setModel(model);
 	}
 
-	private void placeButton_actionPerformed(ActionEvent e)
+	private void placeSelection()
 	{
-		TreePath tp = panel.getTree().getSelectionPath();
+		TreePath tp = treePanel.getTree().getSelectionPath();
 		if(tp == null)
 			return;
 		ObjectResourceTreeNode ortn = (ObjectResourceTreeNode )tp.getLastPathComponent();
@@ -169,7 +225,7 @@ public final class MapSchemeTreePanel extends JPanel
 		disp.notify(new MapEvent(ortn.getObject(), MapEvent.PLACE_ELEMENT));
 	}
 
-	private void placeAllButton_actionPerformed(ActionEvent e)
+	private void placeAll()
 	{
 		ObjectResourceTreeNode ortn;
 		ObjectResourceTreeNode node;
@@ -180,11 +236,11 @@ public final class MapSchemeTreePanel extends JPanel
 			return;
 
 		// Elements
-		ortn = (ObjectResourceTreeNode )panel.getTree().getSelectionPath().getLastPathComponent();
+		ortn = (ObjectResourceTreeNode )treePanel.getTree().getSelectionPath().getLastPathComponent();
 		sendPlaceEvent(ortn);
 	}
 	
-	protected void sendPlaceEvent(ObjectResourceTreeNode ortn)
+	private void sendPlaceEvent(ObjectResourceTreeNode ortn)
 	{
 		ObjectResourceTreeNode node = null;
 		
@@ -202,4 +258,64 @@ public final class MapSchemeTreePanel extends JPanel
 		}
 	}
 
+	private void addToView()
+	{
+		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+
+		if(dataSource == null)
+			return;
+
+		aContext.getDispatcher().notify(new StatusMessageEvent(
+				StatusMessageEvent.STATUS_MESSAGE,
+				LangModelMap.getString("MapOpening")));
+
+		new SchemeDataSourceImage(dataSource).LoadSchemes();
+
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(dataSource, Scheme.typ);
+
+		List dataSet = Pool.getList(Scheme.typ);
+		ObjectResourceDisplayModel odm = Scheme.getDefaultDisplayModel();
+		mcd.setContents(odm, dataSet);
+
+		// отфильтровываем по домену
+		ObjectResourceTableModel ortm = mcd.getTableModel();
+		ortm.setDomainId(aContext.getSessionInterface().getDomainId());
+		ortm.restrictToDomain(true);//ф-я фильтрации схем по домену
+		ortm.fireTableDataChanged();
+
+		mcd.setModal(true);
+		mcd.setVisible(true);
+		if(mcd.getReturnCode() == mcd.RET_CANCEL)
+		{
+			aContext.getDispatcher().notify(new StatusMessageEvent(
+					StatusMessageEvent.STATUS_MESSAGE,
+					LangModel.getString("Aborted")));
+			return;
+		}
+
+		if(mcd.getReturnCode() == mcd.RET_OK)
+		{
+			Scheme retObj = (Scheme )mcd.getReturnObject();
+
+			MapFrame mapFrame = MapFrame.getMapMainFrame();
+			if(mapFrame == null)
+			{
+				System.out.println("mapviewer is NULL");
+			}
+			else
+			{
+				mapFrame.getMapView().addScheme((Scheme )retObj);
+				mapFrame.getContext().getDispatcher().notify(new MapEvent(
+						mapFrame.getMapView(),
+						MapEvent.MAP_VIEW_CHANGED));
+			}
+			aContext.getDispatcher().notify(new StatusMessageEvent(
+					StatusMessageEvent.STATUS_MESSAGE,
+					LangModel.getString("Finished")));
+		}
+	}
+	
+	private void removeFromView()
+	{
+	}
 }
