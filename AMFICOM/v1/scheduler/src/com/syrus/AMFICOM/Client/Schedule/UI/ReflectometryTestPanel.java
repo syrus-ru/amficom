@@ -349,9 +349,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				"Set created by Scheduler", params, Collections.singletonList(this.meId));
 			MeasurementStorableObjectPool.putStorableObject(set);
 
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} catch (IllegalArgumentException e) {
+		}  catch (IllegalArgumentException e) {
 			String message = e.getMessage();
 			// System.out.println(message);
 			Environment.log(Environment.LOG_LEVEL_WARNING, message);

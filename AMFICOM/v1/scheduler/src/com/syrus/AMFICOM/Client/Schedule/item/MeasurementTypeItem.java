@@ -1,5 +1,5 @@
 /*
-* $Id: MeasurementTypeItem.java,v 1.2 2005/03/16 12:40:04 bob Exp $
+* $Id: MeasurementTypeItem.java,v 1.3 2005/03/21 13:13:36 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.Client.Schedule.item;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,14 +25,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.logic.Item;
-import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/16 12:40:04 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/21 13:13:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -59,6 +57,13 @@ public class MeasurementTypeItem extends ElementItem {
 	
 	public void setDomainId(Identifier domainId) {
 		this.domainId = domainId;
+	}
+	
+	private void addChangeListener(Item item) {
+		for (int i = 0; i < super.listener.length; i++) {
+			System.out.println("addChangeListener" + super.listener[i] + " to " + item.getName());
+			item.addChangeListener(super.listener[i]);
+		}		
 	}
 	
 	public void populateChildren() {
@@ -111,12 +116,14 @@ public class MeasurementTypeItem extends ElementItem {
 					Collection measurementTypesFormeasurementPortType = (Collection) kisMeasurementTypes.get(kis);
 					if (measurementTypesFormeasurementPortType.contains(this.getObject())) {
 						KISItem kisItem = new KISItem(kis);
+						this.addChangeListener(kisItem);
 						this.addChild(kisItem);
 						Collection measurementPort = (Collection) kisMeasurementPorts.get(kis);
 						for (Iterator measurementPortIterator = measurementPort.iterator(); measurementPortIterator
 								.hasNext();) {
 							MeasurementPort measurementPort2 = (MeasurementPort) measurementPortIterator.next();
 							MeasurementPortItem measurementPortItem = new MeasurementPortItem(measurementPort2);
+							this.addChangeListener(measurementPortItem);
 							kisItem.addChild(measurementPortItem);
 							for (Iterator monitoredElementIterator = monitoredElements.iterator(); monitoredElementIterator
 									.hasNext();) {
@@ -124,6 +131,7 @@ public class MeasurementTypeItem extends ElementItem {
 								if (monitoredElement.getMeasurementPortId().equals(measurementPort2.getId())) {
 									MonitoredElementItem monitoredElementItem = new MonitoredElementItem(
 																											monitoredElement);
+									this.addChangeListener(monitoredElementItem);
 									measurementPortItem.addChild(monitoredElementItem);
 								}
 							}
@@ -141,6 +149,10 @@ public class MeasurementTypeItem extends ElementItem {
 	
 	public boolean isPopulatedChildren() {
 		return this.populatedChildren;
+	}
+	
+	public boolean isParentAllow() {
+		return false;
 	}
 	
 }

@@ -145,7 +145,7 @@ public class PlanPanel extends JList implements TestsEditor, ActionListener {
 		this.timer.start();
 
 //		setLayout(new VerticalFlowLayout());
-		setBackground(SystemColor.window);
+//		setBackground(SystemColor.window);
 		setPreferredSize(new Dimension(600, 20));
 		// setCursor(UIStorage.DEFAULT_CURSOR);
 

@@ -10,8 +10,9 @@ import java.util.Map;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
@@ -25,7 +26,6 @@ import com.syrus.AMFICOM.Client.Schedule.MeasurementTypeEditor;
 import com.syrus.AMFICOM.Client.Schedule.MonitoredElementEditor;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
-import com.syrus.AMFICOM.Client.Schedule.item.ElementItem;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeItem;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.SelectionListener;
+import com.syrus.AMFICOM.logic.ServiceItem;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 
 public class ElementsTreeFrame extends JInternalFrame implements KISEditor, MonitoredElementEditor,
@@ -53,6 +54,8 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 	private SelectionListener	selectionListener;
 
 	ApplicationContext			aContext;
+	
+	private Item rootItem = new ServiceItem("/");
 
 	public static final String	ACCESSPORT_NAME_REFLECTOMETER	= "MeasurementPortTypeReflectometry";	//$NON-NLS-1$
 
@@ -132,38 +135,45 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 	}
 
 	public void setElements(Collection elements) {
-		this.treePanel.removeAll(null);
-		this.treePanel.addItems(elements);
-		this.treePanel.expandAll(false);
+		for (Iterator it = elements.iterator(); it.hasNext();) {
+			Item item = (Item) it.next();
+			this.rootItem.addChild(item);
+			this.treePanel.addItem(item);
+			this.treePanel.expandAll(item);
+		}		
 	}
-
+	
 	public void init() {
 		this.schedulerModel = (SchedulerModel) this.aContext.getApplicationModel();
 		if (this.treePanel == null) {
 			final Dispatcher dispatcher = this.aContext.getDispatcher();
-			this.treePanel = new LogicalTreeUI();
-			this.treePanel.expandAll(true);
+			this.treePanel = new LogicalTreeUI(this.rootItem);
+			this.treePanel.getTree().addTreeExpansionListener(new TreeExpansionListener(){
+				public void treeCollapsed(TreeExpansionEvent event) {
+					// nothing
+					
+				}
+				
+				public void treeExpanded(TreeExpansionEvent event) {
+					TreePath path = event.getPath();
+					Object lastPathComponent = path.getLastPathComponent();
+					if (lastPathComponent instanceof MeasurementTypeItem) {
+						MeasurementTypeItem measurementTypeItem = (MeasurementTypeItem) lastPathComponent;
+						if (!measurementTypeItem.isPopulatedChildren()) {
+							measurementTypeItem.populateChildren();
+//							List children = measurementTypeItem.getChildren();
+						}
+					}
+					
+				}
+			});
 			this.selectionListener = new SelectionListener() {
 
 				public void selectedItems(Collection items) {
 					for (Iterator it = items.iterator(); it.hasNext();) {
-						ElementItem item = (ElementItem) it.next();
+						Item item = (Item) it.next();
 						Object object = item.getObject();
-						if (object instanceof MeasurementType) {
-							MeasurementTypeItem measurementTypeItem = (MeasurementTypeItem) item;
-							if (!measurementTypeItem.isPopulatedChildren()) {
-								measurementTypeItem.populateChildren();
-								ElementsTreeFrame.this.treePanel.removeAll(measurementTypeItem);
-								List children = measurementTypeItem.getChildren();
-								if (children != null) {
-									for (Iterator iterator = children.iterator(); iterator.hasNext();) {
-										Item item2 = (Item) iterator.next();
-										ElementsTreeFrame.this.treePanel.addItem(measurementTypeItem, item2);
-									}
-								}
-							}
-
-						} else if (object instanceof MonitoredElement) {
+						if (object instanceof MonitoredElement) {
 							MonitoredElement me = (MonitoredElement) object;
 							dispatcher.notify(new OperationEvent(me.getId(), 0, SchedulerModel.COMMAND_CHANGE_ME_TYPE));
 						}

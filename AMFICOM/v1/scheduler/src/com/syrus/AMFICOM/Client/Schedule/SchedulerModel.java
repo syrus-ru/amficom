@@ -11,11 +11,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JOptionPane;
 
@@ -32,14 +30,10 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.RISDDataSource;
-import com.syrus.AMFICOM.Client.Schedule.item.KISItem;
-import com.syrus.AMFICOM.Client.Schedule.item.MeasurementPortItem;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeItem;
-import com.syrus.AMFICOM.Client.Schedule.item.MonitoredElementItem;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -52,6 +46,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.AMFICOM.logic.ServiceItem;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -245,7 +240,9 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				MeasurementType measurementType = (MeasurementType) iter.next();
 				MeasurementTypeItem measurementTypeItem = new MeasurementTypeItem(measurementType);
 				measurementTypeItems.add(measurementTypeItem);
-				measurementTypeItem.setDomainId(sessionInterface.getDomainIdentifier());			
+				measurementTypeItem.setDomainId(sessionInterface.getDomainIdentifier());
+				ServiceItem serviceItem = new ServiceItem();
+				measurementTypeItem.addChild(serviceItem);
 			}
 			
 			this.elementsViewer.setElements(measurementTypeItems);
