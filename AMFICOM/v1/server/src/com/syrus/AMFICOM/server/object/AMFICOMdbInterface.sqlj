@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMdbInterface.sqlj,v 1.1.2.4 2004/08/25 15:24:29 bass Exp $
+ * $Id: AMFICOMdbInterface.sqlj,v 1.1.2.5 2004/08/27 08:09:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,153 +31,12 @@ import java.util.*;
 import org.omg.CORBA.StringHolder;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/08/25 15:24:29 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/08/27 08:09:21 $
  * @author $Author: bass $
  * @module server_v1
  */
 final class AMFICOMdbInterface {
 	private AMFICOMdbInterface() {
-	}
-
-	static int Logon(String username, byte[] password, String ior, AccessIdentity_TransferableHolder accessIdentity) throws AMFICOMRemoteException {
-		return AMFICOMdbGeneral.Logon(username, password, ior, accessIdentity);
-	}
-	
-	static int Logoff(AccessIdentity_Transferable accessIdentity) throws AMFICOMRemoteException {
-		try {
-			AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
-			return AMFICOMdbGeneral.Logoff(accessIdentity);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(1, "fn Logoff:" + e.getMessage ());
-		}
-	}
-
-	static int GetLoggedUserIds(AccessIdentity_Transferable accessIdentity, wstringSeqHolder userids) throws AMFICOMRemoteException {
-		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
-		return AMFICOMdbGeneral.GetLoggedUserIds(accessIdentity, userids);
-	}
-
-	static int ChangePassword(AccessIdentity_Transferable accessIdentity, byte[] oldpassword, byte[] newpassword) throws AMFICOMRemoteException {
-		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
-		return AMFICOMdbGeneral.ChangePassword(accessIdentity, oldpassword, newpassword);
-	}
-
-	static int GetObjects(
-			AccessIdentity_Transferable accessIdentity,
-			ImageResourceSeq_TransferableHolder imageseq,
-			DomainSeq_TransferableHolder domainseq,
-			OperatorCategorySeq_TransferableHolder categoryseq,
-			OperatorGroupSeq_TransferableHolder groupseq,
-			OperatorProfileSeq_TransferableHolder profileseq,
-			CommandPermissionAttributesSeq_TransferableHolder execseq,
-			UserSeq_TransferableHolder userseq)
-			throws AMFICOMRemoteException {
-		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
-
-		int ret = Constants.ERROR_NO_ERROR;
-
-		Vector map_ids = new Vector();
-		Vector img_ids = new Vector();
-
-		imageseq.value = new ImageResource_Transferable[0];
-		domainseq.value = new Domain_Transferable[0];
-		categoryseq.value = new OperatorCategory_Transferable[0];
-		groupseq.value = new OperatorGroup_Transferable[0];
-		profileseq.value = new OperatorProfile_Transferable[0];
-		execseq.value = new CommandPermissionAttributes_Transferable[0];
-		userseq.value = new User_Transferable[0];
-		ret = ObjectdbInterfaceLoad.loadDomains(domainseq);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		ret = ObjectdbInterfaceLoad.loadCategories(categoryseq);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		ret = ObjectdbInterfaceLoad.loadGroups(groupseq);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		ret = ObjectdbInterfaceLoad.loadProfiles(profileseq);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		ret = ObjectdbInterfaceLoad.loadExecs(execseq);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		ret = ObjectdbInterfaceLoad.loadUserDescriptors(userseq);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	static int GetStatedObjects(
-			AccessIdentity_Transferable accessIdentity,
-			String []category_ids,
-			String []group_ids,
-			String []profile_ids,
-			OperatorCategorySeq_TransferableHolder categoryseq,
-			OperatorGroupSeq_TransferableHolder groupseq,
-			OperatorProfileSeq_TransferableHolder profileseq)
-		throws AMFICOMRemoteException
-	{
-		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
-
-		int ret = Constants.ERROR_NO_ERROR;
-
-		categoryseq.value = new OperatorCategory_Transferable[0];
-		groupseq.value = new OperatorGroup_Transferable[0];
-		profileseq.value = new OperatorProfile_Transferable[0];
-
-		ret = ObjectdbInterfaceLoad.loadCategories(categoryseq, category_ids);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		ret = ObjectdbInterfaceLoad.loadGroups(groupseq, group_ids);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		ret = ObjectdbInterfaceLoad.loadProfiles(profileseq, profile_ids);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	static int GetUserDescriptors(
-			AccessIdentity_Transferable accessIdentity,
-			ImageResourceSeq_TransferableHolder imageseq,
-			DomainSeq_TransferableHolder domainseq,
-			UserSeq_TransferableHolder userseq)
-		throws AMFICOMRemoteException
-	{
-		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
-
-		int ret = Constants.ERROR_NO_ERROR;
-		Vector img_ids = new Vector();
-
-		imageseq.value = new ImageResource_Transferable[0];
-		domainseq.value = new Domain_Transferable[0];
-		userseq.value = new User_Transferable[0];
-
-		ret = ObjectdbInterfaceLoad.loadDomains(domainseq);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		ret = ObjectdbInterfaceLoad.loadUserDescriptors(userseq);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	static int GetExecDescriptors(
-			AccessIdentity_Transferable accessIdentity,
-			CommandPermissionAttributesSeq_TransferableHolder execseq)
-		throws AMFICOMRemoteException
-	{
-		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
-
-		int ret = Constants.ERROR_NO_ERROR;
-
-		execseq.value = new CommandPermissionAttributes_Transferable[0];
-
-		ret = ObjectdbInterfaceLoad.loadExecs(execseq);
-		if(ret != Constants.ERROR_NO_ERROR)
-			return ret;
-		return Constants.ERROR_NO_ERROR;
 	}
 
 	static int SaveObjects(
@@ -1904,26 +1763,6 @@ final class AMFICOMdbInterface {
 			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить тесты: " + ex.getMessage());
 		}
 		return ret;
-	}
-
-	static int GetOneTimeTestIdsInDiapazon(
-			AccessIdentity_Transferable accessIdentity,
-			long start_time,
-			long end_time,
-			ResourceDescriptorSeq_TransferableHolder desc)
-		throws AMFICOMRemoteException
-	{
-		AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
-
-		Vector vec1 = getResourceDescriptors("testonetime");
-		ResourceDescriptor_Transferable[] desc1 = new ResourceDescriptor_Transferable[vec1.size()];
-		vec1.copyInto(desc1);
-
-		Vector vec = filterTimeDiapazon(start_time, end_time, desc1);
-
-		desc.value = new ResourceDescriptor_Transferable[vec.size()];
-		vec.copyInto(desc.value);
-		return Constants.ERROR_NO_ERROR;
 	}
 
 	static int GetTestIdsInDiapazon(

@@ -1,5 +1,5 @@
 /*
- * $Id: AdmindbInterfaceRemove.sqlj,v 1.1.2.1 2004/08/20 14:03:46 bass Exp $
+ * $Id: AdmindbInterfaceRemove.sqlj,v 1.1.2.2 2004/08/27 08:09:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,18 +12,15 @@ import com.syrus.AMFICOM.CORBA.Constants;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/08/20 14:03:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/08/27 08:09:21 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class AdmindbInterfaceRemove
-{
-	protected AdmindbInterfaceRemove()
-	{
+final class AdmindbInterfaceRemove {
+	private AdmindbInterfaceRemove() {
 	}
 
-	public static int removeServers(String[] serverseq)
-	{
+	static int removeServers(String[] serverseq) {
 		int i;
 		for(i = serverseq.length - 1; i >= 0; i--)
 		{
@@ -44,8 +41,7 @@ public class AdmindbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeClients(String[] clientseq)
-	{
+	static int removeClients(String[] clientseq) {
 		int i;
 		for(i = clientseq.length - 1; i >= 0; i--)
 		{
@@ -66,8 +62,7 @@ public class AdmindbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int removeAgents(String[] agentseq)
-	{
+	static int removeAgents(String[] agentseq) {
 		int i;
 		for(i = agentseq.length - 1; i >= 0; i--)
 		{

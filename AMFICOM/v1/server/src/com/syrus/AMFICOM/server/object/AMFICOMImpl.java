@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMServer.java,v 1.1.2.3 2004/08/23 11:43:50 bass Exp $
+ * $Id: AMFICOMImpl.java,v 1.1.2.1 2004/08/27 08:09:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,25 +22,57 @@ import com.syrus.AMFICOM.CORBA.Report.*;
 import com.syrus.AMFICOM.CORBA.Resource.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.CORBA._AMFICOMImplBase;
+import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.server.*;
 import com.syrus.AMFICOM.server.event.AlarmType;
 import com.syrus.AMFICOM.server.measurement.*;
 import com.syrus.util.database.DatabaseConnection;
-import java.sql.SQLException;
-import java.util.Vector;
+import java.sql.*;
+import java.util.*;
 import org.omg.CORBA.*;
 import org.omg.CORBA.StringHolder;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/23 11:43:50 $
+ * @version $Revision: 1.1.2.1 $, $Date: 2004/08/27 08:09:21 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class AMFICOMServer extends _AMFICOMImplBase {
+public final class AMFICOMImpl extends _AMFICOMImplBase {
+	private static final Connection CONN = DefaultContext.getDefaultContext().getConnection();
+
 	static {
-		DatabaseConnection.setConnection(DefaultContext.getDefaultContext().getConnection());
+		System.out.println("Static initializer");
+		try {
+			CONN.setAutoCommit(false);
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		DatabaseConnection.setConnection(CONN);
+		
+		System.out.println(CONN);
+		System.out.println(DefaultContext.getDefaultContext());
+		System.out.println(DefaultContext.getDefaultContext().getConnection());
+	}
+
+	{
+		System.out.println("Instance initializer");
+
+		System.out.println(CONN);
+		System.out.println(DefaultContext.getDefaultContext());
+		System.out.println(DefaultContext.getDefaultContext().getConnection());
+
+		System.out.println("New connection");
+		try {
+			System.out.println(new DefaultContext(CONN));
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+	}
+
+	public org.omg.CORBA.Object _initializeAuroraObject() {
+		System.out.println("_initializeAuroraObject()");
+		return this;
 	}
 
 	/**
@@ -75,102 +107,132 @@ public class AMFICOMServer extends _AMFICOMImplBase {
 	 *	счетчик общего количества сессий
 	 *	проверка времени действия лицензии и демо-версии
 	 */
-	public int Logon(
-			String username,
-			byte[] password,
-			String category,
-			AccessIdentity_TransferableHolder accessIdentity)
-		throws AMFICOMRemoteException
-	{
-		return AMFICOMdbInterface.Logon(username, password, category, accessIdentity);
+	public int Logon(String username, byte password[], String ior, AccessIdentity_TransferableHolder accessIdentity) throws AMFICOMRemoteException {
+		try {
+			AMFICOMdbGeneral.login(CONN, username, password, ior, accessIdentity);
+			return Constants.ERROR_NO_ERROR;
+		} catch (AMFICOMRemoteException are) {
+			are.printStackTrace();
+			throw are;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		}
 	}
 
-	public int GetLoggedUserIds(
-			AccessIdentity_Transferable accessIdentity,
-			wstringSeqHolder userids)
-		throws AMFICOMRemoteException
-	{
-		int retcode =
-			AMFICOMdbInterface.GetLoggedUserIds(accessIdentity, userids);
-		return retcode;
+	/**
+	 * Возвращаемое значение - результат работы функции:
+	 *	ERROR_INSUFFICIENT_PRIVILEGES
+	 *	ERROR_NO_ERROR
+	 */
+	public int Logoff(AccessIdentity_Transferable accessIdentity) throws AMFICOMRemoteException {
+		try {
+			AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
+			AMFICOMdbGeneral.logout(CONN, accessIdentity);
+			return Constants.ERROR_NO_ERROR;
+		} catch (AMFICOMRemoteException are) {
+			are.printStackTrace();
+			throw are;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		}
 	}
 
-	public int ChangePassword(
-			AccessIdentity_Transferable accessIdentity,
-			byte[] oldpassword,
-			byte[] newpassword)
-		throws AMFICOMRemoteException
-	{
-		return AMFICOMdbInterface.ChangePassword(
-				accessIdentity,
-				oldpassword,
-				newpassword);
+	public int GetLoggedUserIds(AccessIdentity_Transferable accessIdentity, wstringSeqHolder userids) throws AMFICOMRemoteException {
+		try {
+			AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
+			AMFICOMdbGeneral.getLoggedUserIds(CONN, accessIdentity, userids);
+			return Constants.ERROR_NO_ERROR;
+		} catch (AMFICOMRemoteException are) {
+			are.printStackTrace();
+			throw are;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		}
 	}
 
-	public int GetObjects(
-			AccessIdentity_Transferable accessIdentity,
-			ImageResourceSeq_TransferableHolder imageseq,
-			DomainSeq_TransferableHolder domainseq,
-			OperatorCategorySeq_TransferableHolder categoryseq,
-			OperatorGroupSeq_TransferableHolder groupseq,
-			OperatorProfileSeq_TransferableHolder profileseq,
-			CommandPermissionAttributesSeq_TransferableHolder execseq,
-			UserSeq_TransferableHolder userseq)
-		throws AMFICOMRemoteException
-	{
-		return AMFICOMdbInterface.GetObjects(
-				accessIdentity,
-				imageseq,
-				domainseq,
-				categoryseq,
-				groupseq,
-				profileseq,
-				execseq,
-				userseq);
+	public int ChangePassword(AccessIdentity_Transferable accessIdentity, byte oldpassword[], byte newpassword[]) throws AMFICOMRemoteException {
+		try {
+			AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
+			AMFICOMdbGeneral.changePassword(CONN, accessIdentity, oldpassword, newpassword);
+			return Constants.ERROR_NO_ERROR;
+		} catch (AMFICOMRemoteException are) {
+			are.printStackTrace();
+			throw are;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		}
 	}
 
-	public int GetStatedObjects(
-			AccessIdentity_Transferable accessIdentity,
-			String []category_ids,
-			String []group_ids,
-			String []profile_ids,
-			OperatorCategorySeq_TransferableHolder categoryseq,
-			OperatorGroupSeq_TransferableHolder groupseq,
-			OperatorProfileSeq_TransferableHolder profileseq)
-		throws AMFICOMRemoteException
-	{
-		return AMFICOMdbInterface.GetStatedObjects(
-				accessIdentity,
-				category_ids,
-				group_ids,
-				profile_ids,
-				categoryseq,
-				groupseq,
-				profileseq);
+	public int GetObjects(AccessIdentity_Transferable accessIdentity, ImageResourceSeq_TransferableHolder imageseq, DomainSeq_TransferableHolder domainseq, OperatorCategorySeq_TransferableHolder categoryseq, OperatorGroupSeq_TransferableHolder groupseq, OperatorProfileSeq_TransferableHolder profileseq, CommandPermissionAttributesSeq_TransferableHolder execseq, UserSeq_TransferableHolder userseq) throws AMFICOMRemoteException {
+		try {
+			AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
+//			Collection images = ResourcedbInterface.getImages(CONN);
+//			imageseq.value = (ImageResource_Transferable[]) (images.toArray(new ImageResource_Transferable[images.size()]));
+			imageseq.value = new ImageResource_Transferable[0]; 
+			ObjectdbInterfaceLoad.loadDomains(CONN, domainseq);
+			ObjectdbInterfaceLoad.loadCategories(CONN, categoryseq);
+			ObjectdbInterfaceLoad.loadGroups(CONN, groupseq);
+			ObjectdbInterfaceLoad.loadProfiles(CONN, profileseq);
+			ObjectdbInterfaceLoad.loadExecs(CONN, execseq);
+			ObjectdbInterfaceLoad.loadUserDescriptors(CONN, userseq);
+			return Constants.ERROR_NO_ERROR;
+		} catch (AMFICOMRemoteException are) {
+			are.printStackTrace();
+			throw are;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		}
 	}
 
-	public int GetUserDescriptors(
-			AccessIdentity_Transferable accessIdentity,
-			ImageResourceSeq_TransferableHolder imageseq,
-			DomainSeq_TransferableHolder domainseq,
-			UserSeq_TransferableHolder userseq)
-		throws AMFICOMRemoteException
-	{
-		return AMFICOMdbInterface.GetUserDescriptors(
-				accessIdentity,
-				imageseq,
-				domainseq,
-				userseq);
+	public int GetStatedObjects(AccessIdentity_Transferable accessIdentity, String category_ids[], String group_ids[], String profile_ids[], OperatorCategorySeq_TransferableHolder categoryseq, OperatorGroupSeq_TransferableHolder groupseq, OperatorProfileSeq_TransferableHolder profileseq) throws AMFICOMRemoteException {
+		try {
+			AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
+			ObjectdbInterfaceLoad.loadCategories(CONN, categoryseq, category_ids);
+			ObjectdbInterfaceLoad.loadGroups(CONN, groupseq, group_ids);
+			ObjectdbInterfaceLoad.loadProfiles(CONN, profileseq, profile_ids);
+			return Constants.ERROR_NO_ERROR;
+		} catch (AMFICOMRemoteException are) {
+			are.printStackTrace();
+			throw are;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		}
 	}
 
-	public int GetExecDescriptors(
-			AccessIdentity_Transferable accessIdentity,
-			CommandPermissionAttributesSeq_TransferableHolder execseq)
-		throws AMFICOMRemoteException
-	{
-		return AMFICOMdbInterface.GetExecDescriptors(
-				accessIdentity,
-				execseq);
+	public int GetUserDescriptors(AccessIdentity_Transferable accessIdentity, ImageResourceSeq_TransferableHolder imageseq, DomainSeq_TransferableHolder domainseq, UserSeq_TransferableHolder userseq) throws AMFICOMRemoteException {
+		try {
+			AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
+			imageseq.value = new ImageResource_Transferable[0];
+			ObjectdbInterfaceLoad.loadDomains(CONN, domainseq);
+			ObjectdbInterfaceLoad.loadUserDescriptors(CONN, userseq);
+			return Constants.ERROR_NO_ERROR;
+		} catch (AMFICOMRemoteException are) {
+			are.printStackTrace();
+			throw are;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		}
+	}
+
+	public int GetExecDescriptors(AccessIdentity_Transferable accessIdentity, CommandPermissionAttributesSeq_TransferableHolder execseq) throws AMFICOMRemoteException {
+		try {
+			AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
+			ObjectdbInterfaceLoad.loadExecs(CONN, execseq);
+			return Constants.ERROR_NO_ERROR;
+		} catch (AMFICOMRemoteException are) {
+			are.printStackTrace();
+			throw are;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		}
 	}
 
 	public int SaveObjects(
@@ -275,23 +337,6 @@ public class AMFICOMServer extends _AMFICOMImplBase {
 				serverseq,
 				clientseq,
 				agentseq);
-	}
-
-	/**
-	 * Закончить работу с ИСМ
-	 *
-	 * Ограничения:
-	 *
-	 * Возвращаемое значение - результат работы функции:
-	 *	ERROR_INSUFFICIENT_PRIVILEGES
-	 *	ERROR_NO_ERROR
-	 *
-	 * Сделать:
-	 */
-	public int Logoff(AccessIdentity_Transferable accessIdentity)
-		throws AMFICOMRemoteException
-	{
-		return AMFICOMdbInterface.Logoff(accessIdentity);
 	}
 
 	public int GetMaps(
@@ -916,26 +961,19 @@ public class AMFICOMServer extends _AMFICOMImplBase {
 		return AMFICOMdbInterface.GetDomainResourceDescriptors(accessIdentity, type, desc);
 	}
 
-	public int GetImages(
-			AccessIdentity_Transferable accessIdentity,
-			String[] ids,
-			ImageResourceSeq_TransferableHolder imgs)
-		throws AMFICOMRemoteException
-	{
-		imgs.value = new ImageResource_Transferable[0];
-		Vector vec = new Vector();
-		Vector idsvec = new Vector();
-		for(int i = ids.length - 1; i >= 0; i--)
-			if(!idsvec.contains(ids[i]))
-			{
-				ImageResource_Transferable im_r = ResourcedbInterface.loadImage(ids[i]);
-				if(im_r != null)
-					vec.add(im_r);
-				idsvec.add(ids[i]);
-			}
-		imgs.value = new ImageResource_Transferable[vec.size()];
-		vec.copyInto(imgs.value);
-		return Constants.ERROR_NO_ERROR;
+	public int GetImages(AccessIdentity_Transferable accessIdentity, String ids[], ImageResourceSeq_TransferableHolder imgs) throws AMFICOMRemoteException {
+		try {
+			AMFICOMdbGeneral.checkUserPrivileges(accessIdentity);
+			Collection images = ResourcedbInterface.getImages(CONN, Arrays.asList(ids));
+			imgs.value = (ImageResource_Transferable[]) (images.toArray(new ImageResource_Transferable[images.size()]));
+			return Constants.ERROR_NO_ERROR;
+		} catch (AMFICOMRemoteException are) {
+			are.printStackTrace();
+			throw are;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		}
 	}
 
 	public int LoadNetDirectory(
@@ -1348,20 +1386,6 @@ public class AMFICOMServer extends _AMFICOMImplBase {
 			accessIdentity,
 			ids,
 			testseq);
-	}
-
-	public int GetOneTimeTestIdsInDiapazon(
-			AccessIdentity_Transferable accessIdentity,
-			long start_time,
-			long end_time,
-			ResourceDescriptorSeq_TransferableHolder desc)
-		throws AMFICOMRemoteException
-	{
-		return AMFICOMdbInterface.GetOneTimeTestIdsInDiapazon(
-			accessIdentity,
-			start_time,
-			end_time,
-			desc);
 	}
 
 	public int GetTestIdsInDiapazon(
@@ -2814,14 +2838,8 @@ public class AMFICOMServer extends _AMFICOMImplBase {
 				reportTemplates);
 	}
 
-	public void removeReportTemplates(
-			AccessIdentity_Transferable accessIdentity,
-			String[] reportTemplate_ids)
-		throws AMFICOMRemoteException
-	{
-		AMFICOMdbInterface.removeReportTemplates(
-			accessIdentity,
-			reportTemplate_ids);
+	public void removeReportTemplates(AccessIdentity_Transferable accessIdentity, String[] reportTemplate_ids) throws AMFICOMRemoteException {
+		AMFICOMdbInterface.removeReportTemplates(accessIdentity, reportTemplate_ids);
 	}
 
 	public String saveSchemeOptimizeInfo(
@@ -2841,46 +2859,20 @@ public class AMFICOMServer extends _AMFICOMImplBase {
 		return AMFICOMdbInterface.getSchemeOptimizeInfo(accessIdentity);
 	}
 
-	public void removeSchemeOptimizeInfo(
-			AccessIdentity_Transferable accessIdentity,
-			String[] soi_ids)
-		throws AMFICOMRemoteException
-	{
-		AMFICOMdbInterface.removeSchemeOptimizeInfo(
-			accessIdentity,
-			soi_ids);
+	public void removeSchemeOptimizeInfo(AccessIdentity_Transferable accessIdentity, String[] soi_ids) throws AMFICOMRemoteException {
+		AMFICOMdbInterface.removeSchemeOptimizeInfo(accessIdentity, soi_ids);
 	}
 
-	public String saveSchemeMonitoringSolutions(
-			AccessIdentity_Transferable accessIdentity,
-			SchemeMonitoringSolution_Transferable sol)
-		throws AMFICOMRemoteException
-	{
-		return AMFICOMdbInterface.saveSchemeMonitoringSolutions(
-				accessIdentity,
-				sol);
+	public String saveSchemeMonitoringSolutions(AccessIdentity_Transferable accessIdentity, SchemeMonitoringSolution_Transferable sol) throws AMFICOMRemoteException {
+		return AMFICOMdbInterface.saveSchemeMonitoringSolutions(accessIdentity, sol);
 	}
 
-	public SchemeMonitoringSolution_Transferable[] getSchemeMonitoringSolutions(
-			AccessIdentity_Transferable accessIdentity)
-		throws AMFICOMRemoteException
-	{
+	public SchemeMonitoringSolution_Transferable[] getSchemeMonitoringSolutions(AccessIdentity_Transferable accessIdentity) throws AMFICOMRemoteException {
 		return AMFICOMdbInterface.getSchemeMonitoringSolutions(accessIdentity);
 	}
 
-	public void removeSchemeMonitoringSolutions(
-			AccessIdentity_Transferable accessIdentity,
-			String[] sol_ids)
-		throws AMFICOMRemoteException
-	{
-		AMFICOMdbInterface.removeSchemeMonitoringSolutions(
-			accessIdentity,
-			sol_ids);
-	}
-
-	public org.omg.CORBA.Object _initializeAuroraObject()
-	{
-		return this;
+	public void removeSchemeMonitoringSolutions(AccessIdentity_Transferable accessIdentity, String[] sol_ids) throws AMFICOMRemoteException {
+		AMFICOMdbInterface.removeSchemeMonitoringSolutions(accessIdentity, sol_ids);
 	}
 
 	public void syncPing(LongHolder serverTimeMillis) throws AMFICOMRemoteException
@@ -2888,11 +2880,7 @@ public class AMFICOMServer extends _AMFICOMImplBase {
 		serverTimeMillis.value = System.currentTimeMillis();
 	}
 
-	public void registerAlarmReceiver(
-			AccessIdentity_Transferable accessIdentity,
-			AMFICOMClient cli)
-		throws AMFICOMRemoteException
-	{
+	public void registerAlarmReceiver(AccessIdentity_Transferable accessIdentity, AMFICOMClient cli) throws AMFICOMRemoteException {
 		try
 		{
 			OracleAlarmReceiverMap.put(accessIdentity, cli);
@@ -2920,8 +2908,7 @@ public class AMFICOMServer extends _AMFICOMImplBase {
 		}
 	}
 
-	public void unregisterAlarmReceiver(AccessIdentity_Transferable accessIdentity) throws AMFICOMRemoteException
-	{
+	public void unregisterAlarmReceiver(AccessIdentity_Transferable accessIdentity) throws AMFICOMRemoteException {
 		try
 		{
 			OracleAlarmReceiverMap.remove(accessIdentity);

@@ -1,5 +1,5 @@
 /*
- * $Id: RenderingObject.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
+ * $Id: RenderingObject.sqlj,v 1.1.2.4 2004/08/27 08:09:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,14 +12,13 @@ import com.syrus.AMFICOM.CORBA.Report.RenderingObject_Transferable;
 import com.syrus.util.ByteArray;
 import com.syrus.util.database.ByteArrayDatabase;
 import java.io.*;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Vector;
 import oracle.sql.BLOB;
-import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/08/27 08:09:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -48,8 +47,8 @@ final class RenderingObject {
 		this.column_widths = ro.column_widths;
 		this.tableDivisionsNumber = ro.tableDivisionsNumber;
 		
-		ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
-		boolean autoc = connCtx2.getConnection().getAutoCommit();
+		Connection conn = DefaultContext.getDefaultContext().getConnection();
+		boolean autoc = conn.getAutoCommit();
 
 
 		#sql{ insert into AMFICOM.REPORTTEMPLATEFIELDS(
@@ -87,7 +86,7 @@ final class RenderingObject {
 			System.out.println("Saving " + bytes.length + " bytes as blob:");
 			ByteArrayDatabase bArr = new ByteArrayDatabase(bytes);
 			bArr.saveAsBlob(
-				connCtx2.getConnection(),
+				conn,
 				"AMFICOM.REPORTTEMPLATEFIELDS",
 				"COL_WIDTHS",
 				"id = '" + this.roID + "'");
@@ -97,7 +96,7 @@ final class RenderingObject {
 			System.out.println("Saving " + bytes.length + " bytes as blob:");
 			bArr = new ByteArrayDatabase(bytes);
 			bArr.saveAsBlob(
-				connCtx2.getConnection(),
+				conn,
 				"AMFICOM.REPORTTEMPLATEFIELDS",
 				"IN_REPORT",
 				"id = '" + this.roID + "'");
@@ -109,7 +108,7 @@ final class RenderingObject {
 			ioe.printStackTrace();
 		}
 		#sql { commit };
-		connCtx2.getConnection().setAutoCommit(autoc);
+		conn.setAutoCommit(autoc);
 	}
 
 	RenderingObject(String id)
@@ -224,10 +223,10 @@ final class RenderingObject {
 				oos.writeInt(this.column_widths[i]);
 			byte[] bytes = baos.toByteArray();
 
-			ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
+			Connection conn = DefaultContext.getDefaultContext().getConnection();
 			ByteArrayDatabase bArr = new ByteArrayDatabase(bytes);
 			bArr.saveAsBlob(
-				connCtx2.getConnection(),
+				conn,
 				"AMFICOM.REPORTTEMPLATEFIELDS",
 				"COL_WIDTHS",
 				"id = '" + this.roID + "'");

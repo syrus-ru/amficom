@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectdbInterfaceLoad.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
+ * $Id: ObjectdbInterfaceLoad.sqlj,v 1.1.2.4 2004/08/27 08:09:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,12 +12,13 @@ import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.util.database.ByteArrayDatabase;
 import java.sql.*;
-import java.util.Vector;
+import java.util.*;
 import oracle.sql.BLOB;
 import sqlj.runtime.SQLNullException;
+import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/08/27 08:09:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -25,7 +26,9 @@ final class ObjectdbInterfaceLoad {
 	private ObjectdbInterfaceLoad() {
 	}
 
-	private static ObjectPermissionAttributes_Transferable loadPermissionAttributes(String id) {
+	private static ObjectPermissionAttributes_Transferable loadPermissionAttributes(Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_rwx = "";
 		String It_owner_id = "";
@@ -54,7 +57,7 @@ final class ObjectdbInterfaceLoad {
 
 		try
 		{
-			#sql exIt = {
+			#sql [connCtx] exIt = {
 				select
 						ID,
 						RWX,
@@ -106,7 +109,7 @@ final class ObjectdbInterfaceLoad {
 				vector2 = new Vector();
 				try
 				{
-					#sql ciIt = { select CATEGORY_ID from AMFICOM.OBJECTPERMISSIONCATEGORIES
+					#sql [connCtx] ciIt = { select CATEGORY_ID from AMFICOM.OBJECTPERMISSIONCATEGORIES
 							where OBJECT_PERMISSION_ID = :It_id };
 					while (ciIt.next())
 					{
@@ -129,7 +132,7 @@ final class ObjectdbInterfaceLoad {
 				vector2 = new Vector();
 				try
 				{
-					#sql giIt = { select GROUP_ID from AMFICOM.OBJECTPERMISSIONGROUPS
+					#sql [connCtx] giIt = { select GROUP_ID from AMFICOM.OBJECTPERMISSIONGROUPS
 							where OBJECT_PERMISSION_ID = :It_id };
 					while (giIt.next())
 					{
@@ -187,14 +190,16 @@ final class ObjectdbInterfaceLoad {
 		return opa;
 	}
 
-	private static String[] loadDomainLinks(String id) {
+	private static String[] loadDomainLinks(Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		InnerIdIterator idIt = null;
 		Vector vector = new Vector();
 		String[] ids = new String[0];
 		try
 		{
-			#sql idIt = {
+			#sql [connCtx] idIt = {
 				select INNER_DOMAIN_ID from AMFICOM.DOMAINLINKS
 				where DOMAIN_ID = :id
 			};
@@ -228,7 +233,9 @@ final class ObjectdbInterfaceLoad {
 
 	}
 
-	static int loadDomains(DomainSeq_TransferableHolder domainseq) {
+	static int loadDomains(Connection conn, DomainSeq_TransferableHolder domainseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_codename = "";
@@ -254,7 +261,7 @@ final class ObjectdbInterfaceLoad {
 
 		try
 		{
-			#sql dIt = {
+			#sql [connCtx] dIt = {
 				select
 						ID,
 						NAME,
@@ -304,7 +311,7 @@ final class ObjectdbInterfaceLoad {
 				catch(SQLException e) { }
 				if(It_object_permission_id == null) It_object_permission_id = "";
 
-				It_opa = loadPermissionAttributes(It_object_permission_id);
+				It_opa = loadPermissionAttributes(conn, It_object_permission_id);
 				if(It_opa == null)
 					It_opa = new ObjectPermissionAttributes_Transferable(
 							"",
@@ -320,7 +327,7 @@ final class ObjectdbInterfaceLoad {
 							"",
 							"");
 
-				domain_ids = loadDomainLinks(It_id);
+				domain_ids = loadDomainLinks(conn, It_id);
 
 				d_t = new Domain_Transferable(
 					It_id,
@@ -363,12 +370,14 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadCategories(OperatorCategorySeq_TransferableHolder categoryseq, String category_ids[]) {
+	static int loadCategories(Connection conn, OperatorCategorySeq_TransferableHolder categoryseq, String category_ids[]) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		Vector vec = new Vector();
 		OperatorCategory_Transferable cat;
 		for(int i = 0; i < category_ids.length; i++)
 		{
-			cat = loadCategory(category_ids[i]);
+			cat = loadCategory(conn, category_ids[i]);
 			if(cat != null)
 				vec.add(cat);
 		}
@@ -377,7 +386,9 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static OperatorCategory_Transferable loadCategory(String id) {
+	private static OperatorCategory_Transferable loadCategory(Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_codename = "";
@@ -393,7 +404,7 @@ final class ObjectdbInterfaceLoad {
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select
 						ID,
 						NAME,
@@ -420,7 +431,7 @@ final class ObjectdbInterfaceLoad {
 			vector2 = new Vector();
 			try
 			{
-				#sql uiIt = { select USER_ID from AMFICOM.USERCATEGORIES
+				#sql [connCtx] uiIt = { select USER_ID from AMFICOM.USERCATEGORIES
 						where CATEGORY_ID = :It_id };
 				while (uiIt.next())
 				{
@@ -432,7 +443,6 @@ final class ObjectdbInterfaceLoad {
 			catch(SQLException e)
 			{
 				uiIt.close();
-				System.out.println("could not get user for category " + It_id + ": " + e.getMessage());
 				e.printStackTrace();
 			}
 			finally
@@ -463,7 +473,9 @@ final class ObjectdbInterfaceLoad {
 		}
 	}
 
-	static int loadCategories(OperatorCategorySeq_TransferableHolder categoryseq) {
+	static int loadCategories(Connection conn, OperatorCategorySeq_TransferableHolder categoryseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_codename = "";
@@ -483,7 +495,7 @@ final class ObjectdbInterfaceLoad {
 
 		try
 		{
-			#sql cIt = {
+			#sql [connCtx] cIt = {
 				select
 						ID,
 						NAME,
@@ -513,7 +525,7 @@ final class ObjectdbInterfaceLoad {
 				vector2 = new Vector();
 				try
 				{
-					#sql uiIt = { select USER_ID from AMFICOM.USERCATEGORIES
+					#sql [connCtx] uiIt = { select USER_ID from AMFICOM.USERCATEGORIES
 							where CATEGORY_ID = :It_id };
 					while (uiIt.next())
 					{
@@ -573,12 +585,14 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadGroups(OperatorGroupSeq_TransferableHolder groupseq, String group_ids[]) {
+	static int loadGroups(Connection conn, OperatorGroupSeq_TransferableHolder groupseq, String group_ids[]) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		Vector vec = new Vector();
 		OperatorGroup_Transferable gr;
 		for(int i = 0; i < group_ids.length; i++)
 		{
-			gr = loadGroup(group_ids[i]);
+			gr = loadGroup(conn, group_ids[i]);
 			if(gr != null)
 				vec.add(gr);
 		}
@@ -587,7 +601,9 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static OperatorGroup_Transferable loadGroup(String id) {
+	private static OperatorGroup_Transferable loadGroup(Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_codename = "";
@@ -609,7 +625,7 @@ final class ObjectdbInterfaceLoad {
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select
 						ID,
 						NAME,
@@ -647,7 +663,7 @@ final class ObjectdbInterfaceLoad {
 			vector2 = new Vector();
 			try
 			{
-				#sql uiIt = { select USER_ID from AMFICOM.USERGROUPS
+				#sql [connCtx] uiIt = { select USER_ID from AMFICOM.USERGROUPS
 						where GROUP_ID = :It_id };
 				while (uiIt.next())
 				{
@@ -675,7 +691,7 @@ final class ObjectdbInterfaceLoad {
 			vector2 = new Vector();
 			try
 			{
-				#sql eiIt = { select EXEC_ID from AMFICOM.EXECGROUPS
+				#sql [connCtx] eiIt = { select EXEC_ID from AMFICOM.EXECGROUPS
 						where GROUP_ID = :It_id };
 				while (eiIt.next())
 				{
@@ -723,7 +739,9 @@ final class ObjectdbInterfaceLoad {
 		}
 	}
 
-	static int loadGroups(OperatorGroupSeq_TransferableHolder groupseq) {
+	static int loadGroups(Connection conn, OperatorGroupSeq_TransferableHolder groupseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_codename = "";
@@ -749,7 +767,7 @@ final class ObjectdbInterfaceLoad {
 
 		try
 		{
-			#sql gIt = {
+			#sql [connCtx] gIt = {
 				select
 						ID,
 						NAME,
@@ -794,7 +812,7 @@ final class ObjectdbInterfaceLoad {
 				vector2 = new Vector();
 				try
 				{
-					#sql uiIt = { select USER_ID from AMFICOM.USERGROUPS
+					#sql [connCtx] uiIt = { select USER_ID from AMFICOM.USERGROUPS
 							where GROUP_ID = :It_id };
 					while (uiIt.next())
 					{
@@ -822,7 +840,7 @@ final class ObjectdbInterfaceLoad {
 				vector2 = new Vector();
 				try
 				{
-					#sql eiIt = { select EXEC_ID from AMFICOM.EXECGROUPS
+					#sql [connCtx] eiIt = { select EXEC_ID from AMFICOM.EXECGROUPS
 							where GROUP_ID = :It_id };
 					while (eiIt.next())
 					{
@@ -887,12 +905,14 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadProfiles(OperatorProfileSeq_TransferableHolder profileseq, String profile_ids[]) {
+	static int loadProfiles(Connection conn, OperatorProfileSeq_TransferableHolder profileseq, String profile_ids[]) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		Vector vec = new Vector();
 		OperatorProfile_Transferable pr;
 		for(int i = 0; i < profile_ids.length; i++)
 		{
-			pr = loadProfile(profile_ids[i]);
+			pr = loadProfile(conn, profile_ids[i]);
 			if(pr != null)
 				vec.add(pr);
 		}
@@ -901,7 +921,9 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	private static OperatorProfile_Transferable loadProfile(String id) {
+	private static OperatorProfile_Transferable loadProfile(Connection conn, String id) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_codename = "";
@@ -958,7 +980,7 @@ final class ObjectdbInterfaceLoad {
 
 		try
 		{
-			#sql {
+			#sql [connCtx] {
 				select
 						ID,
 						NAME,
@@ -1088,7 +1110,7 @@ final class ObjectdbInterfaceLoad {
 			vector2 = new Vector();
 			try
 			{
-				#sql ciIt = { select CATEGORY_ID from AMFICOM.USERCATEGORIES
+				#sql [connCtx] ciIt = { select CATEGORY_ID from AMFICOM.USERCATEGORIES
 						where USER_ID = :It_user_id };
 				while (ciIt.next())
 				{
@@ -1116,7 +1138,7 @@ final class ObjectdbInterfaceLoad {
 			vector2 = new Vector();
 			try
 			{
-				#sql giIt = { select GROUP_ID from AMFICOM.USERGROUPS
+				#sql [connCtx] giIt = { select GROUP_ID from AMFICOM.USERGROUPS
 						where USER_ID = :It_user_id };
 				while (giIt.next())
 				{
@@ -1198,7 +1220,9 @@ final class ObjectdbInterfaceLoad {
 		}
 	}
 
-	static int loadProfiles(OperatorProfileSeq_TransferableHolder profileseq) {
+	static int loadProfiles(Connection conn, OperatorProfileSeq_TransferableHolder profileseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_name = "";
 		String It_codename = "";
@@ -1259,7 +1283,7 @@ final class ObjectdbInterfaceLoad {
 
 		try
 		{
-			#sql opIt = {
+			#sql [connCtx] opIt = {
 				select
 						ID,
 						NAME,
@@ -1405,7 +1429,7 @@ final class ObjectdbInterfaceLoad {
 				vector2 = new Vector();
 				try
 				{
-					#sql ciIt = { select CATEGORY_ID from AMFICOM.USERCATEGORIES
+					#sql [connCtx] ciIt = { select CATEGORY_ID from AMFICOM.USERCATEGORIES
 							where USER_ID = :It_user_id };
 					while (ciIt.next())
 					{
@@ -1433,7 +1457,7 @@ final class ObjectdbInterfaceLoad {
 				vector2 = new Vector();
 				try
 				{
-					#sql giIt = { select GROUP_ID from AMFICOM.USERGROUPS
+					#sql [connCtx] giIt = { select GROUP_ID from AMFICOM.USERGROUPS
 							where USER_ID = :It_user_id };
 					while (giIt.next())
 					{
@@ -1533,7 +1557,9 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadExecs(CommandPermissionAttributesSeq_TransferableHolder execseq) {
+	static int loadExecs(Connection conn, CommandPermissionAttributesSeq_TransferableHolder execseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
 		String It_id = "";
 		String It_rwx = "";
 		String It_owner_id = "";
@@ -1562,7 +1588,7 @@ final class ObjectdbInterfaceLoad {
 
 		try
 		{
-			#sql exIt = {
+			#sql [connCtx] exIt = {
 				select
 						ID,
 						RWX,
@@ -1613,7 +1639,7 @@ final class ObjectdbInterfaceLoad {
 				vector2 = new Vector();
 				try
 				{
-					#sql ciIt = { select CATEGORY_ID from AMFICOM.EXECCATEGORIES
+					#sql [connCtx] ciIt = { select CATEGORY_ID from AMFICOM.EXECCATEGORIES
 							where EXEC_ID = :It_id };
 					while (ciIt.next())
 					{
@@ -1641,7 +1667,7 @@ final class ObjectdbInterfaceLoad {
 				vector2 = new Vector();
 				try
 				{
-					#sql giIt = { select GROUP_ID from AMFICOM.EXECGROUPS
+					#sql [connCtx] giIt = { select GROUP_ID from AMFICOM.EXECGROUPS
 							where EXEC_ID = :It_id };
 					while (giIt.next())
 					{
@@ -1711,182 +1737,85 @@ final class ObjectdbInterfaceLoad {
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static int loadUserDescriptors(UserSeq_TransferableHolder userseq) {
-		String It_id = "";
-		String It_login = "";
-		String It_type = "";
+	static void loadUserDescriptors(Connection conn, UserSeq_TransferableHolder userseq) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
 
-		String object_id = "";
-		long last_login = 0;
-		long logged = 0;
-		int sessions = 0;
-		Timestamp lastlogin;
-
-		String[] category_ids = new String[0];
-		String[] group_ids = new String[0];
-
-		Vector vector = new Vector();
-
-		User_Transferable u_t;
-		User_Transferable[] u_ts;
 		UserIterator uIt = null;
-
-		CategoryIdIterator ciIt = null;
-		GroupIdIterator giIt = null;
-		Vector vector2;
-
-		try
-		{
-			#sql uIt = {
-				select
-						ID,
-						LOGIN,
-						TYPE,
-						OPERATOR_ID,
-						OPERATIONAL_ID,
-						SUBSCRIBER_ID,
-						ORGANIZATION_ID
-					from AMFICOM.USERS
+		try {
+			#sql [connCtx] uIt = {
+				SELECT id, login, type, operator_id, operational_id, subscriber_id, organization_id FROM amficom.users
 			};
+			Collection vector = new LinkedList();
+			while (uIt.next()) {
+				String object_id = null;
+				Timestamp lastlogin;
+				long last_login = 0;
+				long logged = 0;
+				int sessions = 0;
 
-			while (uIt.next())
-			{
-				try { It_id = uIt.id(); }
-				catch(SQLException e) { }
-				if(It_id == null) It_id = "";
-				try { It_login = uIt.login(); }
-				catch(SQLException e) { }
-				if(It_login == null) It_login = "";
-				try { It_type = uIt.type(); }
-				catch(SQLException e) { }
-				if(It_type == null) It_type = "";
-				if(It_type.equals("operatorprofile"))
-				{
-					try { object_id = uIt.operator_id(); }
-					catch(SQLException e) { }
-					try {
-						#sql { select LAST_LOGIN into :lastlogin
-								from AMFIcOM.OPERATORPROFILES
-									where ID = :object_id };
-						last_login = lastlogin.getTime();
-					} catch(Exception e) { }
+				String It_id = uIt.id();
+				if (It_id == null)
+					It_id = "";
+				String It_login = uIt.login();
+				if (It_login == null)
+					It_login = "";
+				String It_type = uIt.type();
+				if (It_type == null)
+					It_type = "";
+				if (It_type.equals("operatorprofile")) {
+					object_id = uIt.operator_id();
+					#sql [connCtx] {
+						select LAST_LOGIN into :lastlogin from AMFIcOM.OPERATORPROFILES where ID = :object_id
+					};
+					last_login = lastlogin.getTime();
 					logged = last_login;
-					#sql { select COUNT(*) into :sessions
-							from AMFIcOM.LOGGEDUSERS
-								where USER_ID = :It_id };
+					#sql [connCtx] {
+						select COUNT(*) into :sessions from AMFIcOM.LOGGEDUSERS where USER_ID = :It_id
+					};
+				} else if (It_type.equals("operationalprofile")) {
+					object_id = uIt.operational_id();
+				} else if (It_type.equals("subscriberprofile")) {
+					object_id = uIt.subscriber_id();
+				} else if (It_type.equals("organizationprofile")) {
+					object_id = uIt.organization_id();
 				}
-				else
-				if(It_type.equals("operationalprofile"))
-				{
-					try { object_id = uIt.operational_id(); }
-					catch(SQLException e) { }
-				}
-				else
-				if(It_type.equals("subscriberprofile"))
-				{
-					try { object_id = uIt.subscriber_id(); }
-					catch(SQLException e) { }
-				}
-				else
-				if(It_type.equals("organizationprofile"))
-				{
-					try { object_id = uIt.organization_id(); }
-					catch(SQLException e) { }
-				}
-				if(object_id == null) object_id = "";
+				if (object_id == null)
+					object_id = "";
 
-				vector2 = new Vector();
-				try
-				{
-					#sql ciIt = { select CATEGORY_ID from AMFICOM.USERCATEGORIES
+				Collection vector2 = new LinkedList();
+				CategoryIdIterator ciIt = null;
+				try {
+					#sql [connCtx] ciIt = { select CATEGORY_ID from AMFICOM.USERCATEGORIES
 							where USER_ID = :It_id };
-					while (ciIt.next())
-					{
-						try { vector2.addElement(ciIt.category_id()); }
-						catch(SQLNullException e) { }
+					while (ciIt.next()) {
+						vector2.add(ciIt.category_id());
 					}
-					ciIt.close();
-				}
-				catch(SQLException e)
-				{
-					ciIt.close();
-					System.out.println("could not get category for user " + It_id + ": " + e.getMessage());
-					e.printStackTrace();
-				}
-				finally
-				{
-					try {
+				} finally {
+					if (ciIt != null)
 						ciIt.close();
-					}catch(Exception exe) {}
 				}
-				
-				category_ids = new String[vector2.size()];
-				vector2.copyInto(category_ids);
+				String category_ids[] = (String[]) (vector2.toArray(new String[vector2.size()]));
 
-				vector2 = new Vector();
-				try
-				{
-					#sql giIt = { select GROUP_ID from AMFICOM.USERGROUPS
-							where USER_ID = :It_id };
+				vector2.clear();
+				GroupIdIterator giIt = null;
+				try {
+					#sql [connCtx] giIt = {
+						SELECT group_id FROM amficom.usergroups WHERE user_id = :It_id
+					};
 					while (giIt.next())
-					{
-						try { vector2.addElement(giIt.group_id()); }
-						catch(SQLNullException e) { }
-					}
-					giIt.close();
-				}
-				catch(SQLException e)
-				{
-					giIt.close();
-					System.out.println("could not get group for user " + It_id + ": " + e.getMessage());
-					e.printStackTrace();
-				}
-				finally
-				{
-					try {
+						vector2.add(giIt.group_id());
+				} finally {
+					if (giIt != null)
 						giIt.close();
-					}catch(Exception exe) {}
 				}
-				
-				group_ids = new String[vector2.size()];
-				vector2.copyInto(group_ids);
-
-				u_t = new User_Transferable(
-					It_id,
-					object_id,
-					It_login,
-					It_type,
-					last_login,
-					logged,
-					sessions,
-					category_ids,
-					group_ids);
-
-				vector.add(u_t);
+				String group_ids[] = (String[]) (vector2.toArray(new String[vector2.size()]));
+				vector.add(new User_Transferable(It_id, object_id, It_login, It_type, last_login, logged, sessions, category_ids, group_ids));
 			}
-			uIt.close();
-			u_ts = new User_Transferable[vector.size()];
-			vector.copyInto(u_ts);
-			userseq.value = u_ts;
-
-		}
-		catch(SQLException e)
-		{
-			if(uIt != null) try {
-			uIt.close();
-			}catch(Exception exe) {}
-			System.out.println("error loading users: " + e.getMessage());
-			e.printStackTrace();
-			return Constants.ERROR_LOADING;
-		}
-		finally
-		{
-			try {
+			userseq.value = (User_Transferable[]) (vector.toArray(new User_Transferable[vector.size()]));
+		} finally {
+			if (uIt != null)
 				uIt.close();
-			}catch(Exception exe) {}
 		}
-		
-		return Constants.ERROR_NO_ERROR;
 	}
 
 	#sql public static iterator CategoryIdIterator(
@@ -1950,12 +1879,10 @@ final class ObjectdbInterfaceLoad {
 		String owner_id,
 		String name,
 		String codename,
-
 		Timestamp created,
 		String created_by,
 		Timestamp modified,
 		String modified_by,
-
 		String whyrejected );
 
 	#sql public static iterator OperatorProfileIterator(
@@ -1963,30 +1890,22 @@ final class ObjectdbInterfaceLoad {
 		String name,
 		String codename,
 		String description,
-
 		Timestamp created,
 		String created_by,
 		Timestamp modified,
 		String modified_by,
-
 		String user_id,
 		String owner_id,
-
 		String login,
 		BLOB password,
-
 		long password_expiry,
-
 		Timestamp last_login,
 		String status,
 		String state,
-
 		Timestamp disabled,
 		String disabled_comments,
-
 		String priority,
 		String logfile,
-
 		String first_name,
 		String second_name,
 		String last_name,
@@ -1994,11 +1913,9 @@ final class ObjectdbInterfaceLoad {
 		String phone_home,
 		String phone_mobile,
 		String phone_emergency,
-
 		String pager_phone,
 		String pager_number,
 		String sms_number,
-
 		String address,
 		String language,
 		String organization,

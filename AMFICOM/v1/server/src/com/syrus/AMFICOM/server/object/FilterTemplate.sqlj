@@ -1,5 +1,5 @@
 /*
- * $Id: FilterTemplate.sqlj,v 1.1.2.2 2004/08/24 15:43:43 bass Exp $
+ * $Id: FilterTemplate.sqlj,v 1.1.2.3 2004/08/27 08:09:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,25 +10,21 @@ package com.syrus.AMFICOM.server.object;
 
 import com.syrus.AMFICOM.CORBA.Resource.Filter_Transferable;
 import com.syrus.util.database.ByteArrayDatabase;
-import java.sql.SQLException;
+import java.sql.*;
 import oracle.sql.BLOB;
-import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/24 15:43:43 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/27 08:09:21 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class FilterTemplate
-{
+final class FilterTemplate {
 	private String id;
 	private String resource_typ;
 	private byte[] logic_scheme;
 
-	public FilterTemplate(Filter_Transferable filter)
-			throws SQLException
-	{
+	FilterTemplate(Filter_Transferable filter) throws SQLException {
 		this.id = filter.id; 
 		this.resource_typ = filter.resource_typ;
 		this.logic_scheme = filter.logic_scheme;
@@ -49,15 +45,12 @@ public class FilterTemplate
 
 			ByteArrayDatabase bArr = new ByteArrayDatabase(this.logic_scheme);
       
-			ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
-			boolean autoc = connCtx2.getConnection().getAutoCommit();
-      
+			Connection conn = DefaultContext.getDefaultContext().getConnection();
 			bArr.saveAsBlob(
-				connCtx2.getConnection(),
+				conn,
 				"AMFICOM.FILTERS",
 				"LOGIC_SCHEME",
 				"id = '" + this.id + "'");
-        
 		}
 		catch(Exception ioe)
 		{
@@ -67,9 +60,7 @@ public class FilterTemplate
 		#sql { commit };
 	}
 
-	public FilterTemplate(String id)
-			throws SQLException
-	{
+	FilterTemplate(String id) throws SQLException {
 		FilterIterator fIt = null;
 
 		try
@@ -125,58 +116,9 @@ public class FilterTemplate
 			this.logic_scheme);
 	}
 
-	public String getId()
-	{
+	String getId() {
 		return this.id;
 	}
-
-	public void delete() throws Exception
-	{
-		#sql { delete from AMFICOM.FILTERS
-			where ID = :(this.id)
-		};
-		#sql { commit };
-	}
-
-	public void update(Filter_Transferable filter) throws Exception
-	{
-		this.resource_typ = filter.resource_typ;
-		this.logic_scheme = filter.logic_scheme;
-
-		#sql{ update AMFICOM.FILTERS set
-				ID = :(this.id),
-				RESOURCE_TYP = :(this.resource_typ),
-				LOGIC_SCHEME = empty_blob()
-			where ID = :(this.id)
-		};
-
- 		try
-		{
-			System.out.println("Saving " + this.logic_scheme.length + " bytes as blob:");
-
-			ByteArrayDatabase bArr = new ByteArrayDatabase(this.logic_scheme);
-      
-			ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
-			boolean autoc = connCtx2.getConnection().getAutoCommit();
-      
-			bArr.saveAsBlob(
-				connCtx2.getConnection(),
-				"AMFICOM.FILTERS",
-				"LOGIC_SCHEME",
-				"id = '" + this.id + "'");
-        
-		}
-		catch(Exception ioe)
-		{
-			System.out.println("error saving FILTERS: " + ioe.getMessage());
-			ioe.printStackTrace();
-		}
-
-		#sql { commit };
-	}
-
-	#sql public static iterator IdIterator(
-		String id);
 
 	#sql public static iterator FilterIterator(
 		String id,

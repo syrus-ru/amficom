@@ -1,5 +1,5 @@
 /*
- * $Id: AdmindbInterfaceLoad.sqlj,v 1.1.2.2 2004/08/20 17:12:08 bass Exp $
+ * $Id: AdmindbInterfaceLoad.sqlj,v 1.1.2.3 2004/08/27 08:09:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,20 +14,15 @@ import java.sql.*;
 import java.util.Vector;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/20 17:12:08 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/27 08:09:21 $
  * @author $Author: bass $
  * @module server_v1
  */
-public class AdmindbInterfaceLoad
-{
-	protected AdmindbInterfaceLoad()
-	{
+final class AdmindbInterfaceLoad {
+	private AdmindbInterfaceLoad() {
 	}
 
-	public static int loadServers(
-			ServerSeq_TransferableHolder serverseq,
-			String []server_ids)
-	{
+	static int loadServers(ServerSeq_TransferableHolder serverseq, String []server_ids) {
 		Vector vec = new Vector();
 		Server_Transferable server;
 		for(int i = 0; i < server_ids.length; i++)
@@ -41,8 +36,7 @@ public class AdmindbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static Server_Transferable loadServer(String id)
-	{
+	private static Server_Transferable loadServer(String id) {
 		String It_id = "";
 		String It_name = "";
 		String It_version = "";
@@ -117,9 +111,7 @@ public class AdmindbInterfaceLoad
 		}
 	}
 
-	public static int loadServers(
-			ServerSeq_TransferableHolder serverseq)
-	{
+	static int loadServers(ServerSeq_TransferableHolder serverseq) {
 		String It_id = "";
 		String It_name = "";
 		String It_version = "";
@@ -214,10 +206,7 @@ public class AdmindbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int loadClients(
-			ClientSeq_TransferableHolder clientseq,
-			String []client_ids)
-	{
+	static int loadClients(ClientSeq_TransferableHolder clientseq, String []client_ids) {
 		Vector vec = new Vector();
 		Client_Transferable client;
 		for(int i = 0; i < client_ids.length; i++)
@@ -230,8 +219,8 @@ public class AdmindbInterfaceLoad
 		vec.copyInto(clientseq.value);
 		return Constants.ERROR_NO_ERROR;
 	}
-	public static Client_Transferable loadClient(String id)
-	{
+
+	private static Client_Transferable loadClient(String id) {
 		String It_id = "";
 		String It_name = "";
 		String It_version = "";
@@ -308,10 +297,7 @@ public class AdmindbInterfaceLoad
 		}
 	}
 
-
-	public static int loadClients(
-			ClientSeq_TransferableHolder clientseq)
-	{
+	static int loadClients(ClientSeq_TransferableHolder clientseq) {
 		String It_id = "";
 		String It_name = "";
 		String It_version = "";
@@ -404,10 +390,7 @@ public class AdmindbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static int loadAgents(
-			AgentSeq_TransferableHolder agentseq,
-			String []agent_ids)
-	{
+	static int loadAgents(AgentSeq_TransferableHolder agentseq, String []agent_ids) {
 		Vector vec = new Vector();
 		Agent_Transferable agent;
 		for(int i = 0; i < agent_ids.length; i++)
@@ -421,8 +404,7 @@ public class AdmindbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	public static Agent_Transferable loadAgent(String id)
-	{
+	private static Agent_Transferable loadAgent(String id) {
 		String It_id = "";
 		String It_name = "";
 		String It_version = "";
@@ -499,9 +481,7 @@ public class AdmindbInterfaceLoad
 		}
 	}
 
-	public static int loadAgents(
-			AgentSeq_TransferableHolder agentseq)
-	{
+	static int loadAgents(AgentSeq_TransferableHolder agentseq) {
 		String It_id = "";
 		String It_name = "";
 		String It_version = "";

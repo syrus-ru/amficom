@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMdbGeneral.sqlj,v 1.1.2.3 2004/08/23 11:43:50 bass Exp $
+ * $Id: AMFICOMdbGeneral.sqlj,v 1.1.2.4 2004/08/27 08:09:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,21 +13,20 @@ import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
 import com.syrus.io.Rewriter;
-import com.syrus.util.database.ByteArrayDatabase;
+import com.syrus.util.database.JdbcBlobManager;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import oracle.sql.BLOB;
-import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/23 11:43:50 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/08/27 08:09:21 $
  * @author $Author: bass $
  * @module server_v1
  */
 final class AMFICOMdbGeneral {
-	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+	private AMFICOMdbGeneral() {
+	}
 
 	static void checkUserPrivileges(AccessIdentity_Transferable accessIdentity) throws AMFICOMRemoteException {
 		try {
@@ -43,270 +42,109 @@ final class AMFICOMdbGeneral {
 		}
 	}
 
-	public static int Logon(String username, byte password[], String ior, AccessIdentity_TransferableHolder accessIdentity)
-			throws AMFICOMRemoteException
-	{
-		try
-		{
-			String id = "";
-			String sess = "sess";
-			String sess_code = "";
-			String pwd = "";
-			long pwd_exp = 0;
-			String type = "";
-			BLOB pwd_blob = null;
-			Timestamp tms = new Timestamp(System.currentTimeMillis());
+	static void login(Connection conn, String username, byte password[], String ior, AccessIdentity_TransferableHolder accessIdentity) throws SQLException, AMFICOMRemoteException {
+		DefaultContext connCtx = new DefaultContext(conn);
 
-
-			accessIdentity.value = new AccessIdentity_Transferable(0, "", "", "", "sysdomain");
-
-			try
-			{
-				#sql
-				{
-					select ID, TYPE into :id, :type from AMFICOM.USERS where LOGIN = :username
-				};
-			}
-			catch (SQLException e)
-			{
-				System.out.println("id " + id + " type " + type);
-				e.printStackTrace();
-				int errorCode = e.getErrorCode();
-				if (errorCode == 8000)
-					return Constants.ERROR_NO_CONNECT;
-				else if (errorCode == 2000)
-					return Constants.ERROR_WRONG_LOGIN;
-				else if (errorCode == 8003)
-					return Constants.ERROR_RISD_ERROR;
-				else
-					throw e;
-			}
-			if (type.equals("operatorprofile"))
-			{
-				String op_id = "";
-				try
-				{
-					#sql
-					{
-						select OPERATOR_ID into :op_id from AMFICOM.USERS where LOGIN = :username
-					};
-				}
-				catch (SQLException ex1)
-				{
-					;
-				}
-				System.out.println("op_id " + op_id);
-
-				try
-				{
-					#sql
-					{
-						select PASSWORD, PASSWORD_EXPIRY into :pwd_blob, :pwd_exp from AMFICOM.OPERATORPROFILES where ID = :op_id
-					};
-				}
-				catch (Exception ex1)
-				{
-					ex1.printStackTrace();
-					throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, "field PASSWORD cannot be updated");
-				}
-
-				byte pwd_bytes[] = ByteArrayDatabase.toByteArray(pwd_blob);
-				String decpwd = Rewriter.read(pwd_bytes);
-				String logpwd = Rewriter.read(password);
-				if (!decpwd.equals(logpwd))
-					return Constants.ERROR_WRONG_PASSWORD;
-
-				if ((!id.equals("sys")) && (pwd_exp != 0) && (pwd_exp < System.currentTimeMillis()))
-					throw new AMFICOMRemoteException(Constants.ERROR_PASSWORD_EXPIRED, "fn Logon: Ограниечение времени действия логина");
-			}
-			try
-			{
-				sess = ResourcedbInterface.getUId("loggeduser");
-
-				ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
-				Connection conn = connCtx2.getConnection();
-
-				boolean autoc = conn.getAutoCommit();
-				conn.setAutoCommit(false);
-
-				#sql
-				{
-					insert into AMFICOM.IORS (ID, IOR) values(:sess, empty_blob() )
-				};
-
-				ByteArrayDatabase bArr = new ByteArrayDatabase(ior.getBytes());
-
-				#sql
-				{
-					commit
-				};
-
-				conn.setAutoCommit(false);
-				bArr.saveAsBlob(conn, "AMFICOM.IORS", "IOR", "id = '" + sess + "'");
-
-				conn.createStatement().execute("COMMIT");
-				conn.setAutoCommit(autoc);
-
-				#sql
-				{ 
-					insert into AMFICOM.LOGGEDUSERS (ID, NAME, LOGGED, USER_ID, ACCESSED) values (:sess, :username, SYSDATE, :id, SYSDATE)
-				};
-				System.out.println("ok iserted!!");
-				#sql
-				{
-					select LOGGED into :tms from AMFICOM.LOGGEDUSERS where ID = :sess
-				};
-			}
-			catch (SQLException e)
-			{
-				System.out.println("error sess " + sess + " error is " + e.getErrorCode() + " " + e.getMessage());
-				e.printStackTrace();
-				if(e.getErrorCode() == 8003)
-					return Constants.ERROR_RISD_ERROR;
-				else
-					throw e;
-			}
-			catch (Exception e)
-			{
-				System.out.println("error sess " + sess + " error is " + e.getMessage());
-				e.printStackTrace();
-				throw e;
-			}
-			#sql
-			{
-				commit
-			};
-
-			System.out.println("sess " + sess + " at " + SIMPLE_DATE_FORMAT.format(tms));
-			accessIdentity.value = new AccessIdentity_Transferable(Calendar.getInstance().getTime().getTime(), username, id, sess, "sysdomain");
-
-			return Constants.ERROR_NO_ERROR;
-		}
-		catch (Exception e)
-		{
-			throw new AMFICOMRemoteException(1, "fn Logon:" + e.getMessage());
-		}
-	}
-
-	public static int Logoff(AccessIdentity_Transferable accessIdentity)
-		throws AMFICOMRemoteException
-	{
-	try
-	{
-		int i = 0;
-		int count;
-		String nm;
-		String sessid = accessIdentity.sess_id;
-
-		#sql {delete from AMFICOM.IORS
-			where ID = :sessid };
-
-		#sql {delete from AMFICOM.LOGGEDUSERS
-			where ID = :sessid };
-		#sql { commit };
-
-		return Constants.ERROR_NO_ERROR;
-	}
-	catch (Exception e)
-	{
-		e.printStackTrace();
-		throw new AMFICOMRemoteException(1, "fn Logoff:" + e.getMessage ());
-	}
-	}
-
-	public static int GetLoggedUserIds(
-			AccessIdentity_Transferable accessIdentity,
-			wstringSeqHolder userids)
-		throws AMFICOMRemoteException
-	{
-		Vector vec = new Vector();
-		userids.value = new String[0];
-
-		UserIdIterator uIt = null;
-
-		try
-		{
-			#sql uIt = { select USER_ID
-				from AMFICOM.LOGGEDUSERS
-			};
-			while(uIt.next())
-			{
-				System.out.println("adding " + uIt.user_id());
-				try { vec.add(uIt.user_id()); }
-				catch(SQLException e) { }
-			}
-			uIt.close();
-		}
-		catch (Exception ex1)
-		{
-			if(uIt != null) try {
-			uIt.close();
-			}catch(Exception exe) {}
-			ex1.printStackTrace();
-			throw new AMFICOMRemoteException(1, "fn GetLoggedUserIds:" + ex1.getMessage ());
-		}
-		userids.value = new String[vec.size()];
-		vec.copyInto(userids.value);
-
-		return Constants.ERROR_NO_ERROR;
-	}
-
-	public static int ChangePassword(
-			AccessIdentity_Transferable accessIdentity,
-			byte[] oldpassword,
-			byte[] newpassword)
-		throws AMFICOMRemoteException
-	{
-		String user_id;
+		String id;
 		String type;
-		String op_id = "";
-		String pwd = "";
-		BLOB pwd_blob = null;
-		long pwd_exp = 0;
-		try
-		{
-			#sql {
-				select USER_ID into :user_id
-					from AMFICOM.LOGGEDUSERS
-					where ID = :(accessIdentity.sess_id)
+		#sql [connCtx] {
+			SELECT id, type INTO :id, :type FROM amficom.users WHERE login = :username
+		};
+		if (type.equals("operatorprofile")) {
+			String op_id;
+			#sql [connCtx] {
+				SELECT operator_id INTO :op_id FROM amficom.users WHERE login = :username
 			};
-			#sql { select TYPE into :type
-				from AMFICOM.USERS
-				where ID = :user_id };
 
-			if(type.equals("operatorprofile"))
-			{
-				#sql { select OPERATOR_ID into :op_id
-					from AMFICOM.USERS where ID = :user_id };
-				System.out.println("op_id " + op_id);
+			BLOB pwd_blob;
+			long pwd_exp;
+			#sql [connCtx] {
+				SELECT password, password_expiry INTO :pwd_blob, :pwd_exp FROM amficom.operatorprofiles WHERE id = :op_id
+			};
 
-				#sql { select PASSWORD, PASSWORD_EXPIRY into :pwd_blob, :pwd_exp
-					from AMFICOM.OPERATORPROFILES where ID = :op_id };
+			byte pwd_bytes[] = JdbcBlobManager.getData(pwd_blob);
+			String decpwd = Rewriter.read(pwd_bytes);
+			String logpwd = Rewriter.read(password);
+			if (!decpwd.equals(logpwd))
+				throw new AMFICOMRemoteException(Constants.ERROR_WRONG_PASSWORD, "Wrong password.");
 
-				pwd = Rewriter.read(ByteArrayDatabase.toByteArray(pwd_blob));
-				if(!pwd.equals(Rewriter.read(oldpassword)))
-					return Constants.ERROR_WRONG_PASSWORD;
-
-				ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
-				Connection conn = connCtx2.getConnection();
-
-				ByteArrayDatabase bad = new ByteArrayDatabase(newpassword);
-				bad.saveAsBlob(
-						conn,
-						"AMFICOM.OPERATORPROFILES",
-						"PASSWORD",
-						"id = '" + op_id + "'");
-			}
-			#sql { commit };
+			if ((!id.equals("sys")) && (pwd_exp != 0) && (pwd_exp < System.currentTimeMillis()))
+				throw new AMFICOMRemoteException(Constants.ERROR_PASSWORD_EXPIRED, "Password expired.");
 		}
-		catch (Exception e)
-		{
-			throw new AMFICOMRemoteException(
-					Constants.ERROR_SAVING,
-					"Ошибка: " + e.getMessage());
-		}
-		return Constants.ERROR_NO_ERROR;
+		String sess = ResourcedbInterface.getUid(conn, "loggeduser");
+
+		#sql [connCtx] {
+			INSERT INTO amficom.iors (id, ior) VALUES (:sess, empty_blob())
+		};
+		JdbcBlobManager.setData(conn, "ior", "amficom.iors", "id = '" + sess + '\'', false, ior.getBytes());
+		#sql [connCtx] {
+			INSERT INTO amficom.loggedusers (id, name, logged, user_id, accessed) VALUES (:sess, :username, sysdate, :id, sysdate)
+		};
+		conn.commit();
+		accessIdentity.value = new AccessIdentity_Transferable(System.currentTimeMillis(), username, id, sess, "sysdomain");
 	}
 
-	#sql public static iterator UserIdIterator( String user_id );
+	static void logout(Connection conn, AccessIdentity_Transferable accessIdentity) throws SQLException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
+		String sessid = accessIdentity.sess_id;
+		#sql [connCtx] {
+			DELETE FROM amficom.iors WHERE id = :sessid
+		};
+		#sql [connCtx] {
+			DELETE FROM amficom.loggedusers WHERE id = :sessid
+		};
+		conn.commit();
+	}
+
+	static void getLoggedUserIds(Connection conn, AccessIdentity_Transferable accessIdentity, wstringSeqHolder userids) throws SQLException {
+		UserIdIterator uIt = null;
+		try {
+			DefaultContext connCtx = new DefaultContext(conn);
+
+			#sql [connCtx] uIt = {
+				SELECT user_id FROM amficom.loggedusers
+			};
+			List userIdList = new LinkedList();
+			while(uIt.next())
+				userIdList.add(uIt.user_id());
+			userids.value = (String[]) (userIdList.toArray(new String[userIdList.size()]));
+		} finally {
+			if (uIt != null)
+				uIt.close();
+		}
+	}
+
+	static void changePassword(Connection conn, AccessIdentity_Transferable accessIdentity, byte[] oldpassword, byte[] newpassword) throws SQLException, AMFICOMRemoteException {
+		DefaultContext connCtx = new DefaultContext(conn);
+
+		String user_id;
+		#sql [connCtx] {
+			SELECT user_id INTO :user_id FROM amficom.loggedusers WHERE id = :(accessIdentity.sess_id)
+		};
+
+		String type;
+		#sql [connCtx] {
+			SELECT type INTO :type FROM amficom.users WHERE id = :user_id
+		};
+		if (type.equals("operatorprofile")) {
+			String op_id;
+			#sql [connCtx] {
+				SELECT operator_id INTO :op_id FROM amficom.users WHERE id = :user_id
+			};
+
+			BLOB pwd_blob;
+			long pwd_exp;
+			#sql [connCtx] {
+				SELECT password, password_expiry INTO :pwd_blob, :pwd_exp FROM amficom.operatorprofiles WHERE id = :op_id
+			};
+
+			if (!Rewriter.read(JdbcBlobManager.getData(pwd_blob)).equals(Rewriter.read(oldpassword)))
+				throw new AMFICOMRemoteException(Constants.ERROR_WRONG_PASSWORD, "Wrong password.");
+
+			JdbcBlobManager.setData(conn, "password", "amficom.operatorprofiles", "id = '" + op_id + '\'', newpassword);
+		}
+	}
+
+	#sql private static final iterator UserIdIterator( String user_id );
 }

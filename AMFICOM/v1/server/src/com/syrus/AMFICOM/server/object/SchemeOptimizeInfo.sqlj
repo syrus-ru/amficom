@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeOptimizeInfo.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
+ * $Id: SchemeOptimizeInfo.sqlj,v 1.1.2.4 2004/08/27 08:09:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,14 +12,13 @@ import com.syrus.AMFICOM.CORBA.Scheme.SchemeOptimizeInfo_Transferable;
 import com.syrus.util.ByteArray;
 import com.syrus.util.database.ByteArrayDatabase;
 import java.io.*;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Vector;
 import oracle.sql.BLOB;
-import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/08/27 08:09:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -185,45 +184,45 @@ final class SchemeOptimizeInfo {
 			switch_names_b = new byte[0];
 		}
 
-		ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
+		Connection conn = DefaultContext.getDefaultContext().getConnection();
 		ByteArrayDatabase bad = new ByteArrayDatabase(refl_prices_b);
 		bad.saveAsBlob(
-			connCtx2.getConnection(),
+			conn,
 			"AMFICOM.SCHEMEOPTIMIZEINFO",
 			"REFL_PRICES",
 			"id = '" + id + "'");
 
 		bad = new ByteArrayDatabase(refl_names_b);
 		bad.saveAsBlob(
-			connCtx2.getConnection(),
+			conn,
 			"AMFICOM.SCHEMEOPTIMIZEINFO",
 			"REFL_NAMES",
 			"id = '" + id + "'");
 
 		bad = new ByteArrayDatabase(refl_ranges_b);
 		bad.saveAsBlob(
-			connCtx2.getConnection(),
+			conn,
 			"AMFICOM.SCHEMEOPTIMIZEINFO",
 			"REFL_RANGES",
 			"id = '" + id + "'");
 
 		bad = new ByteArrayDatabase(switch_prices_b);
 		bad.saveAsBlob(
-			connCtx2.getConnection(),
+			conn,
 			"AMFICOM.SCHEMEOPTIMIZEINFO",
 			"SWITCH_PRICES",
 			"id = '" + id + "'");
 
 		bad = new ByteArrayDatabase(switch_nports_b);
 		bad.saveAsBlob(
-			connCtx2.getConnection(),
+			conn,
 			"AMFICOM.SCHEMEOPTIMIZEINFO",
 			"SWITCH_NPORTS",
 			"id = '" + id + "'");
 
 		bad = new ByteArrayDatabase(switch_names_b);
 		bad.saveAsBlob(
-			connCtx2.getConnection(),
+			conn,
 			"AMFICOM.SCHEMEOPTIMIZEINFO",
 			"SWITCH_NAMES",
 			"id = '" + id + "'");

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemedbInterfaceSave.sqlj,v 1.1.2.3 2004/08/24 15:43:44 bass Exp $
+ * $Id: SchemedbInterfaceSave.sqlj,v 1.1.2.4 2004/08/27 08:09:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,11 +14,10 @@ import com.syrus.AMFICOM.server.ResourcedbInterface;
 import com.syrus.util.database.ByteArrayDatabase;
 import java.sql.*;
 import java.util.Vector;
-import sqlj.runtime.ConnectionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/08/24 15:43:44 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/08/27 08:09:21 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -692,10 +691,9 @@ final class SchemedbInterfaceSave {
                             :(scheme.height),
                             empty_blob() )
 				};
-				ConnectionContext connCtx2 = DefaultContext.getDefaultContext();
 				ByteArrayDatabase bArr = new ByteArrayDatabase(scheme.clonez);
 				bArr.saveAsBlob(
-						connCtx2.getConnection(),
+						DefaultContext.getDefaultContext().getConnection(),
 						"AMFICOM.SCHEMES",
 						"CLONEZ",
 						"id = '" + scheme.id + "'");
