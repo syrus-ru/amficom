@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.86 2005/01/26 15:43:17 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.87 2005/01/28 12:19:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,16 +39,13 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/01/26 15:43:17 $
+ * @version $Revision: 1.87 $, $Date: 2005/01/28 12:19:02 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
 public class CMServerImpl extends CMMeasurementTransmit {
 
-/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
 	private static final long serialVersionUID = 3760563104903672628L;
 
 //    private MServer mServer;
