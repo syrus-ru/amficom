@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.4 2005/01/20 07:32:38 stas Exp $
+ * $Id: Characteristic.java,v 1.5 2005/01/20 09:08:48 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/20 07:32:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/20 09:08:48 $
  * @author $Author: stas $
  * @module general_v1
  */
@@ -30,7 +30,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	public static final String COLUMN_ID = "id";
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_CHARACTERISTIC_TYPE = "type";
+	public static final String COLUMN_CHARACTERISTIC_TYPE_ID = "type";
 	public static final String COLUMN_SORT = "sort";
 	public static final String COLUMN_VALUE = "value";
 	public static final String COLUMN_CHARACTERIZED_ID = "characterizedId";
@@ -305,6 +305,40 @@ public class Characteristic extends StorableObject implements TypedObject {
 		return null;
 	}
 
+	public static Characteristic createInstance(Identifier creatorId,
+												 Map exportColumns) throws CreateObjectException{
+
+		if (creatorId == null || exportColumns == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
+		Identifier _id = (Identifier)exportColumns.get(COLUMN_ID);
+		String _description = (String)exportColumns.get(COLUMN_DESCRIPTION);
+		String _name = (String)exportColumns.get(COLUMN_NAME);
+		Identifier _typeId = (Identifier)exportColumns.get(COLUMN_CHARACTERISTIC_TYPE_ID);
+		int _sort = Integer.parseInt((String)exportColumns.get(COLUMN_SORT));
+		String _value = (String)exportColumns.get(COLUMN_VALUE);
+		Identifier _characterizedId = (Identifier)exportColumns.get(COLUMN_CHARACTERIZED_ID);
+		boolean _editable = ((Boolean)exportColumns.get(COLUMN_EDITABLE)).booleanValue();
+		boolean _visible = ((Boolean)exportColumns.get(COLUMN_VISIBLE)).booleanValue();
+
+		try {
+			return new Characteristic(
+					_id,
+					creatorId,
+					(CharacteristicType)GeneralStorableObjectPool.getStorableObject(_typeId, false),
+					_name,
+					_description,
+					_sort,
+					_value,
+					_characterizedId,
+					_editable,
+					_visible);
+		}
+		catch (ApplicationException e) {
+			throw new CreateObjectException("Characteristic.createInstance | cannot find CharacteristicType ", e);
+		}
+	}
+
 	public Map exportColumns() {
 		if (exportColumns == null) {
 			exportColumns = new HashMap(9);
@@ -312,7 +346,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 		exportColumns.put(COLUMN_ID, getId());
 		exportColumns.put(COLUMN_NAME, getName());
 		exportColumns.put(COLUMN_DESCRIPTION, getDescription());
-		exportColumns.put(COLUMN_CHARACTERISTIC_TYPE, getType().getId());
+		exportColumns.put(COLUMN_CHARACTERISTIC_TYPE_ID, getType().getId());
 		exportColumns.put(COLUMN_SORT, String.valueOf(getSort().value()));
 		exportColumns.put(COLUMN_VALUE, getValue());
 		exportColumns.put(COLUMN_CHARACTERIZED_ID, getCharacterizedId());
