@@ -27,11 +27,11 @@ public class ElementaryTest extends StubResource {
 	public ElementaryTest(Test test, long et_time) {
 		this.test = test;
 		this.et_time = et_time;
-		this.id = test.id + String.valueOf(et_time);
-		this.status = test.status;
-		if (test.status.equals(TestStatus.TEST_STATUS_PROCESSING))
+		this.id = test.getId() + String.valueOf(et_time);
+		this.status = test.getStatus();
+		if (this.status.equals(TestStatus.TEST_STATUS_PROCESSING))
 		{
-			String[] res_ids = test.result_ids;
+			String[] res_ids = test.getResultIds();
 			for (int i = 0; i < res_ids.length; i++)
 			{
 				Result res = (Result )Pool.get(Result.typ, res_ids[i]);

@@ -364,8 +364,8 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 					for(; enum.hasMoreElements();)
 					{
 						Test test = (Test )enum.nextElement();
-						if(		test.monitored_element_id.equals(me.getId()) && 
-								test.test_setup_id.equals(tsetup.getId()))
+						if(		test.getMonitoredElementId().equals(me.getId()) && 
+								test.getTestSetupId().equals(tsetup.getId()))
 						{
 							ObjectResourceTreeNode n = new ObjectResourceTreeNode(
 									test, 
@@ -557,7 +557,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 								Evaluation eval = alarm.getEvaluation();
 								Test test = findTestForEvaluation(eval);
 								if(test != null)
-									if(test.test_setup_id.equals(tsetup.getId()))
+									if(test.getTestSetupId().equals(tsetup.getId()))
 										dSet.add(alarm);
 							}
 					}
@@ -611,7 +611,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 						{
 							Test test = (Test )Pool.get(Test.typ, res.action_id);
 							if(test != null)
-								if(test.test_setup_id.equals(tsetup.getId()))
+								if(test.getTestSetupId().equals(tsetup.getId()))
 									dSet.add(res);
 						}
 				}
@@ -646,9 +646,9 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 				DataSet dSet = new DataSet();
 
-				for(int i = 0; i < ts.result_ids.length; i++)
+				for(int i = 0; i < ts.getResultIds().length; i++)
 				{
-					Result res = (Result )Pool.get(Result.typ, ts.result_ids[i]);
+					Result res = (Result )Pool.get(Result.typ, ts.getResultIds()[i]);
 					if(res != null)
 						dSet.add(res);
 				}
@@ -689,7 +689,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 		for(Enumeration enum = ht.elements(); enum.hasMoreElements();)
 		{
 			t = (Test )enum.nextElement();
-			if(t.evaluation_id.equals(eval.getId()))
+			if(t.getEvaluationId().equals(eval.getId()))
 				return t;
 		}
 		return null;

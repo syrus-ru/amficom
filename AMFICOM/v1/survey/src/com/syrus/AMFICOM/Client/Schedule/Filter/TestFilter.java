@@ -119,21 +119,21 @@ public class TestFilter extends ObjectResourceFilter
 			{
 				if (((String)vec.elementAt(1)).equals("="))
 				{
-					if (test.start_time == Long.parseLong((String)vec.elementAt(2)))
+					if (test.getStartTime() == Long.parseLong((String)vec.elementAt(2)))
 					{
 						result = true;
 					}
 				}
 				else if (((String)vec.elementAt(1)).equals(">"))
 				{
-					if (test.start_time > Long.parseLong((String)vec.elementAt(2)))
+					if (test.getStartTime() > Long.parseLong((String)vec.elementAt(2)))
 					{
 						result = true;
 					}
 				}
 				else if (((String)vec.elementAt(1)).equals("<"))
 				{
-					if (test.start_time < Long.parseLong((String)vec.elementAt(2)))
+					if (test.getStartTime() < Long.parseLong((String)vec.elementAt(2)))
 					{
 						result = true;
 					}
@@ -144,7 +144,7 @@ public class TestFilter extends ObjectResourceFilter
 		{
 			if (expr.getId().equals("time"))
 			{
-				if ( test.start_time > Long.parseLong((String)vec.elementAt(1)) &&  test.start_time < Long.parseLong((String)vec.elementAt(2)))
+				if ( test.getStartTime() > Long.parseLong((String)vec.elementAt(1)) &&  test.getStartTime() < Long.parseLong((String)vec.elementAt(2)))
 				{
 					result = true;
 				}
@@ -154,7 +154,7 @@ public class TestFilter extends ObjectResourceFilter
 		{
 			if (expr.getId().equals("time"))
 			{
-				if ( test.start_time > Long.parseLong((String)vec.elementAt(1)) &&  test.start_time < Long.parseLong((String)vec.elementAt(2)))
+				if ( test.getStartTime() > Long.parseLong((String)vec.elementAt(1)) &&  test.getStartTime() < Long.parseLong((String)vec.elementAt(2)))
 				{
 					result = true;
 				}
@@ -165,7 +165,7 @@ public class TestFilter extends ObjectResourceFilter
 			String substring = (String)vec.elementAt(1);
 			if (expr.getId().equals("kis"))
 			{
-				String name = Pool.getName("kis", test.kis_id);
+				String name = Pool.getName(KIS.typ, test.getKisId());
 				result = SearchSubstring(name, substring);
 			}
 			else if (expr.getId().equals("mone"))
@@ -175,7 +175,7 @@ public class TestFilter extends ObjectResourceFilter
 					e.hasMoreElements();)
 				{
 					me = (MonitoredElement )e.nextElement();
-					if(me.getId().equals(test.monitored_element_id))
+					if(me.getId().equals(test.getMonitoredElementId()))
 					{
 						result = SearchSubstring(me.getName(), substring);
 					}
@@ -198,7 +198,7 @@ public class TestFilter extends ObjectResourceFilter
 					e.hasMoreElements();)
 				{
 					me = (MonitoredElement )e.nextElement();
-					if(me.getId().equals(test.monitored_element_id))
+					if(me.getId().equals(test.getMonitoredElementId()))
 					{
 						portid = me.access_port_id;
 						meid = me.getId();
@@ -225,7 +225,7 @@ public class TestFilter extends ObjectResourceFilter
 					for(Enumeration enum = mmtn.children(); enum.hasMoreElements();)
 					{
 						FilterTreeNode down_mte1 = (FilterTreeNode )enum.nextElement();
-						if (test.kis_id.equals(down_mte1.id) && (down_mte1.state != 0))
+						if (test.getKisId().equals(down_mte1.id) && (down_mte1.state != 0))
 						{
 							for(Enumeration enu = down_mte1.children(); enu.hasMoreElements();)
 							{
@@ -296,7 +296,7 @@ public class TestFilter extends ObjectResourceFilter
 							e.hasMoreElements();)
 						{
 							me = (MonitoredElement )e.nextElement();
-							if(me.getId().equals(test.monitored_element_id))
+							if(me.getId().equals(test.getMonitoredElementId()))
 							{
 								break;
 							}
@@ -319,7 +319,7 @@ public class TestFilter extends ObjectResourceFilter
 					for(Enumeration enum = mmtn.children(); enum.hasMoreElements();)
 					{
 						FilterTreeNode down_mte = (FilterTreeNode )enum.nextElement();
-						if (test.test_type_id.equals(down_mte.id) && (down_mte.state == 2))
+						if (test.getTestTypeId().equals(down_mte.id) && (down_mte.state == 2))
 							result = true;
 					}
 				}
@@ -336,7 +336,7 @@ public class TestFilter extends ObjectResourceFilter
 					for(Enumeration enum = mmtn.children(); enum.hasMoreElements();)
 					{
 						FilterTreeNode down_mte = (FilterTreeNode )enum.nextElement();
-						String stat = test.temporal_type.toString();
+						String stat = test.getTemporalType().toString();
 						if (down_mte.getId().equals(stat) && (down_mte.state == 2))
 							result = true;
 					}
@@ -355,7 +355,7 @@ public class TestFilter extends ObjectResourceFilter
 					{
 						FilterTreeNode down_mte = (FilterTreeNode )enum.nextElement();
 						String stat = "";
-						if (test.elementary_test_alarms.length != 0)
+						if (test.getElementaryTestAlarms().length != 0)
 							stat = "alarm";
 						else stat = "noalarm";
 						if (down_mte.getId().equals(stat) && (down_mte.state == 2))
@@ -375,7 +375,7 @@ public class TestFilter extends ObjectResourceFilter
 					for(Enumeration enum = mmtn.children(); enum.hasMoreElements();)
 					{
 						FilterTreeNode down_mte = (FilterTreeNode )enum.nextElement();
-						String stat = test.status.toString();
+						String stat = test.getStatus().toString();
 						if (down_mte.getId().equals(stat) && (down_mte.state == 2))
 							result = true;
 					}

@@ -67,10 +67,10 @@ public class Alarm extends ObjectResource implements Serializable
 		if(test == null)
 			return null;
 		int res_index;
-		for(res_index = 0; res_index < test.result_ids.length; res_index++)
-			if(test.result_ids[res_index].equals(result_id))
+		for(res_index = 0; res_index < test.getResultIds().length; res_index++)
+			if(test.getResultIds()[res_index].equals(result_id))
 				break;
-		if(res_index == test.result_ids.length)
+		if(res_index == test.getResultIds().length)
 			return null;
 
 		Hashtable ht = Pool.getHash(Alarm.typ);
@@ -90,7 +90,7 @@ public class Alarm extends ObjectResource implements Serializable
 					.getActionId());
 			if(eval == null)
 				continue;
-			if(test.evaluation_id.equals(rrr.getActionId()))
+			if(test.getEvaluationId().equals(rrr.getActionId()))
 			{
 				if(eval.getResultIds().length > res_index)
 					if(eval.getResultIds()[res_index].equals(event.descriptor))
@@ -239,7 +239,7 @@ public class Alarm extends ObjectResource implements Serializable
 								.get(Test.typ, res.getActionId());
 						if(test == null)
 							return "";
-						return test.monitored_element_id;
+						return test.getMonitoredElementId();
 					}
 					if(res.getResultType().equals(Evaluation.typ))
 					{

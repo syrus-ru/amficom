@@ -103,15 +103,15 @@ public class ElementaryTestModel extends ObjectResourceModel {
 		if(col_id.equals("status"))
 			return new TextFieldEditor(getColumnValue("status"));
 		if(col_id.equals("kis_id"))
-			return new TextFieldEditor(etest.test.kis_id);
+			return new TextFieldEditor(etest.test.getKisId());
 		if(col_id.equals("start_time"))
 			return new TextFieldEditor(sdf.format(new Date(etest.et_time)));
 		if(col_id.equals("temporal_type"))
 			return new TextFieldEditor(getColumnValue("temporal_type"));
 		if(col_id.equals("test_type_id"))
-			return new ObjectResourceComboBox("testtype", etest.test.test_type_id);
+			return new ObjectResourceComboBox("testtype", etest.test.getTestTypeId());
 		if(col_id.equals("request_id"))
-			return new ObjectResourceComboBox("testrequest", etest.test.request_id);
+			return new ObjectResourceComboBox("testrequest", etest.test.getRequestId());
 		return null;
 	}
 

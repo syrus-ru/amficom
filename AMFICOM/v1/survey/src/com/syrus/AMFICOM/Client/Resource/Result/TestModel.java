@@ -28,7 +28,7 @@ public class TestModel extends ObjectResourceModel {
 		String s = null;
 		try {
 			if (colId.equals(ConstStorage.COLUMN_NAME_STATUS)) {
-				switch (test.status.value()) {
+				switch (test.getStatus().value()) {
 					case TestStatus._TEST_STATUS_PROCESSING:
 						s = LangModelSurvey.getString("labelDoing");
 						break;
@@ -45,7 +45,7 @@ public class TestModel extends ObjectResourceModel {
 						.elements(); e.hasMoreElements();) {
 					path = (TransmissionPath) e.nextElement();
 					if (path.monitored_element_id
-							.equals(test.monitored_element_id)) {
+							.equals(test.getMonitoredElementId())) {
 						s = path.getName();
 						break;
 					}
@@ -57,19 +57,19 @@ public class TestModel extends ObjectResourceModel {
 						.elements(); e.hasMoreElements();) {
 					path = (TransmissionPath) e.nextElement();
 					if (path.monitored_element_id
-							.equals(test.monitored_element_id)) {
+							.equals(test.getMonitoredElementId())) {
 						s = Pool.getName(AccessPort.typ, path.access_port_id);
 						break;
 					}
 				}
 				//				s = test.local_id;
 			} else if (colId.equals(ConstStorage.COLUMN_NAME_KIS_ID))
-				s = Pool.getName(KIS.typ, test.kis_id);
+				s = Pool.getName(KIS.typ, test.getKisId());
 			else if (colId.equals(ConstStorage.COLUMN_NAME_START_TIME))
 				s = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(
-						test.start_time));
+						test.getStartTime()));
 			else if (colId.equals(ConstStorage.COLUMN_NAME_TEMPORAL_TYPE)) {
-				switch (test.temporal_type.value()) {
+				switch (test.getTemporalType().value()) {
 					case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 						s = LangModelSurvey.getString("labelOnetime");
 						break;
@@ -81,11 +81,11 @@ public class TestModel extends ObjectResourceModel {
 						break;
 				}
 			} else if (colId.equals(ConstStorage.COLUMN_NAME_TEST_TYPE_ID))
-				s = Pool.getName(TestType.typ, test.test_type_id);
+				s = Pool.getName(TestType.typ, test.getTestTypeId());
 			else if (colId.equals(ConstStorage.COLUMN_NAME_REQUEST_ID))
-					s = Pool.getName(TestRequest.typ, test.request_id);
+					s = Pool.getName(TestRequest.typ, test.getRequestId());
 			else if (colId.equals(ConstStorage.COLUMN_NAME_DOMAIN_ID)){
-				KIS kis = (KIS)Pool.get(KIS.typ, test.kis_id);
+				KIS kis = (KIS)Pool.get(KIS.typ, test.getKisId());
 				if (kis!=null)
 					s = kis.getDomainId();
 			}
@@ -101,19 +101,19 @@ public class TestModel extends ObjectResourceModel {
 				return new TextFieldEditor(
 						getColumnValue(ConstStorage.COLUMN_NAME_STATUS));
 		if (colId.equals(ConstStorage.COLUMN_NAME_KIS_ID))
-				return new TextFieldEditor(test.kis_id);
+				return new TextFieldEditor(test.getKisId());
 		if (colId.equals(ConstStorage.COLUMN_NAME_START_TIME))
 				return new TextFieldEditor(ConstStorage.SIMPLE_DATE_FORMAT
-						.format(new Date(test.start_time)));
+						.format(new Date(test.getStartTime())));
 		if (colId.equals(ConstStorage.COLUMN_NAME_TEMPORAL_TYPE))
 				return new TextFieldEditor(
 						getColumnValue(ConstStorage.COLUMN_NAME_TEMPORAL_TYPE));
 		if (colId.equals(ConstStorage.COLUMN_NAME_TEST_TYPE_ID))
 				return new ObjectResourceComboBox(TestType.typ,
-						test.test_type_id);
+						test.getTestTypeId());
 		if (colId.equals(ConstStorage.COLUMN_NAME_REQUEST_ID))
 				return new ObjectResourceComboBox(TestRequest.typ,
-						test.request_id);
+						test.getRequestId());
 		return null;
 	}
 

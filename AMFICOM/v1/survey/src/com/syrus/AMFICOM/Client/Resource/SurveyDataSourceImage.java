@@ -414,9 +414,9 @@ public class SurveyDataSourceImage extends DataSourceImage
 			for(int i = 0; i < ids.size(); i++)
 			{
 				Test test = (Test )Pool.get(Test.typ, (String )ids.get(i));
-				TestArgumentSet tas = (TestArgumentSet )Pool.get(TestArgumentSet.typ, test.test_argument_set_id);
+				TestArgumentSet tas = (TestArgumentSet )Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
 				if(tas == null)
-					di.LoadTestArgumentSets(new String[] {test.test_argument_set_id});
+					di.LoadTestArgumentSets(new String[] {test.getTestArgumentSetId()});
 			}
 		}
 	}
@@ -920,10 +920,10 @@ public class SurveyDataSourceImage extends DataSourceImage
 			for(Enumeration e = h.elements(); e.hasMoreElements();)
 			{
 				Test te = (Test )e.nextElement();
-				if(te.evaluation_id.equals(id))
+				if(te.getEvaluationId().equals(id))
 				{
-					test_id = te.id;
-					desc[0] = GetDescriptor(Test.typ, te.id);
+					test_id = te.getId();
+					desc[0] = GetDescriptor(Test.typ, te.getId());
 					found = true;
 					break;
 				}
@@ -962,10 +962,10 @@ public class SurveyDataSourceImage extends DataSourceImage
 			for(Enumeration e = h.elements(); e.hasMoreElements();)
 			{
 				Test te = (Test )e.nextElement();
-				if(te.analysis_id.equals(id))
+				if(te.getAnalysisId().equals(id))
 				{
-					test_id = te.id;
-					desc[0] = GetDescriptor(Test.typ, te.id);
+					test_id = te.getId();
+					desc[0] = GetDescriptor(Test.typ, test_id);
 					found = true;
 					break;
 				}
@@ -1000,7 +1000,7 @@ public class SurveyDataSourceImage extends DataSourceImage
 		Test te = (Test )Pool.get(Test.typ, id);
 		if(te != null)
 		{
-			Evaluation ev = (Evaluation )Pool.get(Evaluation.typ, te.evaluation_id);
+			Evaluation ev = (Evaluation )Pool.get(Evaluation.typ, te.getEvaluationId());
 			if(ev != null)
 			{
 				desc[0] = GetDescriptor(Evaluation.typ, ev.getId());
@@ -1034,7 +1034,7 @@ public class SurveyDataSourceImage extends DataSourceImage
 		Test te = (Test )Pool.get(Test.typ, id);
 		if(te != null)
 		{
-			Analysis an = (Analysis )Pool.get(Analysis.typ, te.analysis_id);
+			Analysis an = (Analysis )Pool.get(Analysis.typ, te.getAnalysisId());
 			if(an != null)
 			{
 				desc[0] = GetDescriptor(Analysis.typ, an.getId());

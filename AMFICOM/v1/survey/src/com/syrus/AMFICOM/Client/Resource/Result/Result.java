@@ -489,7 +489,7 @@ public class Result extends ObjectResource implements Serializable {
 			} else if (this.result_type.equals(Test.typ)) {
 				this.test_id = this.action_id;
 				Test t = (Test) Pool.get(Test.typ, this.action_id);
-				TestType tt = (TestType) Pool.get(TestType.typ, t.test_type_id);
+				TestType tt = (TestType) Pool.get(TestType.typ, t.getTestTypeId());
 				ht = tt.getSortedParameters();
 			}
 		} catch (Exception ex) {

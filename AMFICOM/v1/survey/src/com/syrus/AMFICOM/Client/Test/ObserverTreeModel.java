@@ -325,7 +325,7 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 					for(; enum.hasMoreElements();)
 					{
 						Test test = (Test )enum.nextElement();
-						if(test.monitored_element_id.equals(me.getId()))
+						if(test.getMonitoredElementId().equals(me.getId()))
 						{
 							ObjectResourceTreeNode n = new ObjectResourceTreeNode(test, test.getName(), true);
 							vec.add(n);
@@ -478,9 +478,9 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 
 				DataSet dSet = new DataSet();
 
-				for(int i = 0; i < ts.result_ids.length; i++)
+				for(int i = 0; i < ts.getResultIds().length; i++)
 				{
-					Result res = (Result )Pool.get(Result.typ, ts.result_ids[i]);
+					Result res = (Result )Pool.get(Result.typ, ts.getResultIds()[i]);
 					if(res != null)
 						dSet.add(res);
 				}

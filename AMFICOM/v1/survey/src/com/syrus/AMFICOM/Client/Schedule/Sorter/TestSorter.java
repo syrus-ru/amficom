@@ -67,7 +67,7 @@ public class TestSorter extends ObjectResourceSorter
 	public long getLong(ObjectResource or, String column)
 	{
 		if (column.equals("start_time"))
-			return ((Test )or).start_time;
+			return ((Test )or).getStartTime();
 		return 0;
 	}
 

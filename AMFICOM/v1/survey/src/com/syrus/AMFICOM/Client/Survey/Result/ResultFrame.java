@@ -227,10 +227,10 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 					title = "Результат: " + rrr.getName();
 
 				Analysis anal = null;
-				if(test.analysis_id != null && !test.analysis_id.equals(""))
+				if(test.getAnalysisId() != null && test.getAnalysisId().length()>0)
 				{
-					new SurveyDataSourceImage(dataSource).GetAnalysis(test.analysis_id);
-					anal = (Analysis )Pool.get("analysis", test.analysis_id);
+					new SurveyDataSourceImage(dataSource).GetAnalysis(test.getAnalysisId());
+					anal = (Analysis )Pool.get("analysis", test.getAnalysisId());
 					if(anal != null)
 					{
 						displayed_analysis = anal;
@@ -240,10 +240,10 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 				}
 
 				Evaluation eval = null;
-				if(test.evaluation_id != null && !test.evaluation_id.equals(""))
+				if(test.getEvaluationId() != null && test.getEvaluationId().length()>0)
 				{
-					new SurveyDataSourceImage(dataSource).GetEvaluation(test.evaluation_id);
-					eval = (Evaluation )Pool.get("evaluation", test.evaluation_id);
+					new SurveyDataSourceImage(dataSource).GetEvaluation(test.getEvaluationId());
+					eval = (Evaluation )Pool.get(Evaluation.typ, test.getEvaluationId());
 					if(eval != null)
 					{
 						displayed_evaluation = eval;
@@ -252,15 +252,15 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 					}
 				}
 
-				for(int i = 0; i < test.result_ids.length; i++)
-					if(test.result_ids[i].equals(id))
+				for(int i = 0; i < test.getResultIds().length; i++)
+					if(test.getResultIds()[i].equals(id))
 					{
 						if(anal != null)
 							if(anal.result_ids.length > i)
 						{
 							String ri = anal.result_ids[i];
 							new SurveyDataSourceImage(dataSource).GetResult(ri);
-							add_on_result1 = (Result )Pool.get("result", ri);
+							add_on_result1 = (Result )Pool.get(Result.typ, ri);
 						}
 
 						if(eval != null)
@@ -268,7 +268,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 						{
 							String ri = eval.result_ids[i];
 							new SurveyDataSourceImage(dataSource).GetResult(ri);
-							add_on_result2 = (Result )Pool.get("result", ri);
+							add_on_result2 = (Result )Pool.get(Result.typ, ri);
 						}
 					}
 			}
@@ -287,9 +287,9 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 						if(anal.result_ids[i].equals(id))
 						{
 							displayed_test = test;
-							if(test.result_ids.length - 1 < i)
+							if(test.getResultIds().length - 1 < i)
 								return;
-							String ri = test.result_ids[i];
+							String ri = test.getResultIds()[i];
 //							dataSource.GetTestResult(test.getId());
 //							new SurveyDataSourceImage(dataSource).GetTestResult(test.getId());
 							new SurveyDataSourceImage(dataSource).GetResult(ri);
@@ -313,25 +313,25 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 						if(eval.result_ids[i].equals(id))
 						{
 							displayed_test = test;
-							if(test.result_ids.length - 1 < i)
+							if(test.getResultIds().length - 1 < i)
 								return;
-							String ri = test.result_ids[i];
+							String ri = test.getResultIds()[i];
 							new SurveyDataSourceImage(dataSource).GetResult(ri);
 							add_on_result1 = rrr;
 							res_id = ri;
 
 							Analysis anal = null;
-							if(test.analysis_id != null && !test.analysis_id.equals(""))
+							if(test.getAnalysisId() != null && test.getAnalysisId().length()>0)
 							{
-								new SurveyDataSourceImage(dataSource).GetAnalysis(test.analysis_id);
-								anal = (Analysis )Pool.get("analysis", test.analysis_id);
+								new SurveyDataSourceImage(dataSource).GetAnalysis(test.getAnalysisId());
+								anal = (Analysis )Pool.get(Analysis.typ, test.getAnalysisId());
 								if(anal != null)
 									if(anal.result_ids.length > i)
 									{
 										displayed_analysis = anal;
 										String ri2 = anal.result_ids[i];
 										new SurveyDataSourceImage(dataSource).GetResult(ri2);
-										add_on_result2 = (Result )Pool.get("result", ri2);
+										add_on_result2 = (Result )Pool.get(Result.typ, ri2);
 									}
 							}
 							break;
@@ -412,11 +412,11 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		if (r.result_type.equals("test"))
 		{
 			Test t = (Test )Pool.get("test", r.action_id);
-			dataSource.LoadTestArgumentSets(new String[] {t.test_argument_set_id});
-			TestArgumentSet tas = (TestArgumentSet )Pool.get(TestArgumentSet.typ, t.test_argument_set_id);
-			tas.updateTestArgumentSet(t.test_type_id);
+			dataSource.LoadTestArgumentSets(new String[] {t.getTestArgumentSetId()});
+			TestArgumentSet tas = (TestArgumentSet )Pool.get(TestArgumentSet.typ, t.getTestArgumentSetId());
+			tas.updateTestArgumentSet(t.getTestTypeId());
 			arguments = tas.arguments.elements();
-			monitored_element_id = t.monitored_element_id;
+			monitored_element_id = t.getMonitoredElementId();
 		}
 		else
 			arguments = new Vector().elements();
@@ -602,7 +602,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		{
 			Vector vect = new Vector();
 			vect.add("Шаблон исследования");
-			vect.add(Pool.getName(TestSetup.typ, displayed_test.test_setup_id));
+			vect.add(Pool.getName(TestSetup.typ, displayed_test.getTestSetupId()));
 			tModelPar.insertRow(vect);
 		}
 
@@ -616,7 +616,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		if (ep == null || test == null)
 			return;
 
-		TestArgumentSet metas = (TestArgumentSet)Pool.get(TestArgumentSet.typ, test.test_argument_set_id);
+		TestArgumentSet metas = (TestArgumentSet)Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
 		if (metas == null)
 			return;
 
@@ -653,8 +653,8 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 
 			if (test != null)
 			{
-				dataSource.loadTestSetup(test.test_setup_id);
-				TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, test.test_setup_id);
+				dataSource.loadTestSetup(test.getTestSetupId());
+				TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, test.getTestSetupId());
 				AnalysisUtil.load_Etalon(dataSource, ts);
 				AnalysisUtil.load_Thresholds(dataSource, ts);
 			}
@@ -708,8 +708,8 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		y = com.syrus.AMFICOM.analysis.dadara.MathRef.correctReflectogramm(y);
 		if (test != null)
 		{
-			dataSource.loadTestSetup(test.test_setup_id);
-			TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, test.test_setup_id);
+			dataSource.loadTestSetup(test.getTestSetupId());
+			TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, test.getTestSetupId());
 			AnalysisUtil.load_Etalon(dataSource, ts);
 			AnalysisUtil.load_Thresholds(dataSource, ts);
 		}
