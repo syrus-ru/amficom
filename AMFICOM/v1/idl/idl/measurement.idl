@@ -169,8 +169,9 @@ module corba {
 /////////////////////// Test ////////////////////////
 
 	enum TestStatus {
-		TEST_STATUS_SCHEDULED,	//Сохранён в БД
-//		TEST_STATUS_QUEUED,			//Поставлен МУИ в очередь
+		TEST_STATUS_NEW,				//Сохранён в БД на сервере
+		TEST_STATUS_SCHEDULED,	//Передан на МУИ и сохранён в БД
+//		TEST_STATUS_QUEUED,		//Поставлен МУИ в очередь
 		TEST_STATUS_PROCESSING,	//Извлечён из очереди; первое измерение начинает выполняться
 		TEST_STATUS_COMPLETED,	//Последнее измерение завершено
 		TEST_STATUS_ABORTED			//Прерван
