@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.14 2005/03/04 19:25:01 bass Exp $
+# $Id: Makefile,v 1.15 2005/03/09 15:16:02 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -95,11 +95,11 @@ idlclean:
 	$(RM) .idl
 
 .PHONY:	clean
-clean: cleanmach
+clean: cleanmach cleancorba
 	$(RM) $(LIBNAME)
 
 .PHONY:	cleanmach
-cleanmach: cleancorba
+cleanmach:
 	$(RM) $(subst $$,\$$,$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/scheme/*.class))
 	$(RM) .mach
 
