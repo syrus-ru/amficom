@@ -1,5 +1,5 @@
 /*
- * $Id: FilterExpressionBase.java,v 1.2 2004/06/23 10:01:59 peskovsky Exp $
+ * $Id: FilterExpressionBase.java,v 1.3 2004/08/24 12:52:08 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,10 +9,11 @@
 package com.syrus.AMFICOM.filter;
 
 import java.io.*;
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/23 10:01:59 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/24 12:52:08 $
  * @module filter_v1
  */
 public class FilterExpressionBase implements FilterExpressionInterface
@@ -36,7 +37,7 @@ public class FilterExpressionBase implements FilterExpressionInterface
 
 	protected String visualName = "";
 
-	protected Vector vec = new Vector();
+	protected List vec = new ArrayList();
 	protected boolean is_template = false;
 
 	protected int listID = 0;
@@ -51,7 +52,7 @@ public class FilterExpressionBase implements FilterExpressionInterface
 		return col_id;
 	}
 
-	public Vector getVec()
+	public List getVec()
 	{
 		return vec;
 	}
@@ -86,7 +87,7 @@ public class FilterExpressionBase implements FilterExpressionInterface
 		col_id = i;
 	}
 
-	public void setVec(Vector v)
+	public void setVec(List v)
 	{
 		vec = v;
 	}
@@ -129,7 +130,7 @@ public class FilterExpressionBase implements FilterExpressionInterface
 		visualName = (String) in.readObject();
 		col_name = (String )in.readObject();
 		col_id = (String )in.readObject();
-		vec = (Vector) in.readObject();
+		vec = (List) in.readObject();
 //		Vector vec1 = (Vector )in.readObject();
 //		String type = (String )vec1.get(0);
 //		if (type.equals(LIST_EXPRESSION))
@@ -151,7 +152,10 @@ public class FilterExpressionBase implements FilterExpressionInterface
 		fe.setName(getName());
 		fe.setColumnName(getColumnName());
 		fe.setId(getId());
-		fe.setVec((Vector )getVec().clone());
+    
+    List cloneList = new ArrayList();
+    cloneList.addAll(getVec());
+		fe.setVec(cloneList);
 
 		fe.setListID(getListID());
 

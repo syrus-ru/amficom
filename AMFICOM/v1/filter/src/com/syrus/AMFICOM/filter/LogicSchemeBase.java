@@ -1,5 +1,5 @@
 /*
- * $Id: LogicSchemeBase.java,v 1.2 2004/06/23 10:01:59 peskovsky Exp $
+ * $Id: LogicSchemeBase.java,v 1.3 2004/08/24 12:52:08 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,17 +9,20 @@
 package com.syrus.AMFICOM.filter;
 
 import java.io.*;
-import java.util.*;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/23 10:01:59 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/24 12:52:08 $
  * @module filter_v1
  */
 public class LogicSchemeBase implements Serializable
 {
-	public Vector schemeElements = new Vector();
-	public Vector finishedLinks = new Vector();
-	public Vector activeZones = new Vector();
+	public List schemeElements = new ArrayList();
+	public List finishedLinks = new ArrayList();
+	public List activeZones = new ArrayList();
 
 	public Filter filter;
 
@@ -38,13 +41,13 @@ public class LogicSchemeBase implements Serializable
 	//результату
 	public void organizeStandartScheme()
 	{
-		finishedLinks.removeAllElements();
-		activeZones.removeAllElements();
+		finishedLinks.clear();
+		activeZones.clear();
 
-		Vector schemeEls = new Vector();
-		for (int i = 0; i < schemeElements.size(); i++)
+		List schemeEls = new ArrayList();
+		for (ListIterator lIt = schemeElements.listIterator(); lIt.hasNext();)
 		{
-			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
+			LogicSchemeElementBase se = (LogicSchemeElementBase)lIt.next();
 
 			if (se.type.equals(LogicSchemeElementBase.t_condition))
 			{
@@ -298,12 +301,12 @@ public class LogicSchemeBase implements Serializable
 		activeZones.clear();
 	}
 
-	public Vector getFilterExpressions()
+	public List getFilterExpressions()
 	{
-		Vector result = new Vector();
-		for (int i = 0; i < schemeElements.size(); i++)
+		List result = new ArrayList();
+		for (ListIterator lIt = schemeElements.listIterator(); lIt.hasNext();)
 		{
-			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
+			LogicSchemeElementBase se = (LogicSchemeElementBase)lIt.next();
 
 			if (se.type.equals(LogicSchemeElementBase.t_condition))
 				result.add(se.filterExpression);
@@ -370,12 +373,14 @@ public class LogicSchemeBase implements Serializable
 		if (top.type.equals(LogicSchemeElementBase.t_condition))
 			return filter.expression(top.filterExpression, or);
 
-		LinkedList allTopLinks = top.input.getLinks();
+		List allTopLinks = top.input.getLinks();
 
 		boolean result = true;
-		for (int i = 0; i < allTopLinks.size(); i++)
+    
+    int index = 0;
+		for (ListIterator lIt = allTopLinks.listIterator(); lIt.hasNext(); index++)
 		{
-			FinishedLinkBase fl = (FinishedLinkBase)allTopLinks.get(i);
+			FinishedLinkBase fl = (FinishedLinkBase)lIt.next();
 
 			LogicSchemeElementBase curInputElement = null;
 			if (fl.az1.zoneType.equals(ElementsActiveZoneBase.zt_out))
@@ -383,7 +388,7 @@ public class LogicSchemeBase implements Serializable
 			if (fl.az1.zoneType.equals(ElementsActiveZoneBase.zt_in))
 				curInputElement = fl.az2.owner;
 
-			if (i == 0)
+			if (index == 0)
 				result = passesConstraints(or, curInputElement);
 			else
 			{
@@ -410,13 +415,14 @@ public class LogicSchemeBase implements Serializable
 		if (top.type.equals(LogicSchemeElementBase.t_condition))
 			return "\"" + LogicSchemeElementBase.string(LogicSchemeElementBase.t_condition) + " " + top.filterExpression.getListID() + "\"";
 
-		LinkedList allTopLinks = top.input.getLinks();
+		List allTopLinks = top.input.getLinks();
 
 		String result = "";
 
-		for (int i = 0; i < allTopLinks.size(); i++)
+    int index = 0;
+		for (ListIterator lIt = allTopLinks.listIterator(); lIt.hasNext(); index++)
 		{
-			FinishedLinkBase fl = (FinishedLinkBase)allTopLinks.get(i);
+			FinishedLinkBase fl = (FinishedLinkBase)lIt.next();
 
 			LogicSchemeElementBase curInputElement = null;
 			if (fl.az1.zoneType.equals(ElementsActiveZoneBase.zt_out))
@@ -424,7 +430,7 @@ public class LogicSchemeBase implements Serializable
 			if (fl.az1.zoneType.equals(ElementsActiveZoneBase.zt_in))
 				curInputElement = fl.az2.owner;
 
-			if (i == 0)
+			if (index == 0)
 				result = getLogicFor(curInputElement);
 			else
 				result = result + " " + LogicSchemeElementBase.string(top.operandType) + " " + getLogicFor(curInputElement);
@@ -439,9 +445,9 @@ public class LogicSchemeBase implements Serializable
 	//Блок процедур для воссановления схемы по логическому выражению
 	public void restoreSchemeByLogic (String expression, List filterExpressions)
 	{
-		finishedLinks.removeAllElements();
-		activeZones.removeAllElements();
-		schemeElements.removeAllElements();
+		finishedLinks.clear();
+		activeZones.clear();
+		schemeElements.clear();
 
 		treeResult = createLogicSchemeElement(
 				LogicSchemeElementBase.t_result,
@@ -493,7 +499,7 @@ public class LogicSchemeBase implements Serializable
 		else
 		{
 			String operatorFound = null;
-			Vector positions = new Vector();
+			List positions = new ArrayList();
 
 			findHighestPriorityOperators(expression, operatorFound, positions);
 
@@ -609,7 +615,7 @@ public class LogicSchemeBase implements Serializable
 
 	private FilterExpressionInterface getFEforListID(List filterExpressions, int listID)
 	{
-		Iterator iterator = filterExpressions.iterator();
+		ListIterator iterator = filterExpressions.listIterator();
 		while (iterator.hasNext())
 		{
 			FilterExpressionInterface fe = (FilterExpressionInterface) (iterator.next());
@@ -640,17 +646,17 @@ public class LogicSchemeBase implements Serializable
 	//выполнение Serializable
 	public void writeObject(ObjectOutputStream out) throws IOException
 	{
-		Vector filterExpressions = new Vector();
-		for (int i = 0; i < schemeElements.size(); i++)
+		List filterExpressions = new ArrayList();
+		for (ListIterator lIt = schemeElements.listIterator(); lIt.hasNext();)    
 		{
-			LogicSchemeElementBase se = (LogicSchemeElementBase)schemeElements.get(i);
+			LogicSchemeElementBase se = (LogicSchemeElementBase)lIt.next();
 			if (se.type.equals(LogicSchemeElementBase.t_condition))
 				filterExpressions.add(se.filterExpression);
 		}
 		out.writeInt(filterExpressions.size());
-		for (int i = 0; i < filterExpressions.size(); i++)
+		for (ListIterator lIt = filterExpressions.listIterator(); lIt.hasNext();)    
 		{
-			FilterExpressionInterface filterExpression = (FilterExpressionInterface )filterExpressions.get(i);
+			FilterExpressionInterface filterExpression = (FilterExpressionInterface )lIt.next();
 			filterExpression.writeObject(out);
 		}
 //		out.writeObject(filterExpressions); // Сохранили expressionы из этой схемы
@@ -662,7 +668,7 @@ public class LogicSchemeBase implements Serializable
 	public void readObject(ObjectInputStream in)
 			throws IOException, ClassNotFoundException
 	{
-		Vector filterExpressions = new Vector();
+		List filterExpressions = new ArrayList();
 
 		int count = in.readInt();
 		for (int i = 0; i < count; i++)

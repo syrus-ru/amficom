@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsActiveZoneBase.java,v 1.1 2004/06/17 10:23:05 krupenn Exp $
+ * $Id: ElementsActiveZoneBase.java,v 1.2 2004/08/24 12:52:08 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,10 +8,11 @@
 
 package com.syrus.AMFICOM.filter;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/17 10:23:05 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/24 12:52:08 $
  * @module filter_v1
  */
 public class ElementsActiveZoneBase extends ProSchemeElementBase
@@ -31,7 +32,7 @@ public class ElementsActiveZoneBase extends ProSchemeElementBase
 	public static String zt_out = "out";
 
 	public LogicSchemeElementBase owner = null;
-	private LinkedList links = new LinkedList();
+	private List links = new ArrayList();
 
 	public String zoneType = "";
 
@@ -66,7 +67,7 @@ public class ElementsActiveZoneBase extends ProSchemeElementBase
 		links.remove(fl);
 	}
 
-	public LinkedList getLinks()
+	public List getLinks()
 	{
 		return links;
 	}
