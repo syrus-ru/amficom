@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.65 2005/02/14 11:16:17 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.66 2005/02/16 13:18:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/02/14 11:16:17 $
+ * @version $Revision: 1.66 $, $Date: 2005/02/16 13:18:52 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -477,30 +477,30 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	public void delete (List storableObjects) {
 		//TODO implement this method
 	}
-
-	public AnalysisType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
-		Collection objects = null;
-		try {
-			objects = this.retrieveByIds(null, StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
-		}
-		catch (IllegalDataException ide) {				
-			throw new RetrieveObjectException(ide);
-		}
-
-		if ((objects == null) || (objects.isEmpty()))
-			throw new ObjectNotFoundException("No analysis type with codename: '" + codename + "'");
-
-		return (AnalysisType) objects.iterator().next();
-	}
-
-	public Collection retrieveAll() throws RetrieveObjectException {
-		try {
-			return this.retrieveByIds(null, null);
-		}
-		catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide);
-		}
-	}
+//
+//	public AnalysisType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
+//		Collection objects = null;
+//		try {
+//			objects = this.retrieveByIds(null, StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+//		}
+//		catch (IllegalDataException ide) {				
+//			throw new RetrieveObjectException(ide);
+//		}
+//
+//		if ((objects == null) || (objects.isEmpty()))
+//			throw new ObjectNotFoundException("No analysis type with codename: '" + codename + "'");
+//
+//		return (AnalysisType) objects.iterator().next();
+//	}
+//
+//	public Collection retrieveAll() throws RetrieveObjectException {
+//		try {
+//			return this.retrieveByIds(null, null);
+//		}
+//		catch (IllegalDataException ide) {
+//			throw new RetrieveObjectException(ide);
+//		}
+//	}
 
 	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		Collection objects = null; 
