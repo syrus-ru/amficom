@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.57 2005/01/27 15:14:09 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.58 2005/01/27 15:50:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/01/27 15:14:09 $
+ * @version $Revision: 1.58 $, $Date: 2005/01/27 15:50:02 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -583,7 +583,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	                mtIdsStr.append(CLOSE_BRACKET);
 	                mtIdsStr.append(SQL_AND);
                     mtIdsStr.append(SQL_OR);
-	                mtIdsStr.append(MeasurementTypeDatabase.LINK_COLUMN_MEASUREMENT_TYPE_ID);
+	                mtIdsStr.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 	                mtIdsStr.append(SQL_IN);
 	                mtIdsStr.append(OPEN_BRACKET);
 	       		 }  
@@ -595,7 +595,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 							+ SQL_WHERE + SetDatabase.LINK_COLUMN_TYPE_ID + SQL_IN + OPEN_BRACKET			
 								+ SQL_SELECT + StorableObjectDatabase.LINK_COLUMN_PARAMETER_TYPE_ID
 								+ SQL_FROM + ObjectEntities.MNTTYPPARTYPLINK_ENTITY + SQL_WHERE
-								+ MeasurementTypeDatabase.LINK_COLUMN_MEASUREMENT_TYPE_ID 
+								+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID 
 								+ SQL_IN
 								+ OPEN_BRACKET
 								+ mtIdsStr.toString()

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.52 2005/01/26 15:38:40 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.53 2005/01/27 15:50:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,22 +43,12 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/01/26 15:38:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.53 $, $Date: 2005/01/27 15:50:02 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class MeasurementDatabase extends StorableObjectDatabase {
-	public static final String COLUMN_TYPE_ID = "type_id";
-	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_SETUP_ID = "setup_id";
-	public static final String COLUMN_START_TIME = "start_time";
-	public static final String COLUMN_DURATION = "duration";
-	public static final String COLUMN_STATUS = "status";
-	public static final String COLUMN_LOCAL_ADDRESS = "local_address";
-	public static final String COLUMN_TEST_ID = "test_id";
-
 	public static final String LINK_COLUMN_MEASUREMENT_ID = "measurement_id";
 	public static final String LINK_SORT = "sort";
 
@@ -80,15 +70,15 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_TYPE_ID + COMMA
-				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_SETUP_ID + COMMA
-				+ COLUMN_START_TIME + COMMA
-				+ COLUMN_DURATION + COMMA
-				+ COLUMN_STATUS + COMMA
-				+ COLUMN_LOCAL_ADDRESS + COMMA
-				+ COLUMN_TEST_ID;
+				+ MeasurementWrapper.COLUMN_TYPE_ID + COMMA
+				+ MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
+				+ MeasurementWrapper.COLUMN_NAME + COMMA
+				+ MeasurementWrapper.COLUMN_SETUP_ID + COMMA
+				+ MeasurementWrapper.COLUMN_START_TIME + COMMA
+				+ MeasurementWrapper.COLUMN_DURATION + COMMA
+				+ MeasurementWrapper.COLUMN_STATUS + COMMA
+				+ MeasurementWrapper.COLUMN_LOCAL_ADDRESS + COMMA
+				+ MeasurementWrapper.COLUMN_TEST_ID;
 		}
 		return columns;
 	}	
@@ -169,9 +159,9 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		String name;
 		MeasurementSetup measurementSetup;
 		try {
-			measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
-			name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
-			measurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SETUP_ID), true);
+			measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, MeasurementWrapper.COLUMN_TYPE_ID), true);
+			name = DatabaseString.fromQuerySubString(resultSet.getString(MeasurementWrapper.COLUMN_NAME));
+			measurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, MeasurementWrapper.COLUMN_SETUP_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -181,20 +171,20 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 											measurementType,
-											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MONITORED_ELEMENT_ID),
+											DatabaseIdentifier.getIdentifier(resultSet, MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID),
 											name,
 											measurementSetup,
-											DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
-											resultSet.getLong(COLUMN_DURATION),
-											resultSet.getInt(COLUMN_STATUS),
-											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LOCAL_ADDRESS)),
-											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TEST_ID));
+											DatabaseDate.fromQuerySubString(resultSet, MeasurementWrapper.COLUMN_START_TIME),
+											resultSet.getLong(MeasurementWrapper.COLUMN_DURATION),
+											resultSet.getInt(MeasurementWrapper.COLUMN_STATUS),
+											DatabaseString.fromQuerySubString(resultSet.getString(MeasurementWrapper.COLUMN_LOCAL_ADDRESS)),
+											DatabaseIdentifier.getIdentifier(resultSet, MeasurementWrapper.COLUMN_TEST_ID));
 		return measurement;
 	}
 	
 	protected String retrieveQuery(String condition) {
 		String query = super.retrieveQuery(condition);
-		query = query.replaceFirst(COLUMN_START_TIME, DatabaseDate.toQuerySubString(COLUMN_START_TIME));
+		query = query.replaceFirst(MeasurementWrapper.COLUMN_START_TIME, DatabaseDate.toQuerySubString(MeasurementWrapper.COLUMN_START_TIME));
 		return query;
 	}
 
@@ -308,7 +298,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		String sql = SQL_UPDATE
 			+ ObjectEntities.MEASUREMENT_ENTITY
 			+ SQL_SET
-			+ COLUMN_STATUS + EQUALS + Integer.toString(measurement.getStatus().value()) + COMMA
+			+ MeasurementWrapper.COLUMN_STATUS + EQUALS + Integer.toString(measurement.getStatus().value()) + COMMA
 			+ COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(measurement.getModified()) + COMMA
 			+ COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(measurement.getModifierId())
 			+ SQL_WHERE + COLUMN_ID + EQUALS + measurementIdStr;
@@ -349,7 +339,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 		List list = null;
 
-		String condition = COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
+		String condition = MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
 				+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
 				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
 				+ CLOSE_BRACKET;
@@ -369,7 +359,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 
 		if ((testIds != null) && (!testIds.isEmpty())) {
 			StringBuffer buffer = new StringBuffer();
-			buffer.append(COLUMN_TEST_ID);
+			buffer.append(MeasurementWrapper.COLUMN_TEST_ID);
 			buffer.append(SQL_IN);
 			buffer.append(OPEN_BRACKET);
 			int i = 1;
@@ -394,7 +384,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 						else {
 							buffer.append(CLOSE_BRACKET);
 							buffer.append(SQL_OR);
-							buffer.append(COLUMN_TEST_ID);
+							buffer.append(MeasurementWrapper.COLUMN_TEST_ID);
 							buffer.append(SQL_IN);
 							buffer.append(OPEN_BRACKET);
 						}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.56 2005/01/24 10:47:40 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.57 2005/01/27 15:50:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,21 +46,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/01/24 10:47:40 $
+ * @version $Revision: 1.57 $, $Date: 2005/01/27 15:50:02 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class MeasurementTypeDatabase extends StorableObjectDatabase  {
-	public static final String MODE_IN = "IN";
-	public static final String MODE_OUT = "OUT";
-
-	public static final String COLUMN_CODENAME = "codename";
-	public static final String COLUMN_DESCRIPTION = "description";
-
-	public static final String LINK_COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
-	public static final String LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID = "measurement_port_type_id";
-
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private static String columns;
@@ -80,8 +71,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_CODENAME + COMMA 
-				+ COLUMN_DESCRIPTION;
+				+ MeasurementTypeWrapper.COLUMN_CODENAME + COMMA 
+				+ MeasurementTypeWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}
@@ -127,8 +118,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 									  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 									  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 									  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-									  DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-									  DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
+									  DatabaseString.fromQuerySubString(resultSet.getString(MeasurementTypeWrapper.COLUMN_CODENAME)),
+									  DatabaseString.fromQuerySubString(resultSet.getString(MeasurementTypeWrapper.COLUMN_DESCRIPTION)));
 		return measurementType;
 	}
 
@@ -141,7 +132,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
 			+ LINK_COLUMN_PARAMETER_MODE
 			+ SQL_FROM + ObjectEntities.MNTTYPPARTYPLINK_ENTITY
-			+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr;
+			+ SQL_WHERE + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -154,10 +145,10 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			while (resultSet.next()) {
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
-				if (parameterMode.equals(MODE_IN))
+				if (parameterMode.equals(MeasurementTypeWrapper.MODE_IN))
 					inParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				else
-					if (parameterMode.equals(MODE_OUT))
+					if (parameterMode.equals(MeasurementTypeWrapper.MODE_OUT))
 						outParTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					else
 						Log.errorMessage("MeasurementTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeId);
@@ -199,9 +190,9 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
     StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
 				+ LINK_COLUMN_PARAMETER_MODE + COMMA
-				+ LINK_COLUMN_MEASUREMENT_TYPE_ID
+				+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID
 				+ SQL_FROM + ObjectEntities.MNTTYPPARTYPLINK_ENTITY
-				+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_TYPE_ID + SQL_IN + OPEN_BRACKET);
+				+ SQL_WHERE + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + SQL_IN + OPEN_BRACKET);
 
 		int i = 1;
 		for (Iterator it = measurementTypes.iterator(); it.hasNext(); i++) {
@@ -213,7 +204,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				else {
 					sql.append(CLOSE_BRACKET);
 					sql.append(SQL_OR);
-					sql.append(LINK_COLUMN_MEASUREMENT_TYPE_ID);
+					sql.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 					sql.append(SQL_IN);
 					sql.append(OPEN_BRACKET);
 				}
@@ -239,9 +230,9 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			while (resultSet.next()) {
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
-				measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MEASUREMENT_TYPE_ID);
+				measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 
-				if (parameterMode.equals(MODE_IN)) {
+				if (parameterMode.equals(MeasurementTypeWrapper.MODE_IN)) {
 					inParameterTypes = (List)inParameterTypesMap.get(measurementTypeId);
 					if (inParameterTypes == null) {
 						inParameterTypes = new ArrayList();
@@ -250,7 +241,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 					inParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				}
 				else
-					if (parameterMode.equals(MODE_OUT)) {
+					if (parameterMode.equals(MeasurementTypeWrapper.MODE_OUT)) {
 						outParameterTypes = (List)outParameterTypesMap.get(measurementTypeId);
 						if (outParameterTypes == null) {
 							outParameterTypes = new ArrayList();
@@ -304,9 +295,9 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 
 		String measurementTypeIdStr = DatabaseIdentifier.toSQLString(measurementType.getId());
 		String sql = SQL_SELECT
-			+ LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID
+			+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID
 			+ SQL_FROM + ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY
-			+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr;
+			+ SQL_WHERE + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -316,7 +307,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			resultSet = statement.executeQuery(sql);
 			Identifier measurementPortTypeId;
 			while (resultSet.next()) {
-				measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
+				measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
 				measurementPortTypes.add((MeasurementPortType) ConfigurationStorableObjectPool.getStorableObject(measurementPortTypeId, true));
 			}
 		}
@@ -355,13 +346,13 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			if (measurementPortTypesByOneQuery == null) {
 				StringBuffer buffer = new StringBuffer();
 				buffer.append(SQL_SELECT);
-				buffer.append(LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
+				buffer.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
 				buffer.append(COMMA);
-				buffer.append(LINK_COLUMN_MEASUREMENT_TYPE_ID);
+				buffer.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 				buffer.append(SQL_FROM);
 				buffer.append(ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY);
 				buffer.append(SQL_WHERE);
-				buffer.append(LINK_COLUMN_MEASUREMENT_TYPE_ID);
+				buffer.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 				buffer.append(SQL_IN);
 				buffer.append(OPEN_BRACKET);
 				measurementPortTypesByOneQuery = buffer.toString();
@@ -377,7 +368,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 					else {
 						buffer.append(CLOSE_BRACKET);
 						buffer.append(SQL_OR);
-						buffer.append(LINK_COLUMN_MEASUREMENT_TYPE_ID);
+						buffer.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 						buffer.append(SQL_IN);
 						buffer.append(OPEN_BRACKET);
 					}
@@ -400,8 +391,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			Identifier measurementTypeId;
 			List measurementPortTypes;
 			while (resultSet.next()) {
-				measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
-				measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MEASUREMENT_TYPE_ID);
+				measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
+				measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 
 				measurementPortTypes = (List) measurementPortTypesMap.get(measurementTypeId);
 				if (measurementPortTypes == null) {
@@ -477,7 +468,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		try {
 			String sql = SQL_INSERT_INTO
 				+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY + OPEN_BRACKET
-				+ LINK_COLUMN_MEASUREMENT_TYPE_ID + COMMA
+				+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + COMMA
 				+ LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
 				+ LINK_COLUMN_PARAMETER_MODE
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
@@ -499,8 +490,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		try {
 			String sql = SQL_INSERT_INTO
 				+ ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY + OPEN_BRACKET
-				+ LINK_COLUMN_MEASUREMENT_TYPE_ID + COMMA
-				+ LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID
+				+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + COMMA
+				+ MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 				+ QUESTION + COMMA
 				+ QUESTION
@@ -524,7 +515,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			parameterTypeId = ((ParameterType) iterator.next()).getId();
 			DatabaseIdentifier.setIdentifier(preparedStatement, 1, measurementTypeId);
 			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);			
-			parameterMode = MODE_IN;
+			parameterMode = MeasurementTypeWrapper.MODE_IN;
 			preparedStatement.setString(3, parameterMode);
 			Log.debugMessage("MeasurementTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeId + " of parameter mode '" + parameterMode + "' for measurement type " + measurementTypeId, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
@@ -533,7 +524,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			parameterTypeId = ((ParameterType) iterator.next()).getId();
 			DatabaseIdentifier.setIdentifier(preparedStatement, 1, measurementTypeId);
 			DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
-			parameterMode = MODE_OUT;
+			parameterMode = MeasurementTypeWrapper.MODE_OUT;
 			preparedStatement.setString(3, parameterMode);
 			Log.debugMessage("MeasurementTypeDatabase.insertParameterTypes | Inserting parameter type '" + parameterTypeId + "' of parameter mode '" + parameterMode + "' for measurement type '" + measurementTypeId + "'", Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
@@ -635,10 +626,10 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
 									+ ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY
-									+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr);
+									+ SQL_WHERE + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY
-					+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr);
+					+ SQL_WHERE + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementTypeIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.MEASUREMENTTYPE_ENTITY 
 					+ SQL_WHERE + COLUMN_ID + EQUALS + measurementTypeIdStr);
@@ -666,7 +657,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	public MeasurementType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
 		List list = null;
 		try {
-			list = this.retrieveByIds(null, COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			list = this.retrieveByIds(null, MeasurementTypeWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
@@ -720,8 +711,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		if (measurementPortTypes != null && !measurementPortTypes.isEmpty()) {
 			StringBuffer buffer = new StringBuffer(COLUMN_ID + SQL_IN
 					+ OPEN_BRACKET
-						+ SQL_SELECT + LINK_COLUMN_MEASUREMENT_TYPE_ID + SQL_FROM +  ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY
-						+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID + SQL_IN
+						+ SQL_SELECT + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID + SQL_FROM +  ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY
+						+ SQL_WHERE + MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID + SQL_IN
 							+ OPEN_BRACKET);
 			int i = 1;
 			for (Iterator it = measurementPortTypes.iterator(); it.hasNext(); i++) {
@@ -745,7 +736,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 						else {
 							buffer.append(CLOSE_BRACKET);
 							buffer.append(SQL_OR);
-							buffer.append(LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
+							buffer.append(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID);
 							buffer.append(SQL_IN);
 							buffer.append(OPEN_BRACKET);
 						}					
