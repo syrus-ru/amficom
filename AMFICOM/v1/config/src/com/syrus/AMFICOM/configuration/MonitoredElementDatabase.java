@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.18 2004/09/16 07:57:11 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.19 2004/09/20 14:17:31 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,11 +29,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.util.Log;
+import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/09/16 07:57:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2004/09/20 14:17:31 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -210,7 +212,8 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+        try {
 			statement = connection.createStatement();
 			Log.debugMessage("MonitoredElementDatabase.retrieveMonitoredDomainMemberIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
@@ -236,7 +239,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
+			} finally {
+                DatabaseConnection.closeConnection(connection);
+            }
 		}
 		monitoredElement.setMonitoredDomainMemberIds(mdmIds);
 	}
@@ -317,7 +322,8 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		 * @todo when change DB Identifier model ,change String to long
 		 */
 		String mdmIdCode = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+        try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (Iterator it = mdmIds.iterator(); it.hasNext();) {
 				mdmIdCode = ((Identifier)it.next()).getCode();
@@ -348,7 +354,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
+			} finally {
+                DatabaseConnection.closeConnection(connection);
+            }
 		}
 	}
 
@@ -418,7 +426,8 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			+ SQL_WHERE + COLUMN_ID + EQUALS + meIdStr;
 
 		Statement statement = null;
-		try {
+		Connection connection = DatabaseConnection.getConnection();
+        try {
 			statement = connection.createStatement();
 			Log.debugMessage("MonitoredElementDatabase.delete | Trying: " + sql1, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql1);
@@ -437,7 +446,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			}
 			catch(SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
+			} finally {
+                DatabaseConnection.closeConnection(connection);
+            }
 		}
 	}
 
