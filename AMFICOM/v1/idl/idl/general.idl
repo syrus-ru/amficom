@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.49 2005/01/20 10:04:28 bass Exp $
+ * $Id: general.idl,v 1.50 2005/01/20 15:08:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -243,6 +243,34 @@ module corba {
 			LinkedIdsCondition_Transferable linkedIdsCondition;
 		case COMPOUND:
 			CompoundCondition_Transferable compoundCondition;
+	};
+	
+	enum TypicalSort {
+		TYPE_NUMBER_INT,
+		TYPE_NUMBER_LONG,
+		TYPE_NUMBER_DOUBLE,
+		TYPE_STRING,
+		TYPE_DATE
+	};
+	
+	enum OperationSort {
+		OPERATION_EQUALS,
+		OPERATION_GREAT,
+		OPERATION_LESS,
+		OPERATION_GREAT_EQUALS,
+		OPERATION_LESS_EQUALS,
+		OPERATION_IN_RANGE,
+		OPERATION_SUBSTRING,
+		OPERATION_REGEXP,
+		OPERATION_CI_REGEXP
+	};
+	
+	struct TypicalCondition_Transferable {
+		short	entity_code;
+		WString256 value;
+		WString256 otherValue;		
+		TypicalSort type;		
+		OperationSort operation; 
 	};
 };
 };
