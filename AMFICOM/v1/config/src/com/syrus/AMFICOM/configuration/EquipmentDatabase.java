@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.75 2005/02/28 14:12:14 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.76 2005/03/03 21:31:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/02/28 14:12:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.76 $, $Date: 2005/03/03 21:31:07 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -355,11 +355,12 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	private void updateEquipmentMELinks(Collection equipments) throws UpdateObjectException {
 		if (equipments == null || equipments.isEmpty())
 			return;
+
 		try {
 			Map monitoredElementIdsMap = new HashMap();
 			for (Iterator it = equipments.iterator(); it.hasNext();) {
 				Equipment equipment = this.fromStorableObject((StorableObject) it.next());
-				List monitoredElementIds = equipment.getMonitoredElementIds();
+				Collection monitoredElementIds = equipment.getMonitoredElementIds();
 				monitoredElementIdsMap.put(equipment.getId(), monitoredElementIds);
 			}
 			super.updateLinkedEntities(monitoredElementIdsMap,

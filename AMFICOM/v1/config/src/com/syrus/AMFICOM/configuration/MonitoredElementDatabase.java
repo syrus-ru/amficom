@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.54 2005/03/03 21:30:20 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.55 2005/03/03 21:35:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/03/03 21:30:20 $
+ * @version $Revision: 1.55 $, $Date: 2005/03/03 21:35:02 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -419,6 +419,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	private void updateMonitoredDomainMemberIds(Collection monitoredElements) throws UpdateObjectException {
+		if (monitoredElements == null || monitoredElements.isEmpty())
+			return;
+
 		Map sortedMonitoredElements = new HashMap();
 		Collection monitoredElementsOneSort;
 		Integer meSort;
