@@ -13,7 +13,7 @@ CREATE TABLE Evaluation (
  etalon_id VARCHAR2(32) NOT NULL,
 --
  CONSTRAINT eva_pk PRIMARY KEY (id),
- CONSTRAINT aeva_creator_fk FOREIGN KEY (creator_id)
+ CONSTRAINT eva_creator_fk FOREIGN KEY (creator_id)
   REFERENCES "User" (id) ON DELETE CASCADE,
  CONSTRAINT eva_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES "User" (id) ON DELETE CASCADE,
