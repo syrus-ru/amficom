@@ -860,8 +860,11 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nExte
 		double ratioY = 1.5;
 		for (i = 0; i < thxSize; i++)
 		{
-			thxh[i].dxL = (int )ceil(thx[i].dxL * ratioX);
-			thxh[i].dxR = (int )ceil(thx[i].dxR * ratioX);
+			// we should round away from zero, not away from -inf
+			int lSign = thxh[i].dxL >= 0 ? 1 : -1;
+			int rSign = thxh[i].dxR >= 0 ? 1 : -1;
+			thxh[i].dxL = lSign * (int )ceil(thx[i].dxL * lSign * ratioX);
+			thxh[i].dxR = rSign * (int )ceil(thx[i].dxR * rSign * ratioX);
 		}
 		for (i = 0; i < thySize; i++)
 		{
