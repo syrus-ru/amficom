@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.9 2005/04/01 14:41:33 bob Exp $
+ * $Id: User.java,v 1.10 2005/04/01 15:21:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/01 14:41:33 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 15:21:32 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -89,7 +89,7 @@ public class User extends StorableObject {
 	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
 		User_Transferable ut = (User_Transferable) transferable;
 		super.fromTransferable(ut.header);
-		this.login = ut.login;
+		this.login = new String(ut.login);
 		this.sort = ut.sort.value();
 		this.name = new String(ut.name);
 		this.description = new String(ut.description);
