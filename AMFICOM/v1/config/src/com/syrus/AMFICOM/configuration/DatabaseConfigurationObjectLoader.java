@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.14 2004/10/26 08:24:48 max Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.15 2004/10/29 10:14:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/10/26 08:24:48 $
+ * @version $Revision: 1.15 $, $Date: 2004/10/29 10:14:50 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -91,6 +91,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	public TransmissionPath loadTransmissionPath(Identifier id) throws DatabaseException {
 		return new TransmissionPath(id);
 	}
+    
+    public TransmissionPathType loadTransmissionPathType(Identifier id) throws DatabaseException {
+        return new TransmissionPathType(id);
+    }
 
 	public KIS loadKIS(Identifier id) throws DatabaseException {
 		return new KIS(id);
@@ -314,6 +318,34 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         }
         return list;
     }
+    
+
+	public List loadTransmissionPathTypes(List ids) throws DatabaseException,
+			CommunicationException {
+		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase)ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadTransmissionPathTypes | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+	}
+
+	public List loadTransmissionPathTypesButIds(
+			StorableObjectCondition condition, List ids)
+			throws DatabaseException, CommunicationException {
+		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase)ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
+        List list = null;
+        try {
+            list = database.retrieveByCondition(ids, condition);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathTypesButIds | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadTransmissionPathTypesButIds | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+	}
 
     public List loadKISs(List ids) throws DatabaseException {
         KISDatabase database = (KISDatabase)ConfigurationDatabaseContext.getKISDatabase();
@@ -760,7 +792,26 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveKIS(KIS kis, boolean force) throws DatabaseException, CommunicationException{
+	public void saveTransmissionPathType(
+			TransmissionPathType transmissionPathType, boolean force)
+			throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase)ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
+        try {
+            database.update(transmissionPathType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+        } catch (UpdateObjectException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPathType | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveTransmissionPathType | UpdateObjectException: " + e.getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPathType | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveTransmissionPathType | Illegal Storable Object: " + e.getMessage());
+        } catch (VersionCollisionException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPathType | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveTransmissionPathType | VersionCollisionException: " + e.getMessage());
+        }
+	}
+    
+    public void saveKIS(KIS kis, boolean force) throws DatabaseException, CommunicationException{
 		KISDatabase database = (KISDatabase)ConfigurationDatabaseContext.getKISDatabase();
 		try {
 			database.update(kis, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
@@ -1057,6 +1108,24 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
             throw new DatabaseException("DatabaseConfigurationObjectLoader.saveTransmissionPaths | VersionCollisionException: " + e.getMessage());
 		}
 	}
+
+	public void saveTransmissionPathTypes(List list, boolean force)
+			throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase)ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
+        try {
+            database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+        } catch (UpdateObjectException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPathTypes | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveTransmissionPathTypes | UpdateObjectException: " + e.getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPathTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveTransmissionPathTypes | Illegal Storable Object: " + e.getMessage());
+        } catch (VersionCollisionException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPathTypes | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveTransmissionPathTypes | VersionCollisionException: " + e.getMessage());
+        }
+	}    
 
 	public void saveKISs(List list, boolean force) throws DatabaseException, CommunicationException{
 		KISDatabase database = (KISDatabase)ConfigurationDatabaseContext.getKISDatabase();

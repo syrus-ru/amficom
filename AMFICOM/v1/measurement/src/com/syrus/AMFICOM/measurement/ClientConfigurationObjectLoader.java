@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.5 2004/10/26 08:57:22 max Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.6 2004/10/29 10:14:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.Server;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.configuration.TransmissionPathType;
 import com.syrus.AMFICOM.configuration.User;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
@@ -53,6 +54,7 @@ import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 import com.syrus.AMFICOM.configuration.corba.StringFieldCondition_Transferable;
+import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -69,7 +71,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/10/26 08:57:22 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/29 10:14:50 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -148,21 +150,6 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             throw new CommunicationException(msg, e);
         }
 	}
-
-	public Characteristic loadCharacteristic(Identifier id) throws RetrieveObjectException, CommunicationException {
-        try {
-            return new Characteristic(this.server.transmitCharacteristic((Identifier_Transferable) id
-                    .getTransferable(), accessIdentifierTransferable));
-        } catch (CreateObjectException e) {
-            String msg = "ClientMeasurementObjectLoader.loadCharacteristic | new Characteristic(" + id.toString()
-                    + ")";
-            throw new RetrieveObjectException(msg, e);
-        } catch (AMFICOMRemoteException e) {
-            String msg = "ClientMeasurementObjectLoader.loadCharacteristic | server.transmitCharacteristic("
-                    + id.toString() + ")";
-            throw new CommunicationException(msg, e);
-        }
-	}
     
     public KISType loadKISType(Identifier id) throws RetrieveObjectException, CommunicationException {
         try {
@@ -178,6 +165,40 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             throw new CommunicationException(msg, e);
         }
     }
+    
+    /* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.configuration.ConfigurationObjectLoader#loadTransmissionPathType(com.syrus.AMFICOM.general.Identifier)
+	 */
+	public TransmissionPathType loadTransmissionPathType(Identifier id)
+			throws DatabaseException, CommunicationException {
+		try {
+            return new TransmissionPathType(this.server.transmitTransmissionPathType((Identifier_Transferable) id
+                    .getTransferable(), accessIdentifierTransferable));
+        } catch (CreateObjectException e) {
+            String msg = "ClientMeasurementObjectLoader.loadTransmissionPathType | new TransmissionPathType(" + id.toString()
+                    + ")";
+            throw new RetrieveObjectException(msg, e);
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientMeasurementObjectLoader.loadTransmissionPathType | server.transmitTransmissionPathType("
+                    + id.toString() + ")";
+            throw new CommunicationException(msg, e);
+        }
+	}
+
+	public Characteristic loadCharacteristic(Identifier id) throws RetrieveObjectException, CommunicationException {
+        try {
+            return new Characteristic(this.server.transmitCharacteristic((Identifier_Transferable) id
+                    .getTransferable(), accessIdentifierTransferable));
+        } catch (CreateObjectException e) {
+            String msg = "ClientMeasurementObjectLoader.loadCharacteristic | new Characteristic(" + id.toString()
+                    + ")";
+            throw new RetrieveObjectException(msg, e);
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientMeasurementObjectLoader.loadCharacteristic | server.transmitCharacteristic("
+                    + id.toString() + ")";
+            throw new CommunicationException(msg, e);
+        }
+	}   
     
     public LinkType loadLinkType(Identifier id) throws RetrieveObjectException, CommunicationException {
         try {
@@ -617,9 +638,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             throw new CommunicationException(e);
         }
 	}
-    
-    
-
+        
 	public List loadKISTypesButIds(StorableObjectCondition condition, List ids)
 			throws DatabaseException, CommunicationException {
 		try {
@@ -644,6 +663,55 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
         }
 	}
 
+	public List loadTransmissionPathTypes(List ids) throws DatabaseException,
+			CommunicationException {
+		try {
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            TransmissionPathType_Transferable[] transferables = this.server
+                    .transmitTransmissionPathTypes(identifierTransferables,
+                                    accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new TransmissionPathType(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+	}
+
+	public List loadTransmissionPathTypesButIds(
+			StorableObjectCondition condition, List ids)
+			throws DatabaseException, CommunicationException {
+		try {
+            Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            TransmissionPathType_Transferable[] transferables = this.server
+                    .transmitTransmissionPathTypesButIds(identifierTransferables,
+                                    accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new TransmissionPathType(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+	}
+    
 	public List loadMCMs(List ids) throws DatabaseException, CommunicationException {
         try {
             Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -906,6 +974,20 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
              throw new CommunicationException(msg, e);       
          }
      }
+     
+     public void saveKISType(KISType kisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
+        KISType_Transferable transferables = (KISType_Transferable) kisType.getTransferable();         
+        try {
+            this.server.receiveKISType(transferables, force, accessIdentifierTransferable);         
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientConfigurationObjectLoader.saveKISType ";
+            
+            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+               throw new VersionCollisionException(msg, e);
+            
+            throw new CommunicationException(msg, e);       
+        }
+    }
 
      public void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
          Characteristic_Transferable transferables = (Characteristic_Transferable) characteristic.getTransferable();         
@@ -921,19 +1003,7 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
          }
      }
      
-     public void saveKISType(KISType kisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
-        KISType_Transferable transferables = (KISType_Transferable) kisType.getTransferable();         
-        try {
-            this.server.receiveKISType(transferables, force, accessIdentifierTransferable);         
-        } catch (AMFICOMRemoteException e) {
-            String msg = "ClientConfigurationObjectLoader.saveKISType ";
-            
-            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
-               throw new VersionCollisionException(msg, e);
-            
-            throw new CommunicationException(msg, e);       
-        }
-    }
+     
      
      
 
@@ -1038,6 +1108,20 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
              throw new CommunicationException(msg, e);       
          }
      }
+     
+     public void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
+        TransmissionPathType_Transferable transferables = (TransmissionPathType_Transferable) transmissionPathType.getTransferable();         
+        try {
+            this.server.receiveTransmissionPathType(transferables, force, accessIdentifierTransferable);         
+        } catch (AMFICOMRemoteException e) {
+            String msg = "ClientConfigurationObjectLoader.saveTransmissionPathType ";
+            
+            if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+               throw new VersionCollisionException(msg, e);
+            
+            throw new CommunicationException(msg, e);       
+        }
+    }
 
      public void saveKIS(KIS kis, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
          KIS_Transferable transferables = (KIS_Transferable) kis.getTransferable();         
@@ -1391,6 +1475,26 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             throw new CommunicationException(msg, e);       
          }
      }
+     
+     public void saveTransmissionPathTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
+        TransmissionPathType_Transferable[] transferables = new TransmissionPathType_Transferable[list.size()];
+        int i=0;
+        for (Iterator it = list.iterator(); it.hasNext();i++) {
+            transferables[i] = (TransmissionPathType_Transferable)( (TransmissionPathType)it.next() ).getTransferable();                        
+        }
+        try {
+            this.server.receiveTransmissionPathTypes(transferables, force, accessIdentifierTransferable);         
+        } catch (AMFICOMRemoteException e) {
+           String msg = "ClientMeasurementObjectLoader.saveTransmissionPathTypes ";
+           
+           if (e.error_code.equals(ErrorCode.ERROR_VERSION_COLLISION))
+               throw new VersionCollisionException(msg, e);
+           
+           throw new CommunicationException(msg, e);       
+        }
+    }
+     
+     
 
      public void saveKISs(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
          KIS_Transferable[] transferables = new KIS_Transferable[list.size()];

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.15 2004/10/26 08:24:48 max Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.16 2004/10/29 10:14:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/10/26 08:24:48 $
+ * @version $Revision: 1.16 $, $Date: 2004/10/29 10:14:50 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -37,6 +37,8 @@ public interface ConfigurationObjectLoader {
     Characteristic loadCharacteristic(Identifier id) throws DatabaseException, CommunicationException;
     
     LinkType loadLinkType(Identifier id) throws DatabaseException, CommunicationException;
+    
+    TransmissionPathType loadTransmissionPathType(Identifier id) throws DatabaseException, CommunicationException;
 
 //	PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException, CommunicationException;
 
@@ -77,6 +79,8 @@ public interface ConfigurationObjectLoader {
     List loadKISTypes(List ids) throws DatabaseException, CommunicationException;
     
     List loadLinkTypes(List ids) throws DatabaseException, CommunicationException;
+    
+    List loadTransmissionPathTypes(List ids) throws DatabaseException, CommunicationException;
 
 //  PermissionAttributes loadPermissionAttributes(List ids) throws DatabaseException, CommunicationException;
 
@@ -117,6 +121,8 @@ public interface ConfigurationObjectLoader {
     List loadKISTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
     
     List loadLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+    
+    List loadTransmissionPathTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 //  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
@@ -155,6 +161,8 @@ public interface ConfigurationObjectLoader {
     void saveKISType(KISType kisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
     
     void saveLinkType(LinkType linkType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+    
+    void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
@@ -193,6 +201,8 @@ public interface ConfigurationObjectLoader {
     void saveKISTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
     
     void saveLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+    
+    void saveTransmissionPathTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
