@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.56 2005/01/14 18:09:56 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.57 2005/01/27 15:14:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,24 +43,14 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/01/14 18:09:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2005/01/27 15:14:09 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
-	public static final String	COLUMN_CRITERIA_SET_ID				= "criteria_set_id";
-	public static final String	COLUMN_DESCRIPTION					= "description";
-	public static final String	COLUMN_ETALON_ID					= "etalon_id";
-	public static final String	COLUMN_MEASUREMENT_DURAION			= "measurement_duration";
-	public static final String	COLUMN_PARAMETER_SET_ID				= "parameter_set_id";
-	public static final String	COLUMN_THRESHOLD_SET_ID				= "threshold_set_id";
-
-	public static final String	LINK_COLUMN_ME_ID					= "monitored_element_id";
-	public static final String	LINK_COLUMN_MEASUREMENT_SETUP_ID	= "measurement_setup_id";
-	
-    public static final String  PARAMETER_TYPE_ID                   = "parameter_type_id";
+	public static final String  PARAMETER_TYPE_ID                   = "parameter_type_id";
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;	
 	
 	private static String columns;	
@@ -163,8 +153,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		String meIdStr = DatabaseIdentifier.toSQLString(monitoredElementId);
 		String sql = SQL_INSERT_INTO
 			+ ObjectEntities.MSMELINK_ENTITY + OPEN_BRACKET
-			+ LINK_COLUMN_MEASUREMENT_SETUP_ID + COMMA
-			+ LINK_COLUMN_ME_ID
+			+ MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + COMMA
+			+ MeasurementSetupWrapper.LINK_COLUMN_ME_ID
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 			+ msIdStr + COMMA
 			+ meIdStr
@@ -201,9 +191,9 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		String sql = SQL_DELETE_FROM 
 			+ ObjectEntities.MSMELINK_ENTITY
 			+ SQL_WHERE
-			+ LINK_COLUMN_MEASUREMENT_SETUP_ID + EQUALS + msIdStr
+			+ MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + EQUALS + msIdStr
 			+ SQL_AND
-				+ LINK_COLUMN_ME_ID + EQUALS + meIdStr;
+				+ MeasurementSetupWrapper.LINK_COLUMN_ME_ID + EQUALS + meIdStr;
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
@@ -232,12 +222,12 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){			
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_PARAMETER_SET_ID + COMMA
-				+ COLUMN_CRITERIA_SET_ID + COMMA
-				+ COLUMN_THRESHOLD_SET_ID + COMMA
-				+ COLUMN_ETALON_ID + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_MEASUREMENT_DURAION;
+				+ MeasurementSetupWrapper.COLUMN_PARAMETER_SET_ID + COMMA
+				+ MeasurementSetupWrapper.COLUMN_CRITERIA_SET_ID + COMMA
+				+ MeasurementSetupWrapper.COLUMN_THRESHOLD_SET_ID + COMMA
+				+ MeasurementSetupWrapper.COLUMN_ETALON_ID + COMMA
+				+ MeasurementSetupWrapper.COLUMN_DESCRIPTION + COMMA
+				+ MeasurementSetupWrapper.COLUMN_MEASUREMENT_DURAION;
 		}		
 		return columns;
 	}
@@ -299,8 +289,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		List meIds = measurementSetup.getMonitoredElementIds();
 		String sql = SQL_INSERT_INTO 
 				+ ObjectEntities.MSMELINK_ENTITY + OPEN_BRACKET
-				+ LINK_COLUMN_MEASUREMENT_SETUP_ID + COMMA 
-				+ LINK_COLUMN_ME_ID
+				+ MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + COMMA 
+				+ MeasurementSetupWrapper.LINK_COLUMN_ME_ID
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 				+ QUESTION + COMMA
 				+ QUESTION
@@ -351,19 +341,19 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		Set etalon;
 		Identifier id;
 		try {
-			parameterSet = (Set)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARAMETER_SET_ID), true);			
-			id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CRITERIA_SET_ID);
+			parameterSet = (Set)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_PARAMETER_SET_ID), true);			
+			id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_CRITERIA_SET_ID);
 			criteriaSet = (id != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(id, true) : null;
-			id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_THRESHOLD_SET_ID);
+			id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_THRESHOLD_SET_ID);
 			thresholdSet = (id != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(id, true) : null;			
-			id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ETALON_ID);
+			id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_ETALON_ID);
 			etalon = (id != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(id, true) : null;
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(MeasurementSetupWrapper.COLUMN_DESCRIPTION));
 		measurementSetup.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 									   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
@@ -373,7 +363,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 									   thresholdSet,
 									   etalon,
 									   (description != null) ? description : "",
-									   resultSet.getLong(COLUMN_MEASUREMENT_DURAION));
+									   resultSet.getLong(MeasurementSetupWrapper.COLUMN_MEASUREMENT_DURAION));
 		return measurementSetup;
 	}
 
@@ -382,9 +372,9 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 		String msIdStr = DatabaseIdentifier.toSQLString(measurementSetup.getId());
 		String sql = SQL_SELECT
-			+ LINK_COLUMN_ME_ID
+			+ MeasurementSetupWrapper.LINK_COLUMN_ME_ID
 			+ SQL_FROM + ObjectEntities.MSMELINK_ENTITY
-			+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_SETUP_ID + EQUALS + msIdStr;
+			+ SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + EQUALS + msIdStr;
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -394,7 +384,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			Log.debugMessage("MeasurementSetupDatabase.retrieveMeasurementSetupMELinks | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next())
-				meIds.add(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_ME_ID));
+				meIds.add(DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.LINK_COLUMN_ME_ID));
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetupMELinks | Cannot retrieve monitored element ids for measurement setup '" + msIdStr + "' -- " + sqle.getMessage();
@@ -423,10 +413,10 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
             return;     
         
         StringBuffer sql = new StringBuffer(SQL_SELECT
-                + LINK_COLUMN_ME_ID + COMMA
-                + LINK_COLUMN_MEASUREMENT_SETUP_ID
+                + MeasurementSetupWrapper.LINK_COLUMN_ME_ID + COMMA
+                + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID
                 + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
-                + SQL_WHERE + LINK_COLUMN_MEASUREMENT_SETUP_ID
+                + SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID
                 + SQL_IN + OPEN_BRACKET);
         int i = 1;
         for (Iterator it = measurementSetups.iterator(); it.hasNext();i++) {
@@ -438,7 +428,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
                 else {
                     sql.append(CLOSE_BRACKET);
                     sql.append(SQL_OR);
-                    sql.append(LINK_COLUMN_MEASUREMENT_SETUP_ID);
+                    sql.append(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
                     sql.append(SQL_IN);
                     sql.append(OPEN_BRACKET);
                 }                   
@@ -456,7 +446,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
             Map meIdMap = new HashMap();
             while (resultSet.next()) {
                 MeasurementSetup measurementSetup = null;
-                Identifier measurementSetupId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MEASUREMENT_SETUP_ID);
+                Identifier measurementSetupId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
                 for (Iterator it = measurementSetups.iterator(); it.hasNext();) {
                     MeasurementSetup measurementSetupToCompare = (MeasurementSetup) it.next();
                     if (measurementSetupToCompare.getId().equals(measurementSetupId)){
@@ -470,7 +460,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
                     throw new RetrieveObjectException(mesg);
                 }                    
                 
-                Identifier meId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_ME_ID);
+                Identifier meId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.LINK_COLUMN_ME_ID);
                 List meIds = (List)meIdMap.get(measurementSetup);
                 if (meIds == null){
                     meIds = new LinkedList();
@@ -563,8 +553,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		List list = null;
 		
 		String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
-				+ SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
-				+ SQL_WHERE + LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET
+				+ SQL_SELECT + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
+				+ SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET
 					+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
 					+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
 					+ CLOSE_BRACKET
@@ -600,7 +590,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
        		 }
        	}
 		
-		String condition = COLUMN_PARAMETER_SET_ID + SQL_IN + OPEN_BRACKET		
+		String condition = MeasurementSetupWrapper.COLUMN_PARAMETER_SET_ID + SQL_IN + OPEN_BRACKET		
 							+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
 							+ SQL_WHERE + SetDatabase.LINK_COLUMN_TYPE_ID + SQL_IN + OPEN_BRACKET			
 								+ SQL_SELECT + StorableObjectDatabase.LINK_COLUMN_PARAMETER_TYPE_ID
@@ -640,7 +630,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	                meIdsStr.append(CLOSE_BRACKET);
 	                meIdsStr.append(SQL_OR);
                     meIdsStr.append(SQL_IN);
-	                meIdsStr.append(LINK_COLUMN_ME_ID);
+	                meIdsStr.append(MeasurementSetupWrapper.LINK_COLUMN_ME_ID);
 	                meIdsStr.append(SQL_IN);
 	                meIdsStr.append(OPEN_BRACKET);
 	       		 }  
@@ -648,8 +638,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
        	}
         
 		String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
-					+ SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
-					+ SQL_WHERE + LINK_COLUMN_ME_ID + SQL_IN 
+					+ SQL_SELECT + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
+					+ SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_ME_ID + SQL_IN 
 					+ OPEN_BRACKET
 					+ meIdsStr.toString()
 					+ CLOSE_BRACKET
@@ -681,7 +671,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		                measurementIdsStr.append(SQL_AND);
                         measurementIdsStr.append(NOT);
                         measurementIdsStr.append(SQL_IN);
-		                measurementIdsStr.append(LINK_COLUMN_ME_ID);
+		                measurementIdsStr.append(MeasurementSetupWrapper.LINK_COLUMN_ME_ID);
 		                measurementIdsStr.append(SQL_IN);
 		                measurementIdsStr.append(OPEN_BRACKET);
 		       		 }  
@@ -689,8 +679,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	       	}
 	        
 	        String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET	
-	                        + SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
-	                        + SQL_WHERE + LINK_COLUMN_ME_ID + NOT + SQL_IN + OPEN_BRACKET + measurementIdsStr.toString() 
+	                        + SQL_SELECT + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
+	                        + SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_ME_ID + NOT + SQL_IN + OPEN_BRACKET + measurementIdsStr.toString() 
 	                        + CLOSE_BRACKET
 	                    + CLOSE_BRACKET;        
 	        return retrieveButIds(ids , condition);
