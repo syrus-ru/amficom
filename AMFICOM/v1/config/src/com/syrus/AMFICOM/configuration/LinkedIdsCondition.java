@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.10 2004/12/23 11:19:52 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.11 2004/12/23 12:26:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,55 +8,22 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/12/23 11:19:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2004/12/23 12:26:48 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
-public class LinkedIdsCondition implements StorableObjectCondition {
-
-	protected Domain				domain;
+class LinkedIdsCondition extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 
 	protected static final Short		CHARACTERISTIC_SHORT	= new Short(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
 	protected static final Short		MCM_SHORT				= new Short(ObjectEntities.MCM_ENTITY_CODE);
-
-	protected Short				entityCode;
-
-	protected List				linkedIds;
-	protected Identifier			identifier;	
-
-	public LinkedIdsCondition(LinkedIdsCondition_Transferable transferable) throws DatabaseException,
-			CommunicationException {
-		this.domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(new Identifier(transferable.domain_id), true);
-		if (transferable.linked_ids.length == 1) {
-			this.identifier = new Identifier(transferable.linked_ids[0]);
-		}
-		else {
-			this.linkedIds = new ArrayList(transferable.linked_ids.length);
-			for (int i = 0; i < transferable.linked_ids.length; i++) {
-				this.linkedIds.add(new Identifier(transferable.linked_ids[i]));
-			}
-		}
-
-		setEntityCode(transferable.entity_code);
-	}
-
-	public LinkedIdsCondition(List linkedIds, short entityCode) {
-		this(linkedIds, new Short(entityCode));
-	}
 
 	public LinkedIdsCondition(List linkedIds, Short entityCode) {
 		this.linkedIds = linkedIds;
@@ -66,18 +33,6 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	public LinkedIdsCondition(Identifier identifier, Short entityCode) {
 		this.identifier = identifier;
 		this.entityCode = entityCode;
-	}
-
-	public LinkedIdsCondition(Identifier identifier, short entityCode) {
-		this(identifier, new Short(entityCode));
-	}
-
-	public Domain getDomain() {
-		return this.domain;
-	}
-
-	public Short getEntityCode() {
-		return this.entityCode;
 	}
 
 	/**
@@ -141,18 +96,14 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			}
 				break;
 			default:
-				throw new UnsupportedOperationException("entityCode " + this.entityCode + " is unknown for this condition");
+				throw new UnsupportedOperationException("entityCode " + ObjectEntities.codeToString(this.entityCode.shortValue()) + " is unknown for this condition");
 		}
 
 		return condition;
 	}
 
-	public void setDomain(Domain domain) {
-		this.domain = domain;
-	}
-
-	public void setEntityCode(short entityCode) {
-		switch (entityCode) {
+	public void setEntityCode(Short entityCode) {
+		switch (entityCode.shortValue()) {
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
 				this.entityCode = CHARACTERISTIC_SHORT;
 				break;
@@ -162,68 +113,10 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			default:
 				throw new UnsupportedOperationException("entityCode is unknown for this condition");
 		}
-
 	}
-
-	public void setEntityCode(Short entityCode) {
-		this.setEntityCode(entityCode.shortValue());
-	}
-
-	public void setLinkedIds(List linkedIds) {
-		this.linkedIds = linkedIds;
-		this.identifier = null;
-	}
-
-	public Object getTransferable() {
-
-		if (this.entityCode == null) { throw new UnsupportedOperationException("entityCode doesn't set"); }
-
-		short s = this.entityCode.shortValue();
-		switch (s) {
-			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				break;
-			case ObjectEntities.MCM_ENTITY_CODE:
-				break;
-			default:
-				throw new UnsupportedOperationException("entityCode is unknown");
-		}
-
-		LinkedIdsCondition_Transferable transferable = new LinkedIdsCondition_Transferable();
-		Identifier_Transferable[] linkedIdTransferable;
-		if (this.linkedIds != null) {
-			linkedIdTransferable = new Identifier_Transferable[this.linkedIds.size()];
-			int i = 0;
-
-			for (Iterator it = this.linkedIds.iterator(); it.hasNext(); i++) {
-				Identifier id = (Identifier) it.next();
-				linkedIdTransferable[i] = (Identifier_Transferable) id.getTransferable();
-			}
-		} else {
-			linkedIdTransferable = new Identifier_Transferable[1];
-			linkedIdTransferable[0] = (Identifier_Transferable) this.identifier.getTransferable();
-		}
-
-		transferable.domain_id = (Identifier_Transferable) this.domain.getId().getTransferable();
-		transferable.linked_ids = linkedIdTransferable;
-		transferable.entity_code = s;
-
-		return transferable;
-	}
+	
 	
 	public boolean isNeedMore(List list) {		
 		return true;
 	}	
-
-	public List getLinkedIds() {
-		return this.linkedIds;
-	}
-	
-	public Identifier getIdentifier() {
-		return this.identifier;
-	}
-
-	public void setIdentifier(Identifier identifier) {
-		this.identifier = identifier;
-		this.linkedIds = null;
-	}
 }

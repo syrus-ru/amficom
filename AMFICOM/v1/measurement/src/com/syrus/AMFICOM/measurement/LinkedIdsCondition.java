@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.18 2004/12/07 10:59:48 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.19 2004/12/23 12:26:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,24 +12,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/12/07 10:59:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2004/12/23 12:26:59 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
-public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedIdsCondition {
-
-	private static LinkedIdsCondition	instance				= null;
-	private static boolean				initialized				= false;
-	private static Object				lock					= new Object();
+class LinkedIdsCondition extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 
 	protected static final Short		ANALYSISTYPE_SHORT		= new Short(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
 	protected static final Short		EVALUATIONTYPE_SHORT	= new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
@@ -37,27 +29,15 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 	protected static final Short		RESULT_SHORT			= new Short(ObjectEntities.RESULT_ENTITY_CODE);
 	protected static final Short		MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 	protected static final Short		MS_SHORT				= new Short(ObjectEntities.MS_ENTITY_CODE);
-
-	private LinkedIdsCondition() {
-		super((Identifier) null, (Short) null);
+	
+	public LinkedIdsCondition(List linkedIds, Short entityCode) {
+		this.linkedIds = linkedIds;
+		this.entityCode = entityCode;
 	}
 
-	public LinkedIdsCondition(LinkedIdsCondition_Transferable transferable) throws DatabaseException,
-			CommunicationException {
-		super(transferable);
-	}
-
-	public static LinkedIdsCondition getInstance() {
-		if (!initialized) {
-			synchronized (lock) {
-				if (!initialized && instance == null)
-					instance = new LinkedIdsCondition();
-			}
-			synchronized (lock) {
-				initialized = true;
-			}
-		}
-		return instance;
+	public LinkedIdsCondition(Identifier identifier, Short entityCode) {
+		this.identifier = identifier;
+		this.entityCode = entityCode;
 	}
 
 	/**
@@ -244,8 +224,8 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 		return condition;
 	}
 
-	public void setEntityCode(short entityCode) {
-		switch (entityCode) {
+	public void setEntityCode(Short entityCode) {
+		switch (entityCode.shortValue()) {
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
 				this.entityCode = ANALYSISTYPE_SHORT;
 				break;
@@ -268,76 +248,5 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 				super.setEntityCode(entityCode);
 		}
 
-	}
-
-	public Object getTransferable() {
-
-		if (this.entityCode == null) { throw new UnsupportedOperationException("entityCode doesn't set"); }
-
-		short s = this.entityCode.shortValue();
-		switch (s) {
-			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				break;
-			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-			case ObjectEntities.RESULT_ENTITY_CODE:
-			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-			case ObjectEntities.MS_ENTITY_CODE:
-				break;
-			default:
-				throw new UnsupportedOperationException("entityCode is unknown");
-		}
-
-		LinkedIdsCondition_Transferable transferable = new LinkedIdsCondition_Transferable();
-		Identifier_Transferable[] linkedIdTransferable;
-		if (this.linkedIds != null) {
-			linkedIdTransferable = new Identifier_Transferable[this.linkedIds.size()];
-			int i = 0;
-
-			for (Iterator it = this.linkedIds.iterator(); it.hasNext(); i++) {
-				Identifier id = (Identifier) it.next();
-				linkedIdTransferable[i] = (Identifier_Transferable) id.getTransferable();
-			}
-		} else {
-			linkedIdTransferable = new Identifier_Transferable[1];
-			linkedIdTransferable[0] = (Identifier_Transferable) this.identifier.getTransferable();
-		}
-
-		transferable.domain_id = (Identifier_Transferable) this.domain.getId().getTransferable();
-		transferable.linked_ids = linkedIdTransferable;
-		transferable.entity_code = s;
-
-		return transferable;
-	}
-
-	public List getCriteriaSetIds() {
-		if (this.entityCode.equals(ANALYSISTYPE_SHORT))
-			return this.linkedIds;
-		return null;
-	}
-
-	public List getMeasurementIds() {
-		if (this.entityCode.equals(RESULT_SHORT))
-			return this.linkedIds;
-		return null;
-	}
-
-	public List getMeasurementPortTypeIds() {
-		if (this.entityCode.equals(MEASUREMENTTYPE_SHORT))
-			return this.linkedIds;
-		return null;
-	}
-
-	public List getTestIds() {
-		if (this.entityCode.equals(MEASUREMENT_SHORT))
-			return this.linkedIds;
-		return null;
-	}
-
-	public List getThresholdSetIds() {
-		if (this.entityCode.equals(EVALUATIONTYPE_SHORT))
-			return this.linkedIds;
-		return null;
-	}
+	}	
 }
