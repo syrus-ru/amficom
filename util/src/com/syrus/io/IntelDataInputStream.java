@@ -1,5 +1,5 @@
 /*
- * $Id: IntelDataInputStream.java,v 1.3 2004/07/07 14:36:35 bass Exp $
+ * $Id: IntelDataInputStream.java,v 1.4 2004/11/15 12:43:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.io;
 import java.io.*;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/07/07 14:36:35 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/11/15 12:43:56 $
+ * @author $Author: arseniy $
  * @module util
  */
 public class IntelDataInputStream extends DataInputStream
@@ -89,7 +89,7 @@ public class IntelDataInputStream extends DataInputStream
 	public final String readASCIIString() throws IOException
 	{
 		int res;
-		int n_read = 0;
+		int nRead = 0;
 		byte b[] = new byte[1];
 		String s = "";
 
@@ -98,13 +98,13 @@ public class IntelDataInputStream extends DataInputStream
 			res = read(b);
 			if (res == -1)
 				break;
-			n_read++;
+			nRead++;
 			if (b[0] == '\n')
 				break;
 			else if (b[0] != '\r')
 				s += new String(b);
 		}
-		if (n_read == 0)
+		if (nRead == 0)
 			return null;
 		return s;
 	}

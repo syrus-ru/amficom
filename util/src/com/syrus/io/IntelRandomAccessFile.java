@@ -125,7 +125,7 @@ public class IntelRandomAccessFile extends RandomAccessFile
 	public final String readIString() throws IOException
 	{
 /*    byte b[] = new byte[1];
-		byte NUL = 0x00;
+		byte nul = 0x00;
 		String s = "";
 
 		while (true)
@@ -134,12 +134,12 @@ public class IntelRandomAccessFile extends RandomAccessFile
 			{
 
 				read(b);
-			if ((b[0] == NUL) || (b[0] == '\r') || (b[0] == '\n'))
+			if ((b[0] == nul) || (b[0] == '\r') || (b[0] == '\n'))
 //			this.readLine()
 				break;
 			else
 				{
-					s += (char)((NUL << 8) | (b[0] & 0xff));
+					s += (char)((nul << 8) | (b[0] & 0xff));
 				}
 			}
 			catch (java.io.IOException ex)
@@ -167,9 +167,9 @@ public class IntelRandomAccessFile extends RandomAccessFile
 	public final char readIChar() throws IOException
 	{
 		byte b[] = new byte[1];
-		byte NUL = 0x00;
+		byte nul = 0x00;
 		read(b);
-		return (char)((NUL << 8) | (b[0] & 0xff));
+		return (char)((nul << 8) | (b[0] & 0xff));
 	}
 
 	public final void writeIChar(char ch) throws IOException

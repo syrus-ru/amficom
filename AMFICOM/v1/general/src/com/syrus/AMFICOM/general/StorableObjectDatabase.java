@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.43 2004/11/12 07:45:02 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.44 2004/11/15 12:43:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/11/12 07:45:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.44 $, $Date: 2004/11/15 12:43:41 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -315,10 +315,10 @@ public abstract class StorableObjectDatabase {
 
 	protected String retrieveQuery(final String condition){
 		StringBuffer buffer = new StringBuffer(SQL_SELECT);
-		String columns = this.getColumns();
-		columns = columns.replaceFirst(COLUMN_CREATED, DatabaseDate.toQuerySubString(COLUMN_CREATED));
-		columns = columns.replaceFirst(COLUMN_MODIFIED, DatabaseDate.toQuerySubString(COLUMN_MODIFIED));
-		buffer.append(columns);
+		String cols = this.getColumns();
+		cols = cols.replaceFirst(COLUMN_CREATED, DatabaseDate.toQuerySubString(COLUMN_CREATED));
+		cols = cols.replaceFirst(COLUMN_MODIFIED, DatabaseDate.toQuerySubString(COLUMN_MODIFIED));
+		buffer.append(cols);
 		buffer.append(SQL_FROM);
 		buffer.append(this.getEnityName());
 		if (condition != null && condition.trim().length() > 0){
@@ -782,20 +782,20 @@ public abstract class StorableObjectDatabase {
 	protected void updateEntity(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
 		String storableObjectIdStr = storableObject.getId().toSQLString();
 		
-		String[] columns = this.getColumns().split(COMMA);
-		String[] values = this.parseInsertStringValues(this.getUpdateSingleSQLValues(storableObject), columns.length);
-		if (columns.length != values.length)
-			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+columns.length+"') is not equals count of values ('"+values.length+"')");
+		String[] cols = this.getColumns().split(COMMA);
+		String[] values = this.parseInsertStringValues(this.getUpdateSingleSQLValues(storableObject), cols.length);
+		if (cols.length != values.length)
+			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+cols.length+"') is not equals count of values ('"+values.length+"')");
 		String sql = null;
 		{
 			StringBuffer buffer = new StringBuffer(SQL_UPDATE);
 			buffer.append(this.getEnityName());
 			buffer.append(SQL_SET);
-			for(int i=0;i<columns.length;i++){
-				buffer.append(columns[i]);
+			for(int i=0;i<cols.length;i++){
+				buffer.append(cols[i]);
 				buffer.append(EQUALS);
 				buffer.append(values[i]);
-				if (i<columns.length-1)
+				if (i<cols.length-1)
 					buffer.append(COMMA);
 			}
 			buffer.append(SQL_WHERE);
@@ -841,22 +841,22 @@ public abstract class StorableObjectDatabase {
 			return;
 		}
 
-		String[] columns = this.getColumns().split(COMMA);
-		// String[] values = this.parseInsertStringValues(this.getUpdateMultiplySQLValues(), columns.length);		
+		String[] cols = this.getColumns().split(COMMA);
+		// String[] values = this.parseInsertStringValues(this.getUpdateMultiplySQLValues(), cols.length);		
 		// here we can split multyply sql values by COMMA because of it is only QUESTIONS separeted by COMMA
 		String[] values = this.getUpdateMultiplySQLValues().split(COMMA);
-		if (columns.length != values.length)
-			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+columns.length+"') is not equals count of values ('"+values.length+"')");
+		if (cols.length != values.length)
+			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+cols.length+"') is not equals count of values ('"+values.length+"')");
 		String sql = null;
 		{
 			StringBuffer buffer = new StringBuffer(SQL_UPDATE);
 			buffer.append(this.getEnityName());
 			buffer.append(SQL_SET);
-			for(int i=0;i<columns.length;i++){
-				buffer.append(columns[i]);
+			for(int i=0;i<cols.length;i++){
+				buffer.append(cols[i]);
 				buffer.append(EQUALS);
 				buffer.append(values[i]);
-				if (i<columns.length-1)
+				if (i<cols.length-1)
 					buffer.append(COMMA);
 			}
 			buffer.append(SQL_WHERE);
