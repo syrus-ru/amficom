@@ -45,8 +45,8 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			int result = 0;
 			TestTableRow v1 = (TestTableRow) a;
 			TestTableRow v2 = (TestTableRow) b;
-			Object o1 = v1.get(colIndex);
-			Object o2 = v2.get(colIndex);
+			Object o1 = v1.get(this.colIndex);
+			Object o2 = v2.get(this.colIndex);
 
 			// Treat empty strains like nulls
 			if (o1 instanceof String && ((String) o1).length() == 0) {
@@ -65,13 +65,13 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			} else if (o2 == null) {
 				result = -1;
 			} else if (o1 instanceof Comparable) {
-				if (ascending) {
+				if (this.ascending) {
 					result = ((Comparable) o1).compareTo(o2);
 				} else
 					result = ((Comparable) o2).compareTo(o1);
 
 			} else {
-				if (ascending) {
+				if (this.ascending) {
 					result = o1.toString().compareTo(o2.toString());
 				} else
 					result = o2.toString().compareTo(o1.toString());
@@ -338,12 +338,12 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		}
 
 		public void remove(int rowIndex) {
-			testLines.remove(rowIndex);
+			this.testLines.remove(rowIndex);
 		}
 
 		public void removeAll() {
-			if (testLines != null)
-				testLines.clear();
+			if (this.testLines != null)
+				this.testLines.clear();
 
 		}
 
@@ -511,6 +511,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			if (!skipTestUpdate) {
 				TestUpdateEvent tue = (TestUpdateEvent) ae;
@@ -555,6 +556,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 				this.unsavedTests.clear();
 			TestTableModel model = (TestTableModel) this.listTable.getModel();
 			model.removeAll();
+			this.listTable.removeAll();
 			this.listTable.revalidate();
 			this.listTable.repaint();
 

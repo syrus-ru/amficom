@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.Client.Resource.Result.Evaluation;
 import com.syrus.AMFICOM.Client.Resource.Result.Test;
 import com.syrus.AMFICOM.Client.Resource.Result.TestArgumentSet;
 import com.syrus.AMFICOM.Client.Resource.Result.TestRequest;
-import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 

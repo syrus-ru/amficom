@@ -277,28 +277,28 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	}
 
 	public void operationPerformed(OperationEvent ae) {
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
-			if (paramsRadioButton.isSelected()) {
-				TestArgumentSet tas = ((ParametersTestPanel) (testPanels.get(currentParametersPanelName)))
+			if (this.paramsRadioButton.isSelected()) {
+				TestArgumentSet tas = ((ParametersTestPanel) (this.testPanels.get(this.currentParametersPanelName)))
 						.getTestArgumentSet();
 				if (tas != null)
-					dispatcher.notify(new OperationEvent(tas, SchedulerModel.DATA_ID_PARAMETERS,
+					this.dispatcher.notify(new OperationEvent(tas, SchedulerModel.DATA_ID_PARAMETERS,
 															SchedulerModel.COMMAND_SEND_DATA));
-			} else if (patternRadioButton.isSelected()) {
+			} else if (this.patternRadioButton.isSelected()) {
 				this.getParameters();
-				if (parameters != null) {
-					TestSetup ts = (TestSetup) parameters.get(TestSetup.typ);
-					AnalysisType analysisType = (AnalysisType) parameters.get(AnalysisType.typ);
-					EvaluationType evaluationType = (EvaluationType) parameters.get(EvaluationType.typ);
-					dispatcher.notify(new OperationEvent((ts == null) ? (Object) "" : (Object) ts, //$NON-NLS-1$
+				if (this.parameters != null) {
+					TestSetup ts = (TestSetup) this.parameters.get(TestSetup.typ);
+					AnalysisType analysisType = (AnalysisType) this.parameters.get(AnalysisType.typ);
+					EvaluationType evaluationType = (EvaluationType) this.parameters.get(EvaluationType.typ);
+					this.dispatcher.notify(new OperationEvent((ts == null) ? (Object) "" : (Object) ts, //$NON-NLS-1$
 															SchedulerModel.DATA_ID_PARAMETERS_PATTERN,
 															SchedulerModel.COMMAND_SEND_DATA));
 					//if (analysisType != null)
-					dispatcher.notify(new OperationEvent((analysisType == null) ? (Object) "" //$NON-NLS-1$
+					this.dispatcher.notify(new OperationEvent((analysisType == null) ? (Object) "" //$NON-NLS-1$
 							: (Object) analysisType, SchedulerModel.DATA_ID_PARAMETERS_ANALYSIS,
 															SchedulerModel.COMMAND_SEND_DATA));
 					this.dispatcher.notify(new OperationEvent((evaluationType == null) ? (Object) "" //$NON-NLS-1$

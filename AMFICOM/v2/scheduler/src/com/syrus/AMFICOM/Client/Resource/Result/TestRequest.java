@@ -28,32 +28,33 @@ public class TestRequest extends ObjectResource {
 
 	public TestRequest(String id) {
 		this.id = id;
-		transferable = new ClientTestRequest_Transferable();
+		this.transferable = new ClientTestRequest_Transferable();
 	}
 
 	public void addTest(Test test) {
-		testIds.add(test.getId());
+		System.out.println(getClass().getName()+"\taddTest:"+test.getId());
+		this.testIds.add(test.getId());
 	}
 
 	/**
 	 * @return Returns the completionTime.
 	 */
 	public long getCompletionTime() {
-		return completionTime;
+		return this.completionTime;
 	}
 
 	/**
 	 * @return Returns the created.
 	 */
 	public long getCreated() {
-		return created;
+		return this.created;
 	}
 
 	/**
 	 * @return Returns the deleted.
 	 */
 	public long getDeleted() {
-		return deleted;
+		return this.deleted;
 	}
 
 	public String getDomainId() {
@@ -61,36 +62,36 @@ public class TestRequest extends ObjectResource {
 	}
 
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	/**
 	 * @return Returns the status.
 	 */
 	public TestRequestStatus getStatus() {
-		return status;
+		return this.status;
 	}
 
 	/**
 	 * @return Returns the statusText.
 	 */
 	public String getStatusText() {
-		return statusText;
+		return this.statusText;
 	}
 
 	/**
 	 * @return Returns the testIds.
 	 */
 	public List getTestIds() {
-		return testIds;
+		return this.testIds;
 	}
 
 	public Object getTransferable() {
-		return transferable;
+		return this.transferable;
 	}
 
 	public String getTyp() {

@@ -60,7 +60,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		//		add(titleLabel);
 		gbc.weightx = 4.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		add(nameTextField, gbc);
+		add(this.nameTextField, gbc);
 		//		add(nameTextField);
 
 		JLabel ownerLabel = new JLabel(LangModelSchedule.getString("Owner") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -70,7 +70,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		//		add(ownerLabel);
 		gbc.weightx = 4.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		add(ownerTextField, gbc);
+		add(this.ownerTextField, gbc);
 		//		add(ownerTextField);
 
 		JLabel typeLabel = new JLabel(LangModelSchedule.getString("Type") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -81,7 +81,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		//		add(typeLabel);
 		gbc.weightx = 4.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		add(typeTextField, gbc);
+		add(this.typeTextField, gbc);
 		//		add(typeTextField);
 
 		JLabel objectLabel = new JLabel(LangModelSchedule.getString("TestObject") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -93,28 +93,30 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		gbc.weightx = 4.0;
 		gbc.weighty = 4.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		JScrollPane listPanel = new JScrollPane(testList);
+		JScrollPane listPanel = new JScrollPane(this.testList);
 		add(listPanel, gbc);
 		//		add(listPanel);
 
-		testList.addListSelectionListener(new ListSelectionListener() {
+		this.testList.addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged(ListSelectionEvent e) {
 				//System.out.println("ListSelectionListener");
-				if ((e.getValueIsAdjusting()) || skip)
+				if ((e.getValueIsAdjusting()) || TestRequestPanel.this.skip)
 					return;
-				MonitoredElement me = (MonitoredElement) testList.getSelectedObjectResource();
+				MonitoredElement me = (MonitoredElement) TestRequestPanel.this.testList.getSelectedObjectResource();
 				if (me == null) {
-					dispatcher.notify(new TestUpdateEvent(this, null, TestUpdateEvent.TEST_DESELECTED_EVENT));
+//					TestRequestPanel.this.dispatcher.notify(new TestUpdateEvent(this, null,
+//																				TestUpdateEvent.TEST_DESELECTED_EVENT));
 					//System.out.println("me == null");
 				} else {
-					skip = true;
+					TestRequestPanel.this.skip = true;
 					if (TestRequestPanel.this.tests != null) {
 						Test test = (Test) TestRequestPanel.this.tests.get(me.getId());
 						if (test != null)
-							dispatcher.notify(new TestUpdateEvent(this, test, TestUpdateEvent.TEST_SELECTED_EVENT));
+							TestRequestPanel.this.dispatcher
+									.notify(new TestUpdateEvent(this, test, TestUpdateEvent.TEST_SELECTED_EVENT));
 					}
-					skip = false;
+					TestRequestPanel.this.skip = false;
 				}
 			}
 		});
@@ -129,30 +131,32 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CREATE_TEST);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_APPLY_TEST);
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 
 	}
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		Object obj = ae.getSource();
+		//		Object obj = ae.getSource();
 		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 			TestRequest testRequest = getParameters();
 
-			dispatcher.notify(new OperationEvent(testRequest == null ? (Object) "" : (Object) testRequest, //$NON-NLS-1$
-													0, SchedulerModel.COMMAND_SEND_DATA));
+			this.dispatcher.notify(new OperationEvent(testRequest == null ? (Object) "" : (Object) testRequest, //$NON-NLS-1$
+														0, SchedulerModel.COMMAND_SEND_DATA));
 		} else if (commandName.equals(TestParametersPanel.COMMAND_CHANGE_KIS)) {
 			//kisId = (String) obj;
 			//System.out.println("kisId:" + kisId);
 		} else if (commandName.equals(TestParametersPanel.COMMAND_CHANGE_ME_TYPE)) {
-			String meId = (String) obj;
-			System.out.println("meId:" + meId);
-			MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, meId);
-			this.testList.setSelected(me);
-			if (this.testList.getSelectedIndex() < 0) {
-				this.testList.add(me);
-				this.testList.setSelected(me);
-			}
+			//			String meId = (String) obj;
+			//			System.out.println("meId:" + meId);
+			//			MonitoredElement me = (MonitoredElement)
+			// Pool.get(MonitoredElement.typ, meId);
+			//			this.testList.setSelected(me);
+			//			if (this.testList.getSelectedIndex() < 0) {
+			//				this.testList.add(me);
+			//				this.testList.setSelected(me);
+			//			}
 
 		} else if (commandName.equals(SchedulerModel.COMMAND_CREATE_TEST)) {
 			//toCreate = true;
@@ -164,25 +168,34 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 			Test test = tue.test;
 			setTest(test);
 		} else if (commandName.equals(TestParametersPanel.COMMAND_CHANGE_TEST_TYPE)) {
-			String testTypeId = (String) obj;
-			TestType testType = (TestType) Pool.get(TestType.typ, testTypeId);
-			this.typeTextField.setText(testType.getName());
-			this.typeTextField.setCaretPosition(0);
+			//			String testTypeId = (String) obj;
+			//			TestType testType = (TestType) Pool.get(TestType.typ,
+			// testTypeId);
+			//			this.typeTextField.setText(testType.getName());
+			//			this.typeTextField.setCaretPosition(0);
+		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
+			this.nameTextField.setText("");
+			this.typeTextField.setText("");
+			this.ownerTextField.setText("");
+			if (this.tests != null)
+				this.tests.clear();
+			this.testRequest = null;
+			this.testList.removeAll();
 		}
 	}
 
 	public TestRequest getParameters() {
 		System.out.println(getClass().getName() + " getParameters()"); //$NON-NLS-1$
-		DataSourceInterface dsi = aContext.getDataSourceInterface();
+		DataSourceInterface dsi = this.aContext.getDataSourceInterface();
 		// if test request have saved tests , create new testRequest for new
 		// test
 		// if request contains only unsaved tests , add new test to it
 		boolean needNewReq = false;
-		if (testRequest == null)
+		if (this.testRequest == null)
 			needNewReq = true;
 		else {
-			System.out.println("current TestRequest:" + testRequest.getId()); //$NON-NLS-1$
-			java.util.List list = testRequest.getTestIds();
+			System.out.println("current TestRequest:" + this.testRequest.getId()); //$NON-NLS-1$
+			java.util.List list = this.testRequest.getTestIds();
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				String testId = (String) it.next();
 				Test test = (Test) Pool.get(Test.TYPE, testId);
@@ -210,44 +223,50 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		}
 
 		if (needNewReq) {
-			testRequest = new TestRequest(dsi.GetUId(TestRequest.TYP));
-			testRequest.setName(LangModelSchedule.getString("Test created at") + " "
+			System.out.println("new TestRequest required");
+			this.testRequest = new TestRequest(dsi.GetUId(TestRequest.TYP));
+			System.out.println("set treqId:" + this.testRequest.getId());
+			this.testRequest.setName(LangModelSchedule.getString("Test created at") + " "
 					+ UIStorage.SDF.format(new Date(System.currentTimeMillis())));
-			testRequest.setUserId(aContext.getSessionInterface().getUserId());
+			System.out.println("set name:" + this.testRequest.getName());
+			this.testRequest.setUserId(this.aContext.getSessionInterface().getUserId());
 			//testRequest = newTestRequest;
-			testRequest.setChanged(true);
-			Pool.put(TestRequest.TYP, testRequest.getId(), testRequest);
-			tests = null;
+			this.testRequest.setChanged(true);
+			Pool.put(TestRequest.TYP, this.testRequest.getId(), this.testRequest);
+			this.tests = null;
 		}
 
 		//		TestRequest treq = new TestRequest("");
 		{
-			String s = nameTextField.getText();
+			String s = this.nameTextField.getText();
 			if (s.length() > 0)
-				testRequest.setName(s);
+				this.testRequest.setName(s);
 		}
 		{
-			String s = ownerTextField.getText();
+			String s = this.ownerTextField.getText();
 			if (s.length() > 0)
-				testRequest.setUserId(s);
+				this.testRequest.setUserId(s);
 		}
-		testRequest.getTestIds().clear();
-		if (tests != null) {
-			for (Iterator it = tests.values().iterator(); it.hasNext();) {
+		this.testRequest.getTestIds().clear();
+		if (this.tests != null) {
+			for (Iterator it = this.tests.values().iterator(); it.hasNext();) {
 				Test test = (Test) it.next();
-				testRequest.addTest(test);
+				this.testRequest.addTest(test);
 			}
 		}
-		setTestRequest(testRequest);
-		return testRequest;
+		setTestRequest(this.testRequest);
+		return this.testRequest;
 	}
 
 	public void setTest(Test test) {
 		//System.out.println(getClass().getName() + " setTest");
 		if (test != null) {
+			String treqId = test.getRequestId();
+			TestRequest treq = (TestRequest) Pool.get(TestRequest.TYP, treqId);
+			setTestRequest(treq);
 			MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, test.getMonitoredElementId());
 			if (me != null) {
-				testList.setSelected(me);
+				this.testList.setSelected(me);
 				//System.out.println("setSelected:" + me.getId());
 			} // else System.out.println("tried setSelected me==null");
 			//			ListModel lm = testList.getModel();
@@ -261,40 +280,44 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 			//				}
 			//			}
 		} else {
-			System.err.println("test is null"); //$NON-NLS-1$
+			Environment.log(Environment.LOG_LEVEL_WARNING, "test is null");
 		}
 	}
 
 	public void setTestRequest(TestRequest testRequest) {
-		if (skip)
+		if (this.skip)
 			return;
-		skip = true;
+		System.out.println("setTestRequest");
+		this.skip = true;
 		this.testRequest = testRequest;
-		testList.removeAll();
-		nameTextField.setText(testRequest.getName());
-		ownerTextField.setText(testRequest.getUserId());
-		nameTextField.setCaretPosition(0);
-		ownerTextField.setCaretPosition(0);
+		this.testList.removeAll();
+		this.nameTextField.setText(testRequest.getName());
+		this.ownerTextField.setText(testRequest.getUserId());
+		this.nameTextField.setCaretPosition(0);
+		this.ownerTextField.setCaretPosition(0);
 
-		tests = new Hashtable();
+		this.tests = new Hashtable();
 		Hashtable ht = new Hashtable();
 		String type = ""; //$NON-NLS-1$
 		//for (Enumeration enum = treq.test_ids.elements();
 		// enum.hasMoreElements();)
 		java.util.List list = testRequest.getTestIds();
+		System.out.println("list.size():" + list.size());
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			String testId = (String) it.next();
+			System.out.println("testId:" + testId);
 			Test tst = (Test) Pool.get(Test.TYPE, testId);
-			if (!tst.isChanged()) {
-				System.out.println("test:" + tst.getId() + "\t" + tst.getName()); //$NON-NLS-1$ //$NON-NLS-2$
-				MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, tst.getMonitoredElementId());
-				//System.out.println("me:" + me.getId() + "\t" +
-				// me.element_name);
-				ht.put(me.getId(), me);
-				tests.put(me.getId(), tst);
+			//if (!tst.isChanged()) {
+			//System.out.println("test:" + tst.getId() + "\t" + tst.getName());
+			// //$NON-NLS-1$ //$NON-NLS-2$
+			MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, tst.getMonitoredElementId());
+			//System.out.println("me:" + me.getId() + "\t" +
+			// me.element_name);
+			ht.put(me.getId(), me);
+			this.tests.put(me.getId(), tst);
 
-				type = Pool.getName(TestType.typ, tst.getTestTypeId());
-			}
+			type = Pool.getName(TestType.typ, tst.getTestTypeId());
+			//}
 		}
 		//		System.out.println("testRequest.unsavedTest.size():" //$NON-NLS-1$
 		//				+ testRequest.unsavedTest.size());
@@ -310,11 +333,11 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		//			System.out.println("type:" + type + "\t" + tst.getTestTypeId());
 		// //$NON-NLS-1$ //$NON-NLS-2$
 		//		}
-		testList.setContents(ht);
+		this.testList.setContents(ht);
 		//testList.setSelected(test);
 		this.typeTextField.setText(type);
 		this.typeTextField.setCaretPosition(0);
-		skip = false;
+		this.skip = false;
 	}
 
 }

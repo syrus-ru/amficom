@@ -195,17 +195,17 @@ public class SchedulerModel implements OperationListener {
 		}
 	}
 	private void createTest() {
-		DataSourceInterface dsi = aContext.getDataSourceInterface();
-		Test test = receivedTest;
+		DataSourceInterface dsi = this.aContext.getDataSourceInterface();
+		Test test = this.receivedTest;
 		if (test == null) {
 			test = new Test(dsi.GetUId(Test.TYPE)); //$NON-NLS-1$
 			test.setStatus(TestStatus.TEST_STATUS_SCHEDULED);
 			Pool.put(Test.TYPE, test.getId(), test);
 		}
 
-		TestType testType = (TestType) receiveTreeElements.get(TestType.typ);
-		KIS kis = (KIS) receiveTreeElements.get(KIS.typ);
-		MonitoredElement me = (MonitoredElement) receiveTreeElements
+		TestType testType = (TestType) this.receiveTreeElements.get(TestType.typ);
+		KIS kis = (KIS) this.receiveTreeElements.get(KIS.typ);
+		MonitoredElement me = (MonitoredElement) this.receiveTreeElements
 				.get(MonitoredElement.typ);
 		test.setTestTypeId(testType.getId());
 		test.setKisId(kis.id);
@@ -271,7 +271,7 @@ public class SchedulerModel implements OperationListener {
 			}
 
 		}
-		TestRequest testRequest = (TestRequest) receiveData
+		TestRequest testRequest = (TestRequest) this.receiveData
 				.get(TestRequest.TYP);
 
 		testRequest.addTest(test);
@@ -279,7 +279,7 @@ public class SchedulerModel implements OperationListener {
 		test.setChanged(true);
 		
 		test.setName(ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(test.getStartTime())));
-
+		//testRequest.setName(test.getName());		
 		this.dispatcher.notify(new TestUpdateEvent(this, test,
 				TestUpdateEvent.TEST_SELECTED_EVENT));
 	}
