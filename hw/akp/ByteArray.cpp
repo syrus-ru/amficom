@@ -16,10 +16,14 @@ ByteArray::ByteArray(unsigned int length, char* data) {
 }
 
 ByteArray::ByteArray(char* ndata) {
-	uint32_t nlength = *(uint32_t*) ndata;
-	this->length = htonl(nlength);
+	uint_frame uiframe;
+	unsigned int i;
+
+	for (i = 0; i < sizeof(uint32_t); i++)
+		uiframe.bytes[i] = ndata[i];
+	this->length = ntohl(uiframe.value);
 	this->data = new char[this->length + 1];
-	for (unsigned int i = 0; i < this->length; i++)
+	for (i = 0; i < this->length; i++)
 		this->data[i] = ndata[INTSIZE + i];
 	this->data[this->length] = 0;
 }
@@ -93,3 +97,4 @@ int operator != (const ByteArray& ba1, const ByteArray& ba2) {
 			return 1;
 	return 0;
 }
+

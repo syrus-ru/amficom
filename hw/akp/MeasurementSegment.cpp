@@ -132,7 +132,10 @@ void MeasurementSegment::parseSegment() {
 	p += INTSIZE + this->local_address->getLength();
 
 	//parameters
-	this->parnumber = ntohl(*(uint32_t*) p);
+	uint_frame uiframe;
+	for (unsigned int i = 0; i < sizeof(uint32_t); i++)
+		uiframe.bytes[i] = p[i];
+	this->parnumber = ntohl(uiframe.value);
 	p += INTSIZE;
 
 	this->parameters = new Parameter*[this->parnumber];
@@ -155,3 +158,4 @@ void MeasurementSegment::parseSegment() {
 		this->parnumber = parcount;
 	}
 }
+
