@@ -189,12 +189,13 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 			aModel.fireModelChanged("");
 
 		try {
+			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
 			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
-					new Identifier(aContext.getSessionInterface().getDomainId()),
-					true);
+					domain_id, true);
 			statusBar.setText("domain", domain.getName());
 		}
 		catch (ApplicationException ex) {
+			ex.printStackTrace();
 		}
 	}
 
@@ -285,7 +286,7 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 	{
 		this.aContext = aContext;
 		if(aContext.getApplicationModel() == null)
-			aContext.setApplicationModel(new ApplicationModel());
+			aContext.setApplicationModel(ApplicationModel.getInstance());
 		setModel(aContext.getApplicationModel());
 	}
 

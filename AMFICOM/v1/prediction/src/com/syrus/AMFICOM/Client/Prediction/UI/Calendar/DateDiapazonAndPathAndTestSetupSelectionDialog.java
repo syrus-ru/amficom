@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.configuration.*;
@@ -67,8 +68,9 @@ public class DateDiapazonAndPathAndTestSetupSelectionDialog  extends JDialog
 
 	private void jbInit() throws Exception
 	{
+		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
 		Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
-					new Identifier(aContext.getSessionInterface().getDomainId()), true);
+				domain_id, true);
 
 		mainPanel.setLayout(verticalFlowLayout1);
 		label2.setPreferredSize(new Dimension(20, 23));

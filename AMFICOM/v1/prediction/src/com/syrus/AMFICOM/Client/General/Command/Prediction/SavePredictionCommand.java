@@ -6,7 +6,7 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.*;
@@ -89,8 +89,8 @@ public class SavePredictionCommand extends VoidCommand
 //    if (s == null || s.equals(""))
 //			return;
 
-		Identifier modelingId = IdentifierPool.generateId(ObjectEntities.MODELING_ENTITY_CODE);
-		Identifier userId = new Identifier(aContext.getSessionInterface().getUserId());
+//		Identifier modelingId = IdentifierPool.generateId(ObjectEntities.MODELING_ENTITY_CODE);
+		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 		List meIds = new ArrayList(1);
 		meIds.add(bs.monitoredElementId);
 
@@ -99,25 +99,21 @@ public class SavePredictionCommand extends VoidCommand
 
 			ParameterType ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.PREDICTION_TIME);
 			Long predictionTime = ((Long)Pool.get("predictionTime", bs.title));
-			parameters[0] = new SetParameter(
-					IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
+			parameters[0] = SetParameter.createInstance(
 					ptype,
 					ByteArray.toByteArray(predictionTime.longValue()));
 
 			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.PREDICTION_DATA_FROM);
-			parameters[1] = new SetParameter(
-					IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
+			parameters[1] = SetParameter.createInstance(
 					ptype,
 					ByteArray.toByteArray(refStat.getLowerTime()));
 
 			ptype = AnalysisUtil.getParameterType(userId,	ParameterTypeCodenames.PREDICTION_DATA_TO);
-			parameters[2] = new SetParameter(
-					IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
+			parameters[2] = SetParameter.createInstance(
 					ptype,
 					ByteArray.toByteArray(refStat.getUpperTime()));
 
 			Set argumentSet = Set.createInstance(
-					IdentifierPool.generateId(ObjectEntities.SET_ENTITY_CODE),
 					userId,
 					SetSort.SET_SORT_ANALYSIS_CRITERIA,
 					"",
@@ -126,10 +122,9 @@ public class SavePredictionCommand extends VoidCommand
 
 			String name = bs.title;
 			Modeling m = Modeling.createInstance(
-					modelingId,
 					userId,
-					bs.schemePathId,
-					bs.monitoredElementId,
+					new Identifier(bs.schemePathId),
+					new Identifier(bs.monitoredElementId),
 					name,
 					argumentSet,
 					ModelingSort.MODELINGSORT_PREDICTION);
@@ -137,13 +132,11 @@ public class SavePredictionCommand extends VoidCommand
 			parameters = new SetParameter[1];
 			ptype = AnalysisUtil.getParameterType(userId,
 					ParameterTypeCodenames.REFLECTOGRAMMA);
-			parameters[0] = new SetParameter(
-					IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
+			parameters[0] = SetParameter.createInstance(
 					ptype,
 					new BellcoreWriter().write(bs));
 
 			m.createResult(
-					IdentifierPool.generateId(ObjectEntities.RESULT_ENTITY_CODE),
 					userId,
 					parameters);
 

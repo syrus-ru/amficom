@@ -69,12 +69,9 @@ public class CountPredictedReflectogramm
 
 		bs.title = title;
 
-		for (int i = 0; i < bs.dataPts.TPS[0] && i < predicted.length; i++)
-			bs.dataPts.DSF[0][i] = (int)(65535 - 1000d * predicted[i]);
-
-		bs.fxdParams.DTS = System.currentTimeMillis();
-		bs.dataPts.TPS[0] = predicted.length;
-		bs.dataPts.TNDP = predicted.length;
+		BellcorePredictionWriter writer = new BellcorePredictionWriter(bs);
+		writer.setDataPoints(predicted);
+		writer.setTime(System.currentTimeMillis() / 1000);
 
 		Pool.put("bellcorestructure", bs.title, bs);
 		Pool.put("predictionTime", bs.title, new Long(date));
