@@ -186,7 +186,12 @@ public class Transceiver extends SleepButWorkThread {
 								catch (MeasurementException me) {
 									if (me.getCode() == MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE) {
 										Log.debugMessage("Transceiver.run | Cannot obtain identifier -- trying to wait", Log.DEBUGLEVEL05);
-										MeasurementControlModule.resetMServerConnection();
+										try {
+											MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+										}
+										catch (CommunicationException ce) {
+											Log.errorException(ce);
+										}
 										super.fallCode = FALL_CODE_GENERATE_IDENTIFIER;
 										super.sleepCauseOfFall();
 									}
