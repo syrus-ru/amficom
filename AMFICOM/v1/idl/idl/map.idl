@@ -1,18 +1,17 @@
-/**
- * $Id: map.idl,v 1.8 2004/09/21 14:23:28 krupenn Exp $
+/*
+ * $Id: map.idl,v 1.9 2004/10/20 13:19:02 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
-#ifndef _map_idl_
-#define _map_idl_
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+#ifndef MAP_IDL
+#define MAP_IDL
+
+#include <streams.idl>
 
 #include "general.idl"
-#include "scheme.idl"
-#include "streams.idl"
 
 module com
 {
@@ -127,7 +126,10 @@ module Map
 		wstring city;
 		wstring street;
 		wstring building;
-		
+
+		long dimensionX;
+		long dimensionY;
+
 		boolean leftToRight;
 		boolean topToBottom;
 
@@ -148,7 +150,7 @@ module Map
 		wstring mapId;
 
 		wstring physicalLinkId;
-		
+
 		double distance;
 
 		wstring city;
@@ -186,9 +188,18 @@ module Map
 		long long modified;
 		wstring modifiedBy;
 
-		::CORBA::WStringSeq siteIds;//Вектор элементов наследников класса Node
-		::CORBA::WStringSeq nodeIds;//Вектор элементов наследников класса Node
-		::CORBA::WStringSeq nodeLinkIds;//Вектор элементов типа NodeLinks
+		/**
+		 * Sequence of ids of <code>Node</code> class descendants.
+		 */
+		::CORBA::WStringSeq siteIds;
+		/**
+		 * Sequence of ids of <code>Node</code> class descendants.
+		 */
+		::CORBA::WStringSeq nodeIds;
+		/**
+		 * Sequence of <code>NodeLink</code> ids.
+		 */
+		::CORBA::WStringSeq nodeLinkIds;
 		::CORBA::WStringSeq physicalLinkIds;
 		::CORBA::WStringSeq markIds;
 		::CORBA::WStringSeq collectorIds;
@@ -212,7 +223,7 @@ module Map
 		wstring latitude;
 		double scale;
 		double defaultScale;
-		
+
 		wstring mapId;
 		::CORBA::WStringSeq schemeIds;
 	};
