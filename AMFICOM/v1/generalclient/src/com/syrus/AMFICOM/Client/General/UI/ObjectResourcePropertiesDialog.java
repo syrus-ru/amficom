@@ -6,19 +6,21 @@ import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.Resource.*;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 
 public class ObjectResourcePropertiesDialog extends JDialog
 {
-	protected PropertiesPanel mainPanel = null;
+	protected ObjectResourcePropertiesPane mainPane = null;
 	protected JPanel buttonPanel = new JPanel();
 	protected JButton acceptButton = new JButton();
 	protected JButton cancelButton = new JButton();
@@ -30,14 +32,19 @@ public class ObjectResourcePropertiesDialog extends JDialog
 	protected BorderLayout borderLayout1 = new BorderLayout();
 	protected  FlowLayout flowLayout1 = new FlowLayout();
 
-	public ObjectResourcePropertiesDialog(JFrame frame, String title, boolean modal, ObjectResource or, PropertiesPanel panel)
+	public ObjectResourcePropertiesDialog(
+			JFrame frame, 
+			String title, 
+			boolean modal, 
+			ObjectResource or, 
+			ObjectResourcePropertiesPane pane)
 	{
 		super(frame, title, modal);
 
 		this.or = or;
-		mainPanel = panel;
-		if(mainPanel != null)
-			mainPanel.setObjectResource(or);
+		mainPane = pane;
+		if(mainPane != null)
+			mainPane.setObjectResource(or);
 
 		try
 		{
@@ -54,8 +61,8 @@ public class ObjectResourcePropertiesDialog extends JDialog
 	{
 		this.setResizable(false);
 		this.setSize(new Dimension(590, 300));
-		if(mainPanel != null)
-			mainPanel.setPreferredSize(new Dimension(590, 300));
+		if(mainPane != null)
+			((JComponent )mainPane).setPreferredSize(new Dimension(590, 300));
 		buttonPanel.setBorder(BorderFactory.createEtchedBorder());
 		this.getContentPane().setLayout(borderLayout1);
 		buttonPanel.setLayout(flowLayout1);
@@ -65,7 +72,7 @@ public class ObjectResourcePropertiesDialog extends JDialog
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				acceptButton_actionPerformed(e);
+				accept();
 			}
 		});
 		cancelButton.setText(LangModel.getString("Cancel"));
@@ -73,15 +80,15 @@ public class ObjectResourcePropertiesDialog extends JDialog
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				cancelButton_actionPerformed(e);
+				cancel();
 			}
 		});
 		helpButton.setText(LangModel.getString("Help"));
 		
 		flowLayout1.setAlignment(2);
 
-		if(mainPanel != null)
-			getContentPane().add(mainPanel, BorderLayout.CENTER);
+		if(mainPane != null)
+			getContentPane().add((JComponent )mainPane, BorderLayout.CENTER);
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 		buttonPanel.add(acceptButton, null);
 		buttonPanel.add(cancelButton, null);
@@ -93,9 +100,9 @@ public class ObjectResourcePropertiesDialog extends JDialog
 		return accept;
 	}
 
-	void acceptButton_actionPerformed(ActionEvent e)
+	void accept()
 	{
-		if(mainPanel == null || mainPanel.modify())
+		if(mainPane == null || mainPane.modify())
 		{
 			accept = true;
 			this.dispose();
@@ -106,7 +113,7 @@ public class ObjectResourcePropertiesDialog extends JDialog
 		}
 	}
 
-	void cancelButton_actionPerformed(ActionEvent e)
+	void cancel()
 	{
 		accept = false;
 		this.dispose();
