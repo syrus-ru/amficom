@@ -96,9 +96,8 @@ public class CableTypeThread extends StubResource implements Serializable
 		link_type_id = (String )in.readObject();
 
 //		characteristics = new Hashtable();
-//		transferable = new CableTypeThread_Transferable();
-
-		transferable.characteristics = new Characteristic_Transferable[0];
+		transferable = new CableTypeThread_Transferable();
+//		transferable.characteristics = new Characteristic_Transferable[0];
 	}
 }
 
