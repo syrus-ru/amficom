@@ -35,6 +35,14 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 
 	protected MapMarkElement_Transferable transferable;
 
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";	
+	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
+	public static final String COLUMN_DISTANCE = "distance";
+	public static final String COLUMN_X = "x";
+	public static final String COLUMN_Y = "y";
+
 	//Размер пиктограммы маркера
 	public static final Rectangle DEFAULT_BOUNDS = new Rectangle(14, 14);
 	
@@ -50,12 +58,63 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 
 	protected MapPhysicalLinkElement link;
 
+	public static String[][] exportColumns = null;
+
+	public String[][] getExportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new String[7][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_PHYSICAL_LINK_ID;
+			exportColumns[4][0] = COLUMN_DISTANCE;
+			exportColumns[5][0] = COLUMN_X;
+			exportColumns[6][0] = COLUMN_Y;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = linkId;
+		exportColumns[4][1] = String.valueOf(getDistance());
+		exportColumns[5][1] = String.valueOf(getAnchor().x);
+		exportColumns[6][1] = String.valueOf(getAnchor().y);
+		
+		return exportColumns;
+	}
+	
+	public void setColumn(String field, String value)
+	{
+		if(field.equals(COLUMN_ID))
+			setId(value);
+		else
+		if(field.equals(COLUMN_NAME))
+			setName(value);
+		else
+		if(field.equals(COLUMN_DESCRIPTION))
+			setDescription(value);
+		else
+		if(field.equals(COLUMN_PHYSICAL_LINK_ID))
+			linkId = value;
+		else
+		if(field.equals(COLUMN_DISTANCE))
+			distance = Double.parseDouble(value);
+		else
+		if(field.equals(COLUMN_X))
+			anchor.x = Double.parseDouble(value);
+		else
+		if(field.equals(COLUMN_Y))
+			anchor.y = Double.parseDouble(value);
+	}
+
 	public MapMarkElement()
 	{
 		setImageId(IMAGE_NAME);
-		transferable = new MapMarkElement_Transferable();
 
 		attributes = new HashMap();
+
+		transferable = new MapMarkElement_Transferable();
 	}
 	
 	public MapMarkElement(
@@ -201,6 +260,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 		{
 			map = (Map )Pool.get(com.syrus.AMFICOM.Client.Resource.Map.Map.typ, this.mapId);
 		}
+		moveToFromStartLt(distance);
 	}
 
 	public Object getTransferable()

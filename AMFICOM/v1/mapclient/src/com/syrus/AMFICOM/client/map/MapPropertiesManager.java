@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.3 2004/09/21 14:56:16 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.4 2004/09/23 10:05:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/21 14:56:16 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/23 10:05:29 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -44,6 +44,15 @@ public final class MapPropertiesManager
 {
 	protected static IniFile iniFile;
 	protected static String iniFileName = "Map.properties";//Фаил откуда загружаются данные
+
+	protected static String KEY_MAP_TYPE = "mapType";
+	protected static String KEY_DATA_BASE_PATH = "dataBasePath";
+	protected static String KEY_DATA_BASE_VIEW = "dataBaseView";
+	protected static String KEY_LAST_LONGITUDE = "lastLong";
+	protected static String KEY_LAST_LATITUDE = "lastLat";
+	protected static String KEY_LAST_ZOOM = "lastZoom";
+	protected static String KEY_LAST_VIEW = "lastView";
+	protected static String KEY_LAST_DIRECTORY = "lastDirectory";
 
 	public static final double DEFAULT_ZOOM = 1.0D;
 
@@ -63,6 +72,7 @@ public final class MapPropertiesManager
 	protected static String lastLat = "";
 	protected static String lastZoom = "";
 	protected static String lastView = "";
+	protected static String lastDirectory = ".";
 
 	/* display constants */
 	public static final Color DEFAULT_TEXT_BACKGROUND = SystemColor.window;
@@ -194,43 +204,7 @@ public final class MapPropertiesManager
 			
 		return viewerClass;
 	}
-/*
-	protected static NetMapViewer mapViewer = null;
-	
-	public static NetMapViewer getNetMapViewer()
-	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call MapPropertiesManager.getNetMapViewer()");
 
-		if(mapViewer == null)
-		{
-			String viewerClass = "";
-
-			if(mapType.equalsIgnoreCase(OFX_TYPE))
-				viewerClass = OFX_VIEWER;
-			else
-			if(mapType.equalsIgnoreCase(MAPINFO_TYPE))
-				viewerClass = MAPINFO_VIEWER;
-
-			try
-			{
-				mapViewer = (NetMapViewer )Class.forName(viewerClass).newInstance();
-			}
-			catch(ClassNotFoundException cnfe)
-			{
-				cnfe.printStackTrace();
-			}
-			catch(InstantiationException ie)
-			{
-				ie.printStackTrace();
-			}
-			catch(IllegalAccessException iae)
-			{
-				iae.printStackTrace();
-			}
-		}
-		return mapViewer;
-	}
-*/
 	public static String getConnectionClassName()
 	{
 		String connectionClass = "";
@@ -243,46 +217,7 @@ public final class MapPropertiesManager
 	
 		return connectionClass;
 	}
-/*
-	protected static MapConnection connection = null;
-	
-	public static MapConnection getConnection()
-	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call MapPropertiesManager.getConnection()");
-		
-		if(connection == null)
-		{
-			String connectionClass = "";
-			
-			if(mapType.equalsIgnoreCase(OFX_TYPE))
-				connectionClass = OFX_CONNECTION;
-			else
-			if(mapType.equalsIgnoreCase(MAPINFO_TYPE))
-				connectionClass = MAPINFO_CONNECTION;
 
-			try
-			{
-				connection = (MapConnection )Class.forName(connectionClass).newInstance();
-			}
-			catch(ClassNotFoundException cnfe)
-			{
-				cnfe.printStackTrace();
-			}
-			catch(InstantiationException ie)
-			{
-				ie.printStackTrace();
-			}
-			catch(IllegalAccessException iae)
-			{
-				iae.printStackTrace();
-			}
-			
-			connection.setPath(dataBasePath);
-			connection.setView(dataBaseView);
-		}
-		return connection;
-	}
-*/	
 	public static double getZoom()
 	{
 		try
@@ -343,17 +278,18 @@ public final class MapPropertiesManager
 	//Установить значения из инициализационного файла
 	protected static void setFromIniFile()
 	{
-		dataBasePath = iniFile.getValue("dataBasePath");
-		dataBaseView = iniFile.getValue("dataBaseView");
+		dataBasePath = iniFile.getValue(KEY_DATA_BASE_PATH);
+		dataBaseView = iniFile.getValue(KEY_DATA_BASE_VIEW);
 
-		mapType = iniFile.getValue("mapType");
-		lastLong = iniFile.getValue("lastLong");
-		lastLat = iniFile.getValue("lastLat");
-		lastZoom = iniFile.getValue("lastZoom");
+		mapType = iniFile.getValue(KEY_MAP_TYPE);
+		lastLong = iniFile.getValue(KEY_LAST_LONGITUDE);
+		lastLat = iniFile.getValue(KEY_LAST_LATITUDE);
+		lastZoom = iniFile.getValue(KEY_LAST_ZOOM);
+		lastDirectory = iniFile.getValue(KEY_LAST_DIRECTORY);
 //		selectionColor = iniFile.getValue("selectionColor");
 //		selectionStyle = iniFile.getValue("selectionStyle");
 //		showPhysicalNodes = iniFile.getValue("showNodes");
-		lastView = iniFile.getValue("lastView");
+		lastView = iniFile.getValue(KEY_LAST_VIEW);
 	}
 
 	protected static void setDefaults()
@@ -361,14 +297,16 @@ public final class MapPropertiesManager
 		mapType = OFX_TYPE;
 		dataBasePath = "";
 		dataBaseView = "";
+		lastDirectory = ".";
 	}
 
 	public static void saveIniFile()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call MapPropertiesManager.saveIniFile()");
 		
-		iniFile.setValue( "last_long", lastLong  );
-        iniFile.setValue( "last_lat", lastLat );
+		iniFile.setValue( KEY_LAST_LONGITUDE, lastLong  );
+        iniFile.setValue( KEY_LAST_LATITUDE, lastLat );
+        iniFile.setValue( KEY_LAST_DIRECTORY, lastDirectory );
 
         if ( iniFile.saveKeys() )
         {
@@ -789,5 +727,17 @@ public final class MapPropertiesManager
 	public static String getDataBaseView()
 	{
 		return dataBaseView;
+	}
+
+
+	public static void setLastDirectory(String _lastDirectory)
+	{
+		lastDirectory = _lastDirectory;
+	}
+
+
+	public static String getLastDirectory()
+	{
+		return lastDirectory;
 	}
 }

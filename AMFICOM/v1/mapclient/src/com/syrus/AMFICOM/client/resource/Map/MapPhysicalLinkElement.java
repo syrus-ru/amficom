@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.12 2004/09/21 14:56:16 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.13 2004/09/23 10:05:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
+import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -43,7 +44,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/09/21 14:56:16 $
+ * @version $Revision: 1.13 $, $Date: 2004/09/23 10:05:29 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -54,6 +55,17 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	public static final String typ = "maplinkelement";
 
 	protected MapPhysicalLinkElement_Transferable transferable;
+
+	public static final String COLUMN_ID = "id";	
+	public static final String COLUMN_NAME = "name";	
+	public static final String COLUMN_DESCRIPTION = "description";	
+	public static final String COLUMN_PROTO_ID = "proto_id";	
+	public static final String COLUMN_START_NODE_ID = "start_node_id";	
+	public static final String COLUMN_END_NODE_ID = "end_node_id";	
+	public static final String COLUMN_NODE_LINKS = "node_links";	
+	public static final String COLUMN_CITY = "city";	
+	public static final String COLUMN_STREET = "street";	
+	public static final String COLUMN_BUILDING = "building";	
 
 	//Вектор NodeLink из которых состоит path
 	protected ArrayList nodeLinkIds = new ArrayList();
@@ -70,6 +82,87 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	protected boolean nodeLinksSorted = false;
 
 	protected MapPhysicalLinkBinding binding;
+
+	public static String[][] exportColumns = null;
+
+	public String[][] getExportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new String[10][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_PROTO_ID;
+			exportColumns[4][0] = COLUMN_START_NODE_ID;
+			exportColumns[5][0] = COLUMN_END_NODE_ID;
+			exportColumns[6][0] = COLUMN_NODE_LINKS;
+			exportColumns[7][0] = COLUMN_CITY;
+			exportColumns[8][0] = COLUMN_STREET;
+			exportColumns[9][0] = COLUMN_BUILDING;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = getMapProtoId();
+		exportColumns[4][1] = getStartNode().getId();
+		exportColumns[5][1] = getEndNode().getId();
+		exportColumns[6][1] = "";
+		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
+		{
+			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
+			exportColumns[6][1] += mnle.getId() + " ";
+		}
+		exportColumns[7][1] = getCity();
+		exportColumns[8][1] = getStreet();
+		exportColumns[9][1] = getBuilding();
+		
+		return exportColumns;
+	}
+	
+	public void setColumn(String field, String value)
+	{
+		if(field.equals(COLUMN_ID))
+			setId(value);
+		else
+		if(field.equals(COLUMN_NAME))
+			setName(value);
+		else
+		if(field.equals(COLUMN_DESCRIPTION))
+			setDescription(value);
+		else
+		if(field.equals(COLUMN_PROTO_ID))
+			setMapProtoId(value);
+		else
+		if(field.equals(COLUMN_START_NODE_ID))
+			startNodeId = value;
+		else
+		if(field.equals(COLUMN_END_NODE_ID))
+			endNodeId = value;
+		else
+		if(field.equals(COLUMN_NODE_LINKS))
+		{
+			nodeLinkIds.clear();
+			for(Iterator it = ResourceUtil.parseStrings(value).iterator(); it.hasNext();)
+				nodeLinkIds.add(it.next());
+		}
+		else
+		if(field.equals(COLUMN_CITY))
+			setCity(value);
+		else
+		if(field.equals(COLUMN_STREET))
+			setStreet(value);
+		else
+		if(field.equals(COLUMN_BUILDING))
+			setBuilding(value);
+	}
+	
+	public MapPhysicalLinkElement()
+	{
+		selected = false;
+		
+		transferable = new MapPhysicalLinkElement_Transferable();
+	}
 
 	public MapPhysicalLinkElement( MapPhysicalLinkElement_Transferable transferable)
 	{
@@ -219,7 +312,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		this.endNode = (MapNodeElement )Pool.get(MapSiteNodeElement.typ, endNodeId);
 		if(this.endNode == null)
 			this.endNode = (MapNodeElement )Pool.get(MapPhysicalNodeElement.typ, endNodeId);
-		this.map = (Map)Pool.get(com.syrus.AMFICOM.Client.Resource.Map.Map.typ, this.mapId);
+		this.map = (Map)Pool.get(Map.typ, this.mapId);
 
 		this.nodeLinks = new ArrayList();
 		for (int i = 0; i < nodeLinkIds.size(); i++)
@@ -229,6 +322,8 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		}
 		
 		proto = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, mapProtoId);
+
+		binding = new MapPhysicalLinkBinding(this, proto.getBindingDimension());
 	}
 
 	public ObjectResourceModel getModel()
@@ -336,10 +431,10 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		return false;
 	}
 
-	protected java.util.List getNodeLinkIds()
-	{
-		return this.nodeLinkIds;
-	}
+//	protected java.util.List getNodeLinkIds()
+//	{
+//		return this.nodeLinkIds;
+//	}
 	
 	public List getNodeLinks()
 	{	

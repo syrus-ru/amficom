@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElement.java,v 1.5 2004/09/21 14:56:17 krupenn Exp $
+ * $Id: MapSiteNodeElement.java,v 1.6 2004/09/23 10:05:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/21 14:56:17 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/23 10:05:30 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -46,11 +46,103 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 
 	protected MapSiteElement_Transferable transferable;
 
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_X = "x";
+	public static final String COLUMN_Y = "y";
+	public static final String COLUMN_PROTO_ID = "proto_id";	
+	public static final String COLUMN_CITY = "city";	
+	public static final String COLUMN_STREET = "street";	
+	public static final String COLUMN_BUILDING = "building";	
+	public static final String COLUMN_COEF = "coef";
+	public static final String COLUMN_IMAGE_ID = "image_id";
+
 	protected String city = "";
 	protected String street = "";
 	protected String building = "";
 
 	protected String mapProtoId = "";
+
+	public static String[][] exportColumns = null;
+
+	public String[][] getExportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new String[11][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_PROTO_ID;
+			exportColumns[4][0] = COLUMN_X;
+			exportColumns[5][0] = COLUMN_Y;
+			exportColumns[6][0] = COLUMN_CITY;
+			exportColumns[7][0] = COLUMN_STREET;
+			exportColumns[8][0] = COLUMN_BUILDING;
+			exportColumns[9][0] = COLUMN_COEF;
+			exportColumns[10][0] = COLUMN_IMAGE_ID;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = getMapProtoId();
+		exportColumns[4][1] = String.valueOf(getAnchor().x);
+		exportColumns[5][1] = String.valueOf(getAnchor().y);
+		exportColumns[6][1] = getCity();
+		exportColumns[7][1] = getStreet();
+		exportColumns[8][1] = getBuilding();
+		exportColumns[9][1] = String.valueOf(scaleCoefficient);
+		exportColumns[10][1] = getImageId();
+		
+		return exportColumns;
+	}
+	
+	public void setColumn(String field, String value)
+	{
+		if(field.equals(COLUMN_ID))
+			setId(value);
+		else
+		if(field.equals(COLUMN_NAME))
+			setName(value);
+		else
+		if(field.equals(COLUMN_DESCRIPTION))
+			setDescription(value);
+		else
+		if(field.equals(COLUMN_PROTO_ID))
+			setMapProtoId(value);
+		else
+		if(field.equals(COLUMN_X))
+			anchor.x = Double.parseDouble(value);
+		else
+		if(field.equals(COLUMN_Y))
+			anchor.y = Double.parseDouble(value);
+		else
+		if(field.equals(COLUMN_CITY))
+			setCity(value);
+		else
+		if(field.equals(COLUMN_STREET))
+			setStreet(value);
+		else
+		if(field.equals(COLUMN_BUILDING))
+			setBuilding(value);
+		else
+		if(field.equals(COLUMN_COEF))
+			setScaleCoefficient(Double.parseDouble(value));
+		else
+		if(field.equals(COLUMN_IMAGE_ID))
+			setImageId( imageId);
+	}
+	
+	public MapSiteNodeElement()
+	{
+		attributes = new HashMap();
+		selected = false;
+		setScaleCoefficient(1.0D);
+		setImageId("pc");
+
+		transferable = new MapSiteElement_Transferable();
+	}
 
 	public MapSiteNodeElement(MapSiteElement_Transferable transferable)
 	{

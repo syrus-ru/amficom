@@ -1,5 +1,5 @@
 /**
- * $Id: VoidMapElement.java,v 1.7 2004/09/21 14:56:17 krupenn Exp $
+ * $Id: VoidMapElement.java,v 1.8 2004/09/23 10:05:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/09/21 14:56:17 $
+ * @version $Revision: 1.8 $, $Date: 2004/09/23 10:05:30 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -36,6 +36,15 @@ public final class VoidMapElement extends StubResource implements MapElement
 	protected static VoidMapElement singleton = new VoidMapElement();
 
 	protected VoidMapElement()
+	{
+	}
+
+	public String[][] getExportColumns()
+	{
+		return null;
+	}
+
+	public void setColumn(String field, String value)
 	{
 	}
 

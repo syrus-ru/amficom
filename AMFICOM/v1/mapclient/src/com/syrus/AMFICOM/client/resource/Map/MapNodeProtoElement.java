@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeProtoElement.java,v 1.5 2004/09/21 14:56:16 krupenn Exp $
+ * $Id: MapNodeProtoElement.java,v 1.6 2004/09/23 10:05:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/21 14:56:16 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/23 10:05:29 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -56,6 +56,15 @@ public final class MapNodeProtoElement
 	protected long modified = 0;
 	
 	protected boolean isTopological = false;
+
+	public String[][] getExportColumns()
+	{
+		return null;
+	}
+
+	public void setColumn(String field, String value)
+	{
+	}
 
 	public MapNodeProtoElement(
 		String id,
@@ -219,107 +228,3 @@ public final class MapNodeProtoElement
 		transferable = new MapNodeProtoElement_Transferable();
 	}
 }
-/*
-class MapNodeProtoModel extends ObjectResourceModel
-{
-	MapNodeProtoElement mapproto;
-
-	public MapNodeProtoModel(MapNodeProtoElement mapproto)
-	{
-		this.mapproto = mapproto;
-	}
-
-	public String getColumnValue(String col_id)
-	{
-		String s = "";
-		try
-		{
-			if(col_id.equals("name"))
-				s = mapproto.getName();
-		}
-		catch(Exception e)
-		{
-			System.out.println("error gettin field value - Scheme");
-			s = "";
-		}
-		return s;
-	}
-}
-*/
-/*
-class MapNodeProtoDisplayModel extends StubDisplayModel
-{
-	TextFieldEditor tfe = new TextFieldEditor();
-	
-	public PropertyEditor getColumnEditor(ObjectResource o, String col_id)
-	{
-		if (!(o instanceof MapNodeProtoElement))
-			return null;
-		MapNodeProtoElement mapproto = (MapNodeProtoElement )o;
-
-		if(col_id.equals("name"))
-		{
-			tfe.setText(mapproto.getName());
-			return tfe;
-		}
-		return null;
-	}
-
-	public String getColumnName (String col_id)
-	{
-		String s = "";
-		if(col_id.equals("name"))
-			s = LangModelMap.getString("Name");
-		return s;
-	}
-
-	public PropertyRenderer getColumnRenderer(ObjectResource o, String col_id)
-	{
-		if (!(o instanceof MapNodeProtoElement))
-			return null;
-		MapNodeProtoElement mapproto = (MapNodeProtoElement )o;
-
-		if(col_id.equals("name"))
-		{
-			tfe.setText(mapproto.getName());
-			return tfe;
-		}
-		return null;
-	}
-
-	public boolean isColumnEditable(String col_id)
-	{
-		if(col_id.equals("name"))
-			return true;
-		return false;
-	}
-
-	List cols = new LinkedList();
-	
-	{
-		cols.add("name");
-	}
-
-	public List getColumns()
-	{
-		return cols;
-	}
-
-	public int getColumnSize(String col_id)
-	{
-		if(col_id.equals("name"))
-			return 100;
-		return 100;
-	}
-
-	public Color getColumnColor (ObjectResource o, String col_id)
-	{
-		return Color.white;
-	}
-
-	public boolean isColumnColored (String col_id)
-	{
-		return false;
-	}
-}
-*/

@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.10 2004/09/21 14:56:16 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.11 2004/09/23 10:05:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/09/21 14:56:16 $
+ * @version $Revision: 1.11 $, $Date: 2004/09/23 10:05:29 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -50,8 +50,15 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 {
 	private static final long serialVersionUID = 02L;
 	public static final String typ = "mapnodelinkelement";
-	
+
 	protected MapNodeLinkElement_Transferable transferable;
+
+	public static final String COLUMN_ID = "id";	
+	public static final String COLUMN_NAME = "name";	
+	public static final String COLUMN_DESCRIPTION = "description";	
+	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";	
+	public static final String COLUMN_START_NODE_ID = "start_node_id";	
+	public static final String COLUMN_END_NODE_ID = "end_node_id";	
 
 	/** идентификатор линии, в составе которой находится фрагмент */
 	protected String physicalLinkId;
@@ -60,6 +67,60 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	protected Rectangle labelBox = new Rectangle();
 	
 	protected double lengthLt = 0.0D;
+
+	public static String[][] exportColumns = null;
+
+	public String[][] getExportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new String[6][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_PHYSICAL_LINK_ID;
+			exportColumns[4][0] = COLUMN_START_NODE_ID;
+			exportColumns[5][0] = COLUMN_END_NODE_ID;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = getPhysicalLinkId();
+		exportColumns[4][1] = getStartNode().getId();
+		exportColumns[5][1] = getEndNode().getId();
+		
+		return exportColumns;
+	}
+	
+	public void setColumn(String field, String value)
+	{
+		if(field.equals(COLUMN_ID))
+			setId(value);
+		else
+		if(field.equals(COLUMN_NAME))
+			setName(value);
+		else
+		if(field.equals(COLUMN_DESCRIPTION))
+			setDescription(value);
+		else
+		if(field.equals(COLUMN_PHYSICAL_LINK_ID))
+			setPhysicalLinkId(value);
+		else
+		if(field.equals(COLUMN_START_NODE_ID))
+			startNodeId = value;
+		else
+		if(field.equals(COLUMN_END_NODE_ID))
+			endNodeId = value;
+	}
+
+	public MapNodeLinkElement()
+	{
+		attributes = new HashMap();
+
+		selected = false;
+
+		transferable = new MapNodeLinkElement_Transferable();
+	}
 
 	public MapNodeLinkElement(MapNodeLinkElement_Transferable transferable)
 	{
@@ -176,7 +237,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 			this.endNode = (MapNodeElement )
 					Pool.get(MapPhysicalNodeElement.typ, endNodeId);
 
-		this.map = (Map)Pool.get(com.syrus.AMFICOM.Client.Resource.Map.Map.typ, this.mapId);
+		this.map = (Map )Pool.get(Map.typ, this.mapId);
 	}
 
 	public Object getTransferable()

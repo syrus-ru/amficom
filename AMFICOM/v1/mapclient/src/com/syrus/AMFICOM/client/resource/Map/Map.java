@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.4 2004/09/21 14:56:16 krupenn Exp $
+ * $Id: Map.java,v 1.5 2004/09/23 10:05:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/21 14:56:16 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/23 10:05:29 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -44,16 +44,18 @@ import java.util.List;
 public final class Map extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 02L;
-	protected Map_Transferable transferable;
-
 	public static final String typ = "map";
+
+	protected Map_Transferable transferable;
 
 	public static final String COLUMN_ID = "id";
 	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_USER_ID = "userId";
-	public static final String COLUMN_SCHEME_ID = "schemeId";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_USER_ID = "user_id";
 	public static final String COLUMN_CREATED = "created";
+	public static final String COLUMN_CREATED_BY = "created_by";
 	public static final String COLUMN_MODIFIED = "modified";
+	public static final String COLUMN_MODIFIED_BY = "modified_by";
 	
 	protected String id = "";
 	protected String name = "Без названия";
@@ -111,6 +113,36 @@ public final class Map extends StubResource implements Serializable
 		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "Map(" + transferable + ")");
 		this.transferable = transferable;
 		setLocalFromTransferable();
+	}
+
+	public static String[][] exportColumns = null;
+
+	public String[][] getExportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new String[3][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		
+		return exportColumns;
+	}
+	
+	public void setColumn(String field, String value)
+	{
+		if(field.equals(COLUMN_ID))
+			setId(value);
+		else
+		if(field.equals(COLUMN_NAME))
+			setName(value);
+		else
+		if(field.equals(COLUMN_DESCRIPTION))
+			setDescription(value);
 	}
 
 	/**
@@ -506,6 +538,14 @@ public final class Map extends StubResource implements Serializable
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addNode(" + ob + ")");
 		
 		nodes.add(ob);
+		if(ob instanceof MapPhysicalNodeElement)
+			nodeIds.add(ob.getId());
+		else
+		if(ob instanceof MapSiteNodeElement)
+			siteIds.add(ob.getId());
+		else
+		if(ob instanceof MapMarkElement)
+			markIds.add(ob.getId());
 		ob.setRemoved(false);
 		removedElements.remove(ob);
 	}
@@ -518,6 +558,14 @@ public final class Map extends StubResource implements Serializable
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeNode(" + ob + ")");
 		
 		nodes.remove(ob);
+		if(ob instanceof MapPhysicalNodeElement)
+			nodeIds.remove(ob.getId());
+		else
+		if(ob instanceof MapSiteNodeElement)
+			siteIds.remove(ob.getId());
+		else
+		if(ob instanceof MapMarkElement)
+			markIds.remove(ob.getId());
 		ob.setRemoved(true);
 		removedElements.add(ob);
 	}
@@ -550,6 +598,7 @@ public final class Map extends StubResource implements Serializable
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addNodeLink(" + ob + ")");
 		
 		nodeLinks.add(ob);
+		nodelinkIds.add(ob.getId());
 		ob.setRemoved(false);
 		removedElements.remove(ob);
 	}
@@ -562,6 +611,7 @@ public final class Map extends StubResource implements Serializable
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeNodeLink(" + ob + ")");
 		
 		nodeLinks.remove(ob);
+		nodelinkIds.remove(ob.getId());
 		ob.setRemoved(true);
 		removedElements.add(ob);
 	}
@@ -650,6 +700,7 @@ public final class Map extends StubResource implements Serializable
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addPhysicalLink(" + ob + ")");
 		
 		physicalLinks.add(ob);
+		linkIds.add(ob.getId());
 		ob.setRemoved(false);
 		removedElements.remove(ob);
 	}
@@ -662,6 +713,7 @@ public final class Map extends StubResource implements Serializable
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removePhysicalLink(" + ob + ")");
 		
 		physicalLinks.remove(ob);
+		linkIds.remove(ob.getId());
 		ob.setRemoved(true);
 		removedElements.add(ob);
 	}
@@ -731,6 +783,7 @@ public final class Map extends StubResource implements Serializable
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addCollector(" + ob + ")");
 		
 		collectors.add(ob);
+		collectorIds.add(ob.getId());
 		ob.setRemoved(false);
 		removedElements.remove(ob);
 	}
@@ -743,6 +796,7 @@ public final class Map extends StubResource implements Serializable
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeCollector(" + ob + ")");
 		
 		collectors.remove(ob);
+		collectorIds.remove(ob.getId());
 		ob.setRemoved(true);
 		removedElements.add(ob);
 	}
@@ -959,6 +1013,18 @@ public final class Map extends StubResource implements Serializable
 //		deleted_physicalLinksIds = new LinkedList();
 		updateFromPool();
 //		Pool.put("serverimage", getId(), this);
+	}
+
+
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+
+	public String getDescription()
+	{
+		return description;
 	}
 	
 }

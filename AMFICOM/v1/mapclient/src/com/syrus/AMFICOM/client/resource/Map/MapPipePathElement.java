@@ -5,6 +5,7 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
+import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -25,9 +26,63 @@ public class MapPipePathElement extends MapLinkElement
 
 	protected MapPipePathElement_Transferable transferable;
 
+	public static final String COLUMN_ID = "";	
+	public static final String COLUMN_NAME = "";	
+	public static final String COLUMN_DESCRIPTION = "";	
+	public static final String COLUMN_LINKS = "";	
+
 	protected List physicalLinkIds = new ArrayList();
 
 	protected List links = new ArrayList();
+
+	public static String[][] exportColumns = null;
+
+	public String[][] getExportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new String[4][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_LINKS;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[4][1] = "";
+		for(Iterator it = getLinks().iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement mple = (MapPhysicalLinkElement )it.next();
+			exportColumns[4][1] += mple.getId() + " ";
+		}
+
+		return exportColumns;
+	}
+	
+	public void setColumn(String field, String value)
+	{
+		if(field.equals(COLUMN_ID))
+			setId(value);
+		else
+		if(field.equals(COLUMN_NAME))
+			setName(value);
+		else
+		if(field.equals(COLUMN_DESCRIPTION))
+			setDescription(value);
+		else
+		if(field.equals(COLUMN_LINKS))
+		{
+			physicalLinkIds.clear();
+			for(Iterator it = ResourceUtil.parseStrings(value).iterator(); it.hasNext();)
+				physicalLinkIds.add(it.next());
+		}
+	}
+	
+	public MapPipePathElement()
+	{
+		transferable = new MapPipePathElement_Transferable();
+	}
 
 	public MapPipePathElement(MapPipePathElement_Transferable transferable)
 	{

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.6 2004/09/21 14:56:16 krupenn Exp $
+ * $Id: MapElement.java,v 1.7 2004/09/23 10:05:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/21 14:56:16 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/23 10:05:29 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -113,5 +113,9 @@ public interface MapElement
 	 * установить флаг удаления элемента
 	 */
 	void setRemoved(boolean removed);
+
+	String[][] getExportColumns();
+
+	void setColumn(String field, String value);
 }
 

@@ -36,6 +36,14 @@ public class EmptyMapDataSource
 		super(si);
 	}
 
+	protected static int idcounter = 0;
+
+	public String GetUId(String type)
+	{
+		int len = Math.min(5, type.length());
+		return type.substring(0, len) + idcounter++;
+	}
+
 	public void loadMapProtoElements(String[] eids, String[] lids)
 	{
 		LoadMapProtoElements();

@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElement.java,v 1.7 2004/09/21 14:56:16 krupenn Exp $
+ * $Id: MapNodeElement.java,v 1.8 2004/09/23 10:05:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/09/21 14:56:16 $
+ * @version $Revision: 1.8 $, $Date: 2004/09/23 10:05:29 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -363,6 +363,8 @@ public abstract class MapNodeElement extends StubResource
 	public void setMap( Map map)
 	{
 		this.map = map;
+		if(map != null)
+			this.mapId = map.getId();
 	}
 
 	//Можно ли перемещать

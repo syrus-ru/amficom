@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElement.java,v 1.9 2004/09/21 14:56:16 krupenn Exp $
+ * $Id: MapPhysicalNodeElement.java,v 1.10 2004/09/23 10:05:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/09/21 14:56:16 $
+ * @version $Revision: 1.10 $, $Date: 2004/09/23 10:05:29 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -47,6 +47,14 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	public static final String typ = "mapnodeelement";
 
 	protected MapPhysicalNodeElement_Transferable transferable;
+
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
+	public static final String COLUMN_X = "x";
+	public static final String COLUMN_Y = "y";
+	public static final String COLUMN_ACTIVE = "active";
 
 	public static final String CLOSED_NODE = "node";
 	public static final String OPEN_NODE = "void";
@@ -67,6 +75,67 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	protected boolean active = false;
 
 	protected String physicalLinkId = "";
+
+	public static String[][] exportColumns = null;
+
+	public String[][] getExportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new String[7][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_PHYSICAL_LINK_ID;
+			exportColumns[4][0] = COLUMN_X;
+			exportColumns[5][0] = COLUMN_Y;
+			exportColumns[6][0] = COLUMN_ACTIVE;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = physicalLinkId;
+		exportColumns[4][1] = String.valueOf(getAnchor().x);
+		exportColumns[5][1] = String.valueOf(getAnchor().y);
+		exportColumns[6][1] = String.valueOf(isActive());
+		
+		return exportColumns;
+	}
+	
+	public void setColumn(String field, String value)
+	{
+		if(field.equals(COLUMN_ID))
+			setId(value);
+		else
+		if(field.equals(COLUMN_NAME))
+			setName(value);
+		else
+		if(field.equals(COLUMN_DESCRIPTION))
+			setDescription(value);
+		else
+		if(field.equals(COLUMN_PHYSICAL_LINK_ID))
+			physicalLinkId = value;
+		else
+		if(field.equals(COLUMN_X))
+			anchor.x = Double.parseDouble(value);
+		else
+		if(field.equals(COLUMN_Y))
+			anchor.y = Double.parseDouble(value);
+		else
+		if(field.equals(COLUMN_ACTIVE))
+			setActive(Boolean.getBoolean(value));
+	}
+
+	public MapPhysicalNodeElement()
+	{
+		setImage(CLOSED_NODE_IMAGE);
+		attributes = new HashMap();
+
+		setBounds(bounds);
+		selected = false;
+
+		transferable = new MapPhysicalNodeElement_Transferable();
+	}
 
 	public MapPhysicalNodeElement(MapPhysicalNodeElement_Transferable transferable)
 	{

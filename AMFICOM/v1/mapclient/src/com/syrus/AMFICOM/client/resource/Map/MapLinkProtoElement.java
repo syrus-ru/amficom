@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkProtoElement.java,v 1.5 2004/09/21 14:56:16 krupenn Exp $
+ * $Id: MapLinkProtoElement.java,v 1.6 2004/09/23 10:05:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/21 14:56:16 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/23 10:05:29 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -201,5 +201,15 @@ public final class MapLinkProtoElement
 	{
 		return bindingDimension;
 	}
+
+	public String[][] getExportColumns()
+	{
+		return null;
+	}
+
+	public void setColumn(String field, String value)
+	{
+	}
+
 }
 
