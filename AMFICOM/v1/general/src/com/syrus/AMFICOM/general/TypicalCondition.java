@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.3 2005/01/21 10:37:17 bob Exp $
+ * $Id: TypicalCondition.java,v 1.4 2005/02/04 09:18:02 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -111,7 +111,7 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.3 $, $Date: 2005/01/21 10:37:17 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/04 09:18:02 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -187,7 +187,9 @@ public class TypicalCondition implements StorableObjectCondition {
 	/**
 	 * @param firstInt left edge of range or value searching for
 	 * @param secondInt right edge of range
-	 * @param operation one of {@link OperationSort.OPERATION_EQUALS}, {@link OperationSort.OPERATION_GREAT}, {@link OperationSort.OPERATION_LESS}, {@link OperationSort.OPERATION_GREAT_EQUALS} or {@link OperationSort.OPERATION_LESS_EQUALS}
+	 * @param operation one of {@link OperationSort.OPERATION_EQUALS}, {@link OperationSort.OPERATION_GREAT}, 
+	 * {@link OperationSort.OPERATION_LESS}, {@link OperationSort.OPERATION_GREAT_EQUALS},
+	 * {@link OperationSort.OPERATION_IN_RANGE} or {@link OperationSort.OPERATION_LESS_EQUALS}
 	 * @param entityCode code of searching entity
 	 * @param key key for controller (wrapper)	 
 	 */
@@ -264,7 +266,9 @@ public class TypicalCondition implements StorableObjectCondition {
 	/**
 	 * @param firstLong left edge of range or value searching for
 	 * @param secondLong right edge of range
-	 * @param operation one of {@link OperationSort.OPERATION_EQUALS}, {@link OperationSort.OPERATION_GREAT}, {@link OperationSort.OPERATION_LESS}, {@link OperationSort.OPERATION_GREAT_EQUALS} or {@link OperationSort.OPERATION_LESS_EQUALS}
+	 * @param operation one of {@link OperationSort.OPERATION_EQUALS}, {@link OperationSort.OPERATION_GREAT}, 
+	 * {@link OperationSort.OPERATION_LESS}, {@link OperationSort.OPERATION_GREAT_EQUALS},
+	 * {@link OperationSort.OPERATION_IN_RANGE} or {@link OperationSort.OPERATION_LESS_EQUALS}
 	 * @param entityCode code of searching entity
 	 * @param key key for controller (wrapper)	 
 	 */
@@ -341,7 +345,9 @@ public class TypicalCondition implements StorableObjectCondition {
 	/**
 	 * @param firstDouble left edge of range or value searching for
 	 * @param secondDouble right edge of range
-	 * @param operation one of {@link OperationSort.OPERATION_EQUALS}, {@link OperationSort.OPERATION_GREAT}, {@link OperationSort.OPERATION_LESS}, {@link OperationSort.OPERATION_GREAT_EQUALS} or {@link OperationSort.OPERATION_LESS_EQUALS}
+	 * @param operation one of {@link OperationSort.OPERATION_EQUALS}, {@link OperationSort.OPERATION_GREAT}, 
+	 * {@link OperationSort.OPERATION_LESS}, {@link OperationSort.OPERATION_GREAT_EQUALS},
+	 * {@link OperationSort.OPERATION_IN_RANGE} or {@link OperationSort.OPERATION_LESS_EQUALS}
 	 * @param entityCode code of searching entity
 	 * @param key key for controller (wrapper)	 
 	 */
@@ -495,7 +501,9 @@ public class TypicalCondition implements StorableObjectCondition {
 	/**
 	 * @param firstDate start date range
 	 * @param secondDate end date range or the same object as firstDate if not need (is not NULL)
-	 * @param operation one of {@link OperationSort.OPERATION_EQUALS} or {@link OperationSort.OPERATION_IN_RANGE}
+	 * @param operation one of {@link OperationSort.OPERATION_EQUALS}, {@link OperationSort.OPERATION_GREAT}, 
+	 * {@link OperationSort.OPERATION_LESS}, {@link OperationSort.OPERATION_GREAT_EQUALS},
+	 * {@link OperationSort.OPERATION_IN_RANGE} or {@link OperationSort.OPERATION_LESS_EQUALS}
 	 * @param entityCode code of searching entity
 	 * @param key key for controller (wrapper)
 	 */
@@ -932,16 +940,28 @@ public class TypicalCondition implements StorableObjectCondition {
 				break;
 			case TypicalSort._TYPE_DATE:
 				Date date = (Date) object;
+				long t = date.getTime();
+				long t1 = ((Date) this.delegate.value).getTime();
+				long t2 = ((Date) this.delegate.otherValue).getTime();
 				switch (this.delegate.operation) {
 					case OperationSort._OPERATION_EQUALS:
-						result = date.equals(this.delegate.value);
+						result = Math.abs(t - t1) < 1000;
 						break;
 					case OperationSort._OPERATION_IN_RANGE:
-						long t = date.getTime();
-						long t1 = ((Date) this.delegate.value).getTime();
-						long t2 = ((Date) this.delegate.otherValue).getTime();
 						result = (t1 <= t && t <= t2);
 						break;
+					case OperationSort._OPERATION_GREAT:
+						result = (t1 < t);
+						break;
+					case OperationSort._OPERATION_GREAT_EQUALS:
+						result = (t1 < t) || Math.abs(t - t1) < 1000;
+						break;
+					case OperationSort._OPERATION_LESS:
+						result = (t < t1);
+						break;
+					case OperationSort._OPERATION_LESS_EQUALS:
+						result = (t < t1) || Math.abs(t - t1) < 1000;
+						break;						
 					default:
 						Log.errorMessage("TypicalCondition.parseCondition | unknown operation code "
 								+ this.delegate.operation);
