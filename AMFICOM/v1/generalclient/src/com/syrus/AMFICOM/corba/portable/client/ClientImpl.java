@@ -1,5 +1,5 @@
 /*
- * $Id: ClientImpl.java,v 1.3 2004/06/30 15:36:12 arseniy Exp $
+ * $Id: ClientImpl.java,v 1.4 2004/08/06 06:14:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,14 +16,14 @@ import java.util.LinkedList;
 import org.omg.CORBA.LongHolder;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/06/30 15:36:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2004/08/06 06:14:09 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class ClientImpl implements ClientOperations {
-	private volatile JAlertingMessageDialog jAlertingMessageDialog;
+	volatile JAlertingMessageDialog jAlertingMessageDialog;
 
-	private volatile boolean dialogVisible = false;
+	volatile boolean dialogVisible = false;
 
 	public void reportPopupMessages(Message[] messageSeq)
 			throws MessageDeliveryFailedException {
@@ -36,10 +36,10 @@ public class ClientImpl implements ClientOperations {
 				 * The dialog can be used multiple times, new copies are
 				 * created only because dialog's parent may change.
 				 */
-				if ((jAlertingMessageDialog == null) || (!dialogVisible)) {
-					jAlertingMessageDialog = new JAlertingMessageDialog(
+				if ((this.jAlertingMessageDialog == null) || (!this.dialogVisible)) {
+					this.jAlertingMessageDialog = new JAlertingMessageDialog(
 						Environment.getActiveWindow(), true);
-					jAlertingMessageDialog.setMessageSeq(linkedList);
+					this.jAlertingMessageDialog.setMessageSeq(linkedList);
 					new Thread() {
 						public void run() {
 							/*
@@ -52,13 +52,13 @@ public class ClientImpl implements ClientOperations {
 							 * Since the dialog is modal, show() blocks for all
 							 * the time the dialog is visible.
 							 */
-							dialogVisible = true;
-							jAlertingMessageDialog.show();
-							dialogVisible = false;
+							ClientImpl.this.dialogVisible = true;
+							ClientImpl.this.jAlertingMessageDialog.show();
+							ClientImpl.this.dialogVisible = false;
 						}
 					}.start();
 				} else
-					jAlertingMessageDialog.appendMessageSeq(linkedList);
+					this.jAlertingMessageDialog.appendMessageSeq(linkedList);
 			} catch (NullPointerException npe) {
 				throw new IllegalArgumentException(
 					"Message sequence cannot be null.");
