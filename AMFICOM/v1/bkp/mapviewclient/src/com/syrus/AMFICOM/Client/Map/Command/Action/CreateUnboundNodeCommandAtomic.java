@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundNodeCommandAtomic.java,v 1.11 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: CreateUnboundNodeCommandAtomic.java,v 1.12 2005/03/02 12:32:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement;
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/02/18 12:19:44 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/02 12:32:22 $
  * @module mapviewclietn_v1
  */
 public class CreateUnboundNodeCommandAtomic extends MapActionCommand
@@ -80,7 +80,6 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 				this.logicalNetLayer.getUserId(),
 				this.schemeElement,
 				this.coordinatePoint,
-				this.map,
 				this.logicalNetLayer.getUnboundProto());
 			
 			UnboundNodeController unc = (UnboundNodeController)getLogicalNetLayer().getMapViewController().getController(this.unbound);

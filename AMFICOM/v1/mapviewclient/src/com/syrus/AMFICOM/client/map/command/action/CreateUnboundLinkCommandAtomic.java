@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundLinkCommandAtomic.java,v 1.11 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: CreateUnboundLinkCommandAtomic.java,v 1.12 2005/03/02 12:32:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
  * создание непривязанной линии, внесение ее в пул и на карту - 
  * атомарное действие 
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/02/18 12:19:44 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/02 12:32:22 $
  * @module mapviewclient_v1
  */
 public class CreateUnboundLinkCommandAtomic extends MapActionCommand
@@ -60,11 +60,10 @@ public class CreateUnboundLinkCommandAtomic extends MapActionCommand
 		
 		try
 		{
-			this.link = UnboundLink.createInstance(
+			this.link = (UnboundLink )UnboundLink.createInstance(
 					this.logicalNetLayer.getUserId(),
 					this.startNode, 
 					this.endNode, 
-					this.map,
 					this.logicalNetLayer.getUnboundPen());
 	
 			this.map.addPhysicalLink(this.link);
