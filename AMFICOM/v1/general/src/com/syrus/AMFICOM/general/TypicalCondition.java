@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.16 2005/03/24 12:14:10 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.17 2005/03/31 09:05:03 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -119,8 +119,8 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.16 $, $Date: 2005/03/24 12:14:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/03/31 09:05:03 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -649,7 +649,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			Constructor ctor = Class.forName(className).getDeclaredConstructor(
 				new Class[] { Date.class, Date.class, OperationSort.class, Short.class, String.class});
 			ctor.setAccessible(true);
-			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { firstDate, secondDate, operation,
+			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { firstDate, secondDate == null ? firstDate : secondDate, operation,
 					entityCode, key});
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className //$NON-NLS-1$
