@@ -1,11 +1,20 @@
+/*
+ * $Id: AlarmImpl.java,v 1.2 2004/12/22 15:10:55 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.corba.portable.reflect;
 
-import com.syrus.AMFICOM.CORBA.General.*;
-import java.sql.*;
+import com.syrus.AMFICOM.event.corba.AlarmStatus;
+import java.sql.Timestamp;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/22 12:27:24 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/22 15:10:55 $
  * @author $Author: bass $
+ * @module corbaportable_v1
  */
 final class AlarmImpl {
 	/**
