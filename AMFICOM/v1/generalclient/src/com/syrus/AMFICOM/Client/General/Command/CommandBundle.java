@@ -139,5 +139,12 @@ public class CommandBundle extends VoidCommand implements Command
 
 	public void setParameter(String field, Object value)
 	{
+		int i;
+		int count = getCount();
+		for(i = 0; i < count; i++)
+		{
+			Command command = (Command )commands.get(i);
+			command.setParameter(field, value);
+		}
 	}
 }

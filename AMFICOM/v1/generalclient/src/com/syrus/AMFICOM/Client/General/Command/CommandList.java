@@ -50,7 +50,7 @@ public class CommandList extends VoidCommand implements Command
 	protected Command current = null;
 
 	/** максимальное количество команд в списке */
-	private int maxlength = 10;
+	private int maxlength = 50;
 
 	public CommandList()
 	{
@@ -131,8 +131,13 @@ public class CommandList extends VoidCommand implements Command
 	{
 		if(command == null)
 			return;
-		command.setNext(top);
+
+		// not executed commands are lost
+		command.setNext(current);
 		top = command;
+
+		if(getCount() > maxlength)
+			removeBottom(1);
 	}
 
 	/**
