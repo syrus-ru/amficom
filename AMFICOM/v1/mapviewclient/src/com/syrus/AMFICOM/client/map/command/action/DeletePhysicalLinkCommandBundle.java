@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.2 2004/10/11 16:48:33 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.3 2004/10/14 15:39:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 import java.util.Iterator;
@@ -31,7 +32,7 @@ import java.util.List;
  * состоит из последовательности атомарных действий
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/11 16:48:33 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/14 15:39:05 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -93,7 +94,13 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 		for(Iterator it = cablePathsToScan.iterator(); it.hasNext();)
 		{
 			MapCablePathElement cpath = (MapCablePathElement )it.next();
-			mapView.scanCable(cpath.getSchemeCableLink());
+			
+			cpath.removeLink(link);
+			MapUnboundLinkElement unbound = super.createUnboundLinkWithNodeLink(
+					link.getStartNode(),
+					link.getEndNode());
+			unbound.setCablePath(cpath);
+			cpath.addLink(unbound);
 		}
 
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

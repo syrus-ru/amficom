@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.2 2004/10/11 16:48:33 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.3 2004/10/14 15:39:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.List;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/11 16:48:33 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/14 15:39:05 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -81,12 +81,14 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		endNode = mne[1];
 		
 		cablePath = mapView.findCablePath(scl);
-		if(cablePath == null)
-			cablePath = super.createCablePath(scl, startNode, endNode);
-		else
-			super.removeCablePathLinks(cablePath);
+		if(cablePath != null)
+		{
+//			super.checkCablePathLinks(cablePath);
+			return;
+		}
 
-//		scl.channelingItems = sortCCIS(startNode, endNode, scl.channelingItems);
+		cablePath = super.createCablePath(scl, startNode, endNode);
+
 		List ccis = (List )scl.channelingItems;
 
 		MapSiteNodeElement bufferStartSite = startNode;
@@ -135,10 +137,10 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			if(link == null)
 				continue;
 
-			link.getBinding().add(scl);
+			link.getBinding().add(cablePath);
 			if(cci.row_x != -1
 				&& cci.place_y != -1)
-				link.getBinding().bind(scl, cci.row_x, cci.place_y);
+				link.getBinding().bind(cablePath, cci.row_x, cci.place_y);
 
 			cablePath.addLink(link);
 
@@ -165,7 +167,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		logicalNetLayer.notifySchemeEvent(cablePath);
 		logicalNetLayer.notifyCatalogueEvent(cablePath);
 	}
-	
+/*	
 	protected List sortCCIS(MapSiteNodeElement start, MapSiteNodeElement end, Collection ccis)
 	{
 		MapSiteNodeElement bufferSite = start;
@@ -189,4 +191,5 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		}
 		return retCCIs;
 	}
+*/
 }

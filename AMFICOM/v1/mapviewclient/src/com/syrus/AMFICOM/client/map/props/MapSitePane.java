@@ -94,7 +94,9 @@ public final class MapSitePane extends JPanel implements ObjectResourcePropertie
 
 	public boolean cancel()
 	{
-		return false;
+		gPanel.cancel();
+		bPanel.cancel();
+		return true;
 	}
 
 	public boolean save()

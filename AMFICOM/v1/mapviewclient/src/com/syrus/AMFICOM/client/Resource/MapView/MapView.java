@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.11 2004/10/11 16:48:33 krupenn Exp $
+ * $Id: MapView.java,v 1.12 2004/10/14 15:39:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/10/11 16:48:33 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/14 15:39:05 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -1065,25 +1065,6 @@ public final class MapView extends StubResource
 	public void revert()
 	{
 		removeMarkers();
-	}
-
-	public void updateLinkBinding(MapPhysicalLinkElement link)
-	{
-		MapPhysicalLinkBinding binding = link.getBinding();
-		binding.clear();
-		String lid = link.getId();
-		for(Iterator it = getCablePaths(link).iterator(); it.hasNext();)
-		{
-			MapCablePathElement cpath = (MapCablePathElement )it.next();
-			for(Iterator it2 = cpath.getSchemeCableLink().channelingItems.iterator(); it2.hasNext();)
-			{
-				CableChannelingItem cci = (CableChannelingItem )it.next();
-				if(cci.physicalLinkId.equals(lid))
-				{
-					binding.bind(cpath.getSchemeCableLink(), cci.row_x, cci.place_y);
-				}
-			}
-		}
 	}
 
 	public void setDescription(String description)

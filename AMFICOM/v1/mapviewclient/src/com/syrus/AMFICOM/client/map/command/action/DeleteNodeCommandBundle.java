@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.4 2004/10/11 16:48:33 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.5 2004/10/14 15:39:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,10 +22,12 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -34,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/11 16:48:33 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/14 15:39:05 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -69,11 +71,54 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		MapView mapView = logicalNetLayer.getMapView();
 		
 		List cablePathsToScan = mapView.getCablePaths(node);
-
-		for(Iterator it = mapView.getCablePaths(node).iterator(); it.hasNext();)
+		if(! (node instanceof MapUnboundNodeElement))
 		{
-			MapCablePathElement cpath = (MapCablePathElement )it.next();
-			mapView.scanCable(cpath.getSchemeCableLink());
+			for(Iterator it = cablePathsToScan.iterator(); it.hasNext();)
+			{
+				MapCablePathElement cpath = (MapCablePathElement )it.next();
+				if(cpath.getStartNode().equals(node)
+					|| cpath.getEndNode().equals(node))
+				{
+					super.removeCablePathLinks(cpath);
+					super.removeCablePath(cpath);
+				}
+				else
+				{
+					MapPhysicalLinkElement left = null;
+					MapPhysicalLinkElement right = null;
+					
+					for(Iterator it2 = cpath.getLinks().iterator(); it2.hasNext();)
+					{
+						MapPhysicalLinkElement le = (MapPhysicalLinkElement )it2.next();
+						if(le.getStartNode().equals(node)
+							|| le.getEndNode().equals(node))
+						{
+							if(left == null)
+								left = le;
+							else
+								right = le;
+						}
+					}
+
+					cpath.removeLink(left);
+					cpath.removeLink(right);
+
+					MapUnboundLinkElement unbound = super.createUnboundLinkWithNodeLink(
+							left.getOtherNode(node),
+							right.getOtherNode(node));
+					unbound.setCablePath(cpath);
+					cpath.addLink(unbound);
+
+					if(left instanceof MapUnboundLinkElement)
+					{
+						super.removeUnboundLink((MapUnboundLinkElement )left);
+					}
+					if(right instanceof MapUnboundLinkElement)
+					{
+						super.removeUnboundLink((MapUnboundLinkElement )right);
+					}
+				}
+			}
 		}
 
 		//При удалении узла удаляются все фрагменты линий, исходящие из него
@@ -86,6 +131,10 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			MapNodeLinkElement nodeLink = (MapNodeLinkElement )e.next();
 			MapPhysicalLinkElement physicalLink = map
 					.getPhysicalLink(nodeLink.getPhysicalLinkId());
+					
+			if(physicalLink instanceof MapUnboundLinkElement)
+				continue;
+			MapNodeElement otherNode = physicalLink.getOtherNode(node);
 			MapNodeElement oppositeNode = nodeLink.getOtherNode(node);
 
 			// если фрагмент соединяет два узла сети, он составляет одну
@@ -132,11 +181,6 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 
 		removeNode(node);
 
-		for(Iterator it = cablePathsToScan.iterator(); it.hasNext();)
-		{
-			MapCablePathElement cpath = (MapCablePathElement )it.next();
-			mapView.scanCable(cpath.getSchemeCableLink());
-		}
 	}
 	
 	/**
@@ -289,10 +333,14 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	
 		deleteSite(unbound);
 		
-		for(Iterator it = mapView.getCablePaths(unbound).iterator(); it.hasNext();)
+		List cablePaths = new LinkedList();
+		cablePaths.addAll(mapView.getCablePaths(unbound));
+		
+		for(Iterator it = cablePaths.iterator(); it.hasNext();)
 		{
 			MapCablePathElement cpath = (MapCablePathElement )it.next();
-			mapView.scanCable(cpath.getSchemeCableLink());
+			super.removeCablePathLinks(cpath);
+			super.removeCablePath(cpath);
 		}
 	}
 

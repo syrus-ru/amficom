@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.5 2004/10/11 16:48:33 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.6 2004/10/14 15:39:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,23 +13,23 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Command.CommandBundle;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+
 import java.awt.geom.Point2D;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +39,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/11 16:48:33 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/14 15:39:05 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -192,6 +192,20 @@ public class MapActionCommandBundle extends CommandBundle
 		return cmd.getLink();
 	}
 	
+	protected MapUnboundLinkElement createUnboundLinkWithNodeLink(
+			MapNodeElement startNode,
+			MapNodeElement endNode)
+	{
+		MapUnboundLinkElement unbound = this.createUnboundLink(startNode, endNode);
+
+		MapNodeLinkElement nodeLink = this.createNodeLink(startNode, endNode);
+		unbound.addNodeLink(nodeLink);
+		nodeLink.setPhysicalLinkId(unbound.getId());
+		
+		return unbound;
+	}
+
+	
 	/**
 	 * Удаляется линия связи
 	 */
@@ -246,6 +260,26 @@ public class MapActionCommandBundle extends CommandBundle
 		add(cmd);
 	}
 
+	protected void removeUnboundLink(MapUnboundLinkElement link)
+	{
+		this.removePhysicalLink(link);
+		link.sortNodes();
+		List sortedNodes = new LinkedList();
+		sortedNodes.addAll(link.getSortedNodes());
+		for(Iterator it2 = sortedNodes.iterator(); it2.hasNext();)
+		{
+			MapNodeElement node = (MapNodeElement )it2.next();
+			if(node instanceof MapPhysicalNodeElement)
+				this.removeNode(node);
+		}
+		List sortedNodeLinks = new LinkedList();
+		sortedNodeLinks.addAll(link.getNodeLinks());
+		for(Iterator it3 = sortedNodeLinks.iterator(); it3.hasNext();)
+		{
+			this.removeNodeLink((MapNodeLinkElement )it3.next());
+		}
+	}
+
 	protected void removeCablePathLinks(MapCablePathElement cablePath)
 	{
 		for(Iterator it = cablePath.getLinks().iterator(); it.hasNext();)
@@ -253,31 +287,35 @@ public class MapActionCommandBundle extends CommandBundle
 			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
 			if(link instanceof MapUnboundLinkElement)
 			{
-				removePhysicalLink(link);
-				link.sortNodes();
-				List sortedNodes = new LinkedList();
-				sortedNodes.addAll(link.getSortedNodes());
-				for(Iterator it2 = sortedNodes.iterator(); it2.hasNext();)
-				{
-					MapNodeElement node = (MapNodeElement )it2.next();
-					if(node instanceof MapPhysicalNodeElement)
-						this.removeNode(node);
-				}
-				List sortedNodeLinks = new LinkedList();
-				sortedNodeLinks.addAll(link.getNodeLinks());
-				for(Iterator it3 = sortedNodeLinks.iterator(); it3.hasNext();)
-				{
-					this.removeNodeLink((MapNodeLinkElement )it3.next());
-				}
+				this.removeUnboundLink((MapUnboundLinkElement )link);
 			}
 			else
 			{
-				link.getBinding().remove(cablePath.getSchemeCableLink());
+				link.getBinding().remove(cablePath);
 			}
 		}
 		cablePath.clearLinks();
 	}
-
+/*
+	protected void checkCablePathLinks(MapCablePathElement cablePath)
+	{
+//		cablePath.sortLinks();
+//		MapNodeElement ne = cablePath.getStartNode();
+//		for(Iterator it = cablePath.getLinks().iterator(); it.hasNext();)
+//		{
+//			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+//			if(link instanceof MapUnboundLinkElement)
+//			{
+//				this.removeUnboundLink((MapUnboundLinkElement )link);
+//			}
+//			else
+//			{
+//				link.getBinding().remove(cablePath.getSchemeCableLink());
+//			}
+//		}
+//		cablePath.clearLinks();
+	}
+*/
 	protected void removeMeasurementPathCables(MapMeasurementPathElement mPath)
 	{
 		mPath.clearCablePaths();

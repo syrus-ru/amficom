@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.9 2004/10/11 16:48:33 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.10 2004/10/14 15:39:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,23 +22,26 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.CreateCollectorCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.GenerateCablePathCablingCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Command.Action.GenerateUnboundLinkCablingCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.InsertSiteCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MapElementStateChangeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveCollectorCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
+import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -46,6 +49,7 @@ import java.awt.Toolkit;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -56,7 +60,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/11 16:48:33 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/14 15:39:05 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -205,6 +209,47 @@ public abstract class MapPopupMenu extends JPopupMenu
 		return site;
 	}
 
+	protected MapPhysicalLinkElement selectPhysicalLinkAt(MapUnboundLinkElement unbound)
+	{
+		Map map = logicalNetLayer.getMapView().getMap();
+		
+		MapPhysicalLinkElement link = null;
+		
+		MapNodeElement node1 = unbound.getStartNode();
+		MapNodeElement node2 = unbound.getEndNode();
+
+		List list = new LinkedList();
+
+		// select physical links that connect same end nodes as link
+		List list2 = map.getPhysicalLinksAt(node1);
+		for(Iterator it = map.getPhysicalLinksAt(node2).iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement le = (MapPhysicalLinkElement )it.next();
+			if(! (le instanceof MapUnboundLinkElement))
+				if(list2.contains(le))
+					list.add(le);
+		}
+
+		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
+			
+		dialog.setModal(true);
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension frameSize = dialog.getSize();
+		dialog.setLocation(
+				(screenSize.width - frameSize.width) / 2, 
+				(screenSize.height - frameSize.height) / 2);
+
+		dialog.show();
+
+		if(dialog.getReturnCode() == ObjectResourceSelectionDialog.RET_OK)
+		{
+			link = (MapPhysicalLinkElement )dialog.getSelected();
+		}
+		
+		return link;
+	}
+
 	protected MapPipePathElement createCollector()
 	{
 		String inputValue = JOptionPane.showInputDialog(
@@ -323,12 +368,17 @@ public abstract class MapPopupMenu extends JPopupMenu
 
 	protected void generatePathCabling(MapCablePathElement path, MapNodeProtoElement proto)
 	{
-//		MapNodeProtoElement proto = (MapNodeProtoElement )Pool.get(
-//				MapNodeProtoElement.typ, 
-//				MapNodeProtoElement.WELL);
-
 		GenerateCablePathCablingCommandBundle command = 
 				new GenerateCablePathCablingCommandBundle(path, proto);
+		command.setLogicalNetLayer(logicalNetLayer);
+		getLogicalNetLayer().getCommandList().add(command);
+		getLogicalNetLayer().getCommandList().execute();
+	}
+	
+	protected void convertUnboundLinkToPhysicalLink(MapUnboundLinkElement unbound)
+	{
+		GenerateUnboundLinkCablingCommandBundle command = 
+				new GenerateUnboundLinkCablingCommandBundle(unbound);
 		command.setLogicalNetLayer(logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();

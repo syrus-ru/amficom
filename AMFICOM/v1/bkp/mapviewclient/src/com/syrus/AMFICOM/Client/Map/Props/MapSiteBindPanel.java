@@ -5,7 +5,12 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
@@ -84,7 +89,7 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 				public void actionPerformed(ActionEvent e)
 				{
 					ObjectResource or = elementsList.getSelectedObjectResource();
-					unbind(or);
+					unbindElement(or);
 				}
 			});
 		jPanel1.add(bindButton, null);
@@ -92,12 +97,12 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 
 		schemePanel.getGraph().setGraphEditable(false);
 
-		this.add(titleLabel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 0, 3, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
-		this.add(elementsList, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 100, 150));
-		this.add(Box.createVerticalGlue(), com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
-		this.add(schemePanel, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(titleLabel, ReusedGridBagConstraints.get(0, 0, 3, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
+		this.add(elementsList, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 100, 150));
+		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
+		this.add(schemePanel, ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
 //		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, null, 0, 0));
-		this.add(jPanel1, com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints.get(0, 2, 3, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(jPanel1, ReusedGridBagConstraints.get(0, 2, 3, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 	}
 
 	public ObjectResource getObjectResource()
@@ -105,14 +110,44 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 		return null;
 	}
 
-	public void unbind(ObjectResource or)
+	public void unbindElement(ObjectResource or)
 	{
 		SchemeElement se = (SchemeElement )or;
 		se.siteId = "";
 		elementsList.remove(se);
 		unboundElements.add(se);
-	}
+		
+		MapView mapView = ((LogicalNetLayer )(site.getMap().getConverter())).getMapView();
+		
+		for(Iterator it = mapView.getCablePaths(site).iterator(); it.hasNext();)
+		{
+			MapCablePathElement cablePath = (MapCablePathElement )it.next();
 
+			UnPlaceSchemeCableLinkCommand command = new UnPlaceSchemeCableLinkCommand(cablePath);
+			command.setLogicalNetLayer(cablePath.getMapView().getLogicalNetLayer());
+			command.execute();
+		}
+	}
+/*
+	public void unbindCable(ObjectResource or)
+	{
+		SchemeElement se = (SchemeElement )or;
+		se.siteId = "";
+		elementsList.remove(se);
+		unboundElements.add(se);
+		
+		MapView mapView = ((LogicalNetLayer )(site.getMap().getConverter())).getMapView();
+		
+		for(Iterator it = mapView.getCablePaths(site).iterator(); it.hasNext();)
+		{
+			MapCablePathElement cablePath = (MapCablePathElement )it.next();
+
+			UnPlaceSchemeCableLinkCommand command = new UnPlaceSchemeCableLinkCommand(cablePath);
+			command.setLogicalNetLayer(cablePath.getMapView().getLogicalNetLayer());
+			command.execute();
+		}
+	}
+*/
 	public void showElement(SchemeElement se)
 	{
 //		schemePanel.openSchemeElement(se);
@@ -129,6 +164,8 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 		}
 		else
 		{
+			MapView mapView = ((LogicalNetLayer )(site.getMap().getConverter())).getMapView();
+
 			elementsList.setEnabled(true);
 			List list = Pool.getList(SchemeElement.typ);
 			if(list != null)
@@ -139,6 +176,12 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 					if(se.siteId.equals(site.getId()))
 						elementsList.add(se);
 				}
+			}
+			
+			List list2 = mapView.getCablePaths(site);
+			for(Iterator it = list2.iterator(); it.hasNext();)
+			{
+				MapCablePathElement cablePath = (MapCablePathElement )it.next();
 			}
 		}
 	}

@@ -4,13 +4,13 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkBinding;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
-import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
@@ -27,7 +27,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -42,8 +41,6 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 
 	private TunnelLayout tunnelLayout = null;
 
-	private JScrollPane scrollPane = new JScrollPane();
-	
 	private JPanel jPanel1 = new JPanel();
 	private JButton bindButton = new JButton();
 	private JButton unbindButton = new JButton();
@@ -160,32 +157,19 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 	{
 //		tunnelLayout.setActiveCoordinates(new Point(col, row));
 		MapPhysicalLinkBinding binding = link.getBinding();
-		String lid = link.getId();
 		List list = binding.getBindObjects();
 		if(list != null)
 		{
 			cableList.getSelectionModel().clearSelection();
 			for(Iterator it = list.iterator(); it.hasNext();)
 			{
-				SchemeCableLink scl = (SchemeCableLink )it.next();
-				for(Iterator it2 = scl.channelingItems.iterator(); it2.hasNext();)
-				{
-					CableChannelingItem cci = (CableChannelingItem )it2.next();
-					if(cci.row_x == col
-						&& cci.place_y == row)
-					{
-						cableList.setSelected(scl);
-					}
-				}
-/*
-				MapCablePathElement cpath = (MapCablePathElement )
-				Point position = cpath.getPosition(link);
+				MapCablePathElement cp = (MapCablePathElement )it.next();
+				Point position = cp.getBindingPosition(link);
 				if(position.x == col
 					&& position.y == row)
 				{
-					cableList.setSelected(cpath);
+					cableList.setSelected(cp);
 				}
-*/
 			}
 		}
 	}
@@ -203,10 +187,24 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 
 	public void unbind(ObjectResource or)
 	{
-		MapPhysicalLinkBinding binding = link.getBinding();
-		binding.unbind(or);
+		MapCablePathElement path = (MapCablePathElement )or;
+
+		path.removeLink(link);
+
+		CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
+				link.getStartNode(),
+				link.getEndNode());
+		command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
+		command.execute();
+
+		MapUnboundLinkElement unbound = command.getUnbound();
+		unbound.setCablePath(path);
+		path.addLink(unbound);
+		link.getBinding().remove(path);
+		
+		cableList.remove(path);
+
 		tunnelLayout.updateElements();
-//		unboundElements.add(or);
 	}
 
 	public boolean modify()

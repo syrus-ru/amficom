@@ -93,9 +93,9 @@ public class MapCablePathPane extends JPanel implements ObjectResourceProperties
 		if(gPanel.modify()
 			&& bPanel.modify())
 		{
-			Dispatcher disp  = aContext.getDispatcher();
-			if(disp != null)
-				disp.notify(new MapEvent(path, MapEvent.MAP_ELEMENT_CHANGED));
+//			Dispatcher disp  = aContext.getDispatcher();
+//			if(disp != null)
+//				disp.notify(new MapEvent(path, MapEvent.MAP_ELEMENT_CHANGED));
 			return true;
 		}
 		return false;
@@ -103,7 +103,9 @@ public class MapCablePathPane extends JPanel implements ObjectResourceProperties
 
 	public boolean cancel()
 	{
-		return false;
+		gPanel.cancel();
+		bPanel.cancel();
+		return true;
 	}
 
 	public boolean save()

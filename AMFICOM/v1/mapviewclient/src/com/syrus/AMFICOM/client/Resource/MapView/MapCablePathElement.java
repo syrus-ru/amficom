@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.11 2004/10/11 16:48:33 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.12 2004/10/14 15:39:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathBinding;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
@@ -38,9 +39,9 @@ import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -49,7 +50,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/10/11 16:48:33 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/14 15:39:05 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -59,11 +60,11 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	private static final long serialVersionUID = 02L;
 	public static final String typ = "mapcablepathelement";
 
-	protected ArrayList sortedNodes = new ArrayList();
-	protected ArrayList sortedNodeLinks = new ArrayList();
+	protected List sortedNodes = new LinkedList();
+	protected List sortedNodeLinks = new LinkedList();
 	protected boolean nodeLinksSorted = false;
 
-	protected ArrayList links = new ArrayList();
+	protected List links = new LinkedList();
 	protected boolean linksSorted = false;
 	
 	protected SchemeCableLink schemeCableLink;
@@ -71,6 +72,8 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	protected String mapViewId = "";
 	
 	protected MapView mapView;
+	
+	protected MapCablePathBinding binding;
 
 	public String[][] getExportColumns()
 	{
@@ -102,6 +105,8 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		startNode = stNode;
 		endNode = eNode;
 		attributes = new HashMap();
+		
+		binding = new MapCablePathBinding(this);
 
 		setSchemeCableLink(schemeCableLink);
 	}
@@ -390,8 +395,19 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	public void clearLinks()
 	{	
 		links.clear();
-		linksSorted = false;
+		binding.clear();
 	}
+
+	public void setLinks(List list)
+	{	
+		this.clearLinks();		
+		
+		for(Iterator it = list.iterator(); it.hasNext();)
+		{
+			this.addLink((MapPhysicalLinkElement)it.next());
+		}
+	}
+
 
 	/**
 	 * Внимание! концевые точки линии не обновляются
@@ -399,7 +415,9 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	public void removeLink(MapPhysicalLinkElement link)
 	{
 		links.remove(link);
-		linksSorted = false;
+//		int index = getBinding().
+		getBinding().remove(link);
+		nodeLinksSorted = false;
 	}
 
 	/**
@@ -407,8 +425,31 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	 */
 	public void addLink(MapPhysicalLinkElement addLink)
 	{
+//		MapNodeElement stNode = addLink.getStartNode();
+//		MapNodeElement enNode = addLink.getEndNode();
+//
+//		MapNodeElement bufferNode = getStartNode();
+//		
+//		ListIterator lit = getLinks().iterator();
+//		for(; lit.hasNext();)
+//		{
+//			MapPhysicalLinkElement link = (MapPhysicalLinkElement )lit.next();
+//			if(link.getStartNode().equals(stNode)
+//				|| link.getStartNode().equals(enNode)
+//				|| link.getEndNode().equals(stNode)
+//				|| link.getEndNode().equals(enNode))
+//			{
+//				break;
+//			}
+//		}
+//		lit.add(addLink);
 		links.add(addLink);
+		binding.put(addLink, MapCablePathBinding.generateCCI(
+				addLink,
+				this.getMapView().getLogicalNetLayer().getContext().getDataSource()));
 		linksSorted = false;
+		nodeLinksSorted = false;
+		sortLinks();
 	}
 
 	public void sortLinks()
@@ -416,12 +457,15 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		if(!linksSorted)
 		{
 			MapNodeElement smne = this.getStartNode();
-			ArrayList vec = new ArrayList();
+			List origvec = new LinkedList();
+			origvec.addAll(getLinks());
+			List vec = new LinkedList();
 			int count = getLinks().size();
 			for (int i = 0; i < count; i++) 
 //			while(!smne.equals(this.getEndNode()))
 			{
-				for(Iterator it = getLinks().iterator(); it.hasNext();)
+				boolean canSort = false;
+				for(Iterator it = origvec.iterator(); it.hasNext();)
 				{
 					MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
 
@@ -430,6 +474,10 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 						vec.add(link);
 						it.remove();
 						smne = link.getEndNode();
+						CableChannelingItem cci = getBinding().getCCI(link);
+						cci.startSiteId = link.getStartNode().getId();
+						cci.endSiteId = link.getEndNode().getId();
+						canSort = true;
 						break;
 					}
 					else
@@ -438,9 +486,16 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 						vec.add(link);
 						it.remove();
 						smne = link.getStartNode();
+						CableChannelingItem cci = getBinding().getCCI(link);
+						cci.startSiteId = link.getEndNode().getId();
+						cci.endSiteId = link.getStartNode().getId();
+						canSort = true;
 						break;
 					}
 				}
+				if(!canSort)
+					// unconsistent - cannot sort
+					return;
 			}
 			this.links = vec;
 			linksSorted = true;
@@ -450,20 +505,36 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 
 	public MapPhysicalLinkElement nextLink(MapPhysicalLinkElement link)
 	{
-		int index = getLinks().indexOf(link);
-		if(index == getLinks().size() - 1)
-			return link;
+		MapPhysicalLinkElement ret = null;
+		if(link == null)
+		{
+			if(getLinks().size() != 0)
+				ret = (MapPhysicalLinkElement )getLinks().get(0);
+		}
 		else
-			return (MapPhysicalLinkElement )getLinks().get(index + 1);
+		{
+			int index = getLinks().indexOf(link);
+			if(index != getLinks().size() - 1 && index != -1)
+				ret = (MapPhysicalLinkElement )getLinks().get(index + 1);
+		}
+		return ret;
 	}
 
-	public MapPhysicalLinkElement previousNodeLink(MapPhysicalLinkElement link)
+	public MapPhysicalLinkElement previousLink(MapPhysicalLinkElement link)
 	{
-		int index = getLinks().indexOf(link);
-		if(index == 0)
-			return link;
+		MapPhysicalLinkElement ret = null;
+		if(link == null)
+		{
+			if(getLinks().size() != 0)
+				ret = (MapPhysicalLinkElement )getLinks().get(getLinks().size() - 1);
+		}
 		else
-			return (MapPhysicalLinkElement )getLinks().get(index - 1);
+		{
+			int index = getLinks().indexOf(link);
+			if(index > 0)
+				ret = (MapPhysicalLinkElement )getLinks().get(index - 1);
+		}
+		return ret;
 	}
 
 	public void sortNodes()
@@ -488,13 +559,13 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 
 	public void sortNodeLinks()
 	{
-		sortLinks();
+//		sortLinks();
 //		if(!nodeLinksSorted)
 		{
 			java.util.List pl = getLinks();
 
-			ArrayList vec = new ArrayList();
-			ArrayList nodevec = new ArrayList();
+			List vec = new LinkedList();
+			List nodevec = new LinkedList();
 
 			for(Iterator it = pl.iterator(); it.hasNext();)
 			{
@@ -601,15 +672,76 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return MapPropertiesManager.getAlarmedThickness();
 	}
 
-	public Point getPosition(MapPhysicalLinkElement link)
+	public Point getBindingPosition(MapPhysicalLinkElement link)
 	{
-		String lid = link.getId();
-		for(Iterator it = getSchemeCableLink().channelingItems.iterator(); it.hasNext();)
-		{
-			CableChannelingItem cci = (CableChannelingItem )it.next();
-			if(cci.physicalLinkId.equals(lid))
-				return new Point(cci.row_x, cci.place_y);
-		}
-		return new Point(-1, -1);
+		CableChannelingItem cci = (CableChannelingItem )getBinding().get(link);
+		return new Point(cci.row_x, cci.place_y);
 	}
+
+	public void setBinding(MapCablePathBinding binding)
+	{
+		this.binding = binding;
+	}
+
+	public MapCablePathBinding getBinding()
+	{
+		return binding;
+	}
+
+	public MapNodeElement getStartUnboundNode()
+	{
+		MapNodeElement bufferSite = getStartNode();
+		for(Iterator it = getLinks().iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			if(link instanceof MapUnboundLinkElement)
+				break;
+			bufferSite = link.getOtherNode(bufferSite);
+		}
+		return bufferSite;
+	}
+	
+	public MapNodeElement getEndUnboundNode()
+	{
+		MapNodeElement bufferSite = getEndNode();
+		for(ListIterator it = getLinks().listIterator(getLinks().size()); it.hasPrevious();)
+		{
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.previous();
+			if(link instanceof MapUnboundLinkElement)
+				break;
+			bufferSite = link.getOtherNode(bufferSite);
+		}
+		return bufferSite;
+	}
+	
+	public MapPhysicalLinkElement getStartLastBoundLink()
+	{
+		MapPhysicalLinkElement link = null;
+
+		for(Iterator it = getLinks().iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement link2 = (MapPhysicalLinkElement )it.next();
+			if(link2 instanceof MapUnboundLinkElement)
+				break;
+			link = link2;
+		}
+		
+		return link;
+	}
+
+	public MapPhysicalLinkElement getEndLastBoundLink()
+	{
+		MapPhysicalLinkElement link = null;
+
+		for(ListIterator it = getLinks().listIterator(getLinks().size()); it.hasPrevious();)
+		{
+			MapPhysicalLinkElement link2 = (MapPhysicalLinkElement )it.previous();
+			if(link2 instanceof MapUnboundLinkElement)
+				break;
+			link = link2;
+		}
+		
+		return link;
+	}
+
 }

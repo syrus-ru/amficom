@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.3 2004/10/11 16:48:33 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.4 2004/10/14 15:39:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/11 16:48:33 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/14 15:39:05 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -141,6 +141,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 			{
 				link1.setEndNode(site);
 				link.setStartNode(site);
+				cpath.sortLinks();
 				break;
 			}
 			

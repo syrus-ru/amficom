@@ -9,6 +9,8 @@ package com.syrus.AMFICOM.Client.Map.Props;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
@@ -34,6 +36,7 @@ public final class CableBindingController implements ObjectResourceController
 
 	private List keys;
 	
+	MapCablePathElement cablePath;
 	Map map;
 
 	private CableBindingController() 
@@ -84,35 +87,39 @@ public final class CableBindingController implements ObjectResourceController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (object instanceof CableChannelingItem) 
+		if (object instanceof MapPhysicalLinkElement) 
 		{
-			CableChannelingItem cci = (CableChannelingItem )object;
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )object;
+			CableChannelingItem cci = (CableChannelingItem )cablePath.getBinding().get(link);
 			if (key.equals(KEY_START_NODE))
 			{
+//				result = link.getStartNode().getName();
 				MapNodeElement mne = (MapNodeElement )map.getNode(cci.startSiteId);
-				result = mne.getName();
+				result = (mne == null) ? "" : mne.getName();
 			}
 			else
 			if (key.equals(KEY_START_SPARE))
 			{
-				result = String.valueOf(cci.startSpare);
+				result = (link instanceof MapUnboundLinkElement) ? "" : String.valueOf(cci.startSpare);
 			}
 			else
 			if (key.equals(KEY_LINK))
 			{
-				MapLinkElement mle = (MapLinkElement )map.getPhysicalLink(cci.physicalLinkId);
-				result = mle.getName();
+				result = (link instanceof MapUnboundLinkElement) ? "" : link.getName();
+//				MapLinkElement mle = (MapLinkElement )map.getPhysicalLink(cci.physicalLinkId);
+//				result = (mle == null) ? "" : mle.getName();
 			}
 			else
 			if (key.equals(KEY_END_SPARE))
 			{
-				result = String.valueOf(cci.endSpare);
+				result = (link instanceof MapUnboundLinkElement) ? "" : String.valueOf(cci.endSpare);
 			}
 			else
 			if (key.equals(KEY_END_NODE))
 			{
+//				result = link.getEndNode().getName();
 				MapNodeElement mne = (MapNodeElement )map.getNode(cci.endSiteId);
-				result = mne.getName();
+				result = (mne == null) ? "" : mne.getName();
 			}
 		}
 		return result;
@@ -134,12 +141,14 @@ public final class CableBindingController implements ObjectResourceController
 		CableChannelingItem cci = (CableChannelingItem )object;
 		if (key.equals(KEY_START_SPARE))
 		{
-			cci.startSpare = Double.parseDouble((String )value);
+			if(cci.physicalLinkId.length() != 0)
+				cci.startSpare = Double.parseDouble((String )value);
 		}
 		else
 		if (key.equals(KEY_END_SPARE))
 		{
-			cci.endSpare = Double.parseDouble((String )value);
+			if(cci.physicalLinkId.length() != 0)
+				cci.endSpare = Double.parseDouble((String )value);
 		}
 	}
 
@@ -164,14 +173,14 @@ public final class CableBindingController implements ObjectResourceController
 		return clazz;
 	}
 
-
-	public void setMap(Map map)
+	public void setCablePath(MapCablePathElement cablePath)
 	{
-		this.map = map;
+		this.cablePath = cablePath;
+		this.map = cablePath.getMap();
 	}
 
-	public Map getMap()
+	public MapCablePathElement getCablePath()
 	{
-		return map;
+		return cablePath;
 	}
 }

@@ -5,6 +5,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
@@ -167,6 +168,10 @@ public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropert
 			site.setName(nameTextField.getText());
 			site.setMapProtoId(typeComboBox.getSelectedId());
 			site.setDescription(descTextArea.getText());
+			
+			LogicalNetLayer lnl = (LogicalNetLayer )(site.getMap().getConverter());
+			
+			site.setScaleCoefficient(lnl.getDefaultScale() / lnl.getScale());
 
 			try 
 			{
@@ -189,9 +194,6 @@ public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropert
 		{
 			ex.printStackTrace();
 		} 
-		finally 
-		{
-		}
 		
 		return false;
 	}

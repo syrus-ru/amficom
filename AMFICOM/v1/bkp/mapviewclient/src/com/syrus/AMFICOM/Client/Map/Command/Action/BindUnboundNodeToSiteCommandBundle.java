@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.2 2004/10/11 16:48:33 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.3 2004/10/14 15:39:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/11 16:48:33 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/14 15:39:05 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -109,12 +109,6 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 		prevSiteId = se.siteId;		
 		se.siteId = site.getId();
 
-		for(Iterator it = cablePaths.iterator(); it.hasNext();)
-		{
-			MapCablePathElement cp = (MapCablePathElement )it.next();
-			mapView.scanCable(cp.getSchemeCableLink());
-		}
-		
 		logicalNetLayer.repaint();
 	}
 	
