@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.4 2004/08/17 10:34:11 bob Exp $
+ * $Id: StorableObjectType.java,v 1.5 2004/08/17 14:33:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/17 10:34:11 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/17 14:33:42 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -20,9 +20,6 @@ public abstract class StorableObjectType extends StorableObject {
 	protected String codename;
 	protected String description;
 	
-	protected static final String ID_CODENAME 		= "codename=";
-	protected static final String ID_DESCRIPTION 	= "description=";
-
 	public StorableObjectType(Identifier id) {
 		super(id);
 	}
