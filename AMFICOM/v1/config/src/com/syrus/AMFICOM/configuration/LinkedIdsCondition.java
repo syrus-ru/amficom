@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.8 2004/12/20 14:03:32 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.9 2004/12/22 09:44:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/20 14:03:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2004/12/22 09:44:58 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -141,7 +141,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			}
 				break;
 			default:
-				throw new UnsupportedOperationException("entityCode is unknown for this condition");
+				throw new UnsupportedOperationException("entityCode " + this.entityCode + " is unknown for this condition");
 		}
 
 		return condition;
