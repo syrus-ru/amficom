@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.83 2005/03/24 15:45:27 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.84 2005/03/25 13:08:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/03/24 15:45:27 $
+ * @version $Revision: 1.84 $, $Date: 2005/03/25 13:08:53 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -313,7 +313,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			}
 		}
 		((ArrayList)measurementPortTypes).trimToSize();
-		measurementType.setMeasurementPortTypes(measurementPortTypes);
+		measurementType.setMeasurementPortTypes0(measurementPortTypes);
 	}
 
   private void retrieveMeasurementPortTypesByOneQuery(Collection measurementTypes) throws RetrieveObjectException {
