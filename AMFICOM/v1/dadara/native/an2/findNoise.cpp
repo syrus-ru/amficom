@@ -27,6 +27,8 @@
 #include "../common/median.h"
 #include "../common/prf.h"
 
+#include <stdio.h>
+
 // Для отбрасывания участков, где точность определяется 0.001дБ-представлением
 const double prec0 = 0.001 * 1.5;
 
@@ -134,12 +136,17 @@ void findNoiseArray(double *data, double *out, int size)
 	double *temp = new double[size]; // здесь временно будет сглаженная р/г
 	assert(temp);
 
+	prf_b("findNoiseArray: enter");
+
 	const int width = 8;
+	// mlen должно получиться четным
 	const int mlen = width * 10;
 	// -1 здесь для выравнивания x-коорд.
 	const int nsam = mlen - 2 * width - 1;
 	int mofs = mlen / 2 - 1;
 	double gist[nsam];
+
+	prf_b("findNoiseArray: #1");
 
 	assert(size > mlen); // XXX
 	int i;
@@ -152,9 +159,9 @@ void findNoiseArray(double *data, double *out, int size)
 			double v0 = data[i + j];
 			double v1 = data[i + j + width];
 			double v2 = data[i + j + width * 2];
-			gist[j] = fabs(v2 + v0 - v1 - v1) + 0.001; // XXX
+			gist[j] = fabs(v2 + v0 - v1 - v1);
 		}
-		double dv = destroyAndGetMedian(gist, nsam, nsam / 2);
+		double dv = destroyAndGetMedian(gist, nsam, nsam / 2) + 0.001; // XXX: 0.001
 
 		// определяем среднее значение кривой
 		for (j = 0; j < nsam; j++)
@@ -166,6 +173,8 @@ void findNoiseArray(double *data, double *out, int size)
 		//fprintf(stdout, "%d %g %g\n", io, dv, dy2dB(ya[io], dv));
 		out[i + mofs] = dy2dB(y0, dv);
 	}
+	prf_b("findNoiseArray: #2");
+
     // расширяем до краев массива
 	for (i = 0; i < mofs; i++)
 	{
@@ -208,5 +217,16 @@ void findNoiseArray(double *data, double *out, int size)
 		//fprintf(stdout,"%d %g\n", i, out[i]);
 	}
 
+	/*
+	prf_b("findNoiseArray: done");
+
+	FILE *f = fopen ("noise.tmp", "w");
+	assert(f);
+	for (i = 0; i < size; i++)
+		fprintf(f, "%d %g %g %g\n", i, data[i], out[i], temp[i]);
+	fclose(f);
+	*/
+
 	delete[] temp;
+	prf_b("findNoiseArray: exiting");
 }

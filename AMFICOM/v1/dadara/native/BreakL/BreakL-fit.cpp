@@ -8,6 +8,8 @@
 
 #include "BreakL-fit.h"
 
+#include <stdio.h>
+
 #define USE_CHI2BREAKL 1
 
 static int dfcmp(const void *a, const void *b)
