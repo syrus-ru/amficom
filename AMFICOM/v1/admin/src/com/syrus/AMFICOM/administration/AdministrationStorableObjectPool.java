@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.7 2005/02/11 18:40:09 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.8 2005/02/18 17:48:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/11 18:40:09 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/18 17:48:03 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -47,6 +48,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 
 	private AdministrationStorableObjectPool() {
 		// singleton
+		super(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE);
 	}
 	
 	private AdministrationStorableObjectPool(Class cacheMapClass) {
@@ -263,40 +265,20 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		instance.cleanChangedStorableObjectsImpl();
 	}
 
-	public static void delete(Identifier id) throws DatabaseException, CommunicationException {
+	public static void delete(Identifier id) {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	public static void delete(Collection objects) throws IllegalDataException {
 		instance.deleteImpl(objects);
 	}
 
-	protected void deleteStorableObject(Identifier id) throws DatabaseException, CommunicationException {
-		try {
-			aObjectLoader.delete(id);
-		}
-		catch (DatabaseException e) {
-			Log.errorMessage("AdministrationStorableObjectPool.deleteStorableObject | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("AdministrationStorableObjectPool.deleteStorableObject", e);
-		}
-		catch (CommunicationException e) {
-			Log.errorMessage("AdministrationStorableObjectPool.deleteStorableObject | CommunicationException: " + e.getMessage());
-			throw new CommunicationException("AdministrationStorableObjectPool.deleteStorableObject", e);
-		}
+	protected void deleteStorableObject(Identifier id) throws IllegalDataException {
+		aObjectLoader.delete(id);
 	}
 	
-	protected void deleteStorableObjects(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
-		try {
-			aObjectLoader.delete(objects);
-		}
-		catch (DatabaseException e) {
-			Log.errorMessage("AdministrationStorableObjectPool.deleteStorableObjects | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("AdministrationStorableObjectPool.deleteStorableObjects", e);
-		}
-		catch (CommunicationException e) {
-			Log.errorMessage("AdministrationStorableObjectPool.deleteStorableObjects | CommunicationException: " + e.getMessage());
-			throw new CommunicationException("AdministrationStorableObjectPool.deleteStorableObjects", e);
-		}
+	protected void deleteStorableObjects(Collection objects) throws IllegalDataException {
+		aObjectLoader.delete(objects);
 	}
 
 	public static void serializePool() {

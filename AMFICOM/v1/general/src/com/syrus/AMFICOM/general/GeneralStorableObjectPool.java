@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.8 2005/02/11 18:40:16 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.9 2005/02/18 17:46:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/11 18:40:16 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/18 17:46:18 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -36,6 +36,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 
 	private GeneralStorableObjectPool() {
 		// singleton
+		super(ObjectGroupEntities.GENERAL_GROUP_CODE);
 	}
 
 	private GeneralStorableObjectPool(Class cacheMapClass) {
@@ -224,40 +225,20 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		instance.cleanChangedStorableObjectsImpl();
 	}
 
-	public static void delete(Identifier id) throws DatabaseException, CommunicationException {
+	public static void delete(Identifier id) {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	public static void delete(Collection objects) throws IllegalDataException {
 		instance.deleteImpl(objects);
 	}
 
-	protected void deleteStorableObject(Identifier id) throws DatabaseException, CommunicationException {
-		try {
-			gObjectLoader.delete(id);
-		}
-		catch (DatabaseException e) {
-			Log.errorMessage("GeneralStorableObjectPool.deleteStorableObject | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("GeneralStorableObjectPool.deleteStorableObject", e);
-		}
-		catch (CommunicationException e) {
-			Log.errorMessage("GeneralStorableObjectPool.deleteStorableObject | CommunicationException: " + e.getMessage());
-			throw new CommunicationException("GeneralStorableObjectPool.deleteStorableObject", e);
-		}
+	protected void deleteStorableObject(Identifier id) throws IllegalDataException {
+		gObjectLoader.delete(id);
 	}
 	
-	protected void deleteStorableObjects(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
-		try {
-			gObjectLoader.delete(objects);
-		}
-		catch (DatabaseException e) {
-			Log.errorMessage("GeneralStorableObjectPool.deleteStorableObjects | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("GeneralStorableObjectPool.deleteStorableObjects", e);
-		}
-		catch (CommunicationException e) {
-			Log.errorMessage("GeneralStorableObjectPool.deleteStorableObjects | CommunicationException: " + e.getMessage());
-			throw new CommunicationException("GeneralStorableObjectPool.deleteStorableObjects", e);
-		}
+	protected void deleteStorableObjects(Collection objects) throws IllegalDataException {
+		gObjectLoader.delete(objects);
 	}
 
 	public static void serializePool() {
