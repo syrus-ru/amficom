@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.42 2004/11/11 10:58:06 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.43 2004/11/12 07:45:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/11/11 10:58:06 $
+ * @version $Revision: 1.43 $, $Date: 2004/11/12 07:45:02 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -906,18 +906,26 @@ public abstract class StorableObjectDatabase {
 	
 	private String[] parseInsertStringValues(String insertValues, int columnCount){
 		int length = insertValues.length();
-		Pattern pattern = Pattern.compile("(('(''|[^'])*')|([^',\\s]+))\\s*(,|$)");
+		Pattern pattern = Pattern.compile("(('(''|[^'])*')|([^',\\s]+)|(\\w+\\([^)]+\\)))\\s*(,|$)");
 		Matcher matcher = pattern.matcher(insertValues);
 		String[] values = new String[columnCount];
 		int valueCounter = 0;
+		//Log.debugMessage("insertValue:\"" + insertValues + "\"", Log.DEBUGLEVEL08);
+		//Log.debugMessage("columnCount:" + columnCount, Log.DEBUGLEVEL08);
 		while (matcher.find()) {			
 			for (int i = 1; i <= matcher.groupCount(); i++) {
 				int start = matcher.start(i);
 				int end = matcher.end(i);				
 				if ((0 <= start) && (start < end) && (end <= length)) {					
-					if ((i == 2) || (i == 4)) {
-						values[valueCounter++] = insertValues.substring(matcher.start(i), matcher.end(i));
+					//Log.debugMessage(i + ">\tstart:" + start + "\tend:" + end + "\tlength:" + length, Log.DEBUGLEVEL08);
+					if ((0 <= start) && (start < end) && (end <= length)) {
+						//Log.debugMessage(i + ">\t\"" + insertValues.substring(matcher.start(i), matcher.end(i)) + '"', Log.DEBUGLEVEL08);
+						if ((i == 2) || (i == 4) || (i == 5)) {
+							values[valueCounter++] = insertValues.substring(matcher.start(i), matcher.end(i));
+						}
+
 					}
+
 
 				}
 			}			
