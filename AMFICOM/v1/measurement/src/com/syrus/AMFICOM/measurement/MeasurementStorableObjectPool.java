@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.29 2004/10/05 10:12:26 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.30 2004/10/05 10:24:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/10/05 10:12:26 $
+ * @version $Revision: 1.30 $, $Date: 2004/10/05 10:24:54 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -287,44 +287,7 @@ public class MeasurementStorableObjectPool {
 	}
 
 	public static List getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
-		List list = null;
-		LRUMap objectPool = (LRUMap) objectPoolMap.get(condition.getEntityCode());
-		if (objectPool != null) {
-			list = new LinkedList();
-			for (Iterator it = objectPool.iterator(); it.hasNext();) {
-				StorableObject storableObject = (StorableObject) it.next();
-				if (condition.isConditionTrue(storableObject))
-					list.add(storableObject);
-			}			
-			
-			List loadedList = null;
-			
-			if (useLoader){								
-				List idsList = new ArrayList(list.size());
-				for (Iterator iter = list.iterator(); iter.hasNext();) {
-					StorableObject storableObject = (StorableObject) iter.next();
-					idsList.add(storableObject.getId());					
-				}
-				
-				loadedList = loadStorableObjectsButIds(condition, idsList);
-			}
-			
-			for (Iterator it = list.iterator(); it.hasNext();) {
-				StorableObject storableObject = (StorableObject) it.next();
-				objectPool.get(storableObject);				
-			}
-			
-			if (loadedList!=null){
-				for (Iterator it = loadedList.iterator(); it.hasNext();) {
-					StorableObject storableObject = (StorableObject) it.next();
-					objectPool.put(storableObject.getId(), storableObject);
-					list.add(storableObject);
-				}
-			}
-
-		}
-
-		return list;
+		return getStorableObjectsByConditionButIds(null, condition, useLoader);
 	}
 
 	public static List getStorableObjectsByConditionButIds(List ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
@@ -334,7 +297,7 @@ public class MeasurementStorableObjectPool {
 			list = new LinkedList();
 			for (Iterator it = objectPool.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
-				if ((!ids.contains(storableObject.getId())) && (condition.isConditionTrue(storableObject)))
+				if (( ids == null || !ids.contains(storableObject.getId())) && (condition.isConditionTrue(storableObject)))
 					list.add(storableObject);
 			}			
 			
@@ -347,10 +310,11 @@ public class MeasurementStorableObjectPool {
 					idsList.add(storableObject.getId());					
 				}
 				
-				for (Iterator iter = ids.iterator(); iter.hasNext();) {
-					Identifier id = (Identifier) iter.next();
-					if (!idsList.contains(id))
-						idsList.add(ids);					
+				if (ids != null){
+					for (Iterator iter = ids.iterator(); iter.hasNext();) {
+						Identifier id = (Identifier) iter.next();
+						idsList.add(id);					
+					}
 				}
 				
 				loadedList = loadStorableObjectsButIds(condition, idsList);

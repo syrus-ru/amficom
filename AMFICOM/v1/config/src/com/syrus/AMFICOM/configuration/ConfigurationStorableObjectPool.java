@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.17 2004/10/05 10:12:30 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.18 2004/10/05 10:24:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/10/05 10:12:30 $
+ * @version $Revision: 1.18 $, $Date: 2004/10/05 10:24:49 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -408,113 +408,57 @@ public class ConfigurationStorableObjectPool {
 		return storableObject;
 	}
     
-    private static List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
-        List storableObjects;
-        switch (entityCode.shortValue()) {
-            case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-                storableObjects = cObjectLoader.loadCharacteristicTypes(ids);
-                break;
-            case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-                storableObjects = cObjectLoader.loadEquipmentTypes(ids);
-                break;
-            case ObjectEntities.PORTTYPE_ENTITY_CODE:
-                storableObjects = cObjectLoader.loadPortTypes(ids);
-                break;
-            case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-                storableObjects = cObjectLoader.loadMeasurementPortTypes(ids);
-                break;
-            case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-                storableObjects = cObjectLoader.loadCharacteristics(ids);
-                break;
-            case ObjectEntities.USER_ENTITY_CODE:
-                storableObjects = cObjectLoader.loadUsers(ids);
-                break;
-            case ObjectEntities.DOMAIN_ENTITY_CODE:
-                storableObjects = cObjectLoader.loadDomains(ids);
-                break;
-            case ObjectEntities.SERVER_ENTITY_CODE:
-                storableObjects = cObjectLoader.loadServers(ids);
-                break;
-            case ObjectEntities.MCM_ENTITY_CODE:
-                storableObjects = cObjectLoader.loadMCMs(ids);
-                break;
-            case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-                storableObjects = cObjectLoader.loadEquipments(ids);
-                break;
-            case ObjectEntities.PORT_ENTITY_CODE:
-                storableObjects = cObjectLoader.loadPorts(ids);
-                break;
-            case ObjectEntities.KIS_ENTITY_CODE:
-                storableObjects = cObjectLoader.loadKISs(ids);
-                break;
-            case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-                storableObjects = cObjectLoader.loadMeasurementPorts(ids);
-                break;
-            case ObjectEntities.ME_ENTITY_CODE:
-                storableObjects = cObjectLoader.loadMonitoredElements(ids);
-                break;
-            default:
-                Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjects | Unknown entityCode : " + entityCode);
-                storableObjects = null;
-        }
-        return storableObjects;
-    }
-
-	private static List loadStorableObjectsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
-		CommunicationException {
-		List loadedList = null;
-		short entityCode = condition.getEntityCode().shortValue();
-		switch (entityCode) {
-	        case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadCharacteristicTypesButIds(condition, ids);
-	            break;
-	        case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadEquipmentTypesButIds(condition, ids);
-	            break;
-	        case ObjectEntities.PORTTYPE_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadPortTypesButIds(condition, ids);
-	            break;
-	        case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadMeasurementPortTypesButIds(condition, ids);
-	            break;
-	        case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadCharacteristicsButIds(condition, ids);
-	            break;
-	        case ObjectEntities.USER_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadUsersButIds(condition, ids);
-	            break;
-	        case ObjectEntities.DOMAIN_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadDomainsButIds(condition, ids);
-	            break;
-	        case ObjectEntities.SERVER_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadServersButIds(condition, ids);
-	            break;
-	        case ObjectEntities.MCM_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadMCMsButIds(condition, ids);
-	            break;
-	        case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadEquipmentsButIds(condition, ids);
-	            break;
-	        case ObjectEntities.PORT_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadPortsButIds(condition, ids);
-	            break;
-	        case ObjectEntities.KIS_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadKISsButIds(condition, ids);
-	            break;
-	        case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadMeasurementPortsButIds(condition, ids);
-	            break;
-	        case ObjectEntities.ME_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadMonitoredElementsButIds(condition, ids);
-	            break;
-			default:
-				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjectsButIds | Unknown entity: "
-						+ ObjectEntities.codeToString(entityCode));
-				loadedList = null;
-		}		
-		return loadedList;
+	public static List getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
+		return getStorableObjectsByConditionButIds(null, condition, useLoader);
 	}
 
+	public static List getStorableObjectsByConditionButIds(List ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
+		List list = null;
+		LRUMap objectPool = (LRUMap) objectPoolMap.get(condition.getEntityCode());
+		if (objectPool != null) {
+			list = new LinkedList();
+			for (Iterator it = objectPool.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();
+				if (( ids == null || !ids.contains(storableObject.getId())) && (condition.isConditionTrue(storableObject)))
+					list.add(storableObject);
+			}			
+			
+			List loadedList = null;
+			
+			if (useLoader){								
+				List idsList = new ArrayList(list.size());
+				for (Iterator iter = list.iterator(); iter.hasNext();) {
+					StorableObject storableObject = (StorableObject) iter.next();
+					idsList.add(storableObject.getId());					
+				}
+				
+				if (ids != null){
+					for (Iterator iter = ids.iterator(); iter.hasNext();) {
+						Identifier id = (Identifier) iter.next();
+						idsList.add(id);					
+					}
+				}
+				
+				loadedList = loadStorableObjectsButIds(condition, idsList);
+			}
+			
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();
+				objectPool.get(storableObject);				
+			}
+			
+			if (loadedList!=null){
+				for (Iterator it = loadedList.iterator(); it.hasNext();) {
+					StorableObject storableObject = (StorableObject) it.next();
+					objectPool.put(storableObject.getId(), storableObject);
+					list.add(storableObject);
+				}
+			}
+
+		}
+
+		return list;
+	}
     
 	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {		
 		Identifier objectId = storableObject.getId();
