@@ -11,8 +11,15 @@ CONNECTSTRING=mongol
 LIBNAME=measurement.jar
 ARCHFILE=measurement.tar.gz
 
+include ../tools/Makefile.inc
+$(call checkenve,JAVA_HOME)
+$(call checkenve,ORACLE_HOME)
+$(call checkenve,IDL2JAVA)
+
+
 ORACLECLASSPATH = $(ORACLE_HOME)/jdbc/lib/classes12.jar:$(ORACLE_HOME)/sqlj/lib/translator.jar:$(ORACLE_HOME)/sqlj/lib/runtime12ee.jar
 APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar
+
 
 IDL2JAVA = idl2java
 IDL2JAVA_FLAGS = \
@@ -45,7 +52,7 @@ JAVAC_FLAGS = \
 	-O \
 	-deprecation
 JAVAC_FLAGS := $(JAVAC_FLAGS) $(JIKES_FLAGS)
-JAVAC_WARNOFF_FLAG=-nowarn
+JAVAC_WARNOFF_FLAG=
 
 JPUB = $(ORACLE_HOME)/bin/jpub
 JPUB_FLAGS = \
@@ -57,9 +64,6 @@ JPUB_FLAGS = \
 	-dir=$(SRCDIR) \
 	-usertypes=oracle \
 	-methods=all
-
-JAR=jar-3.3.1
-
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
@@ -153,3 +157,7 @@ arch:
 		Makefile \
 		$(IDLDIR)/measurement.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/*.java
+		
+.PHONY: pmd
+pmd:
+	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/measurement text $(PMD_RULES) 
