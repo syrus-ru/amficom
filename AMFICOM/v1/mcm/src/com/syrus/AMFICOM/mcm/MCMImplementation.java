@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.21 2004/12/23 12:31:04 bob Exp $
+ * $Id: MCMImplementation.java,v 1.22 2005/02/08 12:54:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,18 +13,23 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_TransferablePackage.StorableObjectConditionSort;
 import com.syrus.AMFICOM.mcm.corba.MCMPOA;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
@@ -40,16 +45,39 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/12/23 12:31:04 $
+ * @version $Revision: 1.22 $, $Date: 2005/02/08 12:54:46 $
  * @author $Author: bob $
  * @module mcm_v1
  */
 
 public class MCMImplementation extends MCMPOA {
 
-	public MCMImplementation() {
-	}
+	protected StorableObjectCondition restoreCondition(StorableObjectCondition_Transferable transferable)
+			throws IllegalDataException {
+		StorableObjectCondition condition = null;
+		switch (transferable.discriminator().value()) {
+			case StorableObjectConditionSort._COMPOUND:
+				condition = new CompoundCondition(transferable.compoundCondition());
+				break;
+			case StorableObjectConditionSort._LINKED_IDS:
+				condition = new LinkedIdsCondition(transferable.linkedIdsCondition());
+				break;
+			case StorableObjectConditionSort._TYPICAL:
+				condition = new TypicalCondition(transferable.typicalCondition());
+				break;
+			case StorableObjectConditionSort._EQUIVALENT:
+				condition = new EquivalentCondition(transferable.equialentCondition());
+				break;
+			default:
+				String msg = "CMGeneralReceive.restoreCondition | condition class " + transferable.getClass().getName()
+						+ " is not suppoted";
+				Log.errorMessage(msg);
+				throw new IllegalDataException(msg);
 
+		}
+		return condition;
+	}
+	
 	public void receiveTests(Test_Transferable[] testsT) throws AMFICOMRemoteException {
 		try{
 			Log.debugMessage("Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
@@ -125,26 +153,27 @@ public class MCMImplementation extends MCMPOA {
         }
 	}
 
-	public Measurement_Transferable[] transmitMeasurementsButIds(
-            LinkedIdsCondition_Transferable linkedIdsCondition_Transferable,
-            Identifier_Transferable[] identifier_Transferables) throws AMFICOMRemoteException {
-        try {            
-            List list;
-            if (identifier_Transferables.length > 0) {
-                List idsList = new ArrayList(identifier_Transferables.length);
-                for (int i = 0; i < identifier_Transferables.length; i++)
-                    idsList.add(new Identifier(identifier_Transferables[i]));
-                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
-            } else 
-                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
+	public Measurement_Transferable[] transmitMeasurementsButIds(	StorableObjectCondition_Transferable storableObjectCondition_Transferable,
+																	Identifier_Transferable[] identifier_Transferables)
+			throws AMFICOMRemoteException {
+		try {
+			List list;
+			StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
+			if (identifier_Transferables.length > 0) {
+				List idsList = new ArrayList(identifier_Transferables.length);
+				for (int i = 0; i < identifier_Transferables.length; i++)
+					idsList.add(new Identifier(identifier_Transferables[i]));
+				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+			} else
+				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-            Measurement_Transferable[] transferables = new Measurement_Transferable[list.size()];
-            int i = 0;
-            for (Iterator it = list.iterator(); it.hasNext(); i++) {
-                Measurement measurement = (Measurement) it.next();
-                transferables[i] = (Measurement_Transferable) measurement.getTransferable();
-            }
-            return transferables;
+			Measurement_Transferable[] transferables = new Measurement_Transferable[list.size()];
+			int i = 0;
+			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+				Measurement measurement = (Measurement) it.next();
+				transferables[i] = (Measurement_Transferable) measurement.getTransferable();
+			}
+			return transferables;
 
         } catch (RetrieveObjectException roe) {
             Log.errorException(roe);
@@ -184,18 +213,19 @@ public class MCMImplementation extends MCMPOA {
 	}
 	    
     public Analysis_Transferable[] transmitAnalysesButIds(
-            LinkedIdsCondition_Transferable linkedIdsCondition_Transferable,
+	        StorableObjectCondition_Transferable storableObjectCondition_Transferable,
             Identifier_Transferable[] identifier_Transferables) throws AMFICOMRemoteException {
                
         try {            
             List list;
+            StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
             if (identifier_Transferables.length > 0) {
                 List idsList = new ArrayList(identifier_Transferables.length);
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
-                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
             } else 
-                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
             Analysis_Transferable[] transferables = new Analysis_Transferable[list.size()];
             int i = 0;
@@ -247,17 +277,18 @@ public class MCMImplementation extends MCMPOA {
 	}
     
     public Evaluation_Transferable[] transmitEvaluationsButIds(
-            LinkedIdsCondition_Transferable linkedIdsCondition_Transferable,
+            StorableObjectCondition_Transferable storableObjectCondition_Transferable,
             Identifier_Transferable[] identifier_Transferables) throws AMFICOMRemoteException {
         try {            
             List list;
+            StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
             if (identifier_Transferables.length > 0) {
                 List idsList = new ArrayList(identifier_Transferables.length);
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
-                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
             } else 
-                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(linkedIdsCondition_Transferable), true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
             Evaluation_Transferable[] transferables = new Evaluation_Transferable[list.size()];
             int i = 0;
