@@ -270,6 +270,16 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		return 10000.;
 	}
 
+	protected double getTrueScaleX()
+	{
+		return scaleX;
+	}
+
+	protected double getTrueScaleY()
+	{
+		return -scaleY;
+	}
+
 	protected int coord2index(int coord)
 	{
 		return (int)(coord / scaleX + .5) + start;

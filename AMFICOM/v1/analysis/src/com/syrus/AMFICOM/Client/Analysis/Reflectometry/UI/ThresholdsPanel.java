@@ -134,10 +134,10 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		}
 		if (c_TH != null)
 		{
-			upd_currpos(e);
+			upd_currpos(e); // теперь tmppos - предыдущее положение, а  currpos - новое
 			c_TH.moveBy(
-				(int )((tmppos.x - currpos.x) / scaleX),
-				(tmppos.y - currpos.y) / scaleY);
+				(currpos.x - tmppos.x) / getTrueScaleX(),
+				(currpos.y - tmppos.y) / getTrueScaleY());
 
 			parent.repaint();
 
