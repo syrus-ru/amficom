@@ -114,13 +114,13 @@ public class PredictionMenuBar extends JMenuBar
 		menuViewDataLoad.setName("menuViewDataLoad");
 		menuViewDataLoad.addActionListener(actionAdapter);
 
-		menuTraceAddCompare.setText(LangModelAnalyse.Text("menuTraceAddCompare"));
+		menuTraceAddCompare.setText(LangModelAnalyse.getString("menuTraceAddCompare"));
 		menuTraceAddCompare.setName("menuTraceAddCompare");
 		menuTraceAddCompare.addActionListener(actionAdapter);
-		menuTraceRemoveCompare.setText(LangModelAnalyse.Text("menuTraceRemoveCompare"));
+		menuTraceRemoveCompare.setText(LangModelAnalyse.getString("menuTraceRemoveCompare"));
 		menuTraceRemoveCompare.setName("menuTraceRemoveCompare");
 		menuTraceRemoveCompare.addActionListener(actionAdapter);
-		menuTraceClose.setText(LangModelAnalyse.Text("menuFileClose"));
+		menuTraceClose.setText(LangModelAnalyse.getString("menuFileClose"));
 		menuTraceClose.setName("menuTraceClose");
 		menuTraceClose.addActionListener(actionAdapter);
 
@@ -132,9 +132,9 @@ public class PredictionMenuBar extends JMenuBar
 		menuViewSavePrediction.setName("menuViewSavePrediction");
 		menuViewSavePrediction.addActionListener(actionAdapter);
 
-		menuReport.setText(LangModelAnalyse.Text("menuReport"));
+		menuReport.setText(LangModelAnalyse.getString("menuReport"));
 		menuReport.setName("menuReport");
-		menuReportCreate.setText(LangModelAnalyse.Text("menuReportCreate"));
+		menuReportCreate.setText(LangModelAnalyse.getString("menuReportCreate"));
 		menuReportCreate.setName("menuReportCreate");
 		menuReportCreate.addActionListener(actionAdapter);
 		menuReport.add(menuReportCreate);

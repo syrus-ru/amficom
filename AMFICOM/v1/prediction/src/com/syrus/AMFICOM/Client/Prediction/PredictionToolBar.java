@@ -84,13 +84,13 @@ public class PredictionToolBar extends JToolBar implements ApplicationModelListe
 		traceAddCompare.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/download_add.gif")));
 		traceAddCompare.setMaximumSize(buttonSize);
 		traceAddCompare.setPreferredSize(buttonSize);
-		traceAddCompare.setToolTipText(LangModelAnalyse.ToolTip("menuTraceAddCompare"));
+		traceAddCompare.setToolTipText(LangModelAnalyse.getString("menuTraceAddCompare"));
 		traceAddCompare.setName("menuTraceAddCompare");
 		traceAddCompare.addActionListener(actionAdapter);
 		traceRemoveCompare.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/download_remove.gif")));
 		traceRemoveCompare.setMaximumSize(buttonSize);
 		traceRemoveCompare.setPreferredSize(buttonSize);
-		traceRemoveCompare.setToolTipText(LangModelAnalyse.ToolTip("menuTraceRemoveCompare"));
+		traceRemoveCompare.setToolTipText(LangModelAnalyse.getString("menuTraceRemoveCompare"));
 		traceRemoveCompare.setName("menuTraceRemoveCompare");
 		traceRemoveCompare.addActionListener(actionAdapter);
 

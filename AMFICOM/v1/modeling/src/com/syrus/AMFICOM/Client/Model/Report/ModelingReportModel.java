@@ -43,7 +43,7 @@ public class ModelingReportModel extends ESAPEReportModel
 			if (field.equals(ESAPEReportModel.model_params))
 				strToReturn = LangModelModel.getString(field);
 			else
-				strToReturn = LangModelAnalyse.String(field);
+				strToReturn = LangModelAnalyse.getString(field);
 		}
 		catch(Exception exc)
 		{

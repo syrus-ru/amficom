@@ -97,35 +97,35 @@ public class ModelMainToolBar extends JToolBar implements ApplicationModelListen
 		traceAddCompare.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/download_add.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		traceAddCompare.setMaximumSize(buttonSize);
 		traceAddCompare.setPreferredSize(buttonSize);
-		traceAddCompare.setToolTipText(LangModelAnalyse.ToolTip("menuTraceAddCompare"));
+		traceAddCompare.setToolTipText(LangModelAnalyse.getString("menuTraceAddCompare"));
 		traceAddCompare.setName("menuTraceAddCompare");
 		traceAddCompare.addActionListener(actionAdapter);
 
 		traceRemoveCompare.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/download_remove.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		traceRemoveCompare.setMaximumSize(buttonSize);
 		traceRemoveCompare.setPreferredSize(buttonSize);
-		traceRemoveCompare.setToolTipText(LangModelAnalyse.ToolTip("menuTraceRemoveCompare"));
+		traceRemoveCompare.setToolTipText(LangModelAnalyse.getString("menuTraceRemoveCompare"));
 		traceRemoveCompare.setName("menuTraceRemoveCompare");
 		traceRemoveCompare.addActionListener(actionAdapter);
 
 		buttonFileOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openfile.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		buttonFileOpen.setMaximumSize(buttonSize);
 		buttonFileOpen.setPreferredSize(buttonSize);
-		buttonFileOpen.setToolTipText(LangModelAnalyse.ToolTip("menuFileOpen"));
+		buttonFileOpen.setToolTipText(LangModelAnalyse.getString("menuFileOpen"));
 		buttonFileOpen.setName("menuFileOpen");
 		buttonFileOpen.addActionListener(actionAdapter);
 
 		fileAdd.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addfile.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		fileAdd.setMaximumSize(buttonSize);
 		fileAdd.setPreferredSize(buttonSize);
-		fileAdd.setToolTipText(LangModelAnalyse.ToolTip("menuFileAddCompare"));
+		fileAdd.setToolTipText(LangModelAnalyse.getString("menuFileAddCompare"));
 		fileAdd.setName("menuFileAddCompare");
 		fileAdd.addActionListener(actionAdapter);
 
 		fileRemove.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefile.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		fileRemove.setMaximumSize(buttonSize);
 		fileRemove.setPreferredSize(buttonSize);
-		fileRemove.setToolTipText(LangModelAnalyse.ToolTip("menuFileRemoveCompare"));
+		fileRemove.setToolTipText(LangModelAnalyse.getString("menuFileRemoveCompare"));
 		fileRemove.setName("menuFileRemoveCompare");
 		fileRemove.addActionListener(actionAdapter);
 

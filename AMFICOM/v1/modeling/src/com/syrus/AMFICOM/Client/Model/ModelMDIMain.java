@@ -162,10 +162,10 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		{
 			public String getReportTitle()
 			{
-				return LangModelAnalyse.String("analysisTitle");
+				return LangModelAnalyse.getString("analysisTitle");
 			}
 		};
-		analysisFrame.setTitle(LangModelAnalyse.String("analysisTitle"));
+		analysisFrame.setTitle(LangModelAnalyse.getString("analysisTitle"));
 		graphs.add(analysisFrame);
 		desktopPane.add(analysisFrame);
 

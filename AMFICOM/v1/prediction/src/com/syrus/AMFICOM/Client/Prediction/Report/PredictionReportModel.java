@@ -49,7 +49,7 @@ public class PredictionReportModel extends ESAPEReportModel
 				|| field.equals(ESAPEReportModel.pred_time_distrib))
 				strToReturn = LangModelPrediction.getString(field);
 			else
-				strToReturn = LangModelAnalyse.String(field);
+				strToReturn = LangModelAnalyse.getString(field);
 		}
 		catch(Exception exc)
 		{
