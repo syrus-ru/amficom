@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.61 2004/12/06 09:55:57 bass Exp $
+ * $Id: configuration.idl,v 1.62 2004/12/07 09:51:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -480,26 +480,6 @@ module corba {
 			com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 			com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable linked_ids;		
 	};
-
-	enum StringFieldSort {
-		STRINGSORT_BASE,
-		STRINGSORT_USERNAME,
-		STRINGSORT_USERLOGIN,
-		STRINGSORT_INTEGER
-	};
-
-	/**
-	 * If {@link #sort} is {@link StringFieldSort#STRINGSORT_INTEGER}, then
-	 * {@link #field_string}'s value is interpreted as an integer rather than
-	 * a string. Mapping of this value to the specific column in a table
-	 * is entity-specific (i. e. depends on {@link #entity_code}).
-	 */
-	struct StringFieldCondition_Transferable {	
-			short	entity_code;
-			wstring field_string;
-			StringFieldSort sort;
-	};
-
 };
 };
 };

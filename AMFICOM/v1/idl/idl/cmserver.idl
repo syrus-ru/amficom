@@ -703,7 +703,7 @@ module corba {
 		com::syrus::AMFICOM::configuration::corba::UserSeq_Transferable transmitUsersButIdsCondition(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
-			in com::syrus::AMFICOM::configuration::corba::StringFieldCondition_Transferable stringFieldCondition)
+			in com::syrus::AMFICOM::general::corba::StringFieldCondition_Transferable stringFieldCondition)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);		
 		
 	
@@ -830,7 +830,7 @@ module corba {
 		com::syrus::AMFICOM::measurement::corba::MeasurementTypeSeq_Transferable transmitMeasurementTypesButIdsStringFieldCondition(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
-			in com::syrus::AMFICOM::configuration::corba::StringFieldCondition_Transferable stringFieldCondition_Transferable)
+			in com::syrus::AMFICOM::general::corba::StringFieldCondition_Transferable stringFieldCondition_Transferable)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 			
 		com::syrus::AMFICOM::measurement::corba::ParameterTypeSeq_Transferable transmitParameterTypes(
@@ -846,7 +846,7 @@ module corba {
 		com::syrus::AMFICOM::measurement::corba::ParameterTypeSeq_Transferable transmitParameterTypesButIdsCondition(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
-			in com::syrus::AMFICOM::configuration::corba::StringFieldCondition_Transferable stringFieldCondition_Transferable)
+			in com::syrus::AMFICOM::general::corba::StringFieldCondition_Transferable stringFieldCondition_Transferable)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 
 		com::syrus::AMFICOM::measurement::corba::AnalysisSeq_Transferable transmitAnalyses(
