@@ -20,4 +20,9 @@ public class LangModelSchematics extends LangModel
 	{
 		symbols = new DateFormatSymbols(locale);
 	}
+
+	protected static String getBundleName()
+	{
+		return BUNDLE_NAME;
+	}
 }

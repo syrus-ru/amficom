@@ -34,7 +34,7 @@ public class LangModel {
 	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.Client.General.Lang.generalclient";
 
 	private static final ResourceBundle	RESOURCE_BUNDLE		= ResourceBundle
-																	.getBundle(BUNDLE_NAME);
+																	.getBundle(getBundleName());
 
 
 	public LangModel() {
@@ -149,5 +149,10 @@ public class LangModel {
 	 */
 	public static String ToolTip(String componentName) {
 		return getComponentToolTip(lang, componentName);
+	}
+
+	protected static String getBundleName()
+	{
+		return BUNDLE_NAME;
 	}
 }
