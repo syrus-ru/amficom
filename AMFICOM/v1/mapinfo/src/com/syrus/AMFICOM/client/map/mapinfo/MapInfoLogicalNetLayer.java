@@ -21,6 +21,7 @@ import com.mapinfo.dp.FeatureSet;
 import com.mapinfo.dp.QueryParams;
 import com.mapinfo.mapj.FeatureLayer;
 import com.mapinfo.mapj.LayerType;
+import com.mapinfo.mapj.MapJ;
 import com.mapinfo.util.DoubleRect;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
@@ -57,7 +58,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	{
 		if((width > 0) && (height > 0))
 		{
-			this.nmViewer.localMapJ.setDeviceBounds(new DoubleRect(
+			getLocalMapJ().setDeviceBounds(new DoubleRect(
 					0,
 					0,
 					width,
@@ -77,8 +78,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 			com.mapinfo.util.DoublePoint mapdp = new com.mapinfo.util.DoublePoint(
 					point.getX(),
 					point.getY());
-			com.mapinfo.util.DoublePoint screendp = this.nmViewer.localMapJ
-					.transformNumericToScreen(mapdp);
+			com.mapinfo.util.DoublePoint screendp =
+				getLocalMapJ().transformNumericToScreen(mapdp);
 			return new Point((int )screendp.x, (int )screendp.y);
 		}
 		catch(Exception exc)
@@ -99,8 +100,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 			com.mapinfo.util.DoublePoint screendp = new com.mapinfo.util.DoublePoint(
 					point.x,
 					point.y);
-			com.mapinfo.util.DoublePoint mapdp = this.nmViewer.localMapJ
-					.transformScreenToNumeric(screendp);
+			com.mapinfo.util.DoublePoint mapdp = 
+				getLocalMapJ().transformScreenToNumeric(screendp);
 			return new DoublePoint(mapdp.x, mapdp.y);
 		}
 		catch(Exception e)
@@ -147,7 +148,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	{
 		try
 		{
-			return this.nmViewer.localMapJ.sphericalDistance(
+			return getLocalMapJ().sphericalDistance(
 					new com.mapinfo.util.DoublePoint(from.getX(), from.getY()),
 					new com.mapinfo.util.DoublePoint(to.getX(), to.getY()));
 		}
@@ -165,7 +166,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	{
 		try
 		{
-			this.nmViewer.localMapJ.setCenter(new com.mapinfo.util.DoublePoint(
+			getLocalMapJ().setCenter(new com.mapinfo.util.DoublePoint(
 					center.getX(),
 					center.getY()));
 		}
@@ -184,7 +185,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		com.mapinfo.util.DoublePoint center = null;
 		try
 		{
-			center = this.nmViewer.localMapJ.getCenter();
+			center = getLocalMapJ().getCenter();
 			return new DoublePoint(center.x, center.y);
 		}
 		catch(Exception exc)
@@ -199,7 +200,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	{
 		try
 		{
-			DoubleRect rect = this.nmViewer.localMapJ.getBounds();
+			DoubleRect rect = getLocalMapJ().getBounds();
 			Rectangle2D.Double vb = new Rectangle2D.Double(
 					rect.xmin,
 					rect.ymin,
@@ -229,7 +230,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	{
 		if(fullRepaint)
 		{
-			String url = ((MapInfoNetMapViewer )this.viewer).mapperServletURL;
+			String url = ((MapInfoNetMapViewer )this.viewer).getConnection().getURL();
 			url += this.getMapMainParamString();
 
 			try
@@ -319,7 +320,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		double currentZoom = 0.0D;
 		try
 		{
-			currentZoom = this.nmViewer.localMapJ.getZoom();
+			currentZoom = getLocalMapJ().getZoom();
 		}
 		catch(Exception exc)
 		{
@@ -336,7 +337,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	{
 		try
 		{
-			this.nmViewer.localMapJ.setZoom(z);
+			getLocalMapJ().setZoom(z);
 			updateZoom();
 		}
 		catch(Exception exc)
@@ -381,8 +382,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		// to.getX() + ", " + to.getY() + ")");
 		try
 		{
-			this.nmViewer.localMapJ.setBounds(new DoubleRect(from.getX(), from
-					.getY(), to.getX(), to.getY()));
+			getLocalMapJ().setBounds(new DoubleRect(from.getX(), from.getY(),
+					to.getX(), to.getY()));
 
 			updateZoom();
 		}
@@ -419,7 +420,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	public List findSpatialObjects(String searchText)
 	{
 		List resultList = new ArrayList();
-		Iterator layersIt = this.nmViewer.localMapJ.getLayers().iterator(
+		Iterator layersIt = getLocalMapJ().getLayers().iterator(
 				LayerType.FEATURE);
 		for(; layersIt.hasNext();)
 		{
@@ -515,5 +516,13 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		}
 
 		return result;
+	}
+	
+	public MapJ getLocalMapJ()
+	{
+		MapInfoConnection miConnection = 
+			(MapInfoConnection)this.nmViewer.getConnection();
+		
+		return miConnection.getLocalMapJ();
 	}
 }

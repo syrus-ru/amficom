@@ -8,6 +8,9 @@ import java.awt.event.ComponentEvent;
 
 import javax.swing.JPanel;
 
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
+
 public class MapImagePanel extends JPanel
 {
 	private Image mapImage;
@@ -51,11 +54,23 @@ public class MapImagePanel extends JPanel
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
+		
 		if(this.mapImage != null && g != null)
 			g.drawImage(this.mapImage, 0, 0, this);
 
 		if(this.layerToPaint != null)
-			this.layerToPaint.paint(g);
+			try
+			{
+				this.layerToPaint.paint(g);
+			} catch (MapConnectionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MapDataException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
 	public void repaint(Graphics g, int shiftX, int shiftY)
