@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractNode.java,v 1.7 2005/01/25 13:13:51 bob Exp $
+ * $Id: AbstractNode.java,v 1.8 2005/01/27 06:24:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/01/25 13:13:51 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/27 06:24:04 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -149,11 +149,11 @@ public abstract class AbstractNode
 		return this.location.getX();
 	}
 	
-	protected void setLongitude0(double longitude) {
+	protected void setLongitude(double longitude) {
 		this.location.setLocation(longitude, this.location.getY());
 	}
 
-	protected void setLatitude0(double longitude) {
+	protected void setLatitude(double longitude) {
 		this.location.setLocation(longitude, this.location.getY());
 	}
 

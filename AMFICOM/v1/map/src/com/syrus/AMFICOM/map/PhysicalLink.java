@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLink.java,v 1.19 2005/01/25 14:36:58 bob Exp $
+ * $Id: PhysicalLink.java,v 1.20 2005/01/27 06:24:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/01/25 14:36:58 $
+ * @version $Revision: 1.20 $, $Date: 2005/01/27 06:24:04 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -437,8 +437,9 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return this.name;
 	}
 	
-	protected void setPhysicalLinkType0(PhysicalLinkType physicalLinkType) {
+	public void setPhysicalLinkType(PhysicalLinkType physicalLinkType) {
 		this.physicalLinkType = physicalLinkType;
+		super.currentVersion = super.getNextVersion();
 	}
 	
 	protected void setName0(String name) {
