@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.14 2005/03/21 09:05:10 bob Exp $
+ * $Id: TypicalCondition.java,v 1.15 2005/03/24 11:42:05 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -119,11 +119,13 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.14 $, $Date: 2005/03/21 09:05:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/03/24 11:42:05 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class TypicalCondition implements StorableObjectCondition {
+
+	protected static final String ENTITY_NOT_REGISTERED = "Entity not registered for this condition -- "; //$NON-NLS-1$
 
 	/**
 	 * Field is used by descendants only, and never directly.
@@ -287,7 +289,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
-					public boolean isConditionTrue(final Object object) throws ApplicationException {
+					public boolean isConditionTrue(final Object object) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 							Log.WARNING);
@@ -394,7 +396,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
-					public boolean isConditionTrue(final Object object) throws ApplicationException {
+					public boolean isConditionTrue(final Object object) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 							Log.WARNING);
@@ -501,7 +503,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
-					public boolean isConditionTrue(final Object object) throws ApplicationException {
+					public boolean isConditionTrue(final Object object) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 							Log.WARNING);
@@ -594,7 +596,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
-					public boolean isConditionTrue(final Object object) throws ApplicationException {
+					public boolean isConditionTrue(final Object object) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 							Log.WARNING);
@@ -703,7 +705,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
-					public boolean isConditionTrue(final Object object) throws ApplicationException {
+					public boolean isConditionTrue(final Object object) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 							Log.WARNING);
@@ -779,7 +781,7 @@ public class TypicalCondition implements StorableObjectCondition {
 					if (this.delegate == null) {
 						this.delegate = new TypicalCondition() {
 
-							public boolean isConditionTrue(final Object object) throws ApplicationException {
+							public boolean isConditionTrue(final Object object) {
 								Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 										+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 									Log.WARNING);
@@ -844,7 +846,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
-					public boolean isConditionTrue(final Object object) throws ApplicationException {
+					public boolean isConditionTrue(final Object object) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 							Log.WARNING);
@@ -861,10 +863,9 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * occur.
 	 * 
 	 * @param object
-	 * @throws ApplicationException
 	 * @see StorableObjectCondition#isConditionTrue(Object)
 	 */
-	public boolean isConditionTrue(final Object object) throws ApplicationException {
+	public boolean isConditionTrue(final Object object) throws IllegalObjectEntityException {
 		return this.delegate.isConditionTrue(object);
 	}
 
