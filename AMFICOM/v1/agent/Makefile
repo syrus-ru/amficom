@@ -33,7 +33,7 @@ clean:
 
 arch:
 	tar -czvf $(ARCHFILE) \
-		Makefile rc agent.properties general.properties \
+		Makefile rc agent.properties \
 		src \
 		$(TRANSCEIVER)/*.cpp $(TRANSCEIVER)/*.h $(TRANSCEIVER)/Makefile \
 		$(DADARA)/*.cpp $(DADARA)/*.cxx $(DADARA)/*.h $(DADARA)/Makefile $(DADARA)/architecture.net $(DADARA)/weights.wht
