@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.73 2005/03/29 11:31:03 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.74 2005/03/29 12:08:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/03/29 11:31:03 $
- * @author $Author: bob $
+ * @version $Revision: 1.74 $, $Date: 2005/03/29 12:08:55 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -174,6 +174,9 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
 				storableObject = mObjectLoader.loadEvaluationType(objectId);
 				break;
+			case ObjectEntities.MODELINGTYPE_ENTITY_CODE:
+				storableObject = mObjectLoader.loadModelingType(objectId);
+				break;
 			case ObjectEntities.SET_ENTITY_CODE:
 				storableObject = mObjectLoader.loadSet(objectId);
 				break;
@@ -269,6 +272,9 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 				break;
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
 				loadedCollection = mObjectLoader.loadEvaluationTypesButIds(condition, ids);
+				break;
+			case ObjectEntities.MODELINGTYPE_ENTITY_CODE:
+				loadedCollection = mObjectLoader.loadModelingTypesButIds(condition, ids);
 				break;
 			case ObjectEntities.SET_ENTITY_CODE:
 				loadedCollection = mObjectLoader.loadSetsButIds(condition, ids);
