@@ -53,6 +53,9 @@ AMFICOM_v1	&idl_v1\
 		&map_v1\
 		&survey_v1\
 		&analysis_v1\
+		&modeling_v1\
+		&prediction_v1\
+		&scheme_v1\
 		&filter_v1\
 		&reportbuilder_v1\
 		&server_v1\
