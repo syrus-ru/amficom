@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.60 2005/02/14 10:58:51 arseniy Exp $
+ * $Id: TemporalPattern.java,v 1.61 2005/02/28 08:24:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/02/14 10:58:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.61 $, $Date: 2005/02/28 08:24:26 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -1075,8 +1075,8 @@ public class TemporalPattern extends StorableObject {
 					&& HashCodeGenerator.equalsDate(this.modified, pattern.modified)
 					&& (this.modifierId.equals(pattern.modifierId))
 					&& (this.modifierId.equals(pattern.modifierId))
-					&& (HashCodeGenerator.equalsArray(pattern.getTimeLines().toArray(),
-										getTimeLines().toArray())))
+					&& (HashCodeGenerator.equalsArray(pattern.templates.toArray(),
+						this.templates.toArray())))
 				equals = true;
 		}
 		return equals;
@@ -1089,8 +1089,7 @@ public class TemporalPattern extends StorableObject {
 		hashCodeGenerator.addObject(this.creatorId);
 		hashCodeGenerator.addObject(this.modified);
 		hashCodeGenerator.addObject(this.modifierId);
-		hashCodeGenerator.addObjectArray(this.cronStrings);
-		hashCodeGenerator.addObject(this.getTimeLines());
+		hashCodeGenerator.addObject(this.templates);
 		int result = hashCodeGenerator.getResult();
 		hashCodeGenerator = null;
 		return result;
