@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.27 2004/10/01 10:24:50 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.28 2004/10/01 14:01:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/10/01 10:24:50 $
+ * @version $Revision: 1.28 $, $Date: 2004/10/01 14:01:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -306,7 +306,7 @@ public class MeasurementStorableObjectPool {
 					idsList.add(storableObject.getId());					
 				}
 				
-				loadedList = loadStorableObjectsButIds(condition.getEntityCode().shortValue(), idsList);
+				loadedList = loadStorableObjectsButIds(condition, idsList);
 			}
 			
 			for (Iterator it = list.iterator(); it.hasNext();) {
@@ -430,48 +430,49 @@ public class MeasurementStorableObjectPool {
 		return storableObjects;
 	}
 	
-	private static List loadStorableObjectsButIds(short entityCode, List ids) throws DatabaseException,
+	private static List loadStorableObjectsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 		CommunicationException {
 		List loadedList = null;
+		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				loadedList = mObjectLoader.loadParameterTypesButIds(ids);
+				loadedList = mObjectLoader.loadParameterTypesButIds(condition, ids);
 				break;
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-				loadedList = mObjectLoader.loadMeasurementTypesButIds(ids);
+				loadedList = mObjectLoader.loadMeasurementTypesButIds(condition, ids);
 				break;
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-				loadedList = mObjectLoader.loadAnalysisTypesButIds(ids);
+				loadedList = mObjectLoader.loadAnalysisTypesButIds(condition, ids);
 				break;
 			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-				loadedList = mObjectLoader.loadEvaluationTypesButIds(ids);
+				loadedList = mObjectLoader.loadEvaluationTypesButIds(condition, ids);
 				break;
 			case ObjectEntities.SET_ENTITY_CODE:
-				loadedList = mObjectLoader.loadSetsButIds(ids);
+				loadedList = mObjectLoader.loadSetsButIds(condition, ids);
 				break;
 			case ObjectEntities.MODELING_ENTITY_CODE:
-				loadedList = mObjectLoader.loadModelingsButIds(ids);
+				loadedList = mObjectLoader.loadModelingsButIds(condition, ids);
 				break;						
 			case ObjectEntities.MS_ENTITY_CODE:
-				loadedList = mObjectLoader.loadMeasurementSetupsButIds(ids);
+				loadedList = mObjectLoader.loadMeasurementSetupsButIds(condition, ids);
 				break;
 			case ObjectEntities.ANALYSIS_ENTITY_CODE:
-				loadedList = mObjectLoader.loadAnalysesButIds(ids);
+				loadedList = mObjectLoader.loadAnalysesButIds(condition, ids);
 				break;
 			case ObjectEntities.EVALUATION_ENTITY_CODE:
-				loadedList = mObjectLoader.loadEvaluationsButIds(ids);
+				loadedList = mObjectLoader.loadEvaluationsButIds(condition, ids);
 				break;
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				loadedList = mObjectLoader.loadMeasurementsButIds(ids);
+				loadedList = mObjectLoader.loadMeasurementsButIds(condition, ids);
 				break;
 			case ObjectEntities.TEST_ENTITY_CODE:
-				loadedList = mObjectLoader.loadTestsButIds(ids);
+				loadedList = mObjectLoader.loadTestsButIds(condition, ids);
 				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
-				loadedList = mObjectLoader.loadResultsButIds(ids);
+				loadedList = mObjectLoader.loadResultsButIds(condition, ids);
 				break;
 			case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-				loadedList = mObjectLoader.loadTemporalPatternsButIds(ids);
+				loadedList = mObjectLoader.loadTemporalPatternsButIds(condition, ids);
 				break;
 			default:
 				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObjectsButIds | Unknown entity: "

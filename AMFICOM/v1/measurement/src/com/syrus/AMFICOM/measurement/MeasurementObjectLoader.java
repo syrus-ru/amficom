@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.9 2004/10/01 08:15:12 bob Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.10 2004/10/01 14:01:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,10 +13,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/10/01 08:15:12 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/01 14:01:15 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -77,31 +78,31 @@ public interface MeasurementObjectLoader {
 	
 	/* Load Measurement StorableObject but argument ids */
 	
-	List loadParameterTypesButIds(List ids) throws DatabaseException, CommunicationException;
+	List loadParameterTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	List loadMeasurementTypesButIds(List ids) throws DatabaseException, CommunicationException;
+	List loadMeasurementTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	List loadAnalysisTypesButIds(List ids) throws DatabaseException, CommunicationException;
+	List loadAnalysisTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	List loadEvaluationTypesButIds(List ids) throws DatabaseException, CommunicationException;
+	List loadEvaluationTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	List loadSetsButIds(List ids) throws DatabaseException, CommunicationException;
+	List loadSetsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 	
-	List loadModelingsButIds(List ids) throws DatabaseException, CommunicationException;
+	List loadModelingsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	List loadMeasurementSetupsButIds(List ids) throws DatabaseException, CommunicationException;
+	List loadMeasurementSetupsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	List loadMeasurementsButIds(List ids) throws DatabaseException, CommunicationException;
+	List loadMeasurementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	List loadAnalysesButIds(List ids) throws DatabaseException, CommunicationException;
+	List loadAnalysesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	List loadEvaluationsButIds(List ids) throws DatabaseException, CommunicationException;
+	List loadEvaluationsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	List loadTestsButIds(List ids) throws DatabaseException, CommunicationException;
+	List loadTestsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	List loadResultsButIds(List ids) throws DatabaseException, CommunicationException;
+	List loadResultsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	List loadTemporalPatternsButIds(List ids) throws DatabaseException, CommunicationException;
+	List loadTemporalPatternsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 	
 	public void saveParameterType(ParameterType parameterType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
