@@ -15,6 +15,9 @@ import com.syrus.AMFICOM.Client.Survey.Report.AlarmReportModel;
 import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
 import com.syrus.AMFICOM.CORBA.General.AlarmStatus;
 
+import com.syrus.AMFICOM.filter.FilterExpressionInterface;
+import com.syrus.AMFICOM.filter.FilterExpressionBase;
+
 import java.util.Vector;
 import java.util.Enumeration;
 
@@ -44,7 +47,7 @@ public class AlarmFilter extends ObjectResourceFilter
 			this.filterColumns.add("Monitored_element");
 			this.filterColumns.add("Event_type");
 			this.filterColumns.add("Status");
-			this.filterColumns.add("Event_occurence_time");
+			this.filterColumns.add("time");
 
 			this.filterColumns.add("Execution_start");
 			this.filterColumns.add("Execution_finish");
@@ -91,7 +94,7 @@ public class AlarmFilter extends ObjectResourceFilter
 			return new String[] {"list"};
 		if(colId.equals("Status"))
 			return new String[] {"list"};
-		if(colId.equals("Event_occurence_time"))
+		if(colId.equals("time"))
 			return new String[] {"time"};
 		if(colId.equals("Monitored_element"))
 			return new String[] {"string", "list"};
@@ -133,7 +136,7 @@ public class AlarmFilter extends ObjectResourceFilter
 		return null;
 	}
 
-	public boolean expression(FilterExpression expr, ObjectResource or)
+	public boolean expression(FilterExpressionInterface expr, ObjectResource or)
 	{
 		boolean result = false;
 		Alarm a = (Alarm )or;
@@ -294,8 +297,8 @@ public class AlarmFilter extends ObjectResourceFilter
 		af.clearCriteria();
 		for(int i = 0; i < getCriteria().size(); i++)
 		{
-			FilterExpression fe = (FilterExpression )getCriteria().get(i);
-			af.addCriterium((FilterExpression )fe.clone());
+			FilterExpressionInterface fe = (FilterExpressionInterface) getCriteria().get(i);
+			af.addCriterium((FilterExpressionInterface)(fe.clone()));
 		}
 		af.logicScheme = (LogicScheme )this.logicScheme.clone(af);
 		return af;

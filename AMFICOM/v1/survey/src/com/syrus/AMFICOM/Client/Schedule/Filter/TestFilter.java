@@ -13,6 +13,8 @@ import com.syrus.AMFICOM.CORBA.General.TestStatus;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import java.util.*;
 
+import com.syrus.AMFICOM.filter.FilterExpressionInterface;
+
 public class TestFilter extends ObjectResourceFilter
 {
 //	ApplicationContext aContext;
@@ -105,7 +107,7 @@ public class TestFilter extends ObjectResourceFilter
 		return null;
 	}
 
-	public boolean expression(FilterExpression expr, ObjectResource or)
+	public boolean expression(FilterExpressionInterface expr, ObjectResource or)
 	{
 		boolean result = false;
 		Test test = (Test) or;

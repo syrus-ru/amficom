@@ -4,14 +4,16 @@ import oracle.jdeveloper.layout.*;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Filter.FilterExpression;
+//import com.syrus.AMFICOM.Client.General.Filter.FilterExpression;
+
+import com.syrus.AMFICOM.filter.FilterExpressionInterface;
 
 import javax.swing.JPanel;
 
 public class FilterPanel extends JPanel
 {
 	ApplicationContext aContext;
-	
+
 	public FilterPanel()
 	{
 		super();
@@ -37,7 +39,7 @@ public class FilterPanel extends JPanel
 		this.aContext = aContext;
 	}
 
-	public FilterExpression getExpression(String col_id, String col_name) { return null; }
+	public FilterExpressionInterface getExpression(String col_id, String col_name, boolean conditionsRequested) { return null; }
 	public void setExpression(FilterExpression expr){}
 
 	//public abstract FilterExpression getExpression();

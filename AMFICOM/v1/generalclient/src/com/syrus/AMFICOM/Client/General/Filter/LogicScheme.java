@@ -91,7 +91,7 @@ public class LogicScheme extends LogicSchemeBase
 	{
 		return new LogicSchemeElement(
 				type,
-				(FilterExpression )fe,
+				fe,
 				operandType,
 				itsX,
 				itsY,
@@ -190,7 +190,7 @@ public class LogicScheme extends LogicSchemeBase
 			LogicSchemeElement curLSE = (LogicSchemeElement) this.schemeElements.get(i);
 			if (curLSE.type.equals(LogicSchemeElementBase.t_condition))
 			{
-				FilterExpression fe = (FilterExpression) curLSE.filterExpression;
+				FilterExpressionInterface fe = curLSE.filterExpression;
 				if (fe.isTemplate())
 				{
 					String type = (String) fe.getVec().get(0);
@@ -226,10 +226,27 @@ public class LogicScheme extends LogicSchemeBase
 
 					dialog.setVisible(true);
 
-					curLSE.filterExpression = fp.getExpression(fe.getId(),fe.getName());
+					curLSE.filterExpression = fp.getExpression(fe.getId(),fe.getColumnName(),false);
 					((FilterExpression)curLSE.filterExpression).setTemplate(true);
+					((FilterExpression)curLSE.filterExpression).setListID(fe.getListID());
 				}
 			}
 		}
 	}
+
+	public void readObject(ObjectInputStream in)
+			throws IOException, ClassNotFoundException
+	{
+		// При восстановлении схемы мы получаем выражения фильтрации, не
+		// наследующие ObjectResource - не поддреживающие отображение в
+		// визуальных компонентах
+		super.readObject(in);
+
+		for (int i = 0; i < schemeElements.size(); i++)
+		{
+			LogicSchemeElementBase lse = (LogicSchemeElementBase) schemeElements.get(i);
+			lse.filterExpression = new FilterExpression ((FilterExpressionBase)lse.filterExpression);
+		}
+	}
+
 }

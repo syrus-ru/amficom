@@ -306,7 +306,7 @@ public class ReportTemplate extends ObjectResource implements Serializable
 			}
 			catch (Exception exc)
 			{
-				System.out.println("Error reading filter ReportModel object!!!");
+				System.out.println("Error recreating filter object!!!");
 			}
 		}
 	}
@@ -663,7 +663,7 @@ public class ReportTemplate extends ObjectResource implements Serializable
 			}
 			catch (Exception exc)
 			{
-				System.out.println("Error reading ReportModel object!!!");
+				System.out.println("Error recreating Filter object!!!");
 			}
 		}
 	}

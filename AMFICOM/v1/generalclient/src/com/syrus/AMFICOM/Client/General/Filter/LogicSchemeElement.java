@@ -10,15 +10,15 @@ public class LogicSchemeElement extends LogicSchemeElementBase
 {
 	public LogicSchemeElement(
 			String type,
-            FilterExpression fe,
-            String operandType,
-            int itsX,
-            int itsY,
-            LogicScheme ls)
+				FilterExpressionInterface fe,
+				String operandType,
+				int itsX,
+				int itsY,
+				LogicScheme ls)
 	{
 		super(type, fe, operandType, itsX, itsY, ls);
 	}
-  
+
 	public void paint(Graphics g)
 	{
 		if (this.selected)
@@ -29,7 +29,7 @@ public class LogicSchemeElement extends LogicSchemeElementBase
 		g.drawRect(this.x, this.y, this.width, this.height);
 		g.setColor(Color.pink);
 		g.fillRect(this.x + 1, this.y + 1, this.width - 1, this.height - 1);
-	
+
 		g.setColor(Color.black);
 		int titleX = this.x + 15;
 		int titleY = this.y + 15;

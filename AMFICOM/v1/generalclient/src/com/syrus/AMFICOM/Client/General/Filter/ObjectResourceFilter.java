@@ -36,7 +36,7 @@ public abstract class ObjectResourceFilter implements Filter
 	public abstract String getFilterColumnName(String col_id);
 	public abstract String[] getColumnFilterTypes(String col_id);
 	public abstract FilterPanel getColumnFilterPanel(String col_id, String type);
-	public abstract boolean expression(FilterExpression expr, ObjectResource or);
+	public abstract boolean expression(FilterExpressionInterface expr, ObjectResource or);
 	public abstract Object clone();
 
 	public String getId()
@@ -46,7 +46,7 @@ public abstract class ObjectResourceFilter implements Filter
 
 	public boolean expression(FilterExpressionInterface expr, Object or)
 	{
-		return expression((FilterExpression )expr, (ObjectResource )or);
+		return expression(expr, (ObjectResource)or);
 	}
 
 	public boolean SearchSubstring (String text, String substring)
@@ -69,21 +69,21 @@ public abstract class ObjectResourceFilter implements Filter
 		return res;
 	}
 
-	public void addCriterium(FilterExpression expr)
+	public void addCriterium(FilterExpressionInterface expr)
 	{
 		expr.setListID(lastListID++);
 		logicScheme.addFilterExpression(expr);
 //		criteria.add(expr);
 	}
 
-	public void removeCriterium(FilterExpression expr)
+	public void removeCriterium(FilterExpressionInterface expr)
 	{
 		lastListID--;
 		logicScheme.removeFilterExpression(expr);
 //		criteria.remove(expr);
 	}
 
-	public void replaceCriterium(FilterExpression fe_old, FilterExpression fe_new)
+	public void replaceCriterium(FilterExpressionInterface fe_old, FilterExpressionInterface fe_new)
 	{
 		logicScheme.replaceFilterExpression(fe_old, fe_new);
 	}

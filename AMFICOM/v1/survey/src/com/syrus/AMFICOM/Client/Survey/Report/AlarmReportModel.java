@@ -92,7 +92,7 @@ public class AlarmReportModel extends ObjectResourceReportModel
 		result.add(LangModelSurvey.getString("Monitored_element"));
 		result.add(LangModelSurvey.getString("Event_type"));
 		result.add(LangModelSurvey.getString("Status"));
-		result.add(LangModelSurvey.getString("Event_occurence_time"));
+		result.add(LangModelSurvey.getString("time"));
 
 		result.add(LangModelSurvey.getString("Execution_start"));
 		result.add(LangModelSurvey.getString("Execution_finish"));

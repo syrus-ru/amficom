@@ -631,7 +631,7 @@ repaint();
 		String col_id = (String) columnComboBox.getSelectedItem();
 		String col_name = filter.getFilterColumnName(col_id);
 
-		FilterExpression expr = fp.getExpression(col_id, col_name);
+		FilterExpression expr = (FilterExpression)fp.getExpression(col_id, col_name,!templateCheckBox.isSelected());
 		expr.setTemplate(templateCheckBox.isSelected());
 		filter.addCriterium(expr);
 		criteriaList.add(expr);
@@ -677,7 +677,7 @@ repaint();
 //		filter.removeCriterium(criteriaListEditObject);
 		String col_id = (String) columnComboBox.getSelectedItem();
 		String col_name = filter.getFilterColumnName(col_id);
-		FilterExpression expr = fp.getExpression(col_id, col_name);
+		FilterExpression expr = (FilterExpression) fp.getExpression(col_id, col_name,!templateCheckBox.isSelected());
 		filter.replaceCriterium(criteriaListEditObject, expr);
 //		filter.addCriterium(expr);
 		criteriaList.add(expr);

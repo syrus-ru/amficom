@@ -1,7 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Filter;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Filter.FilterExpression;
+
+import com.syrus.AMFICOM.filter.FilterExpressionInterface;
 
 import java.util.Vector;
 
@@ -41,14 +42,20 @@ public class GeneralStringFilterPanel extends FilterPanel
 				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 10), 0, 0));
 	}
 
-	public FilterExpression getExpression(String col_id, String col_name)
+	public FilterExpressionInterface getExpression(String col_id, String col_name, boolean conditionsRequested)
 	{
 		Vector vec = new Vector();
 		vec.add("string");
 		vec.add(textField.getText());
 		FilterExpression fexp = new FilterExpression();
 		fexp.setVec(vec);
-		fexp.setName(LangModel.String("labelFiltration")+" \'"+col_name+"\' "+LangModel.String("labelPoPodstroke")+" "+textField.getText());
+
+		String expName = LangModel.String("labelFiltration") + " \'" + col_name + "\' "+LangModel.String("labelPoPodstroke");
+		if (conditionsRequested)
+			expName += (" " + textField.getText());
+
+		fexp.setName(expName);
+		fexp.setColumnName(col_name);
 		fexp.setId(col_id);
 		return fexp;
 	}

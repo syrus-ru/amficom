@@ -29,6 +29,12 @@ public class FilterExpression extends StubResource implements FilterExpressionIn
 		fe = new FilterExpressionBase();
 	}
 
+	public FilterExpression(FilterExpressionBase feBase)
+	{
+		fe = feBase;
+	}
+
+
 	public String getName()
 	{
 		return "Условие " + Integer.toString(getListID()) + ": " + fe.getName();
@@ -78,6 +84,17 @@ public class FilterExpression extends StubResource implements FilterExpressionIn
 	{
 		fe.setTemplate(ifT);
 	}
+
+	public void setColumnName(String n)
+	{
+		fe.setColumnName(n);
+	}
+
+	public String getColumnName()
+	{
+		return fe.getColumnName();
+	}
+
 
 	public Object clone()
 	{

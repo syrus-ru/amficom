@@ -28,6 +28,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.FontMetrics;
 
+import com.syrus.AMFICOM.filter.FilterExpressionInterface;
+
 public class GeneralTimeFilterPanel extends FilterPanel
 {
 	JLabel jLabel1 = new JLabel();
@@ -110,7 +112,7 @@ public class GeneralTimeFilterPanel extends FilterPanel
 //		this.setLayout(null);
 	}
 
-	public FilterExpression getExpression(String col_id, String col_name)
+	public FilterExpressionInterface getExpression(String col_id, String col_name, boolean conditionsRequested)
 	{
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTime((Date)loDateSpin.getValue());
@@ -137,10 +139,13 @@ public class GeneralTimeFilterPanel extends FilterPanel
 
 		FilterExpression fexp = new FilterExpression();
 
-		fexp.setName(LangModel.String("labelFiltration") +
-						  " \'" + col_name + "\' " +
-						  LangModel.String("labelTimeOt") + " " + fromDate + " " +
-						  LangModel.String("labelTimeDo") + " " + toDate);
+		String expName = LangModel.String("labelFiltration") + " \'" + col_name + "\' ";
+		if (conditionsRequested)
+			expName += (LangModel.String("labelTimeOt") + " " + fromDate + " " +
+							LangModel.String("labelTimeDo") + " " + toDate);
+
+		fexp.setName(expName);
+		fexp.setColumnName(col_name);
 
 		Vector vec = new Vector();
 		vec.add("time");
