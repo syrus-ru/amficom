@@ -70,8 +70,6 @@ import com.syrus.AMFICOM.Client.Optimize.Report.OptimizeReportsTreeModel;
 
 public class ReportMDIMain extends JFrame implements OperationListener
 {
-	static public String ev_closingAdditionalPanel = "ev_closingAdditionalPanel";
-
 	private Dispatcher internal_dispatcher = new Dispatcher();
 	public ApplicationContext aContext = new ApplicationContext();
 
@@ -155,7 +153,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 			}
 		});
 
-		mainPanel.setLayout(new BorderLayout());//new FlowLayout());
+		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBackground(Color.darkGray);
 		desktopPane.setLayout(null);
 		desktopPane.setBackground(Color.darkGray);
@@ -165,8 +163,6 @@ public class ReportMDIMain extends JFrame implements OperationListener
 		statusBarPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		statusBarPanel.setLayout(new BorderLayout());
 		statusBarPanel.add(statusBar, BorderLayout.CENTER);
-
-//		statusBarPanel.add(new ProgressBar("Попа - новый год"),BorderLayout.WEST);
 
 		statusBar.add("status");
 		statusBar.add("server");
@@ -414,7 +410,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 		}
 
 		if (ae.getActionCommand().equals(
-			ReportMDIMain.ev_closingAdditionalPanel))
+			SelectReportsPanel.ev_closingAdditionalPanel))
 		{
 			if (selectReportsPanel != null)
 				selectReportsPanel.setSize(
@@ -534,7 +530,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 					aContext,
 					this,
 					this.layoutWOCPanel.reportTemplate,
-					new AvailableReportsTreeModel());
+					new AvailableReportsTreeModel(aContext));
 
 			layoutScrollPane = new JInternalFrame();
 			layoutScrollPane.getContentPane().add(innerToolBar,BorderLayout.NORTH);
@@ -594,7 +590,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 			aContext.getDispatcher().register(this,SelectReportsPanel.ev_additionalPaneCreated);
 			aContext.getDispatcher().register(this,com.syrus.AMFICOM.Client.General.Filter.SetRestrictionsWindow.ev_lsWindowCreated);
 			aContext.getDispatcher().register(this,com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilterPane.state_filterClosed);
-			aContext.getDispatcher().register(this,ReportMDIMain.ev_closingAdditionalPanel);
+			aContext.getDispatcher().register(this,SelectReportsPanel.ev_closingAdditionalPanel);
 			aContext.getDispatcher().register(this,ReportBuilder.ev_startProgressBar);
 			aContext.getDispatcher().register(this,ReportBuilder.ev_stopProgressBar);
 		}

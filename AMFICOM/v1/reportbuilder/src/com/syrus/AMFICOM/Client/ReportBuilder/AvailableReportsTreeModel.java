@@ -12,6 +12,8 @@ import javax.swing.tree.TreeNode;
 
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
+import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
@@ -23,6 +25,12 @@ import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceDomainFilter;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
+
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 
 import com.syrus.AMFICOM.Client.Resource.DataSet;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
@@ -54,12 +62,17 @@ import com.syrus.AMFICOM.Client.Configure.Report.EquipFeaturesReportModel;
 import com.syrus.AMFICOM.Client.Schematics.Report.SchemeReportModel;
 
 import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
+
 import com.syrus.AMFICOM.Client.Optimize.Report.OptimizationReportModel;
+import com.syrus.AMFICOM.Client.Optimize.Report.SelectSolutionFrame;
+
 import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.SurveyReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
 import com.syrus.AMFICOM.Client.Prediction.Report.PredictionReportModel;
 import com.syrus.AMFICOM.Client.Model.Report.ModelingReportModel;
+
+import javax.swing.tree.TreePath;
 
 /**
  * <p>Description: Модель дерева с доступными отчётами</p>
@@ -70,9 +83,34 @@ import com.syrus.AMFICOM.Client.Model.Report.ModelingReportModel;
  */
 
 public class AvailableReportsTreeModel extends ObjectResourceTreeModel
+	implements OperationListener
 {
-	public AvailableReportsTreeModel()
-{}
+	private ApplicationContext aContext = null;
+
+	public AvailableReportsTreeModel(ApplicationContext aContext)
+	{
+		this.aContext = aContext;
+		this.aContext.getDispatcher().register(this,TreeDataSelectionEvent.type);
+	}
+
+	public void operationPerformed (OperationEvent oe)
+	{
+		if (oe.getActionCommand().equals(TreeDataSelectionEvent.type))
+		{
+			UniTreePanel reportsTreePanel = (UniTreePanel) oe.getSource();
+			TreePath treePath = reportsTreePanel.getTree().getSelectionPath();
+			if (treePath == null)
+				return;
+
+			ObjectResourceTreeNode lastElem =
+				(ObjectResourceTreeNode) treePath.getLastPathComponent();
+
+			if (lastElem.getObject() instanceof OptimizationReportModel)
+			{
+				SelectSolutionFrame ssFrame = new SelectSolutionFrame (this.aContext);
+			}
+		}
+	}
 
 	public ObjectResourceTreeNode getRoot()
 	{

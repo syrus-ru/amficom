@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.Client.General.Report.
 	ReportTemplateImplementationPanel;
 import com.syrus.AMFICOM.Client.General.Report.FirmedTextPane;
 import com.syrus.AMFICOM.Client.General.Report.RenderingObject;
-import com.syrus.AMFICOM.Client.ReportBuilder.SelectTemplate;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
+import com.syrus.AMFICOM.Client.General.Report.SelectReportsPanel;
 
 import com.syrus.AMFICOM.Client.General.Filter.SetRestrictionsWindow;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilterPane;
@@ -366,7 +366,7 @@ else
 					else
 						theDisp.notify(
 							new OperationEvent("", 0,
-													 ReportMDIMain.ev_closingAdditionalPanel));
+													 SelectReportsPanel.ev_closingAdditionalPanel));
 
 					mainWindow.additionalPanel.dispose();
 				}
