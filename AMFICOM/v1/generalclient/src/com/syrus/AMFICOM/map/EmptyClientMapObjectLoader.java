@@ -1,5 +1,5 @@
 /*
-* $Id: EmptyClientMapObjectLoader.java,v 1.4 2005/03/01 16:12:42 krupenn Exp $
+* $Id: EmptyClientMapObjectLoader.java,v 1.5 2005/03/16 13:40:57 bass Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,13 +22,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/01 16:12:42 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2005/03/16 13:40:57 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public class EmptyClientMapObjectLoader implements MapObjectLoader {

@@ -2,8 +2,6 @@
 package com.syrus.AMFICOM.client_.resource;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
-
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
@@ -17,8 +15,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
  * constructor must be private and its instance must be obtained using a static
  * method <code>getInstance()</code>.
  * 
- * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/02/03 09:12:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/03/16 13:40:57 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>

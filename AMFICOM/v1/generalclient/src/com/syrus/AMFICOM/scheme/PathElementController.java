@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.scheme;
 import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.general.*;
 
 public final class PathElementController implements ObjectResourceController
 {

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertiesPane.java,v 1.2 2005/03/11 16:10:18 stas Exp $
+ * $Id: ObjectResourcePropertiesPane.java,v 1.3 2005/03/16 13:40:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,8 +7,6 @@
  */
 
 package com.syrus.AMFICOM.client_.general.ui_;
-
-import javax.swing.JComponent;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
@@ -22,8 +20,8 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
  * <code style = "background-color: #fff7e9;"><b>protected</b></code> if the class is not
  * <code style = "background-color: #fff7e9;"><b>final</b></code>).</li></ul>
  *
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/11 16:10:18 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/03/16 13:40:57 $
  * @module generalclient_v1
  */
 public interface ObjectResourcePropertiesPane {

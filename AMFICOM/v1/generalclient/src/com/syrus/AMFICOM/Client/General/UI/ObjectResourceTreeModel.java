@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import java.awt.*;
-import com.syrus.AMFICOM.client_.general.ui_.*;
 
 public abstract class ObjectResourceTreeModel
 {

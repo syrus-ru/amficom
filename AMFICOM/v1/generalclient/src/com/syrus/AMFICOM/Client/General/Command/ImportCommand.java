@@ -1,5 +1,5 @@
 /*
- * $Id: ImportCommand.java,v 1.7 2005/02/07 16:10:17 krupenn Exp $
+ * $Id: ImportCommand.java,v 1.8 2005/03/16 13:40:57 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.Client.General.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -24,9 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +35,9 @@ import javax.swing.JOptionPane;
  * Класс $RCSfile: ImportCommand.java,v $ 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2005/02/07 16:10:17 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/16 13:40:57 $
  * @module map_v2
- * @author $Author: krupenn $
+ * @author $Author: bass $
  * @see
  */
 public abstract class ImportCommand extends VoidCommand

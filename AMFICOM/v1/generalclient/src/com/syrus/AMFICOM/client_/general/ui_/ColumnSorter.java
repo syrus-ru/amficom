@@ -2,15 +2,14 @@ package com.syrus.AMFICOM.client_.general.ui_;
 
 import java.util.Comparator;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * ColumnSorter used for sorting elements with aid of Collections i.g.
  * <code>Collections.sort(list, new ColumnSorter(controller, key, ascending))</code>
  * 
- * @version $Revision: 1.3 $, $Date: 2004/11/15 13:23:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/03/16 13:40:57 $
+ * @author $Author: bass $
  * @module generalclient_v1
  */
 public class ColumnSorter implements Comparator {

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceSelectionDialog.java,v 1.1 2005/01/11 16:36:52 krupenn Exp $
+ * $Id: ObjectResourceSelectionDialog.java,v 1.2 2005/03/16 13:40:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,9 +10,7 @@ package com.syrus.AMFICOM.client_.general.ui_;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,8 +18,8 @@ import java.util.Collection;
 import javax.swing.*;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/01/11 16:36:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/03/16 13:40:57 $
  * @module generalclient_v1
  */
 public class ObjectResourceSelectionDialog extends JDialog

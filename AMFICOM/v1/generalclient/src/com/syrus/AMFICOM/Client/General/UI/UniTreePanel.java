@@ -1,5 +1,5 @@
 /*
- * $Id: UniTreePanel.java,v 1.12 2005/03/05 15:23:50 stas Exp $
+ * $Id: UniTreePanel.java,v 1.13 2005/03/16 13:40:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.Client.General.UI;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.client_.general.ui_.*;
 import java.awt.*;
 import java.awt.dnd.*;
 import java.util.*;
@@ -46,8 +45,8 @@ registerSearchableNode(String criteria, ObjectResourceTreeNode tn).
 Таким образом, послав в дерево ListSelectionEvent с указанием OperatorGroup.typ
 зарегистрированная ветвь станет выделенной.
  *
- * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/03/05 15:23:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/03/16 13:40:57 $
  * @module generalclient_v1
  */
 public class UniTreePanel extends JPanel

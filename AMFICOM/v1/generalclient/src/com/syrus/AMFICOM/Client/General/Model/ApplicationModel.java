@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationModel.java,v 1.7 2004/09/27 09:58:44 bass Exp $
+ * $Id: ApplicationModel.java,v 1.8 2005/03/16 13:40:57 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import java.util.*;
  * может производить с системой
  * 
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/09/27 09:58:44 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/16 13:40:57 $
  * @module generalclient_v1
  */
 public class ApplicationModel
@@ -41,40 +41,11 @@ public class ApplicationModel
 	private static ApplicationModel instance = null;
 
 	/**
-	 * @deprecated This constructor shouldn't be used directly, and in the
-	 *             future its visibility will be narrowed to
-	 *             <code>protected</code> to allow it to be invoked by
-	 *             descendants only. To obtain a shared instance, use
-	 *             {@link #getInstance()} instead.
+	 * To obtain a shared instance, use {@link #getInstance()}.
 	 * @see #getInstance()
 	 */
-	public ApplicationModel()
+	protected ApplicationModel()
 	{
-	}
-
-	/**
-	 * при дублировании модели дублируются все элементы и объекты, принимающие
-	 * информацию об изменениях в модели
-	 * 
-	 * @param aModel
-	 * @deprecated Used only in {@link #clone()}.
-	 */
-	public ApplicationModel(ApplicationModel aModel)
-	{
-		// копируются Слушатели изменения модели
-		for (int i = aModel.listenerList.getListenerCount() - 1; i >= 0; i--)
-			listenerList.add(aModel.listenerList.getListenerClass(i), aModel.listenerList.getListener(i));
-
-		// инициализируется список элементов
-		appHash = new Hashtable();
-
-		// копируются элементы модели, с тем, чтобы в каждой модели элементы
-		// изменялись независимо
-		for (Enumeration e = aModel.appHash.keys(); e.hasMoreElements();)
-		{
-			String key = (String )e.nextElement();
-			appHash.put(key, ((ApplicationEntry) (aModel.appHash.get(key))).clone());
-		}
 	}
 
 	public static ApplicationModel getInstance()
@@ -418,21 +389,13 @@ public class ApplicationModel
 	}
 
 	/**
-	 * @deprecated Incorrectly implemented and never used.
-	 */
-	public Object clone()
-	{
-		return new ApplicationModel(this);
-	}
-
-	/**
 	 * запись об элементе модели включает имя элемента, связанную с ним команду 
 	 * и флаги видимости и доступности команды пользователю.
 	 * конструктора без параметров нет, так как элемент определяется 
 	 * идентификатором
 	 * 
 	 * @author $Author: bass $
-	 * @version $Revision: 1.7 $, $Date: 2004/09/27 09:58:44 $
+	 * @version $Revision: 1.8 $, $Date: 2005/03/16 13:40:57 $
 	 * @module generalclient_v1
 	 */
 	class ApplicationEntry

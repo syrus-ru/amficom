@@ -4,7 +4,6 @@ import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.*;
 
 public final class SchemeDeviceController implements ObjectResourceController
 {

@@ -3,8 +3,6 @@ package com.syrus.AMFICOM.client_.general.ui_.tree;
 import java.awt.*;
 import java.awt.dnd.*;
 import java.util.*;
-import java.util.List;
-
 import javax.swing.JTree;
 import javax.swing.event.*;
 import javax.swing.tree.*;
@@ -15,8 +13,8 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * 
- * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/14 13:30:48 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/03/16 13:40:57 $
  * @module mapviewclient_v1
  */
 

@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.Resource.*;
 
 public class ImagesPanelLabel extends JLabel
 		implements MouseListener, OperationListener

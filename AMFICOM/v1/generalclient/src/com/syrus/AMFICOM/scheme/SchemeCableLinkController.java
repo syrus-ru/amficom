@@ -1,11 +1,9 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import java.util.*;
-
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.general.Characteristic;
+import java.util.*;
 
 public final class SchemeCableLinkController implements ObjectResourceController {
 
