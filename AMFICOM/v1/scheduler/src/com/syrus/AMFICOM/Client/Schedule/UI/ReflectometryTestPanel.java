@@ -11,6 +11,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,6 +38,7 @@ import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -47,6 +49,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -154,7 +157,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	private AComboBox				averageQuantityComboBox		= new AComboBox();
 	private Dispatcher				dispatcher;
-	private SchedulerModel schedulerModel;
+	private SchedulerModel			schedulerModel;
 
 	private JTextField				refractTextField			= new JTextField();
 
@@ -202,59 +205,104 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			{
 				try {
 
-					TypicalCondition typicalCondition = new TypicalCondition(
-																				ParameterTypeCodenames.TRACE_WAVELENGTH,
-																				OperationSort.OPERATION_EQUALS,
-																				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-																				StorableObjectWrapper.COLUMN_CODENAME);
+						TypicalCondition waveLengthCondition = new TypicalCondition(
+																					ParameterTypeCodenames.TRACE_WAVELENGTH,
+																					OperationSort.OPERATION_EQUALS,
+																					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																					StorableObjectWrapper.COLUMN_CODENAME);
 
-					Collection parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(
-						typicalCondition, true);
-					if (parameterTypes.isEmpty())
+						TypicalCondition traceLengthCondition = new TypicalCondition(
+																						ParameterTypeCodenames.TRACE_LENGTH,
+																						OperationSort.OPERATION_EQUALS,
+																						ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																						StorableObjectWrapper.COLUMN_CODENAME);
+
+						TypicalCondition resolutionCondition = new TypicalCondition(
+																					ParameterTypeCodenames.TRACE_RESOLUTION,
+																					OperationSort.OPERATION_EQUALS,
+																					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																					StorableObjectWrapper.COLUMN_CODENAME);
+
+						TypicalCondition pulseWidthCondition = new TypicalCondition(
+																					ParameterTypeCodenames.TRACE_PULSE_WIDTH,
+																					OperationSort.OPERATION_EQUALS,
+																					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																					StorableObjectWrapper.COLUMN_CODENAME);
+
+						TypicalCondition indexOfRefractionCondition = new TypicalCondition(
+																							ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION,
+																							OperationSort.OPERATION_EQUALS,
+																							ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																							StorableObjectWrapper.COLUMN_CODENAME);
+
+						TypicalCondition averageCountCondition = new TypicalCondition(
+																						ParameterTypeCodenames.TRACE_AVERAGE_COUNT,
+																						OperationSort.OPERATION_EQUALS,
+																						ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+																						StorableObjectWrapper.COLUMN_CODENAME);
+
+						Collection conditions = new ArrayList(6);
+						conditions.add(waveLengthCondition);
+						conditions.add(traceLengthCondition);
+						conditions.add(resolutionCondition);
+						conditions.add(pulseWidthCondition);
+						conditions.add(indexOfRefractionCondition);
+						conditions.add(averageCountCondition);
+
+						CompoundCondition compoundCondition = new CompoundCondition(conditions,
+																					CompoundConditionSort.OR);
+						
+						
+						Collection parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(
+							compoundCondition, true);
+						
+						ParameterType wvlenParameterType = null;
+						ParameterType trclenParameterType = null;
+						ParameterType resParameterType = null;
+						ParameterType pulswdParameterType = null;
+						ParameterType iorParameterType = null;
+						ParameterType scansParameterType = null;
+						
+						for (Iterator iter = parameterTypes.iterator(); iter.hasNext();) {
+							ParameterType parameterType = (ParameterType) iter.next();
+							String codeName = parameterType.getCodename();
+							if (codeName.equals(waveLengthCondition.getValue()))
+								wvlenParameterType = parameterType;
+							else if (codeName.equals(traceLengthCondition.getValue()))
+								trclenParameterType = parameterType; 
+							else if (codeName.equals(resolutionCondition.getValue()))
+								resParameterType = parameterType;
+							else if (codeName.equals(pulseWidthCondition.getValue()))
+								pulswdParameterType = parameterType;
+							else if (codeName.equals(indexOfRefractionCondition.getValue()))
+								iorParameterType = parameterType;
+							else if (codeName.equals(averageCountCondition.getValue()))
+								scansParameterType = parameterType;		
+						}	
+						
+
+					if (wvlenParameterType == null)
 						throw new IllegalArgumentException("Cannot find parameter type "
 								+ ParameterTypeCodenames.TRACE_WAVELENGTH);
-					ParameterType wvlenParam = (ParameterType) parameterTypes.iterator().next();
 
-					typicalCondition.setValue(ParameterTypeCodenames.TRACE_LENGTH);
-
-					parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
-
-					if (parameterTypes.isEmpty())
+					if (trclenParameterType == null)
 						throw new IllegalArgumentException("Cannot find parameter type "
 								+ ParameterTypeCodenames.TRACE_LENGTH);
-
-					ParameterType trclenParam = (ParameterType) parameterTypes.iterator().next();
-
-					typicalCondition.setValue(ParameterTypeCodenames.TRACE_RESOLUTION);
-					parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
-					if (parameterTypes.isEmpty())
+					if (trclenParameterType == null)
 						throw new IllegalArgumentException("Cannot find parameter type "
 								+ ParameterTypeCodenames.TRACE_RESOLUTION);
-					ParameterType resParam = (ParameterType) parameterTypes.iterator().next();
 
-					typicalCondition.setValue(ParameterTypeCodenames.TRACE_PULSE_WIDTH);
-					parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
-					if (parameterTypes.isEmpty())
+					if (pulswdParameterType == null)
 						throw new IllegalArgumentException("Cannot find parameter type "
 								+ ParameterTypeCodenames.TRACE_PULSE_WIDTH);
 
-					ParameterType pulswdParam = (ParameterType) parameterTypes.iterator().next();
-
-					typicalCondition.setValue(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION);
-					parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
-					if (parameterTypes.isEmpty())
+					if (iorParameterType == null)
 						throw new IllegalArgumentException("Cannot find parameter type "
 								+ ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION);
 
-					ParameterType iorParam = (ParameterType) parameterTypes.iterator().next();
-
-					typicalCondition.setValue(ParameterTypeCodenames.TRACE_AVERAGE_COUNT);
-					parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
-					if (parameterTypes.isEmpty())
+					if (scansParameterType == null)
 						throw new IllegalArgumentException("Cannot find parameter type "
 								+ ParameterTypeCodenames.TRACE_AVERAGE_COUNT);
-
-					ParameterType scansParam = (ParameterType) parameterTypes.iterator().next();
 
 					SetParameter[] params = new SetParameter[6];
 
@@ -267,9 +315,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					String waveStr = wave.toString();
 					if ((waveStr == null) || (waveStr.length() == 0))
 						throw new IllegalArgumentException(LangModelSchedule.getString("wave_length_is_not_set"));
-					byteArray = new ByteArray(((int)Double.parseDouble(waveStr)));
+					byteArray = new ByteArray(((int) Double.parseDouble(waveStr)));
 
-					params[0] = SetParameter.createInstance(wvlenParam, byteArray.getBytes());
+					params[0] = SetParameter.createInstance(wvlenParameterType, byteArray.getBytes());
 
 					Object distance = this.maxDistanceComboBox.getSelectedItem();
 					if (distance == null)
@@ -280,7 +328,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						throw new IllegalArgumentException(LangModelSchedule.getString("distance_is_not_set"));
 					byteArray = new ByteArray(Double.parseDouble(distanceStr));
 
-					params[1] = SetParameter.createInstance(trclenParam, byteArray.getBytes());
+					params[1] = SetParameter.createInstance(trclenParameterType, byteArray.getBytes());
 
 					Object resolution = this.resolutionComboBox.getSelectedItem();
 					if (resolution == null)
@@ -290,7 +338,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						throw new IllegalArgumentException(LangModelSchedule.getString("resolution_is_not_set"));
 					byteArray = new ByteArray(Double.parseDouble(resolutionStr));
 
-					params[2] = SetParameter.createInstance(resParam, byteArray.getBytes());
+					params[2] = SetParameter.createInstance(resParameterType, byteArray.getBytes());
 
 					Object pulse = this.pulseWidthComboBox.getSelectedItem();
 					if (pulse == null)
@@ -301,7 +349,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 					byteArray = new ByteArray(Long.parseLong(pulseStr));
 
-					params[3] = SetParameter.createInstance(pulswdParam, byteArray.getBytes());
+					params[3] = SetParameter.createInstance(pulswdParameterType, byteArray.getBytes());
 
 					String refract = this.refractTextField.getText();
 					if ((refract == null) || (refract.length() == 0))
@@ -309,7 +357,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 								.getString("index_of_refraction_is_not_set")); //$NON-NLS-1$
 					byteArray = new ByteArray(Double.parseDouble(refract));
 
-					params[4] = SetParameter.createInstance(iorParam, byteArray.getBytes());
+					params[4] = SetParameter.createInstance(iorParameterType, byteArray.getBytes());
 
 					Object average = this.averageQuantityComboBox.getSelectedItem();
 					if (average == null)
@@ -320,7 +368,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 					byteArray = new ByteArray(Double.parseDouble(averageStr));
 
-					params[5] = SetParameter.createInstance(scansParam, byteArray.getBytes());
+					params[5] = SetParameter.createInstance(scansParameterType, byteArray.getBytes());
 
 					RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 					set = Set.createInstance(sessionInterface.getUserIdentifier(),

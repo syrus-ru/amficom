@@ -22,7 +22,6 @@ import javax.swing.JLabel;
 import javax.swing.Timer;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.TestEditor;
@@ -389,7 +388,7 @@ public class TestLine extends JLabel implements ActionListener, TestsEditor, Tes
 					TestTimeLine testTimeLine = new TestTimeLine();
 					testTimeLine.test = test;
 					testTimeLine.startTime = test.getStartTime().getTime();
-					testTimeLine.duration = test.getEndTime().getTime() - testTimeLine.startTime;
+					testTimeLine.duration = (test.getEndTime() != null) ? test.getEndTime().getTime() - testTimeLine.startTime : 0;
 					testTimeLine.haveMeasurement = false;
 					measurementTestList.add(testTimeLine);
 					this.measurements.put(test.getId(), measurementTestList);
@@ -428,7 +427,7 @@ public class TestLine extends JLabel implements ActionListener, TestsEditor, Tes
 							TestTimeLine testTimeLine = new TestTimeLine();
 							testTimeLine.test = test;
 							testTimeLine.startTime = test.getStartTime().getTime();
-							testTimeLine.duration = test.getEndTime().getTime() - testTimeLine.startTime;
+							testTimeLine.duration = (test.getEndTime() != null) ? test.getEndTime().getTime() - testTimeLine.startTime : 0;
 							break;
 
 					}

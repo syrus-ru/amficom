@@ -13,8 +13,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -29,7 +27,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -44,10 +41,6 @@ import javax.swing.event.ListSelectionListener;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.CalendarUI;
@@ -62,9 +55,6 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjList;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternController;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
@@ -75,14 +65,12 @@ public class TimeParametersFrame extends JInternalFrame {
 
 	private static final long	serialVersionUID	= 6562288896016470275L;
 
-	public class TimeParametersPanel extends JPanel implements OperationListener, TestTemporalStampsEditor {
+	public class TimeParametersPanel extends JPanel implements TestTemporalStampsEditor {
 
 		private static final long	serialVersionUID	= -7975294015403739057L;
 
 		SchedulerModel schedulerModel;
 		ApplicationContext			aContext;
-
-		Dispatcher					dispatcher;
 
 		private TimeSpinner			startTimeSpinner;
 
@@ -119,23 +107,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.aContext = aContext;
 			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 			this.schedulerModel.setTestTemporalStampsEditor(this);
-			initModule(aContext.getDispatcher());
 			init();
-		}
-
-		private void initModule(Dispatcher dispatcher) {
-			this.dispatcher = dispatcher;
-			this.dispatcher.register(this, ContextChangeEvent.type);
-//			this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TEST);
-//			this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
-//			this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
-		}
-
-		public void unregisterDispatcher() {
-			this.dispatcher.unregister(this, ContextChangeEvent.type);
-//			this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TEST);
-//			this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TESTS);
-//			this.dispatcher.unregister(this, SchedulerModel.COMMAND_DATA_REQUEST);
 		}
 
 		private void init() {
@@ -571,32 +543,18 @@ public class TimeParametersFrame extends JInternalFrame {
 					this.continuosRadioButton.doClick();
 					break;
 
-			}
-
-		
+			}		
 		}
 		
-		public void operationPerformed(OperationEvent ae) {
-			String commandName = ae.getActionCommand();
-			if (ae instanceof ContextChangeEvent) {
-				try {
-					refreshTemporalPatterns();
-				} catch (ApplicationException e) {
-					SchedulerModel.showErrorMessage(this, e);
-				}
-			}
-		}
-
-		private void refreshTemporalPatterns() throws ApplicationException {
-			this.temporalPatterns = MeasurementStorableObjectPool.getStorableObjectsByCondition(
-				new EquivalentCondition(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), true);
+		public void setTemporalPatterns(Collection temporalPatterns) {
+			this.temporalPatterns = temporalPatterns;
 			ObjListModel model = (ObjListModel) this.timeStamps.getModel();
 			for (Iterator it = this.temporalPatterns.iterator(); it.hasNext();) {
 				TemporalPattern pattern = (TemporalPattern) it.next();
 				model.addElement(pattern);
 			}
-
-		}
+			
+		}		
 
 		void showEndCalendar() {
 			Calendar cal = Calendar.getInstance();
@@ -633,28 +591,6 @@ public class TimeParametersFrame extends JInternalFrame {
 	private TimeParametersPanel	panel;
 
 	private Command				command;
-
-	/**
-	 * @todo only for testing mode
-	 */
-	public static void main(String[] args) {
-		TimeParametersFrame timeParametersFrame = new TimeParametersFrame();
-		TimeParametersPanel demo = timeParametersFrame.new TimeParametersPanel();
-		JFrame mainFrame = new JFrame("TimeParametersPanel");
-		mainFrame.addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
-		mainFrame.getContentPane().add(demo);
-		mainFrame.pack();
-		mainFrame.setSize(new Dimension(250, 465));
-		mainFrame.setVisible(true);
-	}
-
-	public TimeParametersFrame() {
-	}
 
 	public TimeParametersFrame(ApplicationContext aContext) {
 		setTitle(LangModelSchedule.getString("TemporalType.Title")); //$NON-NLS-1$

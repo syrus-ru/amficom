@@ -55,10 +55,6 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 
 public class ScheduleMainFrame extends JFrame implements OperationListener {
 
-	public static final String	CONTEXT_CHANGE	= "contextchange";
-
-	//	public static final String SCHEDULER_INI_FILE = "schedule.ini";
-
 	ApplicationContext			aContext;
 	JDesktopPane				desktopPane		= new JDesktopPane();
 
@@ -103,8 +99,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 
 			public void windowClosing(WindowEvent e) {
-				ScheduleMainFrame.this.dispatcher.unregister(ScheduleMainFrame.this, CONTEXT_CHANGE);
-				Environment.the_dispatcher.unregister(ScheduleMainFrame.this, CONTEXT_CHANGE);
+				ScheduleMainFrame.this.dispatcher.unregister(ScheduleMainFrame.this, ContextChangeEvent.type);
+				Environment.the_dispatcher.unregister(ScheduleMainFrame.this, ContextChangeEvent.type);
 				ScheduleMainFrame.this.aContext.getApplicationModel().getCommand(ScheduleMainMenuBar.MENU_EXIT)
 						.execute();
 			}
@@ -200,7 +196,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		if (commandName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
 			StatusMessageEvent sme = (StatusMessageEvent) ae;
 			this.statusBar.setText("status", sme.getText());
-		} else if (commandName.equals(CONTEXT_CHANGE)) {
+		} else if (commandName.equals(ContextChangeEvent.type)) {
 			ContextChangeEvent cce = (ContextChangeEvent) ae;
 			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at "
 					+ this.getTitle());
@@ -421,8 +417,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			//cManager.saveIni();
-			this.dispatcher.unregister(this, CONTEXT_CHANGE);
-			Environment.getDispatcher().unregister(this, CONTEXT_CHANGE);
+			this.dispatcher.unregister(this, ContextChangeEvent.type);
+			Environment.getDispatcher().unregister(this, ContextChangeEvent.type);
 			this.aContext.getApplicationModel().getCommand(ScheduleMainMenuBar.MENU_EXIT).execute();
 			return;
 		}
@@ -459,9 +455,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 //		this.dispatcher.register(this, RefUpdateEvent.typ);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE);
 
-		this.dispatcher.register(this, CONTEXT_CHANGE);
+		this.dispatcher.register(this, ContextChangeEvent.type);
 		Dispatcher dispatcher = Environment.getDispatcher();
-		dispatcher.register(this, CONTEXT_CHANGE);
+		dispatcher.register(this, ContextChangeEvent.type);
 
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_NEW, new SessionOpenCommand(dispatcher, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CLOSE, new SessionCloseCommand(dispatcher, this.aContext));
