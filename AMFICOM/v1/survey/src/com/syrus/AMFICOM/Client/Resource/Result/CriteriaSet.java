@@ -201,6 +201,7 @@ public class CriteriaSet extends ObjectResource implements Serializable {
 			int i = 0;
 			for (Iterator it = keySet.iterator(); it.hasNext();) {
 				Parameter criteria = (Parameter) it.next();
+				criteria.setTransferableFromLocal();
 				this.transferable.criterias[i++] = (ClientParameter_Transferable) criteria
 						.getTransferable();
 			}

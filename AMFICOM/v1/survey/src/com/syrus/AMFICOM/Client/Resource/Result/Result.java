@@ -431,6 +431,7 @@ public class Result extends ObjectResource implements Serializable {
 			int i = 0;
 			for (Iterator it = keySet.iterator(); it.hasNext();) {
 				Parameter parameter = (Parameter) it.next();
+				parameter.setTransferableFromLocal();
 				transferable.parameters[i++] = (ClientParameter_Transferable) parameter
 						.getTransferable();
 			}

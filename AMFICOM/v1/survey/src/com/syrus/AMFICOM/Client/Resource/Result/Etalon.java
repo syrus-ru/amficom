@@ -219,6 +219,7 @@ public class Etalon extends ObjectResource implements Serializable {
 			int i = 0;
 			for (Iterator it = keySet.iterator(); it.hasNext();) {
 				Parameter argument = (Parameter) it.next();
+				argument.setTransferableFromLocal();
 				this.transferable.etalon_parameters[i++] = (ClientParameter_Transferable) argument
 						.getTransferable();
 			}

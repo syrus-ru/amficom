@@ -17,18 +17,18 @@ public class ResultSetModel extends ObjectResourceModel {
 		this.resultSet = resultSet;
 	}
 
-	public String getColumnValue(String col_id) {
+	public String getColumnValue(String colId) {
 		String s = null;
 		try {
-			if (col_id.equals(ConstStorage.COLUMN_NAME_DOMAIN_ID))
+			if (colId.equals(ConstStorage.COLUMN_NAME_DOMAIN_ID))
 					s = Pool.getName(Domain.typ, resultSet.getDomainId());
-			if (col_id.equals(ConstStorage.COLUMN_NAME_START_TIME))
+			if (colId.equals(ConstStorage.COLUMN_NAME_START_TIME))
 					s = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(resultSet
 							.getStartTime()));
-			if (col_id.equals(ConstStorage.COLUMN_NAME_END_TIME))
+			if (colId.equals(ConstStorage.COLUMN_NAME_END_TIME))
 					s = ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(resultSet
 							.getEndTime()));
-			if (col_id.equals(ConstStorage.COLUMN_NAME_ACTIVE)) {
+			if (colId.equals(ConstStorage.COLUMN_NAME_ACTIVE)) {
 				if (resultSet.isActive())
 					s = I18N.getString("Yes"); //$NON-NLS-1$
 				else
