@@ -1,61 +1,48 @@
 /*
-* $Id: PhysicalLinkTypeWrapper.java,v 1.2 2005/01/27 06:23:59 bob Exp $
-*
-* Copyright © 2004 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+ * $Id: PhysicalLinkTypeWrapper.java,v 1.3 2005/02/01 07:25:22 bob Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.map;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
-
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/27 06:23:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/01 07:25:22 $
  * @author $Author: bob $
  * @module map_v1
  */
 public class PhysicalLinkTypeWrapper implements Wrapper {
 
-	//	 codename VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_CODENAME      = "codename";
+	// codename VARCHAR2(32) NOT NULL,
+	public static final String					COLUMN_CODENAME				= "codename";
 	// name VARCHAR2(128),
-	public static final String COLUMN_NAME  = "name";
+	public static final String					COLUMN_NAME					= "name";
 	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION   = "description";
+	public static final String					COLUMN_DESCRIPTION			= "description";
 	// dimension_x NUMBER(12),
-	public static final String COLUMN_DIMENSION_X   = "dimension_x";
+	public static final String					COLUMN_DIMENSION_X			= "dimension_x";
 	// dimension_y NUMBER(12),
-	public static final String COLUMN_DIMENSION_Y   = "dimension_y";
+	public static final String					COLUMN_DIMENSION_Y			= "dimension_y";
 
-	public static final String COLUMN_CHARACTERISTIC_ID  = "collector_id";
-
+	public static final String					COLUMN_CHARACTERISTIC_ID	= "collector_id";
 
 	protected static PhysicalLinkTypeWrapper	instance;
 
-	protected List				keys;
+	protected List								keys;
 
 	private PhysicalLinkTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_MODIFIED, StorableObjectDatabase.COLUMN_CREATOR_ID,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_CODENAME, COLUMN_NAME, COLUMN_DESCRIPTION,
-				COLUMN_DIMENSION_X,
-				COLUMN_DIMENSION_Y, 
-				COLUMN_CHARACTERISTIC_ID};
+		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_DIMENSION_X,
+				COLUMN_DIMENSION_Y, COLUMN_CHARACTERISTIC_ID};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 
@@ -80,7 +67,7 @@ public class PhysicalLinkTypeWrapper implements Wrapper {
 		return key;
 	}
 
-	public Class getPropertyClass(String key) {	
+	public Class getPropertyClass(String key) {
 		if (key.equals(COLUMN_CHARACTERISTIC_ID))
 			return List.class;
 		return String.class;
@@ -94,26 +81,16 @@ public class PhysicalLinkTypeWrapper implements Wrapper {
 	public Object getValue(Object object, String key) {
 		if (object instanceof PhysicalLinkType) {
 			PhysicalLinkType physicalLinkType = (PhysicalLinkType) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return physicalLinkType.getId().getIdentifierString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return Long.toString(physicalLinkType.getCreated().getTime());
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return Long.toString(physicalLinkType.getModified().getTime());
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return physicalLinkType.getCreatorId().getIdentifierString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return physicalLinkType.getModifierId().getIdentifierString();
-			else if (key.equals(COLUMN_CODENAME))
-				return physicalLinkType.getCodename();			
+			if (key.equals(COLUMN_CODENAME))
+				return physicalLinkType.getCodename();
 			else if (key.equals(COLUMN_NAME))
 				return physicalLinkType.getName();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				return physicalLinkType.getDescription();
 			else if (key.equals(COLUMN_DIMENSION_X))
-				return Integer.toString(physicalLinkType.getBindingDimension().getWidth());
+				return new Integer(physicalLinkType.getBindingDimension().getWidth());
 			else if (key.equals(COLUMN_DIMENSION_Y))
-				return Integer.toString(physicalLinkType.getBindingDimension().getHeight());
+				return new Integer(physicalLinkType.getBindingDimension().getHeight());
 			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
 				return physicalLinkType.getCharacteristics();
 		}
@@ -132,30 +109,22 @@ public class PhysicalLinkTypeWrapper implements Wrapper {
 		if (object instanceof PhysicalLinkType) {
 			PhysicalLinkType physicalLinkType = (PhysicalLinkType) object;
 			if (key.equals(COLUMN_CODENAME))
-				physicalLinkType.setCodename((String)value);			
+				physicalLinkType.setCodename((String) value);
 			else if (key.equals(COLUMN_NAME))
-				physicalLinkType.setName((String)value);
+				physicalLinkType.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				physicalLinkType.setDescription((String)value);
+				physicalLinkType.setDescription((String) value);
 			else if (key.equals(COLUMN_DIMENSION_X))
-				physicalLinkType.setBindingDimension(new IntDimension(Integer.parseInt((String)value), physicalLinkType.getBindingDimension().getHeight()));
+				physicalLinkType.setBindingDimension(new IntDimension(((Integer) value).intValue(), physicalLinkType
+						.getBindingDimension().getHeight()));
 			else if (key.equals(COLUMN_DIMENSION_Y))
-				physicalLinkType.setBindingDimension(new IntDimension(physicalLinkType.getBindingDimension().getWidth(), Integer.parseInt((String)value)));
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID)) {
-					List characteristicIdStr = (List)value;
-					List characteristicIds = new ArrayList(characteristicIdStr.size());
-					for (Iterator it = characteristicIdStr.iterator(); it.hasNext();) 
-						characteristicIds.add(new Identifier((String) it.next()));
-					try {
-						physicalLinkType.setCharacteristics(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-					} catch (DatabaseException e) {
-						Log.errorMessage("PhysicalLinkTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-					} catch (CommunicationException e) {
-						Log.errorMessage("PhysicalLinkTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-					}
-				}
+				physicalLinkType.setBindingDimension(new IntDimension(
+																		physicalLinkType.getBindingDimension()
+																				.getWidth(), ((Integer) value)
+																				.intValue()));
+			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+				physicalLinkType.setCharacteristics((List) value);
 		}
 	}
-
 
 }

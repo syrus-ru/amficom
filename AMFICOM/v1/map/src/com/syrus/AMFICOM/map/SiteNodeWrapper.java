@@ -1,68 +1,57 @@
 /*
-* $Id: SiteNodeWrapper.java,v 1.3 2005/01/27 06:23:59 bob Exp $
-*
-* Copyright © 2004 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+ * $Id: SiteNodeWrapper.java,v 1.4 2005/02/01 07:25:22 bob Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.map;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
-
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/27 06:23:59 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/01 07:25:22 $
  * @author $Author: bob $
  * @module map_v1
  */
 public class SiteNodeWrapper implements Wrapper {
 
 	// name VARCHAR2(128),
-	public static final String COLUMN_NAME  = "name";
+	public static final String			COLUMN_NAME					= "name";
 	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION   = "description";
+	public static final String			COLUMN_DESCRIPTION			= "description";
 	// longitude NUMBER(12,6),
-	public static final String COLUMN_LONGITUDE     = "longitude";
+	public static final String			COLUMN_LONGITUDE			= "longitude";
 	// latiude NUMBER(12,6),
-	public static final String COLUMN_LATIUDE       = "latiude";
+	public static final String			COLUMN_LATIUDE				= "latiude";
 	// image_id VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_IMAGE_ID      = "image_id";
+	public static final String			COLUMN_IMAGE_ID				= "image_id";
 	// site_node_type_id VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_SITE_NODE_TYPE_ID     = "site_node_type_id";
+	public static final String			COLUMN_SITE_NODE_TYPE_ID	= "site_node_type_id";
 	// city VARCHAR2(128),
-	public static final String COLUMN_CITY  = "city";
+	public static final String			COLUMN_CITY					= "city";
 	// street VARCHAR2(128),
-	public static final String COLUMN_STREET        = "street";
+	public static final String			COLUMN_STREET				= "street";
 	// building VARCHAR2(128),
-	public static final String COLUMN_BUILDING      = "building";
+	public static final String			COLUMN_BUILDING				= "building";
 
-	public static final String COLUMN_CHARACTERISTIC_ID  = "collector_id";
-
+	public static final String			COLUMN_CHARACTERISTIC_ID	= "collector_id";
 
 	protected static SiteNodeWrapper	instance;
 
-	protected List				keys;
+	protected List						keys;
 
 	private SiteNodeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { StorableObjectDatabase.COLUMN_ID, StorableObjectDatabase.COLUMN_CREATED,
-				StorableObjectDatabase.COLUMN_MODIFIED, StorableObjectDatabase.COLUMN_CREATOR_ID,
-				StorableObjectDatabase.COLUMN_MODIFIER_ID, COLUMN_NAME, COLUMN_DESCRIPTION,
-				COLUMN_LONGITUDE, COLUMN_LATIUDE, COLUMN_IMAGE_ID, COLUMN_SITE_NODE_TYPE_ID,
-				COLUMN_CITY, COLUMN_STREET, COLUMN_BUILDING, 
+		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_LONGITUDE, COLUMN_LATIUDE,
+				COLUMN_IMAGE_ID, COLUMN_SITE_NODE_TYPE_ID, COLUMN_CITY, COLUMN_STREET, COLUMN_BUILDING,
 				COLUMN_CHARACTERISTIC_ID};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
@@ -88,7 +77,7 @@ public class SiteNodeWrapper implements Wrapper {
 		return key;
 	}
 
-	public Class getPropertyClass(String key) {	
+	public Class getPropertyClass(String key) {
 		if (key.equals(COLUMN_CHARACTERISTIC_ID))
 			return List.class;
 		return String.class;
@@ -102,28 +91,18 @@ public class SiteNodeWrapper implements Wrapper {
 	public Object getValue(Object object, String key) {
 		if (object instanceof SiteNode) {
 			SiteNode siteNode = (SiteNode) object;
-			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return siteNode.getId().getIdentifierString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return Long.toString(siteNode.getCreated().getTime());
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return Long.toString(siteNode.getModified().getTime());
-			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return siteNode.getCreatorId().getIdentifierString();
-			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return siteNode.getModifierId().getIdentifierString();
-			else if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME))
 				return siteNode.getName();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				return siteNode.getDescription();
 			else if (key.equals(COLUMN_LONGITUDE))
-				return Double.toString(siteNode.getLocation().getX());
+				return new Double(siteNode.getLocation().getX());
 			else if (key.equals(COLUMN_LATIUDE))
-				return Double.toString(siteNode.getLocation().getY());
+				return new Double(siteNode.getLocation().getY());
 			else if (key.equals(COLUMN_IMAGE_ID))
-				return siteNode.getImageId().getIdentifierString();
+				return siteNode.getImageId();
 			else if (key.equals(COLUMN_SITE_NODE_TYPE_ID))
-				return siteNode.getType().getId().getIdentifierString();			
+				return siteNode.getType();
 			else if (key.equals(COLUMN_CITY))
 				return siteNode.getCity();
 			else if (key.equals(COLUMN_STREET))
@@ -152,38 +131,21 @@ public class SiteNodeWrapper implements Wrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				siteNode.setDescription((String) value);
 			else if (key.equals(COLUMN_LONGITUDE))
-				siteNode.setLongitude(Double.parseDouble((String)value)); 
+				siteNode.setLongitude(((Double) value).doubleValue());
 			else if (key.equals(COLUMN_LATIUDE))
-				siteNode.setLatitude(Double.parseDouble((String)value));
+				siteNode.setLatitude(((Double) value).doubleValue());
 			else if (key.equals(COLUMN_IMAGE_ID))
-				siteNode.setImageId(new Identifier((String)value));
+				siteNode.setImageId((Identifier) value);
 			else if (key.equals(COLUMN_SITE_NODE_TYPE_ID))
-				try {
-				siteNode.setType((SiteNodeType) MapStorableObjectPool.getStorableObject(new Identifier((String)value), true));
-				} catch (DatabaseException e) {
-					Log.errorMessage("SiteNodeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				} catch (CommunicationException e) {
-					Log.errorMessage("SiteNodeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
+				siteNode.setType((SiteNodeType) value);
 			else if (key.equals(COLUMN_CITY))
-				siteNode.setCity((String)value);
+				siteNode.setCity((String) value);
 			else if (key.equals(COLUMN_STREET))
-				siteNode.setStreet((String)value);
+				siteNode.setStreet((String) value);
 			else if (key.equals(COLUMN_BUILDING))
-				siteNode.setBuilding((String)value);			
-			else if (key.equals(COLUMN_CHARACTERISTIC_ID)) {
-					List characteristicIdStr = (List)value;
-					List characteristicIds = new ArrayList(characteristicIdStr.size());
-					for (Iterator it = characteristicIdStr.iterator(); it.hasNext();) 
-						characteristicIds.add(new Identifier((String) it.next()));
-					try {
-						siteNode.setCharacteristics(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-					} catch (DatabaseException e) {
-						Log.errorMessage("SiteNodeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-					} catch (CommunicationException e) {
-						Log.errorMessage("SiteNodeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-					}
-				}
+				siteNode.setBuilding((String) value);
+			else if (key.equals(COLUMN_CHARACTERISTIC_ID))
+				siteNode.setCharacteristics((List) value);
 		}
 	}
 }
