@@ -1,5 +1,5 @@
 /*
- * $Id: AlarmType.java,v 1.1 2004/12/27 13:05:54 arseniy Exp $
+ * $Id: AlarmType.java,v 1.2 2004/12/27 22:07:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.event;
 
 import java.util.Date;
 import java.util.List;
-import java.util.LinkedList;
 import java.util.Collections;
 
 import com.syrus.AMFICOM.general.Identifier;
@@ -28,12 +27,13 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.event.corba.AlarmType_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/27 13:05:54 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/27 22:07:46 $
  * @author $Author: arseniy $
  * @module event_v1
  */
 
 public class AlarmType extends StorableObjectType {
+	private static final long serialVersionUID = 2134412328156996102L;
 
 	private StorableObjectDatabase alarmTypeDatabase;
 
@@ -53,6 +53,8 @@ public class AlarmType extends StorableObjectType {
 		super(att.header,
 					new String(att.codename),
 					new String(att.description));
+
+		this.alarmTypeDatabase = EventDatabaseContext.alarmTypeDatabase;
 	}
 
 	protected AlarmType(Identifier id,
@@ -66,6 +68,10 @@ public class AlarmType extends StorableObjectType {
 				creatorId,
 				codename,
 				description);
+
+		super.currentVersion = super.getNextVersion();
+
+		this.alarmTypeDatabase = EventDatabaseContext.alarmTypeDatabase;
 	}
 
 	/**
@@ -122,6 +128,7 @@ public class AlarmType extends StorableObjectType {
 					 + ID_MODIFIER_ID + this.modifierId.toString() + EOSL
 					 + TypedObject.ID_CODENAME + this.codename+ EOSL
 					 + TypedObject.ID_DESCRIPTION + this.description + EOSL;
+		return str;
 	}
 
 	protected synchronized void setAttributes(Date created,

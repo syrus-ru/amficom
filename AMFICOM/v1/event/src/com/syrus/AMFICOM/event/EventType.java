@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.3 2004/12/27 13:05:54 arseniy Exp $
+ * $Id: EventType.java,v 1.4 2004/12/27 22:07:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.event;
 
 import java.util.Date;
 import java.util.List;
-import java.util.LinkedList;
 import java.util.Collections;
 
 import com.syrus.AMFICOM.general.Identifier;
@@ -28,7 +27,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.event.corba.EventType_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/27 13:05:54 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/27 22:07:46 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -54,6 +53,8 @@ public class EventType extends StorableObjectType {
 		super(ett.header,
 					new String(ett.codename),
 					new String(ett.description));
+
+		this.eventTypeDatabase = EventDatabaseContext.eventTypeDatabase;
 	}
 
 	protected EventType(Identifier id,
@@ -67,6 +68,10 @@ public class EventType extends StorableObjectType {
 				creatorId,
 				codename,
 				description);
+
+		super.currentVersion = super.getNextVersion();
+
+		this.eventTypeDatabase = EventDatabaseContext.eventTypeDatabase;
 	}
 
 	/**
@@ -123,6 +128,7 @@ public class EventType extends StorableObjectType {
 					 + ID_MODIFIER_ID + this.modifierId.toString() + EOSL
 					 + TypedObject.ID_CODENAME + this.codename+ EOSL
 					 + TypedObject.ID_DESCRIPTION + this.description + EOSL;
+		return str;
 	}
 
 	protected synchronized void setAttributes(Date created,

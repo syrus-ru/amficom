@@ -18,6 +18,7 @@ $(call checkenve,JAVA_HOME)
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/event/*.java)
 
+
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com/syrus/AMFICOM/event
