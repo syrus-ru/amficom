@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.10 2005/02/22 11:00:14 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.11 2005/03/01 15:43:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/02/22 11:00:14 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/01 15:43:01 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController implements MapElementController
@@ -100,26 +100,19 @@ public abstract class AbstractLinkController implements MapElementController
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
-//		StorableObjectCondition pTypeCondition = new StringFieldCondition(
-//			codename,
-//			ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE,
-//			StringFieldSort.STRINGSORT_BASE);
-
 		try
 		{
 			Collection pTypes =
 				GeneralStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
-			for (Iterator it = pTypes.iterator(); it.hasNext();)
+			if(!pTypes.isEmpty())
 			{
-				CharacteristicType type = (CharacteristicType )it.next();
-				if (type.getCodename().equals(codename))
-				{
-					return type;
-				}
+				CharacteristicType type = (CharacteristicType )pTypes.iterator().next();
+				return type;
 			}
 		}
 		catch(ApplicationException ex)
 		{
+			//TODO empty
 			System.err.println("Exception searching CharacteristicType. Creating new one.");
 			ex.printStackTrace();
 		}

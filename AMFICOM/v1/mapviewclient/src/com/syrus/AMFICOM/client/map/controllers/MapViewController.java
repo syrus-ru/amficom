@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.18 2005/02/28 16:18:49 krupenn Exp $
+ * $Id: MapViewController.java,v 1.19 2005/03/01 15:43:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,10 +10,12 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.Marker;
 import java.awt.Graphics;
@@ -58,7 +60,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/02/28 16:18:49 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/01 15:43:01 $
  * @module mapviewclient_v1
  */
 public final class MapViewController
@@ -75,6 +77,16 @@ public final class MapViewController
 	public static final String ELEMENT_MARKER = "marker";
 	public static final String ELEMENT_CABLEINLET = "cableinlet";
 	public static final String ELEMENT_NODELINK = "nodelink";
+
+	public static String getMapElementReadableType(MapElement mapElement)
+	{
+		if(mapElement instanceof SiteNode)
+		{
+			SiteNode site = (SiteNode )mapElement;
+			return ((SiteNodeType )site.getType()).getName();
+		}
+		return LangModelMap.getString(MapViewController.getMapElementType(mapElement));
+	}
 
 	public static String getMapElementType(MapElement mapElement)
 	{

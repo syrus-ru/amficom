@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.5 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.6 2005/03/01 15:43:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,17 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.Stroke;
+import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
@@ -23,22 +33,10 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
-import java.awt.Stroke;
-import java.awt.geom.Rectangle2D;
-
-import java.util.HashMap;
-
 /**
  * Контроллер фрагмента линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/01 15:43:01 $
  * @module mapviewclient_v1
  */
 public final class NodeLinkController extends AbstractLinkController
@@ -114,7 +112,7 @@ public final class NodeLinkController extends AbstractLinkController
 				+ " " 
 				+ smne.getName() 
 				+ " [" 
-				+ LangModel.getString("node" + smne.getClass().getName()) 
+				+ MapViewController.getMapElementReadableType(smne)
 				+ "]";
 			AbstractNode emne = link.getEndNode();
 			s3 = "\n" 
@@ -123,7 +121,7 @@ public final class NodeLinkController extends AbstractLinkController
 				+ " " 
 				+ emne.getName() 
 				+ " [" 
-				+ LangModel.getString("node" + emne.getClass().getName()) 
+				+ MapViewController.getMapElementReadableType(emne)
 				+ "]";
 		}
 		catch(Exception e)

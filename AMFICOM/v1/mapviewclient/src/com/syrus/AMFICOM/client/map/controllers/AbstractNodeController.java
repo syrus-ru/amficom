@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.6 2005/02/28 16:18:49 krupenn Exp $
+ * $Id: AbstractNodeController.java,v 1.7 2005/03/01 15:43:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,16 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.MapElement;
-
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -29,13 +19,20 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-
 import java.util.HashMap;
+
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Контроллер узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/28 16:18:49 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/01 15:43:01 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractNodeController implements MapElementController
@@ -320,9 +317,7 @@ public abstract class AbstractNodeController implements MapElementController
 
 		String s1 = node.getName();
 
-		return s1 + " [" + LangModelMap.getString(MapViewController.getMapElementType(node)) + "]";
+		return s1 + " [" + MapViewController.getMapElementReadableType(node) + "]";
 	}
-
-
 
 }

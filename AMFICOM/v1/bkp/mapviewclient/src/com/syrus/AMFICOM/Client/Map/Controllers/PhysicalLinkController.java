@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.8 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.9 2005/03/01 15:43:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,14 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Stroke;
+import java.awt.geom.Rectangle2D;
+import java.util.Iterator;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
@@ -27,19 +34,10 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Stroke;
-import java.awt.geom.Rectangle2D;
-
-import java.util.Iterator;
-
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/01 15:43:01 $
  * @module mapviewclient_v1
  */
 public class PhysicalLinkController extends AbstractLinkController
@@ -101,7 +99,7 @@ public class PhysicalLinkController extends AbstractLinkController
 				+ " " 
 				+ smne.getName() 
 				+ " [" 
-				+ LangModel.getString("node" + smne.getClass().getName()) 
+				+ MapViewController.getMapElementReadableType(smne)
 				+ "]";
 			AbstractNode emne = link.getEndNode();
 			s3 = "\n" 
@@ -110,7 +108,7 @@ public class PhysicalLinkController extends AbstractLinkController
 				+ " " 
 				+ emne.getName() 
 				+ " [" 
-				+ LangModel.getString("node" + emne.getClass().getName()) 
+				+ MapViewController.getMapElementReadableType(emne)
 				+ "]";
 		}
 		catch(Exception e)
