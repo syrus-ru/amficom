@@ -1,5 +1,5 @@
 /*
- * $Id: ClientLRUMap.java,v 1.2 2004/11/15 13:32:36 bob Exp $
+ * $Id: ClientLRUMap.java,v 1.3 2004/11/18 12:18:14 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,12 +12,14 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.text.html.parser.Entity;
+
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/15 13:32:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2004/11/18 12:18:14 $
+ * @author $Author: max $
  * @module generalclient_v1
  */
 
@@ -32,7 +34,7 @@ public class ClientLRUMap extends LRUMap {
 	}
 
 	
-	public synchronized Object put(Object key, Object value) {
+	public synchronized Object _put(Object key, Object value) {
 		super.modCount++;
 		Entry newEntry = new Entry(key, value);
 		Object ret = null;
@@ -70,7 +72,27 @@ public class ClientLRUMap extends LRUMap {
 		}
 		return ret;
 	}
-
+    
+	public synchronized Object put(Object key, Object value) {
+		StorableObject trowedOutObject = (StorableObject) super.put(key, value);
+        if(!trowedOutObject.isChanged()) { 
+            return trowedOutObject;
+        } 
+        for (int i = super.array.length - 1; i >= 0; i--) {
+        	StorableObject storableObject = (StorableObject) super.array[i].value;
+        	if (!storableObject.isChanged()) {
+        		super.array[i] = new Entry(trowedOutObject.getId(), trowedOutObject);
+        		return storableObject;
+        	}
+		}
+        //  array enlargement
+        super.entityCount++;
+        Entry[] array1 = new Entry[super.array.length + 10];
+        System.arraycopy(super.array, 0, array1, 0, super.array.length);
+        array1[super.array.length + 1] = new Entry(trowedOutObject.getId(), trowedOutObject);
+        super.array = array1;
+        return null;                
+    }
 	
 	public synchronized List getChanged(){
 		List list = null;
