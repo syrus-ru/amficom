@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 import java.text.SimpleDateFormat;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
@@ -11,7 +10,6 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.ApplicationException;
 
 public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 {
@@ -33,7 +31,6 @@ public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 	private JPanel descriptionPanel = new JPanel();
 	private JScrollPane descriptionScrollPane = new JScrollPane();
 	private JTextPane descTextArea = new JTextPane();
-	private JButton saveButton = new JButton();
 
 	protected AbstractLinkTypeGeneralPanel()
 	{
@@ -76,12 +73,6 @@ public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 		modifyLabel2.setText(LangModelConfig.getString("label_modified2")); //$NON-NLS-1$
 		modifyLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 		idField.setEnabled(false);
-		saveButton.setText(LangModelConfig.getString("menuMapSaveText")); //$NON-NLS-1$
-		saveButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveButton_actionPerformed(e);
-			}
-		});
 
 		descriptionPanel.setLayout(new BorderLayout());
 		descriptionScrollPane.getViewport().add(descTextArea, null);
@@ -163,18 +154,6 @@ public class AbstractLinkTypeGeneralPanel extends GeneralPanel
 			return false;
 		}
 		return true;
-	}
-
-	void saveButton_actionPerformed(ActionEvent e)
-	{
-		if(modify())
-		{
-			try {
-				ConfigurationStorableObjectPool.putStorableObject(linkType);
-			}
-			catch (ApplicationException ex) {
-			}
-		}
 	}
 
 	public boolean delete()

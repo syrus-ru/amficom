@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Scheme.SchemeFactory;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
@@ -40,7 +39,7 @@ public class CableLinkPropsPanel extends JPanel
 	boolean smooth_length = false;
 
 	SchemeCableLink[] links;
-	List cablelinkTypes;
+	Collection cablelinkTypes;
 	CableLinkType lt;
 
 	private static LinkTypeSort[] linkTypeSorts = new LinkTypeSort[] {
@@ -270,7 +269,7 @@ public class CableLinkPropsPanel extends JPanel
 		descriptionTextArea.setAutoscrolls(true);
 
 		try {
-			DomainCondition condition = new DomainCondition(null, ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
+			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
 			cablelinkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			for (int i = 0; i < linkTypeSorts.length; i++) {

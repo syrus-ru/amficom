@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 import java.text.SimpleDateFormat;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
@@ -20,7 +19,6 @@ public class EquipmentGeneralPanel extends GeneralPanel
 	protected SchemeElement element;
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
-	private JButton saveButton = new JButton();
 	private JLabel nameLabel = new JLabel();
 	private JTextField nameField = new JTextField();
 	private JLabel portsNumberLabel = new JLabel();
@@ -73,12 +71,6 @@ public class EquipmentGeneralPanel extends GeneralPanel
 
 		this.setLayout(new GridBagLayout());
 
-		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
-		saveButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveButton_actionPerformed(e);
-			}
-		});
 		latitudeLabel.setText(LangModelConfig.getString("equip_latitude"));
 		latitudeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
@@ -251,21 +243,6 @@ public class EquipmentGeneralPanel extends GeneralPanel
 			return false;
 		}
 		return true;
-	}
-
-	void saveButton_actionPerformed(ActionEvent e)
-	{
-		if(modify())
-		{
-			if (element.equipment() != null)
-			{
-				try {
-					ConfigurationStorableObjectPool.putStorableObject(element.equipmentImpl());
-				}
-				catch (ApplicationException ex) {
-				}
-			}
-		}
 	}
 
 }

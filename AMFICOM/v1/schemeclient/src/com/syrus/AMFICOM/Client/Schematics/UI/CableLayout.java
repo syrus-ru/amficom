@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
+import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.*;
 
@@ -37,11 +38,11 @@ public class CableLayout implements OperationListener
 		panel.getGraph().setGraphEditable(false);
 		panel.getGraph().setAntiAliased(true);
 
-//		CableLinkType type = link.cableLinkType();
+		CableLinkType type = link.cableLinkTypeImpl();
 		int nModules = 8;
-//		if (type.codename.equals("okst8") ||
-//				type.codename.equals("okst16"))
-//			nModules = 6;
+		if (type.getCodename().equals("okst8") ||
+				type.getCodename().equals("okst16"))
+			nModules = 6;
 
 		int tmp = (int)(2 * FIBER_RADIUS * Math.sqrt(Math.round((double)link.schemeCableThreads().length / (double)nModules + 0.499)));
 		if (tmp > radius)

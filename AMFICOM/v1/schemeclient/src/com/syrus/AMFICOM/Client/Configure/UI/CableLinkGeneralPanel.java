@@ -1,5 +1,8 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
@@ -28,14 +31,11 @@ public class CableLinkGeneralPanel extends AbstractLinkGeneralPanel
 		super.setObject(or);
 
 		try {
-			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-					domain_id, true);
-			DomainCondition condition = new DomainCondition(domain, ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
+			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
+			List clTypes = new ArrayList(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
 			typeBox.setModel(new ObjListModel(
 					CableLinkTypeController.getInstance(),
-					ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true),
+					clTypes,
 					StorableObjectWrapper.COLUMN_NAME));
 			typeBox.setSelectedItem(((SchemeCableLink)link).cableLinkType());
 		}

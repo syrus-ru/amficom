@@ -17,7 +17,6 @@ public class EquipmentPortsPanel extends GeneralPanel
 	protected SchemeElement element;
 
 	private ObjComboBox portBox;
-//	PortGeneralPanel pgp = new PortGeneralPanel();
 	private PortPane pgp = new PortPane();
 	private JPanel mainPanel = new JPanel();
 	private JPanel controlsPanel = new JPanel();

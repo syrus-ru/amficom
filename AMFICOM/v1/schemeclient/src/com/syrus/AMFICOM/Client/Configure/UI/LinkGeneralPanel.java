@@ -1,7 +1,8 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.administration.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
@@ -23,14 +24,11 @@ public class LinkGeneralPanel extends AbstractLinkGeneralPanel
 		super.setObject(or);
 
 		try {
-			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-					domain_id, true);
-			DomainCondition condition = new DomainCondition(domain, ObjectEntities.LINKTYPE_ENTITY_CODE);
+			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINKTYPE_ENTITY_CODE);
+			List lTypes = new ArrayList(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
 			typeBox.setModel(new ObjListModel(
 					LinkTypeController.getInstance(),
-					ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true),
+					lTypes,
 					StorableObjectWrapper.COLUMN_NAME));
 			typeBox.setSelectedItem(((SchemeLink)link).linkType());
 		}

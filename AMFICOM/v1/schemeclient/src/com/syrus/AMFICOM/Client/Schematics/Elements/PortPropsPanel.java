@@ -38,7 +38,7 @@ public class PortPropsPanel extends JPanel
 	private boolean skip_changes = false;
 
 	SchemePort[] ports;
-	List portTypes;
+	Collection portTypes;
 	PortType pt;
 
 	private static PortTypeSort[] portTypeSorts = new PortTypeSort[] {
@@ -197,15 +197,15 @@ public class PortPropsPanel extends JPanel
 		descriptionTextArea.setAutoscrolls(true);
 
 		try {
-			DomainCondition condition = new DomainCondition(null, ObjectEntities.PORTTYPE_ENTITY_CODE);
+			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
 			portTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			for (int i = 0; i < portTypeSorts.length; i++) {
 				sortComboBox.addItem(portTypeSorts[i]);
 			}
 
-			condition = new DomainCondition(null, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-			List measurementPortTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			condition = new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+			Collection measurementPortTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 			accessTypeComboBox.addElements(measurementPortTypes);
 		}
 		catch (ApplicationException ex) {

@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
@@ -9,7 +8,6 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.ApplicationException;
-import oracle.jdeveloper.layout.XYConstraints;
 
 public class MeasurementPortPane extends JPanel implements ObjectResourcePropertiesPane
 {
@@ -19,8 +17,6 @@ public class MeasurementPortPane extends JPanel implements ObjectResourcePropert
 	private MeasurementPortGeneralPanel gPanel = new MeasurementPortGeneralPanel();
 	private MeasurementPortCharacteristicsPanel chPanel = new MeasurementPortCharacteristicsPanel();
 	private JTabbedPane tabbedPane = new JTabbedPane();
-	private JButton saveButton = new JButton();
-	private JPanel buttonsPanel = new JPanel();
 
 	protected MeasurementPortPane()
 	{
@@ -57,15 +53,6 @@ public class MeasurementPortPane extends JPanel implements ObjectResourcePropert
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
-
-		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
-		saveButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveButton_actionPerformed(e);
-			}
-		});
-
-		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));
 	}
 
 	public Object getObject()
@@ -132,10 +119,4 @@ public class MeasurementPortPane extends JPanel implements ObjectResourcePropert
 	{
 		return false;
 	}
-
-	void saveButton_actionPerformed(ActionEvent e)
-	{
-		save();
-	}
-
 }

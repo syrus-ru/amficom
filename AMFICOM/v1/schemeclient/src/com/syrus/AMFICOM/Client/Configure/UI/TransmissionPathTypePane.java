@@ -17,12 +17,13 @@ public class TransmissionPathTypePane extends JPanel implements ObjectResourcePr
 
 	private TransmissionPathTypeGeneralPanel gPanel = new TransmissionPathTypeGeneralPanel();
 	private JTabbedPane tabbedPane = new JTabbedPane();
+	
+	private static TransmissionPathTypePane instance;
 
 	protected TransmissionPathTypePane()
 	{
 		super();
-		try
-		{
+		try {
 			jbInit();
 		}
 		catch (Exception e)
@@ -31,49 +32,45 @@ public class TransmissionPathTypePane extends JPanel implements ObjectResourcePr
 		}
 	}
 
-	protected TransmissionPathTypePane(TransmissionPathType tp)
-	{
+	protected TransmissionPathTypePane(TransmissionPathType tp) {
 		this();
 		setObject(tp);
 	}
+	
+	public static ObjectResourcePropertiesPane getInstance() {
+		if (instance == null)
+			instance = new TransmissionPathTypePane();
+		return instance;
+	}
 
-	private void jbInit() throws Exception
-	{
+	private void jbInit() throws Exception {
 		this.setLayout(new BorderLayout());
 		this.add(tabbedPane, BorderLayout.CENTER);
-
 		tabbedPane.setTabPlacement(SwingConstants.TOP);
-
 		tabbedPane.add(gPanel.getName(), gPanel);
 	}
 
-	public Object getObject()
-	{
+	public Object getObject() {
 		return pathType;
 	}
 
-	public void setObject(Object or)
-	{
+	public void setObject(Object or) {
 		this.pathType = (TransmissionPathType)or;
-
 		gPanel.setObject(pathType);
 	}
 
-	public void setContext(ApplicationContext aContext)
-	{
+	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
 		gPanel.setContext(aContext);
 	}
 
-	public boolean modify()
-	{
+	public boolean modify() {
 		if(gPanel.modify())
 			return true;
 		return false;
 	}
 
-	public boolean save()
-	{
+	public boolean save() {
 /*		if(!Checker.checkCommandByUserId(
 				aContext.getSessionInterface().getUserId(),
 				Checker.catalogCMediting))
@@ -96,33 +93,27 @@ public class TransmissionPathTypePane extends JPanel implements ObjectResourcePr
 		return false;
 	}
 
-	public boolean open()
-	{
+	public boolean open() {
 		return false;
 	}
 
-	public boolean cancel()
-	{
+	public boolean cancel() {
 		return false;
 	}
 
-	public boolean delete()
-	{
-/*		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogCMediting))
-			return false;
-
-		String []s = new String[1];
-
-		s[0] = path.id;
-		aContext.getDataSourceInterface().RemovePaths(s);
-*/
+	public boolean delete() {
+/*
+ * if(!Checker.checkCommandByUserId( aContext.getSessionInterface().getUserId(),
+ * Checker.catalogCMediting)) return false;
+ * 
+ * String []s = new String[1];
+ * 
+ * s[0] = path.id; aContext.getDataSourceInterface().RemovePaths(s);
+ */
 		return true;
 	}
 
-	public boolean create()
-	{
+	public boolean create() {
 		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый тип");
 		dialog.setSize(dialog.preferredSize);
 

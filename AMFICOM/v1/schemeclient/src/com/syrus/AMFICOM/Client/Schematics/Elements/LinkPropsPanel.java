@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
 import java.util.*;
-import java.util.List;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -11,7 +10,6 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
@@ -36,7 +34,7 @@ public class LinkPropsPanel extends JPanel
 	private boolean skip_changes = false;
 
 	protected SchemeLink[] links;
-	protected List linkTypes;
+	protected Collection linkTypes;
 	protected LinkType lt;
 
 	private static LinkTypeSort[] linkTypeSorts = new LinkTypeSort[] {
@@ -254,7 +252,7 @@ public class LinkPropsPanel extends JPanel
 		descriptionTextArea.setAutoscrolls(true);
 
 		try {
-			DomainCondition condition = new DomainCondition(null, ObjectEntities.LINKTYPE_ENTITY_CODE);
+			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINKTYPE_ENTITY_CODE);
 			linkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			for (int i = 0; i < linkTypeSorts.length; i++) {

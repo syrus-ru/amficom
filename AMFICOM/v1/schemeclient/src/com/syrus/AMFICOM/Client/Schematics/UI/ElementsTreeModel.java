@@ -16,6 +16,9 @@ import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.MeasurementTypeController;
 import com.syrus.AMFICOM.scheme.corba.*;
 
 
@@ -99,6 +102,8 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				return TransmissionPathType.class;
 			if(s.equals("MeasurementPortType"))
 				return MeasurementPortType.class;
+			if(s.equals("MeasurementType"))
+				return MeasurementType.class;
 		}
 		else if (node.getObject() instanceof SchemeProtoGroup)
 		{
@@ -130,6 +135,8 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 				return PortTypeController.getInstance();
 			if(s.equals("TransmissionPathType"))
 				return TransmissionPathTypeController.getInstance();
+			if(s.equals("MeasurementType"))
+				return MeasurementTypeController.getInstance();
 			if(s.equals("MeasurementPortType"))
 				return MeasurementPortTypeController.getInstance();
 		}
@@ -183,19 +190,15 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			else if(s.equals("jdirectory"))
 			{
 //				vec.add(new ObjectResourceTreeNode(KISType.typ, LangModelConfig.getString("menuJDirKISText"), true));
+				vec.add(new ObjectResourceTreeNode("MeasurementType", LangModelConfig.getString("MeasurementType"), true));
 				vec.add(new ObjectResourceTreeNode("MeasurementPortType", LangModelConfig.getString("menuJDirAccessPointText"), true));
-				vec.add(new ObjectResourceTreeNode("TransmissionPathType", LangModelConfig.getString("menuJDirPathText"), true));
+//				vec.add(new ObjectResourceTreeNode("TransmissionPathType", LangModelConfig.getString("menuJDirPathText"), true));
 			}
 			else if(s.equals("LinkType"))
 			{
 				try {
-					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-							domain_id, true);
-					DomainCondition condition = new DomainCondition(domain,
-							ObjectEntities.LINKTYPE_ENTITY_CODE);
-					List linkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINKTYPE_ENTITY_CODE);
+					Collection linkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = linkTypes.iterator(); it.hasNext(); ) {
 						LinkType type = (LinkType)it.next();
@@ -209,17 +212,26 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals("CableLinkType"))
 			{
+				try {
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINKTYPE_ENTITY_CODE);
+					Collection linkTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+					for (Iterator it = linkTypes.iterator(); it.hasNext(); ) {
+						CableLinkType type = (CableLinkType)it.next();
+						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
+						vec.add(n);
+					}
+				}
+				catch (ApplicationException ex) {
+					ex.printStackTrace();
+				}
+
 			}
 			else if(s.equals("PortType"))
 			{
 				try {
-					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-							domain_id, true);
-					DomainCondition condition = new DomainCondition(domain,
-							ObjectEntities.PORTTYPE_ENTITY_CODE);
-					List portTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
+					Collection portTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = portTypes.iterator(); it.hasNext(); ) {
 						PortType type = (PortType)it.next();
@@ -234,13 +246,8 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			else if(s.equals("TransmissionPathType"))
 			{
 				try {
-					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-							domain_id, true);
-					DomainCondition condition = new DomainCondition(domain,
-							ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
-					List pathTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
+					Collection pathTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = pathTypes.iterator(); it.hasNext(); ) {
 						TransmissionPathType type = (TransmissionPathType)it.next();
@@ -255,17 +262,28 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			else if(s.equals("MeasurementPortType"))
 			{
 				try {
-					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-							domain_id, true);
-					DomainCondition condition = new DomainCondition(domain,
-							ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
-					List pathTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
+					Collection pathTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = pathTypes.iterator(); it.hasNext(); ) {
 						MeasurementPortType type = (MeasurementPortType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getName(), true, true);
+						vec.add(n);
+					}
+				}
+				catch (ApplicationException ex) {
+					ex.printStackTrace();
+				}
+			}
+			else if(s.equals("MeasurementType"))
+			{
+				try {
+					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+					Collection measurementTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+					for (Iterator it = measurementTypes.iterator(); it.hasNext(); ) {
+						MeasurementType type = (MeasurementType)it.next();
+						ObjectResourceTreeNode n = new ObjectResourceTreeNode(type, type.getDescription(), true, true);
 						vec.add(n);
 					}
 				}
@@ -282,7 +300,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 							domain_id, true);
 					DomainCondition condition = new DomainCondition(domain,
 							ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
-					List groups = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection groups = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = groups.iterator(); it.hasNext(); ) {
 						SchemeProtoGroup group = (SchemeProtoGroup)it.next();

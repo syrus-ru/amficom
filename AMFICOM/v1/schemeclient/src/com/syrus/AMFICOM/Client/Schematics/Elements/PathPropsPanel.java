@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.PathBuilder;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
-import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
@@ -39,7 +38,7 @@ public class PathPropsPanel extends JPanel
 
 //	public ArrayList elements_to_add = new ArrayList();
 	Object element_to_add;
-	List pathTypes;
+	Collection pathTypes;
 	SchemePath path;
 	ApplicationContext aContext;
 	List links;
@@ -147,11 +146,7 @@ public class PathPropsPanel extends JPanel
 		});
 
 		try {
-			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-					domain_id, true);
-			DomainCondition condition = new DomainCondition(domain, ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
+			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
 			pathTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 		catch (ApplicationException ex) {

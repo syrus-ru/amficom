@@ -3,14 +3,12 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 import java.text.SimpleDateFormat;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.SchemeProtoElement;
 
@@ -41,7 +39,6 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 	private JLabel cabelPortsNumberLabel1 = new JLabel();
 	private JLabel cabelPortsNumberLabel2 = new JLabel();
 	private JTextField cabelPortsNumberField = new JTextField();
-	private JButton saveButton = new JButton();
 	private BorderLayout borderLayout1 = new BorderLayout();
 
 	protected EquipmentTypeGeneralPanel()
@@ -98,13 +95,6 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 
 		portsNumberLabel.setText("Число портов");
 		portsNumberLabel.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-
-		saveButton.setText("Сохранить");
-		saveButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveButton_actionPerformed(e);
-			}
-		});
 
 		this.setLayout(gridBagLayout1);
 
@@ -197,18 +187,6 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 			return false;
 		}
 		return true;
-	}
-
-	void saveButton_actionPerformed(ActionEvent e)
-	{
-		if (modify()) {
-			try {
-				ConfigurationStorableObjectPool.putStorableObject(equipmentType);
-			}
-			catch (ApplicationException ex) {
-				ex.printStackTrace();
-			}
-		}
 	}
 
 	public boolean delete()

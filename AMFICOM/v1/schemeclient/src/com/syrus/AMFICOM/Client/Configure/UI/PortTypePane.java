@@ -1,9 +1,6 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.util.Iterator;
-
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
@@ -15,8 +12,6 @@ import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.general.*;
 
-import oracle.jdeveloper.layout.XYConstraints;
-
 public class PortTypePane extends JPanel implements
 		ObjectResourcePropertiesPane {
 	private ApplicationContext aContext;
@@ -26,8 +21,6 @@ public class PortTypePane extends JPanel implements
 	private PortTypeGeneralPanel gPanel;
 	private PortTypeCharacteristicsPanel chPanel;
 	private JTabbedPane tabbedPane = new JTabbedPane();
-	private JButton saveButton = new JButton();
-	private JPanel buttonsPanel = new JPanel();
 
 	protected PortTypePane() {
 		super();
@@ -61,15 +54,6 @@ public class PortTypePane extends JPanel implements
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
-
-		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
-		saveButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveButton_actionPerformed(e);
-			}
-		});
-
-		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));
 	}
 
 	public Object getObject() {
@@ -152,8 +136,5 @@ public class PortTypePane extends JPanel implements
 			return true;
 		}
 		return false;
-	}
-
-	void saveButton_actionPerformed(ActionEvent e) {
 	}
 }

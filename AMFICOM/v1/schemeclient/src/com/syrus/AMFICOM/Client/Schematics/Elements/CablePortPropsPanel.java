@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
 import java.util.*;
-import java.util.List;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -11,8 +10,6 @@ import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.administration.*;
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
@@ -32,7 +29,7 @@ public class CablePortPropsPanel extends JPanel
 	boolean skip_changes = false;
 
 	protected SchemeCablePort[] ports;
-	protected List portTypes;
+	protected Collection portTypes;
 	protected PortType pt;
 	ApplicationContext aContext;
 
@@ -163,11 +160,7 @@ public class CablePortPropsPanel extends JPanel
 		descriptionTextArea.setAutoscrolls(true);
 
 		try {
-			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-					domain_id, true);
-			DomainCondition condition = new DomainCondition(domain, ObjectEntities.PORTTYPE_ENTITY_CODE);
+			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
 			portTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			for (int i = 0; i < portTypeSorts.length; i++) {

@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
+import java.util.Collection;
 import java.util.List;
 
 import java.awt.*;
@@ -86,7 +87,7 @@ public class KISMeasurementPortsPanel extends GeneralPanel
 		{
 			try {
 				List portIds = element.rtuImpl().getMeasurementPortIds();
-				List ports = ConfigurationStorableObjectPool.getStorableObjects(portIds, true);
+				Collection ports = ConfigurationStorableObjectPool.getStorableObjects(portIds, true);
 				portBox.addElements(ports);
 			}
 			catch (ApplicationException ex) {

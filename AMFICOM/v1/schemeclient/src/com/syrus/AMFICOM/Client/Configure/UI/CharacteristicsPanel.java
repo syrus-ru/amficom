@@ -31,23 +31,14 @@ public class CharacteristicsPanel extends GeneralPanel implements
 	protected CharacteristicTypeSort selectedTypeSort;
 
 	Map characteristics = new HashMap();
-
 	Set editableSorts = new HashSet();
-
 	Map typeSortsCharacterizedIds = new HashMap();
-
 	Map addedCharacteristics = new HashMap();
-
 	Map removedCharacteristics = new HashMap();
-
 	PropsADToolBar toolBar;
-
 	UniTreePanel utp;
-
 	JTable jTable;
-
 	PropsTableModel tModel;
-
 	private class CharacterizedObject {
 		CharacteristicSort sort;
 
@@ -62,7 +53,6 @@ public class CharacteristicsPanel extends GeneralPanel implements
 			this.sort = sort;
 		}
 	}
-
 	private class CharacterizableObject {
 		CharacteristicSort sort;
 
@@ -156,48 +146,39 @@ public class CharacteristicsPanel extends GeneralPanel implements
 	}
 
 	public boolean modify() {
-		if (selectedTypeSort == null)
-			return false;
-		Object obj = typeSortsCharacterizedIds.get(selectedTypeSort);
-		if (obj == null) {
-			System.err
-					.println("CharacterizedObject not set for CharacteristicTypeSort "
-							+ selectedTypeSort);
-			return false;
+		for (Iterator tit = typeSortsCharacterizedIds.values().iterator(); tit.hasNext();) {
+			Object obj = tit.next();
+			if (obj instanceof CharacterizableObject) {
+				Characterizable characterizable = ((CharacterizableObject) obj).characterizable;
+				List added = (List) addedCharacteristics.get(obj);
+				if (added != null) {
+					for (Iterator it = added.iterator(); it.hasNext();) {
+						characterizable.addCharacteristic((Characteristic) it.next());
+					}
+				}
+				List removed = (List) removedCharacteristics.get(obj);
+				if (removed != null) {
+					for (Iterator it = removed.iterator(); it.hasNext();) {
+						characterizable.removeCharacteristic((Characteristic) it.next());
+					}
+				}
+			} else if (obj instanceof CharacterizedObject) {
+				Characterized characterized = ((CharacterizedObject) obj).characterized;
+				List added = (List) addedCharacteristics.get(obj);
+				if (added != null) {
+					for (Iterator it = added.iterator(); it.hasNext();) {
+						characterized.addCharacteristic((Characteristic) it.next());
+					}
+				}
+				List removed = (List) removedCharacteristics.get(obj);
+				if (removed != null) {
+					for (Iterator it = removed.iterator(); it.hasNext();) {
+						characterized.removeCharacteristic((Characteristic) it.next());
+					}
+				}
+			}
 		}
-
-		if (obj instanceof CharacterizableObject) {
-			Characterizable characterizable = ((CharacterizableObject) obj).characterizable;
-			List added = (List) addedCharacteristics.get(obj);
-			if (added != null) {
-				for (Iterator it = added.iterator(); it.hasNext();) {
-					characterizable.addCharacteristic((Characteristic) it.next());
-				}
-			}
-			List removed = (List) removedCharacteristics.get(obj);
-			if (removed != null) {
-				for (Iterator it = removed.iterator(); it.hasNext();) {
-					characterizable.removeCharacteristic((Characteristic) it.next());
-				}
-			}
-			return true;
-		} else if (obj instanceof CharacterizedObject) {
-			Characterized characterized = ((CharacterizedObject) obj).characterized;
-			List added = (List) addedCharacteristics.get(obj);
-			if (added != null) {
-				for (Iterator it = added.iterator(); it.hasNext();) {
-					characterized.addCharacteristic((Characteristic) it.next());
-				}
-			}
-			List removed = (List) removedCharacteristics.get(obj);
-			if (removed != null) {
-				for (Iterator it = removed.iterator(); it.hasNext();) {
-					characterized.removeCharacteristic((Characteristic) it.next());
-				}
-			}
-			return true;
-		}
-		return false;
+		return true;
 	}
 
 	public boolean save() {
@@ -444,9 +425,7 @@ public class CharacteristicsPanel extends GeneralPanel implements
 				return;
 			Object obj = typeSortsCharacterizedIds.get(selectedTypeSort);
 			if (obj == null) {
-				System.err
-						.println("CharacterizedObject not set for CharacteristicTypeSort "
-								+ selectedTypeSort);
+				System.err.println("CharacterizedObject not set for CharacteristicTypeSort " + selectedTypeSort);
 				return;
 			}
 
@@ -460,8 +439,8 @@ public class CharacteristicsPanel extends GeneralPanel implements
 				if (obj instanceof CharacterizableObject) {
 					CharacteristicSort sort = ((CharacterizableObject) obj).sort;
 					Identifier characterizedId = ((CharacterizableObject) obj).characterizedId;
-					// Characterizable characterizable =
-					// ((CharacterizableObject)obj).characterizable;
+//					 Characterizable characterizable =
+//					 ((CharacterizableObject)obj).characterizable;
 
 					try {
 						Characteristic ch = Characteristic.createInstance(userId, type,
@@ -482,8 +461,8 @@ public class CharacteristicsPanel extends GeneralPanel implements
 				} else if (obj instanceof CharacterizedObject) {
 					CharacteristicSort sort = ((CharacterizedObject) obj).sort;
 					Identifier characterizedId = ((CharacterizedObject) obj).characterizedId;
-					// Characterized characterized =
-					// ((CharacterizedObject)obj).characterized;
+//					 Characterized characterized =
+//					 ((CharacterizedObject)obj).characterized;
 
 					try {
 						Characteristic ch = Characteristic.createInstance(userId, type,
@@ -526,13 +505,21 @@ public class CharacteristicsPanel extends GeneralPanel implements
 			List chars = getCharacteristics();
 			if (chars != null) {
 				Characteristic ch = getCharacterisric(chars, name);
-
-				List removed = (List) removedCharacteristics.get(obj);
-				if (removed == null) {
-					removed = new LinkedList();
-					removedCharacteristics.put(obj, removed);
+				
+				List added = (List) addedCharacteristics.get(obj);
+				if (added != null && added.contains(ch)) {
+					added.remove(ch);
+					if (added.isEmpty())
+						addedCharacteristics.remove(obj);
 				}
-				removed.add(ch);
+				else {
+					List removed = (List) removedCharacteristics.get(obj);
+					if (removed == null) {
+						removed = new LinkedList();
+						removedCharacteristics.put(obj, removed);
+					}
+					removed.add(ch);
+				}
 
 				tModel.removeRow(n);
 				jTable.updateUI();

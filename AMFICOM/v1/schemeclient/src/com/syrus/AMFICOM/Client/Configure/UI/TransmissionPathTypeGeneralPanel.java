@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 import java.text.SimpleDateFormat;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
@@ -28,7 +27,6 @@ public class TransmissionPathTypeGeneralPanel extends GeneralPanel
 	private JPanel descriptionPanel = new JPanel();
 	private JScrollPane descriptionScrollPane = new JScrollPane();
 	private JTextPane descTextArea = new JTextPane();
-	private JButton saveButton = new JButton();
 
 	protected TransmissionPathTypeGeneralPanel()
 	{
@@ -50,15 +48,6 @@ public class TransmissionPathTypeGeneralPanel extends GeneralPanel
 	private void jbInit() throws Exception
 	{
 		this.setLayout(new GridBagLayout());
-
-		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
-		saveButton.addActionListener(new java.awt.event.ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				saveButton_actionPerformed(e);
-			}
-		});
 
 		nameLabel.setText(LangModelConfig.getString("label_name"));
 		nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
@@ -151,9 +140,5 @@ public class TransmissionPathTypeGeneralPanel extends GeneralPanel
 			return false;
 		}
 		return true;
-	}
-
-	void saveButton_actionPerformed(ActionEvent e)
-	{
 	}
 }

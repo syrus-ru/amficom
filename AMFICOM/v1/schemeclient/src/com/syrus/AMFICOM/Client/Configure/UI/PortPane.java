@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
@@ -10,7 +9,6 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.scheme.corba.SchemePort;
-import oracle.jdeveloper.layout.XYConstraints;
 
 public class PortPane extends JPanel implements ObjectResourcePropertiesPane
 {
@@ -20,8 +18,6 @@ public class PortPane extends JPanel implements ObjectResourcePropertiesPane
 	private AbstractPortGeneralPanel gPanel = new AbstractPortGeneralPanel();
 	private PortCharacteristicsPanel chPanel;
 	private JTabbedPane tabbedPane = new JTabbedPane();
-	private JButton saveButton = new JButton();
-	private JPanel buttonsPanel = new JPanel();
 
 	protected PortPane()
 	{
@@ -61,15 +57,6 @@ public class PortPane extends JPanel implements ObjectResourcePropertiesPane
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
-
-		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
-		saveButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveButton_actionPerformed(e);
-			}
-		});
-
-		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));
 	}
 
 	public Object getObject()
@@ -136,10 +123,4 @@ public class PortPane extends JPanel implements ObjectResourcePropertiesPane
 	{
 		return false;
 	}
-
-
-	void saveButton_actionPerformed(ActionEvent e)
-	{
-	}
-
 }

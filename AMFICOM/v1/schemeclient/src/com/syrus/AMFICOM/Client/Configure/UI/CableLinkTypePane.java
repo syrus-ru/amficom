@@ -15,8 +15,6 @@ import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.*;
 
-import oracle.jdeveloper.layout.XYConstraints;
-
 public class CableLinkTypePane extends JPanel implements ObjectResourcePropertiesPane
 {
 	private ApplicationContext aContext;
@@ -27,8 +25,6 @@ public class CableLinkTypePane extends JPanel implements ObjectResourcePropertie
 	private CableLinkTypeFibrePanel fPanel = new CableLinkTypeFibrePanel();
 	private CableLinkTypeCharacteristicsPanel chPanel = new CableLinkTypeCharacteristicsPanel();
 	private JTabbedPane tabbedPane = new JTabbedPane();
-	private JButton saveButton = new JButton();
-	private JPanel buttonsPanel = new JPanel();
 
 	protected CableLinkTypePane()
 	{
@@ -66,15 +62,6 @@ public class CableLinkTypePane extends JPanel implements ObjectResourcePropertie
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(fPanel.getName(), fPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
-
-		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
-		saveButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveButton_actionPerformed(e);
-			}
-		});
-
-		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));
 	}
 
 	public Object getObject()

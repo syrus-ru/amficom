@@ -10,7 +10,6 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.scheme.corba.SchemeCablePort;
-import oracle.jdeveloper.layout.XYConstraints;
 
 public class CablePortPane extends JPanel implements ObjectResourcePropertiesPane
 {
@@ -20,8 +19,6 @@ public class CablePortPane extends JPanel implements ObjectResourcePropertiesPan
 	AbstractPortGeneralPanel gPanel = new AbstractPortGeneralPanel();
 	CablePortCharacteristicsPanel chPanel;
 	JTabbedPane tabbedPane = new JTabbedPane();
-	JButton saveButton = new JButton();
-	JPanel buttonsPanel = new JPanel();
 
 	protected CablePortPane()
 	{
@@ -62,15 +59,6 @@ public class CablePortPane extends JPanel implements ObjectResourcePropertiesPan
 
 		tabbedPane.add(gPanel.getName(), gPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
-
-		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
-		saveButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveButton_actionPerformed(e);
-			}
-		});
-
-		buttonsPanel.add(saveButton, new XYConstraints(200, 487, -1, -1));
 	}
 
 	public Object getObject()

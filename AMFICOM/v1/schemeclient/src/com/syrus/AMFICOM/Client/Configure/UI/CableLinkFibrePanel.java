@@ -1,15 +1,15 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
@@ -53,14 +53,11 @@ public class CableLinkFibrePanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().domain_id);
-		Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-				domain_id, true);
-		DomainCondition condition = new DomainCondition(domain, ObjectEntities.LINKTYPE_ENTITY_CODE);
+		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINKTYPE_ENTITY_CODE);
+		List lTypes = new ArrayList(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
 		linksTypeBox = new ObjComboBox(
 				LinkTypeController.getInstance(),
-				ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true),
+				lTypes,
 				StorableObjectWrapper.COLUMN_NAME);
 
 		setName(LangModelConfig.getString("label_fibers"));

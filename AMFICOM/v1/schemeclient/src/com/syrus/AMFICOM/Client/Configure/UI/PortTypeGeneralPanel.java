@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 import java.text.SimpleDateFormat;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
@@ -12,7 +11,6 @@ import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.GeneralPanel;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
-import com.syrus.AMFICOM.general.ApplicationException;
 
 public class PortTypeGeneralPanel extends GeneralPanel
 {
@@ -37,7 +35,6 @@ public class PortTypeGeneralPanel extends GeneralPanel
 	private JPanel descriptionPanel = new JPanel();
 	private JScrollPane descriptionScrollPane = new JScrollPane();
 	private JTextPane descTextArea = new JTextPane();
-	private JButton saveButton = new JButton();
 
 	protected PortTypeGeneralPanel()
 	{
@@ -88,13 +85,6 @@ public class PortTypeGeneralPanel extends GeneralPanel
 		modifyLabel1.setPreferredSize(new Dimension(DEF_WIDTH, 10));
 		modifyLabel2.setText(LangModelConfig.getString("label_modified2"));
 		modifyLabel2.setPreferredSize(new Dimension(DEF_WIDTH, 10));
-
-		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
-		saveButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveButton_actionPerformed(e);
-			}
-		});
 
 		this.setLayout(new GridBagLayout());
 
@@ -190,19 +180,6 @@ public class PortTypeGeneralPanel extends GeneralPanel
 			return false;
 		}
 		return true;
-	}
-
-	void saveButton_actionPerformed(ActionEvent e)
-	{
-		if(modify())
-		{
-			try {
-				ConfigurationStorableObjectPool.putStorableObject(portType);
-				ConfigurationStorableObjectPool.flush(true);
-			}
-			catch (ApplicationException ex) {
-			}
-		}
 	}
 
 	public boolean delete()

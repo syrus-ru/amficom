@@ -88,17 +88,17 @@ public class SchemeProtoGroupsTreeModel extends ObjectResourceTreeModel
 	{
 		List vec = new ArrayList();
 		try {
-			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-					getAccessIdentifier().domain_id);
-			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-					domain_id, true);
-			DomainCondition condition = new DomainCondition(domain, ObjectEntities.LINKTYPE_ENTITY_CODE);
-			List groups = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
-
 			if (node.getObject()instanceof String) {
 				String s = (String)node.getObject();
 
 			if (s.equals("root")) {
+				Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+						getAccessIdentifier().domain_id);
+				Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
+						domain_id, true);
+				DomainCondition condition = new DomainCondition(domain, ObjectEntities.SCHEME_PROTO_GROUP_ENTITY_CODE);
+				Collection groups = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
 				for (Iterator it = groups.iterator(); it.hasNext(); )
 				{
 					SchemeProtoGroup group = (SchemeProtoGroup)it.next();

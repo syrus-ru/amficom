@@ -2,13 +2,15 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
+import java.util.List;
+import java.util.LinkedList;
+
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
@@ -54,13 +56,11 @@ public class AbstractPortGeneralPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-		Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-				domain_id, true);
-		DomainCondition condition = new DomainCondition(domain, ObjectEntities.PORTTYPE_ENTITY_CODE);
+		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORTTYPE_ENTITY_CODE);
+		List pTypes = new LinkedList(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
 		typeBox = new ObjComboBox(
 					PortTypeController.getInstance(),
-					ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true),
+					pTypes,
 					StorableObjectWrapper.COLUMN_NAME);
 
 		this.setLayout(new GridBagLayout());

@@ -154,7 +154,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 				Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
 						domain_id, true);
 				StorableObjectCondition condition = new DomainCondition(domain, ObjectEntities.ME_ENTITY_CODE);
-				List mes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				Collection mes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				for (Iterator it = mes.iterator(); it.hasNext(); ) {
 					MonitoredElement monitoredelement = (MonitoredElement)it.next();
 					if (monitoredelement.getMonitoredDomainMemberIds().contains(path.pathImpl().getId())) {

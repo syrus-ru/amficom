@@ -1,16 +1,15 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.administration.*;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
@@ -21,7 +20,6 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 	protected MonitoredElement me;
 
 	private JPanel mainPanel = new JPanel();
-	private JButton saveButton = new JButton();
 	private JLabel localLabel1 = new JLabel();
 	private JLabel localLabel = new JLabel();
 	private JTextField localField = new JTextField();
@@ -57,25 +55,16 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 
 	private void jbInit() throws Exception
 	{
-		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-		Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-				domain_id, true);
-		DomainCondition condition = new DomainCondition(domain, ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
-
+		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE);
+		List mpTypes = new ArrayList(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true));
+		
 		typeBox = new ObjComboBox(
 				MeasurementPortTypeController.getInstance(),
-				ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true),
+				mpTypes,
 				StorableObjectWrapper.COLUMN_NAME);
 
 
 		this.setLayout(new BorderLayout());
-
-		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
-		saveButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				saveButton_actionPerformed(e);
-			}
-		});
 
 		localLabel.setText(LangModelConfig.getString("label_local_addr1"));
 		localLabel.setPreferredSize(new Dimension(DEF_WIDTH, 10));
@@ -142,9 +131,9 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 			try {
 				LinkedIdsCondition condition = new LinkedIdsCondition(port.getId(), ObjectEntities.ME_ENTITY_CODE);
 
-				List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				Collection list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				if (list.size() > 0) {
-					me = (MonitoredElement)list.get(0);
+					me = (MonitoredElement)list.iterator().next();
 				}
 			}
 			catch (ApplicationException ex) {
@@ -186,10 +175,4 @@ public class MeasurementPortGeneralPanel extends GeneralPanel
 		}
 		return true;
 	}
-
-	void saveButton_actionPerformed(ActionEvent e)
-	{
-		save();
-	}
-
 }
