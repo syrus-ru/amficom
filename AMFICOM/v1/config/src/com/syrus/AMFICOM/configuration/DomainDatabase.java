@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.20 2004/11/16 12:33:17 bob Exp $
+ * $Id: DomainDatabase.java,v 1.21 2004/11/17 13:39:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/11/16 12:33:17 $
+ * @version $Revision: 1.21 $, $Date: 2004/11/17 13:39:39 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -216,9 +216,19 @@ public class DomainDatabase extends StorableObjectDatabase {
 		List list = null;
 		if (condition instanceof DomainCondition){
 			DomainCondition domainCondition = (DomainCondition)condition;
+			short entityCode = domainCondition.getEntityCode().shortValue();
+			if ( entityCode != ObjectEntities.DOMAIN_ENTITY_CODE)
+				throw new IllegalDataException("DomainDatabase.retrieveByCondition | illegal entity code '" 
+											   + ObjectEntities.codeToString(entityCode) + "', expected '"
+											   + ObjectEntities.codeToString(ObjectEntities.DOMAIN_ENTITY_CODE) + '\'');
 			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
 		} else if (condition instanceof StringFieldCondition){
 			StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
+			short entityCode = stringFieldCondition.getEntityCode().shortValue();
+			if ( entityCode != ObjectEntities.DOMAIN_ENTITY_CODE)
+				throw new IllegalDataException("DomainDatabase.retrieveByCondition | illegal entity code '" 
+											   + ObjectEntities.codeToString(entityCode) + "', expected '"
+											   + ObjectEntities.codeToString(ObjectEntities.DOMAIN_ENTITY_CODE) + '\'');
 			list = this.retrieveButIdsByName(ids, stringFieldCondition.getString());
 		} else {
 			Log.errorMessage("DomainDatabase.retrieveByCondition | Unknown condition class: " + condition.getClass().getName());

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.34 2004/11/17 13:05:20 max Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.35 2004/11/17 13:39:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/11/17 13:05:20 $
- * @author $Author: max $
+ * @version $Revision: 1.35 $, $Date: 2004/11/17 13:39:39 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -74,7 +74,9 @@ public class ConfigurationStorableObjectPool {
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1, final int size) {
 		objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
-
+		
+		cObjectLoader = cObjectLoader1;
+		
 		addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.KISTYPE_ENTITY_CODE, size);
@@ -92,12 +94,13 @@ public class ConfigurationStorableObjectPool {
 		addObjectPool(ObjectEntities.KIS_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.ME_ENTITY_CODE, size);
-
-		cObjectLoader = cObjectLoader1;
+		
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1) {
 		objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+
+		cObjectLoader = cObjectLoader1;
 		
 		addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, CHARACTERISTICTYPE_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, EQUIPMENTTYPE_OBJECT_POOL_SIZE);
@@ -117,8 +120,6 @@ public class ConfigurationStorableObjectPool {
 		addObjectPool(ObjectEntities.KIS_ENTITY_CODE, KIS_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, MEASUREMENTPORT_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.ME_ENTITY_CODE, ME_OBJECT_POOL_SIZE);
-
-		cObjectLoader = cObjectLoader1;
 	}
 
 	/**
@@ -166,8 +167,8 @@ public class ConfigurationStorableObjectPool {
                 return;
             for (Iterator it = keys.iterator(); it.hasNext();) {
             	Identifier id = (Identifier) it.next();
-            	StorableObject so = getStorableObject(id, true);
-            	objectPool.put(id , so);                
+            	StorableObject storableObject = getStorableObject(id, true);
+           		objectPool.put(id , storableObject);                
             }
         } catch (CommunicationException e) {
             Log.errorException(e);

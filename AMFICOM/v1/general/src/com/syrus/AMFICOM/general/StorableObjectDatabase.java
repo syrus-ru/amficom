@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.50 2004/11/17 08:22:45 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.51 2004/11/17 13:39:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2004/11/17 08:22:45 $
+ * @version $Revision: 1.51 $, $Date: 2004/11/17 13:39:29 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -84,7 +84,7 @@ public abstract class StorableObjectDatabase {
 	
 	private static String columns;
 	private static String updateMultiplySQLValues;
-	private static String retrieveQuery;
+	private String retrieveQuery;
 
 	public StorableObjectDatabase() {
 		//connection = DatabaseConnection.getConnection();
@@ -320,7 +320,7 @@ public abstract class StorableObjectDatabase {
 
 	protected String retrieveQuery(final String condition) {
 		StringBuffer buffer;
-		if (retrieveQuery == null) {
+		if (this.retrieveQuery == null) {
 			buffer = new StringBuffer(SQL_SELECT);
 			String cols = this.getColumns();
 			cols = cols.replaceFirst(COLUMN_CREATED, DatabaseDate.toQuerySubString(COLUMN_CREATED));
@@ -328,10 +328,10 @@ public abstract class StorableObjectDatabase {
 			buffer.append(cols);
 			buffer.append(SQL_FROM);
 			buffer.append(this.getEnityName());
-			retrieveQuery = buffer.toString();
+			this.retrieveQuery = buffer.toString();
 		}
 		else
-			buffer = new StringBuffer(retrieveQuery);
+			buffer = new StringBuffer(this.retrieveQuery);
 		if (condition != null && condition.trim().length() > 0) {
 			buffer.append(SQL_WHERE);
 			buffer.append(condition);
