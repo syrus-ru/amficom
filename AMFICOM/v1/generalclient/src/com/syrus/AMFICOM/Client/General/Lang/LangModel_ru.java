@@ -161,7 +161,7 @@ public class LangModel_ru extends LangModel
 		{ "CalendarTitle", "Календарь" },
 		{ "YearPostfix", "г." },
 		{ "Today", "Сегодня" },
-		
+
 
 // Button strings
 		{ "buttonHelp", "Помощь" },
@@ -169,7 +169,7 @@ public class LangModel_ru extends LangModel
 		{ "buttonCancel", "Отменить" },
 		{ "buttonChange", "Изменить" },
 		{ "buttonClose", "Закрыть" },
-		{ "buttonEnter", "Войти в систему" },//"Вставить Пете" }, 
+		{ "buttonEnter", "Войти в систему" },//"Вставить Пете" },
 		{ "buttonStandard", "Стандартные" },
 		{ "buttonCheck", "Тест" },
 		{ "buttonSelect", "Выбрать" },
@@ -331,6 +331,7 @@ public class LangModel_ru extends LangModel
 		{ "nodeloggeduser", "Текущий пользователь системы" },
 		{ "nodemapcontext", "Структура сети" },
 		{ "nodemapelementlink", "Связь карты с элементом карты" },
+		{ "nodemapprotogroup", "Группа элементов" },
 		{ "nodemapequipmentelement", "Сетевой узел" },
 		{ "nodemapkiselement", "Узел с КИС" },
 		{ "nodemaplinkelement", "Линия связи" },
@@ -389,7 +390,7 @@ public class LangModel_ru extends LangModel
 		{ "nodethreshold", "Параметр порога" },
 		{ "nodethresholdset", "Набор параметров порога" },
 		{ "nodeuser", "Пользователь системы" },
-		
+
 		{ "node", "" },
 		{ "node", "" },
 		{ "node", "" },
@@ -407,47 +408,47 @@ public class LangModel_ru extends LangModel
 //		{ "property_value", "Value" },
 
 		{ "AppText", "" },
-    
-//for filter and LogicScheme
-    { "label_and","И"},
-    { "label_or","ИЛИ"},
-    { "label_condition","Условие"},
-    { "label_operand","Операнд"},
-    { "label_result","Результат"},
 
-    { "label_deleteCriteria","Удалить критерий"},
-    { "label_filterCriteria","Критерий"},
-    { "label_equality","Равенство"},
-    { "label_diapason","Диапазон"},
-    { "label_time","Время"},
-    { "label_substring","Подстрока"},
-    { "label_list","Список"},
-    { "label_editFilterTree","Редактировать дерево фильтрации"},
-    { "label_summaryExpression","Суммарное выражение"},
-    
-    { "label_emptyScheme","Схема пуста!"},
-    { "label_cantDeleteComp","Нельзя удалять компоненты \"Результат\" и \"Условие\"!"},    
-    { "label_error","Ошибка"},        
-    
-    { "label_change","Изменить"},
-    { "label_add","Добавить"},    
-    { "label_apply","Применить"},
-    { "label_close","Закрыть"},
-    
-    { "label_filter","Фильтр"},
-
-    { "label_lswTitle","Редактор логической схемы"},
-    { "label_delete","Удалить"},
-    { "label_createStandartScheme","При добавлении новых условий создавать стандартную схему"},
-    { "label_schemeNotCompleted","Схема не закончена. Используется стандартная."},
-    { "label_time","Время"},
-    { "label_substring","Подстрока"},
-    { "label_list","Список"},
-    { "label_editFilterTree","Редактировать дерево фильтрации"},
-    { "label_summaryExpression","Суммарное выражение"},
-    
 //for filter and LogicScheme
-    
+		{ "label_and","И"},
+		{ "label_or","ИЛИ"},
+		{ "label_condition","Условие"},
+		{ "label_operand","Операнд"},
+		{ "label_result","Результат"},
+
+		{ "label_deleteCriteria","Удалить критерий"},
+		{ "label_filterCriteria","Критерий"},
+		{ "label_equality","Равенство"},
+		{ "label_diapason","Диапазон"},
+		{ "label_time","Время"},
+		{ "label_substring","Подстрока"},
+		{ "label_list","Список"},
+		{ "label_editFilterTree","Редактировать дерево фильтрации"},
+		{ "label_summaryExpression","Суммарное выражение"},
+
+		{ "label_emptyScheme","Схема пуста!"},
+		{ "label_cantDeleteComp","Нельзя удалять компоненты \"Результат\" и \"Условие\"!"},
+		{ "label_error","Ошибка"},
+
+		{ "label_change","Изменить"},
+		{ "label_add","Добавить"},
+		{ "label_apply","Применить"},
+		{ "label_close","Закрыть"},
+
+		{ "label_filter","Фильтр"},
+
+		{ "label_lswTitle","Редактор логической схемы"},
+		{ "label_delete","Удалить"},
+		{ "label_createStandartScheme","При добавлении новых условий создавать стандартную схему"},
+		{ "label_schemeNotCompleted","Схема не закончена. Используется стандартная."},
+		{ "label_time","Время"},
+		{ "label_substring","Подстрока"},
+		{ "label_list","Список"},
+		{ "label_editFilterTree","Редактировать дерево фильтрации"},
+		{ "label_summaryExpression","Суммарное выражение"},
+
+//for filter and LogicScheme
+
 		};
 
 	public LangModel_ru()
