@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.10 2004/08/09 07:49:09 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.11 2004/08/09 08:25:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/09 07:49:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2004/08/09 08:25:51 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -38,7 +38,9 @@ public abstract class ObjectEntities {
 	public static final String EQUIPMENTMELINK_ENTITY = "EquipmentMELink";
 	public static final String ME_ENTITY = "MonitoredElement";
 	public static final String KIS_ENTITY = "kis";
-	public static final String MCM_ENTITY = "mcm";
+	public static final String MCM_ENTITY = "mcm";	
+	public static final String TRANSPATH_ENTITY = "TransmissionPath";
+	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink";
 
 	/*	Measurement	*/
 	public static final String SET_ENTITY = "Sett";
