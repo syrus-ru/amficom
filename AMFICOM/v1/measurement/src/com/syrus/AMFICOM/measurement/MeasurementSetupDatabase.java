@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.36 2004/11/02 07:36:38 max Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.37 2004/11/02 10:29:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/11/02 07:36:38 $
- * @author $Author: max $
+ * @version $Revision: 1.37 $, $Date: 2004/11/02 10:29:59 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -605,30 +605,34 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
     
     private List retrieveButIdMeasurementIds(List ids, List measurementIds) throws RetrieveObjectException, IllegalDataException {
-        String condition = new String();
-        StringBuffer measurementIdsStr = new StringBuffer();
-        
-       	int i=1;
-        for (Iterator it = measurementIds.iterator(); it.hasNext();i++) {
-       		 Identifier id = (Identifier) it.next();
-       		 measurementIdsStr.append( id.toSQLString() );
-       		 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-       		 	measurementIdsStr.append(COMMA);
-       		 else {
-                measurementIdsStr.append(CLOSE_BRACKET);
-                measurementIdsStr.append(SQL_OR);
-                measurementIdsStr.append(COLUMN_ID);
-                measurementIdsStr.append(SQL_IN);
-                measurementIdsStr.append(OPEN_BRACKET);
-       		 }  
-       	}
-        
-        condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
-                        + SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
-                        + SQL_WHERE + LINK_COLUMN_ME_ID + NOT + SQL_IN + OPEN_BRACKET + measurementIdsStr.toString() 
-                        + CLOSE_BRACKET
-                    + CLOSE_BRACKET;        
-        return retrieveButIds(ids , condition);
+    	
+    	if (measurementIds != null && !measurementIds.isEmpty()){
+	        String condition = new String();
+	        StringBuffer measurementIdsStr = new StringBuffer();
+	        
+	       	int i=1;
+	        for (Iterator it = measurementIds.iterator(); it.hasNext();i++) {
+	       		 Identifier id = (Identifier) it.next();
+	       		 measurementIdsStr.append( id.toSQLString() );
+	       		 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+	       		 	measurementIdsStr.append(COMMA);
+	       		 else {
+	                measurementIdsStr.append(CLOSE_BRACKET);
+	                measurementIdsStr.append(SQL_OR);
+	                measurementIdsStr.append(COLUMN_ID);
+	                measurementIdsStr.append(SQL_IN);
+	                measurementIdsStr.append(OPEN_BRACKET);
+	       		 }  
+	       	}
+	        
+	        condition = COLUMN_ID + SQL_IN + OPEN_BRACKET	
+	                        + SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
+	                        + SQL_WHERE + LINK_COLUMN_ME_ID + NOT + SQL_IN + OPEN_BRACKET + measurementIdsStr.toString() 
+	                        + CLOSE_BRACKET
+	                    + CLOSE_BRACKET;        
+	        return retrieveButIds(ids , condition);
+    	}
+    	return Collections.EMPTY_LIST;
     }
     
 	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,

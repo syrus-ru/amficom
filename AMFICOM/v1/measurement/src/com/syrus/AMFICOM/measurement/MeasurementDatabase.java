@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.35 2004/11/01 14:53:14 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.36 2004/11/02 10:29:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/11/01 14:53:14 $
+ * @version $Revision: 1.36 $, $Date: 2004/11/02 10:29:59 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -402,10 +402,10 @@ public class MeasurementDatabase extends StorableObjectDatabase {
     }
 	
 	private List retrieveButIdsByTest(List ids, List testIds) throws RetrieveObjectException {
-        List list = null;
+        List list = null;        
         
-        StringBuffer buffer = new StringBuffer();
         if ((testIds != null) && (!testIds.isEmpty())){
+        	StringBuffer buffer = new StringBuffer();
         	buffer.append(COLUMN_TEST_ID);
         	buffer.append(SQL_IN);
         	buffer.append(OPEN_BRACKET);
@@ -437,13 +437,13 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				}
 			}
         	buffer.append(CLOSE_BRACKET);
-        }
-        
-        try {
-            list = retrieveButIds(ids, buffer.toString());
-        }  catch (IllegalDataException ide) {           
-            Log.debugMessage("MeasurementDatabase.retrieveButIdsByTest | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-        }
+        	try {
+                list = retrieveButIds(ids, buffer.toString());
+            }  catch (IllegalDataException ide) {           
+                Log.debugMessage("MeasurementDatabase.retrieveButIdsByTest | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+            }
+        } else 
+        	list = Collections.EMPTY_LIST;
         
         return list;
     }
