@@ -56,13 +56,17 @@ public class AnalysisType_Database extends StorableObject_Database {
 							+ sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				analysisType.setAttributes(DatabaseDate.fromQuerySubString(
-						resultSet, COLUMN_CREATED), DatabaseDate.fromQuerySubString(
-						resultSet, COLUMN_MODIFIED), new Identifier(resultSet
-						.getString(COLUMN_CREATOR_ID)), new Identifier(resultSet
-						.getString(COLUMN_MODIFIER_ID)), resultSet
-						.getString(COLUMN_CODENAME), resultSet
-						.getString(COLUMN_DESCRIPTION));
+				analysisType
+						.setAttributes(DatabaseDate.fromQuerySubString(
+								resultSet, COLUMN_CREATED),
+								DatabaseDate.fromQuerySubString(resultSet,
+										COLUMN_MODIFIED),
+								new Identifier(resultSet
+										.getString(COLUMN_CREATOR_ID)),
+								new Identifier(resultSet
+										.getString(COLUMN_MODIFIER_ID)),
+								resultSet.getString(COLUMN_CODENAME), resultSet
+										.getString(COLUMN_DESCRIPTION));
 			else
 				throw new Exception("No such analysis type: "
 						+ analysis_type_id_str);
@@ -103,7 +107,8 @@ public class AnalysisType_Database extends StorableObject_Database {
 			String parameter_type_id_code;
 			while (resultSet.next()) {
 				parameter_mode = resultSet.getString("parameter_mode");
-				parameter_type_id_code = resultSet.getString("parameter_type_id");
+				parameter_type_id_code = resultSet
+						.getString("parameter_type_id");
 				if (parameter_mode.equals(MODE_IN))
 					in_par_typs.add(new Identifier(parameter_type_id_code));
 				else if (parameter_mode.equals(MODE_CRITERION))
@@ -169,14 +174,15 @@ public class AnalysisType_Database extends StorableObject_Database {
 
 	private void insertAnalysisType(AnalysisType analysisType) throws Exception {
 		String analysis_type_id_str = analysisType.getId().toString();
-		String sql = "INSERT INTO "
-				+ ObjectEntities.ANALYSISTYPE_ENTITY
-				+ " (id, created, modified, creator_id, modifier_id, codename, description)"
-				+ " VALUES (" + analysis_type_id_str + ", "
+		String sql = "INSERT INTO " + ObjectEntities.ANALYSISTYPE_ENTITY + " ("
+				+ COLUMN_ID + COMMA + COLUMN_CREATED + COMMA + COLUMN_MODIFIED
+				+ COMMA + COLUMN_CREATOR_ID + COMMA + COLUMN_MODIFIER_ID
+				+ COMMA + COLUMN_CODENAME + COMMA + COLUMN_DESCRIPTION + ")"
+				+ " VALUES (" + analysis_type_id_str + COMMA
 				+ DatabaseDate.toUpdateSubString(analysisType.getCreated())
-				+ ", "
+				+ COMMA
 				+ DatabaseDate.toUpdateSubString(analysisType.getModified())
-				+ ", " + analysisType.getCreatorId().toString() + ", "
+				+ COMMA + analysisType.getCreatorId().toString() + COMMA
 				+ analysisType.getModifierId().toString() + ", '"
 				+ analysisType.getCodename() + "', '"
 				+ analysisType.getDescription() + "')";
@@ -297,8 +303,8 @@ public class AnalysisType_Database extends StorableObject_Database {
 					+ ObjectEntities.ANATYPPARTYPLINK_ENTITY
 					+ " WHERE analysis_type_id = " + analysis_type_id_str);
 			statement.executeUpdate("DELETE FROM "
-					+ ObjectEntities.ANALYSISTYPE_ENTITY + " WHERE id = "
-					+ analysis_type_id_str);
+					+ ObjectEntities.ANALYSISTYPE_ENTITY + " WHERE "
+					+ COLUMN_ID + " = " + analysis_type_id_str);
 			connection.commit();
 		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
@@ -313,9 +319,9 @@ public class AnalysisType_Database extends StorableObject_Database {
 
 	public static AnalysisType retrieveForCodename(String codename)
 			throws Exception {
-		String sql = "SELECT " + "id" + " FROM "
-				+ ObjectEntities.ANALYSISTYPE_ENTITY + " WHERE codename = '"
-				+ codename + "'";
+		String sql = "SELECT " + COLUMN_ID + " FROM "
+				+ ObjectEntities.ANALYSISTYPE_ENTITY + " WHERE "
+				+ COLUMN_CODENAME + " = '" + codename + "'";
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -325,7 +331,8 @@ public class AnalysisType_Database extends StorableObject_Database {
 							+ sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				return new AnalysisType(new Identifier(resultSet.getString("id")));
+				return new AnalysisType(new Identifier(resultSet
+						.getString(COLUMN_ID)));
 			else
 				throw new Exception("No analysis type with codename: '"
 						+ codename + "'");
