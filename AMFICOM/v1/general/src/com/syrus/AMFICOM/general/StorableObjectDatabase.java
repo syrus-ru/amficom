@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.13 2004/09/03 07:09:17 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.14 2004/09/03 07:55:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/09/03 07:09:17 $
+ * @version $Revision: 1.14 $, $Date: 2004/09/03 07:55:50 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -110,9 +110,9 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract String getUpdateMultiplySQLValues();
 
-	protected abstract String getUpdateSingleSQLValues(StorableObject storableObject);
+	protected abstract String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException;
 
-	protected void insertEntity(StorableObject storableObject) throws CreateObjectException {
+	protected void insertEntity(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		String storableObjectIdStr = storableObject.getId().toSQLString();
 		String sql = SQL_INSERT_INTO + this.getTableName() + OPEN_BRACKET + this.getUpdateColumns()
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + storableObjectIdStr + COMMA
@@ -139,7 +139,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected void insertEntities(List storableObjects) throws CreateObjectException {
+	protected void insertEntities(List storableObjects) throws IllegalDataException, CreateObjectException {
 
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
@@ -185,7 +185,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected void retrieveEntity(StorableObject storableObject) throws ObjectNotFoundException,
+	protected void retrieveEntity(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
 		String strorableObjectTypeIdStr = storableObject.getId().toSQLString();
 		String sql = retrieveQuery(COLUMN_ID + EQUALS + strorableObjectTypeIdStr);
@@ -225,9 +225,9 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract void setEntityForPreparedStatement(	StorableObject storableObject,
 								PreparedStatement preparedStatement)
-			throws SQLException;
+			throws IllegalDataException, SQLException;
 
-	protected void checkAndUpdateEntity(StorableObject localStorableObject) throws UpdateObjectException {
+	protected void checkAndUpdateEntity(StorableObject localStorableObject) throws IllegalDataException, UpdateObjectException {
 		/**
 		 * @todo recast this method !
 		 */
@@ -288,9 +288,9 @@ public abstract class StorableObjectDatabase {
 	}
 
 	protected abstract StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-			throws RetrieveObjectException, SQLException;
+			throws IllegalDataException, RetrieveObjectException, SQLException;
 
-	protected List retriveByIdsOneQuery(List ids, String condition) throws RetrieveObjectException {
+	protected List retriveByIdsOneQuery(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List result = new LinkedList();
 		String sql;
 		{
@@ -356,7 +356,7 @@ public abstract class StorableObjectDatabase {
 		return result;
 	}
 
-	protected List retriveByIdsPreparedStatement(List ids, String condition) throws RetrieveObjectException {
+	protected List retriveByIdsPreparedStatement(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List result = new LinkedList();
 		String sql = null;
 		{
@@ -418,7 +418,7 @@ public abstract class StorableObjectDatabase {
 		return result;
 	}
 	
-	protected void updateEntity(StorableObject storableObject) throws UpdateObjectException {
+	protected void updateEntity(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
 		String storableObjectIdStr = storableObject.getId().toSQLString();
 		String sql = SQL_UPDATE + this.getTableName() + SQL_SET + OPEN_BRACKET + this.getUpdateColumns()
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + storableObjectIdStr + COMMA
@@ -446,7 +446,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected void updateEntities(List storableObjects) throws UpdateObjectException {
+	protected void updateEntities(List storableObjects) throws IllegalDataException, UpdateObjectException {
 
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
