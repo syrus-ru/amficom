@@ -1,4 +1,3 @@
-@@users.sql
 @@domain.sql
 @@server.sql
 @@mcm.sql

@@ -1,2 +1,3 @@
 @@serverproperty.sql
+@@users.sql
 
