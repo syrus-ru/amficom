@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.36 2005/01/26 15:09:22 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.37 2005/01/27 07:02:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,16 +42,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/01/26 15:09:22 $
+ * @version $Revision: 1.37 $, $Date: 2005/01/27 07:02:41 $
  * @author $Author: bob $
  * @module config_v1
  */
 
 public class MonitoredElementDatabase extends StorableObjectDatabase {
-	public static final String LINK_COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
-	public static final String LINK_COLUMN_EQUIPMENT_ID = "equipment_id";
-	public static final String LINK_COLUMN_TRANSMISSION_PATH_ID = "transmission_path_id";
-
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
   private static String columns;
@@ -166,12 +162,12 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			StringBuffer buffer = new StringBuffer(SQL_SELECT);
 			switch (meSort) {
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:	
-					buffer.append(LINK_COLUMN_EQUIPMENT_ID);
-					column = LINK_COLUMN_EQUIPMENT_ID;
+					buffer.append(MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID);
+					column = MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID;
 					break;
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
-					buffer.append(LINK_COLUMN_TRANSMISSION_PATH_ID);
-					column = LINK_COLUMN_TRANSMISSION_PATH_ID;
+					buffer.append(MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
+					column = MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID;
 					break;
 				default:
 					String mesg = "ERROR: Unknown sort of monitoredelement: " + meSort;
@@ -190,7 +186,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 					throw new RetrieveObjectException(mesg);
 			}
 			buffer.append(SQL_WHERE);
-			buffer.append(LINK_COLUMN_MONITORED_ELEMENT_ID);
+			buffer.append(MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 			buffer.append(EQUALS);
 			buffer.append(meIdStr);
 			sql = buffer.toString();
@@ -257,10 +253,10 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			return;     
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT
-			+ LINK_COLUMN_EQUIPMENT_ID + COMMA
-			+ LINK_COLUMN_MONITORED_ELEMENT_ID
+			+ MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID + COMMA
+			+ MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID
 			+ SQL_FROM + ObjectEntities.EQUIPMENTMELINK_ENTITY
-			+ SQL_WHERE + LINK_COLUMN_MONITORED_ELEMENT_ID
+			+ SQL_WHERE + MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID
 			+ SQL_IN + OPEN_BRACKET);
 		int i = 1;
 		for (Iterator it = monitoredElementWithEquipmentList.iterator(); it.hasNext();i++) {
@@ -272,7 +268,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 				else {
 					sql.append(CLOSE_BRACKET);
 					sql.append(SQL_OR);
-					sql.append(LINK_COLUMN_MONITORED_ELEMENT_ID);
+					sql.append(MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 					sql.append(SQL_IN);
 					sql.append(OPEN_BRACKET);
 				}                   
@@ -290,7 +286,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			Map meIdMap = new HashMap();
 			while (resultSet.next()) {
 				MonitoredElement monitoredElement = null;
-				Identifier monitoredElemntId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MONITORED_ELEMENT_ID);
+				Identifier monitoredElemntId = DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 				for (Iterator it = monitoredElementWithEquipmentList.iterator(); it.hasNext();) {
 					MonitoredElement monitoredElementToCompare = (MonitoredElement) it.next();
 						if (monitoredElementToCompare.getId().equals(monitoredElemntId)){
@@ -304,7 +300,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 					throw new RetrieveObjectException(mesg);
 				}                    
 
-				Identifier meId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_EQUIPMENT_ID);
+				Identifier meId = DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID);
 				List meIds = (List)meIdMap.get(monitoredElement);
 				if (meIds == null) {
 					meIds = new LinkedList();
@@ -347,10 +343,10 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			return;     
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT
-			+ LINK_COLUMN_TRANSMISSION_PATH_ID + COMMA
-			+ LINK_COLUMN_MONITORED_ELEMENT_ID
+			+ MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID + COMMA
+			+ MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID
 			+ SQL_FROM + ObjectEntities.TRANSPATHMELINK_ENTITY
-			+ SQL_WHERE + LINK_COLUMN_MONITORED_ELEMENT_ID
+			+ SQL_WHERE + MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID
 			+ SQL_IN + OPEN_BRACKET);
 		int i = 1;
 		for (Iterator it = transmissionPathList.iterator(); it.hasNext();i++) {
@@ -362,7 +358,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 				else {
 					sql.append(CLOSE_BRACKET);
 					sql.append(SQL_OR);
-					sql.append(LINK_COLUMN_MONITORED_ELEMENT_ID);
+					sql.append(MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 					sql.append(SQL_IN);
 					sql.append(OPEN_BRACKET);
 				}                   
@@ -380,7 +376,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			Map tpIdMap = new HashMap();
 			while (resultSet.next()) {
 				MonitoredElement monitoredElement = null;
-				Identifier monitoredElemntId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MONITORED_ELEMENT_ID);
+				Identifier monitoredElemntId = DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 				for (Iterator it = transmissionPathList.iterator(); it.hasNext();) {
 					MonitoredElement monitoredElementToCompare = (MonitoredElement) it.next();
 					if (monitoredElementToCompare.getId().equals(monitoredElemntId)){
@@ -394,7 +390,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 					throw new RetrieveObjectException(mesg);
 				}
 
-				Identifier tpId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TRANSMISSION_PATH_ID);
+				Identifier tpId = DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
 				List tpIds = (List)tpIdMap.get(monitoredElement);
 				if (tpIds == null) {
 					tpIds = new LinkedList();
@@ -481,17 +477,17 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			buffer.append(OPEN_BRACKET);
 			switch (meSort) {
 				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:	
-					buffer.append(LINK_COLUMN_EQUIPMENT_ID);
+					buffer.append(MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID);
 					break;
 				case	MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
-					buffer.append(LINK_COLUMN_TRANSMISSION_PATH_ID);
+					buffer.append(MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
 					break;
 				default:
 					String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | ERROR: Unknown sort of monitoredelement: " + meSort;
 					throw new CreateObjectException(mesg);
 			}
 			buffer.append(COMMA);
-			buffer.append(LINK_COLUMN_MONITORED_ELEMENT_ID);
+			buffer.append(MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 			buffer.append(CLOSE_BRACKET);
 			buffer.append(SQL_VALUES);
 			buffer.append(OPEN_BRACKET);
@@ -593,7 +589,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 					Log.errorMessage(mesg);
 			}
 			buffer.append(SQL_WHERE);
-			buffer.append(LINK_COLUMN_MONITORED_ELEMENT_ID);
+			buffer.append(MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 			buffer.append(EQUALS);
 			buffer.append(meIdStr);
 			sql1 = buffer.toString();
