@@ -223,20 +223,21 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nCha
 	ThreshDXArray taDX(env, threshArrDX);
 	ThreshDYArray taDY(env, threshArrDY);
 	int key_ = key;
-	int xDXID = 0;
-	void *args[4] = { &key, &taDX, &taDY, &xDXID};
-	mf.execCmd(MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXID, args);
+	int xID = 0;
+	int wannaID = 0;
+	void *args[5] = { &key, &taDX, &taDY, &xID, &wannaID};
+	mf.execCmd(MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXDYID, args);
 	ModelF_C2J_update(env, mf, obj);
 	prf_e();
 }
 
 /*
  * Class:     com_syrus_AMFICOM_analysis_dadara_ModelFunction
- * Method:    nFindResponsibleThreshDXID
- * Signature: ([Lcom/syrus/AMFICOM/analysis/dadara/ThreshDX;[Lcom/syrus/AMFICOM/analysis/dadara/ThreshDY;II)I
+ * Method:    nFindResponsibleThreshDXDYID
+ * Signature: ([Lcom/syrus/AMFICOM/analysis/dadara/ThreshDX;[Lcom/syrus/AMFICOM/analysis/dadara/ThreshDY;III)I
  */
-JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFindResponsibleThreshDXID
-  (JNIEnv *env, jobject obj, jobjectArray threshArrDX, jobjectArray threshArrDY, jint key, jint x)
+JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFindResponsibleThreshDXDYID
+  (JNIEnv *env, jobject obj, jobjectArray threshArrDX, jobjectArray threshArrDY, jint key, jint x, jint xThType)
 {
 	prf_b("nFindResponsibleThreshDXID");
 	ModelF mf;
@@ -245,12 +246,13 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFin
 	ThreshDXArray taDX(env, threshArrDX);
 	ThreshDYArray taDY(env, threshArrDY);
 	int key_ = key;
-	int xDXID = x;
-	void *args[4] = { &key, &taDX, &taDY, &xDXID};
-	int rcDXID = (int )mf.execCmd(MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXID, args);
+	int xID = x;
+	int xType = xThType;
+	void *args[5] = { &key, &taDX, &taDY, &xID, &xType};
+	int rcID = (int )mf.execCmd(MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXDYID, args);
 	// NB: do NOT update mf back to Java because mf is now changed but Java mf should not be modified
 	prf_e();
-	return rcDXID;
+	return rcID;
 }
 
 /*

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.11 2005/02/24 08:54:01 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.12 2005/02/28 13:02:21 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/02/24 08:54:01 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/28 13:02:21 $
  * @module
  */
 public class ModelTraceManager
@@ -352,6 +352,10 @@ public class ModelTraceManager
 		}
 		else
 		{
+			// FIXME - remove
+			//for (int i = 0; i < 500; i++)
+			//	mf.copy().changeByThresh(tDX, tDY, key);
+
 			ModelFunction tmp = mf.copy();
 			tmp.changeByThresh(tDX, tDY, key);
 			thMt = new ModelTraceImplMF(tmp, traceLength);
@@ -771,7 +775,10 @@ public class ModelTraceManager
 
 		if (button == 0)
 		{
-			int thId = getNearestThreshDYByX(bestKey, bestX);
+			int thId = mf.findResponsibleThreshDYID(tDX, tDY, bestKey, bestX);
+			if (thId == -1)
+				return null;
+			//int thId = getNearestThreshDYByX(bestKey, bestX);
 			ThresholdHandleDY handle = new ThresholdHandleDY(thId, bestKey, bestX, bestY, 0.001);
 			handle.posY = getThresholdY(bestKey, handle.posX);
 			return handle;

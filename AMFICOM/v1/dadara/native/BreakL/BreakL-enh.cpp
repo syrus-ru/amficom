@@ -6,6 +6,9 @@
 #include "../common/ModelF.h"
 #include "../common/ArrList.h"
 
+/////////////////////////////////////////////////
+// алгоритм enhance  в двух вариантах - без отслеживания и с отслеживанием
+
 inline void imaxeq(double &a, double b)
 {
 	if (b > a)
@@ -28,21 +31,58 @@ static void enh0m(double *data, int size, int width)
 	for (i = size - width - 1; i >= 0; i--)
 	   imineq(data[i + width], data[i]);
 }
-static void enhance(double *data, int size, int width, int isUpper)
+inline void imaxeqtid(double &a, double b, int &aid, int bid)
+{
+	if (b > a)
+	{
+		a = b;
+		aid = bid;
+	}
+}
+inline void imineqtid(double &a, double b, int &aid, int bid)
+{
+	if (b < a)
+	{
+		a = b;
+		aid = bid;
+	}
+}
+static void enh0ptid(double *data, int size, int width, int *id)
+{
+	int i;
+	for (i = size - width - 1; i >= 0; i--)
+	   imaxeqtid(data[i + width], data[i], id[i + width], id[i]);
+}
+static void enh0mtid(double *data, int size, int width, int *id)
+{
+	int i;
+	for (i = size - width - 1; i >= 0; i--)
+	   imineqtid(data[i + width], data[i], id[i + width], id[i]);
+}
+static void enhance(double *data, int size, int width, int isUpper, int *id = 0)
 {
 	int i;
 	for (i = 1; i <= width; i = i * 2)
 	{
-		isUpper ? enh0p(data, size, i) : enh0m(data, size, i);
+		if (id)
+			isUpper ? enh0ptid(data, size, i, id) : enh0mtid(data, size, i, id);
+		else
+			isUpper ? enh0p(data, size, i) : enh0m(data, size, i);
 		width -= i;
 	}
 	while (i)
 	{
 		if (i & width)
-	      isUpper ? enh0p(data, size, i) : enh0m(data, size, i);
+		{
+			if (id)
+				isUpper ? enh0ptid(data, size, i, id) : enh0mtid(data, size, i, id);
+			else
+				isUpper ? enh0p(data, size, i) : enh0m(data, size, i);
+		}
 		i /= 2;
 	}
 }
+/////////////////////////////////////////////////
 
 // "размазывает" (для образования порога) BreakL
 // поддерживается только BreakL с не очень большими целочисленными X-координатами
@@ -107,7 +147,6 @@ void BreakL_Enh (ModelF &mf, int x0, int x1, int width, int isUpper)
 	prf_b("BreakL_Enh: leave");
 }
 
-
 double *BreakLToArray(double *pars, int npars, int x0, int N) // N > 0, но [x0..x0+N) не обязаны лежать в пределах ООФ
 {
 	double *ret = new double[N];
@@ -136,6 +175,8 @@ int isMonotonous(int N, XY *P) // XXX: debug code, not required is runtime
 	return 1;
 }
 
+/* -- не используется
+// Заменяет одну м.ф. другой на некотором участке
 // обе mf должны быть типа BreakL
 // области определения mf должны пересекаться хотя бы в одной точке
 void BreakLReplaceRegion(ModelF &mf, ModelF &that)
@@ -263,108 +304,7 @@ int BreakLUpdateRegionFromArray(ModelF &mf, int x0, int N, double *upd, int isUp
 
 	return rc;
 }
-
-#define _FindExtrTemplate(op) \
-{\
-	int iExtr = x0;\
-	double vExtr = mf.calcFun(iExtr);\
-	int i;\
-	for (i = iExtr + 1; i < x1; i++)\
-	{\
-		double v = mf.calcFun(i);\
-		if (v op vExtr)\
-		{\
-			vExtr = v;\
-			iExtr = i;\
-		}\
-	}\
-	return iExtr;\
-}
-
-int findFirstMax(ModelF &mf, int x0, int x1) _FindExtrTemplate(>)
-int findFirstMin(ModelF &mf, int x0, int x1) _FindExtrTemplate(<)
-int findLastMax(ModelF &mf, int x0, int x1) _FindExtrTemplate(>=)
-int findLastMin(ModelF &mf, int x0, int x1) _FindExtrTemplate(<=)
-
-// добавляет узлы в ломаную, не делая повторных узлов и не расширяя ее ООФ
-// nodeList должно быть монотонно
-// Разрушает nodeList, а затем удаляет его
-void BreakL_AddInternalNodesFromTempList(ModelF &mf, int listSize, int *nodeList)
-{
-	int i;
-	int toAdd = 0;
-	int Np = mf.getNPars() / 2;
-	if (Np == 0)
-		return;
-
-	double *pars = mf.getP();
-	int p; // индекс добавляемого узла
-	for (i = 0, p = 0; i < listSize; i++)
-	{
-		int pos = nodeList[i];
-
-		if (i != 0 && pos == nodeList[i - 1])
-			continue;
-		int k = f_BREAKL_GETPOS(Np, pars, pos, -1);
-		if (k == 0)
-			continue; // точка слева он начала ломаной
-		if (k == Np)
-			continue; // точка справа от конца ломаной либо совпадает с последним узлом
-		int xk = (int )pars[k * 2 - 2];
-		if (pos <= xk)
-			continue; // узел уже есть
-
-		if (p != 0)
-		{
-			//fprintf(stderr, "i %d p %d pos %d nl[p-1] %d\n",
-			//	i, p, pos, nodeList[p - 1]);
-			//fflush(stderr);
-			assert(pos > nodeList[p - 1]); // проверяем монотонность
-
-			if (pos <= nodeList[p - 1])
-				continue; // игнорируем немонотонные входные узлы
-		}
-		// записываем узел в список на добавление
-		nodeList[p++] = pos;
-	}
-
-	if (p == 0)
-		return;
-
-	// создаем новый массив параметров
-	int newNp = Np + p;
-	double *newPars = new double[newNp * 2];
-	assert(newPars);
-
-	int q; // номер в списке добавляемых точек
-	// i - номер в списке входных узлов
-	int w; // номер в списке выходных узлов
-	for (i = 0, q = 0, w = 0; w < newNp; w++)
-	{
-		if (q < p && pars[2 * i] > nodeList[q])
-		{
-			int pos = nodeList[q];
-			newPars[2 * w] = pos;
-			newPars[2 * w + 1] = f_BREAKL_GETY(i, Np, pars, pos);
-			q++;
-		}
-		else
-		{
-			newPars[2 * w] = pars[2 * i];
-			newPars[2 * w + 1] = pars[2 * i + 1];
-			i++;
-		}
-	}
-
-	assert(i == Np); // XXX - доказать в алгоритме
-
-	//fprintf(stderr, "BreakL_AddInternalNodesFromTempList: p %d Np %d newNp %d\n", p, Np, newNp); fflush(stderr);
-
-	// заменяем параметры
-	mf.init(MF_ID_BREAKL, newNp * 2, newPars);
-
-	delete[] nodeList;
-}
+*/
 
 struct THX
 {
@@ -383,12 +323,27 @@ struct THY
 	int typeL;
 };
 
+// 1: умеем отслеживать перемещение DY-порогов (следовательно)
+// 0: не умеем
+#define CANTTDY 1
+
 struct UPDATE_REGION
 {
 	int x0;
 	int N;
 	int dxthid;
 	double *data;
+#if CANTTDY
+	int *tid;
+	UPDATE_REGION(int x0, int N, int dxthid, double *data, int *tid)
+	{
+		this->x0 = x0;
+		this->N = N;
+		this->data = data;
+		this->dxthid = dxthid;
+		this->tid = tid;
+	}
+#else
 	UPDATE_REGION(int x0, int N, int dxthid, double *data)
 	{
 		this->x0 = x0;
@@ -396,6 +351,7 @@ struct UPDATE_REGION
 		this->data = data;
 		this->dxthid = dxthid;
 	}
+#endif
 };
 
 static int isat(int x, int xMin, int xMax)
@@ -407,14 +363,18 @@ static int isat(int x, int xMin, int xMax)
 	return x;
 }
 
-//*
 // Основное назначение функции соответствует названию - преобразовать м.ф. к ее порогу.
-// Вспомогательное назначение - поиск соответствующего координате DX-порога dXCheckPosition.
-// параметр dXCheckPosition: x-координата, для которой надо провести поиск ответственного DX-порога
-// возвращаемое значение будет либо -1, либо найденным номером в массиве taX
-int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key, int dXCheckPosition)
+// Вспомогательное назначение - поиск соответствующего координате DX/DY-порога thCheckPosition.
+// thCheckPosition: x-координата, для которой надо провести поиск ответственного DX/DY-порога
+// wannaDXDY: 0: ничего не надо, 1: нужен DX-порог, 2: нужен DY-порог
+// возвращаемое значение будет либо -1 (не запрошен либо не найден), либо найденным номером в массиве taX или taY
+int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key, int thCheckPosition, int wannaDXDY)
 {
 	prf_b("BreakL_ChangeByThresh: entered");
+
+#if CANTTDY
+	int needTTDY = wannaDXDY == 2; // need to track ThreshDY
+#endif
 
 	const int thNpX = taX.getLength();
 	const int thNpY = taY.getLength();
@@ -455,11 +415,20 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 	}
 
 	prf_b("BreakL_ChangeByThresh: unpacking BreakL");
-	// XXX: предполагаем, что начальный и конечный узлы mf соответствуют длине рефлектограммы
+	// FIXME: предполагаем, что начальный и конечный узлы mf соответствуют длине рефлектограммы
 	int xMin = (int )mf.getP()[0];
 	int xMax = (int )mf.getP()[mf.getNPars() - 2];
 	int Nx = xMax - xMin + 1;
 	double *unpk = BreakLToArray(mf.getP(), mf.getNPars(), xMin, Nx);
+
+#if CANTTDY
+	int *TTDY = 0;
+	if (needTTDY)
+	{
+		TTDY = new int[Nx];
+		assert(TTDY);
+	}
+#endif
 
 	prf_b("BreakL_ChangeByThresh: process AL threshs");
 
@@ -494,6 +463,10 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 			// пространство внутри порога
 			if (curX <= thY[curLTn].x1 || curLTn == thNpY - 1)
 			{
+#if CANTTDY
+				if (needTTDY)
+					TTDY[i] = curLTn;
+#endif
 				unpk[i] += thY[curLTn].dy;
 				continue;
 			}
@@ -523,16 +496,16 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 			//	curLTn, curMn, curX, xL, xR, dyL, dyR, typeL, typeR, wei);
 
 			unpk[i] += dyL + (dyR - dyL) * wei;
+#if CANTTDY
+			if (needTTDY)
+				TTDY[i] = wei > .5 ? curLTn + 1 : curLTn;
+#endif
 		}
 	}
 
-	//prf_b("BreakL_ChangeByThresh: committing AL thresholds");
-	//BreakLFromArray(mf, xMin, Nx, unpk);
-	//delete[] unpk;
-
 	prf_b("BreakL_ChangeByThresh: process DXLR threshs");
 
-	int rcDXID = -1;
+	int rcID = -1;
 
 	// apply dx-thresholds
 	{
@@ -570,31 +543,76 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 			// расширять будем только на nBase0 + W, а остальное понадобится для контроля
 			// пересечения с исходной кривой
 
-			//double *arr2io = BreakLToArray(mf.getP(), mf.getNPars(), xBegin - dxL * 2, nEnh2);
 			// XXX: надо ли копировать?
 			double *arr2io = new double[nEnh2];
 			assert(arr2io);
+#if CANTTDY
+			int *tid2io = 0;
+			if (needTTDY)
+			{
+				tid2io = new int[nEnh2];
+				assert(tid2io);
+			}
+#endif
 			{
 				int xL = xBegin - dxL * 2;
 				int xR = xL + nEnh2;
 				for (j = 0; j + xL < xMin; j++)
+				{
 					arr2io[j] = unpk[0];
+#if CANTTDY
+					if (needTTDY)
+						tid2io[j] = TTDY[0];
+#endif
+				}
 				for (; j + xL < xR && j + xL <= xMax; j++)
+				{
 					arr2io[j] = unpk[j + xL - xMin];
+#if CANTTDY
+					if (needTTDY)
+						tid2io[j] = TTDY[j + xL - xMin];
+#endif
+				}
 				for (; j + xL < xR; j++)
+				{
 					arr2io[j] = unpk[xMax - xMin - 1];
+#if CANTTDY
+					if (needTTDY)
+						tid2io[j] = TTDY[xMax - xMin - 1];
+#endif
+				}
 			}
 
 			// расширяем nBase0->nEnh2, забивая справа гориз. прямой; исходный вар-т не меняем
 			double *arr1t = new double[nEnh1];
 			assert(arr1t);
+#if CANTTDY
+			int *tid1t = 0;
+			if (needTTDY)
+			{
+				tid1t = new int[nEnh1];
+				assert(tid1t);
+			}
+#endif
 			for (j = 0; j < nBase0; j++)
+			{
 				arr1t[j] = arr2io[j + dxL * 2];
+#if CANTTDY
+				if (needTTDY)
+					tid1t[j] = tid2io[j + dxL * 2];
+#endif
+			}
 			for (j = nBase0; j < nEnh1; j++)
+			{
 				arr1t[j] = arr1t[nBase0 - 1];
+#if CANTTDY
+				if (needTTDY)
+					tid1t[j] = tid1t[nBase0 - 1];
+#endif
+			}
 
 			// собственно расширяем
-			enhance(arr1t, nEnh1, W, isUpper);
+			enhance(arr1t, nEnh1, W, isUpper, needTTDY ? tid1t : 0);
 
 			// сглаживаем стык
 			{
@@ -604,7 +622,11 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 				int x1 = leftMode ? nBase0 + dxL : nEnh1;
 				for (j = x0; j < x1; j++)
 				{
-						arr2io[dxL + j] = arr1t[j];
+					arr2io[dxL + j] = arr1t[j];
+#if CANTTDY
+					if (needTTDY)
+						tid2io[dxL + j] = tid1t[j];
+#endif
 				}
 				if (leftMode)
 				{
@@ -616,7 +638,13 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 					{
 						double yt = y0 + (y1 - y0) * (double )j / dxL;
 						if (arr2io[dxL - j] * sign < yt * sign)
+						{
 							arr2io[dxL - j] = yt;
+#if CANTTDY
+							if (needTTDY)
+								tid2io[dxL - j] = j > dxL * 0.5 ? tid2io[0] : tid1t[0];
+#endif
+						}
 						else
 							break;
 					}
@@ -631,7 +659,13 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 					{
 						double yt = y0 + (y1 - y0) * (double )j / dxR;
 						if (arr2io[nEnh2 - 1 - dxR + j] * sign < yt * sign)
+						{
 							arr2io[nEnh2 - 1 - dxR + j] = yt;
+#if CANTTDY
+							if (needTTDY)
+								tid2io[nEnh2 - 1 - dxR + j] = j > dxR * 0.5 ? tid2io[nEnh2 - 1] : tid1t[nEnh1 - 1];
+#endif
+						}
 						else
 							break;
 					}
@@ -639,10 +673,18 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 			}
 
 			// планируем сохранение
+#if CANTTDY
+			UPDATE_REGION *ur = new UPDATE_REGION(xBegin - dxL * 2, nEnh2, curT, arr2io, needTTDY ? tid2io : 0);
+#else
 			UPDATE_REGION *ur = new UPDATE_REGION(xBegin - dxL * 2, nEnh2, curT, arr2io);
+#endif
 			assert(ur);
 			updateRegions.add(ur);
 			delete[] arr1t;
+#if CANTTDY
+			if (needTTDY)
+				delete[] tid1t;
+#endif
 			//fprintf(stderr, "#6\n"); fflush(stderr);
 		}
 		// сохраняем запланированные изменения
@@ -665,10 +707,16 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 			int x0 = urp->x0;
 			int N = urp->N;
 			double *upd = urp->data;
+#if CANTTDY
+			int *updtid = urp->tid;
+#endif
 			int rc;
 			{
 				assert(x0 + N <= XRmax);
 				double *data = unpk - xMin + x0;
+#if CANTTDY
+				int *tids = needTTDY ? TTDY - xMin + x0 : 0;
+#endif
 				int i;
 				int iMin = x0 < xMin ? xMin - x0 : 0;
 				int iMax = x0 + N >= xMax + 1 ? xMax + 1 - x0 : N;
@@ -680,7 +728,11 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 						if (upd[i] > data[i])
 						{
 							data[i] = upd[i];
-							if (i == dXCheckPosition - x0)
+#if CANTTDY
+							if (needTTDY)
+								tids[i] = updtid[i];
+#endif
+							if (i == thCheckPosition - x0)
 								rc = 1;
 						}
 				}
@@ -690,15 +742,23 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 						if (upd[i] < data[i])
 						{
 							data[i] = upd[i];
-							if (i == dXCheckPosition - x0)
+#if CANTTDY
+							if (needTTDY)
+								tids[i] = updtid[i];
+#endif
+							if (i == thCheckPosition - x0)
 								rc = 1;
 						}
 				}
 
 			}
-			if (rc)
-				rcDXID = urp->dxthid;
+			if (rc != 0 && wannaDXDY == 1)
+				rcID = urp->dxthid;
 			delete[] urp->data;
+#if CANTTDY
+			if (needTTDY)
+				delete[] urp->tid;
+#endif
 			delete urp;
 		}
 		prf_b("BreakL_ChangeByThresh: committing DX thresholds: done");
@@ -707,6 +767,12 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 	prf_b("BreakL_ChangeByThresh: committing thresholds: BreakLFromArray");
 	BreakLFromArray(mf, xMin, Nx, unpk);
 	delete[] unpk;
+#if CANTTDY
+	if (wannaDXDY == 2 && thCheckPosition >= xMin && thCheckPosition <= xMax)
+		rcID = TTDY[thCheckPosition];
+	if (needTTDY)
+		delete[] TTDY;
+#endif
 
 	prf_b("BreakL_ChangeByThresh: done");
 
@@ -717,267 +783,5 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 	if (thNpY > 0)
 		delete[] thY;
 
-	return rcDXID;
+	return rcID;
 }
-/*/
-
-// Основное назначение функции соответствует названию - преобразовать м.ф. к ее порогу.
-// Вспомогательное назначение - поиск соответствующего координате DX-порога dXCheckPosition.
-// параметр dXCheckPosition: x-координата, для которой надо провести поиск ответственного DX-порога
-// возвращаемое значение будет либо -1, либо найденным номером в массиве taX
-int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key, int dXCheckPosition)
-{
-	prf_b("BreakL_ChangeByThresh: entered");
-
-	const int thNpX = taX.getLength();
-	const int thNpY = taY.getLength();
-
-	int conjKey = taX.getConjKey(key);
-	int isUpper = taX.isUpper(key);
-
-	// convert thresholds
-	THX *thX = 0;
-	if (thNpX > 0)
-	{
-		thX = new THX[thNpX];
-		assert(thX);
-	}
-	THY *thY = 0;
-	if (thNpY > 0)
-	{
-		thY = new THY[thNpY];
-		assert(thY);
-	}
-	int j;
-	for (j = 0; j < thNpX; j++)
-	{
-		int isRising = taX.getIsRise(j);
-		int leftMode = !!isRising ^ !!isUpper ^ 1;
-		thX[j].leftMode = leftMode;
-		thX[j].x0 = taX.getX0(j);
-		thX[j].x1 = taX.getX1(j);
-		thX[j].dxL = leftMode ? -taX.getDX(j, key) : taX.getDX(j, conjKey);
-		thX[j].dxR = leftMode ? -taX.getDX(j, conjKey) : taX.getDX(j, key);
-	}
-	for (j = 0; j < thNpY; j++)
-	{
-		thY[j].x0 = taY.getX0(j);
-		thY[j].x1 = taY.getX1(j);
-		thY[j].dy = taY.getValue(j, key);
-		thY[j].typeL = taY.getTypeL(j);
-	}
-
-	prf_b("BreakL_ChangeByThresh: add nodes");
-
-	// добавляем узлы в точках начала и конца всех событий
-	// это изменяет mf
-	// XXX: предполагается, что у каждого X-порога есть два смежных Y-порога,
-	// поэтому достаточно расставить точки только Y-порогов
-	{
-		int *nodeList = new int[thNpY * 2];
-		assert(nodeList);
-		// NB: список не обязан быть без повторений, но должен быть монотонным
-		for (j = 0; j < thNpY; j++)
-		{
-			nodeList[2 * j] = thY[j].x0;
-			nodeList[2 * j + 1] = thY[j].x1;
-		}
-		BreakL_AddInternalNodesFromTempList(mf, thNpY * 2, nodeList);
-	}
-
-	prf_b("BreakL_ChangeByThresh: process AL threshs");
-
-	// process A and L threshs
-	{
-		XY *mfpars = (XY* )mf.getP();
-		int mfNp = mf.getNPars() / 2;
-
-		int curMn; // номер текущего узла mf
-		int curLTn; // номер текущего порога либо левого из текущих
-
-		// для переходов A->L, L->A:
-		double Yx1L = 1; // не инициализируем, т.к. крайние события не м б типа L
-		double Yx0R = 0; // (инициализируем только для успокоения компилятора)
-
-		for (curMn = 0, curLTn = -1; curMn < mfNp; curMn++)
-		{
-			int curX = (int )mfpars[curMn].x;
-
-			// fix curLTn; keep Yx1_prev and Yx1_cur
-			while (curLTn < 0 || curLTn < thNpY - 1 && curX >= thY[curLTn + 1].x0)
-			{
-				curLTn++;
-				Yx1L = mf.calcFun(thY[curLTn].x1);
-				if (curLTn < thNpY - 1)
-					Yx0R = mf.calcFun(thY[curLTn + 1].x0);
-				else
-					Yx0R = 0;
-				if (Yx1L == Yx0R)
-					Yx1L++; // защита от div by zero
-			}
-
-			// нашли последний порог curLTn, начинающийся левее-либо-там-же от точки curX
-
-			// пространство внутри порога
-			if (curX <= thY[curLTn].x1 || curLTn == thNpY - 1)
-			{
-				mfpars[curMn].y += thY[curLTn].dy;
-				continue;
-			}
-
-			// пространство между порогами
-
-			int xL = thY[curLTn].x1;
-			int xR = thY[curLTn + 1].x0;
-
-			double dyL = thY[curLTn].dy;
-			double dyR = thY[curLTn + 1].dy;
-
-			int typeL = thY[curLTn].typeL;
-			int typeR = thY[curLTn + 1].typeL;
-
-			double wei;
-
-			// для A-типа - линейный переход;
-			// A-тип и L-тип - L-переход;
-			// два порога L-типа не могут быть рядом.
-			if (typeL || typeR)
-				wei = (mfpars[curMn].y - Yx1L) / (Yx0R - Yx1L);
-			else
-				wei = (double )(curX - xL) / (xR - xL);
-
-			//fprintf(stderr, "AL threshs: LTn %d Mn %d curX %d xL %d xR %d dyL %g dyR %g tL %d tR %d wei %g\n",
-			//	curLTn, curMn, curX, xL, xR, dyL, dyR, typeL, typeR, wei);
-
-			mfpars[curMn].y += dyL + (dyR - dyL) * wei;
-		}
-	}
-
-	prf_b("BreakL_ChangeByThresh: process DXLR threshd");
-
-	int rcDXID = -1;
-
-	// apply dx-thresholds
-	{
-		ArrList updateRegions;
-		int curT;
-		for (curT = 0; curT < thNpX; curT++)
-		{
-			int dxL = thX[curT].dxL;
-			int dxR = thX[curT].dxR;
-
-			if (dxL < 0)
-				dxL = 0;
-			if (dxR < 0)
-				dxR = 0;
-
-			if (dxL == 0 && dxR == 0)
-				continue;
-
-			int xBegin = thX[curT].x0;
-			int xEnd = thX[curT].x1;
-
-			int nBase0 = xEnd - xBegin + 1;
-			//fprintf(stderr, "Applying dxL/dxR thresholds: curT %d dxL %d dxR %d, nBase %d; leftMode %d upper %d\n",
-			//	curT, dxL, dxR, nBase0, thX[curT].leftMode, isUpper);
-
-			if (nBase0 <= 0)
-				continue;
-
-			int W = dxL + dxR;
-
-			int nEnh1 = nBase0 + W;
-			int nEnh2 = nBase0 + W * 2; // "'2': Double-width enh"
-
-			// получаем событие, которое надо расширить, на ширине nBase0 + 2W
-			// расширять будем только на nBase0 + W, а остальное понадобится для контроля
-			// пересечения с исходной кривой
-			// NB: mf.getP() и mf.getNPars() могут возвращать разные значения в разные итерации,
-			// т.к. мы изменяем длину mf в конце итерации
-			double *arr2io = BreakLToArray(mf.getP(), mf.getNPars(), xBegin - dxL * 2, nEnh2);
-
-			// расширяем nBase0->nEnh2, забивая справа гориз. прямой; исходный вар-т не меняем
-			double *arr1t = new double[nEnh1];
-			assert(arr1t);
-			for (j = 0; j < nBase0; j++)
-				arr1t[j] = arr2io[j + dxL * 2];
-			for (j = nBase0; j < nEnh1; j++)
-				arr1t[j] = arr1t[nBase0 - 1];
-
-			// собственно расширяем
-			enhance(arr1t, nEnh1, W, isUpper);
-
-			// сглаживаем стык
-			{
-				double sign = isUpper ? 1.0 : -1.0;
-				int leftMode = thX[curT].leftMode;
-				int x0 = leftMode ? 0 : dxL;
-				int x1 = leftMode ? nBase0 + dxL : nEnh1;
-				for (j = x0; j < x1; j++)
-				{
-						arr2io[dxL + j] = arr1t[j];
-				}
-				if (leftMode)
-				{
-					double y0 = arr1t[0];
-					double y1 = arr2io[0];
-					if (y1 * sign > y0 * sign) // XXX: в некоторых случаях лучше продолжить горизонтально до пересечения
-						y1 = y0;
-					for (j = 1; j < dxL; j++)
-					{
-						double yt = y0 + (y1 - y0) * (double )j / dxL;
-						if (arr2io[dxL - j] * sign < yt * sign)
-							arr2io[dxL - j] = yt;
-						else
-							break;
-					}
-				}
-				else
-				{
-					double y0 = arr1t[nEnh1 - 1];
-					double y1 = arr2io[nEnh2 - 1];
-					if (y1 * sign > y0 * sign) // XXX
-						y1 = y0;
-					for (j = 1; j < dxR; j++)
-					{
-						double yt = y0 + (y1 - y0) * (double )j / dxR;
-						if (arr2io[nEnh2 - 1 - dxR + j] * sign < yt * sign)
-							arr2io[nEnh2 - 1 - dxR + j] = yt;
-						else
-							break;
-					}
-				}
-			}
-
-			// планируем сохранение в mf
-			UPDATE_REGION *ur = new UPDATE_REGION(xBegin - dxL * 2, nEnh2, curT, arr2io);
-			assert(ur);
-			updateRegions.add(ur);
-			delete[] arr1t;
-			//fprintf(stderr, "#6\n"); fflush(stderr);
-		}
-		// сохраняем в mf запланированные изменения
-		prf_b("BreakL_ChangeByThresh: committing DX thresholds");
-		int i;
-		for (i = 0; i < updateRegions.getLength(); i++)
-		{
-			UPDATE_REGION *urp = (UPDATE_REGION *)updateRegions[i];
-			if (BreakLUpdateRegionFromArray(mf, urp->x0, urp->N, urp->data, isUpper, dXCheckPosition))
-				rcDXID = urp->dxthid;
-			delete[] urp->data;
-			delete urp;
-		}
-	}
-
-	prf_b("BreakL_ChangeByThresh: done");
-
-	//fflush(stderr);
-
-	if (thNpX > 0)
-		delete[] thX;
-	if (thNpY > 0)
-		delete[] thY;
-
-	return rcDXID;
-}
-//*/

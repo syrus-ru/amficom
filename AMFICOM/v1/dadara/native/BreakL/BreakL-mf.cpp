@@ -219,7 +219,7 @@ double fc_BREAKL(double *pars, ModelF &mf, int command, void *extra)
 			// теперь mf изменилась, в т.ч. N и размещение pars
 		}
 	}
-	if (command == MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXID)
+	if (command == MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXDYID)
 	{
 		void **args = (void** )(void* )extra;
 		return
@@ -227,7 +227,8 @@ double fc_BREAKL(double *pars, ModelF &mf, int command, void *extra)
 				*(ThreshDXArray *)args[1],
 				*(ThreshDYArray *)args[2],
 				*(int *)args[0],
-				*(int *)args[3]);
+				*(int *)args[3],
+				*(int *)args[4]);
 	}
 	return 0;
 }

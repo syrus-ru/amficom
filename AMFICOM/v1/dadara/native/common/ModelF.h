@@ -79,7 +79,7 @@ const int MF_PAR_FLAG_L = 4;
 // отбработать преобразование согласно ThreshDX, ThreshDY-порогам
 // и одновременно проследить, какой DX-порог срабатывает в данной x-координате
 // Определено только для ломаной, BREAKL
-#define MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXID 7 /* BREAKL only */
+#define MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXDYID 7 /* BREAKL only */
 
 // создать линейную м.ф.
 #define MF_CMD_LIN_SET_BY_X1Y1X2Y2 2101
