@@ -185,7 +185,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 
 	protected static String[] buttons = new String[]
 	{
-		EX, DX, EY, DY, FIX, separator, events, separator, createMarker, deleteMarker
+		EX, DX, EY, DY, FIX, SEPARATOR, events, SEPARATOR, createMarker, deleteMarker
 	};
 
 	public MapMarkersToolBar(MapMarkersLayeredPanel panel)

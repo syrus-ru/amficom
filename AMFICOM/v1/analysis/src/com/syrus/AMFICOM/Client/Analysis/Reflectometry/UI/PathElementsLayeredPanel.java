@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementsLayeredPanel.java,v 1.3 2005/03/23 10:47:33 bob Exp $
+ * $Id: PathElementsLayeredPanel.java,v 1.4 2005/03/24 12:19:39 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/23 10:47:33 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/24 12:19:39 $
  * @author $Author: bob $
  * @module analysis_v1
  */
@@ -73,7 +73,7 @@ class PathElementsToolBar extends AnalysisToolBar
 
 	protected static String[] buttons = new String[]
 	{
-		EX, DX, EY, DY, FIX, separator, loss, ref, noana, separator, cA, cB, separator, events, modeled, separator, pe
+		EX, DX, EY, DY, FIX, SEPARATOR, loss, ref, noana, SEPARATOR, cA, cB, SEPARATOR, events, modeled, SEPARATOR, pe
 	};
 
 	public PathElementsToolBar (PathElementsLayeredPanel panel)

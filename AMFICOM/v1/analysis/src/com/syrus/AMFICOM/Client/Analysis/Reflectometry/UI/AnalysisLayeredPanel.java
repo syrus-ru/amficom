@@ -160,7 +160,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 
 	protected static String[] buttons = new String[]
 	{
-		EX, DX, EY, DY, FIX, separator, loss, ref, noana, separator, cA, cB, separator, events, modeled
+		EX, DX, EY, DY, FIX, SEPARATOR, loss, ref, noana, SEPARATOR, cA, cB, SEPARATOR, events, modeled
 	};
 
 	public AnalysisToolBar (AnalysisLayeredPanel panel)

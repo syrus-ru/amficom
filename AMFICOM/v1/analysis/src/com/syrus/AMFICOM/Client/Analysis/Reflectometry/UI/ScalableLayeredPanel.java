@@ -227,6 +227,7 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 
 		panel.scaleX = factor_x*((double)(jLayeredPane.getWidth()) / (double)(panel.y.length));
 		panel.scaleY = factor_y*((jLayeredPane.getHeight()) / (panel.maxY - panel.minY));
+		
 		//panel.updateScale((double)(jLayeredPane.getWidth())*factor_x,  (double)(jLayeredPane.getHeight()*factor_y));
 		//panel.setSize(new Dimension (jLayeredPane.getWidth(), jLayeredPane.getHeight()));
 		panel.setSize(jLayeredPane.getSize());

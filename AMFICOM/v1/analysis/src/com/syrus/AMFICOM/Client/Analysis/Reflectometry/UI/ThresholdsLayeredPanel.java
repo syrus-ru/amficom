@@ -160,7 +160,7 @@ class ThresholdsToolBar extends TraceEventsToolBar
 
 	protected static String[] buttons = new String[]
 	{
-		FIT_EVENT, ALL_TRESHOLDS, separator, EX, DX, EY, DY, FIX, separator, modeled
+		FIT_EVENT, ALL_TRESHOLDS, SEPARATOR, EX, DX, EY, DY, FIX, SEPARATOR, modeled
 	};
 
 	public ThresholdsToolBar (ThresholdsLayeredPanel panel)

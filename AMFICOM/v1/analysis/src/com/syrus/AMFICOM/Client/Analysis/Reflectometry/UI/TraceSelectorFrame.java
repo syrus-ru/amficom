@@ -111,7 +111,7 @@ public class TraceSelectorFrame extends JInternalFrame
 
 	private void jbInit() throws Exception
 	{
-		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		tModel = new FixedSizeEditableTableModel(
 					new String[] {LangModelAnalyse.getString("selectorKey"),
@@ -172,15 +172,6 @@ public class TraceSelectorFrame extends JInternalFrame
 		jTable.setMinimumSize(new Dimension(200, 213));
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(jTable);
-		updColorModel();
-	}
-
-	private void updColorModel()
-	{
-//		scrollPane.getViewport().setBackground(SystemColor.window);
-//		jTable.setBackground(SystemColor.window);
-//		jTable.setForeground(ColorManager.getColor("textColor"));
-//		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
 			class DefaultTableModel extends AbstractTableModel {

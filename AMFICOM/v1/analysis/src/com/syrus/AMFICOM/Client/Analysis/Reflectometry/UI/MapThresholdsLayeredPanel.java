@@ -54,7 +54,7 @@ class MapThresholdsToolBar extends MapMarkersToolBar
 
 	protected static String[] buttons = new String[]
 	{
-		EX, DX, EY, DY, FIX, separator, events, modeled, thresholds, separator, createMarker, deleteMarker
+		EX, DX, EY, DY, FIX, SEPARATOR, events, modeled, thresholds, SEPARATOR, createMarker, deleteMarker
 	};
 
 	public MapThresholdsToolBar(MapThresholdsLayeredPanel panel)

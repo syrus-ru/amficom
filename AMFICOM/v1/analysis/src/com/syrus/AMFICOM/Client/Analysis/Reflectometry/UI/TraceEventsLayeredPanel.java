@@ -146,7 +146,7 @@ class TraceEventsToolBar extends ScalableToolBar
 
 	protected static String[] buttons = new String[]
 	{
-		EX, DX, EY, DY, FIX, separator, events, modeled
+		EX, DX, EY, DY, FIX, SEPARATOR, events, modeled
 	};
 
 	protected String[] getButtons()

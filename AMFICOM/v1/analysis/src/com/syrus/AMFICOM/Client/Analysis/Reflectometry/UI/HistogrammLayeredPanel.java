@@ -93,7 +93,7 @@ class HistogrammToolBar extends ScalableToolBar
 
 	protected static String[] buttons = new String[]
 	{
-		EX, DX, EY, DY, FIX, separator, BIND_MARK
+		EX, DX, EY, DY, FIX, SEPARATOR, BIND_MARK
 	};
 
 	public HistogrammToolBar (HistogrammLayeredPanel panel)
