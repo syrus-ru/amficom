@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Resource.Result;
 
 import com.syrus.AMFICOM.CORBA.Survey.ClientAnalysis_Transferable;
 import com.syrus.AMFICOM.CORBA.Survey.ClientParameter_Transferable;
+import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 import com.syrus.AMFICOM.Client.Survey.Result.UI.AnalysisDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
@@ -14,226 +15,449 @@ import com.syrus.AMFICOM.Client.Resource.Test.AnalysisType;
 import java.io.IOException;
 import java.io.Serializable;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.*;
 
-public class Analysis extends ObjectResource implements Serializable
-{
-	private static final long serialVersionUID = 01L;
-	transient static final public String typ = "analysis";
-	transient public ClientAnalysis_Transferable transferable;
+public class Analysis extends ObjectResource implements Serializable {
 
-	public String id = "";
-	public String name = "";
-	public long modified = 0;
-	public String user_id = "";
-	public long deleted = 0;
-	public String description = "";
-	public String result_id = "";
+	private static final long						serialVersionUID		= 01L;
+	public transient static final String			typ						= "analysis";
+	private List									argumentList			= new ArrayList();
+	/**
+	 * @deprecated use setter/getter pair for argumentList to access this field
+	 */
+	public Vector									arguments				= new Vector();
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
+	public String									criteria_set_id			= "";
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
+	public long										deleted					= 0;
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
+	public String									description				= "";
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
+	public String									id						= "";
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
+	public long										modified				= 0;
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
+	public String									monitored_element_id	= "";
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
+	public String									name					= "";
+	private List									parameterList			= new ArrayList();
+	/**
+	 * @deprecated use setter/getter pair for parameterList to access this field
+	 */
+	public Vector									parameters				= new Vector();
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
+	public String									result_id				= "";
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
+	public String[]									result_ids				= new String[0];
+	private transient ClientAnalysis_Transferable	transferable;
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
+	public String									type_id					= "";
+	/**
+	 * @deprecated use setter/getter pair to access this field
+	 */
+	public String									user_id					= "";
 
-	public String criteria_set_id = "";
-	public String monitored_element_id = "";
-	public String type_id = "";
-
-	public String[] result_ids = new String[0];
-
-	public Vector parameters = new Vector();
-	public Vector arguments = new Vector();
-
-	public Analysis(ClientAnalysis_Transferable transferable)
-	{
+	public Analysis(ClientAnalysis_Transferable transferable) {
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
 
-	public Analysis(String id)
-	{
-		parameters = new Vector();
-		arguments = new Vector();
+	public Analysis(String id) {
+		this.parameters = new Vector();
+		this.arguments = new Vector();
 		this.id = id;
-		transferable = new ClientAnalysis_Transferable();
+		this.transferable = new ClientAnalysis_Transferable();
 	}
 
-	public void addParameter(Parameter parameter)
-	{
-		parameters.add(parameter);
+	public static ObjectResourceDisplayModel getDefaultDisplayModel() {
+		return new AnalysisDisplayModel();
 	}
 
-	public void addArgument(Parameter argument)
-	{
-		arguments.add(argument);
+	public static PropertiesPanel getPropertyPane() {
+		return new GeneralPanel();
 	}
 
-	public Enumeration getChildTypes()
-	{
+	public void addArgument(Parameter argument) {
+		this.arguments.add(argument);
+		this.argumentList.add(argument);
+	}
+
+	public void addParameter(Parameter parameter) {
+		this.parameters.add(parameter);
+		this.parameterList.add(parameter);
+	}
+
+	/**
+	 * @return Returns the argumentList.
+	 */
+	public List getArgumentList() {
+		return this.argumentList;
+	}
+
+	/**
+	 * @deprecated use getter for argumentList/parameterList
+	 */
+	public Class getChildClass(String key) {
+		if (key.equals("arguments")) {
+			return Parameter.class;
+		} else if (key.equals("parameters")) { return Parameter.class; }
+		return ObjectResource.class;
+	}
+
+	/**
+	 * @deprecated use getter for argumentList/parameterList
+	 */
+	public Enumeration getChildren(String key) {
+		if (key.equals("arguments")) {
+			return this.arguments.elements();
+		} else if (key.equals("parameters")) { return this.parameters
+				.elements(); }
+		return new Vector().elements();
+	}
+
+	/**
+	 * @deprecated use getter for argumentList/parameterList
+	 */
+	public Enumeration getChildTypes() {
 		Vector vec = new Vector();
 		vec.add("arguments");
 		vec.add("parameters");
 		return vec.elements();
 	}
 
-	public Class getChildClass(String key)
-	{
-		if(key.equals("arguments"))
-		{
-			return Parameter.class;
-		}
-		else if(key.equals("parameters"))
-		{
-			return Parameter.class;
-		}
-		return ObjectResource.class;
+	/**
+	 * @return Returns the criteriaSetId.
+	 */
+	public String getCriteriaSetId() {
+		return this.criteria_set_id;
 	}
 
-	public Enumeration getChildren(String key)
-	{
-		if(key.equals("arguments"))
-		{
-			return arguments.elements();
-		}
-		else if(key.equals("parameters"))
-		{
-			return parameters.elements();
-		}
-		return new Vector().elements();
+	/**
+	 * @return Returns the deleted.
+	 */
+	public long getDeleted() {
+		return this.deleted;
 	}
 
-	public void updateLocalFromTransferable()
-	{
+	/**
+	 * @return Returns the description.
+	 */
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setTransferableFromLocal()
-	{
-		transferable.modified = modified;
-		transferable.deleted = deleted;
-		transferable.description = description;
-		transferable.id = id;
-		transferable.name = name;
-		transferable.user_id = user_id;
-		transferable.monitored_element_id = monitored_element_id;
-		transferable.type_id = type_id;
-		transferable.result_ids = new String[0];
-		transferable.criteria_set_id = criteria_set_id;
-
-		transferable.arguments = new ClientParameter_Transferable[arguments.size()];
-
-		for (int i=0; i<transferable.arguments.length; i++)
-		{
-			Parameter argument = (Parameter)arguments.get(i);
-			argument.setTransferableFromLocal();
-			transferable.arguments[i] = (ClientParameter_Transferable)argument.getTransferable();
-		}
+	public String getDomainId() {
+		return ConstStorage.SYS_DOMAIN;
 	}
 
-	public void setLocalFromTransferable()
-	{
-		modified = transferable.modified;
-		deleted = transferable.deleted;
-		description = transferable.description;
-		id = transferable.id;
-		name = transferable.name;
-		user_id = transferable.user_id;
-		monitored_element_id = transferable.monitored_element_id;
-		type_id = transferable.type_id;
-		criteria_set_id = transferable.criteria_set_id;
-
-		result_ids = transferable.result_ids;
-
-		arguments = new Vector();
-
-		AnalysisType at = (AnalysisType )Pool.get(AnalysisType.typ, type_id);
-
-		for (int i=0; i<transferable.arguments.length; i++)
-			{
-			Parameter param = new Parameter(transferable.arguments[i]);
-			param.updateLocalFromTransferable();
-			param.apt = (ActionParameterType )at.sorted_arguments.get(param.codename);
-			arguments.add(param);
-		}
+	public String getId() {
+		return this.id;
 	}
 
-	public String getId()
-	{
-		return id;
-	}
-
-	public String getDomainId()
-	{
-		return "sysdomain";
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public Object getTransferable()
-	{
-		return transferable;
-	}
-
-	public String getTyp()
-	{
-		return typ;
-	}
-
-	public long getModified()
-	{
-		return modified;
-	}
-
-	public static PropertiesPanel getPropertyPane()
-	{
-		return new GeneralPanel();
-	}
-
-	public ObjectResourceModel getModel()
-	{
+	public ObjectResourceModel getModel() {
 		return new AnalysisModel(this);
 	}
 
-	public static ObjectResourceDisplayModel getDefaultDisplayModel ()
-	{
-		return new AnalysisDisplayModel();
+	public long getModified() {
+		return this.modified;
 	}
 
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException
-	{
-		out.writeObject(id);
-		out.writeObject(name);
-		out.writeLong(modified);
-		out.writeObject(user_id);
-		out.writeLong(deleted);
-		out.writeObject(description);
-		out.writeObject(result_id);
-		out.writeObject(criteria_set_id);
-		out.writeObject(monitored_element_id);
-		out.writeObject(type_id);
-		Object obj = result_ids;
-		out.writeObject(obj);
-		out.writeObject(parameters);
-		out.writeObject(arguments);
+	/**
+	 * @return Returns the monitoredElementId.
+	 */
+	public String getMonitoredElementId() {
+		return this.monitored_element_id;
 	}
 
-	private void readObject(java.io.ObjectInputStream in)
-		throws IOException, ClassNotFoundException
-	{
-		id = (String )in.readObject();
-		name = (String )in.readObject();
-		modified = in.readLong();
-		user_id = (String )in.readObject();
-		deleted = in.readLong();
-		description = (String )in.readObject();
-		result_id = (String )in.readObject();
-		criteria_set_id = (String )in.readObject();
-		monitored_element_id = (String )in.readObject();
-		type_id = (String )in.readObject();
-		Object obj = in.readObject();
-		result_ids = (String[] )obj;
-		parameters = (Vector )in.readObject();
-		arguments = (Vector )in.readObject();
+	public String getName() {
+		return this.name;
+	}
 
-		transferable = new ClientAnalysis_Transferable();
+	/**
+	 * @return Returns the parameterList.
+	 */
+	public List getParameterList() {
+		return this.parameterList;
+	}
+
+	/**
+	 * @return Returns the resultId.
+	 */
+	public String getResultId() {
+		return this.result_id;
+	}
+
+	/**
+	 * @return Returns the resultIds.
+	 */
+	public String[] getResultIds() {
+		return this.result_ids;
+	}
+
+	public Object getTransferable() {
+		return this.transferable;
+	}
+
+	public String getTyp() {
+		return typ;
+	}
+
+	/**
+	 * @return Returns the typeId.
+	 */
+	public String getTypeId() {
+		return this.type_id;
+	}
+
+	/**
+	 * @return Returns the userId.
+	 */
+	public String getUserId() {
+		return this.user_id;
+	}
+
+	/**
+	 * @param argumentList
+	 *            The argumentList to set.
+	 */
+	public void setArgumentList(List argumentList) {
+		this.argumentList = argumentList;
+	}
+
+	/**
+	 * @param criteriaSetId
+	 *            The criteriaSetId to set.
+	 */
+	public void setCriteriaSetId(String criteriaSetId) {
+		this.criteria_set_id = criteriaSetId;
+	}
+
+	/**
+	 * @param deleted
+	 *            The deleted to set.
+	 */
+	public void setDeleted(long deleted) {
+		this.deleted = deleted;
+	}
+
+	/**
+	 * @param description
+	 *            The description to set.
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
+	 * @param id
+	 *            The id to set.
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setLocalFromTransferable() {
+		this.modified = this.transferable.modified;
+		this.deleted = this.transferable.deleted;
+		this.description = this.transferable.description;
+		this.id = this.transferable.id;
+		this.name = this.transferable.name;
+		this.user_id = this.transferable.user_id;
+		this.monitored_element_id = this.transferable.monitored_element_id;
+		this.type_id = this.transferable.type_id;
+		this.criteria_set_id = this.transferable.criteria_set_id;
+
+		this.result_ids = this.transferable.result_ids;
+
+		this.arguments.clear();
+		this.argumentList.clear();
+		AnalysisType at = (AnalysisType) Pool.get(AnalysisType.typ,
+				this.type_id);
+
+		for (int i = 0; i < this.transferable.arguments.length; i++) {
+			Parameter param = new Parameter(this.transferable.arguments[i]);
+			param.updateLocalFromTransferable();
+			param.setApt((ActionParameterType) at.sorted_arguments.get(param
+					.getCodename()));
+			this.addArgument(param);
+		}
+	}
+
+	/**
+	 * @param modified
+	 *            The modified to set.
+	 */
+	public void setModified(long modified) {
+		this.modified = modified;
+	}
+
+	/**
+	 * @param monitoredElementId
+	 *            The monitoredElementId to set.
+	 */
+	public void setMonitoredElementId(String monitoredElementId) {
+		this.monitored_element_id = monitoredElementId;
+	}
+
+	/**
+	 * @param name
+	 *            The name to set.
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @param parameterList
+	 *            The parameterList to set.
+	 */
+	public void setParameterList(List parameterList) {
+		this.parameterList = parameterList;
+	}
+
+	/**
+	 * @param resultId
+	 *            The resultId to set.
+	 */
+	public void setResultId(String resultId) {
+		this.result_id = resultId;
+	}
+
+	/**
+	 * @param resultIds
+	 *            The resultIds to set.
+	 */
+	public void setResultIds(String[] resultIds) {
+		this.result_ids = resultIds;
+	}
+
+	public void setTransferableFromLocal() {
+		this.transferable.modified = this.modified;
+		this.transferable.deleted = this.deleted;
+		this.transferable.description = this.description;
+		this.transferable.id = this.id;
+		this.transferable.name = this.name;
+		this.transferable.user_id = this.user_id;
+		this.transferable.monitored_element_id = this.monitored_element_id;
+		this.transferable.type_id = this.type_id;
+		this.transferable.result_ids = new String[0];
+		this.transferable.criteria_set_id = this.criteria_set_id;
+
+		//		transferable.arguments = new
+		// ClientParameter_Transferable[arguments.size()];
+		//
+		//		for (int i=0; i<transferable.arguments.length; i++)
+		//		{
+		//			Parameter argument = (Parameter)arguments.get(i);
+		//			argument.setTransferableFromLocal();
+		//			transferable.arguments[i] =
+		// (ClientParameter_Transferable)argument.getTransferable();
+		//		}
+		if (this.argumentList.size() == 0) {
+			this.transferable.arguments = new ClientParameter_Transferable[this.arguments
+					.size()];
+			for (int i = 0; i < this.transferable.arguments.length; i++) {
+				Parameter argument = (Parameter) this.arguments.get(i);
+				argument.setTransferableFromLocal();
+				this.transferable.arguments[i] = (ClientParameter_Transferable) argument
+						.getTransferable();
+			}
+		} else {
+			HashMap map = new HashMap();
+			for (int i = 0; i < this.arguments.size(); i++) {
+				Object obj = this.arguments.get(i);
+				map.put(obj, obj);
+			}
+			for (int i = 0; i < this.argumentList.size(); i++) {
+				Object obj = this.argumentList.get(i);
+				map.put(obj, obj);
+			}
+
+			Set keySet = map.keySet();
+			this.transferable.arguments = new ClientParameter_Transferable[keySet
+					.size()];
+			int i = 0;
+			for (Iterator it = keySet.iterator(); it.hasNext();) {
+				Parameter argument = (Parameter) it.next();
+				this.transferable.arguments[i++] = (ClientParameter_Transferable) argument
+						.getTransferable();
+			}
+		}
+	}
+
+	/**
+	 * @param typeId
+	 *            The typeId to set.
+	 */
+	public void setTypeId(String typeId) {
+		this.type_id = typeId;
+	}
+
+	/**
+	 * @param userId
+	 *            The userId to set.
+	 */
+	public void setUserId(String userId) {
+		this.user_id = userId;
+	}
+
+	public void updateLocalFromTransferable() {
+		//nothing to do
+	}
+
+	private void readObject(java.io.ObjectInputStream in) throws IOException,
+			ClassNotFoundException {
+		this.id = (String) in.readObject();
+		this.name = (String) in.readObject();
+		this.modified = in.readLong();
+		this.user_id = (String) in.readObject();
+		this.deleted = in.readLong();
+		this.description = (String) in.readObject();
+		this.result_id = (String) in.readObject();
+		this.criteria_set_id = (String) in.readObject();
+		this.monitored_element_id = (String) in.readObject();
+		this.type_id = (String) in.readObject();
+		this.result_ids = (String[]) in.readObject();
+		this.parameters = (Vector) in.readObject();
+		this.arguments = (Vector) in.readObject();
+
+		this.transferable = new ClientAnalysis_Transferable();
 		updateLocalFromTransferable();
+	}
+
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+		out.writeObject(this.id);
+		out.writeObject(this.name);
+		out.writeLong(this.modified);
+		out.writeObject(this.user_id);
+		out.writeLong(this.deleted);
+		out.writeObject(this.description);
+		out.writeObject(this.result_id);
+		out.writeObject(this.criteria_set_id);
+		out.writeObject(this.monitored_element_id);
+		out.writeObject(this.type_id);
+		out.writeObject(this.result_ids);
+		out.writeObject(this.parameters);
+		out.writeObject(this.arguments);
 	}
 }
