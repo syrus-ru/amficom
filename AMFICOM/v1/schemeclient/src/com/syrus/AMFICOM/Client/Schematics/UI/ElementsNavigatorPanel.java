@@ -132,7 +132,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 			TreeDataSelectionEvent dse = (TreeDataSelectionEvent)oe;
 			if (dse.getDataClass() == null)
 				return;
-			selectedObject = dse.selectedObject;
+			selectedObject = dse.getSelectedObject();
 			Class creating_class = dse.getDataClass();
 
 			if (creating_class.equals(ProtoElement.class))

@@ -1,7 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.awt.event.ActionEvent;
+import java.util.Map;
 
+import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
@@ -12,7 +13,6 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Map.UI.MapChooserDialog;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Schematics.UI.*;
 
 public class SchemeOpenCommand extends VoidCommand
 {
@@ -38,7 +38,7 @@ public class SchemeOpenCommand extends VoidCommand
 
 		SchemeChooserDialog mcd = new SchemeChooserDialog(aContext.getDataSourceInterface());//mapFrame, "Выберите карту", true);
 
-		DataSet dataSet = new DataSet(Pool.getHash(Scheme.typ));
+		Map dataSet = Pool.getHash(Scheme.typ);
 		ObjectResourceDisplayModel odm = new SchemeDisplayModel();
 		ObjectResourceSorter sorter = Scheme.getDefaultSorter();
 		sorter.setDataSet(dataSet);

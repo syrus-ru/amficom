@@ -6,14 +6,13 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Hashtable;
+import java.util.*;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
 public class CatalogElementsDialog extends JDialog
@@ -83,7 +82,7 @@ public class CatalogElementsDialog extends JDialog
 		});
 	}
 
-	public int init (DataSet d)
+	public int init (Map d)
 	{
 		panel.init(d);
 		setVisible(true);

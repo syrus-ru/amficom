@@ -252,7 +252,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 				"label_repPhysicalScheme"))
 			{
 
-				DataSet dSet = new DataSet(Pool.getHash(Scheme.typ));
+				Map dSet = Pool.getHash(Scheme.typ);
 
 				/*          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 				 dSet = filter.filter(dSet);
@@ -260,9 +260,9 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 				 sorter.setDataSet(dSet);
 				 dSet = sorter.default_sort();*/
 
-				for (Enumeration enum = dSet.elements(); enum.hasMoreElements(); )
+				for (Iterator it = dSet.values().iterator(); it.hasNext(); )
 				{
-					Scheme scheme = (Scheme) enum.nextElement();
+					Scheme scheme = (Scheme)it.next();
 					if (scheme.scheme_type.equals(s))
 					{
 						ObjectsReport or = new ObjectsReport (

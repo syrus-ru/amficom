@@ -133,7 +133,7 @@ public class CatalogElementsPanel extends JPanel
 		});
 	}
 
-	public void init(DataSet data)
+	public void init(Map data)
 	{
 		ObjectResourceSorter sorter = new ObjectResourceTypSorter();
 		sorter.setDataSet(data);

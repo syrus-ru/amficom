@@ -92,17 +92,22 @@ public class InsertToCatalogCommand extends VoidCommand
 	}
 
 	boolean save (DataSourceInterface dataSource,
-						 Hashtable elements_to_save,
-						 Hashtable links_to_save,
-						 Hashtable cable_links_to_save,
-						 Hashtable paths_to_save)
+						 Map elements_to_save,
+						 Map links_to_save,
+						 Map cable_links_to_save,
+						 Map paths_to_save)
 	{
 		CatalogElementsDialog dialog = new CatalogElementsDialog(aContext);
 
-			DataSet d = new DataSet(elements_to_save);
-			d.add(new DataSet(links_to_save));
-			d.add(new DataSet(cable_links_to_save));
-			d.add(new DataSet(paths_to_save));
+//			DataSet d = new DataSet(elements_to_save);
+//			d.add(new DataSet(links_to_save));
+//			d.add(new DataSet(cable_links_to_save));
+//			d.add(new DataSet(paths_to_save));
+
+			Map d = new HashMap(elements_to_save);
+			d.putAll(links_to_save);
+			d.putAll(cable_links_to_save);
+			d.putAll(paths_to_save);
 
 			int res = dialog.init(d);
 			if (res != dialog.OK)
@@ -111,9 +116,9 @@ public class InsertToCatalogCommand extends VoidCommand
 			Hashtable mapping = dialog.getMapping();
 			boolean status = true;
 
-			for (Enumeration e = elements_to_save.elements(); e.hasMoreElements();)
+			for (Iterator it = elements_to_save.values().iterator(); it.hasNext();)
 			{
-				SchemeElement se = (SchemeElement)e.nextElement();
+				SchemeElement se = (SchemeElement)it.next();
 				Object obj = mapping.get(se.getId());
 				if (obj instanceof Equipment)
 				{
@@ -128,9 +133,9 @@ public class InsertToCatalogCommand extends VoidCommand
 			if (!status)
 				return false;
 
-			for (Enumeration e = links_to_save.elements(); e.hasMoreElements();)
+			for (Iterator it = links_to_save.values().iterator(); it.hasNext();)
 			{
-				SchemeLink sl = (SchemeLink)e.nextElement();
+				SchemeLink sl = (SchemeLink)it.next();
 				Object obj = mapping.get(sl.getId());
 				if (obj instanceof Link)
 				{
@@ -145,9 +150,9 @@ public class InsertToCatalogCommand extends VoidCommand
 			if (!status)
 				return false;
 
-			for (Enumeration e = cable_links_to_save.elements(); e.hasMoreElements();)
+			for (Iterator it = cable_links_to_save.values().iterator(); it.hasNext();)
 			{
-				SchemeCableLink scl = (SchemeCableLink)e.nextElement();
+				SchemeCableLink scl = (SchemeCableLink)it.next();
 				Object obj = mapping.get(scl.getId());
 				if (obj instanceof CableLink)
 				{
@@ -162,9 +167,9 @@ public class InsertToCatalogCommand extends VoidCommand
 			if (!status)
 				return false;
 
-			for (Enumeration e = paths_to_save.elements(); e.hasMoreElements();)
+			for (Iterator it = paths_to_save.values().iterator(); it.hasNext();)
 			{
-				SchemePath sp = (SchemePath)e.nextElement();
+				SchemePath sp = (SchemePath)it.next();
 				Object obj = mapping.get(sp.getId());
 				if (obj instanceof TransmissionPath)
 				{

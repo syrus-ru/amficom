@@ -153,7 +153,7 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 		if (oe.getActionCommand().equals(TreeDataSelectionEvent.type))
 		{
 			TreeDataSelectionEvent dse = (TreeDataSelectionEvent)oe;
-			selectedObject = dse.selectedObject;
+			selectedObject = dse.getSelectedObject();
 			creating_class = dse.getDataClass();
 
 			if (creating_class.equals(MapProtoGroup.class))

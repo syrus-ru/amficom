@@ -318,7 +318,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(CableLinkType.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(CableLinkType.typ));
+					Map dSet = Pool.getHash(CableLinkType.typ);
 
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
@@ -337,7 +337,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(PortType.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(PortType.typ));
+					Map dSet = Pool.getHash(PortType.typ);
 
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
@@ -356,7 +356,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(CablePortType.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(CablePortType.typ));
+					Map dSet = Pool.getHash(CablePortType.typ);
 
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
@@ -398,7 +398,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(TransmissionPathType.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(TransmissionPathType.typ));
+					Map dSet = Pool.getHash(TransmissionPathType.typ);
 
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
@@ -417,7 +417,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(AccessPortType.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(AccessPortType.typ));
+					Map dSet = Pool.getHash(AccessPortType.typ);
 
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
@@ -448,7 +448,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			else if (s.equals(Scheme.typ))
 			{
 				Scheme parent = (Scheme)((ObjectResourceTreeNode)node.getParent()).getObject();
-				DataSet ds = new DataSet();
+				ArrayList ds = new ArrayList();
 				for (Iterator it = parent.elements.iterator(); it.hasNext();)
 				{
 					SchemeElement el = (SchemeElement)it.next();
@@ -474,7 +474,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			else if (s.equals(SchemeElement.typ))
 			{
 				Object parent = ((ObjectResourceTreeNode)node.getParent()).getObject();
-				DataSet ds = new DataSet();
+				ArrayList ds = new ArrayList();
 				if (parent instanceof Scheme)
 				{
 					Scheme scheme = (Scheme)parent;
@@ -515,9 +515,8 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				if (parent instanceof Scheme)
 				{
 					Scheme scheme = (Scheme)parent;
-					DataSet ds = new DataSet(scheme.links.iterator());
 					ObjectResourceSorter sorter = SchemeLink.getSorter();
-					sorter.setDataSet(ds);
+					sorter.setDataSet(scheme.links);
 					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
 						SchemeLink link = (SchemeLink)it.next();
@@ -527,9 +526,8 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				else if (parent instanceof SchemeElement)
 				{
 					SchemeElement el = (SchemeElement)parent;
-					DataSet ds = new DataSet(el.links);
 					ObjectResourceSorter sorter = SchemeLink.getSorter();
-					sorter.setDataSet(ds);
+					sorter.setDataSet(el.links);
 					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
 						SchemeLink link = (SchemeLink)it.next();
@@ -540,9 +538,8 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			else if (s.equals(SchemeCableLink.typ))
 			{
 				Scheme parent = (Scheme)((ObjectResourceTreeNode)node.getParent()).getObject();
-				DataSet ds = new DataSet(parent.cablelinks.iterator());
 				ObjectResourceSorter sorter = SchemeCableLink.getSorter();
-				sorter.setDataSet(ds);
+				sorter.setDataSet(parent.cablelinks);
 				for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 				{
 					SchemeCableLink link = (SchemeCableLink)it.next();
@@ -552,9 +549,8 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			else if (s.equals(SchemePath.typ))
 			{
 				Scheme parent = (Scheme)((ObjectResourceTreeNode)node.getParent()).getObject();
-				DataSet ds = new DataSet(parent.paths.iterator());
 				ObjectResourceSorter sorter = SchemePath.getSorter();
-				sorter.setDataSet(ds);
+				sorter.setDataSet(parent.paths);
 				for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 				{
 					SchemePath path = (SchemePath)it.next();

@@ -110,7 +110,7 @@ public class MapProtoNavigatorPanel extends JPanel implements OperationListener
 		if (oe.getActionCommand().equals(TreeDataSelectionEvent.type))
 		{
 			TreeDataSelectionEvent dse = (TreeDataSelectionEvent)oe;
-			selectedObject = dse.selectedObject;
+			selectedObject = dse.getSelectedObject();
 			Class creating_class = dse.getDataClass();
 
 			createMapGroupButton.setEnabled(false);

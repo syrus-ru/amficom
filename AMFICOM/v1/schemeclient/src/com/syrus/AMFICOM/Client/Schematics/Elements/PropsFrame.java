@@ -354,7 +354,7 @@ public class PropsFrame extends JInternalFrame
 			}
 			else if (ev.getDataClass().equals(String.class))
 			{
-				selected_type = (String)ev.selectedObject;
+				selected_type = (String)ev.getSelectedObject();
 				setPropsEditable(editable_property);
 			}
 			else if (ev.getDataClass().equals(SchemeElement.class))

@@ -204,7 +204,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(CableLinkType.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(CableLinkType.typ));
+					Map dSet = Pool.getHash(CableLinkType.typ);
 
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
@@ -223,7 +223,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(PortType.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(PortType.typ));
+					Map dSet = Pool.getHash(PortType.typ);
 
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
@@ -242,7 +242,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(CablePortType.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(CablePortType.typ));
+					Map dSet = Pool.getHash(CablePortType.typ);
 
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
@@ -284,7 +284,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(TransmissionPathType.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(TransmissionPathType.typ));
+					Map dSet = Pool.getHash(TransmissionPathType.typ);
 
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
@@ -303,7 +303,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(AccessPortType.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(AccessPortType.typ));
+					Map dSet = Pool.getHash(AccessPortType.typ);
 
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
