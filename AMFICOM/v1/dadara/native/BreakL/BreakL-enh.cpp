@@ -6,8 +6,6 @@
 #include "../common/ModelF.h"
 #include "../common/ArrList.h"
 
-//#include <stdio.h> // debug
-
 inline void imaxeq(double &a, double b)
 {
 	if (b > a)
