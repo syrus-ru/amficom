@@ -1,5 +1,5 @@
 /*
- * $Id: MSHServerImpl.java,v 1.1 2004/12/09 09:06:33 cvsadmin Exp $
+ * $Id: MSHServerImpl.java,v 1.2 2004/12/21 12:49:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainCondition;
 import com.syrus.AMFICOM.configuration.StringFieldCondition;
 import com.syrus.AMFICOM.configuration.User;
+import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -73,8 +74,8 @@ import com.syrus.AMFICOM.mshserver.corba.MSHServerOperations;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/09 09:06:33 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2004/12/21 12:49:07 $
+ * @author $Author: bob $
  * @module mshserver_1
  */
 public class MSHServerImpl implements MSHServerOperations {
@@ -106,9 +107,9 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public String lookupUserLogin(Identifier_Transferable identifier_Transferable) throws AMFICOMRemoteException {
+	public String lookupUserLogin(Identifier_Transferable identifierTransferable) throws AMFICOMRemoteException {
 		try {
-			Identifier id = new Identifier(identifier_Transferable);
+			Identifier id = new Identifier(identifierTransferable);
 			return ((User) ConfigurationStorableObjectPool.getStorableObject(id, true)).getLogin();
 		} catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
@@ -122,9 +123,9 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public String lookupUserName(Identifier_Transferable identifier_Transferable) throws AMFICOMRemoteException {
+	public String lookupUserName(Identifier_Transferable identifierTransferable) throws AMFICOMRemoteException {
 		try {
-			Identifier id = new Identifier(identifier_Transferable);
+			Identifier id = new Identifier(identifierTransferable);
 			return ((User) ConfigurationStorableObjectPool.getStorableObject(id, true)).getName();
 		} catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
@@ -247,11 +248,10 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public void delete(	com.syrus.AMFICOM.general.corba.Identifier_Transferable id_Transferable,
-						com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+	public void delete(Identifier_Transferable idTransferable, AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
 		Log.debugMessage("MSHServerImpl.delete | trying to delete... ", Log.DEBUGLEVEL03);
-		Identifier id = new Identifier(id_Transferable);
+		Identifier id = new Identifier(idTransferable);
 		short entityCode = id.getMajor();
 		try {
 			if (ObjectGroupEntities.isInMapGroup(entityCode))
@@ -266,14 +266,13 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public void deleteList(	com.syrus.AMFICOM.general.corba.Identifier_Transferable[] id_Transferables,
-							com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+	public void deleteList(Identifier_Transferable[] idTransferables, AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
 		Log.debugMessage("MSHServerImpl.deleteList | Trying to delete... ", Log.DEBUGLEVEL03);
-		List idList = new ArrayList(id_Transferables.length);
-		List mapList = new ArrayList(id_Transferables.length);
-		for (int i = 0; i < id_Transferables.length; i++) {
-			idList.add(new Identifier(id_Transferables[i]));
+		List idList = new ArrayList(idTransferables.length);
+		List mapList = new ArrayList(idTransferables.length);
+		for (int i = 0; i < idTransferables.length; i++) {
+			idList.add(new Identifier(idTransferables[i]));
 		}
 		for (Iterator iter = idList.iterator(); iter.hasNext();) {
 			Identifier id = (Identifier) iter.next();
@@ -322,14 +321,13 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public void receiveSiteNode(SiteNode_Transferable siteNode_Transferable,
+	public void receiveSiteNode(SiteNode_Transferable siteNodeTransferable,
 								boolean force,
-								com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+								AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Log.debugMessage("MSHServerImpl.receiveSiteNode | Received siteNode", Log.DEBUGLEVEL07);
 		SiteNode siteNode;
 		try {
-			siteNode = new SiteNode(siteNode_Transferable);
+			siteNode = new SiteNode(siteNodeTransferable);
 		} catch (CreateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
@@ -338,15 +336,14 @@ public class MSHServerImpl implements MSHServerOperations {
 		this.receiveStorableObject(siteNode, database, force);
 	}
 
-	public void receiveTopologicalNode(	TopologicalNode_Transferable topologicalNode_Transferable,
+	public void receiveTopologicalNode(	TopologicalNode_Transferable topologicalNodeTransferable,
 										boolean force,
-										com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Log.debugMessage("MSHServerImpl.receiveTopologicalNode | Received topologicalNode", Log.DEBUGLEVEL07);
 
 		TopologicalNode topologicalNode;
 		try {
-			topologicalNode = new TopologicalNode(topologicalNode_Transferable);
+			topologicalNode = new TopologicalNode(topologicalNodeTransferable);
 		} catch (CreateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
@@ -355,14 +352,13 @@ public class MSHServerImpl implements MSHServerOperations {
 		this.receiveStorableObject(topologicalNode, database, force);
 	}
 
-	public void receiveNodeLink(NodeLink_Transferable nodeLink_Transferable,
+	public void receiveNodeLink(NodeLink_Transferable nodeLinkTransferable,
 								boolean force,
-								com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+								AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Log.debugMessage("MSHServerImpl.receiveNodeLink | Received nodeLink", Log.DEBUGLEVEL07);
 		NodeLink nodeLink;
 		try {
-			nodeLink = new NodeLink(nodeLink_Transferable);
+			nodeLink = new NodeLink(nodeLinkTransferable);
 		} catch (CreateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
@@ -371,14 +367,13 @@ public class MSHServerImpl implements MSHServerOperations {
 		this.receiveStorableObject(nodeLink, database, force);
 	}
 
-	public void receiveMark(Mark_Transferable mark_Transferable,
+	public void receiveMark(Mark_Transferable markTransferable,
 							boolean force,
-							com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+							AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Log.debugMessage("MSHServerImpl.receiveMark | Received mark", Log.DEBUGLEVEL07);
 		Mark mark;
 		try {
-			mark = new Mark(mark_Transferable);
+			mark = new Mark(markTransferable);
 		} catch (CreateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
@@ -387,14 +382,13 @@ public class MSHServerImpl implements MSHServerOperations {
 		this.receiveStorableObject(mark, database, force);
 	}
 
-	public void receivePhysicalLink(PhysicalLink_Transferable physicalLink_Transferable,
+	public void receivePhysicalLink(PhysicalLink_Transferable physicalLinkTransferable,
 									boolean force,
-									com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Log.debugMessage("MSHServerImpl.receivePhysicalLink | Received physicalLink", Log.DEBUGLEVEL07);
 		PhysicalLink physicalLink;
 		try {
-			physicalLink = new PhysicalLink(physicalLink_Transferable);
+			physicalLink = new PhysicalLink(physicalLinkTransferable);
 		} catch (CreateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
@@ -403,14 +397,14 @@ public class MSHServerImpl implements MSHServerOperations {
 		this.receiveStorableObject(physicalLink, database, force);
 	}
 
-	public void receiveCollector(	Collector_Transferable collector_Transferable,
+	public void receiveCollector(	Collector_Transferable collectorTransferable,
 									boolean force,
-									com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Log.debugMessage("MSHServerImpl.receiveCollector | Received collector", Log.DEBUGLEVEL07);
 		Collector collector;
 		try {
-			collector = new Collector(collector_Transferable);
+			collectorTransferable.header.modifier_id = accessIdentifier.user_id;
+			collector = new Collector(collectorTransferable);
 		} catch (CreateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
@@ -419,15 +413,15 @@ public class MSHServerImpl implements MSHServerOperations {
 		this.receiveStorableObject(collector, database, force);
 	}
 
-	public void receiveMap(	Map_Transferable map_Transferable,
+	public void receiveMap(	Map_Transferable mapTransferable,
 							boolean force,
-							com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+							AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Log.debugMessage("MSHServerImpl.receiveMap | Received map", Log.DEBUGLEVEL07);
 
 		Map map;
 		try {
-			map = new Map(map_Transferable);
+			mapTransferable.header.modifier_id = accessIdentifier.user_id;
+			map = new Map(mapTransferable);
 		} catch (CreateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
@@ -436,14 +430,14 @@ public class MSHServerImpl implements MSHServerOperations {
 		this.receiveStorableObject(map, database, force);
 	}
 
-	public void receiveSiteNodeType(SiteNodeType_Transferable siteNodeType_Transferable,
+	public void receiveSiteNodeType(SiteNodeType_Transferable siteNodeTypeTransferable,
 									boolean force,
-									com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Log.debugMessage("MSHServerImpl.receiveSiteNodeType | Received siteNodeType", Log.DEBUGLEVEL07);
 		SiteNodeType siteNodeType;
 		try {
-			siteNodeType = new SiteNodeType(siteNodeType_Transferable);
+			siteNodeTypeTransferable.header.modifier_id = accessIdentifier.user_id;
+			siteNodeType = new SiteNodeType(siteNodeTypeTransferable);
 		} catch (CreateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
@@ -452,14 +446,14 @@ public class MSHServerImpl implements MSHServerOperations {
 		this.receiveStorableObject(siteNodeType, database, force);
 	}
 
-	public void receivePhysicalLinkType(PhysicalLinkType_Transferable physicalLinkType_Transferable,
+	public void receivePhysicalLinkType(PhysicalLinkType_Transferable physicalLinkTypeTransferable,
 										boolean force,
-										com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Log.debugMessage("MSHServerImpl.receivePhysicalLinkType | Received physicalLinkType", Log.DEBUGLEVEL07);
 		PhysicalLinkType physicalLinkType;
 		try {
-			physicalLinkType = new PhysicalLinkType(physicalLinkType_Transferable);
+			physicalLinkTypeTransferable.header.modifier_id = accessIdentifier.user_id;
+			physicalLinkType = new PhysicalLinkType(physicalLinkTypeTransferable);
 		} catch (CreateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
@@ -468,18 +462,17 @@ public class MSHServerImpl implements MSHServerOperations {
 		this.receiveStorableObject(physicalLinkType, database, force);
 	}
 
-	public void receiveSiteNodes(	SiteNode_Transferable[] siteNode_Transferables,
+	public void receiveSiteNodes(	SiteNode_Transferable[] siteNodeTransferables,
 									boolean force,
-									com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		Log.debugMessage(
-			"MSHServerImpl.receiveSiteNodes | Received " + siteNode_Transferables.length + " site node(s)",
+									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		Log.debugMessage("MSHServerImpl.receiveSiteNodes | Received " + siteNodeTransferables.length + " site node(s)",
 			Log.DEBUGLEVEL07);
-		List siteNodeList = new ArrayList(siteNode_Transferables.length);
+		List siteNodeList = new ArrayList(siteNodeTransferables.length);
 		try {
 
-			for (int i = 0; i < siteNode_Transferables.length; i++) {
-				SiteNode siteNode = new SiteNode(siteNode_Transferables[i]);
+			for (int i = 0; i < siteNodeTransferables.length; i++) {
+				siteNodeTransferables[i].header.modifier_id = accessIdentifier.user_id;
+				SiteNode siteNode = new SiteNode(siteNodeTransferables[i]);
 				MapStorableObjectPool.putStorableObject(siteNode);
 				siteNodeList.add(siteNode);
 			}
@@ -512,17 +505,17 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public void receiveTopologicalNodes(TopologicalNode_Transferable[] topologicalNode_Transferables,
+	public void receiveTopologicalNodes(TopologicalNode_Transferable[] topologicalNodeTransferables,
 										boolean force,
-										com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveTopologicalNodes | Received " + topologicalNode_Transferables.length
+										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		Log.debugMessage("MSHServerImpl.receiveTopologicalNodes | Received " + topologicalNodeTransferables.length
 				+ " topological node(s)", Log.DEBUGLEVEL07);
-		List siteNodeList = new ArrayList(topologicalNode_Transferables.length);
+		List siteNodeList = new ArrayList(topologicalNodeTransferables.length);
 		try {
 
-			for (int i = 0; i < topologicalNode_Transferables.length; i++) {
-				TopologicalNode topologicalNode = new TopologicalNode(topologicalNode_Transferables[i]);
+			for (int i = 0; i < topologicalNodeTransferables.length; i++) {
+				topologicalNodeTransferables[i].header.modifier_id = accessIdentifier.user_id;
+				TopologicalNode topologicalNode = new TopologicalNode(topologicalNodeTransferables[i]);
 				MapStorableObjectPool.putStorableObject(topologicalNode);
 				siteNodeList.add(topologicalNode);
 			}
@@ -556,18 +549,17 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public void receiveNodeLinks(	NodeLink_Transferable[] nodeLink_Transferables,
+	public void receiveNodeLinks(	NodeLink_Transferable[] nodeLinkTransferables,
 									boolean force,
-									com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		Log.debugMessage(
-			"MSHServerImpl.receiveNodeLinks | Received " + nodeLink_Transferables.length + " node link(s)",
+									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		Log.debugMessage("MSHServerImpl.receiveNodeLinks | Received " + nodeLinkTransferables.length + " node link(s)",
 			Log.DEBUGLEVEL07);
-		List nodeLinkList = new ArrayList(nodeLink_Transferables.length);
+		List nodeLinkList = new ArrayList(nodeLinkTransferables.length);
 		try {
 
-			for (int i = 0; i < nodeLink_Transferables.length; i++) {
-				NodeLink nodeLink = new NodeLink(nodeLink_Transferables[i]);
+			for (int i = 0; i < nodeLinkTransferables.length; i++) {
+				nodeLinkTransferables[i].header.modifier_id = accessIdentifier.user_id;
+				NodeLink nodeLink = new NodeLink(nodeLinkTransferables[i]);
 				MapStorableObjectPool.putStorableObject(nodeLink);
 				nodeLinkList.add(nodeLink);
 			}
@@ -600,17 +592,17 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public void receiveMarks(	Mark_Transferable[] mark_Transferables,
+	public void receiveMarks(	Mark_Transferable[] markTransferables,
 								boolean force,
-								com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveMarks | Received " + mark_Transferables.length + " mark(s)",
+								AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		Log.debugMessage("MSHServerImpl.receiveMarks | Received " + markTransferables.length + " mark(s)",
 			Log.DEBUGLEVEL07);
-		List markList = new ArrayList(mark_Transferables.length);
+		List markList = new ArrayList(markTransferables.length);
 		try {
 
-			for (int i = 0; i < mark_Transferables.length; i++) {
-				Mark mark = new Mark(mark_Transferables[i]);
+			for (int i = 0; i < markTransferables.length; i++) {
+				markTransferables[i].header.modifier_id = accessIdentifier.user_id;
+				Mark mark = new Mark(markTransferables[i]);
 				MapStorableObjectPool.putStorableObject(mark);
 				markList.add(mark);
 			}
@@ -643,17 +635,17 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public void receivePhysicalLinks(	PhysicalLink_Transferable[] physicalLink_Transferables,
+	public void receivePhysicalLinks(	PhysicalLink_Transferable[] physicalLinkTransferables,
 										boolean force,
-										com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receivePhysicalLinks | Received " + physicalLink_Transferables.length
+										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		Log.debugMessage("MSHServerImpl.receivePhysicalLinks | Received " + physicalLinkTransferables.length
 				+ " physical link(s)", Log.DEBUGLEVEL07);
-		List physicalLinkList = new ArrayList(physicalLink_Transferables.length);
+		List physicalLinkList = new ArrayList(physicalLinkTransferables.length);
 		try {
 
-			for (int i = 0; i < physicalLink_Transferables.length; i++) {
-				PhysicalLink physicalLink = new PhysicalLink(physicalLink_Transferables[i]);
+			for (int i = 0; i < physicalLinkTransferables.length; i++) {
+				physicalLinkTransferables[i].header.modifier_id = accessIdentifier.user_id;
+				PhysicalLink physicalLink = new PhysicalLink(physicalLinkTransferables[i]);
 				MapStorableObjectPool.putStorableObject(physicalLink);
 				physicalLinkList.add(physicalLink);
 			}
@@ -686,17 +678,17 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public void receiveCollectors(	Collector_Transferable[] collector_Transferables,
+	public void receiveCollectors(	Collector_Transferable[] collectorTransferables,
 									boolean force,
-									com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveCollectors | Received " + collector_Transferables.length
+									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		Log.debugMessage("MSHServerImpl.receiveCollectors | Received " + collectorTransferables.length
 				+ " collector(s)", Log.DEBUGLEVEL07);
-		List collectorList = new ArrayList(collector_Transferables.length);
+		List collectorList = new ArrayList(collectorTransferables.length);
 		try {
 
-			for (int i = 0; i < collector_Transferables.length; i++) {
-				Collector collector = new Collector(collector_Transferables[i]);
+			for (int i = 0; i < collectorTransferables.length; i++) {
+				collectorTransferables[i].header.modifier_id = accessIdentifier.user_id;
+				Collector collector = new Collector(collectorTransferables[i]);
 				MapStorableObjectPool.putStorableObject(collector);
 				collectorList.add(collector);
 			}
@@ -729,17 +721,17 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public void receiveMaps(Map_Transferable[] map_Transferables,
+	public void receiveMaps(Map_Transferable[] mapTransferables,
 							boolean force,
-							com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveMaps | Received " + map_Transferables.length + " map(s)",
+							AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		Log.debugMessage("MSHServerImpl.receiveMaps | Received " + mapTransferables.length + " map(s)",
 			Log.DEBUGLEVEL07);
-		List mapList = new ArrayList(map_Transferables.length);
+		List mapList = new ArrayList(mapTransferables.length);
 		try {
 
-			for (int i = 0; i < map_Transferables.length; i++) {
-				Map map = new Map(map_Transferables[i]);
+			for (int i = 0; i < mapTransferables.length; i++) {
+				mapTransferables[i].header.modifier_id = accessIdentifier.user_id;
+				Map map = new Map(mapTransferables[i]);
 				MapStorableObjectPool.putStorableObject(map);
 				mapList.add(map);
 			}
@@ -772,17 +764,17 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public void receiveSiteNodeTypes(	SiteNodeType_Transferable[] siteNodeType_Transferables,
+	public void receiveSiteNodeTypes(	SiteNodeType_Transferable[] siteNodeTypeTransferables,
 										boolean force,
-										com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receiveSiteNodeTypes | Received " + siteNodeType_Transferables.length
+										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		Log.debugMessage("MSHServerImpl.receiveSiteNodeTypes | Received " + siteNodeTypeTransferables.length
 				+ " site node type(s)", Log.DEBUGLEVEL07);
-		List siteNodeTypeList = new ArrayList(siteNodeType_Transferables.length);
+		List siteNodeTypeList = new ArrayList(siteNodeTypeTransferables.length);
 		try {
 
-			for (int i = 0; i < siteNodeType_Transferables.length; i++) {
-				SiteNodeType siteNodeType = new SiteNodeType(siteNodeType_Transferables[i]);
+			for (int i = 0; i < siteNodeTypeTransferables.length; i++) {
+				siteNodeTypeTransferables[i].header.modifier_id = accessIdentifier.user_id;
+				SiteNodeType siteNodeType = new SiteNodeType(siteNodeTypeTransferables[i]);
 				MapStorableObjectPool.putStorableObject(siteNodeType);
 				siteNodeTypeList.add(siteNodeType);
 			}
@@ -815,17 +807,18 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public void receivePhysicalLinkTypes(	PhysicalLinkType_Transferable[] physicalLinkType_Transferables,
+	public void receivePhysicalLinkTypes(	PhysicalLinkType_Transferable[] physicalLinkTypeTransferables,
 											boolean force,
-											com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		Log.debugMessage("MSHServerImpl.receivePhysicalLinkTypes | Received " + physicalLinkType_Transferables.length
+											AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("MSHServerImpl.receivePhysicalLinkTypes | Received " + physicalLinkTypeTransferables.length
 				+ " physical link type(s)", Log.DEBUGLEVEL07);
-		List physicalLinkTypeList = new ArrayList(physicalLinkType_Transferables.length);
+		List physicalLinkTypeList = new ArrayList(physicalLinkTypeTransferables.length);
 		try {
 
-			for (int i = 0; i < physicalLinkType_Transferables.length; i++) {
-				PhysicalLinkType physicalLinkType = new PhysicalLinkType(physicalLinkType_Transferables[i]);
+			for (int i = 0; i < physicalLinkTypeTransferables.length; i++) {
+				physicalLinkTypeTransferables[i].header.modifier_id = accessIdentifier.user_id;
+				PhysicalLinkType physicalLinkType = new PhysicalLinkType(physicalLinkTypeTransferables[i]);
 				MapStorableObjectPool.putStorableObject(physicalLinkType);
 				physicalLinkTypeList.add(physicalLinkType);
 			}
@@ -860,10 +853,9 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	private Object transmitObject(	com.syrus.AMFICOM.general.corba.Identifier_Transferable id_Transferable,
-									com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
+	private Object transmitObject(Identifier_Transferable idTransferable, AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
-		Identifier id = new Identifier(id_Transferable);
+		Identifier id = new Identifier(idTransferable);
 		Log.debugMessage("MSHServerImpl.transmitObject | require " + id.toString(), Log.DEBUGLEVEL07);
 		try {
 			StorableObject storableObject = MapStorableObjectPool.getStorableObject(id, true);
@@ -887,62 +879,61 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public SiteNode_Transferable transmitSiteNode(	com.syrus.AMFICOM.general.corba.Identifier_Transferable id_Transferable,
-													com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		return (SiteNode_Transferable) this.transmitObject(id_Transferable, accessIdentifier);
+	public SiteNode_Transferable transmitSiteNode(	Identifier_Transferable idTransferable,
+													AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		return (SiteNode_Transferable) this.transmitObject(idTransferable, accessIdentifier);
 	}
 
-	public TopologicalNode_Transferable transmitTopologicalNode(com.syrus.AMFICOM.general.corba.Identifier_Transferable id_Transferable,
-																com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+	public TopologicalNode_Transferable transmitTopologicalNode(Identifier_Transferable id_Transferable,
+																AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
 		return (TopologicalNode_Transferable) this.transmitObject(id_Transferable, accessIdentifier);
 	}
 
-	public NodeLink_Transferable transmitNodeLink(	com.syrus.AMFICOM.general.corba.Identifier_Transferable id_Transferable,
-													com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		return (NodeLink_Transferable) this.transmitObject(id_Transferable, accessIdentifier);
+	public NodeLink_Transferable transmitNodeLink(	Identifier_Transferable idTransferable,
+													AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		return (NodeLink_Transferable) this.transmitObject(idTransferable, accessIdentifier);
 	}
 
-	public Mark_Transferable transmitMark(	com.syrus.AMFICOM.general.corba.Identifier_Transferable id_Transferable,
-											com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		return (Mark_Transferable) this.transmitObject(id_Transferable, accessIdentifier);
+	public Mark_Transferable transmitMark(	Identifier_Transferable idTransferable,
+											AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		return (Mark_Transferable) this.transmitObject(idTransferable, accessIdentifier);
 	}
 
-	public PhysicalLink_Transferable transmitPhysicalLink(	com.syrus.AMFICOM.general.corba.Identifier_Transferable id_Transferable,
-															com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		return (PhysicalLink_Transferable) this.transmitObject(id_Transferable, accessIdentifier);
+	public PhysicalLink_Transferable transmitPhysicalLink(	Identifier_Transferable idTransferable,
+															AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		return (PhysicalLink_Transferable) this.transmitObject(idTransferable, accessIdentifier);
 	}
 
-	public Collector_Transferable transmitCollector(com.syrus.AMFICOM.general.corba.Identifier_Transferable id_Transferable,
-													com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		return (Collector_Transferable) this.transmitObject(id_Transferable, accessIdentifier);
+	public Collector_Transferable transmitCollector(Identifier_Transferable idTransferable,
+													AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		return (Collector_Transferable) this.transmitObject(idTransferable, accessIdentifier);
 	}
 
-	public Map_Transferable transmitMap(com.syrus.AMFICOM.general.corba.Identifier_Transferable id_Transferable,
-										com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		return (Map_Transferable) this.transmitObject(id_Transferable, accessIdentifier);
+	public Map_Transferable transmitMap(Identifier_Transferable idTransferable,
+										AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+		return (Map_Transferable) this.transmitObject(idTransferable, accessIdentifier);
 	}
 
-	public SiteNodeType_Transferable transmitSiteNodeType(	com.syrus.AMFICOM.general.corba.Identifier_Transferable id_Transferable,
-															com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		return (SiteNodeType_Transferable) this.transmitObject(id_Transferable, accessIdentifier);
+	public SiteNodeType_Transferable transmitSiteNodeType(	Identifier_Transferable idTransferable,
+															AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		return (SiteNodeType_Transferable) this.transmitObject(idTransferable, accessIdentifier);
 	}
 
-	public PhysicalLinkType_Transferable transmitPhysicalLinkType(	com.syrus.AMFICOM.general.corba.Identifier_Transferable id_Transferable,
-																	com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
-		return (PhysicalLinkType_Transferable) this.transmitObject(id_Transferable, accessIdentifier);
+	public PhysicalLinkType_Transferable transmitPhysicalLinkType(	Identifier_Transferable idTransferable,
+																	AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		return (PhysicalLinkType_Transferable) this.transmitObject(idTransferable, accessIdentifier);
 	}
 
-	private List transmitObjects(	com.syrus.AMFICOM.general.corba.Identifier_Transferable[] ids_Transferable,
-									StorableObjectCondition condition) throws AMFICOMRemoteException {
+	private List transmitObjects(Identifier_Transferable[] ids_Transferable, StorableObjectCondition condition)
+			throws AMFICOMRemoteException {
 		try {
 			List list = null;
 			if (ids_Transferable.length > 0) {
@@ -974,9 +965,9 @@ public class MSHServerImpl implements MSHServerOperations {
 		}
 	}
 
-	public SiteNode_Transferable[] transmitSiteNodes(	com.syrus.AMFICOM.general.corba.Identifier_Transferable[] ids_Transferable,
-														com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+	public SiteNode_Transferable[] transmitSiteNodes(	Identifier_Transferable[] ids_Transferable,
+														AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(accessIdentifier.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitSiteNodes | requiere "
@@ -997,9 +988,9 @@ public class MSHServerImpl implements MSHServerOperations {
 		return transferables;
 	}
 
-	public TopologicalNode_Transferable[] transmitTopologicalNodes(	com.syrus.AMFICOM.general.corba.Identifier_Transferable[] ids_Transferable,
-																	com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+	public TopologicalNode_Transferable[] transmitTopologicalNodes(	Identifier_Transferable[] ids_Transferable,
+																	AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(accessIdentifier.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitTopologicalNodes | requiere "
@@ -1020,9 +1011,9 @@ public class MSHServerImpl implements MSHServerOperations {
 		return transferables;
 	}
 
-	public NodeLink_Transferable[] transmitNodeLinks(	com.syrus.AMFICOM.general.corba.Identifier_Transferable[] ids_Transferable,
-														com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+	public NodeLink_Transferable[] transmitNodeLinks(	Identifier_Transferable[] ids_Transferable,
+														AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(accessIdentifier.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitNodeLinks | requiere "
@@ -1043,9 +1034,9 @@ public class MSHServerImpl implements MSHServerOperations {
 		return transferables;
 	}
 
-	public Mark_Transferable[] transmitMarks(	com.syrus.AMFICOM.general.corba.Identifier_Transferable[] ids_Transferable,
-												com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+	public Mark_Transferable[] transmitMarks(	Identifier_Transferable[] ids_Transferable,
+												AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(accessIdentifier.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitMarks | requiere "
@@ -1066,9 +1057,9 @@ public class MSHServerImpl implements MSHServerOperations {
 		return transferables;
 	}
 
-	public PhysicalLink_Transferable[] transmitPhysicalLinks(	com.syrus.AMFICOM.general.corba.Identifier_Transferable[] ids_Transferable,
-																com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+	public PhysicalLink_Transferable[] transmitPhysicalLinks(	Identifier_Transferable[] ids_Transferable,
+																AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(accessIdentifier.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitPhysicalLinks | requiere "
@@ -1089,9 +1080,9 @@ public class MSHServerImpl implements MSHServerOperations {
 		return transferables;
 	}
 
-	public Collector_Transferable[] transmitCollectors(	com.syrus.AMFICOM.general.corba.Identifier_Transferable[] ids_Transferable,
-														com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+	public Collector_Transferable[] transmitCollectors(	Identifier_Transferable[] ids_Transferable,
+														AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(accessIdentifier.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitCollectors | requiere "
@@ -1112,9 +1103,9 @@ public class MSHServerImpl implements MSHServerOperations {
 		return transferables;
 	}
 
-	public Map_Transferable[] transmitMaps(	com.syrus.AMFICOM.general.corba.Identifier_Transferable[] ids_Transferable,
-											com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+	public Map_Transferable[] transmitMaps(	Identifier_Transferable[] ids_Transferable,
+											AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(accessIdentifier.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitMaps | requiere "
@@ -1135,9 +1126,9 @@ public class MSHServerImpl implements MSHServerOperations {
 		return transferables;
 	}
 
-	public SiteNodeType_Transferable[] transmitSiteNodeTypes(	com.syrus.AMFICOM.general.corba.Identifier_Transferable[] ids_Transferable,
-																com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+	public SiteNodeType_Transferable[] transmitSiteNodeTypes(	Identifier_Transferable[] ids_Transferable,
+																AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(accessIdentifier.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitSiteNodeTypes | requiere "
@@ -1158,9 +1149,9 @@ public class MSHServerImpl implements MSHServerOperations {
 		return transferables;
 	}
 
-	public PhysicalLinkType_Transferable[] transmitPhysicalLinkTypes(	com.syrus.AMFICOM.general.corba.Identifier_Transferable[] ids_Transferable,
-																		com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable accessIdentifier)
-			throws com.syrus.AMFICOM.general.corba.AMFICOMRemoteException {
+	public PhysicalLinkType_Transferable[] transmitPhysicalLinkTypes(	Identifier_Transferable[] ids_Transferable,
+																		AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
 		Identifier domainId = new Identifier(accessIdentifier.domain_id);
 
 		Log.debugMessage("MSHServerImpl.transmitPhysicalLinkTypes | requiere "
