@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.35 2005/02/22 17:01:25 arseniy Exp $
+ * $Id: StorableObject.java,v 1.36 2005/02/22 17:02:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/02/22 17:01:25 $
+ * @version $Revision: 1.36 $, $Date: 2005/02/22 17:02:02 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -150,7 +150,6 @@ public abstract class StorableObject implements Identified, TransferableObject, 
 	}
 
 	protected void setUpdated(Identifier modifierId) {
-System.out.println("#################### setUpdated: " + this.id);
 		this.savedModified = this.modified;
 		this.savedModifierId = this.modifierId;
 		this.savedVersion = this.version;
@@ -162,14 +161,12 @@ System.out.println("#################### setUpdated: " + this.id);
 	}
 
 	protected void cleanupUpdate() {
-System.out.println("#################### cleanupUpdate: " + this.id);
 		this.savedModified = null;
 		this.savedModifierId = null;
 		this.savedVersion = VERSION_ILLEGAL;
 	}
 
 	protected void rollbackUpdate() {
-System.out.println("#################### rollbackUpdate: " + this.id);
 		if (this.savedModified == null || this.savedModifierId == null || this.savedVersion == VERSION_ILLEGAL) {
 			Log.errorMessage("Cannot rollback update of object: '" + this.id + "', entity: '" + ObjectEntities.codeToString(this.id.getMajor())
 					+ "' -- saved values are in illegal states!");

@@ -1,5 +1,5 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.3 2005/02/18 21:31:41 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.4 2005/02/22 17:02:15 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,17 +17,12 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SessionContext;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.UpdateObjectException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/18 21:31:41 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/22 17:02:15 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -41,7 +36,7 @@ public class TestMonitoredElement extends CommonConfigurationTest {
 		return suiteWrapper(TestMonitoredElement.class);
 	}
 
-//	public void testCreateInstance() throws ApplicationException {
+//	public void testCreate() throws ApplicationException {
 //		AccessIdentity accessIdentity = SessionContext.getAccessIdentity();
 //
 //		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
@@ -62,6 +57,28 @@ public class TestMonitoredElement extends CommonConfigurationTest {
 //				localAddress,
 //				Collections.singleton(transmissionPath.getId()));
 //
+//		this.checkMonitoredElement(monitoredElement);
+//
+//		ec = new EquivalentCondition(ObjectEntities.EQUIPMENT_ENTITY_CODE);
+//		it = ConfigurationStorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
+//		Equipment equipment = (Equipment) it.next();
+//
+//		MonitoredElement monitoredElement1 = MonitoredElement.createInstance(accessIdentity.getUserId(),
+//				accessIdentity.getDomainId(),
+//				"monitored element 1",
+//				measurementPort.getId(),
+//				MonitoredElementSort.MONITOREDELEMENT_SORT_EQUIPMENT,
+//				localAddress,
+//				Collections.singleton(equipment.getId()));
+//
+//		this.checkMonitoredElement(monitoredElement1);
+//
+//		ConfigurationStorableObjectPool.putStorableObject(monitoredElement);
+//		ConfigurationStorableObjectPool.putStorableObject(monitoredElement1);
+//		ConfigurationStorableObjectPool.flush(false);
+//	}
+//
+//	private void checkMonitoredElement(MonitoredElement monitoredElement) {
 //		MonitoredElement_Transferable met = (MonitoredElement_Transferable) monitoredElement.getTransferable();
 //
 //		MonitoredElement monitoredElement1 = new MonitoredElement(met);
@@ -76,25 +93,29 @@ public class TestMonitoredElement extends CommonConfigurationTest {
 //		assertEquals(monitoredElement.getMeasurementPortId(), monitoredElement1.getMeasurementPortId());
 //		assertEquals(monitoredElement.getSort(), monitoredElement1.getSort());
 //		assertEquals(monitoredElement.getLocalAddress(), monitoredElement1.getLocalAddress());
-//
-//		ConfigurationStorableObjectPool.putStorableObject(monitoredElement);
-//		ConfigurationStorableObjectPool.flush(true);
 //	}
 
 	public void testUpdate() throws ApplicationException {
-		Identifier id = new Identifier("MonitoredElement_45");
-		Collection collection = ConfigurationStorableObjectPool.getStorableObjects(Collections.singleton(id), true);
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.ME_ENTITY_CODE);
+		Collection collection = ConfigurationStorableObjectPool.getStorableObjectsByCondition(ec, true);
 		System.out.println("size: " + collection.size());
-		MonitoredElement monitoredElement = (MonitoredElement) collection.iterator().next();
-		System.out.println("Monitored element: " + monitoredElement.getId() + ", name: '" + monitoredElement.getName() + "'");
 
-		monitoredElement.setName("ME:12ddddddd");
+		MonitoredElement[] monitoredElements = new MonitoredElement[collection.size()];
+		int j = 0;
+		for (Iterator it = collection.iterator(); it.hasNext(); j++) {
+			monitoredElements[j] = (MonitoredElement) it.next();
+			System.out.println("Monitored element: " + monitoredElements[j].getId() + ", name: '" + monitoredElements[j].getName() + "'");
+		}
+
+		monitoredElements[1].setName("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaAAAAAA");
+		monitoredElements[0].setName("BBBB");
 
 		try {
 			ConfigurationStorableObjectPool.flush(false);
 		}
 		finally {
-			System.out.println("version: " + monitoredElement.getVersion() + ", name: '" + monitoredElement.getName() + "'");
+			for (int i = 0; i < monitoredElements.length; i++)
+				System.out.println("version: " + monitoredElements[i].getVersion() + ", name: '" + monitoredElements[i].getName() + "'");
 		}
 	}
 
