@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.24 2004/12/22 16:17:38 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.25 2004/12/23 16:35:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,10 +21,11 @@ import com.syrus.AMFICOM.map.NodeLink;
  * 
  * 
  * 
- * @version $Revision: 1.24 $, $Date: 2004/12/22 16:17:38 $
+ * @version $Revision: 1.25 $, $Date: 2004/12/23 16:35:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
+ * @deprecated
  */
 public final class MapNodeLinkElement extends NodeLink
 {

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElement.java,v 1.19 2004/12/22 16:17:38 krupenn Exp $
+ * $Id: MapPhysicalNodeElement.java,v 1.20 2004/12/23 16:35:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,10 +23,11 @@ import com.syrus.AMFICOM.map.TopologicalNode;
  * 
  * 
  * 
- * @version $Revision: 1.19 $, $Date: 2004/12/22 16:17:38 $
+ * @version $Revision: 1.20 $, $Date: 2004/12/23 16:35:17 $
  * @module
  * @author $Author: krupenn $
  * @see
+ * @deprecated
  */
 public final class MapPhysicalNodeElement extends TopologicalNode
 {
@@ -111,55 +112,6 @@ public final class MapPhysicalNodeElement extends TopologicalNode
 		}
 
 		return mpne;
-	}
-*/
-/*
-	public String[][] getExportColumns()
-	{
-		if(exportColumns == null)
-		{
-			exportColumns = new String[7][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-			exportColumns[3][0] = COLUMN_PHYSICAL_LINK_ID;
-			exportColumns[4][0] = COLUMN_X;
-			exportColumns[5][0] = COLUMN_Y;
-			exportColumns[6][0] = COLUMN_ACTIVE;
-		}
-		exportColumns[0][1] = getId().toString();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-		exportColumns[3][1] = physicalLinkId;
-		exportColumns[4][1] = String.valueOf(getLocation().x);
-		exportColumns[5][1] = String.valueOf(getLocation().y);
-		exportColumns[6][1] = String.valueOf(isActive());
-		
-		return exportColumns;
-	}
-	
-	public void setColumn(String field, String value)
-	{
-		if(field.equals(COLUMN_ID))
-			setId(value);
-		else
-		if(field.equals(COLUMN_NAME))
-			setName(value);
-		else
-		if(field.equals(COLUMN_DESCRIPTION))
-			setDescription(value);
-		else
-		if(field.equals(COLUMN_PHYSICAL_LINK_ID))
-			physicalLinkId = value;
-		else
-		if(field.equals(COLUMN_X))
-			location.x = Double.parseDouble(value);
-		else
-		if(field.equals(COLUMN_Y))
-			location.y = Double.parseDouble(value);
-		else
-		if(field.equals(COLUMN_ACTIVE))
-			setActive(Boolean.valueOf(value).booleanValue());
 	}
 */
 /*

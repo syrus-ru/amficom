@@ -48,14 +48,11 @@ TARGET_SRC=$(LIBSRC)\mapclientsource.jar
 TARGET_JAVADOC=$(LIBDOC)\mapclientdoc.jar
 
 SERVERCP=$(LIB)\corba.jar
-CLIENTCP=$(LIB)\util.jar;$(LIB)\generalclient.jar;$(LIB)\general.jar;$(LIB)\administrate.jar;$(LIB)\configuration.jar;$(LIB)\configureclient.jar;$(LIB)\corbaportable.jar;$(LIB)\filter.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\generalclient.jar;$(LIB)\general.jar;$(LIB)\administrate.jar;$(LIB)\configuration.jar;$(LIB)\configureclient.jar;$(LIB)\corbaportable.jar;$(LIB)\filter.jar;$(LIB)\map.jar
 
 LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
-SPATIALCP=$(EXTLIB)\ofx.spatialfx.jar
-REPORTCP=$(EXTLIB)\jfreechartK.jar
-JGRAPHCP=$(EXTLIB)\jgraphpad.jar
 
-CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(REPORTCP);$(JGRAPHCP);$(SPATIALCP)
+CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(REPORTCP)
 
 .PHONY:	$(TARGET)
 

@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.21 2004/12/22 16:17:38 krupenn Exp $
+ * $Id: Map.java,v 1.22 2004/12/23 16:35:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,10 +23,11 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.21 $, $Date: 2004/12/22 16:17:38 $
+ * @version $Revision: 1.22 $, $Date: 2004/12/23 16:35:17 $
  * @module
  * @author $Author: krupenn $
  * @see
+ * @deprecated
  */
 public final class Map extends com.syrus.AMFICOM.map.Map implements Serializable
 {

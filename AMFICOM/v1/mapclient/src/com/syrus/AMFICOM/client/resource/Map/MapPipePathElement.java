@@ -1,5 +1,5 @@
 /**
- * $Id: MapPipePathElement.java,v 1.13 2004/12/22 16:17:38 krupenn Exp $
+ * $Id: MapPipePathElement.java,v 1.14 2004/12/23 16:35:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,10 +21,11 @@ import com.syrus.AMFICOM.map.Collector;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/12/22 16:17:38 $
+ * @version $Revision: 1.14 $, $Date: 2004/12/23 16:35:17 $
  * @module
  * @author $Author: krupenn $
  * @see
+ * @deprecated
  */
 public class MapPipePathElement extends Collector
 {
@@ -35,7 +36,7 @@ public class MapPipePathElement extends Collector
 	public static final String COLUMN_DESCRIPTION = "description";	
 	public static final String COLUMN_LINKS = "links";	
 
-	public static String[][] exportColumns = null;
+	public static Object[][] exportColumns = null;
 
 	public MapPipePathElement()
 		throws ObjectNotFoundException, RetrieveObjectException

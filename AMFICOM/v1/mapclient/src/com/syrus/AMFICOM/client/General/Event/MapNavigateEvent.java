@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.10 2004/12/22 16:09:48 krupenn Exp $
+ * $Id: MapNavigateEvent.java,v 1.11 2004/12/23 16:35:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,6 +9,7 @@
 */
 
 package com.syrus.AMFICOM.Client.General.Event;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.IdentifierDefaultFactory;
 
@@ -17,7 +18,7 @@ import com.syrus.AMFICOM.general.corba.IdentifierDefaultFactory;
  *
  *
  *
- * @version $Revision: 1.10 $, $Date: 2004/12/22 16:09:48 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/23 16:35:17 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -115,12 +116,12 @@ public class MapNavigateEvent extends MapEvent
 	/**
 	 * Идентификаторы схемного пути
 	 */
-		protected Identifier schemePathId;
+	protected Identifier schemePathId;
 
 	/**
 	 * Идентификаторы исследуемого объекта
 	 */
-		protected Identifier meId;
+	protected Identifier meId;
 
 	/**
 	 * Идентификатор схемной Линии

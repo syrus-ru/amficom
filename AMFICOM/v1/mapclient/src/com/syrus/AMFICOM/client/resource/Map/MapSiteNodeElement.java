@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElement.java,v 1.15 2004/12/22 16:17:38 krupenn Exp $
+ * $Id: MapSiteNodeElement.java,v 1.16 2004/12/23 16:35:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,10 +11,14 @@
 
 package com.syrus.AMFICOM.Client.Resource.Map;
 
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
@@ -23,10 +27,11 @@ import com.syrus.AMFICOM.map.SiteNodeType;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2004/12/22 16:17:38 $
+ * @version $Revision: 1.16 $, $Date: 2004/12/23 16:35:17 $
  * @module
  * @author $Author: krupenn $
  * @see
+ * @deprecated
  */
 public class MapSiteNodeElement extends SiteNode
 {
@@ -45,7 +50,7 @@ public class MapSiteNodeElement extends SiteNode
 	public static final String COLUMN_IMAGE_ID = "image_id";
 
 
-	protected static String[][] exportColumns = null;
+	protected static Object[][] exportColumns = null;
 
 	private static final String PROPERTY_PANE_CLASS_NAME = 
 			"com.syrus.AMFICOM.Client.Map.Props.MapSitePane";
@@ -149,73 +154,6 @@ public class MapSiteNodeElement extends SiteNode
 		return mene;
 	}
 */
-/*
-	public String[][] getExportColumns()
-	{
-		if(exportColumns == null)
-		{
-			exportColumns = new String[11][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-			exportColumns[3][0] = COLUMN_PROTO_ID;
-			exportColumns[4][0] = COLUMN_X;
-			exportColumns[5][0] = COLUMN_Y;
-			exportColumns[6][0] = COLUMN_CITY;
-			exportColumns[7][0] = COLUMN_STREET;
-			exportColumns[8][0] = COLUMN_BUILDING;
-			exportColumns[9][0] = COLUMN_COEF;
-			exportColumns[10][0] = COLUMN_IMAGE_ID;
-		}
-		exportColumns[0][1] = getId().toString();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-		exportColumns[3][1] = getProto().getId().toString();
-		exportColumns[4][1] = String.valueOf(getLocation().x);
-		exportColumns[5][1] = String.valueOf(getLocation().y);
-		exportColumns[6][1] = getCity();
-		exportColumns[7][1] = getStreet();
-		exportColumns[8][1] = getBuilding();
-		exportColumns[9][1] = String.valueOf(scaleCoefficient);
-		exportColumns[10][1] = getImageId().toString();
-		
-		return exportColumns;
-	}
+
 	
-	public void setColumn(String field, String value)
-	{
-		if(field.equals(COLUMN_ID))
-			setId(value);
-		else
-		if(field.equals(COLUMN_NAME))
-			setName(value);
-		else
-		if(field.equals(COLUMN_DESCRIPTION))
-			setDescription(value);
-		else
-		if(field.equals(COLUMN_PROTO_ID))
-			setMapProtoId(new Identifier(value));
-		else
-		if(field.equals(COLUMN_X))
-			location.x = Double.parseDouble(value);
-		else
-		if(field.equals(COLUMN_Y))
-			location.y = Double.parseDouble(value);
-		else
-		if(field.equals(COLUMN_CITY))
-			setCity(value);
-		else
-		if(field.equals(COLUMN_STREET))
-			setStreet(value);
-		else
-		if(field.equals(COLUMN_BUILDING))
-			setBuilding(value);
-		else
-		if(field.equals(COLUMN_COEF))
-			setScaleCoefficient(Double.parseDouble(value));
-		else
-		if(field.equals(COLUMN_IMAGE_ID))
-			setIconName(value);
-	}
-*/	
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.32 2004/12/22 16:17:38 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.33 2004/12/23 16:35:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,10 +23,11 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
  * 
  * 
  * 
- * @version $Revision: 1.32 $, $Date: 2004/12/22 16:17:38 $
+ * @version $Revision: 1.33 $, $Date: 2004/12/23 16:35:17 $
  * @module
  * @author $Author: krupenn $
  * @see
+ * @deprecated
  */
 public class MapPhysicalLinkElement extends PhysicalLink
 {

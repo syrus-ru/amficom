@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElement.java,v 1.22 2004/12/22 16:17:38 krupenn Exp $
+ * $Id: MapMarkElement.java,v 1.23 2004/12/23 16:35:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,10 +21,11 @@ import com.syrus.AMFICOM.map.Mark;
  * 
  * 
  * 
- * @version $Revision: 1.22 $, $Date: 2004/12/22 16:17:38 $
+ * @version $Revision: 1.23 $, $Date: 2004/12/23 16:35:17 $
  * @module
  * @author $Author: krupenn $
  * @see
+ * @deprecated
  */
 public final class MapMarkElement extends Mark
 {
