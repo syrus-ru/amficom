@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.Client.General.UI.PropertyRenderer;
 import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
 import com.syrus.AMFICOM.Client.Resource.Map.MapEquipmentNodeElement;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
@@ -109,9 +109,9 @@ public class MapEquipmentNodeElementDisplayModel extends StubDisplayModel
 		if(col_id.equals("type_id"))
 		  return new TextFieldEditor(Pool.getName("mapequipmentproto", node.type_id));
 		if(col_id.equals("longitude"))
-		  return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(node.getAnchor().x)) );
+		  return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(node.getAnchor().x)) );
 		if(col_id.equals("latitude"))
-		  return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(node.getAnchor().y)) );
+		  return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(node.getAnchor().y)) );
 		return null;
 	}
 

@@ -5,7 +5,7 @@ import com.syrus.AMFICOM.Client.General.UI.PropertyRenderer;
 import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
 import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.util.LinkedList;
@@ -74,13 +74,13 @@ public class MapMarkElementDisplayModel extends StubDisplayModel
 		if(col_id.equals("name"))
 			return new TextFieldEditor(mark.name);
 		if(col_id.equals("longitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(mark.getAnchor().x)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(mark.getAnchor().x)) );
 		if(col_id.equals("latitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(mark.getAnchor().y)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(mark.getAnchor().y)) );
 		if(col_id.equals("Length_1"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(mark.getFromStartLengthLf())) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(mark.getFromStartLengthLf())) );
 		if(col_id.equals("Lengtht_2"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(mark.getFromEndLengthLf())) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(mark.getFromEndLengthLf())) );
 		return null;
 	}
 

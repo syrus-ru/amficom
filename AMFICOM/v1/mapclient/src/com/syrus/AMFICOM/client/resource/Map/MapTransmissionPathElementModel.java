@@ -136,7 +136,7 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 			return orcb;
 		}
 		if(col_id.equals("length"))
-			return new TextFieldEditor(String.valueOf( MyUtil.fourdigits(path.getSizeInDoubleLt())));
+			return new TextFieldEditor(String.valueOf( MiscUtil.fourdigits(path.getSizeInDoubleLt())));
 		if(col_id.equals("startnode"))
 		{
 			MapContext mc = (MapContext )Pool.get(MapContext.typ, path.mapContextID);

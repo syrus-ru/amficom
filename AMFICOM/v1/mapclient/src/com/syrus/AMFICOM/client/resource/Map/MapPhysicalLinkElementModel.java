@@ -46,7 +46,7 @@ public class MapPhysicalLinkElementModel extends MapLinkElementModel
 				return link.LINK_ID;
 //				return Pool.getName(SchemeCableLink.typ, link.LINK_ID);
 			if(col_id.equals("length"))
-				return String.valueOf( MyUtil.fourdigits(link.getSizeInDoubleLt()));
+				return String.valueOf( MiscUtil.fourdigits(link.getSizeInDoubleLt()));
 		}
 		catch(Exception e)
 		{

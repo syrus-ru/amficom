@@ -52,9 +52,9 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 			if(col_id.equals("element_id"))
 				return node.element_id;
 			if(col_id.equals("longitude"))
-				return String.valueOf(MyUtil.fourdigits(node.getAnchor().x));
+				return String.valueOf(MiscUtil.fourdigits(node.getAnchor().x));
 			if(col_id.equals("latitude"))
-				return String.valueOf(MyUtil.fourdigits(node.getAnchor().y));
+				return String.valueOf(MiscUtil.fourdigits(node.getAnchor().y));
 			if(col_id.equals("optimizeattribute"))
 				return node.optimizerAttribute;
 		}
@@ -166,9 +166,9 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 			return orcb;
 		}
 		if(col_id.equals("longitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(node.getAnchor().x)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(node.getAnchor().x)) );
 		if(col_id.equals("latitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(node.getAnchor().y)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(node.getAnchor().y)) );
 		return null;
 	}
 

@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
 
@@ -88,13 +88,13 @@ public class MapMarkElementModel extends ObjectResourceModel
 			if(col_id.equals("name"))
 				return mark.getName();
 			if(col_id.equals("longitude"))
-				return String.valueOf(MyUtil.fourdigits(mark.getAnchor().x)) ;
+				return String.valueOf(MiscUtil.fourdigits(mark.getAnchor().x)) ;
 			if(col_id.equals("latitude"))
-				return String.valueOf(MyUtil.fourdigits(mark.getAnchor().y));
+				return String.valueOf(MiscUtil.fourdigits(mark.getAnchor().y));
 			if(col_id.equals("Length_1"))
-				return df2.format(MyUtil.fourdigits(mark.getFromStartLengthLt()));
+				return df2.format(MiscUtil.fourdigits(mark.getFromStartLengthLt()));
 			if(col_id.equals("Length_2"))
-				return df2.format(MyUtil.fourdigits(mark.getFromEndLengthLt()));
+				return df2.format(MiscUtil.fourdigits(mark.getFromEndLengthLt()));
 		}
 		catch(Exception e)
 		{
@@ -132,9 +132,9 @@ public class MapMarkElementModel extends ObjectResourceModel
 		if(col_id.equals("name"))
 			return new TextFieldEditor(mark.name);
 		if(col_id.equals("longitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(mark.getAnchor().x)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(mark.getAnchor().x)) );
 		if(col_id.equals("latitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(mark.getAnchor().y)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(mark.getAnchor().y)) );
 		if(col_id.equals("Length_1"))
 			return new TextFieldEditor( String.valueOf((int)mark.getFromStartLengthLt()) );
 		if(col_id.equals("Length_2"))

@@ -4,7 +4,7 @@ import com.syrus.AMFICOM.Client.Map.Popup.PhysicalNodeElementPopupMenu;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
 
@@ -40,9 +40,9 @@ public class MapPhysicalNodeElementModel extends MapNodeElementModel
 			if(col_id.equals("typ"))
 				return node.getTyp();
 			if(col_id.equals("longitude"))
-				return String.valueOf(MyUtil.fourdigits(node.getAnchor().x)) ;
+				return String.valueOf(MiscUtil.fourdigits(node.getAnchor().x)) ;
 			if(col_id.equals("latitude"))
-				return String.valueOf(MyUtil.fourdigits(node.getAnchor().y));
+				return String.valueOf(MiscUtil.fourdigits(node.getAnchor().y));
 			if(col_id.equals("type_id"))
 				return LangModel.getString("node" + MapPhysicalNodeElement.typ);
 		}
@@ -89,9 +89,9 @@ public class MapPhysicalNodeElementModel extends MapNodeElementModel
 		if(col_id.equals("typ"))
 			return new TextFieldEditor( node.getTyp() );
 		if(col_id.equals("longitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(node.getAnchor().x)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(node.getAnchor().x)) );
 		if(col_id.equals("latitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(node.getAnchor().y)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(node.getAnchor().y)) );
 		return null;
 	}
 

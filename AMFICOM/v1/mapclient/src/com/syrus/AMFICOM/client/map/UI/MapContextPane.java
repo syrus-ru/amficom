@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.awt.BorderLayout;
@@ -139,8 +139,8 @@ public class MapContextPane extends GeneralPanel
 		schemeTextField.restrictToDomain(true);
 		schemeTextField.setSelected(mapContext.scheme_id);
 
-		latitudeTextField.setText(String.valueOf(MyUtil.fourdigits(mapContext.latitude)));
-		longitudeTextField.setText(String.valueOf(MyUtil.fourdigits(mapContext.longitude)));
+		latitudeTextField.setText(String.valueOf(MiscUtil.fourdigits(mapContext.latitude)));
+		longitudeTextField.setText(String.valueOf(MiscUtil.fourdigits(mapContext.longitude)));
 	}
 
 	public boolean modify()

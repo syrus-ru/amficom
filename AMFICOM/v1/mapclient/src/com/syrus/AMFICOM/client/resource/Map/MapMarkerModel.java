@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
@@ -115,13 +115,13 @@ public class MapMarkerModel extends ObjectResourceModel
 			if(col_id.equals("path"))
 				return marker.path_id;
 			if(col_id.equals("longitude"))
-				return String.valueOf(MyUtil.fourdigits(marker.getAnchor().x)) ;
+				return String.valueOf(MiscUtil.fourdigits(marker.getAnchor().x)) ;
 			if(col_id.equals("latitude"))
-				return String.valueOf(MyUtil.fourdigits(marker.getAnchor().y));
+				return String.valueOf(MiscUtil.fourdigits(marker.getAnchor().y));
 			if(col_id.equals("Length_1"))
-				return String.valueOf(MyUtil.fourdigits(marker.getFromStartLengthLf()));
+				return String.valueOf(MiscUtil.fourdigits(marker.getFromStartLengthLf()));
 			if(col_id.equals("Length_2"))
-				return String.valueOf(MyUtil.fourdigits(marker.getFromEndLengthLf()));
+				return String.valueOf(MiscUtil.fourdigits(marker.getFromEndLengthLf()));
 		}
 		catch(Exception e)
 		{
@@ -178,9 +178,9 @@ public class MapMarkerModel extends ObjectResourceModel
 			return orcb;
 		}
 		if(col_id.equals("longitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(marker.getAnchor().x)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(marker.getAnchor().x)) );
 		if(col_id.equals("latitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(marker.getAnchor().y)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(marker.getAnchor().y)) );
 		if(col_id.equals("Length_1"))
 			return new TextFieldEditor( String.valueOf((int)marker.getFromStartLengthLf()) );
 		if(col_id.equals("Length_2"))
