@@ -18,6 +18,25 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
+
+SOURCES := com/syrus/AMFICOM/administration/DatabaseAdministrationObjectLoader.java \
+		com/syrus/AMFICOM/administration/AdministrationObjectLoader.java \
+		com/syrus/AMFICOM/administration/AdministrationStorableObjectPool.java \
+		com/syrus/AMFICOM/administration/AdministrationDatabaseContext.java \
+		com/syrus/AMFICOM/administration/User.java \
+		com/syrus/AMFICOM/administration/UserDatabase.java \
+		com/syrus/AMFICOM/administration/Domain.java \
+		com/syrus/AMFICOM/administration/DomainDatabase.java \
+		com/syrus/AMFICOM/administration/DomainMember.java \
+		com/syrus/AMFICOM/administration/Server.java \
+		com/syrus/AMFICOM/administration/ServerDatabase.java \
+		com/syrus/AMFICOM/administration/MCM.java \
+		com/syrus/AMFICOM/administration/MCMDatabase.java \
+		com/syrus/AMFICOM/administration/StringFieldCondition.java \
+		com/syrus/AMFICOM/administration/LinkedIdsConditionImpl.java \
+		com/syrus/AMFICOM/administration/DomainCondition.java
+
+
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
@@ -25,18 +44,7 @@ $(LIBNAME): .mach
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/DatabaseAdministrationObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/AdministrationObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/AdministrationStorableObjectPool.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/AdministrationDatabaseContext.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/User.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/UserDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/Domain.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/DomainDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/Server.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/ServerDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/MCM.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/MCMDatabase.java \
+		$(addprefix $(SRCDIR)/,$(SOURCES))
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -56,7 +64,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/administration/*.class)
+	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleancorba
