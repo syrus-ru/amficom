@@ -1,21 +1,40 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
+import java.awt.*;
 import com.syrus.AMFICOM.Client.Configure.UI.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
 
-public class SchemeElementPane extends EquipmentPane
+public class SchemeElementPane extends PropertiesPanel
 {
 	SchemeElement se;
+	boolean is_kis;
+	EquipmentPane eqPane = new EquipmentPane();
+	KISPane kisPane = new KISPane();
 
 	public SchemeElementPane()
 	{
+		try
+		{
+			jbInit();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public SchemeElementPane(SchemeElement se)
 	{
-		super();
+		this();
 		setObjectResource(se);
+	}
+
+	private void jbInit() throws Exception
+	{
+		this.setLayout(new BorderLayout());
 	}
 
 	public ObjectResource getObjectResource()
@@ -27,112 +46,80 @@ public class SchemeElementPane extends EquipmentPane
 	{
 		this.se = (SchemeElement )or;
 
-		Equipment eq = (Equipment )Pool.get(Equipment.typ, se.equipment_id);
-		super.setObjectResource(eq);
+		Equipment eq = (Equipment)Pool.get("kisequipment", se.equipment_id);
+		if (eq == null)
+			return false;
+		is_kis = eq.is_kis;
 
-		if(eq != null)
-			return true;
-		return false;
+		if (is_kis)
+		{
+			removeAll();
+			add(kisPane, BorderLayout.CENTER);
+			kisPane.setObjectResource(eq);
+		}
+		else
+		{
+			removeAll();
+			add(eqPane, BorderLayout.CENTER);
+			eqPane.setObjectResource(eq);
+		}
+		return true;
 	}
-/*
+
 	public void setContext(ApplicationContext aContext)
 	{
-		this.aContext = aContext;
-		gPanel.setContext(aContext);
-		gaPanel.setContext(aContext);
-		pPanel.setContext(aContext);
-		cpPanel.setContext(aContext);
-		chPanel.setContext(aContext);
+		if (is_kis)
+			kisPane.setContext(aContext);
+		else
+		 eqPane.setContext(aContext);
 	}
 
 	public boolean modify()
 	{
-		if(	gPanel.modify() &&
-				gaPanel.modify() &&
-				pPanel.modify() &&
-				cpPanel.modify() &&
-				chPanel.modify())
-			return true;
-		return false;
-	}
-
-	public boolean save()
-	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-		{
-			return false;
-		}
-
-		if(modify())
-		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			dataSource.SaveEquipment(equipment.getId());
-			return true;
-		}
+		if (is_kis)
+			return kisPane.modify();
 		else
-		{
-			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
-		}
-		return false;
-	}
-
-	public boolean open()
-	{
-		return false;
-	}
-
-	public boolean delete()
-	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.catalogTCediting))
-			return false;
-
-		int i = 0;
-
-		if(equipment instanceof KIS)
-		{
-			KIS kis = (KIS) equipment;
-			String []sa = new String[kis.access_ports.size()];
-			for(Enumeration enum1 = kis.access_ports.elements(); enum1.hasMoreElements();)
-			{
-				AccessPort port = (AccessPort) enum1.nextElement();
-				sa[i++] = port.getId();
-			}
-			aContext.getDataSourceInterface().RemoveAccessPorts(sa);
-		}
-
-		i = 0;
-		String []sp = new String[equipment.ports.size()];
-		for(Enumeration enum1 = equipment.ports.elements(); enum1.hasMoreElements();)
-		{
-			Port port = (Port )enum1.nextElement();
-			sp[i++] = port.getId();
-		}
-		aContext.getDataSourceInterface().RemovePorts(sp);
-
-		i = 0;
-		String []sc = new String[equipment.cports.size()];
-		for(Enumeration enum1 = equipment.cports.elements(); enum1.hasMoreElements();)
-		{
-			CablePort port = (CablePort )enum1.nextElement();
-			sc[i++] = port.getId();
-		}
-		aContext.getDataSourceInterface().RemoveCablePorts(sc);
-
-		String []se = new String[1];
-		se[0] = equipment.id;
-		aContext.getDataSourceInterface().RemoveEquipments(se);
-
-		return true;
+			return eqPane.modify();
 	}
 
 	public boolean create()
 	{
-		return false;
+		if (is_kis)
+			return kisPane.create();
+		else
+			return eqPane.create();
 	}
-*/
+
+	public boolean delete()
+	{
+		if (is_kis)
+			return kisPane.delete();
+		else
+			return eqPane.delete();
+	}
+
+	public boolean open()
+	{
+		if (is_kis)
+			return kisPane.open();
+		else
+			return eqPane.open();
+	}
+
+	public boolean save()
+	{
+		if (is_kis)
+			return kisPane.save();
+		else
+			return eqPane.save();
+	}
+
+	public boolean cancel()
+	{
+		if (is_kis)
+			return kisPane.cancel();
+		else
+			return eqPane.cancel();
+	}
 }
 
