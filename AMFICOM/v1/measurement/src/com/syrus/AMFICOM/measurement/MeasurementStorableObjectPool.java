@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.7 2004/08/23 20:47:37 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.8 2004/09/14 14:14:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,10 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Hashtable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -21,8 +25,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/23 20:47:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2004/09/14 14:14:14 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -108,6 +112,69 @@ public class MeasurementStorableObjectPool {
 			return null;
 		}
 	}
+	
+	public static List getStorableObjects(List objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
+		List list = null;
+		Map objectQueueMap = null;
+		if (objectIds != null) {
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				Identifier objectId = (Identifier) it.next();
+				short objectEntityCode = objectId.getMajor();
+				Short entityCode = new Short(objectEntityCode);
+				LRUMap objectPool = (LRUMap)objectPoolMap.get(objectId);
+				if (objectPool != null) {
+					StorableObject storableObject = (StorableObject)objectPool.get(objectId);
+					if (storableObject != null){
+						if (list == null)
+							list = new LinkedList();
+						list.add(storableObject);
+					}						
+					else {
+						if (useLoader) {
+							if (objectQueueMap == null)
+								objectQueueMap = new HashMap();
+							List objectQueue = (List)objectQueueMap.get(entityCode);
+							if (objectQueue == null){
+								objectQueue = new LinkedList();
+								objectQueueMap.put(entityCode, objectQueue);
+							}
+							objectQueue.add(objectId);
+						}
+					}
+				}			
+				else {
+					Log.errorMessage("MeasurementStorableObjectPool.getStorableObjects | Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");					
+				}
+			}
+			
+		}
+		else {
+			Log.errorMessage("MeasurementStorableObjectPool.getStorableObjects | NULL list of identifiers supplied");
+		}
+
+		if (objectQueueMap != null){
+			for (Iterator it = objectQueueMap.keySet().iterator(); it.hasNext();) {
+				Short entityCode = (Short) it.next();
+				List objectQueue = (List)objectQueueMap.get(entityCode);
+				List storableObjects = loadStorableObjects(entityCode, objectQueue);
+				if (storableObjects != null) {
+					try {
+						for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
+							StorableObject storableObject = (StorableObject) iter.next();
+							putStorableObject(storableObject);
+							list.add(storableObject);
+						}						
+					}
+					catch (IllegalObjectEntityException ioee) {
+						Log.errorException(ioee);
+					}
+				}
+			}
+		}
+		
+		return list;
+	}
+
 
 	private static StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
 		StorableObject storableObject;
@@ -153,6 +220,52 @@ public class MeasurementStorableObjectPool {
 				storableObject = null;
 		}
 		return storableObject;
+	}
+	
+	private static List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
+		List storableObjects;
+		switch (entityCode.shortValue()) {
+			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadParameterTypes(ids);
+				break;
+			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadMeasurementTypes(ids);
+				break;
+			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadAnalysisTypes(ids);
+				break;
+			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadEvaluationTypes(ids);
+				break;
+			case ObjectEntities.SET_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadSets(ids);
+				break;
+			case ObjectEntities.MS_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadMeasurementSetups(ids);
+				break;
+			case ObjectEntities.ANALYSIS_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadAnalyses(ids);
+				break;
+			case ObjectEntities.EVALUATION_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadEvaluations(ids);
+				break;
+			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadMeasurements(ids);
+				break;
+			case ObjectEntities.TEST_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadTests(ids);
+				break;
+			case ObjectEntities.RESULT_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadResults(ids);
+				break;
+			case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadTemporalPatterns(ids);
+				break;
+			default:
+				Log.errorMessage("MeasurementStorableObjectPool.loadStorableObjects | Unknown entityCode : " + entityCode);
+				storableObjects = null;
+		}
+		return storableObjects;
 	}
 
 	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {

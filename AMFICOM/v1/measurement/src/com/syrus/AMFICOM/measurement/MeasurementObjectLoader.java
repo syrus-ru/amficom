@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.2 2004/08/09 10:25:17 arseniy Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.3 2004/09/14 14:14:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,15 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.List;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/09 10:25:17 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2004/09/14 14:14:14 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -43,4 +45,29 @@ public interface MeasurementObjectLoader {
 	Result loadResult(Identifier id) throws DatabaseException, CommunicationException;
 
 	TemporalPattern loadTemporalPattern(Identifier id) throws DatabaseException, CommunicationException;
+	
+	List loadParameterTypes(List ids) throws DatabaseException, CommunicationException;
+
+	List loadMeasurementTypes(List ids) throws DatabaseException, CommunicationException;
+
+	List loadAnalysisTypes(List ids) throws DatabaseException, CommunicationException;
+
+	List loadEvaluationTypes(List ids) throws DatabaseException, CommunicationException;
+
+	List loadSets(List ids) throws DatabaseException, CommunicationException;
+
+	List loadMeasurementSetups(List ids) throws DatabaseException, CommunicationException;
+
+	List loadMeasurements(List ids) throws DatabaseException, CommunicationException;
+
+	List loadAnalyses(List ids) throws DatabaseException, CommunicationException;
+
+	List loadEvaluations(List ids) throws DatabaseException, CommunicationException;
+
+	List loadTests(List ids) throws DatabaseException, CommunicationException;
+
+	List loadResults(List ids) throws DatabaseException, CommunicationException;
+
+	List loadTemporalPatterns(List ids) throws DatabaseException, CommunicationException;
+	
 }
