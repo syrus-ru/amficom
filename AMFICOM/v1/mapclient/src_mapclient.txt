@@ -3,7 +3,6 @@ src\com\syrus\AMFICOM\Client\General\Event\MapNavigateEvent.java
 src\com\syrus\AMFICOM\Client\General\Lang\LangModelMap.java
 src\com\syrus\AMFICOM\Client\Resource\EmptyMapDataSource.java
 src\com\syrus\AMFICOM\Client\Resource\MapDataSourceImage.java
-src\com\syrus\AMFICOM\Client\Resource\RISDMapDataSource.java
 src\com\syrus\AMFICOM\Client\Resource\Map\Map.java
 src\com\syrus\AMFICOM\Client\Resource\Map\MapLinkProtoElement.java
 src\com\syrus\AMFICOM\Client\Resource\Map\MapMarkElement.java
