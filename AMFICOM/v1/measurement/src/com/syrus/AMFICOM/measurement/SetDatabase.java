@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.66 2005/02/24 12:36:20 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.67 2005/02/24 12:37:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/02/24 12:36:20 $
+ * @version $Revision: 1.67 $, $Date: 2005/02/24 12:37:28 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -386,7 +386,7 @@ public class SetDatabase extends StorableObjectDatabase {
 
 	private void insertSetMELinks(Set set) throws CreateObjectException {
 		Identifier setId = set.getId();
-		List meIds = set.getMonitoredElementIds();
+		Collection meIds = set.getMonitoredElementIds();
 		String sql = SQL_INSERT_INTO 
 			+ ObjectEntities.SETMELINK_ENTITY
 			+ OPEN_BRACKET
