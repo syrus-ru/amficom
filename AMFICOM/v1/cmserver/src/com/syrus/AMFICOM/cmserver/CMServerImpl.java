@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.69 2004/11/23 17:40:25 max Exp $
+ * $Id: CMServerImpl.java,v 1.70 2004/11/24 08:47:56 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.KISType;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.MCM;
@@ -47,7 +46,6 @@ import com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
-import com.syrus.AMFICOM.configuration.corba.KISType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
@@ -89,7 +87,6 @@ import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementSetupCondition;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Modeling;
@@ -125,7 +122,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2004/11/23 17:40:25 $
+ * @version $Revision: 1.70 $, $Date: 2004/11/24 08:47:56 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -453,37 +450,6 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
     
-    public KISType_Transferable transmitKISType(
-            Identifier_Transferable id_Transferable,
-            AccessIdentifier_Transferable accessIdentifier)
-            throws AMFICOMRemoteException {
-        Identifier id = new Identifier(id_Transferable);
-        Log.debugMessage("CMServerImpl.KISType | require " + id.toString(), Log.DEBUGLEVEL07);
-        try {
-            KISType kisType = (KISType) ConfigurationStorableObjectPool.getStorableObject(id, true);
-            return (KISType_Transferable) kisType.getTransferable();
-        } catch (ObjectNotFoundException onfe) {
-            Log.errorException(onfe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
-                                onfe.getMessage());
-        } catch (RetrieveObjectException roe) {
-            Log.errorException(roe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-                    .getMessage());
-        } catch (CommunicationException ce) {
-            Log.errorException(ce);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
-                    .getMessage());
-        } catch (DatabaseException de) {
-            Log.errorException(de);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
-                    .getMessage());
-        } catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-    }
-
     public MCM_Transferable transmitMCM(
             Identifier_Transferable id_Transferable,
             AccessIdentifier_Transferable accessIdentifier)
@@ -1614,99 +1580,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
     
-    public KISType_Transferable[] transmitKISTypes(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-        try {
-            Identifier domainId = new Identifier(accessIdentifier.domain_id);
-            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
-            Log.debugMessage("CMServerImpl.transmitKISTypes | requiere "
-                    + (ids_Transferable.length == 0 ? "all" : Integer
-                            .toString(ids_Transferable.length))
-                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
-            List list;
-            if (ids_Transferable.length > 0) {
-                List idsList = new ArrayList(ids_Transferable.length);
-                for (int i = 0; i < ids_Transferable.length; i++)
-                    idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
-            } else
-                list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
-
-            KISType_Transferable[] transferables = new KISType_Transferable[list.size()];
-            int i = 0;
-            for (Iterator it = list.iterator(); it.hasNext(); i++) {
-                KISType kisType = (KISType) it.next();
-                transferables[i] = (KISType_Transferable) kisType.getTransferable();
-            }
-            return transferables;
-
-        } catch (RetrieveObjectException roe) {
-            Log.errorException(roe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-                    .getMessage());
-        } catch (IllegalDataException ide) {
-            Log.errorException(ide);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
-                    .getMessage());
-        } catch (IllegalObjectEntityException ioee) {
-            Log.errorException(ioee);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
-                    .getMessage());
-        } catch (ApplicationException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-    }
-    
-    public KISType_Transferable[] transmitKISTypesButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-        try {
-            Identifier domainId = new Identifier(accessIdentifier.domain_id);
-            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
-            Log.debugMessage("CMServerImpl.transmitKISTypes | requiere "
-                    + (ids_Transferable.length == 0 ? "all" : Integer
-                            .toString(ids_Transferable.length))
-                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
-            List list;
-            if (ids_Transferable.length > 0) {
-                List idsList = new ArrayList(ids_Transferable.length);
-                for (int i = 0; i < ids_Transferable.length; i++)
-                    idsList.add(new Identifier(ids_Transferable[i]));
-                list = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
-            } else
-                list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.KIS_ENTITY_CODE), true);
-
-            KISType_Transferable[] transferables = new KISType_Transferable[list.size()];
-            int i = 0;
-            for (Iterator it = list.iterator(); it.hasNext(); i++) {
-                KISType kisType = (KISType) it.next();
-                transferables[i] = (KISType_Transferable) kisType.getTransferable();
-            }
-            return transferables;
-
-        } catch (RetrieveObjectException roe) {
-            Log.errorException(roe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-                    .getMessage());
-        } catch (IllegalDataException ide) {
-            Log.errorException(ide);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
-                    .getMessage());
-        } catch (IllegalObjectEntityException ioee) {
-            Log.errorException(ioee);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
-                    .getMessage());
-        } catch (ApplicationException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-    }
-
-	public Link_Transferable transmitLink(
+    public Link_Transferable transmitLink(
 			Identifier_Transferable id_Transferable,
 			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
