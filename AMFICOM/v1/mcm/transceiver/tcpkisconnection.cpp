@@ -1,14 +1,19 @@
 #include <string.h>
 
 #include "com_syrus_AMFICOM_mcm_TCPKISConnection.h"
-#include "ByteArray.h"
-#include "Parameter.h"
 #include "MeasurementSegment.h"
-#include "tcpconnect.h"
+#include "ResultSegment.h"
+#include "akptcp.h"
 
 #define FIELDNAME_KIS_HOST_NAME "kisHostName"
 #define FIELDNAME_KIS_TCP_PORT "kisTCPPort"
 #define FIELDNAME_KIS_TCP_SOCKET "kisTCPSocket"
+#define FIELDNAME_INITIAL_TIME_TO_SLEEP "initialTimeToSleep"
+#define FIELDNAME_KIS_REPORT "kisReport"
+
+
+jobject create_kis_report_from_result_segment(ResultSegment* result_segment);
+
 
 JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_establishSocketConnection(JNIEnv *env, jobject obj) {
 	jclass cls = env->GetObjectClass(obj);
@@ -106,7 +111,7 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_transmitM
 		parameters[s] = new Parameter(bpar_type_codename, bpar_value);
 	}
 
-	MeasurementSegment* measurementSegment = new MeasurementSegment(bmeasurement_id,
+	MeasurementSegment* measurement_segment = new MeasurementSegment(bmeasurement_id,
 			bmeasurement_type_codename,
 			blocal_address,
 			parameters_length,
@@ -116,11 +121,77 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_transmitM
 	jfieldID fid = env->GetFieldID(cls, FIELDNAME_KIS_TCP_SOCKET, "I");
 	SOCKET kis_socket = (SOCKET)env->GetIntField(obj, fid);
 
-	unsigned int length = measurementSegment->getLength();
-	unsigned int n_trans = transmit(kis_socket, measurementSegment->getData(), length);
+	int r = transmit_segment(kis_socket, measurement_segment);
+	if (r)
+		printf("Successfully transferred measurement segment\n");
+	else
+		printf("Cannot transmit measurement segment\n");
 
-	delete measurementSegment;
+	delete measurement_segment;
 
-	return (n_trans == length) ? JNI_TRUE : JNI_FALSE;
+	return r ? JNI_TRUE : JNI_FALSE;
+}
+
+JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_receiveKISReportFromSocket(JNIEnv *env, jobject obj) {
+	jclass cls = env->GetObjectClass(obj);
+	jfieldID fid;
+
+	fid = env->GetFieldID(cls, FIELDNAME_INITIAL_TIME_TO_SLEEP, "J");
+	int timeout = (int)(env->GetLongField(obj, fid) / 1000);
+
+	fid = env->GetFieldID(cls, FIELDNAME_KIS_TCP_SOCKET, "I");
+	SOCKET kis_socket = (SOCKET)env->GetIntField(obj, fid);
+
+	Segment* segment = NULL;
+	int r = receive_segment(kis_socket, timeout, segment);
+
+	if (r == 0)
+		return JNI_TRUE;
+
+	jobject j_kis_report;
+	if (r == 1) {
+		switch (segment->getType()) {
+			case SEGMENT_RESULT:
+				printf("Received result segment\n");
+				j_kis_report = create_kis_report_from_result_segment((ResultSegment*)segment);
+				fid = env->GetFieldID(cls, FIELDNAME_KIS_REPORT, "Lcom/syrus/AMFICOM/mcm/KISReport;");
+				env->SetObjectField(obj, fid, j_kis_report);
+			default:
+				printf("Nothing to do with segment of type %d\n", segment->getType());
+		}
+		delete segment;
+		return JNI_TRUE;
+	}
+
+	return JNI_FALSE;
+}
+
+jobject create_kis_report_from_result_segment(JNIEnv *env, ResultSegment* result_segment) {
+	char* measurement_id = result_segment->getMeasurementId()->getData();
+	jstring j_measurement_id = env->NewStringUTF(measurement_id);
+
+	jsize parnumber = (jsize)result_segment->getParnumber();
+	Parameter** parameters = result_segment->getParameters();
+
+	jobjectArray j_par_codenames = (jobjectArray)env->NewObjectArray(parnumber, env->FindClass("java/lang/String"), NULL);
+	jobjectArray j_par_values= (jobjectArray)env->NewObjectArray(parnumber, env->FindClass("[B"), NULL);
+	jbyteArray jpar_value;
+	for (jsize s = 0; s < parnumber; s++) {
+		env->SetObjectArrayElement(j_par_codenames, s, env->NewStringUTF(parameters[s]->getName()->getData()));
+		jpar_value = env->NewByteArray(parameters[s]->getValue()->getLength());
+		env->SetByteArrayRegion(jpar_value, 0, parameters[s]->getValue()->getLength(), (jbyte*)parameters[s]->getValue()->getData());
+		env->SetObjectArrayElement(j_par_values, s, jpar_value);
+		env->DeleteLocalRef(jpar_value);
+	}
+
+	jclass kis_report_class = env->FindClass("com/syrus/AMFICOM/mcm/KISReport");
+	jmethodID constructor_id = env->GetMethodID(kis_report_class, "<init>", "(Ljava/lang/String;[Ljava/lang/String;[[B)V");
+	jobject j_kis_report = env->NewObject(kis_report_class,
+			constructor_id,
+			j_measurement_id,
+			j_par_codenames,
+			j_par_values);
+
+	return j_kis_report;
 }
 

@@ -9,7 +9,7 @@ AKPA=$(AKP)/akp.a
 TCPCONNECT=../../../HW/tcpconnect
 TCPCONNECTA=$(TCPCONNECT)/tcpconnect.a
 
-OBJS=tcpkisconnection.o transceiver.o
+OBJS=tcpkisconnection.o
 
 
 .PHONY:	clean
