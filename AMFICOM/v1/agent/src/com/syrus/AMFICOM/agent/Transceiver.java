@@ -1,13 +1,29 @@
+/*
+ * $Id: Transceiver.java,v 1.2 2004/06/21 14:56:29 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.agent;
 
-public class Transceiver  {
-  private static String measurement_id;
-  private static String[] par_names;
-  private static byte[][] par_values;
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/21 14:56:29 $
+ * @author $Author: bass $
+ * @module agent_v1
+ */
+public class Transceiver {
+	private static String measurement_id;
+	private static String[] par_names;
+	private static byte[][] par_values;
 
-  static {
-    System.loadLibrary("agenttransceiver");
-  }
+	private Transceiver() {
+	}
+
+	static {
+		System.loadLibrary("agenttransceiver");
+	}
 
   public static native int call(String fileName);
   public static native boolean read1(int fileHandle, String fileName);
@@ -26,7 +42,7 @@ public class Transceiver  {
     return par_names;
   }
 
-  public static byte[][] getParameterValues() {
-    return par_values;
-  }
+	public static byte[][] getParameterValues() {
+		return par_values;
+	}
 }

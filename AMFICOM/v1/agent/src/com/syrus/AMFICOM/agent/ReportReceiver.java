@@ -1,22 +1,33 @@
+/*
+ * $Id: ReportReceiver.java,v 1.2 2004/06/21 14:56:29 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.agent;
 
-import com.syrus.AMFICOM.CORBA.KIS.Test_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
 import com.syrus.AMFICOM.CORBA.General.AlarmLevel;
+import com.syrus.AMFICOM.CORBA.KIS.*;
 import com.syrus.AMFICOM.server.measurement.Result;
 import com.syrus.util.Log;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/21 14:56:29 $
+ * @author $Author: bass $
+ * @module agent_v1
+ */
 public class ReportReceiver extends Agent {
-  private final String reportFileName;
-  private boolean reportFileConnected;
-  private int reportFileHandle;
-  
-  public ReportReceiver(String kis_id) {
-    this.reportFileHandle = 0;
-    this.reportFileConnected = false;
-    this.reportFileName = "reportChannel" + kis_id;
-  }
+	private final String reportFileName;
+	private boolean reportFileConnected;
+	private int reportFileHandle;
+
+	public ReportReceiver(String kis_id) {
+		this.reportFileHandle = 0;
+		this.reportFileConnected = false;
+		this.reportFileName = "reportChannel" + kis_id;
+	}
 
   public void run() {
     String[] par_names;
@@ -96,8 +107,11 @@ public class ReportReceiver extends Agent {
         }
       }//else if !reportFileConnected
 
-      try{ sleep(kistimewait); }
-      catch(InterruptedException ex) { }
-    }
-  }
+			try {
+				sleep(kistimewait);
+			} catch (InterruptedException ie) {
+				;
+			}
+		}
+	}
 }

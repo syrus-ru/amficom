@@ -1,31 +1,32 @@
+/*
+ * $Id: TestContainer.java,v 1.3 2004/06/21 14:56:29 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.agent;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.io.IOException;
-import java.sql.Timestamp;
-import com.syrus.AMFICOM.CORBA.KIS.Test_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
-import com.syrus.AMFICOM.CORBA.General.TestTemporalType;
-import com.syrus.AMFICOM.CORBA.General.TestStatus;
-import com.syrus.AMFICOM.CORBA.General.TestTimeStamps;
-import com.syrus.AMFICOM.CORBA.KIS.AgentIdentity_Transferable;
-import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.General.AlarmLevel;
-import com.syrus.AMFICOM.agent.AnalysisManager;
-import com.syrus.AMFICOM.agent.EvaluationManager;
+import com.syrus.AMFICOM.CORBA.General.*;
+import com.syrus.AMFICOM.CORBA.KIS.*;
 import com.syrus.util.Log;
+import java.sql.Timestamp;
+import java.util.*;
 
 //sortArguments
-import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
 
+/**
+ * @version $Revision: 1.3 $, $Date: 2004/06/21 14:56:29 $
+ * @author $Author: bass $
+ * @module agent_v1
+ */
 public class TestContainer extends Agent {
-  private Test_Transferable tt;
-  private final String taskFileName;
-  private boolean taskFileConnected;
-  private int taskFileHandle;
-  private List resultQueue;
+	private Test_Transferable tt;
+	private final String taskFileName;
+	private boolean taskFileConnected;
+	private int taskFileHandle;
+	private List resultQueue;
 	private boolean aborted;
 
   public TestContainer(Test_Transferable tt, String kis_id) {
@@ -185,7 +186,9 @@ sortArguments(test_i);
       try {
         sleep(kistimewait);
       }
-      catch (InterruptedException ex) {}
+      catch (InterruptedException ie) {
+		  ;
+	  }
     }//while
 		synchronized (testContainers) {
 			testContainers.remove(this.tt.id);

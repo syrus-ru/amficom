@@ -1,29 +1,28 @@
+/*
+ * $Id: Agent.java,v 1.2 2004/06/21 14:56:29 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.agent;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Hashtable;
-import java.util.ResourceBundle;
-import java.io.IOException;
-import java.sql.Timestamp;
 import com.syrus.AMFICOM.RISDConnection;
-import com.syrus.AMFICOM.CORBA.AMFICOMKIS;
-import com.syrus.AMFICOM.CORBA.KIS.Test_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
-import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
-import com.syrus.AMFICOM.CORBA.KIS.AgentIdentity_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
-import com.syrus.util.Application;
-import com.syrus.util.ApplicationProperties;
-import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
-
+import com.syrus.AMFICOM.CORBA.KIS.*;
 import com.syrus.AMFICOM.server.measurement.Result;
+import com.syrus.util.*;
+import java.sql.Timestamp;
+import java.util.*;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/21 14:56:29 $
+ * @author $Author: bass $
+ * @module agent_v1
+ */
 public class Agent extends Thread  {
-	private static final String SID = "amficom";
 	private static final long KISTIMEWAIT = 1000;
 	private static final long RISDTIMEWAIT = 1000;
 	static final long MEASURETIME = 10*60*1000;
@@ -41,9 +40,6 @@ public class Agent extends Thread  {
 	static Hashtable testContainers;
 	static AMFICOMKIS amficomkis;
 	private static String[] kis_ids;
-
-  public Agent() {
-  }
 
   public static void main(String[] args) {
 		//Initialize application

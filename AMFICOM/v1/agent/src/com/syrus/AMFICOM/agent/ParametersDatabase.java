@@ -1,9 +1,23 @@
+/*
+ * $Id: ParametersDatabase.java,v 1.2 2004/06/21 14:56:29 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.agent;
 
-import com.syrus.util.Log;
-import com.syrus.util.ApplicationProperties;
+import com.syrus.util.*;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/21 14:56:29 $
+ * @author $Author: bass $
+ * @module agent_v1
+ */
 public class ParametersDatabase {
+	private ParametersDatabase() {
+	}
 /*
   public static String getTestArgumentTypeId(String codename, String test_type_id) {
     if (test_type_id.equals("trace_and_analyse")) {

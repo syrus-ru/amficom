@@ -1,17 +1,24 @@
+/*
+ * $Id: EvaluationManager.java,v 1.2 2004/06/21 14:56:29 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.agent;
 
-import com.syrus.AMFICOM.agent.ParametersDatabase;
-import com.syrus.AMFICOM.analysis.dadara.DadaraEvaluationManager;
-import com.syrus.AMFICOM.CORBA.KIS.Evaluation_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Etalon_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
 import com.syrus.AMFICOM.CORBA.General.AlarmLevel;
+import com.syrus.AMFICOM.CORBA.KIS.*;
+import com.syrus.AMFICOM.analysis.dadara.DadaraEvaluationManager;
 import com.syrus.AMFICOM.server.measurement.Result;
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.LinkedList;
+import java.util.*;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/21 14:56:29 $
+ * @author $Author: bass $
+ * @module agent_v1
+ */
 public abstract class EvaluationManager {
 	protected Hashtable evaluationresultparameters;
 	protected AlarmLevel alarmLevel;
@@ -63,5 +70,5 @@ public abstract class EvaluationManager {
 																	 this.alarmLevel);
   }
 
-  public abstract void evaluate(Hashtable thresholds, Hashtable etalonparameters, Hashtable analysisresultparameters, Hashtable resultparameters) throws Exception;
+	public abstract void evaluate(Hashtable thresholds, Hashtable etalonparameters, Hashtable analysisresultparameters, Hashtable resultparameters) throws Exception;
 }

@@ -1,24 +1,31 @@
+/*
+ * $Id: AnalysisManager.java,v 1.2 2004/06/21 14:56:29 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.agent;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.LinkedList;
-import com.syrus.AMFICOM.analysis.dadara.DadaraAnalysisManager;
-import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Analysis_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Etalon_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
 import com.syrus.AMFICOM.CORBA.General.AlarmLevel;
+import com.syrus.AMFICOM.CORBA.KIS.*;
+import com.syrus.AMFICOM.analysis.dadara.DadaraAnalysisManager;
 import com.syrus.AMFICOM.server.measurement.Result;
+import java.util.*;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/21 14:56:29 $
+ * @author $Author: bass $
+ * @module agent_v1
+ */
 public abstract class AnalysisManager {
-
-  public static AnalysisManager getAnalysisManager(String analysis_type_id) {
-    if (analysis_type_id.equals("dadara"))
-      return new DadaraAnalysisManager();
-    else
-      return null;
-  }
+	public static AnalysisManager getAnalysisManager(String analysis_type_id) {
+		if (analysis_type_id.equals("dadara"))
+			return new DadaraAnalysisManager();
+		else
+			return null;
+	}
 
   public Result_Transferable analyse(Analysis_Transferable analysis, Result_Transferable result, Etalon_Transferable etalon) {
     Hashtable criterias = new Hashtable();
@@ -53,5 +60,5 @@ public abstract class AnalysisManager {
 																	 AlarmLevel.ALARM_LEVEL_NONE);
   }
 
-  public abstract Hashtable analyse(Hashtable criterias, Hashtable resultparameters, Hashtable etalonparameters);
+	public abstract Hashtable analyse(Hashtable criterias, Hashtable resultparameters, Hashtable etalonparameters);
 }

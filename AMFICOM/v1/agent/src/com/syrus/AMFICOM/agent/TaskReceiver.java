@@ -1,29 +1,31 @@
+/*
+ * $Id: TaskReceiver.java,v 1.2 2004/06/21 14:56:29 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.agent;
 
+import com.syrus.AMFICOM.CORBA.General.*;
+import com.syrus.AMFICOM.CORBA.KIS.*;
+import com.syrus.util.*;
+import java.io.IOException;
 import java.sql.Timestamp;
-import com.syrus.AMFICOM.CORBA.KIS.AgentIdentity_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Test_Transferable;
-import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.util.Log;
-import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
 
 // For queryTests_Stub()
-import com.syrus.AMFICOM.CORBA.General.TestTemporalType;
-import com.syrus.AMFICOM.CORBA.General.TestTimeStamps;
-import com.syrus.AMFICOM.CORBA.General.TestStatus;
-import com.syrus.AMFICOM.CORBA.General.TestReturnType;
-import com.syrus.AMFICOM.CORBA.KIS.Analysis_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Evaluation_Transferable;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/21 14:56:29 $
+ * @author $Author: bass $
+ * @module agent_v1
+ */
 public class TaskReceiver extends Agent  {
-  public TaskReceiver() {
-  }
-
-  public void run() {
+	public void run() {
 
 //Query
 		AgentIdentity_Transferable agentId = new AgentIdentity_Transferable(agent_id, "hz");
-    int retcode;
     Test_Transferable[] tests;
 		String[] atids;
     while(true) {
@@ -124,30 +126,30 @@ public class TaskReceiver extends Agent  {
     Test_Transferable[] tests = new Test_Transferable[1];
     TestTimeStamps tts = new TestTimeStamps();
     tts._default();
-    com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable[] parameters = new com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable[6];
+    Parameter_Transferable[] parameters = new Parameter_Transferable[6];
     try {
-      parameters[0] = new com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable("ref_wvlen", "ttal6", (new com.syrus.util.ByteArray((int)1550)).getBytes()); 
-      parameters[1] = new com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable("ref_trclen", "ttal1", (new com.syrus.util.ByteArray((double)65.535)).getBytes());
-      parameters[2] = new com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable("ref_res", "ttal4", (new com.syrus.util.ByteArray((double)4)).getBytes());
-      parameters[3] = new com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable("ref_pulswd", "ttal9", (new com.syrus.util.ByteArray((long)1000)).getBytes());
-      parameters[4] = new com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable("ref_ior", "ttal5", (new com.syrus.util.ByteArray((double)1.467)).getBytes());
-      parameters[5] = new com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable("ref_scans", "ttal2", (new com.syrus.util.ByteArray((double)4000)).getBytes());
+      parameters[0] = new Parameter_Transferable("ref_wvlen", "ttal6", (new ByteArray((int)1550)).getBytes()); 
+      parameters[1] = new Parameter_Transferable("ref_trclen", "ttal1", (new ByteArray((double)65.535)).getBytes());
+      parameters[2] = new Parameter_Transferable("ref_res", "ttal4", (new ByteArray((double)4)).getBytes());
+      parameters[3] = new Parameter_Transferable("ref_pulswd", "ttal9", (new ByteArray((long)1000)).getBytes());
+      parameters[4] = new Parameter_Transferable("ref_ior", "ttal5", (new ByteArray((double)1.467)).getBytes());
+      parameters[5] = new Parameter_Transferable("ref_scans", "ttal2", (new ByteArray((double)4000)).getBytes());
     }
-    catch (java.io.IOException e) {
+    catch (IOException e) {
       System.out.println(e.getMessage());
       e.printStackTrace();
     }
-    com.syrus.AMFICOM.CORBA.KIS.Analysis_Transferable analysis
-      = new com.syrus.AMFICOM.CORBA.KIS.Analysis_Transferable("ani3",
+    Analysis_Transferable analysis
+      = new Analysis_Transferable("ani3",
                                                               "dadara",
-                                                              new com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable[0]);
-    com.syrus.AMFICOM.CORBA.KIS.Evaluation_Transferable evaluation
-      = new com.syrus.AMFICOM.CORBA.KIS.Evaluation_Transferable(null,
+                                                              new Parameter_Transferable[0]);
+    Evaluation_Transferable evaluation
+      = new Evaluation_Transferable(null,
                                                                 null,
-                                                                new com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable[0],
-                                                                new com.syrus.AMFICOM.CORBA.KIS.Etalon_Transferable(null,
+                                                                new Parameter_Transferable[0],
+                                                                new Etalon_Transferable(null,
                                                                                                                     null,
-                                                                                                                    new com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable[0]));
+                                                                                                                    new Parameter_Transferable[0]));
     
     tests[0] = new Test_Transferable("test1",
                                      "trace_and_analyse",
@@ -163,6 +165,6 @@ public class TaskReceiver extends Agent  {
                                      analysis,
                                      evaluation,
                                      TestReturnType.TEST_RETURN_TYPE_WHOLE);
-    return tests;
-  }
+		return tests;
+	}
 }
