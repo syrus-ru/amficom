@@ -42,6 +42,7 @@ JAVAC_FLAGS = \
 	-O \
 	-deprecation
 JAVAC_FLAGS := $(JAVAC_FLAGS) $(JIKES_FLAGS)
+JAVAC_WARNOFF_FLAG=-nowarn
 
 JPUB = $(ORACLE_HOME)/bin/jpub
 JPUB_FLAGS = \
@@ -62,17 +63,43 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com
 
 .mach:	.corba .ora $(CLASSDIR)
-	$(JAVAC) $(JAVAC_FLAGS) \
+	$(JAVAC) $(JAVAC_FLAGS) -nowarn \
 		-classpath $(APPCLASSPATH):$(ORACLECLASSPATH):$(CLASSDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/LangModelMeasurement.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementDatabaseContext.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ParameterTypeDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ActionType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementTypeDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/AnalysisType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/AnalysisTypeDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/EvaluationType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/EvaluationTypeDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/SetParameter.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Set.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/SetDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Result.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ResultDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetup.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetupDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Action.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Measurement.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Analysis.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/AnalysisDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Evaluation.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/EvaluationDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalPattern.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalPattern_Database.java
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalPatternDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/Test.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/TestDatabase.java
 	touch $@
 
 .ora:	$(CLASSDIR)
 	$(JPUB) $(JPUB_FLAGS) \
 		-sql=CRONSTRINGARRAY:CronStringArray
-	$(JAVAC) $(JAVAC_FLAGS) -nowarn \
+	$(JAVAC) $(JAVAC_FLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(ORACLECLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM//measurement/ora/*.java
@@ -83,7 +110,7 @@ $(LIBNAME): .mach
 	$(IDL2JAVA) $(IDL2JAVA_FLAGS) \
 		$(IDLDIR)/event.idl \
 		$(IDLDIR)/measurement.idl
-	$(JAVAC) $(JAVAC_FLAGS) -nowarn \
+	$(JAVAC) $(JAVAC_FLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/event/corba/*.java \
