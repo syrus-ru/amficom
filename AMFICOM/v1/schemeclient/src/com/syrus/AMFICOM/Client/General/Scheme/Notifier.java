@@ -164,8 +164,8 @@ public class Notifier
 				}
 				else
 				{
-					//dispatcher.notify(new SchemeNavigateEvent(new Object[0],
-					//	SchemeNavigateEvent.SCHEME_ALL_DESELECTED_EVENT, isEditable));
+					dispatcher.notify(new SchemeNavigateEvent(cells,
+						SchemeNavigateEvent.OTHER_OBJECT_SELECTED_EVENT, false));
 					return;
 				}
 			}
@@ -245,8 +245,8 @@ public class Notifier
 				}
 				else
 				{
-					//dispatcher.notify(new SchemeNavigateEvent(new Object[0],
-					//	SchemeNavigateEvent.SCHEME_ALL_DESELECTED_EVENT, isEditable));
+					dispatcher.notify(new SchemeNavigateEvent(cells,
+						SchemeNavigateEvent.OTHER_OBJECT_SELECTED_EVENT, false));
 					return;
 				}
 			}
