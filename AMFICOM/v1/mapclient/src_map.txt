@@ -59,7 +59,6 @@ src\com\syrus\AMFICOM\Client\Map\MapElementPanel.java
 src\com\syrus\AMFICOM\Client\Map\MapElementsFrame.java
 src\com\syrus\AMFICOM\Client\Map\MapMainFrame.java
 src\com\syrus\AMFICOM\Client\Map\MapManager.java
-src\com\syrus\AMFICOM\Client\Map\MapMenuBar.java
 src\com\syrus\AMFICOM\Client\Map\MapNodeLinkSizeField.java
 src\com\syrus\AMFICOM\Client\Map\MapOptionsDialog.java
 src\com\syrus\AMFICOM\Client\Map\MapPropertyFrame.java

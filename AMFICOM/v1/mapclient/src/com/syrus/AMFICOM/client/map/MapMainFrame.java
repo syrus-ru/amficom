@@ -29,7 +29,7 @@ import java.awt.event.ContainerEvent;
 
 public class MapMainFrame extends JInternalFrame implements OperationListener
 {
-	public MapMenuBar mapMenuBar;
+//	public MapMenuBar mapMenuBar;
 
 	Dispatcher internal_dispatcher = new Dispatcher();
 	public ApplicationContext aContext;
@@ -172,7 +172,7 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 		Environment.the_dispatcher.register(this, ContextChangeEvent.type);
 
 		setCommands(aModel);
-
+/*
 		aModel.setCommand("menuMapNew", new MapNewCommand(this, aContext));
 		aModel.setCommand("menuMapClose", new MapCloseCommand(this));
 		aModel.setCommand("menuMapOpen", new MapOpenCommand((JDesktopPane )this.getParent(), this, aContext));
@@ -207,7 +207,7 @@ public class MapMainFrame extends JInternalFrame implements OperationListener
 		aModel.setEnabled("menuHelpCourse", false);
 		aModel.setEnabled("menuHelpHelp", false);
 		aModel.setEnabled("menuHelpAbout", false);
-
+*/
 		aModel.fireModelChanged("");
 
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);

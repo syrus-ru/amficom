@@ -372,7 +372,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 			ApplicationModel aModel = aContext.getApplicationModel();
 			if(aModel != null)
 			{
-				aModel.getCommand("menuMapOpen").setParameter("mapFrame", mapFrame);
+//				aModel.getCommand("menuMapOpen").setParameter("mapFrame", mapFrame);
 				aModel.getCommand("menuMapSave").setParameter("mapFrame", mapFrame);
 				aModel.getCommand("menuMapSaveAs").setParameter("mapFrame", mapFrame);
 			}
