@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.6 2005/03/23 15:16:34 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.7 2005/03/30 12:57:47 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/23 15:16:34 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/30 12:57:47 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -174,7 +174,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 
 
 
-	public Collection loadParameterTypes(Collection ids) throws RetrieveObjectException, CommunicationException {
+	public Collection loadParameterTypes(Collection ids) throws ApplicationException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase();
 		Collection objects;
 		try {
@@ -194,12 +194,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 		}
 
 		if (!loadIds.isEmpty()) {
-			Identifier_Transferable[] loadIdsT = new Identifier_Transferable[loadIds.size()];
-			int i = 0;
-			for (Iterator it = loadIds.iterator(); it.hasNext(); i++) {
-				id = (Identifier) it.next();
-				loadIdsT[i] = (Identifier_Transferable) id.getTransferable();
-			}
+			Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
 
 			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
 			if (mServerRef != null) {
@@ -207,7 +202,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 				try {
 					ParameterType_Transferable[] transferables = mServerRef.transmitParameterTypes(loadIdsT);
 					loadedObjects = new ArrayList(transferables.length);
-					for (i = 0; i < transferables.length; i++)
+					for (int i = 0; i < transferables.length; i++)
 						loadedObjects.add(new ParameterType(transferables[i]));
 				}
 				catch (org.omg.CORBA.SystemException se) {
@@ -240,7 +235,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 		return objects;
 	}
 
-	public Collection loadCharacteristicTypes(Collection ids) throws RetrieveObjectException, CommunicationException {
+	public Collection loadCharacteristicTypes(Collection ids) throws ApplicationException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		Collection objects;
 		try {
@@ -260,20 +255,14 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 		}
 
 		if (!loadIds.isEmpty()) {
-			Identifier_Transferable[] loadIdsT = new Identifier_Transferable[loadIds.size()];
-			int i = 0;
-			for (Iterator it = loadIds.iterator(); it.hasNext(); i++) {
-				id = (Identifier) it.next();
-				loadIdsT[i] = (Identifier_Transferable) id.getTransferable();
-			}
-
+			Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
 			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
 			if (mServerRef != null) {
 				Collection loadedObjects = null;
 				try {
 					CharacteristicType_Transferable[] transferables = mServerRef.transmitCharacteristicTypes(loadIdsT);
 					loadedObjects = new ArrayList(transferables.length);
-					for (i = 0; i < transferables.length; i++)
+					for (int i = 0; i < transferables.length; i++)
 						loadedObjects.add(new CharacteristicType(transferables[i]));
 				}
 				catch (org.omg.CORBA.SystemException se) {
@@ -306,7 +295,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 		return objects;
 	}
 
-	public Collection loadCharacteristics(Collection ids) throws RetrieveObjectException, CommunicationException {
+	public Collection loadCharacteristics(Collection ids) throws ApplicationException {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		Collection objects;
 		try {
@@ -326,20 +315,14 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 		}
 
 		if (!loadIds.isEmpty()) {
-			Identifier_Transferable[] loadIdsT = new Identifier_Transferable[loadIds.size()];
-			int i = 0;
-			for (Iterator it = loadIds.iterator(); it.hasNext(); i++) {
-				id = (Identifier) it.next();
-				loadIdsT[i] = (Identifier_Transferable) id.getTransferable();
-			}
-
+			Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
 			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
 			if (mServerRef != null) {
 				Collection loadedObjects = null;
 				try {
 					Characteristic_Transferable[] transferables = mServerRef.transmitCharacteristics(loadIdsT);
 					loadedObjects = new ArrayList(transferables.length);
-					for (i = 0; i < transferables.length; i++)
+					for (int i = 0; i < transferables.length; i++)
 						loadedObjects.add(new Characteristic(transferables[i]));
 				}
 				catch (org.omg.CORBA.SystemException se) {

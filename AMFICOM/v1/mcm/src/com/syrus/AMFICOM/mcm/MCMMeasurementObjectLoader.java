@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.21 2005/03/23 15:16:34 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.22 2005/03/30 12:57:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -44,7 +43,7 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/03/23 15:16:34 $
+ * @version $Revision: 1.22 $, $Date: 2005/03/30 12:57:47 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -373,11 +372,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 			return;
 
 		super.saveTests(collection, force);
-
-		Identifier_Transferable[] idsT = new Identifier_Transferable[collection.size()];
-		int i = 0;
-		for (Iterator it = collection.iterator(); it.hasNext(); i++)
-			idsT[i] = (Identifier_Transferable) ((Test) it.next()).getId().getTransferable();
+		
+		Identifier_Transferable[] idsT = Identifier.createTransferables(collection);
 
 		TestStatus status = ((Test) collection.iterator().next()).getStatus();
 
