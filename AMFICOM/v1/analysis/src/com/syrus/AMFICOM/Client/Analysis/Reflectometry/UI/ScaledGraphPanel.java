@@ -127,11 +127,8 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		}
 	}
 
-	protected void upd_currpos(MouseEvent e)
+	protected void limit_currpos()
 	{
-		tmppos = currpos;
-		currpos = e.getPoint();
-
 		// check if we go out the borders of panel
 		int vx = 0;
 		int wx = getWidth();
@@ -141,11 +138,19 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		if (currpos.x < vx)
 			currpos.x = vx;
 		if (currpos.x > vx + wx)
-			currpos.x = vx+wx;
+			currpos.x = vx + wx;
 		if (currpos.y < vy)
 			currpos.y = vy;
 		if (currpos.y > vy + wy)
-			currpos.y = vy+wy;
+			currpos.y = vy + wy;
+	}
+
+	protected void upd_currpos(MouseEvent e)
+	{
+		tmppos = currpos;
+		currpos = e.getPoint();
+		
+		limit_currpos();
 	}
 
 	protected void updColorModel()
@@ -269,15 +274,25 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 	{
 		return (int)(((double)(coord))/scaleX+.5) + start;
 	}
+	
+	// бывает также надо знать неокругленное значение координаты
+	protected double coord2indexF(int coord)
+	{
+		return ((double)(coord))/scaleX + start;
+	}
 
 	protected int index2coord(int index)
 	{
-		return (int)(((double)(index - start))*scaleX+.5)+1;
+		// FIXME - выяснить, нужен ли (+1) здесь и в value2coord
+		// если нужен - привести в соответствие index2coord и coord2index
+		//return (int)(((double)(index - start))*scaleX+.5)+1;
+		return (int)(((double)(index - start))*scaleX+.5);
 	}
 
 	protected int value2coord(double value)
 	{
-		return (int)((maxY - value - minY - top)*scaleY+.5)-1;
+		//return (int)((maxY - value - minY - top)*scaleY+.5)-1;
+		return (int)((maxY - value - minY - top)*scaleY+.5);
 	}
 
 	protected double coord2value(int coord)

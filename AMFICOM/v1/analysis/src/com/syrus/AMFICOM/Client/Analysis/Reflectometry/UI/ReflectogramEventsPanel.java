@@ -206,28 +206,25 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		}
 	}
 
-	// sre == null => draws whole curve
-	protected void draw_one_model_curve(Graphics g, ModelTrace mt, SimpleReflectogramEvent sre)
+	/**
+	 * Draws model curve using current graphigs plotting settings.
+	 * May be used for drawing both model and threshold curve 
+	 * @param g graphics to plot
+	 * @param mt trace to plot
+	 * @param sre not null: range to plot coded as SimpleReflectogramEvent; null: plot whole trace 
+	 */
+	protected void drawModelCurve(Graphics g, ModelTrace mt, SimpleReflectogramEvent sre)
 	{
 		int n1 = sre == null ? 0 : sre.getBegin();
 		int n2 = sre == null ? mt.getLength() - 1 : sre.getEnd();
 		if ((n1 <= end) && (n2 >= start))
 		{
-		    int i_from = Math.max(0, n1 - start);
-		    int i_to = Math.min(end, n2) - start;
-		    int len = i_to - i_from + 1;
-		    if (len >= 1)
+		    int iFrom = Math.max(0, n1 - start);
+		    int iTo = Math.min(end, n2) - start;
+		    if (iTo - iFrom >= 0)
 		    {
-		        int[] xArr = new int[len]; 
-		        int[] yArr = new int[len];
-		        for (int i = i_from; i <= i_to; i++)
-		        {
-		            xArr[i - i_from] = (int)(i * scaleX + 1);
-		            yArr[i - i_from] = (int)((maxY - mt.getY(i + start) - top) * scaleY);
-		            // FIXME: ^^^ потеря эффективности: мы уже знаем, к какому событию относится
-		            // точка, но заставляем mtm заново определять это событие... и это для КАЖДОЙ точки р/г!
-		        }
-		        g.drawPolyline(xArr, yArr, len);
+		        double[] vArr = mt.getYArrayZeroPad(iFrom + start, iTo - iFrom + 1);
+		        draw_y_curve(g, vArr, 0, iFrom, iTo - iFrom);
 		    }
 		}
 	}
@@ -248,7 +245,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		if (mtm == null)
 			return;
 		g.setColor(modeledColor);
-		draw_one_model_curve(g, mtm.getModelTrace(), null);
+		drawModelCurve(g, mtm.getModelTrace(), null);
 	}
 
 	protected void paint_reflectogram_events(Graphics g)
@@ -286,22 +283,24 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 				}
 				g.setColor(correctColor(color));
 
-				int i_begin = Math.max(start, ep[j].getBegin()) - start;
-				int i_end = Math.min (end, ep[j].getEnd()) - start;
-				for (int i = i_begin; i < i_end; i++)
-				{
-					g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
-					        (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
-				}
+				int iFrom = Math.max(start, ep[j].getBegin()) - start;
+				int iTo = Math.min (end, ep[j].getEnd()) - start;
+				draw_y_curve(g, y, iFrom + start, iFrom, iTo - iFrom);
+//				for (int i = iFrom; i < iFrom; i++)
+//				{
+//					g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
+//					        (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
+//				}
 			}
 		}
 
 		g.setColor(correctColor(noiseColor));
-		int i_begin = Math.max(0, ep[ep.length-1].getEnd() - start);
-		int i_end = Math.min (end, y.length - start - 1);
-		if (ep[ep.length-1].getEnd() < end)
-			for (int i = i_begin; i < i_end; i++)
-				g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
-					(int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
+		int iFrom = Math.max(0, ep[ep.length-1].getEnd() - start);
+		int iTo = Math.min (end, y.length - start - 1);
+		draw_y_curve(g, y, iFrom + start, iFrom, iTo - iFrom);
+//		if (ep[ep.length-1].getEnd() < end)
+//			for (int i = iFrom; i < iTo; i++)
+//				g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
+//					(int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
 	}
 }

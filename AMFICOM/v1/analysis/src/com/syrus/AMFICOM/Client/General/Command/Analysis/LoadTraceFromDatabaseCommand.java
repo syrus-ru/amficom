@@ -138,8 +138,8 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			// XXX: removed by saa because had no effect due to mistake
 
 			// correct event types
-			// XXX: (is necessary??)
-			mtmEvents.fixEventTypes(mtmEtalon, delta);
+			// FIXME: (is necessary??)
+			//mtmEvents.fixEventTypes(mtmEtalon, delta);
 		}
 
 		dispatcher.notify(new RefChangeEvent("primarytrace",

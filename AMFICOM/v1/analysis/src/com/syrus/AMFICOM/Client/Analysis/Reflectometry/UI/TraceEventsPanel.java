@@ -84,18 +84,25 @@ public class TraceEventsPanel extends ScaledGraphPanel
 					default: g.setColor(noiseColor);
 				}
 
-				for (int i = events[j].first_point - start; i <= Math.min (end, events[j].last_point) - start; i++)
-				{
-					g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
-										 (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
-				}
+				int iFrom = events[j].first_point - start;
+				int iTo = Math.min (end, events[j].last_point) - start;
+				draw_y_curve(g, y, iFrom + start, iFrom, iTo - iFrom + 1);
+//				for (int i = events[j].first_point - start; i <= Math.min (end, events[j].last_point) - start; i++)
+//				{
+//					g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
+//										 (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
+//				}
 			}
 		}
-
 		g.setColor(noiseColor);
 		if (events[events.length-1].last_point < end)
-			for (int i =  events[events.length-1].last_point - start; i< Math.min (end, y.length - start - 1); i++)
-				g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY - 1),
-									 (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY - 1));
+		{
+			int iFrom = events[events.length-1].last_point - start;
+			int iTo = Math.min (end, y.length - start - 1);
+			draw_y_curve(g, y, iFrom + start, iFrom, iTo - iFrom);
+//			for (int i = events[events.length-1].last_point - start; i< Math.min (end, y.length - start - 1); i++)
+//				g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY - 1),
+//									 (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY - 1));
+		}
 	}
 }

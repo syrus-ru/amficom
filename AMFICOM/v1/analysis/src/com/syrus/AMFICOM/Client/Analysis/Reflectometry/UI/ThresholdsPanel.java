@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+
 import javax.swing.SwingUtilities;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
@@ -14,13 +15,11 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 	protected boolean edit_thresholds = true;
 
-	//protected ReflectogramEvent[] et_ep;
 	protected ModelTraceManager et_mtm;
 
 	protected int c_event = 0;
-	protected int c_threshold = -1;
+	protected ModelTraceManager.ThresholdHandle c_TH = null;
 	protected boolean isRbutton = false;
-	//protected double max_et_y = 0;
 	
 	// XXX: read colors from file?
 	protected static Color warningThresholdColor = new Color(255, 220, 0);
@@ -53,8 +52,6 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 		this.et_mtm = mtm;
 
-		//max_et_y = ReflectogramMath.getMaximum(mtm);
-
 		if (c_event >= mtm.getNEvents())
 			c_event = mtm.getNEvents() - 1;
 	}
@@ -75,60 +72,60 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		end = events[num].last_point;
 	}
 
-	protected void this_mousePressed(MouseEvent e)
+	protected void this_mousePressed(MouseEvent mev)
 	{
 		if (!edit_thresholds || et_mtm == null)
 		{
-			super.this_mousePressed(e);
+			super.this_mousePressed(mev);
 			return;
 		}
 
-		startpos = e.getPoint();
-		currpos = e.getPoint();
-		if (SwingUtilities.isRightMouseButton(e))
+		startpos = mev.getPoint();
+		currpos = mev.getPoint();
+		if (SwingUtilities.isRightMouseButton(mev))
 			isRbutton = true;
 		else
 			isRbutton = false;
 
-		// определяем позицию, на которую попали
-		int index = coord2index(currpos.x);
-
 		// если это текущее событие - пытаемся "ухватить" (drag) порог
-		SimpleReflectogramEvent c_sre = et_mtm.getSimpleEvent(c_event);
-		if (index >= c_sre.getBegin() && index <= c_sre.getEnd())
+		c_TH = et_mtm.getThresholdHandle(
+			coord2indexF(currpos.x), // we need float value, without rounding
+			coord2value(currpos.y),
+			mouse_coupling / scaleX,
+			mouse_coupling / scaleY,
+			0.5,
+			isRbutton ? 1 : 0);
+
+		if (c_TH != null)
 		{
-			int new_threshold = -1;
-
-			if (Math.abs(currpos.y-value2coord(et_mtm.getThresholdY(Threshold.UP2, index, c_event))) < mouse_coupling)
-				new_threshold = Threshold.UP2;
-			else
-			if (Math.abs(currpos.y-value2coord(et_mtm.getThresholdY(Threshold.DOWN2, index, c_event))) < mouse_coupling)
-				new_threshold = Threshold.DOWN2;
-			else
-			if (Math.abs(currpos.y-value2coord(et_mtm.getThresholdY(Threshold.UP1, index, c_event))) < mouse_coupling)
-				new_threshold = Threshold.UP1;
-			else
-			if (Math.abs(currpos.y-value2coord(et_mtm.getThresholdY(Threshold.DOWN1, index, c_event))) < mouse_coupling)
-				new_threshold = Threshold.DOWN1;
-
-			if (new_threshold != -1)
+			// перемещаем мышь в точку захвата
+			try
 			{
-				if (et_mtm.getThresholdType(c_event) == SimpleReflectogramEvent.CONNECTOR)
-				{
-					c_threshold = new_threshold;
-					setCursor(new Cursor(Cursor.MOVE_CURSOR));
-					return;
-				}
-				else if (!isRbutton)
-				{
-					c_threshold = new_threshold;
-					setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
-					return;
-				}
+				Robot r = new Robot();
+				Point p = getLocationOnScreen();
+				int x = index2coord(c_TH.getX());
+				int y = value2coord(c_TH.getY());
+
+				// не допускаем выхода на пределы окна
+				currpos = new Point(x, y);
+				limit_currpos();
+
+				// перемещаем курсор
+				r.mouseMove(currpos.x + p.x, currpos.y + p.y);
+
+				// запоминаем окончательную экранную позицию
+				currpos = new Point(x, y); 
 			}
+			catch (AWTException ex)
+			{
+				System.out.println("ThresholdsPanel: Warning: MouseMove failed");
+				ex.printStackTrace();
+			}
+
+			return;
 		}
 
-		super.this_mousePressed(e);
+		super.this_mousePressed(mev);
 	}
 
 	protected void this_mouseDragged(MouseEvent e)
@@ -138,21 +135,12 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			super.this_mouseDragged(e);
 			return;
 		}
-		if (c_threshold != -1)
+		if (c_TH != null)
 		{
 			upd_currpos(e);
-
-			if (!isRbutton)
-				et_mtm.changeThresholdBy(c_event, c_threshold,
-						(double) (tmppos.y - currpos.y) / scaleY,
-						(double) (tmppos.x - currpos.x) / scaleX,
-						0, 0);
-			if (isRbutton
-					&& (et_mtm.getThresholdType(c_event) == SimpleReflectogramEvent.CONNECTOR))
-				et_mtm.changeThresholdBy(c_event, c_threshold,
-						0, 0,
-						(double) (tmppos.x - currpos.x) / scaleX,
-						(double) (tmppos.y - currpos.y) / scaleY);
+			c_TH.moveBy(
+				(int )((tmppos.x - currpos.x) / scaleX),
+				(tmppos.y - currpos.y) / scaleY);
 
 			parent.repaint();
 
@@ -166,13 +154,13 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 	protected void this_mouseReleased(MouseEvent e)
 	{
-		if (!edit_thresholds || et_mtm == null || c_threshold == -1)
+		if (!edit_thresholds || et_mtm == null || c_TH == null)
 		{
 			super.this_mouseReleased(e);
 		}
 		else
 		{
-			c_threshold = -1;
+			c_TH = null;
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
@@ -184,16 +172,18 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	    int evId = et_mtm != null ? et_mtm.getEventByCoord(pos) : -1;
 		if (evId != -1 && evId != c_event)
 		{
-		    dispatcher.notify(
-		            new RefUpdateEvent(String.valueOf(evId), RefUpdateEvent.EVENT_SELECTED_EVENT)
-		    );
+		    dispatcher.notify(new RefUpdateEvent(
+		    	String.valueOf(evId), RefUpdateEvent.EVENT_SELECTED_EVENT
+		    ));
 		    return;
 		}
 	}
 
 	public void paint (Graphics g)
 	{
+		long t0 = System.currentTimeMillis();
 		paint_scales(g);
+		long t1 = System.currentTimeMillis();
 
 		if (draw_events)
 		{
@@ -203,13 +193,16 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		{
 			paint_trace(g);
 		}
+		long t2 = System.currentTimeMillis();
 		if (draw_modeled)
 		{
 			paint_modeled_trace(g);
 		}
+		long t3 = System.currentTimeMillis();
 
 		if (draw_alarms)
 			paint_alarms(g);
+		long t4 = System.currentTimeMillis();
 
 		if (draw_min_trace_level && draw_events)
 		{
@@ -218,8 +211,10 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		}
 		else if (draw_noise_level && draw_events)
 			paint_noise_level(g);
+		long t5 = System.currentTimeMillis();
 
 		paint_scale_digits(g);
+		long t6 = System.currentTimeMillis();
 
 		if (paint_thresholds)
 		{
@@ -228,8 +223,19 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			else
 				paint_threshold(g);
 		}
+		long t7 = System.currentTimeMillis();  // XXX: remove t0 - t7
+//		System.err.println("paint:"
+//			+ " ta=" + (t1 - t0)
+//			+ " tb=" + (t2 - t1)
+//			+ " tc=" + (t3 - t2)
+//			+ " td=" + (t4 - t3)
+//			+ " te=" + (t5 - t4)
+//			+ " tf=" + (t6 - t5)
+//			+ " tg=" + (t7 - t6)
+//		);
 	}
 
+	// nEvent < 0 => paint all thresholds
 	private void paintThresholdsEx(Graphics g, int nEvent)
 	{
 		if (et_mtm == null)
@@ -237,13 +243,15 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 		int[] keys = { Threshold.UP1, Threshold.DOWN1, Threshold.UP2, Threshold.DOWN2 };
 		Color[] p_colors = {warningThresholdColor, warningThresholdColor, alarmThresholdColor, alarmThresholdColor };
-		SimpleReflectogramEvent sre = et_mtm.getSimpleEvent(nEvent);
+		SimpleReflectogramEvent sre = nEvent >= 0
+				? et_mtm.getSimpleEvent(nEvent)
+				: null;
 		for (int k = 0; k < 4; k++)
 		{
 			int key = keys[k];
 			g.setColor(p_colors[k]);
 			// XXX: нет draw_joint_of_two_model_curves
-			draw_one_model_curve(g, et_mtm.getThresholdMF(key), sre);
+			drawModelCurve(g, et_mtm.getThresholdMT(key), sre);
 		}
 	}
 
@@ -253,11 +261,12 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	}
 	private void paint_all_thresholds(Graphics g)
 	{
-		if (et_mtm == null)
-			return;
-		int nEvents = et_mtm.getNEvents();
-		for (int i = 0; i < nEvents; i++)
-			paintThresholdsEx(g, i);
+//		if (et_mtm == null)
+//			return;
+//		int nEvents = et_mtm.getNEvents();
+//		for (int i = 0; i < nEvents; i++)
+//			paintThresholdsEx(g, i);
+		paintThresholdsEx(g, -1);
 	}
 
 	/*

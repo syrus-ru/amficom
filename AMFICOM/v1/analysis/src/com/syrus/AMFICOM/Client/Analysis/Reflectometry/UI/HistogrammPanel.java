@@ -43,7 +43,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 		ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, "primarytrace");
 		if (mtm != null)
-			updateHistogrammData(0, mtm.getTraceLength() - 1);
+			updateHistogrammData(0, mtm.getModelTrace().getLength() - 1);
 		else
 			updateHistogrammData(0, y.length / 2);
 	}

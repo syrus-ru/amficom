@@ -142,7 +142,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 				ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id);
 				if (mtm != null)
 				{
-					double[] y = mtm.getModelTrace().getYArray(0, n);
+					double[] y = mtm.getModelTrace().getYArrayZeroPad(0, n);
 					SimpleGraphPanel epPanel = new SimpleGraphPanel(y, deltaX);
 					epPanel.setColorModel(AnalysisUtil.ETALON);
 					((ScalableLayeredPanel)panel).addGraphPanel(epPanel);

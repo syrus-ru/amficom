@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.*;
+
 import javax.swing.JPanel;
 
 public class SimpleGraphPanel extends JPanel
@@ -120,13 +121,38 @@ public class SimpleGraphPanel extends JPanel
 		traceColor = correctColor(ColorManager.getColor(color_id));
 	}
 
+	// plots from y[i0] to y[i0+N] _inclusively_ at x=x0..x0+N
+	protected void draw_y_curve(Graphics g, double[] y, int i0, int x0, int N)
+	{
+		if (N < 0)
+			return;
+		int[] xArr = new int[N + 1];
+		int[] yArr = new int[N + 1];
+		for (int j = 0; j <= N; j++)
+		{
+			xArr[j] = (int)((j + x0) * scaleX + 1);
+			yArr[j] = (int)((maxY - y[j + i0] - top) * scaleY);
+		}
+		g.drawPolyline(xArr, yArr, N + 1);
+//		for (int j = 0; j < N; j++)
+//		{
+//			g.drawLine(
+//				(int)((j + x0    )*scaleX+1), (int)((maxY - y[j + i0] - top) * scaleY),
+//				(int)((j + x0 + 1)*scaleX+1), (int)((maxY - y[j + i0 + 1] - top) * scaleY));
+//		}
+	}
+
 	protected void paint_trace(Graphics g)
 	{
 		g.setColor(traceColor);
 
-		for (int i= Math.max(0, -start); i< Math.min (end + 1, y.length) - start - 1; i++)
-			g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
-								 (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
+		int iFrom = Math.max(0, -start);
+		int iTo = Math.min(end + 1, y.length) - start - 1;
+		draw_y_curve(g, y, iFrom + start, iFrom, iTo - iFrom);
+
+//		for (int i= Math.max(0, -start); i< Math.min (end + 1, y.length) - start - 1; i++)
+//			g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
+//				 (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
 	}
 
 	public void paint(Graphics g)

@@ -118,7 +118,7 @@ public class SaveAnalysisCommand extends VoidCommand
 	
 			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.DADARA_EVENTS);
 			params[2] = SetParameter.createInstance(ptype,
-				mtm.toEventsByteArray());
+				mtm.eventsAndTraceToByteArray());
 		}
 	    catch (CreateObjectException e)
 	    {

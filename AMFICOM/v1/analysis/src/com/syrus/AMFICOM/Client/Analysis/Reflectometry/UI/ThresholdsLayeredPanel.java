@@ -117,7 +117,7 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 	}
 
 
-	public void changeThreshold(double dx, double dl, double da, double dc, int key)
+	public void changeThreshold(double dH, int dW, int key)
 	{
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 		{
@@ -128,7 +128,7 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 				if (tp.mtm != null)
 				{
 					//ReflectogramEvent ep = tp.et_ep[tp.c_event];
-					tp.mtm.changeThresholdBy(tp.c_event, key, da, dc, dx, dl);
+					tp.mtm.changeThresholdBy(tp.c_event, key, dH, dW);
 					jLayeredPane.repaint();
 					return;
 				}
@@ -303,40 +303,40 @@ class ThresholdsToolBar extends TraceEventsToolBar
 	void eAButton_actionPerformed(ActionEvent e)
 	{
 		ThresholdsLayeredPanel panel = (ThresholdsLayeredPanel)super.panel;
-		panel.changeThreshold(0, 0, .1, 0, Threshold.UP1);
-		panel.changeThreshold(0, 0, .2, 0, Threshold.UP2);
-		panel.changeThreshold(0, 0, -.1, 0, Threshold.DOWN1);
-		panel.changeThreshold(0, 0, -.2, 0, Threshold.DOWN2);
+		panel.changeThreshold(.1, 0, Threshold.UP1);
+		panel.changeThreshold(.2, 0, Threshold.UP2);
+		panel.changeThreshold(-.1, 0, Threshold.DOWN1);
+		panel.changeThreshold(-.2, 0, Threshold.DOWN2);
 		panel.dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 	}
 
 	void dAButton_actionPerformed(ActionEvent e)
 	{
 		ThresholdsLayeredPanel panel = (ThresholdsLayeredPanel)super.panel;
-		panel.changeThreshold(0, 0, -.1, 0, Threshold.UP1);
-		panel.changeThreshold(0, 0, -.2, 0, Threshold.UP2);
-		panel.changeThreshold(0, 0, .1, 0, Threshold.DOWN1);
-		panel.changeThreshold(0, 0, .2, 0, Threshold.DOWN2);
+		panel.changeThreshold(-.1, 0, Threshold.UP1);
+		panel.changeThreshold(-.2, 0, Threshold.UP2);
+		panel.changeThreshold(.1, 0, Threshold.DOWN1);
+		panel.changeThreshold(.2, 0, Threshold.DOWN2);
 		panel.dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 	}
 
 	void eXButton_actionPerformed(ActionEvent e)
 	{
 		ThresholdsLayeredPanel panel = (ThresholdsLayeredPanel)super.panel;
-		panel.changeThreshold(1, 0, 0, 0, Threshold.UP1);
-		panel.changeThreshold(2, 0, 0, 0, Threshold.UP2);
-		panel.changeThreshold(-1, 0, 0, 0, Threshold.DOWN1);
-		panel.changeThreshold(-2, 0, 0, 0, Threshold.DOWN2);
+		panel.changeThreshold(0.0, 1, Threshold.UP1);
+		panel.changeThreshold(0.0, 2, Threshold.UP2);
+		panel.changeThreshold(0.0, 1, Threshold.DOWN1);
+		panel.changeThreshold(0.0, 2, Threshold.DOWN2);
 		panel.dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 	}
 
 	void dXButton_actionPerformed(ActionEvent e)
 	{
 		ThresholdsLayeredPanel panel = (ThresholdsLayeredPanel)super.panel;
-		panel.changeThreshold(-1, 0, 0, 0, Threshold.UP1);
-		panel.changeThreshold(-2, 0, 0, 0, Threshold.UP2);
-		panel.changeThreshold(1, 0, 0, 0, Threshold.DOWN1);
-		panel.changeThreshold(2, 0, 0, 0, Threshold.DOWN2);
+		panel.changeThreshold(0.0, -1, Threshold.UP1);
+		panel.changeThreshold(0.0, -2, Threshold.UP2);
+		panel.changeThreshold(0.0, -1, Threshold.DOWN1);
+		panel.changeThreshold(0.0, -2, Threshold.DOWN2);
 		panel.dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 	}
 

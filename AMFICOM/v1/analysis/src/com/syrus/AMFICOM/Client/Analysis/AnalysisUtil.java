@@ -237,7 +237,7 @@ public class AnalysisUtil
 			ParameterType type = (ParameterType)params[i].getType();
 			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON_EVENTS))
 			{
-				mtm = ModelTraceManager.fromEventsByteArray(params[i].getValue());
+				mtm = ModelTraceManager.eventsAndTraceFromByteArray(params[i].getValue());
 				Pool.put(ModelTraceManager.CODENAME, ETALON, mtm);
 				Pool.put("etalon", ETALON, metas);
 			}
@@ -246,7 +246,6 @@ public class AnalysisUtil
 				bsEt = new BellcoreReader().getData(params[i].getValue());
 				Pool.put("bellcorestructure", AnalysisUtil.ETALON, bsEt);
 				bsEt.title = "Эталон (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")";
-//				bsEt.measurementId = m.getId().getIdentifierString();
 			}
 		}
 
@@ -332,7 +331,7 @@ public class AnalysisUtil
 
 			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_ETALON_EVENTS);
 			params[0] = SetParameter.createInstance(ptype,
-					mtm.toEventsByteArray());
+					mtm.eventsAndTraceToByteArray());
 
 			BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
 
