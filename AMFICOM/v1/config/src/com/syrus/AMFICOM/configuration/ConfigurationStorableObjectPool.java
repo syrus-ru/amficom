@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.43 2004/11/23 16:19:46 max Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.44 2004/11/24 09:24:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/11/23 16:19:46 $
- * @author $Author: max $
+ * @version $Revision: 1.44 $, $Date: 2004/11/24 09:24:14 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -245,8 +245,7 @@ public class ConfigurationStorableObjectPool {
         }
     }
 
-	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader)
-			throws DatabaseException, CommunicationException {
+	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws DatabaseException, CommunicationException {
 		if (objectId != null) {
 			short objectEntityCode = objectId.getMajor();
 			LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(objectEntityCode));
@@ -282,8 +281,7 @@ public class ConfigurationStorableObjectPool {
 		}
 	}
 
-	public static List getStorableObjects(List objectIds, boolean useLoader) throws DatabaseException,
-			CommunicationException {
+	public static List getStorableObjects(List objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
 		List list = null;
 		Map objectQueueMap = null;
 		if (objectIds != null) {
