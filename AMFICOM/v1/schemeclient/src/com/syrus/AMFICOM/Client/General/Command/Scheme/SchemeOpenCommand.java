@@ -17,17 +17,15 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 public class SchemeOpenCommand extends VoidCommand
 {
 	ApplicationContext aContext;
-	SchemeGraph graph;
 
-	public SchemeOpenCommand(ApplicationContext aContext, SchemeGraph graph)
+	public SchemeOpenCommand(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-		this.graph = graph;
 	}
 
 	public Object clone()
 	{
-		return new SchemeOpenCommand(aContext, graph);
+		return new SchemeOpenCommand(aContext);
 	}
 
 	public void execute()
@@ -59,8 +57,6 @@ public class SchemeOpenCommand extends VoidCommand
 		if(mcd.retCode == mcd.RET_OK)
 		{
 			Scheme scheme = (Scheme)mcd.retObject;
-			if (graph != null)
-				GraphActions.clearGraph(graph);
 
 			scheme.serializable_cell = null;
 			scheme.serializable_ugo = null;

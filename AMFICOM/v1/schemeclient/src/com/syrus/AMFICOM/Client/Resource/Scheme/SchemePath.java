@@ -55,6 +55,9 @@ public class SchemePath extends StubResource
 		type_id = path.type_id;
 		path_id = path.path_id;
 
+		links = new ArrayList(path.links.size());
+		attributes = new HashMap(path.attributes.size());
+
 		for(Iterator it = path.links.iterator(); it.hasNext();)
 			links.add(it.next());
 
@@ -126,6 +129,17 @@ public class SchemePath extends StubResource
 	public String getTyp()
 	{
 		return typ;
+	}
+
+	public boolean isLinkInPath(String link_id)
+	{
+		for (Iterator it = links.iterator(); it.hasNext();)
+		{
+			PathElement pe = (PathElement)it.next();
+			if (link_id.equals(pe.link_id))
+				return true;
+		}
+		return false;
 	}
 
 	public static ObjectResourceDisplayModel getDefaultDisplayModel()
@@ -308,25 +322,25 @@ class SchemePathModel extends ObjectResourceModel
 		if(col_id.equals("id"))
 			return sp.getId();
 		if(col_id.equals("full_path"))
-    {
-      String s = "";
-      String id = "", name = "";
-      s += ((SchemeElement)Pool.get( SchemeElement.typ, sp.start_device_id)).name;
-      PathElement pe;
-      for( Iterator links = sp.links.iterator();  links.hasNext();)
-      { pe = (PathElement) links.next();
-        id = pe.link_id;
-        name = pe.getName();
-        if(! links.hasNext())  
-        { // в конце стрелочку не ставим (если это последдний элемент, то выход)
-          s += name;
-          break;
-        }	
-        s += name + "->";
-      }
-    
+		{
+			String s = "";
+			String id = "", name = "";
+			s += ((SchemeElement)Pool.get( SchemeElement.typ, sp.start_device_id)).name;
+			PathElement pe;
+			for( Iterator links = sp.links.iterator();  links.hasNext();)
+			{ pe = (PathElement) links.next();
+				id = pe.link_id;
+				name = pe.getName();
+				if(! links.hasNext())
+				{ // в конце стрелочку не ставим (если это последдний элемент, то выход)
+					s += name;
+					break;
+				}
+				s += name + "->";
+			}
+
 			return s;
-    }
+		}
 		if(col_id.equals("name"))
 			return sp.getName();
 		return "";

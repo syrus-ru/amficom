@@ -30,8 +30,8 @@ public class PathAutoCreateCommand extends VoidCommand
 
 	public void execute()
 	{
-		Scheme scheme = panel.scheme;
-		SchemePath path = graph.currentPath;
+		Scheme scheme = panel.getGraph().getScheme();
+		SchemePath path = panel.getGraph().getGraphResource().currentPath;
 		if (path.start_device_id.length() == 0 ||
 				path.end_device_id.length() == 0)
 		{

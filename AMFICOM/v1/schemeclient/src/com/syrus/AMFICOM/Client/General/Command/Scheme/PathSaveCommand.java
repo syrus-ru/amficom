@@ -29,7 +29,7 @@ public class PathSaveCommand extends VoidCommand
 
 	public void execute()
 	{
-		SchemePath path = panel.getGraph().currentPath;
+		SchemePath path = panel.getGraph().getGraphResource().currentPath;
 		if (!MiscUtil.validName(path.name) ||
 				path.end_device_id.equals("") ||
 				path.start_device_id.equals("") ||
@@ -56,7 +56,7 @@ public class PathSaveCommand extends VoidCommand
 		}
 		else
 		{
-			new SchemeSaveCommand(aContext, panel, upanel).execute();
+//			new SchemeSaveCommand(aContext, panel, upanel).execute();
 		}
 
 		//new SchemeSaveCommand(aContext, panel).execute();

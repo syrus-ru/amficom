@@ -21,21 +21,21 @@ public class SchemeSaveAsCommand extends VoidCommand
 	public static final int OK = 1;
 
 	ApplicationContext aContext;
-	SchemePanel schemePanel;
-	UgoPanel ugoPanel;
+	SchemeTabbedPane schemeTab;
+	UgoTabbedPane ugoTab;
 
 	public int ret_code = CANCEL;
 
-	public SchemeSaveAsCommand(ApplicationContext aContext, SchemePanel schemePanel, UgoPanel ugoPanel)
+	public SchemeSaveAsCommand(ApplicationContext aContext, SchemeTabbedPane schemeTab, UgoTabbedPane ugoTab)
 	{
 		this.aContext = aContext;
-		this.schemePanel = schemePanel;
-		this.ugoPanel = ugoPanel;
+		this.schemeTab = schemeTab;
+		this.ugoTab = ugoTab;
 	}
 
 	public Object clone()
 	{
-		return new SchemeSaveAsCommand(aContext, schemePanel, ugoPanel);
+		return new SchemeSaveAsCommand(aContext, schemeTab, ugoTab);
 	}
 
 	public void execute()
@@ -44,14 +44,15 @@ public class SchemeSaveAsCommand extends VoidCommand
 		if (dataSource == null)
 			return;
 
-		if (schemePanel.scheme.getId().equals(""))
+		Scheme scheme = schemeTab.getPanel().getGraph().getScheme();
+		if (scheme.getId().equals(""))
 		{
-			new SchemeSaveCommand(aContext, schemePanel, ugoPanel).execute();
+			new SchemeSaveCommand(aContext, schemeTab, ugoTab).execute();
 			return;
 		}
 
-		SchemeGraph graph = schemePanel.getGraph();
-		SchemeGraph ugo_graph = ugoPanel.getGraph();
+		SchemeGraph graph = schemeTab.getPanel().getGraph();
+		SchemeGraph ugo_graph = ugoTab.getPanel().getGraph();
 
 		if (graph.getRoots().length == 0)
 		{
@@ -71,7 +72,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 		{
 			sd = new SaveDialog(aContext, aContext.getDispatcher(), "Сохранение схемы");
 			int ret = //sd.init(schemePanel.scheme.getName(), schemePanel.scheme.description, false);
-					sd.init(schemePanel.scheme, schemePanel.scheme.getName()+ " (copy)", false);
+					sd.init(scheme, scheme.getName()+ " (copy)", false);
 			if (ret == 0)
 				return;
 
@@ -82,7 +83,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 		}
 		ComponentSaveCommand.saveTypes(aContext.getDataSourceInterface(), false);
 
-		Scheme scheme = (Scheme)schemePanel.scheme.clone(aContext.getDataSourceInterface());
+		scheme = (Scheme)scheme.clone(aContext.getDataSourceInterface());
 //		Map ht = Pool.getMap("clonedids");
 //		scheme.serializable_ugo = ugo_graph.getArchiveableState(ugo_graph.getRoots());
 //		scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
@@ -99,7 +100,7 @@ public class SchemeSaveAsCommand extends VoidCommand
 			if (!se.element_ids.isEmpty())
 			{
 				se.unpack();
-				schemePanel.copySchemeElementFromArchivedState_virtual(se);
+				((SchemePanel)schemeTab.getPanel()).copySchemeElementFromArchivedState_virtual(se);
 				se.pack();
 			};
 //
@@ -107,8 +108,8 @@ public class SchemeSaveAsCommand extends VoidCommand
 
 			/*********/
 
-		schemePanel.assignClonedIds(graph.getAll());
-		ugoPanel.assignClonedIds(ugo_graph.getAll());
+		schemeTab.getPanel().assignClonedIds(graph.getAll());
+		ugoTab.getPanel().assignClonedIds(ugo_graph.getAll());
 
 		scheme.serializable_ugo = ugo_graph.getArchiveableState(ugo_graph.getRoots());
 		//GraphActions.setResizable(ugo_graph, ugo_graph.getAll(), false);
@@ -138,15 +139,8 @@ public class SchemeSaveAsCommand extends VoidCommand
 //		schemePanel.insertCell(scheme.serializable_cell, true);
 //		ugoPanel.insertCell(scheme.serializable_ugo, true);
 
-		HashSet h = schemePanel.schemes_to_save;
-		h.add(scheme);
+		dataSource.SaveScheme(scheme.getId());
 
-		for (Iterator it = h.iterator(); it.hasNext();)
-		{
-			Scheme s = (Scheme)it.next();
-			dataSource.SaveScheme(s.getId());
-		}
-		schemePanel.schemes_to_save = new HashSet();
 		graph.setGraphChanged(false);
 		ugo_graph.setGraphChanged(false);
 

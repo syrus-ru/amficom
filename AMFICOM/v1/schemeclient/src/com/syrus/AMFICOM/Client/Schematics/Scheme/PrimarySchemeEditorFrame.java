@@ -3,15 +3,15 @@ package com.syrus.AMFICOM.Client.Schematics.Scheme;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
+import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 
 public class PrimarySchemeEditorFrame extends //SchemeViewerFrame
 		SchemeEditorFrame
 {
-	public PrimarySchemeEditorFrame(ApplicationContext aContext, SchemePanel panel)
+	public PrimarySchemeEditorFrame(ApplicationContext aContext, SchemeTabbedPane pane)
 	{
-		super(aContext, panel);
+		super(aContext, pane);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -19,22 +19,22 @@ public class PrimarySchemeEditorFrame extends //SchemeViewerFrame
 		if (ae.getActionCommand().equals(SchemeElementsEvent.type))
 		{
 			SchemeElementsEvent see = (SchemeElementsEvent)ae;
-			if (see.OPEN_PRIMARY_SCHEME)
-			{
-				Scheme sch = (Scheme)see.obj;
-				if (sch.getName().equals(""))
-				{
-					if (panel instanceof SchemePanel)
-						setTitle(LangModelSchematics.getString("schemeMainTitle"));
-					else
-						setTitle(LangModelSchematics.getString("elementsUGOTitle"));
-				}
-				else
-					setTitle(sch.getName());
-			}
+//			if (see.OPEN_PRIMARY_SCHEME)
+//			{
+//				Scheme sch = (Scheme)see.obj;
+//				if (sch.getName().equals(""))
+//				{
+//					if (panel instanceof SchemePanel)
+//						setTitle(LangModelSchematics.getString("schemeMainTitle"));
+//					else
+//						setTitle(LangModelSchematics.getString("elementsUGOTitle"));
+//				}
+//				else
+//					setTitle(sch.getName());
+//			}
 			if (see.SCHEME_CHANGED)
 			{
-				panel.getGraph().setGraphChanged(true);
+				pane.getPanel().getGraph().setGraphChanged(true);
 			}
 		}
 		super.operationPerformed(ae);
@@ -42,7 +42,8 @@ public class PrimarySchemeEditorFrame extends //SchemeViewerFrame
 
 	protected void closeFrame()
 	{
-		panel.scheme = new Scheme();
+		UgoPanel panel = pane.getPanel();
+		panel.getGraph().setScheme(null);
 		if (panel instanceof SchemePanel)
 			setTitle(LangModelSchematics.getString("schemeMainTitle"));
 		else

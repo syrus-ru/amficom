@@ -62,11 +62,12 @@ public class GraphActions
 		return cell;
 	}
 
-	public static DefaultEdge CreateLinkAction(SchemeGraph graph, UgoPanel panel, PortView firstPort, PortView port, Point p, Point p2)
+	public static SchemeLink CreateLinkAction(SchemeGraph graph, PortView firstPort, PortView port, Point p, Point p2)
 	{
 		DataSourceInterface dataSource = graph.aContext.getDataSourceInterface();
 		if (dataSource == null)
 			return null;
+		SchemeLink link;
 
 		Font f = graph.getFont();
 		ArrayList list = new ArrayList();
@@ -118,7 +119,7 @@ public class GraphActions
 
 			cell = new DefaultLink(name);
 			GraphConstants.setRouting(map, ((DefaultLink)cell).getRouting());
-			SchemeLink link = new SchemeLink(dataSource.GetUId(SchemeLink.typ));
+			link = new SchemeLink(dataSource.GetUId(SchemeLink.typ));
 			Pool.put(SchemeLink.typ, link.getId(), link);
 			cell.setSchemeLinkId(link.getId());
 			link.name = name;
@@ -132,11 +133,6 @@ public class GraphActions
 			//link.target_port_id = t_port_cell.getSchemePortId();
 			//t_port_cell.getSchemePort().link_id = link.getId();
 			//s_port_cell.getSchemePort().link_id = link.getId();
-
-			if (panel instanceof SchemePanel)
-				((SchemePanel)panel).scheme.links.add(link);
-			else if(panel instanceof ElementsPanel && ((ElementsPanel)panel).scheme_elemement != null)
-				((ElementsPanel)panel).scheme_elemement.links.add(link);
 	}
 		else
 			return null;
@@ -154,14 +150,15 @@ public class GraphActions
 		//lv.getEdgeRenderer().setForeground(Color.blue);
 
 		graph.setSelectionCell(cell);
-		return cell;
+		return link;
 	}
 
-	public static DefaultEdge CreateCableLinkAction(SchemeGraph graph, SchemePanel panel, PortView firstPort, PortView port, Point p, Point p2)
+	public static SchemeCableLink CreateCableLinkAction(SchemeGraph graph, PortView firstPort, PortView port, Point p, Point p2)
 	{
 		DataSourceInterface dataSource = graph.aContext.getDataSourceInterface();
 		if (dataSource == null)
 			return null;
+		SchemeCableLink link;
 
 		Font f = graph.getFont();
 		ArrayList list = new ArrayList();
@@ -213,7 +210,7 @@ public class GraphActions
 
 			cell = new DefaultCableLink(name);
 			GraphConstants.setRouting(map, ((DefaultCableLink)cell).getRouting());
-			SchemeCableLink link = new SchemeCableLink(dataSource.GetUId(SchemeCableLink.typ));
+			link = new SchemeCableLink(dataSource.GetUId(SchemeCableLink.typ));
 			Pool.put(SchemeCableLink.typ, link.getId(), link);
 			((DefaultCableLink)cell).setSchemeCableLinkId(link.getId());
 			link.setName(name);
@@ -224,8 +221,6 @@ public class GraphActions
 //				SchemeActions.connectSchemeCableLink(graph, cell, t_cable_port_cell, false);
 
 			GraphConstants.setLineWidth(map, 2.49f);
-
-			panel.scheme.cablelinks.add(link);
 		}
 		else
 			return null;
@@ -240,7 +235,7 @@ public class GraphActions
 		graph.getModel().insert(insert, viewMap, cs, null, null);
 
 		graph.setSelectionCell(cell);
-		return cell;
+		return link;
 	}
 
 	public static DefaultGraphCell CreateVisualPortAction(SchemeGraph graph, Point p, boolean is_port, String name)
@@ -958,7 +953,7 @@ public class GraphActions
 							menu1.setText("Открыть компонент");
 							pop.add(menu1);
 				}
-
+/*
 				if (show_catalog && graph.isEditable() && graph.panel instanceof SchemePanel)
 				{
 					JMenuItem menu2 = new JMenuItem(new AbstractAction()
@@ -970,7 +965,7 @@ public class GraphActions
 					});
 					menu2.setText("Связать с каталогом");
 					pop.add(menu2);
-				}
+				}*/
 			}
 			return pop;
 		}

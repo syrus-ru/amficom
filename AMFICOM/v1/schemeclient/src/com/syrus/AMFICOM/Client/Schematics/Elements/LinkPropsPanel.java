@@ -294,8 +294,8 @@ public class LinkPropsPanel extends JPanel
 			strLen.setEnabled(b);
 		}
 
-		optLen.setEnabled(true);
-		strLen.setEnabled(true);
+		optLen.setEnabled(b);
+		strLen.setEnabled(b);
 
 		descriptionTextArea.setEnabled(b);
 		manufacturerTextField.setEnabled(b);

@@ -25,7 +25,7 @@ public class PathDeleteCommand extends VoidCommand
 
 	public void execute()
 	{
-		SchemePath path = panel.getGraph().currentPath;
+		SchemePath path = panel.getGraph().getGraphResource().currentPath;
 		aContext.getDispatcher().notify(new CreatePathEvent(panel,
 				new SchemePath[] {path},
 				CreatePathEvent.DELETE_PATH_EVENT));

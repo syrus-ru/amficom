@@ -107,12 +107,12 @@ public class ElementsEditorMainFrame extends JFrame
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 
 		epanel = new ElementsPanel(aContext);
-		editorFrame = new PrimaryElementsEditorFrame(aContext, epanel);
+//		editorFrame = new PrimaryElementsEditorFrame(aContext, epanel);
 		editorFrame.setTitle(LangModelSchematics.getString("elementsMainTitle"));
 		desktopPane.add(editorFrame);
 
 		upanel = new UgoPanel(aContext);
-		ugoFrame = new SchemeViewerFrame(aContext, upanel);
+//		ugoFrame = new SchemeViewerFrame(aContext, upanel);
 		ugoFrame.setTitle(LangModelSchematics.getString("elementsUGOTitle"));
 		desktopPane.add(ugoFrame);
 

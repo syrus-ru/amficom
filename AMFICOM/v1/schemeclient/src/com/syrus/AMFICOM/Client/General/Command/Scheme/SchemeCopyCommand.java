@@ -43,10 +43,12 @@ public class SchemeCopyCommand extends VoidCommand
 		}
 
 		SaveDialog sd;
+		Scheme scheme = schemePanel.getGraph().getScheme();
 		while (true)
 		{
+
 			sd = new SaveDialog(aContext, aContext.getDispatcher(), "Сохранение схемы");
-			int ret = sd.init(schemePanel.scheme, schemePanel.scheme.getName(), false);
+			int ret = sd.init(scheme, scheme.getName(), false);
 
 			if (ret == 0)
 				return;
@@ -57,7 +59,7 @@ public class SchemeCopyCommand extends VoidCommand
 				break;
 		}
 
-		Scheme scheme = (Scheme)schemePanel.scheme.clone(aContext.getDataSourceInterface());
+		scheme = (Scheme)scheme.clone(aContext.getDataSourceInterface());
 		scheme.serializable_ugo = ugo_graph.getArchiveableState(ugo_graph.getRoots());
 		scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
 

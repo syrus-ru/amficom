@@ -17,21 +17,21 @@ public class SchemeSaveCommand extends VoidCommand
 	public static final int OK = 1;
 
 	ApplicationContext aContext;
-	SchemePanel schemePanel;
-	UgoPanel ugoPanel;
+	SchemeTabbedPane schemeTab;
+	UgoTabbedPane ugoTab;
 
 	public int ret_code = CANCEL;
 
-	public SchemeSaveCommand(ApplicationContext aContext, SchemePanel schemePanel, UgoPanel ugoPanel)
+	public SchemeSaveCommand(ApplicationContext aContext, SchemeTabbedPane schemeTab, UgoTabbedPane ugoTab)
 	{
 		this.aContext = aContext;
-		this.schemePanel = schemePanel;
-		this.ugoPanel = ugoPanel;
+		this.schemeTab = schemeTab;
+		this.ugoTab = ugoTab;
 	}
 
 	public Object clone()
 	{
-		return new SchemeSaveCommand(aContext, schemePanel, ugoPanel);
+		return new SchemeSaveCommand(aContext, schemeTab, ugoTab);
 	}
 
 	public void execute()
@@ -40,9 +40,8 @@ public class SchemeSaveCommand extends VoidCommand
 		if (dataSource == null)
 			return;
 
-		SchemeGraph graph = schemePanel.getGraph();
-
-		Scheme scheme = schemePanel.scheme;
+		SchemeGraph graph = schemeTab.getPanel().getGraph();
+		Scheme scheme = graph.getScheme();
 
 		if (graph.getRoots().length == 0)
 		{
@@ -50,7 +49,7 @@ public class SchemeSaveCommand extends VoidCommand
 			return;
 		}
 
-		if (ugoPanel != null && ugoPanel.getGraph().getRoots().length == 0)
+		if (ugoTab != null && ugoTab.getPanel().getGraph().getRoots().length == 0)
 		{
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Схему нельзя будет включить в другую схему,\nт.к. не создано условное графическое обозначение схемы.\nПродолжить сохранение?", "Предупреждение", JOptionPane.YES_NO_OPTION);
 			if (ret == JOptionPane.NO_OPTION || ret == JOptionPane.CANCEL_OPTION)
@@ -90,9 +89,9 @@ public class SchemeSaveCommand extends VoidCommand
 		Pool.put(Scheme.typ, scheme.getId(), scheme);
 		//}
 
-		if (ugoPanel != null)
+		if (ugoTab != null)
 		{
-			scheme.serializable_ugo = ugoPanel.getGraph().getArchiveableState(ugoPanel.getGraph().getRoots());
+			scheme.serializable_ugo = ugoTab.getPanel().getGraph().getArchiveableState(ugoTab.getPanel().getGraph().getRoots());
 			//GraphActions.setResizable(ugoPanel.getGraph(), ugoPanel.getGraph().getAll(), false);
 		}
 		scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
@@ -105,18 +104,11 @@ public class SchemeSaveCommand extends VoidCommand
 			return;
 		}
 
-		HashSet h = schemePanel.schemes_to_save;
-		h.add(scheme);
-
-		for (Iterator it = h.iterator(); it.hasNext();)
-		{
-			Scheme s = (Scheme)it.next();
-			dataSource.SaveScheme(s.getId());
-		}
-		schemePanel.schemes_to_save = new HashSet();
+		dataSource.SaveScheme(scheme.getId());
 		graph.setGraphChanged(false);
-		if (ugoPanel != null)
-			ugoPanel.getGraph().setGraphChanged(false);
+
+		if (ugoTab != null)
+			ugoTab.getPanel().getGraph().setGraphChanged(false);
 
 		aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
 

@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 public class ElementsPanel extends UgoPanel
 		implements KeyListener
 {
-	public SchemeElement scheme_elemement;
+//	public SchemeElement scheme_elemement;
 	// Undo Manager
 	protected GraphUndoManager undoManager = new GraphUndoManager()
 	{
@@ -95,7 +95,6 @@ public class ElementsPanel extends UgoPanel
 
 		toolbar.setVisible(true);
 
-		graph.make_notifications = true;
 		graph.setGridEnabled(true);
 		graph.setGridVisible(true);
 		graph.setGridVisibleAtActualSize(true);
@@ -107,7 +106,7 @@ public class ElementsPanel extends UgoPanel
 
 	protected UgoPanel.ToolBarPanel createToolBar()
 	{
-		ToolBarPanel toolbar = new ToolBarPanel(this);
+		ToolBarPanel toolbar = new ToolBarPanel();
 		commands.putAll(toolbar.createGraphButtons(this));
 
 		String[] buttons = getButtons();
@@ -140,76 +139,86 @@ public class ElementsPanel extends UgoPanel
 				Equipment eq = (Equipment)((Object[])ev.getSource())[0];
 				graph.setSelectionCell(SchemeActions.findEquipmentById(graph, eq.getId()));
 			}
-			if (ev.CATALOG_ACCESS_PORT_SELECTED)
+			else if (ev.CATALOG_ACCESS_PORT_SELECTED)
 			{
 				AccessPort aport = (AccessPort)((Object[])ev.getSource())[0];
 				graph.setSelectionCell(SchemeActions.findAccessPortById(graph, aport.getId()));
 			}
-			if (ev.CATALOG_PORT_SELECTED)
+			else if (ev.CATALOG_PORT_SELECTED)
 			{
 				Port port = (Port)((Object[])ev.getSource())[0];
 				graph.setSelectionCell(SchemeActions.findPortById(graph, port.getId()));
 			}
-			if (ev.CATALOG_CABLE_PORT_SELECTED)
+			else if (ev.CATALOG_CABLE_PORT_SELECTED)
 			{
 				CablePort port = (CablePort)((Object[])ev.getSource())[0];
 				graph.setSelectionCell(SchemeActions.findCablePortById(graph, port.getId()));
 			}
-			if (ev.CATALOG_LINK_SELECTED)
+			else if (ev.CATALOG_LINK_SELECTED)
 			{
 				Link link = (Link)((Object[])ev.getSource())[0];
 				graph.setSelectionCell(SchemeActions.findLinkById(graph, link.getId()));
 			}
-			if (ev.CATALOG_CABLE_LINK_SELECTED)
+			else if (ev.CATALOG_CABLE_LINK_SELECTED)
 			{
 				CableLink link = (CableLink)((Object[])ev.getSource())[0];
 				graph.setSelectionCell(SchemeActions.findCableLinkById(graph, link.getId()));
 			}
-			if (ev.CATALOG_PATH_SELECTED)
+			else if (ev.CATALOG_PATH_SELECTED)
 			{
 				TransmissionPath path = (TransmissionPath)((Object[])ev.getSource())[0];
-				graph.setSelectionCells(graph.getPathElements(path));
+				graph.setSelectionCells(graph.getGraphResource().getPathElements(path));
 			}
 			graph.skip_notify = false;
 		}
 		else if (ae.getActionCommand().equals(SchemeNavigateEvent.type))
 		{
+			SchemeNavigateEvent ev = (SchemeNavigateEvent)ae;
+			if (ev.SCHEME_PATH_SELECTED)
+			{
+				SchemePath path = (SchemePath) ( (Object[]) ev.getSource())[0];
+				if (path != null)
+				{
+					graph.setSelectionCells(graph.getGraphResource().getPathElements(path));
+					getGraph().getGraphResource().currentPath = path;
+				}
+			}
 			if (graph.skip_notify)
 				return;
+
 			graph.skip_notify = true;
-			SchemeNavigateEvent ev = (SchemeNavigateEvent)ae;
 			//graph.removeSelectionCells();
 
 			if (ev.SCHEME_ALL_DESELECTED)
 			{
 				graph.removeSelectionCells();
 			}
-			if (ev.SCHEME_ELEMENT_SELECTED)
+			else if (ev.SCHEME_ELEMENT_SELECTED)
 			{
 				SchemeElement element = (SchemeElement)((Object[])ev.getSource())[0];
 				graph.setSelectionCell(SchemeActions.findSchemeElementById(graph, element.getId()));
 			}
-			if (ev.SCHEME_PROTO_ELEMENT_SELECTED)
+			else if (ev.SCHEME_PROTO_ELEMENT_SELECTED)
 			{
 				ProtoElement proto = (ProtoElement)((Object[])ev.getSource())[0];
 				graph.setSelectionCell(SchemeActions.findProtoElementById(graph, proto.getId()));
 			}
-			if (ev.SCHEME_PORT_SELECTED)
+			else if (ev.SCHEME_PORT_SELECTED)
 			{
 				SchemePort port = (SchemePort)((Object[])ev.getSource())[0];
 				graph.setSelectionCell(SchemeActions.findSchemePortById(graph, port.getId()));
 			}
-			if (ev.SCHEME_CABLE_PORT_SELECTED)
+			else if (ev.SCHEME_CABLE_PORT_SELECTED)
 			{
 				SchemeCablePort port = (SchemeCablePort)((Object[])ev.getSource())[0];
 				graph.setSelectionCell(SchemeActions.findSchemeCablePortById(graph, port.getId()));
 			}
-			if (ev.SCHEME_LINK_SELECTED)
+			else if (ev.SCHEME_LINK_SELECTED)
 			{
 				SchemeLink link = (SchemeLink)((Object[])ev.getSource())[0];
 				graph.setSelectionCell(SchemeActions.findSchemeLinkById(graph, link.getId()));
 			}
-			if (ev.SCHEME_CABLE_LINK_SELECTED)
+			else if (ev.SCHEME_CABLE_LINK_SELECTED)
 			{
 				SchemeCableLink link = (SchemeCableLink)((Object[])ev.getSource())[0];
 				graph.setSelectionCell(SchemeActions.findSchemeCableLinkById(graph, link.getId()));
@@ -223,16 +232,6 @@ public class ElementsPanel extends UgoPanel
 				SchemeElement tte = ((SchemePanel)this).scheme.getTopLevelNonSchemeElement(te);
 				tp = link.target_port_id;*/
 			}
-			if (ev.SCHEME_PATH_SELECTED)
-			{
-				SchemePath path = (SchemePath)((Object[])ev.getSource())[0];
-				if (path != null)
-				{
-					graph.setSelectionCells(graph.getPathElements(path));
-					getGraph().currentPath = path;
-					SchemeElement element = (SchemeElement)Pool.get(SchemeElement.typ, path.start_device_id);
-				}
-			}
 			graph.skip_notify = false;
 		}
 		else if (ae.getActionCommand().equals(CreatePathEvent.typ))
@@ -240,34 +239,11 @@ public class ElementsPanel extends UgoPanel
 			CreatePathEvent cpe = (CreatePathEvent)ae;
 			if (cpe.DELETE_PATH)
 			{
-/*				SchemePath[] paths = (SchemePath[])cpe.cells;
-				Object[] cells = graph.getAll();
-				for (int i = 0; i < cells.length; i++)
-				{
-					if (cells[i] instanceof DefaultCableLink)
-					{
-					DefaultCableLink clink = (DefaultCableLink)cells[i];
-					for (int j = 0; j < paths.length; j++)
-					{
-						if (clink.getSchemePathId().equals(paths[j].getId()))
-							clink.setSchemePathId("");
-					}
-				}
-				else if (cells[i] instanceof DefaultLink)
-				{
-					DefaultLink link = (DefaultLink)cells[i];
-					for (int j = 0; j < paths.length; j++)
-					{
-						if (link.getSchemePathId().equals(paths[j].getId()))
-							link.setSchemePathId("");
-					}
-				}
-				}*/
 			}
 			if (cpe.EDIT_PATH)
 			{
-				if (getGraph().currentPath != null)
-					editing_path = new SchemePath(getGraph().currentPath);
+				if (getGraph().getGraphResource().currentPath != null)
+					editing_path = new SchemePath(getGraph().getGraphResource().currentPath);
 			}
 		}
 		if (ae.getActionCommand().equals(SchemeElementsEvent.type))
@@ -281,41 +257,11 @@ public class ElementsPanel extends UgoPanel
 		super.operationPerformed(ae);
 	}
 
-	protected void setProtoCell (ProtoElement proto, Point p)
-	{
-		if (proto != null)
-		{
-			proto.unpack();
-
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			ProtoElement new_proto = (ProtoElement)proto.clone(dataSource);
-
-			insertCell(new_proto.serializable_cell, false, p);
-			repaint();
-		}
-	}
-
-	public void openScheme(Scheme sch)
-	{
-	}
-
-	public boolean removeScheme(Scheme sch)
-	{
-		if (scheme_elemement != null)
-		{
-			SchemeElement sc = sch.getSchemeElement(scheme_elemement.getId());
-			if (sc != null)
-			{
-				GraphActions.clearGraph(graph);
-				return true;
-			}
-		}
-		return false;
-	}
 
 	public void openSchemeElement(SchemeElement se)
 	{
-		scheme_elemement = se;
+		graph.setScheme(null);
+		graph.setSchemeElement(se);
 		se.unpack();
 		Map clones = graph.copyFromArchivedState(se.serializable_cell, new java.awt.Point(0, 0));
 		graph.setGraphChanged(false);
@@ -325,18 +271,32 @@ public class ElementsPanel extends UgoPanel
 
 	public SchemeElement updateSchemeElement()
 	{
-		if (scheme_elemement != null)
+		SchemeElement scheme_element = graph.getSchemeElement();
+		if (scheme_element != null)
 		{
-			scheme_elemement.serializable_cell = graph.getArchiveableState(graph.getRoots());
-			scheme_elemement.pack();
+			scheme_element.serializable_cell = graph.getArchiveableState(graph.getRoots());
+			scheme_element.pack();
 		}
-
-		return scheme_elemement;
+		return scheme_element;
 	}
 
-	protected void setSchemeCell (Scheme scheme)
+	protected void setProtoCell(ProtoElement proto, Point p)
+	{
+		if (proto != null)
+		{
+			proto.unpack();
+
+			DataSourceInterface dataSource = aContext.getDataSourceInterface();
+			ProtoElement new_proto = (ProtoElement) proto.clone(dataSource);
+
+			insertCell(new_proto.serializable_cell, false, p);
+		}
+	}
+
+	protected void setSchemeCell(Scheme scheme)
 	{
 	}
+
 
 	public void keyReleased(KeyEvent e) { }
 	public void keyTyped(KeyEvent e) { }
@@ -419,7 +379,7 @@ public class ElementsPanel extends UgoPanel
 								int ret = JOptionPane.showConfirmDialog(null, "Заменить старый линк новым?");
 								if (ret == JOptionPane.YES_OPTION)
 								{
-									Scheme scheme = ((SchemePanel)this).scheme;
+									Scheme scheme = graph.getScheme();
 									for (Iterator it = scheme.links.iterator(); it.hasNext();)
 									{
 										SchemeLink sl = (SchemeLink)it.next();
@@ -467,7 +427,7 @@ public class ElementsPanel extends UgoPanel
 								int ret = JOptionPane.showConfirmDialog(null, "Заменить старый кабельный линк новым?");
 								if (ret == JOptionPane.YES_OPTION)
 								{
-									Scheme scheme = ((SchemePanel)this).scheme;
+									Scheme scheme = graph.getScheme();
 									for (Iterator it = scheme.cablelinks.iterator(); it.hasNext();)
 									{
 										SchemeCableLink sl = (SchemeCableLink)it.next();
@@ -515,7 +475,7 @@ public class ElementsPanel extends UgoPanel
 								int ret = JOptionPane.showConfirmDialog(null, "Заменить старый схемный элемент новым?");
 								if (ret == JOptionPane.YES_OPTION)
 								{
-									Scheme scheme = ((SchemePanel)this).scheme;
+									Scheme scheme = graph.getScheme();
 									for (Iterator it = scheme.elements.iterator(); it.hasNext();)
 									{
 										SchemeElement se = (SchemeElement)it.next();
@@ -574,7 +534,7 @@ public class ElementsPanel extends UgoPanel
 								int counter = 0;
 
 								DefaultGraphModel model = new DefaultGraphModel();
-								SchemeGraph virtual_graph = new SchemeGraph(model, aContext, this);
+								SchemeGraph virtual_graph = new SchemeGraph(model, aContext);
 								Object[] _cells = virtual_graph.setFromArchivedState(se.serializable_cell);
 								_cells = virtual_graph.getDescendants(_cells);
 
@@ -614,11 +574,6 @@ public class ElementsPanel extends UgoPanel
 
 class ToolBarPanel extends UgoPanel.ToolBarPanel
 {
-	public ToolBarPanel (ElementsPanel panel)
-	{
-		super(panel);
-	}
-
 	protected Map createGraphButtons (ElementsPanel p)
 	{
 		Map buttons = new HashMap();

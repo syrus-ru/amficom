@@ -24,10 +24,10 @@ public class PathNewCommand extends VoidCommand
 
 	public void execute()
 	{
-		panel.getGraph().currentPath = new SchemePath(aContext.getDataSourceInterface().GetUId(SchemePath.typ));
+		panel.getGraph().getGraphResource().currentPath = new SchemePath(aContext.getDataSourceInterface().GetUId(SchemePath.typ));
 
 		ElementAttribute ea = new ElementAttribute(aContext.getDataSourceInterface().GetUId(ElementAttribute.typ), "", "false", "alarmed");
-		panel.getGraph().currentPath.attributes.put(ea.type_id, ea);
+		panel.getGraph().getGraphResource().currentPath.attributes.put(ea.type_id, ea);
 
 		panel.getGraph().removeSelectionCells();
 		aContext.getDispatcher().notify(new CreatePathEvent(panel, null, CreatePathEvent.CREATE_PATH_EVENT));

@@ -71,14 +71,14 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			if (ev.CREATE_PATH)
 			{
 				SchemePanel panel = (SchemePanel)ae.getSource();
-				showPathCharacteristics(panel.getGraph().currentPath, true);
+				showPathCharacteristics(panel.getGraph().getGraphResource().currentPath, true);
 				mode = CREATING_PATH;
 				pathpanel.setEditable(true);
 			}
 			if (ev.EDIT_PATH)
 			{
 				SchemePanel panel = (SchemePanel)ae.getSource();
-				showPathCharacteristics(panel.getGraph().currentPath, true);
+				showPathCharacteristics(panel.getGraph().getGraphResource().currentPath, true);
 				mode = CREATING_PATH;
 				pathpanel.setEditable(true);
 			}
@@ -284,48 +284,51 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			TreeDataSelectionEvent ev = (TreeDataSelectionEvent) ae;
 			if (ev.getDataClass() == null)
 				return;
-			if (ev.getDataClass().equals(ProtoElement.class))
+			if (ae.getActionCommand().equals(TreeDataSelectionEvent.type))
 			{
+				Class cl = ev.getDataClass();
+				java.util.List ds = ev.getList();
 				if (ev.getSelectionNumber() != -1)
 				{
-					ProtoElement proto = (ProtoElement)ev.getList().get(ev.getSelectionNumber());
-					showProtoCharacteristics(proto, false);
+					if (cl.equals(SchemePath.class))
+					{
+						SchemePath path = (SchemePath)ds.get(ev.getSelectionNumber());
+						showPathCharacteristics(path, false);
+					}
+					else if (cl.equals(SchemeElement.class))
+					{
+						SchemeElement se = (SchemeElement)ds.get(ev.getSelectionNumber());
+						showSchemeElementCharacteristics(se, false);
+					}
+					else if (cl.equals(SchemeLink.class))
+					{
+						SchemeLink l = (SchemeLink)ds.get(ev.getSelectionNumber());
+						showLinksCharacteristics(new SchemeLink[] {l}, false);
+					}
+					else if (cl.equals(SchemeCableLink.class))
+					{
+						SchemeCableLink l = (SchemeCableLink)ds.get(ev.getSelectionNumber());
+						showCableLinksCharacteristics(new SchemeCableLink[] {l}, false);
+					}
+					else if (ev.getDataClass().equals(ProtoElement.class))
+					{
+						ProtoElement proto = (ProtoElement)ev.getList().get(ev.getSelectionNumber());
+						showProtoCharacteristics(proto, false);
+					}
+					else if (ev.getDataClass().equals(MapProtoElement.class))
+					{
+						MapProtoElement map_proto = (MapProtoElement)ev.getList().get(ev.getSelectionNumber());
+						showGroupCharacteristics(map_proto, false);
+					}
+					else if (ev.getDataClass().equals(Scheme.class))
+					{
+						Scheme scheme = (Scheme)ev.getList().get(ev.getSelectionNumber());
+						showSchemeCharacteristics(scheme, false);
+					}
+					else
+						showNoSelection();
 				}
-				else
-					showNoSelection();
 			}
-			else if (ev.getDataClass().equals(MapProtoElement.class))
-			{
-				if (ev.getSelectionNumber() != -1)
-				{
-					MapProtoElement map_proto = (MapProtoElement)ev.getList().get(ev.getSelectionNumber());
-					showGroupCharacteristics(map_proto, false);
-				}
-				else
-					showNoSelection();
-			}
-			else if (ev.getDataClass().equals(SchemeElement.class))
-			{
-				if (ev.getSelectionNumber() != -1)
-				{
-					SchemeElement element = (SchemeElement)ev.getList().get(ev.getSelectionNumber());
-					showSchemeElementCharacteristics(element, false);
-				}
-				else
-					showNoSelection();
-			}
-			else if (ev.getDataClass().equals(Scheme.class))
-			{
-				if (ev.getSelectionNumber() != -1)
-				{
-					Scheme scheme = (Scheme)ev.getList().get(ev.getSelectionNumber());
-					showSchemeCharacteristics(scheme, false);
-				}
-				else
-					showNoSelection();
-			}
-			else
-				showNoSelection();
 		}
 	}
 
@@ -333,6 +336,11 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 	{
 		if (dev == null)
 			return;
+		if (dev.ports.size() == 0 || dev.cableports.size() == 0)
+		{
+			showNoSelection();
+			return;
+		}
 		this.getContentPane().removeAll();
 		DevicePropsPanel devpanel = new DevicePropsPanel(aContext);
 		devpanel.setEditable(isEditable);

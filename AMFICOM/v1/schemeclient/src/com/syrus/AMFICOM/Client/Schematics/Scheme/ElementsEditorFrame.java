@@ -4,25 +4,25 @@ import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Scheme.ElementsPanel;
+import com.syrus.AMFICOM.Client.General.Scheme.*;
 
 public class ElementsEditorFrame extends SchemeViewerFrame
 {
-	public ElementsEditorFrame(ApplicationContext aContext, ElementsPanel panel)
+	public ElementsEditorFrame(ApplicationContext aContext, UgoTabbedPane pane)
 	{
-		super(aContext, panel);
+		super(aContext, pane);
 	}
 
 	protected void closeFrame ()
 	{
-		((ElementsPanel)panel).scheme_elemement = null;
+		pane.getPanel().getGraph().setSchemeElement(null);
 		//super.closeFrame();
 	}
 
 	public void doDefaultCloseAction()
 	{
-		ElementsPanel ep = (ElementsPanel)panel;
-		if (ep.getGraph().isGraphChanged() && ep.scheme_elemement !=  null)
+		ElementsPanel ep = (ElementsPanel)pane.getPanel();
+		if (ep.getGraph().isGraphChanged() && ep.getGraph().getSchemeElement() !=  null)
 		{
 			int res = JOptionPane.showConfirmDialog(
 					Environment.getActiveWindow(),
@@ -33,7 +33,7 @@ public class ElementsEditorFrame extends SchemeViewerFrame
 			{
 				ep.updateSchemeElement();
 				aContext.getDispatcher().notify(new SchemeElementsEvent(
-						this, ep.scheme_elemement, SchemeElementsEvent.SCHEME_CHANGED_EVENT));
+						this, ep.getGraph().getSchemeElement(), SchemeElementsEvent.SCHEME_CHANGED_EVENT));
 			}
 			else if (res == JOptionPane.CANCEL_OPTION)
 				return;

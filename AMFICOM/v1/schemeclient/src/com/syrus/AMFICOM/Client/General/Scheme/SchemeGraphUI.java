@@ -13,6 +13,7 @@ import com.jgraph.pad.GPGraphUI;
 import com.jgraph.plaf.basic.*;
 import com.jgraph.plaf.basic.BasicGraphUI.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.Client.General.Event.*;
 
 public class SchemeGraphUI extends GPGraphUI
 {
@@ -63,7 +64,8 @@ public class SchemeGraphUI extends GPGraphUI
 					ProtoElement proto = (ProtoElement)e.getTransferable().getTransferData(df[0]);
 					e.acceptDrop(DnDConstants.ACTION_MOVE);
 					e.getDropTargetContext().dropComplete(true);
-					((SchemeGraph)graph).panel.setProtoCell(proto, p);
+					((SchemeGraph)graph).aContext.getDispatcher().notify(
+							new SchemeElementsEvent(this, proto, SchemeElementsEvent.OPEN_ELEMENT_EVENT));
 				}
 				catch (UnsupportedFlavorException ex)
 				{

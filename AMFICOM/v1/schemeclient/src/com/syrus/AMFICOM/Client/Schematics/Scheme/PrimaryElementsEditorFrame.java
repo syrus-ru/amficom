@@ -1,14 +1,14 @@
 package com.syrus.AMFICOM.Client.Schematics.Scheme;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.ElementsPanel;
+import com.syrus.AMFICOM.Client.General.Scheme.ElementsTabbedPane;
 
 public class PrimaryElementsEditorFrame extends //SchemeViewerFrame
 		SchemeViewerFrame
 {
-	public PrimaryElementsEditorFrame(ApplicationContext aContext, ElementsPanel panel)
+	public PrimaryElementsEditorFrame(ApplicationContext aContext, ElementsTabbedPane pane)
 	{
-		super(aContext, panel);
+		super(aContext, pane);
 	}
 
 	protected void closeFrame()

@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.List;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 import com.jgraph.graph.DefaultGraphModel;
@@ -17,7 +18,7 @@ import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class SchemePanel extends ElementsPanel
 {
-	public HashSet schemes_to_save = new HashSet();
+//	public HashSet schemes_to_save = new HashSet();
 
 	protected static String[] buttons = new String[]
 	{
@@ -44,8 +45,8 @@ public class SchemePanel extends ElementsPanel
 		Constants.separator,
 		Constants.backgroundSize,
 		Constants.separator,
-		Constants.linkMode,
-		Constants.pathMode
+		Constants.LINK_MODE,
+		Constants.PATH_MODE
 	};
 
 
@@ -60,7 +61,7 @@ public class SchemePanel extends ElementsPanel
 		{
 			e.printStackTrace();
 		}
-		scheme = new Scheme();
+//		scheme = new Scheme();
 	}
 
 	private void jbInit() throws Exception
@@ -74,7 +75,7 @@ public class SchemePanel extends ElementsPanel
 
 	protected UgoPanel.ToolBarPanel createToolBar()
 	{
-		ToolBarPanel toolbar = new ToolBarPanel(this);
+		ToolBarPanel toolbar = new ToolBarPanel();
 		commands.putAll(toolbar.createGraphButtons(this));
 
 		String[] buttons = getButtons();
@@ -113,7 +114,7 @@ public class SchemePanel extends ElementsPanel
 					SchemePath path = (SchemePath)ds.get(ev.getSelectionNumber());
 //					if (scheme.paths.contains(path))
 					{
-						Object[] cells = graph.getPathElements(path);
+						Object[] cells = getGraph().getGraphResource().getPathElements(path);
 						graph.skip_notify = true;
 						graph.setSelectionCells(cells);
 						graph.skip_notify = false;
@@ -122,7 +123,7 @@ public class SchemePanel extends ElementsPanel
 				else if (cl.equals(SchemeElement.class))
 				{
 					SchemeElement se = (SchemeElement)ds.get(ev.getSelectionNumber());
-					if (scheme.elements.contains(se))
+					if (graph.getScheme().elements.contains(se))
 					{
 						Object cell = SchemeActions.findSchemeElementById(graph, se.getId());
 						graph.skip_notify = true;
@@ -133,7 +134,7 @@ public class SchemePanel extends ElementsPanel
 				else if (cl.equals(SchemeLink.class))
 				{
 					SchemeLink l = (SchemeLink)ds.get(ev.getSelectionNumber());
-					if (scheme.links.contains(l))
+					if (graph.getScheme().links.contains(l))
 					{
 						Object cell = SchemeActions.findSchemeLinkById(graph, l.getId());
 						graph.skip_notify = true;
@@ -144,7 +145,7 @@ public class SchemePanel extends ElementsPanel
 				else if (cl.equals(SchemeCableLink.class))
 				{
 					SchemeCableLink l = (SchemeCableLink)ds.get(ev.getSelectionNumber());
-					if (scheme.cablelinks.contains(l))
+					if (graph.getScheme().cablelinks.contains(l))
 					{
 						Object cell = SchemeActions.findSchemeCableLinkById(graph, l.getId());
 						graph.skip_notify = true;
@@ -158,76 +159,7 @@ public class SchemePanel extends ElementsPanel
 		super.operationPerformed(ae);
 	}
 
-	public void openScheme(Scheme sch)
-	{
-		scheme = sch;//(Scheme)sch.clone(aContext.getDataSourceInterface());
-		scheme.unpack();
-		Map clones = graph.copyFromArchivedState(scheme.serializable_cell, new java.awt.Point(0, 0));
-		graph.setGraphChanged(false);
-		graph.selectionNotify();
-		graph.setActualSize(new Dimension(sch.width == 0 ? 840 : sch.width, sch.height == 0 ? 1190 : sch.height));
-		//assignClonedIds(clones);
-	}
-
-	public boolean removeScheme(Scheme sch)
-	{
-		if (scheme != null && sch != null && sch.getId().equals(scheme.getId()))
-		{
-			GraphActions.clearGraph(graph);
-			return true;
-		}
-		return false;
-	}
-
-
-	public Scheme updateScheme()
-	{
-		if (scheme != null)
-		{
-			scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
-			boolean res = scheme.pack();
-			if (!res)
-				return null;
-		}
-		return scheme;
-	}
-
-	public void openSchemeElement(SchemeElement se)
-	{
-		scheme = new Scheme();
-		super.openSchemeElement(se);
-	}
-
-	protected void setProtoCell (ProtoElement proto, Point p)
-	{
-		if (proto != null)
-		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			proto.unpack();
-
-			SchemeElement scheme_el = new SchemeElement(proto, dataSource);
-			scheme_el.unpack();
-
-			insertSchemeElement(scheme_el, proto.serializable_cell, proto.serializable_ugo, p);
-
-			repaint();
-		}
-	}
-
-	protected void setSchemeCell (Scheme sch)
-	{
-		if (sch != null)
-		{
-			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			sch.unpack();
-
-			insertScheme(sch);
-
-			repaint();
-		}
-	}
-
-	private void insertSchemeElement (SchemeElement scheme_el, Serializable serializable_cell, Serializable serializable_ugo, Point p)
+	void insertSchemeElement (SchemeElement scheme_el, Serializable serializable_cell, Serializable serializable_ugo, Point p)
 	{
 		if (serializable_ugo != null)
 		{
@@ -256,7 +188,7 @@ public class SchemePanel extends ElementsPanel
 	//	if (s instanceof ArrayList)
 		{
 			DefaultGraphModel model = new DefaultGraphModel();
-			SchemeGraph virtual_graph = new SchemeGraph(model, aContext, this);
+			SchemeGraph virtual_graph = new SchemeGraph(model, aContext);
 			Map clones = virtual_graph.copyFromArchivedState(element.serializable_cell, new Point(0, 0));
 
 		//	ArrayList v = (ArrayList) s;
@@ -291,7 +223,7 @@ public class SchemePanel extends ElementsPanel
 				//EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
 
 				//SchemeElement element = new SchemeElement(proto, dataSource);
-				scheme.elements.add(element);
+				graph.getScheme().elements.add(element);
 
 				element.serializable_cell = proto.serializable_cell;
 				element.serializable_ugo = proto.serializable_ugo;
@@ -308,7 +240,61 @@ public class SchemePanel extends ElementsPanel
 		return null;
 	}
 
-	private void insertScheme (Scheme sch)
+	public void openScheme(Scheme sch)
+	{
+		SchemeGraph graph = getGraph();
+		graph.setScheme(sch); //(Scheme)sch.clone(aContext.getDataSourceInterface());
+		sch.unpack();
+		Map clones = graph.copyFromArchivedState(sch.serializable_cell, new Point(0, 0));
+		graph.setGraphChanged(false);
+		graph.selectionNotify();
+		graph.setActualSize(new Dimension(sch.width == 0 ? 840 : sch.width,
+				sch.height == 0 ? 1190 : sch.height));
+		//assignClonedIds(clones);
+	}
+
+	protected void setProtoCell(ProtoElement proto, Point p)
+	{
+		if (proto != null)
+		{
+			DataSourceInterface dataSource = aContext.getDataSourceInterface();
+			proto.unpack();
+
+			SchemeElement scheme_el = new SchemeElement(proto, dataSource);
+			scheme_el.unpack();
+
+			insertSchemeElement(scheme_el, proto.serializable_cell,	proto.serializable_ugo, p);
+
+			repaint();
+		}
+	}
+
+	public Scheme updateScheme()
+	{
+		SchemeGraph graph = getGraph();
+		Scheme scheme = graph.getScheme();
+		if (scheme != null)
+		{
+			scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
+			boolean res = scheme.pack();
+			if (!res)
+				return null;
+		}
+		return scheme;
+	}
+
+
+	protected void setSchemeCell(Scheme sch)
+	{
+		if (sch != null)
+		{
+			sch.unpack();
+			insertScheme(sch);
+		}
+	}
+
+
+	void insertScheme (Scheme sch)
 	{
 		if (sch.serializable_ugo != null && sch.serializable_ugo instanceof List)
 		{
@@ -327,7 +313,7 @@ public class SchemePanel extends ElementsPanel
 				element.scheme_id = sch.getId();
 				element.name = sch.getName();
 				element.description = sch.description;
-				scheme.elements.add(element);
+				graph.getScheme().elements.add(element);
 				element.serializable_cell = sch.serializable_ugo;
 				element.pack();
 
@@ -343,7 +329,7 @@ public class SchemePanel extends ElementsPanel
 
 	public boolean removeAllPathsFromScheme()
 	{
-		scheme.paths = new ArrayList();
+		graph.getScheme().paths = new ArrayList();
 //		for (Iterator it = scheme.paths.iterator(); it.hasNext();)
 //		{
 //			boolean b = removePathFromScheme((SchemePath)it.next());
@@ -359,7 +345,7 @@ public class SchemePanel extends ElementsPanel
 		if (!b)
 		{
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка", "(1)Ошибка обновления путей на схеме " +
-																		scheme.getName(), JOptionPane.OK_OPTION);
+																		graph.getScheme().getName(), JOptionPane.OK_OPTION);
 			return false;
 		}
 		for (Iterator it = paths.iterator(); it.hasNext();)
@@ -368,7 +354,7 @@ public class SchemePanel extends ElementsPanel
 			if (!b)
 			{
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка", "(2)Ошибка обновления путей на схеме " +
-																		scheme.getName(), JOptionPane.OK_OPTION);
+																		graph.getScheme().getName(), JOptionPane.OK_OPTION);
 				return false;
 			}
 		}
@@ -377,7 +363,7 @@ public class SchemePanel extends ElementsPanel
 
 	public boolean removePathFromScheme(SchemePath path)
 	{
-		scheme.paths.remove(path);
+		graph.getScheme().paths.remove(path);
 
 /*		Iterator s_to_save;
 		Iterator se_to_save;
@@ -496,8 +482,8 @@ public class SchemePanel extends ElementsPanel
 			editing_path = null;
 		}
 
-		if (!scheme.paths.contains(path))
-			scheme.paths.add(path);
+		if (!graph.getScheme().paths.contains(path))
+			graph.getScheme().paths.add(path);
 
 	/*	Hashtable lp = new Hashtable();
 		for (Iterator it = path.links.iterator(); it.hasNext();)
@@ -600,14 +586,14 @@ public class SchemePanel extends ElementsPanel
 
 	public SchemePath getCurrentPath()
 	{
-		return graph.currentPath;
+		return graph.getGraphResource().currentPath;
 	}
 
 	public boolean removeCurrentPathFromScheme()
 	{
-		if (graph.currentPath != null)
+		if (graph.getGraphResource().currentPath != null)
 		{
-			boolean b = removePathFromScheme(graph.currentPath);
+			boolean b = removePathFromScheme(graph.getGraphResource().currentPath);
 			if (!b)
 				return false;
 			graph.setSelectionCells(new Object[0]);
@@ -622,10 +608,35 @@ public class SchemePanel extends ElementsPanel
 
 	class ToolBarPanel extends ElementsPanel.ToolBarPanel
 	{
-		public ToolBarPanel (ElementsPanel panel)
+		JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
+
+		public ToolBarPanel ()
 		{
-			super(panel);
+			super();
+
+			tabs = new JTabbedPane(JTabbedPane.TOP);
+			tabs.addMouseListener(new MouseAdapter()
+			{
+				public void mouseReleased(MouseEvent e)
+				{
+					if (SwingUtilities.isRightMouseButton(e) && tabs.getTabCount() > 1)
+					{
+						JPopupMenu popup = new JPopupMenu();
+						JMenuItem close = new JMenuItem(new AbstractAction()
+						{
+							public void actionPerformed(ActionEvent ae)
+							{
+								tabs.removeTabAt(tabs.getSelectedIndex());
+							}
+						});
+						close.setText("Закрыть \"" + tabs.getTitleAt(tabs.getSelectedIndex()) + "\"");
+						popup.add(close);
+						popup.show(tabs, e.getX(), e.getY());
+					}
+				}
+			});
 		}
+
 
 		protected Map createGraphButtons (ElementsPanel p)
 		{
@@ -644,11 +655,11 @@ public class SchemePanel extends ElementsPanel
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/sheme_size.gif")),
 										new SetBackgroundSizeAction (SchemePanel.this), true));
 
-				buttons.put(Constants.linkMode,
+				buttons.put(Constants.LINK_MODE,
 										createToolButton(mh.linkButt, btn_size, null, "режим линий",
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/linkmode.gif")),
 										new SetLinkModeAction (SchemePanel.this), true));
-				buttons.put(Constants.pathMode,
+				buttons.put(Constants.PATH_MODE,
 										createToolButton(mh.pathButt, btn_size, null, "режим путей",
 										new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pathmode.gif")),
 										new SetPathModeAction (SchemePanel.this), true));

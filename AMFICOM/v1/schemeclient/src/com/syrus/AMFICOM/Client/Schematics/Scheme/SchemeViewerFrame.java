@@ -16,12 +16,12 @@ public class SchemeViewerFrame extends JInternalFrame implements OperationListen
 
 	public ApplicationContext aContext;
 	Dispatcher dispatcher;
-	public UgoPanel panel;
+	UgoTabbedPane pane;
 
-	public SchemeViewerFrame(ApplicationContext aContext, UgoPanel panel)
+	public SchemeViewerFrame(ApplicationContext aContext, UgoTabbedPane pane)
 	{
-		this.panel = panel;
 		this.aContext = aContext;
+		this.pane = pane;
 		try
 		{
 			jbInit();
@@ -50,7 +50,7 @@ public class SchemeViewerFrame extends JInternalFrame implements OperationListen
 				if (see.obj instanceof Scheme)
 				{
 					Scheme sch = (Scheme)see.obj;
-					if (panel.removeScheme(sch))
+//					if (panel.removeScheme(sch))
 					{
 						closeFrame();
 					}
@@ -61,7 +61,7 @@ public class SchemeViewerFrame extends JInternalFrame implements OperationListen
 
 	protected void closeFrame ()
 	{
-		panel.scheme = new Scheme();
+//		panel.scheme = new Scheme();
 		dispatcher.unregister(this, SchemeElementsEvent.type);
 		doDefaultCloseAction();
 	}
@@ -75,12 +75,12 @@ public class SchemeViewerFrame extends JInternalFrame implements OperationListen
 		setMaximizable(true);
 		setIconifiable(true);
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(panel, BorderLayout.CENTER);
+		getContentPane().add(pane, BorderLayout.CENTER);
 	}
 
 	public SchemeGraph getGraph()
 	{
-		return panel.getGraph();
+		return pane.getPanel().getGraph();
 	}
 
 	public void doDefaultCloseAction()

@@ -22,13 +22,15 @@ import oracle.jdeveloper.layout.*;
 public class UgoPanel extends JPanel
 		implements Printable, OperationListener
 {
-	public Scheme scheme;
+//	static Scheme primary_scheme;
+//	public Scheme scheme;
+
 	Map commands = new HashMap();
 	ToolBarPanel toolbar;
-	SchemeGraph graph;
 	ApplicationContext aContext;
 	Dispatcher dispatcher;
 
+	protected SchemeGraph graph;	//текущий активный граф
 	protected boolean insert_ugo = true;
 	public boolean ignore_loading = false;
 
@@ -58,22 +60,13 @@ public class UgoPanel extends JPanel
 	public void init_module()
 	{
 		dispatcher = aContext.getDispatcher();
-	//	dispatcher.register(this, TreeDataSelectionEvent.type);
 		dispatcher.register(this, SchemeElementsEvent.type);
-		dispatcher.register(this, CreatePathEvent.typ);
 	}
 
 	private void jbInit() throws Exception
 	{
-		DefaultGraphModel model = new DefaultGraphModel();
-
-		graph = new SchemeGraph(model, aContext, this);
-		graph.can_be_editable = true;
-
-		JScrollPane graphView = new JScrollPane(graph);
-
-		this.setLayout(new BorderLayout());
-		this.add(graphView, BorderLayout.CENTER);
+		setLayout(new BorderLayout());
+		add(createGraph(), BorderLayout.CENTER);
 
 		toolbar = createToolBar();
 		add(toolbar, BorderLayout.NORTH);
@@ -94,6 +87,15 @@ public class UgoPanel extends JPanel
 		graph.setBendable(true);
 	}
 
+	protected Component createGraph()
+	{
+		DefaultGraphModel model = new DefaultGraphModel();
+		graph = new SchemeGraph(model, aContext);
+		graph.can_be_editable = true;
+		JScrollPane graphView = new JScrollPane(graph);
+		return graphView;
+	}
+
 	public String getReportTitle()
 	{
 		return LangModelSchematics.getString("elementsUGOTitle");
@@ -106,7 +108,7 @@ public class UgoPanel extends JPanel
 
 	protected ToolBarPanel createToolBar()
 	{
-		ToolBarPanel toolbar = new ToolBarPanel(this);
+		ToolBarPanel toolbar = new ToolBarPanel();
 		commands.putAll(toolbar.createGraphButtons(this));
 
 		String[] buttons = getButtons();
@@ -135,55 +137,6 @@ public class UgoPanel extends JPanel
 		if (ae.getActionCommand().equals(SchemeElementsEvent.type))
 		{
 			SchemeElementsEvent see = (SchemeElementsEvent)ae;
-			if (see.OPEN_PRIMARY_SCHEME)
-			{
-				if (!ignore_loading)
-				{
-					Scheme sch = (Scheme)see.obj;
-					GraphActions.clearGraph(graph);
-					openScheme(sch);
-				}
-			}
-			if (see.OPEN_ELEMENT)
-			{
-				if (!ignore_loading)
-				{
-					graph.skip_notify = true;
-					Object obj = see.obj;
-					if (obj instanceof ProtoElement)
-					{
-						ProtoElement proto = (ProtoElement)obj;
-						setProtoCell(proto, null);
-					}
-					graph.skip_notify = false;
-				}
-			}
-			if (see.OPEN_SCHEME)
-			{
-				if (!ignore_loading)
-				{
-					graph.skip_notify = true;
-					Object obj = see.obj;
-					if (obj instanceof Scheme)
-					{
-						Scheme scheme = (Scheme)obj;
-						setSchemeCell(scheme);
-					}
-					graph.skip_notify = false;
-				}
-			}
-			if (see.CLOSE_SCHEME)
-			{
-				graph.skip_notify = true;
-				Object obj = see.obj;
-				if (obj instanceof Scheme)
-				{
-					Scheme scheme = (Scheme)obj;
-					removeScheme(scheme);
-					graph.setGraphChanged(false);
-				}
-				graph.skip_notify = false;
-			}
 			if (see.UGO_TEXT_UPDATE)
 			{
 				String id = (String)see.getSource();
@@ -458,46 +411,11 @@ public class UgoPanel extends JPanel
 				}
 			}
 		}
-		else if (ae.getActionCommand().equals(CreatePathEvent.typ))
-		{
-			CreatePathEvent cpe = (CreatePathEvent)ae;
-			if (cpe.SAVE_PATH)
-			{
-	/*			SchemePath[] paths = (SchemePath[])cpe.cells;
-				Hashtable lp = new Hashtable();
-				for (int i = 0; i < paths.length; i++)
-				{
-					for (int j = 0; j < paths[i].links.size(); j++)
-					{
-						PathElement pe = (PathElement)paths[i].links.get(j);
-						lp.put(pe.link_id, paths[i].getId());
-					}
-				}
-
-				Object[] cells = graph.getAll();
-				for (int i = 0; i < cells.length; i++)
-				{
-					if (cells[i] instanceof DefaultCableLink)
-					{
-						DefaultCableLink clink = (DefaultCableLink)cells[i];
-						String p_id = (String)lp.get(clink.getSchemeCableLinkId());
-						if (p_id != null)
-							clink.setSchemePathId(p_id);
-					}
-					else if (cells[i] instanceof DefaultLink)
-					{
-						DefaultLink link = (DefaultLink)cells[i];
-						String p_id = (String)lp.get(link.getSchemeLinkId());
-						if (p_id != null)
-							link.setSchemePathId(p_id);
-					}
-				}*/
-			}
-		}
 	}
 
 	public Scheme updateScheme()
 	{
+		Scheme scheme = graph.getScheme();
 		if (scheme != null)
 		{
 			scheme.serializable_ugo = graph.getArchiveableState(graph.getRoots());
@@ -512,29 +430,12 @@ public class UgoPanel extends JPanel
 	{
 		if (!insert_ugo)
 			return;
-		if (proto != null)
-		{
-			GraphActions.clearGraph(graph);
-			//proto.unpack();
-			//insertCell (proto.serializable_ugo, true);
-		}
-		else
-			showNoSelection();
-
+		GraphActions.clearGraph(graph);
 		repaint();
 	}
 
 	protected void setSchemeCell (Scheme scheme)
 	{
-	/*	if (scheme != null)
-		{
-			scheme.unpack();
-			insertCell (scheme.serializable_ugo);
-		}
-		else
-			showNoSelection();
-
-		repaint();*/
 	}
 
 /*	private void insertCell (Serializable serializable_ugo)
@@ -550,28 +451,6 @@ public class UgoPanel extends JPanel
 		else
 			showNoSelection();
 	}*/
-
-	public boolean removeScheme(Scheme sch)
-	{
-		if (scheme != null && sch.getId().equals(scheme.getId()))
-		{
-			GraphActions.clearGraph(graph);
-			graph.setGraphChanged(false);
-			return true;
-		}
-		return false;
-	}
-
-	public void openScheme(Scheme sch)
-	{
-		scheme = sch;
-		GraphActions.clearGraph(graph);
-		sch.unpack();
-
-		Map clones = graph.copyFromArchivedState(sch.serializable_ugo, new java.awt.Point(0, 0));
-		graph.selectionNotify();
-	//	assignClonedIds(clones);
-	}
 
 	public Map insertCell (Serializable serializable_cell, boolean remove_old, Point p)
 	{
@@ -598,7 +477,6 @@ public class UgoPanel extends JPanel
 
 			return clones;
 		}
-		showNoSelection();
 		return null;
 	}
 
@@ -698,18 +576,6 @@ public class UgoPanel extends JPanel
 		}
 	}
 
-
-	void showNoSelection ()
-	{
-		Object[] cells = graph.getRoots();
-		if (cells != null && cells.length != 0)
-		{
-			cells = DefaultGraphModel.getDescendants(graph.getModel(), cells).toArray();
-			graph.getModel().remove(cells);
-			graph.setScale(1);
-		}
-	}
-
 	public int print(Graphics g, PageFormat pf, int pi) throws PrinterException
 	{
 		if (pi > 0)
@@ -764,12 +630,10 @@ public class UgoPanel extends JPanel
 	{
 		public final Dimension btn_size = new Dimension(24, 24);
 		protected int position = 0;
-		UgoPanel panel;
 		Map buttons = new HashMap();
 
-		public ToolBarPanel (UgoPanel panel)
+		public ToolBarPanel ()
 		{
-			this.panel = panel;
 
 			try
 			{

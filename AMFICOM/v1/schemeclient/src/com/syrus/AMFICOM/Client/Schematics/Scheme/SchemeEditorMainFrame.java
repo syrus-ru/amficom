@@ -44,13 +44,16 @@ public class SchemeEditorMainFrame extends JFrame
 
 	static int scheme_count = 0;
 	PrimarySchemeEditorFrame editorFrame;
-	SchemePanel epanel;
+//	SchemePanel epanel;
 	SchemeViewerFrame ugoFrame;
 	UgoPanel upanel;
 	PropsFrame propsFrame;
 	ElementsListFrame elementsListFrame;
 	JInternalFrame treeFrame;
 	ArrayList graphs = new ArrayList();
+
+	UgoTabbedPane ugoPane;
+	SchemeTabbedPane schemeTab;
 
 	public SchemeEditorMainFrame(ApplicationContext aContext)
 	{
@@ -118,26 +121,34 @@ public class SchemeEditorMainFrame extends JFrame
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 
 		//epanel = new SchemePanelNoEdition(aContext);
-		epanel = new SchemePanel(aContext);
-		editorFrame = new PrimarySchemeEditorFrame(aContext, epanel);
+		SchemePanel panel = new SchemePanel(aContext);
+		Scheme scheme = new Scheme();
+		scheme.name = "Новая схема";
+		panel.getGraph().setScheme(scheme);
+
+		schemeTab = new SchemeTabbedPane(aContext);
+		schemeTab.addSchemeTab(panel);
+
+		editorFrame = new PrimarySchemeEditorFrame(aContext, schemeTab);
 		editorFrame.setTitle(LangModelSchematics.getString("schemeMainTitle"));
 		desktopPane.add(editorFrame);
-		graphs.add(epanel);
+		graphs.add(panel);
 
-		upanel = new UgoPanel(aContext);
-		upanel.setUgoInsertable(false);
-		ugoFrame = new SchemeViewerFrame(aContext, upanel)
+		ugoPane = new UgoTabbedPane(aContext);
+//		upanel = new UgoPanel(aContext);
+		ugoPane.getPanel().setUgoInsertable(false);
+		ugoFrame = new SchemeViewerFrame(aContext, ugoPane)
 		{
 			protected void closeFrame()
 			{
-				panel.scheme = new Scheme();
+				ugoPane.getPanel().getGraph().setScheme(null);
 			}
 		};
 		ugoFrame.setTitle(LangModelSchematics.getString("elementsUGOTitle"));
 		desktopPane.add(ugoFrame);
 		//graphs.add(upanel);
 
-		scheme_graph = epanel.getGraph();
+//		scheme_graph = epanel.getGraph();
 
 		propsFrame = new PropsFrame(aContext, true);
 		desktopPane.add(propsFrame);
@@ -204,10 +215,12 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.the_dispatcher, aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
-		aModel.setCommand("menuSchemeNew", new SchemeNewCommand(aContext, epanel, upanel));
-		aModel.setCommand("menuSchemeLoad", new SchemeOpenCommand(aContext, scheme_graph));
-		aModel.setCommand("menuSchemeSave", new SchemeSaveCommand(aContext, epanel, upanel));
-		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(aContext, epanel, upanel));
+		SchemePanel epanel = (SchemePanel)schemeTab.getPanel();
+
+		aModel.setCommand("menuSchemeNew", new SchemeNewCommand(aContext));
+		aModel.setCommand("menuSchemeLoad", new SchemeOpenCommand(aContext));
+		aModel.setCommand("menuSchemeSave", new SchemeSaveCommand(aContext, schemeTab, ugoPane));
+		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(aContext, schemeTab, ugoPane));
 		//aModel.setCommand("menuInsertToCatalog", new InsertToCatalogCommand(aContext, epanel.getGraph()));
 		aModel.setCommand("menuInsertToCatalog", new InsertToCatalogCommand(aContext, epanel, upanel, false));
 		aModel.setCommand("menuSchemeExport", new SchemeToFileCommand(Environment.the_dispatcher, aContext));
@@ -476,26 +489,8 @@ public class SchemeEditorMainFrame extends JFrame
 			scheme.unpack();
 
 			SchemePanel panel = new SchemePanel(aContext);
-			panel.ignore_loading = true;
-			//ElementsEditorFrame frame = new ElementsEditorFrame(aContext, panel);
-			SchemeEditorFrame frame = new SchemeEditorFrame(aContext, panel);
-			frame.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-			frame.setTitle(scheme.getName());
-			desktopPane.add(frame);
-//			schemeFrames.add(frame);
-
-			if (scheme_count > 10)
-				scheme_count = 0;
-
-			int w = desktopPane.getSize().width;
-			int h = desktopPane.getSize().height;
-			frame.setSize(3*w/5, h / 2);
-			frame.setLocation(w/5, h / 2);//+ 25 * scheme_count
-			scheme_count++;
-			frame.setVisible(true);
-			frame.toFront();
-
 			panel.openScheme(scheme);
+			schemeTab.addSchemeTab(panel);
 		}
 		else if (ae.getActionCommand().equals("addschemeelementevent"))
 		{
@@ -504,9 +499,12 @@ public class SchemeEditorMainFrame extends JFrame
 			se.unpack();
 
 			SchemePanel panel = new SchemePanel(aContext);
+			panel.openSchemeElement(se);
+			schemeTab.addSchemeTab(panel);
+
 //			ElementsPanel panel = new ElementsPanel(aContext);
 //			panel.setGraphSize(new Dimension());
-			ElementsEditorFrame frame = new ElementsEditorFrame(aContext, panel);
+	/*		ElementsEditorFrame frame = new ElementsEditorFrame(aContext, panel);
 			frame.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 			frame.setTitle(se.getName());
 			desktopPane.add(frame);
@@ -519,7 +517,7 @@ public class SchemeEditorMainFrame extends JFrame
 			frame.setVisible(true);
 			frame.toFront();
 
-			panel.openSchemeElement(se);
+			panel.openSchemeElement(se);*/
 		}
 	}
 
@@ -696,7 +694,7 @@ public class SchemeEditorMainFrame extends JFrame
 
 	void this_windowClosing(WindowEvent e)
 	{
-		if(epanel.scheme != null && epanel.getGraph().isGraphChanged())
+		if(schemeTab.getPanel().getGraph().getScheme() != null && schemeTab.getPanel().getGraph().isGraphChanged())
 		{
 			int res = JOptionPane.showConfirmDialog(
 					Environment.getActiveWindow(),
@@ -705,7 +703,7 @@ public class SchemeEditorMainFrame extends JFrame
 					JOptionPane.YES_NO_CANCEL_OPTION);
 			if (res == JOptionPane.OK_OPTION)
 			{
-				SchemeSaveCommand ssc = new SchemeSaveCommand(aContext, epanel, upanel);
+				SchemeSaveCommand ssc = new SchemeSaveCommand(aContext, schemeTab, ugoPane);
 				ssc.execute();
 				if (ssc.ret_code == SchemeSaveCommand.CANCEL)
 					return;

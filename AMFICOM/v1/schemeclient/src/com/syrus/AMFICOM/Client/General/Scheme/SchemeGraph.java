@@ -24,11 +24,9 @@ public class SchemeGraph extends GPGraph
 	public Dimension actualSize = Constants.A4;
 	Dispatcher dispatcher;
 	ApplicationContext aContext;
-	UgoPanel panel;
-	public SchemePath currentPath;
-	public String mode = Constants.linkMode;
-
-	public boolean make_notifications = true;
+//	UgoPanel panel;
+//	public SchemePath currentPath;
+	public String mode = Constants.LINK_MODE;
 
 	protected boolean show_grid_at_actual_size = false;
 	protected boolean border_visible = false;
@@ -38,21 +36,23 @@ public class SchemeGraph extends GPGraph
 	public boolean is_debug = false;
 	private boolean changed = false;
 
-	public SchemeGraph(ApplicationContext aContext, UgoPanel panel)
+	SchemeGraphResource graphResource;
+
+	public SchemeGraph(ApplicationContext aContext)
 	{
-		this(null, aContext, panel);
+		this(null, aContext);
 	}
 
-	public SchemeGraph(GraphModel model, ApplicationContext aContext, UgoPanel panel)
+	public SchemeGraph(GraphModel model, ApplicationContext aContext)
 	{
-		this(model, null, aContext, panel);
+		this(model, null, aContext);
 	}
 
-	public SchemeGraph(GraphModel model, GraphLayoutCache view, ApplicationContext aContext, UgoPanel panel)
+	public SchemeGraph(GraphModel model, GraphLayoutCache view, ApplicationContext aContext)
 	{
 		super(model, view);
 		this.aContext = aContext;
-		this.panel = panel;
+		graphResource = new SchemeGraphResource(this, aContext);
 
 		setMarqueeHandler(new ShemeMarqueeHandler());
 		init_module();
@@ -62,6 +62,32 @@ public class SchemeGraph extends GPGraph
 	{
 		dispatcher = aContext.getDispatcher();
 	}
+
+	public SchemeGraphResource getGraphResource()
+	{
+		return graphResource;
+	}
+
+	public Scheme getScheme()
+	{
+		return getGraphResource().scheme;
+	}
+
+	public void setScheme(Scheme scheme)
+	{
+		getGraphResource().scheme = scheme;
+	}
+
+	public void setSchemeElement(SchemeElement schemeelement)
+	{
+		getGraphResource().schemeelement = schemeelement;
+	}
+
+	public SchemeElement getSchemeElement()
+	{
+		return getGraphResource().schemeelement;
+	}
+
 
 	public void setGraphChanged(boolean b)
 	{
@@ -154,7 +180,6 @@ public class SchemeGraph extends GPGraph
 		return new LinkView(e, this, cm, 0);
 	}
 
-
 	public Point snap(Point p) {
 		Point p2 = new Point(fromScreen(p));
 		if (gridEnabled && p != null) {
@@ -208,21 +233,29 @@ public class SchemeGraph extends GPGraph
 
 	public void selectionNotify()
 	{
-		if (skip_notify || !make_notifications)
+		if (skip_notify)
 			return;
 
-		//skip_notify = true;
+		skip_notify = true;
 
 		Object[] cells = getSelectionCells();
 
-		if (cells.length == 0 && panel.scheme != null)
+		if (cells.length == 0)
 		{
-			Notifier.selectionNotify(dispatcher, new Scheme[] {panel.scheme}, can_be_editable);
-			((ShemeMarqueeHandler)getMarqueeHandler()).enableButtons(cells);
+			if (graphResource.scheme != null)
+			{
+				Notifier.selectionNotify(dispatcher, new Scheme[] {graphResource.scheme}, can_be_editable);
+				((ShemeMarqueeHandler)getMarqueeHandler()).enableButtons(cells);
+			}
+			else if (graphResource.schemeelement != null)
+			{
+				Notifier.selectionNotify(dispatcher, new SchemeElement[] {graphResource.schemeelement}, can_be_editable);
+				((ShemeMarqueeHandler)getMarqueeHandler()).enableButtons(cells);
+			}
 		}
 		else
 		{
-			Notifier.selectionNotify(dispatcher, cells, can_be_editable, mode, is_debug);
+			Notifier.selectionNotify(dispatcher, this, can_be_editable);
 			((ShemeMarqueeHandler)getMarqueeHandler()).enableButtons(cells);
 		}
 
@@ -270,63 +303,6 @@ public class SchemeGraph extends GPGraph
 		getModel().remove(getDescendants(getAll()));
 	}
 
-	public Object[] getPathElements(SchemePath path)
-	{
-		Object[] cells = getAll();
-		ArrayList new_cells = new ArrayList();
-		ArrayList links = new ArrayList();
-		for (Iterator it = path.links.iterator(); it.hasNext();)
-			links.add(((PathElement)it.next()).link_id);
-
-		for (int i = 0; i < cells.length; i++)
-		{
-			if (cells[i] instanceof DefaultCableLink)
-			{
-			DefaultCableLink cable = (DefaultCableLink)cells[i];
-			if (links.contains(cable.getSchemeCableLinkId()))
-				new_cells.add(cable);
-		}
-		else if (cells[i] instanceof DefaultLink)
-		{
-			DefaultLink link = (DefaultLink)cells[i];
-			if (links.contains(link.getSchemeLinkId()))
-				new_cells.add(link);
-		}
-		}
-		return new_cells.toArray();
-	}
-
-	public Object[] getPathElements(TransmissionPath path)
-	{
-		Object[] cells = getAll();
-		ArrayList new_cells = new ArrayList();
-		ArrayList links = new ArrayList();
-		for (Iterator it = path.links.iterator(); it.hasNext();)
-		{
-			TransmissionPathElement tpe = (TransmissionPathElement)it.next();
-//			Link link = (Link)Pool.get(Link.typ, tpe.link_id);
-			links.add(tpe.link_id);//link.getId()
-		}
-
-		for (int i = 0; i < cells.length; i++)
-		{
-			if (cells[i] instanceof DefaultCableLink)
-			{
-			DefaultCableLink cable = (DefaultCableLink)cells[i];
-			if (!cable.getSchemeCableLinkId().equals(""))
-				if (links.contains(cable.getSchemeCableLink().cable_link_id))
-					new_cells.add(cable);
-		}
-		else if (cells[i] instanceof DefaultLink)
-		{
-			DefaultLink link = (DefaultLink)cells[i];
-			if (!link.getSchemeLinkId().equals(""))
-				if (links.contains(link.getSchemeLink().link_id))
-					new_cells.add(link);
-		}
-		}
-		return new_cells.toArray();
-	}
 
 /*
 	public void setSelectionPath(Object cell)
@@ -386,7 +362,7 @@ public class SchemeGraph extends GPGraph
 		}
 		return null;
 	}
-
+/*
 	public Map copyFromArchivedState_virtual(Object s)
 	{
 		if (s instanceof List)
@@ -427,7 +403,7 @@ public class SchemeGraph extends GPGraph
 		}
 		return null;
 	}
-
+*/
 	public Map copyFromArchivedState(Object s, Point p)
 	{
 		if (s instanceof List)
@@ -506,11 +482,10 @@ public class SchemeGraph extends GPGraph
 		((ShemeMarqueeHandler)getMarqueeHandler()).setGraphEditable(b);
 	}
 
-	public void setSendEvents(boolean b)
-	{
-		make_notifications = false;
-		((ShemeMarqueeHandler)getMarqueeHandler()).setSendEvents(b);
-	}
+//	public void setSendEvents(boolean b)
+//	{
+//		((ShemeMarqueeHandler)getMarqueeHandler()).setSendEvents(b);
+//	}
 
 	/**
 	 * MarqueeHandler that can insert cells.
@@ -541,7 +516,7 @@ public class SchemeGraph extends GPGraph
 
 		transient ProtoElement setting_proto = null;
 		private transient boolean isEditable = true;
-		private transient boolean sendEvents = true;
+//		private transient boolean sendEvents = true;
 
 		// Update Undo/Redo Button State based on Undo Manager
 		protected void updateHistoryButtons(GraphUndoManager undoManager)
@@ -555,10 +530,10 @@ public class SchemeGraph extends GPGraph
 			isEditable = b;
 		}
 
-		void setSendEvents(boolean b)
-		{
-			sendEvents = b;
-		}
+//		void setSendEvents(boolean b)
+//		{
+//			sendEvents = b;
+//		}
 
 		void enableButtons(Object[] cells)
 		{
@@ -686,8 +661,8 @@ public class SchemeGraph extends GPGraph
 				selectionNotify();
 				return;
 			}*/
-			if (!sendEvents)
-				return;
+//			if (!sendEvents)
+//				return;
 
 			if (!SwingUtilities.isRightMouseButton(event))
 			{
@@ -706,12 +681,13 @@ public class SchemeGraph extends GPGraph
 						if (start == null || current == null)
 							return;
 
-						if (panel instanceof SchemePanel)
-						GraphActions.CreateCableLinkAction(SchemeGraph.this, (SchemePanel)panel,
+						SchemeCableLink link = GraphActions.CreateCableLinkAction(SchemeGraph.this,
 								firstPort,
 								port,
 								fromScreen(new Point(start)),
 								fromScreen(new Point(current)));
+						getScheme().cablelinks.add(link);
+
 						event.consume();
 						reinit();
 					}
@@ -720,11 +696,17 @@ public class SchemeGraph extends GPGraph
 						if (start == null || current == null)
 							return;
 
-						GraphActions.CreateLinkAction(SchemeGraph.this, panel,
+						SchemeLink link = GraphActions.CreateLinkAction(SchemeGraph.this,
 								firstPort,
 								port,
 								fromScreen(new Point(start)),
 								fromScreen(new Point(current)));
+
+						if (getScheme() != null)
+							getScheme().links.add(link);
+						if (getSchemeElement() != null)
+							getSchemeElement().links.add(link);
+
 						event.consume();
 						reinit();
 					}

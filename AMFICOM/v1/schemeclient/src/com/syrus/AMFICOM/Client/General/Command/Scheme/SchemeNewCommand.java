@@ -16,22 +16,17 @@ public class SchemeNewCommand extends VoidCommand
 	public static final int OK = 1;
 
 	ApplicationContext aContext;
-	SchemePanel spanel;
-	UgoPanel upanel;
 
 	public int ret_code = CANCEL;
 
-	public SchemeNewCommand(ApplicationContext aContext, SchemePanel spanel, UgoPanel upanel)
+	public SchemeNewCommand(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-
-		this.spanel = spanel;
-		this.upanel = upanel;
 	}
 
 	public Object clone()
 	{
-		return new SchemeNewCommand(aContext, spanel, upanel);
+		return new SchemeNewCommand(aContext);
 	}
 
 	public void execute()
@@ -40,7 +35,7 @@ public class SchemeNewCommand extends VoidCommand
 		if (dataSource == null)
 			return;
 
-		if (spanel.getGraph().isGraphChanged())
+	/*	if (spanel.getGraph().isGraphChanged())
 		{
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Текущая схема не сохранена. Сохранить?", "Новая схема", JOptionPane.YES_NO_CANCEL_OPTION);
 			if (ret == JOptionPane.CANCEL_OPTION)
@@ -60,7 +55,7 @@ public class SchemeNewCommand extends VoidCommand
 				return;
 		}
 
-/*
+
 		SaveDialog sd;
 		while (true)
 		{
@@ -79,16 +74,16 @@ public class SchemeNewCommand extends VoidCommand
 		*/
 
 		Scheme scheme = new Scheme();
-		scheme.name = "";
+		scheme.name = "Новая схема";
 		scheme.created_by = dataSource.getSession().getUserId();
 		scheme.modified_by = dataSource.getSession().getUserId();
 		scheme.owner_id = dataSource.getSession().getUserId();
 		scheme.domain_id = dataSource.getSession().getDomainId();
 
-		GraphActions.clearGraph(spanel.getGraph());
-		GraphActions.clearGraph(upanel.getGraph());
-		spanel.getGraph().setActualSize(new Dimension(scheme.width, scheme.height));
-		spanel.getGraph().setGraphChanged(false);
+//		GraphActions.clearGraph(spanel.getGraph());
+//		GraphActions.clearGraph(upanel.getGraph());
+//		spanel.getGraph().setActualSize(new Dimension(scheme.width, scheme.height));
+//		spanel.getGraph().setGraphChanged(false);
 
 		aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme,
 				SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));

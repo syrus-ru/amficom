@@ -85,8 +85,8 @@ public class InsertToCatalogCommand extends VoidCommand
 			if (save(dataSource, elements_to_save,links_to_save, cable_links_to_save, paths_to_save))
 			{
 				graph.setGraphChanged(true);
-				if (ugo_panel != null)
-					new SchemeSaveCommand(aContext, panel, ugo_panel).execute();
+//				if (ugo_panel != null)
+//					new SchemeSaveCommand(aContext, panel, ugo_panel).execute();
 			}
 		}
 	}
@@ -229,8 +229,8 @@ public class InsertToCatalogCommand extends VoidCommand
 													links_to_save,
 													cable_links_to_save,
 													paths_to_save);
-				if (panel != null)
-					panel.schemes_to_save.add(inner_scheme);
+//				if (panel != null)
+//					panel.schemes_to_save.add(inner_scheme);
 			}
 		}
 		if (cells[i] instanceof DefaultLink)

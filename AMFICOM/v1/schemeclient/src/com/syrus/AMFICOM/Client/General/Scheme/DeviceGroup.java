@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.Client.General.Scheme;
 
 import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class DeviceGroup extends DefaultGraphCell
@@ -44,6 +44,13 @@ public class DeviceGroup extends DefaultGraphCell
 		SchemeElement p = (SchemeElement)Pool.get(SchemeElement.typ, scheme_element_id);
 		return p;
 	}
+
+	public Scheme getScheme()
+	{
+		Scheme scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
+		return scheme;
+	}
+
 
 	public String getSchemeElementId()
 	{

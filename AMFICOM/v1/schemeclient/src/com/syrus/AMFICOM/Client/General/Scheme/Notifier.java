@@ -1,11 +1,9 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
-import java.util.*;
+import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
@@ -13,17 +11,17 @@ public class Notifier
 {
 	public static boolean DEBUG = false;
 
-	public static void selectionNotify(Dispatcher dispatcher, Object[] cells, boolean isEditable, String mode, boolean is_debug)
-	{
-		DEBUG = is_debug;
-		selectionNotify(dispatcher, cells, mode, isEditable);
-	}
+	private static long selectedType = 0;
+
+	private static Object[] selectedObjects;
+
+//	private static final int aports = new ArrayList();
 
 	public static void selectionNotify(Dispatcher dispatcher, ObjectResource[] cells, boolean isEditable)
 	{
 		if (cells.length == 0)
 		{
-			dispatcher.notify(new SchemeNavigateEvent(new Object[0],
+			dispatcher.notify(new SchemeNavigateEvent(cells,
 						SchemeNavigateEvent.SCHEME_ALL_DESELECTED_EVENT, isEditable));
 			return;
 		}
@@ -52,49 +50,20 @@ public class Notifier
 		if (cells[0] instanceof SchemeCablePort)
 			dispatcher.notify(new SchemeNavigateEvent((SchemeCablePort[])cells,
 					SchemeNavigateEvent.SCHEME_CABLE_PORT_SELECTED_EVENT, isEditable));
-
-		if (cells[0] instanceof Equipment)
-			dispatcher.notify(new CatalogNavigateEvent(cells,
-					CatalogNavigateEvent.CATALOG_EQUIPMENT_SELECTED_EVENT, isEditable));
-		if (cells[0] instanceof TransmissionPath)
-			dispatcher.notify(new CatalogNavigateEvent(cells,
-					CatalogNavigateEvent.CATALOG_PATH_SELECTED_EVENT, isEditable));
-		if (cells[0] instanceof Link)
-			dispatcher.notify(new CatalogNavigateEvent(cells,
-					CatalogNavigateEvent.CATALOG_LINK_SELECTED_EVENT, isEditable));
-		if (cells[0] instanceof CableLink)
-			dispatcher.notify(new CatalogNavigateEvent(cells,
-					CatalogNavigateEvent.CATALOG_CABLE_LINK_SELECTED_EVENT, isEditable));
-		if (cells[0] instanceof Port)
-			dispatcher.notify(new CatalogNavigateEvent(cells,
-					CatalogNavigateEvent.CATALOG_PORT_SELECTED_EVENT, isEditable));
-		if (cells[0] instanceof CablePort)
-			dispatcher.notify(new CatalogNavigateEvent(cells,
-					CatalogNavigateEvent.CATALOG_CABLE_PORT_SELECTED_EVENT, isEditable));
-		if (cells[0] instanceof AccessPort)
-			dispatcher.notify(new CatalogNavigateEvent(cells,
-					CatalogNavigateEvent.CATALOG_ACCESS_PORT_SELECTED_EVENT, isEditable));
 	}
 
-	public static void selectionNotify(Dispatcher dispatcher, Object[] cells, String mode, boolean isEditable)
+	public static void selectionNotify(Dispatcher dispatcher, SchemeGraph graph, boolean isEditable)
 	{
-		ArrayList elements = new ArrayList();
-		ArrayList devices = new ArrayList();
-		ArrayList protos = new ArrayList();
-		ArrayList scheme = new ArrayList();
-		ArrayList scheme_paths = new ArrayList();
-		ArrayList scheme_links = new ArrayList();
-		ArrayList scheme_clinks = new ArrayList();
-		ArrayList scheme_ports = new ArrayList();
-		ArrayList scheme_cports = new ArrayList();
+		DEBUG = graph.is_debug;
+		Object[] cells = graph.getSelectionCells();
 
-		ArrayList equipment = new ArrayList();
-		ArrayList paths = new ArrayList();
-		ArrayList links = new ArrayList();
-		ArrayList clinks = new ArrayList();
-		ArrayList ports = new ArrayList();
-		ArrayList cports = new ArrayList();
-		ArrayList aports = new ArrayList();
+		if (cells.length == 0)
+		{
+			dispatcher.notify(new SchemeNavigateEvent(new Object[0],
+					SchemeNavigateEvent.SCHEME_ALL_DESELECTED_EVENT, isEditable));
+			return;
+		}
+		selectedType = 0;
 
 		try
 		{
@@ -108,104 +77,90 @@ public class Notifier
 					DeviceGroup dev = (DeviceGroup)obj;
 					if (!dev.getSchemeElementId().equals(""))
 					{
-						SchemeElement el = dev.getSchemeElement();
-						elements.add(el);
-						if (!el.equipment_id.equals(""))
-						{
-							Equipment eq = (Equipment)Pool.get(Equipment.typ, el.equipment_id);
-							if (eq != null)
-								equipment.add(eq);
-							else
-								equipment.add(Pool.get(KIS.typ, el.equipment_id));
-						}
-						else if (!el.scheme_id.equals(""))
-						{
-							Scheme sc = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
-							scheme.add(sc);
-						}
+						selectedObjects = new SchemeElement[1];
+						selectedObjects[0] = dev.getSchemeElement();
+						selectedType = SchemeNavigateEvent.SCHEME_ELEMENT_SELECTED_EVENT;
 					}
 					else if (!dev.getProtoElementId().equals(""))
-						protos.add(dev.getProtoElement());
+					{
+						selectedObjects = new ProtoElement[1];
+						selectedObjects[0] = dev.getProtoElement();
+						selectedType = SchemeNavigateEvent.SCHEME_PROTO_ELEMENT_SELECTED_EVENT;
+					}
 					else if (!dev.getSchemeId().equals(""))
 					{
-						scheme.add(Pool.get(Scheme.typ, dev.getSchemeId()));
+						selectedObjects = new Scheme[1];
+						selectedObjects[0] = dev.getScheme();
+						selectedType = SchemeNavigateEvent.SCHEME_SELECTED_EVENT;
 					}
 				}
-				else if (cells[0] instanceof DeviceCell)
+				else if (obj instanceof DeviceCell)
 				{
-					SchemeDevice dev = ((DeviceCell)cells[0]).getSchemeDevice();
+					SchemeDevice dev = ((DeviceCell)obj).getSchemeDevice();
 					if (dev != null)
 					{
-						devices.add(dev);
+						selectedObjects = new SchemeDevice[1];
+						selectedObjects[0] = dev;
+						selectedType = SchemeNavigateEvent.SCHEME_DEVICE_SELECTED_EVENT;
 					}
 				}
 				else if (obj instanceof DefaultLink)
 				{
-				//;	if (mode.equals(Constants.linkMode))
+					SchemeLink link = ((DefaultLink)obj).getSchemeLink();
+					if (graph.mode.equals(Constants.LINK_MODE))
 					{
-						SchemeLink link = ((DefaultLink)obj).getSchemeLink();
-						scheme_links.add(link);
-						if (!link.link_id.equals(""))
-							links.add(Pool.get(Link.typ, link.link_id));
+						selectedObjects = new SchemeLink[1];
+						selectedObjects[0] = link;
+						selectedType = SchemeNavigateEvent.SCHEME_LINK_SELECTED_EVENT;
 					}
-			/*		else if (mode.equals(Constants.pathMode))
+					else if (graph.mode.equals(Constants.PATH_MODE))
 					{
-						if (((DefaultLink)obj).scheme_path_id.length() != 0)
+						for (Iterator it = graph.getScheme().paths.iterator(); it.hasNext();)
 						{
-							SchemePath path = ((DefaultLink)obj).getSchemePath();
-							if (path != null)
+							SchemePath path = (SchemePath)it.next();
+							if (path.isLinkInPath(link.getId()))
 							{
-								scheme_paths.add(path);
-								if(path.path_id.length() != 0)
-									paths.add(Pool.get(TransmissionPath.typ, path.path_id));
+								selectedObjects = new SchemePath[1];
+								selectedObjects[0] = path;
+								selectedType = SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT;
 							}
 						}
-					}*/
+					}
 				}
 				else if (obj instanceof DefaultCableLink)
 				{
-					//if (mode.equals(Constants.linkMode))
+					SchemeCableLink link = ((DefaultCableLink)obj).getSchemeCableLink();
+					if (graph.mode.equals(Constants.LINK_MODE))
 					{
-						SchemeCableLink link = ((DefaultCableLink)obj).getSchemeCableLink();
-						scheme_clinks.add(link);
-						if (!link.cable_link_id.equals(""))
-							clinks.add(Pool.get(CableLink.typ, link.cable_link_id));
+						selectedObjects = new SchemeCableLink[1];
+						selectedObjects[0] = link;
+						selectedType = SchemeNavigateEvent.SCHEME_CABLE_LINK_SELECTED_EVENT;
 					}
-					/*else if (mode.equals(Constants.pathMode))
+					else if (graph.mode.equals(Constants.PATH_MODE))
 					{
-						if (((DefaultCableLink)obj).scheme_path_id.length() != 0)
+						for (Iterator it = graph.getScheme().paths.iterator(); it.hasNext();)
 						{
-							SchemePath path = ((DefaultCableLink)obj).getSchemePath();
-							if (path != null)
+							SchemePath path = (SchemePath)it.next();
+							if (path.isLinkInPath(link.getId()))
 							{
-								scheme_paths.add(path);
-								if(path.path_id.length() != 0)
-									paths.add(Pool.get(TransmissionPath.typ, path.path_id));
+								selectedObjects = new SchemePath[1];
+								selectedObjects[0] = path;
+								selectedType = SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT;
 							}
 						}
-					}*/
+					}
 				}
 				else if (obj instanceof PortCell)
 				{
-					SchemePort port = ((PortCell)obj).getSchemePort();
-					scheme_ports.add(port);
-					if (!port.port_id.equals(""))
-						ports.add(Pool.get(Port.typ, port.port_id));
-					if (!port.access_port_id.equals(""))
-						aports.add(Pool.get(AccessPort.typ, port.access_port_id));
+					selectedObjects = new SchemePort[1];
+					selectedObjects[0] = ((PortCell)obj).getSchemePort();
+					selectedType = SchemeNavigateEvent.SCHEME_PORT_SELECTED_EVENT;
 				}
 				else if (obj instanceof CablePortCell)
 				{
-					SchemeCablePort port = ((CablePortCell)obj).getSchemeCablePort();
-					scheme_cports.add(port);
-					if (!port.cable_port_id.equals(""))
-						cports.add(Pool.get(CablePort.typ, port.cable_port_id));
-				}
-				else if (obj instanceof DeviceCell)
-				{
-					if (GraphActions.hasGroupedParent(obj))
-						dispatcher.notify(new SchemeNavigateEvent(new Object[0],
-								SchemeNavigateEvent.SCHEME_ALL_DESELECTED_EVENT, isEditable));
+					selectedObjects = new SchemeCablePort[1];
+					selectedObjects[0] = ((CablePortCell)obj).getSchemeCablePort();
+					selectedType = SchemeNavigateEvent.SCHEME_CABLE_PORT_SELECTED_EVENT;
 				}
 				else
 				{
@@ -225,34 +180,32 @@ public class Notifier
 
 					if (cells.length == counter)
 					{
+						selectedObjects = new SchemeLink[cells.length];
+						selectedType = SchemeNavigateEvent.SCHEME_LINK_SELECTED_EVENT;
 						for (int i = 0; i < cells.length; i++)
 						{
 							isEditable = isEditable && !GraphActions.hasGroupedParent(cells[i]);
-							SchemeLink link = ((DefaultLink)cells[i]).getSchemeLink();
-							scheme_links.add(link);
-							if (!link.link_id.equals(""))
-								links.add(Pool.get(Link.typ, link.link_id));
+							selectedObjects[i] = ((DefaultLink)cells[i]).getSchemeLink();
 						}
 					}
 				}
 				else if (cells[0] instanceof DefaultCableLink)
 				{
-						int counter = 0;
-						for (int i = 0; i < cells.length; i++)
-							if (cells[i] instanceof DefaultCableLink)
-								counter++;
+					int counter = 0;
+					for (int i = 0; i < cells.length; i++)
+						if (cells[i] instanceof DefaultCableLink)
+							counter++;
 
-						if (cells.length == counter)
+					if (cells.length == counter)
+					{
+						selectedObjects = new SchemeCableLink[cells.length];
+						selectedType = SchemeNavigateEvent.SCHEME_CABLE_LINK_SELECTED_EVENT;
+						for (int i = 0; i < cells.length; i++)
 						{
-							for (int i = 0; i < cells.length; i++)
-							{
-								isEditable = isEditable && !GraphActions.hasGroupedParent(cells[i]);
-								SchemeCableLink link = ((DefaultCableLink)cells[i]).getSchemeCableLink();
-								scheme_clinks.add(link);
-								if (!link.cable_link_id.equals(""))
-									clinks.add(Pool.get(CableLink.typ, link.cable_link_id));
-							}
+							isEditable = isEditable && !GraphActions.hasGroupedParent(cells[i]);
+							selectedObjects[i] = ((DefaultCableLink)cells[i]).getSchemeCableLink();
 						}
+					}
 				}
 				else if (cells[0] instanceof PortCell)
 				{
@@ -263,13 +216,12 @@ public class Notifier
 
 					if (cells.length == counter)
 					{
+						selectedObjects = new SchemePort[cells.length];
+						selectedType = SchemeNavigateEvent.SCHEME_PORT_SELECTED_EVENT;
 						for (int i = 0; i < cells.length; i++)
 						{
 							isEditable = isEditable && !GraphActions.hasGroupedParent(cells[i]);
-							SchemePort port = ((PortCell)cells[i]).getSchemePort();
-							scheme_ports.add(port);
-							if (!port.port_id.equals(""))
-								ports.add(Pool.get(Port.typ, port.port_id));
+							selectedObjects[i] = ((PortCell)cells[i]).getSchemePort();
 						}
 					}
 				}
@@ -282,13 +234,12 @@ public class Notifier
 
 					if (cells.length == counter)
 					{
+						selectedObjects = new SchemeCablePort[cells.length];
+						selectedType = SchemeNavigateEvent.SCHEME_CABLE_PORT_SELECTED_EVENT;
 						for (int i = 0; i < cells.length; i++)
 						{
 							isEditable = isEditable && !GraphActions.hasGroupedParent(cells[i]);
-							SchemeCablePort port = ((CablePortCell)cells[i]).getSchemeCablePort();
-							scheme_cports.add(port);
-							if (!port.cable_port_id.equals(""))
-								cports.add(Pool.get(CablePort.typ, port.cable_port_id));
+							selectedObjects[i] = ((CablePortCell)cells[i]).getSchemeCablePort();
 						}
 					}
 				}
@@ -299,83 +250,10 @@ public class Notifier
 					return;
 				}
 			}
-			else
-			{
-				dispatcher.notify(new SchemeNavigateEvent(new Object[0],
-						SchemeNavigateEvent.SCHEME_ALL_DESELECTED_EVENT, isEditable));
-				return;
-			}
-
-			if (elements.size() != 0)
-				dispatcher.notify(new SchemeNavigateEvent(elements.toArray(new SchemeElement[elements.size()]),
-						SchemeNavigateEvent.SCHEME_ELEMENT_SELECTED_EVENT, isEditable));
-			if (protos.size() != 0)
-				dispatcher.notify(new SchemeNavigateEvent(protos.toArray(new ProtoElement[protos.size()]),
-						SchemeNavigateEvent.SCHEME_PROTO_ELEMENT_SELECTED_EVENT, isEditable));
-			if (scheme.size() != 0)
-				dispatcher.notify(new SchemeNavigateEvent(scheme.toArray(new Scheme[scheme.size()]),
-						SchemeNavigateEvent.SCHEME_SELECTED_EVENT, isEditable));
-			if (devices.size() != 0)
-				dispatcher.notify(new SchemeNavigateEvent(devices.toArray(new SchemeDevice[devices.size()]),
-						SchemeNavigateEvent.SCHEME_DEVICE_SELECTED_EVENT, isEditable));
-			if (scheme_paths.size() != 0)
-				dispatcher.notify(new SchemeNavigateEvent(scheme_paths.toArray(new SchemePath[scheme_paths.size()]),
-						SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT, isEditable));
-			if (scheme_links.size() != 0)
-				dispatcher.notify(new SchemeNavigateEvent(scheme_links.toArray(new SchemeLink[scheme_links.size()]),
-						SchemeNavigateEvent.SCHEME_LINK_SELECTED_EVENT, isEditable));
-			if (scheme_clinks.size() != 0)
-				dispatcher.notify(new SchemeNavigateEvent(scheme_clinks.toArray(new SchemeCableLink[scheme_clinks.size()]),
-						SchemeNavigateEvent.SCHEME_CABLE_LINK_SELECTED_EVENT, isEditable));
-			if (scheme_ports.size() != 0)
-				dispatcher.notify(new SchemeNavigateEvent(scheme_ports.toArray(new SchemePort[scheme_ports.size()]),
-						SchemeNavigateEvent.SCHEME_PORT_SELECTED_EVENT, isEditable));
-			if (scheme_cports.size() != 0)
-				dispatcher.notify(new SchemeNavigateEvent(scheme_cports.toArray(new SchemeCablePort[scheme_cports.size()]),
-						SchemeNavigateEvent.SCHEME_CABLE_PORT_SELECTED_EVENT, isEditable));
-
-			if (equipment.size() != 0)
-				dispatcher.notify(new CatalogNavigateEvent(equipment.toArray(new Equipment[equipment.size()]),
-						CatalogNavigateEvent.CATALOG_EQUIPMENT_SELECTED_EVENT, isEditable));
-			if (paths.size() != 0)
-				dispatcher.notify(new CatalogNavigateEvent(paths.toArray(new TransmissionPath[paths.size()]),
-						CatalogNavigateEvent.CATALOG_PATH_SELECTED_EVENT, isEditable));
-			if (links.size() != 0)
-				dispatcher.notify(new CatalogNavigateEvent(links.toArray(new Link[links.size()]),
-						CatalogNavigateEvent.CATALOG_LINK_SELECTED_EVENT, isEditable));
-			if (clinks.size() != 0)
-				dispatcher.notify(new CatalogNavigateEvent(clinks.toArray(new CableLink[clinks.size()]),
-						CatalogNavigateEvent.CATALOG_CABLE_LINK_SELECTED_EVENT, isEditable));
-			if (ports.size() != 0)
-				dispatcher.notify(new CatalogNavigateEvent(ports.toArray(new Port[ports.size()]),
-						CatalogNavigateEvent.CATALOG_PORT_SELECTED_EVENT, isEditable));
-			if (cports.size() != 0)
-				dispatcher.notify(new CatalogNavigateEvent(cports.toArray(new CablePort[cports.size()]),
-						CatalogNavigateEvent.CATALOG_CABLE_PORT_SELECTED_EVENT, isEditable));
-			if (aports.size() != 0)
-				dispatcher.notify(new CatalogNavigateEvent(aports.toArray(new AccessPort[aports.size()]),
-						CatalogNavigateEvent.CATALOG_ACCESS_PORT_SELECTED_EVENT, isEditable));
+			dispatcher.notify(new SchemeNavigateEvent(selectedObjects, selectedType, isEditable));
 
 			if (DEBUG)
-				printDebug(
-						elements,
-						devices,
-						protos,
-						scheme,
-						scheme_paths,
-						scheme_links,
-						scheme_clinks,
-						scheme_ports,
-						scheme_cports,
-
-						equipment,
-						paths,
-						links,
-						clinks,
-						ports,
-						cports,
-						aports
-						);
+				printDebug();
 		}
 		catch (Exception e)
 		{
@@ -384,29 +262,11 @@ public class Notifier
 		}
 	}
 
-	static void printDebug(
-			ArrayList elements,
-			ArrayList devices,
-			ArrayList protos,
-			ArrayList scheme,
-			ArrayList scheme_paths,
-			ArrayList scheme_links,
-			ArrayList scheme_clinks,
-			ArrayList scheme_ports,
-			ArrayList scheme_cports,
-
-			ArrayList equipment,
-			ArrayList paths,
-			ArrayList links,
-			ArrayList clinks,
-			ArrayList ports,
-			ArrayList cports,
-			ArrayList aports
-			)
+	static void printDebug()
 	{
-		if (elements.size() != 0)
+		if (selectedType == SchemeNavigateEvent.SCHEME_ELEMENT_SELECTED_EVENT)
 		{
-			SchemeElement[] o = (SchemeElement[])elements.toArray(new SchemeElement[elements.size()]);
+			SchemeElement[] o = (SchemeElement[])selectedObjects;
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("SchemeElement: " + o[i].getId());
@@ -419,18 +279,18 @@ public class Notifier
 				System.out.println();
 			}
 		}
-		if (devices.size() != 0)
+		if (selectedType == SchemeNavigateEvent.SCHEME_DEVICE_SELECTED_EVENT)
 		{
-			SchemeDevice[] o = (SchemeDevice[])devices.toArray(new SchemeDevice[devices.size()]);
+			SchemeDevice[] o = (SchemeDevice[])selectedObjects;
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("SchemeDevice: " + o[i].getId());
 				System.out.println();
 			}
 		}
-		if (protos.size() != 0)
+		if (selectedType == SchemeNavigateEvent.SCHEME_PROTO_ELEMENT_SELECTED_EVENT)
 		{
-			ProtoElement[] o = (ProtoElement[])protos.toArray(new ProtoElement[protos.size()]);
+			ProtoElement[] o = (ProtoElement[])selectedObjects;
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("ProtoElement: " + o[i].getId());
@@ -441,18 +301,18 @@ public class Notifier
 				System.out.println();
 			}
 		}
-		if (scheme.size() != 0)
+		if (selectedType == SchemeNavigateEvent.SCHEME_SELECTED_EVENT)
 		{
-			Scheme[] o = (Scheme[])scheme.toArray(new Scheme[scheme.size()]);
+			Scheme[] o = (Scheme[])selectedObjects;
 			for (int i = 0; i < o.length; i++)
 			{
 				if (o[i] != null)
 					System.out.println("Scheme: " + o[i].getId());
 			}
 		}
-		if (scheme_paths.size() != 0)
+		if (selectedType == SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT)
 		{
-			SchemePath[] o = (SchemePath[])scheme_paths.toArray(new SchemePath[scheme_paths.size()]);
+			SchemePath[] o = (SchemePath[])selectedObjects;
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("SchemePath: " + o[i].getId());
@@ -461,9 +321,9 @@ public class Notifier
 				System.out.println("\t path_id = \"" + o[i].path_id + "\"");
 			}
 		}
-		if (scheme_links.size() != 0)
+		if (selectedType == SchemeNavigateEvent.SCHEME_LINK_SELECTED_EVENT)
 		{
-			SchemeLink[] o = (SchemeLink[])scheme_links.toArray(new SchemeLink[scheme_links.size()]);
+			SchemeLink[] o = (SchemeLink[])selectedObjects;
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("SchemeLink: " + o[i].getId());
@@ -475,9 +335,9 @@ public class Notifier
 				System.out.println("\t physical_length = \"" + o[i].physical_length + "\"");
 			}
 		}
-		if (scheme_clinks.size() != 0)
+		if (selectedType == SchemeNavigateEvent.SCHEME_CABLE_LINK_SELECTED_EVENT)
 		{
-			SchemeCableLink[] o = (SchemeCableLink[])scheme_clinks.toArray(new SchemeCableLink[scheme_clinks.size()]);
+			SchemeCableLink[] o = (SchemeCableLink[])selectedObjects;
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("SchemeCableLink: " + o[i].getId());
@@ -489,9 +349,9 @@ public class Notifier
 				System.out.println("\t physical_length = \"" + o[i].physical_length + "\"");
 			}
 		}
-		if (scheme_ports.size() != 0)
+		if (selectedType == SchemeNavigateEvent.SCHEME_PORT_SELECTED_EVENT)
 		{
-			SchemePort[] o = (SchemePort[])scheme_ports.toArray(new SchemePort[scheme_ports.size()]);
+			SchemePort[] o = (SchemePort[])selectedObjects;
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("SchemePort: " + o[i].getId());
@@ -504,9 +364,9 @@ public class Notifier
 				System.out.println("\t port_type_id = \"" + o[i].port_type_id + "\"");
 			}
 		}
-		if (scheme_cports.size() != 0)
+		if (selectedType == SchemeNavigateEvent.SCHEME_CABLE_PORT_SELECTED_EVENT)
 		{
-			SchemeCablePort[] o = (SchemeCablePort[])scheme_cports.toArray(new SchemeCablePort[scheme_cports.size()]);
+			SchemeCablePort[] o = (SchemeCablePort[])selectedObjects;
 			for (int i = 0; i < o.length; i++)
 			{
 				System.out.println("SchemeCablePort: " + o[i].getId());
@@ -521,4 +381,3 @@ public class Notifier
 		}
 	}
 }
-

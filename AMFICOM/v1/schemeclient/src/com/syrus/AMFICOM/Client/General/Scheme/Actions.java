@@ -87,8 +87,8 @@ class DeleteAction extends AbstractAction
 							if (ret == JOptionPane.CANCEL_OPTION || ret == JOptionPane.NO_OPTION)
 								return;
 						}
-						if (panel.scheme != null)
-							panel.scheme.elements.remove(element);
+						if (panel.getGraph().getScheme() != null)
+							panel.getGraph().getScheme().elements.remove(element);
 					}
 					else if (!((DeviceGroup)cells[i]).getSchemeId().equals(""))
 					{
@@ -96,8 +96,8 @@ class DeleteAction extends AbstractAction
 								"Вы действительно хотите удалить условное графическое обозначение схемы?", "Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
 						if (ret == JOptionPane.CANCEL_OPTION || ret == JOptionPane.NO_OPTION)
 							return;
-						panel.scheme.serializable_ugo = null;
-						panel.scheme.ugo = new byte[0];
+						panel.getGraph().getScheme().serializable_ugo = null;
+						panel.getGraph().getScheme().ugo = new byte[0];
 					}
 					new_cells.add(cells[i]);
 				}
@@ -122,8 +122,8 @@ class DeleteAction extends AbstractAction
 					}
 					SchemeActions.disconnectSchemeCableLink (graph, (DefaultCableLink)cells[i], true);
 					SchemeActions.disconnectSchemeCableLink (graph, (DefaultCableLink)cells[i], false);
-					if (panel.scheme != null)
-						panel.scheme.cablelinks.remove(link);
+					if (panel.getGraph().getScheme() != null)
+						panel.getGraph().getScheme().cablelinks.remove(link);
 
 					new_cells.add(cells[i]);
 				}
@@ -149,10 +149,10 @@ class DeleteAction extends AbstractAction
 					SchemeActions.disconnectSchemeLink (graph, (DefaultLink)cells[i], true);
 					SchemeActions.disconnectSchemeLink (graph, (DefaultLink)cells[i], false);
 
-					if (panel.scheme != null)
-						panel.scheme.links.remove(link);
-					if(panel instanceof ElementsPanel && ((ElementsPanel)panel).scheme_elemement != null)
-						((ElementsPanel)panel).scheme_elemement.links.remove(link);
+					if (panel.getGraph().getScheme() != null)
+						panel.getGraph().getScheme().links.remove(link);
+					if(panel.getGraph().getSchemeElement() != null)
+						panel.getGraph().getSchemeElement().links.remove(link);
 					new_cells.add(cells[i]);
 				}
 				else if (cells[i] instanceof BlockPortCell)
@@ -867,14 +867,14 @@ class SetLinkModeAction extends AbstractAction
 
 	SetLinkModeAction(SchemePanel panel)
 	{
-		super(Constants.linkMode);
+		super(Constants.LINK_MODE);
 		this.panel = panel;
 		this.graph = panel.getGraph();
 	}
 
 	public void actionPerformed(ActionEvent e)
 	{
-		graph.mode = Constants.linkMode;
+		graph.mode = Constants.LINK_MODE;
 	}
 }
 
@@ -885,14 +885,14 @@ class SetPathModeAction extends AbstractAction
 
 	SetPathModeAction(SchemePanel panel)
 	{
-		super(Constants.pathMode);
+		super(Constants.PATH_MODE);
 		this.panel = panel;
 		this.graph = panel.getGraph();
 	}
 
 	public void actionPerformed(ActionEvent e)
 	{
-		graph.mode = Constants.pathMode;
+		graph.mode = Constants.PATH_MODE;
 	}
 }
 
@@ -911,10 +911,11 @@ class SetBackgroundSizeAction extends AbstractAction
 	public void actionPerformed(ActionEvent e)
 	{
 		GraphSizeFrame f = new GraphSizeFrame();
-		if (f.init(panel.scheme))
+		Scheme scheme = panel.getGraph().getScheme();
+		if (f.init(scheme))
 		{
-			panel.scheme.width = f.newsize.width;
-			panel.scheme.height = f.newsize.height;
+			scheme.width = f.newsize.width;
+			scheme.height = f.newsize.height;
 			graph.setGraphChanged(true);
 			graph.setActualSize(f.newsize);
 			graph.update();
@@ -973,7 +974,7 @@ class CreateTopLevelSchemeAction extends AbstractAction
 
 		// Save group as serializable_cell
 		Rectangle oldrect = graph.getCellBounds(cells);
-		Scheme scheme = panel.scheme;
+		Scheme scheme = panel.getGraph().getScheme();
 
 		ArrayList v = new ArrayList();
 		v.add(blockports_in);
