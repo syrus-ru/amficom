@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/administrate.jar"/>
 	<classpathentry kind="src" path="/idl_v1"/>
 	<classpathentry kind="src" path="/filter_v1"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/activation.jar"/>
@@ -19,5 +19,5 @@
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/vbjorb.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/corbaportable-common.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/util.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="classes"/>
 </classpath>
