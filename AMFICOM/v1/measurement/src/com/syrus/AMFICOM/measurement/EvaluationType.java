@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.20 2004/08/20 12:52:23 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.21 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/08/20 12:52:23 $
+ * @version $Revision: 1.21 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -73,21 +74,26 @@ public class EvaluationType extends ActionType {
 					new String(ett.codename),
 					new String(ett.description));
 
-		this.inParameterTypes = new ArrayList(ett.in_parameter_type_ids.length);
-		for (int i = 0; i < ett.in_parameter_type_ids.length; i++)
-			this.inParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(ett.in_parameter_type_ids[i]), true));
-
-		this.thresholdParameterTypes = new ArrayList(ett.threshold_parameter_type_ids.length);
-		for (int i = 0; i < ett.threshold_parameter_type_ids.length; i++)
-			this.thresholdParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(ett.threshold_parameter_type_ids[i]), true));
-
-		this.etalonParameterTypes = new ArrayList(ett.etalon_parameter_type_ids.length);
-		for (int i = 0; i < ett.etalon_parameter_type_ids.length; i++)
-			this.etalonParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(ett.etalon_parameter_type_ids[i]), true));
-
-		this.outParameterTypes = new ArrayList(ett.out_parameter_type_ids.length);
-		for (int i = 0; i < ett.out_parameter_type_ids.length; i++)
-			this.outParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(ett.out_parameter_type_ids[i]), true));
+		try {
+			this.inParameterTypes = new ArrayList(ett.in_parameter_type_ids.length);
+			for (int i = 0; i < ett.in_parameter_type_ids.length; i++)
+				this.inParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(ett.in_parameter_type_ids[i]), true));
+	
+			this.thresholdParameterTypes = new ArrayList(ett.threshold_parameter_type_ids.length);
+			for (int i = 0; i < ett.threshold_parameter_type_ids.length; i++)
+				this.thresholdParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(ett.threshold_parameter_type_ids[i]), true));
+	
+			this.etalonParameterTypes = new ArrayList(ett.etalon_parameter_type_ids.length);
+			for (int i = 0; i < ett.etalon_parameter_type_ids.length; i++)
+				this.etalonParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(ett.etalon_parameter_type_ids[i]), true));
+	
+			this.outParameterTypes = new ArrayList(ett.out_parameter_type_ids.length);
+			for (int i = 0; i < ett.out_parameter_type_ids.length; i++)
+				this.outParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(ett.out_parameter_type_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 
 		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
 		try {

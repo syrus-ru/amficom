@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.11 2004/08/18 08:46:03 arseniy Exp $
+ * $Id: Characteristic.java,v 1.12 2004/08/23 20:48:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -23,7 +24,7 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/18 08:46:03 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/23 20:48:15 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -56,7 +57,13 @@ public class Characteristic extends StorableObject implements TypedObject {
 					new Date(ct.modified),
 					new Identifier(ct.creator_id),
 					new Identifier(ct.modifier_id));
-		this.type = (CharacteristicType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(ct.type_id), true);
+
+		try {
+			this.type = (CharacteristicType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(ct.type_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 		this.name = new String(ct.name);
 		this.description = new String(ct.description);
 		this.sort = ct.sort.value();

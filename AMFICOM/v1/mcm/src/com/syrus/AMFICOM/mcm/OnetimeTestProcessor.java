@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.11 2004/08/22 19:10:57 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.12 2004/08/23 20:48:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/22 19:10:57 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/23 20:48:29 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -37,13 +37,15 @@ public class OnetimeTestProcessor extends TestProcessor {
 	public OnetimeTestProcessor(Test test) {
 		super(test);
 		this.startTime = test.getStartTime();
+		super.lastMeasurementAcquisition = (this.startTime.getTime() < System.currentTimeMillis());
+		Log.debugMessage("Set lastMeasurementAcquisition: " + this.lastMeasurementAcquisition + "; startTime: " + this.startTime + ", current: " + (new Date(System.currentTimeMillis())), Log.DEBUGLEVEL08);
 	}
 
 	public void run() {
 		Identifier measurementId = null;
 		Measurement measurement = null;
 		while (super.running) {
-			if (! super.lastMeasurement) {
+			if (! super.lastMeasurementAcquisition) {
 				if (this.startTime.getTime() <= System.currentTimeMillis()) {
 					try {
 						measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE, 10);
@@ -51,7 +53,7 @@ public class OnetimeTestProcessor extends TestProcessor {
 					}
 					catch (IllegalObjectEntityException ioee) {
 						Log.errorException(ioee);
-						Log.debugMessage("Aborting test '" + super.test.getId().toString() + "' because cannot create identifier for measurement", Log.DEBUGLEVEL07);
+						Log.debugMessage("Aborting test '" + super.test.getId() + "' because cannot create identifier for measurement", Log.DEBUGLEVEL07);
 						super.abort();
 					}
 					catch (AMFICOMRemoteException are) {
@@ -89,15 +91,15 @@ public class OnetimeTestProcessor extends TestProcessor {
 					if (measurement != null) {
 						super.transceiver.addMeasurement(measurement, this);
 						super.numberOfScheduledMeasurements ++;
-						super.lastMeasurement = true;
+						super.lastMeasurementAcquisition = true;
 					}
 
 				}	//if (this.startTime.getTime() <= System.currentTimeMillis())
 			}	//if (! super.lastMeasurementAcquisition)
 
 			super.processMeasurementResult();
-System.out.println("numberOfReceivedMResults: " + super.numberOfReceivedMResults + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements + ", lastMeasurement: " + lastMeasurement);
-			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && this.lastMeasurement)
+System.out.println("numberOfReceivedMResults: " + super.numberOfReceivedMResults + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements + ", lastMeasurementAcquisition: " + lastMeasurementAcquisition);
+			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && this.lastMeasurementAcquisition)
 				super.complete();
 
 			try {

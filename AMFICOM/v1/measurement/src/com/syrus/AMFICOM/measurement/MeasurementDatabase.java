@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.15 2004/08/22 18:45:56 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.16 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -25,7 +26,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/22 18:45:56 $
+ * @version $Revision: 1.16 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -78,14 +79,21 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			Log.debugMessage("MeasurementDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
-				/**
-				 * @todo when change DB Identifier model ,change getString() to getLong()
-				 */
-				MeasurementType measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
-				/**
-				 * @todo when change DB Identifier model ,change getString() to getLong()
-				 */
-				MeasurementSetup measurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_SETUP_ID)), true);
+				MeasurementType measurementType;
+				MeasurementSetup measurementSetup;
+				try {
+					/**
+					 * @todo when change DB Identifier model ,change getString() to getLong()
+					 */
+					measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+					/**
+					 * @todo when change DB Identifier model ,change getString() to getLong()
+					 */
+					measurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_SETUP_ID)), true);
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
 				measurement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 											/**
@@ -161,7 +169,12 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				return (Result)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true);
+				try {
+					return (Result)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true);
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
 			}
 			throw new ObjectNotFoundException("No result of sort: " + resultSortNum + " for measurement " + measurementIdStr);
 		}

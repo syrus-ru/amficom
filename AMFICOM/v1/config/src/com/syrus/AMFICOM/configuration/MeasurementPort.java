@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.3 2004/08/13 14:08:15 bob Exp $
+ * $Id: MeasurementPort.java,v 1.4 2004/08/23 20:48:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,9 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Date;
 
 import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -23,8 +24,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/13 14:08:15 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2004/08/23 20:48:15 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public class MeasurementPort extends StorableObject implements TypedObject{
@@ -57,8 +58,13 @@ public class MeasurementPort extends StorableObject implements TypedObject{
 					new Date(mpt.modified),
 					new Identifier(mpt.creator_id),
 					new Identifier(mpt.modifier_id));
-		
-		this.type = (MeasurementPortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(mpt.type_id), true);
+
+		try {
+			this.type = (MeasurementPortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(mpt.type_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 		
 		this.name = new String(mpt.name);
 		this.description = new String(mpt.description);

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.25 2004/08/22 19:10:57 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.26 2004/08/23 20:48:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.NewIdentifierPool;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -39,14 +40,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-//import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-//import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-//import com.syrus.AMFICOM.measurement.AnalysisType;
-//import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
-
 /**
- * @version $Revision: 1.25 $, $Date: 2004/08/22 19:10:57 $
+ * @version $Revision: 1.26 $, $Date: 2004/08/23 20:48:29 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -137,16 +132,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			System.exit(-1);
 		}
 
-		/*	Create and start transceiver for every KIS*/
-		activateKISTransceivers();
-
-		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
-		prepareTestList();
-		prepareResultList();
-
-		/*	Create map of test processors*/
-		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
-
 		/*	Create CORBA server with servant(s)	*/
 		activateCORBAServer();
 
@@ -155,6 +140,16 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 		/*	Initialize pool of Identifiers*/
 		NewIdentifierPool.init(mServerRef);
+
+		/*	Create and start transceiver for every KIS*/
+		activateKISTransceivers();
+
+		/*	Create map of test processors*/
+		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
+
+		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
+		prepareTestList();
+		prepareResultList();
 
 		/*	Start main loop	*/
 		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
@@ -200,33 +195,26 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	private static void prepareTestList() {
 		testList = Collections.synchronizedList(new ArrayList());
+		List tests;
 
 		try {
-			List tests = TestDatabase.retrieveTestsForMCM(iAm.getId(), TestStatus.TEST_STATUS_SCHEDULED);
+			tests = TestDatabase.retrieveTestsForMCM(iAm.getId(), TestStatus.TEST_STATUS_SCHEDULED);
+			Log.debugMessage("Found " + tests.size() + " tests of status SCHEDULED", Log.DEBUGLEVEL07);
 			testList.addAll(tests);
 		}
 		catch (Exception e) {
 			Log.errorException(e);
 		}
 
-/*	Below - load tests for iAm
- * 	It's ness to fix database schema before completing this part of code*/
-//		try {
-//			testList.addAll(iAm.retrieveTestsOrderByStartTime(TestStatus.TEST_STATUS_SCHEDULED));
-//		}
-//		catch (Exception e) {
-//			Log.errorException(e);
-//		}
-//
-//		/*	Processing tests - process right NOW! */
-//		try {
-//			List tests = iAm.retrieveTestsOrderByStartTime(TestStatus.TEST_STATUS_PROCESSING);
-//			for (Iterator it = tests.iterator(); it.hasNext();)
-//				startTestProcessor((Test)it.next());
-//		}
-//		catch (Exception e) {
-//			Log.errorException(e);
-//		}
+		try {
+			tests = TestDatabase.retrieveTestsForMCM(iAm.getId(), TestStatus.TEST_STATUS_PROCESSING);
+			Log.debugMessage("Found " + tests.size() + " tests of status PROCESSING", Log.DEBUGLEVEL07);
+			for (Iterator it = tests.iterator(); it.hasNext();)
+				startTestProcessor((Test)it.next());
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+		}
 	}
 
 	private static void prepareResultList() {
@@ -468,17 +456,23 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			System.exit(-1);
 		}
 
-		id = new Identifier(domainT.creator_id);
-		Log.debugMessage("Getting user '" + id + "' (domain creator)", Log.DEBUGLEVEL05);
-		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
-
-		id = new Identifier(domainT.modifier_id);
-		Log.debugMessage("Getting user '" + id + "' (domain modifier)", Log.DEBUGLEVEL05);
-		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
-
-		id = new Identifier(domainT.id);
-		Log.debugMessage("Getting domain '" + id + "' ", Log.DEBUGLEVEL05);
-		domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(id, true);
+		try {
+			id = new Identifier(domainT.creator_id);
+			Log.debugMessage("Getting user '" + id + "' (domain creator)", Log.DEBUGLEVEL05);
+			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+	
+			id = new Identifier(domainT.modifier_id);
+			Log.debugMessage("Getting user '" + id + "' (domain modifier)", Log.DEBUGLEVEL05);
+			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+	
+			id = new Identifier(domainT.id);
+			Log.debugMessage("Getting domain '" + id + "' ", Log.DEBUGLEVEL05);
+			domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(id, true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			System.exit(-1);
+		}
 
 
 		id = new Identifier(mcmT.server_id);
@@ -493,38 +487,44 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			System.exit(-1);
 		}
 
-		id = new Identifier(serverT.creator_id);
-		Log.debugMessage("Getting user '" + id + "' (server creator)", Log.DEBUGLEVEL05);
-		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
-
-		id = new Identifier(serverT.modifier_id);
-		Log.debugMessage("Getting user '" + id + "' (server modifier)", Log.DEBUGLEVEL05);
-		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
-
-		id = new Identifier(serverT.user_id);
-		Log.debugMessage("Getting user '" + id + "' (server user)", Log.DEBUGLEVEL05);
-		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
-
-		id = new Identifier(serverT.id);
-		Log.debugMessage("Getting server '" + id + "' ", Log.DEBUGLEVEL05);
-		server = (Server)ConfigurationStorableObjectPool.getStorableObject(id, true);
-
-
-		id = new Identifier(mcmT.creator_id);
-		Log.debugMessage("Getting user '" + id + "' (mcm creator)", Log.DEBUGLEVEL05);
-		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
-
-		id = new Identifier(mcmT.modifier_id);
-		Log.debugMessage("Getting user '" + id + "' (mcm modifier)", Log.DEBUGLEVEL05);
-		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
-
-		id = new Identifier(mcmT.user_id);
-		Log.debugMessage("Getting user '" + id + "' (mcm user)", Log.DEBUGLEVEL05);
-		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
-
-		id = new Identifier(mcmT.id);
-		Log.debugMessage("Getting MCM '" + id + "' ", Log.DEBUGLEVEL05);
-		mcm = (MCM)ConfigurationStorableObjectPool.getStorableObject(id, true);
+		try {
+			id = new Identifier(serverT.creator_id);
+			Log.debugMessage("Getting user '" + id + "' (server creator)", Log.DEBUGLEVEL05);
+			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+	
+			id = new Identifier(serverT.modifier_id);
+			Log.debugMessage("Getting user '" + id + "' (server modifier)", Log.DEBUGLEVEL05);
+			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+	
+			id = new Identifier(serverT.user_id);
+			Log.debugMessage("Getting user '" + id + "' (server user)", Log.DEBUGLEVEL05);
+			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+	
+			id = new Identifier(serverT.id);
+			Log.debugMessage("Getting server '" + id + "' ", Log.DEBUGLEVEL05);
+			server = (Server)ConfigurationStorableObjectPool.getStorableObject(id, true);
+	
+	
+			id = new Identifier(mcmT.creator_id);
+			Log.debugMessage("Getting user '" + id + "' (mcm creator)", Log.DEBUGLEVEL05);
+			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+	
+			id = new Identifier(mcmT.modifier_id);
+			Log.debugMessage("Getting user '" + id + "' (mcm modifier)", Log.DEBUGLEVEL05);
+			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+	
+			id = new Identifier(mcmT.user_id);
+			Log.debugMessage("Getting user '" + id + "' (mcm user)", Log.DEBUGLEVEL05);
+			user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+	
+			id = new Identifier(mcmT.id);
+			Log.debugMessage("Getting MCM '" + id + "' ", Log.DEBUGLEVEL05);
+			mcm = (MCM)ConfigurationStorableObjectPool.getStorableObject(id, true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			System.exit(-1);
+		}
 
 
 		for (int i = 0; i < mcmT.kis_ids.length; i++) {

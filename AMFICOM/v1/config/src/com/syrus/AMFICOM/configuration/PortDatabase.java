@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.10 2004/08/22 18:49:19 arseniy Exp $
+ * $Id: PortDatabase.java,v 1.11 2004/08/23 20:48:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -31,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/22 18:49:19 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/23 20:48:15 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -98,10 +99,17 @@ public class PortDatabase extends StorableObjectDatabase {
 			Log.debugMessage("PortDatabase.retrievePort | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
-				/**
-				 * @todo when change DB Identifier model ,change String to long
-				 */
-				String portTypeIdCode = resultSet.getString(COLUMN_TYPE_ID);				
+				PortType portType;
+				try {
+					/**
+					 * @todo when change DB Identifier model ,change String to long
+					 */
+					String portTypeIdCode = resultSet.getString(COLUMN_TYPE_ID);
+					portType = (portTypeIdCode != null) ? (PortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(portTypeIdCode), true) : null;
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
 				
 				String description = resultSet.getString(COLUMN_DESCRIPTION);
 				port.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -116,7 +124,7 @@ public class PortDatabase extends StorableObjectDatabase {
 									*/
 								  new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 								  
-								  (portTypeIdCode != null) ? (PortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(portTypeIdCode), true) : null,								  
+								  portType,								  
 								  (description != null) ? description : "",
 								  /**
 									* @todo when change DB Identifier model ,change getString() to getLong()

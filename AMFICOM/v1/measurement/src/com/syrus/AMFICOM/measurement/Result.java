@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.12 2004/08/06 16:07:06 arseniy Exp $
+ * $Id: Result.java,v 1.13 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/06 16:07:06 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -56,7 +57,13 @@ public class Result extends StorableObject {
 					new Date(rt.modified),
 					new Identifier(rt.creator_id),
 					new Identifier(rt.modifier_id));
-		this.measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
+
+		try {
+			this.measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException("Cannot create result -- " + ae.getMessage(), ae);
+		}
 		this.sort = rt.sort.value();
 		this.alarmLevel = rt.alarm_level.value();
 		switch (this.sort) {
@@ -64,18 +71,33 @@ public class Result extends StorableObject {
 				this.action = this.measurement;
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				this.action = (Analysis)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.analysis_id), true);
+				try {
+					this.action = (Analysis)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.analysis_id), true);
+				}
+				catch (ApplicationException ae) {
+					throw new CreateObjectException("Cannot create result -- " + ae.getMessage(), ae);
+				}
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				this.action = (Evaluation)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
+				try {
+					this.action = (Evaluation)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
+				}
+				catch (ApplicationException ae) {
+					throw new CreateObjectException("Cannot create result -- " + ae.getMessage(), ae);
+				}
 				break;
 			default:
 				Log.errorMessage("Result.init | Illegal sort: " + this.sort + " of result '" + super.id.toString() + "'");
 		}
 
+		try {
 		this.parameters = new SetParameter[rt.parameters.length];
 		for (int i = 0; i < this.parameters.length; i++)
 			this.parameters[i] = new SetParameter(rt.parameters[i]);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 
 		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
 		try {

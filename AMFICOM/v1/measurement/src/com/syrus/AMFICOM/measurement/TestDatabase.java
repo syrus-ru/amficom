@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.25 2004/08/23 14:43:12 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.26 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/08/23 14:43:12 $
+ * @version $Revision: 1.26 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -100,45 +101,63 @@ public class TestDatabase extends StorableObjectDatabase {
 			Log.debugMessage("TestDatabase.retrieveTest | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
-				/**
-				 * @todo when change DB Identifier model ,change String to long
-				 */
-				String temportalPatternIdCode = resultSet.getString(COLUMN_TEMPORAL_PATTERN_ID);
-				/**
-				 * @todo when change DB Identifier model ,change String to long
-				 */
-				String analysisTypeIdCode = resultSet.getString(COLUMN_ANALYSIS_TYPE_ID);
-				/**
-				 * @todo when change DB Identifier model ,change String to long
-				 */
-				String evaluationTypeIdCode = resultSet.getString(COLUMN_EVALUATION_TYPE_ID);
-				/**
-				 * @todo when change DB Identifier model ,change String to long
-				 */
-				String monitoredElementIdCode = resultSet.getString(COLUMN_MONITORED_ELEMENT_ID);
+				TemporalPattern temporalPattern;
+				MeasurementType measurementType;
+				AnalysisType analysisType;
+				EvaluationType evaluationType;
+				MonitoredElement monitoredElement;
+				try {
+					/**
+					 * @todo when change DB Identifier model ,change String to long
+					 */
+					String temportalPatternIdCode = resultSet.getString(COLUMN_TEMPORAL_PATTERN_ID);
+					temporalPattern = (temportalPatternIdCode != null) ? (TemporalPattern)MeasurementStorableObjectPool.getStorableObject(new Identifier(temportalPatternIdCode), true) : null;
+					
+					measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_TYPE_ID)), true);
+
+					/**
+					 * @todo when change DB Identifier model ,change String to long
+					 */
+					String analysisTypeIdCode = resultSet.getString(COLUMN_ANALYSIS_TYPE_ID);
+					analysisType = (analysisTypeIdCode != null) ? (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(analysisTypeIdCode), true) : null;
+					/**
+					 * @todo when change DB Identifier model ,change String to long
+					 */
+					String evaluationTypeIdCode = resultSet.getString(COLUMN_EVALUATION_TYPE_ID);
+					evaluationType = (evaluationTypeIdCode != null) ? (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(evaluationTypeIdCode), true) : null;
+
+					/**
+					 * @todo when change DB Identifier model ,change String to long
+					 */
+					String monitoredElementIdCode = resultSet.getString(COLUMN_MONITORED_ELEMENT_ID);
+					monitoredElement = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(monitoredElementIdCode), true);
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
 				String description = resultSet.getString(COLUMN_DESCRIPTION);
 				test.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 													 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 													 /**
-													   * @todo when change DB Identifier model ,change getString() to getLong()
-													   */
+														 * @todo when change DB Identifier model ,change getString() to getLong()
+														 */
 													 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
 													 /**
-													   * @todo when change DB Identifier model ,change getString() to getLong()
-													   */
+														 * @todo when change DB Identifier model ,change getString() to getLong()
+														 */
 													 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 													 resultSet.getInt(COLUMN_TEMPORAL_TYPE),
 													 DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
 													 DatabaseDate.fromQuerySubString(resultSet, COLUMN_END_TIME),
-													 (temportalPatternIdCode != null) ? (TemporalPattern)MeasurementStorableObjectPool.getStorableObject(new Identifier(temportalPatternIdCode), true) : null,													 
+													 temporalPattern,													 
 													 /**
-													   * @todo when change DB Identifier model ,change getString() to getLong()
-													   */
-													 (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_TYPE_ID)), true),
-													 (analysisTypeIdCode != null) ? (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(analysisTypeIdCode), true) : null,
-													 (evaluationTypeIdCode != null) ? (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(evaluationTypeIdCode), true) : null,
+														 * @todo when change DB Identifier model ,change getString() to getLong()
+														 */
+													 measurementType,
+													 analysisType,
+													 evaluationType,
 													 resultSet.getInt(COLUMN_STATUS),
-													 (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(monitoredElementIdCode), true),
+													 monitoredElement,
 													 resultSet.getInt(COLUMN_RETURN_TYPE),
 													 (description != null) ? description: "");
 			}
@@ -248,6 +267,9 @@ public class TestDatabase extends StorableObjectDatabase {
 			String mesg = "TestDatabase.retrieveMeasurementsOrderByStartTime | Cannot retrieve measurements for test '" + testIdStr + "' and status " + Integer.toString(measurementStatus.value()) + " -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
+		catch (ApplicationException ae) {
+			throw new RetrieveObjectException(ae);
+		}
 		finally {
 			try {
 				if (statement != null)
@@ -286,7 +308,12 @@ public class TestDatabase extends StorableObjectDatabase {
 			Log.debugMessage("TestDatabase.retrieveLastMeasurement | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				return (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true);
+				try {
+					return (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true);
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
 			else
 				throw new ObjectNotFoundException("No last measurement for test: " + testIdStr);
 		}

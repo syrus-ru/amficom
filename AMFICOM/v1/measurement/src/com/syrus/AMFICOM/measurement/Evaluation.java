@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.19 2004/08/10 19:05:19 arseniy Exp $
+ * $Id: Evaluation.java,v 1.20 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -21,7 +22,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/10 19:05:19 $
+ * @version $Revision: 1.20 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -49,10 +50,17 @@ public class Evaluation extends Action {
 					new Date(et.modified),
 					new Identifier(et.creator_id),
 					new Identifier(et.modifier_id),
-					(EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.type_id), true),
+					null,
 					new Identifier(et.monitored_element_id));
 
-		this.thresholdSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
+		try {
+			super.type = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
+
+			this.thresholdSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 
 		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
 		try {

@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.11 2004/08/12 13:35:08 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.12 2004/08/23 20:48:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.io.IOException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.Threshold;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
@@ -38,7 +39,7 @@ import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/12 13:35:08 $
+ * @version $Revision: 1.12 $, $Date: 2004/08/23 20:48:29 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -242,9 +243,14 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 		catch (Exception e) {
 			throw new AnalysisException("Cannot generate identifier for events array -- " + e.getMessage(), e);
 		}
-		ParameterType parTypEventArray = (ParameterType)MeasurementStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(CODENAME_DADARA_EVENT_ARRAY), true);
-		if (parTypEventArray == null)
-			throw new AnalysisException("Cannot find parameter type of codename: '" + CODENAME_DADARA_EVENT_ARRAY + "'");
+
+		ParameterType parTypEventArray = null;
+		try {
+			parTypEventArray = (ParameterType)MeasurementStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(CODENAME_DADARA_EVENT_ARRAY), true);
+		}
+		catch (ApplicationException ae) {
+			throw new AnalysisException("Cannot find parameter type of codename: '" + CODENAME_DADARA_EVENT_ARRAY + "' -- " + ae.getMessage(), ae);
+		}
 		SetParameter[] arParameters = new SetParameter[1];
 		try {
 			arParameters[0] = new SetParameter(identifier,
@@ -306,9 +312,13 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 			catch (Exception e) {
 				throw new EvaluationException("Cannot generate identifier for events array -- " + e.getMessage(), e);
 			}
-			ParameterType parTypAlarmArray = (ParameterType)MeasurementStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(CODENAME_DADARA_ALARM_ARRAY), true);
-			if (parTypAlarmArray == null)
-				throw new EvaluationException("Cannot find parameter type of codename: '" + CODENAME_DADARA_ALARM_ARRAY + "'");
+			ParameterType parTypAlarmArray = null;
+			try {
+				parTypAlarmArray = (ParameterType)MeasurementStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(CODENAME_DADARA_ALARM_ARRAY), true);
+			}
+			catch (ApplicationException ae) {
+				throw new EvaluationException("Cannot find parameter type of codename: '" + CODENAME_DADARA_ALARM_ARRAY + "' -- " + ae.getMessage(), ae);
+			}
 			erParameters = new SetParameter[1];
 			try {
 				erParameters[0] = new SetParameter(identifier,

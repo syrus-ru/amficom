@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.17 2004/08/22 18:49:19 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.18 2004/08/23 20:48:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -27,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/22 18:49:19 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/23 20:48:15 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -196,7 +197,12 @@ public class KISDatabase extends StorableObjectDatabase {
 			Log.debugMessage("KISDatabase.retrieveMonitoredElements | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
-				monitoredElements.add((MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true));
+				try {
+					monitoredElements.add((MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true));
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
 			}
 		}
 		catch (SQLException sqle) {

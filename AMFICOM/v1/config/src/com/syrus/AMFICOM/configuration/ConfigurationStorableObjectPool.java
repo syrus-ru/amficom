@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.5 2004/08/22 18:49:19 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.6 2004/08/23 20:48:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/22 18:49:19 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/23 20:48:15 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -82,7 +82,7 @@ public class ConfigurationStorableObjectPool {
 		objectPoolMap.put(new Short(objectEntityCode), objectPool);
 	}
 
-	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) {
+	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws DatabaseException, CommunicationException {
 		if (objectId != null) {
 			short objectEntityCode = objectId.getMajor();
 			LRUMap objectPool = (LRUMap)objectPoolMap.get(new Short(objectEntityCode));
@@ -92,14 +92,14 @@ public class ConfigurationStorableObjectPool {
 					return storableObject;
 				else {
 					if (useLoader) {
-						try {
-							storableObject = loadStorableObject(objectId);
-							if (storableObject != null)
+						storableObject = loadStorableObject(objectId);
+						if (storableObject != null)
+							try {
 								putStorableObject(storableObject);
-						}
-						catch (Exception e) {
-							Log.errorException(e);
-						}
+							}
+							catch (IllegalObjectEntityException ioee) {
+								Log.errorException(ioee);
+							}
 					}
 					return storableObject;
 				}

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.10 2004/08/22 19:10:57 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.11 2004/08/23 20:48:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.mcm;
 
 import com.syrus.AMFICOM.mcm.corba.MCMPOA;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/22 19:10:57 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/23 20:48:29 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -57,11 +58,13 @@ public class MCMImplementation extends MCMPOA {
 	public void abortTest(Identifier_Transferable testIdT) throws AMFICOMRemoteException {
 		Identifier testId = new Identifier(testIdT);
 		Log.debugMessage("Received signal to abort test '" + testId + "'", Log.DEBUGLEVEL07);
-		Test test = (Test)MeasurementStorableObjectPool.getStorableObject(testId, true);
-		if (test != null)
+		try {
+			Test test = (Test)MeasurementStorableObjectPool.getStorableObject(testId, true);
 			MeasurementControlModule.abortTest(test);
-		else
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, "Test '" + testIdT.identifier_string + "' not found");
+		}
+		catch (ApplicationException ae) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, "Test '" + testIdT.identifier_string + "' not found -- " + ae.getMessage());
+		}
 	}
 
 	public Measurement_Transferable transmitMeasurement(Identifier_Transferable idT) throws AMFICOMRemoteException {

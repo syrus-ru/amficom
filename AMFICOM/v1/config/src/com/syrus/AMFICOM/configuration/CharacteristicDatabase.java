@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.14 2004/08/22 18:49:19 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.15 2004/08/23 20:48:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/22 18:49:19 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/23 20:48:15 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -147,7 +148,14 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					default:
 						throw new RetrieveObjectException("Unknown sort: " + sort + " for characteristic: " + cIdStr);
 				}
-				CharacteristicType characteristicType = (CharacteristicType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+
+				CharacteristicType characteristicType;
+				try {
+					characteristicType = (CharacteristicType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
 				characteristic.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 																		 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 																		 /**

@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.19 2004/08/10 19:05:19 arseniy Exp $
+ * $Id: Analysis.java,v 1.20 2004/08/23 20:47:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -21,7 +22,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/10 19:05:19 $
+ * @version $Revision: 1.20 $, $Date: 2004/08/23 20:47:33 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -49,9 +50,16 @@ public class Analysis extends Action {
 					new Date(at.modified),
 					new Identifier(at.creator_id),
 					new Identifier(at.modifier_id),
-					(AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(at.type_id), true),
+					null,
 					new Identifier(at.monitored_element_id));
-		this.criteriaSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(at.criteria_set_id), true);
+		try {
+			super.type = (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(at.type_id), true);
+
+			this.criteriaSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(at.criteria_set_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 
 		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
 		try {

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.14 2004/08/22 18:45:56 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.15 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/22 18:45:56 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -65,14 +66,21 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 			Log.debugMessage("AnalysisDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
-				/**
-				 * @todo when change DB Identifier model ,change getString() to getLong()
-				 */
-				AnalysisType analysisType = (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
-				/**
-				 * @todo when change DB Identifier model ,change getString() to getLong()
-				 */
-				Set criteriaSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_CRITERIA_SET_ID)), true);
+				AnalysisType analysisType;
+				Set criteriaSet;
+				try {
+					/**
+					 * @todo when change DB Identifier model ,change getString() to getLong()
+					 */
+					analysisType = (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+					/**
+					 * @todo when change DB Identifier model ,change getString() to getLong()
+					 */
+					criteriaSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_CRITERIA_SET_ID)), true);
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
 				analysis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 															 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 															/**
@@ -96,6 +104,9 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		catch (SQLException sqle) {
 			String mesg = "AnalysisDatabase.retrieve | Cannot retrieve analysis '" + analysisIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
+		}
+		catch (ApplicationException ae) {
+			throw new RetrieveObjectException(ae);
 		}
 		finally {
 			try {

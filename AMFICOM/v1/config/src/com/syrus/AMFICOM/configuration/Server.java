@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.10 2004/08/18 08:46:04 arseniy Exp $
+ * $Id: Server.java,v 1.11 2004/08/23 20:48:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.ArrayList;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -22,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/18 08:46:04 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/23 20:48:15 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -68,9 +69,14 @@ public class Server extends DomainMember implements Characterized {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
 
-		this.characteristics = new ArrayList(st.characteristic_ids.length);
-		for (int i = 0; i < st.characteristic_ids.length; i++)
-			this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(st.characteristic_ids[i]), true));
+		try {
+			this.characteristics = new ArrayList(st.characteristic_ids.length);
+			for (int i = 0; i < st.characteristic_ids.length; i++)
+				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(st.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	private Server(Identifier id,

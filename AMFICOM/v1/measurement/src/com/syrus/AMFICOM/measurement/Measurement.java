@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.20 2004/08/14 19:40:41 arseniy Exp $
+ * $Id: Measurement.java,v 1.21 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Date;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -23,7 +24,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/08/14 19:40:41 $
+ * @version $Revision: 1.21 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -60,9 +61,16 @@ public class Measurement extends Action {
 					new Date(mt.modified),
 					new Identifier(mt.creator_id),
 					new Identifier(mt.modifier_id),
-					(MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.type_id), true),
+					null,
 					new Identifier(mt.monitored_element_id));
-		this.setup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.setup_id), true);
+		try {
+			super.type = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.type_id), true);
+
+			this.setup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.setup_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 		this.startTime = new Date(mt.start_time);
 		this.duration = mt.duration;
 		this.status = mt.status.value();

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.9 2004/08/22 19:10:57 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.10 2004/08/23 20:48:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.mcm;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.NewIdentifierPool;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/22 19:10:57 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/23 20:48:29 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -40,7 +41,13 @@ public abstract class AnalysisEvaluationProcessor {
 
 	public static Result[] analyseEvaluate(Result measurementResult) throws AnalysisException, EvaluationException {
 		Measurement measurement = (Measurement)measurementResult.getAction();
-		Test test = (Test)MeasurementStorableObjectPool.getStorableObject(measurement.getTestId(), true);
+		Test test = null;
+		try {
+			test = (Test)MeasurementStorableObjectPool.getStorableObject(measurement.getTestId(), true);
+		}
+		catch (ApplicationException ae) {
+			throw new AnalysisException("Cannot find test -- " + ae.getMessage(), ae);
+		}
 		Identifier monitoredElementId = test.getMonitoredElement().getId();
 		MeasurementSetup measurementSetup = measurement.getSetup();
 
@@ -76,7 +83,7 @@ public abstract class AnalysisEvaluationProcessor {
 																				 Identifier monitoredElementId,
 																				 Set criteriaSet) throws AnalysisException {
 		if (criteriaSet == null)
-			throw new AnalysisException("Cirteria set is NULL");
+			throw new AnalysisException("Criteria set is NULL");
 
 		Identifier analysisId = null;
 		try {

@@ -1,5 +1,5 @@
 /*
- * $Id: VersionCollisionException.java,v 1.3 2004/08/06 13:43:44 arseniy Exp $
+ * $Id: VersionCollisionException.java,v 1.4 2004/08/23 20:47:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,17 +9,13 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/06 13:43:44 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/23 20:47:57 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
-public class VersionCollisionException extends Exception {
+public class VersionCollisionException extends ApplicationException {
 	static final long serialVersionUID = -3847337178607890353L;
-
-	public VersionCollisionException() {
-		super();
-	}
 
 	/**
 	 * @param message

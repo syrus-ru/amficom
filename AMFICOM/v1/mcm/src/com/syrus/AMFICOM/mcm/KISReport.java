@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.12 2004/08/22 19:10:57 arseniy Exp $
+ * $Id: KISReport.java,v 1.13 2004/08/23 20:48:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.NewIdentifierPool;
-import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/22 19:10:57 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/23 20:48:29 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -40,7 +40,6 @@ public class KISReport {
 	private byte[][] parameterValues;
 
 	static {
-	System.out.println("---------------- KISReport -----------------");
 		outParameterTypeIds = new HashMap(1);
 		addOutParameterTypeId(CODENAME_REFLECTOGRAMMA);
 	}
@@ -54,10 +53,10 @@ public class KISReport {
 	}
 
 	public Result createResult() throws MeasurementException {
-		Measurement measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(this.measurementId, true);
-
-		SetParameter[] parameters = new SetParameter[this.parameterCodenames.length];
 		try {
+			Measurement measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(this.measurementId, true);
+
+			SetParameter[] parameters = new SetParameter[this.parameterCodenames.length];
 			ParameterType parameterType;
 			for (int i = 0; i < parameters.length; i++) {
 				parameterType = (ParameterType)MeasurementStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(this.parameterCodenames[i]), true);
@@ -65,15 +64,7 @@ public class KISReport {
 																				 parameterType,
 																				 this.parameterValues[i]);
 			}
-		}
-		catch (IllegalObjectEntityException ioee) {
-			throw new MeasurementException(ioee.getMessage(), MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE, ioee);
-		}
-		catch (AMFICOMRemoteException are) {
-			throw new MeasurementException(are.message, MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE, are);
-		}
 
-		try {
 			return measurement.createResult(NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE, 10),
 																			MeasurementControlModule.iAm.getUserId(),
 																			null,
@@ -83,11 +74,11 @@ public class KISReport {
 		catch (IllegalObjectEntityException ioee) {
 			throw new MeasurementException(ioee.getMessage(), MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE, ioee);
 		}
+		catch (ApplicationException ae) {
+			throw new MeasurementException(ae.getMessage(), MeasurementException.DATABASE_CALL_FAILED_CODE, ae);
+		}
 		catch (AMFICOMRemoteException are) {
 			throw new MeasurementException("Cannot generate identifier: " + are.message, MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE, are);
-		}
-		catch (CreateObjectException e) {
-			throw new MeasurementException("Cannot create result: " + e.getMessage(), MeasurementException.DATABASE_CALL_FAILED_CODE, e);
 		}
 	}
 

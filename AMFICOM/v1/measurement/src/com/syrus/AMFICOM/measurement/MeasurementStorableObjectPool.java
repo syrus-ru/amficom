@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.6 2004/08/22 18:45:56 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.7 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/22 18:45:56 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -76,7 +76,7 @@ public class MeasurementStorableObjectPool {
 		objectPoolMap.put(new Short(objectEntityCode), objectPool);
 	}
 	
-	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) {
+	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws DatabaseException, CommunicationException {
 		if (objectId != null) {
 			short objectEntityCode = objectId.getMajor();
 			LRUMap objectPool = (LRUMap)objectPoolMap.get(new Short(objectEntityCode));
@@ -86,14 +86,14 @@ public class MeasurementStorableObjectPool {
 					return storableObject;
 				else {
 					if (useLoader) {
-						try {
-							storableObject = loadStorableObject(objectId);
-							if (storableObject != null)
+						storableObject = loadStorableObject(objectId);
+						if (storableObject != null)
+							try {
 								putStorableObject(storableObject);
-						}
-						catch (Exception e) {
-							Log.errorException(e);
-						}
+							}
+							catch (IllegalObjectEntityException ioee) {
+								Log.errorException(ioee);
+							}
 					}
 					return storableObject;
 				}

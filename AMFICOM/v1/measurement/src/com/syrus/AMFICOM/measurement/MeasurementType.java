@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.19 2004/08/20 12:52:23 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.20 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/20 12:52:23 $
+ * @version $Revision: 1.20 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -66,13 +67,18 @@ public class MeasurementType extends ActionType {
 					new String(mtt.codename),
 					new String(mtt.description));
 
-		this.inParameterTypes = new ArrayList(mtt.in_parameter_type_ids.length);
-		for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
-			this.inParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mtt.in_parameter_type_ids[i]), true));
-
-		this.outParameterTypes = new ArrayList(mtt.out_parameter_type_ids.length);
-		for (int i = 0; i < mtt.out_parameter_type_ids.length; i++)
-			this.outParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mtt.out_parameter_type_ids[i]), true));
+		try {
+			this.inParameterTypes = new ArrayList(mtt.in_parameter_type_ids.length);
+			for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
+				this.inParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mtt.in_parameter_type_ids[i]), true));
+	
+			this.outParameterTypes = new ArrayList(mtt.out_parameter_type_ids.length);
+			for (int i = 0; i < mtt.out_parameter_type_ids.length; i++)
+				this.outParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mtt.out_parameter_type_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 
 		this.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
 		try {

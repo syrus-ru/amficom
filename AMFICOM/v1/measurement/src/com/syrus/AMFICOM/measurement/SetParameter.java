@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.11 2004/08/17 14:35:48 bob Exp $
+ * $Id: SetParameter.java,v 1.12 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,13 +13,15 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/17 14:35:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2004/08/23 20:47:37 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -30,7 +32,7 @@ public class SetParameter implements TransferableObject, TypedObject {
 	
 	public static final String ID_TYPE = "type";
 
-	public SetParameter(Parameter_Transferable pt) {
+	public SetParameter(Parameter_Transferable pt) throws DatabaseException, CommunicationException{
 		this.id = new Identifier(pt.id);
 		this.type = (ParameterType)MeasurementStorableObjectPool.getStorableObject(new Identifier(pt.type_id), true);
 		this.value = new byte[pt.value.length];

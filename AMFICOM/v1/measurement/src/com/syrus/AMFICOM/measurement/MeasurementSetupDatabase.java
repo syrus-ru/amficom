@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.14 2004/08/22 18:45:56 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.15 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/22 18:45:56 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -331,28 +332,39 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				 * @todo when change DB Identifier model ,change getString() to
 				 *       getLong()
 				 */
-				Set parameterSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_PARAMETER_SET_ID)), true);
-				/**
-				 * @todo when change DB Identifier model ,change String to long
-				 */
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				String idCode = resultSet.getString(COLUMN_CRITERIA_SET_ID);
-				Set criteriaSet = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				idCode = resultSet.getString(COLUMN_THRESHOLD_SET_ID);
-				Set thresholdSet = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				idCode = resultSet.getString(COLUMN_ETALON_ID);
-				Set etalon = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
+				Set parameterSet;
+				Set criteriaSet;
+				Set thresholdSet;
+				Set etalon;
+				String idCode;
+				try {
+					parameterSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_PARAMETER_SET_ID)), true);
+					/**
+					 * @todo when change DB Identifier model ,change String to long
+					 */
+					/**
+					 * @todo when change DB Identifier model ,change getString() to
+					 *       getLong()
+					 */
+					idCode = resultSet.getString(COLUMN_CRITERIA_SET_ID);
+					criteriaSet = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
+					/**
+					 * @todo when change DB Identifier model ,change getString() to
+					 *       getLong()
+					 */
+					idCode = resultSet.getString(COLUMN_THRESHOLD_SET_ID);
+					thresholdSet = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
+					/**
+					 * @todo when change DB Identifier model ,change getString() to
+					 *       getLong()
+					 */
+					idCode = resultSet.getString(COLUMN_ETALON_ID);
+					etalon = (idCode != null) ? (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(idCode), true) : null;
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
+
 				String description = resultSet.getString(COLUMN_DESCRIPTION);
 				measurementSetup.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 																			 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),

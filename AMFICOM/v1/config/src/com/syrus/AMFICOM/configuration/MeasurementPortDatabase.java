@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.5 2004/08/22 18:49:19 arseniy Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.6 2004/08/23 20:48:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,10 +16,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -30,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/22 18:49:19 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/23 20:48:15 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -100,10 +101,17 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 			Log.debugMessage("MeasurementPortDatabase.retrieveMeasurementPort | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
-				/**
-				 * @todo when change DB Identifier model ,change String to long
-				 */
-				String measurementPortTypeIdCode = resultSet.getString(COLUMN_TYPE_ID);				
+				MeasurementPortType measurementPortType;
+				try {
+					/**
+					 * @todo when change DB Identifier model ,change String to long
+					 */
+					String measurementPortTypeIdCode = resultSet.getString(COLUMN_TYPE_ID);
+					measurementPortType = (measurementPortTypeIdCode != null) ? (MeasurementPortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(measurementPortTypeIdCode), true) : null;
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
 				
 				String name = resultSet.getString(COLUMN_NAME);
 				
@@ -120,7 +128,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 									*/
 								  new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 								  
-								  (measurementPortTypeIdCode != null) ? (MeasurementPortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(measurementPortTypeIdCode), true) : null,
+								  measurementPortType,
 								  (name != null) ? name : "",
 								  (description != null) ? description : "",
 								  /**

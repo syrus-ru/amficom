@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.19 2004/08/22 18:45:56 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.20 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -30,7 +31,7 @@ import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/22 18:45:56 $
+ * @version $Revision: 1.20 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -136,27 +137,27 @@ public class SetDatabase extends StorableObjectDatabase {
 			Log.debugMessage("SetDatabase.retrieveSetParameters | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			SetParameter parameter;
+			ParameterType parameterType;
 			while (resultSet.next()) {
 				try {
 					/**
 					 * @todo when change DB Identifier model ,change getString() to getLong()
 					 */
-					ParameterType parameterType = (ParameterType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(LINK_COLUMN_TYPE_ID)), true);
-					parameter = new SetParameter(/**
-																				* @todo when change DB Identifier model ,change getString() to getLong()
-																				*/
-																				new Identifier(resultSet.getString(COLUMN_ID)),
-																				/**
-																				 * @todo when change DB Identifier model ,change getString() to getLong()
-																				 */
-																				parameterType,
-																				ByteArrayDatabase.toByteArray((BLOB)resultSet.getBlob(LINK_COLUMN_VALUE)));
-					parameters.add(parameter);
+					parameterType = (ParameterType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(LINK_COLUMN_TYPE_ID)), true);
 				}
-				catch (Exception e) {
-					Log.errorException(e);
-					continue;
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
 				}
+				parameter = new SetParameter(/**
+																			* @todo when change DB Identifier model ,change getString() to getLong()
+																			*/
+																			new Identifier(resultSet.getString(COLUMN_ID)),
+																			/**
+																			 * @todo when change DB Identifier model ,change getString() to getLong()
+																			 */
+																			parameterType,
+																			ByteArrayDatabase.toByteArray((BLOB)resultSet.getBlob(LINK_COLUMN_VALUE)));
+				parameters.add(parameter);
 			}
 		}
 		catch (SQLException sqle) {

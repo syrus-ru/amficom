@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.19 2004/08/22 19:10:57 arseniy Exp $
+ * $Id: Transceiver.java,v 1.20 2004/08/23 20:48:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.Hashtable;
 import java.util.Collections;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -26,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/22 19:10:57 $
+ * @version $Revision: 1.20 $, $Date: 2004/08/23 20:48:29 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -71,11 +72,28 @@ public class Transceiver extends SleepButWorkThread {
 	protected void addMeasurement(Measurement measurement, TestProcessor testProcessor) {
 		Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED) {
+			Log.debugMessage("Transceiver.addMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			this.measurementQueue.add(measurement);
 			this.testProcessors.put(measurementId, testProcessor);
 		}
 		else
-			Log.errorMessage("Status: " + measurement.getStatus().value() + " of measurement '" + measurementId + "' not SCHEDULED -- cannot add to queue");
+			Log.errorMessage("Transceiver.addMeasurement | Status: " + measurement.getStatus().value() + " of measurement '" + measurementId + "' not SCHEDULED -- cannot add to queue");
+	}
+
+	protected void addAcquiringMeasurement(Measurement measurement, TestProcessor testProcessor) {
+		Identifier measurementId = measurement.getId();
+		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING) {
+			Log.debugMessage("Transceiver.addAcquiringMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+			this.testProcessors.put(measurementId, testProcessor);
+			try {
+				MeasurementStorableObjectPool.putStorableObject(measurement);
+			}
+			catch (IllegalObjectEntityException ioee) {
+				Log.errorException(ioee);
+			}
+		}
+		else
+			Log.errorMessage("Transceiver.addAcquiringMeasurement | Status: " + measurement.getStatus().value() + " of measurement '" + measurementId + "' not ACQUIRING -- cannot add to queue");
 	}
 
 	public void run() {
@@ -122,7 +140,13 @@ public class Transceiver extends SleepButWorkThread {
 			else {
 				measurementId = this.kisReport.getMeasurementId();
 				Log.debugMessage("Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
-				measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(measurementId, true);
+				measurement = null;
+				try {
+					measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(measurementId, true);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
 				if (measurement != null) {
 					testProcessor = (TestProcessor)this.testProcessors.remove(measurementId);
 					if (testProcessor != null) {

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.14 2004/08/22 18:45:56 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.15 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/22 18:45:56 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -90,7 +91,13 @@ public class ResultDatabase extends StorableObjectDatabase {
 				/**
 				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
-				Measurement measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_ID)), true);
+				Measurement measurement = null;
+				try {
+					measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_ID)), true);
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
 				int resultSort = resultSet.getInt(COLUMN_SORT);
 				Action action = null;
 				switch (resultSort) {
@@ -101,13 +108,23 @@ public class ResultDatabase extends StorableObjectDatabase {
 						/**
 						 * @todo when change DB Identifier model ,change getString() to getLong()
 						 */
-						action = (Analysis)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ANALYSIS_ID)), true);
+						try {
+							action = (Analysis)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ANALYSIS_ID)), true);
+						}
+						catch (Exception e) {
+							throw new RetrieveObjectException(e);
+						}
 						break;
 					case ResultSort._RESULT_SORT_EVALUATION:
 						/**
 						 * @todo when change DB Identifier model ,change getString() to getLong()
 						 */
-						action = (Evaluation)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_EVALUATION_ID)), true);
+						try {
+							action = (Evaluation)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_EVALUATION_ID)), true);
+						}
+						catch (Exception e) {
+							throw new RetrieveObjectException(e);
+						}
 						break;
 					default:
 						Log.errorMessage("Unkown sort: " + resultSort + " of result " + resultIdStr);
@@ -169,27 +186,27 @@ public class ResultDatabase extends StorableObjectDatabase {
 			Log.debugMessage("ResultDatabase.retrieveResultParameters | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			SetParameter parameter;
+			ParameterType parameterType;
 			while (resultSet.next()) {
 				try {
 					/**
 					 * @todo when change DB Identifier model ,change getString() to getLong()
 					 */
-					ParameterType parameterType = (ParameterType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(LINK_COLUMN_TYPE_ID)), true);
-					parameter = new SetParameter(/**
+					parameterType = (ParameterType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(LINK_COLUMN_TYPE_ID)), true);
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
+				parameter = new SetParameter(/**
+																			* @todo when change DB Identifier model ,change getString() to getLong()
+																			*/
+																			new Identifier(resultSet.getString(COLUMN_ID)),
+																			/**
 																				* @todo when change DB Identifier model ,change getString() to getLong()
 																				*/
-																				new Identifier(resultSet.getString(COLUMN_ID)),
-																				/**
-																					* @todo when change DB Identifier model ,change getString() to getLong()
-																					*/
-																				parameterType,
-																				ByteArrayDatabase.toByteArray((BLOB)resultSet.getBlob(LINK_COLUMN_VALUE)));
-					parameters.add(parameter);
-				}
-				catch (Exception e) {
-					Log.errorException(e);
-					continue;
-				}
+																			parameterType,
+																			ByteArrayDatabase.toByteArray((BLOB)resultSet.getBlob(LINK_COLUMN_VALUE)));
+				parameters.add(parameter);
 			}
 		}
 		catch (SQLException sqle) {

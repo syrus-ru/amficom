@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.18 2004/08/18 18:09:24 arseniy Exp $
+ * $Id: Set.java,v 1.19 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/18 18:09:24 $
+ * @version $Revision: 1.19 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -69,9 +70,14 @@ public class Set extends StorableObject {
 		this.sort = st.sort.value();
 		this.description = new String(st.description);
 
-		this.parameters = new SetParameter[st.parameters.length];
-		for (int i = 0; i < this.parameters.length; i++)
-			this.parameters[i] = new SetParameter(st.parameters[i]);
+		try {
+			this.parameters = new SetParameter[st.parameters.length];
+			for (int i = 0; i < this.parameters.length; i++)
+				this.parameters[i] = new SetParameter(st.parameters[i]);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 
 		this.monitoredElementIds = new ArrayList(st.monitored_element_ids.length);
 		for (int i = 0; i < st.monitored_element_ids.length; i++)

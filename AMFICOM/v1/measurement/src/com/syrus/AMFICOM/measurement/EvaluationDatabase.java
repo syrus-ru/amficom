@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.12 2004/08/22 18:45:56 arseniy Exp $
+ * $Id: EvaluationDatabase.java,v 1.13 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/22 18:45:56 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -65,15 +66,22 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 			Log.debugMessage("EvaluationDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
-				/**
-				 * @todo when change DB Identifier model ,change getString() to getLong()
-				 */
-				EvaluationType evaluationType = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				Set thresholdSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_THRESHOLD_SET_ID)), true);
+				EvaluationType evaluationType;
+				Set thresholdSet;
+				try {
+					/**
+					 * @todo when change DB Identifier model ,change getString() to getLong()
+					 */
+					evaluationType = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+					/**
+					 * @todo when change DB Identifier model ,change getString() to
+					 *       getLong()
+					 */
+					thresholdSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_THRESHOLD_SET_ID)), true);
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
 				/**
 				 * @todo when change DB Identifier model ,change getString() to
 				 *       getLong()
@@ -92,6 +100,9 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		catch (SQLException sqle) {
 			String mesg = "EvaluationDatabase.retrieve | Cannot retrieve evaluation '" + evaluationIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
+		}
+		catch (ApplicationException ae) {
+			throw new RetrieveObjectException(ae);
 		}
 		finally {
 			try {

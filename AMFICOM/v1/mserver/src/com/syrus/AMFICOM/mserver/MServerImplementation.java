@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.9 2004/08/22 18:58:07 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.10 2004/08/23 20:48:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -80,7 +81,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/22 18:58:07 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/23 20:48:36 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -560,17 +561,13 @@ public class MServerImplementation extends MServerPOA {
 	public void updateTestStatus(Identifier_Transferable idT, TestStatus status) {
 		Identifier id = new Identifier(idT);
 		Log.debugMessage("Updating status of test '" + id + "' to " + status.value(), Log.DEBUGLEVEL07);
-		Test test = (Test)MeasurementStorableObjectPool.getStorableObject(id, true);
-		if (test != null) {
-			try {
-				test.updateStatus(status, MeasurementServer.iAm.getUserId());
-			}
-			catch (UpdateObjectException uoe) {
-				Log.errorException(uoe);
-			}
+		try {
+			Test test = (Test)MeasurementStorableObjectPool.getStorableObject(id, true);
+			test.updateStatus(status, MeasurementServer.iAm.getUserId());
 		}
-		else
-			Log.errorMessage("updateTestStatus | Cannot find test '" + id + "'");
+		catch (ApplicationException ae) {
+			Log.errorMessage("updateTestStatus | Cannot update status of test '" + id + "' -- " + ae.getMessage());
+		}
 	}
 
 

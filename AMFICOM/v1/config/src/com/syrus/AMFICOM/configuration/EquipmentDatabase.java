@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.24 2004/08/22 18:49:19 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.25 2004/08/23 20:48:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,21 +14,22 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.ArrayList;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/08/22 18:49:19 $
+ * @version $Revision: 1.25 $, $Date: 2004/08/23 20:48:15 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -91,6 +92,13 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			if (resultSet.next()) {
 				String name = resultSet.getString(COLUMN_NAME);
 				String description = resultSet.getString(COLUMN_DESCRIPTION);
+				EquipmentType equipmentType;
+				try {
+					equipmentType = (EquipmentType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
 				equipment.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 																DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 																/**
@@ -105,7 +113,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 																	* @todo when change DB Identifier model ,change getString() to getLong()
 																	*/
 																new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
-																(EquipmentType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true),
+																equipmentType,
 																(name != null) ? name : "",
 																(description != null) ? description : "",
 																/**

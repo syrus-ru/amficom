@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.41 2004/08/23 14:43:11 arseniy Exp $
+ * $Id: Test.java,v 1.42 2004/08/23 20:47:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.util.Log;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -37,7 +38,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/08/23 14:43:11 $
+ * @version $Revision: 1.42 $, $Date: 2004/08/23 20:47:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -89,26 +90,44 @@ public class Test extends StorableObject {
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
 		 */
-		this.measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(tt.measurement_type_id), true);
-		/**
-		 * @todo when change DB Identifier model ,change identifier_string to
-		 *       identifier_code
-		 */
-		this.analysisType = (tt.analysis_type_id.identifier_string.length() != 0) ? (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(tt.analysis_type_id), true) : null;
-		/**
-		 * @todo when change DB Identifier model ,change identifier_string to
-		 *       identifier_code
-		 */
-		this.evaluationType = (tt.evaluation_type_id.identifier_string.length() != 0)	? (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(tt.evaluation_type_id), true) : null;
+		try {
+			this.measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(tt.measurement_type_id), true);
+			/**
+			 * @todo when change DB Identifier model ,change identifier_string to
+			 *       identifier_code
+			 */
+			this.analysisType = (tt.analysis_type_id.identifier_string.length() != 0) ? (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(tt.analysis_type_id), true) : null;
+			/**
+			 * @todo when change DB Identifier model ,change identifier_string to
+			 *       identifier_code
+			 */
+			this.evaluationType = (tt.evaluation_type_id.identifier_string.length() != 0)	? (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(tt.evaluation_type_id), true) : null;
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
 		this.status = tt.status.value();
-		this.monitoredElement = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(tt.monitored_element_id), true);
+
+		try {
+			this.monitoredElement = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(tt.monitored_element_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
 		this.returnType = tt.return_type.value();
 		this.description = new String(tt.description);
 		this.measurementSetupIds = new ArrayList(tt.measurement_setup_ids.length);
 		for (int i = 0; i < tt.measurement_setup_ids.length; i++)
 			this.measurementSetupIds.add(new Identifier(tt.measurement_setup_ids[i]));
 
-		this.mainMeasurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject((Identifier)this.measurementSetupIds.get(0), true);
+		try {
+			this.mainMeasurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject((Identifier)this.measurementSetupIds.get(0), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 
 		this.testDatabase = MeasurementDatabaseContext.testDatabase;
 		try {
@@ -456,7 +475,12 @@ public class Test extends StorableObject {
 	protected synchronized void setMeasurementSetupIds(List measurementSetupIds) {
 		this.measurementSetupIds = measurementSetupIds;
 
-		this.mainMeasurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject((Identifier)this.measurementSetupIds.get(0), true);
+		try {
+			this.mainMeasurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject((Identifier)this.measurementSetupIds.get(0), true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
 	}
 	
 	
@@ -556,7 +580,7 @@ public class Test extends StorableObject {
 			}
 		}
 
-		TestTimeStamps(TestTimeStamps_Transferable ttst) {
+		TestTimeStamps(TestTimeStamps_Transferable ttst) throws CreateObjectException {
 			this.discriminator = ttst.discriminator().value();
 			switch (this.discriminator) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
@@ -568,7 +592,12 @@ public class Test extends StorableObject {
 					PeriodicalTestTimeStamps ptts = ttst.ptts();
 					this.startTime = new Date(ptts.start_time);
 					this.endTime = new Date(ptts.end_time);
-					this.temporalPattern = (TemporalPattern) MeasurementStorableObjectPool.getStorableObject(new Identifier(ptts.temporal_pattern_id), true);
+					try {
+						this.temporalPattern = (TemporalPattern) MeasurementStorableObjectPool.getStorableObject(new Identifier(ptts.temporal_pattern_id), true);
+					}
+					catch (ApplicationException ae) {
+						throw new CreateObjectException(ae);
+					}
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
 					ContinuousTestTimeStamps ctts = ttst.ctts();

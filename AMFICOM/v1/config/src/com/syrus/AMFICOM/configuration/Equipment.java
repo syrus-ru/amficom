@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.23 2004/08/19 12:21:22 arseniy Exp $
+ * $Id: Equipment.java,v 1.24 2004/08/23 20:48:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/08/19 12:21:22 $
+ * @version $Revision: 1.24 $, $Date: 2004/08/23 20:48:15 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -69,7 +70,13 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		for (int i = 0; i < et.monitored_element_ids.length; i++)
 			super.monitoredElementIds.add(new Identifier(et.monitored_element_ids[i]));
 
-		this.type = (EquipmentType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
+		try {
+			this.type = (EquipmentType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
 		this.name = new String(et.name);
 		this.description = new String(et.description);
 		this.imageId = new Identifier(et.image_id);
@@ -86,9 +93,14 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
 
-		this.characteristics = new ArrayList(et.characteristic_ids.length);
-		for (int i = 0; i < et.characteristic_ids.length; i++)
-			this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(et.characteristic_ids[i]), true));
+		try {
+			this.characteristics = new ArrayList(et.characteristic_ids.length);
+			for (int i = 0; i < et.characteristic_ids.length; i++)
+				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(et.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 	
 	private Equipment(Identifier id,

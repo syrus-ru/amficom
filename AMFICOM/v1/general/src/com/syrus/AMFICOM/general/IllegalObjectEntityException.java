@@ -1,5 +1,5 @@
 /*
- * $Id: IllegalObjectEntityException.java,v 1.5 2004/08/10 19:04:51 arseniy Exp $
+ * $Id: IllegalObjectEntityException.java,v 1.6 2004/08/23 20:47:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,12 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/10 19:04:51 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/23 20:47:57 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
-public class IllegalObjectEntityException extends Exception {
+public class IllegalObjectEntityException extends ApplicationException {
 	private static final long serialVersionUID = -6641367464918789409L;
 
 	public static final int OTHER_CODE = 0;

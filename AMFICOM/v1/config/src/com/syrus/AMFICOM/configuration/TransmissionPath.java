@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.10 2004/08/18 08:46:04 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.11 2004/08/23 20:48:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -21,7 +22,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/18 08:46:04 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/23 20:48:15 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -125,9 +126,14 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
 
-		this.characteristics = new ArrayList(tpt.characteristic_ids.length);
-		for (int i = 0; i < tpt.characteristic_ids.length; i++)
-			this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.characteristic_ids[i]), true));
+		try {
+			this.characteristics = new ArrayList(tpt.characteristic_ids.length);
+			for (int i = 0; i < tpt.characteristic_ids.length; i++)
+				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 	
 	public Object getTransferable() {

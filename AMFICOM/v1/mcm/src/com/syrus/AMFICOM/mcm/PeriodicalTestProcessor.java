@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.15 2004/08/22 19:10:57 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.16 2004/08/23 20:48:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.mcm;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Iterator;
 import java.util.ArrayList;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -25,7 +26,7 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/22 19:10:57 $
+ * @version $Revision: 1.16 $, $Date: 2004/08/23 20:48:29 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -58,18 +59,23 @@ public class PeriodicalTestProcessor extends TestProcessor {
 
 	private Date getCurrentTimeStamp() {
 		Date timeStamp = null;
-		if (! super.lastMeasurement) {
+		if (! super.lastMeasurementAcquisition) {
 			if (! this.timeStampsList.isEmpty()) {
 				timeStamp = (Date)this.timeStampsList.remove(0);
 			}
 			else {
 				long start = System.currentTimeMillis();
 				if (start <= this.endTime) {
-					this.timeStampsList.addAll(this.temporalPattern.getTimes(start, Math.min(start + FRAME, this.endTime)));
-					timeStamp = (Date)this.timeStampsList.remove(0);
+					List times = this.temporalPattern.getTimes(start, Math.min(start + FRAME, this.endTime));
+System.out.println("From " + (new Date(start)) + " to " + (new Date(Math.min(start + FRAME, this.endTime))));
+for (Iterator it = times.iterator(); it.hasNext();)
+	System.out.println("time: " + ((Date)it.next()));
+					this.timeStampsList.addAll(times);
+					if (! this.timeStampsList.isEmpty())
+						timeStamp = (Date)this.timeStampsList.remove(0);
 				}
 				else
-					super.lastMeasurement = true;
+					super.lastMeasurementAcquisition = true;
 			}
 		}
 		return timeStamp;
@@ -79,7 +85,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 		Identifier measurementId = null;
 		Measurement measurement = null;
 		while (super.running) {
-			if (! super.lastMeasurement) {
+			if (! super.lastMeasurementAcquisition) {
 				if (this.currentTimeStamp == null) {
 					this.currentTimeStamp = this.getCurrentTimeStamp();
 					Log.debugMessage("Next measurement at: " + this.currentTimeStamp, Log.DEBUGLEVEL07);
@@ -132,11 +138,11 @@ public class PeriodicalTestProcessor extends TestProcessor {
 
 					}	//if (this.currentTimeStamp.getTime() <= System.currentTimeMillis())
 				}	//if (this.currentTimeStamp == null)
-			}	//if (! super.lastMeasurement)
+			}	//if (! super.lastMeasurementAcquisition)
 
 			super.processMeasurementResult();
-System.out.println("numberOfReceivedMResults: " + super.numberOfReceivedMResults + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements + ", lastMeasurement: " + lastMeasurement);
-			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && super.lastMeasurement)
+System.out.println("numberOfReceivedMResults: " + super.numberOfReceivedMResults + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements + ", lastMeasurementAcquisition: " + lastMeasurementAcquisition);
+			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && super.lastMeasurementAcquisition)
 				super.complete();
 
 			try {
