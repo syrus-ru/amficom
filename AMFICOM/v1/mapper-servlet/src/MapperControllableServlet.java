@@ -6,11 +6,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.Color;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.net.URISyntaxException;
 
 import java.util.ArrayList;
@@ -21,11 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 // MapInfo classes
-import com.mapinfo.dp.Attribute;
 import com.mapinfo.dp.Feature;
 import com.mapinfo.dp.FeatureSet;
-import com.mapinfo.dp.QueryParams;
-import com.mapinfo.dp.TableInfo;
 import com.mapinfo.mapj.MapJ;
 import com.mapinfo.mapj.FeatureLayer;
 import com.mapinfo.mapj.LayerType;
@@ -40,7 +35,7 @@ import com.mapinfo.xmlprot.mxtj.ImageRequestComposer;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.6 $, $Date: 2005/03/04 08:38:15 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/04 15:04:04 $
  * @module mapper-servlet
  */
 public class MapperControllableServlet
@@ -152,6 +147,7 @@ public class MapperControllableServlet
 	public void service(HttpServletRequest req, HttpServletResponse resp) throws
 		IOException
 	{
+		log(null);
 		log("Creating ObjectOutputStream...");
 		ObjectOutputStream oos = new ObjectOutputStream(resp.getOutputStream());
 		
@@ -427,20 +423,22 @@ public class MapperControllableServlet
 				log ("Got labels' column name: " + labelColumnName);
 				
 				resultColumnNames.add(labelColumnName);
-					
-				FeatureSet fs = currLayer.searchByAttribute(
-						resultColumnNames,
-						labelColumnName,
-						new Attribute(nameToSearch),
-						null);
 
+				FeatureSet fs = currLayer.searchAll(
+					resultColumnNames,
+					null);
+	
 				log ("Got feature set.");
-				
+		
 				Feature feature = null;
 				// Loop until FeatureSet.getNextFeature() returns null
 				while((feature = fs.getNextFeature()) != null)
 				{
 					String featureName = feature.getAttribute(0).getString();
+					
+					if (featureName.toLowerCase().indexOf(nameToSearch.toLowerCase()) < 0)
+						continue;
+						
 					log ("Got feature name: " + featureName);
 					
 					DoublePoint featureCentre = feature.getGeometry().getBounds().center();
@@ -504,8 +502,15 @@ public class MapperControllableServlet
 		try
 		{
 			FileOutputStream logFOS = new FileOutputStream("mcs_log.txt", true);
-			String dateString = (new Date( System.currentTimeMillis())).toString();
-			logFOS.write((dateString + "  MCS - " + msg + "\n").getBytes());
+			if (msg == null)
+			{
+				logFOS.write("\n".getBytes());
+			}
+			else
+			{
+				String dateString = (new Date( System.currentTimeMillis())).toString();
+				logFOS.write((dateString + "  MCS - " + msg + "\n").getBytes());
+			}
 			logFOS.close();
 		}
 		catch (IOException exc)
