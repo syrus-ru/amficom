@@ -24,6 +24,8 @@ module ISM
 		wstring equipmentId;
 		wstring mcmId;
 
+		long long modified;
+
 		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <KIS_Transferable> KISSeq_Transferable;
@@ -33,11 +35,14 @@ module ISM
 	{
 		wstring id;
 		wstring name;
+		wstring description;
 		wstring _typeId;
 		wstring portId;
 		wstring kisId;
 		wstring localId;
 		wstring domainId;
+
+		long long modified;
 
 		General::CharacteristicSeq_Transferable characteristics;
 	};
@@ -47,6 +52,7 @@ module ISM
 	{
 		wstring id;
 		wstring name;
+		wstring description;
 		wstring domainId;
 
 		long long modified;
@@ -81,6 +87,7 @@ module ISMDirectory
 		wstring name;
 		wstring description;
 		wstring accessType;
+
 		long long modified;
 
 		General::wstringSeq testTypeIds;
@@ -94,6 +101,7 @@ module ISMDirectory
 		wstring id;
 		wstring name;
 		wstring description;
+
 		long long modified;
 
 		General::CharacteristicSeq_Transferable characteristics;
@@ -105,6 +113,8 @@ module ISMDirectory
 		wstring id;
 		wstring name;
 		wstring description;
+
+		long long modified;
 
 		General::CharacteristicSeq_Transferable characteristics;
 	};

@@ -1,5 +1,5 @@
 /*
- * $Id: scheme.idl,v 1.8 2004/09/14 14:36:05 krupenn Exp $
+ * $Id: scheme.idl,v 1.9 2004/09/14 15:33:16 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ module Scheme
 		wstring measurementPortTypeId;
 		wstring measurementPortId;
 		wstring directionType;
-
+		
 		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <SchemePort_Transferable> SchemePortSeq_Transferable;
@@ -194,6 +194,7 @@ module Scheme
 		wstring name;
 		wstring protoElementId;
 		wstring equipmentId;
+		wstring kisId;
 		SchemeDeviceSeq_Transferable devices;
 		SchemeLinkSeq_Transferable links;
 		::CORBA::WStringSeq elementIds;
