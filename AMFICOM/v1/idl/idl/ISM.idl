@@ -1,5 +1,15 @@
-#ifndef _ism_idl_
-#define _ism_idl_
+/*
+ * $Id: ISM.idl,v 1.8 2004/10/06 11:52:15 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+#ifndef ISM_IDL
+#define ISM_IDL
+
+#include <streams.idl>
 
 #include "general.idl"
 
@@ -35,14 +45,18 @@ module ISM
 	{
 		wstring id;
 		wstring name;
+#ifndef SERVER
 		wstring description;
+#endif
 		wstring _typeId;
 		wstring portId;
 		wstring kisId;
 		wstring localId;
 		wstring domainId;
 
+#ifndef SERVER
 		long long modified;
+#endif
 
 		General::CharacteristicSeq_Transferable characteristics;
 	};
@@ -53,6 +67,12 @@ module ISM
 		wstring id;
 		wstring name;
 		wstring description;
+#ifdef SERVER
+		wstring KIS_id;
+		wstring measurementPortId;
+		wstring local_address;
+		wstring monitored_element_id;
+#endif
 		wstring domainId;
 
 		long long modified;
@@ -90,7 +110,7 @@ module ISMDirectory
 
 		long long modified;
 
-		General::wstringSeq testTypeIds;
+		::CORBA::WStringSeq testTypeIds;
 
 		General::CharacteristicSeq_Transferable characteristics;
 	};
@@ -104,7 +124,9 @@ module ISMDirectory
 
 		long long modified;
 
+#ifndef SERVER
 		General::CharacteristicSeq_Transferable characteristics;
+#endif
 	};
 	typedef sequence <TransmissionPathType_Transferable> TransmissionPathTypeSeq_Transferable;
 
