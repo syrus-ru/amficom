@@ -8,3 +8,4 @@ load_server.bat
 *.tar
 *.gz
 *.swp
+Makefile.inc

@@ -20,3 +20,4 @@ sqlj.properties
 .all
 .idl
 .sqlj
+Makefile.inc
