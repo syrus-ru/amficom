@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.1 2004/09/24 08:18:07 bob Exp $
+ * $Id: IdentifierPool.java,v 1.2 2004/09/24 09:39:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,9 +15,10 @@ import java.util.Map;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.util.Fifo;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/24 08:18:07 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/24 09:39:33 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -32,7 +33,7 @@ public class IdentifierPool {
 	/* Map <Short objectEntity, LRUMap idPool> */
 	private static Map	idPoolMap;
 
-	private static long	timeToSleep	= 1000;
+	private static long	timeToSleep	= 200;
 
 	private IdentifierPool() {
 		// empty private construcor
@@ -54,20 +55,21 @@ public class IdentifierPool {
 		Fifo fifo = (Fifo) idPoolMap.get(entityCodeShort);
 		if (fifo == null) {
 			fifo = new Fifo(capacity);
-			new IdentifierLoader(server, fifo, entityCode);
+			new IdentifierLoader(server, fifo, entityCode).start();
 			idPoolMap.put(entityCodeShort, fifo);
 		}
 
 		// tranfer ids then fifo filling minimum than minFilling
 		if (fifo.getNumber() < minFilling * fifo.capacity()) {
-			new IdentifierLoader(server, fifo, entityCode);
+			new IdentifierLoader(server, fifo, entityCode).start();
 		}
 
 		while (fifo.getNumber() < 1) {
 			try {
+				Log.debugMessage("IdentifierPool.generateId | Wait for fetching ids", Log.DEBUGLEVEL10);
 				Thread.sleep(timeToSleep);
 			} catch (InterruptedException ie) {
-				//Log.errorException(ie);
+				Log.errorException(ie);
 			}
 		}
 
