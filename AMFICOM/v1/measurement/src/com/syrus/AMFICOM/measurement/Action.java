@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.22 2005/04/01 15:40:18 bob Exp $
+ * $Id: Action.java,v 1.23 2005/04/01 18:13:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/04/01 15:40:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/04/01 18:13:19 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -61,14 +61,14 @@ public abstract class Action extends StorableObject implements TypedObject {
 	}
 	
 	protected void fromTransferable(IDLEntity transferable,
-	              				  ActionType type,
-	            				  Identifier monitoredElementId,
-	            				  Action parentAction) throws CreateObjectException {
+	              				  ActionType type1,
+	            				  Identifier monitoredElementId1,
+	            				  Action parentAction1) throws CreateObjectException {
 		super.fromTransferable(transferable);
-		this.type = type;
-		this.monitoredElementId = monitoredElementId;
+		this.type = type1;
+		this.monitoredElementId = monitoredElementId1;
 
-		this.parentAction = parentAction;
+		this.parentAction = parentAction1;
 	}
 
 	public StorableObjectType getType() {
