@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.4 2004/10/20 07:58:09 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.5 2004/10/20 10:18:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/10/20 07:58:09 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/20 10:18:26 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -81,7 +81,16 @@ public class StringFieldCondition implements StorableObjectCondition {
 					}
 				break;
 			}
-		} 
+		} else if (object instanceof Domain){
+			Domain domain = (Domain)object;
+			switch(this.sort){
+				case StringFieldSort._STRINGSORT_BASE:
+					if (domain.getName().equals(this.string)){
+						condition = true;						
+					}
+					break;
+			}
+		}
 		return condition;
 	}
 

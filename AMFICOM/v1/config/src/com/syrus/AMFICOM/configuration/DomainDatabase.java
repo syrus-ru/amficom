@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.15 2004/10/19 07:48:58 bob Exp $
+ * $Id: DomainDatabase.java,v 1.16 2004/10/20 10:18:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/10/19 07:48:58 $
+ * @version $Revision: 1.16 $, $Date: 2004/10/20 10:18:26 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -225,6 +225,20 @@ public class DomainDatabase extends StorableObjectDatabase {
         
         return list;
     }
+	
+	private List retrieveButIdsByName(List ids, String name) throws RetrieveObjectException {
+        List list = null;
+        
+        String condition = COLUMN_NAME + EQUALS + APOSTOPHE + name + APOSTOPHE;
+        
+        try {
+            list = retrieveButIds(ids, condition);
+        }  catch (IllegalDataException ide) {           
+            Log.debugMessage("DomainDatabase.retrieveButIdsByName | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+        }
+        
+        return list;
+    }
 
 	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
 			IllegalDataException {
@@ -232,6 +246,9 @@ public class DomainDatabase extends StorableObjectDatabase {
 		if (condition instanceof DomainCondition){
 			DomainCondition domainCondition = (DomainCondition)condition;
 			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
+		} else if (condition instanceof StringFieldCondition){
+			StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
+			list = this.retrieveButIdsByName(ids, stringFieldCondition.getString());
 		} else {
 			Log.errorMessage("DomainDatabase.retrieveByCondition | Unknown condition class: " + condition.getClass().getName());
 			list = this.retrieveButIds(ids);
