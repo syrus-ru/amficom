@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.44 2005/01/26 15:38:40 arseniy Exp $
+ * $Id: Measurement.java,v 1.45 2005/01/27 15:49:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/01/26 15:38:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2005/01/27 15:49:39 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -149,9 +149,19 @@ public class Measurement extends Action {
 	public MeasurementSetup getSetup() {
 		return this.setup;
 	}
+	
+	public void setSetup(MeasurementSetup setup) {
+		this.setup = setup;
+		super.currentVersion = super.getNextVersion();
+	}
 
 	public Date getStartTime() {
 		return this.startTime;
+	}
+	
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public long getDuration() {
@@ -285,5 +295,26 @@ public class Measurement extends Action {
 		dependencies.add(this.testId);
 		dependencies.add(this.setup);
 		return dependencies;
+	}
+	/**
+	 * @param localAddress The localAddress to set.
+	 */
+	public void setLocalAddress(String localAddress) {
+		this.localAddress = localAddress;
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param status The status to set.
+	 */
+	public void setStatus(MeasurementStatus status) {
+		this.status = status.value();
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param testId The testId to set.
+	 */
+	public void setTestId(Identifier testId) {
+		this.testId = testId;
+		super.currentVersion = super.getNextVersion();
 	}
 }
