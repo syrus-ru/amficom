@@ -1,5 +1,5 @@
 /*
- * $Id: ActionCondition.java,v 1.1 2005/01/27 16:02:57 arseniy Exp $
+ * $Id: ActionCondition.java,v 1.2 2005/01/28 11:51:51 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.ActionCondition_Transferable;
  * or
  * 	list, containing one element - identifier of the action - as <code>linkedIds</code>
  * 
- * @version $Revision: 1.1 $, $Date: 2005/01/27 16:02:57 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/28 11:51:51 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -48,6 +48,11 @@ public class ActionCondition implements StorableObjectCondition {
 
 	public ActionCondition(short entityCode, Identifier actionId) {
 		this(new Short(entityCode), actionId);
+	}
+
+	public ActionCondition(ActionCondition_Transferable act) {
+		this.entityCode = new Short(act.entity_code);
+		this.actionId = new Identifier(act.action_id);
 	}
 
 	public boolean isConditionTrue(Object object) throws ApplicationException {
