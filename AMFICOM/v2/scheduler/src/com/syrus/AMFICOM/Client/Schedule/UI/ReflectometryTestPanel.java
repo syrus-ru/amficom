@@ -51,18 +51,18 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 
 	private Test					test;
 
-	private String[]				averageOutCount				= { "4000",
+	String[]						averageOutCount				= { "4000",
 			"8000", "16000", "32000", "64000", "128000", "256000"};
 
-	private String[]				waveLength					= { "1310",
+	String[]						waveLength					= { "1310",
 			"1550", "1625"										};
 
-	private String[][]				resolution					= {
+	String[][]						resolution					= {
 			{ "0.25", "0.5", "1", "2", "4", "8", "16"},
 			{ "0.5", "1", "2", "4", "8", "16"}, { "1", "2", "4", "8", "16"},
 			{ "2", "4", "8", "16"}, { "4", "8", "16"}, { "8", "16"}, { "16"}};
 
-	private String[][]				pulseWidth					= {
+	String[][]						pulseWidth					= {
 			{ "100", "200", "500"}, { "100", "200", "500", "1000"},
 			{ "100", "200", "500", "1000"},
 			{ "100", "200", "500", "1000", "5000"},
@@ -70,7 +70,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 			{ "100", "200", "500", "1000", "5000", "10000"},
 			{ "100", "200", "500", "1000", "5000", "10000", "20000"}};
 
-	private String[]				maxDistance					= { "4.096",
+	String[]						maxDistance					= { "4.096",
 			"8.192", "16.384", "32.768", "65.536", "131.072", "262.144"};
 
 	private JTextField				reflectTextField			= new JTextField();
@@ -80,13 +80,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 	private AComboBox				averageOutCountComboBox		= new AComboBox(
 																		averageOutCount);
 	// was jComboBox2
-	private AComboBox				resolutionComboBox			= new AComboBox(
+	AComboBox						resolutionComboBox			= new AComboBox(
 																		resolution[0]);
 	// was jComboBox4
-	private AComboBox				maxDistanceComboBox			= new AComboBox(
+	AComboBox						maxDistanceComboBox			= new AComboBox(
 																		maxDistance);
 	// was jComboBox3
-	private AComboBox				pulseWidthComboBox			= new AComboBox(
+	AComboBox						pulseWidthComboBox			= new AComboBox(
 																		pulseWidth[0]);
 	// was jComboBox5
 
@@ -231,7 +231,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 					tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ,
 							test.test_argument_set_id);
 				}
-			} else {				
+			} else {
 				DataSourceInterface dsi = aContext.getDataSourceInterface();
 
 				tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ,
@@ -382,8 +382,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 				byteArray = new ByteArray(Double.parseDouble(reflectTextField
 						.getText()));
 				// dsi.GetUId("testargument")
-				Parameter reflectParam = new Parameter(dsi.GetUId(PARAMETER_ID_NAME), apt.getId(),
-						byteArray.getBytes(), PARAMETER_REFLECTION, "double");
+				Parameter reflectParam = new Parameter(dsi
+						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
+						.getBytes(), PARAMETER_REFLECTION, "double");
 				if (reflectParam == null)
 						System.out.println("reflectParam is null");
 				tas.addArgument(reflectParam);
@@ -394,8 +395,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 				byteArray = new ByteArray(Integer.parseInt(waveLengthComboBox
 						.getSelectedItem().toString()));
 				//			 dsi.GetUId("testargument")
-				Parameter waveLengthParam = new Parameter(dsi.GetUId(PARAMETER_ID_NAME), apt.getId(),
-						byteArray.getBytes(), PARAMETER_WAVELENGHT, "int");
+				Parameter waveLengthParam = new Parameter(dsi
+						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
+						.getBytes(), PARAMETER_WAVELENGHT, "int");
 				tas.addArgument(waveLengthParam);
 
 				apt = (ActionParameterType) testType.sorted_arguments
@@ -404,9 +406,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 						.parseDouble(averageOutCountComboBox.getSelectedItem()
 								.toString()));
 				// dsi.GetUId("testargument")
-				Parameter averageOutCountParam = new Parameter(dsi.GetUId(PARAMETER_ID_NAME), apt.getId(),
-						byteArray.getBytes(), PARAMETER_AVERAGEOUT_COUNT,
-						"double");
+				Parameter averageOutCountParam = new Parameter(dsi
+						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
+						.getBytes(), PARAMETER_AVERAGEOUT_COUNT, "double");
 				tas.addArgument(averageOutCountParam);
 
 				apt = (ActionParameterType) testType.sorted_arguments
@@ -414,8 +416,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 				byteArray = new ByteArray(Double.parseDouble(pulseWidthComboBox
 						.getSelectedItem().toString()));
 				// dsi.GetUId("testargument")
-				Parameter pulseWidthParam = new Parameter(dsi.GetUId(PARAMETER_ID_NAME), apt.getId(),
-						byteArray.getBytes(), PARAMETER_PULSE_WIDTH, "double");
+				Parameter pulseWidthParam = new Parameter(dsi
+						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
+						.getBytes(), PARAMETER_PULSE_WIDTH, "double");
 				tas.addArgument(pulseWidthParam);
 
 				apt = (ActionParameterType) testType.sorted_arguments
@@ -423,17 +426,19 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 				byteArray = new ByteArray(Double.parseDouble(resolutionComboBox
 						.getSelectedItem().toString()));
 				// dsi.GetUId("testargument")
-				Parameter resolutionParam = new Parameter(dsi.GetUId(PARAMETER_ID_NAME), apt.getId(),
-						byteArray.getBytes(), PARAMETER_RESOLUTION, "double");
+				Parameter resolutionParam = new Parameter(dsi
+						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
+						.getBytes(), PARAMETER_RESOLUTION, "double");
 				tas.addArgument(resolutionParam);
 
 				apt = (ActionParameterType) testType.sorted_arguments
 						.get(PARAMETER_MAX_DISTANCE);
 				byteArray = new ByteArray(Double
 						.parseDouble(maxDistanceComboBox.getSelectedItem()
-								.toString()));			
-				Parameter maxDistanceParam = new Parameter(dsi.GetUId(PARAMETER_ID_NAME), apt.getId(),
-						byteArray.getBytes(), PARAMETER_MAX_DISTANCE, "double");
+								.toString()));
+				Parameter maxDistanceParam = new Parameter(dsi
+						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
+						.getBytes(), PARAMETER_MAX_DISTANCE, "double");
 				tas.addArgument(maxDistanceParam);
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
@@ -448,7 +453,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		Object obj = ae.getSource();
+		//Object obj = ae.getSource();
 		if (ScheduleMainFrame.DEBUG)
 				System.out.println(getClass().getName() + " commandName:"
 						+ commandName);
