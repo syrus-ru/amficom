@@ -1,5 +1,5 @@
 /*
- * $Id: ConditionWrapperTemp.java,v 1.1 2005/03/16 08:05:07 max Exp $
+ * $Id: ConditionWrapperTemp.java,v 1.2 2005/03/16 10:13:11 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,10 +7,8 @@
  */
 package com.syrus.AMFICOM.general;
 
-import java.util.Collection;
-
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/16 08:05:07 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/16 10:13:11 $
  * @author $Author: max $
  * @module general_v1
  */
