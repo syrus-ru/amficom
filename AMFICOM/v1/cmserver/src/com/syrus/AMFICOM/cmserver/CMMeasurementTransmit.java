@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.16 2005/03/30 11:25:27 arseniy Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.17 2005/03/30 12:53:03 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -63,7 +63,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/03/30 11:25:27 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/30 12:53:03 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -1380,7 +1380,6 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 
 
 
-
 	public Analysis_Transferable[] transmitAnalysesButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
@@ -1388,26 +1387,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		Log.debugMessage("CMMeasurementTransmit.transmitAnalysesButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = Identifier.fromTransferables(identifier_Transferables);
-
-		StorableObjectCondition condition = null;
-		try {
-			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-		}
-		catch (IllegalDataException ide) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot restore condition -- " + ide.getMessage());
-		}
-
-		Collection objects = null;
-		try {
-			objects = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
 		Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
 		int i = 0;
@@ -1426,26 +1406,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		Log.debugMessage("CMMeasurementTransmit.transmitEvaluationsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = Identifier.fromTransferables(identifier_Transferables);
-
-		StorableObjectCondition condition = null;
-		try {
-			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-		}
-		catch (IllegalDataException ide) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot restore condition -- " + ide.getMessage());
-		}
-
-		Collection objects = null;
-		try {
-			objects = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
 		Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
 		int i = 0;
@@ -1464,26 +1425,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		Log.debugMessage("CMMeasurementTransmit.transmitModelingsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = Identifier.fromTransferables(identifier_Transferables);
-
-		StorableObjectCondition condition = null;
-		try {
-			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-		}
-		catch (IllegalDataException ide) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot restore condition -- " + ide.getMessage());
-		}
-
-		Collection objects = null;
-		try {
-			objects = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
 		Modeling_Transferable[] transferables = new Modeling_Transferable[objects.size()];
 		int i = 0;
@@ -1502,26 +1444,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = Identifier.fromTransferables(identifier_Transferables);
-
-		StorableObjectCondition condition = null;
-		try {
-			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-		}
-		catch (IllegalDataException ide) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot restore condition -- " + ide.getMessage());
-		}
-
-		Collection objects = null;
-		try {
-			objects = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
 		Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
 		int i = 0;
@@ -1540,26 +1463,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementSetupsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = Identifier.fromTransferables(identifier_Transferables);
-
-		StorableObjectCondition condition = null;
-		try {
-			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-		}
-		catch (IllegalDataException ide) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot restore condition -- " + ide.getMessage());
-		}
-
-		Collection objects = null;
-		try {
-			objects = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
 		MeasurementSetup_Transferable[] transferables = new MeasurementSetup_Transferable[objects.size()];
 		int i = 0;
@@ -1578,26 +1482,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		Log.debugMessage("CMMeasurementTransmit.transmitResultsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = Identifier.fromTransferables(identifier_Transferables);
-
-		StorableObjectCondition condition = null;
-		try {
-			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-		}
-		catch (IllegalDataException ide) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot restore condition -- " + ide.getMessage());
-		}
-
-		Collection objects = null;
-		try {
-			objects = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
 		Result_Transferable[] transferables = new Result_Transferable[objects.size()];
 		int i = 0;
@@ -1616,26 +1501,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		Log.debugMessage("CMMeasurementTransmit.transmitSetsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = Identifier.fromTransferables(identifier_Transferables);
-
-		StorableObjectCondition condition = null;
-		try {
-			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-		}
-		catch (IllegalDataException ide) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot restore condition -- " + ide.getMessage());
-		}
-
-		Collection objects = null;
-		try {
-			objects = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
 		Set_Transferable[] transferables = new Set_Transferable[objects.size()];
 		int i = 0;
@@ -1654,6 +1520,20 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 		Log.debugMessage("CMMeasurementTransmit.transmitTestsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
+		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+
+		Test_Transferable[] transferables = new Test_Transferable[objects.size()];
+		int i = 0;
+		Test test;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			test = (Test) it.next();
+			transferables[i] = (Test_Transferable) test.getTransferable();
+		}
+		return transferables;
+	}
+
+	private Collection getObjectsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
@@ -1674,15 +1554,7 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 			Log.errorException(ae);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
-
-		Test_Transferable[] transferables = new Test_Transferable[objects.size()];
-		int i = 0;
-		Test test;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			test = (Test) it.next();
-			transferables[i] = (Test_Transferable) test.getTransferable();
-		}
-		return transferables;
+		return objects;
 	}
 
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationTransmit.java,v 1.11 2005/03/30 11:25:27 arseniy Exp $
+ * $Id: CMAdministrationTransmit.java,v 1.12 2005/03/30 12:53:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/03/30 11:25:27 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/30 12:53:03 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -423,7 +423,6 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 
 
 
-
 	public User_Transferable[] transmitUsersButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			AccessIdentifier_Transferable accessIdentifier,
 			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
@@ -431,26 +430,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitUsersButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = Identifier.fromTransferables(identifier_Transferables);
-
-		StorableObjectCondition condition = null;
-		try {
-			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-		}
-		catch (IllegalDataException ide) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot restore condition -- " + ide.getMessage());
-		}
-
-		Collection objects = null;
-		try {
-			objects = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
 		User_Transferable[] transferables = new User_Transferable[objects.size()];
 		int i = 0;
@@ -469,26 +449,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitDomainsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = Identifier.fromTransferables(identifier_Transferables);
-
-		StorableObjectCondition condition = null;
-		try {
-			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-		}
-		catch (IllegalDataException ide) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot restore condition -- " + ide.getMessage());
-		}
-
-		Collection objects = null;
-		try {
-			objects = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
 		Domain_Transferable[] transferables = new Domain_Transferable[objects.size()];
 		int i = 0;
@@ -507,26 +468,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitServersButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
-		Collection ids = Identifier.fromTransferables(identifier_Transferables);
-
-		StorableObjectCondition condition = null;
-		try {
-			condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
-		}
-		catch (IllegalDataException ide) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA,
-					CompletionStatus.COMPLETED_NO,
-					"Cannot restore condition -- " + ide.getMessage());
-		}
-
-		Collection objects = null;
-		try {
-			objects = AdministrationStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
+		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
 
 		Server_Transferable[] transferables = new Server_Transferable[objects.size()];
 		int i = 0;
@@ -545,6 +487,20 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 		Log.debugMessage("CMAdministrationTransmit.transmitMCMsButIdsCondition | All, but " + identifier_Transferables.length
 				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
+		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, condition_Transferable);
+
+		MCM_Transferable[] transferables = new MCM_Transferable[objects.size()];
+		int i = 0;
+		MCM mcm;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			mcm = (MCM) it.next();
+			transferables[i] = (MCM_Transferable) mcm.getTransferable();
+		}
+		return transferables;
+	}
+
+	private Collection getObjectsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+			StorableObjectCondition_Transferable condition_Transferable) throws AMFICOMRemoteException {
 		Collection ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
@@ -565,15 +521,7 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 			Log.errorException(ae);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
-
-		MCM_Transferable[] transferables = new MCM_Transferable[objects.size()];
-		int i = 0;
-		MCM mcm;
-		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
-			mcm = (MCM) it.next();
-			transferables[i] = (MCM_Transferable) mcm.getTransferable();
-		}
-		return transferables;
+		return objects;
 	}
 
 
