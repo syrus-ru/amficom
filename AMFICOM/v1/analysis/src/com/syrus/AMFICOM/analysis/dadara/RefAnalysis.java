@@ -16,6 +16,7 @@ public class RefAnalysis
 	public void decode (double[] y, ModelTraceManager mtm)
 	{
 		ComplexReflectogramEvent[] re = mtm.getComplexEvents();
+		ModelTrace mt = mtm.getModelTrace();
 		events = new TraceEvent[re.length];
 
 		if(re.length == 0)
@@ -104,12 +105,12 @@ public class RefAnalysis
 						int x2 = re[j].getEnd() - 1;
 						if (x1 >= x2)
 						{
-							Po = mtm.getY(x1);
+							Po = mt.getY(x1);
 						}
 						else
 						{
-							double y1 = mtm.getY(x1);
-							double y2 = mtm.getY(x2);
+							double y1 = mt.getY(x1);
+							double y2 = mt.getY(x2);
 							Po = (x1 * y2 - x2 * y1) / (x1 - x2);
 						}
 						break;
@@ -120,16 +121,16 @@ public class RefAnalysis
 				// find max
 				double vmax = Po;
 				for (int k = re[i].getBegin(); k < re[i].getEnd(); k++) {
-					if (vmax < mtm.getY(k))
-						vmax = mtm.getY(k);
+					if (vmax < mt.getY(k))
+						vmax = mt.getY(k);
 				}
 				// find width // NOTE: changed a little by saa, 2004-07
 				for (int k = re[i].getBegin(); k < re[i].getEnd(); k++) {
 					//if(re[i].refAmplitude(k) > re[i].aLet_connector +
 					// re[i].a1_connector - 1.5) -- OLD
-					if (mtm.getY(k) > vmax - 1.5)
+					if (mt.getY(k) > vmax - 1.5)
 						edz++;
-					if (mtm.getY(k) > Po + .5)
+					if (mt.getY(k) > Po + .5)
 						adz++;
 				}
 
@@ -190,7 +191,7 @@ public class RefAnalysis
 			{
 				if(j < lastPoint) // XXX: saa: I think there should be '<='
 				{
-					filtered[j] = Math.max(0, mtm.getY(j));
+					filtered[j] = Math.max(0, mt.getY(j));
 					noise[j] = Math.abs(y[j] - filtered[j]);
 					if (noise[j] > maxNoise)
 						maxNoise = noise[j];

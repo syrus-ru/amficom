@@ -228,7 +228,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 				if (mtm != null)
 				{
 					double[] y = new double[n];
-					y = mtm.getYArray(0, n);
+					y = mtm.getModelTrace().getYArray(0, n);
 					SimpleGraphPanel epPanel = new SimpleGraphPanel(y, deltaX);
 					epPanel.setColorModel(AnalysisUtil.ETALON);
 					((ScalableLayeredPanel)panel).addGraphPanel(epPanel);

@@ -20,7 +20,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/01/26 14:59:25 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/27 08:41:14 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -326,8 +326,9 @@ public class ReflectogramComparer
 	public static double getMaxDeviation(ModelTraceManager data,
 			ModelTrace etalon, int nEvent)
 	{
-		int iFrom = data.getEventBegin(nEvent);
-		int iToEx = Math.min(data.getEventEnd(nEvent) + 1, etalon.getLength());
+		SimpleReflectogramEvent dataSE = data.getSimpleEvent(nEvent);
+		int iFrom = dataSE.getBegin();
+		int iToEx = Math.min(dataSE.getEnd() + 1, etalon.getLength());
 		ModelTrace dataMT = data.getModelTrace();
 		return getMaxDeviation(dataMT, etalon, iFrom, iToEx);
 	}
@@ -335,8 +336,9 @@ public class ReflectogramComparer
 	public static double getMeanDeviation(ModelTraceManager data,
 			ModelTrace etalon, int nEvent)
 	{
-		int iFrom = data.getEventBegin(nEvent);
-		int iToEx = Math.min(data.getEventEnd(nEvent) + 1, etalon.getLength());
+		SimpleReflectogramEvent dataSE = data.getSimpleEvent(nEvent);
+		int iFrom = dataSE.getBegin();
+		int iToEx = Math.min(dataSE.getEnd() + 1, etalon.getLength());
 		ModelTrace dataMT = data.getModelTrace();
 		return getMeanDeviation(dataMT, etalon, iFrom, iToEx);
 	}
@@ -366,10 +368,12 @@ public class ReflectogramComparer
 
 		int c = etalonSRE[0].getEnd();
 
-		double a1 = data.getY(c);
-		double a2 = data.getY(length1);
-		double b1 = etalon.getY(c);
-		double b2 = etalon.getY(length2);
+		ModelTrace dataMT = data.getModelTrace();
+		ModelTrace etalonMT = etalon.getModelTrace();
+		double a1 = dataMT.getY(c);
+		double a2 = dataMT.getY(length1);
+		double b1 = etalonMT.getY(c);
+		double b2 = etalonMT.getY(length2);
 
 		return (a1 - a2) - (b1 - b2);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.2 2005/01/26 14:59:25 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.3 2005/01/27 08:41:14 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,15 +15,25 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/01/26 14:59:25 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/27 08:41:14 $
  * @module
  */
 public class ModelTraceManager
 {
 	private static final long SIGNATURE = 3353520050119193100L;
 
-	// @todo: разобраться, м ли re б null
-	private ReflectogramEvent[] re;
+	private ReflectogramEvent[] re; // not null
+	private SimpleReflectogramEvent[] se; // not null; must be kept in sync with re
+
+	protected double getY(int x) { return ReflectogramMath.getEventAmplitudeAt(x, re); }
+
+	private void createSE()
+	{
+		SimpleReflectogramEventImpl[] srei = new SimpleReflectogramEventImpl[re.length];
+		for (int i = 0; i < re.length; i++)
+			srei[i] = new SimpleReflectogramEventImpl(re[i].getBegin(), re[i].getEnd(), re[i].getEventType());
+		this.se = srei;
+	}
 
 	private ModelTrace reMT = new ModelTrace()
 	{
@@ -43,25 +53,15 @@ public class ModelTraceManager
 	public ModelTraceManager(ReflectogramEvent[] re)
 	{
 		this.re = re;
+		createSE();
 	}
 
 	public int getTraceLength()
 	{
-		if (re == null || re.length == 0)
+		if (se.length == 0)
 			return 0;
 		else
-			return re[re.length - 1].getEnd() + 1;
-	}
-
-	public double getY(int x) { return ReflectogramMath.getEventAmplitudeAt(x, re); }
-
-	public double[] getYArray(int x0, int n)
-	{
-		// if x0 + n > trace length, fill with zero
-		double[] ret = new double[n];
-		for (int i = 0; i < n; i++)
-			ret[i] = getY(x0 + i); // XXX: slow
-		return ret;
+			return se[se.length - 1].getEnd() + 1;
 	}
 
 	public ModelTrace getModelTrace()
@@ -71,19 +71,19 @@ public class ModelTraceManager
 
 	public int getNEvents()
 	{
-		if (re != null)
-			return re.length;
-		else return 0;
+		return se.length;
 	}
 
 	public SimpleReflectogramEvent getSimpleEvent(int nEvent)
 	{
-		return getComplexEvent(nEvent);
+		return se[nEvent];
 	}
 
 	public SimpleReflectogramEvent[] getSimpleEvents()
 	{
-		return getComplexEvents();
+		// Copy an array and all its references to protect se array.
+		// se[i] are unmodifiable, so we need not clone them.
+		return (SimpleReflectogramEvent[] )se.clone();
 	}
 
 	public ComplexReflectogramEvent getComplexEvent(int nEvent)
@@ -115,6 +115,7 @@ public class ModelTraceManager
 
 	public void fixEventTypes(ModelTraceManager etalon, int delta)
 	{
+		// FIXME: just a copy-paste
 		// XXX: rude alg.: probable errors when end - begin < delta
 		// just a copy-paste from old analysis
 		if (re.length == etalon.re.length)
@@ -122,8 +123,7 @@ public class ModelTraceManager
 			for (int i = 0; i < etalon.re.length; i++)
 			{
 				if (Math.abs(re[i].getBegin() - etalon.re[i].getBegin()) < delta
-						&& Math.abs(re[i].getEnd()
-								- etalon.re[i].getEnd()) < delta)
+						&& Math.abs(re[i].getEnd() - etalon.re[i].getEnd()) < delta)
 				{
 					re[i].setEventType(etalon.re[i].getEventType());
 				}
@@ -154,9 +154,9 @@ public class ModelTraceManager
 	public int getEventByCoord(int x) // may be -1
 	{
 		int ret = -1;
-		for (int i = 0; i < re.length; i++)
+		for (int i = 0; i < se.length; i++)
 		{
-			if (x >= re[i].getBegin() && x <= re[i].getEnd())
+			if (x >= se[i].getBegin() && x <= se[i].getEnd())
 				ret = i;
 		}
 		return ret;
@@ -181,28 +181,6 @@ public class ModelTraceManager
 	public ModelTrace getThresholdMF(int key)
 	{
 		return new ModelTraceImplREOld(ReflectogramEvent.getThresholdReflectogramEvents(re, key)); //????
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public ReflectogramEvent getEvent(int i)
-	{
-		return re[i];
-	}
-
-	public int getEventBegin(int i)
-	{
-		return re[i].getBegin();
-	}
-
-	public int getEventEnd(int i)
-	{
-		return re[i].getEnd();
-	}
-	public int getEventType(int i)
-	{
-		return re[i].getEventType();
 	}
 
 	public void setThreshold(int nEvent, Threshold th) // disapproved
@@ -286,11 +264,12 @@ public class ModelTraceManager
 		{
 			Threshold[] th = ReflectogramEvent.getThresholds(re);
 
-//			 на данный момент ReflectogramEvent.getThresholds нули не возвращает;
+//			 на данный момент ReflectogramEvent.getThresholds нули не возвращает; и этот код не нужен
 //			 если есть не все пороги, считаем что их и нет
 //			for (int i = 0; i < re.length; i++)
 //				if (th[i] == null)
 //					return new byte[0];
+
 			dos.writeLong(SIGNATURE);
 			Threshold.writeArrayToDOS(th, dos);
 			return baos.toByteArray();
