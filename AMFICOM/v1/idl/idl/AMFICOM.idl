@@ -507,6 +507,11 @@ interface AMFICOM
 			out ISMDirectory::TransmissionPathTypeSeq_Transferable pathtypes)
 		raises (General::AMFICOMRemoteException);
 
+	long RemoveCharacteristicTypes(
+			in Admin::AccessIdentity_Transferable accessIdentity,
+			in General::wstringSeq cht_ids)
+		raises (General::AMFICOMRemoteException);
+
 	long RemoveNetDirectory(
 			in Admin::AccessIdentity_Transferable accessIdentity,
 			in General::wstringSeq pt_ids,
