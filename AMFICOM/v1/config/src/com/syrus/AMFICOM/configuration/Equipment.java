@@ -10,75 +10,75 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 public abstract class Equipment extends DomainMember implements Characterized, TypedObject {
-	Identifier type_id;
+	Identifier typeId;
 	String name;
 	String description;
 	String latitude;
 	String longitude;
-	String hw_serial;
-	String sw_serial;
-	String hw_version;
-	String sw_version;
-	String inventory_number;
+	String hwSerial;
+	String swSerial;
+	String hwVersion;
+	String swVersion;
+	String inventoryNumber;
 	String manufacturer;
-	String manufacturer_code;
+	String manufacturerCode;
 	String supplier;
-	String supplier_code;
-	String eq_class;
-	Identifier image_id;
+	String supplierCode;
+	String eqClass;
+	Identifier imageId;
 
-	ArrayList characteristic_ids;
-	ArrayList port_ids;
-	ArrayList cable_port_ids;
-	ArrayList special_port_ids;
+	ArrayList characteristicIds;
+	ArrayList portIds;
+	ArrayList cablePortIds;
+	ArrayList specialPortIds;
 
-	Equipment(Identifier id) throws RetrieveObjectException {
+	Equipment(Identifier id) {
 		super(id);
 	}
 
-	Equipment(Equipment_Transferable eq) throws CreateObjectException {
-		super(new Identifier(eq.id),
-					new Date(eq.created),
-					new Date(eq.modified),
-					new Identifier(eq.creator_id),
-					new Identifier(eq.modifier_id),
-					new Identifier(eq.domain_id));
-		this.type_id = new Identifier(eq.type_id);
-		this.name = new String(eq.name);
-		this.description = new String(eq.description);
-		this.latitude = new String(eq.latitude);
-		this.longitude = new String(eq.longitude);
-		this.hw_serial = new String(eq.hw_serial);
-		this.sw_serial = new String(eq.sw_serial);
-		this.hw_version = new String(eq.hw_version);
-		this.sw_version = new String(eq.sw_version);
-		this.inventory_number = new String(eq.inventory_nr);
-		this.manufacturer = new String(eq.manufacturer);
-		this.manufacturer_code = new String(eq.manufacturer_code);
-		this.supplier = new String(eq.supplier);
-		this.supplier_code = new String(eq.supplier_code);
-		this.eq_class = new String(eq.eq_class);
-		this.image_id = new Identifier(eq.image_id);
+	Equipment(Equipment_Transferable et) {
+		super(new Identifier(et.id),
+					new Date(et.created),
+					new Date(et.modified),
+					new Identifier(et.creator_id),
+					new Identifier(et.modifier_id),
+					new Identifier(et.domain_id));
+		this.typeId = new Identifier(et.type_id);
+		this.name = new String(et.name);
+		this.description = new String(et.description);
+		this.latitude = new String(et.latitude);
+		this.longitude = new String(et.longitude);
+		this.hwSerial = new String(et.hw_serial);
+		this.swSerial = new String(et.sw_serial);
+		this.hwVersion = new String(et.hw_version);
+		this.swVersion = new String(et.sw_version);
+		this.inventoryNumber = new String(et.inventory_nr);
+		this.manufacturer = new String(et.manufacturer);
+		this.manufacturerCode = new String(et.manufacturer_code);
+		this.supplier = new String(et.supplier);
+		this.supplierCode = new String(et.supplier_code);
+		this.eqClass = new String(et.eq_class);
+		this.imageId = new Identifier(et.image_id);
 
-		this.characteristic_ids = new ArrayList(eq.characteristic_ids.length);
-		for (int i = 0; i < eq.characteristic_ids.length; i++)
-			this.characteristic_ids.add(new Identifier(eq.characteristic_ids[i]));
+		this.characteristicIds = new ArrayList(et.characteristic_ids.length);
+		for (int i = 0; i < et.characteristic_ids.length; i++)
+			this.characteristicIds.add(new Identifier(et.characteristic_ids[i]));
 
-		this.port_ids = new ArrayList(eq.port_ids.length);
-		for (int i = 0; i < eq.port_ids.length; i++)
-			this.port_ids.add(new Identifier(eq.port_ids[i]));
+		this.portIds = new ArrayList(et.port_ids.length);
+		for (int i = 0; i < et.port_ids.length; i++)
+			this.portIds.add(new Identifier(et.port_ids[i]));
 
-		this.cable_port_ids = new ArrayList(eq.cable_port_ids.length);
-		for (int i = 0; i < eq.cable_port_ids.length; i++)
-			this.cable_port_ids.add(new Identifier(eq.cable_port_ids[i]));
+		this.cablePortIds = new ArrayList(et.cable_port_ids.length);
+		for (int i = 0; i < et.cable_port_ids.length; i++)
+			this.cablePortIds.add(new Identifier(et.cable_port_ids[i]));
 
-		this.special_port_ids = new ArrayList(eq.special_port_ids.length);
-		for (int i = 0; i < eq.special_port_ids.length; i++)
-			this.special_port_ids.add(new Identifier(eq.special_port_ids[i]));
+		this.specialPortIds = new ArrayList(et.special_port_ids.length);
+		for (int i = 0; i < et.special_port_ids.length; i++)
+			this.specialPortIds.add(new Identifier(et.special_port_ids[i]));
 	}
 
 	public Identifier getTypeId() {
-		return this.type_id;
+		return this.typeId;
 	}
 
 	public String getName() {
@@ -98,23 +98,23 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 	}
 
 	public String getHWSerial() {
-		return this.hw_serial;
+		return this.hwSerial;
 	}
 
 	public String getSWSerial() {
-		return this.sw_serial;
+		return this.swSerial;
 	}
 
 	public String getHWVersion() {
-		return this.hw_version;
+		return this.hwVersion;
 	}
 
 	public String getSWVersion() {
-		return this.sw_version;
+		return this.swVersion;
 	}
 
 	public String getInventoryNumber() {
-		return this.inventory_number;
+		return this.inventoryNumber;
 	}
 
 	public String getManufacturer() {
@@ -122,7 +122,7 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 	}
 
 	public String getManufacturerCode() {
-		return this.manufacturer_code;
+		return this.manufacturerCode;
 	}
 
 	public String getSupplier() {
@@ -130,74 +130,74 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 	}
 
 	public String getSupplierCode() {
-		return this.supplier_code;
+		return this.supplierCode;
 	}
 
 	public String getEqClass() {
-		return this.eq_class;
+		return this.eqClass;
 	}
 
 	public ArrayList getCharacteristicIds() {
-		return this.characteristic_ids;
+		return this.characteristicIds;
 	}
 
 	public ArrayList getPortIds() {
-		return this.port_ids;
+		return this.portIds;
 	}
 
 	public ArrayList getCablePortIds() {
-		return this.cable_port_ids;
+		return this.cablePortIds;
 	}
 
 	public ArrayList getSpecialPortIds() {
-		return this.special_port_ids;
+		return this.specialPortIds;
 	}
 
-	public void setCharacteristicIds(ArrayList characteristic_ids) {
-		this.characteristic_ids = characteristic_ids;
+	public void setCharacteristicIds(ArrayList characteristicIds) {
+		this.characteristicIds = characteristicIds;
 	}
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
 																						Identifier creator_id,
 																						Identifier modifier_id,
-																						Identifier domain_id,
-																						Identifier type_id,
+																						Identifier domainId,
+																						Identifier typeId,
 																						String name,
 																						String description,
 																						String latitude,
 																						String longitude,
-																						String hw_serial,
-																						String sw_serial,
-																						String hw_version,
-																						String sw_version,
-																						String inventory_number,
+																						String hwSerial,
+																						String swSerial,
+																						String hwVersion,
+																						String swVersion,
+																						String inventoryNumber,
 																						String manufacturer,
-																						String manufacturer_code,
+																						String manufacturerCode,
 																						String supplier,
-																						String supplier_code,
-																						String eq_class,
-																						Identifier image_id) {
+																						String supplierCode,
+																						String eqClass,
+																						Identifier imageId) {
 		super.setAttributes(created,
 												modified,
 												creator_id,
 												modifier_id,
-												domain_id);
-		this.type_id = type_id;
+												domainId);
+		this.typeId = typeId;
 		this.name = name;
 		this.description = description;
 		this.latitude = latitude;
 		this.longitude = longitude;
-		this.hw_serial = hw_serial;
-		this.sw_serial = sw_serial;
-		this.hw_version = hw_version;
-		this.sw_version = sw_version;
-		this.inventory_number = inventory_number;
+		this.hwSerial = hwSerial;
+		this.swSerial = swSerial;
+		this.hwVersion = hwVersion;
+		this.swVersion = swVersion;
+		this.inventoryNumber = inventoryNumber;
 		this.manufacturer = manufacturer;
-		this.manufacturer_code = manufacturer_code;
+		this.manufacturerCode = manufacturerCode;
 		this.supplier = supplier;
-		this.supplier_code = supplier_code;
-		this.eq_class = eq_class;
-		this.image_id = image_id;
+		this.supplierCode = supplierCode;
+		this.eqClass = eqClass;
+		this.imageId = imageId;
 	}
 }

@@ -2,34 +2,36 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 public class Characteristic extends StorableObject implements TypedObject {
-	private Identifier type_id;
+	private Identifier typeId;
 	private String name;
 	private String description;
 	private int sort;
 	private String value;
-	private Identifier characterized_id;
+	private Identifier characterizedId;
 
-	private StorableObject_Database characteristicDatabase;
+	private StorableObjectDatabase characteristicDatabase;
 
-	public Characteristic(Identifier id) throws RetrieveObjectException {
+	public Characteristic(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristicDatabase = ConfigurationDatabaseContext.characteristicDatabase;
 		try {
 			this.characteristicDatabase.retrieve(this);
 		}
-		catch (Exception e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
+		catch (IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
 
@@ -39,19 +41,19 @@ public class Characteristic extends StorableObject implements TypedObject {
 					new Date(ct.modified),
 					new Identifier(ct.creator_id),
 					new Identifier(ct.modifier_id));
-		this.type_id = new Identifier(ct.type_id);
+		this.typeId = new Identifier(ct.type_id);
 		this.name = new String(ct.name);
 		this.description = new String(ct.description);
 		this.sort = ct.sort.value();
 		this.value = new String(ct.value);
-		this.characterized_id = new Identifier(ct.characterized_id);
+		this.characterizedId = new Identifier(ct.characterized_id);
 
 		this.characteristicDatabase = ConfigurationDatabaseContext.characteristicDatabase;
 		try {
 			this.characteristicDatabase.insert(this);
 		}
-		catch (Exception e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
 		}
 	}
 
@@ -61,16 +63,16 @@ public class Characteristic extends StorableObject implements TypedObject {
 																					 super.modified.getTime(),
 																					 (Identifier_Transferable)super.creator_id.getTransferable(),
 																					 (Identifier_Transferable)super.modifier_id.getTransferable(),
-																					 (Identifier_Transferable)this.type_id.getTransferable(),
+																					 (Identifier_Transferable)this.typeId.getTransferable(),
 																					 new String(this.name),
 																					 new String(this.description),
 																					 CharacteristicSort.from_int(this.sort),
 																					 new String(this.value),
-																					 (Identifier_Transferable)this.characterized_id.getTransferable());
+																					 (Identifier_Transferable)this.characterizedId.getTransferable());
 	}
 
 	public Identifier getTypeId() {
-		return this.type_id;
+		return this.typeId;
 	}
 
 	public String getName() {
@@ -90,28 +92,28 @@ public class Characteristic extends StorableObject implements TypedObject {
 	}
 
 	public Identifier getCharacterizedId() {
-		return this.characterized_id;
+		return this.characterizedId;
 	}
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
 																						Identifier creator_id,
 																						Identifier modifier_id,
-																						Identifier type_id,
+																						Identifier typeId,
 																						String name,
 																						String description,
 																						int sort,
 																						String value,
-																						Identifier characterized_id) {
+																						Identifier characterizedId) {
 		super.setAttributes(created,
 												modified,
 												creator_id,
 												modifier_id);
-		this.type_id = type_id;
+		this.typeId = typeId;
 		this.name = name;
 		this.description = description;
 		this.sort = sort;
 		this.value = value;
-		this.characterized_id = characterized_id;
+		this.characterizedId = characterizedId;
 	}
 }

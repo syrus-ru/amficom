@@ -1,21 +1,21 @@
 package com.syrus.AMFICOM.configuration;
 
-import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 public abstract class ConfigurationDatabaseContext {
-	public static StorableObject_Database characteristicTypeDatabase;
+	public static StorableObjectDatabase characteristicTypeDatabase;
 
-	public static StorableObject_Database characteristicDatabase;
-	public static StorableObject_Database portDatabase;
-	public static StorableObject_Database monitoredElementDatabase;
-	public static StorableObject_Database kisDatabase;
+	public static StorableObjectDatabase characteristicDatabase;
+	public static StorableObjectDatabase portDatabase;
+	public static StorableObjectDatabase monitoredElementDatabase;
+	public static StorableObjectDatabase kisDatabase;
 
-	public static void init(StorableObject_Database characteristicTypeDatabase1,
+	public static void init(StorableObjectDatabase characteristicTypeDatabase1,
 
-													StorableObject_Database characteristicDatabase1,
-													StorableObject_Database portDatabase1,
-													StorableObject_Database monitoredElementDatabase1,
-													StorableObject_Database kisDatabase1) {
+													StorableObjectDatabase characteristicDatabase1,
+													StorableObjectDatabase portDatabase1,
+													StorableObjectDatabase monitoredElementDatabase1,
+													StorableObjectDatabase kisDatabase1) {
 		characteristicTypeDatabase = characteristicTypeDatabase1;
 
 		characteristicDatabase = characteristicDatabase1;

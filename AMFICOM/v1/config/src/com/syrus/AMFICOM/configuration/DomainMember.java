@@ -5,7 +5,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 
 public abstract class DomainMember extends StorableObject {
-	protected Identifier domain_id;
+	protected Identifier domainId;
 
 	protected DomainMember(Identifier id) {
 		super(id);
@@ -16,28 +16,28 @@ public abstract class DomainMember extends StorableObject {
 												 Date modified,
 												 Identifier creator_id,
 												 Identifier modifier_id,
-												 Identifier domain_id) {
+												 Identifier domainId) {
 		super(id,
 					created,
 					modified,
 					creator_id,
 					modifier_id);
-		this.domain_id = domain_id;
+		this.domainId = domainId;
 	}
 
 	public Identifier getDomainId() {
-		return this.domain_id;
+		return this.domainId;
 	}
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
 																						Identifier creator_id,
 																						Identifier modifier_id,
-																						Identifier domain_id) {
+																						Identifier domainId) {
 		super.setAttributes(created,
 												modified,
 												creator_id,
 												modifier_id);
-		this.domain_id = domain_id;
+		this.domainId = domainId;
 	}
 }

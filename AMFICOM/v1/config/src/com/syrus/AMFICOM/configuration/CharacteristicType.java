@@ -2,30 +2,32 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 
 public class CharacteristicType extends StorableObjectType {
-	private int data_type;
-	private boolean is_editable;
-	private boolean is_visible;
+	private int dataType;
+	private boolean isEditable;
+	private boolean isVisible;
 
-	private StorableObject_Database characteristicTypeDatabase;
+	private StorableObjectDatabase characteristicTypeDatabase;
 
-	public CharacteristicType(Identifier id) throws RetrieveObjectException {
+	public CharacteristicType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
 		this.characteristicTypeDatabase = ConfigurationDatabaseContext.characteristicTypeDatabase;
 		try {
 			this.characteristicTypeDatabase.retrieve(this);
 		}
-		catch (Exception e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
+		catch (IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
 
@@ -37,16 +39,16 @@ public class CharacteristicType extends StorableObjectType {
 					new Identifier(ctt.modifier_id),
 					new String(ctt.codename),
 					new String(ctt.description));
-		this.data_type = ctt.data_type.value();
-		this.is_editable = ctt.is_editable;
-		this.is_visible = ctt.is_visible;
+		this.dataType = ctt.data_type.value();
+		this.isEditable = ctt.is_editable;
+		this.isVisible = ctt.is_visible;
 
 		this.characteristicTypeDatabase = ConfigurationDatabaseContext.characteristicTypeDatabase;
 		try {
 			this.characteristicTypeDatabase.insert(this);
 		}
-		catch (Exception e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
 		}
 	}
 
@@ -58,21 +60,21 @@ public class CharacteristicType extends StorableObjectType {
 																							 (Identifier_Transferable)super.modifier_id.getTransferable(),
 																							 new String(super.codename),
 																							 new String(super.description),
-																							 DataType.from_int(this.data_type),
-																							 this.is_editable,
-																							 this.is_visible);
+																							 DataType.from_int(this.dataType),
+																							 this.isEditable,
+																							 this.isVisible);
 	}
 
 	public DataType getDataType() {
-		return DataType.from_int(this.data_type);
+		return DataType.from_int(this.dataType);
 	}
 
 	public boolean getIsEditable() {
-		return this.is_editable;
+		return this.isEditable;
 	}
 
 	public boolean getIsVisible() {
-		return this.is_visible;
+		return this.isVisible;
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -81,17 +83,17 @@ public class CharacteristicType extends StorableObjectType {
 																						Identifier modifier_id,
 																						String codename,
 																						String description,
-																						int data_type,
-																						boolean is_editable,
-																						boolean is_visible) {
+																						int dataType,
+																						boolean isEditable,
+																						boolean isVisible) {
 		super.setAttributes(created,
 												modified,
 												creator_id,
 												modifier_id,
 												codename,
 												description);
-		this.data_type = data_type;
-		this.is_editable = is_editable;
-		this.is_visible = is_visible;
+		this.dataType = dataType;
+		this.isEditable = isEditable;
+		this.isVisible = isVisible;
 	}
 }
