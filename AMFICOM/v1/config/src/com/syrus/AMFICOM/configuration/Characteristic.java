@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.17 2004/10/21 13:30:12 bob Exp $
+ * $Id: Characteristic.java,v 1.18 2004/10/22 13:54:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/10/21 13:30:12 $
+ * @version $Revision: 1.18 $, $Date: 2004/10/22 13:54:26 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -36,6 +36,8 @@ public class Characteristic extends StorableObject implements TypedObject {
 	private int sort;
 	private String value;
 	private Identifier characterizedId;
+	private boolean editable;
+	private boolean visible;
 
 	private StorableObjectDatabase characteristicDatabase;
 
@@ -68,7 +70,10 @@ public class Characteristic extends StorableObject implements TypedObject {
 		this.description = new String(ct.description);
 		this.sort = ct.sort.value();
 		this.value = new String(ct.value);
-		this.characterizedId = new Identifier(ct.characterized_id);		
+		this.characterizedId = new Identifier(ct.characterized_id);
+		this.editable = ct.is_editable;
+		this.visible = ct.is_visible;
+
 	}
 	
 	protected Characteristic(Identifier id,
@@ -78,7 +83,9 @@ public class Characteristic extends StorableObject implements TypedObject {
 						String description,
 						int sort,
 						String value,
-						Identifier characterizedId){		
+						Identifier characterizedId,
+						boolean editable,
+						boolean visible){		
 				super(id,
 						new Date(System.currentTimeMillis()),
 						new Date(System.currentTimeMillis()),
@@ -90,6 +97,9 @@ public class Characteristic extends StorableObject implements TypedObject {
 				this.sort = sort;
 				this.value = value;
 				this.characterizedId = characterizedId;
+				
+				this.editable = editable;
+				this.visible = visible;
 				
 				this.characteristicDatabase = ConfigurationDatabaseContext.characteristicDatabase;
 	}
@@ -113,7 +123,9 @@ public class Characteristic extends StorableObject implements TypedObject {
 													String description,
 													int sort,
 													String value,
-													Identifier characterizedId){
+													Identifier characterizedId,
+													boolean editable,
+													boolean visible){
 		return new Characteristic(id,
 								  creatorId,
 								  type,
@@ -121,7 +133,9 @@ public class Characteristic extends StorableObject implements TypedObject {
 								  description,
 								  sort,
 								  value,
-								  characterizedId);
+								  characterizedId,
+								  editable,
+								  visible);
 	}
 	
 	public static Characteristic getInstance(Characteristic_Transferable ct) throws CreateObjectException {
@@ -150,7 +164,18 @@ public class Characteristic extends StorableObject implements TypedObject {
 																					 new String(this.description),
 																					 CharacteristicSort.from_int(this.sort),
 																					 new String(this.value),
-																					 (Identifier_Transferable)this.characterizedId.getTransferable());
+																					 (Identifier_Transferable)this.characterizedId.getTransferable(),
+																					 this.editable,
+																					 this.visible);
+	}
+
+
+	public boolean isEditable() {
+		return this.editable;
+	}
+
+	public boolean isVisible() {
+		return this.visible;
 	}
 
 	public StorableObjectType getType() {
@@ -186,7 +211,9 @@ public class Characteristic extends StorableObject implements TypedObject {
 																						String description,
 																						int sort,
 																						String value,
-																						Identifier characterizedId) {
+																						Identifier characterizedId,
+																						boolean editable,
+																						boolean visible) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
@@ -197,6 +224,8 @@ public class Characteristic extends StorableObject implements TypedObject {
 		this.sort = sort;
 		this.value = value;
 		this.characterizedId = characterizedId;
+		this.editable = editable;
+		this.visible = visible;
 	}
 	
 	public void setValue(String value){

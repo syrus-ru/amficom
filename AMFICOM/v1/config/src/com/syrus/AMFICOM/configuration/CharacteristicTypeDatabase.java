@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.21 2004/10/21 12:28:11 bob Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.22 2004/10/22 13:54:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/10/21 12:28:11 $
+ * @version $Revision: 1.22 $, $Date: 2004/10/22 13:54:27 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -37,8 +37,6 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_CODENAME				= "codename";
 	public static final String COLUMN_DESCRIPTION			= "description";
 	public static final String COLUMN_DATA_TYPE				= "data_type";
-	public static final String COLUMN_IS_EDITABLE			= "is_editable";
-	public static final String COLUMN_IS_VISIBLE			= "is_visible";
 	public static final String COLUMN_SORT				= "sort";
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
@@ -61,9 +59,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 			this.updateColumns  = super.getUpdateColumns() + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_DATA_TYPE + COMMA
-				+ COLUMN_IS_EDITABLE + COMMA
-				+ COLUMN_IS_VISIBLE + COMMA
+				+ COLUMN_DATA_TYPE + COMMA				
 				+ COLUMN_SORT;
 		}
 		return this.updateColumns;
@@ -72,8 +68,6 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
 			this.updateMultiplySQLValues  = super.getUpdateMultiplySQLValues() + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -89,8 +83,6 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 			+ APOSTOPHE + characteristicType.getCodename() + APOSTOPHE + COMMA
 			+ APOSTOPHE + characteristicType.getDescription() + APOSTOPHE + COMMA
 			+ Integer.toString(characteristicType.getDataType().value()) + COMMA
-			+ (characteristicType.isEditable()?"1":"0") + COMMA
-			+ (characteristicType.isVisible()?"1":"0") + COMMA
 			+ Integer.toString(characteristicType.getSort().value());
 		return sql;
 	}
@@ -105,8 +97,6 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 			preparedStatement.setString( ++i, characteristicType.getCodename());
 			preparedStatement.setString( ++i, characteristicType.getDescription());
 			preparedStatement.setInt( ++i, characteristicType.getDataType().value());
-			preparedStatement.setInt( ++i, characteristicType.isEditable()?'1':'0');
-			preparedStatement.setInt( ++i, characteristicType.isVisible()?'1':'0');
 			preparedStatement.setInt( ++i, characteristicType.getSort().value());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("CharacteristicTypeDatabase.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -131,8 +121,6 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		+ COLUMN_CODENAME + COMMA
 		+ COLUMN_DESCRIPTION + COMMA
 		+ COLUMN_DATA_TYPE + COMMA
-		+ COLUMN_IS_EDITABLE + COMMA
-		+ COLUMN_IS_VISIBLE + COMMA
 		+ COLUMN_SORT
 		+ SQL_FROM + ObjectEntities.CHARACTERISTICTYPE_ENTITY
 		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
@@ -149,7 +137,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
 			characteristicType = new CharacteristicType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 0,
-										   false, false, 0);			
+										   0);			
 		}
 		characteristicType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 										 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -166,8 +154,6 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 										 resultSet.getString(COLUMN_CODENAME),
 										 resultSet.getString(COLUMN_DESCRIPTION),
 										 resultSet.getInt(COLUMN_DATA_TYPE),
-										 (resultSet.getInt(COLUMN_IS_EDITABLE) == 0) ? false : true,
-										 (resultSet.getInt(COLUMN_IS_VISIBLE) == 0) ? false : true,
 										 resultSet.getInt(COLUMN_SORT));
 
 		

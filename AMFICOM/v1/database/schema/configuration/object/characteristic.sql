@@ -10,6 +10,8 @@ CREATE TABLE Characteristic (
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
  value VARCHAR2(256),
+ is_editable NUMBER(1) NOT NULL,
+ is_visible NUMBER(1) NOT NULL,
 --
  sort NUMBER(2) NOT NULL,
  domain_id VARCHAR2(32),
@@ -18,7 +20,7 @@ CREATE TABLE Characteristic (
  equipment_id VARCHAR2(32),
  transmission_path_id VARCHAR2(32),
  port_id VARCHAR2(32),
- kis_id VARCHAR2(32),
+ kis_id VARCHAR2(32), 
 --
  CONSTRAINT chc_pk PRIMARY KEY (id),
  CONSTRAINT chc_creator_fk FOREIGN KEY (creator_id)

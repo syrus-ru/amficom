@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.14 2004/10/21 12:28:11 bob Exp $
+ * $Id: CharacteristicType.java,v 1.15 2004/10/22 13:54:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,15 +22,13 @@ import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/10/21 12:28:11 $
+ * @version $Revision: 1.15 $, $Date: 2004/10/22 13:54:26 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class CharacteristicType extends StorableObjectType {
 	private int dataType;
-	private boolean editable;
-	private boolean visible;
 	private int sort;
 
 	private StorableObjectDatabase characteristicTypeDatabase;
@@ -56,8 +54,6 @@ public class CharacteristicType extends StorableObjectType {
 					new String(ctt.codename),
 					new String(ctt.description));
 		this.dataType = ctt.data_type.value();
-		this.editable = ctt.is_editable;
-		this.visible = ctt.is_visible;	
 		this.sort = ctt.sort.value();
 	}
 	
@@ -66,8 +62,6 @@ public class CharacteristicType extends StorableObjectType {
 							String codename,
 							String description,
 							int dataType,
-							boolean editable,
-							boolean visible,
 							int sort){
 					super(id,
 							new Date(System.currentTimeMillis()),
@@ -77,8 +71,6 @@ public class CharacteristicType extends StorableObjectType {
 							codename,
 							description);
 					this.dataType = dataType;
-					this.editable = editable;
-					this.visible = visible;
 					this.sort = sort;
 					
 					this.characteristicTypeDatabase = ConfigurationDatabaseContext.characteristicTypeDatabase;
@@ -100,16 +92,12 @@ public class CharacteristicType extends StorableObjectType {
 							String codename,
 							String description,
 							int dataType,
-							boolean editable,
-							boolean visible,
 							CharacteristicTypeSort sort){
 		return new CharacteristicType(id,
 									  creatorId,
 									  codename,
 									  description,
-									  dataType,
-									  editable,
-									  visible,
+									  dataType,									  
 									  sort.value());
 	
 	}
@@ -138,9 +126,7 @@ public class CharacteristicType extends StorableObjectType {
 																							 (Identifier_Transferable)super.modifierId.getTransferable(),
 																							 new String(super.codename),
 																							 (super.description != null) ? (new String(super.description)) : "",
-																							 DataType.from_int(this.dataType),
-																							 this.editable,
-																							 this.visible,
+																							 DataType.from_int(this.dataType),																							 
 																							 CharacteristicTypeSort.from_int(this.sort));
 	}
 
@@ -152,14 +138,6 @@ public class CharacteristicType extends StorableObjectType {
 		return CharacteristicTypeSort.from_int(this.sort);
 	}
 
-	public boolean isEditable() {
-		return this.editable;
-	}
-
-	public boolean isVisible() {
-		return this.visible;
-	}
-
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
 																						Identifier creatorId,
@@ -167,8 +145,6 @@ public class CharacteristicType extends StorableObjectType {
 																						String codename,
 																						String description,
 																						int dataType,
-																						boolean editable,
-																						boolean visible,
 																						int sort) {
 		super.setAttributes(created,
 												modified,
@@ -177,8 +153,6 @@ public class CharacteristicType extends StorableObjectType {
 												codename,
 												description);
 		this.dataType = dataType;
-		this.editable = editable;
-		this.visible = visible;
 		this.sort = sort;
 	}
 }

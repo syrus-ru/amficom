@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.32 2004/10/21 13:11:14 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.33 2004/10/22 13:54:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/10/21 13:11:14 $
+ * @version $Revision: 1.33 $, $Date: 2004/10/22 13:54:26 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -49,6 +49,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     public static final String COLUMN_DESCRIPTION   = "description";
     // value VARCHAR2(256),
     public static final String COLUMN_VALUE = "value";
+    public static final String COLUMN_IS_EDITABLE			= "is_editable";
+	public static final String COLUMN_IS_VISIBLE			= "is_visible";
     // sort NUMBER(2) NOT NULL,
     public static final String COLUMN_SORT  = "sort";
 		// domain_id VARCHAR2(32),
@@ -65,13 +67,14 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     public static final String COLUMN_PORT_ID  = "port_id";
     // kis_id VARCHAR2(32),
     public static final String COLUMN_KIS_ID  = "kis_id";
+
     
     
     private String updateColumns;
        private String updateMultiplySQLValues;
     
     protected String getEnityName() {
-		return "Characteristic";
+		return ObjectEntities.CHARACTERISTIC_ENTITY;
 	}
     
     protected String getTableName() {
@@ -85,6 +88,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_VALUE + COMMA
+				+ COLUMN_IS_EDITABLE + COMMA
+				+ COLUMN_IS_VISIBLE + COMMA
 				+ COLUMN_SORT +	COMMA
 				+ COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_SERVER_ID + COMMA
@@ -111,6 +116,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION;
     	}
 		return this.updateMultiplySQLValues;
@@ -125,6 +132,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			+ APOSTOPHE + characteristic.getName() + APOSTOPHE + COMMA
 			+ APOSTOPHE + characteristic.getDescription() + APOSTOPHE  + COMMA
 			+ APOSTOPHE + characteristic.getValue() + APOSTOPHE + COMMA
+			+ (characteristic.isEditable()?"1":"0") + COMMA
+			+ (characteristic.isVisible()?"1":"0") + COMMA
 			+ sort + COMMA;
 		String characterizedIdStr = characteristic.getCharacterizedId().toSQLString();
 		switch (sort) {
@@ -209,6 +218,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			preparedStatement.setString( ++i, characteristic.getName());
 			preparedStatement.setString( ++i, characteristic.getDescription());
 			preparedStatement.setString( ++i, characteristic.getValue());
+			preparedStatement.setInt( ++i, characteristic.isEditable()?'1':'0');
+			preparedStatement.setInt( ++i, characteristic.isVisible()?'1':'0');
 			preparedStatement.setInt( ++i, sort);
 			String characterizedIdStr = characteristic.getCharacterizedId().toSQLString();
 			switch (sort) {
@@ -303,6 +314,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		+ COLUMN_NAME + COMMA
 		+ COLUMN_DESCRIPTION + COMMA			
 		+ COLUMN_VALUE + COMMA
+		+ COLUMN_IS_EDITABLE + COMMA
+		+ COLUMN_IS_VISIBLE + COMMA
 		+ COLUMN_SORT + COMMA
 		+ COLUMN_SERVER_ID + COMMA 
 		+ COLUMN_MCM_ID + COMMA			
@@ -322,7 +335,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
 			characteristic = new Characteristic(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null,
-										   0, null, null);			
+										   0, null, null, false, false);			
 		}
 		
 		int sort = resultSet.getInt(COLUMN_SORT);
@@ -412,7 +425,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 																 resultSet.getString(COLUMN_DESCRIPTION),
 																 sort,
 																 resultSet.getString(COLUMN_VALUE),
-																 characterizedId);
+																 characterizedId,										 
+																 (resultSet.getInt(COLUMN_IS_EDITABLE) == 0) ? false : true,
+																 (resultSet.getInt(COLUMN_IS_VISIBLE) == 0) ? false : true);
 		return characteristic;
 	}
 	
