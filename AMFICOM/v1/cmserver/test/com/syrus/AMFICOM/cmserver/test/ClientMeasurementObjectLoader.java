@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.15 2004/10/04 13:04:30 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.16 2004/10/04 14:30:34 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -34,6 +36,7 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementCondition;
 import com.syrus.AMFICOM.measurement.MeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.MeasurementSetupCondition;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.ParameterType;
@@ -60,7 +63,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/10/04 13:04:30 $
+ * @version $Revision: 1.16 $, $Date: 2004/10/04 14:30:34 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -568,17 +571,44 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     public List loadMeasurementSetupsButIds(StorableObjectCondition storableObjectCondition, List ids) throws DatabaseException, CommunicationException {
         try {
             Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            MeasurementSetup_Transferable[] transferables = null;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
                 identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
             }
-            MeasurementSetup_Transferable[] transferables = this.server
-                    .transmitMeasurementSetupsButIds(identifier_Transferables,
-                                    accessIdentifierTransferable);
-            List list = new ArrayList(transferables.length);
-            for (int j = 0; j < transferables.length; j++) {
-                list.add(new MeasurementSetup(transferables[j]));
+            if (storableObjectCondition instanceof MeasurementSetupCondition) {
+                MeasurementSetupCondition measurementSetupCondition = (MeasurementSetupCondition)storableObjectCondition;
+                MeasurementType measurementType = measurementSetupCondition.getMeasurementType();               
+                MonitoredElement monitoredElement = measurementSetupCondition.getMonitoredElement();
+                if (measurementType!=null) {
+                    transferables = this.server
+                            .transmitMeasurementSetupsButIdsConditionMeasurement(identifier_Transferables,
+                                                             accessIdentifierTransferable,
+                                                             (MeasurementType_Transferable) measurementType.getTransferable());
+                } else if (monitoredElement != null) {
+                    transferables = this.server
+                            .transmitMeasurementSetupsButIdsConditionMonitored(identifier_Transferables,
+                                                             accessIdentifierTransferable,
+                                                             (MonitoredElement_Transferable) monitoredElement.getTransferable());
+                }
+            } else {
+                transferables = this.server
+                        .transmitMeasurementSetupsButIds(identifier_Transferables,
+                                                         accessIdentifierTransferable);
+                if (storableObjectCondition != null && ( !(storableObjectCondition instanceof DomainCondition) || !(storableObjectCondition instanceof DomainCondition)) ) {
+                    Log.errorMessage("ClientMeasurementObjectLoader.loadMeasurementsButIds | " +
+                            "Class '" + storableObjectCondition.getClass().getName() + "' is not instanse of DomainCondition or ");
+                }
+            }
+              
+            List list = null;
+            if (transferables != null) {
+                list = new ArrayList(transferables.length);
+                for (int j = 0; j < transferables.length; j++) {
+                    list.add(new MeasurementSetup(transferables[j]));
+                }
+                
             }
             return list;
         } catch (CreateObjectException e) {
