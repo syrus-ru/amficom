@@ -46,7 +46,7 @@ import oracle.aurora.client.*;
 import oracle.aurora.jndi.sess_iiop.*;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/18 07:47:21 $
+ * @version $Revision: 1.3 $, $Date: 2004/07/05 05:49:08 $
  * @author $Author: bass $
  */
 public class RISDConnectionInfo extends ConnectionInterface {
@@ -623,6 +623,13 @@ public class RISDConnectionInfo extends ConnectionInterface {
 		 * @todo Add error-handling while parsing the string.
 		 */
 		public ServiceURL(String str) {
+			if (str == null) {
+				protocol = DEFAULT_PROTOCOL;
+				host = DEFAULT_HOST;
+				port = DEFAULT_PORT;
+				sid = DEFAULT_SID;
+				return;
+			}
 			int i = str.indexOf(':');
 			protocol = str.substring(0, i);
 			/*
