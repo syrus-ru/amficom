@@ -145,7 +145,7 @@ public class MapSiteGeneralPanel
 	{
 		site = (SiteNode)objectResource;
 		
-		typeComboBox.removeAll();
+		typeComboBox.removeAllItems();
 
 		if(site == null)
 		{
