@@ -1,0 +1,35 @@
+/*
+ * $Id: streams.idl,v 1.1 2004/09/07 13:00:20 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+#ifndef STREAMS_IDL
+#define STREAMS_IDL
+
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.1 $, $Date: 2004/09/07 13:00:20 $
+ * @module idl_v1
+ */
+module CORBA {
+	typedef sequence<any> AnySeq;
+	typedef sequence<boolean> BooleanSeq;
+	typedef sequence<char> CharSeq;
+	typedef sequence<double> DoubleSeq;
+	typedef sequence<float> FloatSeq;
+	typedef sequence<long long> LongLongSeq;
+	typedef sequence<long> LongSeq;
+	typedef sequence<octet> OctetSeq;
+	typedef sequence<short> ShortSeq;
+	typedef sequence<string> StringSeq;
+	typedef sequence<unsigned long long> ULongLongSeq;
+	typedef sequence<unsigned long> ULongSeq;
+	typedef sequence<unsigned short> UShortSeq;
+	typedef sequence<wchar> WCharSeq;
+	typedef sequence<wstring> WStringSeq;
+};
+
+#endif
