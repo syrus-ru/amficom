@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.18 2004/12/08 13:40:46 bob Exp $
+ * $Id: ClientMeasurementServer.java,v 1.19 2004/12/09 12:49:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.cmserver.corba.CMServerPOATie;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.mserver.corba.MServer;
@@ -35,7 +34,7 @@ import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/12/08 13:40:46 $
+ * @version $Revision: 1.19 $, $Date: 2004/12/09 12:49:44 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -245,6 +244,5 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 
 	protected static void resetMServerConnection() {
 		activateMServerReference();
-		NewIdentifierPool.setIdentifierGeneratorServer(mServerRef);
 	}	
 }
