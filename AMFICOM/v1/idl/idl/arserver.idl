@@ -1,5 +1,5 @@
 /*
- * $Id: arserver.idl,v 1.2 2005/01/18 07:48:33 max Exp $
+ * $Id: arserver.idl,v 1.3 2005/02/02 05:58:54 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ module com {
 		module AMFICOM {
 			module arserver {
 				module corba {
-					interface ARServer {
+					interface ARServer:general::corba::IdentifierGeneratorServer {
 /////////////////////////////////////////// Delete Resources ////////////////////////////////////////////
 						void delete(in general::corba::Identifier_Transferable id_Transferable,
 								in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
