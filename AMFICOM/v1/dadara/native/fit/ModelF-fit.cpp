@@ -1,6 +1,5 @@
 #include <assert.h>
 #include <time.h> // clock() for debug
-#include <direct.h> // mkdir() for debug
 #include <string.h> // min_sig related
 #include <stdlib.h> // rand() for many tries
 
