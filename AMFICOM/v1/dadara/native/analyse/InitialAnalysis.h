@@ -76,8 +76,7 @@ private:
     void calc_rms_line(double *arr, int beg, int end, double& a, double& b);// (c) Vit 
 
 	// заполнить массив шума (шум не постоянен, поэтому используем массив для описания значеня шума в каждой точке)
-    void fillNoiseArray(const double *y, int N, int width, double Neff, double noiseLevel, double *outNoise);
-	void fillNoiseArray1(double *y, int N, double Neff, double *outNoise);
+	void fillNoiseArray(double *y, int N, double Neff, double *outNoise);
 	void getNoise(double *noise, int freq);
 
 	void performTransformation(double *y, int begin, int end, double *trans, int freq, double norma);

@@ -172,6 +172,8 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse2(
 #endif
 	}
 
+	prf_b("analyse2() - sending to JNI");
+
 #ifdef DEBUG_DADARA_ANALYSE
 	fprintf( dbg_stream, "# converted to Cnew\n");
 	jobjectArray ret_obj = EventP_C2J_arr(env, re, nEvents, dbg_stream);
@@ -185,8 +187,6 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse2(
 #ifdef DEBUG_DADARA_ANALYSE
 	fprintf( dbg_stream, "# re freed\n");
 #endif
-
-	prf_b("analyse2() - sending to JNI");
 
 	// send to JNI
 

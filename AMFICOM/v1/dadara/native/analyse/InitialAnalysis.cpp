@@ -8,6 +8,8 @@
 #include "../An2/findLength.h"
 #include "../An2/findNoise.h"
 
+#include "../common/prf.h"
+
 // Коэффициент запаса: эта величина умножается на оценку 3 сигма шума, и используется как добавка к порогам обнаружения.
 // Предполагаемое теоретическое значение 1; Практически понадобилось 1 - 4.
 // бОльшие значения коэффициента соответствуют меньшей чувствительности.
@@ -61,7 +63,10 @@ InitialAnalysis::~InitialAnalysis()
 }
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::performAnalysis()
-{	lastNonZeroPoint = getLastPoint();
+{
+	prf_b("performAnalysis(): starting");
+	lastNonZeroPoint = getLastPoint();
+
     f_wlet	= new double[lastNonZeroPoint];
 #ifdef debug_VCL
     f_tmp = new double[lastNonZeroPoint];
@@ -71,20 +76,25 @@ void InitialAnalysis::performAnalysis()
 
     wn = getWLetNorma(wlet_width, waveletType);
 
+	prf_b("performAnalysis(): fillNoiseArray");
     // вычисляем уровень шума по saa и поправку к чувствительности на его основе
     { const int sz = lastNonZeroPoint;
       const int width = wlet_width;
-      fillNoiseArray1(data, sz, 1 + width/20, noise);
+      fillNoiseArray(data, sz, 1 + width/20, noise);
     }
 
+	prf_b("performAnalysis(): performTransformation");
 	// выполняем вейвлет-преобразование
 	// f_wlet - вейвлет-образ функции, wlet_width - ширина вейвлета, wn - норма вейвлета
     performTransformation(data, 0, lastNonZeroPoint, f_wlet, wlet_width, wn);
 
+	prf_b("performAnalysis(): processing");
 	// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
 	centerWletImage(f_wlet);
+
     { // ищём все всплески вейвлет-образа
       ArrList splashes; // создаем пустой ArrList
+
       findAllWletSplashes(f_wlet, splashes); // заполняем массив splashes объектами
       findEventsBySplashes(splashes); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
       // используем ArrList и его объекты
@@ -97,6 +107,7 @@ void InitialAnalysis::performAnalysis()
     excludeShortLinesBetweenConnectors(data, wlet_width);
     addLinearPartsBetweenEvents();
 
+	prf_b("performAnalysis(): done");
 return;
 
 	// устанавливаем в 0 КП, которые меньше уровня шума или минимального уровня события
@@ -228,48 +239,8 @@ void InitialAnalysis::centerWletImage(double* fw)
     {	f_wlet[i] -= f_wlet_avrg;
     }
 }
-// -------------------------------------------------------------------------------------------------
-// added by Vit ( (c) saa )
-void InitialAnalysis::fillNoiseArray(const double *y, int N, int width, double Neff, double noiseLevel, double *outNoise)
-{	int i;
-	double acc;
-	if (width < 1)
-	{	width = 1;
-    }
-	// первый шаг усреднения - интегрирование
-	for (i = 0, acc = 0; i < N; i++)
-	{	outNoise[i] = acc;
-		acc += y[i];
-	}
-	// второй шаг усреднения - вычитание
-	for (i = 0; i < N - width; i++)
-	{	outNoise[i] = outNoise[i + width] - outNoise[i];
-	}
-	// третий шаг усреднения - сдвиг и деление
-	int ofs = width / 2;
-	for (i = N - width - 1; i >= 0; i--)
-	{	outNoise[i + ofs] = outNoise[i] / width;
-	}
-	// четвертый шаг - заполнение краев
-	for (i = 0; i < ofs; i++)
-	{	outNoise[i] = outNoise[ofs];
-	}
-	for (i = N - width + ofs; i < N; i++)
-	{	outNoise[i] = outNoise[N - width + ofs - 1];
-	}
-	// получили усредненное значение y[] в массиве noise[]
-	// рассчитываем шум
-	if (Neff < 1)
-	{	Neff = 1;
-    }
-	for (i = 0; i < N; i++)
-	{	// кто скажет, что sqrt(Neff) в цикле сильно влияет на
-		// быстродействие АМФИКОМа, того назову плохим словом.
-		outNoise[i] = 5 * log10(1 +	pow(10.0, (noiseLevel - outNoise[i]) / 5.0) / sqrt(Neff));
-	}
-}
 //------------------------------------------------------------------------------------------------------------
-void InitialAnalysis::fillNoiseArray1(double *y, int N, double Neff, double *outNoise)
+void InitialAnalysis::fillNoiseArray(double *y, int N, double Neff, double *outNoise)
 {	findNoiseArray(y, outNoise, N); // external function from findNoise.cpp
 	int i;
 	if (Neff < 1)
@@ -290,17 +261,31 @@ int InitialAnalysis::getLastPoint()
     return lastPoint;
 }
 //------------------------------------------------------------------------------------------------------------
-// f- исходня ф-ция,
+// f- исходная ф-ция,
 // f_wlet - вейвлет-образ
 void InitialAnalysis::performTransformation(double* f, int begin, int end, double* f_wlet, int freq, double norma)
-{   double tmp;
-	for(int i=begin; i<end; i++)
-	{	tmp = 0.;
-		for(int j = max(i-freq, 0); j < min(i+freq+1, end); j++)
-		{	tmp = tmp + f[j]*wLet(j-i, freq, norma, waveletType);
-        }
+{
+	double tmp;
+	int i;
+	double *wLetData = new double[freq * 2 + 1];
+	assert(wLetData);
+	for (i = -freq; i <= freq; i++)
+		wLetData[i+freq] = wLet(i, freq, norma, waveletType);
+
+	for (i=begin; i<end; i++)
+	{	tmp = 0;
+		int jL = i-freq;
+		int jMin = max(i-freq, 0);
+		int jMax = min(i+freq+1, end);
+		int jR = i+freq+1;
+		int j;
+		for (j = jL;   j < jMin; j++)	tmp += f[jMin]   * wLetData[j-i+freq];
+		for (j = jMin; j < jMax; j++)	tmp += f[j]	     * wLetData[j-i+freq];
+		for (j = jMax; j < jR;   j++)	tmp += f[jMax-1] * wLetData[j-i+freq];
 		f_wlet[i] = tmp;
 	}
+
+	delete[] wLetData;
 }
 //------------------------------------------------------------------------------------------------------------
 // вычислить среднее значение вейвлет-образа 
