@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.14 2004/08/09 13:40:41 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.15 2004/08/09 14:13:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/09 13:40:41 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/09 14:13:40 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -98,7 +98,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		buffer.append(COLUMN_SORT);
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(COLUMN_KIS_ID);
-		buffer.append(StorableObjectDatabase.SQL_FROM);
+		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(ObjectEntities.EQUIPMENT_ENTITY);
 		buffer.append(StorableObjectDatabase.SQL_WHERE);
 		buffer.append(StorableObjectDatabase.COLUMN_ID);
