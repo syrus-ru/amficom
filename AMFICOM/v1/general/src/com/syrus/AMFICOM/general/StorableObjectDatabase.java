@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.129 2005/03/21 15:10:13 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.130 2005/03/29 11:31:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.129 $, $Date: 2005/03/21 15:10:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.130 $, $Date: 2005/03/29 11:31:37 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -1435,14 +1435,18 @@ public abstract class StorableObjectDatabase {
 	private String getConditionQuery(StorableObjectCondition condition) throws IllegalDataException {
 		DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
 		short conditionCode = databaseStorableObjectCondition.getEntityCode().shortValue();
-		String enityName = this.getEnityName();
-		enityName = enityName.replaceAll("\"", "");
-		if (ObjectEntities.stringToCode(enityName) != conditionCode)
-			throw new IllegalDataException(enityName + "Database.retrieveByCondition | Uncompatible condition ("
+		if (!this.checkEntity(conditionCode))
+			throw new IllegalDataException(this.getEnityName() + "Database.retrieveByCondition | Incompatible condition ("
 					+ ObjectEntities.codeToString(conditionCode) + ") and database (" + this.getEnityName()
 					+ ") classes");
 		String conditionQuery = databaseStorableObjectCondition.getSQLQuery();
 		return conditionQuery;
+	}
+	
+	protected boolean checkEntity(short conditionCode) {
+		String enityName = this.getEnityName();
+		enityName = enityName.replaceAll("\"", "");
+		return (ObjectEntities.stringToCode(enityName) == conditionCode);		
 	}
 
 	private DatabaseStorableObjectCondition reflectDatabaseCondition(StorableObjectCondition condition) throws IllegalDataException {
