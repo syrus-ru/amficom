@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.1 2005/01/14 18:05:13 arseniy Exp $
+ * $Id: Domain.java,v 1.2 2005/01/31 13:48:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/14 18:05:13 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/31 13:48:11 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -46,7 +46,7 @@ public class Domain extends DomainMember implements Characterized {
 	public Domain(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);	
 		
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 		this.domainDatabase = AdministrationDatabaseContext.domainDatabase;
 		try {
 			this.domainDatabase.retrieve(this);
@@ -124,7 +124,7 @@ public class Domain extends DomainMember implements Characterized {
 	}
 	
 	public void addCharacteristic(Characteristic characteristic) {
-		if (characteristic != null){
+		if (characteristic != null) {
 			this.characteristics.add(characteristic);
 			super.currentVersion = super.getNextVersion();
 		}
@@ -149,7 +149,7 @@ public class Domain extends DomainMember implements Characterized {
 	
 	public void setCharacteristics(List characteristics) {
 		this.setCharacteristics0(characteristics);
-	    super.currentVersion = super.getNextVersion();
+		super.currentVersion = super.getNextVersion();
 	}
 	
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.1 2005/01/14 18:05:13 arseniy Exp $
+ * $Id: Server.java,v 1.2 2005/01/31 13:48:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/14 18:05:13 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/31 13:48:11 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -50,7 +50,7 @@ public class Server extends DomainMember implements Characterized {
 
 	public Server(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 
 		this.serverDatabase = AdministrationDatabaseContext.serverDatabase;
 		try {
@@ -99,7 +99,7 @@ public class Server extends DomainMember implements Characterized {
 		this.hostname = hostname;
 		this.userId = userId;
 
-		this.characteristics = new LinkedList();
+		this.characteristics = new ArrayList();
 
 		super.currentVersion = super.getNextVersion();
 
@@ -182,13 +182,13 @@ public class Server extends DomainMember implements Characterized {
 
 	protected void setCharacteristics0(List characteristics) {
 		this.characteristics.clear();
-	     if (characteristics != null)
-	     	this.characteristics.addAll(characteristics);
+		if (characteristics != null)
+			this.characteristics.addAll(characteristics);
 	}
 
 	public void setCharacteristics(List characteristics) {
 		this.setCharacteristics0(characteristics);
-	     super.currentVersion = super.getNextVersion();
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public static Server createInstance(Identifier creatorId,
