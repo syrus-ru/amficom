@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMdbInterface.sqlj,v 1.4 2004/07/26 10:23:30 krupenn Exp $
+ * $Id: AMFICOMdbInterface.sqlj,v 1.5 2004/07/26 11:11:48 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import org.omg.CORBA.StringHolder;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/07/26 10:23:30 $
+ * @version $Revision: 1.5 $, $Date: 2004/07/26 11:11:48 $
  * @author $Author: krupenn $
  * @module server_v1
  */
@@ -2360,15 +2360,17 @@ public class AMFICOMdbInterface
 		Vector vec = new Vector();
 		String dom;
 		String kis_id;
+		ResourceDescriptor_Transferable rd;
 		Test test;
 
 		for(int i = 0; i < invec.size(); i++)
 		{
-			test = (Test )invec.get(i);
-			kis_id = test.getKISId();
-				
 			try
 			{
+				rd = (ResourceDescriptor_Transferable )invec.get(i);
+				test = new Test(rd.resource_id);
+				kis_id = test.getKISId();
+				
 				#sql {
 					select domain_id into :dom from equipments
 					where id = :kis_id
@@ -2380,7 +2382,7 @@ public class AMFICOMdbInterface
 			}
 			catch(Exception e)
 			{
-				
+				e.printStackTrace();
 			}
 		}
 		return vec;
