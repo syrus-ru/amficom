@@ -291,34 +291,42 @@ condition.setDomain(domain);
 				ex.printStackTrace();
 			}
 		}
-		if (node.getObject() instanceof Test)
-		{
+		if (node.getObject()instanceof Test) {
 			Test test = (Test)node.getObject();
 			LinkedIdsCondition condition = LinkedIdsCondition.getInstance();
 			condition.setDomain(domain);
 			condition.setIdentifier(test.getId());
-			condition.setEntityCode(ObjectEntities.RESULT_ENTITY_CODE);
-			try {
-				List results = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
-				for (Iterator it = results.iterator(); it.hasNext(); ) {
-					Result r = (Result)it.next();
-					if (r.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
-						ImageIcon icon;
-						if (r.getAlarmLevel().equals(AlarmLevel.ALARM_LEVEL_HARD)) {
-							icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/alarm_bell_red.gif").
-																	 getScaledInstance(15, 15, Image.SCALE_SMOOTH));
-						}
-						else if (r.getAlarmLevel().equals(AlarmLevel.ALARM_LEVEL_SOFT)) {
-							icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-									"images/alarm_bell_yellow.gif").
-																	 getScaledInstance(15, 15, Image.SCALE_SMOOTH));
-						}
-						else {
-							icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/result.gif").
-																	 getScaledInstance(15, 15, Image.SCALE_SMOOTH));
+			condition.setEntityCode(ObjectEntities.MEASUREMENT_ENTITY_CODE);
+			try
+			{
+				List measurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				condition.setEntityCode(ObjectEntities.RESULT_ENTITY_CODE);
+				for (Iterator it = measurements.iterator(); it.hasNext(); ) {
+					Measurement measurement = (Measurement)it.next();
+					condition.setIdentifier(measurement.getId());
+					for (Iterator iter = MeasurementStorableObjectPool.getStorableObjectsByCondition(
+							condition, true).iterator();
+							 iter.hasNext(); ) {
+						Result r = (Result)iter.next();
+						if (r.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+							ImageIcon icon;
+							if (r.getAlarmLevel().equals(AlarmLevel.ALARM_LEVEL_HARD)) {
+								icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+										"images/alarm_bell_red.gif").
+																		 getScaledInstance(15, 15, Image.SCALE_SMOOTH));
+							}
+							else if (r.getAlarmLevel().equals(AlarmLevel.ALARM_LEVEL_SOFT)) {
+								icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+										"images/alarm_bell_yellow.gif").
+																		 getScaledInstance(15, 15, Image.SCALE_SMOOTH));
+							}
+							else {
+								icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/result.gif").
+																		 getScaledInstance(15, 15, Image.SCALE_SMOOTH));
 
+							}
+							vec.add(new ObjectResourceTreeNode(r, r.getMeasurement().getName(), true, icon, true));
 						}
-						vec.add(new ObjectResourceTreeNode(r, r.getMeasurement().getName(), true, icon, true));
 					}
 				}
 			}
@@ -326,7 +334,7 @@ condition.setDomain(domain);
 				ex.printStackTrace();
 			}
 		}
-		if (node.getObject() instanceof Date)
+		if(node.getObject()instanceof Date)
 		{
 			Date startDate = (Date)node.getObject();
 			calendar.setTime(startDate);

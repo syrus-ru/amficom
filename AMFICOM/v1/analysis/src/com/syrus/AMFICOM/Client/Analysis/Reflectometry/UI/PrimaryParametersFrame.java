@@ -160,9 +160,11 @@ public class PrimaryParametersFrame extends ATableFrame
 			return;
 
 		double res = (double)bs.fxdParams.DS[0] * .3d / (double)bs.fxdParams.GI;
+//		double res2 = (bs.fxdParams.AR - bs.fxdParams.AO) * 3d / ((double)bs.dataPts.TNDP * (double)bs.fxdParams.GI/1000d);
+
 		if (bs.fxdParams.UD.equals("km"))
 			res *= 1000d;
-		double range = (double)bs.fxdParams.AR * 3d / (double)bs.fxdParams.GI * 1000;
+		double range = (double)(bs.fxdParams.AR - bs.fxdParams.AO) * 3d / (double)bs.fxdParams.GI * 1000;
 		if (bs.fxdParams.UD.equals("mt"))
 			range /= 1000d;
 		String date = sdf.format(new Date(bs.fxdParams.DTS * 1000));
@@ -181,5 +183,4 @@ public class PrimaryParametersFrame extends ATableFrame
 		}, 1);
 		jTable.updateUI();
 	}
-
 }

@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.AMFICOM.configuration.CharacteristicType;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.Set;
@@ -161,11 +160,11 @@ public class AnalysisUtil
 		Set criteriaSet = ms.getCriteriaSet();
 		if (criteriaSet != null)
 			setParamsFromCriteriaSet(criteriaSet);
-		else
-		{
-			criteriaSet = createCriteriaSetFromParams(userId, ms.getMonitoredElementIds());
-			ms.setCriteriaSet(criteriaSet);
-		}
+//		else
+//		{
+//			criteriaSet = createCriteriaSetFromParams(userId, ms.getMonitoredElementIds());
+//			ms.setCriteriaSet(criteriaSet);
+//		}
 	}
 
 	/**
@@ -184,10 +183,10 @@ public class AnalysisUtil
 		if (ep == null)
 			return;
 
-		if (thresholdSet == null)
-			thresholdSet = createThresholdSet(userId, ms.getMonitoredElementIds(), ep);
-		else
+		if (thresholdSet != null)
 			setParamsFromThresholdsSet(thresholdSet, ep);
+//		else
+//			thresholdSet = createThresholdSet(userId, ms.getMonitoredElementIds(), ep);
 
 //		try
 //		{
@@ -282,7 +281,15 @@ public class AnalysisUtil
 
 		try
 		{
-			for (int i = 0; i < parameterCodenames.length; i++)
+			for (int i = 0; i < 6; i++)
+			{
+				ParameterType ptype = getParameterType(userId, parameterCodenames[i]);
+				params[i] = new SetParameter(
+						IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
+						ptype,
+						ByteArray.toByteArray(defaultMinuitParams[i]));
+			}
+			for (int i = 6; i < 8; i++)
 			{
 				ParameterType ptype = getParameterType(userId, parameterCodenames[i]);
 				params[i] = new SetParameter(
@@ -290,6 +297,7 @@ public class AnalysisUtil
 						ptype,
 						ByteArray.toByteArray((int)defaultMinuitParams[i]));
 			}
+
 		}
 		catch (IOException ex)
 		{

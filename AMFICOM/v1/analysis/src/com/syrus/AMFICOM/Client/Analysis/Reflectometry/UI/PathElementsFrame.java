@@ -51,22 +51,24 @@ public class PathElementsFrame extends AnalysisFrame
 
 			try
 			{
-				MonitoredElement me = (MonitoredElement)MeasurementStorableObjectPool.getStorableObject(bs.monitoredElementId, true);
+				MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(bs.monitoredElementId, true);
 				if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH))
 				{
 					List tpathIds = me.getMonitoredDomainMemberIds();
-					for(Iterator it = Pool.getMap(SchemePath.typ).values().iterator(); it.hasNext(); )
-					{
-						SchemePath sp = (SchemePath)it.next();
-						/**
-						 * @todo remove comment when SchemePath moves to new TransmissionPath
-						 */
-//						if(sp.path != null && tpathIds.contains(sp.path.getId()))
+					List paths = Pool.getList(SchemePath.typ);
+					if (path != null)
+						for(Iterator it = paths.iterator(); it.hasNext(); )
 						{
-							path = sp;
-							break;
+							SchemePath sp = (SchemePath)it.next();
+							/**
+							 * @todo remove comment when SchemePath moves to new TransmissionPath
+							 */
+//						if(sp.path != null && tpathIds.contains(sp.path.getId()))
+							{
+								path = sp;
+								break;
+							}
 						}
-					}
 				}
 				setTitle(me.getName());
 			}
