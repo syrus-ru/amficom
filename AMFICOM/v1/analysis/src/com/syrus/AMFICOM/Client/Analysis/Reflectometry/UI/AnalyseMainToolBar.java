@@ -26,7 +26,6 @@ public class AnalyseMainToolBar extends JToolBar implements ApplicationModelList
 	JButton buttonExit = new JButton();
 
 	public final static int img_siz = 16;
-	public final static int btn_siz = 24;
 
 	public AnalyseMainToolBar()
 	{
@@ -47,49 +46,47 @@ public class AnalyseMainToolBar extends JToolBar implements ApplicationModelList
 		AnalyseMainToolBar_this_actionAdapter actionAdapter =
 				new AnalyseMainToolBar_this_actionAdapter(this);
 
-		Dimension buttonSize = new Dimension(btn_siz, btn_siz);
-
 		sessionOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_SESSION));
-		sessionOpen.setMaximumSize(buttonSize);
-		sessionOpen.setPreferredSize(buttonSize);
+		sessionOpen.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		sessionOpen.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
 		sessionOpen.setName("menuSessionNew");
 		sessionOpen.addActionListener(actionAdapter);
 		traceDownload.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_TRACE));
-		traceDownload.setMaximumSize(buttonSize);
-		traceDownload.setPreferredSize(buttonSize);
+		traceDownload.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		traceDownload.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		traceDownload.setToolTipText(LangModelAnalyse.getString("menuTraceDownload"));
 		traceDownload.setName("menuTraceDownload");
 		traceDownload.addActionListener(actionAdapter);
 		traceAddCompare.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_ADD));
-		traceAddCompare.setMaximumSize(buttonSize);
-		traceAddCompare.setPreferredSize(buttonSize);
+		traceAddCompare.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		traceAddCompare.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		traceAddCompare.setToolTipText(LangModelAnalyse.getString("menuTraceAddCompare"));
 		traceAddCompare.setName("menuTraceAddCompare");
 		traceAddCompare.addActionListener(actionAdapter);
 		traceRemoveCompare.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_REMOVE ));
-		traceRemoveCompare.setMaximumSize(buttonSize);
-		traceRemoveCompare.setPreferredSize(buttonSize);
+		traceRemoveCompare.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		traceRemoveCompare.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		traceRemoveCompare.setToolTipText(LangModelAnalyse.getString("menuTraceRemoveCompare"));
 		traceRemoveCompare.setName("menuTraceRemoveCompare");
 		traceRemoveCompare.addActionListener(actionAdapter);
 
 
 		buttonFileOpen.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_FILE));
-		buttonFileOpen.setMaximumSize(buttonSize);
-		buttonFileOpen.setPreferredSize(buttonSize);
+		buttonFileOpen.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		buttonFileOpen.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		buttonFileOpen.setToolTipText(LangModelAnalyse.getString("menuFileOpen"));
 		buttonFileOpen.setName("menuFileOpen");
 		buttonFileOpen.addActionListener(actionAdapter);
 		fileAdd.setIcon(UIManager.getIcon(ResourceKeys.ICON_ADD_FILE));
-		fileAdd.setMaximumSize(buttonSize);
-		fileAdd.setPreferredSize(buttonSize);
+		fileAdd.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		fileAdd.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		fileAdd.setToolTipText(LangModelAnalyse.getString("menuFileAddCompare"));
 		fileAdd.setName("menuFileAddCompare");
 		fileAdd.addActionListener(actionAdapter);
 		fileRemove.setIcon(UIManager.getIcon(ResourceKeys.ICON_REMOVE_FILE));
-		fileRemove.setMaximumSize(buttonSize);
-		fileRemove.setPreferredSize(buttonSize);
+		fileRemove.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		fileRemove.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
 		fileRemove.setToolTipText(LangModelAnalyse.getString("menuFileRemoveCompare"));
 		fileRemove.setName("menuFileRemoveCompare");
 		fileRemove.addActionListener(actionAdapter);
