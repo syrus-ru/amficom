@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.17 2004/12/27 13:18:10 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.18 2004/12/27 13:53:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.17 $, $Date: 2004/12/27 13:18:10 $
+ * @version $Revision: 1.18 $, $Date: 2004/12/27 13:53:36 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -427,6 +427,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				if (linkedIdsCondition.getLinkedIds() != null)
 					tests = MeasurementStorableObjectPool.getStorableObjects(linkedIdsCondition.getLinkedIds(), true);
 				else tests = Collections.singletonList(MeasurementStorableObjectPool.getStorableObject(linkedIdsCondition.getIdentifier(), true));
+				Log.debugMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | condition consists " + tests.size() + " test(s)", Log.DEBUGLEVEL05);
 				for (Iterator it = tests.iterator(); it.hasNext();) {
 					Test test = (Test) it.next();				
 					MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
