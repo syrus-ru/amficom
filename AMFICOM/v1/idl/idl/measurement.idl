@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.51 2005/01/27 16:09:55 arseniy Exp $
+ * $Id: measurement.idl,v 1.52 2005/02/25 08:42:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -300,6 +300,7 @@ module corba {
 		identifier of the action as identifier
 		or
 		list with one element - identifier of the action - as linkedIds
+	@deprecated use LinkedIdsCondition
 */
 	struct ActionCondition_Transferable {
 		short entity_code;
