@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.59 2004/12/27 14:33:36 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.60 2004/12/27 14:53:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2004/12/27 14:33:36 $
+ * @version $Revision: 1.60 $, $Date: 2004/12/27 14:53:33 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -89,8 +89,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 			clazz = Class.forName(cacheClass.getName());
 			instance = new MeasurementStorableObjectPool(clazz);
 		} catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default '" 
-							 + ((clazz == null) ? "null" : clazz.getName()) + "'");
+			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
 		}
 		init(mObjectLoader1, size);
 	}
@@ -98,6 +97,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	public static void init(MeasurementObjectLoader mObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new MeasurementStorableObjectPool();
+
 		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
 
 		mObjectLoader = mObjectLoader1;
@@ -145,22 +145,20 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		
 		instance.populatePools();
 	}
-		
-    public static void refresh() throws DatabaseException, CommunicationException {        
-    	instance.refreshImpl();
-    }
-    
-    protected java.util.Set refreshStorableObjects(java.util.Set storableObjects) throws CommunicationException, DatabaseException{
-    	return mObjectLoader.refresh(storableObjects);
-    }
 
-	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader)
-			throws DatabaseException, CommunicationException {
+  public static void refresh() throws DatabaseException, CommunicationException {
+		instance.refreshImpl();
+	}
+
+  protected java.util.Set refreshStorableObjects(java.util.Set storableObjects) throws CommunicationException, DatabaseException {
+		return mObjectLoader.refresh(storableObjects);
+	}
+
+	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws DatabaseException, CommunicationException {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static List getStorableObjects(List objectIds, boolean useLoader)
-			throws DatabaseException, CommunicationException {
+	public static List getStorableObjects(List objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
