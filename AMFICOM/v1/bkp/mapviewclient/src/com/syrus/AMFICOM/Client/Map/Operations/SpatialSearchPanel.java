@@ -1,5 +1,5 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.2 2005/03/05 16:00:06 peskovsky Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.3 2005/03/09 09:15:01 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 /**
  * панель поиска географических объектов
- * @version $Revision: 1.2 $, $Date: 2005/03/05 16:00:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/09 09:15:01 $
  * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
@@ -131,6 +131,13 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 		this.foundList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.foundList.setCellRenderer(new SpatialSearchPanel.SpatialObjectRenderer());
+		this.foundList.addMouseListener(new java.awt.event.MouseAdapter(){
+			public void mouseClicked(java.awt.event.MouseEvent e)
+			{
+				if (e.getClickCount() > 1)				
+					SpatialSearchPanel.this.doCenter();
+			}
+		});
 	}
 
 	/**
