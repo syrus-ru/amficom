@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 
 import java.util.ListIterator;
+import java.util.Map;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
@@ -181,10 +182,9 @@ public class TwoListsPanel extends GeneralPanel
     sorter.setDataSet(this.or.getChildren(childTyp));
     list1.setContents(sorter.default_sort());
 
+    Map h = new HashMap();
 
-    HashMap h = new HashMap();
-
-    HashMap tmp_h = (HashMap)Pool.getMap(childTyp);
+    Map tmp_h = Pool.getMap(childTyp);
     if(tmp_h == null)
       tmp_h = new HashMap();
       

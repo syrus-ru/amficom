@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import java.util.Map;
 
 public class ObjectPermissionAttributes extends AdminObjectResource implements AdminObjectRWXresource
 {
@@ -29,8 +30,8 @@ public class ObjectPermissionAttributes extends AdminObjectResource implements A
   public List category_ids = new ArrayList();
   public List group_ids = new ArrayList();
 
-  public HashMap categories = new HashMap();
-  public HashMap groups = new HashMap();
+  public Map categories = new HashMap();
+  public Map groups = new HashMap();
 
   public String owner_id="";
   public String name="";

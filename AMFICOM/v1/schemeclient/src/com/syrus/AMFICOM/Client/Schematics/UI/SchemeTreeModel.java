@@ -1,8 +1,13 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import java.awt.*;
+import java.util.ListIterator;
+import java.util.Map;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.Filter.*;
@@ -226,9 +231,10 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			else if(s.equals("scheme_types"))
 			{
 				Map ht = new HashMap();
-				if (Pool.getHash(Scheme.typ) != null)
+        
+				Map dSet = Pool.getMap(Scheme.typ);        
+				if (dSet != null)
 				{
-					Map dSet = Pool.getHash(Scheme.typ);
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
 
@@ -254,10 +260,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 							s.equals(Scheme.CARDCAGE) ||
 							s.equals(Scheme.RACK))
 			{
-				if (Pool.getHash(Scheme.typ) != null)
+				Map dSet = Pool.getMap(Scheme.typ);
+				if (dSet != null)
 				{
-					Map dSet = Pool.getHash(Scheme.typ);
-
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = Scheme.getSorter();
@@ -297,10 +302,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			}*/
 			else if(s.equals(LinkType.typ))
 			{
-				if (Pool.getHash(LinkType.typ) != null)
+				Map dSet = Pool.getMap(LinkType.typ);
+				if (dSet != null)
 				{
-					Map dSet = Pool.getHash(LinkType.typ);
-
 					//ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					//dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = LinkType.getDefaultSorter();
@@ -316,10 +320,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals(CableLinkType.typ))
 			{
-				if (Pool.getHash(CableLinkType.typ) != null)
+				Map dSet = Pool.getMap(CableLinkType.typ);
+				if (dSet != null)
 				{
-					Map dSet = Pool.getHash(CableLinkType.typ);
-
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = CableLinkType.getDefaultSorter();
@@ -335,10 +338,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals(PortType.typ))
 			{
-				if (Pool.getHash(PortType.typ) != null)
+				Map dSet = Pool.getMap(PortType.typ);
+				if (dSet != null)
 				{
-					Map dSet = Pool.getHash(PortType.typ);
-
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = PortType.getDefaultSorter();
@@ -354,10 +356,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals(CablePortType.typ))
 			{
-				if (Pool.getHash(CablePortType.typ) != null)
+				Map dSet = Pool.getMap(CablePortType.typ);
+				if (dSet != null)
 				{
-					Map dSet = Pool.getHash(CablePortType.typ);
-
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = CablePortType.getDefaultSorter();
@@ -396,10 +397,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			}*/
 			else if(s.equals(TransmissionPathType.typ))
 			{
-				if (Pool.getHash(TransmissionPathType.typ) != null)
+				Map dSet = Pool.getMap(TransmissionPathType.typ);
+				if (dSet != null)
 				{
-					Map dSet = Pool.getHash(TransmissionPathType.typ);
-
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = TransmissionPathType.getDefaultSorter();
@@ -415,10 +415,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals(AccessPortType.typ))
 			{
-				if (Pool.getHash(AccessPortType.typ) != null)
+				Map dSet = Pool.getHash(AccessPortType.typ);
+				if (dSet != null)
 				{
-					Map dSet = Pool.getHash(AccessPortType.typ);
-
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = AccessPortType.getDefaultSorter();
@@ -435,7 +434,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 
 			else if (s.equals(MapProtoGroup.typ))
 			{
-				Map map_groups = Pool.getHash(MapProtoGroup.typ);
+				Map map_groups = Pool.getMap(MapProtoGroup.typ);
 				if (map_groups != null)
 					for (Iterator it = map_groups.keySet().iterator(); it.hasNext();)
 					{
@@ -448,7 +447,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			else if (s.equals(Scheme.typ))
 			{
 				Scheme parent = (Scheme)((ObjectResourceTreeNode)node.getParent()).getObject();
-				ArrayList ds = new ArrayList();
+				List ds = new ArrayList();
 				for (Iterator it = parent.elements.iterator(); it.hasNext();)
 				{
 					SchemeElement el = (SchemeElement)it.next();
@@ -587,9 +586,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			else if(node.getObject() instanceof MapProtoElement)
 			{
 				MapProtoElement map_proto = (MapProtoElement)node.getObject();
-				for (int i = 0; i < map_proto.pe_ids.size(); i++)
+				for (ListIterator it = map_proto.pe_ids.listIterator(); it.hasNext();)
 				{
-					ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, (String)map_proto.pe_ids.get(i));
+					ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 					proto.map_proto = map_proto;
 					ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(proto, proto.getName(), true, true);
 					ortn.setDragDropEnabled(true);

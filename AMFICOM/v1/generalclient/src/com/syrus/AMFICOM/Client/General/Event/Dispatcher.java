@@ -34,11 +34,13 @@ package com.syrus.AMFICOM.Client.General.Event;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Dispatcher implements OperationListener
 {
-	private LinkedList events; // список событий
+	private List events; // список событий
 	private Cmd tmp;
 
 	// на каждое событие может подписываться произвольное число наблюдателей
@@ -52,7 +54,7 @@ public class Dispatcher implements OperationListener
 			listeners = new LinkedList();
 		}
 
-		private synchronized LinkedList cloneListeners()
+		private synchronized List cloneListeners()
 		{
 			return (LinkedList)listeners.clone();
 		}
@@ -113,10 +115,10 @@ public class Dispatcher implements OperationListener
 	public void notify (OperationEvent event)
 	{
 		String command = event.getActionCommand();
-		LinkedList clone = null;
+		List clone = null;
 		synchronized(this)
 		{
-			clone = (LinkedList)events.clone();
+			clone = (List)((LinkedList)events).clone();
 		}
 
 		// ищем событие если список не пуст

@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 public class Domain extends AdminObjectResource
 {
@@ -36,7 +37,7 @@ public class Domain extends AdminObjectResource
 
   public List domain_ids = new ArrayList();
 
-  public HashMap domains = new HashMap();
+  public Map domains = new HashMap();
 
   static final public String typ = "domain";
 

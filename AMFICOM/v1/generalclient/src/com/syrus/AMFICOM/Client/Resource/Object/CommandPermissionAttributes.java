@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import java.util.Map;
 
 public class CommandPermissionAttributes extends AdminObjectResource implements AdminObjectRWXresource
 {
@@ -33,8 +34,8 @@ public class CommandPermissionAttributes extends AdminObjectResource implements 
   public List category_ids = new ArrayList();
   public List group_ids = new ArrayList();
 
-  public HashMap categories = new HashMap();
-  public HashMap groups = new HashMap();
+  public Map categories = new HashMap();
+  public Map groups = new HashMap();
 
   public String owner_id="";
   public String name="";

@@ -1,9 +1,11 @@
 package com.syrus.AMFICOM.Client.Administrate.Object;
 import java.awt.*;
 
-import java.util.Enumeration;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.swing.*;
@@ -585,10 +587,9 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
 
       AdminObjectResource or = (AdminObjectResource )node.getObject();
       {
-        Enumeration enum = or.getChildTypes();
-        for(; enum.hasMoreElements(); )
+        for(Iterator it = or.getChildTypes().iterator(); it.hasNext();)
         {
-          String s = (String)enum.nextElement();
+          String s = (String)it.next();
 
           if(s.equals(OperatorProfile.typ))
           {
@@ -655,12 +656,12 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
     ImageIcon ii = getIcon(typ);
 
     ObjectResourceTreeNode ortn;
-    if (Pool.getHash(typ) != null)
+    Map map = Pool.getMap(typ);
+    if (map != null)
     {
-      Enumeration enum = getSortedElements(Pool.getHash(typ));
-      for(; enum.hasMoreElements();)
+      for(ListIterator it = getSortedElements(map).listIterator(); it.hasNext();)
       {
-        ObjectResource or = (ObjectResource)enum.nextElement();
+        ObjectResource or = (ObjectResource)it.next();
         if(typ.equals(User.typ) || typ.equals(Agent.typ) || typ.equals(Client.typ) || typ.equals(Server.typ))
           ortn = new ObjectResourceTreeNode(or, or.getName(), true, ii, true);
         else
@@ -679,12 +680,12 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
 
     ImageIcon ii = getIcon(CommandPermissionAttributes.typ);
 
-    if (Pool.getHash(CommandPermissionAttributes.typ) != null)
+    Map map = Pool.getMap(CommandPermissionAttributes.typ);
+    if (map != null)
     {
-      Enumeration enum = getSortedElements(Pool.getHash(CommandPermissionAttributes.typ));
-      for(; enum.hasMoreElements();)
+      for(ListIterator it = getSortedElements(map).listIterator(); it.hasNext();)
       {
-        CommandPermissionAttributes cpa = (CommandPermissionAttributes)enum.nextElement();
+        CommandPermissionAttributes cpa = (CommandPermissionAttributes)it.next();
         if(cpa.filterGroup.equals(filterGroup))
         {
           ortn = new ObjectResourceTreeNode(cpa, cpa.getName(), true, ii, true);
@@ -701,12 +702,10 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
     or.updateLocalFromTransferable();
     ImageIcon ii = getIcon(typ);
 
-    Enumeration e = getSortedElements(or.getChildren(typ));
-    if(e == null)
-      return;
-    for(; e.hasMoreElements(); )
+    List sortedEls = getSortedElements(or.getChildren(typ));
+    for (ListIterator it = sortedEls.listIterator(); it.hasNext();)
     {
-      ObjectResource oRes = (ObjectResource)e.nextElement();
+      ObjectResource oRes = (ObjectResource)it.next();
       ObjectResourceTreeNode ortn;
       if(typ.equals(Domain.typ))
         ortn = new ObjectResourceTreeNode(oRes, oRes.getName(), true, ii);
@@ -724,16 +723,13 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
     return sorter.default_sort();
   }
 
-
-
-  private Enumeration getSortedElements(List l)
+  private List getSortedElements(Collection coll)
   {
     ObjectResourceSorter sorter = new ObjectResourceNameSorter();//  MonitoredElement.getDefaultSorter();
-    sorter.setDataSet(l);
+    sorter.setDataSet(coll);
   
     return sorter.default_sort();
   }
-
 
   private ImageIcon getIcon(String typ){
     if(typ.equals(User.typ)){

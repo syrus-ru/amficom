@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import java.util.Map;
 
 public class User extends AdminObjectResource
 {
@@ -25,8 +26,8 @@ public class User extends AdminObjectResource
   public List category_ids = new ArrayList();
   public List group_ids = new ArrayList();
 
-  public HashMap groups = new HashMap();
-  public HashMap categories = new HashMap();
+  public Map groups = new HashMap();
+  public Map categories = new HashMap();
 
   static final public String typ = "user";
 

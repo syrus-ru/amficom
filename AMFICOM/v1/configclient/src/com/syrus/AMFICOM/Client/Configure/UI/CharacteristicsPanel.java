@@ -1,7 +1,10 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Iterator;
+import java.util.Map;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -38,8 +41,8 @@ public class CharacteristicsPanel extends JPanel
 	String selected_item = "";
 	String selected_type = "";
 
-	private Map char_hash = new Hashtable(1);
-	private Map attr_hash = new Hashtable(1);
+	private Map char_hash = new HashMap(1);
+	private Map attr_hash = new HashMap(1);
 
 	ApplicationContext aContext;
 
@@ -132,7 +135,7 @@ public class CharacteristicsPanel extends JPanel
 		String type = res.getTyp();
 		if (type == null || selected_type == null)
 		{
-			char_hash = new Hashtable(1);
+			char_hash = new HashMap(1);
 			elementSelected(char_hash);
 			showNoSelection();
 			return;
@@ -168,7 +171,7 @@ public class CharacteristicsPanel extends JPanel
 
 		else
 		{
-			char_hash = new Hashtable(1);
+			char_hash = new HashMap(1);
 			elementSelected(char_hash);
 			showNoSelection();
 			return;
@@ -274,7 +277,7 @@ public class CharacteristicsPanel extends JPanel
 			tableUpdated(value, row, col);
 		}
 
-		public Vector getData()
+		public List getData()
 		{
 			return rows;
 		}

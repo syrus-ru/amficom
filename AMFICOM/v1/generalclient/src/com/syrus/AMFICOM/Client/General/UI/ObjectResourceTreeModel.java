@@ -1,9 +1,10 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
-import java.util.Hashtable;
 import java.awt.*;
 
 public abstract class ObjectResourceTreeModel
@@ -29,7 +30,7 @@ public abstract class ObjectResourceTreeModel
 				ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
 	}
 
-	Hashtable ht = new Hashtable();
+	Map ht = new HashMap();
 	public void registerSearchableNode(Object criteria, ObjectResourceTreeNode tn)
 	{
 		List vec = (List) ht.get(criteria);

@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfile.java,v 1.2 2004/08/19 15:50:00 peskovsky Exp $
+ * $Id: OperatorProfile.java,v 1.3 2004/08/20 07:21:16 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 
 import com.syrus.io.Rewriter;
+import java.util.Map;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
@@ -29,7 +30,7 @@ import com.syrus.io.Rewriter;
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
  * @author $Author: peskovsky $
- * @version $Revision: 1.2 $, $Date: 2004/08/19 15:50:00 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/20 07:21:16 $
  * @module generalclient_v1
  */
 public class OperatorProfile extends AdminObjectResource implements Serializable
@@ -87,8 +88,8 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
 	public List category_ids = new ArrayList();
 	public List group_ids = new ArrayList();
 
-	public HashMap categories = new HashMap();
-	public HashMap groups = new HashMap();
+	public Map categories = new HashMap();
+	public Map groups = new HashMap();
 
 	static final public String typ = "operatorprofile";
 

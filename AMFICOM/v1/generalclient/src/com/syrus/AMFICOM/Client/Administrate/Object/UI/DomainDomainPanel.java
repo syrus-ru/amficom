@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Collection;
 import java.util.HashMap;
 
+import java.util.Map;
 import javax.swing.*;
 
 import oracle.jdeveloper.layout.*;
@@ -190,9 +191,8 @@ public class DomainDomainPanel extends GeneralPanel
     exeptOtherIds.add(this.domain.id);
     exeptOtherIds.add(this.fatherDomain.getSelectedId());
 
-
-    HashMap other = new HashMap();
-    HashMap tmp_h = (HashMap) Pool.getMap(Domain.typ);
+    Map other = new HashMap();
+    Map tmp_h = Pool.getMap(Domain.typ);
 
     if(tmp_h == null)
       tmp_h = new HashMap();

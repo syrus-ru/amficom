@@ -17,9 +17,11 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -39,7 +41,7 @@ public class AddPropFrame extends JDialog
 	protected int res = CANCEL;
 	protected String ch_class;
 	String selected = LangModelConfig.getString("label_new_char");
-	Hashtable h_named = new Hashtable();
+	Map h_named = new HashMap();
 	CharacteristicType type = new CharacteristicType();
 
 	private JComboBox jComboBox1 = new JComboBox();
@@ -213,10 +215,10 @@ public class AddPropFrame extends JDialog
 
 		if (h != null)
 		{
-			Hashtable used = new Hashtable(chars.size());
-			for (int i = 0; i < chars.size(); i++)
+			Map used = new HashMap(chars.size());
+			for (ListIterator it = chars.listIterator(); it.hasNext();)
 			{
-				Vector el = (Vector)chars.get(i);
+				List el = (List)it.next();
 				used.put(el.get(0), el);
 			}
 

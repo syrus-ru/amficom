@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.5 2004/08/19 13:15:57 peskovsky Exp $
+ * $Id: MapSaveAsCommand.java,v 1.6 2004/08/20 07:22:04 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,8 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+
 import javax.swing.JDesktopPane;
 
 /**
@@ -33,7 +34,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/08/19 13:15:57 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/20 07:22:04 $
  * @module map_v2
  * @author $Author: peskovsky $
  * @see
@@ -129,15 +130,15 @@ public class MapSaveAsCommand extends VoidCommand
 					return;
 				}
 
-				Pool.putHash("schemeclonedids", new Hashtable(scheme.clones));
+				Pool.putMap("schemeclonedids", new HashMap(scheme.clones));
 			}
 			
 			mc2 = (MapContext )mc.clone(dataSource);
 
 			if(!mc2.scheme_id.equals(mc.scheme_id))
 			{
-				Pool.removeHash("schemeclonedids");
-				Pool.removeHash("mapclonedids");
+				Pool.removeMap("schemeclonedids");
+				Pool.removeMap("mapclonedids");
 			}
 
 			Pool.put( mc2.getTyp(), mc2.getId(), mc2);

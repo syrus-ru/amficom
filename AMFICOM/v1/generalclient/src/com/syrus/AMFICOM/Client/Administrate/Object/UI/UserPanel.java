@@ -1,8 +1,10 @@
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
 import java.awt.*;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
+import java.util.ListIterator;
 import javax.swing.*;
 
 import oracle.jdeveloper.layout.*;
@@ -148,19 +150,19 @@ public class UserPanel  extends GeneralPanel
     this.jTextFieldTyp.setText(user.type);
     this.jTextFieldProfileName.setTextNameByID(user.type, user.object_id);
 
-    Vector g = new Vector();
-    for(int i=0; i<user.group_ids.size(); i++)
+    List g = new ArrayList();
+    for(ListIterator lIt = user.group_ids.listIterator(); lIt.hasNext();)
     {
-      Object o = Pool.get(OperatorGroup.typ, (String)user.group_ids.get(i));
-      if(o!=null)
+      Object o = Pool.get(OperatorGroup.typ, (String)lIt.next());
+      if(o != null)
         g.add(o);
     }
 
-    Vector c = new Vector();
-    for(int i=0; i<user.category_ids.size(); i++)
+    List c = new ArrayList();
+    for(ListIterator lIt = user.category_ids.listIterator(); lIt.hasNext();)    
     {
-      Object o = Pool.get(OperatorCategory.typ, (String)user.category_ids.get(i));
-      if(o!=null)
+      Object o = Pool.get(OperatorCategory.typ, (String)lIt.next());
+      if(o != null)
         c.add(o);
     }
 

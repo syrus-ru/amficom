@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.Map;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
@@ -30,7 +31,7 @@ public class ObjectResourceListBox extends JList
 	String obj_id = "";
 	String type = "";
 	String col_id = "name";
-	HashMap objs = new HashMap();
+	Map objs = new HashMap();
 
 	boolean doRestrict = false;
 	String domain_id = "";
@@ -91,7 +92,7 @@ public class ObjectResourceListBox extends JList
 //        this.setMaximumRowCount(5);
 	}
 
-	public ObjectResourceListBox(HashMap objs, String col_id)
+	public ObjectResourceListBox(Map objs, String col_id)
 	{
 		super();
 		this.objs = objs;
@@ -118,7 +119,7 @@ public class ObjectResourceListBox extends JList
 //        this.setMaximumRowCount(5);
 	}
 
-	public ObjectResourceListBox(HashMap objs, String col_id, Object obj)
+	public ObjectResourceListBox(Map objs, String col_id, Object obj)
 	{
 		this(objs, col_id);
 		setSelected(obj);
@@ -129,7 +130,7 @@ public class ObjectResourceListBox extends JList
 		this.type = type;
 		this.col_id = col_id;
 
-		objs = (HashMap)Pool.getMap(type);
+		objs = Pool.getMap(type);
 		if(objs != null)
     {
       Iterator it = objs.values().iterator();
@@ -157,12 +158,12 @@ public class ObjectResourceListBox extends JList
 		setSelected(obj);
 	}
 	
-	public ObjectResourceListBox(HashMap objs, Object obj)
+	public ObjectResourceListBox(Map objs, Object obj)
 	{
 		this(objs, _DEFAULT_COL_ID, obj);
 	}
 	
-	public ObjectResourceListBox(HashMap objs)
+	public ObjectResourceListBox(Map objs)
 	{
 		this(objs, _DEFAULT_COL_ID);
 	}
@@ -195,7 +196,7 @@ public class ObjectResourceListBox extends JList
 		setListData(vec);
 	}
 
-	public void setContents(HashMap objs)
+	public void setContents(Map objs)
 	{
 		vec = new ArrayList();
 		if(objs != null)
@@ -216,7 +217,7 @@ public class ObjectResourceListBox extends JList
 
 	public void setContents(String type)
 	{
-		HashMap objs = (HashMap)Pool.getMap(type);
+		Map objs = Pool.getMap(type);
 		setContents(objs);
 	}
 
@@ -258,7 +259,7 @@ public class ObjectResourceListBox extends JList
 		setListData(vec);
 	}
 	
-	public void add(HashMap h)
+	public void add(Map h)
 	{
 		add(h);
 	}

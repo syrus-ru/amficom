@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+import java.util.Map;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Model.*;
@@ -37,7 +38,7 @@ public class NewUpDater{
       for(int j=0; j<parentTyps.length; j++){
         if(childTyps[i].equals(parentTyps[j])){ //Or can link to child and child can link to Or;
           List childIds = aor.getChildIds(childTyps[i]);
-          HashMap h = (HashMap)Pool.getMap(childTyps[i]);
+          Map h = Pool.getMap(childTyps[i]);
           if(h == null)
             h = new HashMap();
             
@@ -152,7 +153,7 @@ public class NewUpDater{
 
       for(int j=0; j<parentTyps.length; j++)
       {
-        HashMap h = (HashMap) Pool.getMap(parentTyps[j]);
+        Map h = Pool.getMap(parentTyps[j]);
         if(h == null)
           h = new HashMap();
 
@@ -192,7 +193,7 @@ public class NewUpDater{
 
     for(int i=0; i<typs.length; i++)
     {
-      HashMap h = (HashMap)Pool.getMap(typs[i]);
+      Map h = Pool.getMap(typs[i]);
       if(h == null)
         h = new HashMap();
       for(Iterator it = h.values().iterator(); it.hasNext();)
@@ -275,7 +276,7 @@ public class NewUpDater{
       domain.domain_ids.clear();
     }
 
-    HashMap h = (HashMap)Pool.getMap(Domain.typ);
+    Map h = Pool.getMap(Domain.typ);
     if(h == null)
       h = new HashMap();
 
@@ -344,10 +345,7 @@ public class NewUpDater{
     }
   }
 
-
-
-
-  public static boolean contains(HashMap h, String s)
+  public static boolean contains(Map h, String s)
   {
     for(Iterator it = h.values().iterator(); it.hasNext(); )
     {

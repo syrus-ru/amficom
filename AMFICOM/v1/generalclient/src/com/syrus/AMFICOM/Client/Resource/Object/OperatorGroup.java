@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorGroup.java,v 1.2 2004/08/19 15:50:00 peskovsky Exp $
+ * $Id: OperatorGroup.java,v 1.3 2004/08/20 07:21:16 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import java.util.ListIterator;
+import java.util.Map;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
@@ -27,7 +28,7 @@ import java.util.ListIterator;
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
  * @author $Author: peskovsky $
- * @version $Revision: 1.2 $, $Date: 2004/08/19 15:50:00 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/20 07:21:16 $
  * @module generalclient_v1
  */
 public class OperatorGroup extends AdminObjectResource implements Serializable
@@ -50,8 +51,8 @@ public class OperatorGroup extends AdminObjectResource implements Serializable
   public List user_ids = new ArrayList();
   public List exec_ids = new ArrayList();
 
-  public HashMap users = new HashMap();
-	public HashMap execs = new HashMap();
+  public Map users = new HashMap();
+	public Map execs = new HashMap();
 
 
   static final public String typ = "operatorgroup";

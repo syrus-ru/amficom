@@ -1,6 +1,10 @@
 package com.syrus.AMFICOM.Client.Schematics.UI;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 import java.awt.*;
 import javax.swing.ImageIcon;
@@ -82,15 +86,17 @@ public class MapProtoGroupsTreeModel extends ObjectResourceTreeModel
 		else if(node.getObject() instanceof MapProtoGroup)
 		{
 			MapProtoGroup parent_group = (MapProtoGroup)node.getObject();
-			for (int i = 0; i < parent_group.group_ids.size(); i++)
+			for (ListIterator it = parent_group.group_ids.listIterator(); it.hasNext();)
 			{
-				MapProtoGroup map_group = (MapProtoGroup)Pool.get(MapProtoGroup.typ, (String)parent_group.group_ids.get(i));
+				MapProtoGroup map_group =
+          (MapProtoGroup)Pool.get(MapProtoGroup.typ, (String)it.next());
 				vec.add(new ObjectResourceTreeNode(map_group, map_group.getName(), true,
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 			}
-			for (int i = 0; i < parent_group.mapproto_ids.size(); i++)
+
+			for (ListIterator it = parent_group.mapproto_ids.listIterator(); it.hasNext();)      
 			{
-				MapProtoElement map_proto = (MapProtoElement)Pool.get(MapProtoElement.typ, (String)parent_group.mapproto_ids.get(i));
+				MapProtoElement map_proto = (MapProtoElement)Pool.get(MapProtoElement.typ, (String)it.next());
 				String image_id = ((map_proto.getImageID() == null || map_proto.getImageID().equals("")) ? "pc" : map_proto.getImageID());
 				map_proto.setImageID(image_id);
 				ImageResource ir = ImageCatalogue.get(image_id);

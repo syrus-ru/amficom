@@ -1,7 +1,9 @@
 package com.syrus.AMFICOM.Client.General;
 
-import java.util.*;
-
+import java.util.Iterator;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.List;
 
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
@@ -583,7 +585,7 @@ public static final String predict  = "PREDICT";
 /**/
   private static CommandPermissionAttributes getCommand(String commandName)
   {
-    HashMap h = (HashMap)Pool.getMap(CommandPermissionAttributes.typ);
+    Map h = Pool.getMap(CommandPermissionAttributes.typ);
     if(h == null)
       return null;
     
@@ -621,20 +623,21 @@ public static final String predict  = "PREDICT";
   }
 
  /**/
- private static boolean hasEqualElements(Vector a, Vector b, String s)
+ private static boolean hasEqualElements(List a, List b, String s)
  {
-   for(int i=0; i<a.size(); i++)
-   {
-     for(int j=0; j<b.size(); j++)
-     {
-       String as = (String)a.get(i);
-       String bs = (String)b.get(j);
-       if(as.equals(s) && bs.equals(s))
-         return true;
-     }
+    ListIterator aLIt = a.listIterator();
+    ListIterator bLIt = b.listIterator();
+    
+    for(;aLIt.hasNext();)
+    {
+      for(;bLIt.hasNext();)
+      {
+        String as = (String)aLIt.next();
+        String bs = (String)bLIt.next();
+        if(as.equals(s) && bs.equals(s))
+          return true;
+      }
    }
-//     if(a.size() == 0 && b.size() ==0 )
-//   return true;
    return false;
  }
 

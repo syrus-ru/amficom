@@ -1,13 +1,16 @@
 package com.syrus.AMFICOM.Client.Map.Report;
 
+import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceDomainFilter;
+import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Image;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Vector;
-import java.util.Enumeration;
+
+import java.util.ListIterator;
+import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.tree.TreeNode;
 
@@ -107,17 +110,16 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 
 			else if (s.equals("label_repTopologicalScheme"))
 			{
-				if (Pool.getHash(MapContext.typ) != null)
+				Map map = Pool.getMap(MapContext.typ);      
+				if (map != null)
 				{
-					List dSet = new DataSet(Pool.getHash(MapContext.typ));
-
-					/*          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-					  dSet = filter.filter(dSet);
+/*					  ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+					  filter.filter(map);
 					  ObjectResourceSorter sorter = MapContext.getDefaultSorter();
-					  sorter.setDataSet(dSet);
-					  dSet = sorter.default_sort();*/
-
-					for(Iterator it = dSet.iterator(); it.hasNext();)
+					  sorter.setDataSet(map);
+					  sorter.default_sort();
+*/
+					for(Iterator it = map.values().iterator(); it.hasNext();)
 					{
 						MapContext mc = (MapContext) it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(mc,
@@ -133,10 +135,10 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 					getParent();
 				MapContext mc = (MapContext) parent.getObject();
 
-				List dSet = new DataSet();
-				for (int i = 0; i < mc.getNodes().size(); i++)
+				List dSet = new ArrayList();
+				for (ListIterator it = mc.getNodes().listIterator(); it.hasNext();)
 				{
-					ObjectResource os = (ObjectResource) mc.getNodes().get(i);
+					ObjectResource os = (ObjectResource) it.next();
 					if (os instanceof MapEquipmentNodeElement)
 						dSet.add(os);
 				}
@@ -144,7 +146,7 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 				ObjectResourceSorter sorter = MapEquipmentNodeElement.
 					getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
 				for(Iterator it = dSet.iterator(); it.hasNext();)
 				{
@@ -186,11 +188,12 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode) node.
 					getParent();
 				MapContext mc = (MapContext) parent.getObject();
-
-				List dSet = new DataSet();
-				for (int i = 0; i < mc.getNodes().size(); i++)
+        
+        List dSet = new ArrayList();
+        
+				for (ListIterator it = mc.getNodes().listIterator(); it.hasNext();)
 				{
-					ObjectResource os = (ObjectResource) mc.getNodes().get(i);
+					ObjectResource os = (ObjectResource) it.hasNext();
 					if (os instanceof MapPhysicalNodeElement)
 						dSet.add(os);
 				}
@@ -198,7 +201,7 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 				ObjectResourceSorter sorter = MapPhysicalNodeElement.
 					getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
 				for(Iterator it = dSet.iterator(); it.hasNext();)
 				{
@@ -217,7 +220,7 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 				if (parent.getObject()instanceof MapContext)
 				{
 					mc = (MapContext) parent.getObject();
-					dSet = new DataSet(mc.getPhysicalLinks());
+					dSet = mc.getPhysicalLinks();
 				}
 				else
 				{
@@ -225,12 +228,11 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 						getObject();
 					mc = mene.getMapContext();
 
-					dSet = new DataSet();
+					dSet = new ArrayList();
 
-					for (int i = 0; i < mc.getPhysicalLinks().size(); i++)
+          for (ListIterator it = mc.getPhysicalLinks().listIterator(); it.hasNext();)
 					{
-						MapPhysicalLinkElement ml = (MapPhysicalLinkElement) mc.
-							getPhysicalLinks().get(i);
+						MapPhysicalLinkElement ml = (MapPhysicalLinkElement) it.next();
 
 						if (ml.startNode.equals(mene) || ml.endNode.equals(mene))
 							dSet.add(ml);
@@ -240,7 +242,7 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 				ObjectResourceSorter sorter = MapPhysicalLinkElement.
 					getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
 				for(Iterator it = dSet.iterator(); it.hasNext();)
 				{
@@ -279,12 +281,12 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 					getParent();
 				MapContext mc = (MapContext) parent.getObject();
 
-				List dSet = new DataSet(mc.getTransmissionPath());
+				List dSet = mc.getTransmissionPath();
 
 				ObjectResourceSorter sorter = MapTransmissionPathElement.
 					getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
 				for(Iterator it = dSet.iterator(); it.hasNext();)
 				{
@@ -302,18 +304,17 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 					getObject();
 				MapContext mc = ml.getMapContext();
 
-				List dSet = new DataSet();
-				for (int i = 0; i < mc.getMapMarkElements().size(); i++)
+				List dSet = new ArrayList();
+				for (ListIterator it = mc.getMapMarkElements().listIterator(); it.hasNext();)
 				{
-					MapMarkElement mme = (MapMarkElement) mc.getMapMarkElements().
-						get(i);
+					MapMarkElement mme = (MapMarkElement) it.next();
 					if (mme.link_id.equals(ml.getId()))
 						dSet.add(mme);
 				}
 
 				ObjectResourceSorter sorter = MapMarkElement.getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
 				for(Iterator it = dSet.iterator(); it.hasNext();)
 				{

@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-import java.util.Enumeration;
 
 import javax.swing.ImageIcon;
 
@@ -217,7 +215,7 @@ public class MapTreeModel extends ObjectResourceTreeModel
 					MapEquipmentNodeElement mene = (MapEquipmentNodeElement )parent.getObject();
 					mc = mene.getMapContext();
 
-					dSet = new DataSet();
+					dSet = new ArrayList();
 					for(Iterator it = mc.getPhysicalLinks().iterator(); it.hasNext();)
 					{
 						MapPhysicalLinkElement ml = (MapPhysicalLinkElement )it.next();

@@ -1,6 +1,9 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import java.awt.*;
 import java.awt.event.*;
