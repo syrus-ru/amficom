@@ -269,7 +269,7 @@ void RTUTransceiver::setMeasurementParameters(Parameter* pars[], int& wvlen, dou
 	value = pars[1]->getValue()->getData();
 	for (i = 0; i < len; i++)
 		c[i] = value[len - i - 1];
-	trclen = *(double*)c;
+	trclen = (*(double*)c)/1000;
 	if (trclen < 12)
 		trclen = 8;
 	else

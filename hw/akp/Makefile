@@ -1,6 +1,6 @@
 OUT=akp.a
 OUTSO=libakp.so
-CPP=g++#-3.3.1
+CPP=g++#-3.4.1
 CFLAGS=-O -Wall -W -finline-functions
 AR=ar
 ARFLAGS=rcsv

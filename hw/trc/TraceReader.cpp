@@ -142,7 +142,7 @@ int fill_bellcore_structure(const char* compdata, const unsigned short compdata_
 	bs->dataPts->DSF[0] = new unsigned short[nttrace_data->_40066];	//!
 	for (i = 0; i < nttrace_data->_40066; i++)
 		bs->dataPts->DSF[0][i] = (unsigned short)(reflectogramma[i] * 1000);
-/*/---------
+//---------
 FILE* fi = fopen("reflectogramma", "wb");
 for (i = 0; i < nttrace_data->_40066; i++)
 	fprintf(fi, "%hd\n", nttrace_data->_40068[i]);//fprintf(fi, "%f\n", reflectogramma[i]);

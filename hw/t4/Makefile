@@ -3,7 +3,7 @@ AKP=../akp
 AKPA=$(AKP)/akp.a
 TRC=../trc
 TRCA=$(TRC)/tracedata.a
-CPP=g++#-3.3.1
+CPP=g++#-3.4.1
 CFLAGS=-Wall -W -g -ggdb
 OBJS=t4.o \
 	TransceiverManager.o \
