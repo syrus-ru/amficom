@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.61 2005/02/28 08:24:26 bob Exp $
+ * $Id: TemporalPattern.java,v 1.62 2005/03/15 12:18:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/02/28 08:24:26 $
+ * @version $Revision: 1.62 $, $Date: 2005/03/15 12:18:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -804,15 +804,13 @@ public class TemporalPattern extends StorableObject {
 		super(tpt.header);
 
 		this.description = new String(tpt.description);
-		//this.cronStrings = new String[tpt.cronStrings.length];
-		long ver = this.version;
-		removeAll();
-		for (int i = 0; i < tpt.cron_strings.length; i++) {
-			//this.cronStrings[i] = new String(tpt.cronStrings[i]);
-			addTemplate(new String(tpt.cron_strings[i]));
-		}
-		this.version = ver;
 
+		this.removeAll();
+		for (int i = 0; i < tpt.cron_strings.length; i++) {
+			this.addTemplate(new String(tpt.cron_strings[i]));
+		}
+
+		this.changed = false;
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 	}
 
@@ -827,11 +825,11 @@ public class TemporalPattern extends StorableObject {
 		this.description = description;
 		this.cronStrings = cronStrings;
 		if (cronStrings != null) {
-			removeAll();
+			this.removeAll();
 			for (int i = 0; i < cronStrings.length; i++)
-				addTemplate(cronStrings[i]);
+				this.addTemplate(cronStrings[i]);
 		}
-
+		this.changed = false;
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 	}
 
@@ -843,13 +841,12 @@ public class TemporalPattern extends StorableObject {
 			creatorId,
 			version);
 		this.description = description;
-		long ver = this.version;
 		for (Iterator it = cronString.iterator(); it.hasNext();) {
 			String str = (String) it.next();
-			addTemplate(str);
+			this.addTemplate(str);
 		}
 
-		this.version = ver;
+		this.changed = false;
 
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 	}
