@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.6 2004/08/10 13:11:09 arseniy Exp $
+ * $Id: UserDatabase.java,v 1.7 2004/08/10 13:14:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/10 13:11:09 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/10 13:14:42 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -177,7 +177,7 @@ public class UserDatabase extends StorableObjectDatabase {
 			+ COLUMN_CREATOR_ID + COMMA
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ COLUMN_LOGIN + COMMA
-			+ COLUMN_SORT
+			+ COLUMN_SORT + COMMA
 			+ COLUMN_NAME + COMMA
 			+ COLUMN_DESCRIPTION 
 			+ CLOSE_BRACKET
