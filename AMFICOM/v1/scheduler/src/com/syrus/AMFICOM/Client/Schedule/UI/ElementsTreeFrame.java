@@ -13,7 +13,6 @@ import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
@@ -149,25 +148,6 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 		if (this.treePanel == null) {
 			final Dispatcher dispatcher = this.aContext.getDispatcher();
 			this.treePanel = new LogicalTreeUI(this.rootItem);
-			this.treePanel.getTree().addTreeExpansionListener(new TreeExpansionListener(){
-				public void treeCollapsed(TreeExpansionEvent event) {
-					// nothing
-					
-				}
-				
-				public void treeExpanded(TreeExpansionEvent event) {
-					TreePath path = event.getPath();
-					Object lastPathComponent = path.getLastPathComponent();
-					if (lastPathComponent instanceof MeasurementTypeItem) {
-						MeasurementTypeItem measurementTypeItem = (MeasurementTypeItem) lastPathComponent;
-						if (!measurementTypeItem.isPopulatedChildren()) {
-							measurementTypeItem.populateChildren();
-//							List children = measurementTypeItem.getChildren();
-						}
-					}
-					
-				}
-			});
 			this.selectionListener = new SelectionListener() {
 
 				public void selectedItems(Collection items) {

@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.RISDDataSource;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeChildrenFactory;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeItem;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
@@ -243,9 +244,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				MeasurementType measurementType = (MeasurementType) iter.next();
 				MeasurementTypeItem measurementTypeItem = new MeasurementTypeItem(measurementType);
 				measurementTypeItems.add(measurementTypeItem);
-				measurementTypeItem.setDomainId(sessionInterface.getDomainIdentifier());
-				ServiceItem serviceItem = new ServiceItem();
-				measurementTypeItem.addChild(serviceItem);
+				measurementTypeItem.setChildrenFactory(new MeasurementTypeChildrenFactory(sessionInterface.getDomainIdentifier()));
 			}
 			
 			this.elementsViewer.setElements(measurementTypeItems);
