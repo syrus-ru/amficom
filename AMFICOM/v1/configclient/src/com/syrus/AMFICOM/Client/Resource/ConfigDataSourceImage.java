@@ -65,10 +65,10 @@ public class ConfigDataSourceImage extends DataSourceImage
 	public void LoadNet()
 	{
 //		ResourceDescriptor_Transferable[] desc1 = GetDescriptors(Port.typ);
-		ResourceDescriptor_Transferable[] desc2 = GetDescriptors(Equipment.typ);
-		ResourceDescriptor_Transferable[] desc3 = GetDescriptors(Link.typ);
+		ResourceDescriptor_Transferable[] desc2 = GetDomainDescriptors(Equipment.typ);
+		ResourceDescriptor_Transferable[] desc3 = GetDomainDescriptors(Link.typ);
 //		ResourceDescriptor_Transferable[] desc4 = GetDescriptors(CablePort.typ);
-		ResourceDescriptor_Transferable[] desc5 = GetDescriptors(CableLink.typ);
+		ResourceDescriptor_Transferable[] desc5 = GetDomainDescriptors(CableLink.typ);
 //		ResourceDescriptor_Transferable[] desc6 = GetDescriptors(TestPort.typ);
 
 //		Pool.removeHash(Port.typ);
@@ -115,10 +115,10 @@ public class ConfigDataSourceImage extends DataSourceImage
 
 	public void LoadISM()
 	{
-		ResourceDescriptor_Transferable[] desc = GetDescriptors(KIS.typ);
+		ResourceDescriptor_Transferable[] desc = GetDomainDescriptors(KIS.typ);
 //		ResourceDescriptor_Transferable[] desc2 = GetDescriptors(AccessPort.typ);
-		ResourceDescriptor_Transferable[] desc3 = GetDescriptors(MonitoredElement.typ);
-		ResourceDescriptor_Transferable[] desc4 = GetDescriptors(TransmissionPath.typ);
+		ResourceDescriptor_Transferable[] desc3 = GetDomainDescriptors(MonitoredElement.typ);
+		ResourceDescriptor_Transferable[] desc4 = GetDomainDescriptors(TransmissionPath.typ);
 
 //		Pool.removeHash(KIS.typ);
 //		Pool.removeHash(AccessPort.typ);
