@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.21 2005/02/08 12:46:17 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.22 2005/02/15 07:47:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -56,7 +57,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.21 $, $Date: 2005/02/08 12:46:17 $
+ * @version $Revision: 1.22 $, $Date: 2005/02/15 07:47:57 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -295,7 +296,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				}
 			}
 			try{
-				database.update(loadedFromMCM, StorableObjectDatabase.UPDATE_FORCE, null);
+				database.update(loadedFromMCM, SessionContext.getAccessIdentity().getUserId(), StorableObjectDatabase.UPDATE_FORCE);
 			}catch(VersionCollisionException vce){
 				// exception isn't expected
 				Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalyses | exception isn't expected, but its occur: " + vce.getMessage());
@@ -353,7 +354,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				}
 			}
 			try{
-				database.update(loadedFromMCM, StorableObjectDatabase.UPDATE_FORCE, null);
+				database.update(loadedFromMCM, SessionContext.getAccessIdentity().getUserId(), StorableObjectDatabase.UPDATE_FORCE);
 			}catch(VersionCollisionException vce){
 				// exception isn't expected
 				Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluations | exception isn't expected, but its occur: " + vce.getMessage());
@@ -411,7 +412,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				}
 			}
 			try{
-				database.update(loadedFromMCM, StorableObjectDatabase.UPDATE_FORCE, null);
+				database.update(loadedFromMCM, SessionContext.getAccessIdentity().getUserId(), StorableObjectDatabase.UPDATE_FORCE);
 			}catch(VersionCollisionException vce){
 				// exception isn't expected
 				Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluations | exception isn't expected, but its occur: " + vce.getMessage());
@@ -470,7 +471,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				}
 				/* force update measurements that loaded from mcm because of client want it to use*/
 				Log.debugMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | " + loadedFromMCM.size() + " measurement(s) to update", Log.DEBUGLEVEL05);
-				database.update(loadedFromMCM, StorableObjectDatabase.UPDATE_FORCE, null);
+				database.update(loadedFromMCM, SessionContext.getAccessIdentity().getUserId(), StorableObjectDatabase.UPDATE_FORCE);
 			} 
 			Log.debugMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | " + list.size() + " measurement(s) return", Log.DEBUGLEVEL05);
 			return list;
@@ -521,7 +522,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				loadedFromMCM.add(new Analysis(analysesTransferables[j]));			
 			try{
 				/* force update analyses that loaded from mcm because of client want it to use*/
-				database.update(loadedFromMCM, StorableObjectDatabase.UPDATE_FORCE, null);
+				database.update(loadedFromMCM, SessionContext.getAccessIdentity().getUserId(), StorableObjectDatabase.UPDATE_FORCE);
 			}catch(VersionCollisionException vce){
 				//	 exception isn't expected
 				Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalysesButIds | exception isn't expected, but its occur: " + vce.getMessage()); 
@@ -568,7 +569,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				loadedFromMCM.add(new Evaluation(evaluationTransferables[j]));			
 			try{
 				/* force update evaluations that loaded from mcm because of client want it to use*/
-				database.update(loadedFromMCM, StorableObjectDatabase.UPDATE_FORCE, null);
+				database.update(loadedFromMCM, SessionContext.getAccessIdentity().getUserId(), StorableObjectDatabase.UPDATE_FORCE);
 			}catch(VersionCollisionException vce){
 //				 exception isn't expected
 				Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluationsButIds | exception isn't expected, but its occur: " + vce.getMessage());
