@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.10 2005/03/01 16:46:31 arseniy Exp $
+ * $Id: Event.java,v 1.11 2005/04/01 09:00:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,11 @@
 
 package com.syrus.AMFICOM.event;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.event.corba.EventParameter_Transferable;
 import com.syrus.AMFICOM.event.corba.Event_Transferable;
@@ -34,8 +32,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/03/01 16:46:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/04/01 09:00:59 $
+ * @author $Author: bob $
  * @module event_v1
  */
 
@@ -47,8 +45,8 @@ public class Event extends StorableObject implements TypedObject {
 	private EventType type;
 	private String description;
 
-	private Collection eventParameters;	//Collection <EventParameter>
-	private Collection eventSourceIds; //Collection <Identifier>
+	private Set eventParameters;	//Set <EventParameter>
+	private Set eventSourceIds; //Set <Identifier>
 
 	private StorableObjectDatabase eventDatabase;
 
@@ -99,8 +97,8 @@ public class Event extends StorableObject implements TypedObject {
 					   long version,
 					   EventType type,
 						 String description,
-						 Collection eventParameters,
-						 Collection eventSourceIds) {
+						 Set eventParameters,
+						 Set eventSourceIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -124,7 +122,6 @@ public class Event extends StorableObject implements TypedObject {
 	 * @param creatorId
 	 * @param type
 	 * @param description
-	 * @param parameters
 	 * @param eventSourceIds
 	 * @return new instance
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
@@ -132,8 +129,8 @@ public class Event extends StorableObject implements TypedObject {
 	public static Event createInstance(Identifier creatorId,
 		EventType type,
 		String description,
-		Collection eventParameters,
-		Collection eventSourceIds) throws CreateObjectException {
+		Set eventParameters,
+		Set eventSourceIds) throws CreateObjectException {
 		if (creatorId == null || type == null || description == null || eventParameters == null || eventSourceIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
@@ -179,12 +176,12 @@ public class Event extends StorableObject implements TypedObject {
 		return this.description;
 	}
 
-	public Collection getParameters() {
-		return Collections.unmodifiableCollection(this.eventParameters);
+	public Set getParameters() {
+		return Collections.unmodifiableSet(this.eventParameters);
 	}
 
-	public Collection getEventSourceIds() {
-		return Collections.unmodifiableCollection(this.eventSourceIds);
+	public Set getEventSourceIds() {
+		return Collections.unmodifiableSet(this.eventSourceIds);
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -203,13 +200,13 @@ public class Event extends StorableObject implements TypedObject {
 		this.description = description;
 	}
 
-	protected synchronized void setEventParameters0(Collection eventParameters) {
+	protected synchronized void setEventParameters0(Set eventParameters) {
 		this.eventParameters.clear();
 		if (eventParameters != null)
 			this.eventParameters.addAll(eventParameters);
 	}
 
-	protected synchronized void setEventSourceIds0(Collection eventSourceIds) {
+	protected synchronized void setEventSourceIds0(Set eventSourceIds) {
 		this.eventSourceIds.clear();
 		if (eventSourceIds != null)
 			this.eventSourceIds.addAll(eventSourceIds);
@@ -237,7 +234,7 @@ public class Event extends StorableObject implements TypedObject {
 	 * Set new array of event parameters
 	 * @param eventParameters
 	 */
-	public void setEventParameters(Collection eventParameters) {
+	public void setEventParameters(Set eventParameters) {
 		this.setEventParameters0(eventParameters);
 		super.changed = true;
 	}
@@ -246,13 +243,13 @@ public class Event extends StorableObject implements TypedObject {
 	 * Set new list of event sources ids
 	 * @param eventSourceIds
 	 */
-	public void setEventSourceIds(Collection eventSourceIds) {
+	public void setEventSourceIds(Set eventSourceIds) {
 		this.setEventSourceIds0(eventSourceIds);
 		super.changed = true;
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public Set getDependencies() {
+		Set dependencies = new HashSet();
 
 		dependencies.add(this.type);
 

@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.23 2005/03/31 10:03:17 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.24 2005/04/01 09:00:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,12 +13,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/03/31 10:03:17 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/04/01 09:00:59 $
+ * @author $Author: bob $
  * @module event_v1
  */
 
@@ -61,8 +61,8 @@ public class EventDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Event event = this.fromStorableObject(storableObject);
 		this.retrieveEntity(event);
-		this.retrieveEventParametersByOneQuery(Collections.singletonList(event));
-		this.retrieveEventSourceIdsByOneQuery(Collections.singletonList(event));
+		this.retrieveEventParametersByOneQuery(Collections.singleton(event));
+		this.retrieveEventSourceIdsByOneQuery(Collections.singleton(event));
 	}	
 
 	protected String getEnityName() {		
@@ -127,7 +127,7 @@ public class EventDatabase extends StorableObjectDatabase {
 		return event;
 	}
 
-	private void retrieveEventParametersByOneQuery(Collection events) throws RetrieveObjectException {
+	private void retrieveEventParametersByOneQuery(Set events) throws RetrieveObjectException {
     if ((events == null) || (events.isEmpty()))
 			return;
 
@@ -147,7 +147,7 @@ public class EventDatabase extends StorableObjectDatabase {
 
     Map eventParametersMap = new HashMap();
     Identifier eventId;
-    Collection eventParameters;
+    Set eventParameters;
 
     Statement statement = null;
 		ResultSet resultSet = null;
@@ -170,7 +170,7 @@ public class EventDatabase extends StorableObjectDatabase {
 						parameterType,
 						DatabaseString.fromQuerySubString(resultSet.getString(EventWrapper.LINK_COLUMN_PARAMETER_VALUE)));
 				eventId = DatabaseIdentifier.getIdentifier(resultSet, EventWrapper.LINK_COLUMN_EVENT_ID);
-				eventParameters = (Collection) eventParametersMap.get(eventId);
+				eventParameters = (Set) eventParametersMap.get(eventId);
 				if (eventParameters == null) {
 					eventParameters = new HashSet();
 					eventParametersMap.put(eventId, eventParameters);
@@ -203,13 +203,13 @@ public class EventDatabase extends StorableObjectDatabase {
 		for (Iterator it = events.iterator(); it.hasNext();) {
 			event = (Event) it.next();
 			eventId = event.getId();
-			eventParameters = (Collection) eventParametersMap.get(eventId);
+			eventParameters = (Set) eventParametersMap.get(eventId);
 
 			event.setEventParameters0(eventParameters);
 		}
 	}
 
-	private void retrieveEventSourceIdsByOneQuery(Collection events) throws RetrieveObjectException, IllegalDataException {
+	private void retrieveEventSourceIdsByOneQuery(Set events) throws RetrieveObjectException, IllegalDataException {
 		if ((events == null) || (events.isEmpty()))
 			return;
 
@@ -219,10 +219,10 @@ public class EventDatabase extends StorableObjectDatabase {
 				EventWrapper.LINK_COLUMN_SOURCE_ID);
 
 		Event event;
-		Collection eventSourceIds;
+		Set eventSourceIds;
 		for (Iterator it = events.iterator(); it.hasNext();) {
 			event = (Event) it.next();
-			eventSourceIds = (Collection) eventSourceIdsMap.get(event.getId());
+			eventSourceIds = (Set) eventSourceIdsMap.get(event.getId());
 
 			event.setEventSourceIds0(eventSourceIds);
 		}
@@ -243,7 +243,7 @@ public class EventDatabase extends StorableObjectDatabase {
 		try {
 			this.insertEntity(event);
 			this.insertEventParameters(event);
-			this.updateEventSources(Collections.singletonList(event));
+			this.updateEventSources(Collections.singleton(event));
 		}
 		catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
@@ -254,7 +254,7 @@ public class EventDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
@@ -272,7 +272,7 @@ public class EventDatabase extends StorableObjectDatabase {
 
 	private void insertEventParameters(Event event) throws CreateObjectException {
 		Identifier eventId = event.getId();
-		Collection eventParameters = event.getParameters();
+		Set eventParameters = event.getParameters();
 		String sql = SQL_INSERT_INTO + ObjectEntities.EVENTPARAMETER_ENTITY
 				+ OPEN_BRACKET
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
@@ -331,14 +331,14 @@ public class EventDatabase extends StorableObjectDatabase {
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 		try {
-			this.updateEventSources(Collections.singletonList(storableObject));
+			this.updateEventSources(Collections.singleton(storableObject));
 		}
 		catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}
 
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
+	public void update(Set storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		try {
@@ -349,14 +349,14 @@ public class EventDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void updateEventSources(Collection events) throws IllegalDataException, UpdateObjectException {
+	private void updateEventSources(Set events) throws IllegalDataException, UpdateObjectException {
 		if (events == null || events.isEmpty())
 			return;
 
 		Map eventSourceIdsMap = new HashMap();
 		for (Iterator it = events.iterator(); it.hasNext();) {
 			Event event = this.fromStorableObject((StorableObject) it.next());
-			Collection eventSourceIds = event.getEventSourceIds();
+			Set eventSourceIds = event.getEventSourceIds();
 			eventSourceIdsMap.put(event.getId(), eventSourceIds);
 		}
 
@@ -366,8 +366,8 @@ public class EventDatabase extends StorableObjectDatabase {
 				EventWrapper.LINK_COLUMN_SOURCE_ID);
 	}
 
-	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Collection collection = super.retrieveByCondition(conditionQuery);
+	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveEventParametersByOneQuery(collection);
 		this.retrieveEventSourceIdsByOneQuery(collection);
 		return collection;

@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.7 2005/02/14 13:09:40 arseniy Exp $
+ * $Id: EventType.java,v 1.8 2005/04/01 09:00:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,12 @@
 
 package com.syrus.AMFICOM.event;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Collections;
+import java.util.Set;
+
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -34,8 +33,8 @@ import com.syrus.AMFICOM.event.corba.EventType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/14 13:09:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 09:00:59 $
+ * @author $Author: bob $
  * @module event_v1
  */
 
@@ -44,14 +43,14 @@ public class EventType extends StorableObjectType {
 
 	public static final String CODENAME_MEASUREMENT_ALARM = "measurement_alarm";
 
-	private Collection parameterTypes;
+	private Set parameterTypes;
 
 	private StorableObjectDatabase eventTypeDatabase;
 
 	public EventType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.parameterTypes = new ArrayList();
+		this.parameterTypes = new HashSet();
 
 		this.eventTypeDatabase = EventDatabaseContext.eventTypeDatabase;
 		try {
@@ -76,7 +75,7 @@ public class EventType extends StorableObjectType {
 					new String(ett.description));
 
 		try {
-			List parTypeIds = new ArrayList(ett.parameter_type_ids.length);
+			Set parTypeIds = new HashSet(ett.parameter_type_ids.length);
 			for (int i = 0; i < ett.parameter_type_ids.length; i++)
 				parTypeIds.add(new Identifier(ett.parameter_type_ids[i]));
 
@@ -94,7 +93,7 @@ public class EventType extends StorableObjectType {
 								long version,
 								String codename,
 								String description,
-								List parameterTypes) {
+								Set parameterTypes) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -104,7 +103,7 @@ public class EventType extends StorableObjectType {
 				codename,
 				description);
 
-		this.parameterTypes = new ArrayList(); 
+		this.parameterTypes = new HashSet(); 
 		this.setParameterTypes0(parameterTypes);
 
 		this.eventTypeDatabase = EventDatabaseContext.eventTypeDatabase;
@@ -122,7 +121,7 @@ public class EventType extends StorableObjectType {
 	public static EventType createInstance(Identifier creatorId,
 															String codename,
 															String description,
-															List parameterTypes) throws CreateObjectException {
+															Set parameterTypes) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null)
 			throw new IllegalArgumentException("Argument is null'");
 
@@ -153,8 +152,8 @@ public class EventType extends StorableObjectType {
 										parTypeIds);
 	}
 
-  public Collection getParameterTypes() {
-		return Collections.unmodifiableCollection(this.parameterTypes);
+  public Set getParameterTypes() {
+		return Collections.unmodifiableSet(this.parameterTypes);
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -173,7 +172,7 @@ public class EventType extends StorableObjectType {
 							description);
 	}
 
-	protected void setParameterTypes0(Collection parameterTypes) {
+	protected void setParameterTypes0(Set parameterTypes) {
 		this.parameterTypes.clear();
 		if (parameterTypes != null)
 	     	this.parameterTypes.addAll(parameterTypes);
@@ -185,13 +184,13 @@ public class EventType extends StorableObjectType {
 	 * @param parameterTypes
 	 *            The inParameterTypes to set.
 	 */
-	public void setParameterTypes(Collection parameterTypes) {
+	public void setParameterTypes(Set parameterTypes) {
 		this.setParameterTypes0(parameterTypes);
 		this.changed = true;
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public Set getDependencies() {
+		Set dependencies = new HashSet();
 
 		if (this.parameterTypes != null)
 			dependencies.addAll(this.parameterTypes);

@@ -1,5 +1,5 @@
 /*
- * $Id: EventObjectLoader.java,v 1.7 2005/02/24 15:00:07 arseniy Exp $
+ * $Id: EventObjectLoader.java,v 1.8 2005/04/01 09:00:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.event;
 
-import java.util.Collection;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/24 15:00:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 09:00:59 $
+ * @author $Author: bob $
  * @module event_v1
  */
 
@@ -34,26 +34,26 @@ public interface EventObjectLoader {
 //	Alarm loadAlarm(Identifier id) throws ApplicationException;
 
 
-	Collection loadEventTypes(Collection ids) throws ApplicationException;
+	Set loadEventTypes(Set ids) throws ApplicationException;
 
-//	Collection loadAlarmTypes(Collection ids) throws ApplicationException;
+//	Set loadAlarmTypes(Set ids) throws ApplicationException;
 
-	Collection loadEvents(Collection ids) throws ApplicationException;
+	Set loadEvents(Set ids) throws ApplicationException;
 
-	Collection loadEventSources(Collection ids) throws ApplicationException;
+	Set loadEventSources(Set ids) throws ApplicationException;
 
-//	Collection loadAlarms(Collection ids) throws ApplicationException;
+//	Set loadAlarms(Set ids) throws ApplicationException;
 
 
-	Collection loadEventTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
+	Set loadEventTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
-//	Collection loadAlarmTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
+//	Set loadAlarmTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
-	Collection loadEventsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
+	Set loadEventsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
-	Collection loadEventSourcesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
+	Set loadEventSourcesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
-//	Collection loadAlarmsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
+//	Set loadAlarmsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException;
 
 
 	void saveEventType(EventType eventType, boolean force) throws ApplicationException;
@@ -67,15 +67,15 @@ public interface EventObjectLoader {
 //	void saveAlarm(Alarm alarm, boolean force) throws ApplicationException;
 
 
-	void saveEventTypes(Collection collection, boolean force) throws ApplicationException;
+	void saveEventTypes(Set collection, boolean force) throws ApplicationException;
 
-//	void saveAlarmTypes(Collection collection, boolean force) throws ApplicationException;
+//	void saveAlarmTypes(Set collection, boolean force) throws ApplicationException;
 
-	void saveEvents(Collection collection, boolean force) throws ApplicationException;
+	void saveEvents(Set collection, boolean force) throws ApplicationException;
 
-	void saveEventSources(Collection collection, boolean force) throws ApplicationException;
+	void saveEventSources(Set collection, boolean force) throws ApplicationException;
 
-//	void saveAlarms(Collection collection, boolean force) throws ApplicationException;
+//	void saveAlarms(Set collection, boolean force) throws ApplicationException;
 
 
 	java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException;
@@ -83,5 +83,5 @@ public interface EventObjectLoader {
 
 	void delete(Identifier id) throws IllegalDataException;
 
-	void delete(Collection objects) throws IllegalDataException;
+	void delete(Set objects) throws IllegalDataException;
 }

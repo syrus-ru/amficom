@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.11 2005/03/10 15:24:28 arseniy Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.12 2005/04/01 09:00:59 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,11 +7,10 @@
  */
 package com.syrus.AMFICOM.event;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,8 +26,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/03/10 15:24:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/04/01 09:00:59 $
+ * @author $Author: bob $
  * @module event_v1
  */
 public class DatabaseEventObjectLoader implements EventObjectLoader {
@@ -47,9 +46,9 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 
 
-	public Collection loadEventTypes(Collection ids) throws ApplicationException {
+	public Set loadEventTypes(Set ids) throws ApplicationException {
 		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = eventTypeDatabase.retrieveByIdsByCondition(ids, null);
 		}
@@ -61,9 +60,9 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		return collection;
 	}
 
-	public Collection loadEvents(Collection ids) throws ApplicationException {
+	public Set loadEvents(Set ids) throws ApplicationException {
 		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = eventDatabase.retrieveByIdsByCondition(ids, null);
 		}
@@ -75,9 +74,9 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		return collection;
 	}
 
-	public Collection loadEventSources(Collection ids) throws ApplicationException {
+	public Set loadEventSources(Set ids) throws ApplicationException {
 		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = eventSourceDatabase.retrieveByIdsByCondition(ids, null);
 		}
@@ -92,9 +91,9 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 
 
-	public Collection loadEventTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadEventTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = eventTypeDatabase.retrieveButIdsByCondition(ids, condition);
 		}
@@ -106,9 +105,9 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		return collection;
 	}
 
-	public Collection loadEventsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadEventsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = eventDatabase.retrieveButIdsByCondition(ids, condition);
 		}
@@ -120,9 +119,9 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		return collection;
 	}
 
-	public Collection loadEventSourcesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadEventSourcesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
-		Collection collection = null;
+		Set collection = null;
 		try {
 			collection = eventSourceDatabase.retrieveButIdsByCondition(ids, condition);
 		}
@@ -155,17 +154,17 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 
 
-	public void saveEventTypes(Collection collection, boolean force) throws ApplicationException {
+	public void saveEventTypes(Set collection, boolean force) throws ApplicationException {
 		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
 		eventTypeDatabase.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveEvents(Collection collection, boolean force) throws ApplicationException {
+	public void saveEvents(Set collection, boolean force) throws ApplicationException {
 		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
 		eventDatabase.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveEventSources(Collection collection, boolean force) throws ApplicationException {
+	public void saveEventSources(Set collection, boolean force) throws ApplicationException {
 		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
 		eventSourceDatabase.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
@@ -197,7 +196,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 			storableObjectDatabase.delete(id);
 	}
 
-	public void delete(Collection objects) throws IllegalDataException {
+	public void delete(Set objects) throws IllegalDataException {
 		if (objects == null || objects.isEmpty())
 			return;
 		/**
@@ -208,7 +207,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		/**
 		 * separate objects by kind of entity
 		 */
-		Collection entityObjects;
+		Set entityObjects;
 		Short entityCode;
 		for (Iterator it = objects.iterator(); it.hasNext();) {
 			Object object = it.next();
@@ -223,9 +222,9 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 							+ object.getClass().getName() + " isn't Identifier or Identifiable");
 
 			entityCode = new Short(identifier.getMajor());
-			entityObjects = (Collection) map.get(entityCode);
+			entityObjects = (Set) map.get(entityCode);
 			if (entityObjects == null) {
-				entityObjects = new LinkedList();
+				entityObjects = new HashSet();
 				map.put(entityCode, entityObjects);
 			}
 			entityObjects.add(object);
@@ -234,7 +233,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		StorableObjectDatabase storableObjectDatabase;
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			entityCode = (Short) it.next();
-			entityObjects = (Collection) map.get(entityCode);
+			entityObjects = (Set) map.get(entityCode);
 			storableObjectDatabase = EventDatabaseContext.getDatabase(entityCode);
 			if (storableObjectDatabase != null)
 				storableObjectDatabase.delete(entityObjects);

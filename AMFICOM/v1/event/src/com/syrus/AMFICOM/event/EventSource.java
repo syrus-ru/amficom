@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.6 2005/02/14 13:09:40 arseniy Exp $
+ * $Id: EventSource.java,v 1.7 2005/04/01 09:00:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.event;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.event.corba.EventSource_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/14 13:09:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/04/01 09:00:59 $
+ * @author $Author: bob $
  * @module event_v1
  */
 public class EventSource extends StorableObject {
@@ -118,8 +118,8 @@ public class EventSource extends StorableObject {
 		this.sourceEntityId = sourceEntityId;
 	}
 
-	public List getDependencies() {
-		return Collections.singletonList(this.sourceEntityId);
+	public Set getDependencies() {
+		return Collections.singleton(this.sourceEntityId);
 	}
 
 }

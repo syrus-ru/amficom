@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.20 2005/03/11 10:58:19 bob Exp $
+ * $Id: EventTypeDatabase.java,v 1.21 2005/04/01 09:00:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,11 +13,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -38,7 +37,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/03/11 10:58:19 $
+ * @version $Revision: 1.21 $, $Date: 2005/04/01 09:00:59 $
  * @author $Author: bob $
  * @module event_v1
  */
@@ -116,7 +115,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 	}
 
 	private void retrieveParameterTypes(EventType eventType) throws RetrieveObjectException {
-		List parTyps = new ArrayList();
+		Set parTyps = new HashSet();
 		String eventTypeIdStr = DatabaseIdentifier.toSQLString(eventType.getId());
 		String sql = SQL_SELECT
 			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID
@@ -159,11 +158,10 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 
-		((ArrayList) parTyps).trimToSize();
 		eventType.setParameterTypes(parTyps);
 	}
 
-	private void retrieveParameterTypesByOneQuery(Collection eventTypes) throws RetrieveObjectException {
+	private void retrieveParameterTypesByOneQuery(Set eventTypes) throws RetrieveObjectException {
 		if ((eventTypes == null) || (eventTypes.isEmpty()))
 			return;
 
@@ -180,11 +178,11 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 
 		EventType eventType;
 		Identifier eventTypeId;
-		Collection paramaterTypeIds;
+		Set paramaterTypeIds;
 		for (Iterator it = eventTypes.iterator(); it.hasNext();) {
 			eventType = (EventType) it.next();
 			eventTypeId = eventType.getId();
-			paramaterTypeIds = (Collection) eventParamaterTypeIdsMap.get(eventTypeId);
+			paramaterTypeIds = (Set) eventParamaterTypeIdsMap.get(eventTypeId);
 
 			try {
 				eventType.setParameterTypes0(GeneralStorableObjectPool.getStorableObjects(paramaterTypeIds, true));
@@ -210,7 +208,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		this.insertParameterTypes(eventType);
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			EventType eventType = this.fromStorableObject((StorableObject)it.next());
@@ -239,7 +237,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 	}
 
 	private void updatePrepareStatementValues(PreparedStatement preparedStatement, EventType eventType) throws SQLException {
-		Collection parTyps = eventType.getParameterTypes();
+		Set parTyps = eventType.getParameterTypes();
 		Identifier eventTypeId = eventType.getId();
 		Identifier parameterTypeId = null;
 
@@ -311,7 +309,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Collection objects) {
+	public void delete(Set objects) {
 		StringBuffer sql1 = new StringBuffer(SQL_DELETE_FROM
 				+ ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
 				+ SQL_WHERE);
@@ -359,8 +357,8 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Collection collection = super.retrieveByCondition(conditionQuery);
+	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Set collection = super.retrieveByCondition(conditionQuery);
 		this.retrieveParameterTypesByOneQuery(collection);
 		return collection;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.13 2005/03/11 10:58:19 bob Exp $
+ * $Id: EventSourceDatabase.java,v 1.14 2005/04/01 09:00:59 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.event;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/03/11 10:58:19 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/01 09:00:59 $
  * @author $Author: bob $
  * @module event_v1
  */
@@ -258,7 +258,7 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 		this.insertEntity(eventSource);
 	}
 
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 	}
 

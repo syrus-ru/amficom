@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeWrapper.java,v 1.5 2005/02/14 13:13:00 arseniy Exp $
+ * $Id: EventTypeWrapper.java,v 1.6 2005/04/01 09:00:59 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,16 +7,16 @@
  */
 package com.syrus.AMFICOM.event;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/14 13:13:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/04/01 09:00:59 $
+ * @author $Author: bob $
  * @module event_v1
  */
 public class EventTypeWrapper implements StorableObjectWrapper {
@@ -32,7 +32,7 @@ public class EventTypeWrapper implements StorableObjectWrapper {
 		//	private constructor
 		String[] keysArray = new String[] {COLUMN_CODENAME, COLUMN_DESCRIPTION, LINK_FIELD_PARAMETER_TYPES};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static EventTypeWrapper getInstance() {
@@ -77,7 +77,7 @@ public class EventTypeWrapper implements StorableObjectWrapper {
 					eventType.setDescription((String) value);
 				else
 					if (key.equals(LINK_FIELD_PARAMETER_TYPES))
-						eventType.setParameterTypes((List) value);
+						eventType.setParameterTypes((Set) value);
 		}
 	}
 
@@ -96,7 +96,7 @@ public class EventTypeWrapper implements StorableObjectWrapper {
 
 	public Class getPropertyClass(String key) {
 		if (key.equals(LINK_FIELD_PARAMETER_TYPES))
-			return List.class;
+			return Set.class;
 		return String.class;
 	}
 
