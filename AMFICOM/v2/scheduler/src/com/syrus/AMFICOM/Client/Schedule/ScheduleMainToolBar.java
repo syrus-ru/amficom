@@ -6,8 +6,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 
 public class ScheduleMainToolBar extends JToolBar implements ApplicationModelListener
 {

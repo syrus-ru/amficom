@@ -13,7 +13,6 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
 
 public class TestLine extends JLabel implements ActionListener,
 		OperationListener {
@@ -212,13 +211,13 @@ public class TestLine extends JLabel implements ActionListener,
 	}
 
 	private void drawTestRect(Graphics g, Test test) {
-		TemporalPattern timeStamp = test.getTemporalPattern();
+		TimeStamp timeStamp = test.getTimeStamp();
 		int x = margin
-				+ (int) (scale * (timeStamp.getStartPeriod() - start));
+				+ (int) (scale * (test.getTimeStamp().getPeriodStart() - start));
 		int en = margin
-				+ (int) (scale * (timeStamp.getEndPeriod() - start));
+				+ (int) (scale * (test.getTimeStamp().getPeriodEnd() - start));
 		int w = en - x + 1;
-		if (timeStamp.getType() == TemporalPattern.TIMESTAMPTYPE_CONTINUOS)
+		if (timeStamp.getType() == TimeStamp.TIMESTAMPTYPE_CONTINUOS)
 			w = (w > MINIMAL_WIDTH) ? w : MINIMAL_WIDTH;
 		else
 			w = MINIMAL_WIDTH;
@@ -226,9 +225,9 @@ public class TestLine extends JLabel implements ActionListener,
 		int h = height - (titleHeight / 2 + 4) - 2;
 		//System.out.println(">>"+timeStamp.getType());
 		switch (timeStamp.getType()) {
-			case TemporalPattern.TIMESTAMPTYPE_PERIODIC:
+			case TimeStamp.TIMESTAMPTYPE_PERIODIC:
 
-				long[] times = timeStamp.getTimes();
+				long[] times = timeStamp.getTestTimes();
 				for (int i = 0; i < times.length; i++) {
 					x = margin + (int) (scale * (times[i] - start));
 					g.fillRect(x + 2, y + 2, w - 3, h - 3);
@@ -288,28 +287,28 @@ public class TestLine extends JLabel implements ActionListener,
 					for (int i = 0; i < allTests.size(); i++) {
 						//	Test test = (Test) it.next();
 						Test test = (Test) allTests.get(i);
-						TemporalPattern timeStamp = test.getTemporalPattern();
+						TimeStamp timeStamp = test.getTimeStamp();
 						int st = margin
-								+ (int) (scale * (timeStamp
-										.getStartPeriod() - start)) - 1;
+								+ (int) (scale * (test.getTimeStamp()
+										.getPeriodStart() - start)) - 1;
 						int en = margin
-								+ (int) (scale * (timeStamp
-										.getEndPeriod() - start)) + 1;
+								+ (int) (scale * (test.getTimeStamp()
+										.getPeriodEnd() - start)) + 1;
 						en = (en - st < MINIMAL_WIDTH) ? st + MINIMAL_WIDTH
 								: en;
 						//					System.out.println("."+((x >= st) && (x <= en) && (y
 						// >=
 						// titleHeight / 2 + 4)));
 						int w = en - st + 1;
-						if (timeStamp.getType() == TemporalPattern.TIMESTAMPTYPE_CONTINUOS)
+						if (timeStamp.getType() == TimeStamp.TIMESTAMPTYPE_CONTINUOS)
 							w = (w > MINIMAL_WIDTH) ? w : MINIMAL_WIDTH;
 						else
 							w = MINIMAL_WIDTH;
 						en = st + w;
 						boolean condition = false;
 						switch (timeStamp.getType()) {
-							case TemporalPattern.TIMESTAMPTYPE_PERIODIC:
-								long[] times = timeStamp.getTimes();
+							case TimeStamp.TIMESTAMPTYPE_PERIODIC:
+								long[] times = timeStamp.getTestTimes();
 								for (int j = 0; j < times.length; j++) {
 									st = margin
 											+ (int) (scale * (times[j] - start));

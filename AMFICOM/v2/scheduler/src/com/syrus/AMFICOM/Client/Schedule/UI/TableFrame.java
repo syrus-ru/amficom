@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.TestType;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
 
 /**
  * @author Vladimir Dolzhenko
@@ -392,15 +391,15 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		public void setTest(Test test) {
 			data = null;
 			this.test = test;
-			switch (test.getTemporalPattern().getType()) {
-				case TemporalPattern.TIMESTAMPTYPE_ONETIME:
+			switch (test.getTimeStamp().getType()) {
+				case TimeStamp.TIMESTAMPTYPE_ONETIME:
 					this.temporalType = LangModelSchedule.getString("Onetime"); //$NON-NLS-1$
 					break;
-				case TemporalPattern.TIMESTAMPTYPE_CONTINUOS:
+				case TimeStamp.TIMESTAMPTYPE_CONTINUOS:
 					this.temporalType = LangModelSchedule
 							.getString("Continual"); //$NON-NLS-1$
 					break;
-				case TemporalPattern.TIMESTAMPTYPE_PERIODIC:
+				case TimeStamp.TIMESTAMPTYPE_PERIODIC:
 					this.temporalType = LangModelSchedule
 							.getString("Periodical"); //$NON-NLS-1$
 					break;
@@ -423,8 +422,8 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			TestType testType = (TestType) Pool.get(TestType.typ, test
 					.getTestTypeId());
 			this.testType = testType.getName();
-			this.time = UIStorage.SDF.format(new Date(test.getTemporalPattern()
-					.getStartPeriod()));
+			this.time = UIStorage.SDF.format(new Date(test.getTimeStamp()
+					.getPeriodStart()));
 
 			//this.id = test.id;
 			//this.kis = test.kis;
@@ -446,7 +445,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 	}
 
-	/**
+	/** 
 	 * @todo only for testing mode
 	 */
 	public static void main(String[] args) {
@@ -482,8 +481,6 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:"
-				+ commandName, getClass().getName());
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			if (!skipTestUpdate) {
 				TestUpdateEvent tue = (TestUpdateEvent) ae;

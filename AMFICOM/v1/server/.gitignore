@@ -1,8 +1,0 @@
-classes
-load_server.bat
-*.deploy
-*.jpr
-*.jpx
-*.tar
-*.gz
-*.swp

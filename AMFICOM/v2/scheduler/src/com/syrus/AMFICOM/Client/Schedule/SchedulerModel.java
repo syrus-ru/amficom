@@ -14,7 +14,6 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
@@ -25,10 +24,10 @@ import com.syrus.AMFICOM.Client.Resource.Result.Test;
 import com.syrus.AMFICOM.Client.Resource.Result.TestArgumentSet;
 import com.syrus.AMFICOM.Client.Resource.Result.TestRequest;
 import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
+import com.syrus.AMFICOM.Client.Resource.Result.TimeStamp;
 import com.syrus.AMFICOM.Client.Resource.Test.AnalysisType;
 import com.syrus.AMFICOM.Client.Resource.Test.EvaluationType;
 import com.syrus.AMFICOM.Client.Resource.Test.TestType;
-import com.syrus.AMFICOM.measurement.TemporalPattern;
 
 /**
  * @author Vladimir Dolzhenko
@@ -79,121 +78,139 @@ public class SchedulerModel implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:"
-				+ commandName, getClass().getName());
 		int id = ae.getID();
 		Object obj = ae.getSource();
+
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			this.receivedTest = tue.test;
-		} else if (commandName
-				.equalsIgnoreCase(SchedulerModel.COMMAND_CREATE_TEST)) {
+			receivedTest = tue.test;
+
+			if (tue.TEST_SELECTED) {
+				//this.getContentPane().removeAll();
+				//this.getContentPane().add(panel, BorderLayout.CENTER);
+				//updateUI();
+
+				TestRequest treq = (TestRequest) Pool.get(TestRequest.typ,
+						receivedTest.getRequestId());
+				if (treq == null)
+					System.out
+							.println("TestRequestFrame.operationPerformed() treq not found id " //$NON-NLS-1$
+									+ receivedTest.getRequestId());
+				else {
+					System.out.println(this.getClass().getName()
+							+ " > treq.id: " + treq.getId()); //$NON-NLS-1$
+					//panel.setTestRequest(treq);
+					//panel.setTest(receivedTest);
+				}
+
+			}
+		} else if (commandName.equalsIgnoreCase(COMMAND_CREATE_TEST)) {
 			// creating test
 			//if (flag == 0) {
-			this.flag = FLAG_CREATE;
-			if (this.receiveData == null)
-				this.receiveData = new HashMap();
+			flag = FLAG_CREATE;
+			if (receiveData == null)
+				receiveData = new HashMap();
 			else
-				this.receiveData.clear();
-			this.receiveTreeElements = null;
+				receiveData.clear();
+			receiveTreeElements = null;
 
-			this.receiveDataCount = 0;
-			this.dispatcher.notify(new OperationEvent("", 0, //$NON-NLS-1$
-					SchedulerModel.COMMAND_DATA_REQUEST));
+			receiveDataCount = 0;
+			dispatcher.notify(new OperationEvent("", 0, //$NON-NLS-1$
+					COMMAND_DATA_REQUEST));
 			//}
-		} else if (commandName
-				.equalsIgnoreCase(SchedulerModel.COMMAND_APPLY_TEST)) {
+		} else if (commandName.equalsIgnoreCase(COMMAND_APPLY_TEST)) {
 			// apply test
 			//if (flag == 0) {
-			this.flag = FLAG_APPLY;
-			this.receiveTreeElements = null;
-			if (this.receiveData == null)
-				this.receiveData = new HashMap();
+			flag = FLAG_APPLY;
+			receiveTreeElements = null;
+			if (receiveData == null)
+				receiveData = new HashMap();
 			else
-				this.receiveData.clear();
-			this.receiveDataCount = 0;
-			this.dispatcher.notify(new OperationEvent("", 0, //$NON-NLS-1$
-					SchedulerModel.COMMAND_DATA_REQUEST));
+				receiveData.clear();
+			receiveDataCount = 0;
+			dispatcher.notify(new OperationEvent("", 0, //$NON-NLS-1$
+					COMMAND_DATA_REQUEST));
 			//}
-		} else if (commandName
-				.equalsIgnoreCase(SchedulerModel.COMMAND_SEND_DATA)) {
-			this.receiveDataCount++;
-			if (id == SchedulerModel.DATA_ID_PARAMETERS) {
+		} else if (commandName.equalsIgnoreCase(COMMAND_SEND_DATA)) {
+			receiveDataCount++;
+			if (id == DATA_ID_PARAMETERS) {
 				System.out.println("parameters id have got"); //$NON-NLS-1$
-			} else if (id == SchedulerModel.DATA_ID_ELEMENTS) {
+			} else if (id == DATA_ID_ELEMENTS) {
 				System.out.println("elements id have got"); //$NON-NLS-1$
-				this.receiveTreeElements = (HashMap) obj;
-			} else if (id == SchedulerModel.DATA_ID_TIMESTAMP) {
+				receiveTreeElements = (HashMap) obj;
+			} else if (id == DATA_ID_TIMESTAMP) {
 				System.out.println("timestamp id have hot"); //$NON-NLS-1$
 			}
 			if (obj instanceof AnalysisType) {
 				System.out.println("AnalysisType instanceof have got"); //$NON-NLS-1$
-				this.receiveData.put(AnalysisType.typ, obj);
+				receiveData.put(AnalysisType.typ, obj);
 			} else if (obj instanceof EvaluationType) {
 				System.out.println("EvaluationType instanceof have got"); //$NON-NLS-1$
-				this.receiveData.put(EvaluationType.typ, obj);
+				receiveData.put(EvaluationType.typ, obj);
 			} else if (obj instanceof TestArgumentSet) {
 				System.out.println("TestArgumentSet instanceof have got"); //$NON-NLS-1$
-				this.receiveData.put(TestArgumentSet.typ, obj);
-				this.receiveDataCount += 2;
+				receiveData.put(TestArgumentSet.typ, obj);
+				receiveDataCount += 2;
 				//receiveTestArgumentSet = (TestArgumentSet) obj;
 			} else if (obj instanceof TestSetup) {
 				System.out.println("TestSetup instanceof have got"); //$NON-NLS-1$
 				//receiveTestSetup = (TestSetup) obj;
 				System.out.println(((TestSetup) obj).getId());
-				this.receiveData.put(TestSetup.typ, obj);
-			} else if (obj instanceof TemporalPattern) {
+				receiveData.put(TestSetup.typ, obj);
+			} else if (obj instanceof TimeStamp) {
 				System.out.println("timestamp instanceof have got"); //$NON-NLS-1$
-				//receiveTimeStamp = (TimeStamp_dep) obj;
-				this.receiveData.put(TemporalPattern.TYPE, obj);
+				//receiveTimeStamp = (TimeStamp) obj;
+				receiveData.put(TimeStamp.typ, obj);
 			} else if (obj instanceof TestReturnType) {
-				this.returnType = (TestReturnType) obj;
+				returnType = (TestReturnType) obj;
 			} else if (obj instanceof TestRequest) {
-				this.receiveData.put(TestRequest.typ, obj);
+				receiveData.put(TestRequest.typ, obj);
 			}
-			System.out.println("receiveDataCount:" + this.receiveDataCount); //$NON-NLS-1$
-			if (7 == this.receiveDataCount) {
-				if ((this.flag & FLAG_CREATE) != 0) {
+			System.out.println("receiveDataCount:" + receiveDataCount); //$NON-NLS-1$
+			if (7 == receiveDataCount) {
+				if ((flag & FLAG_CREATE) != 0) {
 					System.out.println("createTest"); //$NON-NLS-1$
-					this.receivedTest = null;
+					receivedTest = null;
 					createTest();
-				} else if ((this.flag & FLAG_APPLY) != 0) {
+				} else if ((flag & FLAG_APPLY) != 0) {
 					System.out.println("applyTest"); //$NON-NLS-1$
 					//					if (receivedTest==null)
 					createTest();
 					//					else applyTest();
 				}
-				this.flag = 0;
+				flag = 0;
 			}
+		} else {
+			//this.getContentPane().removeAll();
+			//JList emptyList = new JList();
+			//emptyList.setBorder(BorderFactory.createLoweredBevelBorder());
+			//this.getContentPane().add(emptyList, BorderLayout.CENTER);
+			//updateUI();
 		}
-
 	}
-
 	private void createTest() {
-		DataSourceInterface dsi = this.aContext.getDataSourceInterface();
-		Test test = this.receivedTest;
+		DataSourceInterface dsi = aContext.getDataSourceInterface();
+		Test test = receivedTest;
 		if (test == null) {
 			test = new Test(dsi.GetUId(Test.TYPE)); //$NON-NLS-1$
 			test.setStatus(TestStatus.TEST_STATUS_SCHEDULED);
 			Pool.put(Test.TYPE, test.getId(), test);
 		}
 
-		TestType testType = (TestType) this.receiveTreeElements
-				.get(TestType.typ);
-		KIS kis = (KIS) this.receiveTreeElements.get(KIS.typ);
-		MonitoredElement me = (MonitoredElement) this.receiveTreeElements
+		TestType testType = (TestType) receiveTreeElements.get(TestType.typ);
+		KIS kis = (KIS) receiveTreeElements.get(KIS.typ);
+		MonitoredElement me = (MonitoredElement) receiveTreeElements
 				.get(MonitoredElement.typ);
 		test.setTestTypeId(testType.getId());
 		test.setKisId(kis.id);
 		test.setMonitoredElementId(me.id);
 
-		test.setReturnType(this.returnType);
-		test.setUserId(this.aContext.getSessionInterface().getUserId());
-		test.setTemporalPattern((TemporalPattern) this.receiveData
-				.get(TemporalPattern.TYPE));
+		test.setReturnType(returnType);
+		test.setUserId(aContext.getSessionInterface().getUserId());
+		test.setTimeStamp((TimeStamp) receiveData.get(TimeStamp.typ));
 		{
 
-			TestArgumentSet testArgumentSet = (TestArgumentSet) this.receiveData
+			TestArgumentSet testArgumentSet = (TestArgumentSet) receiveData
 					.get(TestArgumentSet.typ);
 			if (testArgumentSet != null) {
 				testArgumentSet.setId(dsi.GetUId(TestArgumentSet.typ));
@@ -206,12 +223,12 @@ public class SchedulerModel implements OperationListener {
 			}
 		}
 
-		test.setTestSetup((TestSetup) this.receiveData.get(TestSetup.typ));
+		test.setTestSetup((TestSetup) receiveData.get(TestSetup.typ));
 		if (test.getTestSetup() != null)
 				test.setTestSetupId(test.getTestSetup().getId());
 
 		{
-			AnalysisType analysisType = (AnalysisType) this.receiveData
+			AnalysisType analysisType = (AnalysisType) receiveData
 					.get(AnalysisType.typ);
 			if (analysisType == null)
 				test.setAnalysisId(""); //$NON-NLS-1$
@@ -227,7 +244,7 @@ public class SchedulerModel implements OperationListener {
 				//System.err.println("test.analysis_id:" + test.analysis_id);
 			}
 
-			EvaluationType evaluationType = (EvaluationType) this.receiveData
+			EvaluationType evaluationType = (EvaluationType) receiveData
 					.get(EvaluationType.typ);
 			if (evaluationType == null)
 				test.setEvaluationId(""); //$NON-NLS-1$
@@ -247,7 +264,7 @@ public class SchedulerModel implements OperationListener {
 			}
 
 		}
-		TestRequest testRequest = (TestRequest) this.receiveData
+		TestRequest testRequest = (TestRequest) receiveData
 				.get(TestRequest.typ);
 
 		testRequest.addTest(test);
@@ -257,5 +274,4 @@ public class SchedulerModel implements OperationListener {
 		this.dispatcher.notify(new TestUpdateEvent(this, test,
 				TestUpdateEvent.TEST_SELECTED_EVENT));
 	}
-
 }

@@ -119,10 +119,10 @@ public class TestRequestFrame extends JInternalFrame implements
 		//				//receiveTestSetup = (TestSetup) obj;
 		//				System.out.println(((TestSetup) obj).getId());
 		//				receiveData.put(TestSetup.TYPE, obj);
-		//			} else if (obj instanceof TimeStamp_dep) {
+		//			} else if (obj instanceof TimeStamp) {
 		//				System.out.println("timestamp instanceof have got"); //$NON-NLS-1$
-		//				//receiveTimeStamp = (TimeStamp_dep) obj;
-		//				receiveData.put(TimeStamp_dep.TYPE, obj);
+		//				//receiveTimeStamp = (TimeStamp) obj;
+		//				receiveData.put(TimeStamp.TYPE, obj);
 		//			} else if (obj instanceof TestReturnType) {
 		//				returnType = (TestReturnType) obj;
 		//			} else if (obj instanceof TestRequest) {
