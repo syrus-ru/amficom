@@ -50,7 +50,7 @@ public final class AbstractSchemePortController implements ObjectResourceControl
 		{
 			AbstractSchemePort port = (AbstractSchemePort)object;
 			if (key.equals(KEY_NAME))
-				result = port.getName();
+				result = port.name();
 		}
 		return result;
 	}

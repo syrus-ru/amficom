@@ -50,7 +50,7 @@ public final class CableThreadController implements ObjectResourceController
 		{
 			SchemeCableThread thread = (SchemeCableThread)object;
 			if (key.equals(KEY_NAME))
-				result = thread.getName();
+				result = thread.name();
 		}
 		return result;
 	}

@@ -59,7 +59,7 @@ public final class PathElementController implements ObjectResourceController
 				 */
 				result = "";
 			if (key.equals(KEY_SEQUENTIAL_NUMBER))
-				result = new Integer(pe.getSequentialNumber());
+				result = new Integer(pe.sequentialNumber());
 		}
 		return result;
 	}
