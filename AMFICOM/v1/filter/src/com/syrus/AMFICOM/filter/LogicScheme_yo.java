@@ -1,5 +1,5 @@
 /*
- * $Id: LogicScheme_yo.java,v 1.2 2004/06/08 15:31:57 bass Exp $
+ * $Id: LogicScheme_yo.java,v 1.3 2004/06/08 15:44:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/08 15:31:57 $
+ * @version $Revision: 1.3 $, $Date: 2004/06/08 15:44:01 $
  * @module filter_v1
  */
 public class LogicScheme_yo implements Serializable
@@ -49,6 +49,7 @@ public class LogicScheme_yo implements Serializable
 			if (se.type.equals(LogicSchemeElement_yo.t_condition))
 			{
 				schemeEls.add(se);
+				se.out.getLinks().clear();
 				activeZones.add(se.out);
 			}
 		}
@@ -164,12 +165,17 @@ public class LogicScheme_yo implements Serializable
 		return result;
 	}
 
+	public boolean schemeIsEmpty()
+	{
+		return (getFilterExpressions().size() == 0);
+	}
+
 	public boolean checkScheme()
 	{
 		if (getFilterExpressions().size() < getRestrictionsNumber())
 			return false;
 
-		if (getFilterExpressions().size() == 0)
+		if (schemeIsEmpty())
 			return false;
 
 		for (int i = 0; i < activeZones.size(); i++)
@@ -635,7 +641,8 @@ public class LogicScheme_yo implements Serializable
 		out.writeObject(general_expression);
 	}
 
-	public void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	public void readObject(ObjectInputStream in)
+			throws IOException, ClassNotFoundException
 	{
 		Vector filterExpressions = new Vector();
 
