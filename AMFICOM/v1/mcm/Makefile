@@ -16,7 +16,7 @@ LIBNAME=mcm.jar
 ARCHFILE=mcm.tar.gz
 
 ORACLECLASSPATH = $(ORACLE_HOME)/jdbc/lib/classes12.jar:$(ORACLE_HOME)/sqlj/lib/translator.jar:$(ORACLE_HOME)/sqlj/lib/runtime12ee.jar
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar
+APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/dadara.jar
 
 IDL2JAVA = idl2java
 IDL2JAVA_FLAGS = \
@@ -75,7 +75,9 @@ $(LIBNAME): .mach
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVAC_FLAGS) -nowarn \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisManager.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java
+#		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/DatabaseSetup.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/Transceiver.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISReport.java \
@@ -86,8 +88,8 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/ContinuousTestProcessor.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationManager.java \
-		$(SRCDIR)/com/syrus/AMFICOM/analysis/dadara/DadaraAnalysisManager.java \
-		$(SRCDIR)/com/syrus/AMFICOM/analysis/dadara/DadaraEvaluationManager.java
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraEvaluationManager.java
 	touch $@
 
 .corba:	$(CLASSDIR)

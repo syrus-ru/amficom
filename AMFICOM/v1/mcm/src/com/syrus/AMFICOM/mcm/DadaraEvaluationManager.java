@@ -7,7 +7,10 @@ import com.syrus.util.Log;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
-public class DadaraEvaluationManager extends EvaluationManager  {
+public class DadaraEvaluationManager extends EvaluationManager {
+	public static final String CODENAME_DADARA_THRESHOLDS = "dadara_thresholds";
+	public static final String CODENAME_DADARA_ALARM_ARRAY = "dadara_alarm_array";
+
   public DadaraEvaluationManager() {
   }
 

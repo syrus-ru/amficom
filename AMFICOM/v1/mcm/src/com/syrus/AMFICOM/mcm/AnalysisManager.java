@@ -1,12 +1,15 @@
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Map;
 import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.LinkedList;
-import com.syrus.AMFICOM.analysis.dadara.DadaraAnalysisManager;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
+import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Set;
@@ -14,57 +17,65 @@ import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
 public abstract class AnalysisManager {
-	private static final Identifier ANALYSIS_TYPE_DADARA = new Identifier("dadara");
+	private static final String CODENAME_ANALYSIS_TYPE_DADARA = "dadara";
 
-  public static AnalysisManager getAnalysisManager(Identifier analysis_type_id) {
-    if (analysis_type_id.equals(ANALYSIS_TYPE_DADARA))
-      return new DadaraAnalysisManager();
-    else
-      return null;
-  }
+	private static Map analysisTypes;
 
-  public Result analyse(Analysis analysis, Result measurementResult, Set etalon) {
-		SetParameter[] criteria = analysis.getCriteriaSet().getParameters();
-		Hashtable hcriteria = new Hashtable(criteria.length);
-		for (int i = 0; i < criteria.length; i++)
-			hcriteria.put(criteria[i].getTypeId(), criteria[i].getValue());
+	static {
+		analysisTypes = new Hashtable(1);
+		addAnalysisType(CODENAME_ANALYSIS_TYPE_DADARA);
+	}
 
-		SetParameter[] measurementResultParameters = measurementResult.getParameters();
-		Hashtable hmeasurementResultParameters = new Hashtable(measurementResultParameters.length);
-		for (int i = 0; i < measurementResultParameters.length; i++)
-			hmeasurementResultParameters.put(measurementResultParameters[i].getTypeId(), measurementResultParameters[i].getValue());
+	public static Result analyse(Result measurementResult,
+												Analysis analysis,
+												Set etalon) throws AnalysisException {
+		Identifier analysisTypeId = analysis.getTypeId();
+		AnalysisType analysisType = (AnalysisType)analysisTypes.get(analysisTypeId);
+		if (analysisType != null) {
+			String analysisTypeCodename = analysisType.getCodename();
+			SetParameter[] arParameters = null;
+			if (analysisTypeCodename.equals(CODENAME_ANALYSIS_TYPE_DADARA)) {
+				DadaraAnalysisManager dadaraAnalysisManager = new DadaraAnalysisManager(measurementResult,
+																																								analysis,
+																																								etalon);
+				arParameters = dadaraAnalysisManager.analyse();
+			}
+			else
+				throw new AnalysisException("Analysis for codename '" + analysisTypeCodename + "' not implemented");
 
-		SetParameter[] etalonParameters = etalon.getParameters();
-		Hashtable hetalonParameters = new Hashtable();
-		for (int i = 0; i < etalonParameters.length; i++)
-			hetalonParameters.put(etalonParameters[i].getTypeId(), etalonParameters[i].getValue());
-
-		Hashtable hanalysisResultParameters = this.analyse(hcriteria, hmeasurementResultParameters);
-
-		LinkedList ids = new LinkedList();
-		LinkedList type_ids = new LinkedList();
-		LinkedList values = new LinkedList();
-		Enumeration enames = hanalysisResultParameters.keys();
-    Enumeration evalues = hanalysisResultParameters.elements();
-		while (enames.hasMoreElements()) {
-			ids.add(MeasurementControlModule.createIdentifier("parameter"));
-			type_ids.add(enames.nextElement());
-			values.add(evalues.nextElement());
+			Result result = null; 
+			try {
+				analysis.createResult(null,//MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULT_ENTITY),
+															null,//MeasurementControlModule.iAm.getUserId(),
+															measurementResult.getMeasurement(),
+															AlarmLevel.ALARM_LEVEL_NONE,
+															arParameters);
+			}
+			catch (CreateObjectException coe) {
+				Log.errorException(coe);
+				result = null;
+			}
+			return result;
 		}
-		Result result = null;
+		throw new AnalysisException("Cannot find analysis of type '" + analysisTypeId + "'");
+	}
+
+  public abstract SetParameter[] analyse() throws AnalysisException;
+
+	private static void addAnalysisType(String codename) {
 		try {
-			result = analysis.createResult(MeasurementControlModule.createIdentifier("result"),
-																		 measurementResult.getMeasurement(),
-																		 AlarmLevel.ALARM_LEVEL_NONE,
-																		 (Identifier[])ids.toArray(new String[ids.size()]),
-																		 (Identifier[])type_ids.toArray(new String[type_ids.size()]),
-																		 (byte[][])values.toArray(new byte[values.size()][]));
+			AnalysisType analysisType = AnalysisTypeDatabase.retrieveForCodename(codename);
+			Identifier analysisTypeId = analysisType.getId();
+			if (!analysisTypes.containsKey(analysisTypeId))
+				analysisTypes.put(analysisTypeId, analysisType);
+			else
+				Log.errorMessage("Analysis type of codename '" + codename + "' and id '" + analysisTypeId.toString() + "' already added to map");
 		}
-		catch (Exception e) {
-			Log.errorException(e);
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
 		}
-		return result;
-  }
-
-  public abstract Hashtable analyse(Hashtable hcriteria, Hashtable hmeasurementResultParameters);
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+	}
 }

@@ -1,143 +1,184 @@
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Map;
 import java.util.Hashtable;
 import java.io.IOException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.measurement.ParameterType;
+import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
+import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.Analysis;
+import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreReader;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
+import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
 
 public class DadaraAnalysisManager extends AnalysisManager {
 	public static final String CODENAME_REFLECTOGRAMMA = "reflectogramma";
-	public static final String CODENAME_TACTIC = "ref_uselinear";
-	public static final String CODENAME_EVENT_SIZE = "ref_eventsize";
-	public static final String CODENAME_CONN_FALL_PARAMS = "ref_conn_fall_params";
-	public static final String CODENAME_MIN_LEVEL = "ref_min_level";
-	public static final String CODENAME_MAX_LEVEL_NOISE = "ref_max_level_noise";
-	public static final String CODENAME_MIN_LEVEL_TO_FIND_END = "ref_min_level_to_find_end";
-	public static final String CODENAME_MIN_WELD = "ref_min_weld";
-	public static final String CODENAME_MIN_CONNECTOR = "ref_min_connector";
-	public static final String CODENAME_STRATEGY = "ref_strategy";
+	public static final String CODENAME_DADARA_TACTIC = "ref_uselinear";
+	public static final String CODENAME_DADARA_EVENT_SIZE = "ref_eventsize";
+	public static final String CODENAME_DADARA_CONN_FALL_PARAMS = "ref_conn_fall_params";
+	public static final String CODENAME_DADARA_MIN_LEVEL = "ref_min_level";
+	public static final String CODENAME_DADARA_MAX_LEVEL_NOISE = "ref_max_level_noise";
+	public static final String CODENAME_DADARA_MIN_LEVEL_TO_FIND_END = "ref_min_level_to_find_end";
+	public static final String CODENAME_DADARA_MIN_WELD = "ref_min_weld";
+	public static final String CODENAME_DADARA_MIN_CONNECTOR = "ref_min_connector";
+	public static final String CODENAME_DADARA_STRATEGY = "ref_strategy";
 	public static final String CODENAME_DADARA_EVENT_ARRAY = "dadara_event_array";
+	public static final String CODENAME_DADARA_ETALON_EVENT_ARRAY = "dadara_etalon_event_array";
+	public static final String CODENAME_DADARA_THRESHOLDS = "dadara_thresholds";
+	public static final String CODENAME_DADARA_ALARM_ARRAY = "dadara_alarm_array";
 
-  static {
+	private static Map inParameterTypes;
+	private static Map outParameterTypes;
+
+	private Map parameters;
+
+	static {
     try {
       System.loadLibrary("dadara");
     }
     catch (UnsatisfiedLinkError ule) {
       Log.errorMessage(ule.getMessage());
     }
+
+		inParameterTypes = new Hashtable(13);
+		addInParameterType(CODENAME_REFLECTOGRAMMA);
+		addInParameterType(CODENAME_DADARA_TACTIC);
+		addInParameterType(CODENAME_DADARA_EVENT_SIZE);
+		addInParameterType(CODENAME_DADARA_CONN_FALL_PARAMS);
+		addInParameterType(CODENAME_DADARA_MIN_LEVEL);
+		addInParameterType(CODENAME_DADARA_MAX_LEVEL_NOISE);
+		addInParameterType(CODENAME_DADARA_MIN_LEVEL_TO_FIND_END);
+		addInParameterType(CODENAME_DADARA_MIN_WELD);
+		addInParameterType(CODENAME_DADARA_MIN_CONNECTOR);
+		addInParameterType(CODENAME_DADARA_STRATEGY);
+		addInParameterType(CODENAME_DADARA_EVENT_ARRAY);
+		addInParameterType(CODENAME_DADARA_ETALON_EVENT_ARRAY);
+		addInParameterType(CODENAME_DADARA_THRESHOLDS);
+		outParameterTypes = new Hashtable(2);
+		addOutParameterType(CODENAME_DADARA_EVENT_ARRAY);
+		addOutParameterType(CODENAME_DADARA_ALARM_ARRAY);
+	}
+
+  public DadaraAnalysisManager(Result measurementResult,
+															 Analysis analysis,
+															 Set etalon) throws AnalysisException {
+		this.parameters = new Hashtable(20);
+		this.addSetParameters(measurementResult.getParameters());
+		this.addSetParameters(analysis.getCriteriaSet().getParameters());
+		this.addSetParameters(etalon.getParameters());
   }
 
-  public DadaraAnalysisManager() {
-  }
+  public native double[] ana(int dadaraTactic,
+														 double[] reflectogramma,
+														 double dx,
+														 double dadaraConnFallParams,
+														 double dadaraMinLevel,
+														 double dadaraMaxLevelNoise,
+														 double dadaraMinLevelToFindEnd,
+														 double dadaraMinWeld,
+														 double dadaraMinConnector,
+														 int dadaraStrategy);       
 
-  public native double[] ana(int waveletType,
-														 double[] y,                  //the refl. itself
-														 double d_x,                  //dx
-														 double connFallParams,       // ?
-														 double min_level,            // ?
-														 double max_level_noise,      // ?
-														 double min_level_to_find_end,// ?
-														 double min_weld,             // ?
-														 double min_connector,        // ?
-														 int strategy);               // the minuit strategy
-
-  public Hashtable analyse(Hashtable criterias, Hashtable resultparameters, Hashtable etalonparameters) {
-    BellcoreReader br = new BellcoreReader();    
-    BellcoreStructure bs = br.getData((byte[])resultparameters.get(CODENAME_REFLECTOGRAMMA));
-    double[] y = new double[bs.dataPts.TNDP];
+	public SetParameter[] analyse() throws AnalysisException {
+		byte[] rawData = (byte[])this.parameters.get(CODENAME_REFLECTOGRAMMA);
+		if (rawData == null) 
+			throw new AnalysisException("Cannot get parameter of codename: '" + CODENAME_REFLECTOGRAMMA + "'  from map");
+		BellcoreStructure bs = (new BellcoreReader()).getData(rawData);
+		double[] reflectogramma = new double[bs.dataPts.TNDP];
     for (int i = 0; i < bs.dataPts.TPS[0]; i++)
-      y[i] = (double)(65535 - bs.dataPts.DSF[0][i])/1000d;
-
+      reflectogramma[i] = (double)(65535 - bs.dataPts.DSF[0][i])/1000d;
+		double dx = (double)(bs.fxdParams.AR - bs.fxdParams.AO)*3d*1000d / ((double)bs.dataPts.TNDP * (double)bs.fxdParams.GI);
 //----------------
-	try {
-		FileOutputStream fos;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HHmmss");
-		String tstr = sdf.format(new Date(System.currentTimeMillis()));
-		fos = new FileOutputStream("./logs/" + tstr + "-reflectogramma.sor");
-		Object refl = resultparameters.get(CODENAME_REFLECTOGRAMMA);
-		fos.write((byte[])refl);
-		fos.close();
-	}
-	catch (IOException ioe) {
-		System.out.println(ioe.getMessage());
-		ioe.printStackTrace();
-	}
+try {
+	FileOutputStream fos;
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HHmmss");
+	String tstr = sdf.format(new Date(System.currentTimeMillis()));
+	fos = new FileOutputStream("./logs/" + tstr + "-reflectogramma.sor");
+	fos.write((byte[])rawData);
+	fos.close();
+}
+catch (IOException ioe) {
+	System.out.println(ioe.getMessage());
+	ioe.printStackTrace();
+}
 //----------------
-
-    double d_x = (double)(bs.fxdParams.AR - bs.fxdParams.AO)*3d*1000d / ((double)bs.dataPts.TNDP * (double)bs.fxdParams.GI);
-
-    int useLinear;
-		int eventsize;
-		double connFallParams;
-		double min_level;
-		double max_level_noise;
-		double min_level_to_find_end;
-		double min_weld;
-		double min_connector;
-		int strategy;
+		int dadaraTactic;
+		int dadaraEventSize;
+		double dadaraConnFallParams;
+		double dadaraMinLevel;
+		double dadaraMaxLevelNoise;
+		double dadaraMinLevelToFindEnd;
+		double dadaraMinWeld;
+		double dadaraMinConnector;
+		int dadaraStrategy;
 		try {
-			useLinear = (new ByteArray((byte[])criterias.get(CODENAME_TACTIC))).toInt();
-			eventsize = (new ByteArray((byte[])criterias.get(CODENAME_EVENT_SIZE))).toInt();
-			connFallParams = (new ByteArray((byte[])criterias.get(CODENAME_CONN_FALL_PARAMS))).toDouble();
-			min_level = (new ByteArray((byte[])criterias.get(CODENAME_MIN_LEVEL))).toDouble();
-			max_level_noise = (new ByteArray((byte[])criterias.get(CODENAME_MAX_LEVEL_NOISE))).toDouble();
-			min_level_to_find_end = (new ByteArray((byte[])criterias.get(CODENAME_MIN_LEVEL_TO_FIND_END))).toDouble();
-			min_weld = (new ByteArray((byte[])criterias.get(CODENAME_MIN_WELD))).toDouble();
-			min_connector = (new ByteArray((byte[])criterias.get(CODENAME_MIN_CONNECTOR))).toDouble();
-			strategy = (new ByteArray((byte[])criterias.get(CODENAME_STRATEGY))).toInt();
+			dadaraTactic = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_TACTIC))).toInt();
+			dadaraEventSize = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_EVENT_SIZE))).toInt();
+			dadaraConnFallParams = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_CONN_FALL_PARAMS))).toDouble();
+			dadaraMinLevel = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_MIN_LEVEL))).toDouble();
+			dadaraMaxLevelNoise = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_MAX_LEVEL_NOISE))).toDouble();
+			dadaraMinLevelToFindEnd = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_MIN_LEVEL_TO_FIND_END))).toDouble();
+			dadaraMinWeld = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_MIN_WELD))).toDouble();
+			dadaraMinConnector = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_MIN_CONNECTOR))).toDouble();
+			dadaraStrategy = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_STRATEGY))).toInt();
 		}
-		catch(IOException e) {
-			Log.errorException(e);
-			return null;
+		catch(IOException ioe) {
+			Log.errorException(ioe);
+			throw new AnalysisException("Cannot get some of analysis criteria", ioe);
 		}
 //-------------------------------------------------------------
 Log.debugMessage("$$$$$$$$$ DadaraAnalysisManager.analyse:", Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ Number of points: " + y.length, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ d_x == " + d_x, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ useLinear == " + useLinear, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ eventsize == " + eventsize, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ connFallParams == " + connFallParams, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ min_level == " + min_level, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ max_level_noise == " + max_level_noise, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ min_level_to_find_end == " + min_level_to_find_end, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ min_weld == " + min_weld, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ min_connector == " + min_connector, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ strategy == " + strategy, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ Number of points: " + reflectogramma.length, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ dx == " + dx, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ dadaraTactic == " + dadaraTactic, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ dadaraEventSize == " + dadaraEventSize, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ dadaraConnFallParams == " + dadaraConnFallParams, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ dadaraMinLevel == " + dadaraMinLevel, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ dadaraMaxLevelNoise == " + dadaraMaxLevelNoise, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ dadaraMinLevelToFindEnd == " + dadaraMinLevelToFindEnd, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ dadaraMinWeld == " + dadaraMinWeld, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ dadaraMinConnector == " + dadaraMinConnector, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ dadaraStrategy == " + dadaraStrategy, Log.DEBUGLEVEL05);
 //-------------------------------------------------------------
-
-		double[] tmp = ana(useLinear,
-											 y,
-											 d_x,
-											 connFallParams,
-											 min_level,
-											 max_level_noise,
-											 min_level_to_find_end,
-											 min_weld,
-											 min_connector,
-											 strategy);
-		int n_events = tmp.length / ReflectogramEvent.NUMBER_OF_PARAMETERS;
-		ReflectogramEvent[] revents = new ReflectogramEvent[n_events];
-		for(int i = 0; i < n_events; i++) {
+		double[] tmp = ana(dadaraTactic,
+											 reflectogramma,
+											 dx,
+											 dadaraConnFallParams,
+											 dadaraMinLevel,
+											 dadaraMaxLevelNoise,
+											 dadaraMinLevelToFindEnd,
+											 dadaraMinWeld,
+											 dadaraMinConnector,
+											 dadaraStrategy);
+		int nEvents = tmp.length / ReflectogramEvent.NUMBER_OF_PARAMETERS;
+		ReflectogramEvent[] revents = new ReflectogramEvent[nEvents];
+		for(int i = 0; i < nEvents; i++) {
 			revents[i] = new ReflectogramEvent();
 			revents[i].setParams(tmp, i * ReflectogramEvent.NUMBER_OF_PARAMETERS);
-			revents[i].setDeltaX(d_x);
+			revents[i].setDeltaX(dx);
 		}
 //----------
 Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.length == " + tmp.length + ", N of pars == " + ReflectogramEvent.NUMBER_OF_PARAMETERS, Log.DEBUGLEVEL05);
 //----------
 //******************
 		//Here we get etalon parameters
-		ReflectogramEvent[] etalon = ReflectogramEvent.fromByteArray((byte[])etalonparameters.get("dadara_etalon_event_array"));
+		byte[] etalonData = (byte[])this.parameters.get(CODENAME_DADARA_ETALON_EVENT_ARRAY);
+		ReflectogramEvent[] etalon = ReflectogramEvent.fromByteArray(etalonData);
 
-		int delta = 5;
 		//correct end of trace
+		int delta = 5;
 		if (revents.length > etalon.length)	{
 			ReflectogramEvent endEvent = etalon[etalon.length - 1];
 			for (int i = revents.length - 1; i >= 0; i--)	{
@@ -162,10 +203,66 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 				}
 			}
 		}
-
 //******************
-		Hashtable analysisresultparameters = new Hashtable(1);
-		analysisresultparameters.put(CODENAME_DADARA_EVENT_ARRAY, ReflectogramEvent.toByteArray(revents));
-		return analysisresultparameters;
-  }
+		Identifier identifier = null;//MeasurementControlModule.getNewIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY);
+		ParameterType parTypEventArray = (ParameterType)outParameterTypes.get(CODENAME_DADARA_EVENT_ARRAY);
+		if (parTypEventArray == null)
+			throw new AnalysisException("Cannot find in output map parameter type of codename: '" + CODENAME_DADARA_EVENT_ARRAY + "'");
+		SetParameter[] arParameters = new SetParameter[1];
+		arParameters[0] = new SetParameter(identifier,
+																			 parTypEventArray.getId(),
+																			 ReflectogramEvent.toByteArray(revents));
+		return arParameters;
+	}
+
+	private void addSetParameters(SetParameter[] setParameters) throws AnalysisException {
+		for (int i = 0; i < setParameters.length; i++)
+			this.addParameter(setParameters[i]);
+	}
+
+	private void addParameter(SetParameter parameter) throws AnalysisException {
+		Identifier parTypId = parameter.getTypeId();
+		ParameterType parTyp = (ParameterType)inParameterTypes.get(parTypId);
+		if (parTyp != null) {
+			String parTypCodename = parTyp.getCodename();
+			if (!this.parameters.containsKey(parTypCodename))
+				this.parameters.put(parTypCodename, parameter.getValue());
+			else
+				Log.errorMessage("Parameter of codename '" + parTypCodename + "' already added to map; id: '" + parameter.getId() + "'");
+		}
+		throw new AnalysisException("Cannot find in input map parameter type of id: '" + parTypId + "'");
+	}
+
+	private static void addInParameterType(String codename) {
+		try {
+			ParameterType parTyp = ParameterTypeDatabase.retrieveForCodename(codename);
+			Identifier parTypId = parTyp.getId();
+			if (!inParameterTypes.containsKey(parTypId))
+				inParameterTypes.put(parTypId, parTyp);
+			else
+				Log.errorMessage("Input parameter type of codename '" + codename + "' and id '" + parTypId.toString() + "' already added to map");
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+	}
+
+	private static void addOutParameterType(String codename) {
+		try {
+			ParameterType parTyp = ParameterTypeDatabase.retrieveForCodename(codename);
+			if (!outParameterTypes.containsKey(codename))
+				outParameterTypes.put(codename, parTyp);
+			else
+				Log.errorMessage("Output parameter type of codename '" + codename + "' and id '" + parTyp.getId().toString() + "' already added to map");
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+	}
 }

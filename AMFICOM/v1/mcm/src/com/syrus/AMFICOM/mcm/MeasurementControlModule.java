@@ -165,7 +165,7 @@ public class MeasurementControlModule extends Thread {
 		testProcessor.start();
 	}
 
-	protected static Identifier createIdentifier(String entity) {
+	protected static Identifier getNewIdentifier(String entity) {
 		/*	!!!*/
 		return new Identifier(entity);
 	}
