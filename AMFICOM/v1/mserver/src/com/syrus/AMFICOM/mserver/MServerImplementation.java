@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.16 2004/10/15 10:34:26 max Exp $
+ * $Id: MServerImplementation.java,v 1.17 2004/10/19 14:43:32 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -90,7 +90,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/10/15 10:34:26 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/19 14:43:32 $
  * @author $Author: max $
  * @module mserver_v1
  */
@@ -385,7 +385,12 @@ public class MServerImplementation extends MServerPOA {
 			throw new AMFICOMRemoteException();
 		}
 	}
-
+	
+    public Measurement_Transferable transmitMeasurement(Identifier_Transferable id_Transferable) {
+        //TODO Implement this method
+        return null;
+    }
+    
 	public MeasurementPort_Transferable transmitMeasurementPort(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {

@@ -88,6 +88,10 @@ module corba {
 				in com::syrus::AMFICOM::general::corba::Identifier_Transferable id)
 				raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 				
+		com::syrus::AMFICOM::measurement::corba::Measurement_Transferable transmitMeasurement(
+				in com::syrus::AMFICOM::general::corba::Identifier_Transferable id)
+				raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
 		com::syrus::AMFICOM::measurement::corba::MeasurementSeq_Transferable transmitMeasurements(
 				in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable id)
 				raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
