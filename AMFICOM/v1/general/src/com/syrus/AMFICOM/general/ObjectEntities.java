@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.44 2005/01/20 13:34:04 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.45 2005/01/31 07:05:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/01/20 13:34:04 $
+ * @version $Revision: 1.45 $, $Date: 2005/01/31 07:05:14 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -48,6 +48,7 @@ public final class ObjectEntities {
 	public static final String CHARACTERISTIC_ENTITY = "Characteristic";
 
 	/*	Event	*/
+	public static final String EVENTPARAMETER_ENTITY = "EventParameter";
 	public static final String EVENT_ENTITY = "Event";
 	public static final String ALARM_ENTITY = "Alarm";
 
@@ -151,8 +152,9 @@ public final class ObjectEntities {
 	 */
 	public static final short EVENT_MIN_ENTITY_CODE = 0x0081;
 
-	public static final short EVENT_ENTITY_CODE = EVENT_MIN_ENTITY_CODE;
-	public static final short ALARM_ENTITY_CODE = 0x0082;
+	public static final short EVENTPARAMETER_ENTITY_CODE = EVENT_MIN_ENTITY_CODE;
+	public static final short EVENT_ENTITY_CODE = 0x0082;
+	public static final short ALARM_ENTITY_CODE = 0x0083;
 
 	public static final short EVENTTYPE_ENTITY_CODE = 0x00C1;
 	public static final short ALARMTYPE_ENTITY_CODE = 0x00C2;
@@ -324,6 +326,7 @@ public final class ObjectEntities {
 
 		else if (entity.equals(CHARACTERISTIC_ENTITY)) return CHARACTERISTIC_ENTITY_CODE;
 
+		else if (entity.equals(EVENTPARAMETER_ENTITY)) return EVENTPARAMETER_ENTITY_CODE;
 		else if (entity.equals(EVENT_ENTITY)) return EVENT_ENTITY_CODE;
 		else if (entity.equals(ALARM_ENTITY)) return ALARM_ENTITY_CODE;
 
@@ -434,6 +437,8 @@ public final class ObjectEntities {
 			case CHARACTERISTIC_ENTITY_CODE:
 				return CHARACTERISTIC_ENTITY;
 
+			case EVENTPARAMETER_ENTITY_CODE:
+				return EVENTPARAMETER_ENTITY;
 			case EVENT_ENTITY_CODE:
 				return EVENT_ENTITY;
 			case ALARM_ENTITY_CODE:
