@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.9 2005/02/11 12:10:37 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.10 2005/02/11 13:58:51 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/02/11 12:10:37 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/11 13:58:51 $
  * @module
  */
 
@@ -195,11 +195,6 @@ public class CoreAnalysisManager
 				pars[0], pars[4], pars[3], pars[1], pars[2], meanAttenuation,
 				reflSize, nReflSize);
 
-//		// FIXME
-//		ReflectogramEvent ev0 = ep[0];
-// 		ev0.setEnd(ep[ep.length - 1].getEnd());
-//		ep = new ReflectogramEvent[] { ev0 };
-		
 		// определяем уровень шума для фитировки
 		//double noiseLevel = calcNoise3s(y);
 		double[] noiseArray = calcNoiseArray(y, null);
@@ -217,11 +212,9 @@ public class CoreAnalysisManager
 		// определение параметров потерь и отражения (по смежным событиям)
 		ReflectogramEvent.calcMutualParameters(ep, y);
 
-		// теперь еще и формируем пороги
-		//for (int i = 0; i < ep.length; i++)
-		//	ep[i].setDefaultThreshold(y);
-		for (int i = 0; i < ep.length; i++)
-			ep[i].setDefaultThreshold(bs, bellcoreTraces);
+		// теперь еще и формируем пороги -- FIXME - сделать
+//		for (int i = 0; i < ep.length; i++)
+//			ep[i].setDefaultThreshold(bs, bellcoreTraces);
 
 		return new ModelTraceManager(ep, el0[0].getMFClone());
 	}
