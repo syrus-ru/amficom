@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.17 2005/02/07 14:21:04 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.18 2005/02/08 09:12:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/02/07 14:21:04 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/08 09:12:28 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -132,9 +132,19 @@ public abstract class StorableObjectPool {
 		this.deleteStorableObject(id);
 	}
 
-	protected void deleteImpl(final List ids) throws DatabaseException, CommunicationException {
-		for (Iterator it = ids.iterator(); it.hasNext();) {
-			Identifier id = (Identifier) it.next();
+	protected void deleteImpl(final List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+		Object object;
+		Identifier id;
+		for (Iterator it = objects.iterator(); it.hasNext();) {
+			object = it.next();
+			if (object instanceof Identifier)
+				id = (Identifier) object;
+			else
+				if (object instanceof Identified)
+					id = ((Identified) object).getId();
+				else
+					throw new IllegalDataException("StorableObjectPool.deleteImpl | Object " + object.getClass().getName() + " isn't Identifier or Identified");
+
 			Short entityCode = new Short(id.getMajor());
 			LRUMap lruMap = (LRUMap) this.objectPoolMap.get(entityCode);
 			if (lruMap != null)
@@ -143,12 +153,12 @@ public abstract class StorableObjectPool {
 				Log.errorMessage("StorableObjectPool.deleteImpl | Cannot find object pool for entity '" + ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode);
 		}
 
-		this.deleteStorableObjects(ids);
+		this.deleteStorableObjects(objects);
 	}
 
 	protected abstract void deleteStorableObject(final Identifier id) throws DatabaseException, CommunicationException;
 
-	protected abstract void deleteStorableObjects(final List ids) throws DatabaseException, CommunicationException;
+	protected abstract void deleteStorableObjects(final List objects) throws DatabaseException, CommunicationException, IllegalDataException;
 
 	/**
 	 * This method is only invoked by this class' descendants, using their
