@@ -51,8 +51,6 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			+ COMMA
 			+ COLUMN_MODIFIER_ID
 			+ COMMA
-			+ COLUMN_CREATED
-			+ COMMA
 			+ COLUMN_DESCRIPTION
 			+ SQL_FROM
 			+ ObjectEntities.MEASUREMENTTYPE_ENTITY
