@@ -341,8 +341,8 @@ public class OpticalOptimizerContext
     }
   //------------------------------------------------------------------------------------------------------
   public void setCableLinksOptimizeAttributes()
-  { for( Enumeration cls = mdiMain.scheme.getAllCableLinks(); cls.hasMoreElements();) //по всем кабел€м ( то есть по всем  рЄбрам )
-    { SchemeCableLink scl = (SchemeCableLink)cls.nextElement();
+  { for( Iterator cls = mdiMain.scheme.getAllCableLinks().iterator(); cls.hasNext();) //по всем кабел€м ( то есть по всем  рЄбрам )
+    { SchemeCableLink scl = (SchemeCableLink)cls.next();
       String scl_id = scl.id;
       ElementAttribute att = (ElementAttribute)scl.attributes.get("optimizerRibAttribute");
       //если этот линк уже был прописан при загрузке в путь, то не передааЄм его в dll, то есть его  дл€ нас не существует
@@ -378,14 +378,14 @@ public class OpticalOptimizerContext
   }
   //------------------------------------------------------------------------------------------------------
   public void setLinksOptimizeAttributes()
-  { for( Enumeration ls = mdiMain.scheme.getAllLinks(); ls.hasMoreElements();) // по всем линкам
-    { SchemeLink sl = (SchemeLink)ls.nextElement();
+  { for( Iterator ls = this.mdiMain.scheme.getAllLinks().iterator(); ls.hasNext();) // по всем линкам
+    { SchemeLink sl = (SchemeLink)ls.next();
       ElementAttribute att = (ElementAttribute )sl.attributes.get("optimizerRibAttribute");
       //  »—овые линки пропускаем, помеча€ их как "passive"
       if( isLinkRtuConnected(sl) )
       { if(att==null)
         { att = new ElementAttribute();
-          att.id = mdiMain.aContext.getDataSourceInterface().GetUId(ElementAttribute.typ);
+          att.id = this.mdiMain.aContext.getDataSourceInterface().GetUId(ElementAttribute.typ);
           att.name = "јктивность";
           att.type_id = "optimizerRibAttribute";
           att.value = "passive";
@@ -398,7 +398,7 @@ public class OpticalOptimizerContext
       if( isLinkTestedBefore(sl.getId()) )
       { if(att==null)
         { att = new ElementAttribute();
-          att.id = mdiMain.aContext.getDataSourceInterface().GetUId(ElementAttribute.typ);
+          att.id = this.mdiMain.aContext.getDataSourceInterface().GetUId(ElementAttribute.typ);
           att.name = "јктивность";
           att.type_id = "optimizerRibAttribute";
           att.value = "tested";

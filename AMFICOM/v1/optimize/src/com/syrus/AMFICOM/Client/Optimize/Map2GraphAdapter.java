@@ -158,8 +158,8 @@ private int processAllCables()
 {   int wavelength = mdiMain.optimizerContext.wavelength;
     int nscl=0;// счётчик добавленных линков
     String atten_str = "Attenuation_" + Integer.toString(wavelength);
-    for( Enumeration cls = scheme.getAllCableLinks(); cls.hasMoreElements();) // по всем кабелям ( то есть по всем  рёбрам )
-    {  SchemeCableLink scl = (SchemeCableLink) cls.nextElement();
+    for( Iterator cls = scheme.getAllCableLinks().iterator(); cls.hasNext();) // по всем кабелям ( то есть по всем  рёбрам )
+    {  SchemeCableLink scl = (SchemeCableLink) cls.next();
        String scl_id = scl.id ;
        ElementAttribute att = (ElementAttribute)scl.attributes.get("optimizerRibAttribute");
        //если этот линк уже был прописан при загрузке в путь, то не передааём его в dll, то есть его  для нас не существует
@@ -213,10 +213,10 @@ private int processAllCables()
 // С Ч И Т Ы В А Е М   В С Е   Л И Н К И (по отдельным линкам тоже пропускается тестовый сигнал)
 private int processAllLinks()
 {   int nsl = 0;// счётчик добавленных линков
-    int wavelength = mdiMain.optimizerContext.wavelength;
-    mdiMain.optimizerContext.unilinks.clear();// очищаем список имён, которые надо брать в скобки
-    for( Enumeration ls = scheme.getAllLinks(); ls.hasMoreElements();) // по всем линкам
-    { SchemeLink sl = (SchemeLink)ls.nextElement();
+    int wavelength = this.mdiMain.optimizerContext.wavelength;
+    this.mdiMain.optimizerContext.unilinks.clear();// очищаем список имён, которые надо брать в скобки
+    for( Iterator ls = this.scheme.getAllLinks().iterator();  ls.hasNext();) // по всем линкам
+    { SchemeLink sl = (SchemeLink)ls.next();
       String sl_id = sl.id ;
       ElementAttribute att = (ElementAttribute )sl.attributes.get("optimizerRibAttribute");
       if(att == null)
@@ -225,24 +225,24 @@ private int processAllLinks()
       }
       if( att.value.equals("tested") || att.value.equals("passive") ) // пассиавные и ранее протестированные кабели пропускаем
     continue;
-      double len_db = mdiMain.optimizerContext.calcLinkAttenuation( sl, wavelength);// len_db = length*attenuation - длина в децибелах
+      double len_db = this.mdiMain.optimizerContext.calcLinkAttenuation( sl, wavelength);// len_db = length*attenuation - длина в децибелах
       if (len_db == -1)
  return -1;
      String rib_str_id = sl.getId();
      // узнаём узлы, которые соединяет данный линк:
-     String n1_str_id = get_shemeElementId_by_portId(mdiMain.scheme, sl.source_port_id);
-     String n2_str_id = get_shemeElementId_by_portId(mdiMain.scheme, sl.target_port_id);
+     String n1_str_id = get_shemeElementId_by_portId(this.mdiMain.scheme, sl.source_port_id);
+     String n2_str_id = get_shemeElementId_by_portId(this.mdiMain.scheme, sl.target_port_id);
      String unirib_str_id = isNodesLinked(n1_str_id, n2_str_id, rib_str_id);// unirib - линк, который выбирается один из набора линков между парой устройств
      if(!unirib_str_id.equals("")) // если эти два элемента уже соединены линком (именно линком), то не добавляем нового ребра
      {  //System.out.println("CreateGraphByMap(Scheme):Между устройствами "+n1_str_id+" и "+n1_str_id+" уже существует линк "+unirib_str_id+". Дублирующий линк "+rib_str_id+" проигнорирован");
         // поскольку  n1 и n2 уже соединены unirib_str_id, и есть второй линк rib_str_id, то имя первого линка надо взять в скобки
-        if(!mdiMain.optimizerContext.unilinks.contains(unirib_str_id))
-        { mdiMain.optimizerContext.unilinks.add(unirib_str_id);
+        if(!this.mdiMain.optimizerContext.unilinks.contains(unirib_str_id))
+        { this.mdiMain.optimizerContext.unilinks.add(unirib_str_id);
         }
      }
      else // добавляем новое ребро
      { // если такой пары ещё нет, то дописываем это в нашу таблицу
-       links.add(n1_str_id);links.add(n2_str_id); links.add(rib_str_id);// пишем тройками "вершина-вершина-линк"
+       links.add(n1_str_id);links.add(n2_str_id); this.links.add(rib_str_id);// пишем тройками "вершина-вершина-линк"
        if(n1_str_id.equals("error"))
        { System.err.println("CreateGraphByMap(Scheme): Incorrect string of node identificator. Impossible to start optimization");
          javax.swing.JOptionPane.showMessageDialog( Environment.getActiveWindow(), "Название элемента схемы, содержащего порт "+sl.source_port_id
@@ -259,11 +259,11 @@ private int processAllLinks()
        double n1_len = Node.default_att, n2_len = Node.default_att; //затухание по умолчанию (статическое поле)
        // сварки в муфтах игнорируем: если длина линка = 0, то значит это фиктивный линк в муфте (то есть сварка)
        if( len_db == 0 )
-       { g.add_rib(n1_str_id, "fiber", n1_len/2, n2_str_id, n2_len/2, len_db, rib_str_id);
+       { this.g.add_rib(n1_str_id, "fiber", n1_len/2, n2_str_id, n2_len/2, len_db, rib_str_id);
          nsl++;
        }
        else
-       { g.add_rib(n1_str_id, "fiber", n1_len, n2_str_id, n2_len, len_db, rib_str_id);
+       { this.g.add_rib(n1_str_id, "fiber", n1_len, n2_str_id, n2_len, len_db, rib_str_id);
          nsl++;
        }
      }
@@ -301,7 +301,7 @@ private int processAllLinks()
  // Обращаться к g было бы ошибочно, так как нас интересуют только дублирующиеся _линки_. Кабели могут дублироваться без ограничений.
  private String isNodesLinked(String n1, String n2, String r)
  { String result = "", link_name, node1, node2;
-   for(Iterator ils = links.iterator(); ils.hasNext(); ) // ils - Iterator of LinkS
+   for(Iterator ils = this.links.iterator(); ils.hasNext(); ) // ils - Iterator of LinkS
    { node1 = (String) ils.next(); node2 = (String)ils.next(); link_name = (String)ils.next();
      if( (node1.equals(n1)&&node2.equals(n2)) || (node1.equals(n2)&&node2.equals(n1)) ) //граф ненаправленный => порядок не важен
      {  result = link_name;// имя линка

@@ -1,11 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Command.Optimize;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import java.awt.*;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.Optimize.*;

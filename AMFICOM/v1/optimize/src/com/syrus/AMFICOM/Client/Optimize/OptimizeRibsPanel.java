@@ -95,24 +95,24 @@ public class OptimizeRibsPanel extends JPanel implements OperationListener
 	//--------------------------------------------------------------------------------------------------------------
 	// обновить таблицу узлов данными со схемы
 	public void updateTable()
-	{	JTable table = tablePane.getTable();
+	{	JTable table = this.tablePane.getTable();
 		//Оновить таблицу
-		mouseSelect = false;
+		this.mouseSelect = false;
 		//Здесь очищаем выбранные элементы у табли
 		table.clearSelection();
-		mouseSelect = true;
+		this.mouseSelect = true;
 		DataSet dataSet = new DataSet();// еcли ничего не получится, то останется пустая таблица
-		if(mdiMain != null)
-		{	if(mdiMain.scheme != null)
+		if(this.mdiMain != null)
+		{	if(this.mdiMain.scheme != null)
 			{ Vector sum = new Vector(100,100);
-        for(Enumeration cls = mdiMain.scheme.getAllCableLinks(); cls.hasMoreElements();)
-        { sum.add(cls.nextElement());}
-        for(Enumeration ls = mdiMain.scheme.getAllLinks(); ls.hasMoreElements();)
-        { sum.add(ls.nextElement());}
+        for(Iterator cls = mdiMain.scheme.getAllCableLinks().iterator(); cls.hasNext();)
+        { sum.add(cls.next());}
+        for(Iterator ls = this.mdiMain.scheme.getAllLinks().iterator(); ls.hasNext();)
+        { sum.add(ls.next());}
         dataSet = new DataSet(sum.elements());
 			}
 		}
-		tablePane.setContents(dataSet);
+		this.tablePane.setContents(dataSet);
     table.setRowHeight( getFont().getSize() + 8 );
 	}
 	//--------------------------------------------------------------------------------------------------------------

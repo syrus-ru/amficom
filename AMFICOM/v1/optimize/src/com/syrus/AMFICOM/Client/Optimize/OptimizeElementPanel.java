@@ -107,7 +107,7 @@ public class OptimizeElementPanel extends JPanel implements OperationListener
     if(mdiMain != null)
     {	if(mdiMain.scheme != null)
       {  //dataSet = new DataSet(mdiMain.scheme.getTopLevelElements());
-         dataSet = new DataSet(mdiMain.scheme.getAllTopElements()); //getAllTopElements() возвращает все схемные-элементы на всех уровнях
+         dataSet = new DataSet(mdiMain.scheme.getAllTopElements().iterator() ); //getAllTopElements() возвращает все схемные-элементы на всех уровнях
       }
     }
     tablePane.setContents(dataSet);
