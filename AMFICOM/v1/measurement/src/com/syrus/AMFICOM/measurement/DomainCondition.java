@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/30 14:34:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2004/10/01 07:41:53 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 public class DomainCondition implements StorableObjectCondition {
@@ -26,6 +26,11 @@ public class DomainCondition implements StorableObjectCondition {
 	public DomainCondition(Domain domain) {
 		this.domain = domain;
 	}
+    
+    public DomainCondition(Domain domain, Short entityCode) {
+        this(domain);
+        this.entityCode = entityCode; 
+    }
 
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
