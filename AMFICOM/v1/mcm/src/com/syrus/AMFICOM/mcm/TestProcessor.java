@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.14 2004/08/12 13:35:08 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.15 2004/08/13 17:43:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/12 13:35:08 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/13 17:43:52 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -73,6 +73,10 @@ public abstract class TestProcessor extends SleepButWorkThread {
 			Log.errorException(uoe);
 		}
 		this.cleanup();
+	}
+
+	protected void processError() {
+		
 	}
 
 	void cleanup() {

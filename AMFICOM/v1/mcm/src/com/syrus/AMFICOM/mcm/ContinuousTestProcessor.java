@@ -1,5 +1,5 @@
 /*
- * $Id: ContinuousTestProcessor.java,v 1.8 2004/07/30 14:51:25 bob Exp $
+ * $Id: ContinuousTestProcessor.java,v 1.9 2004/08/13 17:43:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/07/30 14:51:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2004/08/13 17:43:52 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -112,8 +112,7 @@ public class ContinuousTestProcessor extends TestProcessor {
 			if (this.nextTimeStamp != null) {
 				if (this.nextTimeStamp.getTime() <= System.currentTimeMillis()) {
 					try {
-						measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY, 10);
-						super.clearFalls();
+						measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE, 10);
 					}
 					catch (IllegalObjectEntityException ioee) {
 						Log.errorException(ioee);

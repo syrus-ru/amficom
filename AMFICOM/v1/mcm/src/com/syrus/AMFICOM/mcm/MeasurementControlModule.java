@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.18 2004/08/12 13:35:08 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.19 2004/08/13 17:43:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.NewIdentifierPool;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/12 13:35:08 $
+ * @version $Revision: 1.19 $, $Date: 2004/08/13 17:43:52 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -139,13 +139,13 @@ public class MeasurementControlModule extends SleepButWorkThread {
 //			}
 
 			try {
-				Identifier id = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_ENTITY_CODE, 10);
+				//Identifier id = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_ENTITY_CODE, 10);
+				Identifier id = new Identifier(mServerRef.getGeneratedIdentifier(ObjectEntities.ANALYSIS_ENTITY_CODE));
 				System.out.println("Received: " + id);
-				super.clearFalls();
 			}
 			catch (Exception e) {
 				Log.errorException(e);
-				super.sleepCauseOfFall();
+				activateMServerReference();
 			}
 
 			try {
@@ -179,6 +179,10 @@ public class MeasurementControlModule extends SleepButWorkThread {
 	protected static Identifier getNewIdentifier(String entity) {
 		/*	!!!*/
 		return new Identifier(entity);
+	}
+
+	protected void processError() {
+		
 	}
 
 	protected void shutdown() {/*!!	Need synchronization	*/

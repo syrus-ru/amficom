@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.14 2004/07/30 15:01:08 bob Exp $
+ * $Id: Transceiver.java,v 1.15 2004/08/13 17:43:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/07/30 15:01:08 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2004/08/13 17:43:52 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -146,6 +146,10 @@ public class Transceiver extends SleepButWorkThread {
 //				Log.errorException(ie);
 //			}
 		}//while
+	}
+
+	protected void processError() {
+		
 	}
 
 	protected void shutdown() {
