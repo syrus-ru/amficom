@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.8 2005/02/18 17:48:03 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.9 2005/02/22 11:17:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/18 17:48:03 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/02/22 11:17:53 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -52,7 +52,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	}
 	
 	private AdministrationStorableObjectPool(Class cacheMapClass) {
-		super(cacheMapClass);
+		super(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, cacheMapClass);
 	}
 
 	public static void init(AdministrationObjectLoader aObjectLoader1, final int size) {
