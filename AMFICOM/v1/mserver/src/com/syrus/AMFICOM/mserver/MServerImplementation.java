@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.41 2005/04/04 14:13:13 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.42 2005/04/05 10:48:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -101,7 +101,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/04/04 14:13:13 $
+ * @version $Revision: 1.42 $, $Date: 2005/04/05 10:48:58 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -692,6 +692,50 @@ public class MServerImplementation extends MServerPOA {
 		return transferables;
 	}
 
+	public MeasurementPort_Transferable[] transmitMeasurementPorts(Identifier_Transferable[] ids_Transferable)
+			throws AMFICOMRemoteException {
+		java.util.Set ids = Identifier.fromTransferables(ids_Transferable);
+
+		java.util.Set objects = null;
+		try {
+			objects = ConfigurationStorableObjectPool.getStorableObjects(ids, true);
+		}
+		catch (ApplicationException ae) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		MeasurementPort_Transferable[] transferables = new MeasurementPort_Transferable[objects.size()];
+		int i = 0;
+		MeasurementPort measurementPort;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			measurementPort = (MeasurementPort) it.next();
+			transferables[i] = (MeasurementPort_Transferable) measurementPort.getTransferable();
+		}
+		return transferables;
+	}
+
+	public MonitoredElement_Transferable[] transmitMonitoredElements(Identifier_Transferable[] ids_Transferable)
+			throws AMFICOMRemoteException {
+		java.util.Set ids = Identifier.fromTransferables(ids_Transferable);
+
+		java.util.Set objects = null;
+		try {
+			objects = ConfigurationStorableObjectPool.getStorableObjects(ids, true);
+		}
+		catch (ApplicationException ae) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		MonitoredElement_Transferable[] transferables = new MonitoredElement_Transferable[objects.size()];
+		int i = 0;
+		MonitoredElement monitoredElement;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			monitoredElement = (MonitoredElement) it.next();
+			transferables[i] = (MonitoredElement_Transferable) monitoredElement.getTransferable();
+		}
+		return transferables;
+	}
+
 
 
 
@@ -987,6 +1031,77 @@ public class MServerImplementation extends MServerPOA {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
 		}
+	}
+
+
+
+
+
+
+	public MeasurementType_Transferable[] transmitMeasurementTypes(Identifier_Transferable[] ids_Transferable)
+			throws AMFICOMRemoteException {
+		java.util.Set ids = Identifier.fromTransferables(ids_Transferable);
+
+		java.util.Set objects = null;
+		try {
+			objects = MeasurementStorableObjectPool.getStorableObjects(ids, true);
+		}
+		catch (ApplicationException ae) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[objects.size()];
+		int i = 0;
+		MeasurementType measurementType;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			measurementType = (MeasurementType) it.next();
+			transferables[i] = (MeasurementType_Transferable) measurementType.getTransferable();
+		}
+		return transferables;
+	}
+
+	public AnalysisType_Transferable[] transmitAnalysisTypes(Identifier_Transferable[] ids_Transferable)
+			throws AMFICOMRemoteException {
+		java.util.Set ids = Identifier.fromTransferables(ids_Transferable);
+
+		java.util.Set objects = null;
+		try {
+			objects = MeasurementStorableObjectPool.getStorableObjects(ids, true);
+		}
+		catch (ApplicationException ae) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[objects.size()];
+		int i = 0;
+		AnalysisType analysisType;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			analysisType = (AnalysisType) it.next();
+			transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
+		}
+		return transferables;
+	}
+
+	public EvaluationType_Transferable[] transmitEvaluationTypes(Identifier_Transferable[] ids_Transferable)
+			throws AMFICOMRemoteException {
+		java.util.Set ids = Identifier.fromTransferables(ids_Transferable);
+
+		java.util.Set objects = null;
+		try {
+			objects = MeasurementStorableObjectPool.getStorableObjects(ids, true);
+		}
+		catch (ApplicationException ae) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[objects.size()];
+		int i = 0;
+		EvaluationType evaluationType;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			evaluationType = (EvaluationType) it.next();
+			transferables[i] = (EvaluationType_Transferable) evaluationType.getTransferable();
+		}
+		return transferables;
 	}
 
 

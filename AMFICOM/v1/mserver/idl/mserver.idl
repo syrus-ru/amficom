@@ -115,6 +115,12 @@ module corba {
 		configuration::corba::KISSeq_Transferable transmitKISs(in general::corba::IdentifierSeq_Transferable ids_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
+		configuration::corba::MeasurementPortSeq_Transferable transmitMeasurementPorts(in general::corba::IdentifierSeq_Transferable ids_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
+		configuration::corba::MonitoredElementSeq_Transferable transmitMonitoredElements(in general::corba::IdentifierSeq_Transferable ids_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
 
 
 
@@ -175,7 +181,17 @@ module corba {
 
 
 
-		
+
+		measurement::corba::MeasurementTypeSeq_Transferable transmitMeasurementTypes(in general::corba::IdentifierSeq_Transferable ids_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
+		measurement::corba::AnalysisTypeSeq_Transferable transmitAnalysisTypes(in general::corba::IdentifierSeq_Transferable ids_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
+		measurement::corba::EvaluationTypeSeq_Transferable transmitEvaluationTypes(in general::corba::IdentifierSeq_Transferable ids_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
+
 		measurement::corba::MeasurementSeq_Transferable transmitMeasurements(in general::corba::IdentifierSeq_Transferable ids)
 			raises (general::corba::AMFICOMRemoteException);
 		
