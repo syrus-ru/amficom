@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabaseContext.java,v 1.13 2004/08/27 12:14:57 bob Exp $
+ * $Id: MeasurementDatabaseContext.java,v 1.14 2004/09/24 14:10:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/27 12:14:57 $
+ * @version $Revision: 1.14 $, $Date: 2004/09/24 14:10:53 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -23,6 +23,7 @@ public class MeasurementDatabaseContext {
 	protected static StorableObjectDatabase	evaluationTypeDatabase;
 	
 	protected static StorableObjectDatabase	setDatabase;
+	protected static StorableObjectDatabase	modelingDatabase;
 	protected static StorableObjectDatabase	measurementSetupDatabase;
 	protected static StorableObjectDatabase	measurementDatabase;
 	protected static StorableObjectDatabase	analysisDatabase;
@@ -39,6 +40,7 @@ public class MeasurementDatabaseContext {
 													StorableObjectDatabase analysisTypeDatabase1,
 													StorableObjectDatabase evaluationTypeDatabase1,
 													StorableObjectDatabase setDatabase1,
+													StorableObjectDatabase modelingDatabase1,
 													StorableObjectDatabase measurementSetupDatabase1,
 													StorableObjectDatabase measurementDatabase1,
 													StorableObjectDatabase analysisDatabase1,
@@ -52,6 +54,7 @@ public class MeasurementDatabaseContext {
 		evaluationTypeDatabase = evaluationTypeDatabase1;
 
 		setDatabase = setDatabase1;
+		modelingDatabase = modelingDatabase1;
 		measurementSetupDatabase = measurementSetupDatabase1;
 		measurementDatabase = measurementDatabase1;
 		analysisDatabase = analysisDatabase1;
@@ -72,6 +75,9 @@ public class MeasurementDatabaseContext {
 	}
 	public static StorableObjectDatabase getEvaluationTypeDatabase() {
 		return evaluationTypeDatabase;
+	}	
+	public static StorableObjectDatabase getModelingDatabase() {
+		return modelingDatabase;
 	}
 	public static StorableObjectDatabase getMeasurementDatabase() {
 		return measurementDatabase;
