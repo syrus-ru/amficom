@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.3 2004/12/07 15:32:33 max Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.4 2004/12/09 14:21:36 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/07 15:32:33 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/09 14:21:36 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -39,8 +39,8 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
     public static final String COLUMN_CODENAME      = "codename";
     // description VARCHAR2(256),
     public static final String COLUMN_DESCRIPTION   = "description";
-    // mark VARCHAR2(64),
-    public static final String COLUMN_MARK  = "mark";
+    // name VARCHAR2(64),
+    public static final String COLUMN_NAME = "name";
     // color VARCHAR2(32),
     public static final String COLUMN_COLOR = "color";
     // cable_link_type_id VARCHAR2(32),
@@ -58,7 +58,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
-			+ QUESTION + COMMA
+            + QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION;
 		}
@@ -70,7 +70,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_MARK + COMMA
+                + COLUMN_NAME + COMMA
 				+ COLUMN_COLOR
 				+ COLUMN_LINK_TYPE_ID;
 		}
@@ -82,8 +82,8 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 		CableThreadType cableThreadType = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getCodename()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getDescription()) + APOSTOPHE 
-			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getMark()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getDescription()) + APOSTOPHE
+            + APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getName()) + APOSTOPHE
 			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getColor()) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(cableThreadType.getLinkTypeId());
 		return sql;
@@ -109,7 +109,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 			preparedStatement.setString( ++i, cableThreadType.getCodename());
 			preparedStatement.setString( ++i, cableThreadType.getDescription());
-			preparedStatement.setString( ++i, cableThreadType.getMark());
+            preparedStatement.setString( ++i, cableThreadType.getName());
 			preparedStatement.setString( ++i, cableThreadType.getColor());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableThreadType.getLinkTypeId());
 		} catch (SQLException sqle) {
@@ -133,7 +133,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MARK)),
+                                    DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_COLOR)),
 									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_LINK_TYPE_ID));
 

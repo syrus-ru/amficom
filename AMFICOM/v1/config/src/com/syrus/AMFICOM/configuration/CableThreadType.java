@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.6 2004/12/09 12:23:55 bob Exp $
+ * $Id: CableThreadType.java,v 1.7 2004/12/09 14:21:36 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/09 12:23:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2004/12/09 14:21:36 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -36,8 +36,8 @@ public class CableThreadType extends AbstractLinkType {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3689355429075628086L;
-	private String					mark;
-	private String					color;
+	private String name;
+    private String					color;
 	private Identifier				linkTypeId;
 
 	private StorableObjectDatabase	cableThreadTypeDatabase;
@@ -55,22 +55,22 @@ public class CableThreadType extends AbstractLinkType {
 
 	public CableThreadType(CableThreadType_Transferable ctt) {
 		super(ctt.header, new String(ctt.codename), new String(ctt.description));
-		this.mark = ctt.mark;
-		this.color = ctt.color;
-		this.linkTypeId = new Identifier(ctt.link_type_id);
+        this.name = ctt.name;
+        this.color = ctt.color;
+        this.linkTypeId = new Identifier(ctt.linkTypeId);
 	}
 
 	protected CableThreadType(Identifier id,
 			Identifier creatorId,
 			String codename,
 			String description,
-			String mark,
-			String color,			
+			String color,
+            String name,
 			Identifier linkTypeId) {
 		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId,
 				codename, description);
-		this.mark = mark;
-		this.color = color;
+		this.name = name;
+        this.color = color;
 		this.linkTypeId = linkTypeId;
 
 		this.cableThreadTypeDatabase = ConfigurationDatabaseContext.cableThreadTypeDatabase;
@@ -84,18 +84,20 @@ public class CableThreadType extends AbstractLinkType {
 	public static CableThreadType createInstance(	Identifier creatorId,
 													String codename,
 													String description,
-													String mark,
-													String color,			
+
+													String name,
+                                                    String color,                                                    
 													Identifier linkTypeId) throws CreateObjectException {
+
 		if (creatorId == null || codename == null || description == null || 
-				mark == null || color == null || linkTypeId == null)
+				name == null || color == null || linkTypeId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
 		try {
-			return new CableThreadType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), creatorId, codename, description, mark, color, linkTypeId);
+			return new CableThreadType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), creatorId, codename, description, name, color, linkTypeId);
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("CableThreadType.createInstance | cannot generate identifier ", e);
 		}
+
 	}
 
 	public static CableThreadType getInstance(CableThreadType_Transferable ctt) throws CreateObjectException {
@@ -115,9 +117,9 @@ public class CableThreadType extends AbstractLinkType {
 	public Object getTransferable() {
 		return new CableThreadType_Transferable(super.getHeaderTransferable(), 
 										 super.codename,
-										 (super.description != null) ? super.description : "",										  
-										 (this.mark != null) ? this.mark : "",
-										 (this.color != null) ? this.color : "",		
+										 (super.description != null) ? super.description : "",
+                                         (this.name != null) ? this.name : "",
+                                         (this.color != null) ? this.color : "",                                         
 										 (Identifier_Transferable) this.linkTypeId.getTransferable());
 	}
 
@@ -127,12 +129,12 @@ public class CableThreadType extends AbstractLinkType {
 												Identifier modifierId,
 												String codename,
 												String description,
-												String mark,
+                                                String name,
 												String color,			
 												Identifier linkTypeId) {
 		super.setAttributes(created, modified, creatorId, modifierId, codename, description);
-		this.mark = mark;
-		this.color = color;
+		this.name = name;
+        this.color = color;
 		this.linkTypeId = linkTypeId;
 	}
 
@@ -143,12 +145,11 @@ public class CableThreadType extends AbstractLinkType {
 	public String getColor() {
 		return this.color;
 	}
+    
+    public String getName() {
+        return this.name;
+    }
 	
-	public String getMark() {
-		return this.mark;
-	}
-	
-
 	public List getDependencies() {
 		return Collections.singletonList(this.linkTypeId);
 	}
