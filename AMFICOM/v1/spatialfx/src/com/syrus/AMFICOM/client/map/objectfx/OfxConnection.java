@@ -1,5 +1,5 @@
 /**
- * $Id: OfxConnection.java,v 1.3 2005/02/10 11:37:49 krupenn Exp $
+ * $Id: OfxConnection.java,v 1.4 2005/02/22 14:45:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,14 +11,21 @@ package com.syrus.AMFICOM.Client.Map.ObjectFX;
 import com.ofx.base.SxEnvironment;
 import com.ofx.base.SxProperties;
 
+import com.ofx.component.swing.JMapViewer;
+import com.ofx.mapViewer.SxMapLayerInterface;
+import com.ofx.mapViewer.SxMapViewer;
+import com.ofx.mapViewer.SxMarkerLayer;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapConnection;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 
+import java.util.List;
 import java.util.Vector;
 
 /**
  * Реализация соединения с хранилищем данных в формате SpatialFX.
- * @version $Revision: 1.3 $, $Date: 2005/02/10 11:37:49 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/22 14:45:17 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -27,11 +34,16 @@ public class OfxConnection extends MapConnection
 	protected String dbUserName = "user";
 	protected String dbPassword = "";
 
-	protected String dataBasePath = "";
-	protected String dataBaseView = "";
+	protected String dataBaseURL = null;
+	protected String dataBasePath = null;
+	protected String dataBaseView = null;
 
 	protected static final String OFX_DATABASE_PREFIX = "file://localhost/";
+
+	protected JMapViewer jMapViewer = null;
 	
+	protected static boolean dbset = false;
+
 	public OfxConnection()
 	{
 		Environment.log(
@@ -41,18 +53,6 @@ public class OfxConnection extends MapConnection
 				"OfxConnection()");
 	}
 	
-	public OfxConnection( String dataBasePath, String dataBaseView)
-	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"constructor call", 
-				getClass().getName(), 
-				"OfxConnection(" + dataBasePath + ", " + dataBaseView + ")");
-		
-		this.setPath(dataBasePath);
-		this.setView(dataBaseView);
-	}
-
 	public void setPath(String path)
 	{
 		Environment.log(
@@ -76,7 +76,8 @@ public class OfxConnection extends MapConnection
 	}
 
 	public void setURL(String url)
-	{//empty
+	{
+		this.dataBaseURL = url;
 	}
 
 	public String getPath()
@@ -91,11 +92,16 @@ public class OfxConnection extends MapConnection
 
 	public String getURL()
 	{
-		return "";
+		return this.dataBaseURL;
 	}
 
-	public boolean connect()
+	public boolean connect() throws MapConnectionException
 	{
+		if(this.dataBaseURL == null
+			|| this.dataBaseView == null
+			|| this.dataBasePath == null)
+				throw new MapConnectionException("insufficient data for map connection");
+	
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
 				"method call", 
@@ -108,12 +114,12 @@ public class OfxConnection extends MapConnection
         SxProperties.singleton().setProperty("ofx.password", this.dbPassword);
         SxProperties.singleton().setProperty("ofx.domainDimension", "3");
         com.ofx.query.SxQueryInterface qsi = SxEnvironment.singleton().getQuery();
-        Vector theProperties = 
+        Vector sessionProperties = 
 			SxEnvironment.singleton().getProperties().getQuerySessionOpenProperties();
-        String dbType = (String)theProperties.elementAt(0);
-        String dbURL = (String)theProperties.elementAt(3);
-        String jdbcDriverClass = (String)theProperties.elementAt(4);
-        String sdoAdminUserName = (String)theProperties.elementAt(5);
+        String dbType = (String)sessionProperties.elementAt(0);
+        String dbURL = (String)sessionProperties.elementAt(3);
+        String jdbcDriverClass = (String)sessionProperties.elementAt(4);
+        String sdoAdminUserName = (String)sessionProperties.elementAt(5);
 /*
         if(OmUtil.isAFileDatabase(dbType)) 
 		{
@@ -151,27 +157,96 @@ public class OfxConnection extends MapConnection
 		{
             System.out.println("Exception occurred opening database named: " 
 					+ sessionName + " exception: " + ex);
+			throw new MapConnectionException(
+				"Exception occurred opening database named: " + sessionName,
+				ex);
         }
         if(!result)
+		{
             System.out.println("Unable to open; Check log file for details.");
+			throw new MapConnectionException("Unable to open; Check log file for details.");
+		}
         else
         if(!qsi.doesSpatialSchemaExist()) 
 		{
             qsi.close();
             System.out.println("Unable to open data tables; they do not exist.");
-			return false;
+			throw new MapConnectionException("Unable to open data tables; they do not exist.");
 		}
+
+		try
+		{
+			this.jMapViewer = new JMapViewer();
+
+			SxMapViewer anSxMapViewer = this.jMapViewer.getSxMapViewer();
+
+			if(!dbset)
+				this.jMapViewer.setDBName( dataBasePath);
+			this.jMapViewer.setMapName( dataBaseView);
+
+			try 
+			{
+				SxMarkerLayer markerLayer = (SxMarkerLayer) 
+						anSxMapViewer.getLayer(SxMapLayerInterface.MARKER);
+				markerLayer.listenForMapEvents( false );
+				markerLayer.setEnabled(false);
+			} 
+			catch (Exception ex) 
+			{
+					ex.printStackTrace();
+			} 
+			
+			anSxMapViewer.removeNamedLayer("OFX LOGO");
+			anSxMapViewer.removeNamedLayer("OFX COPYRIGHT");
+			anSxMapViewer.postPaintEvent();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
 		return true;
 	}
 	
-	public boolean release()
+	public boolean release() throws MapConnectionException
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
 				"method call", 
 				getClass().getName(), 
 				"release()");
+
+		try
+		{
+			SxEnvironment.singleton().getQuery().close();
+			this.jMapViewer.closeSession();
+			com.ofx.service.SxServiceFactory.shutdown();
+		}
+		catch (Exception e)
+		{
+			throw new MapConnectionException(e);
+		}
 		
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.Client.Map.MapConnection#getAvailableViews()
+	 */
+	public List getAvailableViews() throws MapDataException {
+		try 
+		{
+		return this.jMapViewer.getAvailableMaps();
+		} 
+		catch (Exception ex) 
+		{
+			throw new MapDataException(ex);
+		} 
+	}
+
+
+	public JMapViewer getJMapViewer()
+	{
+		return jMapViewer;
 	}
 }

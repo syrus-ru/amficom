@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.7 2005/02/18 12:19:44 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.8 2005/02/22 14:45:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,15 +10,13 @@
 
 package com.syrus.AMFICOM.Client.Map;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-
-import java.awt.Component;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-
 import java.util.List;
 
 import javax.swing.JComponent;
+
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 /**
  * Класс, являясь абстрактным, реализует в себе общую 
@@ -29,32 +27,13 @@ import javax.swing.JComponent;
  * Для того, чтобы получить компонент, содержащий в себе отображение 
  * картографии, следует вызвать метод {@link #getComponent()}
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/02/18 12:19:44 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/22 14:45:35 $
  * @module mapviewclient_v1
  * @see com.syrus.AMFICOM.Client.Map.ObjectFX.OfxNetMapViewer 
  * @see com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer
  */
 public abstract class NetMapViewer 
 {
-	/**
-	 * Соединение с хранилищем картографической информации.
-	 */
-	protected MapConnection mapConnection;
-
-	/**
-	 * Отобразить указанный вид кортографии.
-	 * @param dataBasePath путь к базе картографии
-	 * @param dataBaseView вид в базе картографии
-	 * @deprecated all func should be contained in {@link #setConnection(MapConnection)}
-	 */
-//	public abstract void setMap(String dataBasePath, String dataBaseView);
-	
-	/**
-	 * Закрывает сессию и соединение с картой.
-	 * @deprecated all func should be contained in {@link #setConnection(MapConnection)}
-	 */
-//	public abstract void closeMap();
-	
 	/**
 	 * Установить соединение с хранилищем топографической информации.
 	 * @param conn соежинение
@@ -113,38 +92,11 @@ public abstract class NetMapViewer
 	}
 
 	/**
-	 * Компонент.
-	 * @return компонент
-	 */
-	public abstract JComponent getJComponent();
-	
-	/**
-	 * Компонент.
-	 * @return компонент
-	 */
-	public abstract Component getComponent();
-	
-	/**
 	 * Получить логический слой.
 	 * @return 
 	 * логический слой
 	 */
 	public abstract LogicalNetLayer getLogicalNetLayer();
-
-	/**
-	 * Получить список названий доступных видов.
-	 * @return Список видов &lt;{@link String}&gt;
-	 * @deprecated use {@link MapConnection#getAvailableViews()}
-	 */
-//	public abstract List getAvailableViews()
-//		throws MapDataException;
-	
-	/**
-	 * Установить вид.
-	 * @param dataBaseView вид
-	 * @deprecated all func should be contained in {@link #setConnection(MapConnection)}
-	 */
-//	public abstract void setView(String dataBaseView);
 
 	/**
 	 * Получить список географических слоев.

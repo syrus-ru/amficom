@@ -1,5 +1,5 @@
 /**
- * $Id: MapScrollPane.java,v 1.6 2005/02/10 11:48:40 krupenn Exp $
+ * $Id: MapScrollPane.java,v 1.7 2005/02/22 14:45:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,31 +22,13 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/02/10 11:48:40 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/22 14:45:35 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapScrollPane extends JPanel
 {
-	//Устанавливаем верхнюю, нижнюю границу
-//	double horiz_left = -0.118503;
-//	double horiz_right = 0.236697;
-
-	//Устанавливаем левую, правую границу
-//	double vert_left = 0.241678;
-//	double vert_right = -0.060722;
-
-//	double horiz_incr = 0;
-//	double vert_incr = 0;
-
-//	JScrollBar horScrollBar;
-//	JScrollBar vertScrollBar;
-
 	NetMapViewer viewer;
-
-	//Флаг того что нужно обновить без срабатывания listener
-//	boolean updateWithoutListen = false;
-
 
 	public MapScrollPane(NetMapViewer viewer)
 	{
@@ -66,12 +48,12 @@ public final class MapScrollPane extends JPanel
 
 	private void jbInit()
 	{
-		this.setLayout(new BorderLayout());
-		if(this.viewer.getComponent() != null)
-			this.add(this.viewer.getComponent());
-		else
-		if(this.viewer.getJComponent() != null)
-			this.add(this.viewer.getJComponent());
+//		this.setLayout(new BorderLayout());
+//		if(this.viewer.getComponent() != null)
+//			this.add(this.viewer.getComponent());
+//		else
+//		if(this.viewer.getJComponent() != null)
+//			this.add(this.viewer.getJComponent());
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: OfxLogicalNetLayer.java,v 1.5 2005/02/10 11:37:49 krupenn Exp $
+ * $Id: OfxLogicalNetLayer.java,v 1.6 2005/02/22 14:45:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,8 @@
 
 package com.syrus.AMFICOM.Client.Map.ObjectFX;
 
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -43,7 +45,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/02/10 11:37:49 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/22 14:45:17 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -440,7 +442,18 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		
 		public void paint(Graphics g)
 		{
-			this.lnl.paint(g);
+			try
+			{
+				this.lnl.paint(g);
+			}
+			catch (MapConnectionException e)
+			{
+				System.out.println("Жопа");
+			}
+			catch (MapDataException e)
+			{
+				System.out.println("Жопа");
+			}
 		}
 	}
 }
