@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseDate.java,v 1.11 2005/03/04 08:05:49 bass Exp $
+ * $Id: DatabaseDate.java,v 1.12 2005/03/21 13:10:31 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,14 +24,14 @@ public class DatabaseDate {
 		assert false;
 	}
 
-	public static Date fromQuerySubString(ResultSet resultset, String column) throws SQLException {		
+	public static Date fromQuerySubString(ResultSet resultset, String column) throws SQLException {
 		Date date = null;
-		try{
-		String dateStr = resultset.getString(column);
-		if(dateStr != null)
-			date = SDF.parse(dateStr);
-		else Log.errorMessage("DatabaseDate.fromQuerySubString | date in column '" + column +"' is NULL"); //$NON-NLS-1$ //$NON-NLS-2$
-		}catch(ParseException pe){
+		try {
+			String dateStr = resultset.getString(column);
+			if (dateStr != null)
+				date = SDF.parse(dateStr);
+		}
+		catch (ParseException pe) {
 			Log.errorMessage("DatabaseDate.fromQuerySubString | parse exception '" + pe.getMessage() + '\''); //$NON-NLS-1$
 		}
 		return date;
