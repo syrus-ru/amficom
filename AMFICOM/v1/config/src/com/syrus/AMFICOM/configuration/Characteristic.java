@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.23 2004/11/05 06:52:21 bob Exp $
+ * $Id: Characteristic.java,v 1.24 2004/11/09 16:29:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/11/05 06:52:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2004/11/09 16:29:29 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -238,40 +238,40 @@ public class Characteristic extends StorableObject implements TypedObject {
 	}
 	
 	protected static CharacteristicSort getSortForId(Identifier id) throws IllegalDataException{
-		CharacteristicSort sort;
+		CharacteristicSort csort;
 		switch(id.getMajor()){
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
-				sort = CharacteristicSort.CHARACTERISTIC_SORT_DOMAIN;
+				csort = CharacteristicSort.CHARACTERISTIC_SORT_DOMAIN;
 				break;
 			case ObjectEntities.SERVER_ENTITY_CODE: 
-				sort = CharacteristicSort.CHARACTERISTIC_SORT_SERVER;
+				csort = CharacteristicSort.CHARACTERISTIC_SORT_SERVER;
 				break;
 			case ObjectEntities.MCM_ENTITY_CODE:
-				sort = CharacteristicSort.CHARACTERISTIC_SORT_MCM;
+				csort = CharacteristicSort.CHARACTERISTIC_SORT_MCM;
 				break;
 			case ObjectEntities.TRANSPATH_ENTITY_CODE:
-				sort = CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH;
+				csort = CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH;
 				break;
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-				sort = CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT;
+				csort = CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT;
 				break;
 			case ObjectEntities.PORT_ENTITY_CODE:
-				sort = CharacteristicSort.CHARACTERISTIC_SORT_PORT;
+				csort = CharacteristicSort.CHARACTERISTIC_SORT_PORT;
 				break;
 			case ObjectEntities.LINK_ENTITY_CODE:
-				sort = CharacteristicSort.CHARACTERISTIC_SORT_LINK;
+				csort = CharacteristicSort.CHARACTERISTIC_SORT_LINK;
 				break;
 			case ObjectEntities.KIS_ENTITY_CODE:
-				sort = CharacteristicSort.CHARACTERISTIC_SORT_KIS;
+				csort = CharacteristicSort.CHARACTERISTIC_SORT_KIS;
 				break;
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-				sort = CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORT;
+				csort = CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORT;
 				break;				
 			default:
 				throw new IllegalDataException("Unknown characterized entity, id: '" + id.getIdentifierString() + '\'');
 		}
 		
-		return sort;
+		return csort;
 	}	
 	
 	public List getDependencies() {
