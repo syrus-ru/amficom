@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.58 2005/04/01 13:28:05 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.59 2005/04/04 14:32:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/04/01 13:28:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.59 $, $Date: 2005/04/04 14:32:28 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -390,8 +390,8 @@ public abstract class StorableObjectPool {
 
 	/**
 	 * @param ids
-	 *            a non-null (use {@link Collections#EMPTY_LIST} in case of
-	 *            emergency) list of pure-java identifiers.
+	 *            a non-null (use {@link Collections#EMPTY_SET} in case of
+	 *            emergency) set of pure-java identifiers.
 	 * @param condition
 	 * @param useLoader
 	 * @throws ApplicationException
@@ -399,7 +399,7 @@ public abstract class StorableObjectPool {
 	protected Set getStorableObjectsByConditionButIdsImpl(final Set ids,
 			final StorableObjectCondition condition,
 			final boolean useLoader) throws ApplicationException {
-		assert ids != null : "Supply an empty list instead";
+		assert ids != null : "Supply an empty set instead";
 		assert condition != null : "Supply EquivalentCondition instead";
 
 		Set soSet = null;
@@ -419,16 +419,16 @@ public abstract class StorableObjectPool {
 				soSet.add(storableObject);
 		}
 
-		Set loadedList = null;
+		Set loadedSet = null;
 
 		if (useLoader && condition.isNeedMore(soSet)) {
-			Set idsList = new HashSet(soSet.size());
+			Set idsSet = new HashSet(soSet.size());
 			for (Iterator iter = soSet.iterator(); iter.hasNext();) {
 				StorableObject storableObject = (StorableObject) iter.next();
-				idsList.add(storableObject.getId());
+				idsSet.add(storableObject.getId());
 			}
 
-			idsList.addAll(ids);
+			idsSet.addAll(ids);
 
 			/* do not load delete object too */
 			if (this.deletedIds != null) {
@@ -437,11 +437,11 @@ public abstract class StorableObjectPool {
 				for (Iterator iter = this.deletedIds.iterator(); iter.hasNext();) {
 					Identifier id = (Identifier) iter.next();
 					if (id.getMajor() == code)
-						idsList.add(id);
+						idsSet.add(id);
 				}
 			}
 
-			loadedList = this.loadStorableObjectsButIds(condition, idsList);
+			loadedSet = this.loadStorableObjectsButIds(condition, idsSet);
 		}
 
 //		/*
@@ -452,12 +452,12 @@ public abstract class StorableObjectPool {
 //			objectPool.get(storableObject);
 //		}
 
-		if (loadedList != null) {
-			for (Iterator it = loadedList.iterator(); it.hasNext();) {
+		if (loadedSet != null) {
+			for (Iterator it = loadedSet.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
 				objectPool.put(storableObject.getId(), storableObject);
 			}
-			soSet.addAll(loadedList);
+			soSet.addAll(loadedSet);
 		}
 
 		return soSet;
@@ -470,7 +470,7 @@ public abstract class StorableObjectPool {
 
 	/**
 	 * @param objectIds
-	 *          list of pure java identifiers.
+	 *          set of pure java identifiers.
 	 * @param useLoader
 	 * @throws DatabaseException
 	 * @throws CommunicationException
@@ -478,7 +478,7 @@ public abstract class StorableObjectPool {
 	 *       objectIds is null) into a run time error.
 	 */
 	protected Set getStorableObjectsImpl(final Set objectIds, final boolean useLoader) throws ApplicationException {
-		Set list = null;
+		Set set = null;
 		Map objectQueueMap = null;
 		if (objectIds != null) {
 			for (Iterator it = objectIds.iterator(); it.hasNext();) {
@@ -494,9 +494,9 @@ public abstract class StorableObjectPool {
 				if (objectPool != null) {
 					storableObject = (StorableObject) objectPool.get(objectId);
 					if (storableObject != null) {
-						if (list == null)
-							list = new HashSet();
-						list.add(storableObject);
+						if (set == null)
+							set = new HashSet();
+						set.add(storableObject);
 					}
 					if (storableObject == null && useLoader) {
 						if (objectQueueMap == null)
@@ -518,12 +518,12 @@ public abstract class StorableObjectPool {
 
 		}
 		else {
-			Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectsImpl | NULL list of identifiers supplied");
+			Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectsImpl | NULL set of identifiers supplied");
 		}
 
 		if (objectQueueMap != null) {
-			if (list == null)
-				list = new HashSet();
+			if (set == null)
+				set = new HashSet();
 			for (Iterator it = objectQueueMap.keySet().iterator(); it.hasNext();) {
 				Short entityCode = (Short) it.next();
 				short code = entityCode.shortValue();
@@ -542,7 +542,7 @@ public abstract class StorableObjectPool {
 						for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
 							StorableObject storableObject = (StorableObject) iter.next();
 							this.putStorableObjectImpl(storableObject);
-							list.add(storableObject);
+							set.add(storableObject);
 						}
 					}
 					catch (IllegalObjectEntityException ioee) {
@@ -552,7 +552,7 @@ public abstract class StorableObjectPool {
 			}
 		}
 
-		return list == null ? Collections.EMPTY_SET : list;
+		return set == null ? Collections.EMPTY_SET : set;
 	}
 
 	protected abstract StorableObject loadStorableObject(final Identifier objectId) throws ApplicationException;
@@ -654,9 +654,9 @@ public abstract class StorableObjectPool {
 	 * in a release system.
 	 * 
 	 * @param storableObjects
-	 *            non-null list of pure java storable objects (empty list is
+	 *            non-null set of pure java storable objects (empty set is
 	 *            ok).
-	 * @return <code>true</code> if all entities within this list are of the
+	 * @return <code>true</code> if all entities within this set are of the
 	 *         same type, <code>false</code> otherwise.
 	 */
 	protected boolean hasSingleTypeEntities(final Set storableObjects) {
@@ -686,7 +686,7 @@ public abstract class StorableObjectPool {
 	 * </pre>
 	 * 
 	 * @param storableObjects
-	 *            non-null, non-empty list of pure java storable objects of the
+	 *            non-null, non-empty set of pure java storable objects of the
 	 *            same type.
 	 * @return common type of storable objects supplied as <code>short</code>.
 	 */
