@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.12 2004/08/09 08:31:46 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.13 2004/08/09 14:13:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,16 +9,17 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/09 08:31:46 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/09 14:13:53 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
 public abstract class ObjectEntities {
 	/*	Object Types	*/
-	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
 	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteriscticType";
 	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType";
+
+	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
 	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";
 	public static final String MNTTYPPARTYPLINK_ENTITY = "MntTypParTypLink";
 	public static final String ANALYSISTYPE_ENTITY = "AnalysisType";
@@ -27,20 +28,20 @@ public abstract class ObjectEntities {
 	public static final String EVATYPPARTYPLINK_ENTITY = "EvaTypParTypLink";
 
 	/*	Administration	*/
-	public static final String PERMATTR_ENTITY = "PermissionAttributes";
-	public static final String DOMAIN_ENTITY = "domain";
-	public static final String SERVER_ENTITY = "Server";
-	public static final String USER_ENTITY = "User";
 
 	/*	Configuration	*/
 	public static final String CHARACTERISTIC_ENTITY = "Characterisctic";
+	public static final String PERMATTR_ENTITY = "PermissionAttributes";
+	public static final String USER_ENTITY = "User";
+	public static final String DOMAIN_ENTITY = "Domain";
+	public static final String SERVER_ENTITY = "Server";
+	public static final String MCM_ENTITY = "MCM";
 	public static final String EQUIPMENT_ENTITY = "Equipment";
 	public static final String EQUIPMENTMELINK_ENTITY = "EquipmentMELink";
-	public static final String ME_ENTITY = "MonitoredElement";
-	public static final String KIS_ENTITY = "KIS";
-	public static final String MCM_ENTITY = "MCM";	
 	public static final String TRANSPATH_ENTITY = "TransmissionPath";
-	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink";
+	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink";	
+	public static final String KIS_ENTITY = "KIS";
+	public static final String ME_ENTITY = "MonitoredElement";
 
 	/*	Measurement	*/
 	public static final String SET_ENTITY = "Sett";
@@ -63,22 +64,25 @@ public abstract class ObjectEntities {
 	/*	Object Types 1 -- 128	*/
 	public static final short CHARACTERISTICTYPE_ENTITY_CODE = 0x0001;
 	public static final short EQUIPMENTTYPE_ENTITY_CODE = 0x0002;
+
 	public static final short PARAMETERTYPE_ENTITY_CODE = 0x0003;
 	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0004;
 	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0005;
 	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0006;
 
 	/*	Administration 129 -- 256	*/
-	public static final short PERMATTR_ENTITY_CODE = 0x0081;
-	public static final short DOMAIN_ENTITY_CODE = 0x0082;
-	public static final short SERVER_ENTITY_CODE = 0x0084;
-	public static final short USER_ENTITY_CODE = 0x0085;
 
 	/*	Configuration	257 -- 384*/
 	public static final short CHARACTERISTIC_ENTITY_CODE = 0x0101;
-	public static final short ME_ENTITY_CODE = 0x0102;
-	public static final short KIS_ENTITY_CODE = 0x0103;
-	public static final short MCM_ENTITY_CODE = 0x0104;
+	public static final short PERMATTR_ENTITY_CODE = 0x0102;
+	public static final short USER_ENTITY_CODE = 0x0103;
+	public static final short DOMAIN_ENTITY_CODE = 0x0104;
+	public static final short SERVER_ENTITY_CODE = 0x0105;
+	public static final short MCM_ENTITY_CODE = 0x0106;
+	public static final short EQUIPMENT_ENTITY_CODE = 0x0107;
+	public static final short TRANSPATH_ENTITY_CODE = 0x0108;
+	public static final short KIS_ENTITY_CODE = 0x0109;
+	public static final short ME_ENTITY_CODE = 0x010A;
 
 	/*	Measurement 385 -- 512	*/
 	public static final short SET_ENTITY_CODE = 0x0181;
@@ -95,20 +99,22 @@ public abstract class ObjectEntities {
 	public static short getCodeForString(String entity) {
 		if (entity.equals(CHARACTERISTICTYPE_ENTITY)) return CHARACTERISTICTYPE_ENTITY_CODE;
 		else if (entity.equals(EQUIPMENTTYPE_ENTITY)) return EQUIPMENTTYPE_ENTITY_CODE;
+
 		else if (entity.equals(PARAMETERTYPE_ENTITY)) return PARAMETERTYPE_ENTITY_CODE;
 		else if (entity.equals(MEASUREMENTTYPE_ENTITY)) return MEASUREMENTTYPE_ENTITY_CODE;
 		else if (entity.equals(ANALYSISTYPE_ENTITY)) return ANALYSISTYPE_ENTITY_CODE;
 		else if (entity.equals(EVALUATIONTYPE_ENTITY)) return EVALUATIONTYPE_ENTITY_CODE;
 
+		else if (entity.equals(CHARACTERISTIC_ENTITY)) return CHARACTERISTIC_ENTITY_CODE;
 		else if (entity.equals(PERMATTR_ENTITY)) return PERMATTR_ENTITY_CODE;
+		else if (entity.equals(USER_ENTITY)) return USER_ENTITY_CODE;
 		else if (entity.equals(DOMAIN_ENTITY)) return DOMAIN_ENTITY_CODE;
 		else if (entity.equals(SERVER_ENTITY)) return SERVER_ENTITY_CODE;
-		else if (entity.equals(USER_ENTITY)) return USER_ENTITY_CODE;
-
-		else if (entity.equals(CHARACTERISTIC_ENTITY)) return CHARACTERISTIC_ENTITY_CODE;
-		else if (entity.equals(ME_ENTITY)) return ME_ENTITY_CODE;
-		else if (entity.equals(KIS_ENTITY)) return KIS_ENTITY_CODE;
 		else if (entity.equals(MCM_ENTITY)) return MCM_ENTITY_CODE;
+		else if (entity.equals(EQUIPMENT_ENTITY)) return EQUIPMENT_ENTITY_CODE;
+		else if (entity.equals(TRANSPATH_ENTITY)) return TRANSPATH_ENTITY_CODE;
+		else if (entity.equals(KIS_ENTITY)) return KIS_ENTITY_CODE;
+		else if (entity.equals(ME_ENTITY)) return ME_ENTITY_CODE;
 
 		else if (entity.equals(SET_ENTITY)) return SET_ENTITY_CODE;
 		else if (entity.equals(SETPARAMETER_ENTITY)) return SETPARAMETER_ENTITY_CODE;
