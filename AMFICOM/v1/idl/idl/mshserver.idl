@@ -3,7 +3,7 @@
 
 #include <general.idl>
 #include <configuration.idl>
-#include <lilmapletty.idl>
+#include <map.idl>
 
 module com {
 module syrus {

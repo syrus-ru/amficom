@@ -41,7 +41,7 @@ $(LIBNAME): .mach
 	touch $@
 
 .corba:	$(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/li\'lmapletty.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/map.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
@@ -67,6 +67,12 @@ cleancorba:
 	rm -rf $(SRCDIR)/com/syrus/AMFICOM/event/corba
 	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/event/corba
 	rm -f .corba
+
+#### Install ####
+.PHONY:	install
+install: $(LIBNAME)
+	$(CP) $(LIBNAME) $(LIBDIR)
+
 
 #### Archive ####
 .PHONY:	arch

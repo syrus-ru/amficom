@@ -28,7 +28,7 @@ $(LIBNAME): .mach
 	touch $@
 
 .corba:	$(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/li\'lmapletty.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/map.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
