@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.80 2005/03/11 09:08:23 bob Exp $
+ * $Id: ResultDatabase.java,v 1.81 2005/03/28 15:54:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/03/11 09:08:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.81 $, $Date: 2005/03/28 15:54:55 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -56,17 +56,11 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			StringBuffer buffer = new StringBuffer(COMMA);
-			buffer.append(ResultWrapper.COLUMN_MEASUREMENT_ID);
-			buffer.append(COMMA);
-			buffer.append(ResultWrapper.COLUMN_ANALYSIS_ID);
-			buffer.append(COMMA);
-			buffer.append(ResultWrapper.COLUMN_EVALUATION_ID);
-			buffer.append(COMMA);			
-			buffer.append(ResultWrapper.COLUMN_MODELING_ID);
-			buffer.append(COMMA);
-			buffer.append(ResultWrapper.COLUMN_SORT);
-			columns = buffer.toString();
+			columns = ResultWrapper.COLUMN_MEASUREMENT_ID + COMMA
+					+ ResultWrapper.COLUMN_ANALYSIS_ID + COMMA
+					+ ResultWrapper.COLUMN_EVALUATION_ID + COMMA
+					+ ResultWrapper.COLUMN_MODELING_ID + COMMA
+					+ ResultWrapper.COLUMN_SORT;
 		}
 		return columns;
 	}
