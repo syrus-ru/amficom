@@ -11,8 +11,8 @@ public class StatusTree extends FilterTree
 	ApplicationContext aContext;
 	FilterTreeNode root = new FilterTreeNode(LangModelSchedule.getString("Root"), "ROOT");
 	FilterTreeNode a1 = new FilterTreeNode(LangModelSchedule.getString("Done"), "COMPLETED");
-	FilterTreeNode a2 = new FilterTreeNode(LangModelSchedule.getString("Doing"), "PROCESSING");
-	FilterTreeNode a3 = new FilterTreeNode(LangModelSchedule.getString("ReadyToDo"), "SCHEDULED");
+	FilterTreeNode a2 = new FilterTreeNode(LangModelSchedule.getString("Running"), "PROCESSING");
+	FilterTreeNode a3 = new FilterTreeNode(LangModelSchedule.getString("Scheduled"), "SCHEDULED");
 
 	public StatusTree()
 	{
