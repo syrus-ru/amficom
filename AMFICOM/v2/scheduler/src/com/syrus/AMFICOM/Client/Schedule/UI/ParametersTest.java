@@ -5,7 +5,9 @@
  */
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.Test;
 
 /**
  * @author Vladimir Dolzhenko
@@ -17,11 +19,11 @@ public interface ParametersTest {
 	//String COMMAND_SEND_TEST = "SendTest";
 	String	PARAMETER_ID_NAME	= "testargument";	//$NON-NLS-1$
 
-	TestArgumentSet getTestArgumentSet();
+	Set getSet();
 	
-	void setTestArgumentSet(TestArgumentSet tas);
+	void setSet(Set set);
 	
-	void setTestSetup(TestSetup testSetup);
+	void setMeasurementSetup(MeasurementSetup measurementSetup);
 
 	String getPanelName();
 

@@ -18,13 +18,9 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.Resource.Result.Analysis;
-import com.syrus.AMFICOM.Client.Resource.Result.Evaluation;
-import com.syrus.AMFICOM.Client.Resource.Result.Test;
-import com.syrus.AMFICOM.Client.Resource.Result.TestArgumentSet;
-import com.syrus.AMFICOM.Client.Resource.Result.TestRequest;
 import com.syrus.AMFICOM.Client.Schedule.UI.*;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 
 public class ScheduleMainFrame extends JFrame implements OperationListener {
 
@@ -183,9 +179,6 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 			if (cce.SESSION_OPENED) {
 				SessionInterface ssi = (SessionInterface) cce.getSource();
 				if (this.aContext.getSessionInterface().equals(ssi)) {
-					this.aContext.setDataSourceInterface(this.aContext.getApplicationModel()
-							.getDataSource(this.aContext.getSessionInterface()));
-
 					setSessionOpened();
 
 					this.statusBar.setText("status", LangModel.getString("statusReady"));
@@ -198,7 +191,6 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 			if (cce.SESSION_CLOSED) {
 				SessionInterface ssi = (SessionInterface) cce.getSource();
 				if (this.aContext.getSessionInterface().equals(ssi)) {
-					this.aContext.setDataSourceInterface(null);
 
 					setSessionClosed();
 
@@ -209,12 +201,12 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 			}
 			if (cce.CONNECTION_OPENED) {
 				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
-				if (this.aContext.getConnectionInterface().equals(cci)) {
+				if (ConnectionInterface.getInstance().equals(cci)) {
 					setConnectionOpened();
 
 					this.statusBar.setText("status", LangModel.getString("statusReady"));
-					this.statusBar.setText("server", this.aContext.getConnectionInterface()
-							.getServiceURL());
+					this.statusBar.setText("server", ConnectionInterface.getInstance()
+							.getServerName());
 				}
 			}
 			if (cce.CONNECTION_CLOSED) {
@@ -301,7 +293,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	}
 
 	public void setDomainSelected() {
-		DataSourceInterface dataSource = this.aContext.getDataSourceInterface();
+		DataSourceInterface dataSource = this.aContext.getDataSource();
 		new ConfigDataSourceImage(dataSource).LoadISM();
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -315,43 +307,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		this.statusBar.setText("domain", Pool.getName(Domain.typ, domainId));
 
 		this.treeFrame.init();
-		Map unsavedTestArgumentSet = Pool.getChangedMap(TestArgumentSet.TYPE);
-		Map unsavedAnalysis = Pool.getChangedMap(Analysis.TYPE);
-		Map unsavedEvaluation = Pool.getChangedMap(Evaluation.TYPE);
-		Map unsavedTestRequest = Pool.getChangedMap(TestRequest.TYPE);
-		Map unsavedTest = Pool.getChangedMap(Test.TYPE);
 
-		for (int i = 0; i < 5; i++) {
-			Map table;
-			switch (i) {
-				case 0:
-					table = unsavedTestArgumentSet;
-					break;
-				case 1:
-					table = unsavedAnalysis;
-					break;
-				case 2:
-					table = unsavedEvaluation;
-					break;
-				case 3:
-					table = unsavedTestRequest;
-					break;
-				case 4:
-					table = unsavedTest;
-					break;
-				default:
-					table = null;
-					break;
-			}
-			if (table != null) {
-				Set keys = table.keySet();
-				for (Iterator it = keys.iterator(); it.hasNext();) {
-					String key = (String) it.next();
-					ObjectResource obj = (ObjectResource) table.get(key);
-					obj.setChanged(false);
-				}
-			}
-		}
+		MeasurementStorableObjectPool.cleanChangedStorableObjects();
 
 		this.dispatcher.notify(new OperationEvent(this, 0, SchedulerModel.COMMAND_CLEAN));
 
@@ -390,7 +347,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		//this.checker = new
 		// Checker(aContext.getDataSourceInterface());
 
-		DataSourceInterface dataSource = this.aContext.getDataSourceInterface();
+		DataSourceInterface dataSource = this.aContext.getDataSource();
 
 		this.aContext.getDispatcher()
 				.notify(
@@ -431,7 +388,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			//cManager.saveIni();
 			this.dispatcher.unregister(this, CONTEXT_CHANGE);
-			Environment.the_dispatcher.unregister(this, CONTEXT_CHANGE);
+			Environment.getDispatcher().unregister(this, CONTEXT_CHANGE);
 			this.aContext.getApplicationModel().getCommand(ScheduleMainMenuBar.MENU_EXIT).execute();
 			return;
 		}
@@ -469,19 +426,20 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE);
 
 		this.dispatcher.register(this, CONTEXT_CHANGE);
-		Environment.the_dispatcher.register(this, CONTEXT_CHANGE);
+		Dispatcher dispatcher = Environment.getDispatcher();
+		dispatcher.register(this, CONTEXT_CHANGE);
 
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_NEW,
-					new SessionOpenCommand(Environment.the_dispatcher, this.aContext));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CLOSE,
-					new SessionCloseCommand(Environment.the_dispatcher, this.aContext));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_NEW, new SessionOpenCommand(dispatcher,
+												this.aContext));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CLOSE, new SessionCloseCommand(dispatcher,
+													this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_OPTIONS, new SessionOptionsCommand(this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CONNECTION,
-					new SessionConnectionCommand(Environment.the_dispatcher, this.aContext));
+					new SessionConnectionCommand(dispatcher, this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_CHANGE_PASSWORD,
-					new SessionChangePasswordCommand(Environment.the_dispatcher, this.aContext));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_DOMAIN,
-					new SessionDomainCommand(Environment.the_dispatcher, this.aContext));
+					new SessionChangePasswordCommand(dispatcher, this.aContext));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_SESSION_DOMAIN, new SessionDomainCommand(dispatcher,
+													this.aContext));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_EXIT, new ExitCommand(this));
 
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PLAN, this.planFrame.getCommand());
@@ -502,30 +460,22 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		aModel.fireModelChanged("");
 
-		if (ConnectionInterface.getActiveConnection() != null) {
-			this.aContext.setConnectionInterface(ConnectionInterface.getActiveConnection());
-			if (this.aContext.getConnectionInterface().isConnected())
+		ConnectionInterface connectionInterface = ConnectionInterface.getInstance();
+		if (connectionInterface != null) {
+			if (connectionInterface.isConnected())
 				this.dispatcher
 						.notify(new ContextChangeEvent(
-										this.aContext.getConnectionInterface(),
+										connectionInterface,
 										ContextChangeEvent.CONNECTION_OPENED_EVENT));
-		} else {
-			this.aContext.setConnectionInterface(Environment.getDefaultConnectionInterface());
-			ConnectionInterface.setActiveConnection(this.aContext.getConnectionInterface());
-			//			new CheckConnectionCommand(internal_dispatcher,
-			// aContext).execute();
-		}
+		} 
 		if (SessionInterface.getActiveSession() != null) {
 			this.aContext.setSessionInterface(SessionInterface.getActiveSession());
-			this.aContext.setConnectionInterface(this.aContext.getSessionInterface()
-					.getConnectionInterface());
 			if (this.aContext.getSessionInterface().isOpened())
 				this.dispatcher
 						.notify(new ContextChangeEvent(this.aContext.getSessionInterface(),
 										ContextChangeEvent.SESSION_OPENED_EVENT));
 		} else {
-			this.aContext.setSessionInterface(Environment.getDefaultSessionInterface(this.aContext
-					.getConnectionInterface()));
+			this.aContext.setSessionInterface(Environment.getDefaultSessionInterface(connectionInterface));
 			SessionInterface.setActiveSession(this.aContext.getSessionInterface());
 		}
 	}

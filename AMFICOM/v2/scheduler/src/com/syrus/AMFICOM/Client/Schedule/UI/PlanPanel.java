@@ -9,12 +9,10 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.measurement.Test;
 
 import oracle.jdeveloper.layout.*;
 
@@ -250,7 +248,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 						//						if ((scaleIndex > 0) && (scaleIndex <
 						// SCALES_MS.length))
 						//							diff = SCALES_MS[scaleIndex] / 2;
-						Date date = new Date(test.getStartTime() - diff);
+						Date date = new Date(test.getStartTime().getTime() - diff);
 						//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(date));
 						//
 						//						System.out.println(ConstStorage.SIMPLE_DATE_FORMAT.format(this.toolBar.timeSpinner.getModel()
@@ -282,9 +280,9 @@ public class PlanPanel extends JPanel implements OperationListener {
 					//					found = true;
 					//				}
 					//				
-					found = this.testLines.containsKey(test.getMonitoredElementId());
+					found = this.testLines.containsKey(test.getMonitoredElement().getId());
 					if (found) {
-						TestLine testLine = (TestLine) this.testLines.get(test.getMonitoredElementId());
+						TestLine testLine = (TestLine) this.testLines.get(test.getMonitoredElement().getId());
 						//System.out.println("testLine found");
 						//System.out.println("testLine.getTest(test.getId()):"
 						// + testLine.getTest(test.getId()));
@@ -302,10 +300,10 @@ public class PlanPanel extends JPanel implements OperationListener {
 								Environment.log(Environment.LOG_LEVEL_WARNING, "testLines is null"); //$NON-NLS-1$
 							if (test == null)
 								Environment.log(Environment.LOG_LEVEL_WARNING, "test is null"); //$NON-NLS-1$
-							else if (test.getMonitoredElementId() == null)
+							else if (test.getMonitoredElement().getId() == null)
 								Environment.log(Environment.LOG_LEVEL_WARNING, "test.monitored_element_id is null"); //$NON-NLS-1$
-							if (this.testLines.containsKey(test.getMonitoredElementId()))
-								testLine = (TestLine) this.testLines.get(test.getMonitoredElementId());
+							if (this.testLines.containsKey(test.getMonitoredElement().getId()))
+								testLine = (TestLine) this.testLines.get(test.getMonitoredElement().getId());
 							else {
 								String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
 								testLine = new TestLine(this.aContext,
@@ -313,7 +311,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 														meName, this.scaleStart.getTime(), this.scaleEnd.getTime(),
 														this.margin / 2);
 								testLine.setPreferredSize(new Dimension(0, 20));
-								this.testLines.put(test.getMonitoredElementId(), testLine);
+								this.testLines.put(test.getMonitoredElement().getId(), testLine);
 								add(testLine);
 							}
 							testLine.addTest(test);
@@ -652,15 +650,15 @@ public class PlanPanel extends JPanel implements OperationListener {
 	private void updateTest(Test test) {
 		TestLine testLine;
 		//System.out.println("updateTest:" + test.getId());
-		if (this.testLines.containsKey(test.getMonitoredElementId()))
-			testLine = (TestLine) this.testLines.get(test.getMonitoredElementId());
+		if (this.testLines.containsKey(test.getMonitoredElement().getId()))
+			testLine = (TestLine) this.testLines.get(test.getMonitoredElement().getId());
 		else {
 			String meName = Pool.getName(MonitoredElement.typ, test.getMonitoredElementId());
 			testLine = new TestLine(this.aContext,
 			//parent.getViewport(),
 									meName, this.scaleStart.getTime(), this.scaleEnd.getTime(), this.margin / 2);
 			testLine.setPreferredSize(new Dimension(0, 25));
-			this.testLines.put(test.getMonitoredElementId(), testLine);
+			this.testLines.put(test.getMonitoredElement().getId(), testLine);
 		}
 		testLine.addTest(test);
 		add(testLine);

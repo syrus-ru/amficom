@@ -11,13 +11,12 @@ import javax.swing.event.ListSelectionListener;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Resource.Test.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.measurement.Test;
 
 public class TestParametersPanel extends JPanel implements OperationListener {
 	public static final String	PARAMETER_PARAMETER		= "Parameter";											//$NON-NLS-1$
@@ -139,7 +138,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 					for (Iterator it = TestParametersPanel.this.testPanels.keySet().iterator(); it.hasNext();) {
 						String key = (String) it.next();
 						ParametersTestPanel panel = (ParametersTestPanel) (TestParametersPanel.this.testPanels.get(key));
-						panel.setTestSetup(ts);
+						panel.setMeasurementSetup(ts);
 					}
 
 				} else {
@@ -275,7 +274,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 			if (this.paramsRadioButton.isSelected()) {
 				TestArgumentSet tas = ((ParametersTestPanel) (this.testPanels.get(this.currentParametersPanelName)))
-						.getTestArgumentSet();
+						.getSet();
 				if (tas != null)
 					this.dispatcher.notify(new OperationEvent(tas, SchedulerModel.DATA_ID_PARAMETERS,
 																SchedulerModel.COMMAND_SEND_DATA));

@@ -1,6 +1,8 @@
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.*;
 import java.util.*;
 
@@ -13,9 +15,12 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 public class TestLine extends JLabel implements ActionListener, OperationListener {
 
@@ -103,30 +108,31 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 					for (Iterator it = TestLine.this.allTests.iterator(); it.hasNext();) {
 						//	Test test = (Test) it.next();
 						Test test = (Test) it.next();
-						TimeStamp timeStamp = test.getTimeStamp();
+						TestTemporalType temporalType = test.getTemporalType();
 						int st = TestLine.this.margin
-								+ (int) (TestLine.this.scale * (test.getTimeStamp().getPeriodStart() - TestLine.this
+								+ (int) (TestLine.this.scale * (test.getStartTime().getTime() - TestLine.this
 										.getStart())) - 1;
 						int en = TestLine.this.margin
-								+ (int) (TestLine.this.scale * (test.getTimeStamp().getPeriodEnd() - TestLine.this
+								+ (int) (TestLine.this.scale * (test.getEndTime().getTime() - TestLine.this
 										.getStart())) + 1;
 						en = (en - st < MINIMAL_WIDTH) ? st + MINIMAL_WIDTH : en;
 						//					System.out.println("."+((x >= st) && (x <= en) && (y
 						// >=
 						// titleHeight / 2 + 4)));
 						int w = en - st + 1;
-						if (timeStamp.getType() == TimeStamp.TIMESTAMPTYPE_CONTINUOS)
+						if (temporalType.value() == TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS)
 							w = (w > MINIMAL_WIDTH) ? w : MINIMAL_WIDTH;
 						else
 							w = MINIMAL_WIDTH;
 						en = st + w;
 						boolean condition = false;
-						switch (timeStamp.getType()) {
-							case TimeStamp.TIMESTAMPTYPE_PERIODIC:
-								long[] times = timeStamp.getTestTimes();
-								for (int j = 0; j < times.length; j++) {
+						switch (temporalType.value()) {
+							case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+								List times = test.getTemporalPattern().getTimes(test.getStartTime(), test.getEndTime());
+								for (Iterator timeIt = times.iterator(); timeIt.hasNext();) {
+									Date time = (Date) timeIt.next();
 									st = TestLine.this.margin
-											+ (int) (TestLine.this.scale * (times[j] - TestLine.this.getStart()));
+											+ (int) (TestLine.this.scale * (time.getTime() - TestLine.this.getStart()));
 									en = st + w;
 									if ((x >= st) && (x <= en) && (y >= TestLine.this.titleHeight / 2 + 4)) {
 										condition = true;
@@ -189,8 +195,8 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		flashUnsavedTest();
 	}
 
-	public void addTest(String id) {
-		Test test = (Test) Pool.get(Test.TYPE, id);
+	public void addTest(Identifier id) {
+		Test test = (Test) MeasurementStorableObjectPool.getStorableObject(id, true);
 		if (test != null)
 			addTest(test);
 	}
@@ -269,7 +275,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	//		return tests.keySet();
 	//	}
 
-	public Test getTest(String id) {
+	public Test getTest(Identifier id) {
 		Test test = (Test) this.tests.get(id);
 		if (test == null) {
 			for (Iterator it = this.allTests.iterator(); it.hasNext();) {
@@ -388,7 +394,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 
 	public void removeTest(Test test) {
 		//Test test = (Test) this.tests.get(id);
-		String testId = test.getId();
+		Identifier testId = test.getId();
 		if (this.unsavedTests != null) {
 			if (this.unsavedTests.containsKey(testId)) {
 				this.timer.stop();
@@ -433,11 +439,11 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 
 	private void drawTestRect(Graphics g, Test test) {
 		//System.out.println("drawTestRect:"+test.getId());
-		TimeStamp timeStamp = test.getTimeStamp();
-		int x = this.margin + (int) (this.scale * (test.getTimeStamp().getPeriodStart() - this.start));
-		int en = this.margin + (int) (this.scale * (test.getTimeStamp().getPeriodEnd() - this.start));
+		int x = this.margin + (int) (this.scale * (test.getStartTime().getTime() - this.start));
+		int en = this.margin + (int) (this.scale * (test.getEndTime().getTime() - this.start));
 		int w = en - x + 1;
-		if (timeStamp.getType() == TimeStamp.TIMESTAMPTYPE_CONTINUOS)
+		TestTemporalType temporalType = test.getTemporalType();
+		if (temporalType.value() == TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS)
 			w = (w > MINIMAL_WIDTH) ? w : MINIMAL_WIDTH;
 		else
 			w = MINIMAL_WIDTH;
@@ -447,14 +453,16 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 
 		ElementaryTestAlarm[] testAlarms = test.getElementaryTestAlarms();
 
-		switch (timeStamp.getType()) {
-			case TimeStamp.TIMESTAMPTYPE_PERIODIC:
+		switch (temporalType.value()) {
+			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 
-				long[] times = timeStamp.getTestTimes();
-				for (int i = 0; i < times.length; i++) {
+				List times = test.getTemporalPattern().getTimes(test.getStartTime(),test.getEndTime());
+				for (Iterator timeIt = times.iterator(); timeIt.hasNext();) {
+					Date time = (Date) timeIt.next();
+					long t = time.getTime();
 					if (testAlarms.length > 0) {
 						for (int j = 0; j < testAlarms.length; j++) {
-							if (Math.abs(testAlarms[j].elementary_start_time - times[i]) < 1000 * 30) {
+							if (Math.abs(testAlarms[j].elementary_start_time - t) < 1000 * 30) {
 								Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[j].alarm_id);
 								if (alarm != null) {
 									//System.out.println("alarm.type_id:" +
@@ -481,7 +489,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 							//alarm.
 						}
 					}
-					x = this.margin + (int) (this.scale * (times[i] - this.start));
+					x = this.margin + (int) (this.scale * (t - this.start));
 					g.fillRect(x + 2, y + 2, w - 3, h - 3);
 					//System.out.println(i + "\t" + times[i] + "\tx:" + x);
 					g.draw3DRect(x, y, w, h, true);

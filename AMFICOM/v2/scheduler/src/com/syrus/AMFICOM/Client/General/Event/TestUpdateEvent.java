@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Event;
 
-import com.syrus.AMFICOM.Client.Resource.Result.Test;
+import com.syrus.AMFICOM.measurement.Test;
+
 
 public class TestUpdateEvent extends OperationEvent {
 	public boolean testSelected = false;

@@ -9,15 +9,15 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.CORBA.General.TestReturnType;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Result.Test;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 
 /**
  * @author Vladimir Dolzhenko
