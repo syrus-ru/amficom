@@ -274,15 +274,6 @@ public class OverallStatsFrame extends ATableFrame
 	void updTableModel(String id)
 	{
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-		double alpha;
-
-		switch (bs.getWavelength())
-		{
-			case 1310: alpha = .063; break;
-			case 1550: alpha = .032; break;
-			case 1625: alpha = .0265; break;
-			default: alpha = .032;
-		}
 
 		TraceEvent ev = ((RefAnalysis)Pool.get("refanalysis", id)).overallStats;
 		if (ev == null)
