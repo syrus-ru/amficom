@@ -517,10 +517,9 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				MapContext mc = (MapContext) parent.getObject();
 
 				DataSet dSet = new DataSet();
-				for (Enumeration enum = mc.getNodes().elements();
-					enum.hasMoreElements(); )
+				for (int i = 0; i < mc.getNodes().size(); i++)
 				{
-					ObjectResource os = (ObjectResource) enum.nextElement();
+					ObjectResource os = (ObjectResource) mc.getNodes().get(i);
 					if (os instanceof MapEquipmentNodeElement)
 						dSet.add(os);
 				}
@@ -540,7 +539,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 					vec.add(n);
 				}
 			}
-			else if (s.equals(MapKISNodeElement.typ))
+/*			else if (s.equals(MapKISNodeElement.typ))
 			{
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode) node.
 					getParent();
@@ -568,7 +567,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 						me.getName(), true);
 					vec.add(n);
 				}
-			}
+			}*/
 			else if (s.equals(MapPhysicalNodeElement.typ))
 			{
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode) node.
@@ -576,10 +575,9 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				MapContext mc = (MapContext) parent.getObject();
 
 				DataSet dSet = new DataSet();
-				for (Enumeration enum = mc.getNodes().elements();
-					enum.hasMoreElements(); )
+				for (int i = 0; i < mc.getNodes().size();	i++)
 				{
-					ObjectResource os = (ObjectResource) enum.nextElement();
+					ObjectResource os = (ObjectResource) mc.getNodes().get(i);
 					if (os instanceof MapPhysicalNodeElement)
 						dSet.add(os);
 				}
@@ -617,11 +615,11 @@ getObject();
 					mc = mene.getMapContext();
 
 					dSet = new DataSet();
-					for (Enumeration enum = mc.getPhysicalLinks().elements();
-						enum.hasMoreElements(); )
+
+					for (int i = 0; i < mc.getPhysicalLinks().size();	i++)
 					{
-						MapPhysicalLinkElement ml = (MapPhysicalLinkElement) enum.
-nextElement();
+						MapPhysicalLinkElement ml = (MapPhysicalLinkElement) mc.getPhysicalLinks().get(i);
+
 						if (ml.startNode.equals(mene) || ml.endNode.equals(mene))
 							dSet.add(ml);
 					}
@@ -640,7 +638,7 @@ nextElement();
 
 					String curName = ml.getName();
 					ObjectsReport curReport = new ObjectsReport(new MapReportModel(),
-						curName, "", toAskObjects(node));
+						curName, MapReportModel.rep_topology, toAskObjects(node));
 
 					try
 					{
@@ -698,10 +696,9 @@ nextElement();
 				MapContext mc = ml.getMapContext();
 
 				DataSet dSet = new DataSet();
-				for (Enumeration enum = mc.getMapMarkElements().elements();
-					enum.hasMoreElements(); )
+				for (int i = 0; i < mc.getMapMarkElements().size(); i++)
 				{
-					MapMarkElement mme = (MapMarkElement) enum.nextElement();
+					MapMarkElement mme = (MapMarkElement) mc.getMapMarkElements().get(i);
 					if (mme.link_id.equals(ml.getId()))
 						dSet.add(mme);
 				}

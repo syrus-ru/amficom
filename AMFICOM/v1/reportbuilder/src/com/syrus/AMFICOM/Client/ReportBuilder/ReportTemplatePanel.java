@@ -41,18 +41,20 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 
 import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
 import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
+import com.syrus.AMFICOM.Client.Map.Report.MapRenderPanel;
+import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import com.syrus.AMFICOM.Client.General.Report.ObjectResourceReportModel;
 import com.syrus.AMFICOM.Client.Optimize.Report.OptimizationReportModel;
-import com.syrus.AMFICOM.Client.Optimize.Report.MapRenderPanel;
 
 import com.syrus.AMFICOM.CORBA.Scheme.SchemeOptimizeInfo_Transferable;
 import com.syrus.AMFICOM.Client.Resource.Optimize.SolutionCompact;
 
 import com.syrus.AMFICOM.Client.General.Report.*;
+import com.syrus.AMFICOM.Client.Optimize.Report.SelectSolutionFrame;
 
 /**
  * <p>Description: Панель для размещения схемы элементов шаблона</p>
@@ -1758,7 +1760,7 @@ getHeight();
 					String scheme_id = SelectSolutionFrame.selectedScheme.id;
 					transf_rep.setReserve(scheme_id);
 				}
-				if (transf_rep.field.equals(OptimizationReportModel.topology))
+				if (transf_rep.field.equals(MapReportModel.rep_topology))
 				{
 					String scheme_id = SelectSolutionFrame.selectedScheme.id;
 

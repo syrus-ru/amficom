@@ -50,15 +50,16 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
-import com.syrus.AMFICOM.Client.ReportBuilder.*;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplateImplementationPanel;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.Report.ReportBuilder;
+import com.syrus.AMFICOM.Client.General.Report.SelectReportsPanel;
 
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilterPane;
 
 import com.syrus.io.IniFile;
 
+import com.syrus.AMFICOM.Client.Optimize.Report.OptimizeReportsTreeModel;
 /**
  * <p>Description: Главное окно редактора шаблонов отчёта</p>
  * <p>Copyright: Copyright (c) 2003</p>
@@ -69,7 +70,6 @@ import com.syrus.io.IniFile;
 
 public class ReportMDIMain extends JFrame implements OperationListener
 {
-	static public String ev_closingWindow = "ev_closingWindow";
 	static public String ev_closingAdditionalPanel = "ev_closingAdditionalPanel";
 
 	private Dispatcher internal_dispatcher = new Dispatcher();
@@ -533,7 +533,8 @@ public class ReportMDIMain extends JFrame implements OperationListener
 					desktopPane,
 					aContext,
 					this,
-					this.layoutWOCPanel.reportTemplate);
+					this.layoutWOCPanel.reportTemplate,
+					new AvailableReportsTreeModel());
 
 			layoutScrollPane = new JInternalFrame();
 			layoutScrollPane.getContentPane().add(innerToolBar,BorderLayout.NORTH);
@@ -593,7 +594,6 @@ public class ReportMDIMain extends JFrame implements OperationListener
 			aContext.getDispatcher().register(this,SelectReportsPanel.ev_additionalPaneCreated);
 			aContext.getDispatcher().register(this,com.syrus.AMFICOM.Client.General.Filter.SetRestrictionsWindow.ev_lsWindowCreated);
 			aContext.getDispatcher().register(this,com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilterPane.state_filterClosed);
-			aContext.getDispatcher().register(this,ReportMDIMain.ev_closingWindow);
 			aContext.getDispatcher().register(this,ReportMDIMain.ev_closingAdditionalPanel);
 			aContext.getDispatcher().register(this,ReportBuilder.ev_startProgressBar);
 			aContext.getDispatcher().register(this,ReportBuilder.ev_stopProgressBar);
