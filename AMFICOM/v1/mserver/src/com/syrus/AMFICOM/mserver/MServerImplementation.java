@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.15 2004/10/15 09:58:42 max Exp $
+ * $Id: MServerImplementation.java,v 1.16 2004/10/15 10:34:26 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -89,7 +90,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/10/15 09:58:42 $
+ * @version $Revision: 1.16 $, $Date: 2004/10/15 10:34:26 $
  * @author $Author: max $
  * @module mserver_v1
  */
