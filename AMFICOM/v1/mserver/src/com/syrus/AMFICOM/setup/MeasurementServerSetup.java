@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.21 2004/12/09 15:28:10 bob Exp $
+ * $Id: MeasurementServerSetup.java,v 1.22 2004/12/10 12:44:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/12/09 15:28:10 $
+ * @version $Revision: 1.22 $, $Date: 2004/12/10 12:44:46 $
  * @author $Author: bob $
  * @module mserver_v1
  */
@@ -136,8 +136,8 @@ public final class MeasurementServerSetup {
 					"sys",
 					"System Administrator");
 																			
-			User user1 = User.getInstance((User_Transferable)user.getTransferable());
-			return user1.getId();
+			user.insert();
+			return user.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -151,8 +151,8 @@ public final class MeasurementServerSetup {
 					"EqTypeKIS",
 					"",
 					"");
-			EquipmentType eqType1 = EquipmentType.getInstance((EquipmentType_Transferable)eqType.getTransferable());
-			return eqType1;
+			eqType.insert();
+			return eqType;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -166,7 +166,8 @@ public final class MeasurementServerSetup {
 					"Type of TransmissionPath",
                     "",
 					"");            
-            return TransmissionPathType.getInstance((TransmissionPathType_Transferable)transmissionPathType.getTransferable());
+            transmissionPathType.insert();
+            return transmissionPathType;
         }
         catch (Exception e) {
             Log.errorException(e);
@@ -181,8 +182,8 @@ public final class MeasurementServerSetup {
 					"",
 					"",
 					PortTypeSort.PORTTYPESORT_ELECTRICAL);
-			PortType portType1 = PortType.getInstance((PortType_Transferable)portType.getTransferable());
-			return portType1;
+			portType.insert();
+			return portType;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -196,8 +197,8 @@ public final class MeasurementServerSetup {
 					"MeasurementPortTypeReflectometry",
 					"",
 					"");
-			MeasurementPortType mportType1 = MeasurementPortType.getInstance((MeasurementPortType_Transferable)mportType.getTransferable());
-			return mportType1;
+			mportType.insert();
+			return mportType;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -211,8 +212,8 @@ public final class MeasurementServerSetup {
 					null,
 					"domain 1",
 					"System domain");
-			Domain domain1 = Domain.getInstance((Domain_Transferable)domain.getTransferable());
-			return domain1.getId();
+			domain.insert();
+			return domain.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -229,8 +230,8 @@ public final class MeasurementServerSetup {
 				"server 1",
 				"Measurement server",
 				serverUserId);
-			Server server1 = Server.getInstance((Server_Transferable)server.getTransferable());
-			return server1.getId();
+			server.insert();
+			return server.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -251,8 +252,8 @@ public final class MeasurementServerSetup {
 				mcmUserId,
 				serverId,
 				tcpPort);
-			MCM mcm1 = MCM.getInstance((MCM_Transferable)mcm.getTransferable());
-			return mcm1.getId();
+			mcm.insert();
+			return mcm.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -275,8 +276,8 @@ public final class MeasurementServerSetup {
 					tcpPort,
 					equipmentId,
 					mcmId);
-			KIS kis1 = KIS.getInstance((KIS_Transferable)kis.getTransferable());
-			return kis1.getId();
+			kis.insert();
+			return kis.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -297,8 +298,8 @@ public final class MeasurementServerSetup {
 					"default supplier",
 					0.0,
 					0.0);
-			Equipment eq1 = Equipment.getInstance((Equipment_Transferable)eq.getTransferable());
-			return eq1.getId();
+			eq.insert();			
+			return eq.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -315,8 +316,8 @@ public final class MeasurementServerSetup {
 					"Port",
 					equipmentId,
 					PortSort.PORT_SORT_PORT);
-			Port port1 = Port.getInstance((Port_Transferable)port.getTransferable()); 
-			return port1.getId();
+			port.insert(); 
+			return port.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -337,8 +338,8 @@ public final class MeasurementServerSetup {
 					type,
 					startPortId,
 					finishPortId);
-			TransmissionPath tp1 = TransmissionPath.getInstance((TransmissionPath_Transferable)tp.getTransferable());
-			return tp1.getId();
+			tp.insert();
+			return tp.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -357,8 +358,8 @@ public final class MeasurementServerSetup {
 					"MeasurementPortTest",
 					kisId,
 					portId);
-			MeasurementPort mport1 = MeasurementPort.getInstance((MeasurementPort_Transferable)mport.getTransferable()); 
-			return mport1.getId();
+			mport.insert(); 
+			return mport.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -380,8 +381,8 @@ public final class MeasurementServerSetup {
 					MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
 					"ME",
 					mdmIds);
-			MonitoredElement monitoredElement1 = MonitoredElement.getInstance((MonitoredElement_Transferable)monitoredElement.getTransferable()); 
-			return monitoredElement1;
+			monitoredElement.insert(); 
+			return monitoredElement;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -401,8 +402,8 @@ public final class MeasurementServerSetup {
 					name,
 					description);
 																			
-			User user1 = User.getInstance((User_Transferable)user.getTransferable());
-			return user1.getId();
+			user.insert();
+			return user.getId();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -520,7 +521,7 @@ public final class MeasurementServerSetup {
 						codename,
 						description,
 						name);
-			ParameterType.getInstance((ParameterType_Transferable)parameterType.getTransferable());
+			parameterType.insert();
 			return parameterType;
 		}
 		catch (Exception e) {
@@ -541,7 +542,7 @@ public final class MeasurementServerSetup {
 					inParameterTypes,
 					outParameterTypes,
 					new ArrayList());
-			MeasurementType.getInstance((MeasurementType_Transferable)measurementType.getTransferable());
+			measurementType.insert();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -563,7 +564,7 @@ public final class MeasurementServerSetup {
 					criParameterTypes,
 					etaParameterTypes,
 					outParameterTypes);
-			AnalysisType.getInstance((AnalysisType_Transferable)analysisType.getTransferable());
+			analysisType.insert();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -585,7 +586,7 @@ public final class MeasurementServerSetup {
 					thrParameterTypes,
 					etaParameterTypes,
 					outParameterTypes);
-			EvaluationType.getInstance((EvaluationType_Transferable)evaluationType.getTransferable());
+			evaluationType.insert();
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -641,8 +642,8 @@ public final class MeasurementServerSetup {
 					"Set of measurement parameters",
 					params,
 					monitoredElementIds);
-			Set set1 = Set.getInstance((Set_Transferable) set.getTransferable());
-			return set1;
+			set.insert();
+			return set;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -687,8 +688,8 @@ public final class MeasurementServerSetup {
 					"Set of criteria",
 					params,
 					monitoredElementIds);
-			Set set1 = Set.getInstance((Set_Transferable) set.getTransferable());
-			return set1;
+			set.insert();
+			return set;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -711,8 +712,8 @@ public final class MeasurementServerSetup {
 					"created by MeasurementSetupTestCase",
 					1000 * 60 * 10,
 					monitoredElementIds);
-			MeasurementSetup mSetup1 = MeasurementSetup.getInstance((MeasurementSetup_Transferable)mSetup.getTransferable());
-			return mSetup1;
+			mSetup.insert();
+			return mSetup;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -759,8 +760,8 @@ public final class MeasurementServerSetup {
 				TestReturnType.TEST_RETURN_TYPE_WHOLE,
 				"Onetime test",
 				measurementSetupIds);
-			Test test1 = Test.getInstance((Test_Transferable)test.getTransferable());
-			return test1;
+			test.insert();
+			return test;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -792,8 +793,8 @@ public final class MeasurementServerSetup {
 					TestReturnType.TEST_RETURN_TYPE_WHOLE,
 					"Onetime test",
 					measurementSetupIds);
-			Test test1 = Test.getInstance((Test_Transferable)test.getTransferable());
-			return test1;
+			test.insert();
+			return test;
 		}
 		catch (Exception e) {
 			Log.errorException(e);
