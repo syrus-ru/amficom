@@ -51,134 +51,22 @@ import java.util.Enumeration;
 import java.util.Vector;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 
-public abstract class ObjectResource extends Object
+public interface ObjectResource
 {
-	static final public String typ = "objectresource";	
-									// тип ресурса объекта, представляет собой
-									// имя класса объекта (например, Port)
+	String getTyp();
+	boolean isChanged();
+	void setChanged(boolean changed);
 
-//	public boolean loaded = false;
-	protected boolean changed = false;
-/*
-	public ObjectResource()
-	{
-	}
+	ObjectResourceModel getModel();
 
-	public ObjectResource(String typ)
-	{
-//		this.typ = typ;
-		changed = false;
-	}
-	
-	public ObjectResource(
-			String typ,
-			boolean changed)
-	{
+	long getModified();
+	ObjectPermissionAttributes getPermissionAttributes();
 
-		this.changed = changed;
-	}
-*/
-	public abstract String getTyp();
-/*
-	{
-		return typ;
-	}
-*/	
-
-	public boolean isChanged()
-	{
-		return changed;
-	}
-	
-	public void setChanged(boolean changed)
-	{
-		this.changed = changed;
-	}
-
-	/**
-	 * @deprecated
-	 * @see ObjectResourceModel
-	 */
-	public Enumeration getChildren(String key)
-	{
-		System.out.println(" ObjectResource: getChildren " + key);
-		return new Vector().elements();
-	}
-
-	public static PropertiesPanel getPropertyPane()
-	{
-		System.out.println("  ObjectResource: getPropertyPane");
-		return new GeneralPanel();
-	}
-
-	public static ObjectResourceDisplayModel getDefaultDisplayModel()
-	{
-		return new StubDisplayModel(new String[] {"name"}, new String[] {"Название"});
-	}
-	
-	public static ObjectResourceDisplayModel getReportDisplayModel()
-	{
-		return new StubDisplayModel(new String[] {"name"}, new String[] {"Название"});
-	}
-	
-	public static ObjectResourceFilter getFilter()
-	{
-		return null;
-	}
-	
-	public static ObjectResourceSorter getSorter()
-	{
-		return getDefaultSorter();
-	}
-	
-	public static ObjectResourceSorter getDefaultSorter()
-	{
-		return new ObjectResourceNameSorter();
-	}
-/*	
-	public void prepareRemoval()
-	{
-		System.out.println("                    ObjectResource: prepareRemoval");
-	}
-*/
-	public ObjectResourceModel getModel()
-	{
-		return new ObjectResourceModel();
-	}
-
-	/**
-	 * @deprecated
-	 * @see ObjectResourceModel
-	 */
-	public Enumeration getChildTypes()
-    {
-        return new Vector().elements();
-    }
-		
-	/**
-	 * @deprecated
-	 * @see ObjectResourceModel
-	 */
-	public Class getChildClass(String type)
-    {
-        return ObjectResource.class;
-    }
-
-	public long getModified()
-	{
-		return 0;
-	}
-
-	public ObjectPermissionAttributes getPermissionAttributes()
-	{
-		return null;
-	}
-
-	public abstract Object getTransferable();
-	public abstract String getName();
-	public abstract String getId();
-	public abstract String getDomainId();
-	public abstract void setLocalFromTransferable();
-	public abstract void setTransferableFromLocal();
-	public abstract void updateLocalFromTransferable();
+	Object getTransferable();
+	String getName();
+	String getId();
+	String getDomainId();
+	void setLocalFromTransferable();
+	void setTransferableFromLocal();
+	void updateLocalFromTransferable();
 }

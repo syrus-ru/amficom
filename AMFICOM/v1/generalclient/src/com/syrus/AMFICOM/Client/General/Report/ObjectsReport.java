@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 import java.util.Vector;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.DataFlavor;
@@ -20,7 +21,7 @@ import com.syrus.AMFICOM.Client.Resource.MyDataFlavor;
  * @version 1.0
  */
 
-public class ObjectsReport extends ObjectResource
+public class ObjectsReport extends StubResource
 	implements Transferable,Serializable
 {
 	public ReportModel model = null;

@@ -113,8 +113,6 @@ src\com\syrus\AMFICOM\Client\General\Model\Module.java
 src\com\syrus\AMFICOM\Client\General\Model\Patch.java
 src\com\syrus\AMFICOM\Client\General\Model\Version.java
 src\com\syrus\AMFICOM\Client\General\Report\AMTReport.java
-src\com\syrus\AMFICOM\Client\General\Report\AMTReportPanel.java
-src\com\syrus\AMFICOM\Client\General\Report\AMTReportTable.java
 src\com\syrus\AMFICOM\Client\General\Report\APOReportModel.java
 src\com\syrus\AMFICOM\Client\General\Report\ChartFrame.java
 src\com\syrus\AMFICOM\Client\General\Report\CreateReportException.java
@@ -124,6 +122,7 @@ src\com\syrus\AMFICOM\Client\General\Report\DocumentRenderer.java
 src\com\syrus\AMFICOM\Client\General\Report\FirmedTextPane.java
 src\com\syrus\AMFICOM\Client\General\Report\ImagePanel.java
 src\com\syrus\AMFICOM\Client\General\Report\ObjectList.java
+src\com\syrus\AMFICOM\Client\General\Report\ObjectResourceDivList.java
 src\com\syrus\AMFICOM\Client\General\Report\ObjectResourceReportModel.java
 src\com\syrus\AMFICOM\Client\General\Report\ObjectsReport.java
 src\com\syrus\AMFICOM\Client\General\Report\RenderingObject.java
@@ -137,6 +136,7 @@ src\com\syrus\AMFICOM\Client\General\Report\ReportTemplateImplementationPanel.ja
 src\com\syrus\AMFICOM\Client\General\Report\SelectReportsPanel.java
 src\com\syrus\AMFICOM\Client\General\Report\SelectTypeTemplateWindow.java
 src\com\syrus\AMFICOM\Client\General\Report\Statistics.java
+src\com\syrus\AMFICOM\Client\General\Report\TextPanel.java
 src\com\syrus\AMFICOM\Client\General\Report\TitledPanel.java
 src\com\syrus\AMFICOM\Client\General\UI\AboutBoxPanel.java
 src\com\syrus\AMFICOM\Client\General\UI\AComboBox.java
@@ -182,7 +182,6 @@ src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTableEditor.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTableModel.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTablePane.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTableRenderer.java
-src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTreeFilter.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTreeModel.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTreeNode.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTreeRenderer.java

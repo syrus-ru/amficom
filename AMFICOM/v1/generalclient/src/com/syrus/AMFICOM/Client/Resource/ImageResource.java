@@ -49,7 +49,7 @@ import java.util.Hashtable;
 
 import javax.swing.ImageIcon;
 
-public class ImageResource extends ObjectResource
+public class ImageResource extends StubResource
 		implements Serializable
 {
 	private static final long serialVersionUID = 01L;

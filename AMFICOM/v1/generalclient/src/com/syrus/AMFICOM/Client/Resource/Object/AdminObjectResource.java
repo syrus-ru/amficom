@@ -1,6 +1,8 @@
 package com.syrus.AMFICOM.Client.Resource.Object;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
+import java.util.Enumeration;
 import java.util.Vector;
 /**
  * <p>Title: </p>
@@ -11,7 +13,7 @@ import java.util.Vector;
  * @version 1.0
  */
 
-public abstract class AdminObjectResource extends ObjectResource
+public abstract class AdminObjectResource extends StubResource
 {
 /*
   public AdminObjectResource(String typ)
@@ -30,11 +32,13 @@ public abstract class AdminObjectResource extends ObjectResource
   }
 */
 
-  public abstract Vector getChildIds(String key);
-  public abstract void addChildId(String key, String id);
-  public abstract void removeChildId(String key, String id);
-  public abstract String getOwnerId();
-  public abstract void setOwnerId(String ownerID);
-  public abstract void setModificationTime(long time);
+	public abstract Enumeration getChildTypes();
+	public abstract Enumeration getChildren(String key);
+	public abstract Vector getChildIds(String key);
+	public abstract void addChildId(String key, String id);
+	public abstract void removeChildId(String key, String id);
+	public abstract String getOwnerId();
+	public abstract void setOwnerId(String ownerID);
+	public abstract void setModificationTime(long time);
 
 }

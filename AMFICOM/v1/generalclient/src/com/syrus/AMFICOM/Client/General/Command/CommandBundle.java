@@ -40,7 +40,7 @@ import java.util.Vector;
 
 public class CommandBundle extends VoidCommand implements Command
 {
-	protected Vector commands;			// список команд
+	protected Vector commands = new Vector();			// список команд
 
 	public CommandBundle()
 	{

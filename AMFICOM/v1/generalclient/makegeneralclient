@@ -16,12 +16,13 @@ TARGET_SRC=$(LIBSRC)\generalclientsource.jar
 SERVERCP=$(LIB)\corba.jar
 CLIENTCP=$(LIB)\utilclient.jar;$(LIB)\corbaportable-common.jar;$(LIB)\filter.jar
 
-ORBCP=$(EXTLIB)\aurora.zip;$(EXTLIB)\aurora_client_orbindep.jar;$(EXTLIB)\aurora_client_orbdep.jar
+ORBCP=$(EXTLIB)\aurora_client_orbindep.jar;$(EXTLIB)\aurora_client_orbdep.jar
 VBJCP=$(ORACLE_HOME)\lib\vbjorb.jar;$(ORACLE_HOME)\lib\vbjapp.jar
 LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
 SPATIALCP=$(EXTLIB)\ofx.spatialfx.jar
 REPORTCP=$(EXTLIB)\jfreechartK.jar
 JGRAPHCP=$(EXTLIB)\jgraphpad.jar
+JUNITCP=$(EXTLIB)\junit.jar
 
 
 .PHONY:	$(TARGET)
@@ -36,7 +37,7 @@ impl:
 	$(JAVAC) \
 		-deprecation \
 		-d $(CLASSES) \
-		-classpath $(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP);$(REPORTCP);$(JGRAPHCP);$(VBJCP):$(ORBCP) \
+		-classpath $(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP);$(REPORTCP);$(JGRAPHCP);$(VBJCP);$(ORBCP);$(JUNITCP) \
 		-sourcepath $(SRC) \
 		@$(TARGET_CLASS_LIST)
 

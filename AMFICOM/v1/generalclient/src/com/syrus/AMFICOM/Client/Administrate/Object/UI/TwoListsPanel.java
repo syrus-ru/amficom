@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
+import com.syrus.AMFICOM.Client.Resource.Object.AdminObjectResource;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -19,7 +20,7 @@ public class TwoListsPanel extends GeneralPanel
   OrListBox list1 = new OrListBox();
   OrListBox list2 = new OrListBox();
 
-  ObjectResource or;
+  AdminObjectResource or;
 
   JScrollPane scrollPane1 = new JScrollPane();
   JScrollPane scrollPane2 = new JScrollPane();
@@ -168,11 +169,11 @@ public class TwoListsPanel extends GeneralPanel
 
   public boolean setObjectResource(ObjectResource or)
   {
-    this.or = or;
+    this.or = (AdminObjectResource )or;
 
     {
       list1.removeAll();
-      DataSet dSet = new DataSet(or.getChildren(childTyp));
+      DataSet dSet = new DataSet(this.or.getChildren(childTyp));
       ObjectResourceSorter sorter = new ObjectResourceNameSorter();//  MonitoredElement.getDefaultSorter();
       sorter.setDataSet(dSet);
       dSet = sorter.default_sort();
@@ -192,7 +193,7 @@ public class TwoListsPanel extends GeneralPanel
       h.put(o.getId(), o);
     }
 
-    for(Enumeration e = or.getChildren(childTyp);
+    for(Enumeration e = this.or.getChildren(childTyp);
         e.hasMoreElements();)
     {
       h.remove(((ObjectResource)e.nextElement()).getId());

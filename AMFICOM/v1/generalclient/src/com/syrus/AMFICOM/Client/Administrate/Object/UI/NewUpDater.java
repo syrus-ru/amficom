@@ -27,7 +27,7 @@ public class NewUpDater{
     or.updateLocalFromTransferable();
     AdminObjectResource aor = (AdminObjectResource)or;
 
-    String []childTyps = getChildTyps(or);
+    String []childTyps = getChildTyps(aor);
     String []parentTyps= getParentTyps(or);
 
     for(int i=0; i<childTyps.length; i++){
@@ -236,7 +236,7 @@ public class NewUpDater{
 
 
 //------------------------------------------------------------------------------
-  public String []getChildTyps(ObjectResource or){
+  public String []getChildTyps(AdminObjectResource or){
     Vector v = new Vector();
     for(Enumeration e = or.getChildTypes(); e.hasMoreElements(); ){
       v.add(e.nextElement());

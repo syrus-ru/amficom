@@ -38,15 +38,78 @@
 //////////////////////////////////////////////////////////////////////////////
 
 package com.syrus.AMFICOM.Client.Resource;
+import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
+import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
+import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
+import com.syrus.AMFICOM.Client.Resource.Object.ObjectPermissionAttributes;
 
 
-public class StubResource extends ObjectResource
+public class StubResource implements ObjectResource
 {
 	static final public String typ = "stub";
 
+	protected boolean changed = false;
+
+	public boolean isChanged()
+	{
+		return changed;
+	}
+	
+	public void setChanged(boolean changed)
+	{
+		this.changed = changed;
+	}
+
+	public static PropertiesPanel getPropertyPane()
+	{
+		System.out.println("  ObjectResource: getPropertyPane");
+		return new GeneralPanel();
+	}
+
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new StubDisplayModel(new String[] {"name"}, new String[] {"Название"});
+	}
+	
+	public static ObjectResourceDisplayModel getReportDisplayModel()
+	{
+		return new StubDisplayModel(new String[] {"name"}, new String[] {"Название"});
+	}
+	
+	public static ObjectResourceFilter getFilter()
+	{
+		return null;
+	}
+	
+	public static ObjectResourceSorter getSorter()
+	{
+		return getDefaultSorter();
+	}
+	
+	public static ObjectResourceSorter getDefaultSorter()
+	{
+		return new ObjectResourceNameSorter();
+	}
+
+	public ObjectResourceModel getModel()
+	{
+		return new ObjectResourceModel();
+	}
+
+	public long getModified()
+	{
+		return 0;
+	}
+
+	public ObjectPermissionAttributes getPermissionAttributes()
+	{
+		return null;
+	}
+
 	public StubResource()
 	{
-		super();
 	}
 /*
 	public StubResource(String typ)

@@ -4,15 +4,15 @@ import com.syrus.AMFICOM.CORBA.Alarm.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/05/27 12:49:24 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/08/17 11:07:23 $
+ * @author $Author: krupenn $
  * @module Survey
  * 
  * @see MessageModel
  * @see com.syrus.AMFICOM.Client.Object.UI.MessageDisplayModel
  * @deprecated
  */
-public class Message extends ObjectResource
+public class Message extends StubResource
 {
 	public String id;
 	public String text;

@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.CORBA.Report.RenderingObject_Transferable;
 import com.syrus.AMFICOM.CORBA.Report.ReportTemplate_Transferable;
 import com.syrus.AMFICOM.CORBA.Resource.Filter_Transferable;
 
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 import com.syrus.AMFICOM.filter.LogicSchemeBase;
 
 import java.io.Serializable;
@@ -49,7 +50,7 @@ import javax.swing.JOptionPane;
  * @version 1.0
  */
 
-public class ReportTemplate extends ObjectResource implements Serializable
+public class ReportTemplate extends StubResource implements Serializable
 {
 	//מבשאÿ קאסעü - הכÿ סמגלוסעטלמסעט ס ObjectResource
 	/**
